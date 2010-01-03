@@ -6,7 +6,7 @@ compile() {
 	# Is there any changes to this file?
 	THISCHANGES=`echo ${CHANGES} | grep ${1}`
 	
-	# Compile if the output doesn't exist, or the local version differs from SVN
+	# Compile if the output doesn't exist, or the local version differs from GIT
 	if [ ! -e ${2} -o "" != "${THISCHANGES}" ]; then
 		echo "	Compiling: ${1} -> ${2}"
 		fpc -Sd -Twin32 ${1} >/dev/null 2>&1
