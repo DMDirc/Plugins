@@ -33,12 +33,15 @@ import java.awt.Window;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingWorker;
+import net.miginfocom.layout.ComponentWrapper;
+import net.miginfocom.layout.LayoutCallback;
 
 import net.miginfocom.layout.PlatformDefaults;
 import net.miginfocom.swing.MigLayout;
@@ -66,7 +69,7 @@ public class CategoryPanel extends JPanel {
     /** Active preferences category. */
     private PreferencesCategory category;
     /** Parent window. */
-    private Window parent;
+    private SwingPreferencesDialog parent;
     /** Title label. */
     private TitlePanel title;
     /** Tooltip display area. */
@@ -91,7 +94,7 @@ public class CategoryPanel extends JPanel {
      *
      * @param parent Parent window
      */
-    public CategoryPanel(final Window parent) {
+    public CategoryPanel(final SwingPreferencesDialog parent) {
         this(parent, null);
     }
 
@@ -101,7 +104,7 @@ public class CategoryPanel extends JPanel {
      * @param parent Parent window
      * @param category Initial category
      */
-    public CategoryPanel(final Window parent,
+    public CategoryPanel(final SwingPreferencesDialog parent,
             final PreferencesCategory category) {
         super(new MigLayout("fillx, wrap, ins 0"));
         this.parent = parent;
@@ -129,11 +132,22 @@ public class CategoryPanel extends JPanel {
                 "description, if available.");
 
         add(title, "pushx, growx, h 45!");
-        add(scrollPane, "grow, push, h 425!");
+        add(scrollPane, "grow, push");
         add(tooltip, "pushx, growx, h 65!");
 
         panels.put(null, loading);
         setCategory(category);
+        ((MigLayout) getLayout()).addLayoutCallback(new LayoutCallback() {
+
+            /** {@inheritDoc} */
+            @Override
+            public void correctBounds(final ComponentWrapper cw) {
+                if (cw.getComponent() == scrollPane) {
+                   parent.setPanelHeight((int) (scrollPane.getViewport().
+                           getExtentSize().height * 0.95));
+                }
+            }
+        });
     }
 
     /**

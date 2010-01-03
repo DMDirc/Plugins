@@ -128,9 +128,6 @@ public class TopicBar extends JComponent implements ActionListener,
         //}
         ((DefaultStyledDocument) topicText.getDocument()).setDocumentFilter(
                 new NewlinesDocumentFilter());
-        setAttributes();
-        ((DefaultStyledDocument) topicText.getDocument()).setCharacterAttributes(
-                0, Integer.MAX_VALUE, as, true);
 
         topicText.getActionMap().put("paste-from-clipboard",
                 new NoNewlinesPasteAction());
@@ -209,6 +206,8 @@ public class TopicBar extends JComponent implements ActionListener,
         IdentityManager.getGlobalConfig().addChangeListener(
                 controller.getDomain(), "hideEmptyTopicBar", this);
         setColours();
+        ((DefaultStyledDocument) topicText.getDocument()).setCharacterAttributes(
+                0, Integer.MAX_VALUE, as, true);
     }
 
     /** {@inheritDoc} */
