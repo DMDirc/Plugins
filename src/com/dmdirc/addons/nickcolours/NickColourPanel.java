@@ -22,7 +22,8 @@
 
 package com.dmdirc.addons.nickcolours;
 
-import com.dmdirc.addons.ui_swing.dialogs.prefs.SwingPreferencesDialog;
+import com.dmdirc.Main;
+import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.prefs.PreferencesInterface;
 
@@ -117,9 +118,9 @@ public class NickColourPanel extends JPanel implements ActionListener,
         table.setFillsViewportHeight(true);
         table.setDefaultRenderer(Color.class, new ColourRenderer());
 
-        setLayout(new MigLayout("ins 0, fill, h " +
-                SwingPreferencesDialog.CLIENT_HEIGHT));
-        add(scrollPane, "grow, wrap, spanx, hmax 100%");
+        setLayout(new MigLayout("ins 0, fillx, hmax " + ((SwingController) Main.
+                getUI()).getPrefsDialog().getPanelHeight()));
+        add(scrollPane, "grow, push, wrap, spanx");
 
         final JButton addButton = new JButton("Add");
         addButton.addActionListener(this);

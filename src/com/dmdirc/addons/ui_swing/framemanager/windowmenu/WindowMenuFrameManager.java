@@ -192,7 +192,6 @@ public final class WindowMenuFrameManager extends JMenu implements
             menu.remove(items.get(window));
             items.remove(window);
             if (menu.getMenuComponentCount() == 1) {
-                System.out.println(getParentMenu(parent));
                 replaceMenuWithItem(getParentMenu(parent), menus.get(parent),
                         new FrameContainerMenuItem(parent, this));
             }

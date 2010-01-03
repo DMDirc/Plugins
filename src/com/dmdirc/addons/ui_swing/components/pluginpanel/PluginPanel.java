@@ -22,6 +22,8 @@
 
 package com.dmdirc.addons.ui_swing.components.pluginpanel;
 
+import com.dmdirc.Main;
+import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.config.prefs.PreferencesInterface;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.PluginManager;
@@ -29,7 +31,6 @@ import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
 import com.dmdirc.addons.ui_swing.components.addonbrowser.DownloaderWindow;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.addons.ui_swing.components.renderers.AddonCellRenderer;
-import com.dmdirc.addons.ui_swing.dialogs.prefs.SwingPreferencesDialog;
 
 import java.awt.Window;
 import java.awt.event.ActionEvent;
@@ -72,13 +73,17 @@ public final class PluginPanel extends JPanel implements
     private TextLabel blurbLabel;
     /** Parent Window. */
     private Window parentWindow;
+    /** Swing Controller. */
+    private SwingController controller;
 
     /**
      * Creates a new instance of PluginDialog.
      *
      * @param parentWindow Parent window
+     * @param controller Swing Controller
      */
-    public PluginPanel(final Window parentWindow) {
+    public PluginPanel(final Window parentWindow,
+            final SwingController controller) {
         super();
 
         this.parentWindow = parentWindow;
@@ -128,8 +133,8 @@ public final class PluginPanel extends JPanel implements
 
     /** Lays out the dialog. */
     private void layoutComponents() {
-        setLayout(new MigLayout("ins 0, fill, h " +
-                SwingPreferencesDialog.CLIENT_HEIGHT));
+        setLayout(new MigLayout("ins 0, fill, hmax " + controller.
+                getPrefsDialog().getPanelHeight()));
 
         add(blurbLabel, "wrap 10, growx, pushx");
 

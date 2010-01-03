@@ -57,6 +57,7 @@ import com.dmdirc.addons.ui_swing.dialogs.updater.SwingUpdaterDialog;
 import com.dmdirc.addons.ui_swing.dialogs.url.URLDialog;
 import com.dmdirc.addons.ui_swing.dialogs.channelsetting.ChannelSettingsDialog;
 import com.dmdirc.addons.ui_swing.dialogs.error.ErrorListDialog;
+import com.dmdirc.addons.ui_swing.dialogs.prefs.SwingPreferencesDialog;
 import com.dmdirc.addons.ui_swing.dialogs.prefs.URLConfigPanel;
 import com.dmdirc.addons.ui_swing.dialogs.prefs.UpdateConfigPanel;
 import com.dmdirc.addons.ui_swing.wizard.firstrun.SwingFirstRunWizard;
@@ -531,7 +532,7 @@ public final class SwingController extends Plugin implements UIController {
             /** {@inheritDoc} */
             @Override
             public void run() {
-                setObject(new PluginPanel(me));
+                setObject(new PluginPanel(me, SwingController.this));
             }
         });
     }
@@ -544,7 +545,7 @@ public final class SwingController extends Plugin implements UIController {
             /** {@inheritDoc} */
             @Override
             public void run() {
-                setObject(new UpdateConfigPanel());
+                setObject(new UpdateConfigPanel(SwingController.this));
             }
         });
     }
@@ -641,6 +642,15 @@ public final class SwingController extends Plugin implements UIController {
                 UIManager.getFont("TextPane.font").getFamily());
         defaults.setOption("ui", "textPaneFontSize",
                 UIManager.getFont("TextPane.font").getSize());
+    }
+
+    /**
+     * Returns the preferences dialog instance creating if required.
+     *
+     * @return Swing prefs dialog
+     */
+    public SwingPreferencesDialog getPrefsDialog() {
+        return SwingPreferencesDialog.getSwingPreferencesDialog(me);
     }
 
     /** {@inheritDoc} */
