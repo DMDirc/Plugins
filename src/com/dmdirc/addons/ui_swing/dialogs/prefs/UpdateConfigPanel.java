@@ -22,6 +22,8 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.prefs;
 
+import com.dmdirc.Main;
+import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.config.ConfigManager;
 import com.dmdirc.config.Identity;
 import com.dmdirc.config.IdentityManager;
@@ -69,11 +71,17 @@ public class UpdateConfigPanel extends JPanel implements ActionListener,
     private JButton checkNow;
     /** Update channel. */
     private JComboBox updateChannel;
+    /** Swing controller. */
+    private SwingController controller;
 
     /**
      * Instantiates a new update config panel.
+     *
+     * @param controller Swing controller
      */
-    public UpdateConfigPanel() {
+    public UpdateConfigPanel(final SwingController controller) {
+        this.controller = controller;
+        
         initComponents();
         addListeners();
         layoutComponents();
@@ -139,13 +147,13 @@ public class UpdateConfigPanel extends JPanel implements ActionListener,
      * Lays out the components.
      */
     private void layoutComponents() {
-        setLayout(new MigLayout("fillx, ins 0, hmax " +
-                SwingPreferencesDialog.CLIENT_HEIGHT));
+        setLayout(new MigLayout("fill, ins 0, hmax " + controller.
+                getPrefsDialog().getPanelHeight()));
 
         add(new JLabel("Update checking:"), "split");
         add(enable, "growx");
         add(updateChannel, "growx, pushx, wrap");
-        add(scrollPane, "wrap");
+        add(scrollPane, "wrap, grow, push");
         add(checkNow, "right");
     }
 

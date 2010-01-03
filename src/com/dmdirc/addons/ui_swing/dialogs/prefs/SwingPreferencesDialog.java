@@ -64,12 +64,6 @@ public final class SwingPreferencesDialog extends StandardDialog implements
      * serialized objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 9;
-    /**
-     * The maximum height clients may use if they don't want to scroll.
-     *
-     * @since 0.6.3m1
-     */
-    public static final int CLIENT_HEIGHT = 375;
     /** Previously instantiated instance of SwingPreferencesDialog. */
     private static volatile SwingPreferencesDialog me;
     /** Preferences tab list, used to switch option types. */
@@ -84,6 +78,8 @@ public final class SwingPreferencesDialog extends StandardDialog implements
     private LoggingSwingWorker worker;
     /** Parent window. */
     private MainFrame parentWindow;
+    /** Panel size. */
+    protected int panelSize = 0;
 
     /**
      * Creates a new instance of SwingPreferencesDialog.
@@ -189,8 +185,10 @@ public final class SwingPreferencesDialog extends StandardDialog implements
         getOkButton().addActionListener(this);
         getCancelButton().addActionListener(this);
 
-        setLayout(new MigLayout("pack"));
-        add(tabListScrollPane, "w 150!, hmax 545, growy, pushy");
+        final MigLayout layout = new MigLayout("pack, hmin min(80sp, 700), " +
+                "hmax min(700, 80sp)");
+        setLayout(layout);
+        add(tabListScrollPane, "w 150!, growy, pushy");
         add(mainPanel, "wrap, w 480!, pushy, growy, pushy");
         add(getLeftButton(), "span, split, right");
         add(getRightButton(), "right");
@@ -347,6 +345,24 @@ public final class SwingPreferencesDialog extends StandardDialog implements
             }
         }
         tabList.setSelectedIndex(indexToSelect);
+    }
+
+    /**
+     * Gets the maximum panel size.
+     *
+     * @return Max panel size
+     */
+    public int getPanelHeight() {
+        return panelSize;
+    }
+
+    /**
+     * Sets the panel size to the specified value.
+     *
+     * @param panelSize New panel size
+     */
+    protected void setPanelHeight(final int panelSize) {
+        this.panelSize = panelSize;
     }
 
     /** {@inheritDoc} */
