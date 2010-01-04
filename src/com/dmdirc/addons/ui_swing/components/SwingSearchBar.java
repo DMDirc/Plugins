@@ -280,7 +280,9 @@ public final class SwingSearchBar extends JPanel implements ActionListener,
      */
     @Override
     public void keyPressed(final KeyEvent event) {
-        if (event.getSource() == searchBox) {
+        System.out.println("source: " + event.getSource());
+        System.out.println("key event: " + event.getKeyText(event.getKeyCode()));
+        if (event.getSource() == searchBox.getTextField()) {
             if (event.getKeyCode() == KeyEvent.VK_ESCAPE) {
                 close();
             } else if (event.getKeyCode() == KeyEvent.VK_ENTER) {
