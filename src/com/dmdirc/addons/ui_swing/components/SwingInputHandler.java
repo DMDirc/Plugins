@@ -128,13 +128,15 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
     /** {@inheritDoc} */
     @Override
     protected void addTabHandler() {
-        JTextComponent localTarget = null;
+        final JTextComponent localTarget;
         if (target instanceof JTextComponent) {
             localTarget = (JTextComponent) target;
         } else if (target instanceof SwingInputField) {
             localTarget = ((SwingInputField) target).getTextField();
+        } else {
+            throw new IllegalArgumentException("Unknown target");
         }
-        localTarget.getActionMap().put("tabPressed", new AbstractAction() {
+        localTarget.getActionMap().put("insert-tab", new AbstractAction() {
 
             /**
              * A version number for this class. It should be changed whenever the class
@@ -151,7 +153,7 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
                     /** {@inheritDoc} */
                     @Override
                     protected Object doInBackground() throws Exception {
-                        ((JTextField) e.getSource()).setEditable(false);
+                        localTarget.setEditable(false);
                         doTabCompletion();
                         return null;
                     }
@@ -159,13 +161,13 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
                     /** {@inheritDoc} */
                     @Override
                     protected void done() {
-                        ((JTextField) e.getSource()).setEditable(true);
+                        localTarget.setEditable(true);
                     }
                 }.execute();
             }
         });
         localTarget.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).
-                put(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 0), "tabPressed");
+                put(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 0), "insert-tab");
     }
 
     /** {@inheritDoc} */
