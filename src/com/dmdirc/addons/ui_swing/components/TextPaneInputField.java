@@ -47,6 +47,7 @@ public class TextPaneInputField extends JEditorPane implements InputField {
     /** Colour picker. */
     protected ColourPickerDialog colourPicker;
 
+    /** {@inheritDoc} */
     @Override
     public void showColourPicker(boolean irc, boolean hex) {
         if (IdentityManager.getGlobalConfig().getOptionBool("general",
@@ -73,6 +74,7 @@ public class TextPaneInputField extends JEditorPane implements InputField {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void hideColourPicker() {
         if (colourPicker != null) {
@@ -81,11 +83,13 @@ public class TextPaneInputField extends JEditorPane implements InputField {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void addActionListener(ActionListener listener) {
         //Ignore
     }
 
+    /** {@inheritDoc} */
     @Override
     public void removeActionListener(ActionListener listener) {
         //Ignore
