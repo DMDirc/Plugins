@@ -50,6 +50,7 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.HyperlinkEvent;
@@ -139,23 +140,17 @@ public class TopicBar extends JComponent implements ActionListener,
                 getIcon("close-active"));
 
         new SwingInputHandler(topicText, channelFrame.getCommandParser(),
-                channelFrame).setTypes(false,
-                false, true, false);
-
-        topicText.setFocusable(false);
-        topicText.setEditable(false);
-        topicCancel.setVisible(false);
+                channelFrame).setTypes(false, false, true, false);
 
         final JScrollPane sp = new JScrollPane(topicText);
         sp.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        sp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        sp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
 
         setLayout(new MigLayout("fillx, ins 0, hidemode 3"));
         add(sp, "growx, pushx");
         add(errorIcon, "");
         add(topicCancel, "");
         add(topicEdit, "");
-
 
         channel.getChannelInfo().getParser().getCallbackManager().addCallback(
                 ChannelTopicListener.class, this, channel.getChannelInfo().
@@ -205,9 +200,11 @@ public class TopicBar extends JComponent implements ActionListener,
                 controller.getDomain(), "showfulltopic", this);
         IdentityManager.getGlobalConfig().addChangeListener(
                 controller.getDomain(), "hideEmptyTopicBar", this);
+        
+        topicText.setFocusable(false);
+        topicText.setEditable(false);
+        topicCancel.setVisible(false);
         setColours();
-        ((DefaultStyledDocument) topicText.getDocument()).setCharacterAttributes(
-                0, Integer.MAX_VALUE, as, true);
     }
 
     /** {@inheritDoc} */
@@ -225,9 +222,6 @@ public class TopicBar extends JComponent implements ActionListener,
             return;
         }
         topicText.setText("");
-        setAttributes();
-        ((DefaultStyledDocument) topicText.getDocument()).setCharacterAttributes(
-                0, Integer.MAX_VALUE, as, true);
         if (channel.getCurrentTopic() != null) {
             Styliser.addStyledString((StyledDocument) topicText.getDocument(),
                     new String[]{Styliser.CODE_HEXCOLOUR + ColourManager.getHex(
@@ -261,10 +255,6 @@ public class TopicBar extends JComponent implements ActionListener,
             } else {
                 topicText.setVisible(false);
                 topicText.setText("");
-                setAttributes();
-                ((DefaultStyledDocument) topicText.getDocument()).
-                        setCharacterAttributes(
-                        0, Integer.MAX_VALUE, as, true);
                 if (channel.getCurrentTopic() != null) {
                     topicText.setText(channel.getCurrentTopic().getTopic());
                 }
@@ -513,6 +503,18 @@ public class TopicBar extends JComponent implements ActionListener,
     @Override
     public void insertUpdate(final DocumentEvent e) {
         validateTopic();
+        if (topicText.isEditable()) {
+            SwingUtilities.invokeLater(new Runnable() {
+
+                @Override
+                public void run() {
+                    setAttributes();
+                    ((DefaultStyledDocument) topicText.getDocument()).
+                            setCharacterAttributes(0, Integer.MAX_VALUE, as,
+                            true);
+                }
+            });
+        }
     }
 
     /** {@inheritDoc} */
