@@ -84,6 +84,8 @@ public final class NewServerDialog extends StandardDialog implements ActionListe
     private JButton editProfileButton;
     /** Main frame. */
     private MainFrame mainFrame;
+    /**  Opening new server? */
+    private boolean openingServer = false;
 
     /**
      * Creates a new instance of the dialog.
@@ -244,6 +246,10 @@ public final class NewServerDialog extends StandardDialog implements ActionListe
      * Saves the dialog changes.
      */
     private void save() {
+        if (openingServer) {
+            dispose();
+            return;
+        }
         if (!serverField.validateText()) {
             serverField.requestFocusInWindow();
             return;
@@ -258,6 +264,7 @@ public final class NewServerDialog extends StandardDialog implements ActionListe
         final int port = Integer.parseInt(portField.getText());
 
         dispose();
+        openingServer = true;
 
         final Identity profile =
                 (Identity) identityField.getSelectedItem();
