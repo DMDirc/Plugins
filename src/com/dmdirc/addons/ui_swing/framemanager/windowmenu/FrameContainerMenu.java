@@ -24,6 +24,7 @@
 package com.dmdirc.addons.ui_swing.framemanager.windowmenu;
 
 import com.dmdirc.FrameContainer;
+import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.interfaces.FrameInfoListener;
 import com.dmdirc.interfaces.SelectionListener;
 import com.dmdirc.ui.IconManager;
@@ -55,10 +56,13 @@ public class FrameContainerMenu extends JMenu implements FrameInfoListener,
      * Instantiates a new FrameContainer menu item wrapping the specified frame.
      *
      * @param frame Wrapped frame
+     * @param controller Controller
      */
-    public FrameContainerMenu(final FrameContainer frame) {
+    public FrameContainerMenu(final FrameContainer frame,
+            final SwingController controller) {
         super(frame.toString());
         setIcon(IconManager.getIconManager().getIcon(frame.getIcon()));
+        new WindowMenuScroller(this, controller.getDomain(), 0);
 
         this.frame = frame;
 
