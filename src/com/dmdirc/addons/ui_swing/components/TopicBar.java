@@ -139,8 +139,10 @@ public class TopicBar extends JComponent implements ActionListener,
                 getIcon("close"), IconManager.getIconManager().
                 getIcon("close-active"));
 
-        new SwingInputHandler(topicText, channelFrame.getCommandParser(),
-                channelFrame).setTypes(false, false, true, false);
+        final SwingInputHandler handler = new SwingInputHandler(topicText,
+                channelFrame.getCommandParser(), channelFrame);
+        handler.setTypes(true, false, true, false);
+        handler.setTabCompleter(channel.getTabCompleter());
 
         final JScrollPane sp = new JScrollPane(topicText);
         sp.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);

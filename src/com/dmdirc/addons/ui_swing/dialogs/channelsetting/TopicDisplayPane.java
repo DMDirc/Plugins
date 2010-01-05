@@ -101,10 +101,12 @@ public class TopicDisplayPane extends JPanel implements DocumentListener {
         topicText.setWrapStyleWord(true);
         topicText.setRows(5);
         topicText.setColumns(30);
-        new SwingInputHandler(topicText, channel.getFrame().getCommandParser(),
-                channel.getFrame()).setTypes(false, false, true, false);
+        final SwingInputHandler handler = new SwingInputHandler(topicText,
+                channel.getFrame().getCommandParser(), channel.getFrame());
+        handler.setTypes(true, false, true, false);
+        handler.setTabCompleter(channel.getTabCompleter());
 
-        topicText.getActionMap().put("paste-from-clipboard",
+        topicText.getActionMap().put("paste-from-clipboard",    
                     new NoNewlinesPasteAction());
         topicText.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 
                 0), new TopicEnterAction(parent));
