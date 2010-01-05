@@ -171,7 +171,7 @@ public final class WindowMenuFrameManager extends JMenu implements
         JMenu parentMenu;
         if (!menus.containsKey(parent)) {
             final FrameContainerMenu replacement =
-                    new FrameContainerMenu(parent);
+                    new FrameContainerMenu(parent, controller);
             replaceItemWithMenu(getParentMenu(parent), items.get(parent),
                     replacement);
             parentMenu = replacement;
