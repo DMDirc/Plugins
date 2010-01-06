@@ -71,15 +71,7 @@ public class StringTransferable implements Transferable {
     /** {@inheritDoc} */
     @Override
     public boolean isDataFlavorSupported(final DataFlavor flavor) {
-        if (localStringFlavor.equals(flavor)) {
-            return true;
-        }
-
-        if (serialStringFlavor.equals(flavor)) {
-            return true;
-        }
-
-        return false;
+        return localStringFlavor.equals(flavor) || serialStringFlavor.equals(flavor);
     }
 
     /** 

@@ -76,7 +76,7 @@ public class AddonFilter extends RowFilter<DefaultTableModel, Integer> {
             Entry<? extends DefaultTableModel, ? extends Integer> entry) {
         AddonInfo info = ((AddonInfoLabel) entry.getModel().getValueAt(entry.
                 getIdentifier(), 0)).getAddonInfo();
-        if ((!verifiedBox.isSelected() && info.isVerified()) ||
+        return !((!verifiedBox.isSelected() && info.isVerified()) ||
                 (!unverifiedBox.isSelected() && !info.isVerified()) ||
                 (!installedBox.isSelected() && info.isInstalled()) ||
                 (!notinstalledBox.isSelected() &&
@@ -86,9 +86,6 @@ public class AddonFilter extends RowFilter<DefaultTableModel, Integer> {
                 AddonType.TYPE_THEME) ||
                 (!actionsBox.isSelected() && info.getType() ==
                 AddonType.TYPE_ACTION_PACK) || (!searchBox.getText().
-                isEmpty() && !info.matches(searchBox.getText()))) {
-            return false;
-        }
-        return true;
+                isEmpty() && !info.matches(searchBox.getText())));
     }
 }
