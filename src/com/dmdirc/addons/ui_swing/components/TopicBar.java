@@ -200,7 +200,7 @@ public class TopicBar extends JComponent implements ActionListener,
                 controller.getDomain(), "showfulltopic", this);
         IdentityManager.getGlobalConfig().addChangeListener(
                 controller.getDomain(), "hideEmptyTopicBar", this);
-        
+
         topicText.setFocusable(false);
         topicText.setEditable(false);
         topicCancel.setVisible(false);
@@ -258,6 +258,7 @@ public class TopicBar extends JComponent implements ActionListener,
                 if (channel.getCurrentTopic() != null) {
                     topicText.setText(channel.getCurrentTopic().getTopic());
                 }
+                applyAttributes();
                 topicText.setCaretPosition(0);
                 topicText.setFocusable(true);
                 topicText.setEditable(true);
@@ -304,6 +305,12 @@ public class TopicBar extends JComponent implements ActionListener,
         StyleConstants.setUnderline(as, false);
         StyleConstants.setBold(as, false);
         StyleConstants.setItalic(as, false);
+    }
+
+    private void applyAttributes() {
+        setAttributes();
+        ((DefaultStyledDocument) topicText.getDocument()).setCharacterAttributes(
+                0, Integer.MAX_VALUE, as, true);
     }
 
     /**
@@ -508,10 +515,7 @@ public class TopicBar extends JComponent implements ActionListener,
 
                 @Override
                 public void run() {
-                    setAttributes();
-                    ((DefaultStyledDocument) topicText.getDocument()).
-                            setCharacterAttributes(0, Integer.MAX_VALUE, as,
-                            true);
+                    applyAttributes();
                 }
             });
         }
