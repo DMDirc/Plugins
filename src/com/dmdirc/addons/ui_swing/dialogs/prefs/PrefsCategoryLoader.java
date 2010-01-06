@@ -153,6 +153,7 @@ public class PrefsCategoryLoader extends SwingWorker<JPanel, Object> {
                         " for this UI must extend JPanel.");
             }
 
+            ((JPanel) category.getObject()).getParent();
             panel.add((JPanel) category.getObject(), "growx, pushx");
 
             return;
@@ -244,9 +245,10 @@ public class PrefsCategoryLoader extends SwingWorker<JPanel, Object> {
     private void addInlineCategory(final PreferencesCategory category,
             final JPanel parent) {
         final JPanel panel =
-                new JPanel(new MigLayout("fillx, gap unrel, wrap 2, hidemode 3, pack, " +
-                "wmax 470-" + leftPadding + "-" +
+                new NoRemovePanel(new MigLayout("fillx, gap unrel, wrap 2, " +
+                "hidemode 3, pack, wmax 470-" + leftPadding + "-" +
                 rightPadding + "-2*" + padding));
+        panel.setName(category.getPath());
         panel.setBorder(BorderFactory.createTitledBorder(UIManager.getBorder(
                 "TitledBorder.border"), category.getTitle()));
 
@@ -264,9 +266,10 @@ public class PrefsCategoryLoader extends SwingWorker<JPanel, Object> {
      */
     private JPanel addCategory(final PreferencesCategory category) {
         final JPanel panel =
-                new JPanel(new MigLayout("fillx, gap unrel, " +
+                new NoRemovePanel(new MigLayout("fillx, gap unrel, " +
                 "wrap 2, hidemode 3, wmax 470-" + leftPadding + "-" +
                 rightPadding + "-2*" + padding));
+        panel.setName(category.getPath());
         final String path = category.getPath();
 
         initCategory(category, panel, path);
