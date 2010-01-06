@@ -472,12 +472,7 @@ public class Twitter implements Parser, TwitterErrorHandler, TwitterRawHandler, 
     /** {@inheritDoc} */
     @Override
     public boolean isUserSettable(final char mode) {
-        switch (mode) {
-            case 'b':
-                return true;
-            default:
-                return false;
-        }
+        return mode == 'b';
     }
 
     /** {@inheritDoc} */

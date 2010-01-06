@@ -84,14 +84,7 @@ public final class ArrayListTransferable implements Transferable {
     /** {@inheritDoc} */
     @Override
     public boolean isDataFlavorSupported(final DataFlavor flavor) {
-        if (localArrayListFlavor.equals(flavor)) {
-            return true;
-        }
-        
-        if (serialArrayListFlavor.equals(flavor)) {
-            return true;
-        }
-        
-        return false;
+        return localArrayListFlavor.equals(flavor)
+                || serialArrayListFlavor.equals(flavor);
     }
 }
