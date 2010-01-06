@@ -899,12 +899,15 @@ public abstract class TextFrame extends JInternalFrame implements Window,
                 if (type == MouseClickType.CLICKED) {
                     switch (clickType) {
                         case CHANNEL:
+                            ActionManager.processEvent(CoreActionType.LINK_CHANNEL_CLICKED, null, attribute);
                             frameParent.getServer().join(attribute);
                             break;
                         case HYPERLINK:
+                            ActionManager.processEvent(CoreActionType.LINK_URL_CLICKED, null, attribute);
                             URLHandler.getURLHander().launchApp(attribute);
                             break;
                         case NICKNAME:
+                            ActionManager.processEvent(CoreActionType.LINK_NICKNAME_CLICKED, null, attribute);
                             if (getContainer().getServer().hasQuery(attribute)) {
                                 getContainer().getServer().getQuery(attribute).
                                         activateFrame();
