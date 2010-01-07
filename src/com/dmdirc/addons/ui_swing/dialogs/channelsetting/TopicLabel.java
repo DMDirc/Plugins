@@ -87,12 +87,14 @@ public class TopicLabel extends JPanel {
         StyleConstants.setFontFamily(as, pane.getFont().getFamily());
         StyleConstants.setFontSize(as, pane.getFont().getSize());
         if (getBackground() == null) {
-            StyleConstants.setBackground(as, UIManager.getColor("Table.background"));
+            StyleConstants.setBackground(as, UIManager.getColor(
+                    "Table.background"));
         } else {
             StyleConstants.setBackground(as, getBackground());
         }
         if (getForeground() == null) {
-            StyleConstants.setForeground(as, UIManager.getColor("Table.foreground"));
+            StyleConstants.setForeground(as, UIManager.getColor(
+                    "Table.foreground"));
         } else {
             StyleConstants.setForeground(as, getForeground());
         }
@@ -104,7 +106,7 @@ public class TopicLabel extends JPanel {
     private void init() {
         initTopicField();
         removeAll();
-        setLayout(new MigLayout("fillx, ins 0, debug", "[]0[]", "[]0[]"));
+        setLayout(new MigLayout("fill, ins 0, debug", "[]0[]", "[]0[]"));
 
         if (!topic.getTopic().isEmpty()) {
             Styliser.addStyledString((StyledDocument) pane.getDocument(),
@@ -119,13 +121,15 @@ public class TopicLabel extends JPanel {
         } else {
             label = new OldTextLabel("Topic set by " + topic.getClient());
         }
-        add(label, "wmax 450, growy, pushy, wrap, gapleft 5, pad 0");
+        add(label, "wmax 450, grow, push, wrap, gapleft 5, pad 0");
 
         label = new OldTextLabel("on " + new Date(topic.getTime() * 1000).
                 toString());
-        add(label, "wmax 450, growy, pushy, wrap, gapleft 5, pad 0");
+        add(label, "wmax 450, grow, push, wrap, gapleft 5, pad 0");
 
         add(new JSeparator(), "newline, span, growx, pushx");
+
+        super.validate();
     }
 
     /**
@@ -141,7 +145,7 @@ public class TopicLabel extends JPanel {
     @Override
     public void setBackground(final Color bg) {
         super.setBackground(bg);
-        if (topic != null) {
+        if (topic != null && !bg.equals(getBackground())) {
             init();
         }
     }
@@ -150,8 +154,41 @@ public class TopicLabel extends JPanel {
     @Override
     public void setForeground(final Color fg) {
         super.setForeground(fg);
-        if (topic != null) {
+        if (topic != null && fg.equals(getForeground())) {
             init();
         }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void invalidate() {
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void revalidate() {
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void repaint() {
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void firePropertyChange(String propertyName, Object oldValue,
+            Object newValue) {
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void firePropertyChange(String propertyName, boolean oldValue,
+            boolean newValue) {
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void firePropertyChange(String propertyName, int oldValue,
+            int newValue) {
     }
 }
