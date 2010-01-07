@@ -22,13 +22,13 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.prefs;
 
-import com.dmdirc.Main;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.config.ConfigManager;
 import com.dmdirc.config.Identity;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.prefs.PreferencesInterface;
 import com.dmdirc.addons.ui_swing.components.PackingTable;
+import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.updater.UpdateChannel;
@@ -51,7 +51,7 @@ import net.miginfocom.swing.MigLayout;
  * Updates configuration UI.
  */
 public class UpdateConfigPanel extends JPanel implements ActionListener,
-        PreferencesInterface {
+        PreferencesInterface, ConfigChangeListener {
 
     /**
      * A version number for this class. It should be changed whenever the class
@@ -81,7 +81,7 @@ public class UpdateConfigPanel extends JPanel implements ActionListener,
      */
     public UpdateConfigPanel(final SwingController controller) {
         this.controller = controller;
-        
+
         initComponents();
         addListeners();
         layoutComponents();
@@ -91,11 +91,7 @@ public class UpdateConfigPanel extends JPanel implements ActionListener,
     @Override
     public void save() {
         final Identity identity = IdentityManager.getConfigIdentity();
-        if (enable.isSelected()) {
-            identity.setOption("updater", "enable", true);
-        } else {
-            identity.setOption("updater", "enable", false);
-        }
+        identity.setOption("updater", "enable", enable.isSelected());
 
         IdentityManager.getConfigIdentity().setOption("updater", "channel",
                 updateChannel.getSelectedItem().toString());
@@ -120,6 +116,8 @@ public class UpdateConfigPanel extends JPanel implements ActionListener,
         tableModel = new UpdateTableModel(UpdateChecker.getComponents());
         table = new PackingTable(tableModel, false, scrollPane);
         checkNow = new JButton("Check now");
+        checkNow.setEnabled(IdentityManager.getGlobalConfig().getOptionBool(
+                "updater", "enable"));
         updateChannel = new JComboBox(new DefaultComboBoxModel(UpdateChannel.
                 values()));
 
@@ -129,8 +127,8 @@ public class UpdateConfigPanel extends JPanel implements ActionListener,
             channel = UpdateChannel.valueOf(
                     config.getOption("updater", "channel"));
         } catch (IllegalArgumentException e) {
-            Logger.userError(ErrorLevel.LOW, "Invalid setting for update " +
-                    "channel, defaulting to none.");
+            Logger.userError(ErrorLevel.LOW, "Invalid setting for update "
+                    + "channel, defaulting to none.");
         }
         updateChannel.setSelectedItem(channel);
         scrollPane.setViewportView(table);
@@ -141,14 +139,17 @@ public class UpdateConfigPanel extends JPanel implements ActionListener,
      */
     private void addListeners() {
         checkNow.addActionListener(this);
+        IdentityManager.getGlobalConfig().addChangeListener("updater",
+                "enable", this);
+        enable.addActionListener(this);
     }
 
     /**
      * Lays out the components.
      */
     private void layoutComponents() {
-        setLayout(new MigLayout("fill, ins 0, hmax " + controller.
-                getPrefsDialog().getPanelHeight()));
+        setLayout(new MigLayout("fill, ins 0, hmax " + controller.getPrefsDialog().
+                getPanelHeight()));
 
         add(new JLabel("Update checking:"), "split");
         add(enable, "growx");
@@ -164,6 +165,17 @@ public class UpdateConfigPanel extends JPanel implements ActionListener,
      */
     @Override
     public void actionPerformed(final ActionEvent e) {
-        UpdateChecker.checkNow();
+        if (enable == e.getSource()) {
+            checkNow.setEnabled(enable.isSelected());
+        } else {
+            UpdateChecker.checkNow();
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void configChanged(final String domain, final    String key) {
+        checkNow.setEnabled(IdentityManager.getGlobalConfig().getOptionBool(
+                "updater", "enable"));
     }
 }
