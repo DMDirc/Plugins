@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_swing.components.renderers;
 
 import com.dmdirc.addons.ui_swing.dialogs.channelsetting.TopicLabel;
+import java.awt.Color;
 
 import java.awt.Component;
 
@@ -68,7 +69,7 @@ public class TopicCellRenderer implements TableCellRenderer {
         } else {
             panel = new JPanel(new MigLayout());
             panel.add(new JLabel(value.toString()));
-            
+
         }
         table.setRowHeight(row, panel.getPreferredSize().height);
         return panel;
