@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.components.frames;
 
-import com.dmdirc.addons.ui_swing.components.*;
 import com.dmdirc.Main;
 import com.dmdirc.commandparser.parsers.GlobalCommandParser;
 import com.dmdirc.config.ConfigManager;
@@ -31,11 +30,10 @@ import com.dmdirc.config.InvalidIdentityFileException;
 import com.dmdirc.harness.TestConfigManagerMap;
 import com.dmdirc.harness.TestWritableFrameContainer;
 import com.dmdirc.harness.ui.ClassFinder;
-import com.dmdirc.harness.ui.UIClassTestRunner;
-import com.dmdirc.harness.ui.UITestIface;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
+import com.dmdirc.addons.ui_swing.components.TextAreaInputField;
 import com.dmdirc.plugins.PluginManager;
 
 import java.awt.event.KeyEvent;
@@ -52,11 +50,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
-
-@RunWith(UIClassTestRunner.class)
-public class InputTextFrameTest implements UITestIface {
+public class InputTextFrameTest {
 
     static FrameFixture mainframe;
     static JInternalFrameFixture window;

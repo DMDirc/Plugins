@@ -25,9 +25,6 @@ package com.dmdirc.addons.ui_swing;
 import com.dmdirc.Main;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.InvalidIdentityFileException;
-import com.dmdirc.harness.ui.UIClassTestRunner;
-import com.dmdirc.harness.ui.UITestIface;
-
 import com.dmdirc.addons.ui_swing.dialogs.FeedbackDialog;
 import com.dmdirc.addons.ui_swing.dialogs.NewServerDialog;
 import com.dmdirc.addons.ui_swing.dialogs.about.AboutDialog;
@@ -44,10 +41,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
-@RunWith(UIClassTestRunner.class)
-public class MainFrameTest implements UITestIface {
+public class MainFrameTest {
     
     private static FrameFixture window;
     private DialogFixture newwin;
@@ -137,7 +132,7 @@ public class MainFrameTest implements UITestIface {
         window.menuItemWithPath("Server", "Server settings").requireDisabled();
     }
 
-    @Override @After
+    @After
     public void tearDown() throws InterruptedException, InvocationTargetException {
         SwingUtilities.invokeAndWait(new Runnable() {
             @Override

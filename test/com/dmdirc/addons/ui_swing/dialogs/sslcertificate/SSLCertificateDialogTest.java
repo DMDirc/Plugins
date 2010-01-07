@@ -26,8 +26,6 @@ import com.dmdirc.Main;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.harness.ui.ClassFinder;
 import com.dmdirc.harness.ui.TestSSLCertificateDialogModel;
-import com.dmdirc.harness.ui.UIClassTestRunner;
-import com.dmdirc.harness.ui.UITestIface;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 
@@ -48,11 +46,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import static org.junit.Assert.*;
 
-@RunWith(UIClassTestRunner.class)
-public class SSLCertificateDialogTest implements UITestIface {
+public class SSLCertificateDialogTest {
 
     private DialogFixture window;
 
