@@ -19,7 +19,6 @@ package com.dmdirc.addons.parser_twitter.api.commons;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.util.Locale;
 
 /**
  * <p>Escapes and unescapes <code>String</code>s for

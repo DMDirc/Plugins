@@ -36,6 +36,7 @@ import com.dmdirc.config.prefs.PreferencesManager;
 import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.interfaces.ActionListener;
+import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.parser.interfaces.ChannelClientInfo;
@@ -71,18 +72,33 @@ import java.util.TimerTask;
  *
  * @author Shane 'Dataforce' McCormack
  */
-public class LoggingPlugin extends Plugin implements ActionListener {
+public class LoggingPlugin extends Plugin implements ActionListener,
+        ConfigChangeListener {
 
     /** The command we registered. */
     private LoggingCommand command;
+    /** Cached boolean settings. */
+    private boolean networkfolders, filenamehash, addtime, stripcodes,
+            channelmodeprefix, autobackbuffer, backbufferTimestamp, usedate;
+    /** Cached string settings. */
+    private String timestamp, usedateformat, logDirectory, colour;
+    /** Cached int settings. */
+    private int historyLines, backbufferLines;
 
     /** Open File */
     protected class OpenFile {
 
+        /** Last used time. */
         public long lastUsedTime = System.currentTimeMillis();
 
+        /** Open file's writer. */
         public BufferedWriter writer = null;
 
+        /**
+         * Creates a new open file.
+         *
+         * @param writer Writer that has file open
+         */
         public OpenFile(final BufferedWriter writer) {
             this.writer = writer;
         }
@@ -117,7 +133,7 @@ public class LoggingPlugin extends Plugin implements ActionListener {
      */
     @Override
     public void onLoad() {
-        final File dir = new File(IdentityManager.getGlobalConfig().getOption(getDomain(), "general.directory"));
+        final File dir = new File(logDirectory);
         if (dir.exists()) {
             if (!dir.isDirectory()) {
                 Logger.userError(ErrorLevel.LOW, "Unable to create logging dir (file exists instead)");
@@ -127,6 +143,9 @@ public class LoggingPlugin extends Plugin implements ActionListener {
                 Logger.userError(ErrorLevel.LOW, "Unable to create logging dir");
             }
         }
+
+        setCachedSettings();
+        IdentityManager.getGlobalConfig().addChangeListener(getDomain(), this);
 
         command = new LoggingCommand();
         ActionManager.addListener(this,
@@ -191,8 +210,10 @@ public class LoggingPlugin extends Plugin implements ActionListener {
      */
     @Override
     public void onUnload() {
-        idleFileTimer.cancel();
-        idleFileTimer.purge();
+        if (idleFileTimer != null) {
+            idleFileTimer.cancel();
+            idleFileTimer.purge();
+        }
 
         CommandManager.unregisterCommand(command);
         ActionManager.removeListener(this);
@@ -258,7 +279,7 @@ public class LoggingPlugin extends Plugin implements ActionListener {
 
         if (parser == null) {
             // Without a parser object, we might not be able to find the file to log this to.
-            if (IdentityManager.getGlobalConfig().getOptionBool(getDomain(), "general.networkfolders")) {
+            if (networkfolders) {
                 // We *wont* be able to, so rather than logging to an incorrect file we just won't log.
                 return;
             }
@@ -271,7 +292,7 @@ public class LoggingPlugin extends Plugin implements ActionListener {
 
         switch (type) {
             case QUERY_OPENED:
-                if (IdentityManager.getGlobalConfig().getOptionBool(getDomain(), "backbuffer.autobackbuffer")) {
+                if (autobackbuffer) {
                     showBackBuffer(query.getFrame(), filename);
                 }
 
@@ -326,7 +347,7 @@ public class LoggingPlugin extends Plugin implements ActionListener {
 
         switch (type) {
             case CHANNEL_OPENED:
-                if (IdentityManager.getGlobalConfig().getOptionBool(getDomain(), "backbuffer.autobackbuffer")) {
+                if (autobackbuffer) {
                     showBackBuffer(chan.getFrame(), filename);
                 }
 
@@ -449,6 +470,12 @@ public class LoggingPlugin extends Plugin implements ActionListener {
         }
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public void configChanged(String domain, String key) {
+        setCachedSettings();
+    }
+
     /**
      * Add a backbuffer to a frame.
      *
@@ -456,9 +483,6 @@ public class LoggingPlugin extends Plugin implements ActionListener {
      * @param filename File to get backbuffer from
      */
     protected void showBackBuffer(final Window frame, final String filename) {
-        final int numLines = IdentityManager.getGlobalConfig().getOptionInt(getDomain(), "backbuffer.lines");
-        final String colour = IdentityManager.getGlobalConfig().getOption(getDomain(), "backbuffer.colour");
-        final boolean showTimestamp = IdentityManager.getGlobalConfig().getOptionBool(getDomain(), "backbuffer.timestamp");
         if (frame == null) {
             Logger.userError(ErrorLevel.LOW, "Given a null frame");
             return;
@@ -472,12 +496,12 @@ public class LoggingPlugin extends Plugin implements ActionListener {
                 // is returned by getLines. To counter this, we call getLines(1) and do
                 // nothing with the output.
                 file.getLines(1);
-                final Stack<String> lines = file.getLines(numLines);
+                final Stack<String> lines = file.getLines(backbufferLines);
                 while (!lines.empty()) {
-                    frame.addLine(getColouredString(colour, lines.pop()), showTimestamp);
+                    frame.addLine(getColouredString(colour, lines.pop()), backbufferTimestamp);
                 }
                 file.close();
-                frame.addLine(getColouredString(colour, "--- End of backbuffer\n"), showTimestamp);
+                frame.addLine(getColouredString(colour, "--- End of backbuffer\n"), backbufferTimestamp);
             } catch (FileNotFoundException e) {
                 Logger.userError(ErrorLevel.LOW, "Unable to show backbuffer (Filename: " + filename + "): " + e.getMessage());
             } catch (IOException e) {
@@ -545,24 +569,23 @@ public class LoggingPlugin extends Plugin implements ActionListener {
     protected boolean appendLine(final String filename, final String line) {
         final StringBuffer finalLine = new StringBuffer();
 
-        if (IdentityManager.getGlobalConfig().getOptionBool(getDomain(), "general.addtime")) {
+        if (addtime) {
             String dateString;
-            final String dateFormatString = IdentityManager.getGlobalConfig().getOption(getDomain(), "general.timestamp");
             try {
-                final DateFormat dateFormat = new SimpleDateFormat(dateFormatString);
+                final DateFormat dateFormat = new SimpleDateFormat(timestamp);
                 dateString = dateFormat.format(new Date()).trim();
             } catch (IllegalArgumentException iae) {
                 // Default to known good format
                 final DateFormat dateFormat = new SimpleDateFormat("[dd/MM/yyyy HH:mm:ss]");
                 dateString = dateFormat.format(new Date()).trim();
 
-                Logger.userError(ErrorLevel.LOW, "Dateformat String '" + dateFormatString + "' is invalid. For more information: http://java.sun.com/javase/6/docs/api/java/text/SimpleDateFormat.html");
+                Logger.userError(ErrorLevel.LOW, "Dateformat String '" + timestamp + "' is invalid. For more information: http://java.sun.com/javase/6/docs/api/java/text/SimpleDateFormat.html");
             }
             finalLine.append(dateString);
             finalLine.append(" ");
         }
 
-        if (IdentityManager.getGlobalConfig().getOptionBool(getDomain(), "general.stripcodes")) {
+        if (stripcodes) {
             finalLine.append(Styliser.stipControlCodes(line));
         } else {
             finalLine.append(line);
@@ -605,7 +628,7 @@ public class LoggingPlugin extends Plugin implements ActionListener {
         final StringBuffer file = new StringBuffer();
         String md5String = "";
 
-        directory.append(IdentityManager.getGlobalConfig().getOption(getDomain(), "general.directory"));
+        directory.append(logDirectory);
         if (directory.charAt(directory.length() - 1) != File.separatorChar) {
             directory.append(File.separatorChar);
         }
@@ -631,8 +654,8 @@ public class LoggingPlugin extends Plugin implements ActionListener {
             md5String = obj.toString();
         }
 
-        if (IdentityManager.getGlobalConfig().getOptionBool(getDomain(), "advanced.usedate")) {
-            final String dateFormat = IdentityManager.getGlobalConfig().getOption(getDomain(), "advanced.usedateformat");
+        if (usedate) {
+            final String dateFormat = usedateformat;
             final String dateDir = (new SimpleDateFormat(dateFormat)).format(new Date());
             directory.append(dateDir);
             if (directory.charAt(directory.length() - 1) != File.separatorChar) {
@@ -644,7 +667,7 @@ public class LoggingPlugin extends Plugin implements ActionListener {
             }
         }
 
-        if (IdentityManager.getGlobalConfig().getOptionBool(getDomain(), "advanced.filenamehash")) {
+        if (filenamehash) {
             file.append('.');
             file.append(md5(md5String));
         }
@@ -663,7 +686,7 @@ public class LoggingPlugin extends Plugin implements ActionListener {
      * @param networkName Name of network
      */
     protected void addNetworkDir(final StringBuffer directory, final StringBuffer file, final String networkName) {
-        if (!IdentityManager.getGlobalConfig().getOptionBool(getDomain(), "general.networkfolders")) {
+        if (!networkfolders) {
             return;
         }
 
@@ -761,14 +784,12 @@ public class LoggingPlugin extends Plugin implements ActionListener {
      * @return name to display
      */
     protected String getDisplayName(final ChannelClientInfo channelClient, final String overrideNick) {
-        final boolean addModePrefix = (IdentityManager.getGlobalConfig().getOptionBool(getDomain(), "general.channelmodeprefix"));
-
         if (channelClient == null) {
             return (overrideNick.isEmpty()) ? "Unknown Client" : overrideNick;
         } else if (overrideNick.isEmpty()) {
-            return (addModePrefix) ? channelClient.toString() : channelClient.getClient().getNickname();
+            return channelmodeprefix ? channelClient.toString() : channelClient.getClient().getNickname();
         } else {
-            return (addModePrefix) ? channelClient.getImportantModePrefix() + overrideNick : overrideNick;
+            return channelmodeprefix ? channelClient.getImportantModePrefix() + overrideNick : overrideNick;
         }
     }
 
@@ -812,10 +833,27 @@ public class LoggingPlugin extends Plugin implements ActionListener {
             return false;
         }
 
-        new HistoryWindow("History", reader, target,
-                IdentityManager.getGlobalConfig().getOptionInt(getDomain(), "history.lines"));
+        new HistoryWindow("History", reader, target, historyLines);
 
         return true;
+    }
+
+    /** Updates cached settings. */
+    public void setCachedSettings() {
+        networkfolders = IdentityManager.getGlobalConfig().getOptionBool(getDomain(), "general.networkfolders");
+        filenamehash = IdentityManager.getGlobalConfig().getOptionBool(getDomain(), "advanced.filenamehash");
+        addtime = IdentityManager.getGlobalConfig().getOptionBool(getDomain(), "general.addtime");
+        stripcodes = IdentityManager.getGlobalConfig().getOptionBool(getDomain(), "general.stripcodes");
+        channelmodeprefix = IdentityManager.getGlobalConfig().getOptionBool(getDomain(), "general.channelmodeprefix");
+        autobackbuffer = IdentityManager.getGlobalConfig().getOptionBool(getDomain(), "backbuffer.autobackbuffer");
+        backbufferTimestamp = IdentityManager.getGlobalConfig().getOptionBool(getDomain(), "backbuffer.timestamp");
+        usedate = IdentityManager.getGlobalConfig().getOptionBool(getDomain(), "advanced.usedate");
+        timestamp = IdentityManager.getGlobalConfig().getOption(getDomain(), "general.timestamp");
+        usedateformat = IdentityManager.getGlobalConfig().getOption(getDomain(), "advanced.usedateformat");
+        historyLines = IdentityManager.getGlobalConfig().getOptionInt(getDomain(), "history.lines");
+        colour = IdentityManager.getGlobalConfig().getOption(getDomain(), "backbuffer.colour");
+        backbufferLines = IdentityManager.getGlobalConfig().getOptionInt(getDomain(), "backbuffer.lines");
+        logDirectory = IdentityManager.getGlobalConfig().getOption(getDomain(), "general.directory");
     }
 
 }

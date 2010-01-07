@@ -153,6 +153,9 @@ public class Twitter implements Parser, TwitterErrorHandler, TwitterRawHandler, 
     /** Map to store misc stuff in. */
     private Map<Object, Object> myMap = new HashMap<Object, Object>();
 
+    /** Debug enabled. */
+    private boolean debugEnabled;
+
     /**
      * Create a new Twitter Parser!
      *
@@ -172,6 +175,7 @@ public class Twitter implements Parser, TwitterErrorHandler, TwitterRawHandler, 
         
         resetState(true);
 
+        debugEnabled = getConfigManager().getOptionBool(myPlugin.getDomain(), "debugEnabled");
         if (getConfigManager().hasOptionString(myPlugin.getDomain(), "api.address."+myServerName)) {
             this.apiAddress = getConfigManager().getOption(myPlugin.getDomain(), "api.address."+myServerName);
         } else {
@@ -834,8 +838,7 @@ public class Twitter implements Parser, TwitterErrorHandler, TwitterRawHandler, 
      * @param message Content of the message.
      */
     private void doDebug(final Debug code, final String message) {
-        final boolean debug = getConfigManager().getOptionBool(myPlugin.getDomain(), "debugEnabled");
-        if (debug) {
+        if (debugEnabled) {
             getCallbackManager().getCallbackType(DebugInfoListener.class).call(code.ordinal(), message);
         }
     }
@@ -873,7 +876,7 @@ public class Twitter implements Parser, TwitterErrorHandler, TwitterRawHandler, 
         currentParsers.add(this);
         api.addErrorHandler(this);
         api.addRawHandler(this);
-        api.setDebug(getConfigManager().getOptionBool(myPlugin.getDomain(), "debugEnabled"));
+        api.setDebug(debugEnabled);
 
         getConfigManager().addChangeListener(myPlugin.getDomain(), this);
 
@@ -1281,13 +1284,12 @@ public class Twitter implements Parser, TwitterErrorHandler, TwitterRawHandler, 
     /** {@inheritDoc} */
     @Override
     public void handleTwitterError(final TwitterAPI api, final Throwable t, final String source, final String twitterInput, final String twitterOutput, final String message) {
-        final boolean debug = getConfigManager().getOptionBool(myPlugin.getDomain(), "debugEnabled");
-        final boolean hide500Errors = !debug && getConfigManager().getOptionBool(myPlugin.getDomain(), "hide500Errors");
+        final boolean hide500Errors = !debugEnabled && getConfigManager().getOptionBool(myPlugin.getDomain(), "hide500Errors");
         if (hide500Errors && message.matches("^\\(50[0-9]\\).*")) { return; }
         try {
             if (!message.isEmpty()) {
-                twitterFail("Recieved an error from twitter: " + message + (debug ? " [" + source + "]" : ""));
-            } else if (debug) {
+                twitterFail("Recieved an error from twitter: " + message + (debugEnabled ? " [" + source + "]" : ""));
+            } else if (debugEnabled) {
                 twitterFail("Recieved an error: " + source);
             }
             if (t != null) {
@@ -1395,7 +1397,8 @@ public class Twitter implements Parser, TwitterErrorHandler, TwitterRawHandler, 
     public void configChanged(final String domain, final String key) {
         if (domain.equalsIgnoreCase(myPlugin.getDomain())) {
             if (key.equalsIgnoreCase("debugEnabled")) {
-                api.setDebug(getConfigManager().getOptionBool(myPlugin.getDomain(), "debugEnabled"));
+                debugEnabled = getConfigManager().getOptionBool(myPlugin.getDomain(), "debugEnabled");
+                api.setDebug(debugEnabled);
             } else if (key.equalsIgnoreCase("autoAt")) {
                 sendPrivateNotice("'autoAt' setting was changed, reconnect needed.");
                 disconnect("'autoAt' setting was changed, reconnect needed.");
