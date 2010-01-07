@@ -57,6 +57,8 @@ public final class WindowStatusPlugin extends Plugin implements ActionListener, 
 
     /** The panel we use in the status bar. */
     private final WindowStatusPanel panel = new WindowStatusPanel();
+    private boolean showname, shownone;
+    private String nonePrefix;
 
     /** Creates a new instance of WindowStatusPlugin. */
     public WindowStatusPlugin() {
@@ -70,7 +72,7 @@ public final class WindowStatusPlugin extends Plugin implements ActionListener, 
     public void onLoad() {
         Main.getUI().getStatusBar().addComponent(panel);
         IdentityManager.getGlobalConfig().addChangeListener(getDomain(), this);
-        updateStatus();
+        updateCache();
 
         ActionManager.addListener(this, CoreActionType.CLIENT_FRAME_CHANGED);
     }
@@ -96,6 +98,13 @@ public final class WindowStatusPlugin extends Plugin implements ActionListener, 
         if (type.equals(CoreActionType.CLIENT_FRAME_CHANGED)) {
             updateStatus((FrameContainer) arguments[0]);
         }
+    }
+
+    private void updateCache() {
+        showname = IdentityManager.getGlobalConfig().getOptionBool(getDomain(), "client.showname");
+        shownone = IdentityManager.getGlobalConfig().getOptionBool(getDomain(), "channel.shownone");
+        nonePrefix = IdentityManager.getGlobalConfig().getOption(getDomain(), "channel.noneprefix");
+        updateStatus();
     }
 
     /**
@@ -139,12 +148,8 @@ public final class WindowStatusPlugin extends Plugin implements ActionListener, 
 
                 if (!names.containsKey(im)) {
                     if (mode.isEmpty()) {
-                        if (IdentityManager.getGlobalConfig().getOptionBool(getDomain(), "channel.shownone")) {
-                            if (IdentityManager.getGlobalConfig().hasOptionString(getDomain(), "channel.noneprefix")) {
-                                mode = IdentityManager.getGlobalConfig().getOption(getDomain(), "channel.noneprefix");
-                            } else {
-                                mode = "None:";
-                            }
+                        if (shownone) {
+                            mode = nonePrefix;
                         } else {
                             continue;
                         }
@@ -179,7 +184,7 @@ public final class WindowStatusPlugin extends Plugin implements ActionListener, 
             final Query frame = (Query) current;
 
             textString.append(frame.getHost());
-            if (IdentityManager.getGlobalConfig().getOptionBool(getDomain(), "client.showname") && frame.getServer().getParser() != null) {
+            if (showname && frame.getServer().getParser() != null) {
                 final ClientInfo client = frame.getServer().getParser().getClient(frame.getHost());
                 final String realname = client.getRealname();
                 if (!realname.isEmpty()) {
@@ -214,7 +219,7 @@ public final class WindowStatusPlugin extends Plugin implements ActionListener, 
     /** {@inheritDoc} */
     @Override
     public void configChanged(final String domain, final String key) {
-        updateStatus();
+        updateCache();
     }
 
 }

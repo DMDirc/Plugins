@@ -22,8 +22,6 @@
 
 package com.dmdirc.addons.parser_twitter.api;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
