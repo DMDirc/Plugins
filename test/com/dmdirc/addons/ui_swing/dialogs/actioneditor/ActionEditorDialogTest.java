@@ -28,19 +28,15 @@ import com.dmdirc.actions.ActionManager;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.InvalidIdentityFileException;
-import com.dmdirc.harness.ui.UIClassTestRunner;
 import com.dmdirc.harness.ui.ClassFinder;
-import com.dmdirc.harness.ui.UITestIface;
 import com.dmdirc.harness.ui.JRadioButtonByTextMatcher;
-
 import com.dmdirc.addons.ui_swing.components.ImageButton;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
-import com.dmdirc.logger.ErrorLevel;
-import com.dmdirc.logger.Logger;
-import java.awt.Component;
 
+import java.awt.Component;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -56,11 +52,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import static org.junit.Assert.*;
 
-@RunWith(UIClassTestRunner.class)
-public class ActionEditorDialogTest implements UITestIface {
+public class ActionEditorDialogTest {
 
     private DialogFixture window;
 
@@ -70,7 +64,6 @@ public class ActionEditorDialogTest implements UITestIface {
     }
 
     @Before
-    @Override
     public void setUp() throws InvalidIdentityFileException {
         IdentityManager.load();
         ActionManager.init();
@@ -81,7 +74,6 @@ public class ActionEditorDialogTest implements UITestIface {
     }
 
     @After
-    @Override
     public void tearDown() {
         if (window != null) {
             window.cleanUp();

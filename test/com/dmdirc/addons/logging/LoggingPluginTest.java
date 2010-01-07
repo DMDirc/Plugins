@@ -29,13 +29,15 @@ import com.dmdirc.Query;
 import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.harness.TestLoggingPlugin;
-import com.dmdirc.parser.irc.IRCChannelInfo;
 import com.dmdirc.addons.ui_dummy.DummyController;
-import com.dmdirc.parser.irc.IRCParser;
+import com.dmdirc.parser.interfaces.ChannelInfo;
+import com.dmdirc.parser.interfaces.ClientInfo;
+import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.util.ConfigFile;
 
-import java.net.URI;
 import java.util.Map;
+
+import static org.mockito.Mockito.*;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -52,15 +54,31 @@ public class LoggingPluginTest {
     public static void setUp() throws Exception {
         Main.setUI(new DummyController());
         IdentityManager.load();
-        server = new Server(new URI("irc-test://255.255.255.255"),
-                IdentityManager.getProfiles().get(0));
-        server.connect();
-        
-        channel = new Channel(server, new IRCChannelInfo((IRCParser) server.getParser(), "#test"));
-        query = new Query(server, "foo!bar@baz");
 
-        final ConfigFile file = new ConfigFile(LoggingPlugin.class
-                .getResourceAsStream("plugin.config"));
+
+        ClientInfo clientinfo = mock(ClientInfo.class);
+        when(clientinfo.toString()).thenReturn("foo!bar@baz");
+        
+        Parser parser = mock(Parser.class);
+        when(parser.getClient(anyString())).thenReturn(clientinfo);
+
+        server = mock(Server.class);
+        when(server.toString()).thenReturn("server");
+        when(server.getParser()).thenReturn(parser);
+        
+        ChannelInfo info = mock(ChannelInfo.class);
+        when(info.toString()).thenReturn("#test");
+
+        channel = mock(Channel.class);
+        when(channel.getServer()).thenReturn(server);
+        when(channel.getChannelInfo()).thenReturn(info);
+        query = mock(Query.class);
+        when(query.getServer()).thenReturn(server);
+        when(query.toString()).thenReturn("query");
+        when(query.getHost()).thenReturn("foo!bar@baz");
+
+        final ConfigFile file = new ConfigFile(LoggingPlugin
+                .class.getResourceAsStream("plugin.config"));
         file.read();
 
         for (Map.Entry<String, String> entry : file.getKeyDomain("defaults").entrySet()) {
@@ -101,7 +119,7 @@ public class LoggingPluginTest {
     public void testQueryOpened() {
         lp.processEvent(CoreActionType.QUERY_OPENED, new StringBuffer(),
                 query);
-        
+
         assertTrue(lp.lines.containsKey("foo!bar@baz"));
         assertEquals(3, lp.lines.get("foo!bar@baz").size());
         assertTrue(lp.lines.get("foo!bar@baz").get(2).isEmpty());

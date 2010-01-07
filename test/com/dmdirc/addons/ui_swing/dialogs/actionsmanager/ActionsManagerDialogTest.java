@@ -27,13 +27,12 @@ import com.dmdirc.actions.ActionManager;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.InvalidIdentityFileException;
-import com.dmdirc.harness.ui.UIClassTestRunner;
 import com.dmdirc.harness.ui.ClassFinder;
-import com.dmdirc.harness.ui.UITestIface;
-
 import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialog;
 import com.dmdirc.addons.ui_swing.dialogs.actioneditor.ActionEditorDialog;
+
 import java.lang.reflect.InvocationTargetException;
+
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.text.JTextComponent;
@@ -48,11 +47,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import static org.junit.Assert.*;
 
-@RunWith(UIClassTestRunner.class)
-public class ActionsManagerDialogTest implements UITestIface {
+public class ActionsManagerDialogTest {
     
     private DialogFixture window;
 

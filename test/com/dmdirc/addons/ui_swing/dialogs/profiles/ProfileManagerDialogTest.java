@@ -29,14 +29,11 @@ import com.dmdirc.addons.ui_swing.components.reorderablelist.ReorderableJList;
 import com.dmdirc.config.prefs.validator.FileNameValidator;
 import com.dmdirc.config.prefs.validator.IdentValidator;
 import com.dmdirc.config.prefs.validator.NotEmptyValidator;
-import com.dmdirc.harness.ui.UIClassTestRunner;
-import com.dmdirc.harness.ui.UITestIface;
 import com.dmdirc.harness.ui.ClassFinder;
 import com.dmdirc.harness.ui.ValidatingJTextFieldFinder;
 
 import javax.swing.JList;
 
-import javax.swing.JPanel;
 import org.fest.swing.core.EventMode;
 import org.fest.swing.fixture.DialogFixture;
 
@@ -44,11 +41,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import static org.junit.Assert.*;
 
-@RunWith(UIClassTestRunner.class)
-public class ProfileManagerDialogTest implements UITestIface {
+public class ProfileManagerDialogTest {
 
     private DialogFixture window;
     private Profile profile;
