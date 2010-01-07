@@ -25,11 +25,19 @@ package com.dmdirc.addons.ui_swing.dialogs.channelsetting;
 
 import com.dmdirc.Topic;
 import com.dmdirc.addons.ui_swing.components.text.OldTextLabel;
+import com.dmdirc.ui.messages.Styliser;
+import java.awt.Color;
 
 import java.util.Date;
+import javax.swing.JEditorPane;
 
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
+import javax.swing.UIManager;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
+import javax.swing.text.StyledEditorKit;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -46,6 +54,10 @@ public class TopicLabel extends JPanel {
     private static final long serialVersionUID = 1;
     /** Topic this label represents. */
     private final Topic topic;
+    /** Topic field. */
+    private JEditorPane pane;
+    /** Empty Attrib set. */
+    private SimpleAttributeSet as;
 
     /**
      * Instantiates a new topic label based on the specified topic.
@@ -53,20 +65,55 @@ public class TopicLabel extends JPanel {
      * @param topic Specified topic
      */
     public TopicLabel(final Topic topic) {
+        if (topic == null) {
+            throw new IllegalArgumentException();
+        }
         this.topic = topic;
+        super.setBackground(UIManager.getColor("Table.background"));
+        super.setForeground(UIManager.getColor("Table.foreground"));
 
         init();
     }
 
+    private void initTopicField() {
+        pane = new JEditorPane();
+        pane.setEditorKit(new StyledEditorKit());
+
+        pane.setFocusable(false);
+        pane.setEditable(false);
+        pane.setOpaque(false);
+
+        as = new SimpleAttributeSet();
+        StyleConstants.setFontFamily(as, pane.getFont().getFamily());
+        StyleConstants.setFontSize(as, pane.getFont().getSize());
+        if (getBackground() == null) {
+            StyleConstants.setBackground(as, UIManager.getColor("Table.background"));
+        } else {
+            StyleConstants.setBackground(as, getBackground());
+        }
+        if (getForeground() == null) {
+            StyleConstants.setForeground(as, UIManager.getColor("Table.foreground"));
+        } else {
+            StyleConstants.setForeground(as, getForeground());
+        }
+        StyleConstants.setUnderline(as, false);
+        StyleConstants.setBold(as, false);
+        StyleConstants.setItalic(as, false);
+    }
+
     private void init() {
+        initTopicField();
+        removeAll();
         setLayout(new MigLayout("fillx, ins 0, debug", "[]0[]", "[]0[]"));
 
-        OldTextLabel label;
         if (!topic.getTopic().isEmpty()) {
-            label = new OldTextLabel(topic.getTopic());
-            add(label, "wmax 450, growy, pushy, wrap, gapleft 5, gapleft 5");
+            Styliser.addStyledString((StyledDocument) pane.getDocument(),
+                    new String[]{topic.getTopic(),},
+                    as);
+            add(pane, "wmax 450, grow, push, wrap, gapleft 5, gapleft 5");
         }
 
+        OldTextLabel label;
         if (topic.getTopic().isEmpty()) {
             label = new OldTextLabel("Topic unset by " + topic.getClient());
         } else {
@@ -74,7 +121,8 @@ public class TopicLabel extends JPanel {
         }
         add(label, "wmax 450, growy, pushy, wrap, gapleft 5, pad 0");
 
-        label = new OldTextLabel("on " + new Date(topic.getTime() * 1000).toString());
+        label = new OldTextLabel("on " + new Date(topic.getTime() * 1000).
+                toString());
         add(label, "wmax 450, growy, pushy, wrap, gapleft 5, pad 0");
 
         add(new JSeparator(), "newline, span, growx, pushx");
@@ -87,5 +135,23 @@ public class TopicLabel extends JPanel {
      */
     public Topic getTopic() {
         return topic;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setBackground(final Color bg) {
+        super.setBackground(bg);
+        if (topic != null) {
+            init();
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setForeground(final Color fg) {
+        super.setForeground(fg);
+        if (topic != null) {
+            init();
+        }
     }
 }

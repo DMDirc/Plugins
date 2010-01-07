@@ -68,7 +68,6 @@ public class TopicCellRenderer implements TableCellRenderer {
         } else {
             panel = new JPanel(new MigLayout());
             panel.add(new JLabel(value.toString()));
-            
         }
         table.setRowHeight(row, panel.getPreferredSize().height);
         return panel;
