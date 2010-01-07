@@ -49,7 +49,7 @@ public class TitleMediaSourcePlugin extends Plugin implements MediaSourceManager
                     "Options\"|\"Diagnostics\"|\"last\\.?fm\"|\"Share\"|\\(has no " +
                     "name\\)):' | sed -r 's/^[^\"]*?\"(.*)\": \\(\"last\\.?fm.*$/\\1/g'", "Last.fm"));
         sources.add(new TitleMediaSource("grep '\": (\"spotify.exe' | cut -d '\"' -f 2 | "
-                    + "cut -d '-' -f 2- | sed -r 's/^\\s+|\\s+$//g' | sed -r 's/–/-/g'", "Spotify"));
+                    + "cut -d '-' -f 2- | sed -r 's/^\\s+|\\s+$//g' | sed -r 's/-/–/g'", "Spotify"));
     }
 
     /** {@inheritDoc} */
