@@ -38,6 +38,7 @@ import com.dmdirc.addons.ui_swing.dialogs.aliases.AliasManagerDialog;
 import com.dmdirc.addons.ui_swing.dialogs.prefs.SwingPreferencesDialog;
 import com.dmdirc.addons.ui_swing.dialogs.profiles.ProfileManagerDialog;
 import com.dmdirc.addons.ui_swing.framemanager.windowmenu.WindowMenuFrameManager;
+import com.dmdirc.ui.WindowManager;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -268,7 +269,7 @@ public class MenuBar extends JMenuBar implements ActionListener, MenuListener {
         } else if (e.getActionCommand().equals("feedback")) {
             FeedbackDialog.showFeedbackDialog(mainFrame);
         } else if (e.getActionCommand().equals("ChannelSettings")) {
-            final Window activeWindow = controller.getActiveWindow();
+            final Window activeWindow = WindowManager.getActiveWindow();
             if (activeWindow instanceof ChannelFrame) {
                 controller.showChannelSettingsDialog(((ChannelFrame) activeWindow).
                         getChannel());
@@ -303,7 +304,7 @@ public class MenuBar extends JMenuBar implements ActionListener, MenuListener {
     /** {@inheritDoc} */
     @Override
     public void menuSelected(final MenuEvent e) {
-        final Window activeWindow = controller.getActiveWindow();
+        final Window activeWindow = WindowManager.getActiveWindow();
 
         ssd.setEnabled(activeWindow != null && activeWindow.getContainer().
                 getServer() != null && activeWindow.getContainer().
