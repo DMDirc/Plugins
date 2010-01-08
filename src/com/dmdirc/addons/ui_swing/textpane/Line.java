@@ -23,9 +23,11 @@
 package com.dmdirc.addons.ui_swing.textpane;
 
 import com.dmdirc.config.ConfigManager;
+import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.ui.core.util.ExtendedAttributedString;
 import com.dmdirc.ui.core.util.Utils;
 import com.dmdirc.ui.messages.Styliser;
+import java.awt.Font;
 
 import java.text.AttributedString;
 import java.util.Arrays;
@@ -35,11 +37,12 @@ import javax.swing.UIManager;
 /**
  * Represents a line of text in IRC.
  */
-class Line {
+class Line implements ConfigChangeListener {
 
     private final String[] lineParts;
     private final ConfigManager config;
     private int lineHeight;
+    private String fontName;
 
     /**
      * Creates a new line.
@@ -50,12 +53,9 @@ class Line {
     public Line(final String[] lineParts, final ConfigManager config) {
         this.lineParts = lineParts;
         this.config = config;
-        this.lineHeight = -1;
-        if (config.hasOptionString("ui", "textPaneFontSize")) {
-            this.lineHeight = config.getOptionInt("ui", "textPaneFontSize");
-        } else {
-            this.lineHeight = UIManager.getFont("TextPane.font").getSize();
-        }
+        setCachedSettings();
+        config.addChangeListener("ui", "textPaneFontSize", this);
+        config.addChangeListener("ui", "textPaneFontName", this);
     }
 
     /**
@@ -69,7 +69,9 @@ class Line {
             final int lineHeight) {
         this.lineParts = lineParts;
         this.config = config;
-        this.lineHeight = lineHeight;
+        setCachedSettings();
+        config.addChangeListener("ui", "textPaneFontSize", this);
+        config.addChangeListener("ui", "textPaneFontName", this);
     }
 
     /**
@@ -138,7 +140,7 @@ class Line {
      */
     public AttributedString getStyled() {
         final ExtendedAttributedString string = Utils.getAttributedString(lineParts,
-                config);
+                fontName, lineHeight);
         lineHeight = string.getMaxLineHeight();
         return string.getAttributedString();
     }
@@ -156,5 +158,25 @@ class Line {
     @Override
     public int hashCode() {
         return getLineParts().hashCode();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void configChanged(final String domain, final String key) {
+        setCachedSettings();
+    }
+
+    private void setCachedSettings() {
+        final Font defaultFont = UIManager.getFont("TextPane.font");
+        if (config.hasOptionString("ui", "textPaneFontName")) {
+            fontName = config.getOption("ui", "textPaneFontName");
+        } else {
+            fontName = defaultFont.getName();
+        }
+        if (config.hasOptionString("ui", "textPaneFontSize")) {
+            lineHeight = config.getOptionInt("ui", "textPaneFontSize");
+        } else {
+            lineHeight = defaultFont.getSize();
+        }
     }
 }
