@@ -22,56 +22,35 @@
 
 package com.dmdirc.addons.ui_swing.textpane;
 
-import com.dmdirc.config.ConfigManager;
-import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.ui.core.util.ExtendedAttributedString;
 import com.dmdirc.ui.core.util.Utils;
 import com.dmdirc.ui.messages.Styliser;
-import java.awt.Font;
 
 import java.text.AttributedString;
 import java.util.Arrays;
 
-import javax.swing.UIManager;
 
 /**
  * Represents a line of text in IRC.
  */
-class Line implements ConfigChangeListener {
+class Line {
 
     private final String[] lineParts;
-    private final ConfigManager config;
-    private int lineHeight;
+    private int fontSize;
     private String fontName;
-
-    /**
-     * Creates a new line.
-     *
-     * @param lineParts Parts of the line
-     * @param config Configuration manager for this line
-     */
-    public Line(final String[] lineParts, final ConfigManager config) {
-        this.lineParts = lineParts;
-        this.config = config;
-        setCachedSettings();
-        config.addChangeListener("ui", "textPaneFontSize", this);
-        config.addChangeListener("ui", "textPaneFontName", this);
-    }
 
     /**
      * Creates a new line with a specified height.
      *
      * @param lineParts Parts of the line
-     * @param config Configuration manager for this line
-     * @param lineHeight The height for this line
+     * @param fontSize The height for this line
+     * @param fontName
      */
-    public Line(final String[] lineParts, final ConfigManager config,
-            final int lineHeight) {
+    public Line(final String[] lineParts, final int fontSize,
+            final String fontName) {
         this.lineParts = lineParts;
-        this.config = config;
-        setCachedSettings();
-        config.addChangeListener("ui", "textPaneFontSize", this);
-        config.addChangeListener("ui", "textPaneFontName", this);
+        this.fontName = fontName;
+        this.fontSize = fontSize;
     }
 
     /**
@@ -101,8 +80,26 @@ class Line implements ConfigChangeListener {
      * 
      * @return Line height
      */
-    public int getHeight() {
-        return lineHeight;
+    public int getFontSize() {
+        return fontSize;
+    }
+
+    /**
+     * Sets the default font size for this line.
+     *
+     * @param fontSize New default font size
+     */
+    public void setFontSize(final int fontSize) {
+        this.fontSize = fontSize;
+    }
+
+    /**
+     * Sets the default font name for this line.
+     *
+     * @param fontName New default font name
+     */
+    public void setFontName(final String fontName) {
+        this.fontName = fontName;
     }
 
     /**
@@ -140,8 +137,8 @@ class Line implements ConfigChangeListener {
      */
     public AttributedString getStyled() {
         final ExtendedAttributedString string = Utils.getAttributedString(lineParts,
-                fontName, lineHeight);
-        lineHeight = string.getMaxLineHeight();
+                fontName, fontSize);
+        fontSize = string.getMaxLineHeight();
         return string.getAttributedString();
     }
 
@@ -158,25 +155,5 @@ class Line implements ConfigChangeListener {
     @Override
     public int hashCode() {
         return getLineParts().hashCode();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void configChanged(final String domain, final String key) {
-        setCachedSettings();
-    }
-
-    private void setCachedSettings() {
-        final Font defaultFont = UIManager.getFont("TextPane.font");
-        if (config.hasOptionString("ui", "textPaneFontName")) {
-            fontName = config.getOption("ui", "textPaneFontName");
-        } else {
-            fontName = defaultFont.getName();
-        }
-        if (config.hasOptionString("ui", "textPaneFontSize")) {
-            lineHeight = config.getOptionInt("ui", "textPaneFontSize");
-        } else {
-            lineHeight = defaultFont.getSize();
-        }
     }
 }

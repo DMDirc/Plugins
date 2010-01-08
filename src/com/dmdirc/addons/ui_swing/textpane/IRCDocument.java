@@ -19,17 +19,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 package com.dmdirc.addons.ui_swing.textpane;
 
 import com.dmdirc.config.ConfigManager;
 import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.util.RollingList;
+import java.awt.Font;
 
 import java.io.Serializable;
 import java.text.AttributedCharacterIterator;
 import java.text.AttributedString;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.UIManager;
 
 import javax.swing.event.EventListenerList;
 
@@ -54,6 +57,10 @@ public final class IRCDocument implements Serializable, ConfigChangeListener {
     private RollingList<AttributedString> cachedStrings;
     /** Configuration manager. */
     private ConfigManager config;
+    /** Font size. */
+    private int fontSize;
+    /** Font name. */
+    private String fontName;
 
     /** 
      * Creates a new instance of IRCDocument.
@@ -67,6 +74,11 @@ public final class IRCDocument implements Serializable, ConfigChangeListener {
 
         cachedLines = new RollingList<Line>(50);
         cachedStrings = new RollingList<AttributedString>(50);
+
+        setCachedSettings();
+
+        config.addChangeListener("ui", "textPaneFontSize", this);
+        config.addChangeListener("ui", "textPaneFontName", this);
     }
 
     /**
@@ -75,7 +87,9 @@ public final class IRCDocument implements Serializable, ConfigChangeListener {
      * @return Number of lines
      */
     public int getNumLines() {
-        return lines.size();
+        synchronized (lines) {
+            return lines.size();
+        }
     }
 
     /**
@@ -86,7 +100,9 @@ public final class IRCDocument implements Serializable, ConfigChangeListener {
      * @return Line at the specified number or null
      */
     Line getLine(final int lineNumber) {
-        return lines.get(lineNumber);
+        synchronized (lines) {
+            return lines.get(lineNumber);
+        }
     }
 
     /**
@@ -96,7 +112,7 @@ public final class IRCDocument implements Serializable, ConfigChangeListener {
      */
     public void addText(final String[] text) {
         synchronized (lines) {
-            lines.add(new Line(text, config));
+            lines.add(new Line(text, fontSize, fontName));
             fireLineAdded(lines.indexOf(text));
         }
     }
@@ -109,7 +125,7 @@ public final class IRCDocument implements Serializable, ConfigChangeListener {
      */
     public void addText(final String[] text, final int lineHeight) {
         synchronized (lines) {
-            lines.add(new Line(text, config, lineHeight));
+            lines.add(new Line(text, lineHeight, fontName));
             fireLineAdded(lines.indexOf(text));
         }
     }
@@ -123,7 +139,7 @@ public final class IRCDocument implements Serializable, ConfigChangeListener {
         synchronized (lines) {
             final int start = lines.size();
             for (String[] string : text) {
-                lines.add(new Line(string, config));
+                lines.add(new Line(string, fontSize, fontName));
             }
             fireLinesAdded(start, text.size());
         }
@@ -135,13 +151,14 @@ public final class IRCDocument implements Serializable, ConfigChangeListener {
      * @param text stylised string to add to the text
      * @param lineHeights line heights for the new lines
      */
-    public void addText(final List<String[]> text, final List<Integer> lineHeights) {
+    public void addText(final List<String[]> text,
+            final List<Integer> lineHeights) {
         synchronized (lines) {
             final int start = lines.size();
-            for (int i = 0; i < text.size() ; i++) {
+            for (int i = 0; i < text.size(); i++) {
                 final String[] string = text.get(i);
                 final int lineHeight = lineHeights.get(i);
-                lines.add(new Line(string, config, lineHeight));
+                lines.add(new Line(string, lineHeight, fontName));
             }
             fireLinesAdded(start, text.size());
         }
@@ -247,7 +264,7 @@ public final class IRCDocument implements Serializable, ConfigChangeListener {
             }
         }
     }
-    
+
     /**
      * fires the need repaint method on all listeners.
      */
@@ -269,19 +286,21 @@ public final class IRCDocument implements Serializable, ConfigChangeListener {
      * @return Styled line
      */
     AttributedCharacterIterator getStyledLine(final Line line) {
-        AttributedString styledLine = null;
-        if (cachedLines.contains(line)) {
-            final int index = cachedLines.getList().indexOf(line);
-            styledLine = cachedStrings.get(index);
-        }
+        synchronized (lines) {
+            AttributedString styledLine = null;
+            if (cachedLines.contains(line)) {
+                final int index = cachedLines.getList().indexOf(line);
+                styledLine = cachedStrings.get(index);
+            }
 
-        if (styledLine == null) {
-            styledLine = line.getStyled();
-            cachedLines.add(line);
-            cachedStrings.add(styledLine);
-        }
+            if (styledLine == null) {
+                styledLine = line.getStyled();
+                cachedLines.add(line);
+                cachedStrings.add(styledLine);
+            }
 
-        return styledLine.getIterator();
+            return styledLine.getIterator();
+        }
     }
 
     /**
@@ -295,7 +314,7 @@ public final class IRCDocument implements Serializable, ConfigChangeListener {
     public AttributedCharacterIterator getStyledLine(final int line) {
         return getStyledLine(getLine(line));
     }
-    
+
     /**
      * Returns the line height of the specified line
      * 
@@ -304,9 +323,9 @@ public final class IRCDocument implements Serializable, ConfigChangeListener {
      * @return Line height
      */
     int getLineHeight(final Line line) {
-        return line.getHeight();
+        return line.getFontSize();
     }
-    
+
     /**
      * Returns the line height of the specified line
      * 
@@ -315,14 +334,35 @@ public final class IRCDocument implements Serializable, ConfigChangeListener {
      * @return Line height
      */
     public int getLineHeight(final int line) {
-        return  getLineHeight(getLine(line));
+        return getLineHeight(getLine(line));
+    }
+
+    private void setCachedSettings() {
+        final Font defaultFont = UIManager.getFont("TextPane.font");
+        if (config.hasOptionString("ui", "textPaneFontName")) {
+            fontName = config.getOption("ui", "textPaneFontName");
+        } else {
+            fontName = defaultFont.getName();
+        }
+        if (config.hasOptionString("ui", "textPaneFontSize")) {
+            fontSize = config.getOptionInt("ui", "textPaneFontSize");
+        } else {
+            fontSize = defaultFont.getSize();
+        }
     }
 
     /** {@inheritDoc} */
     @Override
     public void configChanged(final String domain, final String key) {
+        setCachedSettings();
         cachedLines.clear();
         cachedStrings.clear();
+        synchronized (lines) {
+            for (Line line : lines) {
+                line.setFontName(fontName);
+                line.setFontSize(fontSize);
+            }
+        }
         fireRepaintNeeded();
     }
 }
