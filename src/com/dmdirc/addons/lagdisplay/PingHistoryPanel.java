@@ -22,10 +22,9 @@
 
 package com.dmdirc.addons.lagdisplay;
 
-import com.dmdirc.Main;
-import com.dmdirc.ServerManager;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.util.RollingList;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -72,8 +71,7 @@ public class PingHistoryPanel extends JPanel {
         setOpaque(false);
         
         this.plugin = plugin;
-        this.history = plugin.getHistory(ServerManager.getServerManager()
-                .getServerFromFrame(WindowManager.getActiveWindow()));
+        this.history = plugin.getHistory(WindowManager.getActiveServer());
 
         for (Long value : history.getList()) {
             maximum = Math.max(value, maximum);
