@@ -173,7 +173,7 @@ public class InviteLabel extends StatusbarPopupPanel implements
             activeServer.addInviteListener(this);
         }
 
-        UIUtilities.invokeAndWait(new Runnable() {
+        UIUtilities.invokeLater(new Runnable() {
 
             /** {@inheritDoc} */
             @Override
