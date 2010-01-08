@@ -436,7 +436,11 @@ public final class SwingController extends Plugin implements UIController {
         }
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     * 
+     * @deprecated 
+     */
     @Override
     @Deprecated
     public Window getActiveWindow() {
