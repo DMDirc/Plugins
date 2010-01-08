@@ -133,6 +133,8 @@ public class LoggingPlugin extends Plugin implements ActionListener,
      */
     @Override
     public void onLoad() {
+        setCachedSettings();
+
         final File dir = new File(logDirectory);
         if (dir.exists()) {
             if (!dir.isDirectory()) {
@@ -144,7 +146,6 @@ public class LoggingPlugin extends Plugin implements ActionListener,
             }
         }
 
-        setCachedSettings();
         IdentityManager.getGlobalConfig().addChangeListener(getDomain(), this);
 
         command = new LoggingCommand();
