@@ -295,17 +295,6 @@ public abstract class TextFrame extends JInternalFrame implements Window,
                         TextFrame.super.setVisible(true);
                     }
                     if (!isSelected()) {
-                        new LoggingSwingWorker() {
-
-                            /** {@inheritDoc} */
-                            @Override
-                            protected Object doInBackground() throws Exception {
-                                ActionManager.processEvent(
-                                    CoreActionType.CLIENT_FRAME_CHANGED,
-                                    null, getContainer());
-                                return null;
-                            }
-                        }.execute();
                         setSelected(true);
                     }
                 } catch (PropertyVetoException ex) {
