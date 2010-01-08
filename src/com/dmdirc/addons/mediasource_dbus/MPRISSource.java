@@ -54,8 +54,14 @@ public class MPRISSource implements MediaSource {
         this.source = source;
         this.service = service;
 
-        this.name = source.doDBusCall("org.mpris." + service, "/",
-                "org.freedesktop.MediaPlayer.Identity").get(0).replace(' ', '_');
+        final List<String> info = source.doDBusCall("org.mpris." + service, "/",
+                "org.freedesktop.MediaPlayer.Identity");
+
+        if (info.isEmpty()) {
+            throw new IllegalArgumentException("No service with that name found");
+        }
+
+        this.name = info.get(0).replace(' ', '_');
     }
 
     /** {@inheritDoc} */

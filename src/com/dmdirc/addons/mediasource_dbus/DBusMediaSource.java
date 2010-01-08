@@ -79,11 +79,17 @@ public class DBusMediaSource extends Plugin implements MediaSourceManager {
     @Override
     public List<MediaSource> getSources() {
         for (String mpris : doDBusCall("org.mpris.*", "/", "/")) {
-            final String service = mpris.substring(10);
+            try {
+                final String service = mpris.substring(10);
 
-            if (!mprisSources.containsKey(service)) {
-                mprisSources.put(service, new MPRISSource(this, service));
-                sources.add(mprisSources.get(service));
+                if (!mprisSources.containsKey(service)) {
+                    mprisSources.put(service, new MPRISSource(this, service));
+                    sources.add(mprisSources.get(service));
+                }
+            } catch (IllegalArgumentException ex) {
+                // The service either stopped after the initial call and before
+                // we created an MRPIS Source, or otherwise doesn't correctly
+                // implement MPRIS. Either way, ignore it.
             }
         }
 
