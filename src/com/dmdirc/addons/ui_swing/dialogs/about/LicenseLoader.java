@@ -27,13 +27,14 @@ import com.dmdirc.addons.ui_swing.components.GenericListModel;
 import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
+import com.dmdirc.plugins.PluginInfo;
+import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.util.resourcemanager.ResourceManager;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
@@ -67,9 +68,12 @@ public class LicenseLoader extends LoggingSwingWorker<Void, Void> {
                     "no resource manager");
         } else {
             final Map<String, InputStream> licenses =
-                    new TreeMap<String, InputStream>(rm.
-                    getResourcesStartingWithAsInputStreams(
+                    new TreeMap<String, InputStream>(String.CASE_INSENSITIVE_ORDER);
+            licenses.putAll(rm.getResourcesStartingWithAsInputStreams(
                     "com/dmdirc/licenses/"));
+            for (PluginInfo pi : PluginManager.getPluginManager().getPluginInfos()) {
+                licenses.putAll(pi.getLicenseStreams());
+            }
             for (Entry<String, InputStream> entry : licenses.entrySet()) {
                 final String licenseString = entry.getKey().substring(entry.
                         getKey().
