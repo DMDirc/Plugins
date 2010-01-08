@@ -22,11 +22,14 @@
 
 package com.dmdirc.addons.ui_swing.textpane;
 
+import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
+import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.messages.IRCTextAttribute;
 
 import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
@@ -139,6 +142,25 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
     }
 
     /**
+     * Paints the background, either from the config setting or the background
+     * colour of the textpane.
+     *
+     * @param g Graphics object to draw onto
+     */
+    private void paintBackground(final Graphics2D g) {
+        final String backgroundPath = textPane.getFrameContainer().
+                getConfigManager().getOption(((TextFrame) textPane.
+                getFrameContainer().getFrame()).getController().getDomain(),
+                "textpanebackground");
+        if (!backgroundPath.isEmpty()) {
+            g.drawImage(Toolkit.getDefaultToolkit().getImage(backgroundPath), 0,
+                    0, getBounds().width, getBounds().height, null);
+        } else {
+            g.fill(getBounds());
+        }
+    }
+
+    /**
      * Calculates the position of the lines and highlights.
      */
     protected void calc() {
@@ -169,7 +191,7 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
         LineBreakMeasurer lineMeasurer;
 
         g.setColor(textPane.getBackground());
-        g.fill(getBounds());
+        paintBackground(g);
 
         textLayouts.clear();
         positions.clear();
