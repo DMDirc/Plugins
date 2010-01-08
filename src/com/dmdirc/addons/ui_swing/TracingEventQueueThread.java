@@ -49,6 +49,7 @@ class TracingEventQueueThread extends Thread {
     private long thresholdDelay;
     private Map<AWTEvent, Long> eventTimeMap;
     private ThreadMXBean threadBean;
+    private boolean running = false;
 
     /**
      * Instantiates a new tracing thread.
@@ -142,7 +143,8 @@ class TracingEventQueueThread extends Thread {
     /** {@inheritDoc} */
     @Override
     public void run() {
-        while (true) {
+        running = true;
+        while (running) {
             long currTime = System.currentTimeMillis();
             synchronized (this) {
                 for (Map.Entry<AWTEvent, Long> entry : this.eventTimeMap.
@@ -160,5 +162,12 @@ class TracingEventQueueThread extends Thread {
             } catch (InterruptedException ie) {
             }
         }
+    }
+
+    /**
+     * Cancels this thread.
+     */
+    public void cancel() {
+        running = false;
     }
 }

@@ -39,6 +39,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
 import java.awt.event.WindowEvent;
+import java.util.concurrent.atomic.AtomicReference;
 import javax.swing.JPopupMenu;
 import javax.swing.KeyStroke;
 import javax.swing.MenuSelectionManager;
@@ -78,9 +79,13 @@ public final class DMDircEventQueue extends EventQueue implements
         if (tracingThread == null) {
             super.dispatchEvent(event);
         } else {
-            this.tracingThread.eventDispatched(event);
+            if (tracingThread != null) {
+                tracingThread.eventDispatched(event);
+            }
             super.dispatchEvent(event);
-            this.tracingThread.eventProcessed(event);
+            if (tracingThread != null) {
+                tracingThread.eventProcessed(event);
+            }
         }
 
         if (event instanceof MouseEvent) {
@@ -96,10 +101,13 @@ public final class DMDircEventQueue extends EventQueue implements
         final boolean tracing = IdentityManager.getGlobalConfig().
                 getOptionBool(controller.getDomain(), "debugEDT");
         if (tracing) {
-            this.tracingThread = new TracingEventQueueThread(100);
-            this.tracingThread.start();
+            tracingThread = new TracingEventQueueThread(100);
+            tracingThread.start();
         } else {
-            tracingThread = null;
+            if (tracingThread != null) {
+                tracingThread.cancel();
+                tracingThread = null;
+            }
         }
     }
 
