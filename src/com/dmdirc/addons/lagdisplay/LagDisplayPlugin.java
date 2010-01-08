@@ -38,6 +38,7 @@ import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.interfaces.ActionListener;
 import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.plugins.Plugin;
+import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.interfaces.Window;
 import com.dmdirc.util.RollingList;
 
@@ -160,7 +161,7 @@ public final class LagDisplayPlugin extends Plugin implements ActionListener, Co
         }
 
         if (!useAlternate && type.equals(CoreActionType.SERVER_GOTPING)) {
-            final Window active = Main.getUI().getActiveWindow();
+            final Window active = WindowManager.getActiveWindow();
             final String value = formatTime(arguments[1]);
 
             getHistory(((Server) arguments[0])).add((Long) arguments[1]);
@@ -172,7 +173,7 @@ public final class LagDisplayPlugin extends Plugin implements ActionListener, Co
 
             panel.refreshDialog();
         } else if (!useAlternate && type.equals(CoreActionType.SERVER_NOPING)) {
-            final Window active = Main.getUI().getActiveWindow();
+            final Window active = WindowManager.getActiveWindow();
             final String value = formatTime(arguments[1]) + "+";
 
             pings.put(((Server) arguments[0]), value);
@@ -183,7 +184,7 @@ public final class LagDisplayPlugin extends Plugin implements ActionListener, Co
 
             panel.refreshDialog();
         } else if (type.equals(CoreActionType.SERVER_DISCONNECTED)) {
-            final Window active = Main.getUI().getActiveWindow();
+            final Window active = WindowManager.getActiveWindow();
 
             if (((Server) arguments[0]).ownsFrame(active)) {
                 panel.setText("Not connected");
@@ -211,7 +212,7 @@ public final class LagDisplayPlugin extends Plugin implements ActionListener, Co
                 final long sent = Long.parseLong(((String[]) arguments[2])[3].substring(9));
                 final Long duration = Long.valueOf(new Date().getTime() - sent);
                 final String value = formatTime(duration);
-                final Window active = Main.getUI().getActiveWindow();
+                final Window active = WindowManager.getActiveWindow();
 
                 pings.put((Server) arguments[0], value);
                 getHistory(((Server) arguments[0])).add(duration);
