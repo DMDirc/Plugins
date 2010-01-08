@@ -93,10 +93,10 @@ public final class DMDircEventQueue extends EventQueue implements
     }
 
     private void checkTracing() {
-        final boolean tracing = IdentityManager.getAddonIdentity().
+        final boolean tracing = IdentityManager.getGlobalConfig().
                 getOptionBool(controller.getDomain(), "debugEDT");
         if (tracing) {
-            this.tracingThread = new TracingEventQueueThread(500);
+            this.tracingThread = new TracingEventQueueThread(100);
             this.tracingThread.start();
         } else {
             tracingThread = null;

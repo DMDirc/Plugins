@@ -140,7 +140,11 @@ public final class DummyController extends Plugin implements UIController {
         // Do nothing
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     * 
+     * @deprecated 
+     */
     @Override
     @Deprecated
     public Window getActiveWindow() {
