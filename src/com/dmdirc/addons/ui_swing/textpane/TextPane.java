@@ -22,7 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.textpane;
 
-import com.dmdirc.FrameContainer;
+import com.dmdirc.ui.interfaces.Window;
 
 import java.awt.Point;
 import java.awt.Toolkit;
@@ -61,18 +61,18 @@ public final class TextPane extends JComponent implements AdjustmentListener,
     /** IRCDocument. */
     private final IRCDocument document;
     /** Parent Frame. */
-    private final FrameContainer frame;
+    private final Window frame;
 
     /** 
      * Creates a new instance of TextPane. 
      *
      * @param frame Parent Frame
      */
-    public TextPane(final FrameContainer frame) {
+    public TextPane(final Window frame) {
         super();
-        setUI(new TextPaneUI());
-
         this.frame = frame;
+        
+        setUI(new TextPaneUI());
         document = new IRCDocument(frame.getConfigManager());
         frame.getConfigManager().addChangeListener("ui", "textPaneFontName",
                 document);
@@ -430,11 +430,11 @@ public final class TextPane extends JComponent implements AdjustmentListener,
     }
 
     /**
-     * Retrives the parent framecontainer for this textpane.
+     * Retrives the parent window for this textpane.
      * 
-     * @return Parent frame container
+     * @return Parent window
      */
-    public FrameContainer getFrameContainer() {
+    public Window getWindow() {
         return frame;
     }
 }
