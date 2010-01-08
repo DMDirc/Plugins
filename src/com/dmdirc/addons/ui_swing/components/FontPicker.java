@@ -23,12 +23,16 @@
 package com.dmdirc.addons.ui_swing.components;
 
 import com.dmdirc.addons.ui_swing.components.renderers.FontListCellRenderer;
+import com.dmdirc.logger.ErrorLevel;
+import com.dmdirc.logger.Logger;
 
 import java.awt.Font;
 import java.awt.GraphicsEnvironment;
+import java.util.concurrent.ExecutionException;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
+import javax.swing.SwingUtilities;
 
 /**
  * System font picking component.
@@ -36,6 +40,7 @@ import javax.swing.JComboBox;
 public class FontPicker extends JComboBox {
 
     private static final long serialVersionUID = -9054812588033935839L;
+    private String fontFamily;
 
     /**
      * Creates a new Font picker for the specified font family.
@@ -44,16 +49,52 @@ public class FontPicker extends JComboBox {
      */
     public FontPicker(final String fontFamily) {
         super(new DefaultComboBoxModel());
-
-        final String[] fonts = GraphicsEnvironment.getLocalGraphicsEnvironment().
-                getAvailableFontFamilyNames();
-        final int size = getFont().getSize();
-        for (String font : fonts) {
-            ((DefaultComboBoxModel) getModel()).addElement(new Font(font,
-                    Font.PLAIN, size));
-        }
-        setSelectedItem(new Font(fontFamily, Font.PLAIN, size));
+        this.fontFamily = fontFamily;
 
         setRenderer(new FontListCellRenderer());
+        new LoggingSwingWorker<String[], String[]>() {
+
+            /** {@inheritDoc} */
+            @Override
+            protected String[] doInBackground() throws Exception {
+                return GraphicsEnvironment.getLocalGraphicsEnvironment().
+                        getAvailableFontFamilyNames();
+            }
+
+            /** {@inheritDoc} */
+            @Override
+            protected void done() {
+                try {
+                    loadFonts(get());
+                } catch (InterruptedException ex) {
+                    //Ignore
+                } catch (ExecutionException ex) {
+                    Logger.appError(ErrorLevel.MEDIUM, ex.getMessage(), ex);
+                }
+            }
+        }.execute();
+    }
+
+    private void loadFonts(final String[] fonts) {
+        final int size = getFont().getSize();
+        for (final String font : fonts) {
+            SwingUtilities.invokeLater(new Runnable() {
+
+                /** {@inheritDoc} */
+                @Override
+                public void run() {
+                    ((DefaultComboBoxModel) getModel()).addElement(new Font(
+                            font, Font.PLAIN, size));
+                }
+            });
+        }
+        SwingUtilities.invokeLater(new Runnable() {
+
+            /** {@inheritDoc} */
+            @Override
+            public void run() {
+                setSelectedItem(new Font(fontFamily, Font.PLAIN, size));
+            }
+        });
     }
 }

@@ -78,15 +78,13 @@ public final class ChannelSettingsDialog extends StandardDialog implements
     private ChannelSettingsDialog(final Channel newChannel,
             final Window parentWindow) {
         super(parentWindow, ModalityType.MODELESS);
-        final long time = System.currentTimeMillis();
-
+        
         channel = newChannel;
         identity = IdentityManager.getChannelConfig(channel.getServer().
                 getNetwork(), channel.getChannelInfo().getName());
 
         initComponents();
         initListeners();
-        System.out.println(System.currentTimeMillis() - time);
     }
 
     /**
