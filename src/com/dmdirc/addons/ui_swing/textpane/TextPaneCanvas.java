@@ -22,11 +22,16 @@
 
 package com.dmdirc.addons.ui_swing.textpane;
 
+import com.dmdirc.addons.ui_swing.UIUtilities;
+import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
+import com.dmdirc.config.ConfigManager;
+import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.ui.messages.IRCTextAttribute;
 
 import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
@@ -52,7 +57,7 @@ import javax.swing.event.MouseInputListener;
 
 /** Canvas object to draw text. */
 class TextPaneCanvas extends JPanel implements MouseInputListener,
-        ComponentListener, AdjustmentListener {
+        ComponentListener, AdjustmentListener, ConfigChangeListener {
 
     /**
      * A version number for this class. It should be changed whenever the
@@ -84,6 +89,12 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
     private int lastVisibleLine;
     /** Cached canvas. */
     private BufferedImage buffer;
+    /** Background image. */
+    private Image backgroundImage;
+    /** Config Manager. */
+    private  ConfigManager manager;
+    /** Config domain. */
+    private  String domain;
 
     /**
      * Creates a new text pane canvas.
@@ -94,8 +105,11 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
     public TextPaneCanvas(final TextPane parent, final IRCDocument document) {
         super();
         this.document = document;
-        startLine = 0;
         textPane = parent;
+        this.manager = parent.getWindow().getConfigManager();
+        this.domain = ((TextFrame) parent.getWindow()).getController().
+                getDomain();
+        startLine = 0;
         setDoubleBuffered(true);
         setOpaque(true);
         textLayouts = new HashMap<TextLayout, LineInfo>();
@@ -104,6 +118,9 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
         addMouseListener(this);
         addMouseMotionListener(this);
         addComponentListener(this);
+        manager.addChangeListener(domain, "textpanebackground", this);
+
+        updateCachedSettings();
     }
 
     /**
@@ -139,6 +156,36 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
     }
 
     /**
+     * Paints the background, either from the config setting or the background
+     * colour of the textpane.
+     *
+     * @param g Graphics object to draw onto
+     */
+    private void paintBackground(final Graphics2D g) {
+        if (backgroundImage != null) {
+            g.drawImage(backgroundImage, 0,
+                    0, getBounds().width, getBounds().height, null);
+        } else {
+            g.fill(getBounds());
+        }
+    }
+
+    private void updateCachedSettings() {
+        final String backgroundPath = manager.getOption(domain,
+                "textpanebackground");
+        UIUtilities.invokeLater(new Runnable() {
+
+            /** {@inheritDoc} */
+            @Override
+            public void run() {
+                backgroundImage = backgroundPath.isEmpty() ? null : Toolkit.
+                getDefaultToolkit().getImage(backgroundPath);
+                repaint();
+            }
+        });
+    }
+
+    /**
      * Calculates the position of the lines and highlights.
      */
     protected void calc() {
@@ -169,7 +216,7 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
         LineBreakMeasurer lineMeasurer;
 
         g.setColor(textPane.getBackground());
-        g.fill(getBounds());
+        paintBackground(g);
 
         textLayouts.clear();
         positions.clear();
@@ -908,5 +955,11 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
     @Override
     public void componentHidden(final ComponentEvent e) {
         //Ignore
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void configChanged(final String domain, final String key) {
+        updateCachedSettings();
     }
 }
