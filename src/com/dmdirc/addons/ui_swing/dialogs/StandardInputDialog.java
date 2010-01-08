@@ -181,6 +181,13 @@ public abstract class StandardInputDialog extends StandardDialog {
         });
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public boolean enterPressed() {
+        executeAction(getOkButton());
+        return true;
+    }
+
     /**
      * Validates the change.
      */

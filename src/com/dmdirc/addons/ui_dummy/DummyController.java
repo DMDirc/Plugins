@@ -142,6 +142,7 @@ public final class DummyController extends Plugin implements UIController {
 
     /** {@inheritDoc} */
     @Override
+    @Deprecated
     public Window getActiveWindow() {
         return null;
     }
