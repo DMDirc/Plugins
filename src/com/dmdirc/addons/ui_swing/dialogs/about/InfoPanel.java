@@ -26,17 +26,19 @@ import com.dmdirc.Main;
 import com.dmdirc.ui.core.util.Info;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
+import com.dmdirc.ui.messages.Formatter;
 
 
 import java.awt.Font;
 import java.nio.charset.Charset;
+
 import javax.swing.JEditorPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-
 import javax.swing.UIManager;
 import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
+
 import net.miginfocom.layout.LayoutUtil;
 import net.miginfocom.swing.MigLayout;
 
@@ -76,6 +78,7 @@ public final class InfoPanel extends JPanel {
                 "<b>Look and Feel: </b>" + SwingController.getLookAndFeel() + "<br>" +
                 "<b>MiG Layout version: </b>" + LayoutUtil.getVersion() + "<br>" +
                 "<b>Java Default charset: </b>" + Charset.defaultCharset().displayName() + "<br>" +
+                "<b>Client Uptime: </b>" + Formatter.formatDuration((int) Info.getUptime()/1000) + "<br>" +
                 "</html>");
         infoPane.setEditable(false);
         scrollPane.setViewportView(infoPane);
