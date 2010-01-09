@@ -194,7 +194,7 @@ public final class LagDisplayPlugin extends Plugin implements ActionListener, Co
             panel.refreshDialog();
         } else if (type.equals(CoreActionType.CLIENT_FRAME_CHANGED)) {
             final FrameContainer source = (FrameContainer) arguments[0];
-            if (source.getServer() == null) {
+            if (source == null || source.getServer() == null) {
                 panel.setText("Unknown");
             } else if (source.getServer().getState() != ServerState.CONNECTED) {
                 panel.setText("Not connected");
