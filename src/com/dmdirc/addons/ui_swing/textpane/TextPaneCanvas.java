@@ -180,7 +180,7 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
             @Override
             public void run() {
                 backgroundImage = backgroundPath.isEmpty() ? null : Toolkit.
-                getDefaultToolkit().getImage(URLBuilder.buildURL(backgroundPath));
+                getDefaultToolkit().createImage(URLBuilder.buildURL(backgroundPath));
                 repaint();
             }
         });
