@@ -103,4 +103,37 @@ public class AddonInfoLabel extends JPanel {
     public AddonInfo getAddonInfo() {
         return addonInfo;
     }
+
+    /** {@inheritDoc} */
+    @Override
+    public void invalidate() {
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void revalidate() {
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void repaint() {
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void firePropertyChange(String propertyName, Object oldValue,
+            Object newValue) {
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void firePropertyChange(String propertyName, boolean oldValue,
+            boolean newValue) {
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void firePropertyChange(String propertyName, int oldValue,
+            int newValue) {
+    }
 }
