@@ -27,6 +27,7 @@ import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.config.ConfigManager;
 import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.ui.messages.IRCTextAttribute;
+import com.dmdirc.util.URLBuilder;
 
 import java.awt.Cursor;
 import java.awt.Graphics;
@@ -179,7 +180,7 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
             @Override
             public void run() {
                 backgroundImage = backgroundPath.isEmpty() ? null : Toolkit.
-                getDefaultToolkit().getImage(backgroundPath);
+                getDefaultToolkit().getImage(URLBuilder.buildURL(backgroundPath));
                 repaint();
             }
         });
