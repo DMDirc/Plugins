@@ -58,6 +58,7 @@ import com.dmdirc.ui.interfaces.Window;
 import com.dmdirc.ui.messages.Formatter;
 import com.dmdirc.util.URLHandler;
 
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
@@ -75,13 +76,13 @@ import java.nio.charset.UnsupportedCharsetException;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JInternalFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JSeparator;
 import javax.swing.KeyStroke;
@@ -92,6 +93,9 @@ import javax.swing.event.InternalFrameEvent;
 import javax.swing.event.InternalFrameListener;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 import javax.swing.plaf.synth.SynthLookAndFeel;
+
+import net.miginfocom.layout.PlatformDefaults;
+import net.miginfocom.swing.MigLayout;
 
 /**
  * Implements a generic (internal) frame.
@@ -129,6 +133,8 @@ public abstract class TextFrame extends JInternalFrame implements Window,
     private SwingController controller;
     /** Are we maximising/restoring? */
     private AtomicBoolean maximiseRestoreInProgress = new AtomicBoolean(false);
+    /** Content pane. */
+    private final JPanel panel;
 
     /** Click types. */
     public enum MouseClickType {
@@ -208,6 +214,15 @@ public abstract class TextFrame extends JInternalFrame implements Window,
         config.addChangeListener("ui", "frameBufferSize", this);
 
         addPropertyChangeListener("maximum", this);
+
+        panel = new JPanel(new MigLayout("fill"));
+        super.getContentPane().add(panel);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Container getContentPane() {
+        return panel;
     }
 
     /**
@@ -567,6 +582,7 @@ public abstract class TextFrame extends JInternalFrame implements Window,
             /** {@inheritDoc} */
             @Override
             public void run() {
+                panel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
                 setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
                 ((BasicInternalFrameUI) getUI()).setNorthPane(null);
             }
@@ -628,6 +644,10 @@ public abstract class TextFrame extends JInternalFrame implements Window,
                 }
 
                 setUI((BasicInternalFrameUI) temp);
+                final int size = (int) PlatformDefaults.getPanelInsets(0).
+                        getValue();
+                panel.setBorder(BorderFactory.createEmptyBorder(size, size,
+                        size, size));
             }
         });
     }
