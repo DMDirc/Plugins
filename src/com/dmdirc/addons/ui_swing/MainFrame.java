@@ -97,6 +97,8 @@ public final class MainFrame extends JFrame implements WindowListener,
     private SwingController controller;
     /** Status bar. */
     private SwingStatusBar statusBar;
+    /** Client Version. */
+    private String version;
 
     /**
      * Creates new form MainFrame.
@@ -122,6 +124,8 @@ public final class MainFrame extends JFrame implements WindowListener,
 
         showVersion = IdentityManager.getGlobalConfig().getOptionBool("ui",
                 "showversion");
+        version = IdentityManager.getGlobalConfig().getOption("version",
+                    "version");
         IdentityManager.getGlobalConfig().addChangeListener("ui", "lookandfeel",
                 this);
         IdentityManager.getGlobalConfig().addChangeListener("ui", "showversion",
@@ -230,8 +234,7 @@ public final class MainFrame extends JFrame implements WindowListener,
     @Override
     public String getTitlePrefix() {
         if (showVersion) {
-            return "DMDirc " + IdentityManager.getGlobalConfig().getOption(
-                    "version", "version");
+            return "DMDirc " + version;
         } else {
             return "DMDirc";
         }
