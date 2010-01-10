@@ -26,6 +26,7 @@ import com.dmdirc.Main;
 import com.dmdirc.ui.core.util.Info;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
+import com.dmdirc.config.IdentityManager;
 import com.dmdirc.ui.messages.Formatter;
 
 
@@ -72,9 +73,11 @@ public final class InfoPanel extends JPanel {
         
          infoPane.setText("<html>" +
                 "<b>DMDirc version: </b>" + Info.getDMDircVersion() + "<br>" +
+                "<b>Mode Alises version: </b>" + IdentityManager.
+                getGlobalConfig().getOption("identity", "modealiasversion") + "<br>" +
+                "<b>OS Version: </b>" + Info.getOSVersion() + "<br>" +
                 "<b>Profile directory: </b>" + Main.getConfigDir() + "<br>" +
                 "<b>Java version: </b>" + Info.getJavaVersion() + "<br>" +
-                "<b>OS Version: </b>" + Info.getOSVersion() + "<br>" +
                 "<b>Look and Feel: </b>" + SwingController.getLookAndFeel() + "<br>" +
                 "<b>MiG Layout version: </b>" + LayoutUtil.getVersion() + "<br>" +
                 "<b>Java Default charset: </b>" + Charset.defaultCharset().displayName() + "<br>" +
