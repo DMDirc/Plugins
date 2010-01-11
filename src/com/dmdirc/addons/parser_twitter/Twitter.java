@@ -817,6 +817,11 @@ public class Twitter implements Parser, TwitterErrorHandler, TwitterRawHandler, 
     private boolean checkUserOnChannel(final TwitterUser user) {
         final TwitterChannelInfo channel = (TwitterChannelInfo) this.getChannel(mainChannelName);
 
+	if (channel == null) {
+		doDebug(Debug.stateError, "Tried to check user (" + user.getScreenName() + "), but channel is null.");
+		return false;
+	}
+
         if (channel.getChannelClient(user.getScreenName()) == null) {
             final TwitterClientInfo ci = new TwitterClientInfo(user.getScreenName(), this);
             clients.put(ci.getNickname().toLowerCase(), ci);
