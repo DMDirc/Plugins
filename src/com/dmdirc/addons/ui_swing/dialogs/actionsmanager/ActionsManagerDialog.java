@@ -100,7 +100,7 @@ public final class ActionsManagerDialog extends StandardDialog implements
     /** Group panel. */
     private JPanel groupPanel;
     /** Are we saving? */
-    private AtomicBoolean saving = new AtomicBoolean(false);
+    private final AtomicBoolean saving = new AtomicBoolean(false);
 
     /** 
      * Creates a new instance of ActionsManagerDialog.
@@ -322,8 +322,7 @@ public final class ActionsManagerDialog extends StandardDialog implements
             delGroup();
         } else if (e.getSource() == getOkButton() || e.getSource()
                 == getCancelButton()) {
-            if (!saving.get()) {
-                saving.set(true);
+            if (!saving.getAndSet(true)) {
                 if (ActionEditorDialog.isOpen()) {
                     if (JOptionPane.showConfirmDialog(this,
                             "The action editor is currently open, do you want to cotinue and lose any unsaved changes?",
@@ -367,8 +366,7 @@ public final class ActionsManagerDialog extends StandardDialog implements
             /** {@inheritDoc} */
             @Override
             public boolean save() {
-                if (!saving.get()) {
-                    saving.set(true);
+                if (!saving.getAndSet(true)) {
                     if (getText() == null || getText().isEmpty() && !ActionManager.
                             getGroups().
                             containsKey(getText())) {
@@ -416,8 +414,7 @@ public final class ActionsManagerDialog extends StandardDialog implements
             /** {@inheritDoc} */
             @Override
             public boolean save() {
-                if (!saving.get()) {
-                    saving.set(true);
+                if (!saving.getAndSet(true)) {
                     if (getText() == null || getText().isEmpty()) {
                         return false;
                     } else {

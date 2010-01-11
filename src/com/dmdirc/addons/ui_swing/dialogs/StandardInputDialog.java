@@ -54,7 +54,7 @@ public abstract class StandardInputDialog extends StandardDialog {
     /** Message. */
     private String message;
     /** Are we saving? */
-    protected AtomicBoolean saving = new AtomicBoolean(false);
+    protected final AtomicBoolean saving = new AtomicBoolean(false);
 
     /**
      * Instantiates a new standard input dialog.
