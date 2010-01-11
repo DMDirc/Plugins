@@ -48,6 +48,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
@@ -98,6 +99,8 @@ public final class ActionsManagerDialog extends StandardDialog implements
     private ActionGroupSettingsPanel activeSettings;
     /** Group panel. */
     private JPanel groupPanel;
+    /** Are we saving? */
+    private AtomicBoolean saving = new AtomicBoolean(false);
 
     /** 
      * Creates a new instance of ActionsManagerDialog.
@@ -167,10 +170,10 @@ public final class ActionsManagerDialog extends StandardDialog implements
      */
     private void initComponents() {
         orderButtons(new JButton(), new JButton());
-        infoLabel = new TextLabel("Actions allow you to make DMDirc" +
-                " intelligently respond to various events.  Action groups are " +
-                "there for you to organise groups, add or remove them " +
-                "to suit your needs.");
+        infoLabel = new TextLabel("Actions allow you to make DMDirc"
+                + " intelligently respond to various events.  Action groups are "
+                + "there for you to organise groups, add or remove them "
+                + "to suit your needs.");
         groups = new JList(new SortedListModel<ActionGroup>(
                 new ActionGroupNameComparator()));
         actions = new ActionsGroupPanel(this, null);
@@ -239,7 +242,8 @@ public final class ActionsManagerDialog extends StandardDialog implements
      */
     private void layoutComponents() {
 
-        getContentPane().setLayout(new MigLayout("fill, wrap 2, hidemode 3, wmax 800"));
+        getContentPane().setLayout(new MigLayout(
+                "fill, wrap 2, hidemode 3, wmax 800"));
 
         getContentPane().add(infoLabel, "spanx 2, growx");
         if (info.isVisible() && activeSettings.isVisible()) {
@@ -316,24 +320,29 @@ public final class ActionsManagerDialog extends StandardDialog implements
             editGroup();
         } else if (e.getSource() == delete) {
             delGroup();
-        } else if (e.getSource() == getOkButton() || e.getSource() ==
-                getCancelButton()) {
-            if (ActionEditorDialog.isOpen()) {
-                if (JOptionPane.showConfirmDialog(this,
-                        "The action editor is currently open, do you want to cotinue and lose any unsaved changes?",
-                        "Confirm close?", JOptionPane.YES_NO_OPTION,
-                        JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
-                    ActionEditorDialog.getActionEditorDialog(this, "").dispose();
-                } else {
-                    return;
+        } else if (e.getSource() == getOkButton() || e.getSource()
+                == getCancelButton()) {
+            if (!saving.get()) {
+                saving.set(true);
+                if (ActionEditorDialog.isOpen()) {
+                    if (JOptionPane.showConfirmDialog(this,
+                            "The action editor is currently open, do you want to cotinue and lose any unsaved changes?",
+                            "Confirm close?", JOptionPane.YES_NO_OPTION,
+                            JOptionPane.QUESTION_MESSAGE)
+                            == JOptionPane.YES_OPTION) {
+                        ActionEditorDialog.getActionEditorDialog(this, "").
+                                dispose();
+                    } else {
+                        return;
+                    }
                 }
+                for (ActionGroupSettingsPanel loopSettings : settings.values()) {
+                    loopSettings.save();
+                }
+                IdentityManager.getConfigIdentity().setOption("dialogstate",
+                        "actionsmanagerdialog", groups.getSelectedIndex());
+                dispose();
             }
-            for (ActionGroupSettingsPanel loopSettings : settings.values()) {
-                loopSettings.save();
-            }
-            IdentityManager.getConfigIdentity().setOption("dialogstate",
-                    "actionsmanagerdialog", groups.getSelectedIndex());
-            dispose();
         }
     }
 
@@ -358,16 +367,20 @@ public final class ActionsManagerDialog extends StandardDialog implements
             /** {@inheritDoc} */
             @Override
             public boolean save() {
-                if (getText() == null || getText().isEmpty() && !ActionManager.
-                        getGroups().
-                        containsKey(getText())) {
-                    return false;
-                } else {
-                    final ActionGroup group =
-                            ActionManager.makeGroup(getText());
-                    reloadGroups(group);
-                    return true;
+                if (!saving.get()) {
+                    saving.set(true);
+                    if (getText() == null || getText().isEmpty() && !ActionManager.
+                            getGroups().
+                            containsKey(getText())) {
+                        return false;
+                    } else {
+                        final ActionGroup group =
+                                ActionManager.makeGroup(getText());
+                        reloadGroups(group);
+                        return true;
+                    }
                 }
+                return false;
             }
 
             /** {@inheritDoc} */
@@ -403,13 +416,17 @@ public final class ActionsManagerDialog extends StandardDialog implements
             /** {@inheritDoc} */
             @Override
             public boolean save() {
-                if (getText() == null || getText().isEmpty()) {
-                    return false;
-                } else {
-                    ActionManager.renameGroup(oldName, getText());
-                    reloadGroups();
-                    return true;
+                if (!saving.get()) {
+                    saving.set(true);
+                    if (getText() == null || getText().isEmpty()) {
+                        return false;
+                    } else {
+                        ActionManager.renameGroup(oldName, getText());
+                        reloadGroups();
+                        return true;
+                    }
                 }
+                return false;
             }
 
             /** {@inheritDoc} */
@@ -429,8 +446,8 @@ public final class ActionsManagerDialog extends StandardDialog implements
         final String group =
                 ((ActionGroup) groups.getSelectedValue()).getName();
         final int response = JOptionPane.showConfirmDialog(this,
-                "Are you sure you wish to delete the '" + group +
-                "' group and all actions within it?",
+                "Are you sure you wish to delete the '" + group
+                + "' group and all actions within it?",
                 "Confirm deletion", JOptionPane.YES_NO_OPTION);
         if (response == JOptionPane.YES_OPTION) {
             int location =
@@ -457,8 +474,8 @@ public final class ActionsManagerDialog extends StandardDialog implements
         }
 
         changeActiveGroup((ActionGroup) groups.getSelectedValue());
-        if (groups.getSelectedIndex() == -1 ||
-                !((ActionGroup) groups.getSelectedValue()).isDelible()) {
+        if (groups.getSelectedIndex() == -1 || !((ActionGroup) groups.
+                getSelectedValue()).isDelible()) {
             edit.setEnabled(false);
             delete.setEnabled(false);
         } else {
@@ -474,8 +491,8 @@ public final class ActionsManagerDialog extends StandardDialog implements
         if (groups.getSelectedValue() == null) {
             return;
         }
-        if (type.equals(CoreActionType.ACTION_CREATED) ||
-                type.equals(CoreActionType.ACTION_UPDATED)) {
+        if (type.equals(CoreActionType.ACTION_CREATED) || type.equals(
+                CoreActionType.ACTION_UPDATED)) {
             final Action action = (Action) arguments[0];
             if (action.getGroup().equals(((ActionGroup) groups.getSelectedValue()).
                     getName())) {
