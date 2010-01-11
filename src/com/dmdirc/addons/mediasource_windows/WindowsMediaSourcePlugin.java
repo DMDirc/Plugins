@@ -34,8 +34,6 @@ import com.dmdirc.util.resourcemanager.ResourceManager;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.io.File;
 import java.io.IOException;
 
@@ -94,34 +92,6 @@ public class WindowsMediaSourcePlugin extends Plugin implements MediaSourceManag
         return new MediaInfoOutput(-1, "Error executing GetMediaInfo.exe");
     }
 
-    /**
-     * Use the given resource manager to extract files ending with the given suffix
-     *
-     * @param res ResourceManager
-     * @param newDir Directory to extract to.
-     * @param suffix Suffix to extract
-     */
-    private void extractFiles(final ResourceManager res, final File newDir, final String suffix) {
-        final Map<String, byte[]> resources = res.getResourcesEndingWithAsBytes(suffix);
-        for (Entry<String, byte[]> resource : resources.entrySet()) {
-            try {
-                final String key = resource.getKey();
-                final String resourceName = key.substring(key.lastIndexOf('/'), key.length());
-
-                final File newFile = new File(newDir, resourceName);
-
-                if (!newFile.isDirectory()) {
-                    if (newFile.exists()) {
-                        newFile.delete();
-                    }
-                    ResourceManager.getResourceManager().resourceToFile(resource.getValue(), newFile);
-                }
-            } catch (IOException ex) {
-                Logger.userError(ErrorLevel.LOW, "Failed to extract " + suffix + "s for windowsmediasource: " + ex.getMessage(), ex);
-            }
-        }
-    }
-
     /** {@inheritDoc} */
     @Override
     public void onLoad() {
@@ -144,8 +114,12 @@ public class WindowsMediaSourcePlugin extends Plugin implements MediaSourceManag
             }
 
             // Now extract the .dlls and .exe
-            extractFiles(res, newDir, ".dll");
-            extractFiles(res, newDir, ".exe");
+            try {
+                res.extractResoucesEndingWith(newDir, ".dll");
+                res.extractResoucesEndingWith(newDir, ".exe");
+            } catch (IOException ex) {
+                Logger.userError(ErrorLevel.MEDIUM, "Unable to extract files for windows media source: " + ex.getMessage(), ex);
+            }
         } catch (IOException ioe) {
             Logger.userError(ErrorLevel.LOW, "Unable to open ResourceManager for windowsmediasource: " + ioe.getMessage(), ioe);
         }
