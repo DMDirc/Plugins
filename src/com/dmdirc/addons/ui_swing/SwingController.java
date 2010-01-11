@@ -449,6 +449,7 @@ public final class SwingController extends Plugin implements UIController {
 
     /** {@inheritDoc} */
     @Override
+    @Deprecated
     public Server getActiveServer() {
         if (!mainFrameCreated.get()) {
             return null;

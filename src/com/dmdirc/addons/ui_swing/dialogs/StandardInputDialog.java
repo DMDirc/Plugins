@@ -32,6 +32,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.swing.JButton;
 import javax.swing.event.DocumentEvent;
@@ -52,6 +53,8 @@ public abstract class StandardInputDialog extends StandardDialog {
     private TextLabel blurb;
     /** Message. */
     private String message;
+    /** Are we saving? */
+    protected AtomicBoolean saving = new AtomicBoolean(false);
 
     /**
      * Instantiates a new standard input dialog.
