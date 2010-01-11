@@ -36,6 +36,8 @@ enum Debug {
     dataIn,
     /** Debug information for data output. */
     dataOut,
+    /** Error with internal state. */
+    stateError,
     /** General error info from the twitter parser. */
     twitterError,
     /** More debuggy error info from the twitter parser. */
