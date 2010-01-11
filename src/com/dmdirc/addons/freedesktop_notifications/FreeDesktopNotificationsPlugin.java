@@ -31,8 +31,6 @@ import com.dmdirc.logger.Logger;
 import com.dmdirc.Main;
 import java.io.File;
 import java.io.IOException;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.ArrayList;
 import com.dmdirc.commandparser.CommandManager;
 import com.dmdirc.installer.StreamReader;
@@ -157,36 +155,14 @@ public final class FreeDesktopNotificationsPlugin extends Plugin {
                 }
             
                 // Now extract the files needed
-                extractFiles(res, newDir, ".py");
-                extractFiles(res, newDir, ".png");
+                try {
+                    res.extractResoucesEndingWith(newDir, ".py");
+                    res.extractResoucesEndingWith(newDir, ".png");
+                } catch (IOException ex) {
+                    Logger.userError(ErrorLevel.MEDIUM, "Unable to extract files for Free desktop notifications: " + ex.getMessage(), ex);
+                }
             } catch (IOException ioe) {
                 Logger.userError(ErrorLevel.LOW, "Unable to open ResourceManager for freedesktop_notifications: "+ioe.getMessage(), ioe);
-            }
-        }
-    }
-    
-    /**
-     * Use the given resource manager to extract files ending with the given suffix
-     *
-     * @param res ResourceManager
-     * @param newDir Directory to extract to.
-     * @param suffix Suffix to extract
-     */
-    private static void extractFiles(final ResourceManager res, final File newDir, final String suffix) {
-        final Map<String, byte[]> resources = res.getResourcesEndingWithAsBytes(suffix);
-        for (Entry<String, byte[]> resource : resources.entrySet()) {
-            try {
-                final String key = resource.getKey();
-                final String resourceName = key.substring(key.lastIndexOf('/'), key.length());
-
-                final File newFile = new File(newDir, resourceName);
-
-                if (!newFile.isDirectory()) {
-                    if (newFile.exists()) { newFile.delete(); }
-                    ResourceManager.getResourceManager().resourceToFile(resource.getValue(), newFile);
-                }
-            } catch (IOException ex) {
-                Logger.userError(ErrorLevel.LOW, "Failed to extract "+suffix+"s for freedesktop_notifications: "+ex.getMessage(), ex);
             }
         }
     }
