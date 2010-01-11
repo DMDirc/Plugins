@@ -1,4 +1,4 @@
-/*
+#/*
  * Copyright (c) 2006-2009 Chris Smith, Shane Mc Cormack, Gregory Holmes
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -816,6 +816,11 @@ public class Twitter implements Parser, TwitterErrorHandler, TwitterRawHandler, 
      */
     private boolean checkUserOnChannel(final TwitterUser user) {
         final TwitterChannelInfo channel = (TwitterChannelInfo) this.getChannel(mainChannelName);
+
+	if (channel == null) {
+		doDebug(Debug.stateError, "Tried to check user (" + user.getScreenName() + "), but channel is null.");
+		return false;
+	}
 
         if (channel.getChannelClient(user.getScreenName()) == null) {
             final TwitterClientInfo ci = new TwitterClientInfo(user.getScreenName(), this);
