@@ -324,10 +324,10 @@ public class DMDircDesktopPane extends JDesktopPane implements FrameListener,
 
     private void handleMaximiseEvent(final boolean isMaximised,
             final String title) {
-        if (changing.get()) {
+        if (changing.getAndSet(true)) {
             return;
         }
-        changing.set(true);
+
         maximised = isMaximised;
         Stack<JInternalFrame> stack = new Stack<JInternalFrame>();
         stack.addAll(Arrays.asList(getAllFrames()));
