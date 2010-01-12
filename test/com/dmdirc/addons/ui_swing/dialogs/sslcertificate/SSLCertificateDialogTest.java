@@ -24,26 +24,25 @@ package com.dmdirc.addons.ui_swing.dialogs.sslcertificate;
 
 import com.dmdirc.Main;
 import com.dmdirc.addons.ui_swing.SwingController;
+import com.dmdirc.config.InvalidIdentityFileException;
 import com.dmdirc.harness.ui.ClassFinder;
 import com.dmdirc.harness.ui.TestSSLCertificateDialogModel;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 
+import com.dmdirc.config.IdentityManager;
 import java.awt.Component;
 import java.util.Arrays;
 
 import javax.swing.Icon;
 import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JScrollPane;
 import javax.swing.border.TitledBorder;
 
-import org.fest.swing.core.EventMode;
+import org.fest.swing.driver.BasicCellRendererReader;
 import org.fest.swing.driver.BasicJListCellReader;
 import org.fest.swing.fixture.DialogFixture;
 
 import org.junit.After;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -53,13 +52,10 @@ public class SSLCertificateDialogTest {
     private DialogFixture window;
 
     @BeforeClass
-    public static void setUpClass() {
-        Main.setUI(new SwingController());
-    }
-
-    @Before
-    public void setUp() {
+    public static void setUpClass() throws InvalidIdentityFileException {
+        IdentityManager.load();
         UIUtilities.initUISettings();
+        Main.setUI(new SwingController());
     }
 
     @After
@@ -87,7 +83,8 @@ public class SSLCertificateDialogTest {
             "cross",
             "tick",
             "cross"
-        },window.list().cellReader(new CertificateListCellReader()).contents()));
+        },window.list().cellReader(new BasicJListCellReader(new CertificateListCellReader()))
+                .contents()));
     }
 
     @Test
@@ -100,7 +97,7 @@ public class SSLCertificateDialogTest {
             window.list().selectItem(cert).requireSelection(cert);
 
             assertEquals("Information for " + cert, ((TitledBorder) window
-                    .scrollPane(new ClassFinder<JScrollPane>(CertificateInfoPanel.class, null))
+                    .scrollPane(new ClassFinder<CertificateInfoPanel>(CertificateInfoPanel.class, null))
                     .target.getBorder()).getTitle());
         }
     }
@@ -108,18 +105,15 @@ public class SSLCertificateDialogTest {
     protected void setupWindow() {
         window = new DialogFixture(new SSLCertificateDialog(null,
                 new TestSSLCertificateDialogModel()));
-
-        window.robot.settings().eventMode(EventMode.AWT);
         window.show();
     }
 
-    private static class CertificateListCellReader extends BasicJListCellReader {
+    private static class CertificateListCellReader extends BasicCellRendererReader {
 
-        public String valueAt(JList arg0, int arg1) {
-            final Component c = cellRendererComponent(arg0, arg1);
-
+        @Override
+        public String valueFrom(Component c) {
             final Icon target = ((JLabel) c).getIcon();
-            
+
             for (String icon : new String[]{"tick", "cross", "nothing"}) {
                 if (target == IconManager.getIconManager().getIcon(icon)) {
                     return icon;
