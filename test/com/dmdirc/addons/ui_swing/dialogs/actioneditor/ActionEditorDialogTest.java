@@ -42,9 +42,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.text.JTextComponent;
 
-import org.fest.swing.core.EventMode;
-import org.fest.swing.core.matcher.JButtonByTextMatcher;
-import org.fest.swing.core.matcher.JLabelByTextMatcher;
+import org.fest.swing.core.matcher.JButtonMatcher;
+import org.fest.swing.core.matcher.JLabelMatcher;
 import org.fest.swing.fixture.DialogFixture;
 import org.fest.swing.fixture.JLabelFixture;
 import org.fest.swing.fixture.JPanelFixture;
@@ -60,14 +59,13 @@ public class ActionEditorDialogTest {
 
     @BeforeClass
     public static void setUpClass() throws InvalidIdentityFileException {
+        IdentityManager.load();
         Main.setUI(new SwingController());
+        ActionManager.init();
     }
 
     @Before
     public void setUp() throws InvalidIdentityFileException {
-        IdentityManager.load();
-        ActionManager.init();
-
         if (!ActionManager.getGroups().containsKey("amd-ui-test1")) {
             ActionManager.makeGroup("amd-ui-test1");
         }
@@ -90,7 +88,7 @@ public class ActionEditorDialogTest {
 
         window.panel(new ClassFinder<JPanel>(ActionNamePanel.class, null)).
                 textBox().requireEnabled().requireEditable().requireEmpty();
-        window.button(JButtonByTextMatcher.withText("OK")).requireDisabled();
+        window.button(JButtonMatcher.withText("OK")).requireDisabled();
     }
 
     @Test
@@ -102,7 +100,7 @@ public class ActionEditorDialogTest {
         window.panel(new ClassFinder<JPanel>(ActionNamePanel.class, null)).
                 textBox().requireEnabled().requireEditable().requireEmpty();
         window.panel(new ClassFinder<JPanel>(ActionTriggersPanel.class, null)).
-                button(JButtonByTextMatcher.withText("Add")).requireDisabled();
+                button(JButtonMatcher.withText("Add")).requireDisabled();
     }
 
     @Test
@@ -115,11 +113,11 @@ public class ActionEditorDialogTest {
                 new ClassFinder<JPanel>(ActionTriggersPanel.class, null));
 
         triggers.comboBox().selectItem("Client closed");
-        triggers.button(JButtonByTextMatcher.withText("Add")).requireEnabled().
+        triggers.button(JButtonMatcher.withText("Add")).requireEnabled().
                 click();
 
         window.panel(new ClassFinder<JPanel>(ActionConditionsPanel.class, null)).
-                button(JButtonByTextMatcher.withText("Add")).requireDisabled();
+                button(JButtonMatcher.withText("Add")).requireDisabled();
     }
 
     @Test
@@ -135,15 +133,15 @@ public class ActionEditorDialogTest {
 
         final int items = triggers.comboBox().target.getItemCount();
         triggers.comboBox().requireEnabled().selectItem("Channel message received");
-        triggers.button(JButtonByTextMatcher.withText("Add")).requireEnabled().
+        triggers.button(JButtonMatcher.withText("Add")).requireEnabled().
                 click();
 
         final JLabelFixture label =
-                triggers.label(JLabelByTextMatcher.withText("Channel message received"));
+                triggers.label(JLabelMatcher.withText("Channel message received"));
         label.requireVisible();
 
         assertTrue(items > triggers.comboBox().target.getItemCount());
-        window.button(JButtonByTextMatcher.withText("OK")).requireEnabled();
+        window.button(JButtonMatcher.withText("OK")).requireEnabled();
 
         window.panel(new ClassFinder<JPanel>(ActionNamePanel.class, null)).
                 textBox().deleteText();
@@ -162,7 +160,7 @@ public class ActionEditorDialogTest {
         }
 
         assertEquals(items, triggers.comboBox().target.getItemCount());
-        window.button(JButtonByTextMatcher.withText("OK")).requireDisabled();
+        window.button(JButtonMatcher.withText("OK")).requireDisabled();
     }
 
     @Test
@@ -175,7 +173,7 @@ public class ActionEditorDialogTest {
                 new ClassFinder<JPanel>(ActionTriggersPanel.class, null));
 
         triggers.comboBox().selectItem("Channel message received");
-        triggers.button(JButtonByTextMatcher.withText("Add")).requireEnabled().
+        triggers.button(JButtonMatcher.withText("Add")).requireEnabled().
                 click();
 
         window.radioButton(new JRadioButtonByTextMatcher("All of the conditions are true")).
@@ -188,7 +186,7 @@ public class ActionEditorDialogTest {
                 null)).textBox(new ClassFinder<JTextComponent>(JTextField.class,
                 null)).requireDisabled();
 
-        window.button(JButtonByTextMatcher.withText("OK")).requireEnabled();
+        window.button(JButtonMatcher.withText("OK")).requireEnabled();
 
         window.radioButton(new JRadioButtonByTextMatcher("The conditions match a custom rule")).
                 click().requireSelected();
@@ -196,7 +194,7 @@ public class ActionEditorDialogTest {
                 null)).textBox(new ClassFinder<JTextComponent>(JTextField.class,
                 null)).requireEnabled().enterText("invalid");
 
-        window.button(JButtonByTextMatcher.withText("OK")).requireDisabled();
+        window.button(JButtonMatcher.withText("OK")).requireDisabled();
     }
 
     @Test
@@ -209,11 +207,11 @@ public class ActionEditorDialogTest {
                 new ClassFinder<JPanel>(ActionTriggersPanel.class, null));
 
         triggers.comboBox().selectItem("Channel message received");
-        triggers.button(JButtonByTextMatcher.withText("Add")).requireEnabled().
+        triggers.button(JButtonMatcher.withText("Add")).requireEnabled().
                 click();
 
         window.panel(new ClassFinder<JPanel>(ActionConditionsPanel.class, null)).
-                button(JButtonByTextMatcher.withText("Add")).requireEnabled().
+                button(JButtonMatcher.withText("Add")).requireEnabled().
                 click();
         
         Pattern pattern = Pattern.compile(".+<body>(.+)</body>.+", Pattern.DOTALL);
@@ -271,14 +269,12 @@ public class ActionEditorDialogTest {
                 new ClassFinder<JPanel>(ActionTriggersPanel.class, null));
 
         triggers.comboBox().selectItem("Channel message received");
-        triggers.button(JButtonByTextMatcher.withText("Add")).requireEnabled().
-                click();
+        triggers.button(JButtonMatcher.withText("Add")).requireEnabled().click();
 
-        window.button(JButtonByTextMatcher.withText("OK")).requireEnabled();
+        window.button(JButtonMatcher.withText("OK")).requireEnabled();
 
         window.panel(new ClassFinder<JPanel>(ActionConditionsPanel.class, null)).
-                button(JButtonByTextMatcher.withText("Add")).requireEnabled().
-                click();
+                button(JButtonMatcher.withText("Add")).requireEnabled().click();
 
         window.panel(new ClassFinder<JPanel>(ActionConditionEditorPanel.class,
                 null)).comboBox("argument").requireEnabled();
@@ -288,7 +284,7 @@ public class ActionEditorDialogTest {
                 null)).comboBox("comparison").requireDisabled();
         window.panel(new ClassFinder<JPanel>(ActionConditionEditorPanel.class,
                 null)).textBox().requireDisabled();
-        window.button(JButtonByTextMatcher.withText("OK")).requireDisabled();
+        window.button(JButtonMatcher.withText("OK")).requireDisabled();
 
         window.panel(new ClassFinder<JPanel>(ActionConditionEditorPanel.class,
                 null)).comboBox("argument").selectItem("message");
@@ -298,7 +294,7 @@ public class ActionEditorDialogTest {
                 null)).comboBox("comparison").requireDisabled();
         window.panel(new ClassFinder<JPanel>(ActionConditionEditorPanel.class,
                 null)).textBox().requireDisabled();
-        window.button(JButtonByTextMatcher.withText("OK")).requireDisabled();
+        window.button(JButtonMatcher.withText("OK")).requireDisabled();
 
         window.panel(new ClassFinder<JPanel>(ActionConditionEditorPanel.class,
                 null)).comboBox("component").selectItem("content");
@@ -306,19 +302,18 @@ public class ActionEditorDialogTest {
                 null)).comboBox("comparison").requireEnabled();
         window.panel(new ClassFinder<JPanel>(ActionConditionEditorPanel.class,
                 null)).textBox().requireDisabled();
-        window.button(JButtonByTextMatcher.withText("OK")).requireDisabled();
+        window.button(JButtonMatcher.withText("OK")).requireDisabled();
 
         window.panel(new ClassFinder<JPanel>(ActionConditionEditorPanel.class,
                 null)).comboBox("comparison").selectItem("contains");
         window.panel(new ClassFinder<JPanel>(ActionConditionEditorPanel.class,
                 null)).textBox().requireEnabled();
-        window.button(JButtonByTextMatcher.withText("OK")).requireEnabled();
+        window.button(JButtonMatcher.withText("OK")).requireEnabled();
     }
 
     protected void setupWindow(final Action action) {
         window = new DialogFixture(ActionEditorDialog.getActionEditorDialog(null,
                 "amd-ui-test1", action));
-        window.robot.settings().eventMode(EventMode.AWT);
         window.show();
     }
 

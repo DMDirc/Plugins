@@ -26,6 +26,8 @@ import com.dmdirc.Main;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.reorderablelist.ReorderableJList;
+import com.dmdirc.config.IdentityManager;
+import com.dmdirc.config.InvalidIdentityFileException;
 import com.dmdirc.config.prefs.validator.FileNameValidator;
 import com.dmdirc.config.prefs.validator.IdentValidator;
 import com.dmdirc.config.prefs.validator.NotEmptyValidator;
@@ -34,7 +36,6 @@ import com.dmdirc.harness.ui.ValidatingJTextFieldFinder;
 
 import javax.swing.JList;
 
-import org.fest.swing.core.EventMode;
 import org.fest.swing.fixture.DialogFixture;
 
 import org.junit.After;
@@ -49,13 +50,14 @@ public class ProfileManagerDialogTest {
     private Profile profile;
 
     @BeforeClass
-    public static void setUpClass() {
+    public static void setUpClass() throws InvalidIdentityFileException {
+        IdentityManager.load();
+        UIUtilities.initUISettings();
         Main.setUI(new SwingController());
     }
 
     @Before
     public void setUp() {
-        UIUtilities.initUISettings();
         profile = new Profile("unit-test1", "nick1", "real name", "ident");
         profile.save();
     }
@@ -89,8 +91,6 @@ public class ProfileManagerDialogTest {
 
     protected void setupWindow() {
         window = new DialogFixture(ProfileManagerDialog.getProfileManagerDialog(null));
-
-        window.robot.settings().eventMode(EventMode.AWT);
         window.show();
     }
 
