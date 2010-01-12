@@ -38,10 +38,9 @@ import com.dmdirc.plugins.PluginManager;
 
 import java.awt.event.KeyEvent;
 
-import org.fest.swing.core.EventMode;
 import org.fest.swing.core.KeyPressInfo;
-import org.fest.swing.core.matcher.DialogByTitleMatcher;
-import org.fest.swing.core.matcher.JButtonByTextMatcher;
+import org.fest.swing.core.matcher.DialogMatcher;
+import org.fest.swing.core.matcher.JButtonMatcher;
 import org.fest.swing.fixture.DialogFixture;
 import org.fest.swing.fixture.FrameFixture;
 import org.fest.swing.fixture.JInternalFrameFixture;
@@ -62,7 +61,9 @@ public class InputTextFrameTest {
     @BeforeClass
     public static void setUpClass() throws InvalidIdentityFileException {
         IdentityManager.load();
+        IdentityManager.getAddonIdentity().setOption("test", "debugEDT", "false");
         controller = new SwingController();
+        controller.setDomain("test");
         controller.onLoad();
         Main.setUI(controller);
         Main.ensureExists(PluginManager.getPluginManager(), "tabcompletion");
@@ -89,10 +90,10 @@ public class InputTextFrameTest {
     public void testPasteDialogContents() throws InterruptedException {
         ((InputTextFrame) window.target).doPaste("line1\nline2");
 
-        final DialogFixture dlg = mainframe.dialog(DialogByTitleMatcher
-                .withTitleAndShowing("Multi-line paste"));
+        final DialogFixture dlg = mainframe.dialog(DialogMatcher
+                .withTitle("Multi-line paste").andShowing());
 
-        dlg.requireVisible().button(JButtonByTextMatcher.withText("Edit")).click();
+        dlg.requireVisible().button(JButtonMatcher.withText("Edit")).click();
         dlg.textBox(new ClassFinder<TextAreaInputField>(TextAreaInputField.class, null))
                 .requireText("line1\nline2");
         dlg.target.dispose();
@@ -103,10 +104,10 @@ public class InputTextFrameTest {
         window.textBox().enterText("testing:");
         ((InputTextFrame) window.target).doPaste("line1\nline2");
 
-        final DialogFixture dlg = mainframe.dialog(DialogByTitleMatcher
-                .withTitleAndShowing("Multi-line paste"));
+        final DialogFixture dlg = mainframe.dialog(DialogMatcher
+                .withTitle("Multi-line paste").andShowing());
 
-        dlg.requireVisible().button(JButtonByTextMatcher.withText("Edit")).click();
+        dlg.requireVisible().button(JButtonMatcher.withText("Edit")).click();
         dlg.textBox(new ClassFinder<TextAreaInputField>(TextAreaInputField.class, null))
                 .requireText("testing:line1\nline2");
         dlg.target.dispose();
@@ -118,10 +119,10 @@ public class InputTextFrameTest {
                 KeyPressInfo.keyCode(KeyEvent.VK_HOME));
         ((InputTextFrame) window.target).doPaste("line1\nline2");
 
-        final DialogFixture dlg = mainframe.dialog(DialogByTitleMatcher
-                .withTitleAndShowing("Multi-line paste"));
+        final DialogFixture dlg = mainframe.dialog(DialogMatcher
+                .withTitle("Multi-line paste").andShowing());
 
-        dlg.requireVisible().button(JButtonByTextMatcher.withText("Edit")).click();
+        dlg.requireVisible().button(JButtonMatcher.withText("Edit")).click();
         dlg.textBox(new ClassFinder<TextAreaInputField>(TextAreaInputField.class, null))
                 .requireText("line1\nline2<- testing");
         dlg.target.dispose();
@@ -132,10 +133,10 @@ public class InputTextFrameTest {
         window.textBox().enterText("testing:<- testing").selectText(8, 8);
         ((InputTextFrame) window.target).doPaste("line1\nline2");
 
-        final DialogFixture dlg = mainframe.dialog(DialogByTitleMatcher
-                .withTitleAndShowing("Multi-line paste"));
+        final DialogFixture dlg = mainframe.dialog(DialogMatcher
+                .withTitle("Multi-line paste").andShowing());
 
-        dlg.requireVisible().button(JButtonByTextMatcher.withText("Edit")).click();
+        dlg.requireVisible().button(JButtonMatcher.withText("Edit")).click();
         dlg.textBox(new ClassFinder<TextAreaInputField>(TextAreaInputField.class, null))
                 .requireText("testing:line1\nline2<- testing");
         dlg.target.dispose();
@@ -145,7 +146,6 @@ public class InputTextFrameTest {
         UIUtilities.initUISettings();
 
         mainframe = new FrameFixture(controller.getMainWindow());
-        mainframe.robot.settings().eventMode(EventMode.AWT);
 
         final CustomInputFrame titf = new CustomInputFrame(owner,
                 GlobalCommandParser.getGlobalCommandParser(), controller);

@@ -34,11 +34,10 @@ import com.dmdirc.addons.ui_swing.dialogs.actioneditor.ActionEditorDialog;
 import java.lang.reflect.InvocationTargetException;
 
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
-import javax.swing.text.JTextComponent;
 
-import org.fest.swing.core.EventMode;
-import org.fest.swing.core.matcher.JButtonByTextMatcher;
+import org.fest.swing.core.matcher.JButtonMatcher;
 import org.fest.swing.finder.JOptionPaneFinder;
 import org.fest.swing.finder.WindowFinder;
 import org.fest.swing.fixture.DialogFixture;
@@ -55,8 +54,8 @@ public class ActionsManagerDialogTest {
 
     @BeforeClass
     public static void setUpClass() throws InvalidIdentityFileException {
-        Main.setUI(new SwingController());
         IdentityManager.load();
+        Main.setUI(new SwingController());
         ActionManager.init();
     }
     
@@ -98,7 +97,7 @@ public class ActionsManagerDialogTest {
         setupWindow();
         
         window.panel(new ClassFinder<JPanel>(JPanel.class, "Groups"))
-                .button(JButtonByTextMatcher.withText("Add")).click();
+                .button(JButtonMatcher.withText("Add")).click();
         
         DialogFixture newwin = WindowFinder.findDialog(StandardInputDialog.class)
                 .withTimeout(5000).using(window.robot);
@@ -106,23 +105,23 @@ public class ActionsManagerDialogTest {
         newwin.requireVisible();
         assertEquals("New action group", newwin.target.getTitle());
         
-        newwin.button(JButtonByTextMatcher.withText("Cancel")).click();
+        newwin.button(JButtonMatcher.withText("Cancel")).click();
         
         newwin.requireNotVisible();
         
         window.panel(new ClassFinder<JPanel>(JPanel.class, "Groups"))
-                .button(JButtonByTextMatcher.withText("Add")).click();
+                .button(JButtonMatcher.withText("Add")).click();
         
         newwin = WindowFinder.findDialog(StandardInputDialog.class)
                 .withTimeout(5000).using(window.robot);
         
         newwin.requireVisible();
-        newwin.button(JButtonByTextMatcher.withText("OK")).requireDisabled();
+        newwin.button(JButtonMatcher.withText("OK")).requireDisabled();
         
-        newwin.textBox(new ClassFinder<JTextComponent>(javax.swing.JTextField.class,
+        newwin.textBox(new ClassFinder<JTextField>(JTextField.class,
                 null)).enterText("amd-ui-test1");
         
-        newwin.button(JButtonByTextMatcher.withText("OK")).requireEnabled().click();
+        newwin.button(JButtonMatcher.withText("OK")).requireEnabled().click();
         
         window.list().requireSelectedItems("amd-ui-test1");
 
@@ -137,7 +136,7 @@ public class ActionsManagerDialogTest {
         window.list().selectItem("amd-ui-test1").requireSelectedItems("amd-ui-test1");
         
         window.panel(new ClassFinder<JPanel>(JPanel.class, "Groups"))
-                .button(JButtonByTextMatcher.withText("Delete")).requireEnabled().click();
+                .button(JButtonMatcher.withText("Delete")).requireEnabled().click();
         
         JOptionPaneFixture newwin = JOptionPaneFinder.findOptionPane()
                 .withTimeout(5000).using(window.robot);
@@ -147,7 +146,7 @@ public class ActionsManagerDialogTest {
         window.list().selectItem("amd-ui-test1").requireSelectedItems("amd-ui-test1");
         
         window.panel(new ClassFinder<JPanel>(JPanel.class, "Groups"))
-                .button(JButtonByTextMatcher.withText("Delete")).click();
+                .button(JButtonMatcher.withText("Delete")).click();
         
         newwin = JOptionPaneFinder.findOptionPane()
                 .withTimeout(5000).using(window.robot);
@@ -166,15 +165,15 @@ public class ActionsManagerDialogTest {
         
         window.list().selectItem("performs").requireSelectedItems("performs");
         window.panel(new ClassFinder<JPanel>(JPanel.class, "Groups"))
-                .button(JButtonByTextMatcher.withText("Delete")).requireDisabled();
+                .button(JButtonMatcher.withText("Delete")).requireDisabled();
         window.panel(new ClassFinder<JPanel>(JPanel.class, "Groups"))
-                .button(JButtonByTextMatcher.withText("Edit")).requireDisabled();
+                .button(JButtonMatcher.withText("Edit")).requireDisabled();
         
         window.list().selectItem("amd-ui-test1").requireSelectedItems("amd-ui-test1");
         window.panel(new ClassFinder<JPanel>(JPanel.class, "Groups"))
-                .button(JButtonByTextMatcher.withText("Delete")).requireEnabled();
+                .button(JButtonMatcher.withText("Delete")).requireEnabled();
         window.panel(new ClassFinder<JPanel>(JPanel.class, "Groups"))
-                .button(JButtonByTextMatcher.withText("Edit")).requireEnabled();
+                .button(JButtonMatcher.withText("Edit")).requireEnabled();
     }
 
     @Test
@@ -182,8 +181,8 @@ public class ActionsManagerDialogTest {
         ActionManager.makeGroup("amd-ui-test1");
         setupWindow();
         window.list().selectItem("amd-ui-test1").requireSelectedItems("amd-ui-test1");
-        window.panel(new ClassFinder<JPanel>(ActionsGroupPanel.class, null))
-                .button(JButtonByTextMatcher.withText("Add")).click();
+        window.panel(new ClassFinder<ActionsGroupPanel>(ActionsGroupPanel.class, null))
+                .button(JButtonMatcher.withText("Add")).click();
 
         DialogFixture newwin = WindowFinder.findDialog(ActionEditorDialog.class)
                 .withTimeout(5000).using(window.robot);
@@ -196,7 +195,7 @@ public class ActionsManagerDialogTest {
         
         window.list().selectItem("amd-ui-test1").requireSelectedItems("amd-ui-test1");
         window.panel(new ClassFinder<JPanel>(JPanel.class, "Groups"))
-                .button(JButtonByTextMatcher.withText("Edit")).requireEnabled().click();
+                .button(JButtonMatcher.withText("Edit")).requireEnabled().click();
         
         DialogFixture newwin = WindowFinder.findDialog(StandardInputDialog.class)
                 .withTimeout(5000).using(window.robot);
@@ -205,12 +204,12 @@ public class ActionsManagerDialogTest {
         assertEquals("Edit action group", newwin.target.getTitle());
         
         assertEquals("amd-ui-test1", 
-                newwin.textBox(new ClassFinder<JTextComponent>(javax.swing.JTextField.class,
+                newwin.textBox(new ClassFinder<JTextField>(JTextField.class,
                 null)).target.getText());
         
-        newwin.textBox(new ClassFinder<JTextComponent>(javax.swing.JTextField.class,
+        newwin.textBox(new ClassFinder<JTextField>(JTextField.class,
                 null)).deleteText().enterText("amd-ui-test2");
-        newwin.button(JButtonByTextMatcher.withText(button)).requireEnabled().click();
+        newwin.button(JButtonMatcher.withText(button)).requireEnabled().click();
     }
     
     @Test
@@ -229,7 +228,6 @@ public class ActionsManagerDialogTest {
     
     protected void setupWindow() {
         window = new DialogFixture(ActionsManagerDialog.getActionsManagerDialog(null, null));
-        window.robot.settings().eventMode(EventMode.AWT);
         window.show();
     }
 
