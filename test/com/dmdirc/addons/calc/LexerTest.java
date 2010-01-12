@@ -48,8 +48,6 @@ public class LexerTest {
         final Lexer lexer = new Lexer("(123 / 2.0) * ((3)+\t   (-1))");
         final List<Token> tokens = lexer.tokenise();
 
-        System.out.println(Arrays.toString(tokens.toArray()));
-
         assertEquals(18, tokens.size());
         assertEquals(TokenType.START, tokens.get(0).getType());
         assertEquals(TokenType.BRACKET_OPEN, tokens.get(1).getType());
