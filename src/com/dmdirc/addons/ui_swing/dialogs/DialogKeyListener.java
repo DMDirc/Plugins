@@ -37,35 +37,38 @@ import javax.swing.JButton;
 public class DialogKeyListener implements KeyEventDispatcher {
 
     /** Repeat delay to prevent rapid firing of the events. */
-    private static final int REPEAT_DELAY = 750;
+    private static final int REPEAT_DELAY = 250;
     /** Last key press. */
     private long lastKeyPress = System.currentTimeMillis();
 
     /** {@inheritDoc} */
     @Override
     public boolean dispatchKeyEvent(final KeyEvent e) {
-        if (lastKeyPress + REPEAT_DELAY <= System.currentTimeMillis()) {
-            if (KeyboardFocusManager.getCurrentKeyboardFocusManager().
-                    getFocusedWindow() instanceof StandardDialog) {
-                final StandardDialog dialog = (StandardDialog) KeyboardFocusManager.
-                        getCurrentKeyboardFocusManager().getFocusedWindow();
-                if (e.getKeyCode() == KeyEvent.VK_ENTER && e.getModifiers() == UIUtilities.
-                        getCtrlMask()) {
-                    dialog.ctrlEnterPressed();
-                }
-                if (e.getKeyCode() == KeyEvent.VK_ENTER && e.getModifiers() != UIUtilities.
-                        getCtrlMask()) {
-                    if (dialog.getFocusOwner() instanceof JButton) {
-                        dialog.executeAction(((JButton) dialog.getFocusOwner()));
-                    } else {
-                        return dialog.enterPressed();
+        if (e.getID() == e.KEY_RELEASED) {
+            if (lastKeyPress + REPEAT_DELAY <= System.currentTimeMillis()) {
+                if (KeyboardFocusManager.getCurrentKeyboardFocusManager().
+                        getFocusedWindow() instanceof StandardDialog) {
+                    final StandardDialog dialog = (StandardDialog) KeyboardFocusManager.
+                            getCurrentKeyboardFocusManager().getFocusedWindow();
+                    if (e.getKeyCode() == KeyEvent.VK_ENTER && e.getModifiers() == UIUtilities.
+                            getCtrlMask()) {
+                        dialog.ctrlEnterPressed();
+                    }
+                    if (e.getKeyCode() == KeyEvent.VK_ENTER && e.getModifiers() != UIUtilities.
+                            getCtrlMask()) {
+                        if (dialog.getFocusOwner() instanceof JButton) {
+                            dialog.executeAction(
+                                    ((JButton) dialog.getFocusOwner()));
+                        } else {
+                            return dialog.enterPressed();
+                        }
+                    }
+                    if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                        return dialog.escapePressed();
                     }
                 }
-                if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-                    return dialog.escapePressed();
-                }
+                lastKeyPress = System.currentTimeMillis();
             }
-            lastKeyPress = System.currentTimeMillis();
         }
         return false;
     }
