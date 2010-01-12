@@ -51,7 +51,9 @@ public class MainFrameTest {
     @BeforeClass
     public static void setUpClass() throws InvalidIdentityFileException {
         IdentityManager.load();
+        IdentityManager.getAddonIdentity().setOption("test", "debugEDT", "false");
         controller = new SwingController();
+        controller.setDomain("test");
         controller.onLoad();
 
         Main.setUI(controller);
