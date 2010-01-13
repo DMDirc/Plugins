@@ -49,15 +49,12 @@ public class NickColourInputDialog extends StandardDialog
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 1;
-    
     /** Whether or not this is a new entry (as opposed to editing an old one). */
     private boolean isnew;
     /** The row we're editing, if this isn't a new entry. */
     private int row;
-    
     /** The NickColourPanel we're reporting to. */
     private final NickColourPanel panel;
-    
     /** nickname textfield. */
     private JTextField nickname;
     /** network textfield. */
@@ -167,17 +164,14 @@ public class NickColourInputDialog extends StandardDialog
     }
     
     /** Saves settings. */
-    public void saveSettings() {
-        final String myNetwork = network.getText().toLowerCase();
-        final String myNickname = nickname.getText().toLowerCase();
-        final String myTextColour = textColour.getColour();
-        final String myNickColour = nicklistColour.getColour();
-        
+    public void saveSettings() {        
         if (!isnew) {
             panel.removeRow(row);
         }
         
-        panel.addRow(myNetwork, myNickname, myTextColour, myNickColour);
+        panel.addRow(network.getText().toLowerCase(),
+                nickname.getText().toLowerCase(),
+                nickname.getText().toLowerCase(), nicklistColour.getColour());
     }
     
 }
