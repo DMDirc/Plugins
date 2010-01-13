@@ -151,8 +151,13 @@ public final class DummyController extends Plugin implements UIController {
         return null;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     * 
+     * @deprecated 
+     */
     @Override
+    @Deprecated
     public Server getActiveServer() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
