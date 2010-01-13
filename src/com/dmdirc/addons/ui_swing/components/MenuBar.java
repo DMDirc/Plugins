@@ -275,9 +275,9 @@ public class MenuBar extends JMenuBar implements ActionListener, MenuListener {
                         getChannel());
             }
         } else if (e.getActionCommand().equals("ServerSettings")) {
-            controller.showServerSettingsDialog(controller.getActiveServer());
+            controller.showServerSettingsDialog(WindowManager.getActiveServer());
         } else if (e.getActionCommand().equals("Disconnect")) {
-            controller.getActiveServer().disconnect();
+            WindowManager.getActiveServer().disconnect();
         } else if (e.getActionCommand().equals("JoinChannel")) {
             new StandardInputDialog(mainFrame, ModalityType.MODELESS,
                     "Join channel", "Enter the name of the channel to join.") {
@@ -288,7 +288,7 @@ public class MenuBar extends JMenuBar implements ActionListener, MenuListener {
                 /** {@inheritDoc} */
                 @Override
                 public boolean save() {
-                    controller.getActiveServer().join(getText());
+                    WindowManager.getActiveServer().join(getText());
                     return true;
                 }
 
