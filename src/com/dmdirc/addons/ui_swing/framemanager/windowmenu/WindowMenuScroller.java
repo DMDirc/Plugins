@@ -53,9 +53,6 @@ public class WindowMenuScroller implements ConfigChangeListener {
      */
     public WindowMenuScroller(final JMenu menu, final String configDomain,
             final int fixedCount) {
-        if (IdentityManager.getGlobalConfig() == null) {
-            throw new IllegalArgumentException("null global config");
-        }
         this.menu = menu;
         this.configDomain = configDomain;
         this.fixedCount = fixedCount;

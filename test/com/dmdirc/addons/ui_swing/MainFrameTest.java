@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing;
 
-import com.dmdirc.Main;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.InvalidIdentityFileException;
 import com.dmdirc.addons.ui_swing.dialogs.FeedbackDialog;
@@ -52,12 +51,11 @@ public class MainFrameTest {
     public static void setUpClass() throws InvalidIdentityFileException {
         IdentityManager.load();
         IdentityManager.getAddonIdentity().setOption("test", "debugEDT", "false");
+        IdentityManager.getAddonIdentity().setOption("test", "windowMenuItems", "1");
+        IdentityManager.getAddonIdentity().setOption("test", "windowMenuScrollInterval", "1");
         controller = new SwingController();
         controller.setDomain("test");
         controller.onLoad();
-
-        Main.setUI(controller);
-        
     }
 
     @Before

@@ -47,7 +47,6 @@ import org.fest.swing.fixture.JInternalFrameFixture;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class InputTextFrameTest {
@@ -61,11 +60,14 @@ public class InputTextFrameTest {
     @BeforeClass
     public static void setUpClass() throws InvalidIdentityFileException {
         IdentityManager.load();
+        IdentityManager.getAddonIdentity().setOption("test", "windowMenuItems", "1");
+        IdentityManager.getAddonIdentity().setOption("test", "windowMenuScrollInterval", "1");
         IdentityManager.getAddonIdentity().setOption("test", "debugEDT", "false");
+        IdentityManager.getAddonIdentity().setOption("test", "textpanebackground", "");
         controller = new SwingController();
         controller.setDomain("test");
         controller.onLoad();
-        Main.setUI(controller);
+
         Main.ensureExists(PluginManager.getPluginManager(), "tabcompletion");
     }
 
@@ -99,7 +101,7 @@ public class InputTextFrameTest {
         dlg.target.dispose();
     }
 
-    @Test @Ignore
+    @Test
     public void testPasteDialogWithTextBefore() throws InterruptedException {
         window.textBox().enterText("testing:");
         ((InputTextFrame) window.target).doPaste("line1\nline2");
@@ -113,7 +115,7 @@ public class InputTextFrameTest {
         dlg.target.dispose();
     }
 
-    @Test @Ignore
+    @Test
     public void testPasteDialogWithTextAfter() throws InterruptedException {
         window.textBox().enterText("<- testing").pressAndReleaseKey(
                 KeyPressInfo.keyCode(KeyEvent.VK_HOME));
@@ -128,7 +130,7 @@ public class InputTextFrameTest {
         dlg.target.dispose();
     }
 
-    @Test @Ignore
+    @Test
     public void testPasteDialogWithTextAround() throws InterruptedException {
         window.textBox().enterText("testing:<- testing").selectText(8, 8);
         ((InputTextFrame) window.target).doPaste("line1\nline2");
