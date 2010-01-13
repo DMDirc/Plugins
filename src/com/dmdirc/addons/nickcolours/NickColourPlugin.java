@@ -33,6 +33,7 @@ import com.dmdirc.config.prefs.PreferencesManager;
 import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.interfaces.ActionListener;
+import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.parser.interfaces.ChannelClientInfo;
 import com.dmdirc.parser.interfaces.ChannelInfo;
 import com.dmdirc.parser.interfaces.ClientInfo;
@@ -49,13 +50,19 @@ import java.util.Map;
  *
  * @author chris
  */
-public final class NickColourPlugin extends Plugin implements ActionListener {
+public final class NickColourPlugin extends Plugin implements ActionListener,
+        ConfigChangeListener {
     
     /** "Random" colours to use to colour nicknames. */
     private String[] randColours = new String[] {
         "E90E7F", "8E55E9", "B30E0E", "18B33C",
         "58ADB3", "9E54B3", "B39875", "3176B3",
     };
+    private boolean useowncolour;
+    private String owncolour;
+    private boolean userandomcolour;
+    private boolean settext;
+    private boolean setnicklist;
     
     /** Creates a new instance of NickColourPlugin. */
     public NickColourPlugin() {
@@ -94,12 +101,10 @@ public final class NickColourPlugin extends Plugin implements ActionListener {
         final String nickOption2 = "color:"
                 + client.getClient().getParser().getStringConverter().toLowerCase("*:" + client.getClient().getNickname());
         
-        if (IdentityManager.getGlobalConfig().getOptionBool(getDomain(), "useowncolour")
-                && client.getClient().equals(myself)) {
-            final Color color = ColourManager.parseColour(
-                    IdentityManager.getGlobalConfig().getOption(getDomain(), "owncolour"));
+        if (useowncolour && client.getClient().equals(myself)) {
+            final Color color = ColourManager.parseColour(owncolour);
             putColour(map, color, color);
-        }  else if (IdentityManager.getGlobalConfig().getOptionBool(getDomain(), "userandomcolour")) {
+        }  else if (userandomcolour) {
             putColour(map, getColour(client.getClient().getNickname()), getColour(client.getClient().getNickname()));
         }
         
@@ -136,13 +141,11 @@ public final class NickColourPlugin extends Plugin implements ActionListener {
      */
     @SuppressWarnings("unchecked")
     private void putColour(final Map map, final Color textColour, final Color nickColour) {
-        if (IdentityManager.getGlobalConfig().getOptionBool(getDomain(), "settext")
-                && textColour != null) {
+        if (settext && textColour != null) {
             map.put(ChannelClientProperty.TEXT_FOREGROUND, textColour);
         }
         
-        if (IdentityManager.getGlobalConfig().getOptionBool(getDomain(), "setnicklist")
-                && nickColour != null) {
+        if (setnicklist && nickColour != null) {
             map.put(ChannelClientProperty.NICKLIST_FOREGROUND, nickColour);
         }
     }
@@ -218,10 +221,7 @@ public final class NickColourPlugin extends Plugin implements ActionListener {
     /** {@inheritDoc} */
     @Override
     public void onLoad() {
-        if (IdentityManager.getGlobalConfig().hasOptionString(getDomain(), "randomcolours")) {
-            randColours = IdentityManager.getGlobalConfig().getOptionList(getDomain(), "randomcolours").toArray(new String[0]);
-        }
-        
+        setCachedSettings();
         ActionManager.addListener(this, CoreActionType.CHANNEL_GOTNAMES,
                 CoreActionType.CHANNEL_JOIN);
     }
@@ -264,6 +264,23 @@ public final class NickColourPlugin extends Plugin implements ActionListener {
 
         general.addSubCategory(colours);
         manager.getCategory("Plugins").addSubCategory(general);
+    }
+
+    private void setCachedSettings() {
+        useowncolour = IdentityManager.getGlobalConfig().getOptionBool(getDomain(), "useowncolour");
+        owncolour = IdentityManager.getGlobalConfig().getOption(getDomain(), "owncolour");
+        userandomcolour = IdentityManager.getGlobalConfig().getOptionBool(getDomain(), "userandomcolour");
+        settext = IdentityManager.getGlobalConfig().getOptionBool(getDomain(), "settext");
+        setnicklist = IdentityManager.getGlobalConfig().getOptionBool(getDomain(), "setnicklist");
+        if (IdentityManager.getGlobalConfig().hasOptionString(getDomain(), "randomcolours")) {
+            randColours = IdentityManager.getGlobalConfig().getOptionList(getDomain(), "randomcolours").toArray(new String[0]);
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void configChanged(final String domain, final String key) {
+        setCachedSettings();
     }
     
 }
