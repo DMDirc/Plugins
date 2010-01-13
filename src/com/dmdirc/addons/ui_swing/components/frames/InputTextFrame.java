@@ -57,8 +57,8 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JSeparator;
 import javax.swing.KeyStroke;
-
 import javax.swing.event.InternalFrameEvent;
+
 import net.miginfocom.layout.PlatformDefaults;
 
 /**
@@ -85,6 +85,8 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
     private JPopupMenu inputFieldPopup;
     /** Nick popup menu. */
     protected JPopupMenu nickPopup;
+    /** Away indicator. */
+    private boolean useAwayIndicator;
 
     /**
      * Creates a new instance of InputFrame.
@@ -108,9 +110,11 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
         getInputField().setCaretColor(config.getOptionColour(
                 "ui", "inputforegroundcolour",
                 "ui", "foregroundcolour"));
+        config.getOptionBool("ui", "awayindicator");
 
         config.addChangeListener("ui", "inputforegroundcolour", this);
         config.addChangeListener("ui", "inputbackgroundcolour", this);
+        config.addChangeListener("ui", "awayindicator", this);
         if (getContainer().getServer() != null) {
             getContainer().getServer().addAwayStateListener(this);
         }
@@ -125,7 +129,7 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
             @Override
             public void run() {
                 InputTextFrame.super.open();
-                if (getConfigManager().getOptionBool("ui", "awayindicator") && getContainer().
+                if (useAwayIndicator && getContainer().
                     getServer() != null) {
                     awayLabel.setVisible(getContainer().getServer().isAway());
                 }
@@ -385,22 +389,26 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
     public void configChanged(final String domain, final String key) {
         super.configChanged(domain, key);
 
-        if ("ui".equals(domain) && getInputField() != null &&
-                getConfigManager() != null) {
-            if ("inputbackgroundcolour".equals(key) ||
-                    "backgroundcolour".equals(key)) {
-                getInputField().setBackground(getConfigManager().getOptionColour(
-                        "ui", "inputbackgroundcolour",
-                        "ui", "backgroundcolour"));
-            } else if ("inputforegroundcolour".equals(key) ||
-                    "foregroundcolour".equals(key)) {
-                getInputField().setForeground(getConfigManager().getOptionColour(
-                        "ui", "inputforegroundcolour",
-                        "ui", "foregroundcolour"));
-                getInputField().setCaretColor(getConfigManager().getOptionColour(
-                        "ui", "inputforegroundcolour",
-                        "ui", "foregroundcolour"));
-
+        if ("ui".equals(domain) && getConfigManager() != null) {
+            if (getInputField() != null) {
+                if ("inputbackgroundcolour".equals(key) ||
+                        "backgroundcolour".equals(key)) {
+                    getInputField().setBackground(getConfigManager().getOptionColour(
+                            "ui", "inputbackgroundcolour",
+                            "ui", "backgroundcolour"));
+                } else if ("inputforegroundcolour".equals(key) ||
+                        "foregroundcolour".equals(key)) {
+                    getInputField().setForeground(getConfigManager().getOptionColour(
+                            "ui", "inputforegroundcolour",
+                            "ui", "foregroundcolour"));
+                    getInputField().setCaretColor(getConfigManager().getOptionColour(
+                            "ui", "inputforegroundcolour",
+                            "ui", "foregroundcolour"));
+                }
+            }
+            if ("awayindicator".equals(key)) {
+                useAwayIndicator = getConfigManager().getOptionBool("ui",
+                        "awayindicator");
             }
         }
     }

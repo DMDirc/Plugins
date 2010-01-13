@@ -22,44 +22,58 @@
 
 package com.dmdirc.addons.freedesktop_notifications;
 
+import com.dmdirc.Main;
+import com.dmdirc.addons.freedesktop_notifications.commons.StringEscapeUtils;
+import com.dmdirc.commandparser.CommandManager;
+import com.dmdirc.config.IdentityManager;
+import com.dmdirc.config.prefs.PreferencesCategory;
+import com.dmdirc.config.prefs.PreferencesManager;
+import com.dmdirc.config.prefs.PreferencesSetting;
+import com.dmdirc.config.prefs.PreferencesType;
+import com.dmdirc.installer.StreamReader;
+import com.dmdirc.interfaces.ConfigChangeListener;
+import com.dmdirc.logger.ErrorLevel;
+import com.dmdirc.logger.Logger;
 import com.dmdirc.plugins.Plugin;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.PluginManager;
+import com.dmdirc.ui.messages.Styliser;
 import com.dmdirc.util.resourcemanager.ResourceManager;
-import com.dmdirc.logger.ErrorLevel;
-import com.dmdirc.logger.Logger;
-import com.dmdirc.Main;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import com.dmdirc.commandparser.CommandManager;
-import com.dmdirc.installer.StreamReader;
-import com.dmdirc.ui.messages.Styliser;
-import com.dmdirc.config.IdentityManager;
-import com.dmdirc.config.Identity;
-import com.dmdirc.config.prefs.PreferencesManager;
-import com.dmdirc.config.prefs.PreferencesCategory;
-import com.dmdirc.config.prefs.PreferencesSetting;
-import com.dmdirc.config.prefs.PreferencesType;
-import com.dmdirc.addons.freedesktop_notifications.commons.StringEscapeUtils;;
 
 /**
  * This plugin adds freedesktop Style Notifications to dmdirc.
  *
  * @author Shane 'Dataforce' McCormack
  */
-public final class FreeDesktopNotificationsPlugin extends Plugin {
+public final class FreeDesktopNotificationsPlugin extends Plugin implements
+        ConfigChangeListener{
     /** The DcopCommand we created */
     private FDNotifyCommand command = null;
-    
     /** Files dir */
     private static final String filesDir  = Main.getConfigDir() + "plugins/freedesktop_notifications_files/";
+    /** notification timeout. */
+    private int timeout;
+    /** notification icon. */
+    private String icon;
+    /** Escape HTML. */
+    private boolean escapehtml;
+    /** Strict escape. */
+    private boolean strictescape;
+    /** Strip codes. */
+    private boolean stripcodes;
     
     /**
      * Creates a new instance of the FreeDesktopNotifications Plugin.
      */
     public FreeDesktopNotificationsPlugin() {
         super();
+
+        IdentityManager.getGlobalConfig().addChangeListener(getDomain(), this);
+        setCachedSettings();
     }
 
     /**
@@ -70,8 +84,6 @@ public final class FreeDesktopNotificationsPlugin extends Plugin {
      * @return True if the notification was shown.
      */
     public boolean showNotification(final String title, final String message) {
-        final int seconds = IdentityManager.getGlobalConfig().getOptionInt(getDomain(), "general.timeout");
-        final String icon = IdentityManager.getGlobalConfig().getOption(getDomain(), "general.icon");
         final ArrayList<String> args = new ArrayList<String>();
         
         args.add("/usr/bin/env");
@@ -82,7 +94,7 @@ public final class FreeDesktopNotificationsPlugin extends Plugin {
         args.add("-i");
         args.add(icon);
         args.add("-t");
-        args.add(Integer.toString(seconds * 1000));
+        args.add(Integer.toString(timeout * 1000));
         args.add("-s");
 
         if (title != null && !title.isEmpty()) {
@@ -113,10 +125,6 @@ public final class FreeDesktopNotificationsPlugin extends Plugin {
      * @return Input string after being processed according to config settings.
      */
     public final String prepareString(final String input) {
-        final boolean escapehtml = IdentityManager.getGlobalConfig().getOptionBool(getDomain(), "advanced.escapehtml");
-	final boolean strictescape = IdentityManager.getGlobalConfig().getOptionBool(getDomain(), "advanced.strictescape");
-        final boolean stripcodes = IdentityManager.getGlobalConfig().getOptionBool(getDomain(), "advanced.stripcodes");
-
         String output = input;
         if (stripcodes) { output = Styliser.stipControlCodes(output); }
         if (escapehtml) {
@@ -178,8 +186,7 @@ public final class FreeDesktopNotificationsPlugin extends Plugin {
     /** {@inheritDoc} */
     @Override
     public void domainUpdated() {
-        final Identity defaults = IdentityManager.getAddonIdentity();
-        defaults.setOption(getDomain(), "general.icon", filesDir+"icon.png");
+        IdentityManager.getAddonIdentity().setOption(getDomain(), "general.icon", filesDir+"icon.png");
     }
     
     /** {@inheritDoc} */
@@ -194,6 +201,20 @@ public final class FreeDesktopNotificationsPlugin extends Plugin {
         general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN, getDomain(), "advanced.stripcodes", "Strip Control Codes", "Strip IRC Control codes from messages?"));
         
         manager.getCategory("Plugins").addSubCategory(general);
+    }
+
+    private void setCachedSettings() {
+        timeout = IdentityManager.getGlobalConfig().getOptionInt(getDomain(), "general.timeout");
+        icon = IdentityManager.getGlobalConfig().getOption(getDomain(), "general.icon");
+        escapehtml = IdentityManager.getGlobalConfig().getOptionBool(getDomain(), "advanced.escapehtml");
+	strictescape = IdentityManager.getGlobalConfig().getOptionBool(getDomain(), "advanced.strictescape");
+        stripcodes = IdentityManager.getGlobalConfig().getOptionBool(getDomain(), "advanced.stripcodes");
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void configChanged(final String domain, final String key) {
+        setCachedSettings();
     }
 }
 

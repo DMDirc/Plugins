@@ -22,13 +22,10 @@
 
 package com.dmdirc.addons.freedesktop_notifications;
 
-import com.dmdirc.Server;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandManager;
 import com.dmdirc.commandparser.commands.GlobalCommand;
 import com.dmdirc.ui.interfaces.InputWindow;
-
-import java.util.List;
 
 /**
  * The FDNotify Command shows a nice popup on using the FreeDesktop

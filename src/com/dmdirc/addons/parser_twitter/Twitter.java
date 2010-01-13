@@ -24,9 +24,15 @@ package com.dmdirc.addons.parser_twitter;
 
 import com.dmdirc.addons.parser_twitter.api.TwitterAPI;
 import com.dmdirc.addons.parser_twitter.api.TwitterErrorHandler;
+import com.dmdirc.addons.parser_twitter.api.TwitterException;
 import com.dmdirc.addons.parser_twitter.api.TwitterMessage;
+import com.dmdirc.addons.parser_twitter.api.TwitterRawHandler;
 import com.dmdirc.addons.parser_twitter.api.TwitterStatus;
 import com.dmdirc.addons.parser_twitter.api.TwitterUser;
+import com.dmdirc.config.ConfigManager;
+import com.dmdirc.config.IdentityManager;
+import com.dmdirc.interfaces.ConfigChangeListener;
+import com.dmdirc.logger.ErrorManager;
 import com.dmdirc.parser.common.CallbackManager;
 import com.dmdirc.parser.common.DefaultStringConverter;
 import com.dmdirc.parser.common.IgnoreList;
@@ -37,13 +43,18 @@ import com.dmdirc.parser.interfaces.ChannelInfo;
 import com.dmdirc.parser.interfaces.ClientInfo;
 import com.dmdirc.parser.interfaces.LocalClientInfo;
 import com.dmdirc.parser.interfaces.Parser;
-import com.dmdirc.parser.interfaces.callbacks.ChannelMessageListener;
 import com.dmdirc.parser.interfaces.StringConverter;
 import com.dmdirc.parser.interfaces.callbacks.AuthNoticeListener;
+import com.dmdirc.parser.interfaces.callbacks.ChannelJoinListener;
+import com.dmdirc.parser.interfaces.callbacks.ChannelKickListener;
+import com.dmdirc.parser.interfaces.callbacks.ChannelMessageListener;
 import com.dmdirc.parser.interfaces.callbacks.ChannelModeChangeListener;
 import com.dmdirc.parser.interfaces.callbacks.ChannelNamesListener;
 import com.dmdirc.parser.interfaces.callbacks.ChannelSelfJoinListener;
 import com.dmdirc.parser.interfaces.callbacks.ChannelTopicListener;
+import com.dmdirc.parser.interfaces.callbacks.DataInListener;
+import com.dmdirc.parser.interfaces.callbacks.DataOutListener;
+import com.dmdirc.parser.interfaces.callbacks.DebugInfoListener;
 import com.dmdirc.parser.interfaces.callbacks.MotdEndListener;
 import com.dmdirc.parser.interfaces.callbacks.MotdLineListener;
 import com.dmdirc.parser.interfaces.callbacks.MotdStartListener;
@@ -52,34 +63,21 @@ import com.dmdirc.parser.interfaces.callbacks.NickChangeListener;
 import com.dmdirc.parser.interfaces.callbacks.NumericListener;
 import com.dmdirc.parser.interfaces.callbacks.Post005Listener;
 import com.dmdirc.parser.interfaces.callbacks.PrivateMessageListener;
-import com.dmdirc.parser.interfaces.callbacks.UnknownMessageListener;
 import com.dmdirc.parser.interfaces.callbacks.PrivateNoticeListener;
 import com.dmdirc.parser.interfaces.callbacks.ServerReadyListener;
-import com.dmdirc.parser.interfaces.callbacks.UserModeDiscoveryListener;
 import com.dmdirc.parser.interfaces.callbacks.SocketCloseListener;
+import com.dmdirc.parser.interfaces.callbacks.UnknownMessageListener;
+import com.dmdirc.parser.interfaces.callbacks.UserModeDiscoveryListener;
 import com.dmdirc.ui.messages.Styliser;
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Collection;
 
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import com.dmdirc.interfaces.ConfigChangeListener;
-import com.dmdirc.addons.parser_twitter.api.TwitterException;
-import com.dmdirc.addons.parser_twitter.api.TwitterRawHandler;
-import com.dmdirc.config.ConfigManager;
-import com.dmdirc.config.IdentityManager;
-import com.dmdirc.logger.ErrorManager;
-import com.dmdirc.parser.interfaces.callbacks.ChannelJoinListener;
-import com.dmdirc.parser.interfaces.callbacks.ChannelKickListener;
-import com.dmdirc.parser.interfaces.callbacks.DataInListener;
-import com.dmdirc.parser.interfaces.callbacks.DataOutListener;
-import com.dmdirc.parser.interfaces.callbacks.DebugInfoListener;
-import java.lang.reflect.Method;
-import java.net.URI;
-import java.util.Calendar;
 
 /**
  * Twitter Parser for DMDirc.
@@ -155,6 +153,20 @@ public class Twitter implements Parser, TwitterErrorHandler, TwitterRawHandler, 
 
     /** Debug enabled. */
     private boolean debugEnabled;
+    /** Save last IDs */
+    private boolean saveLastIDs;
+    /** Status count. */
+    private int statusCount;
+    /** Get sent messages. */
+    private boolean getSentMessage;
+    /** Number of api calls to use. */
+    private int apicalls;
+    /** Auto append @ to nicknames. */
+    private boolean autoAt;
+    /** Replace opening nickname. */
+    private boolean replaceOpeningNickname;
+    /** hide 500 errors. */
+    private boolean hide500Errors;
 
     /**
      * Create a new Twitter Parser!
@@ -174,8 +186,7 @@ public class Twitter implements Parser, TwitterErrorHandler, TwitterRawHandler, 
         this.myAddress = address;
         
         resetState(true);
-
-        debugEnabled = getConfigManager().getOptionBool(myPlugin.getDomain(), "debugEnabled");
+        
         if (getConfigManager().hasOptionString(myPlugin.getDomain(), "api.address."+myServerName)) {
             this.apiAddress = getConfigManager().getOption(myPlugin.getDomain(), "api.address."+myServerName);
         } else {
@@ -948,7 +959,7 @@ public class Twitter implements Parser, TwitterErrorHandler, TwitterRawHandler, 
         long lastTimelineId = -1;
         long lastDirectMessageId = -1;
 
-        if (getConfigManager().getOptionBool(myPlugin.getDomain(), "saveLastIDs")) {
+        if (saveLastIDs) {
             if (getConfigManager().hasOptionString(myPlugin.getDomain(), "lastReplyId-"+myServerName+"-"+myUsername)) {
                 lastReplyId = TwitterAPI.parseLong(getConfigManager().getOption(myPlugin.getDomain(), "lastReplyId-"+myServerName+"-"+myUsername), -1);
             }
@@ -972,7 +983,7 @@ public class Twitter implements Parser, TwitterErrorHandler, TwitterRawHandler, 
             if (!wantAuth && api.isAllowed()) {
                 lastQueryTime = System.currentTimeMillis();
 
-                final int statusesPerAttempt = Math.min(200, getConfigManager().getOptionInt(myPlugin.getDomain(), "statuscount"));
+                final int statusesPerAttempt = Math.min(200, statusCount);
 
                 final List<TwitterStatus> statuses = new ArrayList<TwitterStatus>();
                 for (TwitterStatus status : api.getReplies(lastReplyId, statusesPerAttempt)) {
@@ -1017,7 +1028,7 @@ public class Twitter implements Parser, TwitterErrorHandler, TwitterRawHandler, 
                     if (directMessage.getID() > lastDirectMessageId) { lastDirectMessageId = directMessage.getID(); }
                 }
 
-                if (getConfigManager().getOptionBool(myPlugin.getDomain(), "getSentMessages")) {
+                if (getSentMessage) {
                     for (TwitterMessage directMessage : api.getSentDirectMessages(lastDirectMessageId)) {
                         directMessages.add(directMessage);
                         if (directMessage.getID() > lastDirectMessageId) { lastDirectMessageId = directMessage.getID(); }
@@ -1045,7 +1056,6 @@ public class Twitter implements Parser, TwitterErrorHandler, TwitterRawHandler, 
             IdentityManager.getConfigIdentity().setOption(myPlugin.getDomain(), "lastTimelineId-"+myServerName+"-"+myUsername, Long.toString(lastTimelineId));
             IdentityManager.getConfigIdentity().setOption(myPlugin.getDomain(), "lastDirectMessageId-"+myServerName+"-"+myUsername, Long.toString(lastDirectMessageId));
 
-            final int apiLimit = getConfigManager().getOptionInt(myPlugin.getDomain(), "apicalls");
             final int endCalls = (wantAuth) ? 0 : api.getUsedCalls();
             final Long[] apiCalls = (wantAuth) ? new Long[]{0L, 0L, System.currentTimeMillis(), (long)api.getUsedCalls()} : api.getRemainingApiCalls();
             doDebug(Debug.apiCalls, "Twitter calls Remaining: "+apiCalls[0]);
@@ -1071,14 +1081,14 @@ public class Twitter implements Parser, TwitterErrorHandler, TwitterRawHandler, 
                 sleepTime = 10 * 60 * 1000;
                 // Also alert the user.
                 twitterFail("Unable to communicate with twitter, or no API calls allowed at all, retrying in 10 minutes.");
-            } else if (api.getUsedCalls() > apiLimit) {
+            } else if (api.getUsedCalls() > apicalls) {
                 // Sleep for the rest of the hour, we have done too much!
                 sleepTime = timeLeft;
             } else {
                 // Else work out how many calls we have left.
                 // Whichever is less between the number of calls we want to make
                 // and the number of calls twitter is going to allow us to make.
-                final long callsLeft = Math.min(apiLimit - api.getUsedCalls(), apiCalls[0]);
+                final long callsLeft = Math.min(apicalls - api.getUsedCalls(), apiCalls[0]);
                 // How many calls do we make each time?
                 // If this is less than 0 (If there was a time reset between
                 // calculating the start and end calls used) then assume 3.
@@ -1129,11 +1139,12 @@ public class Twitter implements Parser, TwitterErrorHandler, TwitterRawHandler, 
         }
         clients.clear();
 
-        if (!simpleMyself && getConfigManager().getOptionBool(myPlugin.getDomain(), "autoAt")) {
+        if (!simpleMyself && autoAt) {
             myself = new TwitterClientInfo("@" + myUsername, this);
         } else {
             myself = new TwitterClientInfo(myUsername, this);
         }
+        setCachedSettings();
     }
 
     /**
@@ -1184,7 +1195,7 @@ public class Twitter implements Parser, TwitterErrorHandler, TwitterRawHandler, 
         final StringBuffer newStatus = new StringBuffer(message);
         final TwitterChannelInfo channel = (TwitterChannelInfo) this.getChannel(mainChannelName);
         
-        if (channel != null && getConfigManager().getOptionBool(myPlugin.getDomain(), "replaceOpeningNickname")) {
+        if (channel != null && replaceOpeningNickname) {
             final String[] bits = message.split(" ");
             if (bits[0].charAt(bits[0].length() - 1) == ':') {
                 final String name = bits[0].substring(0, bits[0].length() - 1);
@@ -1289,8 +1300,8 @@ public class Twitter implements Parser, TwitterErrorHandler, TwitterRawHandler, 
     /** {@inheritDoc} */
     @Override
     public void handleTwitterError(final TwitterAPI api, final Throwable t, final String source, final String twitterInput, final String twitterOutput, final String message) {
-        final boolean hide500Errors = !debugEnabled && getConfigManager().getOptionBool(myPlugin.getDomain(), "hide500Errors");
-        if (hide500Errors && message.matches("^\\(50[0-9]\\).*")) { return; }
+        final boolean showError = !debugEnabled && hide500Errors;
+        if (showError && message.matches("^\\(50[0-9]\\).*")) { return; }
         try {
             if (!message.isEmpty()) {
                 twitterFail("Recieved an error from twitter: " + message + (debugEnabled ? " [" + source + "]" : ""));
@@ -1311,25 +1322,9 @@ public class Twitter implements Parser, TwitterErrorHandler, TwitterRawHandler, 
             doDebug(Debug.twitterErrorMore, "");
             doDebug(Debug.twitterErrorMore, "Exception:");
 
-            // Hax the error manager to get a nice String[] representing the stack trace and output it.
-            try {
-                final Method gt = ErrorManager.class.getDeclaredMethod("getTrace", Throwable.class);
-                gt.setAccessible(true);
-                final String[] trace = (String[]) gt.invoke(ErrorManager.getErrorManager(), t);
-
-                for (String out : trace) {
-                    doDebug(Debug.twitterErrorMore, "                "+out);
-                }
-            } catch (NoSuchMethodException ex) {
-                doDebug(Debug.twitterErrorMore, "    ... Unable to get StackTrace (nsme: "+ex+")");
-            } catch (SecurityException ex) {
-                doDebug(Debug.twitterErrorMore, "    ... Unable to get StackTrace (se: "+ex+")");
-            } catch (IllegalAccessException ex) {
-                doDebug(Debug.twitterErrorMore, "    ... Unable to get StackTrace (iae: "+ex+")");
-            } catch (IllegalArgumentException ex) {
-                doDebug(Debug.twitterErrorMore, "    ... Unable to get StackTrace (iae2: "+ex+")");
-            } catch (InvocationTargetException ex) {
-                doDebug(Debug.twitterErrorMore, "    ... Unable to get StackTrace (ite: "+ex+")");
+            final String[] trace = ErrorManager.getTrace(t);
+            for (String out : trace) {
+                doDebug(Debug.twitterErrorMore, "                "+out);
             }
 
             doDebug(Debug.twitterErrorMore, "==================================");
@@ -1400,9 +1395,9 @@ public class Twitter implements Parser, TwitterErrorHandler, TwitterRawHandler, 
     /** {@inheritDoc} */
     @Override
     public void configChanged(final String domain, final String key) {
+        setCachedSettings();
         if (domain.equalsIgnoreCase(myPlugin.getDomain())) {
             if (key.equalsIgnoreCase("debugEnabled")) {
-                debugEnabled = getConfigManager().getOptionBool(myPlugin.getDomain(), "debugEnabled");
                 api.setDebug(debugEnabled);
             } else if (key.equalsIgnoreCase("autoAt")) {
                 sendPrivateNotice("'autoAt' setting was changed, reconnect needed.");
@@ -1422,5 +1417,16 @@ public class Twitter implements Parser, TwitterErrorHandler, TwitterRawHandler, 
         }
 
         return myConfigManager;
+    }
+
+    private void setCachedSettings() {
+        saveLastIDs = getConfigManager().getOptionBool(myPlugin.getDomain(), "saveLastIDs");
+        statusCount = getConfigManager().getOptionInt(myPlugin.getDomain(), "statusCount");
+        getSentMessage = getConfigManager().getOptionBool(myPlugin.getDomain(), "getSentMessage");
+        apicalls = getConfigManager().getOptionInt(myPlugin.getDomain(), "apicalls");
+        autoAt = getConfigManager().getOptionBool(myPlugin.getDomain(), "autoAt");
+        replaceOpeningNickname = getConfigManager().getOptionBool(myPlugin.getDomain(), "replaceOpeningNickname");
+        hide500Errors = getConfigManager().getOptionBool(myPlugin.getDomain(), "hide500Errors");
+        debugEnabled = getConfigManager().getOptionBool(myPlugin.getDomain(), "debugEnabled");
     }
 }
