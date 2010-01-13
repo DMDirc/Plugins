@@ -232,6 +232,12 @@ public class TwitterChannelInfo implements ChannelInfo {
 
     /** {@inheritDoc} */
     @Override
+    public void requestListModes() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public Collection<ChannelListModeItem> getListMode(final char mode) {
         final ArrayList<ChannelListModeItem> items = new ArrayList<ChannelListModeItem>();
 
