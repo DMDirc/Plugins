@@ -24,6 +24,7 @@ package com.dmdirc.addons.ui_swing.components.statusbar;
 
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.config.IdentityManager;
+import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.interfaces.StatusBarComponent;
 import com.dmdirc.ui.interfaces.StatusMessageNotifier;
@@ -43,7 +44,7 @@ import javax.swing.SwingUtilities;
  * Message label handles showing messages in the status bar.
  */
 public class MessageLabel extends JLabel implements StatusBarComponent, 
-        MouseListener {
+        MouseListener, ConfigChangeListener {
 
     /**
      * A version number for this class. It should be changed whenever the class
@@ -57,6 +58,8 @@ public class MessageLabel extends JLabel implements StatusBarComponent,
     private transient StatusMessageNotifier messageNotifier;
     /** Timer to clear the message. */
     private transient TimerTask messageTimer;
+    /** Message timeout. */
+    private int timeout;
 
     /**
      * Instantiates a new message label.
@@ -66,34 +69,73 @@ public class MessageLabel extends JLabel implements StatusBarComponent,
         setText(DEFAULT_MESSAGE);
         setBorder(BorderFactory.createEtchedBorder());
         addMouseListener(this);
+        setCachedSettings();
+        IdentityManager.getGlobalConfig().addChangeListener("ui",
+                "awayindicator", this);
     }
 
+    /**
+     * Sets the message for this message label.
+     *
+     * @param newMessage New message
+     */
     public void setMessage(final String newMessage) {
         setMessage(newMessage, (StatusMessageNotifier) null);
     }
 
+    /**
+     * Sets the message for this message label.
+     *
+     * @param newMessage New message
+     * @param newNotifier New notifier
+     */
     public void setMessage(final String newMessage,
             final StatusMessageNotifier newNotifier) {
         setMessage(null, newMessage, newNotifier);
     }
 
+    /**
+     * Sets the message for this message label.
+     *
+     * @param iconType Icon type
+     * @param newMessage New message
+     */
     public void setMessage(final String iconType, final String newMessage) {
         setMessage(iconType, newMessage, null);
     }
 
+    /**
+     * Sets the message for this message label.
+     *
+     * @param iconType Icon type
+     * @param newMessage New message
+     * @param newNotifier New notifier
+     */
     public void setMessage(final String iconType, final String newMessage,
             final StatusMessageNotifier newNotifier) {
-        final int timeout =
-                IdentityManager.getGlobalConfig().
-                getOptionInt("statusBar", "messageDisplayLength");
         setMessage(iconType, newMessage, newNotifier, timeout);
     }
 
+    /**
+     * Sets the message for this message label.
+     *
+     * @param newMessage New message
+     * @param newNotifier New notifier
+     * @param timeout New timeout
+     */
     public void setMessage(final String newMessage,
             final StatusMessageNotifier newNotifier, final int timeout) {
         setMessage(null, newMessage, newNotifier, timeout);
     }
 
+    /**
+     * Sets the message for this message label.
+     *
+     * @param iconType Icon type
+     * @param newMessage New message
+     * @param newNotifier New notifier
+     * @param timeout New timeout
+     */
     public synchronized void setMessage(final String iconType, final String newMessage,
             final StatusMessageNotifier newNotifier, final int timeout) {
         final Icon icon;
@@ -194,5 +236,17 @@ public class MessageLabel extends JLabel implements StatusBarComponent,
     @Override
     public void mouseExited(final MouseEvent e) {
         //Ignore
+    }
+
+    /** Set cached options. */
+    private void setCachedSettings() {
+        timeout = IdentityManager.getGlobalConfig().getOptionInt("statusBar",
+                "messageDisplayLength");
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void configChanged(final String domain, final String key) {
+        setCachedSettings();
     }
 }
