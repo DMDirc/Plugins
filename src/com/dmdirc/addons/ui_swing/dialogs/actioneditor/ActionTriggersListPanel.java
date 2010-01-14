@@ -51,7 +51,7 @@ public class ActionTriggersListPanel extends JPanel {
      */
     private static final long serialVersionUID = 1;
     /** Trigger list. */
-    private List<ActionType> triggers;
+    private final List<ActionType> triggers;
     /** Listeners. */
     private final ListenerList listeners = new ListenerList();
 
@@ -77,6 +77,7 @@ public class ActionTriggersListPanel extends JPanel {
 
     /** Initialises the components. */
     private void initComponents() {
+        setOpaque(false);
         setLayout(new MigLayout("fillx, wrap 2"));
     }
 

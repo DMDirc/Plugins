@@ -101,6 +101,7 @@ public class URLProtocolPanel extends JPanel implements ActionListener,
 
     /** Initialises the components. */
     private void initComponents() {
+        setOpaque(false);
         showFileChooser = new JButton("Browse");
         commandPath = new JTextField();
         optionType = new ButtonGroup();
