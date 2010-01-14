@@ -25,17 +25,17 @@ package com.dmdirc.addons.ui_swing.dialogs.channelsetting;
 import com.dmdirc.Channel;
 import com.dmdirc.addons.ui_swing.components.ParamModePanel;
 import com.dmdirc.addons.ui_swing.UIUtilities;
-
 import com.dmdirc.parser.interfaces.Parser;
+
 import java.awt.Insets;
 import java.util.Hashtable;
 import java.util.Map;
-import javax.swing.BorderFactory;
 
+import javax.swing.BorderFactory;
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
-
 import javax.swing.UIManager;
+
 import net.miginfocom.swing.MigLayout;
 
 /** Non list mode panel. */
@@ -103,8 +103,6 @@ public final class ChannelModesPane extends JPanel {
             String text;
             String tooltip;
 
-            final boolean opaque = UIUtilities.getTabbedPaneOpaque();
-
             if (channel.getConfigManager().hasOptionString("server",
                     "mode" + mode)) {
                 text = channel.getConfigManager().
@@ -126,7 +124,7 @@ public final class ChannelModesPane extends JPanel {
             final JCheckBox checkBox = new JCheckBox(text, state);
             checkBox.setMargin(new Insets(0, 0, 0, 0));
             checkBox.setToolTipText(tooltip);
-            checkBox.setOpaque(opaque);
+            checkBox.setOpaque(false);
 
             modeCheckBoxes.put(mode, checkBox);
             if (!channel.getConfigManager().hasOptionString("server",

@@ -57,8 +57,7 @@ public class TreeScroller implements MouseWheelListener {
         this.selectionModel = tree.getSelectionModel();
 
         rootVisible = tree.isRootVisible();
-        rootNode =
-                (DefaultMutableTreeNode) tree.getModel().getRoot();
+        rootNode = (DefaultMutableTreeNode) tree.getModel().getRoot();
 
         tree.addMouseWheelListener(this);
     }

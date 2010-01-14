@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.components.colours;
 
-import com.dmdirc.addons.ui_swing.components.colours.ColourPickerDialog;
 import com.dmdirc.ui.messages.ColourManager;
 import com.dmdirc.util.ListenerList;
 import com.dmdirc.addons.ui_swing.UIUtilities;
@@ -38,6 +37,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
+import javax.swing.UIManager;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -141,6 +141,8 @@ public final class OptionalColourChooser extends JPanel implements ActionListene
         enabled.setPreferredSize(new Dimension(40, 40));
         enabled.setSelected(initialState);
         enabled.addActionListener(this);
+        enabled.setOpaque(false);
+        setOpaque(false);
 
         setLayout(new MigLayout("fill, ins 0"));
 

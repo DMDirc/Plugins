@@ -24,8 +24,8 @@ package com.dmdirc.addons.ui_swing.dialogs.serversetting;
 
 import com.dmdirc.Server;
 import com.dmdirc.addons.ui_swing.UIUtilities;
-
 import com.dmdirc.parser.interfaces.Parser;
+
 import java.awt.Insets;
 import java.util.Hashtable;
 import java.util.Map;
@@ -33,8 +33,8 @@ import java.util.Map;
 import javax.swing.BorderFactory;
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
-
 import javax.swing.UIManager;
+
 import net.miginfocom.swing.MigLayout;
 
 /** User mode panel. */
@@ -86,8 +86,6 @@ public final class UserModesPane extends JPanel {
         modeCheckBoxes =
                 new Hashtable<String, JCheckBox>();
 
-        final boolean opaque = UIUtilities.getTabbedPaneOpaque();
-
         // Lay out all the boolean mode checkboxes
         for (int i = 0; i < userModes.length();
                 i++) {
@@ -116,7 +114,7 @@ public final class UserModesPane extends JPanel {
             final JCheckBox checkBox = new JCheckBox(text, state);
             checkBox.setMargin(new Insets(0, 0, 0, 0));
             checkBox.setToolTipText(tooltip);
-            checkBox.setOpaque(opaque);
+            checkBox.setOpaque(false);
 
             modeCheckBoxes.put(mode, checkBox);
         }

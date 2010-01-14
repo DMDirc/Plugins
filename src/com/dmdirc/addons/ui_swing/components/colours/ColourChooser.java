@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.components.colours;
 
-import com.dmdirc.addons.ui_swing.components.*;
 import com.dmdirc.ui.messages.ColourManager;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 
@@ -36,6 +35,7 @@ import java.awt.event.ActionListener;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.UIManager;
 import javax.swing.event.EventListenerList;
 
 import net.miginfocom.swing.MigLayout;
@@ -64,7 +64,7 @@ public final class ColourChooser extends JPanel implements ActionListener {
     /** The value of this component. */
     private String value;
     /** Event listeners. */
-    private EventListenerList listeners;
+    private final EventListenerList listeners;
     /** Action command. */
     private String command;
     /** Parent window. */
@@ -131,6 +131,7 @@ public final class ColourChooser extends JPanel implements ActionListener {
         previewPanel = new JPanel();
         previewPanel.setPreferredSize(new Dimension(40, 10));
         previewPanel.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
+        setOpaque(false);
 
         setLayout(new MigLayout("ins 0, fill"));
 
