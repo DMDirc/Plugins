@@ -106,11 +106,19 @@ public class SwingRestartDialog extends StandardDialog implements ActionListener
     
     /** Layout Components. */
     public void layoutComponents() {
-        setLayout(new MigLayout("fill, wrap 2"));
+        setLayout(new MigLayout("fill, wrap 2, wmax " +
+                mainFrame.getSize().getWidth() + ", pack"));
         
-        add(info, "grow, pushy, span 2");
+        add(info, "grow, pushx, span 2");
         add(getLeftButton(), "split, right");
         add(getRightButton(), "right");
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void validate() {
+        super.validate();
+        setLocationRelativeTo(mainFrame);
     }
 
     /** 
