@@ -1421,7 +1421,7 @@ public class Twitter implements Parser, TwitterErrorHandler, TwitterRawHandler, 
 
     private void setCachedSettings() {
         saveLastIDs = getConfigManager().getOptionBool(myPlugin.getDomain(), "saveLastIDs");
-        statusCount = getConfigManager().getOptionInt(myPlugin.getDomain(), "statusCount");
+        statusCount = getConfigManager().getOptionInt(myPlugin.getDomain(), "statuscount");
         getSentMessage = getConfigManager().getOptionBool(myPlugin.getDomain(), "getSentMessage");
         apicalls = getConfigManager().getOptionInt(myPlugin.getDomain(), "apicalls");
         autoAt = getConfigManager().getOptionBool(myPlugin.getDomain(), "autoAt");
