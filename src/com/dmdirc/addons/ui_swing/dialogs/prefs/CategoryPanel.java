@@ -42,7 +42,6 @@ import javax.swing.SwingWorker;
 import net.miginfocom.layout.ComponentWrapper;
 import net.miginfocom.layout.LayoutCallback;
 
-import net.miginfocom.layout.PlatformDefaults;
 import net.miginfocom.swing.MigLayout;
 
 /**
@@ -56,15 +55,6 @@ public class CategoryPanel extends JPanel {
      * serialized objects being unserialized with the new class).
      */
     private static final long serialVersionUID = -3268284364607758509L;
-    /** Panel gap. */
-    private final int padding = (int) PlatformDefaults.getUnitValueX("related").
-            getValue();
-    /** Panel left padding. */
-    private final int leftPadding = (int) PlatformDefaults.getPanelInsets(1).
-            getValue();
-    /** Panel right padding. */
-    private final int rightPadding = (int) PlatformDefaults.getPanelInsets(3).
-            getValue();
     /** Active preferences category. */
     private PreferencesCategory category;
     /** Parent window. */
@@ -85,8 +75,6 @@ public class CategoryPanel extends JPanel {
     private Map<PreferencesCategory, JPanel> panels;
     /** Category loading swing worker. */
     private SwingWorker worker;
-    /** Waiting. */
-    private boolean waiting;
 
     /**
      * Instantiates a new category panel.
@@ -226,8 +214,20 @@ public class CategoryPanel extends JPanel {
      * 
      * @param b
      */
-    public void setWaiting(boolean b) {
-        waiting = b;
+    public void setWaiting(final boolean b) {
         scrollPane.setViewportView(waitingCategory);
+    }
+
+    /**
+     * Displays an error panel to the end user.
+     *
+     * @param message Message to display
+     */
+    public void setError(final String message) {
+        final JPanel panel = new JPanel(new MigLayout("fillx"));
+        panel.add(new TextLabel("An error has occurred loading the " +
+                "preferences dialog, an error has been raised: "), "wrap");
+        panel.add(new TextLabel(message));
+        scrollPane.setViewportView(panel);
     }
 }
