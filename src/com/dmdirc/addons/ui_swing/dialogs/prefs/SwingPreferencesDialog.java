@@ -99,7 +99,15 @@ public final class SwingPreferencesDialog extends StandardDialog implements
             @Override
             protected PreferencesManager doInBackground() throws Exception {
                 mainPanel.setWaiting(true);
-                return new PreferencesManager();
+                PreferencesManager prefsManager = null;
+                try {
+                    prefsManager = new PreferencesManager();
+                } catch (IllegalArgumentException ex) {
+                    mainPanel.setError(ex.getMessage());
+                    Logger.appError(ErrorLevel.HIGH, "Unable to load the" +
+                            "preferences dialog.", ex);
+                }
+                return prefsManager;
             }
 
             /** {@inheritDoc} */
@@ -107,7 +115,10 @@ public final class SwingPreferencesDialog extends StandardDialog implements
             protected void done() {
                 if (!isCancelled()) {
                     try {
-                        setPrefsManager(get());
+                        final PreferencesManager prefsManager = get();
+                        if (prefsManager != null) {
+                            setPrefsManager(prefsManager);
+                        }
                     } catch (InterruptedException ex) {
                         //Ignore
                     } catch (ExecutionException ex) {
