@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.urlcatcher;
 
+import com.dmdirc.FrameContainer;
 import com.dmdirc.Raw;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.interfaces.ActionType;
@@ -84,7 +85,8 @@ public class UrlCatcherPlugin extends Plugin implements ActionListener,
             return;
         }
 
-        final String message = Styliser.doLinks((String) arguments[1]);
+        final String message = ((FrameContainer) arguments[0]).getStyliser()
+                .doLinks((String) arguments[1]);
         
         if (message.indexOf(Styliser.CODE_HYPERLINK) > -1) {
             final String[] parts = message.split("" + Styliser.CODE_HYPERLINK);
