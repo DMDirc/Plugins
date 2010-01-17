@@ -117,13 +117,30 @@ public class StandardDialog extends JDialog {
             }
         });
         pack();
+        centreOnOwner();
+        setVisible(false);
+        setVisible(true);
+    }
+
+
+    /**
+     * Centres this dialog on its owner, or the screen if no owner is present.
+     */
+    public void centreOnOwner() {
         if (owner == null) {
             CoreUIUtils.centreWindow(this);
         } else {
             setLocationRelativeTo(owner);
         }
-        setVisible(false);
-        setVisible(true);
+    }
+
+    /**
+     * Returns the window owner for this dialog.
+     *
+     * @return Parent window or null
+     */
+    public Window getOwner() {
+        return owner;
     }
 
     /**

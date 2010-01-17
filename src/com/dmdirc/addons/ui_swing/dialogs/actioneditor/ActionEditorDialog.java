@@ -24,6 +24,7 @@ package com.dmdirc.addons.ui_swing.dialogs.actioneditor;
 
 import com.dmdirc.actions.Action;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
+import com.dmdirc.ui.CoreUIUtils;
 
 import java.awt.Dimension;
 import java.awt.Window;
@@ -254,6 +255,14 @@ public class ActionEditorDialog extends StandardDialog implements ActionListener
         } else if (e.getSource().equals(getCancelButton())) {
             dispose();
         }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void validate() {
+        super.validate();
+        
+        centreOnOwner();
     }
 
     /** Saves the action being edited. */
