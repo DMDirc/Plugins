@@ -225,7 +225,7 @@ public class TopicBar extends JComponent implements ActionListener,
         }
         topicText.setText("");
         if (channel.getCurrentTopic() != null) {
-            Styliser.addStyledString((StyledDocument) topicText.getDocument(),
+            channel.getStyliser().addStyledString((StyledDocument) topicText.getDocument(),
                     new String[]{Styliser.CODE_HEXCOLOUR + ColourManager.getHex(
                         foregroundColour) + channel.getCurrentTopic().getTopic(),},
                     as);

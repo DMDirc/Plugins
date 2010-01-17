@@ -36,18 +36,21 @@ import java.util.Arrays;
 class Line {
 
     private final String[] lineParts;
+    private final Styliser styliser;
     private int fontSize;
     private String fontName;
 
     /**
      * Creates a new line with a specified height.
      *
+     * @param styliser The styliser to use to style this line
      * @param lineParts Parts of the line
      * @param fontSize The height for this line
-     * @param fontName
+     * @param fontName The name of the font to use for this line
      */
-    public Line(final String[] lineParts, final int fontSize,
-            final String fontName) {
+    public Line(final Styliser styliser, final String[] lineParts,
+            final int fontSize, final String fontName) {
+        this.styliser = styliser;
         this.lineParts = lineParts;
         this.fontName = fontName;
         this.fontSize = fontSize;
@@ -136,7 +139,7 @@ class Line {
      * @return AttributedString representing the specified StyledDocument
      */
     public AttributedString getStyled() {
-        final ExtendedAttributedString string = Utils.getAttributedString(lineParts,
+        final ExtendedAttributedString string = Utils.getAttributedString(styliser, lineParts,
                 fontName, fontSize);
         fontSize = string.getMaxLineHeight();
         return string.getAttributedString();
