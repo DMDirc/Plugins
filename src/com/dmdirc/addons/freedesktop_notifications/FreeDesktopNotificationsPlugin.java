@@ -71,9 +71,6 @@ public final class FreeDesktopNotificationsPlugin extends Plugin implements
      */
     public FreeDesktopNotificationsPlugin() {
         super();
-
-        IdentityManager.getGlobalConfig().addChangeListener(getDomain(), this);
-        setCachedSettings();
     }
 
     /**
@@ -145,6 +142,9 @@ public final class FreeDesktopNotificationsPlugin extends Plugin implements
      */
     @Override
     public void onLoad() {
+        IdentityManager.getGlobalConfig().addChangeListener(getDomain(), this);
+        setCachedSettings();
+
         command = new FDNotifyCommand(this);
 
         // Extract required Files
@@ -181,6 +181,7 @@ public final class FreeDesktopNotificationsPlugin extends Plugin implements
     @Override
     public synchronized void onUnload() {
         CommandManager.unregisterCommand(command);
+        IdentityManager.getGlobalConfig().removeListener(this);
     }
     
     /** {@inheritDoc} */
