@@ -546,6 +546,12 @@ public class Twitter implements Parser, TwitterErrorHandler, TwitterRawHandler, 
 
     /** {@inheritDoc} */
     @Override
+    public String getChannelPrefixes() {
+        return "#&";
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public boolean compareURI(final URI uri) {
         return myAddress.equals(uri);
     }
@@ -1429,4 +1435,5 @@ public class Twitter implements Parser, TwitterErrorHandler, TwitterRawHandler, 
         hide500Errors = getConfigManager().getOptionBool(myPlugin.getDomain(), "hide500Errors");
         debugEnabled = getConfigManager().getOptionBool(myPlugin.getDomain(), "debugEnabled");
     }
+
 }
