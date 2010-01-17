@@ -121,6 +121,17 @@ public final class ServerSettingsDialog extends StandardDialog implements Action
         return me;
     }
 
+    /**
+     * Checks if a Server settings dialog exists.
+     *
+     * @return true iif a dialog exists
+     */
+    public static boolean hasServerSettingsDialog() {
+        synchronized (ServerSettingsDialog.class) {
+            return me != null;
+        }
+    }
+
     /** Initialises the main UI components. */
     private void initComponents() {
         orderButtons(new JButton(), new JButton());
