@@ -31,7 +31,6 @@ import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.parser.common.ChannelListModeItem;
 import com.dmdirc.util.MapList;
 
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -42,7 +41,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -125,23 +123,13 @@ public final class ChannelListModesPane extends JPanel implements ActionListener
                 IdentityManager.getGlobalConfig().getOptionBool("general",
                 "extendedListModes"));
         toggle.setOpaque(UIUtilities.getTabbedPaneOpaque());
-        toggle.setMargin(new Insets(0, 0, 0, 0));
-        toggle.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
 
         initListModesPanel();
         initListeners();
-
-        setVisible(true);
     }
 
     /** Updates the panel. */
     public void update() {
-        final boolean visible = listModesPanel.isVisible();
-
-        if (visible) {
-            listModesPanel.setVisible(false);
-        }
-
         existingListItems.clear();
 
         for (int i = 0; i < listModesArray.length;
@@ -159,10 +147,6 @@ public final class ChannelListModesPane extends JPanel implements ActionListener
             for (ChannelListModeItem listItem : listItems) {
                 model.addElement(listItem);
             }
-        }
-
-        if (visible) {
-            listModesPanel.setVisible(true);
         }
     }
 
