@@ -22,18 +22,18 @@
 
 package com.dmdirc.addons.ui_swing.textpane;
 
-import com.dmdirc.config.ConfigManager;
+import com.dmdirc.FrameContainer;
 import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.util.RollingList;
-import java.awt.Font;
 
+import java.awt.Font;
 import java.io.Serializable;
 import java.text.AttributedCharacterIterator;
 import java.text.AttributedString;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.UIManager;
 
+import javax.swing.UIManager;
 import javax.swing.event.EventListenerList;
 
 /**
@@ -55,8 +55,8 @@ public final class IRCDocument implements Serializable, ConfigChangeListener {
     private RollingList<Line> cachedLines;
     /** Cached attributed strings. */
     private RollingList<AttributedString> cachedStrings;
-    /** Configuration manager. */
-    private ConfigManager config;
+    /** Container that owns this document. */
+    private final FrameContainer container;
     /** Font size. */
     private int fontSize;
     /** Font name. */
@@ -65,20 +65,22 @@ public final class IRCDocument implements Serializable, ConfigChangeListener {
     /** 
      * Creates a new instance of IRCDocument.
      * 
-     * @param config Document's config manager
+     * @param container The container that owns this document
+     * @since 0.6.3
      */
-    public IRCDocument(final ConfigManager config) {
-        this.config = config;
+    public IRCDocument(final FrameContainer container) {
+        this.container = container;
+
         lines = new ArrayList<Line>();
         listeners = new EventListenerList();
 
         cachedLines = new RollingList<Line>(50);
         cachedStrings = new RollingList<AttributedString>(50);
 
-        setCachedSettings();
+        container.getConfigManager().addChangeListener("ui", "textPaneFontSize", this);
+        container.getConfigManager().addChangeListener("ui", "textPaneFontName", this);
 
-        config.addChangeListener("ui", "textPaneFontSize", this);
-        config.addChangeListener("ui", "textPaneFontName", this);
+        setCachedSettings();
     }
 
     /**
@@ -112,7 +114,7 @@ public final class IRCDocument implements Serializable, ConfigChangeListener {
      */
     public void addText(final String[] text) {
         synchronized (lines) {
-            lines.add(new Line(text, fontSize, fontName));
+            lines.add(new Line(container.getStyliser(), text, fontSize, fontName));
             fireLineAdded(lines.indexOf(text));
         }
     }
@@ -125,7 +127,7 @@ public final class IRCDocument implements Serializable, ConfigChangeListener {
      */
     public void addText(final String[] text, final int lineHeight) {
         synchronized (lines) {
-            lines.add(new Line(text, lineHeight, fontName));
+            lines.add(new Line(container.getStyliser(), text, lineHeight, fontName));
             fireLineAdded(lines.indexOf(text));
         }
     }
@@ -139,7 +141,7 @@ public final class IRCDocument implements Serializable, ConfigChangeListener {
         synchronized (lines) {
             final int start = lines.size();
             for (String[] string : text) {
-                lines.add(new Line(string, fontSize, fontName));
+                lines.add(new Line(container.getStyliser(), string, fontSize, fontName));
             }
             fireLinesAdded(start, text.size());
         }
@@ -158,7 +160,7 @@ public final class IRCDocument implements Serializable, ConfigChangeListener {
             for (int i = 0; i < text.size(); i++) {
                 final String[] string = text.get(i);
                 final int lineHeight = lineHeights.get(i);
-                lines.add(new Line(string, lineHeight, fontName));
+                lines.add(new Line(container.getStyliser(), string, lineHeight, fontName));
             }
             fireLinesAdded(start, text.size());
         }
@@ -339,13 +341,13 @@ public final class IRCDocument implements Serializable, ConfigChangeListener {
 
     private void setCachedSettings() {
         final Font defaultFont = UIManager.getFont("TextPane.font");
-        if (config.hasOptionString("ui", "textPaneFontName")) {
-            fontName = config.getOption("ui", "textPaneFontName");
+        if (container.getConfigManager().hasOptionString("ui", "textPaneFontName")) {
+            fontName = container.getConfigManager().getOption("ui", "textPaneFontName");
         } else {
             fontName = defaultFont.getName();
         }
-        if (config.hasOptionString("ui", "textPaneFontSize")) {
-            fontSize = config.getOptionInt("ui", "textPaneFontSize");
+        if (container.getConfigManager().hasOptionString("ui", "textPaneFontSize")) {
+            fontSize = container.getConfigManager().getOptionInt("ui", "textPaneFontSize");
         } else {
             fontSize = defaultFont.getSize();
         }

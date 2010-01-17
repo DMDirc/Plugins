@@ -23,14 +23,14 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.channelsetting;
 
+import com.dmdirc.Channel;
 import com.dmdirc.Topic;
 import com.dmdirc.addons.ui_swing.components.text.OldTextLabel;
-import com.dmdirc.ui.messages.Styliser;
+
 import java.awt.Color;
-
 import java.util.Date;
-import javax.swing.JEditorPane;
 
+import javax.swing.JEditorPane;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.UIManager;
@@ -54,6 +54,8 @@ public class TopicLabel extends JPanel {
     private static final long serialVersionUID = 1;
     /** Topic this label represents. */
     private final Topic topic;
+    /** The channel to which this label belongs. */
+    private final Channel channel;
     /** Topic field. */
     private JEditorPane pane;
     /** Empty Attrib set. */
@@ -62,13 +64,18 @@ public class TopicLabel extends JPanel {
     /**
      * Instantiates a new topic label based on the specified topic.
      *
+     * @param channel The channel to which this label belongs
      * @param topic Specified topic
+     * @since 0.6.3
      */
-    public TopicLabel(final Topic topic) {
+    public TopicLabel(final Channel channel, final Topic topic) {
         if (topic == null) {
             throw new IllegalArgumentException();
         }
+        
         this.topic = topic;
+        this.channel = channel;
+
         super.setBackground(UIManager.getColor("Table.background"));
         super.setForeground(UIManager.getColor("Table.foreground"));
 
@@ -109,7 +116,7 @@ public class TopicLabel extends JPanel {
         setLayout(new MigLayout("fill, ins 0, debug", "[]0[]", "[]0[]"));
 
         if (!topic.getTopic().isEmpty()) {
-            Styliser.addStyledString((StyledDocument) pane.getDocument(),
+            channel.getStyliser().addStyledString((StyledDocument) pane.getDocument(),
                     new String[]{topic.getTopic(),},
                     as);
             add(pane, "wmax 450, grow, push, wrap, gapleft 5, gapleft 5");
