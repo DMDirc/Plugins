@@ -23,11 +23,13 @@
 package com.dmdirc.addons.ui_swing.dialogs.serversetting;
 
 import com.dmdirc.Server;
+import com.dmdirc.ServerState;
 import com.dmdirc.config.Identity;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.addons.ui_swing.components.expandingsettings.SettingsPanel;
 import com.dmdirc.addons.ui_swing.components.expandingsettings.SettingsPanel.OptionType;
+import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
 
 import java.awt.Window;
 import java.awt.event.ActionEvent;
@@ -246,6 +248,34 @@ public final class ServerSettingsDialog extends StandardDialog implements Action
 
     /** Saves the settings from this dialog. */
     public void saveSettings() {
+        if (server.getState() != ServerState.CONNECTED) {
+            new StandardQuestionDialog(parentWindow, ModalityType.MODELESS,
+                    "Server has been disconnected.", "Any changes you have " +
+                    "made will be lost, are you sure you want to close this " +
+                    "dialog?") {
+
+                private static final long serialVersionUID = 1;
+                
+                /** {@inheritDoc} */
+                @Override
+                public boolean save() {
+                    ServerSettingsDialog.this.dispose();
+                    return true;
+                }
+
+                /** {@inheritDoc} */
+                @Override
+                public void cancelled() {
+                    //Ignore
+                }
+            }.display(parentWindow);
+        } else {
+            closeAndSave();
+        }
+    }
+
+    /** Closes this dialog and saves the settings. */
+    private void closeAndSave() {
         modesPanel.save();
         settingsPanel.save();
         performPanel.savePerforms();
@@ -254,6 +284,8 @@ public final class ServerSettingsDialog extends StandardDialog implements Action
         final Identity identity = server.getNetworkIdentity();
         identity.setOption("dialogstate", "serversettingsdialog",
                 String.valueOf(tabbedPane.getSelectedIndex()));
+        
+        dispose();
     }
 
     /**
@@ -265,7 +297,6 @@ public final class ServerSettingsDialog extends StandardDialog implements Action
     public void actionPerformed(final ActionEvent e) {
         if (e.getSource() == getOkButton()) {
             saveSettings();
-            dispose();
         } else if (e.getSource() == getCancelButton()) {
             dispose();
         }

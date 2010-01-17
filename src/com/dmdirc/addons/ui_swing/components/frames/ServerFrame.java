@@ -31,6 +31,7 @@ import com.dmdirc.commandparser.parsers.ServerCommandParser;
 import com.dmdirc.ui.interfaces.ServerWindow;
 import com.dmdirc.addons.ui_swing.components.SwingInputHandler;
 import com.dmdirc.addons.ui_swing.dialogs.serversetting.ServerSettingsDialog;
+import java.awt.Window;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -150,5 +151,13 @@ public final class ServerFrame extends InputTextFrame implements ServerWindow,
         }
         
         popupMenu.add(settingsMI);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void close() {
+        ServerSettingsDialog.getServerSettingsDialog(getContainer().getServer(),
+                getController().getMainFrame()).dispose();
+        super.close();
     }
 }
