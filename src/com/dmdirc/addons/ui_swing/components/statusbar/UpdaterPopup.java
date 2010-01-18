@@ -33,7 +33,7 @@ import javax.swing.JSeparator;
 /**
  * Information popup for the updater label.
  *
- * @since 0.6.4
+ * @since 0.6.3
  * @author chris
  */
 public class UpdaterPopup extends StatusbarPopupWindow {

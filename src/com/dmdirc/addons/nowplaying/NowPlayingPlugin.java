@@ -269,7 +269,7 @@ public class NowPlayingPlugin extends Plugin implements ActionListener  {
      *
      * @param input The string to be sanitised
      * @return A sanitised version of the String
-     * @since 0.6.4
+     * @since 0.6.3
      */
     protected static String sanitise(final String input) {
         return input == null ? "" : input;
