@@ -29,6 +29,7 @@ import com.dmdirc.addons.parser_twitter.api.TwitterMessage;
 import com.dmdirc.addons.parser_twitter.api.TwitterRawHandler;
 import com.dmdirc.addons.parser_twitter.api.TwitterStatus;
 import com.dmdirc.addons.parser_twitter.api.TwitterUser;
+import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
 import com.dmdirc.config.ConfigManager;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.interfaces.ConfigChangeListener;
@@ -1402,14 +1403,23 @@ public class Twitter implements Parser, TwitterErrorHandler, TwitterRawHandler, 
     @Override
     public void configChanged(final String domain, final String key) {
         setCachedSettings();
-        if (domain.equalsIgnoreCase(myPlugin.getDomain())) {
-            if (key.equalsIgnoreCase("debugEnabled")) {
-                api.setDebug(debugEnabled);
-            } else if (key.equalsIgnoreCase("autoAt")) {
-                sendPrivateNotice("'autoAt' setting was changed, reconnect needed.");
-                disconnect("'autoAt' setting was changed, reconnect needed.");
+        new LoggingSwingWorker<Object,Object>() {
+
+            /** {@inheritDoc} */
+            @Override
+            protected Object doInBackground() throws Exception {
+                if (domain.equalsIgnoreCase(myPlugin.getDomain())) {
+                    if (key.equalsIgnoreCase("debugEnabled")) {
+                        api.setDebug(debugEnabled);
+                    } else if (key.equalsIgnoreCase("autoAt")) {
+                        sendPrivateNotice("'autoAt' setting was changed, reconnect needed.");
+                        disconnect("'autoAt' setting was changed, reconnect needed.");
+                    }
+                }
+                return null;
             }
-        }
+
+        }.execute();
     }
 
     /**
