@@ -78,6 +78,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.swing.SwingWorker;
 
 /**
  * Twitter Parser for DMDirc.
@@ -1402,14 +1403,23 @@ public class Twitter implements Parser, TwitterErrorHandler, TwitterRawHandler, 
     @Override
     public void configChanged(final String domain, final String key) {
         setCachedSettings();
-        if (domain.equalsIgnoreCase(myPlugin.getDomain())) {
-            if (key.equalsIgnoreCase("debugEnabled")) {
-                api.setDebug(debugEnabled);
-            } else if (key.equalsIgnoreCase("autoAt")) {
-                sendPrivateNotice("'autoAt' setting was changed, reconnect needed.");
-                disconnect("'autoAt' setting was changed, reconnect needed.");
+        new SwingWorker<Object,Object>() {
+
+            /** {@inheritDoc} */
+            @Override
+            protected Object doInBackground() throws Exception {
+                if (domain.equalsIgnoreCase(myPlugin.getDomain())) {
+                    if (key.equalsIgnoreCase("debugEnabled")) {
+                        api.setDebug(debugEnabled);
+                    } else if (key.equalsIgnoreCase("autoAt")) {
+                        sendPrivateNotice("'autoAt' setting was changed, reconnect needed.");
+                        disconnect("'autoAt' setting was changed, reconnect needed.");
+                    }
+                }
+                return null;
             }
-        }
+
+        }.execute();
     }
 
     /**
