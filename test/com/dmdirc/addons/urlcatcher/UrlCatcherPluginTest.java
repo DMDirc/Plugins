@@ -22,13 +22,33 @@
 
 package com.dmdirc.addons.urlcatcher;
 
+import com.dmdirc.FrameContainer;
 import com.dmdirc.actions.CoreActionType;
+import com.dmdirc.config.ConfigManager;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.InvalidIdentityFileException;
+import com.dmdirc.ui.messages.Styliser;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 public class UrlCatcherPluginTest {
+    
+    private static FrameContainer container;
+
+    @BeforeClass
+    public static void setupClass() {
+        container = mock(FrameContainer.class);
+
+        final ConfigManager manager = mock(ConfigManager.class);
+
+        when(container.getConfigManager()).thenReturn(manager);
+        
+        final Styliser styliser = new Styliser(container);
+
+        when(container.getStyliser()).thenReturn(styliser);
+    }
 
     @Test
     public void testURLCounting() throws InvalidIdentityFileException {
@@ -37,11 +57,11 @@ public class UrlCatcherPluginTest {
         final UrlCatcherPlugin plugin = new UrlCatcherPlugin();
 
         plugin.processEvent(CoreActionType.CHANNEL_MESSAGE, null,
-                null, "This is a message - http://www.google.com/ foo");
+                container, "This is a message - http://www.google.com/ foo");
         plugin.processEvent(CoreActionType.CHANNEL_MESSAGE, null,
-                null, "This is a message - http://www.google.com/ foo");
+                container, "This is a message - http://www.google.com/ foo");
         plugin.processEvent(CoreActionType.CHANNEL_MESSAGE, null,
-                null, "This is a message - http://www.google.com/ foo");
+                container, "This is a message - http://www.google.com/ foo");
         
         assertEquals(1, plugin.getURLS().size());
         assertEquals(3, (int) plugin.getURLS().get("http://www.google.com/"));
@@ -54,9 +74,9 @@ public class UrlCatcherPluginTest {
         final UrlCatcherPlugin plugin = new UrlCatcherPlugin();
 
         plugin.processEvent(CoreActionType.CHANNEL_MESSAGE, null,
-                null, "http://www.google.com/ www.example.com foo://bar.baz");
+                container, "http://www.google.com/ www.example.com foo://bar.baz");
         plugin.processEvent(CoreActionType.CHANNEL_MESSAGE, null,
-                null, "No URLs here, no sir!");        
+                container, "No URLs here, no sir!");
         
         assertEquals(3, plugin.getURLS().size());
         assertTrue(plugin.getURLS().containsKey("http://www.google.com/"));
