@@ -29,6 +29,7 @@ import com.dmdirc.addons.ui_swing.components.TitlePanel;
 import com.dmdirc.addons.ui_swing.components.ToolTipPanel;
 import com.dmdirc.config.prefs.PreferencesCategory;
 
+import java.awt.Color;
 import java.awt.Window;
 import java.util.Collections;
 import java.util.HashMap;
@@ -115,8 +116,7 @@ public class CategoryPanel extends JPanel {
 
         title = new TitlePanel(BorderFactory.createEtchedBorder(),
                 "Preferences");
-        tooltip = new ToolTipPanel("Hover over a setting to see a " +
-                "description, if available.");
+        tooltip = new ToolTipPanel();
 
         add(title, "pushx, growx, h 45!");
         add(scrollPane, "grow, push");
@@ -192,6 +192,15 @@ public class CategoryPanel extends JPanel {
      */
     public void setCategory(final PreferencesCategory category) {
         this.category = category;
+
+        if (category == null || category.getWarning() == null) {
+            tooltip.setDefaultText("Hover over a setting to see a " +
+                    "description, if available.");
+            tooltip.setWarning(false);
+        } else {
+            tooltip.setDefaultText(category.getWarning());
+            tooltip.setWarning(true);
+        }
 
         if (!panels.containsKey(category)) {
             UIUtilities.invokeAndWait(new Runnable() {

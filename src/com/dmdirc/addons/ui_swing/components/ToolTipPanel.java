@@ -56,21 +56,20 @@ public class ToolTipPanel extends JPanel implements MouseListener {
      */
     private static final long serialVersionUID = -8929794537312606692L;
     /** Default tooltip. */
-    private final String defaultHelp;
+    private String defaultHelp = "";
     /** Tooltip display. */
     private TextLabel tooltip;
+    /** Whether or not this is a warning. */
+    private boolean warning;
     /** Map of registered components to their tooltips. */
     private final Map<JComponent, String> tooltips;
 
     /**
      * Instantiates a new tooltip panel.
-     *
-     * @param defaultHelp Default help message when idle
      */
-    public ToolTipPanel(final String defaultHelp) {
+    public ToolTipPanel() {
         super(new MigLayout());
 
-        this.defaultHelp = defaultHelp;
         this.tooltips = new HashMap<JComponent, String>();
 
         setBackground(Color.WHITE);
@@ -83,12 +82,30 @@ public class ToolTipPanel extends JPanel implements MouseListener {
     }
 
     /**
+     * Sets the default text to show when the tooltip panel is idle.
+     *
+     * @param text The default text to be shown
+     * @since 0.6.3
+     */
+    public void setDefaultText(final String text) {
+        this.defaultHelp = text;
+        reset();
+    }
+
+    /**
      * Resets the content of the tooltip.
      */
     protected void reset() {
         tooltip.setText(defaultHelp);
         SimpleAttributeSet sas = new SimpleAttributeSet();
-        StyleConstants.setItalic(sas, true);
+
+        if (warning) {
+            StyleConstants.setForeground(sas, Color.red);
+            StyleConstants.setBold(sas, true);
+        } else {
+            StyleConstants.setItalic(sas, true);
+        }
+
         tooltip.getDocument().setParagraphAttributes(0, defaultHelp.length(),
                 sas, true);
     }
@@ -109,6 +126,17 @@ public class ToolTipPanel extends JPanel implements MouseListener {
         SimpleAttributeSet sas = new SimpleAttributeSet();
         StyleConstants.setItalic(sas, false);
         tooltip.getDocument().setParagraphAttributes(0, text.length(), sas, true);
+    }
+
+    /**
+     * Sets whether or not this tooltip should be rendered as a warning.
+     *
+     * @param warning True if this is a warning, false otherwise
+     * @since 0.6.3
+     */
+    public void setWarning(final boolean warning) {
+        this.warning = warning;
+        reset();
     }
 
     /**
