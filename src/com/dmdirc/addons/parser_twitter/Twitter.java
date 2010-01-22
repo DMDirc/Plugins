@@ -1436,4 +1436,10 @@ public class Twitter implements Parser, TwitterErrorHandler, TwitterRawHandler, 
         debugEnabled = getConfigManager().getOptionBool(myPlugin.getDomain(), "debugEnabled");
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public void updateURI(final URI uri) {
+        // Do nothing
+    }
+
 }
