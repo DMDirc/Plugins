@@ -31,6 +31,9 @@ import com.dmdirc.util.ReturnableThread;
 
 import java.awt.Dimension;
 import java.awt.FontMetrics;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.lang.reflect.InvocationTargetException;
 
@@ -347,5 +350,89 @@ public final class UIUtilities {
                 scrollPane.getVerticalScrollBar().setValue(0);
             }
         });
+    }
+
+    /**
+     * Paints the background, either from the config setting or the background
+     * colour of the textpane.
+     *
+     * @param g Graphics object to draw onto
+     * @param bounds
+     * @param backgroundImage
+     * @param backgroundOption
+     */
+    public static void paintBackground(final Graphics2D g,
+            final Rectangle bounds,
+            final Image backgroundImage,
+            final BackgroundOption backgroundOption) {
+        if (backgroundImage != null) {
+            switch (backgroundOption) {
+                case TILED:
+                    paintTiledBackground(g, bounds, backgroundImage);
+                    break;
+                case SCALE:
+                    paintStretchedBackground(g, bounds, backgroundImage);
+                    break;
+                case SCALE_ASPECT_RATIO:
+                    paintStretchedAspectRatioBackground(g, bounds, backgroundImage);
+                    break;
+                case CENTER:
+                    paintCenterBackground(g, bounds, backgroundImage);
+                    break;
+                default:
+                    break;
+            }
+        } else {
+            paintNoBackground(g, bounds);
+        }
+    }
+
+    private static void paintNoBackground(final Graphics2D g, final Rectangle bounds) {
+        g.fill(bounds);
+    }
+
+    private static void paintStretchedBackground(final Graphics2D g,
+            final Rectangle bounds, final Image backgroundImage) {
+        g.drawImage(backgroundImage, 0, 0, bounds.width, bounds.height, null);
+    }
+
+    private static void paintCenterBackground(final Graphics2D g,
+            final Rectangle bounds, final Image backgroundImage) {
+        final int x = (bounds.width / 2) - (backgroundImage.getWidth(null) / 2);
+        final int y = (bounds.height / 2) - (backgroundImage.getHeight(null) / 2);
+        g.drawImage(backgroundImage, x, y, backgroundImage.getWidth(null),
+                backgroundImage.getWidth(null), null);
+    }
+
+    private static void paintStretchedAspectRatioBackground(final Graphics2D g,
+            final Rectangle bounds, final Image backgroundImage) {
+        final double widthratio = bounds.width
+                / (double) backgroundImage.getWidth(null);
+        final double heightratio = bounds.height
+                / (double) backgroundImage.getHeight(null);
+        final double ratio = Math.min(widthratio, heightratio);
+        final int width = (int) (backgroundImage.getWidth(null) * ratio);
+        final int height = (int) (backgroundImage.getWidth(null) * ratio);
+
+        final int x = (bounds.width / 2) - (width / 2);
+        final int y = (bounds.height / 2) - (height / 2);
+        g.drawImage(backgroundImage, x, y, width, height, null);
+    }
+
+    private static void paintTiledBackground(final Graphics2D g,
+            final Rectangle bounds, final Image backgroundImage) {
+        final int width = backgroundImage.getWidth(null);
+        final int height = backgroundImage.getWidth(null);
+
+        if (width <= 0 || height <= 0) {
+            // ARG!
+            return;
+        }
+
+        for (int x = 0; x < bounds.width; x += width) {
+            for (int y = 0; y < bounds.height; y += height) {
+                g.drawImage(backgroundImage, x, y, width, height, null);
+            }
+        }
     }
 }
