@@ -40,19 +40,19 @@ import java.util.Map.Entry;
 import java.util.TreeMap;
 
 /**
- * Background loader of licenses into a list.
+ * Background loader of licences into a list.
  */
-public class LicenseLoader extends LoggingSwingWorker<Void, Void> {
+public class LicenceLoader extends LoggingSwingWorker<Void, Void> {
 
-    /** Model to load licenses into. */
-    private GenericListModel<License> model;
+    /** Model to load licences into. */
+    private GenericListModel<Licence> model;
 
     /**
-     * Instantiates a new license loader.
+     * Instantiates a new licence loader.
      *
-     * @param model Model to load licenses into
+     * @param model Model to load licences into
      */
-    public LicenseLoader(final GenericListModel<License> model) {
+    public LicenceLoader(final GenericListModel<Licence> model) {
         this.model = model;
     }
 
@@ -65,29 +65,29 @@ public class LicenseLoader extends LoggingSwingWorker<Void, Void> {
     protected Void doInBackground() throws Exception {
         final ResourceManager rm = ResourceManager.getResourceManager();
         if (rm == null) {
-            Logger.userError(ErrorLevel.LOW, "Unable to load licenses, " +
+            Logger.userError(ErrorLevel.LOW, "Unable to load licences, " +
                     "no resource manager");
         } else {
-            final Map<String, InputStream> licenses =
+            final Map<String, InputStream> licences =
                     new TreeMap<String, InputStream>(String.CASE_INSENSITIVE_ORDER);
-            licenses.putAll(rm.getResourcesStartingWithAsInputStreams(
-                    "com/dmdirc/licenses/"));
+            licences.putAll(rm.getResourcesStartingWithAsInputStreams(
+                    "com/dmdirc/licences/"));
             for (PluginInfo pi : PluginManager.getPluginManager().getPluginInfos()) {
-                licenses.putAll(pi.getLicenseStreams());
+                licences.putAll(pi.getLicenceStreams());
             }
-            for (Entry<String, InputStream> entry : licenses.entrySet()) {
-                final String licenseString = entry.getKey().substring(entry.
+            for (Entry<String, InputStream> entry : licences.entrySet()) {
+                final String licenceString = entry.getKey().substring(entry.
                         getKey().
                         lastIndexOf('/') + 1);
-                if (licenseString.length() > 1) {
-                    final String licenseStringParts[] = licenseString.split(
+                if (licenceString.length() > 1) {
+                    final String licenceStringParts[] = licenceString.split(
                             " - ");
-                    final License license = new License(licenseStringParts[1],
-                            licenseStringParts[0], "<html><h1>" +
-                            licenseStringParts[1] + "</h1><p>" + readInputStream(
+                    final Licence licence = new Licence(licenceStringParts[1],
+                            licenceStringParts[0], "<html><h1>" +
+                            licenceStringParts[1] + "</h1><p>" + readInputStream(
                             entry.getValue()).replaceAll("\n", "<br>") +
                             "</p></html>");
-                    model.add(license);
+                    model.add(licence);
                 }
             }
         }
