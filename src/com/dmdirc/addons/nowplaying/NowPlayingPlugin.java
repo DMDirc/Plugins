@@ -215,10 +215,11 @@ public class NowPlayingPlugin extends Plugin implements ActionListener  {
      */
     public MediaSource getBestSource() {
         MediaSource paused = null;
+        final List<MediaSource> possibleSources = getSources();
         
-        Collections.sort(sources, new MediaSourceComparator(order));
+        Collections.sort(possibleSources, new MediaSourceComparator(order));
         
-        for (final MediaSource source : getSources()) {
+        for (final MediaSource source : possibleSources) {
             if (source.getState() != MediaSourceState.CLOSED) {
                 if (source.getState() == MediaSourceState.PLAYING) {
                     return source;
