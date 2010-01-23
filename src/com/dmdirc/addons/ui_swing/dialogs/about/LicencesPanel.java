@@ -33,7 +33,6 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
-import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -43,9 +42,9 @@ import javax.swing.text.html.HTMLEditorKit;
 import net.miginfocom.swing.MigLayout;
 
 /**
- * License panel.
+ * Licences panel.
  */
-public final class LicensePanel extends JPanel implements ListSelectionListener {
+public final class LicencesPanel extends JPanel implements ListSelectionListener {
 
     /**
      * A version number for this class. It should be changed whenever the class
@@ -53,19 +52,19 @@ public final class LicensePanel extends JPanel implements ListSelectionListener 
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 3;
-    /** License scroll pane. */
+    /** Licence scroll pane. */
     private JScrollPane scrollPane;
-    /** License list model */
-    private GenericListModel<License> listModel;
-    /** License textpane. */
-    private JEditorPane license;
-    /** License list. */
+    /** Licence list model */
+    private GenericListModel<Licence> listModel;
+    /** Licence textpane. */
+    private JEditorPane licence;
+    /** Licence list. */
     private JList list;
     /** Selected index. */
     private int selectedIndex;
 
-    /** Creates a new instance of LicensePanel. */
-    public LicensePanel() {
+    /** Creates a new instance of LicencesPanel. */
+    public LicencesPanel() {
         super();
 
         initComponents();
@@ -94,19 +93,19 @@ public final class LicensePanel extends JPanel implements ListSelectionListener 
     /** Initialises the components. */
     private void initComponents() {
         setOpaque(UIUtilities.getTabbedPaneOpaque());
-        listModel = new GenericListModel<License>();
+        listModel = new GenericListModel<Licence>();
         list = new JList(listModel);
         list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         new ListScroller(list);
-        new LicenseLoader(listModel).execute();
-        license = new JEditorPane();
-        license.setEditorKit(new HTMLEditorKit());
+        new LicenceLoader(listModel).execute();
+        licence = new JEditorPane();
+        licence.setEditorKit(new HTMLEditorKit());
         final Font font = UIManager.getFont("Label.font");
-        ((HTMLDocument) license.getDocument()).getStyleSheet().addRule("body " +
+        ((HTMLDocument) licence.getDocument()).getStyleSheet().addRule("body " +
                 "{ font-family: " + font.getFamily() + "; " + "font-size: " +
                 font.getSize() + "pt; }");
-        license.setEditable(false);
-        scrollPane = new JScrollPane(license);
+        licence.setEditable(false);
+        scrollPane = new JScrollPane(licence);
     }
 
     /** {@inheritDoc} */
@@ -116,7 +115,7 @@ public final class LicensePanel extends JPanel implements ListSelectionListener 
             if (list.getSelectedIndex() == -1) {
                 list.setSelectedIndex(selectedIndex);
             } else {
-                license.setText(listModel.get(list.getSelectedIndex()).getBody());
+                licence.setText(listModel.get(list.getSelectedIndex()).getBody());
                 UIUtilities.resetScrollPane(scrollPane);
             }
             selectedIndex = list.getSelectedIndex();

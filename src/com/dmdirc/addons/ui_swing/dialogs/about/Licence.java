@@ -24,22 +24,22 @@
 package com.dmdirc.addons.ui_swing.dialogs.about;
 
 /**
- * Simple class to describe a license.
+ * Simple class to describe a licence.
  */
-public class License {
+public class Licence {
 
     private String name;
     private String component;
     private String body;
 
     /**
-     * Instantiates a new license with the specified attributes.
+     * Instantiates a new licence with the specified attributes.
      *
-     * @param name Name of the license
-     * @param component Component the license applies to
-     * @param body Body of the license
+     * @param name Name of the licence
+     * @param component Component the licence applies to
+     * @param body Body of the licence
      */
-    public License(final String name, final String component, final String body) {
+    public Licence(final String name, final String component, final String body) {
         this.name = name;
         this.component = component;
         this.body = body;
