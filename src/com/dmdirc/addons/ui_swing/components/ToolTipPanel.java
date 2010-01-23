@@ -25,6 +25,7 @@ package com.dmdirc.addons.ui_swing.components;
  */
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
+import com.dmdirc.ui.IconManager;
 
 import java.awt.Color;
 import java.awt.event.MouseEvent;
@@ -34,6 +35,7 @@ import java.util.Map;
 
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
@@ -56,9 +58,13 @@ public class ToolTipPanel extends JPanel implements MouseListener {
      */
     private static final long serialVersionUID = -8929794537312606692L;
     /** Default tooltip. */
-    private final String defaultHelp;
+    private String defaultHelp;
     /** Tooltip display. */
     private TextLabel tooltip;
+    /** Error icon. */
+    private JLabel icon;
+    /** Whether or not this is a warning. */
+    private String warning = null;
     /** Map of registered components to their tooltips. */
     private final Map<JComponent, String> tooltips;
 
@@ -68,10 +74,11 @@ public class ToolTipPanel extends JPanel implements MouseListener {
      * @param defaultHelp Default help message when idle
      */
     public ToolTipPanel(final String defaultHelp) {
-        super(new MigLayout());
+        super(new MigLayout("hidemode 3"));
 
         this.defaultHelp = defaultHelp;
         this.tooltips = new HashMap<JComponent, String>();
+        this.icon = new JLabel(IconManager.getIconManager().getIcon("warning"));
 
         setBackground(Color.WHITE);
         setBorder(BorderFactory.createEtchedBorder());
@@ -79,6 +86,7 @@ public class ToolTipPanel extends JPanel implements MouseListener {
         tooltip = new TextLabel();
         reset();
 
+        add(icon, "aligny top");
         add(tooltip, "grow, push");
     }
 
@@ -86,11 +94,18 @@ public class ToolTipPanel extends JPanel implements MouseListener {
      * Resets the content of the tooltip.
      */
     protected void reset() {
-        tooltip.setText(defaultHelp);
         SimpleAttributeSet sas = new SimpleAttributeSet();
-        StyleConstants.setItalic(sas, true);
-        tooltip.getDocument().setParagraphAttributes(0, defaultHelp.length(),
-                sas, true);
+
+        if (warning == null || warning.isEmpty()) {
+            tooltip.setText(defaultHelp);
+            icon.setVisible(false);
+            StyleConstants.setItalic(sas, true);
+        } else {
+            icon.setVisible(true);
+            tooltip.setText(warning);
+        }
+        tooltip.getDocument().setParagraphAttributes(0, tooltip.getDocument().
+                getLength(), sas, true);
     }
 
     /**
@@ -102,13 +117,27 @@ public class ToolTipPanel extends JPanel implements MouseListener {
         if (tooltip == null) {
             return;
         }
+        
         tooltip.setText(text);
         if (tooltip.getDocument() == null || text == null) {
             return;
         }
+
+        icon.setVisible(false);
         SimpleAttributeSet sas = new SimpleAttributeSet();
         StyleConstants.setItalic(sas, false);
         tooltip.getDocument().setParagraphAttributes(0, text.length(), sas, true);
+    }
+
+    /**
+     * Sets whether or not this tooltip should be rendered as a warning.
+     *
+     * @param warning Warning string, null or empty to reset.
+     * @since 0.6.3
+     */
+    public void setWarning(final String warning) {
+        this.warning = warning;
+        reset();
     }
 
     /**
