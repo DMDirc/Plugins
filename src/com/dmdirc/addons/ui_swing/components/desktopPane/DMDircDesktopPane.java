@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_swing.components.desktopPane;
 
 import com.dmdirc.FrameContainer;
+import com.dmdirc.addons.ui_swing.BackgroundOption;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.TreeScroller;
@@ -30,6 +31,8 @@ import com.dmdirc.addons.ui_swing.components.frames.InputTextFrame;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.addons.ui_swing.framemanager.tree.TreeViewModel;
 import com.dmdirc.addons.ui_swing.framemanager.tree.TreeViewNode;
+import com.dmdirc.config.IdentityManager;
+import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.interfaces.SelectionListener;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
@@ -37,15 +40,21 @@ import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.interfaces.Window;
 import com.dmdirc.ui.interfaces.FrameListener;
 import com.dmdirc.util.ReturnableThread;
+import com.dmdirc.util.URLBuilder;
 
 import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 import java.util.concurrent.atomic.AtomicBoolean;
+import javax.imageio.ImageIO;
 
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
@@ -61,7 +70,7 @@ import javax.swing.tree.TreeSelectionModel;
  * DMDirc Extentions to JDesktopPane.
  */
 public class DMDircDesktopPane extends JDesktopPane implements FrameListener,
-        SelectionListener, PropertyChangeListener {
+        SelectionListener, PropertyChangeListener, ConfigChangeListener {
 
     /** Logger to use. */
     private static final java.util.logging.Logger LOGGER =
@@ -96,16 +105,24 @@ public class DMDircDesktopPane extends JDesktopPane implements FrameListener,
     private AtomicBoolean changing = new AtomicBoolean(false);
     /** Main Frame. */
     private MainFrame mainFrame;
+    /** Background image. */
+    private Image backgroundImage;
+    /** Background image option. */
+    private BackgroundOption backgroundOption;
+    /** Config domain. */
+    private String domain;
 
     /**
      * Initialises the DMDirc desktop pane.
      * 
      * @param mainFrame Main frame
+     * @param domain Config domain
      */
-    public DMDircDesktopPane(final MainFrame mainFrame) {
+    public DMDircDesktopPane(final MainFrame mainFrame, final String domain) {
         super();
 
         this.mainFrame = mainFrame;
+        this.domain = domain;
         setBackground(new Color(238, 238, 238));
         setBorder(BorderFactory.createEtchedBorder());
         setUI(new ProxyDesktopPaneUI(getUI(), this));
@@ -125,6 +142,23 @@ public class DMDircDesktopPane extends JDesktopPane implements FrameListener,
         };
 
         WindowManager.addFrameListener(this);
+        IdentityManager.getGlobalConfig().addChangeListener(domain,
+                "desktopbackground", this);
+        IdentityManager.getGlobalConfig().addChangeListener(domain,
+                "desktopbackgroundoption", this);
+
+        updateCachedSettings();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void paintComponent(final Graphics g) {
+        if (backgroundImage == null) {
+            super.paintComponent(g);
+        } else {
+            UIUtilities.paintBackground((Graphics2D) g, getBounds(),
+                backgroundImage, backgroundOption);
+        }
     }
 
     /** {@inheritDoc} */
@@ -227,8 +261,8 @@ public class DMDircDesktopPane extends JDesktopPane implements FrameListener,
                 final TreeViewNode node = nodes.get(window);
                 if (node.getLevel() == 0) {
                     Logger.appError(ErrorLevel.MEDIUM,
-                            "delServer triggered for root node" +
-                            node.toString(),
+                            "delServer triggered for root node"
+                            + node.toString(),
                             new IllegalArgumentException());
                 } else {
                     model.removeNodeFromParent(nodes.get(window));
@@ -353,5 +387,36 @@ public class DMDircDesktopPane extends JDesktopPane implements FrameListener,
             mainFrame.setTitle(null);
         }
         changing.set(false);
+    }
+
+    private void updateCachedSettings() {
+        final String backgroundPath = IdentityManager.getGlobalConfig().
+                getOption(domain, "desktopbackground");
+        UIUtilities.invokeAndWait(new Runnable() {
+
+            /** {@inheritDoc} */
+            @Override
+            public void run() {
+                try {
+                    backgroundImage = ImageIO.read(URLBuilder.buildURL(
+                            backgroundPath));
+                } catch (IOException ex) {
+                    backgroundImage = null;
+                }
+            }
+        });
+        try {
+            backgroundOption = BackgroundOption.valueOf(IdentityManager.
+                    getGlobalConfig().getOption(domain,
+                    "desktopbackgroundoption"));
+        } catch (IllegalArgumentException ex) {
+            backgroundOption = BackgroundOption.CENTER;
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void configChanged(final String domain, final String key) {
+        updateCachedSettings();
     }
 }

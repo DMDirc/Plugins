@@ -21,7 +21,7 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.ui_swing.textpane;
+package com.dmdirc.addons.ui_swing;
 
 /**
  * Options available for the background image.

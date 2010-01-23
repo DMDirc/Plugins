@@ -379,7 +379,7 @@ public final class MainFrame extends JFrame implements WindowListener,
     private void initComponents() {
         statusBar = new SwingStatusBar(controller, this);
         frameManagerPanel = new JPanel();
-        desktopPane = new DMDircDesktopPane(this);
+        desktopPane = new DMDircDesktopPane(this, controller.getDomain());
 
         initFrameManagers();
 

@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.textpane;
 
+import com.dmdirc.addons.ui_swing.BackgroundOption;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.config.ConfigManager;
@@ -147,7 +148,8 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
         }
         g.setColor(textPane.getBackground());
         g.fill(g.getClipBounds());
-        paintBackground(g);
+        UIUtilities.paintBackground(g, getBounds(), backgroundImage,
+                backgroundOption);
         paintOntoGraphics(g);
         //g.drawImage(buffer, 0, 0, null);
     }
@@ -159,81 +161,6 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
         buffer = null;
         if (isVisible()) {
             repaint();
-        }
-    }
-
-    /**
-     * Paints the background, either from the config setting or the background
-     * colour of the textpane.
-     *
-     * @param g Graphics object to draw onto
-     */
-    private void paintBackground(final Graphics2D g) {
-        if (backgroundImage != null) {
-            switch (backgroundOption) {
-                case TILED:
-                    paintTiledBackground(g);
-                    break;
-                case SCALE:
-                    paintStretchedBackground(g);
-                    break;
-                case SCALE_ASPECT_RATIO:
-                    paintStretchedAspectRatioBackground(g);
-                    break;
-                case CENTER:
-                    paintCenterBackground(g);
-                    break;
-                default:
-                    break;
-            }
-        } else {
-            paintNoBackground(g);
-        }
-    }
-
-    private void paintNoBackground(final Graphics2D g) {
-        g.fill(getBounds());
-    }
-
-    private void paintStretchedBackground(final Graphics2D g) {
-        g.drawImage(backgroundImage, 0, 0, getBounds().width,
-                getBounds().height, null);
-    }
-
-    private void paintCenterBackground(final Graphics2D g) {
-        final int x = (getBounds().width / 2) - (backgroundImage.getWidth(null) / 2);
-        final int y = (getBounds().height / 2) - (backgroundImage.getHeight(null) / 2);
-        g.drawImage(backgroundImage, x, y, backgroundImage.getWidth(null),
-                backgroundImage.getWidth(null), null);
-    }
-
-    private void paintStretchedAspectRatioBackground(final Graphics2D g) {
-        final double widthratio = getBounds().width
-                / (double) backgroundImage.getWidth(null);
-        final double heightratio = getBounds().height
-                / (double) backgroundImage.getHeight(null);
-        final double ratio = Math.min(widthratio, heightratio);
-        final int width = (int) (backgroundImage.getWidth(null) * ratio);
-        final int height = (int) (backgroundImage.getWidth(null) * ratio);
-
-        final int x = (getBounds().width / 2) - (width / 2);
-        final int y = (getBounds().height / 2) - (height / 2);
-        g.drawImage(backgroundImage, x, y, width, height, null);
-    }
-
-    private void paintTiledBackground(final Graphics2D g) {
-        final int width = backgroundImage.getWidth(null);
-        final int height = backgroundImage.getWidth(null);
-
-        if (width <= 0 || height <= 0) {
-            // ARG!
-            return;
-        }
-
-        for (int x = 0; x < getBounds().width; x += width) {
-            for (int y = 0; y < getBounds().height; y += height) {
-                g.drawImage(backgroundImage, x, y, width, height, null);
-            }
         }
     }
 
