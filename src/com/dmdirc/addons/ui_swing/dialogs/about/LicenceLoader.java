@@ -42,17 +42,17 @@ import java.util.TreeMap;
 /**
  * Background loader of licenses into a list.
  */
-public class LicenseLoader extends LoggingSwingWorker<Void, Void> {
+public class LicenceLoader extends LoggingSwingWorker<Void, Void> {
 
     /** Model to load licenses into. */
-    private GenericListModel<License> model;
+    private GenericListModel<Licence> model;
 
     /**
      * Instantiates a new license loader.
      *
      * @param model Model to load licenses into
      */
-    public LicenseLoader(final GenericListModel<License> model) {
+    public LicenceLoader(final GenericListModel<Licence> model) {
         this.model = model;
     }
 
@@ -82,7 +82,7 @@ public class LicenseLoader extends LoggingSwingWorker<Void, Void> {
                 if (licenseString.length() > 1) {
                     final String licenseStringParts[] = licenseString.split(
                             " - ");
-                    final License license = new License(licenseStringParts[1],
+                    final Licence license = new Licence(licenseStringParts[1],
                             licenseStringParts[0], "<html><h1>" +
                             licenseStringParts[1] + "</h1><p>" + readInputStream(
                             entry.getValue()).replaceAll("\n", "<br>") +

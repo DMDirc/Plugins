@@ -112,7 +112,7 @@ public final class AboutDialog extends StandardDialog implements
 
         tabbedPane.add("About", new AboutPanel());
         tabbedPane.add("Credits", cp);
-        tabbedPane.add("License", new LicensePanel());
+        tabbedPane.add("Licences", new LicencesPanel());
         tabbedPane.add("Information", new InfoPanel());
         tabbedPane.addChangeListener(this);
 

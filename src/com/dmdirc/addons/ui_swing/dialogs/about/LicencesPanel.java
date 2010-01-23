@@ -33,7 +33,6 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
-import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -43,9 +42,9 @@ import javax.swing.text.html.HTMLEditorKit;
 import net.miginfocom.swing.MigLayout;
 
 /**
- * License panel.
+ * Licences panel.
  */
-public final class LicensePanel extends JPanel implements ListSelectionListener {
+public final class LicencesPanel extends JPanel implements ListSelectionListener {
 
     /**
      * A version number for this class. It should be changed whenever the class
@@ -56,7 +55,7 @@ public final class LicensePanel extends JPanel implements ListSelectionListener 
     /** License scroll pane. */
     private JScrollPane scrollPane;
     /** License list model */
-    private GenericListModel<License> listModel;
+    private GenericListModel<Licence> listModel;
     /** License textpane. */
     private JEditorPane license;
     /** License list. */
@@ -65,7 +64,7 @@ public final class LicensePanel extends JPanel implements ListSelectionListener 
     private int selectedIndex;
 
     /** Creates a new instance of LicensePanel. */
-    public LicensePanel() {
+    public LicencesPanel() {
         super();
 
         initComponents();
@@ -94,11 +93,11 @@ public final class LicensePanel extends JPanel implements ListSelectionListener 
     /** Initialises the components. */
     private void initComponents() {
         setOpaque(UIUtilities.getTabbedPaneOpaque());
-        listModel = new GenericListModel<License>();
+        listModel = new GenericListModel<Licence>();
         list = new JList(listModel);
         list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         new ListScroller(list);
-        new LicenseLoader(listModel).execute();
+        new LicenceLoader(listModel).execute();
         license = new JEditorPane();
         license.setEditorKit(new HTMLEditorKit());
         final Font font = UIManager.getFont("Label.font");
