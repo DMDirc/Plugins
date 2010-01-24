@@ -31,6 +31,7 @@ import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.actions.interfaces.ActionType;
 import com.dmdirc.commandparser.CommandManager;
 import com.dmdirc.config.IdentityManager;
+import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesManager;
 import com.dmdirc.config.prefs.PreferencesSetting;
@@ -235,9 +236,12 @@ public class LoggingPlugin extends Plugin implements ActionListener,
     /** {@inheritDoc} */
     @Override
     public void showConfig(final PreferencesManager manager) {
-        final PreferencesCategory general = new PreferencesCategory("Logging", "General configuration for Logging plugin.");
-        final PreferencesCategory backbuffer = new PreferencesCategory("Back Buffer", "Options related to the automatic backbuffer");
-        final PreferencesCategory advanced = new PreferencesCategory("Advanced", "Advanced configuration for Logging plugin. You shouldn't need to edit this unless you know what you are doing.");
+        final PreferencesCategory general = new PluginPreferencesCategory(
+                getPluginInfo(), "Logging", "General configuration for Logging plugin.");
+        final PreferencesCategory backbuffer = new PluginPreferencesCategory(
+                getPluginInfo(), "Back Buffer", "Options related to the automatic backbuffer");
+        final PreferencesCategory advanced = new PluginPreferencesCategory(
+                getPluginInfo(), "Advanced", "Advanced configuration for Logging plugin. You shouldn't need to edit this unless you know what you are doing.");
 
         general.addSetting(new PreferencesSetting(PreferencesType.TEXT, getDomain(), "general.directory", "Directory", "Directory for log files"));
         general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN, getDomain(), "general.networkfolders", "Separate logs by network", "Should the files be stored in a sub-dir with the networks name?"));

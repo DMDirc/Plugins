@@ -31,6 +31,7 @@ import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.actions.interfaces.ActionType;
 import com.dmdirc.config.IdentityManager;
+import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesManager;
 import com.dmdirc.config.prefs.PreferencesSetting;
@@ -202,7 +203,8 @@ public final class WindowStatusPlugin extends Plugin implements ActionListener, 
     /** {@inheritDoc} */
     @Override
     public void showConfig(final PreferencesManager manager) {
-        final PreferencesCategory category = new PreferencesCategory("Window status", "");
+        final PreferencesCategory category = new PluginPreferencesCategory(
+                getPluginInfo(), "Window status", "");
 
         category.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
                 getDomain(), "channel.shownone", "Show 'none' count",

@@ -26,6 +26,7 @@ import com.dmdirc.Main;
 import com.dmdirc.addons.freedesktop_notifications.commons.StringEscapeUtils;
 import com.dmdirc.commandparser.CommandManager;
 import com.dmdirc.config.IdentityManager;
+import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesManager;
 import com.dmdirc.config.prefs.PreferencesSetting;
@@ -193,7 +194,7 @@ public final class FreeDesktopNotificationsPlugin extends Plugin implements
     /** {@inheritDoc} */
     @Override
     public void showConfig(final PreferencesManager manager) {
-        final PreferencesCategory general = new PreferencesCategory("FreeDesktop Notifications", "General configuration for FreeDesktop Notifications plugin.");
+        final PreferencesCategory general = new PluginPreferencesCategory(getPluginInfo(), "FreeDesktop Notifications", "General configuration for FreeDesktop Notifications plugin.");
         
         general.addSetting(new PreferencesSetting(PreferencesType.INTEGER, getDomain(), "general.timeout", "Timeout", "Length of time in seconds before the notification popup closes."));
         general.addSetting(new PreferencesSetting(PreferencesType.TEXT, getDomain(), "general.icon", "icon", "Path to icon to use on the notification."));

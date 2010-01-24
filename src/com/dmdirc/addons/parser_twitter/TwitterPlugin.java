@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.parser_twitter;
 
+import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesManager;
 import com.dmdirc.config.prefs.PreferencesSetting;
@@ -71,8 +72,10 @@ public class TwitterPlugin extends Plugin  {
     /** {@inheritDoc} */
     @Override
     public void showConfig(final PreferencesManager manager) {
-        final PreferencesCategory category = new PreferencesCategory("Twitter Plugin", "Settings related to the twitter plugin");
-        final PreferencesCategory advanced = new PreferencesCategory("Advanced", "Advanced Settings related to the twitter plugin");
+        final PreferencesCategory category = new PluginPreferencesCategory(
+                getPluginInfo(), "Twitter Plugin", "Settings related to the twitter plugin");
+        final PreferencesCategory advanced = new PluginPreferencesCategory(
+                getPluginInfo(), "Advanced", "Advanced Settings related to the twitter plugin");
 
         category.addSetting(new PreferencesSetting(PreferencesType.INTEGER, getDomain(), "statuscount", "Statuses to request", "How many statuses to request at a time.?"));
         category.addSetting(new PreferencesSetting(PreferencesType.INTEGER, getDomain(), "apicalls", "API Calls", "Aim to only use how many API Calls per hour? (Twitter has a max of 150)"));

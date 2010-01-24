@@ -29,6 +29,7 @@ import com.dmdirc.actions.interfaces.ActionType;
 import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.config.IdentityManager;
+import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesManager;
 import com.dmdirc.config.prefs.PreferencesSetting;
@@ -149,7 +150,8 @@ public final class SystrayPlugin extends Plugin implements ActionListener,
     /** {@inheritDoc} */
     @Override
     public void showConfig(final PreferencesManager manager) {
-        final PreferencesCategory category = new PreferencesCategory("System Tray", 
+        final PreferencesCategory category = new PluginPreferencesCategory(
+                getPluginInfo(), "System Tray",
                 "General configuration settings");
         
         category.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,

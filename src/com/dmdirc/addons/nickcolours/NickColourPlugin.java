@@ -28,6 +28,7 @@ import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.interfaces.ActionType;
 import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.config.IdentityManager;
+import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesManager;
 import com.dmdirc.config.prefs.PreferencesSetting;
@@ -235,9 +236,11 @@ public final class NickColourPlugin extends Plugin implements ActionListener,
     /** {@inheritDoc} */
     @Override
     public void showConfig(final PreferencesManager manager) {
-        final PreferencesCategory general = new PreferencesCategory("Nick Colours",
+        final PreferencesCategory general = new PluginPreferencesCategory(
+                getPluginInfo(), "Nick Colours",
                 "General configuration for NickColour plugin.");
-        final PreferencesCategory colours = new PreferencesCategory("Colours",
+        final PreferencesCategory colours = new PluginPreferencesCategory(
+                getPluginInfo(), "Colours",
                 "Set colours for specific nicknames.", new NickColourPanel(this));
         
         general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,

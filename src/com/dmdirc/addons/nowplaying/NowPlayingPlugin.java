@@ -27,6 +27,7 @@ import com.dmdirc.actions.interfaces.ActionType;
 import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.commandparser.CommandManager;
 import com.dmdirc.config.IdentityManager;
+import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesManager;
 import com.dmdirc.interfaces.ActionListener;
@@ -101,7 +102,8 @@ public class NowPlayingPlugin extends Plugin implements ActionListener  {
     public void showConfig(final PreferencesManager manager) {
         final ConfigPanel configPanel = new ConfigPanel(this, order);
         
-        final PreferencesCategory category = new PreferencesCategory("Now Playing",
+        final PreferencesCategory category = new PluginPreferencesCategory(
+                getPluginInfo(), "Now Playing",
                 "", "category-nowplaying", configPanel);
         manager.getCategory("Plugins").addSubCategory(category);
     }

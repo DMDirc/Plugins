@@ -23,6 +23,7 @@
 
 package com.dmdirc.addons.addonbrowser;
 
+import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesManager;
 import com.dmdirc.plugins.Plugin;
@@ -45,7 +46,8 @@ public class BrowserPlugin extends Plugin {
     /** {@inheritDoc} */
     @Override
     public void showConfig(final PreferencesManager manager) {
-        PreferencesCategory category = new PreferencesCategory("Addon Browser",
+        PreferencesCategory category = new PluginPreferencesCategory(
+                getPluginInfo(), "Addon Browser",
                 "This addon is now part of the Swing UI and is no longer " +
                 "required. The plugin may be manually deleted from your " +
                 "plugins directory.");
