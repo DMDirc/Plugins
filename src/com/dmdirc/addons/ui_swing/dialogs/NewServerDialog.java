@@ -285,11 +285,11 @@ public final class NewServerDialog extends StandardDialog implements ActionListe
                     }
                 }.execute();
             } else {
-                final com.dmdirc.ui.interfaces.Window active = mainFrame.getActiveFrame();
-                final Server server = ServerManager.getServerManager().getServerFromFrame(active);
+                final Server server = mainFrame.getActiveFrame().getContainer().getServer();
 
                 new LoggingSwingWorker() {
 
+                    /** {@inheritDoc} */
                     @Override
                     protected Object doInBackground() throws Exception {
                         if (server == null) {
