@@ -227,7 +227,7 @@ public class DynamicRequestHandler extends AbstractHandler {
             final WebInputWindow wiw = (WebInputWindow) WebInterfaceUI.active;
             ((WebInputHandler) wiw.getInputHandler(request.getParameter("clientID"),
                     request.getParameter("input"), request.getParameter("selstart"),
-                    request.getParameter("selend"))).doTabCompletion();
+                    request.getParameter("selend"))).doTabCompletion(false);
         }
     }
 
