@@ -33,7 +33,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -61,14 +60,10 @@ public final class OsdWindow extends JDialog implements MouseListener,
      */
     private static final long serialVersionUID = 2;
     
-    /** Gap between vertically stacked windows. */
-    private static final int WINDOW_GAP = 5;
     
-    /** A list of open OSD windows. */
-    private static List<OsdWindow> windows = new ArrayList<OsdWindow>();
-
     /** Plugin this window belongs to. */
     private final OsdPlugin plugin;
+    private static OsdManager osdManager;
     
     /** OSD Label. */
     private final JLabel label;
@@ -90,9 +85,11 @@ public final class OsdWindow extends JDialog implements MouseListener,
      * allow itself to be moved)
      * @param plugin The plugin that owns this window
      */    
-    public OsdWindow(final String text, final boolean config, final OsdPlugin plugin) {
+    public OsdWindow(final String text, final boolean config, final OsdPlugin plugin,
+            OsdManager osdManager) {
         this(text, config, IdentityManager.getGlobalConfig()
-                .getOptionInt(plugin.getDomain(), "locationX"), getYPosition(plugin), plugin);
+                .getOptionInt(plugin.getDomain(), "locationX"), osdManager.getYPosition(plugin),
+                plugin, osdManager);
     }
 
     /**
@@ -106,9 +103,9 @@ public final class OsdWindow extends JDialog implements MouseListener,
      * @param plugin Parent OSD Plugin
      */
     public OsdWindow(final String text, final boolean config, final int x,
-            final int y, final OsdPlugin plugin) {
+            final int y, final OsdPlugin plugin, OsdManager osdManager) {
         super((MainFrame) Main.getUI().getMainWindow(), false);
-
+        
         this.plugin = plugin;
         this.config = config;
 
@@ -161,50 +158,7 @@ public final class OsdWindow extends JDialog implements MouseListener,
         }
     }
     
-    /**
-     * Retrieves the y-axis position for a new OSD window, based on the user's
-     * configured policy.
-     * 
-     * @return The y-axis position for a new OSD window.
-     */
-    private static int getYPosition(final OsdPlugin plugin) {
-        final String policy = IdentityManager.getGlobalConfig()
-                .getOption(plugin.getDomain(), "newbehaviour");
-        int y = IdentityManager.getGlobalConfig().getOptionInt(plugin.getDomain(),
-                "locationY");
-        
-        if ("down".equals(policy)) {
-            // Place our new window below old windows
-            for (OsdWindow window : new ArrayList<OsdWindow>(windows)) {
-                if (window.isVisible()) {
-                    y = Math.max(y, window.getY() + window.getHeight() + WINDOW_GAP);
-                }
-            }
-        } else if ("up".equals(policy)) {
-            // Place our new window above old windows
-            for (OsdWindow window : new ArrayList<OsdWindow>(windows)) {
-                if (window.isVisible()) {
-                    y = Math.min(y, window.getY() - window.getHeight() - WINDOW_GAP);
-                }
-            }            
-        } else if ("close".equals(policy)) {
-            // Close existing windows and use their place
-            closeAll();
-        }        
-        
-        return y;
-    }
-    
-    /**
-     * Closes all open OSD windows.
-     */
-    protected static void closeAll() {
-        for (OsdWindow window : new ArrayList<OsdWindow>(windows)) {
-            window.setVisible(false);
-            window.dispose();
-        }        
-    }
-    
+   
     /** 
      * {@inheritDoc}
      * 
@@ -316,16 +270,7 @@ public final class OsdWindow extends JDialog implements MouseListener,
         super.setVisible(b);
         
         if (b) {
-            windows.add(this);
             transferFocusBackward();
         }
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void dispose() {
-        super.dispose();
-        
-        windows.remove(this);
     }
 }
