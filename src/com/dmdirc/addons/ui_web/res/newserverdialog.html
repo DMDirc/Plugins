@@ -1,0 +1,42 @@
+<h2>New server</h2>
+
+<div class="dialogcontents">
+    
+    <p>Enter the details of the server that you wish to connect to.</p>
+    
+    <table class="form">
+        <tr>
+            <td>Server:</td>
+            <td><input type="text" id="nsd_server" value="irc.quakenet.org"></td>
+        </tr>
+        <tr>
+            <td>Port:</td>
+            <td><input type="text" id="nsd_port" value="6667"></td>
+        </tr>
+        <tr>
+            <td>Password:</td>
+            <td><input type="password" id="nsd_password"></td>
+        </tr>
+        <tr>
+            <td>Profile:</td>
+            <td><select id="nsd_profile" class="profilelist"></select></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                <label>
+                    <input type="checkbox" id="nsd_ssl"> Use a secure (SSL) connection?
+                </label>
+                <label>
+                    <input type="checkbox" id="nsd_window" disabled="disabled" checked="checked">Open in a new window?
+                </label>
+            </td>
+        </tr>
+    </table>
+    
+    <div class="buttons">
+        <input type="submit" id="nsd_ok" value="OK" onclick="nsd_ok();">
+        <input type="submit" id="nsd_cancel" value="Cancel" onclick="nsd_cancel();">
+    </div>
+    
+</div>
