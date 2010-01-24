@@ -28,7 +28,6 @@ import com.dmdirc.commandparser.commands.GlobalCommand;
 import com.dmdirc.commandparser.commands.IntelligentCommand;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 import com.dmdirc.ui.interfaces.InputWindow;
-import com.dmdirc.ui.messages.Styliser;
 
 import java.util.List;
 
@@ -40,20 +39,23 @@ public final class OsdCommand extends GlobalCommand implements IntelligentComman
 
     /** The plugin that owns this command. */
     private final OsdPlugin plugin;
+
+    /** The OSDManager that this command should use. */
+    private final OsdManager osdManager;
     
     /**
      * Creates a new instance of OsdCommand.
      *
      * @param plugin The plugin that owns this command
      */
-    public OsdCommand(final OsdPlugin plugin) {
+    public OsdCommand(final OsdPlugin plugin, final OsdManager osdManager) {
         super();
 
+        this.osdManager = osdManager;
         this.plugin = plugin;
         
         CommandManager.registerCommand(this);
     }
-    
 
     /**
      * Used to show a notification using this plugin.
@@ -63,8 +65,8 @@ public final class OsdCommand extends GlobalCommand implements IntelligentComman
      * @return True if the notification was shown.
      */
     public boolean showOSD(final String title, final String message) {
-        new OsdWindow(Styliser.stipControlCodes(message), false, plugin);
-        return true;
+        osdManager.createOSDWindow(title, message);
+        return true;		
     }
 
     /** {@inheritDoc} */
@@ -73,7 +75,7 @@ public final class OsdCommand extends GlobalCommand implements IntelligentComman
             final CommandArguments args) {
         if (args.getArguments().length > 0
                 && "--close".equalsIgnoreCase(args.getArguments()[0])) {
-            OsdWindow.closeAll();
+            osdManager.destroyAllOSDWindows();
         } else {
             showOSD("", args.getArgumentsAsString());
         }
