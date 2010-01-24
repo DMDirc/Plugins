@@ -1,0 +1,38 @@
+<h2>Web UI status</h2>
+
+<div class="speedbuttons">
+    Update speed:
+    <a id="wus_500" href="javascript:setSpeed('wus', 500);">500ms</a>
+    <a id="wus_1000" href="javascript:setSpeed('wus', 1000);" style="text-decoration: underline;">1s</a>
+    <a id="wus_2000" href="javascript:setSpeed('wus', 2000);">2s</a>
+    <a id="wus_5000" href="javascript:setSpeed('wus', 5000);">5s</a>
+    <a id="wus_10000" href="javascript:setSpeed('wus', 10000);">10s</a>
+</div>
+
+<div class="dialogcontents">
+    
+    <h3>Clients</h3>
+    
+    <p id="wus_last">Last updated: never</p>
+    
+    <table class="wus_clients">
+        <thead>
+            <tr>
+                <th>IP address</th>
+                <th>Last update</th>
+                <th>Event queue</th>
+            </tr>
+        </thead>
+        <tbody id="wus_clients">
+        </tbody>
+    </table>
+    
+    <h3>Requests</h3>
+    
+    <div id="wus_requests"></div>
+    
+    <div class="buttons">
+        <input type="submit" id="wus_close" value="Close" onclick="wus_close();">
+    </div>
+    
+</div>
