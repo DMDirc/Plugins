@@ -48,6 +48,8 @@ public final class OsdPlugin extends Plugin implements CategoryChangeListener,
     
     /** OSD Command. */
     private OsdCommand command;
+
+    private OsdManager osdManager;
     
     /** X-axis position of OSD. */
     private int x;
@@ -57,7 +59,7 @@ public final class OsdPlugin extends Plugin implements CategoryChangeListener,
     
     /** Setting objects with registered change listeners. */
     private PreferencesSetting fontSizeSetting, backgroundSetting, 
-            foregroundSetting, widthSetting;
+            foregroundSetting, widthSetting, timeoutSetting, maxWindowsSetting;
     
     /**
      * Creates a new instance of OsdPlugin.
@@ -69,7 +71,8 @@ public final class OsdPlugin extends Plugin implements CategoryChangeListener,
     /** {@inheritDoc} */
     @Override
     public void onLoad() {
-        command = new OsdCommand(this);
+        osdManager = new OsdManager(this);
+        command = new OsdCommand(this, osdManager);
     }
     
     /** {@inheritDoc} */
@@ -100,14 +103,19 @@ public final class OsdPlugin extends Plugin implements CategoryChangeListener,
         widthSetting = new PreferencesSetting(PreferencesType.INTEGER,
                 getDomain(), "width", "OSD Width", "Width of the OSD Window").
                 registerChangeListener(this);
+        timeoutSetting = new PreferencesSetting(PreferencesType.INTEGER,
+                getDomain(), "timeout", "Timeout", "Length of time in " +
+                "seconds before the OSD window closes");
+        maxWindowsSetting = new PreferencesSetting(PreferencesType.OPTIONALINTEGER,
+                getDomain(), "maxWindows", "Max display at once", "Maximum number of OSD " +
+                "windows that will be displayed at any given time");
                 
         category.addSetting(fontSizeSetting);
         category.addSetting(backgroundSetting);
         category.addSetting(foregroundSetting);
         category.addSetting(widthSetting);
-        category.addSetting(new PreferencesSetting(PreferencesType.INTEGER,
-                getDomain(), "timeout", "Timeout", "Length of time in " +
-                "seconds before the OSD window closes"));
+        category.addSetting(timeoutSetting);
+        category.addSetting(maxWindowsSetting);
         
         final Map<String, String> posOptions = new HashMap<String, String>();
         posOptions.put("down", "Place new windows below old ones");
@@ -127,7 +135,7 @@ public final class OsdPlugin extends Plugin implements CategoryChangeListener,
     /** {@inheritDoc} */
     @Override
     public void categorySelected(final PreferencesCategory category) {
-        osdWindow = new OsdWindow("Please drag this OSD to position", true, x, y, this);
+        osdWindow = new OsdWindow("Please drag this OSD to position", true, x, y, this, osdManager);
         osdWindow.setBackgroundColour(backgroundSetting.getValue());
         osdWindow.setForegroundColour(foregroundSetting.getValue());
         osdWindow.setFontSize(Integer.parseInt(fontSizeSetting.getValue()));
