@@ -211,13 +211,13 @@ public class WebInterfaceUI implements UIController {
     }
 
     /** {@inheritDoc} */
-    @Override
+    @Override @Deprecated
     public Window getActiveWindow() {
         return active;
     }
 
     /** {@inheritDoc} */
-    @Override
+    @Override @Deprecated
     public Server getActiveServer() {
         //TODO FIXME
         throw new UnsupportedOperationException("Not supported yet.");

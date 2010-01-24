@@ -79,9 +79,8 @@ public class WebInputHandler extends InputHandler {
 
     /** {@inheritDoc} */
     @Override
-    public void doTabCompletion() {
-        System.out.println("doTab");
-        super.doTabCompletion();
+    public void doTabCompletion(boolean shiftPressed) {
+        super.doTabCompletion(shiftPressed);
     }
 
     /** {@inheritDoc} */
