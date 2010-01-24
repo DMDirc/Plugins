@@ -61,14 +61,16 @@ public class MircStyle implements TabCompletionStyle {
     /** {@inheritDoc} */
     @Override
     public TabCompletionResult getResult(final String original, final int start,
-            final int end, final AdditionalTabTargets additional) {
+            final int end, final boolean shiftPressed,
+            final AdditionalTabTargets additional) {
         
         final String word = original.substring(start, end);
         String target = "";
         
         if (word.equals(lastWord)) {
             // We're continuing to tab through
-            target = lastResult.get((lastResult.indexOf(lastWord) + 1) % lastResult.size());
+            target = lastResult.get((lastResult.indexOf(lastWord) + 
+                    (shiftPressed ? -1 : 1) + lastResult.size()) % lastResult.size());
         } else {
             // New tab target
             final TabCompleterResult res = tabCompleter.complete(word, additional);
