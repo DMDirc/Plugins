@@ -31,6 +31,7 @@ import com.dmdirc.ui.input.tabstyles.TabCompletionStyle;
 import com.dmdirc.ui.interfaces.InputWindow;
 
 import java.awt.Toolkit;
+import java.util.Collections;
 import java.util.List;
 
 public class MircStyle implements TabCompletionStyle {
@@ -66,7 +67,6 @@ public class MircStyle implements TabCompletionStyle {
         
         final String word = original.substring(start, end);
         String target = "";
-        
         if (word.equals(lastWord)) {
             // We're continuing to tab through
             target = lastResult.get((lastResult.indexOf(lastWord) + 
@@ -79,6 +79,8 @@ public class MircStyle implements TabCompletionStyle {
                 Toolkit.getDefaultToolkit().beep();
                 return null;
             } else {
+                Collections.sort(res.getResults(), String.CASE_INSENSITIVE_ORDER);
+
                 if (word.length() > 0 && window.getContainer() instanceof Channel
                         && ((Channel) window.getContainer())
                         .getChannelInfo().getName().startsWith(word)) {
