@@ -62,7 +62,8 @@ public class BashStyle implements TabCompletionStyle {
     /** {@inheritDoc} */
     @Override
     public TabCompletionResult getResult(final String original, final int start,
-            final int end, final AdditionalTabTargets additional) {
+            final int end, final boolean shiftPressed,
+            final AdditionalTabTargets additional) {
         final String word = original.substring(start, end);
         final TabCompleterResult res = tabCompleter.complete(word, additional);
         
