@@ -30,10 +30,12 @@ import com.dmdirc.config.IdentityManager;
 import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.parser.interfaces.callbacks.SocketCloseListener;
 
+import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 
+import java.io.IOException;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -78,6 +80,9 @@ public class DCCSendWindow extends DCCFrame implements DCCSendInterface, ActionL
     /** Button */
     private final JButton button = new JButton("Cancel");
 
+    /** Open Button */
+    private final JButton openButton = new JButton("Open");
+
     /** Plugin that this send belongs to. */
     private final DCCPlugin myPlugin;
 
@@ -110,7 +115,7 @@ public class DCCSendWindow extends DCCFrame implements DCCSendInterface, ActionL
 
         otherNickname = targetNick;
 
-        getContentPane().setLayout(new MigLayout());
+        getContentPane().setLayout(new MigLayout("hidemode 0"));
 
         progress.setMinimum(0);
         progress.setMaximum(100);
@@ -131,7 +136,11 @@ public class DCCSendWindow extends DCCFrame implements DCCSendInterface, ActionL
         getContentPane().add(progress, "growx, wrap");
 
         button.addActionListener(this);
-        getContentPane().add(button, "wrap, align right");
+        openButton.addActionListener(this);
+        openButton.setVisible(false);
+
+        getContentPane().add(openButton, "split 2, align right, sg button");
+        getContentPane().add(button, "align right, sg button");
 
         plugin.addWindow(this);
     }
@@ -206,6 +215,16 @@ public class DCCSendWindow extends DCCFrame implements DCCSendInterface, ActionL
             }
         } else if (e.getActionCommand().equals("Close Window")) {
             close();
+        } else if (e.getSource() == openButton) {
+            if (Desktop.isDesktopSupported()) {
+                if (Desktop.getDesktop().isSupported(Desktop.Action.OPEN)) {
+                    try {
+                        Desktop.getDesktop().open(new File(dcc.getFileName()));
+                    } catch (IOException x) {
+                        //Ignore
+                    }
+                }
+            }
         }
     }
 
@@ -296,6 +315,9 @@ public class DCCSendWindow extends DCCFrame implements DCCSendInterface, ActionL
             synchronized (this) {
                 if (transferCount == dcc.getFileSize()) {
                     status.setText("Status: Transfer Compelete.");
+                    if (dcc.getType() == DCCSend.TransferType.RECEIVE) {
+                        openButton.setVisible(true);
+                    }
                     progress.setValue(100);
                     setIcon(dcc.getType() == DCCSend.TransferType.SEND ? "dcc-send-done" : "dcc-receive-done");
                     button.setText("Close Window");
