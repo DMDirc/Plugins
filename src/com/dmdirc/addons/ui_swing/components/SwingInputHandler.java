@@ -154,7 +154,37 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
                     @Override
                     protected Object doInBackground() throws Exception {
                         localTarget.setEditable(false);
-                        doTabCompletion();
+                        doTabCompletion(false);
+                        return null;
+                    }
+
+                    /** {@inheritDoc} */
+                    @Override
+                    protected void done() {
+                        localTarget.setEditable(true);
+                    }
+                }.execute();
+            }
+        });
+        localTarget.getActionMap().put("insert-shift-tab", new AbstractAction() {
+
+            /**
+             * A version number for this class. It should be changed whenever the class
+             * structure is changed (or anything else that would prevent serialized
+             * objects being unserialized with the new class).
+             */
+            private static final long serialVersionUID = 1;
+
+            /** {@inheritDoc} */
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                new LoggingSwingWorker() {
+
+                    /** {@inheritDoc} */
+                    @Override
+                    protected Object doInBackground() throws Exception {
+                        localTarget.setEditable(false);
+                        doTabCompletion(true);
                         return null;
                     }
 
@@ -168,6 +198,9 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
         });
         localTarget.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).
                 put(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 0), "insert-tab");
+        localTarget.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).
+                put(KeyStroke.getKeyStroke(KeyEvent.VK_TAB,
+                KeyEvent.SHIFT_MASK), "insert-shift-tab");
     }
 
     /** {@inheritDoc} */
