@@ -247,7 +247,11 @@ public class TopicBar extends JComponent implements ActionListener,
     public void actionPerformed(final ActionEvent e) {
         if (e.getSource() == topicEdit || e.getSource() == topicText) {
             if (topicText.isEditable()) {
-                channel.setTopic(topicText.getText());
+                if ((channel.getCurrentTopic() == null && !topicText.getText().isEmpty())
+                        || (channel.getCurrentTopic() != null &&
+                        !channel.getCurrentTopic().getTopic().equals(topicText.getText()))) {
+                    channel.setTopic(topicText.getText());
+                }
                 ((ChannelFrame) channel.getFrame()).getInputField().
                         requestFocusInWindow();
                 topicChanged();
