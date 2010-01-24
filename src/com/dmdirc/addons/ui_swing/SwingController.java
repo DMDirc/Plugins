@@ -22,25 +22,47 @@
 
 package com.dmdirc.addons.ui_swing;
 
-import com.dmdirc.addons.ui_swing.dialogs.DialogKeyListener;
-import com.dmdirc.addons.ui_swing.components.frames.ServerFrame;
-import com.dmdirc.addons.ui_swing.components.frames.CustomFrame;
-import com.dmdirc.addons.ui_swing.components.frames.QueryFrame;
-import com.dmdirc.addons.ui_swing.components.frames.CustomInputFrame;
-import com.dmdirc.addons.ui_swing.components.frames.ChannelFrame;
 import com.dmdirc.Channel;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.Main;
-import com.dmdirc.config.prefs.PreferencesInterface;
-import com.dmdirc.config.prefs.PreferencesManager;
-import com.dmdirc.ui.IconManager;
 import com.dmdirc.Query;
 import com.dmdirc.Server;
 import com.dmdirc.WritableFrameContainer;
+import com.dmdirc.addons.ui_swing.components.frames.ChannelFrame;
+import com.dmdirc.addons.ui_swing.components.frames.CustomFrame;
+import com.dmdirc.addons.ui_swing.components.frames.CustomInputFrame;
+import com.dmdirc.addons.ui_swing.components.frames.QueryFrame;
+import com.dmdirc.addons.ui_swing.components.frames.ServerFrame;
+import com.dmdirc.addons.ui_swing.components.pluginpanel.PluginPanel;
+import com.dmdirc.addons.ui_swing.components.statusbar.FeedbackNag;
+import com.dmdirc.addons.ui_swing.components.statusbar.SwingStatusBar;
+import com.dmdirc.addons.ui_swing.components.themepanel.ThemePanel;
+import com.dmdirc.addons.ui_swing.dialogs.DialogKeyListener;
+import com.dmdirc.addons.ui_swing.dialogs.channelsetting.ChannelSettingsDialog;
+import com.dmdirc.addons.ui_swing.dialogs.error.ErrorListDialog;
+import com.dmdirc.addons.ui_swing.dialogs.prefs.SwingPreferencesDialog;
+import com.dmdirc.addons.ui_swing.dialogs.prefs.URLConfigPanel;
+import com.dmdirc.addons.ui_swing.dialogs.prefs.UpdateConfigPanel;
+import com.dmdirc.addons.ui_swing.dialogs.serversetting.ServerSettingsDialog;
+import com.dmdirc.addons.ui_swing.dialogs.sslcertificate.SSLCertificateDialog;
+import com.dmdirc.addons.ui_swing.dialogs.updater.SwingUpdaterDialog;
+import com.dmdirc.addons.ui_swing.dialogs.url.URLDialog;
+import com.dmdirc.addons.ui_swing.wizard.WizardListener;
+import com.dmdirc.addons.ui_swing.wizard.firstrun.SwingFirstRunWizard;
 import com.dmdirc.commandparser.parsers.CommandParser;
+import com.dmdirc.config.Identity;
 import com.dmdirc.config.IdentityManager;
+import com.dmdirc.config.prefs.PluginPreferencesCategory;
+import com.dmdirc.config.prefs.PreferencesCategory;
+import com.dmdirc.config.prefs.PreferencesInterface;
+import com.dmdirc.config.prefs.PreferencesManager;
+import com.dmdirc.config.prefs.PreferencesSetting;
+import com.dmdirc.config.prefs.PreferencesType;
+import com.dmdirc.config.prefs.validator.NumericalValidator;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
+import com.dmdirc.plugins.Plugin;
+import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.core.dialogs.sslcertificate.SSLCertificateDialogModel;
 import com.dmdirc.ui.interfaces.ChannelWindow;
 import com.dmdirc.ui.interfaces.InputWindow;
@@ -49,27 +71,6 @@ import com.dmdirc.ui.interfaces.ServerWindow;
 import com.dmdirc.ui.interfaces.StatusBar;
 import com.dmdirc.ui.interfaces.UIController;
 import com.dmdirc.ui.interfaces.Window;
-import com.dmdirc.addons.ui_swing.components.pluginpanel.PluginPanel;
-import com.dmdirc.addons.ui_swing.components.statusbar.FeedbackNag;
-import com.dmdirc.addons.ui_swing.components.statusbar.SwingStatusBar;
-import com.dmdirc.addons.ui_swing.components.themepanel.ThemePanel;
-import com.dmdirc.addons.ui_swing.dialogs.updater.SwingUpdaterDialog;
-import com.dmdirc.addons.ui_swing.dialogs.url.URLDialog;
-import com.dmdirc.addons.ui_swing.dialogs.channelsetting.ChannelSettingsDialog;
-import com.dmdirc.addons.ui_swing.dialogs.error.ErrorListDialog;
-import com.dmdirc.addons.ui_swing.dialogs.prefs.SwingPreferencesDialog;
-import com.dmdirc.addons.ui_swing.dialogs.prefs.URLConfigPanel;
-import com.dmdirc.addons.ui_swing.dialogs.prefs.UpdateConfigPanel;
-import com.dmdirc.addons.ui_swing.wizard.firstrun.SwingFirstRunWizard;
-import com.dmdirc.addons.ui_swing.dialogs.serversetting.ServerSettingsDialog;
-import com.dmdirc.addons.ui_swing.dialogs.sslcertificate.SSLCertificateDialog;
-import com.dmdirc.addons.ui_swing.wizard.WizardListener;
-import com.dmdirc.config.Identity;
-import com.dmdirc.config.prefs.PreferencesCategory;
-import com.dmdirc.config.prefs.PreferencesSetting;
-import com.dmdirc.config.prefs.PreferencesType;
-import com.dmdirc.config.prefs.validator.NumericalValidator;
-import com.dmdirc.plugins.Plugin;
 import com.dmdirc.updater.Update;
 import com.dmdirc.util.ReturnableThread;
 
@@ -674,9 +675,9 @@ public final class SwingController extends Plugin implements UIController {
      * Creates the "Advanced" category.
      */
     private PreferencesCategory createGeneralCategory() {
-        final PreferencesCategory general = new PreferencesCategory("Swing UI",
-                "These config options apply only to the swing UI.",
-                "category-gui");
+        final PreferencesCategory general = new PluginPreferencesCategory(
+                getPluginInfo(), "Swing UI", "These config options apply " +
+                "only to the swing UI.", "category-gui");
 
         final Map<String, String> lafs = new HashMap<String, String>();
         final Map<String, String> framemanagers = new HashMap<String, String>();
@@ -729,8 +730,8 @@ public final class SwingController extends Plugin implements UIController {
      * Creates the "Advanced" category.
      */
     private PreferencesCategory createAdvancedCategory() {
-        final PreferencesCategory advanced = new PreferencesCategory("Advanced",
-                "");
+        final PreferencesCategory advanced = new PluginPreferencesCategory(
+                getPluginInfo(), "Advanced", "");
         final Map<String, String> options = new HashMap<String, String>();
 
         options.put("alwaysShow", "Always show");
@@ -776,8 +777,8 @@ public final class SwingController extends Plugin implements UIController {
      * Creates the "Treeview" category.
      */
     private PreferencesCategory createTreeViewCategory() {
-        final PreferencesCategory treeview = new PreferencesCategory("Treeview",
-                "", "treeview");
+        final PreferencesCategory treeview = new PluginPreferencesCategory(
+                getPluginInfo(), "Treeview", "", "treeview");
 
         treeview.addSetting(new PreferencesSetting(
                 PreferencesType.OPTIONALCOLOUR,
@@ -816,8 +817,8 @@ public final class SwingController extends Plugin implements UIController {
      * Creates the "Nicklist" category.
      */
     private PreferencesCategory createNicklistCategory() {
-        final PreferencesCategory nicklist = new PreferencesCategory("Nicklist",
-                "", "nicklist");
+        final PreferencesCategory nicklist = new PluginPreferencesCategory(
+                getPluginInfo(), "Nicklist", "", "nicklist");
 
         nicklist.addSetting(new PreferencesSetting(
                 PreferencesType.OPTIONALCOLOUR,
