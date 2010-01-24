@@ -25,6 +25,7 @@ package com.dmdirc.addons.osd;
 import com.dmdirc.commandparser.CommandManager;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.prefs.CategoryChangeListener;
+import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesInterface;
 import com.dmdirc.config.prefs.PreferencesManager;
@@ -83,7 +84,8 @@ public final class OsdPlugin extends Plugin implements CategoryChangeListener,
         x = IdentityManager.getGlobalConfig().getOptionInt(getDomain(), "locationX");
         y = IdentityManager.getGlobalConfig().getOptionInt(getDomain(), "locationY");
         
-        final PreferencesCategory category = new PreferencesCategory("OSD",
+        final PreferencesCategory category = new PluginPreferencesCategory(
+                getPluginInfo(), "OSD",
                 "General configuration for OSD plugin.", "category-osd");
         
         fontSizeSetting = new PreferencesSetting(PreferencesType.INTEGER,

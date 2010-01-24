@@ -27,6 +27,7 @@ import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.actions.interfaces.ActionType;
 import com.dmdirc.config.IdentityManager;
+import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesManager;
 import com.dmdirc.config.prefs.PreferencesSetting;
@@ -111,10 +112,10 @@ public class IdentdPlugin extends Plugin implements ActionListener {
     /** {@inheritDoc} */
     @Override
     public void showConfig(final PreferencesManager manager) {
-        final PreferencesCategory general = new PreferencesCategory("Identd",
+        final PreferencesCategory general = new PluginPreferencesCategory(getPluginInfo(), "Identd",
                 "General Identd Plugin config ('Lower' options take priority " +
                 "over those above them)");
-        final PreferencesCategory advanced = new PreferencesCategory("Advanced",
+        final PreferencesCategory advanced = new PluginPreferencesCategory(getPluginInfo(), "Advanced",
                 "Advanced Identd Plugin config - Only edit these if you need " +
                 "to/know what you are doing. Editing these could prevent " +
                 "access to some servers. ('Lower' options take priority over " +

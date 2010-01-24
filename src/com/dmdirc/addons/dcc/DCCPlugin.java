@@ -34,6 +34,7 @@ import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.commandparser.CommandManager;
 import com.dmdirc.config.Identity;
 import com.dmdirc.config.IdentityManager;
+import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesManager;
 import com.dmdirc.config.prefs.PreferencesSetting;
@@ -563,10 +564,10 @@ public final class DCCPlugin extends Plugin implements ActionListener {
     /** {@inheritDoc} */
     @Override
     public void showConfig(final PreferencesManager manager) {
-        final PreferencesCategory general = new PreferencesCategory("DCC", "", "category-dcc");
-        final PreferencesCategory firewall = new PreferencesCategory("Firewall", "");
-        final PreferencesCategory sending = new PreferencesCategory("Sending", "");
-        final PreferencesCategory receiving = new PreferencesCategory("Receiving", "");
+        final PreferencesCategory general = new PluginPreferencesCategory(getPluginInfo(), "DCC", "", "category-dcc");
+        final PreferencesCategory firewall = new PluginPreferencesCategory(getPluginInfo(), "Firewall", "");
+        final PreferencesCategory sending = new PluginPreferencesCategory(getPluginInfo(), "Sending", "");
+        final PreferencesCategory receiving = new PluginPreferencesCategory(getPluginInfo(), "Receiving", "");
 
         manager.getCategory("Plugins").addSubCategory(general.setInlineAfter());
         general.addSubCategory(firewall.setInline());

@@ -31,6 +31,7 @@ import com.dmdirc.actions.interfaces.ActionType;
 import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.config.ConfigManager;
 import com.dmdirc.config.IdentityManager;
+import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesManager;
 import com.dmdirc.config.prefs.PreferencesSetting;
@@ -260,8 +261,8 @@ public final class LagDisplayPlugin extends Plugin implements ActionListener, Co
     /** {@inheritDoc} */
     @Override
     public void showConfig(final PreferencesManager manager) {
-        final PreferencesCategory cat = new PreferencesCategory("Lag display plugin",
-                                                                "");
+        final PreferencesCategory cat = new PluginPreferencesCategory(
+                getPluginInfo(), "Lag display plugin", "");
         cat.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
                 getDomain(), "usealternate",
                 "Alternate method", "Use an alternate method of determining "

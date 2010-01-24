@@ -25,6 +25,7 @@ package com.dmdirc.addons.mediasource_vlc;
 import com.dmdirc.addons.nowplaying.MediaSource;
 import com.dmdirc.addons.nowplaying.MediaSourceState;
 import com.dmdirc.config.IdentityManager;
+import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesManager;
 import com.dmdirc.config.prefs.PreferencesSetting;
@@ -201,9 +202,11 @@ public class VlcMediaSourcePlugin extends Plugin implements MediaSource {
     /** {@inheritDoc} */
     @Override
     public void showConfig(final PreferencesManager manager) {
-        final PreferencesCategory general = new PreferencesCategory("VLC Media Source",
+        final PreferencesCategory general = new PluginPreferencesCategory(
+                getPluginInfo(), "VLC Media Source",
                 "", "category-vlc");
-        final PreferencesCategory instr = new PreferencesCategory("Instructions",
+        final PreferencesCategory instr = new PluginPreferencesCategory(
+                getPluginInfo(), "Instructions",
                 "", new InstructionsPanel());
         
         general.addSetting(new PreferencesSetting(PreferencesType.TEXT, 
