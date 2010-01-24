@@ -231,18 +231,18 @@ public class DCCSendWindow extends DCCFrame implements DCCSendInterface, ActionL
                 Desktop.getDesktop().open(file);
             } catch (IllegalArgumentException ex) {
                     Logger.userError(ErrorLevel.LOW, "Unable to open file: " +
-                            file + ex);
+                            file, ex);
                     openButton.setEnabled(false);
             } catch (IOException ex) {
                 try {
                     Desktop.getDesktop().open(file.getParentFile());
                 } catch (IllegalArgumentException ex1) {
                     Logger.userError(ErrorLevel.LOW, "Unable to open folder: " +
-                            file.getParentFile() + ex1);
+                            file.getParentFile(), ex1);
                     openButton.setEnabled(false);
                 } catch (IOException ex1) {
                     Logger.userError(ErrorLevel.LOW, "No associated handler " +
-                            "to open file or directory." + ex1);
+                            "to open file or directory.", ex1);
                     openButton.setEnabled(false);
                 }
             }
