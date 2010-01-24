@@ -53,6 +53,8 @@ public class MainFrameTest {
         IdentityManager.getAddonIdentity().setOption("test", "debugEDT", "false");
         IdentityManager.getAddonIdentity().setOption("test", "windowMenuItems", "1");
         IdentityManager.getAddonIdentity().setOption("test", "windowMenuScrollInterval", "1");
+        IdentityManager.getAddonIdentity().setOption("test", "desktopbackground", "");
+        IdentityManager.getAddonIdentity().setOption("test", "desktopbackgroundoption", "STRETCH");
         controller = new SwingController();
         controller.setDomain("test");
         controller.onLoad();
