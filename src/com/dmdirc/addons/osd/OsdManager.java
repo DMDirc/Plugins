@@ -24,7 +24,9 @@ package com.dmdirc.addons.osd;
 
 import com.dmdirc.config.IdentityManager;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 /**
  * Class to manage OSD Windows.
@@ -38,6 +40,7 @@ public class OsdManager {
 
     /** List of OSD Windows. */
     private List<OsdWindow> windowList = new ArrayList<OsdWindow>();
+    private Queue<String> queueList = new LinkedList<String>();
 
     /** The spacing between the windows. */
     private static final int WINDOW_GAP = 5;
@@ -48,12 +51,34 @@ public class OsdManager {
      * @param plugin The plugin that owns this OSD Manager
      */
     public OsdManager(final OsdPlugin plugin) {
-        //Constructor
         this.plugin = plugin;
     }
 
-    public void createOSDWindow(final String title, final String message) {
-        //Check some form of queue.
+    /**
+     * Add messages to the queue, if queue is less than max windows (if enabled)
+     * then display window immediately.
+     * 
+     * @param title Window title
+     * @param message Message to be displayed
+     */
+    public void addQueue(final String title, final String message) {
+        final Integer maxWindows = IdentityManager.getGlobalConfig().getOptionInt(plugin.getDomain(), "maxWindows");
+        final int windowCount = getWindowCount();
+        
+        if (maxWindows != null && windowCount >= maxWindows) {
+            queueList.add(message);
+        } else {
+            showWindow(title, message);
+        }
+    }
+
+    /**
+     * Create a new OSD window with "message"
+     *
+     * @param title Title of the OSD window
+     * @param message Text to display in the OSD window
+     */
+    public void showWindow(final String title, final String message) {
         OsdWindow currentWindow = new OsdWindow(message, false,
                 IdentityManager.getGlobalConfig().getOptionInt(plugin.getDomain(),
                 "locationX"), getYPosition(), plugin, this);
@@ -62,22 +87,28 @@ public class OsdManager {
     }
 
     /**
-    * Destroy the given OSD Window.
+    * Destroy the given OSD Window and check if the Queue has items, if so
+     * Display them.
     *
     * @param window The window that we are destroying.
     */
-    public void destroyOSDWindow(OsdWindow window) {
+    public void killWindow(OsdWindow window) {
         windowList.remove(window);
         window.dispose();
+        
+        String nextItem = queueList.poll();
+        if (nextItem != null) {
+            showWindow("", nextItem);
+        }
     }
 
     /**
      * Destropy all OSD Windows
      */
-    public void destroyAllOSDWindows() {
+    public void killAll() {
         for (OsdWindow window : new ArrayList<OsdWindow>(windowList)) {
             window.setVisible(false);
-            destroyOSDWindow(window);
+            killWindow(window);
         }
     }
 
@@ -126,7 +157,7 @@ public class OsdManager {
             }
         } else if ("close".equals(policy)) {
             // Close existing windows and use their place
-            destroyAllOSDWindows();
+            killAll();
         }
 
         return y;

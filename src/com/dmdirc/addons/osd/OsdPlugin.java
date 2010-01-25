@@ -63,11 +63,9 @@ public final class OsdPlugin extends Plugin implements CategoryChangeListener,
      * Setting objects with registered change listeners.
      * maxWindowSetting not used at present so comment out
      */
-    //private PreferencesSetting fontSizeSetting, backgroundSetting,
-    //        foregroundSetting, widthSetting, timeoutSetting, maxWindowsSetting;
     private PreferencesSetting fontSizeSetting, backgroundSetting,
-            foregroundSetting, widthSetting, timeoutSetting;
-    
+            foregroundSetting, widthSetting, timeoutSetting, maxWindowsSetting;
+        
     /**
      * Creates a new instance of OsdPlugin.
      */
@@ -113,16 +111,16 @@ public final class OsdPlugin extends Plugin implements CategoryChangeListener,
         timeoutSetting = new PreferencesSetting(PreferencesType.INTEGER,
                 getDomain(), "timeout", "Timeout", "Length of time in " +
                 "seconds before the OSD window closes");
-        //maxWindowsSetting = new PreferencesSetting(PreferencesType.OPTIONALINTEGER,
-        //        getDomain(), "maxWindows", "Max display at once", "Maximum number of OSD " +
-        //        "windows that will be displayed at any given time");
+        maxWindowsSetting = new PreferencesSetting(PreferencesType.OPTIONALINTEGER,
+                getDomain(), "maxWindows", "Max display at once", "Maximum number of OSD " +
+                "windows that will be displayed at any given time");
                 
         category.addSetting(fontSizeSetting);
         category.addSetting(backgroundSetting);
         category.addSetting(foregroundSetting);
         category.addSetting(widthSetting);
         category.addSetting(timeoutSetting);
-        //category.addSetting(maxWindowsSetting);
+        category.addSetting(maxWindowsSetting);
         
         final Map<String, String> posOptions = new HashMap<String, String>();
         posOptions.put("down", "Place new windows below old ones");

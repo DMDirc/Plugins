@@ -134,7 +134,7 @@ public final class OsdWindow extends JDialog implements MouseListener,
                 @Override
                 public void run() {
                     setVisible(false);
-                    osdManager.destroyOSDWindow(OsdWindow.this);
+                    osdManager.killWindow(OsdWindow.this);
                 }
             }, IdentityManager.getGlobalConfig().getOptionInt(plugin.getDomain(),
                     "timeout") * 1000);
@@ -151,7 +151,7 @@ public final class OsdWindow extends JDialog implements MouseListener,
     public void mouseClicked(final MouseEvent e) {
         if (!config) {
             setVisible(false);
-            osdManager.destroyOSDWindow(this);
+            osdManager.killWindow(this);
         }
     }
     
