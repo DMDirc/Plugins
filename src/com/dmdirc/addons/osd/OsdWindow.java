@@ -32,7 +32,6 @@ import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -84,7 +83,7 @@ public final class OsdWindow extends JDialog implements MouseListener,
      * @param x The x-axis position for the OSD Window
      * @param y The y-axis position for the OSD window
      * @param plugin Parent OSD Plugin
-     * @param osdMAnager The manager that owns this OSD Window
+     * @param osdManager The manager that owns this OSD Window
      */
     public OsdWindow(final String text, final boolean config, final int x,
             final int y, final OsdPlugin plugin, final OsdManager osdManager) {
@@ -119,7 +118,7 @@ public final class OsdWindow extends JDialog implements MouseListener,
                 (float) IdentityManager.getGlobalConfig().getOptionInt(plugin.getDomain(),
                 "fontSize")));
         label.setHorizontalAlignment(SwingConstants.CENTER);
-            add(label, "alignx center");
+        add(label, "alignx center, hmin " + label.getFont().getSize());
 
         setVisible(true);
         pack();
