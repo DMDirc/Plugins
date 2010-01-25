@@ -156,7 +156,7 @@ public final class AboutDialog extends StandardDialog implements
     public void stateChanged(ChangeEvent e) {
         history = 10 * (history % 10000) + tabbedPane.getSelectedIndex();
 
-        if (history == 30321) {
+        if (history / 10 % 100 == 32 && (history & 1) == 1 && history >> 8 == 118) {
             cp.showEE();
         }
     }
