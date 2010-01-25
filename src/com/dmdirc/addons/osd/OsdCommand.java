@@ -65,8 +65,8 @@ public final class OsdCommand extends GlobalCommand implements IntelligentComman
      * @return True if the notification was shown.
      */
     public boolean showOSD(final String title, final String message) {
-        osdManager.createOSDWindow(title, message);
-        return true;		
+        osdManager.showWindow(message);
+        return true;
     }
 
     /** {@inheritDoc} */
@@ -75,9 +75,9 @@ public final class OsdCommand extends GlobalCommand implements IntelligentComman
             final CommandArguments args) {
         if (args.getArguments().length > 0
                 && "--close".equalsIgnoreCase(args.getArguments()[0])) {
-            osdManager.destroyAllOSDWindows();
+            osdManager.closeAll();
         } else {
-            showOSD("", args.getArgumentsAsString());
+            showOSD(null, args.getArgumentsAsString());
         }
     }
     
