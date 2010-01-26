@@ -105,6 +105,25 @@ public class OsdManager {
         windowList.remove(window);
         window.dispose();
 
+        final String policy = IdentityManager.getGlobalConfig().getOption(
+        plugin.getDomain(), "newbehaviour");
+        int y = IdentityManager.getGlobalConfig().getOptionInt(plugin.getDomain(),
+                "locationY");
+        
+
+        for (OsdWindow w : new ArrayList<OsdWindow>(getWindowList())) {
+            int x = w.getX();
+            if (w.isVisible()) {
+                if ("down".equals(policy)) {
+                    y = Math.max(y, w.getY() - w.getHeight() - WINDOW_GAP);
+                } else if ("up".equals(policy)) {
+                    y = Math.max(y, w.getY() + w.getHeight() + WINDOW_GAP);
+                }
+            }
+            w.setLocation(x, y);
+        }
+
+
         displayWindows();
     }
 
@@ -141,7 +160,7 @@ public class OsdManager {
      *
      * @return the Y position for the next window.
      */
-    public int getYPosition() {
+    private int getYPosition() {
         final String policy = IdentityManager.getGlobalConfig().getOption(
                 plugin.getDomain(), "newbehaviour");
         int y = IdentityManager.getGlobalConfig().getOptionInt(plugin.getDomain(),
