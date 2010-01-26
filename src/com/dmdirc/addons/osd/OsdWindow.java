@@ -254,4 +254,9 @@ public final class OsdWindow extends JDialog implements MouseListener,
             transferFocusBackward();
         }
     }
+
+    /** {@inheritDoc} */
+    @Override  public String toString() {
+        return label.getText();
+    }
 }
