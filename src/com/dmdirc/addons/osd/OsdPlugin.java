@@ -114,7 +114,7 @@ public final class OsdPlugin extends Plugin implements CategoryChangeListener,
                 getDomain(), "timeout", "Timeout", "Length of time in " +
                 "seconds before the OSD window closes");
         maxWindowsSetting = new PreferencesSetting(PreferencesType.OPTIONALINTEGER,
-                new OptionalValidator(new NumericalValidator(1 ,Integer.MAX_VALUE)),
+                new OptionalValidator(new NumericalValidator(1, Integer.MAX_VALUE)),
                 getDomain(), "maxWindows", "Maximum open windows", "Maximum number of OSD " +
                 "windows that will be displayed at any given time");
                 
