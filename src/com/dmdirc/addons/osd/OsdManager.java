@@ -91,7 +91,6 @@ public class OsdManager {
         OsdWindow currentWindow = new OsdWindow(message, false,
                 IdentityManager.getGlobalConfig().getOptionInt(plugin.getDomain(),
                 "locationX"), getYPosition(), plugin, this);
-
         windowList.add(currentWindow);
     }
 
@@ -102,9 +101,27 @@ public class OsdManager {
      * @param window The window that we are destroying.
      */
     public void closeWindow(final OsdWindow window) {
+        final String policy = IdentityManager.getGlobalConfig().getOption(
+                plugin.getDomain(), "newbehaviour");
+        final int startY = IdentityManager.getGlobalConfig().getOptionInt(plugin.getDomain(),
+                "locationY");
+
         windowList.remove(window);
         window.dispose();
 
+        synchronized (this) {
+            for (OsdWindow otherWindow : getWindowList()) {
+                if (otherWindow.isVisible()) {
+                    if ("down".equals(policy)) {
+                        otherWindow.setLocation(otherWindow.getX(), Math.max(startY,
+                                otherWindow.getY() - otherWindow.getHeight() - WINDOW_GAP));
+                    } else if ("up".equals(policy)) {
+                        otherWindow.setLocation(otherWindow.getX(), Math.min(startY,
+                                otherWindow.getY() + otherWindow.getHeight() + WINDOW_GAP));
+                    }
+                }
+            }
+        }
         displayWindows();
     }
 
@@ -141,7 +158,7 @@ public class OsdManager {
      *
      * @return the Y position for the next window.
      */
-    public int getYPosition() {
+    private int getYPosition() {
         final String policy = IdentityManager.getGlobalConfig().getOption(
                 plugin.getDomain(), "newbehaviour");
         int y = IdentityManager.getGlobalConfig().getOptionInt(plugin.getDomain(),

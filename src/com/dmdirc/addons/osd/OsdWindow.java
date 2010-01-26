@@ -133,7 +133,6 @@ public final class OsdWindow extends JDialog implements MouseListener,
                 /** {@inheritDoc} */
                 @Override
                 public void run() {
-                    setVisible(false);
                     osdManager.closeWindow(OsdWindow.this);
                 }
             }, IdentityManager.getGlobalConfig().getOptionInt(plugin.getDomain(),
@@ -150,7 +149,6 @@ public final class OsdWindow extends JDialog implements MouseListener,
     @Override
     public void mouseClicked(final MouseEvent e) {
         if (!config) {
-            setVisible(false);
             osdManager.closeWindow(this);
         }
     }
