@@ -22,7 +22,9 @@
 
 package com.dmdirc.addons.osd;
 
+import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.config.IdentityManager;
+import com.dmdirc.util.ReturnableThread;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -38,13 +40,10 @@ public class OsdManager {
 
     /** The Plugin that owns this OSD Manager. */
     private final OsdPlugin plugin;
-
     /** List of OSD Windows. */
     private final List<OsdWindow> windowList = new ArrayList<OsdWindow>();
-
     /** List of messages to be queued. */
     private final Queue<String> windowQueue = new LinkedList<String>();
-
     /** The spacing between the windows. */
     private static final int WINDOW_GAP = 5;
 
@@ -71,8 +70,8 @@ public class OsdManager {
      * Displays as many windows as appropriate.
      */
     private synchronized void displayWindows() {
-        final Integer maxWindows = IdentityManager.getGlobalConfig().getOptionInt(
-                plugin.getDomain(), "maxWindows");
+        final Integer maxWindows = IdentityManager.getGlobalConfig().
+                getOptionInt(plugin.getDomain(), "maxWindows");
 
         String nextItem;
 
@@ -88,10 +87,17 @@ public class OsdManager {
      * @param message Text to display in the OSD window.
      */
     private void displayWindow(final String message) {
-        OsdWindow currentWindow = new OsdWindow(message, false,
-                IdentityManager.getGlobalConfig().getOptionInt(plugin.getDomain(),
-                "locationX"), getYPosition(), plugin, this);
-        windowList.add(currentWindow);
+        windowList.add(UIUtilities.invokeAndWait(
+                new ReturnableThread<OsdWindow>() {
+
+            /** {@inheritDoc} */
+            @Override
+            public void run() {
+                setObject(new OsdWindow(message, false,
+                        IdentityManager.getGlobalConfig().getOptionInt(
+                        plugin.getDomain(), "locationX"), getYPosition(),
+                        plugin, OsdManager.this));
+            }}));
     }
 
     /**
@@ -103,25 +109,33 @@ public class OsdManager {
     public void closeWindow(final OsdWindow window) {
         final String policy = IdentityManager.getGlobalConfig().getOption(
                 plugin.getDomain(), "newbehaviour");
-        final int startY = IdentityManager.getGlobalConfig().getOptionInt(plugin.getDomain(),
-                "locationY");
+        final int startY = IdentityManager.getGlobalConfig().getOptionInt(plugin.
+                getDomain(), "locationY");
 
-        windowList.remove(window);
-        window.dispose();
+        UIUtilities.invokeAndWait(new Runnable() {
 
-        synchronized (this) {
-            for (OsdWindow otherWindow : getWindowList()) {
-                if (otherWindow.isVisible()) {
-                    if ("down".equals(policy)) {
-                        otherWindow.setLocation(otherWindow.getX(), Math.max(startY,
-                                otherWindow.getY() - otherWindow.getHeight() - WINDOW_GAP));
-                    } else if ("up".equals(policy)) {
-                        otherWindow.setLocation(otherWindow.getX(), Math.min(startY,
-                                otherWindow.getY() + otherWindow.getHeight() + WINDOW_GAP));
+            /** {@inheritDoc} */
+            @Override
+            public void run() {
+                synchronized (OsdManager.this) {
+                    windowList.remove(window);
+                    window.dispose();
+                    for (OsdWindow otherWindow : getWindowList()) {
+                        if (otherWindow.isVisible()) {
+                            if ("down".equals(policy)) {
+                                otherWindow.setLocation(otherWindow.getX(), Math.
+                                        max(startY, otherWindow.getY()
+                                        - otherWindow.getHeight() - WINDOW_GAP));
+                            } else if ("up".equals(policy)) {
+                                otherWindow.setLocation(otherWindow.getX(), Math.
+                                        min(startY, otherWindow.getY()
+                                        + otherWindow.getHeight() + WINDOW_GAP));
+                            }
+                        }
                     }
                 }
             }
-        }
+        });
         displayWindows();
     }
 
