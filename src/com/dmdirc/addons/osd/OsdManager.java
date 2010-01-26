@@ -96,11 +96,11 @@ public class OsdManager {
     }
 
     /**
-    * Destroy the given OSD Window and check if the Queue has items, if so
-    * Display them.
-    *
-    * @param window The window that we are destroying.
-    */
+     * Destroy the given OSD Window and check if the Queue has items, if so
+     * Display them.
+     *
+     * @param window The window that we are destroying.
+     */
     public void closeWindow(final OsdWindow window) {
         windowList.remove(window);
         window.dispose();
@@ -119,28 +119,28 @@ public class OsdManager {
     }
 
     /**
-    * Get the list of current OSDWindows.
-    *
-    * @return a List of all currently open OSDWindows.
-    */
+     * Get the list of current OSDWindows.
+     *
+     * @return a List of all currently open OSDWindows.
+     */
     public List<OsdWindow> getWindowList() {
         return new ArrayList<OsdWindow>(windowList);
     }
 
     /**
-    * Get the count of open windows.
-    *
-    * @return Current number of OSD Windows open.
-    */
+     * Get the count of open windows.
+     *
+     * @return Current number of OSD Windows open.
+     */
     public int getWindowCount() {
         return windowList.size();
     }
 
     /**
-    * Get the Y position for the next window.
-    *
-    * @return the Y position for the next window.
-    */
+     * Get the Y position for the next window.
+     *
+     * @return the Y position for the next window.
+     */
     public int getYPosition() {
         final String policy = IdentityManager.getGlobalConfig().getOption(
                 plugin.getDomain(), "newbehaviour");
