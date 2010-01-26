@@ -112,12 +112,11 @@ public class OsdManager {
         final int startY = IdentityManager.getGlobalConfig().getOptionInt(plugin.
                 getDomain(), "locationY");
 
-        UIUtilities.invokeAndWait(new Runnable() {
-
-            /** {@inheritDoc} */
-            @Override
-            public void run() {
-                synchronized (OsdManager.this) {
+        synchronized (OsdManager.this) {
+            UIUtilities.invokeAndWait(new Runnable() {
+                /** {@inheritDoc} */
+                @Override
+                public void run() {
                     windowList.remove(window);
                     window.dispose();
                     for (OsdWindow otherWindow : getWindowList()) {
@@ -134,8 +133,8 @@ public class OsdManager {
                         }
                     }
                 }
-            }
-        });
+            });
+        }
         displayWindows();
     }
 
