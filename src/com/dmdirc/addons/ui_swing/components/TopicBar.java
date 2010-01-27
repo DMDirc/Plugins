@@ -24,15 +24,14 @@
 package com.dmdirc.addons.ui_swing.components;
 
 import com.dmdirc.Channel;
+import com.dmdirc.Topic;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.actions.NoNewlinesPasteAction;
 import com.dmdirc.addons.ui_swing.components.frames.ChannelFrame;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.interfaces.ConfigChangeListener;
-import com.dmdirc.parser.interfaces.ChannelInfo;
-import com.dmdirc.parser.interfaces.Parser;
-import com.dmdirc.parser.interfaces.callbacks.ChannelTopicListener;
+import com.dmdirc.interfaces.TopicChangeListener;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.messages.ColourManager;
 import com.dmdirc.ui.messages.Styliser;
@@ -78,8 +77,8 @@ import net.miginfocom.swing.MigLayout;
  * Component to show and edit topics for a channel.
  */
 public class TopicBar extends JComponent implements ActionListener,
-        ConfigChangeListener, ChannelTopicListener, HyperlinkListener,
-        MouseListener, DocumentListener {
+        ConfigChangeListener, HyperlinkListener, MouseListener,
+        DocumentListener, TopicChangeListener {
 
     /**
      * A version number for this class. It should be changed whenever the class
@@ -117,7 +116,7 @@ public class TopicBar extends JComponent implements ActionListener,
         this.channel = channelFrame.getChannel();
         controller = channelFrame.getController();
         topicText = new TextPaneInputField();
-        topicLengthMax = channel.getServer().getParser().getMaxTopicLength();
+        topicLengthMax = channel.getMaxTopicLength();
         errorIcon =
                 new JLabel(IconManager.getIconManager().getIcon("input-error"));
         //TODO issue 3251
@@ -154,9 +153,7 @@ public class TopicBar extends JComponent implements ActionListener,
         add(topicCancel, "");
         add(topicEdit, "");
 
-        channel.getChannelInfo().getParser().getCallbackManager().addCallback(
-                ChannelTopicListener.class, this, channel.getChannelInfo().
-                getName());
+        channel.addTopicChangeListener(this);
         topicText.addActionListener(this);
         topicEdit.addActionListener(this);
         topicCancel.addActionListener(this);
@@ -211,15 +208,7 @@ public class TopicBar extends JComponent implements ActionListener,
 
     /** {@inheritDoc} */
     @Override
-    public void onChannelTopic(final Parser tParser, ChannelInfo cChannel,
-            boolean bIsJoinTopic) {
-        topicChanged();
-    }
-
-    /**
-     * Topic has changed, update topic.
-     */
-    private void topicChanged() {
+    public void topicChanged(final Channel channel, final Topic topic) {
         if (topicText.isEditable()) {
             return;
         }
@@ -254,7 +243,7 @@ public class TopicBar extends JComponent implements ActionListener,
                 }
                 ((ChannelFrame) channel.getFrame()).getInputField().
                         requestFocusInWindow();
-                topicChanged();
+                topicChanged(channel, null);
                 topicText.setFocusable(false);
                 topicText.setEditable(false);
                 topicCancel.setVisible(false);
@@ -278,7 +267,7 @@ public class TopicBar extends JComponent implements ActionListener,
             topicCancel.setVisible(false);
             ((ChannelFrame) channel.getFrame()).getInputField().
                     requestFocusInWindow();
-            topicChanged();
+            topicChanged(channel, null);
         }
     }
 
@@ -429,8 +418,7 @@ public class TopicBar extends JComponent implements ActionListener,
      * Closes this topic bar.
      */
     public void close() {
-        channel.getChannelInfo().getParser().getCallbackManager().delCallback(
-                ChannelTopicListener.class, this);
+        channel.removeTopicChangeListener(this);
     }
 
     /**
