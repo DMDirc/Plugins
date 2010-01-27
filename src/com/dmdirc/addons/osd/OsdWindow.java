@@ -24,6 +24,7 @@ package com.dmdirc.addons.osd;
 
 import com.dmdirc.Main;
 import com.dmdirc.addons.ui_swing.MainFrame;
+import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.ui.messages.ColourManager;
 
@@ -70,6 +71,9 @@ public final class OsdWindow extends JDialog implements MouseListener,
     
     /** Starting positions of the mouse. */
     private int startX, startY;
+
+    /** Desired position. */
+    private volatile int desiredX, desiredY;
     
     /** Is this a config instance? */
     private final boolean config;
@@ -99,6 +103,9 @@ public final class OsdWindow extends JDialog implements MouseListener,
 
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
+        desiredX = x;
+        desiredY = y;
+
         setLocation(x, y);
 
         panel = new JPanel();
@@ -124,8 +131,8 @@ public final class OsdWindow extends JDialog implements MouseListener,
         pack();
 
         if (config) {
-            this.addMouseMotionListener(this);
-            this.addMouseListener(this);
+            addMouseMotionListener(this);
+            addMouseListener(this);
         } else {
             addMouseListener(this);
             new Timer("OSD Display Timer").schedule(new TimerTask() {
@@ -255,8 +262,63 @@ public final class OsdWindow extends JDialog implements MouseListener,
         }
     }
 
+    /**
+     * Retrieves the desired x offset of this OSD window.
+     *
+     * @since 0.6.3
+     * @see #setDesiredLocation(int, int)
+     * @return The desired offset of this window
+     */
+    public int getDesiredX() {
+        return desiredX;
+    }
+
+    /**
+     * Retrieves the desired y offset of this OSD window.
+     *
+     * @since 0.6.3
+     * @see #setDesiredLocation(int, int)
+     * @return The desired offset of this window
+     */
+    public int getDesiredY() {
+        return desiredY;
+    }
+
+    /**
+     * Sets the desired location of this OSD window, and queues an event to
+     * move the window to the desired location at some point in the future.
+     * <p>
+     * This method WILL NOT alter the location immediately, but will schedule
+     * an event in the AWT event despatch thread which will be executed in
+     * the future.
+     * <p>
+     * This method will immediately update the values returned by the
+     * {@link #getDesiredX()} and {@link #getDesiredY()} methods, but the
+     * {@link #getX()} and {@link #getY()} methods will continue to reflect the
+     * actual location of the window.
+     * <p>
+     * This method is thread safe.
+     *
+     * @param x The desired x offset of this window
+     * @param y The desired y offset of this window
+     * @since 0.6.3
+     */
+    public void setDesiredLocation(final int x, final int y) {
+        this.desiredX = x;
+        this.desiredY = y;
+
+        UIUtilities.invokeLater(new Runnable() {
+            /** {@inheritDoc} */
+            @Override
+            public void run() {
+                setLocation(getDesiredX(), getDesiredY());
+            }
+        });
+    }
+
     /** {@inheritDoc} */
-    @Override  public String toString() {
+    @Override
+    public String toString() {
         return label.getText();
     }
 }
