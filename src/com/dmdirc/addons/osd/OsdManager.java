@@ -117,19 +117,30 @@ public class OsdManager {
                 /** {@inheritDoc} */
                 @Override
                 public void run() {
+                    int oldY = window.getY();
+                    final int closedIndex = windowList.indexOf(window);
+
+                    if (!windowList.contains(window)) {
+                        return;
+                    }
+
                     windowList.remove(window);
                     window.dispose();
-                    for (OsdWindow otherWindow : getWindowList()) {
-                        if (otherWindow.isVisible()) {
-                            if ("down".equals(policy)) {
-                                otherWindow.setLocation(otherWindow.getX(), Math.
-                                        max(startY, otherWindow.getY()
-                                        - otherWindow.getHeight() - WINDOW_GAP));
-                            } else if ("up".equals(policy)) {
-                                otherWindow.setLocation(otherWindow.getX(), Math.
-                                        min(startY, otherWindow.getY()
-                                        + otherWindow.getHeight() + WINDOW_GAP));
+
+                    List<OsdWindow> newList = getWindowList();
+
+                    for (OsdWindow otherWindow : newList.subList(closedIndex, newList.size())) {
+                        int currentIndex = newList.indexOf(otherWindow);
+
+                        int currentY = otherWindow.getY();
+
+                        if ("down".equals(policy)) {
+                            if (currentIndex > 0) {
+                                otherWindow.setLocation(otherWindow.getX(), oldY);
+                            } else {
+                                otherWindow.setLocation(otherWindow.getX(), startY);
                             }
+                            oldY = currentY;
                         }
                     }
                 }
@@ -142,8 +153,7 @@ public class OsdManager {
      * Destroy all OSD Windows.
      */
     public void closeAll() {
-        for (OsdWindow window : new ArrayList<OsdWindow>(windowList)) {
-            window.setVisible(false);
+        for (OsdWindow window : getWindowList()) {
             closeWindow(window);
         }
     }
@@ -179,14 +189,14 @@ public class OsdManager {
 
         if ("down".equals(policy)) {
             // Place our new window below old windows
-            for (OsdWindow window : new ArrayList<OsdWindow>(getWindowList())) {
+            for (OsdWindow window : getWindowList()) {
                 if (window.isVisible()) {
                     y = Math.max(y, window.getY() + window.getHeight() + WINDOW_GAP);
                 }
             }
         } else if ("up".equals(policy)) {
             // Place our new window above old windows
-            for (OsdWindow window : new ArrayList<OsdWindow>(getWindowList())) {
+            for (OsdWindow window : getWindowList()) {
                 if (window.isVisible()) {
                     y = Math.min(y, window.getY() - window.getHeight() - WINDOW_GAP);
                 }
