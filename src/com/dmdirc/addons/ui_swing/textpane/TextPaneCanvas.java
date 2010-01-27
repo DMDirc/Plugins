@@ -49,6 +49,7 @@ import java.awt.font.TextHitInfo;
 import java.awt.font.TextLayout;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.net.URL;
 import java.text.AttributedCharacterIterator;
 import java.text.AttributedString;
 import java.util.HashMap;
@@ -173,8 +174,10 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
             @Override
             public void run() {
                 try {
-                    backgroundImage = ImageIO.read(URLBuilder.
-                            buildURL(backgroundPath));
+                    final URL url = URLBuilder.buildURL(backgroundPath);
+                    if (url != null) {
+                        backgroundImage = ImageIO.read(url);
+                    }
                 } catch (IOException ex) {
                     backgroundImage = null;
                 }
