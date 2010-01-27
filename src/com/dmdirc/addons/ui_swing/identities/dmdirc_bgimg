@@ -1,0 +1,17 @@
+# This is a DMDirc configuration file.
+# Written on: Mon Jan 04 00:02:09 GMT 2010
+
+# This section indicates which sections below take key/value
+# pairs, rather than a simple list. It should be placed above
+# any sections that take key/values.
+keysections:
+  identity
+  plugin-ui_swing
+
+identity:
+  name=#dmdirc background settings
+  channel=re:(?i)#dmdirc@.*
+
+plugin-ui_swing:
+  textpanebackground=dmdirc://com/dmdirc/res/background-alpha.png
+  textpanebackgroundoption=CENTER
