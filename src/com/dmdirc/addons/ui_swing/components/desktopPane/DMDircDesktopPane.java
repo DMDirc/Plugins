@@ -49,6 +49,7 @@ import java.awt.Image;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -398,8 +399,10 @@ public class DMDircDesktopPane extends JDesktopPane implements FrameListener,
             @Override
             public void run() {
                 try {
-                    backgroundImage = ImageIO.read(URLBuilder.buildURL(
-                            backgroundPath));
+                    final URL url = URLBuilder.buildURL(backgroundPath);
+                    if (url != null) {
+                        backgroundImage = ImageIO.read(url);
+                    }
                 } catch (IOException ex) {
                     backgroundImage = null;
                 }
