@@ -401,7 +401,7 @@ public final class UIUtilities {
         final int x = (bounds.width / 2) - (backgroundImage.getWidth(null) / 2);
         final int y = (bounds.height / 2) - (backgroundImage.getHeight(null) / 2);
         g.drawImage(backgroundImage, x, y, backgroundImage.getWidth(null),
-                backgroundImage.getWidth(null), null);
+                backgroundImage.getHeight(null), null);
     }
 
     private static void paintStretchedAspectRatioBackground(final Graphics2D g,
