@@ -64,6 +64,7 @@ public class InputTextFrameTest {
         IdentityManager.getAddonIdentity().setOption("test", "windowMenuScrollInterval", "1");
         IdentityManager.getAddonIdentity().setOption("test", "debugEDT", "false");
         IdentityManager.getAddonIdentity().setOption("test", "textpanebackground", "");
+        IdentityManager.getAddonIdentity().setOption("test", "desktopbackground", "");
         controller = new SwingController();
         controller.setDomain("test");
         controller.onLoad();
