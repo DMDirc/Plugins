@@ -83,10 +83,15 @@ public class OsdManager {
 
     /**
      * Create a new OSD window with "message".
+     * <p>
+     * This method needs to be synchronised to ensure that the window list is
+     * not modified in between the invocation of {@link #getYPosition()} and
+     * the point at which the {@link OSDWindow} is added to the windowList.
      *
+     * @see #getYPosition()
      * @param message Text to display in the OSD window.
      */
-    private void displayWindow(final String message) {
+    private synchronized void displayWindow(final String message) {
         windowList.add(UIUtilities.invokeAndWait(
                 new ReturnableThread<OsdWindow>() {
 
@@ -97,7 +102,8 @@ public class OsdManager {
                         IdentityManager.getGlobalConfig().getOptionInt(
                         plugin.getDomain(), "locationX"), getYPosition(),
                         plugin, OsdManager.this));
-            }}));
+            }
+        }));
     }
 
     /**
@@ -106,38 +112,38 @@ public class OsdManager {
      *
      * @param window The window that we are destroying.
      */
-    public void closeWindow(final OsdWindow window) {
+    public synchronized void closeWindow(final OsdWindow window) {
         final String policy = IdentityManager.getGlobalConfig().getOption(
                 plugin.getDomain(), "newbehaviour");
 
-        synchronized (OsdManager.this) {
-            UIUtilities.invokeAndWait(new Runnable() {
-                /** {@inheritDoc} */
-                @Override
-                public void run() {
-                    int oldY = window.getY();
-                    final int closedIndex = windowList.indexOf(window);
+        int oldY = window.getDesiredY();
+        final int closedIndex = windowList.indexOf(window);
 
-                    if (closedIndex == -1) {
-                        return;
-                    }
-
-                    windowList.remove(window);
-                    window.dispose();
-
-                    final List<OsdWindow> newList = getWindowList();
-
-                    for (OsdWindow otherWindow : newList.subList(closedIndex, newList.size())) {
-                        final int currentY = otherWindow.getY();
-
-                        if ("down".equals(policy) || "up".equals(policy)) {
-                                otherWindow.setLocation(otherWindow.getX(), oldY);
-                                oldY = currentY;
-                        }
-                    }
-                }
-            });
+        if (closedIndex == -1) {
+            return;
         }
+
+        windowList.remove(window);
+
+        UIUtilities.invokeLater(new Runnable() {
+            /** {@inheritDoc} */
+            @Override
+            public void run() {
+                window.dispose();
+            }
+        });
+
+        final List<OsdWindow> newList = getWindowList();
+        for (OsdWindow otherWindow : newList.subList(closedIndex, newList.size())) {
+            final int currentY = otherWindow.getDesiredY();
+
+            if ("down".equals(policy) || "up".equals(policy)) {
+                System.out.println("Moving " + otherWindow + " to " + oldY);
+                otherWindow.setDesiredLocation(otherWindow.getDesiredX(), oldY);
+                oldY = currentY;
+            }
+        }
+
         displayWindows();
     }
 
@@ -170,6 +176,13 @@ public class OsdManager {
 
     /**
      * Get the Y position for the next window.
+     * <p>
+     * In order to ensure that windows are displayed at the correct position,
+     * the calling party MUST ensure that the window list is not altered between
+     * this method's invocation and the time at which the window is displayed.
+     * If the window list is altered, multiple windows may appear on top of
+     * each other instead of stacking correctly, or there may be gaps in up/down
+     * policy layouts.
      *
      * @return the Y position for the next window.
      */
