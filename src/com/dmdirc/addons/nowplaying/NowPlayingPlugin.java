@@ -38,6 +38,7 @@ import com.dmdirc.plugins.PluginManager;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.regex.Matcher;
 
 /**
  * Plugin that allows users to advertise what they're currently playing or
@@ -183,7 +184,7 @@ public class NowPlayingPlugin extends Plugin implements ActionListener  {
     private void removePlugin(final PluginInfo target) {
         final Plugin targetPlugin = target.getPlugin();
         if (targetPlugin instanceof MediaSource) {
-            sources.remove(targetPlugin);
+            sources.remove((MediaSource) targetPlugin);
         }
         
         if (targetPlugin instanceof MediaSourceManager) {
@@ -268,14 +269,15 @@ public class NowPlayingPlugin extends Plugin implements ActionListener  {
      * Sanitises the specified String so that it may be used as the replacement
      * in a call to String.replaceAll. Namely, at present, this method returns
      * an empty String if it is passed a null value; otherwise the input is
-     * returned.
+     * quoted for use as a replacement in the
+     * {@link String#replaceAll(java.lang.String, java.lang.String)} method.
      *
      * @param input The string to be sanitised
      * @return A sanitised version of the String
      * @since 0.6.3
      */
     protected static String sanitise(final String input) {
-        return input == null ? "" : input;
+        return input == null ? "" : Matcher.quoteReplacement(input);
     }
     
     /**
