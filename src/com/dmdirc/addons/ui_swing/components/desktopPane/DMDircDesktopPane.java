@@ -412,6 +412,7 @@ public class DMDircDesktopPane extends JDesktopPane implements FrameListener,
         } catch (IllegalArgumentException ex) {
             backgroundOption = BackgroundOption.CENTER;
         }
+        repaint();
     }
 
     /** {@inheritDoc} */
