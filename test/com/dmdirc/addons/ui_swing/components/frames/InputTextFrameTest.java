@@ -162,6 +162,7 @@ public class InputTextFrameTest {
         titf.open();
 
         window = new JInternalFrameFixture(mainframe.robot, titf);
+        window.robot.settings().eventPostingDelay(250);
     }
 
 }

@@ -314,6 +314,7 @@ public class ActionEditorDialogTest {
     protected void setupWindow(final Action action) {
         window = new DialogFixture(ActionEditorDialog.getActionEditorDialog(null,
                 "amd-ui-test1", action));
+        window.robot.settings().eventPostingDelay(250);
         window.show();
     }
 
