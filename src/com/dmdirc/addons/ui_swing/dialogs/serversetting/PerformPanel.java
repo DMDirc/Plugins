@@ -57,14 +57,19 @@ public final class PerformPanel extends JPanel implements ActionListener {
     private Action serverAction;
     /** The action used for network performs. */
     private Action networkAction;
+    /** The action used for profile server performs. */
+    private Action profileServerAction;
+    /** The action used for profile network performs. */
+    private Action profileNetworkAction;
     
     /** The server perform string. */
     private String serverPerform;
     /** The network perform string. */
     private String networkPerform;
-    
-    /** Keeps track of which perform we're editing. */
-    private boolean isNetworkPerform;
+    /** The profile's server perform string. */
+    private String profileServerPerform;
+    /** The profile's network perform string. */
+    private String profileNetworkPerform;
     
     /** Network/server combo box. */
     private JComboBox target;
@@ -96,13 +101,15 @@ public final class PerformPanel extends JPanel implements ActionListener {
         final DefaultComboBoxModel model = new DefaultComboBoxModel();
         target = new JComboBox(model);
         
-        if (!server.getNetwork().isEmpty()) {
-            model.addElement("Network perform (" + server.getNetwork() + ")");
-        }
-        if (!server.getName().isEmpty()) {
-            model.addElement("Server perform (" + server.getName() + ")");
-        }
-        
+        model.addElement("Network perform (" + server.getNetwork()
+                + ") Any profile");
+        model.addElement("Network perform (" + server.getNetwork()
+                + ") This profile (" + server.getProfile().getName() + ")");
+        model.addElement("Server perform (" + server.getName() 
+                + "), Any profile");
+        model.addElement("Server perform (" + server.getName() 
+                + "), This profile (" + server.getProfile().getName() + ")");
+
         add(target, "growx, pushx, wrap");
         
         textarea = new JTextArea();
@@ -118,8 +125,14 @@ public final class PerformPanel extends JPanel implements ActionListener {
     
     /** Loads the perform actions. */
     private void loadPerforms() {
-        serverAction = PerformWrapper.getPerformWrapper().getActionForServer(server.getName());
-        networkAction = PerformWrapper.getPerformWrapper().getActionForNetwork(server.getNetwork());
+        serverAction = PerformWrapper.getPerformWrapper().
+                getActionForServer(server.getName());
+        networkAction = PerformWrapper.getPerformWrapper().
+                getActionForNetwork(server.getNetwork());
+        profileServerAction = PerformWrapper.getPerformWrapper().
+                getActionForServer(server.getName(), server.getProfile().getName());
+        profileNetworkAction = PerformWrapper.getPerformWrapper().
+                getActionForNetwork(server.getNetwork(), server.getProfile().getName());
         
         if (serverAction == null) {
             serverPerform = "";
@@ -131,6 +144,18 @@ public final class PerformPanel extends JPanel implements ActionListener {
             networkPerform = "";
         } else {
             networkPerform = implode(networkAction.getResponse());
+        }
+
+        if (profileServerAction == null) {
+            profileServerPerform = "";
+        } else {
+            profileServerPerform = implode(profileServerAction.getResponse());
+        }
+
+        if (profileNetworkAction == null) {
+            profileNetworkPerform = "";
+        } else {
+            profileNetworkPerform = implode(profileServerAction.getResponse());
         }
     }
     
@@ -153,21 +178,41 @@ public final class PerformPanel extends JPanel implements ActionListener {
     
     /** Populates the perform text area. */
     private void populatePerform() {
-        if (target.getSelectedIndex() == 0) {
-            isNetworkPerform = true;
-            textarea.setText(networkPerform);
-        } else {
-            isNetworkPerform = false;
-            textarea.setText(serverPerform);
+        switch (target.getSelectedIndex()) {
+            case 0:
+                textarea.setText(networkPerform);
+                break;
+            case 1:
+                textarea.setText(profileNetworkPerform);
+                break;
+            case 2:
+                textarea.setText(serverPerform);
+                break;
+            case 3:
+                textarea.setText(profileServerPerform);
+                break;
+            default:
+                break;
         }
     }
     
     /** Stores the text currently in the textarea into the perform strings. */
     private void storeText() {
-        if (isNetworkPerform) {
-            networkPerform = textarea.getText();
-        } else {
-            serverPerform = textarea.getText();
+        switch (target.getSelectedIndex()) {
+            case 0:
+                networkPerform = textarea.getText();
+                break;
+            case 1:
+                profileNetworkPerform = textarea.getText();
+                break;
+            case 2:
+                serverPerform = textarea.getText();
+                break;
+            case 3:
+                profileServerPerform = textarea.getText();
+                break;
+            default:
+                break;
         }
     }
     
@@ -177,7 +222,8 @@ public final class PerformPanel extends JPanel implements ActionListener {
         
         if (!serverPerform.isEmpty() || serverAction != null) {
             if (serverAction == null) {
-                serverAction = PerformWrapper.getPerformWrapper().createActionForServer(server.getName());
+                serverAction = PerformWrapper.getPerformWrapper().
+                        createActionForServer(server.getName());
             }
             serverAction.setResponse(serverPerform.split("\n"));
             serverAction.save();
@@ -185,14 +231,40 @@ public final class PerformPanel extends JPanel implements ActionListener {
         
         if (!networkPerform.isEmpty() || networkAction != null) {
             if (networkAction == null) {
-                networkAction = PerformWrapper.getPerformWrapper().createActionForNetwork(server.getNetwork());
+                networkAction = PerformWrapper.getPerformWrapper().
+                        createActionForNetwork(server.getNetwork());
             }
             networkAction.setResponse(networkPerform.split("\n"));
             networkAction.save();
         }
+
+        if (!profileNetworkPerform.isEmpty() || profileNetworkAction != null) {
+            if (profileNetworkAction == null) {
+                profileNetworkAction = PerformWrapper.getPerformWrapper().
+                        createActionForNetwork(server.getNetwork(),
+                        server.getProfile().getName());
+            }
+            profileNetworkAction.setResponse(profileNetworkPerform.split("\n"));
+            profileNetworkAction.save();
+        }
+
+        if (!profileServerPerform.isEmpty() || profileServerAction != null) {
+            if (profileServerAction == null) {
+                profileServerAction = PerformWrapper.getPerformWrapper().
+                        createActionForServer(server.getName(),
+                        server.getProfile().getName());
+            }
+            profileServerAction.setResponse(profileServerPerform.split("\n"));
+            profileServerAction.save();
+        }
     }
     
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     *
+     * @param e Action event
+     */
+    @Override
     public void actionPerformed(final ActionEvent e) {
         storeText();
         populatePerform();
