@@ -29,6 +29,7 @@ import com.dmdirc.commandparser.commands.IntelligentCommand;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 import com.dmdirc.ui.interfaces.InputWindow;
 
+import com.dmdirc.ui.messages.Styliser;
 import java.util.List;
 
 /**
@@ -65,7 +66,7 @@ public final class OsdCommand extends GlobalCommand implements IntelligentComman
      * @return True if the notification was shown.
      */
     public boolean showOSD(final String title, final String message) {
-        osdManager.showWindow(message);
+        osdManager.showWindow(Styliser.stipControlCodes(message));
         return true;
     }
 
