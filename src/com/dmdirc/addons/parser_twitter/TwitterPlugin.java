@@ -73,9 +73,11 @@ public class TwitterPlugin extends Plugin  {
     @Override
     public void showConfig(final PreferencesManager manager) {
         final PreferencesCategory category = new PluginPreferencesCategory(
-                getPluginInfo(), "Twitter Plugin", "Settings related to the twitter plugin");
+                getPluginInfo(), "Twitter Plugin", "Settings related to the twitter plugin",
+                "category-twitter");
         final PreferencesCategory advanced = new PluginPreferencesCategory(
-                getPluginInfo(), "Advanced", "Advanced Settings related to the twitter plugin");
+                getPluginInfo(), "Advanced", "Advanced Settings related to the twitter plugin",
+                "category-twitter");
 
         category.addSetting(new PreferencesSetting(PreferencesType.INTEGER, getDomain(), "statuscount", "Statuses to request", "How many statuses to request at a time.?"));
         category.addSetting(new PreferencesSetting(PreferencesType.INTEGER, getDomain(), "apicalls", "API Calls", "Aim to only use how many API Calls per hour? (Twitter has a max of 150)"));
