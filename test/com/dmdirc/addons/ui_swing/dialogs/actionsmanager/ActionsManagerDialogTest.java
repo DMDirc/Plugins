@@ -228,6 +228,7 @@ public class ActionsManagerDialogTest {
     
     protected void setupWindow() {
         window = new DialogFixture(ActionsManagerDialog.getActionsManagerDialog(null, null));
+        window.robot.settings().eventPostingDelay(250);
         window.show();
     }
 
