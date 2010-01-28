@@ -131,7 +131,7 @@ public abstract class StandardQuestionDialog extends StandardDialog {
      * Lays out the components.
      */
     private final void layoutComponents() {
-        setLayout(new MigLayout("fill, wrap 1"));
+        setLayout(new MigLayout("fill, wrap 1, hidemode 3"));
 
         add(blurb, "growx");
         add(getLeftButton(), "split 2, right");

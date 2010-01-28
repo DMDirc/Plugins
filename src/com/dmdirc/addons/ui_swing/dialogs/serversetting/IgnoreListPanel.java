@@ -19,6 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 package com.dmdirc.addons.ui_swing.dialogs.serversetting;
 
 import com.dmdirc.Server;
@@ -27,6 +28,7 @@ import com.dmdirc.config.prefs.validator.RegexValidator;
 import com.dmdirc.config.prefs.validator.ValidatorChain;
 import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialog;
 import com.dmdirc.addons.ui_swing.UIUtilities;
+import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
 import com.dmdirc.parser.common.IgnoreList;
 
 import java.awt.Dialog.ModalityType;
@@ -38,7 +40,6 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
@@ -126,7 +127,8 @@ public final class IgnoreListPanel extends JPanel implements ActionListener,
 
     /** Updates the size label. */
     private void updateSizeLabel() {
-        sizeLabel.setText(cachedIgnoreList.count() + " entr" + (cachedIgnoreList.count() == 1 ? "y" : "ies"));
+        sizeLabel.setText(cachedIgnoreList.count() + " entr" + (cachedIgnoreList.
+                count() == 1 ? "y" : "ies"));
     }
 
     /** Adds listeners to the components. */
@@ -165,16 +167,16 @@ public final class IgnoreListPanel extends JPanel implements ActionListener,
         server.saveIgnoreList();
     }
 
-    /** 
+    /**
      * {@inheritDoc}
-     * 
+     *
      * @param e Action event
      */
     @SuppressWarnings("unchecked")
     @Override
     public void actionPerformed(final ActionEvent e) {
         if (e.getSource() == addButton) {
-            new StandardInputDialog(parentWindow, ModalityType.MODELESS, 
+            new StandardInputDialog(parentWindow, ModalityType.MODELESS,
                     "New ignore list entry",
                     "Please enter the new ignore list entry",
                     viewToggle.isSelected() ? new ValidatorChain<String>(
@@ -207,12 +209,35 @@ public final class IgnoreListPanel extends JPanel implements ActionListener,
                     //Ignore
                 }
             }.display();
-        } else if (e.getSource() == delButton && list.getSelectedIndex() != -1 && JOptionPane.showConfirmDialog(this,
-                "Are you sure you want to delete this item?",
-                "Delete Confirmation", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-            cachedIgnoreList.remove(list.getSelectedIndex());
+        } else if (e.getSource() == delButton && list.getSelectedIndex()
+                != -1) {
+            new StandardQuestionDialog(parentWindow,
+                    ModalityType.APPLICATION_MODAL,
+                    "Confirm deletion",
+                    "Are you sure you want to delete this item?") {
 
-            updateList();
+                /**
+                 * A version number for this class. It should be changed whenever the class
+                 * structure is changed (or anything else that would prevent serialized
+                 * objects being unserialized with the new class).
+                 */
+                private static final long serialVersionUID = 1;
+
+                /** {@inheritDoc} */
+                @Override
+                public boolean save() {
+                    cachedIgnoreList.remove(list.getSelectedIndex());
+
+                    updateList();
+                    return true;
+                }
+
+                /** {@inheritDoc} */
+                @Override
+                public void cancelled() {
+                    return;
+                }
+            }.display();
         } else if (e.getSource() == viewToggle) {
             listModel.setIsSimple(!viewToggle.isSelected());
         }

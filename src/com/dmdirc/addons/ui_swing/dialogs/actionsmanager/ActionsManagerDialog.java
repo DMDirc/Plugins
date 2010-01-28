@@ -41,6 +41,7 @@ import com.dmdirc.addons.ui_swing.components.SortedListModel;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialog;
 import com.dmdirc.addons.ui_swing.components.renderers.ActionGroupListCellRenderer;
+import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
 import com.dmdirc.addons.ui_swing.dialogs.actioneditor.ActionEditorDialog;
 
 import java.awt.Window;
@@ -54,7 +55,6 @@ import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JList;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
@@ -324,16 +324,33 @@ public final class ActionsManagerDialog extends StandardDialog implements
                 == getCancelButton()) {
             if (!saving.getAndSet(true)) {
                 if (ActionEditorDialog.isOpen()) {
-                    if (JOptionPane.showConfirmDialog(this,
-                            "The action editor is currently open, do you want to cotinue and lose any unsaved changes?",
-                            "Confirm close?", JOptionPane.YES_NO_OPTION,
-                            JOptionPane.QUESTION_MESSAGE)
-                            == JOptionPane.YES_OPTION) {
-                        ActionEditorDialog.getActionEditorDialog(this, "").
-                                dispose();
-                    } else {
-                        return;
-                    }
+                    new StandardQuestionDialog(this,
+                            ModalityType.APPLICATION_MODAL,
+                            "Confirm close",
+                            "The action editor is currently open, "
+                            + "do you want to cotinue and lose any unsaved changes?") {
+
+                        /**
+                         * A version number for this class. It should be changed whenever the class
+                         * structure is changed (or anything else that would prevent serialized
+                         * objects being unserialized with the new class).
+                         */
+                        private static final long serialVersionUID = 1;
+
+                        /** {@inheritDoc} */
+                        @Override
+                        public boolean save() {
+                            ActionEditorDialog.getActionEditorDialog(this, "").
+                                    dispose();
+                            return true;
+                        }
+
+                        /** {@inheritDoc} */
+                        @Override
+                        public void cancelled() {
+                            return;
+                        }
+                    }.display();
                 }
                 for (ActionGroupSettingsPanel loopSettings : settings.values()) {
                     loopSettings.save();
@@ -442,25 +459,44 @@ public final class ActionsManagerDialog extends StandardDialog implements
     private void delGroup() {
         final String group =
                 ((ActionGroup) groups.getSelectedValue()).getName();
-        final int response = JOptionPane.showConfirmDialog(this,
+        new StandardQuestionDialog(this,
+                ModalityType.APPLICATION_MODAL,
+                "Confirm deletion",
                 "Are you sure you wish to delete the '" + group
-                + "' group and all actions within it?",
-                "Confirm deletion", JOptionPane.YES_NO_OPTION);
-        if (response == JOptionPane.YES_OPTION) {
-            int location =
-                    ((DefaultListModel) groups.getModel()).indexOf(
-                    ActionManager.getGroup(group));
-            ActionManager.removeGroup(group);
-            reloadGroups();
-            if (groups.getModel().getSize() == 0) {
-                location = -1;
-            } else if (location >= groups.getModel().getSize()) {
-                location = groups.getModel().getSize();
-            } else if (location <= 0) {
-                location = 0;
+                + "' group and all actions within it?") {
+
+            /**
+             * A version number for this class. It should be changed whenever the class
+             * structure is changed (or anything else that would prevent serialized
+             * objects being unserialized with the new class).
+             */
+            private static final long serialVersionUID = 1;
+
+            /** {@inheritDoc} */
+            @Override
+            public boolean save() {
+                int location =
+                        ((DefaultListModel) groups.getModel()).indexOf(
+                        ActionManager.getGroup(group));
+                ActionManager.removeGroup(group);
+                reloadGroups();
+                if (groups.getModel().getSize() == 0) {
+                    location = -1;
+                } else if (location >= groups.getModel().getSize()) {
+                    location = groups.getModel().getSize();
+                } else if (location <= 0) {
+                    location = 0;
+                }
+                groups.setSelectedIndex(location);
+                return true;
             }
-            groups.setSelectedIndex(location);
-        }
+
+            /** {@inheritDoc} */
+            @Override
+            public void cancelled() {
+                return;
+            }
+        }.display();
     }
 
     /** {@inheritDoc} */

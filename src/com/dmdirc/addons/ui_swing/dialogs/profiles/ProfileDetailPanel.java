@@ -31,10 +31,12 @@ import com.dmdirc.config.prefs.validator.ValidationResponse;
 import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialog;
 import com.dmdirc.addons.ui_swing.components.reorderablelist.ReorderableJList;
 import com.dmdirc.addons.ui_swing.components.validating.ValidatingJTextField;
+import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
 import com.dmdirc.config.prefs.validator.ValidatorChain;
 
 import java.awt.Color;
 import java.awt.Dialog.ModalityType;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -93,18 +95,22 @@ public final class ProfileDetailPanel extends JPanel implements ActionListener,
     private Border passBorder;
     /** Validation failed border. */
     private Border failBorder;
+    /** Parent window. */
+    private Window parentWindow;
 
     /**
      * Creates a new profile detail panel.
      * 
      * @param model The list model to use to validate names
      * @param mainFrame Main frame
+     * @param parentWindow Parent window
      */
     @SuppressWarnings("unchecked")
     public ProfileDetailPanel(final ProfileListModel model,
-            final MainFrame mainFrame) {
+            final MainFrame mainFrame, final Window parentWindow) {
         super();
         this.mainFrame = mainFrame;
+        this.parentWindow = parentWindow;
 
         this.model = model;
         this.nicknameModel = new DefaultListModel();
@@ -309,11 +315,31 @@ public final class ProfileDetailPanel extends JPanel implements ActionListener,
             };
             dialog.setText((String) nicknames.getSelectedValue());
             dialog.display();
-        } else if (e.getSource() == delButton && JOptionPane.showConfirmDialog(this,
-                "Are you sure you want to delete this nickname?",
-                "Delete Confirmaton", JOptionPane.YES_NO_OPTION) ==
-                JOptionPane.YES_OPTION) {
-            nicknames.getModel().removeElementAt(nicknames.getSelectedIndex());
+        } else if (e.getSource() == delButton) {
+            new StandardQuestionDialog(parentWindow, ModalityType.DOCUMENT_MODAL,
+                    "Delete Confirmaton",
+                    "Are you sure you want to delete this nickname?") {
+
+                /**
+                 * A version number for this class. It should be changed whenever the class
+                 * structure is changed (or anything else that would prevent serialized
+                 * objects being unserialized with the new class).
+                 */
+                private static final long serialVersionUID = 1;
+
+                /** {@inheritDoc} */
+                @Override
+                public boolean save() {
+                    nicknames.getModel().removeElementAt(nicknames.getSelectedIndex());
+                    return true;
+                }
+
+                /** {@inheritDoc} */
+                @Override
+                public void cancelled() {
+                    return;
+                }
+            }.display();
         }
     }
 
