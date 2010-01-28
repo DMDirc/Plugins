@@ -57,6 +57,7 @@ public class ActionsManagerDialogTest {
         IdentityManager.load();
         Main.setUI(new SwingController());
         ActionManager.init();
+        ActionManager.loadActions();
     }
     
     @Before
