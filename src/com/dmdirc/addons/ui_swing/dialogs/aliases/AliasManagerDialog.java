@@ -32,6 +32,7 @@ import com.dmdirc.actions.CoreActionComparison;
 import com.dmdirc.actions.wrappers.AliasWrapper;
 import com.dmdirc.addons.ui_swing.components.PackingTable;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
+import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
 
 import java.awt.Dimension;
 import java.awt.Window;
@@ -42,7 +43,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.JButton;
-import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
@@ -123,7 +123,8 @@ public final class AliasManagerDialog extends StandardDialog implements
      *
      * @return Instance of AliasManagerDialog
      */
-    public static AliasManagerDialog getAliasManagerDialog(final Window parentWindow) {
+    public static AliasManagerDialog getAliasManagerDialog(
+            final Window parentWindow) {
         synchronized (AliasManagerDialog.class) {
             if (me == null) {
                 me = new AliasManagerDialog(parentWindow);
@@ -254,7 +255,8 @@ public final class AliasManagerDialog extends StandardDialog implements
     public void valueChanged(final ListSelectionEvent e) {
         if (!e.getValueIsAdjusting()) {
 
-            if (selectedRow > -1 && selectedRow < tableModel.getRowCount() && aliasDetails.getAlias() == tableModel.getAlias(
+            if (selectedRow > -1 && selectedRow < tableModel.getRowCount() && aliasDetails.
+                    getAlias() == tableModel.getAlias(
                     table.getRowSorter().convertRowIndexToModel(selectedRow))) {
                 updateAlias();
             }
@@ -301,10 +303,34 @@ public final class AliasManagerDialog extends StandardDialog implements
                 updateAlias();
             }
             if (checkForDuplicates()) {
-                JOptionPane.showMessageDialog(this,
-                        "There are duplicate aliases in the table, these need " +
-                        "to be removed before saving", "Duplicates",
-                        JOptionPane.WARNING_MESSAGE);
+                final StandardQuestionDialog dialog = new StandardQuestionDialog(
+                        this, ModalityType.APPLICATION_MODAL,
+                        "Duplicate Aliases",
+                        "There are duplicate aliases in the table, these need "
+                        + "to be removed before saving") {
+
+                    /**
+                     * A version number for this class. It should be changed whenever the class
+                     * structure is changed (or anything else that would prevent serialized
+                     * objects being unserialized with the new class).
+                     */
+                    private static final long serialVersionUID = 1;
+
+                    /** {@inheritDoc} */
+                    @Override
+                    public boolean save() {
+                        return true;
+                    }
+
+                    /** {@inheritDoc} */
+                    @Override
+                    public void cancelled() {
+                        return;
+                    }
+                };
+                dialog.getOkButton().setVisible(false);
+                dialog.getCancelButton().setText("OK");
+                dialog.display();
                 return;
             }
             save();
@@ -355,9 +381,10 @@ public final class AliasManagerDialog extends StandardDialog implements
             if (action == null) {
                 newAliases.add(alias);
             } else {
-                if (!action.getName().equals(alias.getName()) || !action.getConditions().
-                        equals(alias.getArguments()) ||
-                        !Arrays.equals(action.getResponse(), alias.getResponse())) {
+                if (!action.getName().equals(alias.getName()) || !action.
+                        getConditions().
+                        equals(alias.getArguments()) || !Arrays.equals(action.
+                        getResponse(), alias.getResponse())) {
                     modifiedAliases.add(alias);
                 }
                 actions.remove(action);
@@ -416,7 +443,8 @@ public final class AliasManagerDialog extends StandardDialog implements
         Action action = null;
 
         for (Action loopAction : actions) {
-            if (loopAction.getName().equals(alias.getName()) && loopAction.getConditions().
+            if (loopAction.getName().equals(alias.getName()) && loopAction.
+                    getConditions().
                     equals(alias.getArguments())) {
                 action = loopAction;
                 break;
@@ -450,7 +478,7 @@ public final class AliasManagerDialog extends StandardDialog implements
 
         return false;
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public void dispose() {

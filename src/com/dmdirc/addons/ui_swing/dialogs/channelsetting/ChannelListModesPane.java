@@ -26,10 +26,14 @@ import com.dmdirc.addons.ui_swing.components.renderers.ListModeCellRenderer;
 import com.dmdirc.addons.ui_swing.components.renderers.ExtendedListModeCellRenderer;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.Channel;
+import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialog;
 import com.dmdirc.config.IdentityManager;
+import com.dmdirc.config.prefs.validator.NotEmptyValidator;
 import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.parser.common.ChannelListModeItem;
 import com.dmdirc.util.MapList;
+import java.awt.Dialog.ModalityType;
+import java.awt.Window;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -48,7 +52,6 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListCellRenderer;
@@ -89,17 +92,21 @@ public final class ChannelListModesPane extends JPanel implements ActionListener
     private ListCellRenderer renderer;
     /** Extended info toggle. */
     private final JCheckBox toggle;
+    /** Parent window. */
+    private Window parentWindow;
 
     /**
      * Creates a new instance of ChannelListModePane.
      *
      * @param channel Parent channel
+     * @param parentWindow Parent window
      */
-    public ChannelListModesPane(final Channel channel) {
+    public ChannelListModesPane(final Channel channel, final Window parentWindow) {
         super();
 
         this.setOpaque(UIUtilities.getTabbedPaneOpaque());
         this.channel = channel;
+        this.parentWindow = parentWindow;
 
         if (IdentityManager.getGlobalConfig().getOptionBool("general",
                 "extendedListModes")) {
@@ -110,7 +117,8 @@ public final class ChannelListModesPane extends JPanel implements ActionListener
         listModesPanel = new JScrollPane();
         listModesPanels = new ArrayList<JList>();
         listModesArray =
-                channel.getServer().getParser().getListChannelModes().toCharArray();
+                channel.getServer().getParser().getListChannelModes().
+                toCharArray();
         existingListItems =
                 new MapList<Character, ChannelListModeItem>();
         listModesMenu =
@@ -165,9 +173,10 @@ public final class ChannelListModesPane extends JPanel implements ActionListener
                 (DefaultComboBoxModel) listModesMenu.getModel();
         for (char mode : listModesArray) {
             String modeText = mode + " list";
-            if (channel.getConfigManager().hasOptionString("server", "mode" + mode)) {
+            if (channel.getConfigManager().hasOptionString("server", "mode"
+                    + mode)) {
                 modeText = channel.getConfigManager().getOption("server",
-                        "mode" + mode) + " list [+"+mode+"]";
+                        "mode" + mode) + " list [+" + mode + "]";
             }
             model.addElement(modeText);
 
@@ -227,7 +236,8 @@ public final class ChannelListModesPane extends JPanel implements ActionListener
                 i++) {
             final char mode = listModesArray[i];
             final Enumeration<?> values =
-                    ((DefaultListModel) listModesPanels.get(i).getModel()).elements();
+                    ((DefaultListModel) listModesPanels.get(i).getModel()).
+                    elements();
             final List<ChannelListModeItem> listItems =
                     existingListItems.get(mode);
 
@@ -252,7 +262,8 @@ public final class ChannelListModesPane extends JPanel implements ActionListener
             }
         }
 
-        for (Entry<ChannelListModeItem, Character> entry : currentModes.entrySet()) {
+        for (Entry<ChannelListModeItem, Character> entry :
+                currentModes.entrySet()) {
             channel.getChannelInfo().
                     alterMode(false, entry.getValue(), entry.getKey().getItem());
         }
@@ -267,22 +278,41 @@ public final class ChannelListModesPane extends JPanel implements ActionListener
     private void addListMode() {
         final int selectedIndex = listModesMenu.getSelectedIndex();
         String modeText = String.valueOf(listModesArray[selectedIndex]);
-        String modeMask;
         if (channel.getConfigManager().hasOptionString("server", "mode"
                 + listModesArray[selectedIndex])) {
             modeText = channel.getConfigManager().
                     getOption("server", "mode" + listModesArray[selectedIndex]);
         }
-        modeMask = JOptionPane.showInputDialog(listModesPanel,
-                "Please enter the hostmask for the new " + modeText);
-        if (modeMask != null && (!modeMask.isEmpty() || !modeMask.isEmpty())) {
-            final DefaultListModel model =
-                    (DefaultListModel) listModesPanels.get(selectedIndex).
-                    getModel();
-            model.addElement(new ChannelListModeItem(modeMask, "",
-                    System.currentTimeMillis() / 1000));
-        }
-        updateModeCount();
+        new StandardInputDialog(parentWindow, ModalityType.DOCUMENT_MODAL,
+                "Add new " + modeText,
+                "Please enter the hostmask for the new " + modeText,
+                new NotEmptyValidator()) {
+
+            /**
+             * A version number for this class. It should be changed whenever the class
+             * structure is changed (or anything else that would prevent serialized
+             * objects being unserialized with the new class).
+             */
+            private static final long serialVersionUID = 1;
+
+            /** {@inheritDoc} */
+            @Override
+            public boolean save() {
+                final DefaultListModel model =
+                        (DefaultListModel) listModesPanels.get(selectedIndex).
+                        getModel();
+                model.addElement(new ChannelListModeItem(getText(), "",
+                        System.currentTimeMillis() / 1000));
+                updateModeCount();
+                return true;
+            }
+
+            /** {@inheritDoc} */
+            @Override
+            public void cancelled() {
+                return;
+            }
+        }.display();
     }
 
     /** Removes a list mode. */
@@ -348,14 +378,15 @@ public final class ChannelListModesPane extends JPanel implements ActionListener
             modeCount.setText(null);
             return;
         }
-        
+
         final int selected = listModesMenu.getSelectedIndex();
         final int current = listModesPanels.get(selected).getModel().getSize();
         final int maxModes = channel.getServer().getParser().
                 getMaxListModes(listModesArray[selected]);
-        
+
         if (maxModes == -1) {
-            modeCount.setText(current + " mode" + (current == 1 ? "" : "s") + " set");
+            modeCount.setText(current + " mode" + (current == 1 ? "" : "s")
+                    + " set");
         } else {
             modeCount.setText(current + " mode" + (current == 1 ? "" : "s")
                     + " set (maximum of " + maxModes + ")");
