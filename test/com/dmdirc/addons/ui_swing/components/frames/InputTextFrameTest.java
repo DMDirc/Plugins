@@ -70,6 +70,10 @@ public class InputTextFrameTest {
         controller.onLoad();
 
         Main.ensureExists(PluginManager.getPluginManager(), "tabcompletion");
+
+        UIUtilities.initUISettings();
+
+        mainframe = new FrameFixture(controller.getMainWindow());
     }
 
     @Before
@@ -77,16 +81,15 @@ public class InputTextFrameTest {
         cmmap = new TestConfigManagerMap();
         cmmap.settings.put("ui.pasteProtectionLimit", "1");
 
-        if (window == null) {
-            owner = new TestWritableFrameContainer(512, cmmap);
-
-            setupWindow(cmmap);
-        }
+        owner = new TestWritableFrameContainer(512, cmmap);
+        setupWindow(cmmap);
     }
 
     @After
     public void tearDown() {
-        // ??
+        window.close();
+        owner.window.close();
+        WindowManager.removeWindow(owner.window);
     }
 
     @Test
@@ -146,10 +149,6 @@ public class InputTextFrameTest {
     }
 
     protected void setupWindow(final ConfigManager configManager) {
-        UIUtilities.initUISettings();
-
-        mainframe = new FrameFixture(controller.getMainWindow());
-
         final CustomInputFrame titf = new CustomInputFrame(owner,
                 GlobalCommandParser.getGlobalCommandParser(), controller);
 
@@ -162,7 +161,6 @@ public class InputTextFrameTest {
         titf.open();
 
         window = new JInternalFrameFixture(mainframe.robot, titf);
-        window.robot.settings().eventPostingDelay(250);
     }
 
 }
