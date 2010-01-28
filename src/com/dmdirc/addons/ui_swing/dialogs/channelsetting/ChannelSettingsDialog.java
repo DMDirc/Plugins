@@ -170,7 +170,7 @@ public final class ChannelSettingsDialog extends StandardDialog implements
 
     /** Initialises the IRC Settings tab. */
     private void initListModesTab() {
-        channelListModesPane = new ChannelListModesPane(channel);
+        channelListModesPane = new ChannelListModesPane(channel, this);
         tabbedPane.addTab("List Modes", channelListModesPane);
     }
 

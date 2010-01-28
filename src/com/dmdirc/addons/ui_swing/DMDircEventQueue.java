@@ -39,7 +39,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
 import java.awt.event.WindowEvent;
-import java.util.concurrent.atomic.AtomicReference;
 import javax.swing.JPopupMenu;
 import javax.swing.KeyStroke;
 import javax.swing.MenuSelectionManager;

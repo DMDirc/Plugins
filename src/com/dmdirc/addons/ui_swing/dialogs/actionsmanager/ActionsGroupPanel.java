@@ -28,7 +28,9 @@ import com.dmdirc.actions.ActionManager;
 import com.dmdirc.addons.ui_swing.components.PackingTable;
 import com.dmdirc.addons.ui_swing.components.renderers.ActionTypeTableCellRenderer;
 import com.dmdirc.addons.ui_swing.components.renderers.ArrayCellRenderer;
+import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
 import com.dmdirc.addons.ui_swing.dialogs.actioneditor.ActionEditorDialog;
+import java.awt.Dialog.ModalityType;
 
 import java.awt.Window;
 import java.awt.event.ActionEvent;
@@ -38,7 +40,6 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
@@ -129,7 +130,8 @@ public final class ActionsGroupPanel extends JPanel implements ActionListener,
      */
     private void initComponents() {
         scrollPane = new JScrollPane();
-        model = new ActionTableModel(group == null ? new ArrayList<Action>() : group.getActions());
+        model = new ActionTableModel(group == null ? new ArrayList<Action>() : group.
+                getActions());
         table = new PackingTable(model, false, scrollPane, false) {
 
             /**
@@ -234,18 +236,38 @@ public final class ActionsGroupPanel extends JPanel implements ActionListener,
         } else if (e.getSource() == edit) {
             ActionEditorDialog.showActionEditorDialog(parent, group.getName(),
                     model.getAction(
-                    table.getRowSorter().convertRowIndexToModel(table.getSelectedRow())));
+                    table.getRowSorter().convertRowIndexToModel(table.
+                    getSelectedRow())));
         } else if (e.getSource() == delete) {
             final Action action =
                     model.getAction(
-                    table.getRowSorter().convertRowIndexToModel(table.getSelectedRow()));
-            final int response = JOptionPane.showConfirmDialog(this,
-                    "Are you sure you wish to delete the action '" +
-                    action.getName() + "'?",
-                    "Confirm deletion", JOptionPane.YES_NO_OPTION);
-            if (response == JOptionPane.YES_OPTION) {
-                ActionManager.deleteAction(action);
-            }
+                    table.getRowSorter().convertRowIndexToModel(table.
+                    getSelectedRow()));
+            new StandardQuestionDialog(parent, ModalityType.APPLICATION_MODAL,
+                    "Confirm deletion",
+                    "Are you sure you wish to delete the action '" + action.
+                    getName() + "'?") {
+
+                /**
+                 * A version number for this class. It should be changed whenever the class
+                 * structure is changed (or anything else that would prevent serialized
+                 * objects being unserialized with the new class).
+                 */
+                private static final long serialVersionUID = 1;
+
+                /** {@inheritDoc} */
+                @Override
+                public boolean save() {
+                    ActionManager.deleteAction(action);
+                    return true;
+                }
+
+                /** {@inheritDoc} */
+                @Override
+                public void cancelled() {
+                    return;
+                }
+            }.display();
         }
     }
 

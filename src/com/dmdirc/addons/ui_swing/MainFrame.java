@@ -33,6 +33,7 @@ import com.dmdirc.Main;
 import com.dmdirc.ServerManager;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionType;
+import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.ui.IconManager;
@@ -44,6 +45,7 @@ import com.dmdirc.ui.interfaces.Window;
 import com.dmdirc.ui.CoreUIUtils;
 import com.dmdirc.ui.interfaces.FrameListener;
 import com.dmdirc.util.ReturnableThread;
+import java.awt.Dialog.ModalityType;
 
 import java.awt.Dimension;
 import java.awt.event.WindowEvent;
@@ -54,7 +56,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.MenuSelectionManager;
@@ -125,7 +126,7 @@ public final class MainFrame extends JFrame implements WindowListener,
         showVersion = IdentityManager.getGlobalConfig().getOptionBool("ui",
                 "showversion");
         version = IdentityManager.getGlobalConfig().getOption("version",
-                    "version");
+                "version");
         IdentityManager.getGlobalConfig().addChangeListener("ui", "lookandfeel",
                 this);
         IdentityManager.getGlobalConfig().addChangeListener("ui", "showversion",
@@ -175,8 +176,8 @@ public final class MainFrame extends JFrame implements WindowListener,
             /** {@inheritDoc} */
             @Override
             public void run() {
-                if (position == FramemanagerPosition.LEFT ||
-                        position == FramemanagerPosition.RIGHT) {
+                if (position == FramemanagerPosition.LEFT || position
+                        == FramemanagerPosition.RIGHT) {
                     setObject(frameManagerPanel.getWidth());
                 } else {
                     setObject(frameManagerPanel.getHeight());
@@ -223,7 +224,8 @@ public final class MainFrame extends JFrame implements WindowListener,
     /** {@inheritDoc}. */
     @Override
     public void setTitle(final String title) {
-        if (title != null && getActiveFrame() != null && getActiveFrame().isMaximum()) {
+        if (title != null && getActiveFrame() != null && getActiveFrame().
+                isMaximum()) {
             super.setTitle(getTitlePrefix() + " - " + title);
         } else {
             super.setTitle(getTitlePrefix());
@@ -311,7 +313,7 @@ public final class MainFrame extends JFrame implements WindowListener,
      */
     @Override
     public void windowIconified(final WindowEvent windowEvent) {
-            ActionManager.processEvent(CoreActionType.CLIENT_MINIMISED, null);
+        ActionManager.processEvent(CoreActionType.CLIENT_MINIMISED, null);
     }
 
     /** 
@@ -416,14 +418,14 @@ public final class MainFrame extends JFrame implements WindowListener,
             position = FramemanagerPosition.LEFT;
         }
 
-        if (!mainFrameManager.canPositionVertically() &&
-                (position == FramemanagerPosition.LEFT ||
-                position == FramemanagerPosition.RIGHT)) {
+        if (!mainFrameManager.canPositionVertically() && (position
+                == FramemanagerPosition.LEFT || position
+                == FramemanagerPosition.RIGHT)) {
             position = FramemanagerPosition.BOTTOM;
         }
-        if (!mainFrameManager.canPositionHorizontally() &&
-                (position == FramemanagerPosition.TOP ||
-                position == FramemanagerPosition.BOTTOM)) {
+        if (!mainFrameManager.canPositionHorizontally() && (position
+                == FramemanagerPosition.TOP || position
+                == FramemanagerPosition.BOTTOM)) {
             position = FramemanagerPosition.LEFT;
         }
 
@@ -486,14 +488,42 @@ public final class MainFrame extends JFrame implements WindowListener,
      */
     public void quit(final int exitCode) {
         if (exitCode == 0 && IdentityManager.getGlobalConfig().getOptionBool(
-                "ui", "confirmQuit") && JOptionPane.showConfirmDialog(this,
-                "You are about to quit DMDirc, are you sure?", "Quit confirm",
-                JOptionPane.YES_NO_OPTION,
-                JOptionPane.WARNING_MESSAGE) !=
-                JOptionPane.YES_OPTION) {
+                "ui", "confirmQuit")) {
+            new StandardQuestionDialog(this, ModalityType.APPLICATION_MODAL,
+                    "Quit confirm",
+                    "You are about to quit DMDirc, are you sure?") {
+
+                /**
+                 * A version number for this class. It should be changed whenever the class
+                 * structure is changed (or anything else that would prevent serialized
+                 * objects being unserialized with the new class).
+                 */
+                private static final long serialVersionUID = 1;
+
+                /** {@inheritDoc} */
+                @Override
+                public boolean save() {
+                    doQuit(exitCode);
+                    return true;
+                }
+
+                /** {@inheritDoc} */
+                @Override
+                public void cancelled() {
+                    return;
+                }
+            }.display();
             return;
         }
+        doQuit(exitCode);
+    }
 
+    /**
+     * Exit code call to quit.
+     *
+     * @param exitCode Exit code
+     */
+    private void doQuit(final int exitCode) {
         this.exitCode = exitCode;
 
         new LoggingSwingWorker() {

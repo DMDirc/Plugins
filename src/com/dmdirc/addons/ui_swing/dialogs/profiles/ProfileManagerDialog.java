@@ -28,6 +28,7 @@ import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.addons.ui_swing.components.renderers.ProfileListCellRenderer;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.addons.ui_swing.dialogs.NewServerDialog;
+import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
 import com.dmdirc.config.Identity;
 import com.dmdirc.config.IdentityManager;
 
@@ -40,7 +41,6 @@ import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JList;
-import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.WindowConstants;
@@ -50,7 +50,8 @@ import javax.swing.event.ListSelectionListener;
 import net.miginfocom.swing.MigLayout;
 
 /** Profile editing dialog. */
-public final class ProfileManagerDialog extends StandardDialog implements ActionListener,
+public final class ProfileManagerDialog extends StandardDialog implements
+        ActionListener,
         ListSelectionListener {
 
     /**
@@ -102,7 +103,7 @@ public final class ProfileManagerDialog extends StandardDialog implements Action
             selectedIndex = -1;
         }
     }
-    
+
     /** 
      * Creates the dialog if one doesn't exist, and displays it. 
      * 
@@ -122,7 +123,8 @@ public final class ProfileManagerDialog extends StandardDialog implements Action
      *
      * @return The current ProfileManagerDialog instance
      */
-    public static ProfileManagerDialog getProfileManagerDialog(final MainFrame mainFrame) {
+    public static ProfileManagerDialog getProfileManagerDialog(
+            final MainFrame mainFrame) {
         synchronized (ProfileManagerDialog.class) {
             if (me == null) {
                 me = new ProfileManagerDialog(mainFrame);
@@ -142,13 +144,13 @@ public final class ProfileManagerDialog extends StandardDialog implements Action
 
         model = new ProfileListModel();
         profileList = new JList(model);
-        details = new ProfileDetailPanel(model, mainFrame);
+        details = new ProfileDetailPanel(model, mainFrame, this);
         addButton = new JButton("Add");
         deleteButton = new JButton("Delete");
         infoLabel =
-                new TextLabel("Profiles describe information needed to " +
-                "connect to a server.  You can use a different profile for " +
-                "each connection.");
+                new TextLabel("Profiles describe information needed to "
+                + "connect to a server.  You can use a different profile for "
+                + "each connection.");
 
         profileList.setCellRenderer(new ProfileListCellRenderer());
         profileList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -230,23 +232,44 @@ public final class ProfileManagerDialog extends StandardDialog implements Action
             dispose();
         } else if (e.getSource().equals(addButton)) {
             addProfile();
-        } else if (e.getSource().equals(deleteButton) && JOptionPane.showConfirmDialog(this,
-                "Are you sure you want to delete this profile?",
-                "Delete Confirmaton", JOptionPane.YES_NO_OPTION) ==
-                JOptionPane.YES_OPTION) {
-            final Profile selectedProfile = (Profile) profileList.getSelectedValue();
-            int selected = profileList.getSelectedIndex();
-            deletedProfiles.add(selectedProfile);
-            model.remove(selectedProfile);
-            final int profilesSize = profileList.getModel().getSize();
-            if (profilesSize == 0) {
-                selected = -1;
-            } else if (selected >= profilesSize) {
-                selected = profilesSize - 1;
-            } else if (selected <= 0) {
-                selected = 0;
-            }
-            profileList.setSelectedIndex(selected);
+        } else if (e.getSource().equals(deleteButton)) {
+            new StandardQuestionDialog(this, ModalityType.DOCUMENT_MODAL,
+                    "Delete Confirmaton",
+                    "Are you sure you want to delete this profile?") {
+
+                /**
+                 * A version number for this class. It should be changed whenever the class
+                 * structure is changed (or anything else that would prevent serialized
+                 * objects being unserialized with the new class).
+                 */
+                private static final long serialVersionUID = 1;
+
+                /** {@inheritDoc} */
+                @Override
+                public boolean save() {
+                    final Profile selectedProfile = (Profile) profileList.
+                            getSelectedValue();
+                    int selected = profileList.getSelectedIndex();
+                    deletedProfiles.add(selectedProfile);
+                    model.remove(selectedProfile);
+                    final int profilesSize = profileList.getModel().getSize();
+                    if (profilesSize == 0) {
+                        selected = -1;
+                    } else if (selected >= profilesSize) {
+                        selected = profilesSize - 1;
+                    } else if (selected <= 0) {
+                        selected = 0;
+                    }
+                    profileList.setSelectedIndex(selected);
+                    return true;
+                }
+
+                /** {@inheritDoc} */
+                @Override
+                public void cancelled() {
+                    return;
+                }
+            }.display();
         }
     }
 
