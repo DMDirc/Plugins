@@ -148,7 +148,7 @@ public final class TreeFrameManager implements FrameManager,
     /** {@inheritDoc} */
     @Override
     public void delWindow(final FrameContainer window) {
-        UIUtilities.invokeLater(new Runnable() {
+        UIUtilities.invokeAndWait(new Runnable() {
 
             /** {@inheritDoc} */
             @Override
@@ -184,7 +184,7 @@ public final class TreeFrameManager implements FrameManager,
      */
     public void addWindow(final TreeViewNode parent,
             final FrameContainer window) {
-        UIUtilities.invokeLater(new Runnable() {
+        UIUtilities.invokeAndWait(new Runnable() {
 
             /** {@inheritDoc} */
             @Override
