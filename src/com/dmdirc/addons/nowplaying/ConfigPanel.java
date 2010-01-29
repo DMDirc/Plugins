@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.nowplaying;
 
+import com.dmdirc.addons.ui_swing.components.reorderablelist.ListReorderButtonPanel;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.prefs.PreferencesInterface;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
@@ -118,7 +119,8 @@ public class ConfigPanel extends JPanel implements PreferencesInterface,
         panel.setLayout(new MigLayout("fillx, ins 5"));
 
         panel.add(new JLabel("Drag and drop items to reorder"), "wrap");
-        panel.add(new JScrollPane(list), "growx");
+        panel.add(new JScrollPane(list), "growx, pushx");
+        panel.add(new ListReorderButtonPanel(list), "");
 
         add(panel, "growx, wrap");
 
@@ -136,8 +138,7 @@ public class ConfigPanel extends JPanel implements PreferencesInterface,
 
         add(new NowPlayingSubsitutionPanel(Arrays.asList(new String[]{"app",
                     "title", "artist", "album", "bitrate", "format", "length",
-                    "time",
-                    "state"})), "growx");
+                    "time", "state"})), "growx");
         schedulePreviewUpdate();
     }
 
