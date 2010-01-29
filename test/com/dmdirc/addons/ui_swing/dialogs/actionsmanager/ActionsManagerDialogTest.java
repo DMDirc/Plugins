@@ -29,6 +29,7 @@ import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.InvalidIdentityFileException;
 import com.dmdirc.harness.ui.ClassFinder;
 import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialog;
+import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
 import com.dmdirc.addons.ui_swing.dialogs.actioneditor.ActionEditorDialog;
 
 import java.lang.reflect.InvocationTargetException;
@@ -38,10 +39,9 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
 import org.fest.swing.core.matcher.JButtonMatcher;
-import org.fest.swing.finder.JOptionPaneFinder;
 import org.fest.swing.finder.WindowFinder;
 import org.fest.swing.fixture.DialogFixture;
-import org.fest.swing.fixture.JOptionPaneFixture;
+import org.fest.swing.fixture.JButtonFixture;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -138,20 +138,20 @@ public class ActionsManagerDialogTest {
         
         window.panel(new ClassFinder<JPanel>(JPanel.class, "Groups"))
                 .button(JButtonMatcher.withText("Delete")).requireEnabled().click();
-        
-        JOptionPaneFixture newwin = JOptionPaneFinder.findOptionPane()
-                .withTimeout(5000).using(window.robot);
-        newwin.buttonWithText("No").click();
+
+        DialogFixture newwin = WindowFinder.findDialog(StandardQuestionDialog.
+                class).withTimeout(5000).using(window.robot);
+        JButtonFixture button = newwin.button(JButtonMatcher.withText("No")).click();
         
         assertTrue(ActionManager.getGroups().containsKey("amd-ui-test1"));
         window.list().selectItem("amd-ui-test1").requireSelectedItems("amd-ui-test1");
         
         window.panel(new ClassFinder<JPanel>(JPanel.class, "Groups"))
                 .button(JButtonMatcher.withText("Delete")).click();
-        
-        newwin = JOptionPaneFinder.findOptionPane()
-                .withTimeout(5000).using(window.robot);
-        newwin.buttonWithText("Yes").click();
+
+        newwin = WindowFinder.findDialog(StandardQuestionDialog.
+                class).withTimeout(5000).using(window.robot);
+        button = newwin.button(JButtonMatcher.withText("Yes")).click();
         
         assertTrue(window.list().selection().length != 1 ||   
                 !window.list().selection()[0].equals("amd-ui-test1"));
