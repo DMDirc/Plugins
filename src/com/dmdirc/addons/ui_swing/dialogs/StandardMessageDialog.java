@@ -1,16 +1,17 @@
 /*
+ * 
  * Copyright (c) 2006-2010 Chris Smith, Shane Mc Cormack, Gregory Holmes
- *
+ * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- *
+ * 
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- *
+ * 
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -35,16 +36,20 @@ import javax.swing.JButton;
 import net.miginfocom.swing.MigLayout;
 
 /**
- * Standard input dialog.
+ * Abstract standard dialog for showing messages.
  */
-public abstract class StandardQuestionDialog extends StandardDialog {
+public class StandardMessageDialog extends StandardDialog {
 
+    /**
+     * A version number for this class. It should be changed whenever the class
+     * structure is changed (or anything else that would prevent serialized
+     * objects being unserialized with the new class).
+     */
+    private static final long serialVersionUID = 1;
     /** Blurb label. */
     private TextLabel blurb;
     /** Message. */
     private String message;
-    /** Question result. */
-    private boolean result = false;
 
     /**
      * Instantiates a new standard input dialog.
@@ -54,7 +59,7 @@ public abstract class StandardQuestionDialog extends StandardDialog {
      * @param title Dialog title
      * @param message Dialog message
      */
-    public StandardQuestionDialog(Window owner, ModalityType modal,
+    public StandardMessageDialog(Window owner, ModalityType modal,
             final String title, final String message) {
         super(owner, modal);
 
@@ -73,20 +78,22 @@ public abstract class StandardQuestionDialog extends StandardDialog {
      *
      * @return whether the dialog can close
      */
-    public abstract boolean save();
+    public boolean save() {
+        return true;
+    }
 
     /**
      * Called when the dialog's cancel button is clicked, or otherwise closed.
      */
-    public abstract void cancelled();
+    public void cancelled() {
+    }
 
     /**
      * Initialises the components.
      */
     private final void initComponents() {
         orderButtons(new JButton(), new JButton());
-        getOkButton().setText("Yes");
-        getCancelButton().setText("No");
+        getOkButton().setText("OK");
         blurb = new TextLabel(message);
     }
 
@@ -94,26 +101,18 @@ public abstract class StandardQuestionDialog extends StandardDialog {
      * Adds the listeners
      */
     private final void addListeners() {
-        getOkButton().addActionListener(new ActionListener() {
+        final ActionListener listener = new ActionListener() {
 
             /** {@inheritDoc} */
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (save()) {
-                    result = true;
                     dispose();
                 }
             }
-        });
-        getCancelButton().addActionListener(new ActionListener() {
-
-            /** {@inheritDoc} */
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                cancelled();
-                dispose();
-            }
-        });
+        };
+        getCancelButton().addActionListener(listener);
+        getOkButton().addActionListener(listener);
         addWindowListener(new WindowAdapter() {
 
             /** {@inheritDoc} */
@@ -137,16 +136,6 @@ public abstract class StandardQuestionDialog extends StandardDialog {
         setLayout(new MigLayout("fill, wrap 1, hidemode 3"));
 
         add(blurb, "growx");
-        add(getLeftButton(), "split 2, right");
-        add(getRightButton(), "right");
-    }
-
-    /**
-     * Returns the result of the question.
-     *
-     * @return true iif the user pressed Yes
-     */
-    public boolean getResult() {
-        return result;
+        add(getOkButton(), "right");
     }
 }
