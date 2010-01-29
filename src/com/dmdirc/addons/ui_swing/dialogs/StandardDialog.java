@@ -31,9 +31,11 @@ import java.awt.Frame;
 import java.awt.Window;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.concurrent.Semaphore;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.SwingUtilities;
 
 /**
  * Provides common methods for dialogs.
@@ -107,7 +109,7 @@ public class StandardDialog extends JDialog {
      *
      * @param owner Window to center on
      */
-    public void display(Component owner) {
+    public void display(final Component owner) {
         addWindowListener(new WindowAdapter() {
 
             /** {@inheritDoc} */
@@ -120,6 +122,34 @@ public class StandardDialog extends JDialog {
         centreOnOwner();
         setVisible(false);
         setVisible(true);
+    }
+
+    /**
+     * Displays the dialog centering on the parent window, blocking until
+     * complete.
+     */
+    public void displayBlocking() {
+        displayBlocking(owner);
+    }
+
+    /**
+     * Displays the dialog centering on the specified window, blocking until
+     * complete.
+     *
+     * @param owner Window to center on
+     */
+    public void displayBlocking(final Component owner) {
+        SwingUtilities.invokeLater(new Runnable() {
+
+            /** {@inheritDoc} */
+            @Override
+            public void run() {
+                display(owner);
+            }
+        });
+        while (isVisible()) {
+            Thread.yield();
+        }
     }
 
 

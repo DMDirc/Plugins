@@ -30,6 +30,7 @@ import com.dmdirc.ui.interfaces.SearchBar;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.actions.SearchAction;
 import com.dmdirc.addons.ui_swing.components.validating.ValidatingJTextField;
+import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
 import com.dmdirc.addons.ui_swing.textpane.IRCDocument;
 import com.dmdirc.addons.ui_swing.textpane.IRCDocumentSearcher;
 import com.dmdirc.addons.ui_swing.textpane.LinePosition;
@@ -38,6 +39,7 @@ import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.prefs.validator.Validator;
 import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.util.ListenerList;
+import java.awt.Dialog.ModalityType;
 
 import java.awt.Window;
 import java.awt.event.ActionEvent;
@@ -48,7 +50,6 @@ import java.awt.event.KeyListener;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
@@ -92,7 +93,7 @@ public final class SwingSearchBar extends JPanel implements ActionListener,
 
     /**
      * Creates a new instance of StatusBar.
-     * 
+     *
      * @param newParent parent frame for the dialog
      * @param parentWindow Parent window
      */
@@ -253,15 +254,32 @@ public final class SwingSearchBar extends JPanel implements ActionListener,
                 && ((up && result.getEndLine() > textPane.getSelectedRange().
                 getEndLine())
                 || (!up && result.getStartLine() < textPane.getSelectedRange().
-                getStartLine()))
-                && JOptionPane.showConfirmDialog(parentWindow,
-                "Do you want to continue searching from the " + (up ? "end"
-                : "beginning") + "?",
-                "No more results", JOptionPane.OK_CANCEL_OPTION,
-                JOptionPane.QUESTION_MESSAGE) != JOptionPane.OK_OPTION) {
-            // It's wrapped, and they don't want to continue searching
+                getStartLine()))) {
+            final StandardQuestionDialog dialog = new StandardQuestionDialog(
+                    parentWindow, ModalityType.MODELESS, "No more results",
+                    "Do you want to continue searching from the "
+                    + (up ? "end" : "beginning") + "?") {
 
-            foundText = false;
+                /**
+                 * A version number for this class. It should be changed whenever the class
+                 * structure is changed (or anything else that would prevent serialized
+                 * objects being unserialized with the new class).
+                 */
+                 private static final long serialVersionUID = 1;
+
+                 /**{@inheritDoc} */
+                 @Override
+                 public boolean save() {
+                     return true;
+                 }
+
+                 @Override
+                 public void cancelled() {
+                     //Continue
+                 }
+            };
+            dialog.displayBlocking();
+            foundText = dialog.getResult();
         } else {
             //found, select and return found
             textPane.setScrollBarPosition(result.getEndLine());
