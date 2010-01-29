@@ -30,6 +30,7 @@ import com.dmdirc.parser.interfaces.Parser;
 import java.awt.Insets;
 import java.util.Hashtable;
 import java.util.Map;
+import java.util.TreeSet;
 
 import javax.swing.BorderFactory;
 import javax.swing.JCheckBox;
@@ -93,8 +94,7 @@ public final class ChannelModesPane extends JPanel {
                 new Hashtable<String, JCheckBox>();
 
         // Lay out all the boolean mode checkboxes
-        for (int i = 0; i < booleanModes.length();
-                i++) {
+        for (int i = 0; i < booleanModes.length(); i++) {
             final String mode = booleanModes.substring(i, i + 1);
             final char modeChar = mode.toCharArray()[0];
             final boolean state =
@@ -106,16 +106,15 @@ public final class ChannelModesPane extends JPanel {
             if (channel.getConfigManager().hasOptionString("server",
                     "mode" + mode)) {
                 text = channel.getConfigManager().
-                        getOption("server", "mode" + mode) + " [+"+mode+"]";
+                        getOption("server", "mode" + mode) + " [+" + mode + "]";
             } else {
                 text = "Mode " + mode;
             }
 
-            if (channel.getConfigManager().hasOptionString("server", "mode" +
-                    mode)) {
+            if (channel.getConfigManager().hasOptionString("server", "mode"
+                    + mode)) {
                 tooltip =
-                        "Mode " + mode + ": " +
-                        channel.getConfigManager().
+                        "Mode " + mode + ": " + channel.getConfigManager().
                         getOption("server", "mode" + mode);
             } else {
                 tooltip = "Mode " + mode + ": Unknown";
@@ -139,11 +138,9 @@ public final class ChannelModesPane extends JPanel {
         }
 
         // Lay out all the parameter-requiring modes
-        modeInputs =
-                new Hashtable<String, ParamModePanel>();
+        modeInputs = new Hashtable<String, ParamModePanel>();
 
-        for (int i = 0; i < paramModes.length();
-                i++) {
+        for (int i = 0; i < paramModes.length(); i++) {
             final String mode = paramModes.substring(i, i + 1);
             final String value =
                     channel.getChannelInfo().getMode(mode.charAt(0));
@@ -163,13 +160,20 @@ public final class ChannelModesPane extends JPanel {
     private void layoutComponents() {
         final JPanel booleanModes =
                 new JPanel(new MigLayout("wrap 2, fillx"));
-        for (JCheckBox checkBox : modeCheckBoxes.values()) {
-            booleanModes.add(checkBox);
-        }
-
         final JPanel paramModes =
                 new JPanel(new MigLayout("wrap 2, fillx"));
-        for (ParamModePanel modePanel : modeInputs.values()) {
+
+        final TreeSet<String> modes = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
+
+        modes.addAll(modeCheckBoxes.keySet());
+        for(String mode : modes) {
+            booleanModes.add(modeCheckBoxes.get(mode));
+        }
+        modes.clear();
+        
+        modes.addAll(modeInputs.keySet());
+        for(String mode : modes) {
+            final ParamModePanel modePanel = modeInputs.get(mode);
             paramModes.add(modePanel.getCheckboxComponent());
             paramModes.add(modePanel.getValueComponent(), "growx, pushx");
         }
@@ -207,8 +211,8 @@ public final class ChannelModesPane extends JPanel {
                     ourBooleanModes.split(" ")[0].contains(
                     mode.subSequence(0, 1));
 
-            if (modeCheckBoxes.get(mode) != null &&
-                    state != modeCheckBoxes.get(mode).isSelected()) {
+            if (modeCheckBoxes.get(mode) != null && state != modeCheckBoxes.get(
+                    mode).isSelected()) {
                 changed = true;
                 channel.getChannelInfo().
                         alterMode(modeCheckBoxes.get(mode).isSelected(),
@@ -226,8 +230,8 @@ public final class ChannelModesPane extends JPanel {
                     mode.subSequence(0, 1));
             final ParamModePanel paramModePanel = modeInputs.get(mode);
 
-            if (state != paramModePanel.getState() ||
-                    !value.equals(paramModePanel.getValue())) {
+            if (state != paramModePanel.getState() || !value.equals(paramModePanel.
+                    getValue())) {
                 changed = true;
                 channel.getChannelInfo().
                         alterMode(paramModePanel.getState(),
