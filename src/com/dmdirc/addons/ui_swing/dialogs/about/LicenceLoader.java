@@ -85,7 +85,7 @@ public class LicenceLoader extends LoggingSwingWorker<Void, Void> {
                     final Licence licence = new Licence(licenceStringParts[1],
                             licenceStringParts[0], "<html><h1>" +
                             licenceStringParts[1] + "</h1><p>" + readInputStream(
-                            entry.getValue()).replaceAll("\n", "<br>") +
+                            entry.getValue()).replace("\n", "<br>") +
                             "</p></html>");
                     model.add(licence);
                 }

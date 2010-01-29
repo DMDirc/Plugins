@@ -186,7 +186,7 @@ public final class IdentClient implements Runnable {
      * @return Escaped string.
      */
     public static String escapeString(final String str) {
-        return str.replaceAll("\\\\", "\\\\\\\\").replaceAll(":", "\\\\:").replaceAll(",", "\\\\,").replaceAll(" ", "\\\\ ");
+        return str.replace("\\", "\\\\").replace(":", "\\:").replace(",", "\\,").replace(" ", "\\ ");
     }
 
     /**
@@ -196,7 +196,7 @@ public final class IdentClient implements Runnable {
      * @return Escaped string.
      */
     public static String unescapeString(final String str) {
-        return str.replaceAll("\\\\:", ":").replaceAll("\\\\ ", " ").replaceAll("\\\\,", ",").replaceAll("\\\\\\\\", "\\\\");
+        return str.replace("\\:", ":").replace("\\ ", " ").replace("\\,", ",").replace("\\\\", "\\");
     }
 
     /**

@@ -233,7 +233,7 @@ public class ActionConditionDisplayPanel extends JPanel implements ActionListene
             }
             sb.append(" '");
             if (condition.getTarget() != null) {
-                sb.append(condition.getTarget().replaceAll("<", "&lt;"));
+                sb.append(condition.getTarget().replace("<", "&lt;"));
             } else {
                 sb.append(" ...");
                 return sb.toString();
