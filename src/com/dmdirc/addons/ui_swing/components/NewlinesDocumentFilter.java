@@ -60,7 +60,7 @@ public class NewlinesDocumentFilter extends DocumentFilter {
      */
     private String sanitise(final String text) {
         if (text.contains("\n")) {
-            return text.replaceAll("\\n", "");
+            return text.replace("\n", "");
         }
         return text;
     }

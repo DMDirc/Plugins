@@ -129,9 +129,9 @@ public final class FreeDesktopNotificationsPlugin extends Plugin implements
 	    if (strictescape) {
                 output = StringEscapeUtils.escapeHtml(output);
             } else {
-                output = output.replaceAll("&", "&amp;");
-                output = output.replaceAll("<", "&lt;");
-                output = output.replaceAll(">", "&gt;");
+                output = output.replace("&", "&amp;");
+                output = output.replace("<", "&lt;");
+                output = output.replace(">", "&gt;");
             }
         }
         

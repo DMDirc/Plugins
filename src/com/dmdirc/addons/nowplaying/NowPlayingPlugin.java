@@ -254,30 +254,29 @@ public class NowPlayingPlugin extends Plugin implements ActionListener  {
         final String time = source.getTime();
         final String state = source.getState().getNiceName();
         
-        return format.replaceAll("\\$artist", sanitise(artist))
-                     .replaceAll("\\$title", sanitise(title))
-                     .replaceAll("\\$album", sanitise(album))
-                     .replaceAll("\\$app", sanitise(app))
-                     .replaceAll("\\$bitrate", sanitise(bitrate))
-                     .replaceAll("\\$format", sanitise(filetype))
-                     .replaceAll("\\$length", sanitise(length))
-                     .replaceAll("\\$state", sanitise(state))
-                     .replaceAll("\\$time", sanitise(time));
+        return format.replace("$artist", sanitise(artist))
+                     .replace("$title", sanitise(title))
+                     .replace("$album", sanitise(album))
+                     .replace("$app", sanitise(app))
+                     .replace("$bitrate", sanitise(bitrate))
+                     .replace("$format", sanitise(filetype))
+                     .replace("$length", sanitise(length))
+                     .replace("$state", sanitise(state))
+                     .replace("$time", sanitise(time));
     }
 
     /**
      * Sanitises the specified String so that it may be used as the replacement
      * in a call to String.replaceAll. Namely, at present, this method returns
      * an empty String if it is passed a null value; otherwise the input is
-     * quoted for use as a replacement in the
-     * {@link String#replaceAll(java.lang.String, java.lang.String)} method.
+     * returned as-is.
      *
      * @param input The string to be sanitised
      * @return A sanitised version of the String
      * @since 0.6.3
      */
     protected static String sanitise(final String input) {
-        return input == null ? "" : Matcher.quoteReplacement(input);
+        return input == null ? "" : input;
     }
     
     /**

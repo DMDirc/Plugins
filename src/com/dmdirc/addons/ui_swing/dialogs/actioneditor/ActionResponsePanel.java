@@ -109,7 +109,7 @@ public class ActionResponsePanel extends JPanel {
     public void setResponse(final String[] response) {
         final StringBuilder sb = new StringBuilder();
         for (String responseLine : response) {
-            responseLine = responseLine.replaceAll("\n", "\\\\n");
+            responseLine = responseLine.replace("\n", "\\n");
             sb.append(responseLine).append('\n');
         }
 
@@ -143,7 +143,7 @@ public class ActionResponsePanel extends JPanel {
     public String[] getResponse() {
         final String[] text = response.getText().split("\n");
         for (int i = 0; i < text.length; i++) {
-            text[i] = text[i].replaceAll("\\\\n", "\n");
+            text[i] = text[i].replace("\\n", "\n");
         }
         return text;
     }
