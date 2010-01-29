@@ -38,6 +38,8 @@ import com.dmdirc.addons.ui_swing.components.statusbar.FeedbackNag;
 import com.dmdirc.addons.ui_swing.components.statusbar.SwingStatusBar;
 import com.dmdirc.addons.ui_swing.components.themepanel.ThemePanel;
 import com.dmdirc.addons.ui_swing.dialogs.DialogKeyListener;
+import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialog;
+import com.dmdirc.addons.ui_swing.dialogs.StandardMessageDialog;
 import com.dmdirc.addons.ui_swing.dialogs.channelsetting.ChannelSettingsDialog;
 import com.dmdirc.addons.ui_swing.dialogs.error.ErrorListDialog;
 import com.dmdirc.addons.ui_swing.dialogs.prefs.SwingPreferencesDialog;
@@ -58,6 +60,7 @@ import com.dmdirc.config.prefs.PreferencesInterface;
 import com.dmdirc.config.prefs.PreferencesManager;
 import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
+import com.dmdirc.config.prefs.validator.NotEmptyValidator;
 import com.dmdirc.config.prefs.validator.NumericalValidator;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
@@ -73,6 +76,7 @@ import com.dmdirc.ui.interfaces.UIController;
 import com.dmdirc.ui.interfaces.Window;
 import com.dmdirc.updater.Update;
 import com.dmdirc.util.ReturnableThread;
+import java.awt.Dialog.ModalityType;
 
 import java.awt.Font;
 import java.awt.GraphicsEnvironment;
@@ -86,7 +90,6 @@ import java.util.Map;
 import java.util.concurrent.Semaphore;
 
 import java.util.concurrent.atomic.AtomicBoolean;
-import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
@@ -163,7 +166,7 @@ public final class SwingController extends Plugin implements UIController {
 
     /**
      * Retrieves the Swing Status Bar used by this UI.
-     * 
+     *
      * @return This UI's status bar
      */
     public SwingStatusBar getSwingStatusBar() {
@@ -268,7 +271,7 @@ public final class SwingController extends Plugin implements UIController {
 
     /**
      * Shows a first run wizard, or a migration wizard.
-     * 
+     *
      * @param firstRun First run?
      */
     private synchronized void showFirstRunWizard(final boolean firstRun) {
@@ -373,20 +376,16 @@ public final class SwingController extends Plugin implements UIController {
             });
         } catch (ClassNotFoundException ex) {
             Logger.userError(ErrorLevel.LOW,
-                    "Unable to change Look and Feel: " +
-                    ex.getMessage());
+                    "Unable to change Look and Feel: " + ex.getMessage());
         } catch (InstantiationException ex) {
             Logger.userError(ErrorLevel.LOW,
-                    "Unable to change Look and Feel: " +
-                    ex.getMessage());
+                    "Unable to change Look and Feel: " + ex.getMessage());
         } catch (IllegalAccessException ex) {
             Logger.userError(ErrorLevel.LOW,
-                    "Unable to change Look and Feel: " +
-                    ex.getMessage());
+                    "Unable to change Look and Feel: " + ex.getMessage());
         } catch (UnsupportedLookAndFeelException ex) {
             Logger.userError(ErrorLevel.LOW,
-                    "Unable to change Look and Feel: " +
-                    ex.getMessage());
+                    "Unable to change Look and Feel: " + ex.getMessage());
         }
     }
 
@@ -439,8 +438,8 @@ public final class SwingController extends Plugin implements UIController {
 
     /**
      * {@inheritDoc}
-     * 
-     * @deprecated 
+     *
+     * @deprecated
      */
     @Override
     @Deprecated
@@ -450,8 +449,8 @@ public final class SwingController extends Plugin implements UIController {
 
     /**
      * {@inheritDoc}
-     * 
-     * @deprecated 
+     *
+     * @deprecated
      */
     @Override
     @Deprecated
@@ -516,8 +515,8 @@ public final class SwingController extends Plugin implements UIController {
             /** {@inheritDoc} */
             @Override
             public void run() {
-                JOptionPane.showMessageDialog(null, message, title,
-                        JOptionPane.PLAIN_MESSAGE);
+                new StandardMessageDialog(me, ModalityType.MODELESS, title,
+                        message).display();
             }
         });
     }
@@ -532,7 +531,29 @@ public final class SwingController extends Plugin implements UIController {
     /** {@inheritDoc} */
     @Override
     public String getUserInput(final String prompt) {
-        return JOptionPane.showInputDialog(prompt);
+        final StandardInputDialog dialog = new StandardInputDialog(me,
+                ModalityType.MODELESS, "Input required", prompt,
+                new NotEmptyValidator()) {
+
+            /**
+             * A version number for this class. It should be changed whenever the class
+             * structure is changed (or anything else that would prevent serialized
+             * objects being unserialized with the new class).
+             */
+            private static final long serialVersionUID = 1;
+
+            /** {@inheritDoc} */
+            @Override
+            public boolean save() {
+                return true;
+            }
+
+            /** {@inheritDoc} */
+            @Override
+            public void cancelled() {}
+        };
+        dialog.displayBlocking();
+        return dialog.getText();
     }
 
     /** {@inheritDoc} */
@@ -589,7 +610,7 @@ public final class SwingController extends Plugin implements UIController {
 
     /**
      * Returns the current look and feel.
-     * 
+     *
      * @return Current look and feel
      */
     public static String getLookAndFeel() {
@@ -628,10 +649,10 @@ public final class SwingController extends Plugin implements UIController {
         }
 
         if (System.getProperty("java.vm.name", "unknown").contains("OpenJDK")) {
-            JOptionPane.showMessageDialog(null, "OpenJDK has known graphical " +
-                    "issues and as such is unsupported by DMDirc.  Please " +
-                    "consider using the official JRE.", "Unsupported JRE",
-                    JOptionPane.WARNING_MESSAGE);
+            new StandardMessageDialog(me, ModalityType.MODELESS,
+                    "Unsupported JRE", "OpenJDK has known graphical "
+                    + "issues and as such is unsupported by DMDirc.  Please "
+                    + "consider using the official JRE.").display();
         }
 
         Main.setUI(this);
@@ -676,8 +697,8 @@ public final class SwingController extends Plugin implements UIController {
      */
     private PreferencesCategory createGeneralCategory() {
         final PreferencesCategory general = new PluginPreferencesCategory(
-                getPluginInfo(), "Swing UI", "These config options apply " +
-                "only to the swing UI.", "category-gui");
+                getPluginInfo(), "Swing UI", "These config options apply "
+                + "only to the swing UI.", "category-gui");
 
         final Map<String, String> lafs = new HashMap<String, String>();
         final Map<String, String> framemanagers = new HashMap<String, String>();
@@ -708,8 +729,8 @@ public final class SwingController extends Plugin implements UIController {
                 "Window manager", "Which window manager should be used?",
                 framemanagers).setRestartNeeded());
         general.addSetting(new PreferencesSetting("ui", "framemanagerPosition",
-                "Window manager position", "Where should the window " +
-                "manager be positioned?", fmpositions).setRestartNeeded());
+                "Window manager position", "Where should the window "
+                + "manager be positioned?", fmpositions).setRestartNeeded());
         general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
                 "ui", "stylelinks", "Style links", "Style links in text areas"));
         general.addSetting(new PreferencesSetting(PreferencesType.FONT,
@@ -740,8 +761,8 @@ public final class SwingController extends Plugin implements UIController {
 
         advanced.addSetting(new PreferencesSetting(PreferencesType.INTEGER,
                 new NumericalValidator(10, -1), "ui", "frameBufferSize",
-                "Window buffer size", "The maximum number of lines in a window" +
-                " buffer"));
+                "Window buffer size", "The maximum number of lines in a window"
+                + " buffer"));
         advanced.addSetting(new PreferencesSetting("ui", "mdiBarVisibility",
                 "MDI Bar Visibility", "Controls the visibility of the MDI bar",
                 options));
@@ -749,26 +770,29 @@ public final class SwingController extends Plugin implements UIController {
                 new PreferencesSetting(PreferencesType.BOOLEAN, "ui",
                 "useOneTouchExpandable", "Use one touch expandable split panes?",
                 "Use one touch expandable arrows for collapsing/expanding the split panes"));
-       advanced.addSetting(new PreferencesSetting(PreferencesType.INTEGER, getDomain(),
-               "windowMenuItems", "Window menu item count",
-               "Number of items to show in the window menu"));
-       advanced.addSetting(new PreferencesSetting(PreferencesType.INTEGER, getDomain(),
-               "windowMenuScrollInterval", "Window menu scroll interval",
-               "Number of milliseconds to pause when autoscrolling in the window menu"));
-       advanced.addSetting(
+        advanced.addSetting(new PreferencesSetting(PreferencesType.INTEGER,
+                getDomain(), "windowMenuItems", "Window menu item count",
+                "Number of items to show in the window menu"));
+        advanced.addSetting(
+                new PreferencesSetting(PreferencesType.INTEGER, getDomain(),
+                "windowMenuScrollInterval", "Window menu scroll interval",
+                "Number of milliseconds to pause when autoscrolling in the window menu"));
+        advanced.addSetting(
                 new PreferencesSetting(PreferencesType.BOOLEAN, getDomain(),
                 "showtopicbar", "Show topic bar",
                 "Shows a graphical topic bar in channels."));
-        advanced.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN, getDomain(),
-               "shownicklist", "Show nicklist?", "Do you want the nicklist visible"));
+        advanced.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
+                getDomain(),
+                "shownicklist", "Show nicklist?",
+                "Do you want the nicklist visible"));
         //TODO issue 3251
         //advanced.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN, getDomain(),
         //       "showfulltopic", "Show full topic in topic bar?",
         //       "Do you want to show the full topic in the topic bar or just" +
         //       "first line?"));
-        advanced.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN, 
+        advanced.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
                 getDomain(), "hideEmptyTopicBar", "Hide empty topic bar?",
-               "Do you want to hide the topic bar when there is no topic"));
+                "Do you want to hide the topic bar when there is no topic"));
 
         return advanced;
     }
@@ -845,7 +869,7 @@ public final class SwingController extends Plugin implements UIController {
 
     /**
      * Adds a top level window to the window list.
-     * 
+     *
      * @param source New window
      */
     protected void addTopLevelWindow(final java.awt.Window source) {
@@ -856,7 +880,7 @@ public final class SwingController extends Plugin implements UIController {
 
     /**
      * Deletes a top level window to the window list.
-     * 
+     *
      * @param source Old window
      */
     protected void delTopLevelWindow(final java.awt.Window source) {
