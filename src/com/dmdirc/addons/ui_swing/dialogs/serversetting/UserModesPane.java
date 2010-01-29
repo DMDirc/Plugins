@@ -1,3 +1,4 @@
+
 /*
  * Copyright (c) 2006-2010 Chris Smith, Shane Mc Cormack, Gregory Holmes
  *
@@ -29,6 +30,7 @@ import com.dmdirc.parser.interfaces.Parser;
 import java.awt.Insets;
 import java.util.Hashtable;
 import java.util.Map;
+import java.util.TreeSet;
 
 import javax.swing.BorderFactory;
 import javax.swing.JCheckBox;
@@ -83,12 +85,10 @@ public final class UserModesPane extends JPanel {
         final String userModes = parser.getUserModes();
         final String ourUserModes = parser.getLocalClient().getModes();
 
-        modeCheckBoxes =
-                new Hashtable<String, JCheckBox>();
+        modeCheckBoxes = new Hashtable<String, JCheckBox>();
 
         // Lay out all the boolean mode checkboxes
-        for (int i = 0; i < userModes.length();
-                i++) {
+        for (int i = 0; i < userModes.length(); i++) {
             final String mode = userModes.substring(i, i + 1);
             final boolean state =
                     ourUserModes.split(" ")[0].contains(mode.subSequence(0, 1));
@@ -122,10 +122,12 @@ public final class UserModesPane extends JPanel {
 
     /** Lays out the components. */
     private void layoutComponents() {
-        final JPanel userModes =
-                new JPanel(new MigLayout("wrap 2, fillx"));
-        for (JCheckBox checkBox : modeCheckBoxes.values()) {
-            userModes.add(checkBox);
+        final JPanel userModes = new JPanel(new MigLayout("wrap 2, fillx"));
+        final TreeSet<String> modes = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
+
+        modes.addAll(modeCheckBoxes.keySet());
+        for(String mode : modes) {
+            userModes.add(modeCheckBoxes.get(mode));
         }
 
         userModes.setBorder(BorderFactory.createTitledBorder(UIManager.getBorder(
