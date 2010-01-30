@@ -76,15 +76,16 @@ public final class ErrorListDialog extends StandardDialog implements
     /** Row being deleted. */
     private boolean rowBeingDeleted = false;
 
-    /** 
-     * Creates a new instance of ErrorListDialog. 
-     * 
+    /**
+     * Creates a new instance of ErrorListDialog.
+     *
      * @param mainFrame Main frame
      */
     public ErrorListDialog(final MainFrame mainFrame) {
         super(mainFrame, ModalityType.MODELESS);
 
         setTitle("DMDirc: Error list");
+        setMinimumSize(new Dimension(600, 550));
 
         tableModel = new ErrorTableModel();
 
@@ -195,9 +196,9 @@ public final class ErrorListDialog extends StandardDialog implements
         }
     }
 
-    /** 
+    /**
      * {@inheritDoc}.
-     * 
+     *
      * @param e Action event
      */
     @Override
@@ -274,5 +275,12 @@ public final class ErrorListDialog extends StandardDialog implements
         } else {
             deleteAllButton.setEnabled(false);
         }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void display() {
+        super.display();
+        setSize(new Dimension(600, 550));
     }
 }
