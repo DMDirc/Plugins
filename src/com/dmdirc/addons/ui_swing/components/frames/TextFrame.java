@@ -56,7 +56,7 @@ import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.interfaces.InputWindow;
 import com.dmdirc.ui.interfaces.Window;
 import com.dmdirc.ui.messages.Formatter;
-import com.dmdirc.util.URLHandler;
+import com.dmdirc.ui.core.util.URLHandler;
 
 import java.awt.Container;
 import java.awt.Dimension;
