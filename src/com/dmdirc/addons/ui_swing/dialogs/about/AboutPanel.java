@@ -24,7 +24,7 @@ package com.dmdirc.addons.ui_swing.dialogs.about;
 
 import com.dmdirc.addons.ui_swing.components.text.HTMLLabel;
 import com.dmdirc.addons.ui_swing.UIUtilities;
-import com.dmdirc.util.URLHandler;
+import com.dmdirc.ui.core.util.URLHandler;
 
 import javax.swing.JPanel;
 import javax.swing.event.HyperlinkEvent;

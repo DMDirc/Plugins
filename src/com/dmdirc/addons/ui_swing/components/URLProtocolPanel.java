@@ -24,7 +24,7 @@ package com.dmdirc.addons.ui_swing.components;
 
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.addons.ui_swing.dialogs.url.URLSubsitutionsPanel;
-import com.dmdirc.util.URLHandler;
+import com.dmdirc.ui.core.util.URLHandler;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
