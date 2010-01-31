@@ -126,10 +126,11 @@ public final class OsdPlugin extends Plugin implements CategoryChangeListener,
         category.addSetting(maxWindowsSetting);
         
         final Map<String, String> posOptions = new HashMap<String, String>();
-        posOptions.put("down", "Place new windows below old ones");
-        posOptions.put("up", "Place new windows above old ones");
-        posOptions.put("close", "Close existing windows");
-        posOptions.put("ontop", "Place new windows on top of existing window");
+
+        //Populate policy MULTICHOICE
+        for (OsdPolicy policy : OsdPolicy.values()) {
+            posOptions.put(policy.name(), policy.getDescription());
+        }
         
         category.addSetting(new PreferencesSetting(getDomain(), "newbehaviour",
                 "New window policy", "What to do when an OSD Window "
