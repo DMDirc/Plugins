@@ -33,14 +33,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This class handles a DCC Send.
+ * This class handles a DCC transfer.
  *
  * @author Shane 'Dataforce' McCormack
  */
-public class DCCSend extends DCC {
+public class DCCTransfer extends DCC {
 
     /** List of active sends. */
-    private static final List<DCCSend> SENDS = new ArrayList<DCCSend>();
+    private static final List<DCCTransfer> TRANSFERS = new ArrayList<DCCTransfer>();
 
     /** File Transfer Types. */
     public enum TransferType {
@@ -53,7 +53,7 @@ public class DCCSend extends DCC {
     private TransferType transferType = TransferType.RECEIVE;
 
     /** The handler for this DCCSend. */
-    private DCCSendInterface handler;
+    private DCCTransferHandler handler;
 
     /** Used to send data out the socket. */
     private DataOutputStream out;
@@ -93,21 +93,21 @@ public class DCCSend extends DCC {
 
     private boolean active = false;
 
-    /** Creates a new instance of DCCSend with a default block size. */
-    public DCCSend() {
+    /** Creates a new instance of DCCTransfer with a default block size. */
+    public DCCTransfer() {
         this(1024);
     }
 
     /**
-     * Creates a new instance of DCCSend.
+     * Creates a new instance of DCCTransfer.
      *
      * @param blockSize Block size to use
      */
-    public DCCSend(final int blockSize) {
+    public DCCTransfer(final int blockSize) {
         super();
         this.blockSize = blockSize;
-        synchronized (SENDS) {
-            SENDS.add(this);
+        synchronized (TRANSFERS) {
+            TRANSFERS.add(this);
         }
     }
 
@@ -125,18 +125,18 @@ public class DCCSend extends DCC {
      *
      * @return A copy of the list of active sends.
      */
-    public static List<DCCSend> getSends() {
-        synchronized (SENDS) {
-            return new ArrayList<DCCSend>(SENDS);
+    public static List<DCCTransfer> getTransfers() {
+        synchronized (TRANSFERS) {
+            return new ArrayList<DCCTransfer>(TRANSFERS);
         }
     }
 
     /**
      * Called to remove this object from the sends list.
      */
-    public void removeFromSends() {
-        synchronized (SENDS) {
-            SENDS.remove(this);
+    public void removeFromTransfers() {
+        synchronized (TRANSFERS) {
+            TRANSFERS.remove(this);
         }
     }
 
@@ -150,7 +150,8 @@ public class DCCSend extends DCC {
         if (transferType == TransferType.SEND) {
             transferFile = new File(filename);
             try {
-                fileIn = new DataInputStream(new FileInputStream(transferFile.getAbsolutePath()));
+                fileIn = new DataInputStream(new FileInputStream(
+                        transferFile.getAbsolutePath()));
             } catch (FileNotFoundException e) {
                 fileIn = null;
             } catch (SecurityException e) {
@@ -174,13 +175,13 @@ public class DCCSend extends DCC {
      * @return Filename without path
      */
     public String getShortFileName() {
-        return (new File(filename)).getName();
+        return new File(filename).getName();
     }
 
     /**
      * Set dcc Type.
      *
-     * @param type Type of DCC Send this is.
+     * @param type Type of DCC transfer this is.
      */
     public void setType(final TransferType type) {
         this.transferType = type;
@@ -189,7 +190,7 @@ public class DCCSend extends DCC {
     /**
      * Get dcc Type.
      *
-     * @return Type of DCC Send this is.
+     * @return Type of DCC transfer this is.
      */
     public TransferType getType() {
         return transferType;
@@ -241,11 +242,9 @@ public class DCCSend extends DCC {
      */
     public String makeToken() {
         String myToken = "";
-        boolean unique = true;
         do {
             myToken = Integer.toString(Math.abs((myToken + filename).hashCode()));
-            unique = (findByToken(myToken) == null);
-        } while (!unique);
+        } while (findByToken(myToken) != null);
         setToken(myToken);
         return myToken;
     }
@@ -254,16 +253,16 @@ public class DCCSend extends DCC {
      * Find a send based on a given token.
      *
      * @param token Token to look for. (case sensitive)
-     * @return The first DCCSend that matches the given token.
+     * @return The first DCCTransfer that matches the given token.
      *         null if none match, or token is "" or null.
      */
-    public static DCCSend findByToken(final String token) {
+    public static DCCTransfer findByToken(final String token) {
         if (token == null || token.isEmpty()) {
             return null;
         }
-        for (DCCSend send : getSends()) {
-            if (send.getToken().equals(token)) {
-                return send;
+        for (DCCTransfer transfer : getTransfers()) {
+            if (transfer.getToken().equals(token)) {
+                return transfer;
             }
         }
         return null;
@@ -291,7 +290,8 @@ public class DCCSend extends DCC {
      * Set the starting position of the file
      *
      * @param startpos Starting position
-     * @return -1 if fileIn is null or if dcc receive, else the result of fileIn.skipBytes()
+     * @return -1 if fileIn is null or if dcc receive, else the result of
+     * fileIn.skipBytes()
      */
     public int setFileStart(final int startpos) {
         this.startpos = startpos;
@@ -318,22 +318,21 @@ public class DCCSend extends DCC {
     /**
      * Change the handler for this DCC Send
      *
-     * @param handler A class implementing DCCSendInterface
+     * @param handler A class implementing DCCTransferHandler
      */
-    public void setHandler(final DCCSendInterface handler) {
+    public void setHandler(final DCCTransferHandler handler) {
         this.handler = handler;
     }
 
-    /**
-     * Called when the socket is first opened, before any data is handled.
-     */
+    /** {@inheritDoc} */
     @Override
     protected void socketOpened() {
         try {
             active = true;
             transferFile = new File(filename);
             if (transferType == TransferType.RECEIVE) {
-                fileOut = new DataOutputStream(new FileOutputStream(transferFile.getAbsolutePath(), (startpos > 0)));
+                fileOut = new DataOutputStream(new FileOutputStream(
+                        transferFile.getAbsolutePath(), (startpos > 0)));
             }
             out = new DataOutputStream(socket.getOutputStream());
             in = new DataInputStream(socket.getInputStream());
@@ -345,9 +344,7 @@ public class DCCSend extends DCC {
         }
     }
 
-    /**
-     * Called when the socket is closed, before the thread terminates.
-     */
+    /** {@inheritDoc} */
     @Override
     protected void socketClosed() {
         // Try to close both, even if one fails.
@@ -369,21 +366,17 @@ public class DCCSend extends DCC {
             handler.socketClosed(this);
         }
         // Try to delete empty files.
-        if (transferType == TransferType.RECEIVE && transferFile != null && transferFile.length() == 0) {
+        if (transferType == TransferType.RECEIVE && transferFile != null
+                && transferFile.length() == 0) {
             transferFile.delete();
         }
-        synchronized (SENDS) {
-            SENDS.remove(this);
+        synchronized (TRANSFERS) {
+            TRANSFERS.remove(this);
         }
         active = false;
     }
 
-    /**
-     * Handle the socket.
-     *
-     * @return false when socket is closed, true will cause the method to be
-     *         called again.
-     */
+    /** {@inheritDoc} */
     @Override
     protected boolean handleSocket() {
         if (out == null || in == null) {
@@ -399,8 +392,8 @@ public class DCCSend extends DCC {
     /**
      * Handle the socket as a RECEIVE.
      *
-     * @return false when socket is closed (or should be closed), true will cause the method to be
-     *         called again.
+     * @return false when socket is closed (or should be closed), true will
+     * cause the method to be called again.
      */
     protected boolean handleReceive() {
         try {
@@ -435,8 +428,8 @@ public class DCCSend extends DCC {
     /**
      * Handle the socket as a SEND.
      *
-     * @return false when socket is closed (or should be closed), true will cause the method to be
-     *         called again.
+     * @return false when socket is closed (or should be closed), true will
+     * cause the method to be called again.
      */
     protected boolean handleSend() {
         try {

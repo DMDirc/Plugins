@@ -27,7 +27,7 @@ package com.dmdirc.addons.dcc;
  *
  * @author Shane 'Dataforce' McCormack
  */
-public interface DCCChatInterface {
+public interface DCCChatHandler {
 
     /**
      * Handle a received message

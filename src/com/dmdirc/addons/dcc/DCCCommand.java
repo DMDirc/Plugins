@@ -68,23 +68,26 @@ public final class DCCCommand extends ServerCommand implements IntelligentComman
     /** {@inheritDoc} */
     @Override
     public void execute(final InputWindow origin, final Server server,
-                        final boolean isSilent, final CommandArguments args) {
+            final boolean isSilent, final CommandArguments args) {
         if (args.getArguments().length > 1) {
             final String type = args.getArguments()[0];
             final String target = args.getArguments()[1];
             final Parser parser = server.getParser();
             final String myNickname = parser.getLocalClient().getNickname();
 
-            if (parser.isValidChannelName(target) || parser.getStringConverter().equalsIgnoreCase(target, myNickname)) {
+            if (parser.isValidChannelName(target)
+                    || parser.getStringConverter().equalsIgnoreCase(target, myNickname)) {
                 final Thread errorThread = new Thread(new Runnable() {
 
                     /** {@inheritDoc} */
                     @Override
                     public void run() {
                         if (parser.getStringConverter().equalsIgnoreCase(target, myNickname)) {
-                            JOptionPane.showMessageDialog(null, "You can't DCC yourself.", "DCC Error", JOptionPane.ERROR_MESSAGE);
+                            JOptionPane.showMessageDialog(null, "You can't DCC yourself.",
+                                    "DCC Error", JOptionPane.ERROR_MESSAGE);
                         } else {
-                            JOptionPane.showMessageDialog(null, "You can't DCC a channel.", "DCC Error", JOptionPane.ERROR_MESSAGE);
+                            JOptionPane.showMessageDialog(null, "You can't DCC a channel.",
+                                    "DCC Error", JOptionPane.ERROR_MESSAGE);
                         }
                     }
 
@@ -95,16 +98,24 @@ public final class DCCCommand extends ServerCommand implements IntelligentComman
             if (type.equalsIgnoreCase("chat")) {
                 final DCCChat chat = new DCCChat();
                 if (myPlugin.listen(chat)) {
-                    final DCCChatWindow window = new DCCChatWindow(myPlugin, chat, "*Chat: " + target, myNickname, target);
+                    final DCCChatWindow window = new DCCChatWindow(myPlugin, chat,
+                            "*Chat: " + target, myNickname, target);
 
-                    parser.sendCTCP(target, "DCC", "CHAT chat " + DCC.ipToLong(myPlugin.getListenIP(parser)) + " " + chat.getPort());
+                    parser.sendCTCP(target, "DCC", "CHAT chat "
+                            + DCC.ipToLong(myPlugin.getListenIP(parser)) + " "
+                            + chat.getPort());
 
-                    ActionManager.processEvent(DCCActions.DCC_CHAT_REQUEST_SENT, null, server, target);
+                    ActionManager.processEvent(DCCActions.DCC_CHAT_REQUEST_SENT,
+                            null, server, target);
 
-                    sendLine(origin, isSilent, "DCCChatStarting", target, chat.getHost(), chat.getPort());
-                    window.getFrame().addLine("DCCChatStarting", target, chat.getHost(), chat.getPort());
+                    sendLine(origin, isSilent, "DCCChatStarting", target,
+                            chat.getHost(), chat.getPort());
+                    window.getFrame().addLine("DCCChatStarting", target,
+                            chat.getHost(), chat.getPort());
                 } else {
-                    sendLine(origin, isSilent, "DCCChatError", "Unable to start chat with " + target + " - unable to create listen socket");
+                    sendLine(origin, isSilent, "DCCChatError",
+                            "Unable to start chat with " + target
+                            + " - unable to create listen socket");
                 }
             } else if (type.equalsIgnoreCase("send")) {
                 sendFile(target, origin, server, isSilent, args.getArgumentsAsString(2));
@@ -126,7 +137,8 @@ public final class DCCCommand extends ServerCommand implements IntelligentComman
      * @param filename The file to send
      * @since 0.6.3m1
      */
-    public void sendFile(final String target, final InputWindow origin, final Server server, final boolean isSilent, final String filename) {
+    public void sendFile(final String target, final InputWindow origin,
+            final Server server, final boolean isSilent, final String filename) {
         // New thread to ask the user what file to send
         final File givenFile = new File(filename);
         final Thread dccThread = new Thread(new Runnable() {
@@ -134,7 +146,9 @@ public final class DCCCommand extends ServerCommand implements IntelligentComman
             /** {@inheritDoc} */
             @Override
             public void run() {
-                final JFileChooser jc = (givenFile.exists()) ? KFileChooser.getFileChooser(myPlugin, givenFile) : KFileChooser.getFileChooser(myPlugin);
+                final JFileChooser jc = givenFile.exists()
+                        ? KFileChooser.getFileChooser(myPlugin, givenFile)
+                        : KFileChooser.getFileChooser(myPlugin);
                 int result;
                 if (!givenFile.exists() || !givenFile.isFile()) {
                     jc.setDialogTitle("Send file to " + target + " - DMDirc ");
@@ -147,33 +161,55 @@ public final class DCCCommand extends ServerCommand implements IntelligentComman
                 }
                 if (result == JFileChooser.APPROVE_OPTION) {
                     if (jc.getSelectedFile().length() == 0) {
-                        JOptionPane.showMessageDialog(null, "You can't send empty files over DCC.", "DCC Error", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(null,
+                                "You can't send empty files over DCC.", "DCC Error",
+                                JOptionPane.ERROR_MESSAGE);
                         return;
                     } else if (!jc.getSelectedFile().exists()) {
-                        JOptionPane.showMessageDialog(null, "Invalid file specified", "DCC Error", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(null,
+                                "Invalid file specified", "DCC Error",
+                                JOptionPane.ERROR_MESSAGE);
                         return;
                     }
                     final Parser parser = server.getParser();
-                    DCCSend send = new DCCSend(IdentityManager.getGlobalConfig().getOptionInt(myPlugin.getDomain(), "send.blocksize"));
-                    send.setTurbo(IdentityManager.getGlobalConfig().getOptionBool(myPlugin.getDomain(), "send.forceturbo"));
-                    send.setType(DCCSend.TransferType.SEND);
+                    DCCTransfer send = new DCCTransfer(IdentityManager
+                            .getGlobalConfig().getOptionInt(myPlugin.getDomain(),
+                            "send.blocksize"));
+                    send.setTurbo(IdentityManager.getGlobalConfig()
+                            .getOptionBool(myPlugin.getDomain(), "send.forceturbo"));
+                    send.setType(DCCTransfer.TransferType.SEND);
 
-                    ActionManager.processEvent(DCCActions.DCC_SEND_REQUEST_SENT, null, server, target, jc.getSelectedFile());
+                    ActionManager.processEvent(DCCActions.DCC_SEND_REQUEST_SENT,
+                            null, server, target, jc.getSelectedFile());
 
-                    sendLine(origin, isSilent, FORMAT_OUTPUT, "Starting DCC Send with: " + target);
+                    sendLine(origin, isSilent, FORMAT_OUTPUT,
+                            "Starting DCC Send with: " + target);
 
                     send.setFileName(jc.getSelectedFile().getAbsolutePath());
                     send.setFileSize(jc.getSelectedFile().length());
 
-                    if (IdentityManager.getGlobalConfig().getOptionBool(myPlugin.getDomain(), "send.reverse")) {
-                        new DCCSendWindow(myPlugin, send, "Send: " + target, target, server);
-                        parser.sendCTCP(target, "DCC", "SEND \"" + jc.getSelectedFile().getName() + "\" " + DCC.ipToLong(myPlugin.getListenIP(parser)) + " 0 " + send.getFileSize() + " " + send.makeToken() + ((send.isTurbo()) ? " T" : ""));
+                    if (IdentityManager.getGlobalConfig().getOptionBool(
+                            myPlugin.getDomain(), "send.reverse")) {
+                        new DCCTransferWindow(myPlugin, send, "Send: "
+                                + target, target, server);
+                        parser.sendCTCP(target, "DCC", "SEND \""
+                                + jc.getSelectedFile().getName() + "\" "
+                                + DCC.ipToLong(myPlugin.getListenIP(parser))
+                                + " 0 " + send.getFileSize() + " " + send.makeToken()
+                                + (send.isTurbo() ? " T" : ""));
                     } else {
                         if (myPlugin.listen(send)) {
-                            new DCCSendWindow(myPlugin, send, "*Send: " + target, target, server);
-                            parser.sendCTCP(target, "DCC", "SEND \"" + jc.getSelectedFile().getName() + "\" " + DCC.ipToLong(myPlugin.getListenIP(parser)) + " " + send.getPort() + " " + send.getFileSize() + ((send.isTurbo()) ? " T" : ""));
+                            new DCCTransferWindow(myPlugin, send, "*Send: "
+                                    + target, target, server);
+                            parser.sendCTCP(target, "DCC", "SEND \""
+                                    + jc.getSelectedFile().getName() + "\" "
+                                    + DCC.ipToLong(myPlugin.getListenIP(parser))
+                                    + " " + send.getPort() + " " + send.getFileSize()
+                                    + (send.isTurbo() ? " T" : ""));
                         } else {
-                            sendLine(origin, isSilent, "DCCSendError", "Unable to start dcc send with " + target + " - unable to create listen socket");
+                            sendLine(origin, isSilent, "DCCSendError",
+                                    "Unable to start dcc send with " + target
+                                    + " - unable to create listen socket");
                         }
                     }
                 }
@@ -184,43 +220,25 @@ public final class DCCCommand extends ServerCommand implements IntelligentComman
         dccThread.start();
     }
 
-    /**
-     * Returns this command's name.
-     *
-     * @return The name of this command
-     */
+    /** {@inheritDoc} */
     @Override
     public String getName() {
         return "dcc";
     }
 
-    /**
-     * Returns whether or not this command should be shown in help messages.
-     *
-     * @return True iff the command should be shown, false otherwise
-     */
+    /** {@inheritDoc} */
     @Override
     public boolean showInHelp() {
         return true;
     }
 
-    /**
-     * Returns a string representing the help message for this command.
-     *
-     * @return the help message for this command
-     */
+    /** {@inheritDoc} */
     @Override
     public String getHelp() {
-        return "dcc - Allows DCC";
+        return "dcc <SEND|CHAT> <target> [params] - Allows DCC";
     }
 
-    /**
-     * Returns a list of suggestions for the specified argument, given the list
-     * of previous arguments.
-     * @param arg The argument that is being completed
-     * @param previousArgs The contents of the previous arguments, if any
-     * @return A list of suggestions for the argument
-     */
+    /** {@inheritDoc} */
     @Override
     public AdditionalTabTargets getSuggestions(final int arg, final List<String> previousArgs) {
         final AdditionalTabTargets res = new AdditionalTabTargets();
