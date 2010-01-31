@@ -23,28 +23,30 @@
 package com.dmdirc.addons.ui_swing.dialogs.about;
 
 import com.dmdirc.addons.ui_swing.UIUtilities;
-import com.dmdirc.addons.ui_swing.components.GenericListModel;
-import com.dmdirc.addons.ui_swing.components.ListScroller;
+import com.dmdirc.addons.ui_swing.components.TreeScroller;
+import com.dmdirc.plugins.PluginInfo;
 
 import java.awt.Font;
+import java.awt.Rectangle;
 
 import javax.swing.JEditorPane;
-import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.ListSelectionModel;
+import javax.swing.JTree;
 import javax.swing.UIManager;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
 import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
 
 import net.miginfocom.swing.MigLayout;
 
 /**
  * Licences panel.
  */
-public final class LicencesPanel extends JPanel implements ListSelectionListener {
+public final class LicencesPanel extends JPanel implements TreeSelectionListener {
 
     /**
      * A version number for this class. It should be changed whenever the class
@@ -55,11 +57,11 @@ public final class LicencesPanel extends JPanel implements ListSelectionListener
     /** Licence scroll pane. */
     private JScrollPane scrollPane;
     /** Licence list model */
-    private GenericListModel<Licence> listModel;
+    private DefaultTreeModel listModel;
     /** Licence textpane. */
     private JEditorPane licence;
     /** Licence list. */
-    private JList list;
+    private JTree list;
     /** Selected index. */
     private int selectedIndex;
 
@@ -70,15 +72,13 @@ public final class LicencesPanel extends JPanel implements ListSelectionListener
         initComponents();
         addListeners();
         layoutComponents();
-
-        list.setSelectedIndex(0);
     }
 
     /**
      * Adds the listeners to the components.
      */
     private void addListeners() {
-        list.addListSelectionListener(this);
+        list.addTreeSelectionListener(this);
     }
 
     /**
@@ -93,11 +93,27 @@ public final class LicencesPanel extends JPanel implements ListSelectionListener
     /** Initialises the components. */
     private void initComponents() {
         setOpaque(UIUtilities.getTabbedPaneOpaque());
-        listModel = new GenericListModel<Licence>();
-        list = new JList(listModel);
-        list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        new ListScroller(list);
-        new LicenceLoader(listModel).execute();
+        listModel = new DefaultTreeModel(new DefaultMutableTreeNode());
+        list = new JTree(listModel) {
+
+            /**
+             * A version number for this class. It should be changed whenever the class
+             * structure is changed (or anything else that would prevent serialized
+             * objects being unserialized with the new class).
+             */
+            private static final long serialVersionUID = 1;
+
+            /** {@inheritDoc} */
+            @Override
+            public void scrollRectToVisible(final Rectangle aRect) {
+                final Rectangle rect = new Rectangle(0, aRect.y, aRect.width,
+                        aRect.height);
+                super.scrollRectToVisible(rect);
+            }
+        };
+        list.setRootVisible(false);
+        new TreeScroller(list);
+        new LicenceLoader(list, listModel).execute();
         licence = new JEditorPane();
         licence.setEditorKit(new HTMLEditorKit());
         final Font font = UIManager.getFont("Label.font");
@@ -110,15 +126,22 @@ public final class LicencesPanel extends JPanel implements ListSelectionListener
 
     /** {@inheritDoc} */
     @Override
-    public void valueChanged(final ListSelectionEvent e) {
-        if (!e.getValueIsAdjusting()) {
-            if (list.getSelectedIndex() == -1) {
-                list.setSelectedIndex(selectedIndex);
-            } else {
-                licence.setText(listModel.get(list.getSelectedIndex()).getBody());
-                UIUtilities.resetScrollPane(scrollPane);
-            }
-            selectedIndex = list.getSelectedIndex();
+    public void valueChanged(final TreeSelectionEvent e) {
+        list.scrollPathToVisible(e.getPath());
+        final Object userObject = ((DefaultMutableTreeNode) e.getPath().
+                getLastPathComponent()).getUserObject();
+        if (userObject instanceof Licence) {
+        licence.setText(((Licence) userObject).getBody());
+        } else if (userObject instanceof PluginInfo) {
+            final PluginInfo pi = (PluginInfo) userObject;
+            licence.setText("Name: " + pi.getNiceName() + "<br>"
+                    + "Description: " + pi.getDescription() + "<br>"
+                    + "Author: " + pi.getAuthor() + "<br>"
+                    + "Version: " + pi.getFriendlyVersion());
+        } else {
+            licence.setText("Name: DMDirc<br>"
+                    + "Desciption: The intelligent IRC client");
         }
+        UIUtilities.resetScrollPane(scrollPane);
     }
 }
