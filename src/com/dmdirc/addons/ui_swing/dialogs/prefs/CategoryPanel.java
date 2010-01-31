@@ -174,7 +174,11 @@ public class CategoryPanel extends JPanel {
                 /** {@inheritDoc} */
                 @Override
                 public void run() {
-                    scrollPane.setViewportView(panels.get(category));
+                    final JPanel panel = panels.get(category);
+                    scrollPane.setViewportView(panel);
+                    //Hack around mig bug
+                    panel.invalidate();
+                    panel.validate();
                     if (category == null) {
                         title.setText("Preferences");
                     } else {
