@@ -28,6 +28,7 @@ import com.dmdirc.logger.ErrorListener;
 import com.dmdirc.logger.ErrorManager;
 import com.dmdirc.logger.ErrorReportStatus;
 import com.dmdirc.logger.ProgramError;
+import java.util.Collections;
 
 import java.util.List;
 
@@ -61,7 +62,7 @@ public final class ErrorTableModel extends AbstractTableModel implements
     public ErrorTableModel(final List<ProgramError> errors) {
         super();
 
-        this.errors = errors;
+        this.errors = Collections.synchronizedList(errors);
 
         ErrorManager.getErrorManager().addErrorListener(this);
     }
