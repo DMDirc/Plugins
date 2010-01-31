@@ -176,8 +176,13 @@ public class Twitter implements Parser, TwitterErrorHandler, TwitterRawHandler, 
      * @param myPlugin Plugin that created this parser
      */
     protected Twitter(final MyInfo myInfo, final URI address, final TwitterPlugin myPlugin) {
-        final String[] bits = address.getUserInfo().split(":");
-        this.myUsername = bits[0];
+        final String[] bits;
+        if (address.getUserInfo() == null) {
+            bits = new String[]{};
+        } else {
+            bits = address.getUserInfo().split(":");
+        }
+        this.myUsername = bits.length == 0 ? "" : bits[0];
         this.myPassword = (bits.length > 1) ? bits[1] : "";
 
         this.myPlugin = myPlugin;
@@ -871,6 +876,12 @@ public class Twitter implements Parser, TwitterErrorHandler, TwitterRawHandler, 
     @Override
     public void run() {
         resetState();
+
+        if (myUsername.isEmpty()) {
+            sendPrivateNotice("Unable to connect to "+myServerName+" without a username. Disconnecting.");
+            getCallbackManager().getCallbackType(SocketCloseListener.class).call();
+            return;
+        }
 
         // Get the consumerKey and consumerSecret for this server if known
         // else default to our twitter key and secret
