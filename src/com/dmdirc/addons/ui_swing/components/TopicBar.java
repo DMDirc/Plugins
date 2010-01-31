@@ -29,6 +29,7 @@ import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.actions.NoNewlinesPasteAction;
 import com.dmdirc.addons.ui_swing.components.frames.ChannelFrame;
+import com.dmdirc.addons.ui_swing.components.text.WrapEditorKit;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.interfaces.TopicChangeListener;
@@ -54,22 +55,10 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
-import javax.swing.text.AbstractDocument;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.BoxView;
-import javax.swing.text.ComponentView;
 import javax.swing.text.DefaultStyledDocument;
-import javax.swing.text.Element;
-import javax.swing.text.GlyphView;
-import javax.swing.text.IconView;
-import javax.swing.text.LabelView;
-import javax.swing.text.ParagraphView;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
-import javax.swing.text.StyledEditorKit;
-import javax.swing.text.View;
-import javax.swing.text.ViewFactory;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -526,139 +515,6 @@ public class TopicBar extends JComponent implements ActionListener,
     @Override
     public void changedUpdate(final DocumentEvent e) {
         validateTopic();
-    }
-}
-
-/**
- * @author Stanislav Lapitsky
- * @version 1.0
- */
-class WrapEditorKit extends StyledEditorKit {
-
-    private static final long serialVersionUID = 1;
-    private ViewFactory defaultFactory = new WrapColumnFactory();
-
-    /** {@inheritDoc} */
-    @Override
-    public ViewFactory getViewFactory() {
-        return defaultFactory;
-    }
-}
-
-/**
- * @author Stanislav Lapitsky
- * @version 1.0
- */
-class WrapColumnFactory implements ViewFactory {
-
-    /** {@inheritDoc} */
-    @Override
-    public View create(final Element elem) {
-        String kind = elem.getName();
-        if (kind != null) {
-            if (kind.equals(AbstractDocument.ContentElementName)) {
-                return new WrapLabelView(elem);
-            } else if (kind.equals(AbstractDocument.ParagraphElementName)) {
-                return new NoWrapParagraphView(elem);
-            } else if (kind.equals(AbstractDocument.SectionElementName)) {
-                return new BoxView(elem, View.Y_AXIS);
-            } else if (kind.equals(StyleConstants.ComponentElementName)) {
-                return new ComponentView(elem);
-            } else if (kind.equals(StyleConstants.IconElementName)) {
-                return new IconView(elem);
-            }
-        }
-
-        // default to text display
-        return new LabelView(elem);
-    }
-}
-
-/**
- * @author Stanislav Lapitsky
- * @version 1.0
- */
-class NoWrapParagraphView extends ParagraphView {
-
-    /**
-     * Creates a new no wrap paragraph view.
-     *
-     * @param elem Element to view
-     */
-    public NoWrapParagraphView(final Element elem) {
-        super(elem);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void layout(final int width, final int height) {
-        super.layout(Short.MAX_VALUE, height);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public float getMinimumSpan(final int axis) {
-        return super.getPreferredSpan(axis);
-    }
-}
-
-/**
- * @author Stanislav Lapitsky
- * @version 1.0
- */
-class WrapLabelView extends LabelView {
-
-    /**
-     * Creates a new wrap label view.
-     *
-     * @param elem Element to view
-     */
-    public WrapLabelView(final Element elem) {
-        super(elem);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public int getBreakWeight(final int axis, final float pos, final float len) {
-        if (axis == View.X_AXIS) {
-            checkPainter();
-            int p0 = getStartOffset();
-            int p1 = getGlyphPainter().getBoundedPosition(this, p0, pos, len);
-            if (p1 == p0) {
-                // can't even fit a single character
-                return View.BadBreakWeight;
-            }
-            try {
-                //if the view contains line break char return forced break
-                if (getDocument().getText(p0, p1 - p0).indexOf("\r") >= 0) {
-                    return View.ForcedBreakWeight;
-                }
-            } catch (BadLocationException ex) {
-                //should never happen
-            }
-        }
-        return super.getBreakWeight(axis, pos, len);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public View breakView(final int axis, final int p0, final float pos,
-            final float len) {
-        if (axis == View.X_AXIS) {
-            checkPainter();
-            int p1 = getGlyphPainter().getBoundedPosition(this, p0, pos, len);
-            try {
-                //if the view contains line break char break the view
-                int index = getDocument().getText(p0, p1 - p0).indexOf("\r");
-                if (index >= 0) {
-                    GlyphView v = (GlyphView) createFragment(p0, p0 + index + 1);
-                    return v;
-                }
-            } catch (BadLocationException ex) {
-                //should never happen
-            }
-        }
-        return super.breakView(axis, p0, pos, len);
     }
 }
        
