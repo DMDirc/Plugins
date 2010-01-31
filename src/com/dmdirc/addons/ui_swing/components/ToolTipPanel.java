@@ -39,6 +39,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -104,7 +105,7 @@ public class ToolTipPanel extends JPanel implements MouseListener {
             icon.setVisible(true);
             tooltip.setText(warning);
         }
-        tooltip.getDocument().setParagraphAttributes(0, tooltip.getDocument().
+        ((StyledDocument) tooltip.getDocument()).setParagraphAttributes(0, tooltip.getDocument().
                 getLength(), sas, true);
     }
 
@@ -126,7 +127,7 @@ public class ToolTipPanel extends JPanel implements MouseListener {
         icon.setVisible(false);
         SimpleAttributeSet sas = new SimpleAttributeSet();
         StyleConstants.setItalic(sas, false);
-        tooltip.getDocument().setParagraphAttributes(0, text.length(), sas, true);
+        ((StyledDocument) tooltip.getDocument()).setParagraphAttributes(0, text.length(), sas, true);
     }
 
     /**
@@ -159,7 +160,9 @@ public class ToolTipPanel extends JPanel implements MouseListener {
     @SuppressWarnings("unchecked")
     public void registerTooltipHandler(final JComponent component,
             final String tooltipText) {
-        tooltips.put(component, tooltipText);
+        final String newTooltip =  "<html>" + tooltipText +
+                "<img src=\"dmdirc://com/dmdirc/res/logo.png\"></html";
+        tooltips.put(component, newTooltip);
         if (component instanceof JXLayer) {
             final LayerUI<JComponent> layerUI = new AbstractLayerUI<JComponent>() {
 

@@ -29,7 +29,6 @@ import com.dmdirc.addons.ui_swing.components.TitlePanel;
 import com.dmdirc.addons.ui_swing.components.ToolTipPanel;
 import com.dmdirc.config.prefs.PreferencesCategory;
 
-import java.awt.Color;
 import java.awt.Window;
 import java.util.Collections;
 import java.util.HashMap;
