@@ -34,26 +34,27 @@ import com.dmdirc.addons.ui_swing.components.ImageButton;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 
 import java.awt.Component;
+import java.awt.Dialog;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.swing.JButton;
-import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.text.JTextComponent;
 
 import org.fest.swing.core.matcher.JButtonMatcher;
 import org.fest.swing.core.matcher.JLabelMatcher;
+import org.fest.swing.edt.GuiActionRunner;
+import org.fest.swing.edt.GuiQuery;
 import org.fest.swing.fixture.DialogFixture;
 import org.fest.swing.fixture.JLabelFixture;
 import org.fest.swing.fixture.JPanelFixture;
+import org.fest.swing.junit.testcase.FestSwingJUnitTestCase;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-public class ActionEditorDialogTest {
+public class ActionEditorDialogTest extends FestSwingJUnitTestCase {
 
     private DialogFixture window;
 
@@ -66,14 +67,16 @@ public class ActionEditorDialogTest {
     }
 
     @Before
-    public void setUp() throws InvalidIdentityFileException {
+    @Override
+    public void onSetUp() {
         if (!ActionManager.getGroups().containsKey("amd-ui-test1")) {
             ActionManager.makeGroup("amd-ui-test1");
         }
     }
 
     @After
-    public void tearDown() {
+    @Override
+    public void onTearDown() {
         if (window != null) {
             window.cleanUp();
         }
@@ -313,9 +316,16 @@ public class ActionEditorDialogTest {
     }
 
     protected void setupWindow(final Action action) {
-        window = new DialogFixture(ActionEditorDialog.getActionEditorDialog(null,
-                "amd-ui-test1", action));
-        window.robot.settings().eventPostingDelay(250);
+        final Dialog d = GuiActionRunner.execute(new GuiQuery<Dialog>() {
+            @Override
+            protected Dialog executeInEDT() throws Throwable {
+                return ActionEditorDialog.getActionEditorDialog(null,
+                        "amd-ui-test1", action);
+            }
+        });
+        robot().waitForIdle();
+
+        window = new DialogFixture(robot(), d);
         window.show();
     }
 
