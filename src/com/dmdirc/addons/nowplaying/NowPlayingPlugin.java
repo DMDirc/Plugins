@@ -38,7 +38,6 @@ import com.dmdirc.plugins.PluginManager;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.regex.Matcher;
 
 /**
  * Plugin that allows users to advertise what they're currently playing or
