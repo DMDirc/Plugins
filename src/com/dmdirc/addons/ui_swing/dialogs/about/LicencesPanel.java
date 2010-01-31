@@ -28,6 +28,7 @@ import com.dmdirc.plugins.PluginInfo;
 
 import java.awt.Font;
 import java.awt.Rectangle;
+import javax.swing.BorderFactory;
 
 import javax.swing.JEditorPane;
 import javax.swing.JPanel;
@@ -40,6 +41,7 @@ import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import net.miginfocom.layout.PlatformDefaults;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -62,8 +64,6 @@ public final class LicencesPanel extends JPanel implements TreeSelectionListener
     private JEditorPane licence;
     /** Licence list. */
     private JTree list;
-    /** Selected index. */
-    private int selectedIndex;
 
     /** Creates a new instance of LicencesPanel. */
     public LicencesPanel() {
@@ -111,7 +111,14 @@ public final class LicencesPanel extends JPanel implements TreeSelectionListener
                 super.scrollRectToVisible(rect);
             }
         };
+        list.setBorder(BorderFactory.createEmptyBorder(
+                (int) PlatformDefaults.getUnitValueX("related").getValue(),
+                (int) PlatformDefaults.getUnitValueX("related").getValue(),
+                (int) PlatformDefaults.getUnitValueX("related").getValue(),
+                (int) PlatformDefaults.getUnitValueX("related").getValue()));
+        list.setCellRenderer(new LicenceRenderer());
         list.setRootVisible(false);
+        list.setOpaque(false);
         new TreeScroller(list);
         new LicenceLoader(list, listModel).execute();
         licence = new JEditorPane();
