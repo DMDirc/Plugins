@@ -137,7 +137,8 @@ public class OsdManager {
         for (OsdWindow otherWindow : newList.subList(closedIndex, newList.size())) {
             final int currentY = otherWindow.getDesiredY();
 
-            if ("down".equals(policy) || "up".equals(policy)) {
+            if (OsdPolicies.valueOf(policy) == OsdPolicies.DOWN
+                    || OsdPolicies.valueOf(policy) == OsdPolicies.UP) {
                 otherWindow.setDesiredLocation(otherWindow.getDesiredX(), oldY);
                 oldY = currentY;
             }
@@ -191,21 +192,23 @@ public class OsdManager {
         int y = IdentityManager.getGlobalConfig().getOptionInt(plugin.getDomain(),
                 "locationY");
 
-        if ("down".equals(policy)) {
+        
+
+        if (OsdPolicies.valueOf(policy) == OsdPolicies.DOWN) {
             // Place our new window below old windows
             for (OsdWindow window : getWindowList()) {
                 if (window.isVisible()) {
                     y = Math.max(y, window.getY() + window.getHeight() + WINDOW_GAP);
                 }
             }
-        } else if ("up".equals(policy)) {
+        } else if (OsdPolicies.valueOf(policy) == OsdPolicies.UP) {
             // Place our new window above old windows
             for (OsdWindow window : getWindowList()) {
                 if (window.isVisible()) {
                     y = Math.min(y, window.getY() - window.getHeight() - WINDOW_GAP);
                 }
             }
-        } else if ("close".equals(policy)) {
+        } else if (OsdPolicies.valueOf(policy) == OsdPolicies.CLOSE) {
             // Close existing windows and use their place
             closeAll();
         }
