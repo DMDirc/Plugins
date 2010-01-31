@@ -29,8 +29,10 @@ import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.actions.interfaces.ActionType;
 import com.dmdirc.addons.dcc.kde.KFileChooser;
 import com.dmdirc.addons.dcc.actions.DCCActions;
+import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
+import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
 import com.dmdirc.commandparser.CommandManager;
 import com.dmdirc.config.Identity;
 import com.dmdirc.config.IdentityManager;
@@ -46,6 +48,7 @@ import com.dmdirc.parser.interfaces.ClientInfo;
 import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.plugins.Plugin;
 import com.dmdirc.ui.WindowManager;
+import java.awt.Dialog.ModalityType;
 
 import java.io.File;
 import java.io.IOException;
@@ -427,8 +430,7 @@ public final class DCCPlugin extends Plugin implements ActionListener {
      * Create the container window.
      */
     protected void createContainer() {
-        container = new DCCFrame(this, "DCCs", "dcc") {
-        };
+        container = new PlaceholderDCCFrame(this);
         final TextLabel label = new TextLabel("This is a placeholder window to group DCCs together.");
         label.setText(label.getText() + "\n\nClosing this window will close all the active DCCs");
         ((TextFrame) container.getFrame()).getContentPane().add(label);
@@ -608,5 +610,49 @@ public final class DCCPlugin extends Plugin implements ActionListener {
                 "sometimes speed up transfers."));
     }
 
+}
+
+/**
+ * Creates a placeholder DCC Frame.
+ */
+class PlaceholderDCCFrame extends DCCFrame {
+
+    /**
+     * Creates a placeholder dcc frame.
+     *
+     * @param plugin Parent plugin
+     */
+    public PlaceholderDCCFrame(final DCCPlugin plugin) {
+        super(plugin, "DCCs", "dcc");
+    }
+
+    @Override
+    public void close() {
+        new StandardQuestionDialog(
+                (MainFrame) Main.getUI().getMainWindow(),
+                ModalityType.MODELESS, "Close confirmation",
+                "Closing this window will cause all existing DCCs " +
+                "to terminate, are you sure you want to do this?") {
+            
+            /**
+             * A version number for this class. It should be changed whenever the class
+             * structure is changed (or anything else that would prevent serialized
+             * objects being unserialized with the new class).
+             */
+            private static final long serialVersionUID = 1;
+
+            /** {@inheritDoc} */
+            @Override
+            public boolean save() {
+                PlaceholderDCCFrame.super.close();
+                return true;
+            }
+
+            /** {@inheritDoc} */
+            @Override
+            public void cancelled() {
+            }
+       }.display();
+    }
 }
 
