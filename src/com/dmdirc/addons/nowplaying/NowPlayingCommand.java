@@ -74,8 +74,9 @@ public final class NowPlayingCommand extends ChatCommand implements IntelligentC
                     sendLine(origin, isSilent, FORMAT_ERROR, "Source not found.");
                 } else {
                     if (source.getState() != MediaSourceState.CLOSED) {
+                        final String format = args.getArgumentsAsString(2);
                         target.getFrame().getCommandParser().parseCommand(origin,
-                                getInformation(source));
+                                getInformation(source, format));
                     } else {
                         sendLine(origin, isSilent, FORMAT_ERROR, "Source is not running.");
                     }
@@ -86,8 +87,9 @@ public final class NowPlayingCommand extends ChatCommand implements IntelligentC
             }
         } else {
             if (parent.hasRunningSource()) {
-                target.getFrame().getCommandParser().parseCommand(origin,
-                        getInformation(parent.getBestSource()));
+                final String format = args.getArgumentsAsString(0);
+                    target.getFrame().getCommandParser().parseCommand(origin,
+                            getInformation(parent.getBestSource(), format));
             } else {
                 sendLine(origin, isSilent, FORMAT_ERROR, "No running media sources available.");
             }
@@ -115,7 +117,7 @@ public final class NowPlayingCommand extends ChatCommand implements IntelligentC
                 
                 if (source.getState() != MediaSourceState.CLOSED) {
                     data[i][1] = source.getState().getNiceName().toLowerCase();
-                    data[i][2] = getInformation(source);
+                    data[i][2] = getInformation(source, "");
                 } else {
                     data[i][1] = "not running";
                     data[i][2] = "-";
@@ -132,12 +134,18 @@ public final class NowPlayingCommand extends ChatCommand implements IntelligentC
      * Returns a formatted information string from the requested soruce.
      *
      * @param source MediaSource to query
+     * @param format Format to use
      *
      * @return Formatted information string
-     */ 
-    private String getInformation(final MediaSource source) {
-        return parent.doSubstitution(IdentityManager.getGlobalConfig()
-                .getOption(parent.getDomain(), "format"), source);
+     * @since 0.6.3
+     */
+    private String getInformation(final MediaSource source, final String format) {
+        if (format.isEmpty()) {
+            return parent.doSubstitution(IdentityManager.getGlobalConfig()
+                    .getOption(parent.getDomain(), "format"), source);
+        } else {
+            return parent.doSubstitution(format, source);
+        }
     }
     
     /** {@inheritDoc}. */
