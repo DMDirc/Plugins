@@ -44,8 +44,6 @@ public class OsdManager {
     private final List<OsdWindow> windowList = new ArrayList<OsdWindow>();
     /** List of messages to be queued. */
     private final Queue<String> windowQueue = new LinkedList<String>();
-    /** The spacing between the windows. */
-    private static final int WINDOW_GAP = 5;
 
     /**
      * Create a new OSD Manager.
@@ -92,6 +90,10 @@ public class OsdManager {
      * @param message Text to display in the OSD window.
      */
     private synchronized void displayWindow(final String message) {
+        final String policy = IdentityManager.getGlobalConfig().getOption(
+                plugin.getDomain(), "newbehaviour").toUpperCase();
+        final int startY = IdentityManager.getGlobalConfig().getOptionInt(
+                plugin.getDomain(), "locationY");
         windowList.add(UIUtilities.invokeAndWait(
                 new ReturnableThread<OsdWindow>() {
 
@@ -100,7 +102,8 @@ public class OsdManager {
             public void run() {
                 setObject(new OsdWindow(message, false,
                         IdentityManager.getGlobalConfig().getOptionInt(
-                        plugin.getDomain(), "locationX"), getYPosition(),
+                        plugin.getDomain(), "locationX"), OsdPolicies.
+                        valueOf(policy).getYPosition(OsdManager.this, startY),
                         plugin, OsdManager.this));
             }
         }));
@@ -114,7 +117,7 @@ public class OsdManager {
      */
     public synchronized void closeWindow(final OsdWindow window) {
         final String policy = IdentityManager.getGlobalConfig().getOption(
-                plugin.getDomain(), "newbehaviour");
+                plugin.getDomain(), "newbehaviour").toUpperCase();
 
         int oldY = window.getDesiredY();
         final int closedIndex = windowList.indexOf(window);
@@ -136,13 +139,11 @@ public class OsdManager {
         final List<OsdWindow> newList = getWindowList();
         for (OsdWindow otherWindow : newList.subList(closedIndex, newList.size())) {
             final int currentY = otherWindow.getDesiredY();
-
-            if ("down".equals(policy) || "up".equals(policy)) {
+            if (OsdPolicies.valueOf(policy).changesPosition()) {
                 otherWindow.setDesiredLocation(otherWindow.getDesiredX(), oldY);
                 oldY = currentY;
             }
         }
-
         displayWindows();
     }
 
@@ -171,45 +172,5 @@ public class OsdManager {
      */
     public int getWindowCount() {
         return windowList.size();
-    }
-
-    /**
-     * Get the Y position for the next window.
-     * <p>
-     * In order to ensure that windows are displayed at the correct position,
-     * the calling party MUST ensure that the window list is not altered between
-     * this method's invocation and the time at which the window is displayed.
-     * If the window list is altered, multiple windows may appear on top of
-     * each other instead of stacking correctly, or there may be gaps in up/down
-     * policy layouts.
-     *
-     * @return the Y position for the next window.
-     */
-    private int getYPosition() {
-        final String policy = IdentityManager.getGlobalConfig().getOption(
-                plugin.getDomain(), "newbehaviour");
-        int y = IdentityManager.getGlobalConfig().getOptionInt(plugin.getDomain(),
-                "locationY");
-
-        if ("down".equals(policy)) {
-            // Place our new window below old windows
-            for (OsdWindow window : getWindowList()) {
-                if (window.isVisible()) {
-                    y = Math.max(y, window.getY() + window.getHeight() + WINDOW_GAP);
-                }
-            }
-        } else if ("up".equals(policy)) {
-            // Place our new window above old windows
-            for (OsdWindow window : getWindowList()) {
-                if (window.isVisible()) {
-                    y = Math.min(y, window.getY() - window.getHeight() - WINDOW_GAP);
-                }
-            }
-        } else if ("close".equals(policy)) {
-            // Close existing windows and use their place
-            closeAll();
-        }
-
-        return y;
     }
 }
