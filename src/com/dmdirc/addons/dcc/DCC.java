@@ -195,12 +195,8 @@ public abstract class DCC implements Runnable {
                 }
             }
 
-            // Sleep for a short period of time to reduce CPU usage.
-            try {
-                Thread.yield();
-                Thread.sleep(100);
-            } catch (InterruptedException ie) {
-            }
+            // Yield to reduce CPU usage.
+            Thread.yield();
         }
         // Socket closed
 
