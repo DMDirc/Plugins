@@ -49,8 +49,8 @@ import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.plugins.Plugin;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.interfaces.Window;
-import java.awt.Dialog.ModalityType;
 
+import java.awt.Dialog.ModalityType;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -546,8 +546,13 @@ public final class DCCPlugin extends Plugin implements ActionListener {
     public String getListenIP(final Parser parser) {
         final String configIP = IdentityManager.getGlobalConfig().getOption(getDomain(), "firewall.ip");
         if (!configIP.isEmpty()) {
-            return configIP;
-        } else if (parser != null) {
+            try {
+                return InetAddress.getByName(configIP).getHostAddress();
+            } catch (UnknownHostException ex) {
+                //Fallthrough
+            }
+        }
+        if (parser != null) {
             final String myHost = parser.getLocalClient().getHostname();
             if (!myHost.isEmpty()) {
                 try {
