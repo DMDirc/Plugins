@@ -228,9 +228,9 @@ public class PrefsCategoryLoader extends SwingWorker<JPanel, Object> {
      */
     private String getTooltipText(final PreferencesSetting setting) {
         if (setting.isRestartNeeded()) {
-            return "<html>" + setting.getHelptext() + "<br><img src=\"" +
-                "dmdirc://com/dmdirc/res/restart-needed.png\">Restart needed " +
-                "if changed</html>";
+            return "<html>" + setting.getHelptext() + "<br>" +
+                    "<img src=\"dmdirc://com/dmdirc/res/restart-needed.png\">" +
+                    "Restart needed if changed</html>";
         }
         return setting.getHelptext();
 
