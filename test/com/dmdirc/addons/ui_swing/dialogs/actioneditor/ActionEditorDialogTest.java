@@ -113,12 +113,17 @@ public class ActionEditorDialogTest extends FestSwingJUnitTestCase {
 
         window.panel(new ClassFinder<ActionNamePanel>(ActionNamePanel.class, null)).
                 textBox().enterText("test1");
+        robot().waitForIdle();
+
         final JPanelFixture triggers = window.panel(
                 new ClassFinder<ActionTriggersPanel>(ActionTriggersPanel.class, null));
 
         triggers.comboBox().selectItem("Client closed");
+        robot().waitForIdle();
+        
         triggers.button(JButtonMatcher.withText("Add")).requireEnabled().
                 click();
+        robot().waitForIdle();
 
         window.panel(new ClassFinder<ActionConditionsPanel>(ActionConditionsPanel.class, null)).
                 button(JButtonMatcher.withText("Add")).requireDisabled();
@@ -134,11 +139,14 @@ public class ActionEditorDialogTest extends FestSwingJUnitTestCase {
 
         window.panel(new ClassFinder<ActionNamePanel>(ActionNamePanel.class, null)).
                 textBox().enterText("test1");
+        robot().waitForIdle();
 
         final int items = triggers.comboBox().target.getItemCount();
         triggers.comboBox().requireEnabled().selectItem("Channel message received");
-        triggers.button(JButtonMatcher.withText("Add")).requireEnabled().
-                click();
+        robot().waitForIdle();
+
+        triggers.button(JButtonMatcher.withText("Add")).requireEnabled().click();
+        robot().waitForIdle();
 
         final JLabelFixture label =
                 triggers.label(JLabelMatcher.withText("Channel message received"));
@@ -149,14 +157,18 @@ public class ActionEditorDialogTest extends FestSwingJUnitTestCase {
 
         window.panel(new ClassFinder<ActionNamePanel>(ActionNamePanel.class, null)).
                 textBox().deleteText();
+        robot().waitForIdle();
+
         triggers.button(new ClassFinder<ImageButton>(ImageButton.class, null)).
                 requireDisabled();
         triggers.comboBox().requireDisabled();
         window.panel(new ClassFinder<ActionNamePanel>(ActionNamePanel.class, null)).
                 textBox().enterText("test1");
+        robot().waitForIdle();
 
         triggers.button(new ClassFinder<ImageButton>(ImageButton.class, null)).
                 requireEnabled().click();
+        robot().waitForIdle();
 
         for (Component comp : triggers.panel(new ClassFinder<ActionTriggersListPanel>(ActionTriggersListPanel.class,
                 null)).target.getComponents()) {
@@ -173,12 +185,16 @@ public class ActionEditorDialogTest extends FestSwingJUnitTestCase {
 
         window.panel(new ClassFinder<ActionNamePanel>(ActionNamePanel.class, null)).
                 textBox().enterText("test1");
+        robot().waitForIdle();
+
         final JPanelFixture triggers = window.panel(
                 new ClassFinder<ActionTriggersPanel>(ActionTriggersPanel.class, null));
 
         triggers.comboBox().selectItem("Channel message received");
+        robot().waitForIdle();
         triggers.button(JButtonMatcher.withText("Add")).requireEnabled().
                 click();
+        robot().waitForIdle();
 
         window.radioButton(new JRadioButtonByTextMatcher("All of the conditions are true")).
                 requireEnabled().requireSelected();
@@ -194,9 +210,11 @@ public class ActionEditorDialogTest extends FestSwingJUnitTestCase {
 
         window.radioButton(new JRadioButtonByTextMatcher("The conditions match a custom rule")).
                 click().requireSelected();
+        robot().waitForIdle();
         window.panel(new ClassFinder<ActionConditionsTreePanel>(ActionConditionsTreePanel.class,
                 null)).textBox(new ClassFinder<JTextField>(JTextField.class,
                 null)).requireEnabled().enterText("invalid");
+        robot().waitForIdle();
 
         window.button(JButtonMatcher.withText("OK")).requireDisabled();
     }
@@ -207,16 +225,20 @@ public class ActionEditorDialogTest extends FestSwingJUnitTestCase {
 
         window.panel(new ClassFinder<ActionNamePanel>(ActionNamePanel.class, null)).
                 textBox().enterText("test1");
+        robot().waitForIdle();
         final JPanelFixture triggers = window.panel(
                 new ClassFinder<ActionTriggersPanel>(ActionTriggersPanel.class, null));
 
         triggers.comboBox().selectItem("Channel message received");
+        robot().waitForIdle();
         triggers.button(JButtonMatcher.withText("Add")).requireEnabled().
                 click();
+        robot().waitForIdle();
 
         window.panel(new ClassFinder<ActionConditionsPanel>(ActionConditionsPanel.class, null)).
                 button(JButtonMatcher.withText("Add")).requireEnabled().
                 click();
+        robot().waitForIdle();
         
         Pattern pattern = Pattern.compile(".+<body>(.+)</body>.+", Pattern.DOTALL);
         
@@ -228,6 +250,7 @@ public class ActionEditorDialogTest extends FestSwingJUnitTestCase {
 
         window.panel(new ClassFinder<ActionConditionEditorPanel>(ActionConditionEditorPanel.class,
                 null)).comboBox("argument").selectItem("message");
+        robot().waitForIdle();
         
         matcher = pattern.matcher(window.panel(new ClassFinder<ActionConditionDisplayPanel>(ActionConditionDisplayPanel.class,
                 null)).textBox(new ClassFinder<TextLabel>(TextLabel.class,
@@ -237,6 +260,7 @@ public class ActionEditorDialogTest extends FestSwingJUnitTestCase {
 
         window.panel(new ClassFinder<ActionConditionEditorPanel>(ActionConditionEditorPanel.class,
                 null)).comboBox("component").selectItem("content");
+        robot().waitForIdle();
         
         matcher = pattern.matcher(window.panel(new ClassFinder<ActionConditionDisplayPanel>(ActionConditionDisplayPanel.class,
                 null)).textBox(new ClassFinder<TextLabel>(TextLabel.class,
@@ -246,6 +270,7 @@ public class ActionEditorDialogTest extends FestSwingJUnitTestCase {
 
         window.panel(new ClassFinder<ActionConditionEditorPanel>(ActionConditionEditorPanel.class,
                 null)).comboBox("comparison").selectItem("contains");
+        robot().waitForIdle();
         
         matcher = pattern.matcher(window.panel(new ClassFinder<ActionConditionDisplayPanel>(ActionConditionDisplayPanel.class,
                 null)).textBox(new ClassFinder<TextLabel>(TextLabel.class,
@@ -255,6 +280,7 @@ public class ActionEditorDialogTest extends FestSwingJUnitTestCase {
 
         window.panel(new ClassFinder<ActionConditionEditorPanel>(ActionConditionEditorPanel.class,
                 null)).textBox().enterText("foo");
+        robot().waitForIdle();
         
         matcher = pattern.matcher(window.panel(new ClassFinder<ActionConditionDisplayPanel>(ActionConditionDisplayPanel.class,
                 null)).textBox(new ClassFinder<TextLabel>(TextLabel.class,
@@ -269,16 +295,20 @@ public class ActionEditorDialogTest extends FestSwingJUnitTestCase {
 
         window.panel(new ClassFinder<ActionNamePanel>(ActionNamePanel.class, null)).
                 textBox().enterText("test1");
+        robot().waitForIdle();
         final JPanelFixture triggers = window.panel(
                 new ClassFinder<ActionTriggersPanel>(ActionTriggersPanel.class, null));
 
         triggers.comboBox().selectItem("Channel message received");
+        robot().waitForIdle();
         triggers.button(JButtonMatcher.withText("Add")).requireEnabled().click();
+        robot().waitForIdle();
 
         window.button(JButtonMatcher.withText("OK")).requireEnabled();
 
         window.panel(new ClassFinder<ActionConditionsPanel>(ActionConditionsPanel.class, null)).
                 button(JButtonMatcher.withText("Add")).requireEnabled().click();
+        robot().waitForIdle();
 
         window.panel(new ClassFinder<ActionConditionEditorPanel>(ActionConditionEditorPanel.class,
                 null)).comboBox("argument").requireEnabled();
@@ -292,6 +322,7 @@ public class ActionEditorDialogTest extends FestSwingJUnitTestCase {
 
         window.panel(new ClassFinder<ActionConditionEditorPanel>(ActionConditionEditorPanel.class,
                 null)).comboBox("argument").selectItem("message");
+        robot().waitForIdle();
         window.panel(new ClassFinder<ActionConditionEditorPanel>(ActionConditionEditorPanel.class,
                 null)).comboBox("component").requireEnabled();
         window.panel(new ClassFinder<ActionConditionEditorPanel>(ActionConditionEditorPanel.class,
@@ -302,6 +333,7 @@ public class ActionEditorDialogTest extends FestSwingJUnitTestCase {
 
         window.panel(new ClassFinder<ActionConditionEditorPanel>(ActionConditionEditorPanel.class,
                 null)).comboBox("component").selectItem("content");
+        robot().waitForIdle();
         window.panel(new ClassFinder<ActionConditionEditorPanel>(ActionConditionEditorPanel.class,
                 null)).comboBox("comparison").requireEnabled();
         window.panel(new ClassFinder<ActionConditionEditorPanel>(ActionConditionEditorPanel.class,
@@ -310,6 +342,7 @@ public class ActionEditorDialogTest extends FestSwingJUnitTestCase {
 
         window.panel(new ClassFinder<ActionConditionEditorPanel>(ActionConditionEditorPanel.class,
                 null)).comboBox("comparison").selectItem("contains");
+        robot().waitForIdle();
         window.panel(new ClassFinder<ActionConditionEditorPanel>(ActionConditionEditorPanel.class,
                 null)).textBox().requireEnabled();
         window.button(JButtonMatcher.withText("OK")).requireEnabled();
