@@ -1,5 +1,4 @@
 /*
- * 
  * Copyright (c) 2006-2010 Chris Smith, Shane Mc Cormack, Gregory Holmes
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -23,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.about;
 
-import com.dmdirc.addons.ui_swing.components.GenericListModel;
 import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
@@ -39,20 +37,28 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
+import javax.swing.JTree;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
+
 /**
  * Background loader of licences into a list.
  */
 public class LicenceLoader extends LoggingSwingWorker<Void, Void> {
 
+    /** Tree. */
+    private JTree tree;
     /** Model to load licences into. */
-    private GenericListModel<Licence> model;
+    private DefaultTreeModel model;
 
     /**
      * Instantiates a new licence loader.
      *
+     * @param tree Tree
      * @param model Model to load licences into
      */
-    public LicenceLoader(final GenericListModel<Licence> model) {
+    public LicenceLoader(final JTree tree, final DefaultTreeModel model) {
+        this.tree = tree;
         this.model = model;
     }
 
@@ -65,39 +71,76 @@ public class LicenceLoader extends LoggingSwingWorker<Void, Void> {
     protected Void doInBackground() throws Exception {
         final ResourceManager rm = ResourceManager.getResourceManager();
         if (rm == null) {
-            Logger.userError(ErrorLevel.LOW, "Unable to load licences, " +
-                    "no resource manager");
+            Logger.userError(ErrorLevel.LOW, "Unable to load licences, "
+                    + "no resource manager");
         } else {
-            final Map<String, InputStream> licences =
-                    new TreeMap<String, InputStream>(String.CASE_INSENSITIVE_ORDER);
-            licences.putAll(rm.getResourcesStartingWithAsInputStreams(
-                    "com/dmdirc/licences/"));
-            for (PluginInfo pi : PluginManager.getPluginManager().getPluginInfos()) {
-                licences.putAll(pi.getLicenceStreams());
-            }
-            for (Entry<String, InputStream> entry : licences.entrySet()) {
-                final String licenceString = entry.getKey().substring(entry.
-                        getKey().
-                        lastIndexOf('/') + 1);
-                if (licenceString.length() > 1) {
-                    final String licenceStringParts[] = licenceString.split(
-                            " - ");
-                    final Licence licence = new Licence(licenceStringParts[1],
-                            licenceStringParts[0], "<html><h1>" +
-                            licenceStringParts[1] + "</h1><p>" + readInputStream(
-                            entry.getValue()).replace("\n", "<br>") +
-                            "</p></html>");
-                    model.add(licence);
-                }
+            addCoreLicences(rm);
+            for (PluginInfo pi :
+                    PluginManager.getPluginManager().getPluginInfos()) {
+                addPluginLicences(pi);
             }
         }
 
         return null;
     }
 
+    private Licence createLicence(final Entry<String, InputStream> entry) {
+        final String licenceString = entry.getKey().substring(entry.getKey().
+                lastIndexOf('/') + 1);
+        if (licenceString.length() > 1) {
+            final String licenceStringParts[] = licenceString.split(
+                    " - ");
+            return new Licence(licenceStringParts[1], licenceStringParts[0],
+                    "<html><h1>" + licenceStringParts[1] + "</h1><p>"
+                    + readInputStream(entry.getValue()).replace("\n", "<br>")
+                    + "</p></html>");
+        } else {
+            return null;
+        }
+    }
+
+    private void addCoreLicences(final ResourceManager rm) {
+        final DefaultMutableTreeNode root = new DefaultMutableTreeNode("DMDirc");
+        final Map<String, InputStream> licences =
+                new TreeMap<String, InputStream>(String.CASE_INSENSITIVE_ORDER);
+        licences.putAll(rm.getResourcesStartingWithAsInputStreams(
+                "com/dmdirc/licences/"));
+        addLicensesToNode(licences, root);
+    }
+
+    private void addPluginLicences(final PluginInfo pi) throws IOException {
+        final Map<String, InputStream> licences = pi.getLicenceStreams();
+
+        if (licences.isEmpty()) {
+            return;
+        }
+
+        final DefaultMutableTreeNode root = new DefaultMutableTreeNode(pi);
+        addLicensesToNode(licences, root);
+    }
+
+    private void addLicensesToNode(final Map<String, InputStream> licences,
+            final DefaultMutableTreeNode root) {
+        model.insertNodeInto(root, (DefaultMutableTreeNode) model.getRoot(),
+                model.getChildCount(model.getRoot()));
+        for (Entry<String, InputStream> entry : licences.entrySet()) {
+            final Licence licence = createLicence(entry);
+            if (licence == null) {
+                continue;
+            }
+            model.insertNodeInto(new DefaultMutableTreeNode(licence), root,
+                    model.getChildCount(root));
+        }
+    }
+
     /** {@inheritDoc} */
     @Override
     protected void done() {
+        model.nodeStructureChanged((DefaultMutableTreeNode) model.getRoot());
+        for (int i = 0; i < tree.getRowCount(); i++) {
+            tree.expandRow(i);
+        }
+        tree.setSelectionRow(0);
         super.done();
     }
 
