@@ -30,6 +30,7 @@ import com.dmdirc.commandparser.CommandManager;
 import com.dmdirc.commandparser.commands.IntelligentCommand;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.ui.input.AdditionalTabTargets;
+import com.dmdirc.ui.input.TabCompleter;
 import com.dmdirc.ui.interfaces.InputWindow;
 
 import java.util.List;
@@ -172,22 +173,27 @@ public final class NowPlayingCommand extends ChatCommand implements IntelligentC
     @Override
     public AdditionalTabTargets getSuggestions(final int arg, 
             final List<String> previousArgs) {
-        final AdditionalTabTargets res = new AdditionalTabTargets();
-        
-        res.excludeAll();
-        
+
         if (arg == 0) {
+            final AdditionalTabTargets res = TabCompleter.
+                    getIntelligentResults(arg, previousArgs, 0);
             res.add("--sources");
             res.add("--source");
+            return res;
         } else if (arg == 1 && previousArgs.get(0).equalsIgnoreCase("--source")) {
+            final AdditionalTabTargets res = new AdditionalTabTargets();
+            res.excludeAll();
             for (MediaSource source : parent.getSources()) {
                 if (source.getState() != MediaSourceState.CLOSED) {
                     res.add(source.getAppName());
                 }
             }
+            return res;
+        } else if (arg > 1 && previousArgs.get(0).equalsIgnoreCase("--source")) {
+            return TabCompleter.getIntelligentResults(arg, previousArgs, 2);
+        } else {
+            return TabCompleter.getIntelligentResults(arg, previousArgs,
+                    previousArgs.get(0).equalsIgnoreCase("--sources") ? 1 : 0);
         }
-        
-        return res;
     }
-    
 }
