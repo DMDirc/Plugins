@@ -285,7 +285,7 @@ public class PrefsCategoryLoader extends SwingWorker<JPanel, Object> {
     private JPanel addCategory(final PreferencesCategory category) {
         final JPanel panel =
                 new NoRemovePanel(new MigLayout("fillx, gap unrel, " +
-                "wrap 2, hidemode 3, wmax 470-" + leftPadding + "-" +
+                "wrap 2, pack, hidemode 3, wmax 470-" + leftPadding + "-" +
                 rightPadding + "-2*" + padding));
         panel.setName(category.getPath());
         final String path = category.getPath();
