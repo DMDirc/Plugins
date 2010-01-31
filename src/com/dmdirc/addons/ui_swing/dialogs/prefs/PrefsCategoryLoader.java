@@ -196,9 +196,11 @@ public class PrefsCategoryLoader extends SwingWorker<JPanel, Object> {
         });
         
         option.setToolTipText(null);
-        categoryPanel.getToolTipPanel().registerTooltipHandler(label);
+        categoryPanel.getToolTipPanel().registerTooltipHandler(label,
+                getTooltipText(setting));
         categoryPanel.getToolTipPanel().registerTooltipHandler(option,
-                setting.getHelptext());
+                getTooltipText(setting));
+
 
         if (option instanceof DurationDisplay) {
             ((DurationDisplay) option).setWindow(categoryPanel.getParentWindow());
@@ -215,6 +217,22 @@ public class PrefsCategoryLoader extends SwingWorker<JPanel, Object> {
             panel.add(label, "align left, wmax 40%");
         }
         panel.add(option, "growx, pushx, w 60%");
+    }
+
+    /**
+     * Returns the tooltip text for a preferences setting.
+     *
+     * @param setting Setting to get text for
+     *
+     * @return Tooltip text for the setting
+     */
+    private String getTooltipText(final PreferencesSetting setting) {
+        if (setting.isRestartNeeded()) {
+            return "<html>" + setting.getHelptext() + " <img src=\"" +
+                "dmdirc://com/dmdirc/res/restart-needed.png\"></html>";
+        }
+        return setting.getHelptext();
+
     }
 
     /**
