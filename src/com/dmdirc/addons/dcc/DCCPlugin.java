@@ -123,7 +123,7 @@ public final class DCCPlugin extends Plugin implements ActionListener {
      * @param sendFilename The name of the file which is being received
      * @param token Token used in reverse dcc.
      */
-    public void saveFile(final String nickname, final DCCSend send, final Parser parser, final boolean reverse, final String sendFilename, final String token) {
+    public void saveFile(final String nickname, final DCCTransfer send, final Parser parser, final boolean reverse, final String sendFilename, final String token) {
         // New thread to ask the user where to save in to stop us locking the UI
         final Thread dccThread = new Thread(new Runnable() {
 
@@ -163,7 +163,7 @@ public final class DCCPlugin extends Plugin implements ActionListener {
                         }
                     }
                     if (reverse && !token.isEmpty()) {
-                        new DCCSendWindow(DCCPlugin.this, send, "*Receive: " + nickname, nickname, null);
+                        new DCCTransferWindow(DCCPlugin.this, send, "*Receive: " + nickname, nickname, null);
                         send.setToken(token);
                         if (resume) {
                             if (IdentityManager.getGlobalConfig().getOptionBool(getDomain(), "receive.reverse.sendtoken")) {
@@ -179,7 +179,7 @@ public final class DCCPlugin extends Plugin implements ActionListener {
                             }
                         }
                     } else {
-                        new DCCSendWindow(DCCPlugin.this, send, "Receive: " + nickname, nickname, null);
+                        new DCCTransferWindow(DCCPlugin.this, send, "Receive: " + nickname, nickname, null);
                         if (resume) {
                             parser.sendCTCP(nickname, "DCC", "RESUME " + sendFilename + " " + send.getPort() + " " + jc.getSelectedFile().length());
                         } else {
@@ -330,7 +330,7 @@ public final class DCCPlugin extends Plugin implements ActionListener {
                         return;
                     }
 
-                    DCCSend send = DCCSend.findByToken(token);
+                    DCCTransfer send = DCCTransfer.findByToken(token);
 
                     if (send == null && !dontAsk) {
                         if (!token.isEmpty() && !port.equals("0")) {
@@ -344,7 +344,7 @@ public final class DCCPlugin extends Plugin implements ActionListener {
                     } else {
                         final boolean newSend = send == null;
                         if (newSend) {
-                            send = new DCCSend(IdentityManager.getGlobalConfig().getOptionInt(getDomain(), "send.blocksize"));
+                            send = new DCCTransfer(IdentityManager.getGlobalConfig().getOptionInt(getDomain(), "send.blocksize"));
                             send.setTurbo(IdentityManager.getGlobalConfig().getOptionBool(getDomain(), "send.forceturbo"));
                         }
                         try {
@@ -392,7 +392,7 @@ public final class DCCPlugin extends Plugin implements ActionListener {
                         final String token = (ctcpData.length - 1 > i) ? " " + ctcpData[++i] : "";
 
                         // Now look for a dcc that matches.
-                        for (DCCSend send : DCCSend.getSends()) {
+                        for (DCCTransfer send : DCCTransfer.getTransfers()) {
                             if (send.port == port && (new File(send.getFileName())).getName().equalsIgnoreCase(filename)) {
                                 if ((!token.isEmpty() && !send.getToken().isEmpty()) && (!token.equals(send.getToken()))) {
                                     continue;
@@ -638,7 +638,7 @@ class PlaceholderDCCFrame extends DCCFrame {
         int dccs = 0;
         for (Window window : windows) {
             if (window instanceof EmptyFrame) {
-                if (((DCCSendWindow)((EmptyFrame) window).getContainer()).getDCC().isActive()) {
+                if (((DCCTransferWindow)((EmptyFrame) window).getContainer()).getDCC().isActive()) {
                     dccs++;
                 }
             } else if (window instanceof DCCChatWindow) {

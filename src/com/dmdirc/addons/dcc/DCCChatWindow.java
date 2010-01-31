@@ -31,7 +31,7 @@ import com.dmdirc.Main;
  *
  * @author Shane 'Dataforce' McCormack
  */
-public class DCCChatWindow extends DCCFrame implements DCCChatInterface {
+public class DCCChatWindow extends DCCFrame implements DCCChatHandler {
 
     /** The DCCChat object we are a window for */
     private final DCCChat dcc;
@@ -51,7 +51,8 @@ public class DCCChatWindow extends DCCFrame implements DCCChatInterface {
      * @param nick My Current Nickname
      * @param targetNick Nickname of target
      */
-    public DCCChatWindow(final DCCPlugin plugin, final DCCChat dcc, final String title, final String nick, final String targetNick) {
+    public DCCChatWindow(final DCCPlugin plugin, final DCCChat dcc,
+            final String title, final String nick, final String targetNick) {
         super(plugin, title, "dcc-chat-inactive", false);
         this.dcc = dcc;
         dcc.setHandler(this);
@@ -74,11 +75,7 @@ public class DCCChatWindow extends DCCFrame implements DCCChatInterface {
         return dcc;
     }
 
-    /**
-     * Sends a line of text to this container's source.
-     *
-     * @param line The line to be sent
-     */
+    /** {@inheritDoc} */
     @Override
     public void sendLine(final String line) {
         if (dcc.isWriteable()) {
@@ -92,24 +89,16 @@ public class DCCChatWindow extends DCCFrame implements DCCChatInterface {
         }
     }
 
-    /**
-     * Handle a received message
-     *
-     * @param dcc The DCCChat that this message is from
-     * @param message The message
-     */
+    /** {@inheritDoc} */
     @Override
     public void handleChatMessage(final DCCChat dcc, final String message) {
         final StringBuffer buff = new StringBuffer("DCCChatMessage");
-        ActionManager.processEvent(DCCActions.DCC_CHAT_MESSAGE, buff, this, otherNickname, message);
+        ActionManager.processEvent(DCCActions.DCC_CHAT_MESSAGE, buff, this,
+                otherNickname, message);
         addLine(buff, otherNickname, myWindow.getTranscoder().encode(message));
     }
 
-    /**
-     * Called when the socket is closed
-     *
-     * @param dcc The DCCChat that this message is from
-     */
+    /** {@inheritDoc} */
     @Override
     public void socketClosed(final DCCChat dcc) {
         final StringBuffer buff = new StringBuffer("DCCChatInfo");
@@ -120,11 +109,7 @@ public class DCCChatWindow extends DCCFrame implements DCCChatInterface {
         }
     }
 
-    /**
-     * Called when the socket is opened
-     *
-     * @param dcc The DCCChat that this message is from
-     */
+    /** {@inheritDoc} */
     @Override
     public void socketOpened(final DCCChat dcc) {
         final StringBuffer buff = new StringBuffer("DCCChatInfo");
@@ -133,9 +118,7 @@ public class DCCChatWindow extends DCCFrame implements DCCChatInterface {
         setIcon("dcc-chat-active");
     }
 
-    /**
-     * Closes this container (and it's associated frame).
-     */
+    /** {@inheritDoc} */
     @Override
     public void windowClosing() {
         super.windowClosing();

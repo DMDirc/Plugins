@@ -35,7 +35,7 @@ import java.io.PrintWriter;
 public class DCCChat extends DCC {
 
     /** The handler for this DCCChat. */
-    private DCCChatInterface handler = null;
+    private DCCChatHandler handler = null;
 
     /** Used to send data out the socket. */
     private PrintWriter out;
@@ -56,15 +56,13 @@ public class DCCChat extends DCC {
     /**
      * Change the handler for this DCC Chat.
      *
-     * @param handler A class implementing DCCChatInterface
+     * @param handler A class implementing DCCChatHandler
      */
-    public void setHandler(final DCCChatInterface handler) {
+    public void setHandler(final DCCChatHandler handler) {
         this.handler = handler;
     }
 
-    /**
-     * Called when the socket is first opened, before any data is handled.
-     */
+    /** {@inheritDoc} */
     @Override
     protected void socketOpened() {
         active = true;
@@ -79,9 +77,7 @@ public class DCCChat extends DCC {
         }
     }
 
-    /**
-     * Called when the socket is closed, before the thread terminates.
-     */
+    /** {@inheritDoc} */
     @Override
     protected void socketClosed() {
         out = null;
@@ -92,12 +88,7 @@ public class DCCChat extends DCC {
         active = false;
     }
 
-    /**
-     * Handle the socket.
-     *
-     * @return false when socket is closed, true will cause the method to be
-     *         called again.
-     */
+    /** {@inheritDoc} */
     @Override
     protected boolean handleSocket() {
         if (out == null || in == null) {
@@ -119,9 +110,7 @@ public class DCCChat extends DCC {
         }
     }
 
-    /**
-     * Check if this socket can be written to.
-     */
+    /** {@inheritDoc} */
     @Override
     public boolean isWriteable() {
         return out != null;

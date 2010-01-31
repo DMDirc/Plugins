@@ -23,32 +23,33 @@
 package com.dmdirc.addons.dcc;
 
 /**
- * This interfaces allows DCC Send Windows to receive data from a DCCSend
+ * This interfaces allows DCC Transfer Windows to receive data from a
+ * DCCTransfer.
  *
  * @author Shane 'Dataforce' McCormack
  */
-public interface DCCSendInterface {
+public interface DCCTransferHandler {
 
     /**
-     * Called when the socket is closed
+     * Called when the socket is closed.
      *
-     * @param dcc The DCCSend that this message is from
+     * @param dcc The DCCTransfer that this message is from
      */
-    void socketClosed(final DCCSend dcc);
+    void socketClosed(final DCCTransfer dcc);
 
     /**
-     * Called when the socket is opened
+     * Called when the socket is opened.
      *
-     * @param dcc The DCCSend that this message is from
+     * @param dcc The DCCTransfer that this message is from
      */
-    void socketOpened(final DCCSend dcc);
+    void socketOpened(final DCCTransfer dcc);
 
     /**
-     * Called when data is sent/recieved
+     * Called when data is sent/recieved.
      *
-     * @param dcc The DCCSend that this message is from
+     * @param dcc The DCCTransfer that this message is from
      * @param bytes The number of new bytes that were transfered
      */
-    void dataTransfered(final DCCSend dcc, final int bytes);
+    void dataTransfered(final DCCTransfer dcc, final int bytes);
 
 }

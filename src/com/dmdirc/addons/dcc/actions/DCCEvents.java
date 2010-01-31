@@ -26,7 +26,7 @@ import com.dmdirc.Server;
 import com.dmdirc.actions.interfaces.ActionMetaType;
 
 import com.dmdirc.addons.dcc.DCCChatWindow;
-import com.dmdirc.addons.dcc.DCCSendWindow;
+import com.dmdirc.addons.dcc.DCCTransferWindow;
 
 import java.io.File;
 
@@ -50,11 +50,11 @@ public enum DCCEvents implements ActionMetaType {
     /** DCC Chat Socket Opened. */
     DCC_CHAT_SOCKETOPENED(new String[]{"DCCChatWindow"}, DCCChatWindow.class),
     /** DCC Send Socket Closed. */
-    DCC_SEND_SOCKETCLOSED(new String[]{"DCCSendWindow"}, DCCSendWindow.class),
+    DCC_SEND_SOCKETCLOSED(new String[]{"DCCSendWindow"}, DCCTransferWindow.class),
     /** DCC Send Socket Opened. */
-    DCC_SEND_SOCKETOPENED(new String[]{"DCCSendWindow"}, DCCSendWindow.class),
+    DCC_SEND_SOCKETOPENED(new String[]{"DCCSendWindow"}, DCCTransferWindow.class),
     /** DCC Send Data Transfered */
-    DCC_SEND_DATATRANSFERED(new String[]{"DCCSendWindow", "Bytes Transfered"}, DCCSendWindow.class, int.class),
+    DCC_SEND_DATATRANSFERED(new String[]{"DCCSendWindow", "Bytes Transfered"}, DCCTransferWindow.class, int.class),
     /** DCC Send Request. */
     DCC_SEND_REQUEST(new String[]{"server", "client", "file"}, Server.class, String.class, String.class),
     /** DCC Send Request Sent. */

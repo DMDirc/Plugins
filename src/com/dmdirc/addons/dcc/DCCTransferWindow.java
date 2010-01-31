@@ -50,10 +50,11 @@ import net.miginfocom.swing.MigLayout;
  *
  * @author Shane 'Dataforce' McCormack
  */
-public class DCCSendWindow extends DCCFrame implements DCCSendInterface, ActionListener, SocketCloseListener {
+public class DCCTransferWindow extends DCCFrame implements DCCTransferHandler,
+        ActionListener, SocketCloseListener {
 
     /** The DCCSend object we are a window for */
-    private final DCCSend dcc;
+    private final DCCTransfer dcc;
 
     /** Other Nickname */
     private final String otherNickname;
@@ -99,16 +100,18 @@ public class DCCSendWindow extends DCCFrame implements DCCSendInterface, ActionL
             Desktop.getDesktop().isSupported(Desktop.Action.OPEN);
 
     /**
-     * Creates a new instance of DCCSendWindow with a given DCCSend object.
+     * Creates a new instance of DCCTransferWindow with a given DCCTransfer object.
      *
      * @param plugin the DCC Plugin responsible for this window
-     * @param dcc The DCCSend object this window wraps around
+     * @param dcc The DCCTransfer object this window wraps around
      * @param title The title of this window
      * @param targetNick Nickname of target
      * @param server The server that initiated this send
      */
-    public DCCSendWindow(final DCCPlugin plugin, final DCCSend dcc, final String title, final String targetNick, final Server server) {
-        super(plugin, title, dcc.getType() == DCCSend.TransferType.SEND ? "dcc-send-inactive" : "dcc-receive-inactive");
+    public DCCTransferWindow(final DCCPlugin plugin, final DCCTransfer dcc,
+            final String title, final String targetNick, final Server server) {
+        super(plugin, title, dcc.getType() == DCCTransfer.TransferType.SEND
+                ? "dcc-send-inactive" : "dcc-receive-inactive");
         this.dcc = dcc;
         this.server = server;
         this.parser = server == null ? null : server.getParser();
@@ -128,7 +131,7 @@ public class DCCSendWindow extends DCCFrame implements DCCSendInterface, ActionL
         progress.setStringPainted(true);
         progress.setValue(0);
 
-        if (dcc.getType() == DCCSend.TransferType.SEND) {
+        if (dcc.getType() == DCCTransfer.TransferType.SEND) {
             getContentPane().add(new JLabel("Sending: " + dcc.getShortFileName()), "wrap");
             getContentPane().add(new JLabel("To: " + targetNick), "wrap");
         } else {
@@ -168,7 +171,7 @@ public class DCCSendWindow extends DCCFrame implements DCCSendInterface, ActionL
      *
      * @return The DCCSend Object associated with this window
      */
-    public DCCSend getDCC() {
+    public DCCTransfer getDCC() {
         return dcc;
     }
 
@@ -180,7 +183,7 @@ public class DCCSendWindow extends DCCFrame implements DCCSendInterface, ActionL
     @Override
     public void actionPerformed(final ActionEvent e) {
         if (e.getActionCommand().equals("Cancel")) {
-            if (dcc.getType() == DCCSend.TransferType.SEND) {
+            if (dcc.getType() == DCCTransfer.TransferType.SEND) {
                 button.setText("Resend");
             } else {
                 button.setText("Close Window");
@@ -204,18 +207,29 @@ public class DCCSendWindow extends DCCFrame implements DCCSendInterface, ActionL
                         /** {@inheritDoc} */
                         @Override
                         public void run() {
-                            JOptionPane.showMessageDialog(null, "You can't DCC yourself.", "DCC Error", JOptionPane.ERROR_MESSAGE);
+                            JOptionPane.showMessageDialog(null,
+                                    "You can't DCC yourself.", "DCC Error",
+                                    JOptionPane.ERROR_MESSAGE);
                         }
 
                     });
                     errorThread.start();
                     return;
                 } else {
-                    if (IdentityManager.getGlobalConfig().getOptionBool(plugin.getDomain(), "send.reverse")) {
-                        parser.sendCTCP(otherNickname, "DCC", "SEND \"" + (new File(dcc.getFileName())).getName() + "\" " + DCC.ipToLong(myPlugin.getListenIP(parser)) + " 0 " + dcc.getFileSize() + " " + dcc.makeToken() + ((dcc.isTurbo()) ? " T" : ""));
+                    if (IdentityManager.getGlobalConfig().getOptionBool(
+                            plugin.getDomain(), "send.reverse")) {
+                        parser.sendCTCP(otherNickname, "DCC", "SEND \"" +
+                                new File(dcc.getFileName()).getName() + "\" "
+                                + DCC.ipToLong(myPlugin.getListenIP(parser))
+                                + " 0 " + dcc.getFileSize() + " " + dcc.makeToken()
+                                + ((dcc.isTurbo()) ? " T" : ""));
                         return;
                     } else if (plugin.listen(dcc)) {
-                        parser.sendCTCP(otherNickname, "DCC", "SEND \"" + (new File(dcc.getFileName())).getName() + "\" " + DCC.ipToLong(myPlugin.getListenIP(parser)) + " " + dcc.getPort() + " " + dcc.getFileSize() + ((dcc.isTurbo()) ? " T" : ""));
+                        parser.sendCTCP(otherNickname, "DCC", "SEND \""
+                                + new File(dcc.getFileName()).getName() + "\" "
+                                + DCC.ipToLong(myPlugin.getListenIP(parser)) + " "
+                                + dcc.getPort() + " " + dcc.getFileSize()
+                                + ((dcc.isTurbo()) ? " T" : ""));
                         return;
                     }
                 }
@@ -256,14 +270,14 @@ public class DCCSendWindow extends DCCFrame implements DCCSendInterface, ActionL
      * @param bytes The number of new bytes that were transfered
      */
     @Override
-    public void dataTransfered(final DCCSend dcc, final int bytes) {
+    public void dataTransfered(final DCCTransfer dcc, final int bytes) {
         final double percent;
         synchronized (this) {
             transferCount += bytes;
             percent = (100.00 / dcc.getFileSize()) * (transferCount + dcc.getFileStart());
         }
 
-        if (dcc.getType() == DCCSend.TransferType.SEND) {
+        if (dcc.getType() == DCCTransfer.TransferType.SEND) {
             status.setText("Status: Sending");
         } else {
             status.setText("Status: Recieving");
@@ -298,10 +312,13 @@ public class DCCSendWindow extends DCCFrame implements DCCSendInterface, ActionL
         synchronized (this) {
             remaningBytes = dcc.getFileSize() - dcc.getFileStart() - transferCount;
         }
-        final double remainingSeconds = (bytesPerSecond > 0) ? (remaningBytes / bytesPerSecond) : 1;
+        final double remainingSeconds = bytesPerSecond > 0
+                ? (remaningBytes / bytesPerSecond) : 1;
 
-        remaining.setText(String.format("Time Remaining: %s", duration((int) Math.floor(remainingSeconds))));
-        taken.setText(String.format("Time Taken: %s", timeStarted == 0 ? "N/A" : duration(time)));
+        remaining.setText(String.format("Time Remaining: %s", duration(
+                (int) Math.floor(remainingSeconds))));
+        taken.setText(String.format("Time Taken: %s", timeStarted == 0
+                ? "N/A" : duration(time)));
     }
 
     /**
@@ -330,23 +347,25 @@ public class DCCSendWindow extends DCCFrame implements DCCSendInterface, ActionL
      * @param dcc The DCCSend that this message is from
      */
     @Override
-    public void socketClosed(final DCCSend dcc) {
+    public void socketClosed(final DCCTransfer dcc) {
         ActionManager.processEvent(DCCActions.DCC_SEND_SOCKETCLOSED, null, this);
         if (!isWindowClosing()) {
             synchronized (this) {
                 if (transferCount == dcc.getFileSize()) {
                     status.setText("Status: Transfer Compelete.");
 
-                    if (showOpen && dcc.getType() == DCCSend.TransferType.RECEIVE) {
+                    if (showOpen && dcc.getType() == DCCTransfer.TransferType.RECEIVE) {
                         openButton.setVisible(true);
                     }
                     progress.setValue(100);
-                    setIcon(dcc.getType() == DCCSend.TransferType.SEND ? "dcc-send-done" : "dcc-receive-done");
+                    setIcon(dcc.getType() == DCCTransfer.TransferType.SEND
+                            ? "dcc-send-done" : "dcc-receive-done");
                     button.setText("Close Window");
                 } else {
                     status.setText("Status: Transfer Failed.");
-                    setIcon(dcc.getType() == DCCSend.TransferType.SEND ? "dcc-send-failed" : "dcc-receive-failed");
-                    if (dcc.getType() == DCCSend.TransferType.SEND) {
+                    setIcon(dcc.getType() == DCCTransfer.TransferType.SEND
+                            ? "dcc-send-failed" : "dcc-receive-failed");
+                    if (dcc.getType() == DCCTransfer.TransferType.SEND) {
                         button.setText("Resend");
                     } else {
                         button.setText("Close Window");
@@ -363,11 +382,12 @@ public class DCCSendWindow extends DCCFrame implements DCCSendInterface, ActionL
      * @param dcc The DCCSend that this message is from
      */
     @Override
-    public void socketOpened(final DCCSend dcc) {
+    public void socketOpened(final DCCTransfer dcc) {
         ActionManager.processEvent(DCCActions.DCC_SEND_SOCKETOPENED, null, this);
         status.setText("Status: Socket Opened");
         timeStarted = System.currentTimeMillis();
-        setIcon(dcc.getType() == DCCSend.TransferType.SEND ? "dcc-send-active" : "dcc-receive-active");
+        setIcon(dcc.getType() == DCCTransfer.TransferType.SEND
+                ? "dcc-send-active" : "dcc-receive-active");
     }
 
     /**
@@ -376,7 +396,7 @@ public class DCCSendWindow extends DCCFrame implements DCCSendInterface, ActionL
     @Override
     public void windowClosing() {
         super.windowClosing();
-        dcc.removeFromSends();
+        dcc.removeFromTransfers();
         dcc.close();
     }
 

@@ -26,10 +26,11 @@ import java.net.Socket;
 import java.net.ServerSocket;
 import java.io.IOException;
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- * This class handles the main "grunt work" of DCC, subclasses process the data
- * received by this class.
+ * This class manages the socket and low-level I/O functionality for all
+ * types of DCC. Subclasses process the data received by this class.
  *
  * @author Shane 'Dataforce' McCormack
  */
@@ -48,7 +49,7 @@ public abstract class DCC implements Runnable {
     private volatile Thread myThread;
 
     /** Are we already running? */
-    protected boolean running = false;
+    protected final AtomicBoolean running = new AtomicBoolean();
 
     /** Are we a listen socket? */
     protected boolean listen = false;
@@ -56,28 +57,28 @@ public abstract class DCC implements Runnable {
     /**
      * The current socket in use if this is a listen socket.
      * This reference may be changed if and only if exactly one permit from the
-     * <code>serverSocketSem</code> and <code>serverListenignSem</code>
-     * semaphores is held by the thread doing the modification.
+     * {@link #serverSocketSem} and {@link #serverListeningSem} semaphores is
+     * held by the thread doing the modification.
      */
     private ServerSocket serverSocket;
 
     /**
      * Semaphore to control write access to ServerSocket.
-     * If an object acquires a permit from the <code>serverSocketSem</code>, then
-     * <code>serverSocket</code> is <em>guaranteed</em> not to be externally
+     * If an object acquires a permit from the {@link #serverSocketSem}, then
+     * {@link #serverSocket} is <em>guaranteed</em> not to be externally
      * modified until that permit is released, <em>unless</em> the object also
-     * acquires a permit from the <code>serverListeningSem</code>.
+     * acquires a permit from the {@link #serverListeningSem}.
      */
     private final Semaphore serverSocketSem = new Semaphore(1);
 
     /**
      * Semaphore used when we're blocking waiting for connections.
-     * If an object acquires a permit from the <code>serverListeningSem</code>,
+     * If an object acquires a permit from the {@link #serverListeningSem},
      * then it is <em>guaranteed</em> that the {@link #run()} method is blocking
      * waiting for incoming connections. In addition, it is <em>guaranteed</em>
-     * that the {@link #run()} method is holding the <code>serverSocketSem</code>
+     * that the {@link #run()} method is holding the {@link #serverSocketSem}
      * permit, and it will continue holding that permit until it can reaquire
-     * the <code>serverListeningSem</code> permit.
+     * the {@link #serverListeningSem} permit.
      */
     private final Semaphore serverListeningSem = new Semaphore(0);
 
@@ -97,7 +98,6 @@ public abstract class DCC implements Runnable {
                 address = 0;
                 port = serverSocket.getLocalPort();
             } else {
-                // socket = new Socket(longToIP(address), port, bindIP, 0);
                 socket = new Socket(longToIP(address), port);
                 socketOpened();
             }
@@ -161,13 +161,13 @@ public abstract class DCC implements Runnable {
      */
     @Override
     public void run() {
-        if (running) {
+        if (running.getAndSet(true)) {
             return;
         }
-        running = true;
+
         // handleSocket is implemented by sub classes, and should return false
         // when the socket is closed.
-        Thread thisThread = Thread.currentThread();
+        final Thread thisThread = Thread.currentThread();
 
         while (myThread == thisThread) {
             serverSocketSem.acquireUninterruptibly();
@@ -200,8 +200,7 @@ public abstract class DCC implements Runnable {
         }
         // Socket closed
 
-        thisThread = null;
-        running = false;
+        running.set(false);
     }
 
     /**
@@ -211,11 +210,7 @@ public abstract class DCC implements Runnable {
         boolean haveSLS = false;
 
         while (!serverSocketSem.tryAcquire() && !(haveSLS = serverListeningSem.tryAcquire())) {
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException ex) {
-                // Do we care? I doubt we do! Should be unchecked damnit.
-            }
+            Thread.yield();
         }
 
         if (serverSocket != null) {
@@ -268,7 +263,16 @@ public abstract class DCC implements Runnable {
     }
 
     /**
-     * Handle the socket.
+     * Called periodically to read or write data to this DCC's socket.
+     * Implementations should attempt to send or receive one unit of data
+     * (for example one block of binary data, or one line of ASCII data) each
+     * time this method is called.
+     * <p>
+     * The return value of this method is used to determine whether the DCC
+     * has been completed. If the method returns <code>false</code>, the
+     * DCC is assumed to have finished (i.e., the socket has closed), and the
+     * method will not be called again. A return value of <code>true</code> will
+     * cause the method to be recalled.
      *
      * @return false when socket is closed, true will cause the method to be
      *         called again.
@@ -322,7 +326,8 @@ public abstract class DCC implements Runnable {
     public static long ipToLong(final String ip) {
         final String bits[] = ip.split("\\.");
         if (bits.length > 3) {
-            return (Long.parseLong(bits[0]) << 24) + (Long.parseLong(bits[1]) << 16) + (Long.parseLong(bits[2]) << 8) + Long.parseLong(bits[3]);
+            return (Long.parseLong(bits[0]) << 24) + (Long.parseLong(bits[1]) << 16)
+                    + (Long.parseLong(bits[2]) << 8) + Long.parseLong(bits[3]);
         }
         return 0;
     }
@@ -334,7 +339,8 @@ public abstract class DCC implements Runnable {
      * @return long as an IP
      */
     public static String longToIP(final long in) {
-        return ((in & 0xff000000) >> 24) + "." + ((in & 0x00ff0000) >> 16) + "." + ((in & 0x0000ff00) >> 8) + "." + (in & 0x000000ff);
+        return ((in & 0xff000000) >> 24) + "." + ((in & 0x00ff0000) >> 16) + "."
+                + ((in & 0x0000ff00) >> 8) + "." + (in & 0x000000ff);
     }
 
 }
