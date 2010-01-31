@@ -91,6 +91,8 @@ public class DCCSend extends DCC {
     /** Is this a turbo dcc? */
     private boolean turbo = false;
 
+    private boolean active = false;
+
     /** Creates a new instance of DCCSend with a default block size. */
     public DCCSend() {
         this(1024);
@@ -328,6 +330,7 @@ public class DCCSend extends DCC {
     @Override
     protected void socketOpened() {
         try {
+            active = true;
             transferFile = new File(filename);
             if (transferType == TransferType.RECEIVE) {
                 fileOut = new DataOutputStream(new FileOutputStream(transferFile.getAbsolutePath(), (startpos > 0)));
@@ -372,6 +375,7 @@ public class DCCSend extends DCC {
         synchronized (SENDS) {
             SENDS.remove(this);
         }
+        active = false;
     }
 
     /**
@@ -486,6 +490,15 @@ public class DCCSend extends DCC {
             return false;
         }
         return false;
+    }
+
+    /**
+     * Is this DCC transfer active.
+     *
+     * @return true iif active
+     */
+    public boolean isActive() {
+        return active;
     }
 
 }

@@ -51,7 +51,7 @@ public abstract class DCCFrame extends WritableFrameContainer {
     /**
      * Empty Frame.
      */
-    private class EmptyFrame extends InputTextFrame {
+    class EmptyFrame extends InputTextFrame {
 
         /** A version number for this class. */
         private static final long serialVersionUID = 200711271;

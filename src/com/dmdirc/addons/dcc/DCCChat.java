@@ -43,6 +43,9 @@ public class DCCChat extends DCC {
     /** Used to read data from the socket. */
     private BufferedReader in;
 
+    /** Are we active? */
+    private boolean active = false;
+
     /**
      * Creates a new instance of DCCChat.
      */
@@ -64,6 +67,7 @@ public class DCCChat extends DCC {
      */
     @Override
     protected void socketOpened() {
+        active = true;
         try {
             out = new PrintWriter(socket.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -85,6 +89,7 @@ public class DCCChat extends DCC {
         if (handler != null) {
             handler.socketClosed(this);
         }
+        active = false;
     }
 
     /**
@@ -131,6 +136,15 @@ public class DCCChat extends DCC {
         if (out != null) {
             out.printf("%s\r\n", line);
         }
+    }
+
+    /**
+     * Are we an active DCC Chat?
+     *
+     * @return true iif active
+     */
+    public boolean isActive() {
+        return active;
     }
 
 }
