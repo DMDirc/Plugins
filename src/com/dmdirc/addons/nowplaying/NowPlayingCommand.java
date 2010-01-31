@@ -74,8 +74,14 @@ public final class NowPlayingCommand extends ChatCommand implements IntelligentC
                     sendLine(origin, isSilent, FORMAT_ERROR, "Source not found.");
                 } else {
                     if (source.getState() != MediaSourceState.CLOSED) {
-                        target.getFrame().getCommandParser().parseCommand(origin,
-                                getInformation(source));
+                        final String format = args.getArgumentsAsString(2);
+                        if (format.isEmpty()) {
+                            target.getFrame().getCommandParser().parseCommand(origin,
+                                    getInformation(source));
+                        } else {
+                            target.getFrame().getCommandParser().parseCommand(origin,
+                                    getInformation(source, format));
+                        }
                     } else {
                         sendLine(origin, isSilent, FORMAT_ERROR, "Source is not running.");
                     }
@@ -86,8 +92,14 @@ public final class NowPlayingCommand extends ChatCommand implements IntelligentC
             }
         } else {
             if (parent.hasRunningSource()) {
-                target.getFrame().getCommandParser().parseCommand(origin,
-                        getInformation(parent.getBestSource()));
+                final String format = args.getArgumentsAsString(0);
+                if (format.isEmpty()) {
+                    target.getFrame().getCommandParser().parseCommand(origin,
+                            getInformation(parent.getBestSource()));
+                } else {
+                    target.getFrame().getCommandParser().parseCommand(origin,
+                            getInformation(parent.getBestSource(), format));
+                }
             } else {
                 sendLine(origin, isSilent, FORMAT_ERROR, "No running media sources available.");
             }
@@ -138,6 +150,18 @@ public final class NowPlayingCommand extends ChatCommand implements IntelligentC
     private String getInformation(final MediaSource source) {
         return parent.doSubstitution(IdentityManager.getGlobalConfig()
                 .getOption(parent.getDomain(), "format"), source);
+    }
+
+    /**
+     * Returns a formatted information string from the requested soruce.
+     *
+     * @param source MediaSource to query
+     * @param format Format to use
+     *
+     * @return Formatted information string
+     */
+    private String getInformation(final MediaSource source, final String format) {
+        return parent.doSubstitution(format, source);
     }
     
     /** {@inheritDoc}. */
