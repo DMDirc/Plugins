@@ -28,6 +28,7 @@ import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.addons.ui_swing.components.TitlePanel;
 import com.dmdirc.addons.ui_swing.components.ToolTipPanel;
 import com.dmdirc.config.prefs.PreferencesCategory;
+import java.awt.Component;
 
 import java.awt.Window;
 import java.util.Collections;
@@ -38,6 +39,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import net.miginfocom.layout.ComponentWrapper;
 import net.miginfocom.layout.LayoutCallback;
@@ -179,6 +181,27 @@ public class CategoryPanel extends JPanel {
                     //Hack around mig bug
                     panel.invalidate();
                     panel.validate();
+                    for (Component component : panel.getComponents()) {
+                        if (component instanceof JPanel) {
+                            component.invalidate();
+                            component.validate();
+                        }
+                    }
+                    //And for good measure, hack the crap out of it some more :(
+                    SwingUtilities.invokeLater(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            panel.invalidate();
+                            panel.validate();
+                            for (Component component : panel.getComponents()) {
+                                if (component instanceof JPanel) {
+                                    component.invalidate();
+                                    component.validate();
+                                }
+                            }
+                        }
+                    });
                     if (category == null) {
                         title.setText("Preferences");
                     } else {
