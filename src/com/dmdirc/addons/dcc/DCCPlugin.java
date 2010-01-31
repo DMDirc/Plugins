@@ -53,6 +53,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.logging.Level;
 
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -543,8 +544,13 @@ public final class DCCPlugin extends Plugin implements ActionListener {
     public String getListenIP(final Parser parser) {
         final String configIP = IdentityManager.getGlobalConfig().getOption(getDomain(), "firewall.ip");
         if (!configIP.isEmpty()) {
-            return configIP;
-        } else if (parser != null) {
+            try {
+                return InetAddress.getByName(configIP).getHostAddress();
+            } catch (UnknownHostException ex) {
+                //Fallthrough
+            }
+        }
+        if (parser != null) {
             final String myHost = parser.getLocalClient().getHostname();
             if (!myHost.isEmpty()) {
                 try {
