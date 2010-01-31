@@ -165,7 +165,7 @@ public final class NowPlayingCommand extends ChatCommand implements IntelligentC
     /** {@inheritDoc}. */
     @Override
     public String getHelp() {
-        return "nowplaying [--sources|--source <source>] - " +
+        return "nowplaying [--sources|--source <source>] [format] - " +
                 "tells the channel the song you're currently playing";
     }
     
