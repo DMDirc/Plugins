@@ -32,23 +32,26 @@ import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialog;
 import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
 import com.dmdirc.addons.ui_swing.dialogs.actioneditor.ActionEditorDialog;
 
-import java.lang.reflect.InvocationTargetException;
+import java.awt.Dialog;
 
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
 
 import org.fest.swing.core.matcher.JButtonMatcher;
+import org.fest.swing.edt.GuiActionRunner;
+import org.fest.swing.edt.GuiQuery;
+import org.fest.swing.edt.GuiTask;
 import org.fest.swing.finder.WindowFinder;
 import org.fest.swing.fixture.DialogFixture;
 import org.fest.swing.fixture.JButtonFixture;
+import org.fest.swing.junit.testcase.FestSwingJUnitTestCase;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-public class ActionsManagerDialogTest {
+public class ActionsManagerDialogTest extends FestSwingJUnitTestCase {
     
     private DialogFixture window;
 
@@ -59,17 +62,20 @@ public class ActionsManagerDialogTest {
         ActionManager.init();
         ActionManager.loadActions();
     }
-    
+
+    @Override
     @Before
-    public void setUp() {
+    public void onSetUp() {
         removeGroups();
     }
-    
+
+    @Override
     @After
-    public void tearDown() throws InterruptedException, InvocationTargetException {
-        SwingUtilities.invokeAndWait(new Runnable() {
+    public void onTearDown() {
+        GuiActionRunner.execute(new GuiTask() {
+
             @Override
-            public void run() {
+            protected void executeInEDT() throws Throwable {
                 close();
             }
         });
@@ -228,8 +234,15 @@ public class ActionsManagerDialogTest {
     }
     
     protected void setupWindow() {
-        window = new DialogFixture(ActionsManagerDialog.getActionsManagerDialog(null, null));
-        window.robot.settings().eventPostingDelay(250);
+        final Dialog d = GuiActionRunner.execute(new GuiQuery<Dialog>() {
+            @Override
+            protected Dialog executeInEDT() throws Throwable {
+                return ActionsManagerDialog.getActionsManagerDialog(null, null);
+            }
+        });
+        robot().waitForIdle();
+
+        window = new DialogFixture(robot(), d);
         window.show();
     }
 
