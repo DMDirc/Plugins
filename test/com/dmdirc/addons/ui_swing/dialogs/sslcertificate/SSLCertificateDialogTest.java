@@ -32,6 +32,7 @@ import com.dmdirc.addons.ui_swing.UIUtilities;
 
 import com.dmdirc.config.IdentityManager;
 import java.awt.Component;
+import java.awt.Dialog;
 import java.util.Arrays;
 
 import javax.swing.Icon;
@@ -40,14 +41,18 @@ import javax.swing.border.TitledBorder;
 
 import org.fest.swing.driver.BasicCellRendererReader;
 import org.fest.swing.driver.BasicJListCellReader;
+import org.fest.swing.edt.GuiActionRunner;
+import org.fest.swing.edt.GuiQuery;
 import org.fest.swing.fixture.DialogFixture;
 
+import org.fest.swing.junit.testcase.FestSwingJUnitTestCase;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-public class SSLCertificateDialogTest {
+public class SSLCertificateDialogTest extends FestSwingJUnitTestCase {
 
     private DialogFixture window;
 
@@ -58,8 +63,14 @@ public class SSLCertificateDialogTest {
         Main.setUI(new SwingController());
     }
 
+    @Before
+    @Override
+    public void onSetUp() {
+    }
+
     @After
-    public void tearDown() {
+    @Override
+    public void onTearDown() {
         if (window != null) {
             window.cleanUp();
         }
@@ -103,8 +114,16 @@ public class SSLCertificateDialogTest {
     }
 
     protected void setupWindow() {
-        window = new DialogFixture(new SSLCertificateDialog(null,
-                new TestSSLCertificateDialogModel()));
+        final Dialog d = GuiActionRunner.execute(new GuiQuery<Dialog>() {
+            @Override
+            protected Dialog executeInEDT() throws Throwable {
+                return new SSLCertificateDialog(null,
+                new TestSSLCertificateDialogModel());
+            }
+        });
+        robot().waitForIdle();
+
+        window = new DialogFixture(robot(), d);
         window.show();
     }
 
