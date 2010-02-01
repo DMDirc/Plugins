@@ -202,7 +202,7 @@ public class ActionEditorDialog extends StandardDialog implements ActionListener
     /** Initialises the components. */
     private void initComponents() {
         orderButtons(new JButton(), new JButton());
-        name = new ActionNamePanel("");
+        name = new ActionNamePanel("", group);
         triggers = new ActionTriggersPanel();
         response = new ActionResponsePanel();
         conditions = new ActionConditionsPanel();
