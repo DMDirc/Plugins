@@ -73,11 +73,11 @@ public final class WindowMenuFrameManager extends JMenu implements
     /** Swing controller. */
     private final SwingController controller;
     /** Window -> menu map. */
-    private Map<FrameContainer, FrameContainerMenu> menus =
+    private final Map<FrameContainer, FrameContainerMenu> menus =
             new HashMap<FrameContainer, FrameContainerMenu>();
-    private Map<FrameContainer, FrameContainerMenuItem> items =
+    private final Map<FrameContainer, FrameContainerMenuItem> items =
             new HashMap<FrameContainer, FrameContainerMenuItem>();
-    private Map<FrameContainer, FrameContainerMenuItem> menuItems =
+    private final Map<FrameContainer, FrameContainerMenuItem> menuItems =
             new HashMap<FrameContainer, FrameContainerMenuItem>();
 
     /** 
@@ -258,18 +258,22 @@ public final class WindowMenuFrameManager extends JMenu implements
         final Map<FrameContainer, SelectionListener> allItems =
                 new HashMap<FrameContainer, SelectionListener>();
         synchronized (allItems) {
-            allItems.putAll(menus);
+            synchronized (items) {
+                synchronized (menuItems) {
+                    allItems.putAll(menus);
 
-            for (SelectionListener menuItem : allItems.values()) {
-                menuItem.selectionChanged(window);
-            }
+                    for (SelectionListener menuItem : allItems.values()) {
+                        menuItem.selectionChanged(window);
+                    }
 
-            allItems.clear();
-            allItems.putAll(items);
-            allItems.putAll(menuItems);
+                    allItems.clear();
+                    allItems.putAll(items);
+                    allItems.putAll(menuItems);
 
-            for (SelectionListener menuItem : allItems.values()) {
-                menuItem.selectionChanged(window);
+                    for (SelectionListener menuItem : allItems.values()) {
+                        menuItem.selectionChanged(window);
+                    }
+                }
             }
         }
     }
