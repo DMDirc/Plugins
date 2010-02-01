@@ -422,7 +422,7 @@ public final class UIUtilities {
     private static void paintTiledBackground(final Graphics2D g,
             final Rectangle bounds, final Image backgroundImage) {
         final int width = backgroundImage.getWidth(null);
-        final int height = backgroundImage.getWidth(null);
+        final int height = backgroundImage.getHeight(null);
 
         if (width <= 0 || height <= 0) {
             // ARG!
