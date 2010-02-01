@@ -35,7 +35,6 @@ import java.awt.event.ActionListener;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JPanel;
-import javax.swing.UIManager;
 import javax.swing.event.EventListenerList;
 
 import net.miginfocom.swing.MigLayout;
