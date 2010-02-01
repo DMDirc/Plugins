@@ -33,8 +33,11 @@ import com.dmdirc.harness.ui.JRadioButtonByTextMatcher;
 import com.dmdirc.addons.ui_swing.components.ImageButton;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 
+import java.awt.AWTException;
 import java.awt.Component;
 import java.awt.Dialog;
+import java.awt.Robot;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -48,6 +51,8 @@ import org.fest.swing.fixture.DialogFixture;
 import org.fest.swing.fixture.JLabelFixture;
 import org.fest.swing.fixture.JPanelFixture;
 import org.fest.swing.junit.testcase.FestSwingJUnitTestCase;
+import org.fest.swing.keystroke.KeyStrokeMap;
+import org.fest.swing.timing.Timeout;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -91,7 +96,8 @@ public class ActionEditorDialogTest extends FestSwingJUnitTestCase {
         setupWindow(null);
 
         window.panel(new ClassFinder<ActionNamePanel>(ActionNamePanel.class, null)).
-                textBox().requireEnabled().requireEditable().requireEmpty();
+                textBox().requireEnabled(Timeout.timeout(5, TimeUnit.SECONDS))
+                .requireEditable().requireEmpty();
         window.button(JButtonMatcher.withText("OK")).requireDisabled();
     }
 
@@ -102,27 +108,38 @@ public class ActionEditorDialogTest extends FestSwingJUnitTestCase {
         setupWindow(null);
 
         window.panel(new ClassFinder<ActionNamePanel>(ActionNamePanel.class, null)).
-                textBox().requireEnabled().requireEditable().requireEmpty();
+                textBox().requireEnabled(Timeout.timeout(5, TimeUnit.SECONDS))
+                .requireEditable().requireEmpty();
         window.panel(new ClassFinder<ActionTriggersPanel>(ActionTriggersPanel.class, null)).
                 button(JButtonMatcher.withText("Add")).requireDisabled();
     }
 
     @Test
-    public void testTriggerWithNoArgs() {
+    public void testTriggerWithNoArgs() throws AWTException {
         setupWindow(null);
 
         window.panel(new ClassFinder<ActionNamePanel>(ActionNamePanel.class, null)).
-                textBox().enterText("test1");
+                textBox().focus().requireFocused();
+        final Robot robot = new Robot();
+        robot.keyPress(KeyStrokeMap.keyStrokeFor('t').getKeyCode());
+        robot.keyPress(KeyStrokeMap.keyStrokeFor('e').getKeyCode());
+        robot.keyPress(KeyStrokeMap.keyStrokeFor('s').getKeyCode());
+        robot.keyPress(KeyStrokeMap.keyStrokeFor('t').getKeyCode());
+        robot.keyPress(KeyStrokeMap.keyStrokeFor('1').getKeyCode());
+
         robot().waitForIdle();
 
         final JPanelFixture triggers = window.panel(
                 new ClassFinder<ActionTriggersPanel>(ActionTriggersPanel.class, null));
 
-        triggers.comboBox().selectItem("Client closed");
+        System.out.println(window.panel(new ClassFinder<ActionNamePanel>(ActionNamePanel.class, null)).
+                textBox().target.getText());
+        triggers.comboBox().requireEnabled(Timeout.timeout(5, TimeUnit.SECONDS))
+                .selectItem("Client closed");
         robot().waitForIdle();
         
-        triggers.button(JButtonMatcher.withText("Add")).requireEnabled().
-                click();
+        triggers.button(JButtonMatcher.withText("Add"))
+                .requireEnabled(Timeout.timeout(5, TimeUnit.SECONDS)).click();
         robot().waitForIdle();
 
         window.panel(new ClassFinder<ActionConditionsPanel>(ActionConditionsPanel.class, null)).
@@ -142,10 +159,12 @@ public class ActionEditorDialogTest extends FestSwingJUnitTestCase {
         robot().waitForIdle();
 
         final int items = triggers.comboBox().target.getItemCount();
-        triggers.comboBox().requireEnabled().selectItem("Channel message received");
+        triggers.comboBox().requireEnabled(Timeout.timeout(5, TimeUnit.SECONDS))
+                .selectItem("Channel message received");
         robot().waitForIdle();
 
-        triggers.button(JButtonMatcher.withText("Add")).requireEnabled().click();
+        triggers.button(JButtonMatcher.withText("Add"))
+                .requireEnabled(Timeout.timeout(5, TimeUnit.SECONDS)).click();
         robot().waitForIdle();
 
         final JLabelFixture label =
@@ -190,10 +209,11 @@ public class ActionEditorDialogTest extends FestSwingJUnitTestCase {
         final JPanelFixture triggers = window.panel(
                 new ClassFinder<ActionTriggersPanel>(ActionTriggersPanel.class, null));
 
-        triggers.comboBox().selectItem("Channel message received");
+        triggers.comboBox().requireEnabled(Timeout.timeout(5, TimeUnit.SECONDS))
+                .selectItem("Channel message received");
         robot().waitForIdle();
-        triggers.button(JButtonMatcher.withText("Add")).requireEnabled().
-                click();
+        triggers.button(JButtonMatcher.withText("Add"))
+                .requireEnabled(Timeout.timeout(5, TimeUnit.SECONDS)).click();
         robot().waitForIdle();
 
         window.radioButton(new JRadioButtonByTextMatcher("All of the conditions are true")).
@@ -206,7 +226,8 @@ public class ActionEditorDialogTest extends FestSwingJUnitTestCase {
                 null)).textBox(new ClassFinder<JTextField>(JTextField.class,
                 null)).requireDisabled();
 
-        window.button(JButtonMatcher.withText("OK")).requireEnabled();
+        window.button(JButtonMatcher.withText("OK")).requireEnabled(
+                Timeout.timeout(5, TimeUnit.SECONDS));
 
         window.radioButton(new JRadioButtonByTextMatcher("The conditions match a custom rule")).
                 click().requireSelected();
@@ -229,15 +250,16 @@ public class ActionEditorDialogTest extends FestSwingJUnitTestCase {
         final JPanelFixture triggers = window.panel(
                 new ClassFinder<ActionTriggersPanel>(ActionTriggersPanel.class, null));
 
-        triggers.comboBox().selectItem("Channel message received");
+        triggers.comboBox().requireEnabled(Timeout.timeout(5, TimeUnit.SECONDS))
+                .selectItem("Channel message received");
         robot().waitForIdle();
-        triggers.button(JButtonMatcher.withText("Add")).requireEnabled().
-                click();
+        triggers.button(JButtonMatcher.withText("Add"))
+                .requireEnabled(Timeout.timeout(5, TimeUnit.SECONDS)).click();
         robot().waitForIdle();
 
         window.panel(new ClassFinder<ActionConditionsPanel>(ActionConditionsPanel.class, null)).
-                button(JButtonMatcher.withText("Add")).requireEnabled().
-                click();
+                button(JButtonMatcher.withText("Add"))
+                .requireEnabled(Timeout.timeout(5, TimeUnit.SECONDS)).click();
         robot().waitForIdle();
         
         Pattern pattern = Pattern.compile(".+<body>(.+)</body>.+", Pattern.DOTALL);
@@ -299,19 +321,22 @@ public class ActionEditorDialogTest extends FestSwingJUnitTestCase {
         final JPanelFixture triggers = window.panel(
                 new ClassFinder<ActionTriggersPanel>(ActionTriggersPanel.class, null));
 
-        triggers.comboBox().selectItem("Channel message received");
+        triggers.comboBox().requireEnabled(Timeout.timeout(5, TimeUnit.SECONDS))
+                .selectItem("Channel message received");
         robot().waitForIdle();
-        triggers.button(JButtonMatcher.withText("Add")).requireEnabled().click();
+        triggers.button(JButtonMatcher.withText("Add"))
+                .requireEnabled(Timeout.timeout(5, TimeUnit.SECONDS)).click();
         robot().waitForIdle();
 
-        window.button(JButtonMatcher.withText("OK")).requireEnabled();
+        window.button(JButtonMatcher.withText("OK"))
+                .requireEnabled(Timeout.timeout(5, TimeUnit.SECONDS));
 
         window.panel(new ClassFinder<ActionConditionsPanel>(ActionConditionsPanel.class, null)).
                 button(JButtonMatcher.withText("Add")).requireEnabled().click();
         robot().waitForIdle();
 
         window.panel(new ClassFinder<ActionConditionEditorPanel>(ActionConditionEditorPanel.class,
-                null)).comboBox("argument").requireEnabled();
+                null)).comboBox("argument").requireEnabled(Timeout.timeout(5, TimeUnit.SECONDS));
         window.panel(new ClassFinder<ActionConditionEditorPanel>(ActionConditionEditorPanel.class,
                 null)).comboBox("component").requireDisabled();
         window.panel(new ClassFinder<ActionConditionEditorPanel>(ActionConditionEditorPanel.class,
@@ -324,7 +349,7 @@ public class ActionEditorDialogTest extends FestSwingJUnitTestCase {
                 null)).comboBox("argument").selectItem("message");
         robot().waitForIdle();
         window.panel(new ClassFinder<ActionConditionEditorPanel>(ActionConditionEditorPanel.class,
-                null)).comboBox("component").requireEnabled();
+                null)).comboBox("component").requireEnabled(Timeout.timeout(5, TimeUnit.SECONDS));
         window.panel(new ClassFinder<ActionConditionEditorPanel>(ActionConditionEditorPanel.class,
                 null)).comboBox("comparison").requireDisabled();
         window.panel(new ClassFinder<ActionConditionEditorPanel>(ActionConditionEditorPanel.class,
@@ -335,7 +360,7 @@ public class ActionEditorDialogTest extends FestSwingJUnitTestCase {
                 null)).comboBox("component").selectItem("content");
         robot().waitForIdle();
         window.panel(new ClassFinder<ActionConditionEditorPanel>(ActionConditionEditorPanel.class,
-                null)).comboBox("comparison").requireEnabled();
+                null)).comboBox("comparison").requireEnabled(Timeout.timeout(5, TimeUnit.SECONDS));
         window.panel(new ClassFinder<ActionConditionEditorPanel>(ActionConditionEditorPanel.class,
                 null)).textBox().requireDisabled();
         window.button(JButtonMatcher.withText("OK")).requireDisabled();
@@ -345,7 +370,7 @@ public class ActionEditorDialogTest extends FestSwingJUnitTestCase {
         robot().waitForIdle();
         window.panel(new ClassFinder<ActionConditionEditorPanel>(ActionConditionEditorPanel.class,
                 null)).textBox().requireEnabled();
-        window.button(JButtonMatcher.withText("OK")).requireEnabled();
+        window.button(JButtonMatcher.withText("OK")).requireEnabled(Timeout.timeout(5, TimeUnit.SECONDS));
     }
 
     protected void setupWindow(final Action action) {
@@ -358,6 +383,7 @@ public class ActionEditorDialogTest extends FestSwingJUnitTestCase {
         });
         robot().waitForIdle();
 
+        robot().settings().eventPostingDelay(1000);
         window = new DialogFixture(robot(), d);
         window.show();
     }
