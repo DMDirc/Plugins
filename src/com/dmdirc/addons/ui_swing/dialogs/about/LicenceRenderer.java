@@ -24,6 +24,7 @@
 package com.dmdirc.addons.ui_swing.dialogs.about;
 
 import com.dmdirc.plugins.PluginInfo;
+import java.awt.Color;
 
 import java.awt.Component;
 
@@ -52,8 +53,6 @@ public class LicenceRenderer extends DefaultTreeCellRenderer {
         final JLabel label = (JLabel) super.getTreeCellRendererComponent(tree,
                 value, sel, expanded, leaf, row, hasFocus);
         label.setIcon(null);
-        label.setBackground(tree.getBackground());
-        label.setForeground(tree.getForeground());
         label.setOpaque(false);
         if (((DefaultMutableTreeNode) value).getUserObject() instanceof PluginInfo) {
             setText(((PluginInfo) ((DefaultMutableTreeNode) value).getUserObject()).
@@ -61,4 +60,20 @@ public class LicenceRenderer extends DefaultTreeCellRenderer {
         }
         return label;
     }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @return Background colour for non selected nodes
+     */
+    @Override
+    public Color getBackgroundNonSelectionColor() {
+        return null;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Color getBackground() {
+        return null;
+    } 
 }
