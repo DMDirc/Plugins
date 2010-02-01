@@ -197,9 +197,9 @@ public class PrefsCategoryLoader extends SwingWorker<JPanel, Object> {
         
         option.setToolTipText(null);
         categoryPanel.getToolTipPanel().registerTooltipHandler(label,
-                getTooltipText(setting));
+                getTooltipText(setting, categoryPanel));
         categoryPanel.getToolTipPanel().registerTooltipHandler(option,
-                getTooltipText(setting));
+                getTooltipText(setting, categoryPanel));
 
 
         if (option instanceof DurationDisplay) {
@@ -223,14 +223,18 @@ public class PrefsCategoryLoader extends SwingWorker<JPanel, Object> {
      * Returns the tooltip text for a preferences setting.
      *
      * @param setting Setting to get text for
+     * @param component Component tooltip applies to
      *
      * @return Tooltip text for the setting
      */
-    private String getTooltipText(final PreferencesSetting setting) {
+    private String getTooltipText(final PreferencesSetting setting,
+            final JComponent component) {
         if (setting.isRestartNeeded()) {
+            final int size = component.getFont().getSize();
             return "<html>" + setting.getHelptext() + "<br>" +
-                    "<img src=\"dmdirc://com/dmdirc/res/restart-needed.png\">" +
-                    "Restart needed if changed</html>";
+                    "<img src=\"dmdirc://com/dmdirc/res/restart-needed.png\" " +
+                    "width=\""+ size +"\" height=\""+ size +"\">" +
+                    "&nbsp;Restart needed if changed</html>";
         }
         return setting.getHelptext();
 
