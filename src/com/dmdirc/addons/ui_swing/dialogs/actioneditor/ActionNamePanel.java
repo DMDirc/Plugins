@@ -22,8 +22,12 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.actioneditor;
 
+import com.dmdirc.actions.ActionGroup;
+import com.dmdirc.actions.ActionManager;
 import com.dmdirc.config.prefs.validator.FileNameValidator;
 import com.dmdirc.addons.ui_swing.components.validating.ValidatingJTextField;
+import com.dmdirc.config.prefs.validator.ActionNameValidator;
+import com.dmdirc.config.prefs.validator.ValidatorChain;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -32,8 +36,8 @@ import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-
 import javax.swing.UIManager;
+
 import net.miginfocom.swing.MigLayout;
 
 /**
@@ -51,18 +55,25 @@ public class ActionNamePanel extends JPanel implements PropertyChangeListener {
     private final String originalName;
     /** Action name field. */
     private ValidatingJTextField name;
+    /** Action group. */
+    private ActionGroup group;
 
-    /** Instantiates the panel. */
-    public ActionNamePanel() {
-        this("");
+    /**
+     * Instantiates the panel.
+     * 
+     * @param group Associated group for this action
+     */
+    public ActionNamePanel(final String group) {
+        this("", group);
     }
 
     /** 
      * Instantiates the panel.
      * 
      * @param name Initial name of the action
+     * @param group Associated group for this action
      */
-    public ActionNamePanel(final String name) {
+    public ActionNamePanel(final String name, final String group) {
         super();
 
         if (name == null) {
@@ -70,6 +81,7 @@ public class ActionNamePanel extends JPanel implements PropertyChangeListener {
         } else {
             this.originalName = name;
         }
+        this.group = ActionManager.getGroup(group);
 
         initComponents();
         addListeners();
@@ -93,8 +105,9 @@ public class ActionNamePanel extends JPanel implements PropertyChangeListener {
 
     /** Initialises the components. */
     private void initComponents() {
-        name = new ValidatingJTextField(new JTextField(originalName),
-                new FileNameValidator());
+        name = new ValidatingJTextField(new JTextField(originalName), 
+                new ValidatorChain<String>(new FileNameValidator(),
+                new ActionNameValidator(group)));
     }
 
     /** Adds the listeners. */
