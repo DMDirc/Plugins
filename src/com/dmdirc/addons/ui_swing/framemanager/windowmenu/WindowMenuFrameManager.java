@@ -34,6 +34,7 @@ import com.dmdirc.ui.interfaces.FrameListener;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -73,12 +74,9 @@ public final class WindowMenuFrameManager extends JMenu implements
     /** Swing controller. */
     private final SwingController controller;
     /** Window -> menu map. */
-    private Map<FrameContainer, FrameContainerMenu> menus =
-            new HashMap<FrameContainer, FrameContainerMenu>();
-    private Map<FrameContainer, FrameContainerMenuItem> items =
-            new HashMap<FrameContainer, FrameContainerMenuItem>();
-    private Map<FrameContainer, FrameContainerMenuItem> menuItems =
-            new HashMap<FrameContainer, FrameContainerMenuItem>();
+    private final Map<FrameContainer, FrameContainerMenu> menus;
+    private final Map<FrameContainer, FrameContainerMenuItem> items;
+    private final Map<FrameContainer, FrameContainerMenuItem> menuItems;
 
     /** 
      * Creates a new instance of WindowMenuFrameManager.
@@ -88,6 +86,13 @@ public final class WindowMenuFrameManager extends JMenu implements
     public WindowMenuFrameManager(final SwingController controller) {
         super();
         this.controller = controller;
+
+        menus = Collections.synchronizedMap(new HashMap<FrameContainer,
+                FrameContainerMenu>());
+        items = Collections.synchronizedMap(new HashMap<FrameContainer,
+                FrameContainerMenuItem>());
+        menuItems = Collections.synchronizedMap(new HashMap<FrameContainer,
+                FrameContainerMenuItem>());
 
         setText("Window");
         setMnemonic('w');
@@ -255,22 +260,15 @@ public final class WindowMenuFrameManager extends JMenu implements
     @Override
     public void selectionChanged(final Window window) {
         activeWindow = window;
-        final Map<FrameContainer, SelectionListener> allItems =
-                new HashMap<FrameContainer, SelectionListener>();
-        synchronized (allItems) {
-            allItems.putAll(menus);
-
-            for (SelectionListener menuItem : allItems.values()) {
-                menuItem.selectionChanged(window);
-            }
-
-            allItems.clear();
-            allItems.putAll(items);
-            allItems.putAll(menuItems);
-
-            for (SelectionListener menuItem : allItems.values()) {
-                menuItem.selectionChanged(window);
-            }
+        //iterate over menu items seperately here to simplify code in listeners
+        for (SelectionListener menuItem : menus.values()) {
+            menuItem.selectionChanged(window);
+        }
+        for (SelectionListener menuItem : items.values()) {
+            menuItem.selectionChanged(window);
+        }
+        for (SelectionListener menuItem : menuItems.values()) {
+            menuItem.selectionChanged(window);
         }
     }
 
