@@ -49,6 +49,7 @@ import org.fest.swing.junit.testcase.FestSwingJUnitTestCase;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -98,7 +99,7 @@ public class SSLCertificateDialogTest extends FestSwingJUnitTestCase {
                 .contents()));
     }
 
-    @Test
+    @Test @Ignore
     public void testSelection() {
         setupWindow();
 
