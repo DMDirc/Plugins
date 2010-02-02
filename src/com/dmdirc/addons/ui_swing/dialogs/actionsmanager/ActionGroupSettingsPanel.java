@@ -116,13 +116,15 @@ public final class ActionGroupSettingsPanel extends JPanel implements ActionList
             label.setToolTipText(setting.getTitle());
             final JComponent component =
                     PrefsComponentFactory.getComponent(setting);
+
             if (component instanceof DurationDisplay) {
-            ((DurationDisplay) component).setWindow(window);
-        } else if (component instanceof ColourChooser) {
-            ((ColourChooser) component).setWindow(window);
-        } else if (component instanceof OptionalColourChooser) {
-            ((OptionalColourChooser) component).setWindow(window);
-        }
+                ((DurationDisplay) component).setWindow(window);
+            } else if (component instanceof ColourChooser) {
+                ((ColourChooser) component).setWindow(window);
+            } else if (component instanceof OptionalColourChooser) {
+                ((OptionalColourChooser) component).setWindow(window);
+            }
+
             final JButton button = new SettingsRevertButton(setting);
             settingMap.put(button, setting);
             button.addActionListener(this);
