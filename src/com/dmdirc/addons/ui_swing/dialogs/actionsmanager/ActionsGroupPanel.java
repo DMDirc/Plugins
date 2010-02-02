@@ -160,6 +160,7 @@ public final class ActionsGroupPanel extends JPanel implements ActionListener,
                 }
             }
         };
+        table.setRowSorter(new ActionsTableSorter());
         table.addMouseListener(new MouseAdapter() {
 
             /** {@inheritDoc} */
