@@ -68,7 +68,7 @@ public class ErrorPanel extends StatusbarPopupPanel implements ErrorListener, Ac
     /** Swing status bar. */
     private SwingStatusBar statusBar;
     /** Error manager. */
-    private final ErrorManager errorManager = ErrorManager.getErrorManager();
+    private transient final ErrorManager errorManager = ErrorManager.getErrorManager();
     /** Dismiss menu. */
     private final JPopupMenu menu;
     /** Dismiss menu item. */

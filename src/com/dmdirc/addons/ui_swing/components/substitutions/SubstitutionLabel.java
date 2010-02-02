@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_swing.components.substitutions;
 
 import com.dmdirc.addons.ui_swing.dialogs.actioneditor.StringTransferable;
+
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
@@ -57,19 +58,19 @@ public class SubstitutionLabel extends JButton implements MouseListener,
     /** Drag source. */
     private DragSource dragSource;
     /** Substitution. */
-    private Substitution substition;
+    private transient final Substitution substitution;
     /** Previously selected component. */
     private Component previousComponent;
 
     /** 
      * Instantiates the panel.
      * 
-     * @param substition Action substitition
+     * @param substitution Action substitition
      */
-    public SubstitutionLabel(final Substitution substition) {
+    public SubstitutionLabel(final Substitution substitution) {
         super();
 
-        this.substition = substition;
+        this.substitution = substitution;
 
         initComponents();
         addListeners();
@@ -82,7 +83,7 @@ public class SubstitutionLabel extends JButton implements MouseListener,
         dragSource.createDefaultDragGestureRecognizer(this,
                 DnDConstants.ACTION_COPY, this);
 
-        setText(substition.getName());
+        setText(substitution.getName());
         setFont(getFont().deriveFont(getFont().getSize() - 2f));
         
         setBorder(
@@ -159,7 +160,7 @@ public class SubstitutionLabel extends JButton implements MouseListener,
     @Override
     public void dragGestureRecognized(final DragGestureEvent dge) {
         dragSource.startDrag(dge, Cursor.getPredefinedCursor(Cursor.HAND_CURSOR),
-                new StringTransferable(substition.toString()), null);
+                new StringTransferable(substitution.toString()), null);
     }
 
     /** 
@@ -170,7 +171,7 @@ public class SubstitutionLabel extends JButton implements MouseListener,
     @Override
     public void actionPerformed(ActionEvent e) {
         if (previousComponent instanceof JTextComponent) {
-            ((JTextComponent) previousComponent).replaceSelection(substition.toString());
+            ((JTextComponent) previousComponent).replaceSelection(substitution.toString());
         }
     }
 

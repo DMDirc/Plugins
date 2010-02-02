@@ -62,7 +62,7 @@ public class ProfileListModel extends DefaultListModel implements Iterable<Profi
 
     /** {@inheritDoc} */
     @Override
-    public Profile getElementAt(int index) {
+    public Profile getElementAt(final int index) {
         return profiles.get(index);
     }
 
@@ -74,7 +74,7 @@ public class ProfileListModel extends DefaultListModel implements Iterable<Profi
      * @return the profile that was removed
      */
     @Override
-    public Profile remove(int index) {
+    public Profile remove(final int index) {
         final Profile returnValue = profiles.remove(index);
 
         fireIntervalRemoved(this, index, index);
@@ -89,7 +89,7 @@ public class ProfileListModel extends DefaultListModel implements Iterable<Profi
      *
      * @return true if the object was removed
      */
-    public boolean remove(Profile p) {
+    public boolean remove(final Profile p) {
         final int index = profiles.indexOf(p);
         final boolean returnValue = profiles.remove(p);
 
@@ -115,7 +115,7 @@ public class ProfileListModel extends DefaultListModel implements Iterable<Profi
      *
      * @return index of the specified object
      */
-    public int indexOf(Profile p) {
+    public int indexOf(final Profile p) {
         return profiles.indexOf(p);
     }
 
@@ -127,7 +127,7 @@ public class ProfileListModel extends DefaultListModel implements Iterable<Profi
      * @return the profile that was removed
      */
     @Override
-    public Profile get(int index) {
+    public Profile get(final int index) {
         return profiles.get(index);
     }
     
@@ -148,7 +148,7 @@ public class ProfileListModel extends DefaultListModel implements Iterable<Profi
      *
      * @return true if the model contains the profile
      */
-    public boolean contains(Profile p) {
+    public boolean contains(final Profile p) {
         return profiles.contains(p);
     }
 
@@ -160,7 +160,7 @@ public class ProfileListModel extends DefaultListModel implements Iterable<Profi
      *
      * @return true if the model contains a profile with the specified name
      */
-    public boolean contains(String name) {
+    public boolean contains(final String name) {
         synchronized (profiles) {
             for (Profile profile : profiles) {
                 if (profile.getName().equals(name)) {
@@ -188,7 +188,7 @@ public class ProfileListModel extends DefaultListModel implements Iterable<Profi
      * @param index index to add the profile
      * @param element profile to add
      */
-    public void add(int index, Profile element) {
+    public void add(final int index, final Profile element) {
         profiles.add(index, element);
 
         fireIntervalAdded(this, index, index);
@@ -201,7 +201,7 @@ public class ProfileListModel extends DefaultListModel implements Iterable<Profi
      *
      * @return true if the item was added
      */
-    public boolean add(Profile p) {
+    public boolean add(final Profile p) {
         final boolean returnValue = profiles.add(p);
         final int index = profiles.indexOf(p);
 
@@ -222,8 +222,9 @@ public class ProfileListModel extends DefaultListModel implements Iterable<Profi
 
     /** {@inheritDoc} */
     @Override
-    public boolean equals(Object obj) {
-        return profiles.equals(obj);
+    public boolean equals(final Object obj) {
+        return obj instanceof ProfileListModel
+                && profiles.equals(((ProfileListModel) obj).getProfiles());
     }
 
     /** {@inheritDoc} */

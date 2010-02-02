@@ -82,6 +82,7 @@ import java.awt.Font;
 import java.awt.GraphicsEnvironment;
 import java.awt.KeyboardFocusManager;
 import java.awt.Toolkit;
+import java.io.Serializable;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -100,7 +101,15 @@ import net.miginfocom.layout.PlatformDefaults;
 /**
  * Controls the main swing UI.
  */
-public final class SwingController extends Plugin implements UIController {
+public final class SwingController extends Plugin implements Serializable,
+        UIController {
+
+    /**
+     * A version number for this class. It should be changed whenever the class
+     * structure is changed (or anything else that would prevent serialized
+     * objects being unserialized with the new class).
+     */
+    private static final long serialVersionUID = 1;
 
     /** Logger to use. */
     private static final java.util.logging.Logger LOGGER =
