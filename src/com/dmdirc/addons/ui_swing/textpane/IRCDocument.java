@@ -52,9 +52,9 @@ public final class IRCDocument implements Serializable, ConfigChangeListener {
     /** Listener list. */
     private final EventListenerList listeners;
     /** Cached lines. */
-    private RollingList<Line> cachedLines;
+    private transient RollingList<Line> cachedLines;
     /** Cached attributed strings. */
-    private RollingList<AttributedString> cachedStrings;
+    private transient RollingList<AttributedString> cachedStrings;
     /** Container that owns this document. */
     private final FrameContainer container;
     /** Font size. */
