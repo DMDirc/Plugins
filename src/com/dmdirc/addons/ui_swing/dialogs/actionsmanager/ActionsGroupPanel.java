@@ -24,14 +24,13 @@ package com.dmdirc.addons.ui_swing.dialogs.actionsmanager;
 
 import com.dmdirc.actions.Action;
 import com.dmdirc.actions.ActionGroup;
-import com.dmdirc.actions.ActionManager;
 import com.dmdirc.addons.ui_swing.components.PackingTable;
 import com.dmdirc.addons.ui_swing.components.renderers.ActionTypeTableCellRenderer;
 import com.dmdirc.addons.ui_swing.components.renderers.ArrayCellRenderer;
 import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
 import com.dmdirc.addons.ui_swing.dialogs.actioneditor.ActionEditorDialog;
-import java.awt.Dialog.ModalityType;
 
+import java.awt.Dialog.ModalityType;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -258,7 +257,7 @@ public final class ActionsGroupPanel extends JPanel implements ActionListener,
                 /** {@inheritDoc} */
                 @Override
                 public boolean save() {
-                    ActionManager.deleteAction(action);
+                    group.deleteAction(action);
                     return true;
                 }
 
