@@ -45,6 +45,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableRowSorter;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -159,7 +160,13 @@ public final class ActionsGroupPanel extends JPanel implements ActionListener,
                 }
             }
         };
-        table.setRowSorter(new ActionsTableSorter());
+
+
+        final TableRowSorter<ActionTableModel> sorter
+                = new TableRowSorter<ActionTableModel>(model);
+        sorter.setComparator(2, new ActionResponseComparator());
+
+        table.setRowSorter(sorter);
         table.addMouseListener(new MouseAdapter() {
 
             /** {@inheritDoc} */
@@ -176,7 +183,6 @@ public final class ActionsGroupPanel extends JPanel implements ActionListener,
 
         scrollPane.setViewportView(table);
 
-        table.setAutoCreateRowSorter(true);
         table.setAutoCreateColumnsFromModel(true);
         table.setColumnSelectionAllowed(false);
         table.setCellSelectionEnabled(false);
