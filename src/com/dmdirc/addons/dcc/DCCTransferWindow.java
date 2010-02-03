@@ -351,7 +351,7 @@ public class DCCTransferWindow extends DCCFrame implements DCCTransferHandler,
         ActionManager.processEvent(DCCActions.DCC_SEND_SOCKETCLOSED, null, this);
         if (!isWindowClosing()) {
             synchronized (this) {
-                if (transferCount == dcc.getFileSize()) {
+                if (transferCount == dcc.getFileSize() - dcc.getFileStart()) {
                     status.setText("Status: Transfer Compelete.");
 
                     if (showOpen && dcc.getType() == DCCTransfer.TransferType.RECEIVE) {
