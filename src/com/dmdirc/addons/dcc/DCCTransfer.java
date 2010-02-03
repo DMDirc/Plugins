@@ -411,11 +411,20 @@ public class DCCTransfer extends DCC {
                     handler.dataTransfered(this, bytesRead);
                 }
                 fileOut.write(data, 0, bytesRead);
-                // Send ack
-                out.writeInt((int) readSize);
-                out.flush();
+
+                if (!turbo) {
+                    // Send ack
+                    out.writeInt((int) readSize);
+                    out.flush();
+                }
+
                 if (readSize == size) {
                     fileOut.close();
+
+                    if (turbo) {
+                        in.close();
+                    }
+
                     return false;
                 } else {
                     return true;
