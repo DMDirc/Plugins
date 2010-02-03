@@ -94,6 +94,16 @@ public class ValidatingJTextField extends JComponent implements DocumentListener
     }
 
     /**
+     * Updates the validator for this textfield.
+     *
+     * @param validator new validator
+     */
+    public void setValidator(final Validator<String> validator) {
+        this.validator = validator;
+        checkError();
+    }
+
+    /**
      * Checks the text for errors and sets the error state accordingly.
      */
     public void checkError() {
