@@ -118,6 +118,9 @@ public class DCCTransfer extends DCC {
         close();
         setFileName(filename);
         setFileStart(startpos);
+        synchronized (TRANSFERS) {
+            TRANSFERS.add(this);
+        }
     }
 
     /**
