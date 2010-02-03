@@ -41,6 +41,7 @@ import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreeSelectionModel;
 import net.miginfocom.layout.PlatformDefaults;
 
 import net.miginfocom.swing.MigLayout;
@@ -119,6 +120,8 @@ public final class LicencesPanel extends JPanel implements TreeSelectionListener
         list.setCellRenderer(new LicenceRenderer());
         list.setRootVisible(false);
         list.setOpaque(false);
+        list.getSelectionModel().setSelectionMode(TreeSelectionModel.
+                SINGLE_TREE_SELECTION);
         new TreeScroller(list);
         new LicenceLoader(list, listModel).execute();
         licence = new JEditorPane();
@@ -134,6 +137,9 @@ public final class LicencesPanel extends JPanel implements TreeSelectionListener
     /** {@inheritDoc} */
     @Override
     public void valueChanged(final TreeSelectionEvent e) {
+        if (list.getSelectionCount() == 0) {
+            list.setSelectionPath(e.getOldLeadSelectionPath());
+        }
         list.scrollPathToVisible(e.getPath());
         final Object userObject = ((DefaultMutableTreeNode) e.getPath().
                 getLastPathComponent()).getUserObject();
