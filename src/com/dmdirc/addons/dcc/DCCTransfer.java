@@ -298,14 +298,16 @@ public class DCCTransfer extends DCC {
      */
     public int setFileStart(final int startpos) {
         this.startpos = startpos;
+        this.readSize = startpos;
+
         if (transferType == TransferType.SEND && fileIn != null) {
             try {
                 this.startpos = fileIn.skipBytes(startpos);
-                readSize = startpos;
                 return this.startpos;
             } catch (IOException ioe) {
             }
         }
+
         return -1;
     }
 
