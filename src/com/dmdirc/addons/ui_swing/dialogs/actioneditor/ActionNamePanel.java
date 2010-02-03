@@ -52,7 +52,7 @@ public class ActionNamePanel extends JPanel implements PropertyChangeListener {
      */
     private static final long serialVersionUID = 1;
     /** Original name. */
-    private final String originalName;
+    private String existingName;
     /** Action name field. */
     private ValidatingJTextField name;
     /** Action group. */
@@ -77,9 +77,9 @@ public class ActionNamePanel extends JPanel implements PropertyChangeListener {
         super();
 
         if (name == null) {
-            this.originalName = "";
+            this.existingName = "";
         } else {
-            this.originalName = name;
+            this.existingName = name;
         }
         this.group = ActionManager.getGroup(group);
 
@@ -92,10 +92,18 @@ public class ActionNamePanel extends JPanel implements PropertyChangeListener {
     /**
      * Sets the action name.
      * 
-     * @param name new name
+     * @param newName new name
      */
-    void setActionName(final String name) {
-        this.name.setText(name);
+    @SuppressWarnings("unchecked")
+    void setActionName(final String newName) {
+        if (newName == null) {
+            this.existingName = "";
+        } else {
+            this.existingName = newName;
+        }
+        name.setValidator(new ValidatorChain<String>(new FileNameValidator(),
+                new ActionNameValidator(group, existingName)));
+        this.name.setText(newName);
     }
 
     /** Validates the name. */
@@ -106,9 +114,9 @@ public class ActionNamePanel extends JPanel implements PropertyChangeListener {
     /** Initialises the components. */
     @SuppressWarnings("unchecked")
     private void initComponents() {
-        name = new ValidatingJTextField(new JTextField(originalName), 
+        name = new ValidatingJTextField(new JTextField(existingName),
                 new ValidatorChain<String>(new FileNameValidator(),
-                new ActionNameValidator(group)));
+                new ActionNameValidator(group, existingName)));
     }
 
     /** Adds the listeners. */
@@ -134,7 +142,7 @@ public class ActionNamePanel extends JPanel implements PropertyChangeListener {
 
      */
     public boolean hasNameChanged() {
-        return getActionName().equals(originalName);
+        return getActionName().equals(existingName);
     }
 
     /**
