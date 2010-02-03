@@ -303,6 +303,7 @@ public class DCCTransfer extends DCC {
         if (transferType == TransferType.SEND && fileIn != null) {
             try {
                 this.startpos = fileIn.skipBytes(startpos);
+                this.readSize = this.startpos;
                 return this.startpos;
             } catch (IOException ioe) {
             }
