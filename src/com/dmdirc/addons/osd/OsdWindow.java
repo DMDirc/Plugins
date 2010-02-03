@@ -50,7 +50,7 @@ import net.miginfocom.swing.MigLayout;
  * about events to the user.
  * @author chris
  */
-public final class OsdWindow extends JDialog implements MouseListener,
+public class OsdWindow extends JDialog implements MouseListener,
         MouseMotionListener {
     
     /**

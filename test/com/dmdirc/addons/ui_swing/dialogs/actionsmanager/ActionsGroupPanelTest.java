@@ -26,23 +26,23 @@ import com.dmdirc.actions.Action;
 import com.dmdirc.actions.ActionGroup;
 import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.actions.interfaces.ActionType;
+import com.dmdirc.harness.ui.WindowButtonHandler;
 import java.util.ArrayList;
 import java.util.Arrays;
 import org.junit.Before;
 import org.junit.Test;
 import org.uispec4j.Panel;
 import org.uispec4j.Table;
-import org.uispec4j.Trigger;
 import org.uispec4j.UISpecTestCase;
-import org.uispec4j.Window;
-import org.uispec4j.interception.WindowHandler;
 import org.uispec4j.interception.WindowInterceptor;
-import static org.junit.Assume.*;
 import static org.mockito.Mockito.*;
 
 public class ActionsGroupPanelTest extends UISpecTestCase {
 
-    private static Action action1, action2, action3, action4;
+    private Action action1, action2, action3, action4;
+    private ActionGroup group;
+    private Panel panel;
+    private Table table;
     
     @Before
     @Override
@@ -52,7 +52,7 @@ public class ActionsGroupPanelTest extends UISpecTestCase {
         when(action1.getTriggers()).thenReturn(new ActionType[] {
             CoreActionType.ACTION_CREATED, CoreActionType.ACTION_DELETED,
         });
-        when(action1.getResponse()).thenReturn(new String[0]);
+        when(action1.getResponse()).thenReturn(new String[] { "A" });
                 
         action2 = mock(Action.class);
         when(action2.getName()).thenReturn("name 2");
@@ -80,128 +80,95 @@ public class ActionsGroupPanelTest extends UISpecTestCase {
         when(action4.getResponse()).thenReturn(new String[] {
             "Response line 1",
             "Response line 2",
-            "Response line 3",
+            "Response line 4",
         });
+
+        group = mock(ActionGroup.class);
+        when(group.getActions()).thenReturn(new ArrayList<Action>(Arrays.asList(new Action[]{
+            action1, action2, action3, action4,
+        })));
+
+        panel = new Panel(new ActionsGroupPanel(null, group));
+        table = panel.getTable();
     }
 
     @Test
     public void testTable() {
-        final ActionGroup group = mock(ActionGroup.class);
-        when(group.getActions()).thenReturn(Arrays.asList(new Action[]{
-            action1, action2, action3, action4,
-        }));
-
-        final Panel panel = new Panel(new ActionsGroupPanel(null, group));
-        final Table table = panel.getTable();
-
         assertTrue(table.getHeader().contentEquals("Name", "Trigger", "Response"));
 
         assertTrue(table.contentEquals(new String[][]{
-            {"name 1", "Action created", ""},
+            {"name 1", "Action created", "A"},
             {"name 2", "Action created", ""},
             {"name 3", "Action created", "Response line 1, Response line 2, Response line 3"},
-            {"name 4", "Action created", "Response line 1, Response line 2, Response line 3"},
+            {"name 4", "Action created", "Response line 1, Response line 2, Response line 4"},
+        }));
+    }
+
+    @Test
+    public void testTableSorting() {
+        assertTrue(table.getHeader().contentEquals("Name", "Trigger", "Response"));
+
+        table.getHeader().click("Name");
+
+        assertTrue(table.contentEquals(new String[][]{
+            {"name 4", "Action created", "Response line 1, Response line 2, Response line 4"},
+            {"name 3", "Action created", "Response line 1, Response line 2, Response line 3"},
+            {"name 2", "Action created", ""},
+            {"name 1", "Action created", "A"},
+        }));
+
+        table.getHeader().click("Response");
+
+        assertTrue(table.contentEquals(new String[][]{
+            {"name 2", "Action created", ""},
+            {"name 1", "Action created", "A"},
+            {"name 3", "Action created", "Response line 1, Response line 2, Response line 3"},
+            {"name 4", "Action created", "Response line 1, Response line 2, Response line 4"},
         }));
     }
 
     @Test
     public void testDeletingCancel() {
-        final ActionGroup group = mock(ActionGroup.class);
-        when(group.getActions()).thenReturn(new ArrayList<Action>(Arrays.asList(new Action[]{
-            action1, action2, action3, action4,
-        })));
-
-        final Panel panel = new Panel(new ActionsGroupPanel(null, group));
-        final Table table = panel.getTable();
-
         table.selectRow(1);
 
         WindowInterceptor.init(panel.getButton("Delete").triggerClick())
-                .process(new WindowHandler() {
-
-            @Override
-            public Trigger process(final Window window) throws Exception {
-                assumeTrue("Confirm deletion".equals(window.getTitle()));
-
-                return window.getButton("No").triggerClick();
-            }
-        }).run();
+                .process(new WindowButtonHandler("Confirm deletion", "No")).run();
 
         assertTrue(table.contentEquals(new String[][]{
-            {"name 1", "Action created", ""},
+            {"name 1", "Action created", "A"},
             {"name 2", "Action created", ""},
             {"name 3", "Action created", "Response line 1, Response line 2, Response line 3"},
-            {"name 4", "Action created", "Response line 1, Response line 2, Response line 3"},
+            {"name 4", "Action created", "Response line 1, Response line 2, Response line 4"},
         }));
         verify(group, never()).deleteAction((Action) anyObject());
     }
 
     public void testDeletingOk() {
-        final ActionGroup group = mock(ActionGroup.class);
-        when(group.getActions()).thenReturn(new ArrayList<Action>(Arrays.asList(new Action[]{
-            action1, action2, action3, action4,
-        })));
-
-        final Panel panel = new Panel(new ActionsGroupPanel(null, group));
-        final Table table = panel.getTable();
-
         table.selectRow(1);
 
         WindowInterceptor.init(panel.getButton("Delete").triggerClick())
-                .process(new WindowHandler() {
-
-            @Override
-            public Trigger process(final Window window) throws Exception {
-                assumeTrue("Confirm deletion".equals(window.getTitle()));
-
-                return window.getButton("Yes").triggerClick();
-            }
-        }).run();
+                .process(new WindowButtonHandler("Confirm deletion", "Yes")).run();
 
         verify(group).deleteAction(same(action2));
     }
 
     public void testDeletingSorted() {
-        final ActionGroup group = mock(ActionGroup.class);
-        when(group.getActions()).thenReturn(new ArrayList<Action>(Arrays.asList(new Action[]{
-            action1, action2, action3, action4,
-        })));
-
-        final Panel panel = new Panel(new ActionsGroupPanel(null, group));
-        final Table table = panel.getTable();
-
         table.getHeader().click("Name");
 
         table.selectRow(1);
 
         WindowInterceptor.init(panel.getButton("Delete").triggerClick())
-                .process(new WindowHandler() {
-
-            @Override
-            public Trigger process(final Window window) throws Exception {
-                assumeTrue("Confirm deletion".equals(window.getTitle()));
-
-                return window.getButton("Yes").triggerClick();
-            }
-        }).run();
+                .process(new WindowButtonHandler("Confirm deletion", "Yes")).run();
 
         verify(group).deleteAction(same(action3));
     }
 
     public void testTableDeleting() {
-        final ActionGroup group = mock(ActionGroup.class);
-        when(group.getActions()).thenReturn(new ArrayList<Action>(Arrays.asList(new Action[]{
-            action1, action2, action3, action4,
-        })));
-
-        final Panel panel = new Panel(new ActionsGroupPanel(null, group));
-        final Table table = panel.getTable();
-
         assertTrue(table.contentEquals(new String[][]{
-            {"name 1", "Action created", ""},
+            {"name 1", "Action created", "A"},
             {"name 2", "Action created", ""},
             {"name 3", "Action created", "Response line 1, Response line 2, Response line 3"},
-            {"name 4", "Action created", "Response line 1, Response line 2, Response line 3"},
+            {"name 4", "Action created", "Response line 1, Response line 2, Response line 4"},
         }));
 
         when(group.getActions()).thenReturn(new ArrayList<Action>(Arrays.asList(new Action[]{
@@ -209,11 +176,12 @@ public class ActionsGroupPanelTest extends UISpecTestCase {
         })));
 
         ((ActionsGroupPanel) panel.getAwtComponent()).actionDeleted("name 2");
+        ((ActionsGroupPanel) panel.getAwtComponent()).actionDeleted("name 7");
 
         assertTrue(table.contentEquals(new String[][]{
-            {"name 1", "Action created", ""},
+            {"name 1", "Action created", "A"},
             {"name 3", "Action created", "Response line 1, Response line 2, Response line 3"},
-            {"name 4", "Action created", "Response line 1, Response line 2, Response line 3"},
+            {"name 4", "Action created", "Response line 1, Response line 2, Response line 4"},
         }));
     }
 
