@@ -1,16 +1,16 @@
 /*
  * Copyright (c) 2006-2010 Chris Smith, Shane Mc Cormack, Gregory Holmes
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -33,6 +33,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import javax.swing.JButton;
+import javax.swing.SwingUtilities;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -73,9 +74,9 @@ public class ActionEditorDialog extends StandardDialog implements ActionListener
     /** Action group. */
     private String group;
 
-    /** 
+    /**
      * Instantiates the panel.
-     * 
+     *
      * @param window Parent window
      * @param group Action's group
      */
@@ -83,9 +84,9 @@ public class ActionEditorDialog extends StandardDialog implements ActionListener
         this(window, group, null);
     }
 
-    /** 
+    /**
      * Instantiates the panel.
-     * 
+     *
      * @param window Parent window
      * @param action Action to be edited
      * @param group Action's group
@@ -103,13 +104,13 @@ public class ActionEditorDialog extends StandardDialog implements ActionListener
         addListeners();
         doComponents();
         layoutComponents();
-        
+
         setResizable(false);
     }
-    
+
     /**
      * Is the dialog open?
-     * 
+     *
      * @return is the dialog open
      */
     public static boolean isOpen() {
@@ -118,9 +119,9 @@ public class ActionEditorDialog extends StandardDialog implements ActionListener
         }
     }
 
-    /** 
-     * Creates the dialog if one doesn't exist, and displays it. 
-     * 
+    /**
+     * Creates the dialog if one doesn't exist, and displays it.
+     *
      * @param window Parent window
      * @param group Action's group
      */
@@ -129,9 +130,9 @@ public class ActionEditorDialog extends StandardDialog implements ActionListener
         showActionEditorDialog(window, group, null);
     }
 
-    /** 
-     * Creates the dialog if one doesn't exist, and displays it. 
-     * 
+    /**
+     * Creates the dialog if one doesn't exist, and displays it.
+     *
      * @param window Parent window
      * @param group Action's group
      * @param action Action to be edited
@@ -148,7 +149,7 @@ public class ActionEditorDialog extends StandardDialog implements ActionListener
      *
      * @param window Parent window
      * @param group Action's group
-     * 
+     *
      * @return The current ActionEditorDialog instance
      */
     public static ActionEditorDialog getActionEditorDialog(final Window window,
@@ -158,7 +159,7 @@ public class ActionEditorDialog extends StandardDialog implements ActionListener
 
     /**
      * Returns the current instance of the ActionEditorDialog.
-     * 
+     *
      * @param window Parent window
      * @param group Action's group
      * @param action Action to be edited
@@ -236,9 +237,9 @@ public class ActionEditorDialog extends StandardDialog implements ActionListener
         add(getRightButton(), "right, sgx button");
     }
 
-    /** 
+    /**
      * @{inheritDoc}
-     * 
+     *
      * @param e Action event
      */
     @Override
@@ -247,7 +248,7 @@ public class ActionEditorDialog extends StandardDialog implements ActionListener
             substitutions.setVisible(!substitutions.isVisible());
             showSubstitutions.setText(substitutions.isVisible() ? "Hide Substitutions"
                     : "Show Substitutions");
-            pack();
+                    pack();
         } else if (e.getSource().equals(getOkButton())) {
             save();
             dispose();
@@ -260,8 +261,15 @@ public class ActionEditorDialog extends StandardDialog implements ActionListener
     @Override
     public void validate() {
         super.validate();
-        
-        centreOnOwner();
+
+        SwingUtilities.invokeLater(new Runnable() {
+
+            /** {@inheritDoc} */
+            @Override
+            public void run() {
+                centreOnOwner();
+            }
+        });
     }
 
     /** Saves the action being edited. */
