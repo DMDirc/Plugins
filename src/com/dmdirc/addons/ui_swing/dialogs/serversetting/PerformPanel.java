@@ -77,6 +77,9 @@ public final class PerformPanel extends JPanel implements ActionListener {
     /** Perform text area. */
     private JTextArea textarea;
 
+    /** Active perform. */
+    private int activePerform = 0;
+
     /**
      * Creates a new instance of IgnoreList.
      *
@@ -84,7 +87,6 @@ public final class PerformPanel extends JPanel implements ActionListener {
      */
     public PerformPanel(final Server server) {
         super();
-
         this.server = server;
 
         this.setOpaque(UIUtilities.getTabbedPaneOpaque());
@@ -123,6 +125,7 @@ public final class PerformPanel extends JPanel implements ActionListener {
         target.addActionListener(this);
     }
 
+
     /** Loads the perform actions. */
     private void loadPerforms() {
         serverAction = PerformWrapper.getPerformWrapper().
@@ -155,7 +158,7 @@ public final class PerformPanel extends JPanel implements ActionListener {
         if (profileNetworkAction == null) {
             profileNetworkPerform = "";
         } else {
-            profileNetworkPerform = implode(profileServerAction.getResponse());
+            profileNetworkPerform = implode(profileNetworkAction.getResponse());
         }
     }
 
@@ -198,7 +201,7 @@ public final class PerformPanel extends JPanel implements ActionListener {
 
     /** Stores the text currently in the textarea into the perform strings. */
     private void storeText() {
-        switch (target.getSelectedIndex()) {
+        switch (activePerform) {
             case 0:
                 networkPerform = textarea.getText();
                 break;
@@ -220,7 +223,7 @@ public final class PerformPanel extends JPanel implements ActionListener {
     public void savePerforms() {
         storeText();
 
-        if (!serverPerform.isEmpty() || serverAction != null) {
+        if (!serverPerform.isEmpty()) {
             if (serverAction == null) {
                 serverAction = PerformWrapper.getPerformWrapper().
                         createActionForServer(server.getName());
@@ -229,7 +232,7 @@ public final class PerformPanel extends JPanel implements ActionListener {
             serverAction.save();
         }
 
-        if (!networkPerform.isEmpty() || networkAction != null) {
+        if (!networkPerform.isEmpty()) {
             if (networkAction == null) {
                 networkAction = PerformWrapper.getPerformWrapper().
                         createActionForNetwork(server.getNetwork());
@@ -238,7 +241,7 @@ public final class PerformPanel extends JPanel implements ActionListener {
             networkAction.save();
         }
 
-        if (!profileNetworkPerform.isEmpty() || profileNetworkAction != null) {
+        if (!profileNetworkPerform.isEmpty()) {
             if (profileNetworkAction == null) {
                 profileNetworkAction = PerformWrapper.getPerformWrapper().
                         createActionForNetwork(server.getNetwork(),
@@ -248,7 +251,7 @@ public final class PerformPanel extends JPanel implements ActionListener {
             profileNetworkAction.save();
         }
 
-        if (!profileServerPerform.isEmpty() || profileServerAction != null) {
+        if (!profileServerPerform.isEmpty()) {
             if (profileServerAction == null) {
                 profileServerAction = PerformWrapper.getPerformWrapper().
                         createActionForServer(server.getName(),
@@ -267,6 +270,7 @@ public final class PerformPanel extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(final ActionEvent e) {
         storeText();
+        activePerform = target.getSelectedIndex();
         populatePerform();
     }
 
