@@ -54,9 +54,13 @@ public class AddonInfoCellRenderer implements TableCellRenderer {
         if (value instanceof AddonInfoLabel) {
             final AddonInfoLabel label = (AddonInfoLabel) value;
 
-            label.setBackground(row % 2 == 1 ? new Color(0xEE, 0xEE, 0xFF) : Color.WHITE);
+            if (!label.getBackground().equals(row % 2 == 1 ? new Color(0xEE, 0xEE, 0xFF) : Color.WHITE)) {
+                label.setBackground(row % 2 == 1 ? new Color(0xEE, 0xEE, 0xFF) : Color.WHITE);
+            }
 
-            table.setRowHeight(row, label.getPreferredSize().height);
+            if (table.getRowHeight(row) != label.getPreferredSize().height) {
+                table.setRowHeight(row, label.getPreferredSize().height);
+            }
 
             return label;
         } else {
