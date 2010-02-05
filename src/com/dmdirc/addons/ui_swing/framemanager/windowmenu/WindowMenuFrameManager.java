@@ -259,16 +259,18 @@ public final class WindowMenuFrameManager extends JMenu implements
     /** {@inheritDoc} */
     @Override
     public void selectionChanged(final Window window) {
-        activeWindow = window;
-        //iterate over menu items seperately here to simplify code in listeners
-        for (SelectionListener menuItem : menus.values()) {
-            menuItem.selectionChanged(window);
-        }
-        for (SelectionListener menuItem : items.values()) {
-            menuItem.selectionChanged(window);
-        }
-        for (SelectionListener menuItem : menuItems.values()) {
-            menuItem.selectionChanged(window);
+        synchronized (WindowMenuFrameManager.class) {
+            activeWindow = window;
+            //iterate over menu items seperately here to simplify code in listeners
+            for (SelectionListener menuItem : menus.values()) {
+                menuItem.selectionChanged(window);
+            }
+            for (SelectionListener menuItem : items.values()) {
+                menuItem.selectionChanged(window);
+            }
+            for (SelectionListener menuItem : menuItems.values()) {
+                menuItem.selectionChanged(window);
+            }
         }
     }
 
