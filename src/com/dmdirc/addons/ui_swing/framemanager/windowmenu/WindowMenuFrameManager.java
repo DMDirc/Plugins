@@ -87,12 +87,12 @@ public final class WindowMenuFrameManager extends JMenu implements
         super();
         this.controller = controller;
 
-        menus = Collections.synchronizedMap(new HashMap<FrameContainer,
-                FrameContainerMenu>());
-        items = Collections.synchronizedMap(new HashMap<FrameContainer,
-                FrameContainerMenuItem>());
-        menuItems = Collections.synchronizedMap(new HashMap<FrameContainer,
-                FrameContainerMenuItem>());
+        menus = Collections.synchronizedMap(
+                new HashMap<FrameContainer, FrameContainerMenu>());
+        items = Collections.synchronizedMap(
+                new HashMap<FrameContainer, FrameContainerMenuItem>());
+        menuItems = Collections.synchronizedMap(
+                new HashMap<FrameContainer, FrameContainerMenuItem>());
 
         setText("Window");
         setMnemonic('w');
@@ -147,11 +147,14 @@ public final class WindowMenuFrameManager extends JMenu implements
     /** {@inheritDoc} */
     @Override
     public void addWindow(final FrameContainer window) {
-        final FrameContainerMenuItem item = new FrameContainerMenuItem(window,
-                this);
-        items.put(window, item);
-        add(item, getIndex(window, this));
-        window.addSelectionListener(this);
+        synchronized (WindowMenuFrameManager.class) {
+            final FrameContainerMenuItem item = new FrameContainerMenuItem(
+                    window,
+                    this);
+            items.put(window, item);
+            add(item, getIndex(window, this));
+            window.addSelectionListener(this);
+        }
     }
 
     /** {@inheritDoc} */
@@ -171,7 +174,8 @@ public final class WindowMenuFrameManager extends JMenu implements
     @Override
     public void addWindow(final FrameContainer parent,
             final FrameContainer window) {
-        final FrameContainerMenuItem item = new FrameContainerMenuItem(window,
+        final FrameContainerMenuItem item = new FrameContainerMenuItem(
+                window,
                 this);
         JMenu parentMenu;
         if (!menus.containsKey(parent)) {
@@ -259,16 +263,18 @@ public final class WindowMenuFrameManager extends JMenu implements
     /** {@inheritDoc} */
     @Override
     public void selectionChanged(final Window window) {
-        activeWindow = window;
-        //iterate over menu items seperately here to simplify code in listeners
-        for (SelectionListener menuItem : menus.values()) {
-            menuItem.selectionChanged(window);
-        }
-        for (SelectionListener menuItem : items.values()) {
-            menuItem.selectionChanged(window);
-        }
-        for (SelectionListener menuItem : menuItems.values()) {
-            menuItem.selectionChanged(window);
+        synchronized (WindowMenuFrameManager.class) {
+            activeWindow = window;
+            //iterate over menu items seperately here to simplify code in listeners
+            for (SelectionListener menuItem : menus.values()) {
+                menuItem.selectionChanged(window);
+            }
+            for (SelectionListener menuItem : items.values()) {
+                menuItem.selectionChanged(window);
+            }
+            for (SelectionListener menuItem : menuItems.values()) {
+                menuItem.selectionChanged(window);
+            }
         }
     }
 
