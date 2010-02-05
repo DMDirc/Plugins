@@ -87,12 +87,12 @@ public final class WindowMenuFrameManager extends JMenu implements
         super();
         this.controller = controller;
 
-        menus = Collections.synchronizedMap(new HashMap<FrameContainer,
-                FrameContainerMenu>());
-        items = Collections.synchronizedMap(new HashMap<FrameContainer,
-                FrameContainerMenuItem>());
-        menuItems = Collections.synchronizedMap(new HashMap<FrameContainer,
-                FrameContainerMenuItem>());
+        menus = Collections.synchronizedMap(
+                new HashMap<FrameContainer, FrameContainerMenu>());
+        items = Collections.synchronizedMap(
+                new HashMap<FrameContainer, FrameContainerMenuItem>());
+        menuItems = Collections.synchronizedMap(
+                new HashMap<FrameContainer, FrameContainerMenuItem>());
 
         setText("Window");
         setMnemonic('w');
@@ -147,64 +147,74 @@ public final class WindowMenuFrameManager extends JMenu implements
     /** {@inheritDoc} */
     @Override
     public void addWindow(final FrameContainer window) {
-        final FrameContainerMenuItem item = new FrameContainerMenuItem(window,
-                this);
-        items.put(window, item);
-        add(item, getIndex(window, this));
-        window.addSelectionListener(this);
+        synchronized (WindowMenuFrameManager.class) {
+            final FrameContainerMenuItem item = new FrameContainerMenuItem(
+                    window,
+                    this);
+            items.put(window, item);
+            add(item, getIndex(window, this));
+            window.addSelectionListener(this);
+        }
     }
 
     /** {@inheritDoc} */
     @Override
     public void delWindow(final FrameContainer window) {
-        if (items.containsKey(window)) {
-            remove(items.get(window));
-            items.remove(window);
-        } else if (menus.containsKey(window)) {
-            remove(menus.get(window));
-            menus.remove(window);
+        synchronized (WindowMenuFrameManager.class) {
+            if (items.containsKey(window)) {
+                remove(items.get(window));
+                items.remove(window);
+            } else if (menus.containsKey(window)) {
+                remove(menus.get(window));
+                menus.remove(window);
+            }
+            window.removeSelectionListener(this);
         }
-        window.removeSelectionListener(this);
     }
 
     /** {@inheritDoc} */
     @Override
     public void addWindow(final FrameContainer parent,
             final FrameContainer window) {
-        final FrameContainerMenuItem item = new FrameContainerMenuItem(window,
-                this);
-        JMenu parentMenu;
-        if (!menus.containsKey(parent)) {
-            final FrameContainerMenu replacement =
-                    new FrameContainerMenu(parent, controller);
-            replaceItemWithMenu(getParentMenu(parent), items.get(parent),
-                    replacement);
-            parentMenu = replacement;
-        } else {
-            parentMenu = menus.get(parent);
+        synchronized (WindowMenuFrameManager.class) {
+            final FrameContainerMenuItem item = new FrameContainerMenuItem(
+                    window,
+                    this);
+            JMenu parentMenu;
+            if (!menus.containsKey(parent)) {
+                final FrameContainerMenu replacement =
+                        new FrameContainerMenu(parent, controller);
+                replaceItemWithMenu(getParentMenu(parent), items.get(parent),
+                        replacement);
+                parentMenu = replacement;
+            } else {
+                parentMenu = menus.get(parent);
+            }
+            items.put(window, item);
+            parentMenu.add(item, getIndex(window, parentMenu));
+            window.addSelectionListener(this);
         }
-        items.put(window, item);
-        parentMenu.add(item, getIndex(window, parentMenu));
-        window.addSelectionListener(this);
     }
 
     /** {@inheritDoc} */
     @Override
     public void delWindow(final FrameContainer parent,
             final FrameContainer window) {
-        if (items.containsKey(window)) {
-            final JMenu menu = getParentMenu(window);
-            menu.remove(items.get(window));
-            items.remove(window);
-            if (menu.getMenuComponentCount() == 1) {
-                replaceMenuWithItem(getParentMenu(parent), menus.get(parent),
-                        new FrameContainerMenuItem(parent, this));
+        synchronized (WindowMenuFrameManager.class) {
+            if (items.containsKey(window)) {
+                final JMenu menu = getParentMenu(window);
+                menu.remove(items.get(window));
+                items.remove(window);
+                if (menu.getMenuComponentCount() == 1) {
+                    replaceMenuWithItem(getParentMenu(parent), menus.get(parent),
+                            new FrameContainerMenuItem(parent, this));
+                }
+            } else if (menus.containsKey(window)) {
+                menus.get(parent).remove(menus.get(window));
+                menus.remove(window);
             }
-        } else if (menus.containsKey(window)) {
-            menus.get(parent).remove(menus.get(window));
-            menus.remove(window);
+            window.removeSelectionListener(this);
         }
-        window.removeSelectionListener(this);
     }
 
     private JMenu getParentMenu(final FrameContainer window) {
@@ -259,16 +269,18 @@ public final class WindowMenuFrameManager extends JMenu implements
     /** {@inheritDoc} */
     @Override
     public void selectionChanged(final Window window) {
-        activeWindow = window;
-        //iterate over menu items seperately here to simplify code in listeners
-        for (SelectionListener menuItem : menus.values()) {
-            menuItem.selectionChanged(window);
-        }
-        for (SelectionListener menuItem : items.values()) {
-            menuItem.selectionChanged(window);
-        }
-        for (SelectionListener menuItem : menuItems.values()) {
-            menuItem.selectionChanged(window);
+        synchronized (WindowMenuFrameManager.class) {
+            activeWindow = window;
+            //iterate over menu items seperately here to simplify code in listeners
+            for (SelectionListener menuItem : menus.values()) {
+                menuItem.selectionChanged(window);
+            }
+            for (SelectionListener menuItem : items.values()) {
+                menuItem.selectionChanged(window);
+            }
+            for (SelectionListener menuItem : menuItems.values()) {
+                menuItem.selectionChanged(window);
+            }
         }
     }
 
