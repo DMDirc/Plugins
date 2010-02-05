@@ -87,12 +87,12 @@ public final class WindowMenuFrameManager extends JMenu implements
         super();
         this.controller = controller;
 
-        menus = Collections.synchronizedMap(new HashMap<FrameContainer,
-                FrameContainerMenu>());
-        items = Collections.synchronizedMap(new HashMap<FrameContainer,
-                FrameContainerMenuItem>());
-        menuItems = Collections.synchronizedMap(new HashMap<FrameContainer,
-                FrameContainerMenuItem>());
+        menus = Collections.synchronizedMap(
+                new HashMap<FrameContainer, FrameContainerMenu>());
+        items = Collections.synchronizedMap(
+                new HashMap<FrameContainer, FrameContainerMenuItem>());
+        menuItems = Collections.synchronizedMap(
+                new HashMap<FrameContainer, FrameContainerMenuItem>());
 
         setText("Window");
         setMnemonic('w');
@@ -259,16 +259,22 @@ public final class WindowMenuFrameManager extends JMenu implements
     /** {@inheritDoc} */
     @Override
     public void selectionChanged(final Window window) {
-        activeWindow = window;
-        //iterate over menu items seperately here to simplify code in listeners
-        for (SelectionListener menuItem : menus.values()) {
-            menuItem.selectionChanged(window);
-        }
-        for (SelectionListener menuItem : items.values()) {
-            menuItem.selectionChanged(window);
-        }
-        for (SelectionListener menuItem : menuItems.values()) {
-            menuItem.selectionChanged(window);
+        synchronized (menus) {
+            synchronized (items) {
+                synchronized (menuItems) {
+                    activeWindow = window;
+                    //iterate over menu items seperately here to simplify code in listeners
+                    for (SelectionListener menuItem : menus.values()) {
+                        menuItem.selectionChanged(window);
+                    }
+                    for (SelectionListener menuItem : items.values()) {
+                        menuItem.selectionChanged(window);
+                    }
+                    for (SelectionListener menuItem : menuItems.values()) {
+                        menuItem.selectionChanged(window);
+                    }
+                }
+            }
         }
     }
 
