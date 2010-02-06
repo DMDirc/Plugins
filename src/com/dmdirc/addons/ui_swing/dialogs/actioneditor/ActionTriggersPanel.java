@@ -101,12 +101,13 @@ public class ActionTriggersPanel extends JPanel implements ActionListener,
                         getComponent(0);
                 Dimension size = scrollPane.getPreferredSize();
                 if (scrollPane instanceof JScrollPane) {
-                    size.width = ((ActionTypeModel) trigger.getModel()).
-                            getMaxWidth() + (int) ((JScrollPane) scrollPane).
-                            getVerticalScrollBar().getPreferredSize().getWidth();
+                    size.width = Math.max(size.width, ((ActionTypeModel)
+                            trigger.getModel()).getMaxWidth() + (int)
+                            ((JScrollPane) scrollPane).getVerticalScrollBar().
+                            getPreferredSize().getWidth());
                 } else {
-                    size.width = ((ActionTypeModel) trigger.getModel()).
-                            getMaxWidth();
+                    size.width = Math.max(size.width, ((ActionTypeModel)
+                            trigger.getModel()). getMaxWidth());
                 }
                 scrollPane.setPreferredSize(size);
                 scrollPane.setMaximumSize(size);
