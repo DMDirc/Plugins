@@ -22,8 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.textpane;
 
-import java.awt.Graphics2D;
-
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.UIManager;
@@ -38,33 +36,16 @@ public class TextPaneUI extends ComponentUI {
     /** {@inheritDoc} */
     @Override
     public void installUI(final JComponent c) {
-        Border border = UIManager.getBorder("TextField.border");
+        Border border;
+        if (UIManager.getLookAndFeel().getClass().getName().equals(
+                "com.sun.java.swing.plaf.gtk.GTKLookAndFeel")) {
+            border = UIManager.getBorder("TitledBorder.border");
+        } else {
+            border = UIManager.getBorder("TextField.border");
+        }
         if (border == null) {
             border = BorderFactory.createEtchedBorder();
         }
         c.setBorder(border);
-    }
-
-    /** {@inheritDoc} */
-    /*@Override
-    public void paint(final Graphics g, final JComponent c) {
-        if (c.isOpaque()) {
-            g.setColor(c.getBackground());
-            g.fillRect(0, 0, c.getWidth(), c.getHeight());
-        }
-        paint(g, c);
-    }*/
-
-    /** {@inheritDoc} */
-    /*@Override
-    public void update(final Graphics g, final JComponent c) {
-        if (c.isOpaque()) {
-            g.setColor(c.getBackground());
-            g.fillRect(0, 0, c.getWidth(), c.getHeight());
-        }
-        paint(g, c);
-    }*/
-
-    protected void paintTextPane(final Graphics2D g, final TextPane c) {
     }
 }
