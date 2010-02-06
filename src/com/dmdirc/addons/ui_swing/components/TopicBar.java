@@ -59,6 +59,7 @@ import javax.swing.text.DefaultStyledDocument;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
+import javax.swing.text.StyledEditorKit;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -108,13 +109,12 @@ public class TopicBar extends JComponent implements ActionListener,
         topicLengthMax = channel.getMaxTopicLength();
         errorIcon =
                 new JLabel(IconManager.getIconManager().getIcon("input-error"));
-        //TODO issue 3251
-        //if (channelFrame.getConfigManager().getOptionBool(controller.
-        //        getDomain(), "showfulltopic")) {
-        //    topicText.setEditorKit(new StyledEditorKit());
-        //} else {
-        topicText.setEditorKit(new WrapEditorKit());
-        //}
+        if (channelFrame.getConfigManager().getOptionBool(controller.
+                getDomain(), "showfulltopic")) {
+            topicText.setEditorKit(new StyledEditorKit());
+        } else {
+            topicText.setEditorKit(new WrapEditorKit());
+        }
         ((DefaultStyledDocument) topicText.getDocument()).setDocumentFilter(
                 new NewlinesDocumentFilter());
 
@@ -215,6 +215,8 @@ public class TopicBar extends JComponent implements ActionListener,
         }
         topicText.setCaretPosition(0);
         validateTopic();
+        setVisible(false);
+        setVisible(true);
     }
 
     /**
@@ -383,17 +385,17 @@ public class TopicBar extends JComponent implements ActionListener,
     /** {@inheritDoc} */
     @Override
     public void configChanged(String domain, String key) {
-        //TODO issue 3251
-        //if ("showfulltopic".equals(key)) {
-        //    if (channel.getConfigManager().getOptionBool(controller.getDomain(),
-        //            "showfulltopic")) {
-        //        topicText.setEditorKit(new StyledEditorKit());
-        //    } else {
-        //        topicText.setEditorKit(new WrapEditorKit());
-        //    }
-        //    ((DefaultStyledDocument) topicText.getDocument()).setDocumentFilter(
-        //            new NewlinesDocumentFilter());
-        //}
+        if ("showfulltopic".equals(key)) {
+            if (channel.getConfigManager().getOptionBool(controller.getDomain(),
+                    "showfulltopic")) {
+                topicText.setEditorKit(new StyledEditorKit());
+            } else {
+                topicText.setEditorKit(new WrapEditorKit());
+            }
+            ((DefaultStyledDocument) topicText.getDocument()).setDocumentFilter(
+                    new NewlinesDocumentFilter());
+            topicChanged(channel, null);
+        }
         setColours();
         if ("hideEmptyTopicBar".equals(key)) {
             setVisible(true);
