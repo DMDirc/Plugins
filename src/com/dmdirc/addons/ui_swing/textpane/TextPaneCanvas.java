@@ -47,7 +47,6 @@ import java.awt.font.LineBreakMeasurer;
 import java.awt.font.TextAttribute;
 import java.awt.font.TextHitInfo;
 import java.awt.font.TextLayout;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
 import java.text.AttributedCharacterIterator;
@@ -92,8 +91,6 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
     private int firstVisibleLine;
     /** Last visible line. */
     private int lastVisibleLine;
-    /** Cached canvas. */
-    private BufferedImage buffer;
     /** Background image. */
     private Image backgroundImage;
     /** Config Manager. */
@@ -139,9 +136,6 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
     @Override
     public void paintComponent(final Graphics graphics) {
         final Graphics2D g = (Graphics2D) graphics;
-        //if (buffer == null) {
-            //calc();
-        //}
         final Map desktopHints = (Map) Toolkit.getDefaultToolkit().
                 getDesktopProperty("awt.font.desktophints");
         if (desktopHints != null) {
@@ -152,14 +146,12 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
         UIUtilities.paintBackground(g, getBounds(), backgroundImage,
                 backgroundOption);
         paintOntoGraphics(g);
-        //g.drawImage(buffer, 0, 0, null);
     }
 
     /**
      * Re calculates positions of lines and repaints if required.
      */
     protected void recalc() {
-        buffer = null;
         if (isVisible()) {
             repaint();
         }
@@ -189,21 +181,6 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
         } catch (IllegalArgumentException ex) {
             backgroundOption = BackgroundOption.CENTER;
         }
-    }
-
-    /**
-     * Calculates the position of the lines and highlights.
-     */
-    protected void calc() {
-        final BufferedImage image = new BufferedImage(getWidth(), getHeight(),
-                BufferedImage.TYPE_INT_ARGB);
-        final Graphics2D g = image.createGraphics();
-
-        paintOntoGraphics(g);
-        
-        buffer = new BufferedImage(getWidth(), getHeight(),
-                BufferedImage.TYPE_INT_ARGB);
-        buffer.createGraphics().drawImage(image, null, null);
     }
 
     private void paintOntoGraphics(final Graphics2D g) {
