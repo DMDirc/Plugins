@@ -30,7 +30,10 @@ import com.dmdirc.ui.interfaces.InputField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.BorderFactory;
 import javax.swing.JEditorPane;
+import javax.swing.plaf.ComponentUI;
+import javax.swing.plaf.basic.BasicEditorPaneUI;
 import javax.swing.text.BadLocationException;
 
 /**
@@ -93,5 +96,18 @@ public class TextPaneInputField extends JEditorPane implements InputField {
     @Override
     public void removeActionListener(ActionListener listener) {
         //Ignore
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    protected void setUI(final ComponentUI newUI) {
+        super.setUI(new BasicEditorPaneUI());
+        super.setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));
+    }
+
+    @Override
+    public void updateUI() {
+        super.setUI(new BasicEditorPaneUI());
+        super.setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));
     }
 }
