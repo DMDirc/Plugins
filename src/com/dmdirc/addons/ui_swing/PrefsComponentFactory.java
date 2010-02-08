@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_swing;
 
+import com.dmdirc.addons.ui_swing.components.FileBrowser;
 import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.validator.NumericalValidator;
 import com.dmdirc.addons.ui_swing.components.colours.ColourChooser;
@@ -46,6 +47,7 @@ import java.util.Map;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
+import javax.swing.JFileChooser;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
@@ -105,6 +107,15 @@ public final class PrefsComponentFactory {
             case FONT:
                 option = getFontOption(setting);
                 break;
+            case FILE:
+                option = getFileBrowseOption(setting, JFileChooser.FILES_ONLY);
+                break;
+            case DIRECTORY:
+                option = getFileBrowseOption(setting, JFileChooser.DIRECTORIES_ONLY);
+                break;
+            case FILES_AND_DIRECTORIES:
+                option = getFileBrowseOption(setting, JFileChooser.FILES_AND_DIRECTORIES);
+                break;
             default:
                 throw new IllegalArgumentException(setting.getType()
                         + " is not a valid option type");
@@ -146,7 +157,7 @@ public final class PrefsComponentFactory {
         final JCheckBox option = new JCheckBox();
         option.setSelected(Boolean.parseBoolean(setting.getValue()));
         option.addChangeListener(new ChangeListener() {
-            
+
             /** {@inheritDoc} */
             @Override
             public void stateChanged(final ChangeEvent e) {
@@ -176,7 +187,7 @@ public final class PrefsComponentFactory {
         }
 
         option.addActionListener(new ActionListener() {
-            
+
             /** {@inheritDoc} */
             @Override
             public void actionPerformed(final ActionEvent e) {
@@ -238,7 +249,7 @@ public final class PrefsComponentFactory {
                 && !setting.getValue().startsWith("false:");
         final String integer = setting.getValue() == null ? "0" : setting.getValue().
                 substring(1 + setting.getValue().indexOf(':'));
-        
+
         OptionalJSpinner option;
         Validator optionalValidator = setting.getValidator();
         Validator numericalValidator = null;
@@ -296,7 +307,7 @@ public final class PrefsComponentFactory {
         }
 
         option.addDurationListener(new DurationListener() {
-            
+
             /** {@inheritDoc} */
             @Override
             public void durationUpdated(final int newDuration) {
@@ -317,7 +328,7 @@ public final class PrefsComponentFactory {
         final ColourChooser option = new ColourChooser(setting.getValue(), true, true);
 
         option.addActionListener(new ActionListener() {
-            
+
             /** {@inheritDoc} */
             @Override
             public void actionPerformed(final ActionEvent e) {
@@ -343,7 +354,7 @@ public final class PrefsComponentFactory {
         final OptionalColourChooser option = new OptionalColourChooser(colour, state, true, true);
 
         option.addActionListener(new ActionListener() {
-            
+
             /** {@inheritDoc} */
             @Override
             public void actionPerformed(final ActionEvent e) {
@@ -355,7 +366,7 @@ public final class PrefsComponentFactory {
 
         return option;
     }
-    
+
     /**
      * Initialises and returns an Font Chooser for the specified setting.
      *
@@ -366,7 +377,7 @@ public final class PrefsComponentFactory {
         final String value = setting.getValue();
 
         final FontPicker option = new FontPicker(value);
-        
+
         option.addActionListener(new ActionListener() {
 
             /** {@inheritDoc} */
@@ -379,8 +390,39 @@ public final class PrefsComponentFactory {
                     setting.setValue(null);
                 }
             }
-        });        
-        
+        });
+
+        return option;
+    }
+
+    /**
+     * Initialises and returns a FileBrowser for the specified setting.
+     *
+     * @param setting The setting to create the component for
+     * @param type The type of filechooser we want (Files/Directories/Both)
+     *
+     * @return A JComponent descendent for the specified setting
+     */
+    private static JComponent getFileBrowseOption(final PreferencesSetting setting,
+            final int type) {
+        final FileBrowser option = new FileBrowser(setting, type);
+
+        option.addActionListener(new ActionListener() {
+            /** {@inheritDoc} */
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                setting.setValue(option.getPath());
+            }
+        });
+
+        option.addKeyListener(new KeyAdapter() {
+            /** {@inheritDoc} */
+            @Override
+            public void keyReleased(final KeyEvent e) {
+                setting.setValue(((JTextField) e.getSource()).getText());
+            }
+        });
+
         return option;
     }
 
