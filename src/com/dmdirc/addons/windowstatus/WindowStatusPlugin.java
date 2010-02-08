@@ -30,6 +30,7 @@ import com.dmdirc.Server;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.actions.interfaces.ActionType;
+import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
@@ -45,6 +46,7 @@ import com.dmdirc.plugins.Plugin;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.interfaces.InputWindow;
 import com.dmdirc.ui.interfaces.Window;
+import com.dmdirc.util.ReturnableThread;
 
 import java.util.Hashtable;
 import java.util.Map;
@@ -58,13 +60,23 @@ import java.util.Map.Entry;
 public final class WindowStatusPlugin extends Plugin implements ActionListener, ConfigChangeListener {
 
     /** The panel we use in the status bar. */
-    private final WindowStatusPanel panel = new WindowStatusPanel();
+    private final WindowStatusPanel panel;
     private boolean showname, shownone;
     private String nonePrefix;
 
     /** Creates a new instance of WindowStatusPlugin. */
     public WindowStatusPlugin() {
         super();
+
+        panel = UIUtilities.invokeAndWait(
+                new ReturnableThread<WindowStatusPanel>() {
+
+            /** {@inheritDoc} */
+            @Override
+            public void run() {
+                setObject(new WindowStatusPanel());
+            }
+        });
     }
 
     /**

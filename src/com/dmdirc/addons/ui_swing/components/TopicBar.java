@@ -109,8 +109,8 @@ public class TopicBar extends JComponent implements ActionListener,
         topicLengthMax = channel.getMaxTopicLength();
         errorIcon =
                 new JLabel(IconManager.getIconManager().getIcon("input-error"));
-        if (channelFrame.getConfigManager().getOptionBool(controller.
-                getDomain(), "showfulltopic")) {
+        if (channelFrame.getConfigManager().getOptionBool(controller.getDomain(),
+                "showfulltopic")) {
             topicText.setEditorKit(new StyledEditorKit());
         } else {
             topicText.setEditorKit(new WrapEditorKit());
@@ -199,24 +199,35 @@ public class TopicBar extends JComponent implements ActionListener,
     /** {@inheritDoc} */
     @Override
     public void topicChanged(final Channel channel, final Topic topic) {
-        if (topicText.isEditable()) {
-            return;
-        }
-        topicText.setText("");
-        if (channel.getCurrentTopic() != null) {
-            channel.getStyliser().addStyledString((StyledDocument) topicText.getDocument(),
-                    new String[]{Styliser.CODE_HEXCOLOUR + ColourManager.getHex(
-                        foregroundColour) + channel.getCurrentTopic().getTopic(),},
-                    as);
-        }
-        if (channel.getConfigManager().getOptionBool(controller.getDomain(),
-                "hideEmptyTopicBar")) {
-            setVisible(topicText.getDocument().getLength() != 0);
-        }
-        topicText.setCaretPosition(0);
-        validateTopic();
-        setVisible(false);
-        setVisible(true);
+        UIUtilities.invokeLater(new Runnable() {
+
+            /** {@inheritDoc} */
+            @Override
+            public void run() {
+                if (topicText.isEditable()) {
+                    return;
+                }
+                topicText.setText("");
+                if (channel.getCurrentTopic() != null) {
+                    channel.getStyliser().addStyledString((StyledDocument) topicText.
+                            getDocument(),
+                            new String[]{Styliser.CODE_HEXCOLOUR + ColourManager.
+                                getHex(
+                                foregroundColour) + channel.getCurrentTopic().
+                                getTopic(),},
+                            as);
+                }
+                if (channel.getConfigManager().getOptionBool(controller.
+                        getDomain(),
+                        "hideEmptyTopicBar")) {
+                    setVisible(topicText.getDocument().getLength() != 0);
+                }
+                topicText.setCaretPosition(0);
+                validateTopic();
+                setVisible(false);
+                setVisible(true);
+            }
+        });
     }
 
     /**
@@ -228,9 +239,10 @@ public class TopicBar extends JComponent implements ActionListener,
     public void actionPerformed(final ActionEvent e) {
         if (e.getSource() == topicEdit || e.getSource() == topicText) {
             if (topicText.isEditable()) {
-                if ((channel.getCurrentTopic() == null && !topicText.getText().isEmpty())
-                        || (channel.getCurrentTopic() != null &&
-                        !channel.getCurrentTopic().getTopic().equals(topicText.getText()))) {
+                if ((channel.getCurrentTopic() == null && !topicText.getText().
+                        isEmpty())
+                        || (channel.getCurrentTopic() != null && !channel.
+                        getCurrentTopic().getTopic().equals(topicText.getText()))) {
                     channel.setTopic(topicText.getText());
                 }
                 ((ChannelFrame) channel.getFrame()).getInputField().

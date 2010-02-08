@@ -148,20 +148,22 @@ public class ConfigPanel extends JPanel implements PreferencesInterface,
     private void updatePreview() {
         updateTimer.cancel();
 
-        MediaSource source = plugin.getBestSource();
+        final MediaSource source;
 
-        if (source == null) {
+        if (plugin.getBestSource() == null) {
             source = new DummyMediaSource();
+        } else {
+            source = plugin.getBestSource();
         }
-
-        preview.setText("Preview:\n" + plugin.doSubstitution(textfield.getText(),
-                source));
-        preview.repaint();
 
         SwingUtilities.invokeLater(new Runnable() {
 
+            /** {@inheritDoc} */
             @Override
             public void run() {
+                preview.setText("Preview:\n" + plugin.doSubstitution(
+                        textfield.getText(), source));
+                preview.repaint();
                 previewPanel.revalidate();
                 revalidate();
             }

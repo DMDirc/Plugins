@@ -231,9 +231,16 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
                     /** {@inheritDoc} */
                     @Override
                     protected Object doInBackground() throws Exception {
-                        if (((JTextField) e.getSource()).isEditable()) {
-                            enterPressed(line);
-                        }
+                        UIUtilities.invokeLater(new Runnable() {
+
+                            /** {@inheritDoc} */
+                            @Override
+                            public void run() {
+                                if (((JTextField) e.getSource()).isEditable()) {
+                                    enterPressed(line);
+                                }
+                            }
+                        });
                         return null;
                     }
                     }.execute();
