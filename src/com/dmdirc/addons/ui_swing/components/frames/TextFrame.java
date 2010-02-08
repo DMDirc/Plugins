@@ -48,7 +48,7 @@ import com.dmdirc.commandparser.parsers.GlobalCommandParser;
 import com.dmdirc.util.StringTranscoder;
 import com.dmdirc.config.ConfigManager;
 import com.dmdirc.interfaces.ConfigChangeListener;
-import com.dmdirc.interfaces.FrameInfoAdapter;
+import com.dmdirc.interfaces.FrameInfoListener;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.ui.IconManager;
@@ -102,7 +102,7 @@ import net.miginfocom.swing.MigLayout;
  */
 public abstract class TextFrame extends JInternalFrame implements Window,
         PropertyChangeListener, InternalFrameListener,
-        MouseListener, KeyListener, ConfigChangeListener {
+        MouseListener, KeyListener, ConfigChangeListener, FrameInfoListener {
 
     /** Logger to use. */
     private static final java.util.logging.Logger LOGGER =
@@ -165,14 +165,7 @@ public abstract class TextFrame extends JInternalFrame implements Window,
 
         setFrameIcon(IconManager.getIconManager().getIcon(owner.getIcon()));
 
-        owner.addFrameInfoListener(new FrameInfoAdapter() {
-
-            /** {@inheritDoc} */
-            @Override
-            public void iconChanged(final Window window, final String icon) {
-                setFrameIcon(IconManager.getIconManager().getIcon(icon));
-            }
-        });
+        owner.addFrameInfoListener(this);
 
         try {
             transcoder = new StringTranscoder(Charset.forName(
@@ -1178,5 +1171,24 @@ public abstract class TextFrame extends JInternalFrame implements Window,
                         getOptionBool("ui", "quickCopy");
             }
         }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void iconChanged(final Window window, final String icon) {
+        UIUtilities.invokeLater(new Runnable() {
+
+            /** {@inheritDoc} */
+            @Override
+            public void run() {
+                setFrameIcon(IconManager.getIconManager().getIcon(icon));
+            }
+        });
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void nameChanged(final Window window, final String name) {
+        //Ignore
     }
 }

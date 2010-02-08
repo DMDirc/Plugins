@@ -117,8 +117,8 @@ public class CategoryPanel extends JPanel {
 
         title = new TitlePanel(BorderFactory.createEtchedBorder(),
                 "Preferences");
-        tooltip = new ToolTipPanel("Hover over a setting to see a " +
-                    "description, if available.");
+        tooltip = new ToolTipPanel("Hover over a setting to see a "
+                + "description, if available.");
 
         add(title, "pushx, growx, h 45!");
         add(scrollPane, "grow, push");
@@ -132,8 +132,8 @@ public class CategoryPanel extends JPanel {
             @Override
             public void correctBounds(final ComponentWrapper cw) {
                 if (cw.getComponent() == scrollPane) {
-                   parent.setPanelHeight((int) (scrollPane.getViewport().
-                           getExtentSize().height * 0.95));
+                    parent.setPanelHeight((int) (scrollPane.getViewport().
+                            getExtentSize().height * 0.95));
                 }
             }
         });
@@ -209,7 +209,7 @@ public class CategoryPanel extends JPanel {
                     }
                 }
             });
-        }        
+        }
     }
 
     /**
@@ -248,7 +248,14 @@ public class CategoryPanel extends JPanel {
      * @param b
      */
     public void setWaiting(final boolean b) {
-        scrollPane.setViewportView(waitingCategory);
+        UIUtilities.invokeLater(new Runnable() {
+
+            /** {@inheritDoc} */
+            @Override
+            public void run() {
+                scrollPane.setViewportView(waitingCategory);
+            }
+        });
     }
 
     /**
@@ -257,10 +264,18 @@ public class CategoryPanel extends JPanel {
      * @param message Message to display
      */
     public void setError(final String message) {
-        final JPanel panel = new JPanel(new MigLayout("fillx"));
-        panel.add(new TextLabel("An error has occurred loading the " +
-                "preferences dialog, an error has been raised: "), "wrap");
-        panel.add(new TextLabel(message));
-        scrollPane.setViewportView(panel);
+        UIUtilities.invokeLater(new Runnable() {
+
+            /** {@inheritDoc} */
+            @Override
+            public void run() {
+                final JPanel panel = new JPanel(new MigLayout("fillx"));
+                panel.add(new TextLabel("An error has occurred loading the "
+                        + "preferences dialog, an error has been raised: "),
+                        "wrap");
+                panel.add(new TextLabel(message));
+                scrollPane.setViewportView(panel);
+            }
+        });
     }
 }

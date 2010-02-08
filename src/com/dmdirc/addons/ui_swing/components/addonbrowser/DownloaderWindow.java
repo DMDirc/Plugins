@@ -6,6 +6,7 @@
 package com.dmdirc.addons.ui_swing.components.addonbrowser;
 
 import com.dmdirc.Main;
+import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.ui.CoreUIUtils;
 import com.dmdirc.util.DownloadListener;
 import com.dmdirc.util.Downloader;
@@ -62,7 +63,14 @@ public class DownloaderWindow extends JDialog implements Runnable, DownloadListe
         try {
             Downloader.downloadPage("http://addons.dmdirc.com/feed", 
                     Main.getConfigDir() + File.separator + "addons.feed", this);
-            new BrowserWindow(parentWindow);
+            UIUtilities.invokeLater(new Runnable() {
+
+                /** {@inheritDoc} */
+                @Override
+                public void run() {
+                    new BrowserWindow(parentWindow);
+                }
+            });
         } catch (IOException ex) {
             removeAll();
             add(new JLabel("Unable to download feed."));
@@ -73,14 +81,28 @@ public class DownloaderWindow extends JDialog implements Runnable, DownloadListe
     
     /** {@inheritDoc} */
     @Override
-    public void downloadProgress(float percent) {
-        jpb.setValue((int) percent);
+    public void downloadProgress(final float percent) {
+        UIUtilities.invokeLater(new Runnable() {
+
+            /** {@inheritDoc} */
+            @Override
+            public void run() {
+                jpb.setValue((int) percent);
+            }
+        });
     }
 
     /** {@inheritDoc} */
     @Override
     public void setIndeterminate(final boolean indeterminate) {
-        jpb.setIndeterminate(indeterminate);
+        UIUtilities.invokeLater(new Runnable() {
+
+            /** {@inheritDoc} */
+            @Override
+            public void run() {
+                jpb.setIndeterminate(indeterminate);
+            }
+        });
     }
 
 }

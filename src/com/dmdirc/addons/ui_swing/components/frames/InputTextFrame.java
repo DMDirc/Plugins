@@ -19,6 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 package com.dmdirc.addons.ui_swing.components.frames;
 
 import com.dmdirc.WritableFrameContainer;
@@ -94,7 +95,8 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
      * @param owner WritableFrameContainer owning this frame.
      * @param controller Swing controller
      */
-    public InputTextFrame(final WritableFrameContainer owner, final SwingController controller) {
+    public InputTextFrame(final WritableFrameContainer owner,
+            final SwingController controller) {
         super(owner, controller);
 
         initComponents();
@@ -130,7 +132,7 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
             public void run() {
                 InputTextFrame.super.open();
                 if (useAwayIndicator && getContainer().
-                    getServer() != null) {
+                        getServer() != null) {
                     awayLabel.setVisible(getContainer().getServer().isAway());
                 }
 
@@ -183,9 +185,11 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
 
         getInputField().getActionMap().put("paste",
                 new InputTextFramePasteAction(this));
-        getInputField().getInputMap(WHEN_FOCUSED).put(KeyStroke.getKeyStroke("shift INSERT"),
+        getInputField().getInputMap(WHEN_FOCUSED).put(KeyStroke.getKeyStroke(
+                "shift INSERT"),
                 "paste");
-        getInputField().getInputMap(WHEN_FOCUSED).put(KeyStroke.getKeyStroke("ctrl V"),
+        getInputField().getInputMap(WHEN_FOCUSED).put(KeyStroke.getKeyStroke(
+                "ctrl V"),
                 "paste");
     }
 
@@ -253,16 +257,23 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
      */
     @Override
     public void setAwayIndicator(final boolean awayState) {
-        final boolean awayIndicator = getConfigManager().
-                getOptionBool("ui", "awayindicator");
-        if (awayIndicator || !awayState) {
-            if (awayState) {
-                inputPanel.add(awayLabel, BorderLayout.LINE_START);
-                awayLabel.setVisible(true);
-            } else {
-                awayLabel.setVisible(false);
+        UIUtilities.invokeLater(new Runnable() {
+
+            /** {@inheritDoc} */
+            @Override
+            public void run() {
+                final boolean awayIndicator = getConfigManager().
+                        getOptionBool("ui", "awayindicator");
+                if (awayIndicator || !awayState) {
+                    if (awayState) {
+                        inputPanel.add(awayLabel, BorderLayout.LINE_START);
+                        awayLabel.setVisible(true);
+                    } else {
+                        awayLabel.setVisible(false);
+                    }
+                }
             }
-        }
+        });
     }
 
     /**
@@ -307,8 +318,8 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
             if (point != null) {
                 initPopupMenu();
                 inputFieldPopup.show(this, (int) point.getX(),
-                        (int) point.getY() + getTextPane().getHeight() +
-                        (int) PlatformDefaults.getUnitValueX("related").getValue());
+                        (int) point.getY() + getTextPane().getHeight() + (int) PlatformDefaults.
+                        getUnitValueX("related").getValue());
             }
         }
         super.processMouseEvent(e);
@@ -334,8 +345,8 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
                     getSystemClipboard().getData(DataFlavor.stringFlavor);
             doPaste(clipboard);
         } catch (IOException ex) {
-            Logger.userError(ErrorLevel.LOW, "Unable to get clipboard contents: " +
-                    ex.getMessage());
+            Logger.userError(ErrorLevel.LOW, "Unable to get clipboard contents: " + ex.
+                    getMessage());
         } catch (UnsupportedFlavorException ex) {
             Logger.userError(ErrorLevel.LOW, "Unsupported clipboard type", ex);
         }
@@ -350,17 +361,21 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
     protected void doPaste(final String clipboard) {
         String[] clipboardLines;
         //check theres something to paste
-        if (clipboard != null && (clipboardLines = getSplitLine(clipboard)).length > 1) {
+        if (clipboard != null && (clipboardLines = getSplitLine(clipboard)).length
+                > 1) {
             final int caretPosition = getInputField().getCaretPosition();
             final String inputFieldText = getInputField().getText();
-            final String text = inputFieldText.substring(0, caretPosition) + clipboard + inputFieldText.substring(caretPosition);
+            final String text = inputFieldText.substring(0, caretPosition)
+                    + clipboard + inputFieldText.substring(caretPosition);
             //check the limit
             final Integer pasteTrigger = getConfigManager().getOptionInt("ui",
                     "pasteProtectionLimit");
             //check whether the number of lines is over the limit
-            if (pasteTrigger != null && getContainer().getNumLines(text) > pasteTrigger) {
+            if (pasteTrigger != null && getContainer().getNumLines(text)
+                    > pasteTrigger) {
                 //show the multi line paste dialog
-                new PasteDialog(this, text, getController().getMainFrame()).display();
+                new PasteDialog(this, text, getController().getMainFrame()).
+                        display();
                 inputField.setText("");
             } else {
                 //send the lines
@@ -391,17 +406,20 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
 
         if ("ui".equals(domain) && getConfigManager() != null) {
             if (getInputField() != null) {
-                if ("inputbackgroundcolour".equals(key) ||
-                        "backgroundcolour".equals(key)) {
-                    getInputField().setBackground(getConfigManager().getOptionColour(
+                if ("inputbackgroundcolour".equals(key) || "backgroundcolour".
+                        equals(key)) {
+                    getInputField().setBackground(getConfigManager().
+                            getOptionColour(
                             "ui", "inputbackgroundcolour",
                             "ui", "backgroundcolour"));
-                } else if ("inputforegroundcolour".equals(key) ||
-                        "foregroundcolour".equals(key)) {
-                    getInputField().setForeground(getConfigManager().getOptionColour(
+                } else if ("inputforegroundcolour".equals(key) || "foregroundcolour".
+                        equals(key)) {
+                    getInputField().setForeground(getConfigManager().
+                            getOptionColour(
                             "ui", "inputforegroundcolour",
                             "ui", "foregroundcolour"));
-                    getInputField().setCaretColor(getConfigManager().getOptionColour(
+                    getInputField().setCaretColor(getConfigManager().
+                            getOptionColour(
                             "ui", "inputforegroundcolour",
                             "ui", "foregroundcolour"));
                 }
@@ -444,7 +462,9 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
                 menu.add(populatePopupMenu(new JMenu(menuItem.getName()),
                         menuItem.getSubMenu(), arguments));
             } else {
-                menu.add(new JMenuItem(new CommandAction(getCommandParser(),
+                menu.add(
+                        new JMenuItem(
+                        new CommandAction(getCommandParser(),
                         this, menuItem.getName(), menuItem.getCommand(arguments))));
             }
         }

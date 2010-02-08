@@ -131,7 +131,14 @@ public abstract class StatusbarPopupPanel extends JPanel
      * @param text New text
      */
     public void setText(final String text) {
-        label.setText(text);
+        UIUtilities.invokeLater(new Runnable() {
+
+            /** {@inheritDoc} */
+            @Override
+            public void run() {
+                label.setText(text);
+            }
+        });
     }
 
     /**
