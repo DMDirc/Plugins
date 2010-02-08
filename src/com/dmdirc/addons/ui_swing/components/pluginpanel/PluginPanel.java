@@ -24,6 +24,7 @@ package com.dmdirc.addons.ui_swing.components.pluginpanel;
 
 import com.dmdirc.Main;
 import com.dmdirc.addons.ui_swing.SwingController;
+import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.config.prefs.PreferencesInterface;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.PluginManager;
@@ -163,12 +164,18 @@ public final class PluginPanel extends JPanel implements
                 PluginManager.getPluginManager().getPossiblePluginInfos(true);
         Collections.sort(list);
 
-        ((DefaultListModel) pluginList.getModel()).clear();
-        for (PluginInfo plugin : list) {
-            ((DefaultListModel) pluginList.getModel()).addElement(new PluginInfoToggle(
-                    plugin));
-        }
-        pluginList.repaint();
+        UIUtilities.invokeLater(new Runnable() {
+
+            @Override
+            public void run() {
+                ((DefaultListModel) pluginList.getModel()).clear();
+                for (PluginInfo plugin : list) {
+                    ((DefaultListModel) pluginList.getModel()).addElement(new PluginInfoToggle(
+                            plugin));
+                }
+                pluginList.repaint();
+            }
+        });
         return pluginList;
     }
 

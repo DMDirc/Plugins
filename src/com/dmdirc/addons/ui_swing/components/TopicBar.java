@@ -198,25 +198,35 @@ public class TopicBar extends JComponent implements ActionListener,
     /** {@inheritDoc} */
     @Override
     public void topicChanged(final Channel channel, final Topic topic) {
-        if (topicText.isEditable()) {
-            return;
-        }
-        topicText.setText("");
-        if (channel.getCurrentTopic() != null) {
-            channel.getStyliser().addStyledString((StyledDocument) topicText.
-                    getDocument(),
-                    new String[]{Styliser.CODE_HEXCOLOUR + ColourManager.getHex(
-                        foregroundColour) + channel.getCurrentTopic().getTopic(),},
-                    as);
-        }
-        if (channel.getConfigManager().getOptionBool(controller.getDomain(),
-                "hideEmptyTopicBar")) {
-            setVisible(topicText.getDocument().getLength() != 0);
-        }
-        topicText.setCaretPosition(0);
-        validateTopic();
-        setVisible(false);
-        setVisible(true);
+        UIUtilities.invokeLater(new Runnable() {
+
+            /** {@inheritDoc} */
+            @Override
+            public void run() {
+                if (topicText.isEditable()) {
+                    return;
+                }
+                topicText.setText("");
+                if (channel.getCurrentTopic() != null) {
+                    channel.getStyliser().addStyledString((StyledDocument) topicText.
+                            getDocument(),
+                            new String[]{Styliser.CODE_HEXCOLOUR + ColourManager.
+                                getHex(
+                                foregroundColour) + channel.getCurrentTopic().
+                                getTopic(),},
+                            as);
+                }
+                if (channel.getConfigManager().getOptionBool(controller.
+                        getDomain(),
+                        "hideEmptyTopicBar")) {
+                    setVisible(topicText.getDocument().getLength() != 0);
+                }
+                topicText.setCaretPosition(0);
+                validateTopic();
+                setVisible(false);
+                setVisible(true);
+            }
+        });
     }
 
     /**

@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.components.themepanel;
 
+import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.prefs.PreferencesInterface;
 import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
@@ -143,18 +144,24 @@ public final class ThemePanel extends JPanel implements
                 getAvailableThemes().values());
         Collections.sort(list);
 
-        ((DefaultListModel) themeList.getModel()).clear();
+        UIUtilities.invokeLater(new Runnable() {
 
-        for (Theme plugin : list) {
-            ((DefaultListModel) themeList.getModel()).addElement(new ThemeToggle(
-                    plugin));
-        }
+            /** {@inheritDoc} */
+            @Override
+            public void run() {
+                ((DefaultListModel) themeList.getModel()).clear();
+                for (Theme plugin : list) {
+                    ((DefaultListModel) themeList.getModel()).addElement(
+                            new ThemeToggle(plugin));
+                }
 
-        if (((DefaultListModel) themeList.getModel()).size() > 0) {
-            toggleButton.setEnabled(true);
-        }
+                if (((DefaultListModel) themeList.getModel()).size() > 0) {
+                    toggleButton.setEnabled(true);
+                }
 
-        themeList.repaint();
+                themeList.repaint();
+            }
+        });
         return themeList;
     }
 

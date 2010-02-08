@@ -25,6 +25,7 @@ package com.dmdirc.addons.nowplaying;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.interfaces.ActionType;
 import com.dmdirc.actions.CoreActionType;
+import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.commandparser.CommandManager;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
@@ -34,6 +35,7 @@ import com.dmdirc.interfaces.ActionListener;
 import com.dmdirc.plugins.Plugin;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.PluginManager;
+import com.dmdirc.util.ReturnableThread;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -100,7 +102,14 @@ public class NowPlayingPlugin extends Plugin implements ActionListener  {
     /** {@inheritDoc} */
     @Override
     public void showConfig(final PreferencesManager manager) {
-        final ConfigPanel configPanel = new ConfigPanel(this, order);
+        final ConfigPanel configPanel = UIUtilities.invokeAndWait(
+                new ReturnableThread<ConfigPanel>() {
+
+            @Override
+            public void run() {
+                setObject(new ConfigPanel(NowPlayingPlugin.this, order));
+            }
+        });
         
         final PreferencesCategory category = new PluginPreferencesCategory(
                 getPluginInfo(), "Now Playing",

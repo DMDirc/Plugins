@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.windowstatus;
 
+import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.ui.interfaces.StatusBarComponent;
 import com.dmdirc.ui.messages.Styliser;
 
@@ -58,7 +59,14 @@ public class WindowStatusPanel extends JPanel implements StatusBarComponent {
      * @param text New text
      */
     public void setText(final String text) {
-        label.setText(Styliser.stipControlCodes(text));
+        UIUtilities.invokeLater(new Runnable() {
+
+            /** {@inheritDoc} */
+            @Override
+            public void run() {
+                label.setText(Styliser.stipControlCodes(text));
+            }
+        });
     }
 
 }

@@ -24,6 +24,7 @@ package com.dmdirc.addons.mediasource_vlc;
 
 import com.dmdirc.addons.nowplaying.MediaSource;
 import com.dmdirc.addons.nowplaying.MediaSourceState;
+import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
@@ -32,6 +33,7 @@ import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.plugins.Plugin;
 import com.dmdirc.util.Downloader;
+import com.dmdirc.util.ReturnableThread;
 
 import java.io.File;
 import java.io.IOException;
@@ -207,7 +209,15 @@ public class VlcMediaSourcePlugin extends Plugin implements MediaSource {
                 "", "category-vlc");
         final PreferencesCategory instr = new PluginPreferencesCategory(
                 getPluginInfo(), "Instructions",
-                "", new InstructionsPanel());
+                "", UIUtilities.invokeAndWait(
+                new ReturnableThread<InstructionsPanel>() {
+
+            /** {@inheritDoc} */
+            @Override
+            public void run() {
+                setObject(new InstructionsPanel());
+            }
+        }));
         
         general.addSetting(new PreferencesSetting(PreferencesType.TEXT, 
                 getDomain(), "host", "Hostname and port",
