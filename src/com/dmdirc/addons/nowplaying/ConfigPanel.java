@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.nowplaying;
 
+import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.reorderablelist.ListReorderButtonPanel;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.prefs.PreferencesInterface;
@@ -30,6 +31,7 @@ import com.dmdirc.addons.ui_swing.components.reorderablelist.ReorderableJList;
 
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
+import com.dmdirc.util.ReturnableThread;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.Arrays;
@@ -148,20 +150,29 @@ public class ConfigPanel extends JPanel implements PreferencesInterface,
     private void updatePreview() {
         updateTimer.cancel();
 
-        MediaSource source = plugin.getBestSource();
+        final MediaSource source;
 
-        if (source == null) {
+        if (plugin.getBestSource() == null) {
             source = new DummyMediaSource();
+        } else {
+            source = plugin.getBestSource();
         }
 
-        preview.setText("Preview:\n" + plugin.doSubstitution(textfield.getText(),
-                source));
-        preview.repaint();
+        final String text = plugin.doSubstitution(
+                        UIUtilities.invokeAndWait(new ReturnableThread<String>() {
 
+                    @Override
+                    public void run() {
+                        setObject(textfield.getText());
+                    }
+                }), source);
         SwingUtilities.invokeLater(new Runnable() {
 
+            /** {@inheritDoc} */
             @Override
             public void run() {
+                preview.setText("Preview:\n" + text);
+                preview.repaint();
                 previewPanel.revalidate();
                 revalidate();
             }

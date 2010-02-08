@@ -87,7 +87,8 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
             localTarget.getInputMap(JComponent.WHEN_FOCUSED).
                     put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0), "upArrow");
         } else {
-            localTarget.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).
+            localTarget.getInputMap(
+                    JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).
                     put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0), "upArrow");
         }
     }
@@ -120,7 +121,8 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
             localTarget.getInputMap(JComponent.WHEN_FOCUSED).
                     put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), "downArrow");
         } else {
-            localTarget.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).
+            localTarget.getInputMap(
+                    JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).
                     put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), "downArrow");
         }
     }
@@ -226,17 +228,25 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
             public void actionPerformed(final ActionEvent e) {
                 final String line = target.getText();
                 target.setText("");
-                new LoggingSwingWorker() {
+                UIUtilities.invokeLater(new Runnable() {
 
                     /** {@inheritDoc} */
                     @Override
-                    protected Object doInBackground() throws Exception {
+                    public void run() {
                         if (((JTextField) e.getSource()).isEditable()) {
-                            enterPressed(line);
+                            new LoggingSwingWorker() {
+
+                                /** {@inheritDoc} */
+                                @Override
+                                protected Object doInBackground() throws
+                                        Exception {
+                                    enterPressed(line);
+                                    return null;
+                                }
+                            }.execute();
                         }
-                        return null;
                     }
-                    }.execute();
+                });
             }
         });
         localTarget.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).
@@ -256,7 +266,7 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
      */
     @Override
     public void keyTyped(final KeyEvent e) {
-    //Ignore
+        //Ignore
     }
 
     /** 
@@ -266,8 +276,8 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
      */
     @Override
     public void keyPressed(final KeyEvent e) {
-        if (e.getKeyCode() != KeyEvent.VK_TAB && e.getKeyCode() !=
-                KeyEvent.VK_UP && e.getKeyCode() != KeyEvent.VK_DOWN) {
+        if (e.getKeyCode() != KeyEvent.VK_TAB && e.getKeyCode()
+                != KeyEvent.VK_UP && e.getKeyCode() != KeyEvent.VK_DOWN) {
             final String line = target.getText();
             if (UIUtilities.isCtrlDown(e) && e.getKeyCode() == KeyEvent.VK_ENTER
                     && (flags & HANDLE_RETURN) == HANDLE_RETURN) {
@@ -292,6 +302,6 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
      */
     @Override
     public void keyReleased(final KeyEvent e) {
-    //Ignore
+        //Ignore
     }
 }

@@ -27,6 +27,7 @@ import com.dmdirc.ChannelClientProperty;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.interfaces.ActionType;
 import com.dmdirc.actions.CoreActionType;
+import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
@@ -40,6 +41,7 @@ import com.dmdirc.parser.interfaces.ChannelInfo;
 import com.dmdirc.parser.interfaces.ClientInfo;
 import com.dmdirc.plugins.Plugin;
 import com.dmdirc.ui.messages.ColourManager;
+import com.dmdirc.util.ReturnableThread;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -53,85 +55,94 @@ import java.util.Map;
  */
 public final class NickColourPlugin extends Plugin implements ActionListener,
         ConfigChangeListener {
-    
+
     /** "Random" colours to use to colour nicknames. */
-    private String[] randColours = new String[] {
+    private String[] randColours = new String[]{
         "E90E7F", "8E55E9", "B30E0E", "18B33C",
-        "58ADB3", "9E54B3", "B39875", "3176B3",
-    };
+        "58ADB3", "9E54B3", "B39875", "3176B3",};
     private boolean useowncolour;
     private String owncolour;
     private boolean userandomcolour;
     private boolean settext;
     private boolean setnicklist;
-    
+
     /** Creates a new instance of NickColourPlugin. */
     public NickColourPlugin() {
         super();
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public void processEvent(final ActionType type, final StringBuffer format,
             final Object... arguments) {
         if (type.equals(CoreActionType.CHANNEL_GOTNAMES)) {
-            final ChannelInfo chanInfo = ((Channel) arguments[0]).getChannelInfo();
-            final String network = ((Channel) arguments[0]).getServer().getNetwork();
-            
+            final ChannelInfo chanInfo =
+                    ((Channel) arguments[0]).getChannelInfo();
+            final String network = ((Channel) arguments[0]).getServer().
+                    getNetwork();
+
             for (ChannelClientInfo client : chanInfo.getChannelClients()) {
                 colourClient(network, client);
             }
         } else if (type.equals(CoreActionType.CHANNEL_JOIN)) {
-            final String network = ((Channel) arguments[0]).getServer().getNetwork();
-            
+            final String network = ((Channel) arguments[0]).getServer().
+                    getNetwork();
+
             colourClient(network, (ChannelClientInfo) arguments[1]);
         }
     }
-    
+
     /**
      * Colours the specified client according to the user's config.
      *
      * @param network The network to use for the colouring
      * @param client The client to be coloured
      */
-    private void colourClient(final String network, final ChannelClientInfo client) {
+    private void colourClient(final String network,
+            final ChannelClientInfo client) {
         final Map map = client.getMap();
-        final ClientInfo myself = client.getClient().getParser().getLocalClient();
+        final ClientInfo myself =
+                client.getClient().getParser().getLocalClient();
         final String nickOption1 = "color:"
-                + client.getClient().getParser().getStringConverter().toLowerCase(network + ":" + client.getClient().getNickname());
+                + client.getClient().getParser().getStringConverter().
+                toLowerCase(network + ":" + client.getClient().getNickname());
         final String nickOption2 = "color:"
-                + client.getClient().getParser().getStringConverter().toLowerCase("*:" + client.getClient().getNickname());
-        
+                + client.getClient().getParser().getStringConverter().
+                toLowerCase("*:" + client.getClient().getNickname());
+
         if (useowncolour && client.getClient().equals(myself)) {
             final Color color = ColourManager.parseColour(owncolour);
             putColour(map, color, color);
-        }  else if (userandomcolour) {
-            putColour(map, getColour(client.getClient().getNickname()), getColour(client.getClient().getNickname()));
+        } else if (userandomcolour) {
+            putColour(map, getColour(client.getClient().getNickname()), getColour(client.
+                    getClient().getNickname()));
         }
-        
+
         String[] parts = null;
-                
-        if (IdentityManager.getGlobalConfig().hasOptionString(getDomain(), nickOption1)) {
+
+        if (IdentityManager.getGlobalConfig().hasOptionString(getDomain(),
+                nickOption1)) {
             parts = getParts(nickOption1);
-        } else if (IdentityManager.getGlobalConfig().hasOptionString(getDomain(), nickOption2)) {
+        } else if (IdentityManager.getGlobalConfig().hasOptionString(
+                getDomain(), nickOption2)) {
             parts = getParts(nickOption2);
         }
-        
+
         if (parts != null) {
             Color textColor = null;
             Color nickColor = null;
-            
+
             if (parts[0] != null) {
                 textColor = ColourManager.parseColour(parts[0], null);
             }
             if (parts[1] != null) {
                 nickColor = ColourManager.parseColour(parts[1], null);
             }
-            
+
             putColour(map, textColor, nickColor);
         }
     }
-    
+
     /**
      * Puts the specified colour into the given map. The keys are determined
      * by config settings.
@@ -141,16 +152,17 @@ public final class NickColourPlugin extends Plugin implements ActionListener,
      * @param nickColour Nick colour to be inserted
      */
     @SuppressWarnings("unchecked")
-    private void putColour(final Map map, final Color textColour, final Color nickColour) {
+    private void putColour(final Map map, final Color textColour,
+            final Color nickColour) {
         if (settext && textColour != null) {
             map.put(ChannelClientProperty.TEXT_FOREGROUND, textColour);
         }
-        
+
         if (setnicklist && nickColour != null) {
             map.put(ChannelClientProperty.NICKLIST_FOREGROUND, nickColour);
         }
     }
-    
+
     /**
      * Retrieves a pseudo-random colour for the specified nickname.
      *
@@ -159,16 +171,16 @@ public final class NickColourPlugin extends Plugin implements ActionListener,
      */
     private Color getColour(final String nick) {
         int count = 0;
-        
+
         for (int i = 0; i < nick.length(); i++) {
             count += nick.charAt(i);
         }
-        
+
         count = count % randColours.length;
-        
+
         return ColourManager.parseColour(randColours[count]);
     }
-    
+
     /**
      * Reads the nick colour data from the config.
      *
@@ -176,30 +188,31 @@ public final class NickColourPlugin extends Plugin implements ActionListener,
      */
     public Object[][] getData() {
         final List<Object[]> data = new ArrayList<Object[]>();
-        
-        for (String key : IdentityManager.getGlobalConfig().getOptions(getDomain()).keySet()) {
+
+        for (String key : IdentityManager.getGlobalConfig().getOptions(
+                getDomain()).keySet()) {
             if (key.startsWith("color:")) {
                 final String network = key.substring(6, key.indexOf(':', 6));
                 final String user = key.substring(1 + key.indexOf(':', 6));
                 final String[] parts = getParts(key);
-                
-                
+
+
                 data.add(new Object[]{network, user, parts[0], parts[1]});
             }
         }
-        
+
         final Object[][] res = new Object[data.size()][4];
-        
+
         int i = 0;
         for (Object[] row : data) {
             res[i] = row;
-            
+
             i++;
         }
-        
+
         return res;
     }
-    
+
     /**
      * Retrieves the config option with the specified key, and returns an
      * array of the colours that should be used for it.
@@ -208,17 +221,18 @@ public final class NickColourPlugin extends Plugin implements ActionListener,
      * @return The colours specified by the given key
      */
     private String[] getParts(final String key) {
-        String[] parts = IdentityManager.getGlobalConfig().getOption(getDomain(), key).split(":");
-        
+        String[] parts = IdentityManager.getGlobalConfig().getOption(getDomain(),
+                key).split(":");
+
         if (parts.length == 0) {
             parts = new String[]{null, null};
         } else if (parts.length == 1) {
             parts = new String[]{parts[0], null};
         }
-        
+
         return parts;
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public void onLoad() {
@@ -226,13 +240,13 @@ public final class NickColourPlugin extends Plugin implements ActionListener,
         ActionManager.addListener(this, CoreActionType.CHANNEL_GOTNAMES,
                 CoreActionType.CHANNEL_JOIN);
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public void onUnload() {
         ActionManager.removeListener(this);
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public void showConfig(final PreferencesManager manager) {
@@ -241,14 +255,22 @@ public final class NickColourPlugin extends Plugin implements ActionListener,
                 "General configuration for NickColour plugin.");
         final PreferencesCategory colours = new PluginPreferencesCategory(
                 getPluginInfo(), "Colours",
-                "Set colours for specific nicknames.", new NickColourPanel(this));
-        
+                "Set colours for specific nicknames.", UIUtilities.invokeAndWait(
+                new ReturnableThread<NickColourPanel>() {
+
+                    /** {@inheritDoc} */
+                    @Override
+                    public void run() {
+                        setObject(new NickColourPanel(NickColourPlugin.this));
+                    }
+                }));
+
         general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
-                "ui", "shownickcoloursintext", "Show colours in text" +
-                "area", "Colour nicknames in main text area?"));
+                "ui", "shownickcoloursintext", "Show colours in text" + "area",
+                "Colour nicknames in main text area?"));
         general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
-                "ui", "shownickcoloursinnicklist", "Show colours in" +
-                " nick list", "Colour nicknames in channel nick lists?"));
+                "ui", "shownickcoloursinnicklist", "Show colours in"
+                + " nick list", "Colour nicknames in channel nick lists?"));
         general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
                 getDomain(), "settext", "Set colours in textarea",
                 "Should the plugin set the textarea colour of nicks?"));
@@ -261,22 +283,30 @@ public final class NickColourPlugin extends Plugin implements ActionListener,
         general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
                 getDomain(), "useowncolour", "Use colour for own nick",
                 "Always use the same colour for our own nickname?"));
-        general.addSetting(new PreferencesSetting(PreferencesType.COLOUR,
+        general.addSetting(
+                new PreferencesSetting(PreferencesType.COLOUR,
                 getDomain(), "owncolour", "Colour to use for own nick",
-                "Colour used for our own nickname, if above setting is enabled."));        
+                "Colour used for our own nickname, if above setting is enabled."));
 
         general.addSubCategory(colours);
         manager.getCategory("Plugins").addSubCategory(general);
     }
 
     private void setCachedSettings() {
-        useowncolour = IdentityManager.getGlobalConfig().getOptionBool(getDomain(), "useowncolour");
-        owncolour = IdentityManager.getGlobalConfig().getOption(getDomain(), "owncolour");
-        userandomcolour = IdentityManager.getGlobalConfig().getOptionBool(getDomain(), "userandomcolour");
-        settext = IdentityManager.getGlobalConfig().getOptionBool(getDomain(), "settext");
-        setnicklist = IdentityManager.getGlobalConfig().getOptionBool(getDomain(), "setnicklist");
-        if (IdentityManager.getGlobalConfig().hasOptionString(getDomain(), "randomcolours")) {
-            randColours = IdentityManager.getGlobalConfig().getOptionList(getDomain(), "randomcolours").toArray(new String[0]);
+        useowncolour = IdentityManager.getGlobalConfig().getOptionBool(
+                getDomain(), "useowncolour");
+        owncolour = IdentityManager.getGlobalConfig().getOption(getDomain(),
+                "owncolour");
+        userandomcolour = IdentityManager.getGlobalConfig().getOptionBool(
+                getDomain(), "userandomcolour");
+        settext = IdentityManager.getGlobalConfig().getOptionBool(getDomain(),
+                "settext");
+        setnicklist = IdentityManager.getGlobalConfig().getOptionBool(
+                getDomain(), "setnicklist");
+        if (IdentityManager.getGlobalConfig().hasOptionString(getDomain(),
+                "randomcolours")) {
+            randColours = IdentityManager.getGlobalConfig().getOptionList(
+                    getDomain(), "randomcolours").toArray(new String[0]);
         }
     }
 
@@ -285,5 +315,4 @@ public final class NickColourPlugin extends Plugin implements ActionListener,
     public void configChanged(final String domain, final String key) {
         setCachedSettings();
     }
-    
 }

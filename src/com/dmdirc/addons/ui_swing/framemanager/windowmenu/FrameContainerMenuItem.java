@@ -61,7 +61,8 @@ public class FrameContainerMenuItem extends JMenuItem implements FrameInfoListen
      */
     public FrameContainerMenuItem(final FrameContainer frame,
             final WindowMenuFrameManager manager) {
-        super(frame.toString(), IconManager.getIconManager().getIcon(frame.getIcon()));
+        super(frame.toString(), IconManager.getIconManager().getIcon(frame.
+                getIcon()));
 
         this.frame = frame;
         this.manager = manager;
@@ -78,8 +79,8 @@ public class FrameContainerMenuItem extends JMenuItem implements FrameInfoListen
             /** {@inheritDoc} */
             @Override
             public void run() {
-                if ((frame != null && window != null) &&
-                        frame.equals(window.getContainer())) {
+                if ((frame != null && window != null) && frame.equals(window.
+                        getContainer())) {
                     setIcon(IconManager.getIconManager().getIcon(icon));
                 }
             }
@@ -94,8 +95,8 @@ public class FrameContainerMenuItem extends JMenuItem implements FrameInfoListen
             /** {@inheritDoc} */
             @Override
             public void run() {
-                if ((frame != null && window != null) &&
-                        frame.equals(window.getContainer())) {
+                if ((frame != null && window != null) && frame.equals(window.
+                        getContainer())) {
                     setText(name);
                 }
             }

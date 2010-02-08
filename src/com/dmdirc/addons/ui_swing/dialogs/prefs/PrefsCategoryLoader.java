@@ -134,8 +134,15 @@ public class PrefsCategoryLoader extends SwingWorker<JPanel, Object> {
             final JPanel panel, final String path) {
 
         if (!category.getDescription().isEmpty()) {
-            panel.add(new TextLabel(category.getDescription()), "span, " +
+            UIUtilities.invokeAndWait(new Runnable() {
+
+                /** {@inheritDoc} */
+                @Override
+                public void run() {
+                    panel.add(new TextLabel(category.getDescription()), "span, " +
                     "growx, pushx, wrap 2*unrel");
+                }
+            });
         }
 
         for (PreferencesCategory child : category.getSubcats()) {
@@ -191,11 +198,12 @@ public class PrefsCategoryLoader extends SwingWorker<JPanel, Object> {
             /** {@inheritDoc} */
             @Override
             public void run() {
-                setObject(PrefsComponentFactory.getComponent(setting));
+                JComponent option = PrefsComponentFactory.getComponent(setting);
+                option.setToolTipText(null);
+                setObject(option);
             }
         });
-        
-        option.setToolTipText(null);
+
         categoryPanel.getToolTipPanel().registerTooltipHandler(label,
                 getTooltipText(setting, categoryPanel));
         categoryPanel.getToolTipPanel().registerTooltipHandler(option,
@@ -247,13 +255,21 @@ public class PrefsCategoryLoader extends SwingWorker<JPanel, Object> {
      * @return A TextLabel with the appropriate text and tooltip
      */
     private TextLabel getLabel(final PreferencesSetting setting) {
-        final TextLabel label = new TextLabel(setting.getTitle() + ": ", false);
+        final TextLabel label = UIUtilities.invokeAndWait(
+                new ReturnableThread<TextLabel>() {
 
-        if (setting.getHelptext().isEmpty()) {
-            label.setToolTipText("No help available.");
-        } else {
-            label.setToolTipText(setting.getHelptext());
-        }
+            @Override
+            public void run() {
+                final TextLabel label = new TextLabel(setting.getTitle() +
+                        ": ", false);
+                if (setting.getHelptext().isEmpty()) {
+                    label.setToolTipText("No help available.");
+                } else {
+                    label.setToolTipText(setting.getHelptext());
+                }
+                setObject(label);
+            }
+        });
 
         return label;
     }
@@ -266,14 +282,22 @@ public class PrefsCategoryLoader extends SwingWorker<JPanel, Object> {
      */
     private void addInlineCategory(final PreferencesCategory category,
             final JPanel parent) {
-        final JPanel panel =
-                new NoRemovePanel(new MigLayout("fillx, gap unrel, wrap 2, " +
-                "hidemode 3, pack, wmax 470-" + leftPadding + "-" +
-                rightPadding + "-2*" + padding));
-        panel.setName(category.getPath());
-        panel.setBorder(BorderFactory.createTitledBorder(UIManager.getBorder(
-                "TitledBorder.border"), category.getTitle()));
+        final JPanel panel = UIUtilities.invokeAndWait(
+                new ReturnableThread<JPanel>() {
 
+            @Override
+            public void run() {
+                final JPanel panel =
+                new NoRemovePanel(new MigLayout("fillx, gap unrel, wrap 2, " +
+                    "hidemode 3, pack, wmax 470-" + leftPadding + "-" +
+                    rightPadding + "-2*" + padding));
+                panel.setName(category.getPath());
+                panel.setBorder(BorderFactory.createTitledBorder(UIManager.
+                        getBorder("TitledBorder.border"), category.getTitle()));
+                setObject(panel);
+            }
+        });
+        
         parent.add(panel, "span, growx, pushx, wrap");
 
         initCategory(category, panel, "");
@@ -287,14 +311,21 @@ public class PrefsCategoryLoader extends SwingWorker<JPanel, Object> {
      * @param namePrefix Category name prefix
      */
     private JPanel addCategory(final PreferencesCategory category) {
-        final JPanel panel =
-                new NoRemovePanel(new MigLayout("fillx, gap unrel, " +
-                "wrap 2, pack, hidemode 3, wmax 470-" + leftPadding + "-" +
-                rightPadding + "-2*" + padding));
-        panel.setName(category.getPath());
-        final String path = category.getPath();
+        final JPanel panel = UIUtilities.invokeAndWait(
+                new ReturnableThread<JPanel>() {
 
-        initCategory(category, panel, path);
+            @Override
+            public void run() {
+                final JPanel panel = new NoRemovePanel(
+                        new MigLayout("fillx, gap unrel, wrap 2, pack, " +
+                        "hidemode 3, wmax 470-" + leftPadding + "-" +
+                        rightPadding + "-2*" + padding));
+                panel.setName(category.getPath());
+                setObject(panel);
+            }
+        });
+
+        initCategory(category, panel, category.getPath());
 
         return panel;
     }
