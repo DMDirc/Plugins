@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.about;
 
+import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
@@ -121,15 +122,29 @@ public class LicenceLoader extends LoggingSwingWorker<Void, Void> {
 
     private void addLicensesToNode(final Map<String, InputStream> licences,
             final DefaultMutableTreeNode root) {
-        model.insertNodeInto(root, (DefaultMutableTreeNode) model.getRoot(),
-                model.getChildCount(model.getRoot()));
+        UIUtilities.invokeAndWait(new Runnable() {
+
+            /** {@inheritDoc} */
+            @Override
+            public void run() {
+                model.insertNodeInto(root, (DefaultMutableTreeNode) model.
+                        getRoot(), model.getChildCount(model.getRoot()));
+            }
+        });
         for (Entry<String, InputStream> entry : licences.entrySet()) {
             final Licence licence = createLicence(entry);
             if (licence == null) {
                 continue;
             }
-            model.insertNodeInto(new DefaultMutableTreeNode(licence), root,
-                    model.getChildCount(root));
+            UIUtilities.invokeAndWait(new Runnable() {
+
+                /** {@inheritDoc} */
+                @Override
+                public void run() {
+                    model.insertNodeInto(new DefaultMutableTreeNode(licence),
+                            root, model.getChildCount(root));
+                }
+            });
         }
     }
 
