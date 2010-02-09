@@ -156,6 +156,7 @@ public class BrowserWindow extends JDialog implements ActionListener {
                 nameButton.getModel(), ratingButton.getModel(),
                 statusButton.getModel(), filter);
         list.setRowSorter(sorter);
+        list.setShowGrid(false);
 
         try {
             loadData();
