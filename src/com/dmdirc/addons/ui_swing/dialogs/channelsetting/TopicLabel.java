@@ -152,7 +152,8 @@ public class TopicLabel extends JPanel {
     @Override
     public void setBackground(final Color bg) {
         super.setBackground(bg);
-        if (topic != null && !bg.equals(getBackground())) {
+        if (topic != null && ((bg == null && getBackground() != null) ||
+                !bg.equals(getBackground()))) {
             init();
         }
     }
@@ -161,7 +162,8 @@ public class TopicLabel extends JPanel {
     @Override
     public void setForeground(final Color fg) {
         super.setForeground(fg);
-        if (topic != null && !fg.equals(getForeground())) {
+        if (topic != null && ((fg == null && getForeground() != null) ||
+                !fg.equals(getForeground()))) {
             init();
         }
     }
