@@ -79,6 +79,7 @@ public class TopicHistoryPane extends JPanel implements ListSelectionListener {
             topicHistory.getModel().addRow(new Object[]{new TopicLabel(channel, topic),});
         }
         topicHistory.getSelectionModel().setSelectionInterval(0, 0);
+        topicHistory.setShowGrid(false);
 
         setLayout(new MigLayout("fill, ins 0"));
         add(scrollPane, "hmin 50, hmax 200, wmax 450");
