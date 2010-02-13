@@ -171,12 +171,12 @@ public class URLConfigPanel extends JPanel implements
      */
     private void layoutComponents() {
         removeAll();
-        setLayout(new MigLayout("ins 0, wrap 1"));
+        setLayout(new MigLayout("ins 0, wrap 1, nocache"));
 
         add(tableScrollPane, "growx, pushx, h 150!");
         add(add, "split 2, growx, pushx");
         add(remove, "growx, pushx");
-        add(activeComponent, "growx, pushx");
+        add(activeComponent, "growx, pushx, wmax 100%");
     }
 
     /** {@inheritDoc} */
