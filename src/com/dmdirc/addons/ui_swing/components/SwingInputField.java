@@ -32,6 +32,7 @@ import com.dmdirc.util.ListenerList;
 import com.dmdirc.util.ReturnableThread;
 
 import java.awt.Color;
+import java.awt.FontMetrics;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -43,6 +44,7 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.text.BadLocationException;
 
+import net.miginfocom.layout.PlatformDefaults;
 import net.miginfocom.swing.MigLayout;
 
 /** Swing input field. */
@@ -93,7 +95,9 @@ public class SwingInputField extends JComponent implements InputField,
 
         setLayout(new MigLayout("ins 0, hidemode 3"));
 
-        add(textField, "growx, pushx");
+        final FontMetrics fm = textField.getFontMetrics(textField.getFont());
+        add(textField, "grow, push, hmin " + (fm.getMaxAscent() + fm.
+                getMaxDescent() + PlatformDefaults.getPanelInsets(0).getValue()));
         add(wrapIndicator, "");
         add(errorIndicator, "");
 
