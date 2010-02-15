@@ -24,6 +24,7 @@ package com.dmdirc.addons.ui_swing.dialogs.about;
 
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.TreeScroller;
+import com.dmdirc.config.IdentityManager;
 import com.dmdirc.plugins.PluginInfo;
 
 import java.awt.Font;
@@ -147,13 +148,15 @@ public final class LicencesPanel extends JPanel implements TreeSelectionListener
         licence.setText(((Licence) userObject).getBody());
         } else if (userObject instanceof PluginInfo) {
             final PluginInfo pi = (PluginInfo) userObject;
-            licence.setText("Name: " + pi.getNiceName() + "<br>"
-                    + "Description: " + pi.getDescription() + "<br>"
-                    + "Author: " + pi.getAuthor() + "<br>"
-                    + "Version: " + pi.getFriendlyVersion());
+            licence.setText("<b>Name:</b> " + pi.getNiceName() + "<br>"
+                    + "<b>Version:</b> " + pi.getFriendlyVersion() + "<br>"
+                    + "<b>Author:</b> " + pi.getAuthor() + "<br>"
+                    + "<b>Description:</b> " + pi.getDescription() + "<br>");
         } else {
-            licence.setText("Name: DMDirc<br>"
-                    + "Desciption: The intelligent IRC client");
+            licence.setText("<b>Name:</b> DMDirc<br>"
+                    + "<b>Version:</b> " + IdentityManager.getGlobalConfig().
+                    getOption("version", "version") + "<br>"
+                    + "<b>Desciption:</b> The intelligent IRC client");
         }
         UIUtilities.resetScrollPane(scrollPane);
     }
