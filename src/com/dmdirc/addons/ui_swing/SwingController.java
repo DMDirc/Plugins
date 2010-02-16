@@ -657,7 +657,9 @@ public final class SwingController extends Plugin implements Serializable,
                     "Main frame not created. Unable to continue.");
         }
 
-        if (System.getProperty("java.vm.name", "unknown").contains("OpenJDK")) {
+        if (System.getProperty("java.vm.name", "unknown").contains("OpenJDK")
+                && IdentityManager.getGlobalConfig().getOptionBool(getDomain(),
+                "showjrewarning")) {
             new StandardMessageDialog(me, ModalityType.MODELESS,
                     "Unsupported JRE", "OpenJDK has known graphical "
                     + "issues and as such is unsupported by DMDirc.  Please "
