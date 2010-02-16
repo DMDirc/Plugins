@@ -210,7 +210,7 @@ public class BrowserWindow extends JDialog implements ActionListener {
 
         for (Map<String, String> entry : data.getKeyDomains().values()) {
             final AddonInfo info = new AddonInfo(entry);
-            list.getModel().addRow(new Object[]{new AddonInfoLabel(info),});
+            list.getModel().addRow(new Object[]{new AddonInfoLabel(info, this),});
         }
     }
 
