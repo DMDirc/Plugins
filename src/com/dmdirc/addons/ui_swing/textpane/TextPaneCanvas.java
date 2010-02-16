@@ -1,3 +1,4 @@
+
 /*
  * Copyright (c) 2006-2010 Chris Smith, Shane Mc Cormack, Gregory Holmes
  *
@@ -461,11 +462,15 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
                 selection.setEndLine(lineInfo.getLine());
                 selection.setStartPos(start);
                 selection.setEndPos(end);
+                textPane.copy();
+                textPane.clearSelection();
             } else if (e.getClickCount() == 3) {
                 selection.setStartLine(lineInfo.getLine());
                 selection.setEndLine(lineInfo.getLine());
                 selection.setStartPos(0);
                 selection.setEndPos(clickedText.length());
+                textPane.copy();
+                textPane.clearSelection();
             }
         }
 
