@@ -30,11 +30,13 @@ import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.themes.ThemeManager;
 import com.dmdirc.util.Downloader;
 
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import java.io.File;
 import java.io.IOException;
+import javax.swing.SwingUtilities;
 
 /**
  * Addon info install listener.
@@ -43,14 +45,18 @@ public class InstallListener implements ActionListener {
 
     /** Addon info. */
     private final AddonInfo info;
+    /** Parent window. */
+    private Window parentWindow;
 
     /**
      * Instantiates a new install listener.
      * 
      * @param info Addoninfo to install
+     * @param parentWindow Parent window
      */
-    public InstallListener(final AddonInfo info) {
+    public InstallListener(final AddonInfo info, final Window parentWindow) {
         this.info = info;
+        this.parentWindow = parentWindow;
     }
 
     /** 
@@ -60,6 +66,14 @@ public class InstallListener implements ActionListener {
      */
     @Override
     public void actionPerformed(final ActionEvent e) {
+        final InstallerWindow installer = new InstallerWindow(parentWindow, info);
+        SwingUtilities.invokeLater(new Runnable() {
+
+            @Override
+            public void run() {
+                installer.display(parentWindow);
+            }
+        });
         try {
             final File file = File.createTempFile("dmdirc-addon", ".tmp");
             file.deleteOnExit();
@@ -87,6 +101,9 @@ public class InstallListener implements ActionListener {
                         Logger.userError(ErrorLevel.MEDIUM, "Unable to "
                                 + "install addon, failed to move file: "
                                 + file.getAbsolutePath());
+                        installer.finished("Unable to "
+                                + "install addon, failed to move file: "
+                                + file.getAbsolutePath());
                     }
                     break;
                 case TYPE_THEME:
@@ -96,6 +113,8 @@ public class InstallListener implements ActionListener {
         } catch (IOException ex) {
             Logger.userError(ErrorLevel.MEDIUM, "Unable to download addon: "
                     + ex.getMessage(), ex);
+            installer.finished("Unable to download addon: " + ex.getMessage());
         }
+        installer.finished("");
     }
 }
