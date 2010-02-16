@@ -67,6 +67,7 @@ public class StandardDialog extends JDialog {
         if (owner != null) {
             setIconImages(owner.getIconImages());
         }
+        orderButtons(new JButton(), new JButton());
     }
 
     /**
@@ -81,6 +82,7 @@ public class StandardDialog extends JDialog {
         if (owner != null) {
             setIconImages(owner.getIconImages());
         }
+        orderButtons(new JButton(), new JButton());
     }
 
     /**
@@ -95,6 +97,7 @@ public class StandardDialog extends JDialog {
         if (owner != null) {
             setIconImages(owner.getIconImages());
         }
+        orderButtons(new JButton(), new JButton());
     }
 
     /**

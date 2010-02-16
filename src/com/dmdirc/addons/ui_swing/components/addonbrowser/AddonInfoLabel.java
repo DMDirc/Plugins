@@ -27,6 +27,7 @@ import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Window;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -47,15 +48,20 @@ public class AddonInfoLabel extends JPanel {
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 1;
+    /** Addon info to be represented. */
     private final AddonInfo addonInfo;
+    /** Parent window. */
+    private Window parentWindow;
 
     /**
      * Creates a new addon info label to describe the specified addon info.
      *
      * @param addonInfo Addon to describe
+     * @param parentWindow Parent window
      */
-    public AddonInfoLabel(final AddonInfo addonInfo) {
+    public AddonInfoLabel(final AddonInfo addonInfo, final Window parentWindow) {
         this.addonInfo = addonInfo;
+        this.parentWindow = parentWindow;
 
         init();
     }
@@ -80,7 +86,7 @@ public class AddonInfoLabel extends JPanel {
         add(label, "wmax 100%-170, hmax 150, growy, wrap, pushy, gapleft 5");
 
         final JButton button = new JButton("Install");
-        button.addActionListener(new InstallListener(addonInfo));
+        button.addActionListener(new InstallListener(addonInfo, parentWindow));
         final boolean installed = addonInfo.isInstalled();
         add(button, "split, gapleft 5");
 
