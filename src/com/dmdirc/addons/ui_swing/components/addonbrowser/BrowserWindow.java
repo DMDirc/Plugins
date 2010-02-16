@@ -44,6 +44,7 @@ import javax.swing.JTextField;
 
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+import javax.swing.table.DefaultTableModel;
 import net.miginfocom.swing.MigLayout;
 
 /**
@@ -210,7 +211,7 @@ public class BrowserWindow extends JDialog implements ActionListener {
 
         for (Map<String, String> entry : data.getKeyDomains().values()) {
             final AddonInfo info = new AddonInfo(entry);
-            list.getModel().addRow(new Object[]{new AddonInfoLabel(info),});
+            list.getModel().addRow(new Object[]{new AddonInfoLabel(info, this),});
         }
     }
 
