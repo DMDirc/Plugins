@@ -231,7 +231,11 @@ public abstract class DCCFrame extends WritableFrameContainer {
 
         // 6: Remove the window from the window manager
         WindowManager.removeWindow(myWindow);
+    }
 
+    /** {@inheritDoc} */
+    @Override
+    public void windowClosed() {
         // 7: Remove any references to the window and parents
         myWindow = null; // NOPMD
     }
