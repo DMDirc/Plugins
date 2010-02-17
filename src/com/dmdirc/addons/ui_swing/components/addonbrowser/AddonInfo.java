@@ -39,6 +39,7 @@ public class AddonInfo {
     private final int id;
     private final String stableDownload;
     private final String unstableDownload;
+    private final String nightlyDownload;
     private final String title;
     private final String author;
     private final int rating;
@@ -63,6 +64,7 @@ public class AddonInfo {
                 AddonType.TYPE_THEME : AddonType.TYPE_ACTION_PACK;
         this.stableDownload = entry.get("stable");
         this.unstableDownload = entry.get("unstable");
+        this.nightlyDownload = entry.get("nightly");
         this.description = entry.get("description");
         this.verified = entry.get("verified").equals("yes");
         this.date = Integer.parseInt(entry.get("date"));
@@ -159,6 +161,15 @@ public class AddonInfo {
     }
 
     /**
+     * Returns the nightly download location.
+     *
+     * @return Nightly download location
+     */
+    public String getNightlyDownload() {
+        return nightlyDownload;
+    }
+
+    /**
      * Returns whether the addon is verified.
      *
      * @return true iff the addon is verified
@@ -201,8 +212,10 @@ public class AddonInfo {
                 getOption("updater", "channel");
         if ("STABLE".equals(channel)) {
             return !stableDownload.isEmpty();
-        } else {
+        } else if ("UNSTABLE".equals(channel)) {
             return !unstableDownload.isEmpty();
+        } else {
+            return !nightlyDownload.isEmpty();
         }
     }
 
