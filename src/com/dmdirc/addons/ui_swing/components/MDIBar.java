@@ -24,7 +24,6 @@
 package com.dmdirc.addons.ui_swing.components;
 
 import com.dmdirc.addons.ui_swing.MainFrame;
-import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.config.ConfigManager;
@@ -43,6 +42,7 @@ import java.beans.PropertyChangeListener;
 
 import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -106,7 +106,7 @@ public class MDIBar extends JPanel implements FrameListener, SelectionListener,
     }
 
     private void check() {
-        UIUtilities.invokeLater(new Runnable() {
+        SwingUtilities.invokeLater(new Runnable() {
 
             @Override
             public void run() {
@@ -203,5 +203,6 @@ public class MDIBar extends JPanel implements FrameListener, SelectionListener,
     @Override
     public void selectionChanged(Window window) {
         activeFrame = window;
+        check();
     }
 }
