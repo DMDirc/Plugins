@@ -695,15 +695,7 @@ public abstract class TextFrame extends JInternalFrame implements Window,
      */
     @Override
     public void internalFrameClosed(final InternalFrameEvent event) {
-        new LoggingSwingWorker() {
-
-            /** {@inheritDoc} */
-            @Override
-            protected Object doInBackground() throws Exception {
-                frameParent.windowClosed();
-                return null;
-            }
-        }.execute();
+        //Ignore.
     }
 
     /**
@@ -730,7 +722,7 @@ public abstract class TextFrame extends JInternalFrame implements Window,
     @Override
     public void internalFrameDeiconified(final InternalFrameEvent event) {
         //Ignore.
-        }
+    }
 
     /**
      * Activates the input field on frame focus. {@inheritDoc}
