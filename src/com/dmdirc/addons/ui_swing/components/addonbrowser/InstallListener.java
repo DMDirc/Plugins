@@ -78,13 +78,17 @@ public class InstallListener implements ActionListener {
             final File file = File.createTempFile("dmdirc-addon", ".tmp");
             file.deleteOnExit();
 
-            if ("STABLE".equals(IdentityManager.getGlobalConfig().getOption(
-                    "updater", "channel"))) {
+            final String channel = IdentityManager.getGlobalConfig().getOption(
+                    "updater", "channel");
+            if ("STABLE".equals(channel)) {
                 Downloader.downloadPage("http://addons.dmdirc.com/addondownload/"
                         + info.getStableDownload(), file.getAbsolutePath());
-            } else {
+            } else if ("UNSTABLE".equals(channel)) {
                 Downloader.downloadPage("http://addons.dmdirc.com/addondownload/"
                         + info.getUnstableDownload(), file.getAbsolutePath());
+            } else {
+                Downloader.downloadPage("http://addons.dmdirc.com/addondownload/"
+                        + info.getNightlyDownload(), file.getAbsolutePath());
             }
 
             switch (info.getType()) {
