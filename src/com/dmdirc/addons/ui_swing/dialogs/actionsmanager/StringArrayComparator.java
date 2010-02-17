@@ -26,18 +26,18 @@ import java.util.Arrays;
 import java.util.Comparator;
 
 /**
- * Action response comparator.
+ * String array comparator.
  */
-public class ActionResponseComparator implements Comparator<String[]> {
+public class StringArrayComparator implements Comparator<String[]> {
     
     /** {@inheritDoc} */
     @Override
     public int compare(final String[] o1, final String[] o2) {
-        String response1 = Arrays.toString(o1);
-        response1 = response1.substring(1, response1.length() - 1);
-        String response2 = Arrays.toString(o2);
-        response2 = response2.substring(1, response2.length() - 1);
-        return response1.toLowerCase().compareTo(response2.toLowerCase());
+        String array1 = Arrays.toString(o1);
+        array1 = array1.substring(1, array1.length() - 1);
+        String array2 = Arrays.toString(o2);
+        array2 = array2.substring(1, array2.length() - 1);
+        return array1.toLowerCase().compareTo(array2.toLowerCase());
     }
 
 }
