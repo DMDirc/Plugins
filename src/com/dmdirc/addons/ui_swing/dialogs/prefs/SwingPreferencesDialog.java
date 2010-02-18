@@ -335,9 +335,9 @@ public final class SwingPreferencesDialog extends StandardDialog implements
         if (manager != null) {
             if (manager.save()) {
                 dispose();
-                new SwingRestartDialog(parentWindow,
+                SwingRestartDialog.showSwingRestartDialog(parentWindow,
                         ModalityType.APPLICATION_MODAL,
-                        "apply settings").display();
+                        "apply settings");
             }
         }
     }

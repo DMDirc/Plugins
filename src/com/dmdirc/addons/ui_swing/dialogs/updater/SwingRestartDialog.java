@@ -46,6 +46,8 @@ public class SwingRestartDialog extends StandardDialog implements ActionListener
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = -7446499281414990074L;
+    /** Previously created instance of SwingUpdaterDialog. */
+    private static volatile SwingRestartDialog me;
     /** Informational label. */
     private TextLabel info;
     /** Swing controller. */
@@ -59,7 +61,7 @@ public class SwingRestartDialog extends StandardDialog implements ActionListener
      * @param mainFrame Main Frame
      * @param modal Modality
      */
-    public SwingRestartDialog(final MainFrame mainFrame, final ModalityType modal) {
+    private SwingRestartDialog(final MainFrame mainFrame, final ModalityType modal) {
         this(mainFrame, modal, "finish updating");
     }
 
@@ -70,7 +72,7 @@ public class SwingRestartDialog extends StandardDialog implements ActionListener
      * @param modal Modality
      * @param cause Reason for restart
      */
-    public SwingRestartDialog(final MainFrame mainFrame, 
+    private SwingRestartDialog(final MainFrame mainFrame,
             final ModalityType modal, final String cause) {
         super(mainFrame, modal);
         this.mainFrame = mainFrame;
@@ -81,6 +83,72 @@ public class SwingRestartDialog extends StandardDialog implements ActionListener
         
         initComponents();
         layoutComponents();
+    }
+
+    /**
+     * Creates the dialog if one doesn't exist, and displays it.
+     *
+     * @param mainFrame Main frame
+     * @param modal Dialog modality
+     */
+    public static void showSwingRestartDialog(final MainFrame mainFrame,
+            final ModalityType modal) {
+        me = getSwingUpdaterDialog(mainFrame, modal);
+        me.display();
+    }
+
+    /**
+     * Creates the dialog if one doesn't exist, and displays it.
+     *
+     * @param mainFrame Main frame
+     * @param modal Dialog modality
+     * @param cause Reason to restart
+     */
+    public static void showSwingRestartDialog(final MainFrame mainFrame,
+            final ModalityType modal, final String cause) {
+        me = getSwingUpdaterDialog(mainFrame, modal, cause);
+        me.setModalityType(modal);
+        me.display();
+    }
+
+    /**
+     * Gets the dialog if one doesn't exist.
+     *
+     * @param mainFrame Main frame
+     * @param modal Dialog modality
+     *
+     * @return Dialog instance
+     */
+    public static SwingRestartDialog getSwingUpdaterDialog(
+            final MainFrame mainFrame, final ModalityType modal) {
+        synchronized (SwingUpdaterDialog.class) {
+            if (me == null) {
+                me = new SwingRestartDialog(mainFrame, modal);
+            }
+        }
+
+        return me;
+    }
+
+    /**
+     * Gets the dialog if one doesn't exist.
+     *
+     * @param mainFrame Main frame
+     * @param modal Dialog modality
+     * @param cause Reason to restart
+     *
+     * @return Dialog instance
+     */
+    public static SwingRestartDialog getSwingUpdaterDialog(
+            final MainFrame mainFrame, final ModalityType modal,
+            final String cause) {
+        synchronized (SwingUpdaterDialog.class) {
+            if (me == null) {
+                me = new SwingRestartDialog(mainFrame, modal, cause);
+            }
+        }
+
+        return me;
     }
     
     /** Initialise components. */
@@ -133,5 +201,16 @@ public class SwingRestartDialog extends StandardDialog implements ActionListener
         }
         dispose();
     }
-    
+
+    /** {@inheritDoc} */
+    @Override
+    public void dispose() {
+        if (me == null) {
+            return;
+        }
+        synchronized (me) {
+            super.dispose();
+            me = null;
+        }
+    }    
 }

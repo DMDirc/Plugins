@@ -78,9 +78,7 @@ public class UpdaterLabel extends StatusbarPopupPanel implements StatusBarCompon
         
         if (mouseEvent.getButton() == MouseEvent.BUTTON1) {
             if (UpdateChecker.getStatus().equals(UpdateChecker.STATE.RESTART_REQUIRED)) {
-                SwingRestartDialog restartDialog = new SwingRestartDialog(
-                        mainFrame, ModalityType.MODELESS);
-                restartDialog.setVisible(true);
+                SwingRestartDialog.showSwingRestartDialog(mainFrame, ModalityType.MODELESS);
             } else if (!UpdateChecker.getStatus().equals(UpdateChecker.STATE.CHECKING)) {
                 SwingUpdaterDialog.showSwingUpdaterDialog(
                         UpdateChecker.getAvailableUpdates(), mainFrame);
