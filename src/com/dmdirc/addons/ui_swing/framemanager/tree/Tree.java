@@ -28,6 +28,8 @@ import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.addons.ui_swing.actions.CloseFrameContainerAction;
 import com.dmdirc.addons.ui_swing.components.TreeScroller;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
+import com.dmdirc.logger.ErrorLevel;
+import com.dmdirc.logger.Logger;
 
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
@@ -98,6 +100,21 @@ public class Tree extends JTree implements MouseMotionListener,
             /** {@inheritDoc} */
             @Override
             protected void setPath(final TreePath path) {
+                if (path == null) {
+                    Logger.appError(ErrorLevel.HIGH, "Unable to change focus",
+                            new IllegalArgumentException("path == null"));
+                    return;
+                }
+                if (path.getLastPathComponent() == null) {
+                    Logger.appError(ErrorLevel.HIGH, "Unable to change focus",
+                            new IllegalArgumentException("Last component == null"));
+                    return;
+                }
+                if (((TreeViewNode) path.getLastPathComponent()).getFrameContainer() == null) {
+                    Logger.appError(ErrorLevel.HIGH, "Unable to change focus",
+                            new IllegalArgumentException("Frame is null"));
+                    return;
+                }
                 super.setPath(path);
                 ((TreeViewNode) path.getLastPathComponent()).getFrameContainer().
                         activateFrame();

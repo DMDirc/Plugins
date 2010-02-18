@@ -79,6 +79,27 @@ public class TreeScroller implements MouseWheelListener {
     }
 
     /**
+     * Registers a new tree scroller on the specified tree.
+     *
+     * @param tree Tree to scroll
+     */
+    public static void register(final JTree tree) {
+        new TreeScroller(tree);
+    }
+
+    /**
+     * Registers a new tree scroller for the specified models.
+     *
+     * @param model Tree model.
+     * @param selectionModel Selection model.
+     * @param rootVisible Root visible
+     */
+    public static void register(final DefaultTreeModel model,
+            final TreeSelectionModel selectionModel, final boolean rootVisible) {
+        new TreeScroller(model, selectionModel, rootVisible);
+    }
+
+    /**
      * {@inheritDoc}
      *
      * @param e Mouse wheel event
