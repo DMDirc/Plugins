@@ -323,11 +323,11 @@ public final class WindowMenuFrameManager extends JMenu implements
     private int getIndex(final FrameContainer newChild, final JMenu menu) {
         final int count = menu == this ? itemCount : 0;
         for (int i = count; i < menu.getMenuComponentCount(); i++) {
-            if (!(menu.getMenuComponent(i) instanceof FrameContainerMenuItem)) {
+            if (!(menu.getMenuComponent(i) instanceof FrameContainerMenuIterface)) {
                 continue;
             }
-            final FrameContainer child =
-                    ((FrameContainerMenuItem) menu.getMenuComponent(i)).getFrame();
+            final FrameContainer child = ((FrameContainerMenuIterface)
+                    menu.getMenuComponent(i)).getFrame();
             if (sortBefore(newChild, child)) {
                 return i;
             } else if (!sortAfter(newChild, child) && IdentityManager.
