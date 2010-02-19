@@ -40,7 +40,7 @@ import javax.swing.SwingUtilities;
  * Action representing a frame.
  */
 public class FrameContainerMenuItem extends JMenuItem implements FrameInfoListener,
-        ActionListener, SelectionListener {
+        ActionListener, SelectionListener, FrameContainerMenuIterface {
 
     /**
      * A version number for this class. It should be changed whenever the class
@@ -126,11 +126,8 @@ public class FrameContainerMenuItem extends JMenuItem implements FrameInfoListen
         }
     }
 
-    /**
-     * Returns the wrapped frame container.
-     * 
-     * @return Wrapped frame container
-     */
+    /** {@inheritDoc} */
+    @Override
     public FrameContainer getFrame() {
         return frame;
     }
