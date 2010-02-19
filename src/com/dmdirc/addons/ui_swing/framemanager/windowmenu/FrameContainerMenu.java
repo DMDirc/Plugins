@@ -41,7 +41,7 @@ import javax.swing.SwingUtilities;
  * Frame container JMenu.
  */
 public class FrameContainerMenu extends JMenu implements FrameInfoListener,
-        ActionListener, SelectionListener {
+        ActionListener, SelectionListener, FrameContainerMenuIterface {
 
     /**
      * A version number for this class. It should be changed whenever the class
@@ -129,11 +129,8 @@ public class FrameContainerMenu extends JMenu implements FrameInfoListener,
         setFont(getFont().deriveFont(Font.ITALIC));
     }
 
-    /**
-     * Returns the wrapped frame container.
-     *
-     * @return Wrapped frame container
-     */
+    /** {@inheritDoc} */
+    @Override
     public FrameContainer getFrame() {
         return frame;
     }
