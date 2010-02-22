@@ -345,7 +345,7 @@ public final class ProfileDetailPanel extends JPanel implements ActionListener,
     /** {@inheritDoc} */
     @Override
     public void valueChanged(final ListSelectionEvent e) {
-        if (!e.getValueIsAdjusting() && nicknames.getSelectedIndex() == -1) {
+        if (nicknames.getSelectedIndex() == -1) {
             editButton.setEnabled(false);
             delButton.setEnabled(false);
         } else {
