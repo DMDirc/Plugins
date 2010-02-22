@@ -114,9 +114,11 @@ public final class ProfileDetailPanel extends JPanel implements ActionListener,
         this.model = model;
         this.nicknameModel = new DefaultListModel();
 
-        validator = new ValidatorChain(new NoDuplicatesInListValidator(
-                false, nicknameModel), new NicknameValidator());
         initMainComponents();
+
+        validator = new ValidatorChain(new NoDuplicatesInListValidator(
+                false, nicknames, nicknameModel), new NicknameValidator());
+
         layoutComponents();
 
         clearProfile();
@@ -261,6 +263,8 @@ public final class ProfileDetailPanel extends JPanel implements ActionListener,
     @Override
     public void actionPerformed(final ActionEvent e) {
         if (e.getSource() == addButton) {
+            final int index = nicknames.getSelectedIndex();
+            nicknames.getSelectionModel().clearSelection();
             new StandardInputDialog(ProfileManagerDialog.getProfileManagerDialog(mainFrame),
                     ModalityType.DOCUMENT_MODAL, "New Nickname",
                     "Please enter the new nickname", validator) {
@@ -275,6 +279,7 @@ public final class ProfileDetailPanel extends JPanel implements ActionListener,
                 /** {@inheritDoc} */
                 @Override
                 public boolean save() {
+                    nicknames.setSelectedIndex(index);
                     nicknames.getModel().addElement(getText());
                     return true;
                 }
@@ -282,7 +287,7 @@ public final class ProfileDetailPanel extends JPanel implements ActionListener,
                 /** {@inheritDoc} */
                 @Override
                 public void cancelled() {
-                //Ignore
+                    nicknames.setSelectedIndex(index);
                 }
             }.display();
         } else if (e.getSource() == editButton) {
