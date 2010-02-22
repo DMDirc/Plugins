@@ -110,7 +110,7 @@ public class URLDialog extends StandardDialog implements ActionListener {
     private void initComponents() {
         orderButtons(new JButton(), new JButton());
         blurb = new TextLabel("Please select the appropriate action to " +
-                "handle " + url.getScheme() + " URL protocols from the list " +
+                "handle " + url.getScheme() + ":// URLsfrom the list " +
                 "below.");
         panel = new URLProtocolPanel(url, false);
     }

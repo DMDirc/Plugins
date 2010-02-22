@@ -105,7 +105,7 @@ public class URLProtocolPanel extends JPanel implements ActionListener,
         showFileChooser = new JButton("Browse");
         commandPath = new JTextField();
         optionType = new ButtonGroup();
-        dmdirc = new JRadioButton("Handle internally (irc links only)");
+        dmdirc = new JRadioButton("Open with DMDirc)");
         browser = new JRadioButton("Use browser (or system registered handler)");
         mail = new JRadioButton("Use mail client");
         custom = new JRadioButton("Custom command");
