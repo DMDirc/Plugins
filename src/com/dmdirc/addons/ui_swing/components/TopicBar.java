@@ -226,6 +226,9 @@ public class TopicBar extends JComponent implements ActionListener,
      */
     @Override
     public void actionPerformed(final ActionEvent e) {
+        if (!channel.isOnChannel()) {
+            return;
+        }
         if (e.getSource() == topicEdit || e.getSource() == topicText) {
             if (topicText.isEditable()) {
                 if ((channel.getCurrentTopic() == null && !topicText.getText().isEmpty())
