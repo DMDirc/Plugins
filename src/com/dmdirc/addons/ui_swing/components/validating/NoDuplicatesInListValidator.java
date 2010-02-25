@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.ui_swing.dialogs.profiles;
+package com.dmdirc.addons.ui_swing.components.validating;
 
 import com.dmdirc.config.prefs.validator.ValidationResponse;
 import com.dmdirc.config.prefs.validator.Validator;
@@ -34,11 +34,11 @@ import javax.swing.JList;
 public class NoDuplicatesInListValidator implements Validator<String> {
 
     /** List. */
-    private JList list;
+    protected JList list;
     /** List to validate. */
-    private DefaultListModel model;
+    protected DefaultListModel model;
     /** Case sensitive. */
-    private boolean caseSensitive;
+    protected boolean caseSensitive;
 
     /**
      * Creates a new validator.
@@ -69,11 +69,35 @@ public class NoDuplicatesInListValidator implements Validator<String> {
     @Override
     public ValidationResponse validate(final String object) {
         final String string = caseSensitive ? object : object.toLowerCase();
-        if (model.indexOf(string) != -1 && (list.getSelectedValue() == null ||
-                !list.getSelectedValue().equals(string))) {
+        if (indexOfString(string) != -1 && (list.getSelectedValue() == null ||
+                !listValueToString(list.getSelectedValue()).equals(string))) {
                 return new ValidationResponse("Value is a duplicate");
         } else {
             return new ValidationResponse();
         }
+    }
+
+    /**
+     * Converts the list object to a string for validation. Defaults to the
+     * objects toString method.
+     *
+     * @param object Object to convert
+     *
+     * @return String representation
+     */
+    public String listValueToString(final Object object) {
+        return object.toString();
+    }
+
+    /**
+     * Returns the index of an object represented by a string.  Defaults to
+     * searching for the string.
+     *
+     * @param string String to look for
+     *
+     * @return Index of the string of -1 if not found
+     */
+    public int indexOfString(final String string) {
+        return model.indexOf(string);
     }
 }

@@ -32,7 +32,6 @@ import com.dmdirc.addons.ui_swing.Apple;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.config.IdentityManager;
-import com.dmdirc.config.prefs.validator.ActionGroupValidator;
 import com.dmdirc.config.prefs.validator.FileNameValidator;
 import com.dmdirc.config.prefs.validator.ValidatorChain;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
@@ -41,6 +40,7 @@ import com.dmdirc.addons.ui_swing.components.SortedListModel;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialog;
 import com.dmdirc.addons.ui_swing.components.renderers.ActionGroupListCellRenderer;
+import com.dmdirc.addons.ui_swing.components.validating.NoDuplicatesInListValidator;
 import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
 
 import java.awt.Window;
@@ -100,16 +100,22 @@ public final class ActionsManagerDialog extends StandardDialog implements
     private JPanel groupPanel;
     /** Are we saving? */
     private final AtomicBoolean saving = new AtomicBoolean(false);
+    /** Duplicate action group validator. */
+    private ValidatorChain<String> validator;
 
     /** 
      * Creates a new instance of ActionsManagerDialog.
      */
+    @SuppressWarnings("unchecked")
     private ActionsManagerDialog(final Window parentWindow,
             final SwingController controller) {
         super(Apple.isAppleUI() ? new AppleJFrame((MainFrame) parentWindow,
                 controller) : null, ModalityType.MODELESS);
 
         initComponents();
+        validator = new ValidatorChain<String>(
+                new ActionGroupNoDuplicatesInListValidator(groups,
+                (DefaultListModel) groups.getModel()), new FileNameValidator());
         addListeners();
         layoutGroupPanel();
         layoutComponents();
@@ -335,13 +341,12 @@ public final class ActionsManagerDialog extends StandardDialog implements
     /**
      * Prompts then adds an action group.
      */
-    @SuppressWarnings("unchecked")
     private void addGroup() {
+        final int index = groups.getSelectedIndex();
+        groups.getSelectionModel().clearSelection();
         final StandardInputDialog inputDialog = new StandardInputDialog(this,
                 ModalityType.DOCUMENT_MODAL, "New action group",
-                "Please enter the name of the new action group",
-                new ValidatorChain<String>(new FileNameValidator(),
-                new ActionGroupValidator())) {
+                "Please enter the name of the new action group", validator) {
 
             /**
              * A version number for this class. It should be changed whenever the class
@@ -354,6 +359,7 @@ public final class ActionsManagerDialog extends StandardDialog implements
             @Override
             public boolean save() {
                 if (!saving.getAndSet(true)) {
+                    groups.setSelectedIndex(index);
                     if (getText() == null || getText().isEmpty() && !ActionManager.
                             getGroups().
                             containsKey(getText())) {
@@ -371,7 +377,7 @@ public final class ActionsManagerDialog extends StandardDialog implements
             /** {@inheritDoc} */
             @Override
             public void cancelled() {
-                //Ignore
+                groups.setSelectedIndex(index);
             }
         };
         inputDialog.display(this);
@@ -380,16 +386,12 @@ public final class ActionsManagerDialog extends StandardDialog implements
     /**
      * Prompts then edits an action group.
      */
-    @SuppressWarnings("unchecked")
     private void editGroup() {
         final String oldName =
                 ((ActionGroup) groups.getSelectedValue()).getName();
         final StandardInputDialog inputDialog = new StandardInputDialog(this,
-                ModalityType.DOCUMENT_MODAL,
-                "Edit action group",
-                "Please enter the new name of the action group",
-                new ValidatorChain<String>(new FileNameValidator(),
-                new ActionGroupValidator())) {
+                ModalityType.DOCUMENT_MODAL, "Edit action group",
+                "Please enter the new name of the action group", validator) {
 
             /**
              * A version number for this class. It should be changed whenever the class
@@ -519,5 +521,54 @@ public final class ActionsManagerDialog extends StandardDialog implements
             super.dispose();
             me = null;
         }
+    }
+}
+
+/**
+ * No duplicates list validator, overriden to work with action groups.
+ */
+class ActionGroupNoDuplicatesInListValidator extends NoDuplicatesInListValidator {
+
+    /**
+     * Creates a new validator.
+     *
+     * @param list List
+     * @param model Model to validate
+     */
+    public ActionGroupNoDuplicatesInListValidator(final JList list,
+            final DefaultListModel model) {
+        super(true, list, model);
+    }
+
+    /**
+     * Creates a new validator.
+     *
+     * @param list List
+     * @param caseSensitive Case sensitive check?
+     * @param model Model to validate
+     */
+    public ActionGroupNoDuplicatesInListValidator(final boolean caseSensitive,
+            final JList list, final DefaultListModel model) {
+        super(caseSensitive, list, model);
+    }
+    
+    /** {@inheritDoc} */
+    @Override
+    public String listValueToString(final Object object) {
+        return ((ActionGroup) object).getName();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public int indexOfString(final String string) {
+        final String value = caseSensitive ? string : string.toLowerCase();
+        int index = -1;
+        for (int i = 0; i < model.getSize(); i++) {
+            if (((ActionGroup) model.get(i)).getName().equals(value)) {
+                index = i;
+                break;
+            }
+        }
+        return index;
     }
 }

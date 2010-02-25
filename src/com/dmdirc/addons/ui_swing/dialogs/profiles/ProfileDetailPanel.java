@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.profiles;
 
+import com.dmdirc.addons.ui_swing.components.validating.NoDuplicatesInListValidator;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.config.prefs.validator.FileNameValidator;
 import com.dmdirc.config.prefs.validator.IdentValidator;
