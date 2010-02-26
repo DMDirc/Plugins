@@ -109,8 +109,8 @@ public class TopicBar extends JComponent implements ActionListener,
         topicLengthMax = channel.getMaxTopicLength();
         errorIcon =
                 new JLabel(IconManager.getIconManager().getIcon("input-error"));
-        if (channelFrame.getConfigManager().getOptionBool(controller.
-                getDomain(), "showfulltopic")) {
+        if (channelFrame.getConfigManager().getOptionBool(controller.getDomain(),
+                "showfulltopic")) {
             topicText.setEditorKit(new StyledEditorKit());
         } else {
             topicText.setEditorKit(new WrapEditorKit());
@@ -156,7 +156,7 @@ public class TopicBar extends JComponent implements ActionListener,
             /** {@inheritDoc} */
             @Override
             public void actionPerformed(ActionEvent e) {
-                TopicBar.this.actionPerformed(e);
+                commitTopicEdit();
             }
         });
         topicText.getInputMap().put(KeyStroke.getKeyStroke("ESCAPE"),
@@ -169,8 +169,7 @@ public class TopicBar extends JComponent implements ActionListener,
             /** {@inheritDoc} */
             @Override
             public void actionPerformed(ActionEvent e) {
-                e.setSource(topicCancel);
-                TopicBar.this.actionPerformed(e);
+                cancelTopicEdit();
             }
         });
         topicText.addHyperlinkListener(this);
@@ -204,7 +203,8 @@ public class TopicBar extends JComponent implements ActionListener,
         }
         topicText.setText("");
         if (channel.getCurrentTopic() != null) {
-            channel.getStyliser().addStyledString((StyledDocument) topicText.getDocument(),
+            channel.getStyliser().addStyledString((StyledDocument) topicText.
+                    getDocument(),
                     new String[]{Styliser.CODE_HEXCOLOUR + ColourManager.getHex(
                         foregroundColour) + channel.getCurrentTopic().getTopic(),},
                     as);
@@ -229,41 +229,51 @@ public class TopicBar extends JComponent implements ActionListener,
         if (!channel.isOnChannel()) {
             return;
         }
-        if (e.getSource() == topicEdit || e.getSource() == topicText) {
+        if (e.getSource() == topicEdit) {
             if (topicText.isEditable()) {
-                if ((channel.getCurrentTopic() == null && !topicText.getText().isEmpty())
-                        || (channel.getCurrentTopic() != null &&
-                        !channel.getCurrentTopic().getTopic().equals(topicText.getText()))) {
-                    channel.setTopic(topicText.getText());
-                }
-                ((ChannelFrame) channel.getFrame()).getInputField().
-                        requestFocusInWindow();
-                topicChanged(channel, null);
-                topicText.setFocusable(false);
-                topicText.setEditable(false);
-                topicCancel.setVisible(false);
+                commitTopicEdit();
             } else {
-                topicText.setVisible(false);
-                topicText.setText("");
-                if (channel.getCurrentTopic() != null) {
-                    topicText.setText(channel.getCurrentTopic().getTopic());
-                }
-                applyAttributes();
-                topicText.setCaretPosition(0);
-                topicText.setFocusable(true);
-                topicText.setEditable(true);
-                topicText.setVisible(true);
-                topicText.requestFocusInWindow();
-                topicCancel.setVisible(true);
+                setupTopicEdit();
             }
         } else if (e.getSource() == topicCancel) {
-            topicText.setFocusable(false);
-            topicText.setEditable(false);
-            topicCancel.setVisible(false);
-            ((ChannelFrame) channel.getFrame()).getInputField().
-                    requestFocusInWindow();
-            topicChanged(channel, null);
+            cancelTopicEdit();
         }
+    }
+
+    private void commitTopicEdit() {
+        if ((channel.getCurrentTopic() == null && !topicText.getText().isEmpty())
+                || (channel.getCurrentTopic() != null
+                && !channel.getCurrentTopic().getTopic().equals(topicText.getText()))) {
+            channel.setTopic(topicText.getText());
+        }
+        ((ChannelFrame) channel.getFrame()).getInputField().requestFocusInWindow();
+        topicChanged(channel, null);
+        topicText.setFocusable(false);
+        topicText.setEditable(false);
+        topicCancel.setVisible(false);
+    }
+
+    private void setupTopicEdit() {
+        topicText.setVisible(false);
+        topicText.setText("");
+        if (channel.getCurrentTopic() != null) {
+            topicText.setText(channel.getCurrentTopic().getTopic());
+        }
+        applyAttributes();
+        topicText.setCaretPosition(0);
+        topicText.setFocusable(true);
+        topicText.setEditable(true);
+        topicText.setVisible(true);
+        topicText.requestFocusInWindow();
+        topicCancel.setVisible(true);
+    }
+
+    private void cancelTopicEdit() {
+        topicText.setFocusable(false);
+        topicText.setEditable(false);
+        topicCancel.setVisible(false);
+        ((ChannelFrame) channel.getFrame()).getInputField().requestFocusInWindow();
+        topicChanged(channel, null);
     }
 
     /** {@inheritDoc} */
@@ -451,7 +461,9 @@ public class TopicBar extends JComponent implements ActionListener,
     @Override
     public void mouseClicked(MouseEvent e) {
         if (e.getClickCount() == 2) {
-            topicEdit.doClick();
+            if (!topicText.isEditable()) {
+                topicEdit.doClick();
+            }
         }
     }
 
