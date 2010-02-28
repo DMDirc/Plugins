@@ -277,10 +277,23 @@ public class DCCTransferWindow extends DCCFrame implements DCCTransferHandler,
             percent = (100.00 / dcc.getFileSize()) * (transferCount + dcc.getFileStart());
         }
 
+        boolean percentageInTitle = IdentityManager.getGlobalConfig().getOptionBool(
+                            plugin.getDomain(), "general.percentageInTitle");
+
         if (dcc.getType() == DCCTransfer.TransferType.SEND) {
             status.setText("Status: Sending");
         } else {
             status.setText("Status: Recieving");
+        }
+
+        if (percentageInTitle) {
+            final StringBuilder title = new StringBuilder();
+            if (dcc.isListenSocket()) { title.append("*"); }
+            title.append(dcc.getType() == DCCTransfer.TransferType.SEND ? "Sending: " : "Recieving: ");
+            title.append(otherNickname);
+            title.append(" ("+ String.format("%.0f", Math.floor(percent)) +"%)");
+            this.setName(title.toString());
+            this.getFrame().setTitle(title.toString());
         }
 
         updateSpeedAndTime();
