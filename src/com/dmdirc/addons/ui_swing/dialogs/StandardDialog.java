@@ -118,6 +118,7 @@ public class StandardDialog extends JDialog {
                 executeAction(getCancelButton());
             }
         });
+        centreOnOwner();
         pack();
         centreOnOwner();
         setVisible(false);
