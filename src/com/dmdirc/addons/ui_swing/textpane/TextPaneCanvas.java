@@ -30,6 +30,7 @@ import com.dmdirc.config.ConfigManager;
 import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.ui.messages.IRCTextAttribute;
 import com.dmdirc.util.URLBuilder;
+import java.awt.Color;
 
 import java.awt.Cursor;
 import java.awt.Graphics;
@@ -270,8 +271,8 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
                     firstVisibleLine = line;
                     textLayouts.put(layout, new LineInfo(line, numberOfWraps));
                     positions.put(new Rectangle(0, (int) (drawPosY - layout.
-                            getAscent()), (int) (formatWidth +
-                            DOUBLE_SIDE_PADDING), lineHeight), layout);
+                            getDescent() - layout.getDescent()), (int) (formatWidth +
+                            DOUBLE_SIDE_PADDING), document.getLineHeight(line)), layout);
                 }
 
                 numberOfWraps++;
