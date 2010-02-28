@@ -269,9 +269,12 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
                     doHighlight(line, chars, layout, g, drawPosY, drawPosX);
                     firstVisibleLine = line;
                     textLayouts.put(layout, new LineInfo(line, numberOfWraps));
-                    positions.put(new Rectangle(0, (int) (drawPosY - layout.
-                            getDescent() - layout.getDescent()), (int) (formatWidth +
-                            DOUBLE_SIDE_PADDING), document.getLineHeight(line)), layout);
+                    final int y1 = (int) (drawPosY - layout.getAscent()
+                            + layout.getDescent());
+                    final int y2 = (int) (drawPosY + layout.getDescent()
+                            + layout.getDescent());
+                    positions.put(new Rectangle(0, y1, (int) formatWidth
+                            + DOUBLE_SIDE_PADDING, y2-y1), layout);
                 }
 
                 numberOfWraps++;
