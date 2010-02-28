@@ -614,6 +614,10 @@ public final class DCCPlugin extends Plugin implements ActionListener {
                 getDomain(), "send.blocksize", "Blocksize to use for DCC",
                 "Change the block size for send/receive, this can " +
                 "sometimes speed up transfers."));
+        general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
+                getDomain(), "general.percentageInTitle",
+                "Show percentage of transfers in the window title",
+                "Show the current percentage of transfers in the DCC window title"));
     }
 
 }
