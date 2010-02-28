@@ -270,8 +270,8 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
                     firstVisibleLine = line;
                     textLayouts.put(layout, new LineInfo(line, numberOfWraps));
                     positions.put(new Rectangle(0, (int) (drawPosY - layout.
-                            getAscent()), (int) (formatWidth +
-                            DOUBLE_SIDE_PADDING), lineHeight), layout);
+                            getDescent() - layout.getDescent()), (int) (formatWidth +
+                            DOUBLE_SIDE_PADDING), document.getLineHeight(line)), layout);
                 }
 
                 numberOfWraps++;
