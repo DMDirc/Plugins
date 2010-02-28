@@ -95,6 +95,10 @@ public class DCCTransferWindow extends DCCFrame implements DCCTransferHandler,
     /** Server that caused this send */
     private Server server = null;
 
+    /** Config option for Reverse DCC */
+    private boolean reverse = IdentityManager.getGlobalConfig().getOptionBool(
+                            plugin.getDomain(), "send.reverse");
+
     /** Show open button. */
     private boolean showOpen = Desktop.isDesktopSupported() &&
             Desktop.getDesktop().isSupported(Desktop.Action.OPEN);
@@ -277,10 +281,21 @@ public class DCCTransferWindow extends DCCFrame implements DCCTransferHandler,
             percent = (100.00 / dcc.getFileSize()) * (transferCount + dcc.getFileStart());
         }
 
+        boolean percentageInTitle = IdentityManager.getGlobalConfig().getOptionBool(
+                            plugin.getDomain(), "general.percentageInTitle");
+
         if (dcc.getType() == DCCTransfer.TransferType.SEND) {
             status.setText("Status: Sending");
+            if (percentageInTitle) {
+                this.setName((dcc.isListenSocket() ? "*Sending: " : "Sending: ") + otherNickname + (percentageInTitle ? " ("+ String.format("%.0f", Math.floor(percent)) +"%)" : ""));
+                this.getFrame().setTitle((dcc.isListenSocket() ? "*Sending: " : "Sending: ") + otherNickname + (percentageInTitle ? " ("+ String.format("%.0f", Math.floor(percent)) +"%)" : ""));
+            }
         } else {
             status.setText("Status: Recieving");
+            if (percentageInTitle) {
+                this.setName((dcc.isListenSocket() ? "*Receiving: " : "Receiving: ") + otherNickname + (percentageInTitle ? " ("+ String.format("%.0f", Math.floor(percent)) +"%)" : ""));
+                this.getFrame().setTitle((dcc.isListenSocket() ? "*Reveiving: " : "Receiving: ") + otherNickname + (percentageInTitle ? " ("+ String.format("%.0f", Math.floor(percent)) +"%)" : ""));
+            }
         }
 
         updateSpeedAndTime();
