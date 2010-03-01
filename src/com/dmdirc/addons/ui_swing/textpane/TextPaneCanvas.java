@@ -443,7 +443,7 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
         final int start;
         final int end;
 
-        final LineInfo lineInfo = getClickPosition(getMousePosition());
+        final LineInfo lineInfo = getClickPosition(getMousePosition(), true);
 
         if (lineInfo.getLine() != -1) {
             clickedText = document.getLine(lineInfo.getLine()).getText();
@@ -686,7 +686,7 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
 
     /** Checks for a link under the cursor and sets appropriately. */
     private void checkForLink() {
-        final LineInfo lineInfo = getClickPosition(getMousePosition());
+        final LineInfo lineInfo = getClickPosition(getMousePosition(), false);
 
         if (lineInfo.getLine() != -1 && document.getLine(lineInfo.getLine()) !=
                 null) {
@@ -752,7 +752,7 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
                             bounds.getHeight() - DOUBLE_SIDE_PADDING - 1);
                 }
             }
-            final LineInfo info = getClickPosition(point);
+            final LineInfo info = getClickPosition(point, true);
             if (info.getLine() == -1 && info.getPart() == -1 && contains(point)) {
                 info.setLine(0);
                 info.setPart(0);
@@ -776,10 +776,11 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
      * Returns the line information from a mouse click inside the textpane.
      *
      * @param point mouse position
+     * @param selection Are we selecting text?
      *
      * @return line number, line part, position in whole line
      */
-    public LineInfo getClickPosition(final Point point) {
+    public LineInfo getClickPosition(final Point point, final boolean selection) {
         int lineNumber = -1;
         int linePart = -1;
         int pos = 0;
@@ -793,7 +794,7 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
             }
 
             pos = getHitPosition(lineNumber, linePart, (int) point.getX(),
-                    (int) point.getY());
+                    (int) point.getY(), selection);
         }
 
         return new LineInfo(lineNumber, linePart, pos);
@@ -810,7 +811,7 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
      * @return Hit position
      */
     private int getHitPosition(final int lineNumber, final int linePart,
-            final int x, final int y) {
+            final int x, final int y, final boolean selection) {
         int pos = 0;
 
         for (Map.Entry<Rectangle, TextLayout> entry : positions.entrySet()) {
@@ -821,7 +822,11 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
                         linePart) {
                     final TextHitInfo hit = entry.getValue().hitTestChar(x -
                             DOUBLE_SIDE_PADDING, y);
-                    pos += hit.getInsertionIndex();
+                    if (selection) {
+                        pos += hit.getInsertionIndex();
+                    } else {
+                        pos += hit.getCharIndex();
+                    }
                 }
             }
         }
