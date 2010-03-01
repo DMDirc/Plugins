@@ -749,7 +749,7 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
                         (bounds.getY() + bounds.getHeight())) {
                     point.setLocation(bounds.getX() + bounds.getWidth() -
                             SINGLE_SIDE_PADDING, bounds.getY() +
-                            bounds.getHeight() - DOUBLE_SIDE_PADDING);
+                            bounds.getHeight() - DOUBLE_SIDE_PADDING - 1);
                 }
             }
             final LineInfo info = getClickPosition(point);
