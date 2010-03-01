@@ -200,7 +200,22 @@ public final class TextPane extends JComponent implements AdjustmentListener,
      * @return line number, line part, position in whole line
      */
     public LineInfo getClickPosition(final Point point) {
-        return canvas.getClickPosition(point);
+        return canvas.getClickPosition(point, true);
+    }
+
+    /**
+     *
+     * Returns the line information from a mouse click inside the textpane.
+     *
+     * @param point mouse position
+     * @param selection Are we selecting text?
+     *
+     * @return line number, line part, position in whole line
+     *
+     * @since 0.6.3
+     */
+    public LineInfo getClickPosition(final Point point, final boolean selection) {
+        return canvas.getClickPosition(point, selection);
     }
 
     /**

@@ -890,7 +890,7 @@ public abstract class TextFrame extends JInternalFrame implements Window,
         SwingUtilities.convertPointFromScreen(point, this);
         if (e.getSource() == getTextPane() && point != null) {
             final LineInfo lineInfo = getTextPane().getClickPosition(textPane.
-                    getMousePosition());
+                    getMousePosition(), false);
             final ClickType clickType = getTextPane().getClickType(lineInfo);
             final String attribute = (String) getTextPane().
                     getAttributeValueAtPoint(lineInfo);
