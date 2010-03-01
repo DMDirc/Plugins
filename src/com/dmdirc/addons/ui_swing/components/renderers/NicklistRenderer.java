@@ -102,8 +102,6 @@ public final class NicklistRenderer extends DefaultListCellRenderer implements
             }
         }
 
-        setBorder(BorderFactory.createEmptyBorder(0, 2, 0, 2));
-
         return this;
     }
 
