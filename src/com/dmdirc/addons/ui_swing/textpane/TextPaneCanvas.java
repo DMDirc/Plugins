@@ -753,11 +753,6 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
                 }
             }
             final LineInfo info = getClickPosition(point, true);
-            if (info.getLine() == -1 && info.getPart() == -1 && contains(point)) {
-                info.setLine(0);
-                info.setPart(0);
-                info.setIndex(0);
-            }
             if (info.getLine() != -1 && info.getPart() != -1) {
                 if (type == MouseEventType.CLICK) {
                     selection.setStartLine(info.getLine());
