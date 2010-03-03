@@ -280,7 +280,22 @@ public class TopicBar extends JComponent implements ActionListener,
     @Override
     public void hyperlinkUpdate(final HyperlinkEvent e) {
         if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-            URLHandler.getURLHander().launchApp(e.getDescription());
+            final String url = e.getDescription();
+            if (url == null) {
+                return;
+            }
+            if (url.startsWith("#")) {
+                channel.getServer().join(url);
+            } else if (url.contains("://")) {
+                URLHandler.getURLHander().launchApp(e.getDescription());
+            } else {
+                if (channel.getServer().hasQuery(url)) {
+                    channel.getServer().getQuery(url).activateFrame();
+                } else {
+                    channel.getServer().addQuery(url);
+                    channel.getServer().getQuery(url).show();
+                }
+            }
         }
     }
 
