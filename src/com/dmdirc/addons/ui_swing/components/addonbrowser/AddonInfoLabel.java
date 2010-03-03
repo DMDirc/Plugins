@@ -106,16 +106,6 @@ public class AddonInfoLabel extends JPanel {
 
     /** {@inheritDoc} */
     @Override
-    public void invalidate() {
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void revalidate() {
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public void repaint() {
     }
 
