@@ -74,9 +74,12 @@ public class WrapEditorKit extends StyledEditorKit implements MouseListener,
             return;
         }
         if (!editorPane.isEditable()) {
-            Object target = characterElementAt(e).getAttributes().getAttribute(
-                    IRCTextAttribute.HYPERLINK);
-            if (target != null) {
+            if (characterElementAt(e).getAttributes().getAttribute(
+                    IRCTextAttribute.HYPERLINK) != null
+                    || characterElementAt(e).getAttributes().getAttribute(
+                    IRCTextAttribute.CHANNEL) != null
+                    || characterElementAt(e).getAttributes().getAttribute(
+                    IRCTextAttribute.NICKNAME) != null) {
                 editorPane.setCursor(HAND_CURSOR);
                 return;
             }
@@ -97,6 +100,20 @@ public class WrapEditorKit extends StyledEditorKit implements MouseListener,
         if (!editorPane.isEditable()) {
             Object target = characterElementAt(e).getAttributes().getAttribute(
                     IRCTextAttribute.HYPERLINK);
+            if (target != null) {
+                editorPane.fireHyperlinkUpdate(new HyperlinkEvent(editorPane,
+                    HyperlinkEvent.EventType.ACTIVATED, null,
+                    (String) target));
+            }
+            target = characterElementAt(e).getAttributes().getAttribute(
+                    IRCTextAttribute.CHANNEL);
+            if (target != null) {
+                editorPane.fireHyperlinkUpdate(new HyperlinkEvent(editorPane,
+                    HyperlinkEvent.EventType.ACTIVATED, null,
+                    (String) target));
+            }
+            target = characterElementAt(e).getAttributes().getAttribute(
+                    IRCTextAttribute.NICKNAME);
             if (target != null) {
                 editorPane.fireHyperlinkUpdate(new HyperlinkEvent(editorPane,
                     HyperlinkEvent.EventType.ACTIVATED, null,
