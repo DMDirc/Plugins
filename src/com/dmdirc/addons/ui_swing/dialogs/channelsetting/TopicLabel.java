@@ -170,16 +170,6 @@ public class TopicLabel extends JPanel {
 
     /** {@inheritDoc} */
     @Override
-    public void invalidate() {
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void revalidate() {
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public void repaint() {
     }
 
