@@ -197,7 +197,7 @@ public final class FreeDesktopNotificationsPlugin extends Plugin implements
         final PreferencesCategory general = new PluginPreferencesCategory(getPluginInfo(), "FreeDesktop Notifications", "General configuration for FreeDesktop Notifications plugin.");
         
         general.addSetting(new PreferencesSetting(PreferencesType.INTEGER, getDomain(), "general.timeout", "Timeout", "Length of time in seconds before the notification popup closes."));
-        general.addSetting(new PreferencesSetting(PreferencesType.TEXT, getDomain(), "general.icon", "icon", "Path to icon to use on the notification."));
+        general.addSetting(new PreferencesSetting(PreferencesType.FILE, getDomain(), "general.icon", "icon", "Path to icon to use on the notification."));
         general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN, getDomain(), "advanced.escapehtml", "Escape HTML", "Some Implementations randomly parse HTML, escape it before showing?"));
 	general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN, getDomain(), "advanced.strictescape", "Strict Escape HTML", "Strictly escape HTML or just the basic characters? (&, < and >)"));
         general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN, getDomain(), "advanced.stripcodes", "Strip Control Codes", "Strip IRC Control codes from messages?"));

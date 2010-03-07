@@ -243,7 +243,7 @@ public class LoggingPlugin extends Plugin implements ActionListener,
         final PreferencesCategory advanced = new PluginPreferencesCategory(
                 getPluginInfo(), "Advanced", "Advanced configuration for Logging plugin. You shouldn't need to edit this unless you know what you are doing.");
 
-        general.addSetting(new PreferencesSetting(PreferencesType.TEXT, getDomain(), "general.directory", "Directory", "Directory for log files"));
+        general.addSetting(new PreferencesSetting(PreferencesType.DIRECTORY, getDomain(), "general.directory", "Directory", "Directory for log files"));
         general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN, getDomain(), "general.networkfolders", "Separate logs by network", "Should the files be stored in a sub-dir with the networks name?"));
         general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN, getDomain(), "general.addtime", "Timestamp logs", "Should a timestamp be added to the log files?"));
         general.addSetting(new PreferencesSetting(PreferencesType.TEXT, getDomain(), "general.timestamp", "Timestamp format", "The String to pass to 'SimpleDateFormat' to format the timestamp"));
