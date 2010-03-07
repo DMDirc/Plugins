@@ -405,6 +405,16 @@ public final class TextPane extends JComponent implements AdjustmentListener,
         scrollModel.setValue(scrollModel.getValue() - 10);
     }
 
+    /** Scrolls to the beginning of the TextPane */
+    public void goToHome() {
+        scrollModel.setValue(0);
+    }
+
+    /** Scrolls to the end of the TextPane */
+    public void goToEnd() {
+        scrollModel.setValue(document.getNumLines());
+    }
+
     /** {@inheritDoc}. */
     @Override
     public void lineAdded(final int line, final int size) {

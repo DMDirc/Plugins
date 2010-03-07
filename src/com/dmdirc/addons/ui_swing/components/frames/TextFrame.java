@@ -40,6 +40,8 @@ import com.dmdirc.addons.ui_swing.textpane.LineInfo;
 import com.dmdirc.addons.ui_swing.textpane.TextPane;
 import com.dmdirc.addons.ui_swing.textpane.TextPanePageDownAction;
 import com.dmdirc.addons.ui_swing.textpane.TextPanePageUpAction;
+import com.dmdirc.addons.ui_swing.textpane.TextPaneHomeAction;
+import com.dmdirc.addons.ui_swing.textpane.TextPaneEndAction;
 import com.dmdirc.commandparser.PopupManager;
 import com.dmdirc.commandparser.PopupMenu;
 import com.dmdirc.commandparser.PopupMenuItem;
@@ -537,11 +539,21 @@ public abstract class TextFrame extends JInternalFrame implements Window,
                 put(KeyStroke.getKeyStroke(KeyEvent.VK_F,
                 UIUtilities.getCtrlDownMask()), "searchAction");
 
+        getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).
+                put(KeyStroke.getKeyStroke(KeyEvent.VK_HOME, 
+                UIUtilities.getCtrlDownMask()), "homeAction");
+
+        getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).
+                put(KeyStroke.getKeyStroke(KeyEvent.VK_END,
+                UIUtilities.getCtrlDownMask()), "endAction");
+
         getActionMap().put("pageUpAction",
                 new TextPanePageUpAction(getTextPane()));
         getActionMap().put("pageDownAction",
                 new TextPanePageDownAction(getTextPane()));
         getActionMap().put("searchAction", new SearchAction(searchBar));
+        getActionMap().put("homeAction", new TextPaneHomeAction(getTextPane()));
+        getActionMap().put("endAction", new TextPaneEndAction(getTextPane()));
     }
 
     /**
