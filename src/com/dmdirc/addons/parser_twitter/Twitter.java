@@ -34,6 +34,7 @@ import com.dmdirc.config.IdentityManager;
 import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.logger.ErrorManager;
 import com.dmdirc.parser.common.CallbackManager;
+import com.dmdirc.parser.common.ChannelJoinRequest;
 import com.dmdirc.parser.common.DefaultStringConverter;
 import com.dmdirc.parser.common.IgnoreList;
 import com.dmdirc.parser.common.MyInfo;
@@ -221,44 +222,54 @@ public class Twitter implements Parser, TwitterErrorHandler, TwitterRawHandler, 
     /** {@inheritDoc} */
     @Override
     public void joinChannel(final String channel) {
-        joinChannel(channel, "");
+        joinChannels(new ChannelJoinRequest(channel));
     }
 
     /** {@inheritDoc} */
     @Override
     public void joinChannel(final String channel, final String key) {
-        if (isValidChannelName(channel) && getChannel(channel) == null && !channel.equalsIgnoreCase(mainChannelName)) {
-            final TwitterChannelInfo newChannel = new TwitterChannelInfo(channel, this);
-            newChannel.addChannelClient(new TwitterChannelClientInfo(newChannel, myself));
-            if (channel.matches("^&[0-9]+$")) {
-                try {
-                    long id = Long.parseLong(channel.substring(1));
-                    final TwitterStatus status = api.getStatus(id);
-                    if (status != null) {
-                        if (status.getReplyTo() > 0) {
-                            newChannel.setLocalTopic(status.getText()+" [Reply to: &"+status.getReplyTo()+"]");
+        joinChannels(new ChannelJoinRequest(channel, key));
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void joinChannels(final ChannelJoinRequest ... channels) {
+        for (ChannelJoinRequest request : channels) {
+            final String channel = request.getName();
+
+            if (isValidChannelName(channel) && getChannel(channel) == null && !channel.equalsIgnoreCase(mainChannelName)) {
+                final TwitterChannelInfo newChannel = new TwitterChannelInfo(channel, this);
+                newChannel.addChannelClient(new TwitterChannelClientInfo(newChannel, myself));
+                if (channel.matches("^&[0-9]+$")) {
+                    try {
+                        long id = Long.parseLong(channel.substring(1));
+                        final TwitterStatus status = api.getStatus(id);
+                        if (status != null) {
+                            if (status.getReplyTo() > 0) {
+                                newChannel.setLocalTopic(status.getText()+" [Reply to: &"+status.getReplyTo()+"]");
+                            } else {
+                                newChannel.setLocalTopic(status.getText());
+                            }
+                            newChannel.setTopicSetter(status.getUser().getScreenName());
+                            newChannel.setTopicTime(status.getTime());
+                            final TwitterClientInfo client = (TwitterClientInfo) getClient(status.getUser().getScreenName());
+                            if (client.isFake()) {
+                                client.setFake(false);
+                                clients.put(client.getNickname().toLowerCase(), client);
+                            }
+                            newChannel.addChannelClient(new TwitterChannelClientInfo(newChannel, client));
                         } else {
-                            newChannel.setLocalTopic(status.getText());
+                            newChannel.setLocalTopic("Unknown status, or you do not have access to see it.");
                         }
-                        newChannel.setTopicSetter(status.getUser().getScreenName());
-                        newChannel.setTopicTime(status.getTime());
-                        final TwitterClientInfo client = (TwitterClientInfo) getClient(status.getUser().getScreenName());
-                        if (client.isFake()) {
-                            client.setFake(false);
-                            clients.put(client.getNickname().toLowerCase(), client);
+                        synchronized (this.channels) {
+                            this.channels.put(channel, newChannel);
                         }
-                        newChannel.addChannelClient(new TwitterChannelClientInfo(newChannel, client));
-                    } else {
-                        newChannel.setLocalTopic("Unknown status, or you do not have access to see it.");
-                    }
-                    synchronized (channels) {
-                        channels.put(channel, newChannel);
-                    }
-                } catch (NumberFormatException nfe) { }
+                    } catch (NumberFormatException nfe) { }
+                }
+                doJoinChannel(newChannel);
+            } else {
+                sendNumericOutput(474, new String[]{":"+myServerName, "474", myself.getNickname(), channel, "Cannot join channel - name is not valid, or you are already there."});
             }
-            doJoinChannel(newChannel);
-        } else {
-            sendNumericOutput(474, new String[]{":"+myServerName, "474", myself.getNickname(), channel, "Cannot join channel - name is not valid, or you are already there."});
         }
     }
 
@@ -1449,8 +1460,8 @@ public class Twitter implements Parser, TwitterErrorHandler, TwitterRawHandler, 
 
     /** {@inheritDoc} */
     @Override
-    public void updateURI(final URI uri) {
-        // Do nothing
+    public Collection<? extends ChannelJoinRequest> extractChannels(final URI uri) {
+        return new ArrayList<ChannelJoinRequest>();
     }
 
 }
