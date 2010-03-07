@@ -594,7 +594,7 @@ public final class DCCPlugin extends Plugin implements ActionListener {
         firewall.addSetting(new PreferencesSetting(PreferencesType.INTEGER,
                 getDomain(), "firewall.ports.endPort", "End Port",
                 "Port to try to listen on last"));
-        receiving.addSetting(new PreferencesSetting(PreferencesType.TEXT,
+        receiving.addSetting(new PreferencesSetting(PreferencesType.DIRECTORY,
                 getDomain(), "receive.savelocation", "Default save location",
                 "Where the save as window defaults to?"));
         sending.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
