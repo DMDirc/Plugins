@@ -25,6 +25,7 @@ package com.dmdirc.addons.ui_swing.dialogs.channelsetting;
 import com.dmdirc.Channel;
 import com.dmdirc.addons.ui_swing.components.ParamModePanel;
 import com.dmdirc.addons.ui_swing.UIUtilities;
+import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.parser.interfaces.Parser;
 
 import java.awt.Insets;
@@ -166,12 +167,18 @@ public final class ChannelModesPane extends JPanel {
         final TreeSet<String> modes = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
 
         modes.addAll(modeCheckBoxes.keySet());
+        if (modes.isEmpty()) {
+            booleanModes.add(new TextLabel("No boolean modes."));
+        }
         for(String mode : modes) {
             booleanModes.add(modeCheckBoxes.get(mode));
         }
         modes.clear();
 
         modes.addAll(modeInputs.keySet());
+        if (modes.isEmpty()) {
+            paramModes.add(new TextLabel("No parameter modes."));
+        }
         for(String mode : modes) {
             final ParamModePanel modePanel = modeInputs.get(mode);
             paramModes.add(modePanel.getCheckboxComponent());
