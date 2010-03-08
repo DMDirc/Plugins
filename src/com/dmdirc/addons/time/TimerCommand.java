@@ -29,7 +29,6 @@ import com.dmdirc.commandparser.commands.IntelligentCommand;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 import com.dmdirc.ui.input.TabCompleter;
 import com.dmdirc.ui.interfaces.InputWindow;
-import java.util.List;
 
 /**
  * The timer command allows users to schedule commands to occur after a certain
@@ -99,13 +98,14 @@ public final class TimerCommand extends GlobalCommand implements IntelligentComm
 
     /** {@inheritDoc} */
     @Override
-    public AdditionalTabTargets getSuggestions(final int arg, final List<String> previousArgs) {
+    public AdditionalTabTargets getSuggestions(final int arg,
+            final IntelligentCommandContext context) {
         AdditionalTabTargets res;
         
         if (arg <= 1) {
             res = new AdditionalTabTargets().excludeAll();
         } else {
-            res = TabCompleter.getIntelligentResults(arg, previousArgs, 2);
+            res = TabCompleter.getIntelligentResults(arg, context, 2);
         }
         
         return res;

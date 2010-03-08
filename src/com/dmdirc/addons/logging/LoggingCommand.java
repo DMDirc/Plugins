@@ -32,7 +32,6 @@ import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 import com.dmdirc.ui.interfaces.InputWindow;
-import java.util.List;
 
 /**
  * The dcop command retrieves information from a dcop application.
@@ -99,7 +98,8 @@ public final class LoggingCommand extends ServerCommand implements IntelligentCo
      * @return A list of suggestions for the argument
      */
     @Override
-    public AdditionalTabTargets getSuggestions(final int arg, final List<String> previousArgs) {
+    public AdditionalTabTargets getSuggestions(final int arg,
+            final IntelligentCommandContext context) {
         final AdditionalTabTargets res = new AdditionalTabTargets();
         if (arg == 0) {
             res.add("reload");
