@@ -53,6 +53,7 @@ import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.interfaces.FrameInfoListener;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
+import com.dmdirc.parser.common.ChannelJoinRequest;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.interfaces.InputWindow;
@@ -905,24 +906,21 @@ public abstract class TextFrame extends JInternalFrame implements Window,
                 if (type == MouseClickType.CLICKED) {
                     switch (clickType) {
                         case CHANNEL:
-                            ActionManager.processEvent(CoreActionType.LINK_CHANNEL_CLICKED, null, attribute);
-                            frameParent.getServer().join(attribute);
+                            ActionManager.processEvent(CoreActionType.
+                                    LINK_CHANNEL_CLICKED, null, attribute);
+                            frameParent.getServer().join(
+                                    new ChannelJoinRequest(attribute));
                             break;
                         case HYPERLINK:
-                            ActionManager.processEvent(CoreActionType.LINK_URL_CLICKED, null, attribute);
+                            ActionManager.processEvent(CoreActionType.
+                                    LINK_URL_CLICKED, null, attribute);
                             URLHandler.getURLHander().launchApp(attribute);
                             break;
                         case NICKNAME:
-                            ActionManager.processEvent(CoreActionType.LINK_NICKNAME_CLICKED, null, attribute);
-                            if (getContainer().getServer().hasQuery(attribute)) {
-                                getContainer().getServer().getQuery(attribute).
-                                        activateFrame();
-                            } else {
-                                getContainer().getServer().addQuery(attribute);
-                                getContainer().getServer().getQuery(attribute).
-                                        show();
-                            }
-
+                            ActionManager.processEvent(CoreActionType.
+                                    LINK_NICKNAME_CLICKED, null, attribute);
+                            getContainer().getServer().addQuery(attribute).
+                                    activateFrame();
                             break;
                         default:
                             break;

@@ -38,6 +38,7 @@ import com.dmdirc.addons.ui_swing.dialogs.aliases.AliasManagerDialog;
 import com.dmdirc.addons.ui_swing.dialogs.prefs.SwingPreferencesDialog;
 import com.dmdirc.addons.ui_swing.dialogs.profiles.ProfileManagerDialog;
 import com.dmdirc.addons.ui_swing.framemanager.windowmenu.WindowMenuFrameManager;
+import com.dmdirc.parser.common.ChannelJoinRequest;
 import com.dmdirc.ui.WindowManager;
 
 import java.awt.event.ActionEvent;
@@ -288,7 +289,8 @@ public class MenuBar extends JMenuBar implements ActionListener, MenuListener {
                 /** {@inheritDoc} */
                 @Override
                 public boolean save() {
-                    WindowManager.getActiveServer().join(getText());
+                    WindowManager.getActiveServer().join(new ChannelJoinRequest(
+                            getText()));
                     return true;
                 }
 
