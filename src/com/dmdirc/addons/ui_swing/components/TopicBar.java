@@ -33,6 +33,7 @@ import com.dmdirc.addons.ui_swing.components.text.WrapEditorKit;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.interfaces.TopicChangeListener;
+import com.dmdirc.parser.common.ChannelJoinRequest;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.messages.ColourManager;
 import com.dmdirc.ui.messages.Styliser;
@@ -295,16 +296,11 @@ public class TopicBar extends JComponent implements ActionListener,
                 return;
             }
             if (url.startsWith("#")) {
-                channel.getServer().join(url);
+                channel.getServer().join(new ChannelJoinRequest(url));
             } else if (url.contains("://")) {
                 URLHandler.getURLHander().launchApp(e.getDescription());
             } else {
-                if (channel.getServer().hasQuery(url)) {
-                    channel.getServer().getQuery(url).activateFrame();
-                } else {
-                    channel.getServer().addQuery(url);
-                    channel.getServer().getQuery(url).show();
-                }
+                channel.getServer().addQuery(url).activateFrame();
             }
         }
     }

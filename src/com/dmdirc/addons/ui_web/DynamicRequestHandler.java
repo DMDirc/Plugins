@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_web;
 
+import com.dmdirc.Channel;
 import com.dmdirc.Server;
 import com.dmdirc.config.Identity;
 import com.dmdirc.config.IdentityManager;
@@ -30,6 +31,7 @@ import com.dmdirc.addons.ui_web.uicomponents.WebChannelWindow;
 import com.dmdirc.addons.ui_web.uicomponents.WebInputHandler;
 import com.dmdirc.addons.ui_web.uicomponents.WebInputWindow;
 import com.dmdirc.addons.ui_web.uicomponents.WebWindow;
+import com.dmdirc.parser.common.ChannelJoinRequest;
 
 import java.io.IOException;
 import java.net.URI;
@@ -326,7 +328,8 @@ public class DynamicRequestHandler extends AbstractHandler {
             final HttpServletResponse response) throws IOException {
         final String windowID = request.getParameter("source");
         final WebWindow window = WebWindow.getWindow(windowID);
-        window.getContainer().getServer().join(request.getParameter("channel"));
+        window.getContainer().getServer().join(new ChannelJoinRequest(request.
+                getParameter("channel")));
     }
     
     private void doOpenQuery(final HttpServletRequest request,
