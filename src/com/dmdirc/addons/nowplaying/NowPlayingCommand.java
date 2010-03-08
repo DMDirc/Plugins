@@ -171,16 +171,16 @@ public final class NowPlayingCommand extends ChatCommand implements IntelligentC
     
     /** {@inheritDoc} */
     @Override
-    public AdditionalTabTargets getSuggestions(final int arg, 
-            final List<String> previousArgs) {
+    public AdditionalTabTargets getSuggestions(final int arg,
+            final IntelligentCommandContext context) {
 
         if (arg == 0) {
             final AdditionalTabTargets res = TabCompleter.
-                    getIntelligentResults(arg, previousArgs, 0);
+                    getIntelligentResults(arg, context, 0);
             res.add("--sources");
             res.add("--source");
             return res;
-        } else if (arg == 1 && previousArgs.get(0).equalsIgnoreCase("--source")) {
+        } else if (arg == 1 && context.getPreviousArgs().get(0).equalsIgnoreCase("--source")) {
             final AdditionalTabTargets res = new AdditionalTabTargets();
             res.excludeAll();
             for (MediaSource source : parent.getSources()) {
@@ -189,11 +189,11 @@ public final class NowPlayingCommand extends ChatCommand implements IntelligentC
                 }
             }
             return res;
-        } else if (arg > 1 && previousArgs.get(0).equalsIgnoreCase("--source")) {
-            return TabCompleter.getIntelligentResults(arg, previousArgs, 2);
+        } else if (arg > 1 && context.getPreviousArgs().get(0).equalsIgnoreCase("--source")) {
+            return TabCompleter.getIntelligentResults(arg, context, 2);
         } else {
-            return TabCompleter.getIntelligentResults(arg, previousArgs,
-                    previousArgs.get(0).equalsIgnoreCase("--sources") ? 1 : 0);
+            return TabCompleter.getIntelligentResults(arg, context,
+                    context.getPreviousArgs().get(0).equalsIgnoreCase("--sources") ? 1 : 0);
         }
     }
 }

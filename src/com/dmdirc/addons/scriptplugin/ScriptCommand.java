@@ -29,7 +29,6 @@ import com.dmdirc.commandparser.commands.GlobalCommand;
 import com.dmdirc.ui.interfaces.InputWindow;
 import com.dmdirc.commandparser.commands.IntelligentCommand;
 import com.dmdirc.ui.input.AdditionalTabTargets;
-import com.dmdirc.ui.input.TabCompletionType;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -37,7 +36,6 @@ import java.util.Map;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-
 import java.lang.reflect.Method;
 
 /**
@@ -188,7 +186,8 @@ public final class ScriptCommand extends GlobalCommand implements IntelligentCom
      * @return A list of suggestions for the argument
      */
     @Override
-    public AdditionalTabTargets getSuggestions(final int arg, final List<String> previousArgs) {
+    public AdditionalTabTargets getSuggestions(final int arg,
+            final IntelligentCommandContext context) {
         final AdditionalTabTargets res = new AdditionalTabTargets();
         
         res.excludeAll();
@@ -202,11 +201,11 @@ public final class ScriptCommand extends GlobalCommand implements IntelligentCom
             res.add("savetobasefile");
         } else if (arg == 1) {
             final Map<String,ScriptEngineWrapper> scripts = myPlugin.getScripts();
-            if (previousArgs.get(0).equalsIgnoreCase("load")) {
+            if (context.getPreviousArgs().get(0).equalsIgnoreCase("load")) {
                 for (String filename : getPossibleScripts()) {
                     res.add(filename);
                 }
-            } else if (previousArgs.get(0).equalsIgnoreCase("unload")) {
+            } else if (context.getPreviousArgs().get(0).equalsIgnoreCase("unload")) {
                 for (String filename : scripts.keySet()) {
                     res.add(filename);
                 }

@@ -28,9 +28,7 @@ import com.dmdirc.commandparser.commands.GlobalCommand;
 import com.dmdirc.commandparser.commands.IntelligentCommand;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 import com.dmdirc.ui.interfaces.InputWindow;
-
 import com.dmdirc.ui.messages.Styliser;
-import java.util.List;
 
 /**
  * The osd command shows an on screen message.
@@ -103,12 +101,13 @@ public final class OsdCommand extends GlobalCommand implements IntelligentComman
 
     /** {@inheritDoc} */
     @Override
-    public AdditionalTabTargets getSuggestions(final int arg, final List<String> previousArgs) {
+    public AdditionalTabTargets getSuggestions(final int arg,
+            final IntelligentCommandContext context) {
         final AdditionalTabTargets res = new AdditionalTabTargets();
         
         if (arg == 0) {
             res.add("--close");
-        } else if (arg > 0 && previousArgs.get(0).equals("--close")) {
+        } else if (arg > 0 && context.getPreviousArgs().get(0).equals("--close")) {
             res.excludeAll();
         }
         
