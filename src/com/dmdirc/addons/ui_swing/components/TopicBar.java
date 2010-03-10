@@ -300,7 +300,7 @@ public class TopicBar extends JComponent implements ActionListener,
             } else if (url.contains("://")) {
                 URLHandler.getURLHander().launchApp(e.getDescription());
             } else {
-                channel.getServer().addQuery(url).activateFrame();
+                channel.getServer().getQuery(url).activateFrame();
             }
         }
     }
