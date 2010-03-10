@@ -1,4 +1,4 @@
-    /*
+/*
  * Copyright (c) 2006-2010 Chris Smith, Shane Mc Cormack, Gregory Holmes
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -906,8 +906,10 @@ public abstract class TextFrame extends JInternalFrame implements Window,
                 if (type == MouseClickType.CLICKED) {
                     switch (clickType) {
                         case CHANNEL:
-                            if (ActionManager.processEvent(CoreActionType.
-                                    LINK_CHANNEL_CLICKED, null, this, attribute)) {
+                            if (frameParent.getServer() != null &&
+                                    ActionManager.processEvent(CoreActionType.
+                                    LINK_CHANNEL_CLICKED, null, this,
+                                    attribute)) {
                                 frameParent.getServer().join(
                                         new ChannelJoinRequest(attribute));
                             }
@@ -919,10 +921,12 @@ public abstract class TextFrame extends JInternalFrame implements Window,
                             }
                             break;
                         case NICKNAME:
-                            if (ActionManager.processEvent(CoreActionType.
-                                    LINK_NICKNAME_CLICKED, null, this, attribute)) {
-                                getContainer().getServer().addQuery(attribute).
-                                        activateFrame();
+                            if (frameParent.getServer() != null &&
+                                    ActionManager.processEvent(CoreActionType.
+                                    LINK_NICKNAME_CLICKED, null, this,
+                                    attribute)) {
+                                getContainer().getServer().getQuery(
+                                        attribute).activateFrame();
                             }
                             break;
                         default:
