@@ -906,21 +906,24 @@ public abstract class TextFrame extends JInternalFrame implements Window,
                 if (type == MouseClickType.CLICKED) {
                     switch (clickType) {
                         case CHANNEL:
-                            ActionManager.processEvent(CoreActionType.
-                                    LINK_CHANNEL_CLICKED, null, attribute);
-                            frameParent.getServer().join(
-                                    new ChannelJoinRequest(attribute));
+                            if (ActionManager.processEvent(CoreActionType.
+                                    LINK_CHANNEL_CLICKED, null, attribute)) {
+                                frameParent.getServer().join(
+                                        new ChannelJoinRequest(attribute));
+                            }
                             break;
                         case HYPERLINK:
-                            ActionManager.processEvent(CoreActionType.
-                                    LINK_URL_CLICKED, null, attribute);
-                            URLHandler.getURLHander().launchApp(attribute);
+                            if (ActionManager.processEvent(CoreActionType.
+                                    LINK_URL_CLICKED, null, attribute)) {
+                                URLHandler.getURLHander().launchApp(attribute);
+                            }
                             break;
                         case NICKNAME:
-                            ActionManager.processEvent(CoreActionType.
-                                    LINK_NICKNAME_CLICKED, null, attribute);
-                            getContainer().getServer().addQuery(attribute).
-                                    activateFrame();
+                            if (ActionManager.processEvent(CoreActionType.
+                                    LINK_NICKNAME_CLICKED, null, attribute)) {
+                                getContainer().getServer().addQuery(attribute).
+                                        activateFrame();
+                            }
                             break;
                         default:
                             break;
