@@ -907,20 +907,20 @@ public abstract class TextFrame extends JInternalFrame implements Window,
                     switch (clickType) {
                         case CHANNEL:
                             if (ActionManager.processEvent(CoreActionType.
-                                    LINK_CHANNEL_CLICKED, null, attribute)) {
+                                    LINK_CHANNEL_CLICKED, null, this, attribute)) {
                                 frameParent.getServer().join(
                                         new ChannelJoinRequest(attribute));
                             }
                             break;
                         case HYPERLINK:
                             if (ActionManager.processEvent(CoreActionType.
-                                    LINK_URL_CLICKED, null, attribute)) {
+                                    LINK_URL_CLICKED, null, this, attribute)) {
                                 URLHandler.getURLHander().launchApp(attribute);
                             }
                             break;
                         case NICKNAME:
                             if (ActionManager.processEvent(CoreActionType.
-                                    LINK_NICKNAME_CLICKED, null, attribute)) {
+                                    LINK_NICKNAME_CLICKED, null, this, attribute)) {
                                 getContainer().getServer().addQuery(attribute).
                                         activateFrame();
                             }
