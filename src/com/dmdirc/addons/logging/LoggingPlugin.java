@@ -322,12 +322,12 @@ public class LoggingPlugin extends Plugin implements ActionListener,
             case QUERY_ACTION:
             case QUERY_SELF_ACTION:
                 final boolean isME = (type == CoreActionType.QUERY_SELF_MESSAGE || type == CoreActionType.QUERY_SELF_ACTION);
-                final String overrideNick = (isME) ? getDisplayName(parser.getLocalClient()) : "";
+                final String overrideNick = isME ? getDisplayName(parser.getLocalClient()) : "";
 
                 if (type == CoreActionType.QUERY_MESSAGE || type == CoreActionType.QUERY_SELF_MESSAGE) {
-                    appendLine(filename, "<%s> %s", getDisplayName(client, overrideNick), (String) arguments[1]);
+                    appendLine(filename, "<%s> %s", getDisplayName(client, overrideNick), (String) arguments[2]);
                 } else {
-                    appendLine(filename, "* %s %s", getDisplayName(client, overrideNick), (String) arguments[1]);
+                    appendLine(filename, "* %s %s", getDisplayName(client, overrideNick), (String) arguments[2]);
                 }
                 break;
         }
