@@ -27,46 +27,51 @@ import com.dmdirc.addons.ui_swing.textpane.TextPane;
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
+import javax.swing.JTextField;
 
 /**
  * Textpane Copy action.
  */
-public final class TextPaneCopyAction extends AbstractAction { 
-    
+public final class InputFieldCopyAction extends AbstractAction {
+
     /**
      * A version number for this class. It should be changed whenever the class
      * structure is changed (or anything else that would prevent serialized
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 1;
-    
+
     /** Text component to be acted upon. */
-    private final TextPane comp; 
- 
-    /** 
+    private final TextPane textPane;
+    /** Input field to be acted upon. */
+    private final JTextField inputField;
+
+    /**
      * Instantiates a new copy action.
-     * 
-     * @param comp TextPane to be acted upon
+     *
+     * @param textPane TextPane to be acted upon
+     * @param inputField Inputfield to be acted upon
      */
-    public TextPaneCopyAction(final TextPane comp) { 
-        super("Copy"); 
-        
-        this.comp = comp; 
-    } 
- 
-    /** 
+    public InputFieldCopyAction(final TextPane textPane,
+            final JTextField inputField) {
+        super("Copy");
+
+        this.textPane = textPane;
+        this.inputField = inputField;
+    }
+
+    /**
      * {@inheritDoc}
-     * 
+     *
      * @param e Action event
      */
     @Override
-    public void actionPerformed(final ActionEvent e) { 
-        comp.copy(); 
-    } 
- 
-    /** {@inheritDoc} */
-    @Override
-    public boolean isEnabled() { 
-        return comp.isEnabled() && comp.hasSelectedRange();
-    } 
-} 
+    public void actionPerformed(final ActionEvent e) {
+        final String inputSelected = inputField.getSelectedText();
+        if (inputSelected != null && !inputSelected.isEmpty()) {
+            inputField.copy();
+        } else if (textPane.hasSelectedRange()) {
+            textPane.copy();
+        }
+    }
+}

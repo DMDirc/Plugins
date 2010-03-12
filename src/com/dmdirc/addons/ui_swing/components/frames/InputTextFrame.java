@@ -40,6 +40,7 @@ import com.dmdirc.addons.ui_swing.actions.CutAction;
 import com.dmdirc.addons.ui_swing.actions.InputTextFramePasteAction;
 import com.dmdirc.addons.ui_swing.dialogs.paste.PasteDialog;
 import com.dmdirc.addons.ui_swing.actions.CommandAction;
+import com.dmdirc.addons.ui_swing.actions.InputFieldCopyAction;
 import com.dmdirc.addons.ui_swing.components.SwingInputField;
 
 import java.awt.BorderLayout;
@@ -47,6 +48,7 @@ import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.UnsupportedFlavorException;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 
@@ -120,6 +122,12 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
         if (getContainer().getServer() != null) {
             getContainer().getServer().addAwayStateListener(this);
         }
+
+        getInputField().getTextField().getInputMap().put(KeyStroke.getKeyStroke(
+                KeyEvent.VK_C, UIUtilities.getCtrlMask()), "textpaneCopy");
+        getInputField().getTextField().getActionMap().put("textpaneCopy",
+                new InputFieldCopyAction(getTextPane(),
+                getInputField().getTextField()));
     }
 
     /** {@inheritDoc} */
@@ -147,7 +155,6 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
     private void initComponents() {
         setInputField(new SwingInputField(getController().getMainFrame()));
 
-        getInputField().addKeyListener(this);
         getInputField().addMouseListener(this);
 
         initPopupMenu();
