@@ -901,11 +901,11 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
             if (textLayouts.get(entry.getValue()).getLine() == lineNumber) {
                 if (textLayouts.get(entry.getValue()).getPart() < linePart) {
                     pos += entry.getValue().getCharacterCount();
-                } else if (textLayouts.get(entry.getValue()).getPart()
+                } else if (textLayouts.get(entry.getValue()).getPart() 
                         == linePart) {
                     final TextHitInfo hit = entry.getValue().hitTestChar(x
                             - DOUBLE_SIDE_PADDING, y);
-                    if (selection) {
+                    if (selection || x > entry.getValue().getBounds().getX()) {
                         pos += hit.getInsertionIndex();
                     } else {
                         pos += hit.getCharIndex();
@@ -913,7 +913,6 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
                 }
             }
         }
-
         return pos;
     }
 
