@@ -53,8 +53,6 @@ public class CustomFrame extends TextFrame {
         super(owner, controller);
 
         initComponents();
-
-        addKeyListener(this);
     }
 
     /**

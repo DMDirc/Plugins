@@ -30,14 +30,15 @@ import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.actions.ChannelCopyAction;
 import com.dmdirc.addons.ui_swing.actions.CommandAction;
 import com.dmdirc.addons.ui_swing.actions.HyperlinkCopyAction;
+import com.dmdirc.addons.ui_swing.actions.InputFieldCopyAction;
 import com.dmdirc.addons.ui_swing.actions.NicknameCopyAction;
 import com.dmdirc.addons.ui_swing.actions.SearchAction;
-import com.dmdirc.addons.ui_swing.actions.TextPaneCopyAction;
 import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
 import com.dmdirc.addons.ui_swing.components.SwingSearchBar;
 import com.dmdirc.addons.ui_swing.textpane.ClickType;
 import com.dmdirc.addons.ui_swing.textpane.LineInfo;
 import com.dmdirc.addons.ui_swing.textpane.TextPane;
+import com.dmdirc.addons.ui_swing.textpane.TextPaneCopyAction;
 import com.dmdirc.addons.ui_swing.textpane.TextPanePageDownAction;
 import com.dmdirc.addons.ui_swing.textpane.TextPanePageUpAction;
 import com.dmdirc.addons.ui_swing.textpane.TextPaneHomeAction;
@@ -65,7 +66,6 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.beans.PropertyChangeEvent;
@@ -104,8 +104,8 @@ import net.miginfocom.swing.MigLayout;
  * Implements a generic (internal) frame.
  */
 public abstract class TextFrame extends JInternalFrame implements Window,
-        PropertyChangeListener, InternalFrameListener,
-        MouseListener, KeyListener, ConfigChangeListener, FrameInfoListener {
+        PropertyChangeListener, InternalFrameListener, MouseListener,
+        ConfigChangeListener, FrameInfoListener {
 
     /** Logger to use. */
     private static final java.util.logging.Logger LOGGER =
@@ -126,8 +126,6 @@ public abstract class TextFrame extends JInternalFrame implements Window,
     private StringTranscoder transcoder;
     /** Frame buffer size. */
     private int frameBufferSize;
-    /** Quick copy? */
-    private boolean quickCopy;
     /** Are we closing? */
     private boolean closing = false;
     /** Input window for popup commands. */
@@ -164,7 +162,6 @@ public abstract class TextFrame extends JInternalFrame implements Window,
 
         final ConfigManager config = owner.getConfigManager();
         frameBufferSize = config.getOptionInt("ui", "frameBufferSize");
-        quickCopy = config.getOptionBool("ui", "quickCopy");
 
         setFrameIcon(IconManager.getIconManager().getIcon(owner.getIcon()));
 
@@ -206,7 +203,6 @@ public abstract class TextFrame extends JInternalFrame implements Window,
 
         config.addChangeListener("ui", "foregroundcolour", this);
         config.addChangeListener("ui", "backgroundcolour", this);
-        config.addChangeListener("ui", "quickCopy", this);
         config.addChangeListener("ui", "frameBufferSize", this);
 
         addPropertyChangeListener("maximum", this);
@@ -519,11 +515,9 @@ public abstract class TextFrame extends JInternalFrame implements Window,
         setTextPane(new TextPane(this));
 
         getTextPane().addMouseListener(this);
-        getTextPane().addKeyListener(this);
 
         searchBar = new SwingSearchBar(this, controller.getMainFrame());
         searchBar.setVisible(false);
-        searchBar.addKeyListener(this);
 
         getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).
                 put(KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_UP, 0),
@@ -547,6 +541,12 @@ public abstract class TextFrame extends JInternalFrame implements Window,
         getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).
                 put(KeyStroke.getKeyStroke(KeyEvent.VK_END,
                 UIUtilities.getCtrlDownMask()), "endAction");
+
+        getSearchBar().getTextField().getInputMap().put(KeyStroke.getKeyStroke(
+                KeyEvent.VK_C, UIUtilities.getCtrlMask()), "textpaneCopy");
+        getSearchBar().getTextField().getActionMap().put("textpaneCopy",
+                new InputFieldCopyAction(getTextPane(),
+                getSearchBar().getTextField()));
 
         getActionMap().put("pageUpAction",
                 new TextPanePageUpAction(getTextPane()));
@@ -856,11 +856,6 @@ public abstract class TextFrame extends JInternalFrame implements Window,
      */
     @Override
     public void mouseReleased(final MouseEvent mouseEvent) {
-        if (quickCopy && mouseEvent.getSource() == getTextPane()) {
-            getTextPane().copy();
-            getTextPane().clearSelection();
-        }
-
         processMouseClickEvent(mouseEvent, MouseClickType.RELEASED);
     }
 
@@ -1121,41 +1116,6 @@ public abstract class TextFrame extends JInternalFrame implements Window,
         return menu;
     }
 
-    /** 
-     * {@inheritDoc}
-     * 
-     * @param event Key event
-     */
-    @Override
-    public void keyTyped(final KeyEvent event) {
-        //Ignore.
-        }
-
-    /** 
-     * {@inheritDoc}
-     * 
-     * @param event Key event
-     */
-    @Override
-    public void keyPressed(final KeyEvent event) {
-        if (!quickCopy && (event.getModifiers() & UIUtilities.getCtrlMask()) !=
-                0 &&
-                event.getKeyCode() == KeyEvent.VK_C) {
-            getTextPane().copy();
-        }
-
-    }
-
-    /** 
-     * {@inheritDoc}
-     * 
-     * @param event Key event
-     */
-    @Override
-    public void keyReleased(final KeyEvent event) {
-        //Ignore.
-        }
-
     /**
      * Gets the search bar.
      *
@@ -1183,9 +1143,6 @@ public abstract class TextFrame extends JInternalFrame implements Window,
             } else if ("frameBufferSize".equals(key)) {
                 frameBufferSize = getContainer().getConfigManager().
                         getOptionInt("ui", "frameBufferSize");
-            } else if ("quickCopy".equals(key)) {
-                quickCopy = getContainer().getConfigManager().
-                        getOptionBool("ui", "quickCopy");
             }
         }
     }

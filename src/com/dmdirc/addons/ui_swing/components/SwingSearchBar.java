@@ -51,6 +51,7 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
@@ -289,6 +290,15 @@ public final class SwingSearchBar extends JPanel implements ActionListener,
 
         validator.setValidates(foundText);
         searchBox.checkError();
+    }
+
+    /**
+     * Returns the textfield used in this search bar.
+     *
+     * @return Search textfield
+     */
+    public JTextField getTextField() {
+        return searchBox.getTextField();
     }
 
     /**
