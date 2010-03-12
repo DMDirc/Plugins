@@ -99,6 +99,8 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
     private String domain;
     /** Background image option. */
     private BackgroundOption backgroundOption;
+    /** Quick copy? */
+    private boolean quickCopy;
 
     /**
      * Creates a new text pane canvas.
@@ -124,6 +126,7 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
         addComponentListener(this);
         manager.addChangeListener(domain, "textpanebackground", this);
         manager.addChangeListener(domain, "textpanebackgroundoption", this);
+        manager.addChangeListener("ui", "quickCopy", this);
 
         updateCachedSettings();
     }
@@ -181,6 +184,7 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
         } catch (IllegalArgumentException ex) {
             backgroundOption = BackgroundOption.CENTER;
         }
+        quickCopy = manager.getOptionBool("ui", "quickCopy");
     }
 
     private void paintOntoGraphics(final Graphics2D g) {
@@ -464,15 +468,19 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
                 selection.setEndLine(lineInfo.getLine());
                 selection.setStartPos(start);
                 selection.setEndPos(end);
-                textPane.copy();
-                textPane.clearSelection();
+                if (quickCopy) {
+                    textPane.copy();
+                    clearSelection();
+                }
             } else if (e.getClickCount() == 3) {
                 selection.setStartLine(lineInfo.getLine());
                 selection.setEndLine(lineInfo.getLine());
                 selection.setStartPos(0);
                 selection.setEndPos(clickedText.length());
-                textPane.copy();
-                textPane.clearSelection();
+                if (quickCopy) {
+                    textPane.copy();
+                    clearSelection();
+                }
             }
         }
 
@@ -632,6 +640,17 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
      */
     @Override
     public void mouseReleased(final MouseEvent e) {
+        if (quickCopy) {
+            textPane.copy();
+            SwingUtilities.invokeLater(new Runnable() {
+
+                /** {@inheritDoc} */
+                @Override
+                public void run() {
+                    clearSelection();
+                }
+            });
+        }
         if (e.getButton() == MouseEvent.BUTTON1) {
             highlightEvent(MouseEventType.RELEASE, e);
         }
