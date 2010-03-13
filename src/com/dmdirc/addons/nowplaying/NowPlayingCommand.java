@@ -33,6 +33,8 @@ import com.dmdirc.ui.input.AdditionalTabTargets;
 import com.dmdirc.ui.input.TabCompleter;
 import com.dmdirc.ui.interfaces.InputWindow;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -174,13 +176,30 @@ public final class NowPlayingCommand extends ChatCommand implements IntelligentC
     public AdditionalTabTargets getSuggestions(final int arg,
             final IntelligentCommandContext context) {
 
+        final List<String> substitutionsList = new ArrayList<String>();
+
+        substitutionsList.add("$artist");
+        substitutionsList.add("$title");
+        substitutionsList.add("$album");
+        substitutionsList.add("$app");
+        substitutionsList.add("$bitrate");
+        substitutionsList.add("$format");
+        substitutionsList.add("$length");
+        substitutionsList.add("$state");
+        substitutionsList.add("$time");
+
         if (arg == 0) {
             final AdditionalTabTargets res = TabCompleter.
                     getIntelligentResults(arg, context, 0);
             res.add("--sources");
             res.add("--source");
+            res.addAll(substitutionsList);
             return res;
-        } else if (arg == 1 && context.getPreviousArgs().get(0).equalsIgnoreCase("--source")) {
+        } else if (context.getPreviousArgs().get(0).equalsIgnoreCase("--sources")) {
+            final AdditionalTabTargets res = new AdditionalTabTargets();
+            res.excludeAll();
+            return res;
+        } else if (context.getPreviousArgs().get(0).equalsIgnoreCase("--source")) {
             final AdditionalTabTargets res = new AdditionalTabTargets();
             res.excludeAll();
             for (MediaSource source : parent.getSources()) {
@@ -190,10 +209,13 @@ public final class NowPlayingCommand extends ChatCommand implements IntelligentC
             }
             return res;
         } else if (arg > 1 && context.getPreviousArgs().get(0).equalsIgnoreCase("--source")) {
-            return TabCompleter.getIntelligentResults(arg, context, 2);
+            final AdditionalTabTargets res = TabCompleter.getIntelligentResults(arg, context, 2);
+            res.excludeAll();
+            return res;
         } else {
-            return TabCompleter.getIntelligentResults(arg, context,
-                    context.getPreviousArgs().get(0).equalsIgnoreCase("--sources") ? 1 : 0);
+            final AdditionalTabTargets res = TabCompleter.getIntelligentResults(arg, context, arg);
+            res.addAll(substitutionsList);
+            return res;
         }
     }
 }
