@@ -33,6 +33,7 @@ import com.dmdirc.ui.input.AdditionalTabTargets;
 import com.dmdirc.ui.input.TabCompleter;
 import com.dmdirc.ui.interfaces.InputWindow;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -174,11 +175,17 @@ public final class NowPlayingCommand extends ChatCommand implements IntelligentC
     public AdditionalTabTargets getSuggestions(final int arg,
             final IntelligentCommandContext context) {
 
+        final List<String> subsList = Arrays.asList(new String[] {
+            "$artist", "$title", "$album", "$app", "$bitrate", "$format",
+            "$length", "$state", "$time"
+        });
+
         if (arg == 0) {
             final AdditionalTabTargets res = TabCompleter.
                     getIntelligentResults(arg, context, 0);
             res.add("--sources");
             res.add("--source");
+            res.addAll(subsList);
             return res;
         } else if (arg == 1 && context.getPreviousArgs().get(0).equalsIgnoreCase("--source")) {
             final AdditionalTabTargets res = new AdditionalTabTargets();
@@ -190,10 +197,16 @@ public final class NowPlayingCommand extends ChatCommand implements IntelligentC
             }
             return res;
         } else if (arg > 1 && context.getPreviousArgs().get(0).equalsIgnoreCase("--source")) {
-            return TabCompleter.getIntelligentResults(arg, context, 2);
+            final AdditionalTabTargets res = TabCompleter
+                    .getIntelligentResults(arg, context, 2);
+            res.addAll(subsList);
+            return res;
         } else {
-            return TabCompleter.getIntelligentResults(arg, context,
-                    context.getPreviousArgs().get(0).equalsIgnoreCase("--sources") ? 1 : 0);
+            final AdditionalTabTargets res =  TabCompleter
+                    .getIntelligentResults(arg, context, context
+                    .getPreviousArgs().get(0).equalsIgnoreCase("--sources") ? 1 : 0);
+            res.addAll(subsList);
+            return res;
         }
     }
 }
