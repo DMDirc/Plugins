@@ -198,11 +198,7 @@ public class ActionConditionsTreePanel extends JPanel implements ActionListener,
      * @return Selected rule type
      */
     public ConditionTreeFactoryType getRuleType(final int conditionCount) {
-        if (conditionCount >= 2) {
-            return treeFactory.getType();
-        } else {
-            return ConditionTreeFactoryType.CONJUNCTION;
-        }
+        return treeFactory.getType();
     }
 
     /**
@@ -224,7 +220,7 @@ public class ActionConditionsTreePanel extends JPanel implements ActionListener,
      * @param tree new condition tree
      */
     public void setRule(final int conditionCount, final ConditionTree tree) {
-        if (tree != null && conditionCount >= 2) {
+        if (tree != null) {
             this.conditionCount = conditionCount;
             treeFactory = ConditionTreeFactory.getFactory(tree, conditionCount);
             selectTreeButton();
