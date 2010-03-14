@@ -451,4 +451,22 @@ public final class TextPane extends JComponent implements AdjustmentListener,
     public Window getWindow() {
         return frame;
     }
+
+    /**
+     * Adds a textpane listener to this textpane.
+     *
+     * @param listener Listener to add
+     */
+    public void addTextPaneListener(final TextPaneListener listener) {
+        canvas.addTextPaneListener(listener);
+    }
+
+    /**
+     * Removes a textpane listener from this textpane.
+     *
+     * @param listener Listener to remove
+     */
+    public void removeTextPaneListener(final TextPaneListener listener) {
+        canvas.removeTextPaneListener(listener);
+    }
 }
