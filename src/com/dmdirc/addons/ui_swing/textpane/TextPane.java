@@ -313,7 +313,7 @@ public final class TextPane extends JComponent implements AdjustmentListener,
      * 
      * @return Click type for specified position
      */
-    public ClickType getClickType(final LineInfo lineInfo) {
+    public ClickTypeValue getClickType(final LineInfo lineInfo) {
         return canvas.getClickType(lineInfo);
     }
 
@@ -335,17 +335,6 @@ public final class TextPane extends JComponent implements AdjustmentListener,
                 index);
         return document.getLine(lineNumber).getText().substring(indexes[0],
                 indexes[1]);
-    }
-
-    /**
-     * Returns the atrriute value for the specified location.
-     * 
-     * @param lineInfo Specified location
-     * 
-     * @return Specified value
-     */
-    public Object getAttributeValueAtPoint(LineInfo lineInfo) {
-        return canvas.getAttributeValueAtPoint(lineInfo);
     }
 
     /** Adds the selected text to the clipboard. */
