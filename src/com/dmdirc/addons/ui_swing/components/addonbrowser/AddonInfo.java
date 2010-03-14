@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_swing.components.addonbrowser;
 
 import com.dmdirc.config.IdentityManager;
+import com.dmdirc.updater.UpdateChannel;
 import com.dmdirc.updater.UpdateChecker;
 import com.dmdirc.updater.UpdateComponent;
 import com.dmdirc.util.URLBuilder;
@@ -48,6 +49,7 @@ public class AddonInfo {
     private final boolean verified;
     private final int date;
     private final ImageIcon screenshot;
+    private UpdateChannel channel;
 
     /**
      * Creates a new addon info class with the specified entries.
@@ -76,6 +78,12 @@ public class AddonInfo {
         } else {
             this.screenshot = new ImageIcon(URLBuilder.buildURL(
                     "dmdirc://com/dmdirc/res/logo.png"));
+        }
+        try {
+            channel = UpdateChannel.valueOf(IdentityManager.getGlobalConfig()
+                    .getOption("updater", "channel"));
+        } catch (IllegalArgumentException ex) {
+            channel = UpdateChannel.NONE;
         }
     }
 
@@ -208,14 +216,31 @@ public class AddonInfo {
      * @return true iff the plugin is downloadable
      */
     public boolean isDownloadable() {
-        final String channel = IdentityManager.getGlobalConfig().
-                getOption("updater", "channel");
-        if ("STABLE".equals(channel)) {
-            return !stableDownload.isEmpty();
-        } else if ("UNSTABLE".equals(channel)) {
-            return !unstableDownload.isEmpty();
-        } else {
-            return !nightlyDownload.isEmpty();
+        return !getDownload().isEmpty();
+    }
+
+    /**
+     * Returns the download location for this addoninfo, or an empty string.
+     * 
+     * @return Download location or empty string
+     */
+    @SuppressWarnings("fallthrough")
+    public String getDownload() {
+        switch (channel) {
+            case NIGHTLY:
+                if (!nightlyDownload.isEmpty()) {
+                    return nightlyDownload;
+                }
+            case UNSTABLE:
+                if (!unstableDownload.isEmpty()) {
+                    return unstableDownload;
+                }
+            case STABLE:
+                if (!stableDownload.isEmpty()) {
+                    return stableDownload;
+                }
+            default:
+                return "";
         }
     }
 
