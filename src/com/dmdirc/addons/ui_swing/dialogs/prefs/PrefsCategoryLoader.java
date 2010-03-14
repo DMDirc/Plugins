@@ -189,7 +189,7 @@ public class PrefsCategoryLoader extends SwingWorker<JPanel, Object> {
             final PreferencesSetting setting,
             final JPanel panel) {
 
-        final TextLabel label = getLabel(setting);
+        final TextLabel label = new TextLabel(setting.getTitle() + ": ", false);
 
 
         JComponent option = UIUtilities.invokeAndWait(
@@ -246,32 +246,6 @@ public class PrefsCategoryLoader extends SwingWorker<JPanel, Object> {
         }
         return setting.getHelptext();
 
-    }
-
-    /**
-     * Retrieves the title label for the specified setting.
-     *
-     * @param setting The setting whose label is being requested
-     * @return A TextLabel with the appropriate text and tooltip
-     */
-    private TextLabel getLabel(final PreferencesSetting setting) {
-        final TextLabel label = UIUtilities.invokeAndWait(
-                new ReturnableThread<TextLabel>() {
-
-            @Override
-            public void run() {
-                final TextLabel label = new TextLabel(setting.getTitle() +
-                        ": ", false);
-                if (setting.getHelptext().isEmpty()) {
-                    label.setToolTipText("No help available.");
-                } else {
-                    label.setToolTipText(setting.getHelptext());
-                }
-                setObject(label);
-            }
-        });
-
-        return label;
     }
 
     /**
