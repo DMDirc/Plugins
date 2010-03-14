@@ -213,9 +213,10 @@ public class AddonInfo {
         if ("STABLE".equals(channel)) {
             return !stableDownload.isEmpty();
         } else if ("UNSTABLE".equals(channel)) {
-            return !unstableDownload.isEmpty();
+            return !unstableDownload.isEmpty()  | !stableDownload.isEmpty();
         } else {
-            return !nightlyDownload.isEmpty();
+            return !nightlyDownload.isEmpty() | !unstableDownload.isEmpty()
+                    | !stableDownload.isEmpty();
         }
     }
 

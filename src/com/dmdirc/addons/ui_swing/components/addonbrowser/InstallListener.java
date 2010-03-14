@@ -84,11 +84,24 @@ public class InstallListener implements ActionListener {
                 Downloader.downloadPage("http://addons.dmdirc.com/addondownload/"
                         + info.getStableDownload(), file.getAbsolutePath());
             } else if ("UNSTABLE".equals(channel)) {
-                Downloader.downloadPage("http://addons.dmdirc.com/addondownload/"
-                        + info.getUnstableDownload(), file.getAbsolutePath());
+                if (!info.getUnstableDownload().isEmpty()) {
+                    Downloader.downloadPage("http://addons.dmdirc.com/addondownload/"
+                            + info.getUnstableDownload(), file.getAbsolutePath());
+                } else {
+                    Downloader.downloadPage("http://addons.dmdirc.com/addondownload/"
+                            + info.getStableDownload(), file.getAbsolutePath());
+                }
             } else {
-                Downloader.downloadPage("http://addons.dmdirc.com/addondownload/"
-                        + info.getNightlyDownload(), file.getAbsolutePath());
+                if (!info.getNightlyDownload().isEmpty()) {
+                    Downloader.downloadPage("http://addons.dmdirc.com/addondownload/"
+                            + info.getNightlyDownload(), file.getAbsolutePath());
+                } else if (!info.getUnstableDownload().isEmpty()) {
+                    Downloader.downloadPage("http://addons.dmdirc.com/addondownload/"
+                            + info.getUnstableDownload(), file.getAbsolutePath());
+                } else {
+                    Downloader.downloadPage("http://addons.dmdirc.com/addondownload/"
+                            + info.getStableDownload(), file.getAbsolutePath());
+                }
             }
 
             switch (info.getType()) {
