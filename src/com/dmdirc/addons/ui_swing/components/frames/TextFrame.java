@@ -827,9 +827,9 @@ public abstract class TextFrame extends JInternalFrame implements Window,
         this.textPane = newTextPane;
     }
 
-    /**
+        /**
      * {@inheritDoc}
-     * 
+     *
      * @param mouseEvent Mouse event
      */
     @Override
@@ -842,7 +842,7 @@ public abstract class TextFrame extends JInternalFrame implements Window,
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @param mouseEvent Mouse event
      */
     @Override
@@ -852,7 +852,7 @@ public abstract class TextFrame extends JInternalFrame implements Window,
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @param mouseEvent Mouse event
      */
     @Override
@@ -862,7 +862,7 @@ public abstract class TextFrame extends JInternalFrame implements Window,
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @param mouseEvent Mouse event
      */
     @Override
@@ -872,7 +872,7 @@ public abstract class TextFrame extends JInternalFrame implements Window,
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @param mouseEvent Mouse event
      */
     @Override
@@ -897,38 +897,6 @@ public abstract class TextFrame extends JInternalFrame implements Window,
             final String attribute = clickType.getValue();
             if (e.isPopupTrigger()) {
                 showPopupMenuInternal(clickType, point, attribute);
-            } else {
-                if (type == MouseClickType.CLICKED) {
-                    switch (clickType.getType()) {
-                        case CHANNEL:
-                            if (frameParent.getServer() != null &&
-                                    ActionManager.processEvent(CoreActionType.
-                                    LINK_CHANNEL_CLICKED, null, this,
-                                    attribute)) {
-                                frameParent.getServer().join(
-                                        new ChannelJoinRequest(attribute));
-                            }
-                            break;
-                        case HYPERLINK:
-                            if (ActionManager.processEvent(CoreActionType.
-                                    LINK_URL_CLICKED, null, this, attribute)) {
-                                URLHandler.getURLHander().launchApp(attribute);
-                            }
-                            break;
-                        case NICKNAME:
-                            if (frameParent.getServer() != null &&
-                                    ActionManager.processEvent(CoreActionType.
-                                    LINK_NICKNAME_CLICKED, null, this,
-                                    attribute)) {
-                                getContainer().getServer().getQuery(
-                                        attribute).activateFrame();
-                            }
-                            break;
-                        default:
-                            break;
-                    }
-
-                }
             }
         }
         super.processMouseEvent(e);
