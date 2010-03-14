@@ -227,22 +227,26 @@ public class FeedbackDialog extends StandardDialog implements ActionListener,
         final StringBuilder dmdircInfo = new StringBuilder();
         if (serverCheckbox.isSelected()) {
             for (Server server : ServerManager.getServerManager().getServers()) {
-                serverInfo.append("Server name: ").append(server.getName()).
-                        append("\n");
-                serverInfo.append("Actual name: ").
-                        append(server.getParser().getServerName()).append("\n");
-                serverInfo.append("Network: ").append(server.getNetwork()).
-                        append("\n");
-                serverInfo.append("IRCd: ").append(server.getParser().getServerSoftware()).
-                        append(" - ");
-                serverInfo.append(server.getParser().getServerSoftwareType()).append("\n");
-                serverInfo.append("Modes: ").
-                        append(server.getParser().getBooleanChannelModes()).
-                        append(" ");
-                serverInfo.append(server.getParser().getListChannelModes()).append(" ");
-                serverInfo.append(server.getParser().getParameterChannelModes()).
-                        append(" ");
-                serverInfo.append(server.getParser().getDoubleParameterChannelModes());
+                if (!server.getState().isDisconnected()) {
+                    serverInfo.append("Server name: ").append(server.getName())
+                            .append("\n");
+                    serverInfo.append("Actual name: ").append(server.getParser()
+                            .getServerName()).append("\n");
+                    serverInfo.append("Network: ").append(server.getNetwork())
+                            .append("\n");
+                    serverInfo.append("IRCd: ").append(server.getParser()
+                            .getServerSoftware()).append(" - ");
+                    serverInfo.append(server.getParser()
+                            .getServerSoftwareType()).append("\n");
+                    serverInfo.append("Modes: ").append(server.getParser()
+                            .getBooleanChannelModes()).append(" ");
+                    serverInfo.append(server.getParser().getListChannelModes())
+                            .append(" ");
+                    serverInfo.append(server.getParser().
+                            getParameterChannelModes()).append(" ");
+                    serverInfo.append(server.getParser().
+                            getDoubleParameterChannelModes());
+                }
             }
         }
         if (DMDircCheckbox.isSelected()) {
