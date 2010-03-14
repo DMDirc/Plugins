@@ -107,9 +107,9 @@ public final class PerformPanel extends JPanel implements ActionListener {
                 + ") Any profile");
         model.addElement("Network perform (" + server.getNetwork()
                 + ") This profile (" + server.getProfile().getName() + ")");
-        model.addElement("Server perform (" + server.getName()
+        model.addElement("Server perform (" + server.getAddress()
                 + ") Any profile");
-        model.addElement("Server perform (" + server.getName()
+        model.addElement("Server perform (" + server.getAddress()
                 + ") This profile (" + server.getProfile().getName() + ")");
 
         add(target, "growx, pushx, wrap");
@@ -129,11 +129,11 @@ public final class PerformPanel extends JPanel implements ActionListener {
     /** Loads the perform actions. */
     private void loadPerforms() {
         serverAction = PerformWrapper.getPerformWrapper().
-                getActionForServer(server.getName());
+                getActionForServer(server.getAddress());
         networkAction = PerformWrapper.getPerformWrapper().
                 getActionForNetwork(server.getNetwork());
         profileServerAction = PerformWrapper.getPerformWrapper().
-                getActionForServer(server.getName(), server.getProfile().getName());
+                getActionForServer(server.getAddress(), server.getProfile().getName());
         profileNetworkAction = PerformWrapper.getPerformWrapper().
                 getActionForNetwork(server.getNetwork(), server.getProfile().getName());
 
@@ -226,7 +226,7 @@ public final class PerformPanel extends JPanel implements ActionListener {
         if (!serverPerform.isEmpty()) {
             if (serverAction == null) {
                 serverAction = PerformWrapper.getPerformWrapper().
-                        createActionForServer(server.getName());
+                        createActionForServer(server.getAddress());
             }
             serverAction.setResponse(serverPerform.split("\n"));
             serverAction.save();
@@ -254,7 +254,7 @@ public final class PerformPanel extends JPanel implements ActionListener {
         if (!profileServerPerform.isEmpty()) {
             if (profileServerAction == null) {
                 profileServerAction = PerformWrapper.getPerformWrapper().
-                        createActionForServer(server.getName(),
+                        createActionForServer(server.getAddress(),
                         server.getProfile().getName());
             }
             profileServerAction.setResponse(profileServerPerform.split("\n"));
