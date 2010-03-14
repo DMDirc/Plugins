@@ -22,11 +22,15 @@
  */
 package com.dmdirc.addons.ui_swing.textpane;
 
+import com.dmdirc.Main;
+import com.dmdirc.actions.ActionManager;
+import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.addons.ui_swing.BackgroundOption;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.config.ConfigManager;
 import com.dmdirc.interfaces.ConfigChangeListener;
+import com.dmdirc.ui.core.util.URLHandler;
 import com.dmdirc.ui.messages.IRCTextAttribute;
 import com.dmdirc.util.URLBuilder;
 
@@ -273,8 +277,7 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
                     firstVisibleLine = line;
                     textLayouts.put(layout, new LineInfo(line, numberOfWraps));
                     positions.put(new Rectangle(0,
-                            (int) (drawPosY - layout.getAscent() + layout.
-                            getDescent()),
+                            (int) (drawPosY + 1.5 - layout.getAscent() + layout.getDescent()),
                             (int) formatWidth + DOUBLE_SIDE_PADDING,
                             (int) (layout.getAscent() + layout.getDescent())),
                             layout);
@@ -482,6 +485,27 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
                     clearSelection();
                 }
             }
+        }
+        
+        final ClickTypeValue clickType = getClickType(lineInfo);
+
+        switch (clickType.getType()) {
+            case CHANNEL:
+                Main.getUI().getStatusBar().setMessage("Channel clicked: "
+                        + clickType.getValue());
+                break;
+            case HYPERLINK:
+                if (ActionManager.processEvent(CoreActionType.LINK_URL_CLICKED,
+                        null, this, clickType.getValue())) {
+                    URLHandler.getURLHander().launchApp(clickType.getValue());
+                }
+                break;
+            case NICKNAME:
+                Main.getUI().getStatusBar().setMessage("Nickname clicked: "
+                        + clickType.getValue());
+                break;
+            default:
+                break;
         }
 
         e.setSource(textPane);
