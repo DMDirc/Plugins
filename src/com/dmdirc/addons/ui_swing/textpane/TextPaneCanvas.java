@@ -22,11 +22,15 @@
  */
 package com.dmdirc.addons.ui_swing.textpane;
 
+import com.dmdirc.Main;
+import com.dmdirc.actions.ActionManager;
+import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.addons.ui_swing.BackgroundOption;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.config.ConfigManager;
 import com.dmdirc.interfaces.ConfigChangeListener;
+import com.dmdirc.ui.core.util.URLHandler;
 import com.dmdirc.ui.messages.IRCTextAttribute;
 import com.dmdirc.util.URLBuilder;
 
@@ -75,6 +79,8 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
     private static final int SINGLE_SIDE_PADDING = 3;
     /** Both Side padding for textpane. */
     private static final int DOUBLE_SIDE_PADDING = SINGLE_SIDE_PADDING * 2;
+    /** Padding to add to line height. */
+    private static final double LINE_PADDING = 0.2;
     /** IRCDocument. */
     private final IRCDocument document;
     /** parent textpane. */
@@ -114,7 +120,7 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
         textPane = parent;
         this.manager = parent.getWindow().getConfigManager();
         this.domain = ((TextFrame) parent.getWindow()).getController().
-                getDomain();
+                getDomain();SINGLE_SIDE_PADDING
         startLine = 0;
         setDoubleBuffered(true);
         setOpaque(true);
@@ -224,7 +230,7 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
             final AttributedCharacterIterator iterator = document.getStyledLine(
                     line);
             int lineHeight = document.getLineHeight(line);
-            lineHeight += lineHeight * 0.2;
+            lineHeight += lineHeight * LINE_PADDING;
             paragraphStart = iterator.getBeginIndex();
             paragraphEnd = iterator.getEndIndex();
             lineMeasurer = new LineBreakMeasurer(iterator,
@@ -273,8 +279,8 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
                     firstVisibleLine = line;
                     textLayouts.put(layout, new LineInfo(line, numberOfWraps));
                     positions.put(new Rectangle(0,
-                            (int) (drawPosY - layout.getAscent() + layout.
-                            getDescent()),
+                            (int) (drawPosY + SINGLE_SIDE_PADDING/2
+                            - layout.getAscent() + layout.getDescent()),
                             (int) formatWidth + DOUBLE_SIDE_PADDING,
                             (int) (layout.getAscent() + layout.getDescent())),
                             layout);
@@ -482,6 +488,27 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
                     clearSelection();
                 }
             }
+        }
+        
+        final ClickTypeValue clickType = getClickType(lineInfo);
+
+        switch (clickType.getType()) {
+            case CHANNEL:
+                Main.getUI().getStatusBar().setMessage("Channel clicked: "
+                        + clickType.getValue());
+                break;
+            case HYPERLINK:
+                if (ActionManager.processEvent(CoreActionType.LINK_URL_CLICKED,
+                        null, this, clickType.getValue())) {
+                    URLHandler.getURLHander().launchApp(clickType.getValue());
+                }
+                break;
+            case NICKNAME:
+                Main.getUI().getStatusBar().setMessage("Nickname clicked: "
+                        + clickType.getValue());
+                break;
+            default:
+                break;
         }
 
         e.setSource(textPane);
