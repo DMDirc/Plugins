@@ -133,7 +133,8 @@ public class StandardMessageDialog extends StandardDialog {
      * Lays out the components.
      */
     private final void layoutComponents() {
-        setLayout(new MigLayout("fill, wrap 1, hidemode 3"));
+        setLayout(new MigLayout("fill, wrap 1, hidemode 3, wmax min(80sp, 500),"
+                + " wmin min(80sp, 500)"));
 
         add(blurb, "growx");
         add(getOkButton(), "right");
