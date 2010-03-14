@@ -50,6 +50,7 @@ import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.IOException;
 
 import javax.swing.JComponent;
@@ -68,7 +69,7 @@ import net.miginfocom.layout.PlatformDefaults;
  * Frame with an input field.
  */
 public abstract class InputTextFrame extends TextFrame implements InputWindow,
-        AwayStateListener {
+        AwayStateListener, MouseListener {
 
     /**
      * A version number for this class. It should be changed whenever the class
@@ -156,7 +157,7 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
         setInputField(new SwingInputField(getController().getMainFrame()));
 
         getInputField().addMouseListener(this);
-
+        
         initPopupMenu();
         nickPopup = new JPopupMenu();
 
@@ -284,32 +285,55 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
     }
 
     /**
-     * Checks for url's, channels and nicknames. {@inheritDoc}
+     * {@inheritDoc}
+     *
+     * @param mouseEvent Mouse event
      */
     @Override
     public void mouseClicked(final MouseEvent mouseEvent) {
         if (mouseEvent.getSource() == getTextPane()) {
             processMouseEvent(mouseEvent);
         }
-        super.mouseClicked(mouseEvent);
     }
 
     /**
-     * Not needed for this class. {@inheritDoc}
+     * {@inheritDoc}
+     *
+     * @param mouseEvent Mouse event
      */
     @Override
     public void mousePressed(final MouseEvent mouseEvent) {
         processMouseEvent(mouseEvent);
-        super.mousePressed(mouseEvent);
     }
 
     /**
-     * Not needed for this class. {@inheritDoc}
+     * {@inheritDoc}
+     *
+     * @param mouseEvent Mouse event
      */
     @Override
     public void mouseReleased(final MouseEvent mouseEvent) {
         processMouseEvent(mouseEvent);
-        super.mouseReleased(mouseEvent);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @param mouseEvent Mouse event
+     */
+    @Override
+    public void mouseExited(final MouseEvent mouseEvent) {
+        //Ignore
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @param mouseEvent Mouse event
+     */
+    @Override
+    public void mouseEntered(final MouseEvent mouseEvent) {
+        //Ignore
     }
 
     /**
@@ -329,7 +353,6 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
                         getUnitValueX("related").getValue());
             }
         }
-        super.processMouseEvent(e);
     }
 
     /** Checks and pastes text. */
