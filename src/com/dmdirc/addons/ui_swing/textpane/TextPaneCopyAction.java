@@ -45,6 +45,7 @@ public class TextPaneCopyAction extends AbstractAction {
      * @param textpane Textpane
      */
     public TextPaneCopyAction(final TextPane textpane) {
+        super("Copy");
         this.textpane = textpane;
     }
 
