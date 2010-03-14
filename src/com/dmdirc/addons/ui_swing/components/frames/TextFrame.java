@@ -36,6 +36,7 @@ import com.dmdirc.addons.ui_swing.actions.SearchAction;
 import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
 import com.dmdirc.addons.ui_swing.components.SwingSearchBar;
 import com.dmdirc.addons.ui_swing.textpane.ClickType;
+import com.dmdirc.addons.ui_swing.textpane.ClickTypeValue;
 import com.dmdirc.addons.ui_swing.textpane.LineInfo;
 import com.dmdirc.addons.ui_swing.textpane.TextPane;
 import com.dmdirc.addons.ui_swing.textpane.TextPaneCopyAction;
@@ -892,14 +893,13 @@ public abstract class TextFrame extends JInternalFrame implements Window,
         if (e.getSource() == getTextPane() && point != null) {
             final LineInfo lineInfo = getTextPane().getClickPosition(textPane.
                     getMousePosition(), false);
-            final ClickType clickType = getTextPane().getClickType(lineInfo);
-            final String attribute = (String) getTextPane().
-                    getAttributeValueAtPoint(lineInfo);
+            final ClickTypeValue clickType = getTextPane().getClickType(lineInfo);
+            final String attribute = clickType.getValue();
             if (e.isPopupTrigger()) {
                 showPopupMenuInternal(clickType, point, attribute);
             } else {
                 if (type == MouseClickType.CLICKED) {
-                    switch (clickType) {
+                    switch (clickType.getType()) {
                         case CHANNEL:
                             if (frameParent.getServer() != null &&
                                     ActionManager.processEvent(CoreActionType.
@@ -976,12 +976,12 @@ public abstract class TextFrame extends JInternalFrame implements Window,
      * @param point Point Point of the click
      * @param argument Word under the click
      */
-    private void showPopupMenuInternal(final ClickType type,
+    private void showPopupMenuInternal(final ClickTypeValue type,
             final Point point,
             final String argument) {
         final JPopupMenu popupMenu;
 
-        switch (type) {
+        switch (type.getType()) {
             case CHANNEL:
                 popupMenu = getPopupMenu(getChannelPopupType(), argument);
                 popupMenu.add(new ChannelCopyAction(argument));
