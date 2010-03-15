@@ -112,12 +112,12 @@ public final class ActionGroupInformationPanel extends JPanel {
         if (shouldDisplay()) {
             infoLabel.setText(group.getDescription());
             author.setText(group.getAuthor());
-            version.setText(Integer.toString(group.getVersion()));
+            version.setText(group.getVersion() == null ? "" : group.getVersion().toString());
 
             author.setVisible(group.getAuthor() != null);
-            version.setVisible(group.getVersion() != -1);
+            version.setVisible(group.getVersion() != null);
             authorLabel.setVisible(group.getAuthor() != null);
-            versionLabel.setVisible(group.getVersion() != -1);
+            versionLabel.setVisible(group.getVersion() != null);
         } else {
             infoLabel.setText("");
             author.setText("");

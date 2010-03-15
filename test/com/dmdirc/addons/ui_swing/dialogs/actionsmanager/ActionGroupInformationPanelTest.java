@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_swing.dialogs.actionsmanager;
 
 import com.dmdirc.actions.ActionGroup;
+import com.dmdirc.updater.Version;
 import org.junit.Test;
 import org.uispec4j.Panel;
 import org.uispec4j.UISpecTestCase;
@@ -53,7 +54,7 @@ public class ActionGroupInformationPanelTest extends UISpecTestCase {
     public void testAllLabels() {
         final ActionGroup group = mock(ActionGroup.class);
         when(group.getDescription()).thenReturn("description");
-        when(group.getVersion()).thenReturn(17);
+        when(group.getVersion()).thenReturn(new Version(17));
         when(group.getAuthor()).thenReturn("foo <bar@baz>");
         
         final Panel panel = new Panel(new ActionGroupInformationPanel(group));
@@ -71,7 +72,7 @@ public class ActionGroupInformationPanelTest extends UISpecTestCase {
     public void testNoAuthor() {
         final ActionGroup group = mock(ActionGroup.class);
         when(group.getDescription()).thenReturn("description");
-        when(group.getVersion()).thenReturn(17);
+        when(group.getVersion()).thenReturn(new Version(17));
 
         final Panel panel = new Panel(new ActionGroupInformationPanel(group));
 
@@ -86,7 +87,7 @@ public class ActionGroupInformationPanelTest extends UISpecTestCase {
     public void testNoVersion() {
         final ActionGroup group = mock(ActionGroup.class);
         when(group.getDescription()).thenReturn("description");
-        when(group.getVersion()).thenReturn(-1);
+        when(group.getVersion()).thenReturn(null);
         when(group.getAuthor()).thenReturn("foo <bar@baz>");
 
         final Panel panel = new Panel(new ActionGroupInformationPanel(group));
