@@ -57,6 +57,7 @@ import java.util.Map;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+import javax.swing.ToolTipManager;
 import javax.swing.event.MouseInputListener;
 
 /** Canvas object to draw text. */
@@ -129,6 +130,7 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
         manager.addChangeListener("ui", "quickCopy", this);
 
         updateCachedSettings();
+        ToolTipManager.sharedInstance().registerComponent(this);
     }
 
     /**
@@ -676,28 +678,47 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
 
     /** Checks for a link under the cursor and sets appropriately. */
     private void checkForLink() {
-        final LineInfo lineInfo = getClickPosition(getMousePosition(), false);
+        final AttributedCharacterIterator iterator = getIterator(getMousePosition());
 
-        if (lineInfo.getLine() != -1 && document.getLine(lineInfo.getLine())
-                != null) {
-            final AttributedCharacterIterator iterator = document.getStyledLine(
-                    lineInfo.getLine());
-            if (lineInfo.getIndex() < iterator.getBeginIndex() || lineInfo.
-                    getIndex() > iterator.getEndIndex()) {
-                return;
-            }
-            iterator.setIndex(lineInfo.getIndex());
-            if (iterator.getAttributes().get(IRCTextAttribute.HYPERLINK) 
-                    != null || iterator.getAttributes().get(
-                    IRCTextAttribute.CHANNEL) != null || iterator.
-                    getAttributes().get(IRCTextAttribute.NICKNAME) != null) {
-                setCursor(HAND_CURSOR);
-                return;
-            }
+        if (iterator != null
+                && (iterator.getAttribute(IRCTextAttribute.HYPERLINK) != null
+                || iterator.getAttribute(IRCTextAttribute.CHANNEL) != null
+                || iterator.getAttribute(IRCTextAttribute.NICKNAME) != null)) {
+            setCursor(HAND_CURSOR);
+            return;
         }
+
         if (getCursor() == HAND_CURSOR) {
             setCursor(Cursor.getDefaultCursor());
         }
+    }
+
+    /**
+     * Retrieves a character iterator for the text at the specified mouse
+     * position.
+     *
+     * @since 0.6.4
+     * @param mousePosition The mouse position to retrieve text for
+     * @return A corresponding character iterator, or null if the specified
+     * mouse position doesn't correspond to any text
+     */
+    private AttributedCharacterIterator getIterator(final Point mousePosition) {
+        final LineInfo lineInfo = getClickPosition(mousePosition, false);
+
+        if (lineInfo.getLine() != -1 && document.getLine(lineInfo.getLine()) != null) {
+            final AttributedCharacterIterator iterator
+                    = document.getStyledLine(lineInfo.getLine());
+
+            if (lineInfo.getIndex() < iterator.getBeginIndex()
+                    || lineInfo.getIndex() > iterator.getEndIndex()) {
+                return null;
+            }
+
+            iterator.setIndex(lineInfo.getIndex());
+            return iterator;
+        }
+
+        return null;
     }
 
     /**
@@ -1010,5 +1031,17 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
     @Override
     public void configChanged(final String domain, final String key) {
         updateCachedSettings();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public String getToolTipText(final MouseEvent event) {
+        final AttributedCharacterIterator iterator = getIterator(event.getPoint());
+
+        if (iterator != null && iterator.getAttribute(IRCTextAttribute.TOOLTIP) != null) {
+            return iterator.getAttribute(IRCTextAttribute.TOOLTIP).toString();
+        }
+
+        return super.getToolTipText(event);
     }
 }
