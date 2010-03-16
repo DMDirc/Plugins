@@ -100,6 +100,19 @@ public class ParserTest {
         assertEquals(TokenType.END, tokens.get(5).getToken().getType());
     }
 
+    @Test(expected=ParseException.class)
+    public void testUnmatchedBracket() throws ParseException {
+        final Parser parser = new Parser(null);
+
+        final List<TreeToken> tokens = new ArrayList<TreeToken>();
+        tokens.add(new TreeToken(new Token(TokenType.START, null)));
+        tokens.add(new TreeToken(new Token(TokenType.NUMBER_INT, null)));
+        tokens.add(new TreeToken(new Token(TokenType.BRACKET_CLOSE, null)));
+        tokens.add(new TreeToken(new Token(TokenType.END, null)));
+
+        parser.parseBracket(tokens, 3);
+    }
+
     @Test
     public void testParseNumber() {
         final Parser parser = new Parser(null);
