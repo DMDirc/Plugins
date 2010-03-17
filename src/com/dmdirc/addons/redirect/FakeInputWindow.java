@@ -74,20 +74,23 @@ public class FakeInputWindow implements InputWindow {
 
     /** {@inheritDoc} */
     @Override
+    @Deprecated
     public void addLine(final String messageType, final Object... args) {
-        target.sendLine(Formatter.formatMessage(getConfigManager(), messageType, args));
+        getContainer().addLine(messageType, args);
     }
 
     /** {@inheritDoc} */
     @Override
+    @Deprecated
     public void addLine(final StringBuffer messageType, final Object... args) {
-        addLine(messageType.toString(), args);
+        getContainer().addLine(messageType, args);
     }
 
     /** {@inheritDoc} */
     @Override
+    @Deprecated
     public void addLine(final String line, final boolean timestamp) {
-        target.sendLine(line);
+        getContainer().addLine(line, timestamp);
     }
 
     /** {@inheritDoc} */

@@ -425,18 +425,21 @@ public abstract class TextFrame extends JInternalFrame implements Window,
 
     /** {@inheritDoc} */
     @Override
+    @Deprecated
     public final void addLine(final String line, final boolean timestamp) {
         frameParent.addLine(line, timestamp);
     }
 
     /** {@inheritDoc} */
     @Override
+    @Deprecated
     public final void addLine(final String messageType, final Object... args) {
         frameParent.addLine(messageType, args);
     }
 
     /** {@inheritDoc} */
     @Override
+    @Deprecated
     public final void addLine(final StringBuffer messageType, final Object... args) {
         frameParent.addLine(messageType, args);
     }

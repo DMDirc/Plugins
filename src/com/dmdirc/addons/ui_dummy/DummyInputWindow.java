@@ -82,19 +82,20 @@ public class DummyInputWindow implements InputWindow {
     /** {@inheritDoc} */
     @Override
     public void addLine(final String messageType, final Object... args) {
-        System.out.println("DummyInputWindow.addLine(" + messageType + ", " + Arrays.toString(args) + ")");
+        getContainer().addLine(messageType, args);
     }
     
     /** {@inheritDoc} */
     @Override
     public void addLine(final StringBuffer messageType, final Object... args) {
-        addLine(messageType.toString(), args);
+        getContainer().addLine(messageType, args);
     }
     
     /** {@inheritDoc} */
     @Override
+    @Deprecated
     public void addLine(final String line, final boolean timestamp) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        getContainer().addLine(line, timestamp);
     }
     
     /** {@inheritDoc} */
