@@ -426,63 +426,19 @@ public abstract class TextFrame extends JInternalFrame implements Window,
     /** {@inheritDoc} */
     @Override
     public final void addLine(final String line, final boolean timestamp) {
-        final String encodedLine = transcoder.decode(line);
-        UIUtilities.invokeLater(new Runnable() {
-
-            /** {@inheritDoc} */
-            @Override
-            public void run() {
-                final List<String[]> lines = new LinkedList<String[]>();
-                for (final String myLine : encodedLine.split("\n")) {
-                    if (timestamp) {
-                        lines.add(new String[]{
-                                    Formatter.formatMessage(getConfigManager(),
-                                    "timestamp", new Date()), myLine,});
-                    } else {
-                        lines.add(new String[]{myLine,});
-                    }
-
-                    new LoggingSwingWorker() {
-
-                        /** {@inheritDoc} */
-                        @Override
-                        protected Object doInBackground() throws Exception {
-                            ActionManager.processEvent(
-                                    CoreActionType.CLIENT_LINE_ADDED,
-                                    null, getContainer(), myLine);
-                            return null;
-                        }
-                    }.execute();
-                }
-
-                textPane.getDocument().addText(lines);
-
-                if (frameBufferSize > 0) {
-                    textPane.trim(frameBufferSize);
-                }
-            }
-        });
+        frameParent.addLine(line, timestamp);
     }
 
     /** {@inheritDoc} */
     @Override
-    public final void addLine(final String messageType,
-            final Object... args) {
-        if (!messageType.isEmpty()) {
-            addLine(Formatter.formatMessage(getConfigManager(), messageType,
-                    args), true);
-        }
-
+    public final void addLine(final String messageType, final Object... args) {
+        frameParent.addLine(messageType, args);
     }
 
     /** {@inheritDoc} */
     @Override
-    public final void addLine(final StringBuffer messageType,
-            final Object... args) {
-        if (messageType != null) {
-            addLine(messageType.toString(), args);
-        }
-
+    public final void addLine(final StringBuffer messageType, final Object... args) {
+        frameParent.addLine(messageType, args);
     }
 
     /** {@inheritDoc} */
