@@ -61,7 +61,6 @@ import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.core.util.URLHandler;
 import com.dmdirc.ui.interfaces.InputWindow;
 import com.dmdirc.ui.interfaces.Window;
-import com.dmdirc.ui.messages.Formatter;
 
 import java.awt.Container;
 import java.awt.Dimension;
@@ -76,9 +75,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.Charset;
 import java.nio.charset.IllegalCharsetNameException;
 import java.nio.charset.UnsupportedCharsetException;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
@@ -124,8 +120,6 @@ public abstract class TextFrame extends JInternalFrame implements Window,
     private SwingSearchBar searchBar;
     /** String transcoder. */
     private StringTranscoder transcoder;
-    /** Frame buffer size. */
-    private int frameBufferSize;
     /** Are we closing? */
     private boolean closing = false;
     /** Input window for popup commands. */
@@ -150,7 +144,6 @@ public abstract class TextFrame extends JInternalFrame implements Window,
         frameParent = owner;
 
         final ConfigManager config = owner.getConfigManager();
-        frameBufferSize = config.getOptionInt("ui", "frameBufferSize");
 
         setFrameIcon(IconManager.getIconManager().getIcon(owner.getIcon()));
 
@@ -985,9 +978,6 @@ public abstract class TextFrame extends JInternalFrame implements Window,
                     != null) {
                 getTextPane().setBackground(getConfigManager().
                         getOptionColour("ui", "backgroundcolour"));
-            } else if ("frameBufferSize".equals(key)) {
-                frameBufferSize = getContainer().getConfigManager().
-                        getOptionInt("ui", "frameBufferSize");
             }
         }
     }
