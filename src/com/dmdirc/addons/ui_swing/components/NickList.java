@@ -26,6 +26,7 @@ package com.dmdirc.addons.ui_swing.components;
 import com.dmdirc.addons.ui_swing.components.frames.ChannelFrame;
 import com.dmdirc.addons.ui_swing.components.renderers.NicklistRenderer;
 import com.dmdirc.addons.ui_swing.textpane.ClickType;
+import com.dmdirc.addons.ui_swing.textpane.ClickTypeValue;
 import com.dmdirc.config.ConfigManager;
 import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.parser.interfaces.ChannelClientInfo;
@@ -164,10 +165,9 @@ public class NickList extends JScrollPane implements ConfigChangeListener,
                 getMousePosition() != null) {
             if (checkCursorInSelectedCell() || selectNickUnderCursor()) {
                 if (e.isPopupTrigger()) {
-                    frame.showPopupMenu(ClickType.NICKNAME, new Point(e.
-                            getXOnScreen(), e.getYOnScreen()),
-                            ((ChannelClientInfo) nickList.getSelectedValue()).
-                            getClient().getNickname());
+                    frame.showPopupMenu(new ClickTypeValue(ClickType.NICKNAME,
+                            ((ChannelClientInfo) nickList.getSelectedValue()).getClient().getNickname()),
+                            new Point(e.getXOnScreen(), e.getYOnScreen()));
                 }
             } else {
                 nickList.clearSelection();
