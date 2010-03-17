@@ -35,7 +35,6 @@ import com.dmdirc.addons.ui_swing.actions.NicknameCopyAction;
 import com.dmdirc.addons.ui_swing.actions.SearchAction;
 import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
 import com.dmdirc.addons.ui_swing.components.SwingSearchBar;
-import com.dmdirc.addons.ui_swing.textpane.ClickType;
 import com.dmdirc.addons.ui_swing.textpane.ClickTypeValue;
 import com.dmdirc.addons.ui_swing.textpane.MouseEventType;
 import com.dmdirc.addons.ui_swing.textpane.TextPane;
@@ -943,45 +942,11 @@ public abstract class TextFrame extends JInternalFrame implements Window,
      * 
      * @param type ClickType Click type
      * @param point Point Point of the click (Must be screen coords)
-     * @param argument Word under the click
      */
-    public void showPopupMenu(final ClickType type,
-            final Point point,
-            final String argument) {
+    public void showPopupMenu(final ClickTypeValue type,
+            final Point point) {
         SwingUtilities.convertPointFromScreen(point, this);
-        final JPopupMenu popupMenu;
-
-        switch (type) {
-            case CHANNEL:
-                popupMenu = getPopupMenu(getChannelPopupType(), argument);
-                popupMenu.add(new ChannelCopyAction(argument));
-                if (popupMenu.getComponentCount() > 1) {
-                    popupMenu.addSeparator();
-                }
-
-                break;
-            case HYPERLINK:
-                popupMenu = getPopupMenu(getHyperlinkPopupType(), argument);
-                popupMenu.add(new HyperlinkCopyAction(argument));
-                if (popupMenu.getComponentCount() > 1) {
-                    popupMenu.addSeparator();
-                }
-
-                break;
-            case NICKNAME:
-                popupMenu = getPopupMenu(getNicknamePopupType(), argument);
-                if (popupMenu.getComponentCount() > 0) {
-                    popupMenu.addSeparator();
-                }
-
-                popupMenu.add(new NicknameCopyAction(argument));
-                break;
-            default:
-                popupMenu = getPopupMenu(null, argument);
-                break;
-        }
-
-        popupMenu.show(this, (int) point.getX(), (int) point.getY());
+        showPopupMenuInternal(type, point);
     }
 
     /**
