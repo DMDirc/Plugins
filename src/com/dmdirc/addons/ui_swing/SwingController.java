@@ -772,7 +772,7 @@ public final class SwingController extends Plugin implements Serializable,
         options.put("neverShow", "Never show");
         options.put("showWhenMaximised", "Show only when windows maximised");
 
-        advanced.addSetting(new PreferencesSetting(PreferencesType.INTEGER,
+        advanced.addSetting(new PreferencesSetting(PreferencesType.OPTIONALINTEGER,
                 new NumericalValidator(10, -1), "ui", "frameBufferSize",
                 "Window buffer size", "The maximum number of lines in a window"
                 + " buffer"));
