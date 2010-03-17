@@ -269,21 +269,23 @@ public final class SwingController extends Plugin implements Serializable,
     /** {@inheritDoc} */
     @Override
     public void showFirstRunWizard() {
-        showFirstRunWizard(true);
+        showFirstRunWizard(me, true);
     }
 
     /** {@inheritDoc} */
     @Override
     public void showMigrationWizard() {
-        showFirstRunWizard(false);
+        showFirstRunWizard(me, false);
     }
 
     /**
      * Shows a first run wizard, or a migration wizard.
      *
+     * @param parentWindow Parent window
      * @param firstRun First run?
      */
-    private synchronized void showFirstRunWizard(final boolean firstRun) {
+    private synchronized void showFirstRunWizard(
+            final java.awt.Window parentWindow, final boolean firstRun) {
         final Semaphore semaphore = new Semaphore(0);
         UIUtilities.invokeLater(new Runnable() {
 
@@ -305,7 +307,7 @@ public final class SwingController extends Plugin implements Serializable,
                     }
                 };
                 final SwingFirstRunWizard wizard =
-                        new SwingFirstRunWizard(firstRun);
+                        new SwingFirstRunWizard(parentWindow, firstRun);
                 wizard.getWizardDialog().addWizardListener(listener);
                 wizard.display();
             }
