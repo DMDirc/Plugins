@@ -355,32 +355,6 @@ public final class TextPane extends JComponent implements AdjustmentListener,
         canvas.clearSelection();
     }
 
-    /**
-     * Trims the document to the specified number of lines.
-     *
-     * @param numLines Number of lines to trim the document to
-     */
-    public void trim(final int numLines) {
-        if (document.getNumLines() < numLines) {
-            return;
-        }
-        final int trimmedLines = document.getNumLines() - numLines;
-        final LinePosition selectedRange = getSelectedRange();
-
-        selectedRange.setStartLine(selectedRange.getStartLine() - trimmedLines);
-        selectedRange.setEndLine(selectedRange.getEndLine() - trimmedLines);
-
-        if (selectedRange.getStartLine() < 0) {
-            selectedRange.setStartLine(0);
-        }
-        if (selectedRange.getEndLine() < 0) {
-            selectedRange.setEndLine(0);
-        }
-
-        setSelectedTexT(selectedRange);
-        document.trim(numLines);
-    }
-
     /** Scrolls one page up in the textpane. */
     public void pageDown() {
         scrollModel.setValue(scrollModel.getValue() + 10);
@@ -409,7 +383,21 @@ public final class TextPane extends JComponent implements AdjustmentListener,
 
     /** {@inheritDoc}. */
     @Override
-    public void trimmed(final int numLines) {
+    public void trimmed(final int newSize, final int numTrimmed) {
+        final LinePosition selectedRange = getSelectedRange();
+
+        selectedRange.setStartLine(selectedRange.getStartLine() - numTrimmed);
+        selectedRange.setEndLine(selectedRange.getEndLine() - numTrimmed);
+
+        if (selectedRange.getStartLine() < 0) {
+            selectedRange.setStartLine(0);
+        }
+        if (selectedRange.getEndLine() < 0) {
+            selectedRange.setEndLine(0);
+        }
+
+        setSelectedTexT(selectedRange);
+        
         setScrollBarMax(1);
     }
 
