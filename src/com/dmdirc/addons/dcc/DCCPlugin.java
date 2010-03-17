@@ -261,7 +261,7 @@ public final class DCCPlugin extends Plugin implements ActionListener {
                         }
                         final String myNickname = ((Server) arguments[0]).getParser().getLocalClient().getNickname();
                         final DCCFrame f = new DCCChatWindow(this, chat, "Chat: " + nickname, myNickname, nickname);
-                        f.getFrame().addLine("DCCChatStarting", nickname, chat.getHost(), chat.getPort());
+                        f.addLine("DCCChatStarting", nickname, chat.getHost(), chat.getPort());
                         chat.connect();
                     } else {
                         ActionManager.processEvent(DCCActions.DCC_CHAT_REQUEST, null, ((Server) arguments[0]), nickname);

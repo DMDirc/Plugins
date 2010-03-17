@@ -109,7 +109,7 @@ public final class DCCCommand extends ServerCommand implements IntelligentComman
 
                     sendLine(origin, isSilent, "DCCChatStarting", target,
                             chat.getHost(), chat.getPort());
-                    window.getFrame().addLine("DCCChatStarting", target,
+                    window.addLine("DCCChatStarting", target,
                             chat.getHost(), chat.getPort());
                 } else {
                     sendLine(origin, isSilent, "DCCChatError",

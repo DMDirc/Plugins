@@ -63,7 +63,7 @@ public class HistoryWindow extends FrameContainer {
         window.open();
         final int frameBufferSize = IdentityManager.getGlobalConfig().getOptionInt(
                 "ui", "frameBufferSize");
-        window.addLine(reader.getLinesAsString(Math.min(frameBufferSize, numLines)), false);
+        addLine(reader.getLinesAsString(Math.min(frameBufferSize, numLines)), false);
     }
 
     /** {@inheritDoc} */
