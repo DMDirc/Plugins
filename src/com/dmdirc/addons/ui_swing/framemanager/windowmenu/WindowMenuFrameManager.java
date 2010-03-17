@@ -406,7 +406,7 @@ public final class WindowMenuFrameManager extends JMenu implements
                     }
                 });
         for (int i = count; i < menuItemCount; i++) {
-            if (!(menu.getMenuComponent(i) instanceof FrameContainerMenuIterface)) {
+            if (!(menu.getMenuComponent(i) instanceof FrameContainerMenuInterface)) {
                 continue;
             }
             final int index = i;
@@ -418,7 +418,7 @@ public final class WindowMenuFrameManager extends JMenu implements
                             setObject(menu.getMenuComponent(index));
                         }
                     });
-            final FrameContainer child = ((FrameContainerMenuIterface) component).getFrame();
+            final FrameContainer child = ((FrameContainerMenuInterface) component).getFrame();
             if (sortBefore(newChild, child)) {
                 return i;
             } else if (!sortAfter(newChild, child) && IdentityManager.
