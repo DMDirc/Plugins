@@ -27,7 +27,7 @@ import com.dmdirc.FrameContainer;
 /**
  * Interface to define a menu or menu item that holds a framecontainer.
  */
-public interface FrameContainerMenuIterface {
+public interface FrameContainerMenuInterface {
 
     /**
      * Returns the wrapped frame container.

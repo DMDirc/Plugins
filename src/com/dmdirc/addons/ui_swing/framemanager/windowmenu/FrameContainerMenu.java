@@ -41,7 +41,7 @@ import javax.swing.SwingUtilities;
  * Frame container JMenu.
  */
 public class FrameContainerMenu extends JMenu implements FrameInfoListener,
-        ActionListener, SelectionListener, FrameContainerMenuIterface {
+        ActionListener, SelectionListener, FrameContainerMenuInterface {
 
     /**
      * A version number for this class. It should be changed whenever the class
