@@ -116,13 +116,10 @@ public final class ChannelListModesPane extends JPanel implements ActionListener
         }
         listModesPanel = new JScrollPane();
         listModesPanels = new ArrayList<JList>();
-        listModesArray =
-                channel.getServer().getParser().getListChannelModes().
+        listModesArray = channel.getServer().getParser().getListChannelModes().
                 toCharArray();
-        existingListItems =
-                new MapList<Character, ChannelListModeItem>();
-        listModesMenu =
-                new JComboBox(new DefaultComboBoxModel());
+        existingListItems = new MapList<Character, ChannelListModeItem>();
+        listModesMenu = new JComboBox(new DefaultComboBoxModel());
         addListModeButton = new JButton("Add");
         removeListModeButton = new JButton("Remove");
         removeListModeButton.setEnabled(false);
@@ -140,14 +137,17 @@ public final class ChannelListModesPane extends JPanel implements ActionListener
     public void update() {
         existingListItems.clear();
 
-        for (int i = 0; i < listModesArray.length;
-                i++) {
+        if (channel.getChannelInfo() == null) {
+            return;
+        }
+        for (int i = 0; i < listModesArray.length; i++) {
             final char mode = listModesArray[i];
-            existingListItems.add(mode,
-                    new ArrayList<ChannelListModeItem>(channel.getChannelInfo().
-                    getListMode(mode)));
-            final Collection<ChannelListModeItem> listItems =
-                    channel.getChannelInfo().getListMode(mode);
+            final Collection<ChannelListModeItem> listItems = channel
+                    .getChannelInfo().getListMode(mode);
+            if (listItems == null) {
+                continue;
+            }
+            existingListItems.add(mode, new ArrayList<ChannelListModeItem>(listItems));
             final DefaultListModel model =
                     (DefaultListModel) listModesPanels.get(i).getModel();
 
