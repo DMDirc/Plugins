@@ -22,6 +22,9 @@
 
 package com.dmdirc.addons.ui_swing.textpane;
 
+import com.dmdirc.ui.messages.IRCDocumentListener;
+import com.dmdirc.ui.messages.LinePosition;
+import com.dmdirc.ui.messages.IRCDocument;
 import com.dmdirc.ui.interfaces.Window;
 
 import java.awt.Point;
@@ -329,10 +332,8 @@ public final class TextPane extends JComponent implements AdjustmentListener,
         if (lineNumber == -1) {
             return "";
         }
-        final int[] indexes =
-                canvas.getSurroundingWordIndexes(document.getLine(lineNumber).
-                getText(),
-                index);
+        final int[] indexes = canvas.getSurroundingWordIndexes(document
+                .getLine(lineNumber).getText(), index);
         return document.getLine(lineNumber).getText().substring(indexes[0],
                 indexes[1]);
     }

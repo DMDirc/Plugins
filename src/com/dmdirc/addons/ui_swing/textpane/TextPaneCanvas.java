@@ -21,6 +21,8 @@
  */
 package com.dmdirc.addons.ui_swing.textpane;
 
+import com.dmdirc.ui.messages.LinePosition;
+import com.dmdirc.ui.messages.IRCDocument;
 import com.dmdirc.addons.ui_swing.BackgroundOption;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
