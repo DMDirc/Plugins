@@ -39,8 +39,10 @@ import com.dmdirc.addons.ui_swing.wizard.WizardDialog;
 import com.dmdirc.addons.ui_swing.wizard.WizardListener;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.util.resourcemanager.ResourceManager;
+import java.awt.Dialog.ModalityType;
 
 import java.awt.Dimension;
+import java.awt.Window;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -56,22 +58,27 @@ public final class SwingFirstRunWizard implements WizardListener,
     /** First run or update. */
     private boolean firstRun = true;
 
-    /** Instatiate the wizard. */
-    public SwingFirstRunWizard() {
-        this(true);
+    /**
+     * Instatiate the wizard.
+     *
+     * @param parentWindow Parent window
+     */
+    public SwingFirstRunWizard(final Window parentWindow) {
+        this(parentWindow, true);
     }
 
     /**
      * Instantiate the wizard.
      *
+     * @param parentWindow Parent window
      * @param firstRun is this the first run or an update?
      */
-    public SwingFirstRunWizard(final boolean firstRun) {
+    public SwingFirstRunWizard(final Window parentWindow, final boolean firstRun) {
         this.firstRun = firstRun;
         
-        wizardDialog =
-                new WizardDialog("DMDirc: " + (firstRun ? "Setup wizard" :
-                    "Migration wizard"), new ArrayList<Step>(), this, null);
+        wizardDialog = new WizardDialog("DMDirc: " + (firstRun ? "Setup wizard" 
+                : "Migration wizard"), new ArrayList<Step>(), this, parentWindow,
+                ModalityType.APPLICATION_MODAL);
         wizardDialog.setIconImage(IconManager.getIconManager().getImage("icon"));
         wizardDialog.addWizardListener(this);
         if(Apple.isAppleUI()) {
