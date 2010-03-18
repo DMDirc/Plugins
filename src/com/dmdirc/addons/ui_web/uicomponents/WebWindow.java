@@ -88,6 +88,7 @@ public class WebWindow implements Window {
 
     /** {@inheritDoc} */
     @Override
+    @Deprecated
     public void addLine(String messageType, Object... args) {
         if (!messageType.isEmpty()) {
             addLine(Formatter.formatMessage(parent.getConfigManager(), messageType, args), true);
@@ -96,6 +97,7 @@ public class WebWindow implements Window {
 
     /** {@inheritDoc} */
     @Override
+    @Deprecated
     public void addLine(StringBuffer messageType, Object... args) {
         if (messageType != null) {
             addLine(messageType.toString(), args);
@@ -104,6 +106,7 @@ public class WebWindow implements Window {
 
     /** {@inheritDoc} */
     @Override
+    @Deprecated
     public void addLine(String line, boolean timestamp) {
         for (String linepart : line.split("\n")) {
             final String message = 

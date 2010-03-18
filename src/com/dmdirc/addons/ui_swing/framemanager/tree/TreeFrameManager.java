@@ -31,7 +31,6 @@ import com.dmdirc.interfaces.SelectionListener;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.ui.interfaces.FrameManager;
-import com.dmdirc.ui.interfaces.Window;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.ui.WindowManager;
 
@@ -333,16 +332,15 @@ public final class TreeFrameManager implements FrameManager,
 
     /** {@inheritDoc} */
     @Override
-    public void notificationSet(final Window window, final Color colour) {
+    public void notificationSet(final FrameContainer window, final Color colour) {
         SwingUtilities.invokeLater(new Runnable() {
 
             /** {@inheritDoc} */
             @Override
             public void run() {
                 synchronized (nodes) {
-                    final FrameContainer container = window.getContainer();
-                    final TreeViewNode node = nodes.get(container);
-                    if (container != null && node != null) {
+                    final TreeViewNode node = nodes.get(window);
+                    if (window != null && node != null) {
                         final NodeLabel label = node.getLabel();
                         if (label != null) {
                             label.notificationSet(window, colour);
@@ -356,16 +354,15 @@ public final class TreeFrameManager implements FrameManager,
 
     /** {@inheritDoc} */
     @Override
-    public void notificationCleared(final Window window) {
+    public void notificationCleared(final FrameContainer window) {
         SwingUtilities.invokeLater(new Runnable() {
 
             /** {@inheritDoc} */
             @Override
             public void run() {
                 synchronized (nodes) {
-                    final FrameContainer container = window.getContainer();
-                    final TreeViewNode node = nodes.get(container);
-                    if (container != null && node != null) {
+                    final TreeViewNode node = nodes.get(window);
+                    if (window != null && node != null) {
                         final NodeLabel label = node.getLabel();
                         if (label != null) {
                             label.notificationCleared(window);
@@ -379,14 +376,14 @@ public final class TreeFrameManager implements FrameManager,
 
     /** {@inheritDoc} */
     @Override
-    public void iconChanged(final Window window, final String icon) {
+    public void iconChanged(final FrameContainer window, final String icon) {
         SwingUtilities.invokeLater(new Runnable() {
 
             /** {@inheritDoc} */
             @Override
             public void run() {
                 synchronized (nodes) {
-                    final TreeViewNode node = nodes.get(window.getContainer());
+                    final TreeViewNode node = nodes.get(window);
                     if (node != null) {
                         final NodeLabel label = node.getLabel();
                         if (label != null) {
@@ -401,14 +398,14 @@ public final class TreeFrameManager implements FrameManager,
 
     /** {@inheritDoc} */
     @Override
-    public void nameChanged(final Window window, final String name) {
+    public void nameChanged(final FrameContainer window, final String name) {
         SwingUtilities.invokeLater(new Runnable() {
 
             /** {@inheritDoc} */
             @Override
             public void run() {
                 synchronized (nodes) {
-                    final TreeViewNode node = nodes.get(window.getContainer());
+                    final TreeViewNode node = nodes.get(window);
                     if (node != null) {
                         final NodeLabel label = node.getLabel();
                         if (label != null) {

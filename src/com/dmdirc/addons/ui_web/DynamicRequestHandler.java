@@ -336,7 +336,7 @@ public class DynamicRequestHandler extends AbstractHandler {
             final HttpServletResponse response) throws IOException {
         final String windowID = request.getParameter("source");
         final WebWindow window = WebWindow.getWindow(windowID);
-        window.getContainer().getServer().addQuery(request.getParameter("target"));
+        window.getContainer().getServer().getQuery(request.getParameter("target"));
     }
 
     private Identity findProfile(final String parameter) {
