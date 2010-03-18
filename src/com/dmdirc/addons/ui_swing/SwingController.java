@@ -744,8 +744,6 @@ public final class SwingController extends Plugin implements Serializable,
         general.addSetting(new PreferencesSetting("ui", "framemanagerPosition",
                 "Window manager position", "Where should the window "
                 + "manager be positioned?", fmpositions).setRestartNeeded());
-        general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
-                "ui", "stylelinks", "Style links", "Style links in text areas"));
         general.addSetting(new PreferencesSetting(PreferencesType.FONT,
                 "ui", "textPaneFontName", "Textpane font",
                 "Font for the textpane"));
