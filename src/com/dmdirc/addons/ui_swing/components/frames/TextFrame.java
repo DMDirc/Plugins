@@ -57,7 +57,6 @@ import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.parser.common.ChannelJoinRequest;
 import com.dmdirc.ui.IconManager;
-import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.core.util.URLHandler;
 import com.dmdirc.ui.interfaces.InputWindow;
 import com.dmdirc.ui.interfaces.Window;
@@ -163,7 +162,7 @@ public abstract class TextFrame extends JInternalFrame implements Window,
 
         inputWindow = this;
         while (!(inputWindow instanceof InputWindow) && inputWindow != null) {
-            inputWindow = WindowManager.getParent(inputWindow.getContainer()).getFrame();
+            inputWindow = inputWindow.getContainer().getParent().getFrame();
         }
 
         initComponents();
