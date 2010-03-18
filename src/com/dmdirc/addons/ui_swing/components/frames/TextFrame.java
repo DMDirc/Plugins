@@ -57,7 +57,6 @@ import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.parser.common.ChannelJoinRequest;
 import com.dmdirc.ui.IconManager;
-import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.core.util.URLHandler;
 import com.dmdirc.ui.interfaces.InputWindow;
 import com.dmdirc.ui.interfaces.Window;
@@ -163,7 +162,7 @@ public abstract class TextFrame extends JInternalFrame implements Window,
 
         inputWindow = this;
         while (!(inputWindow instanceof InputWindow) && inputWindow != null) {
-            inputWindow = WindowManager.getParent(inputWindow.getContainer()).getFrame();
+            inputWindow = inputWindow.getContainer().getParent().getFrame();
         }
 
         initComponents();
@@ -417,29 +416,46 @@ public abstract class TextFrame extends JInternalFrame implements Window,
         });
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     * 
+     * @deprecated Use corresponding methods in {@link FrameContainer} instead
+     */
     @Override
     @Deprecated
     public final void addLine(final String line, final boolean timestamp) {
         frameParent.addLine(line, timestamp);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     * 
+     * @deprecated Use corresponding methods in {@link FrameContainer} instead
+     */
     @Override
     @Deprecated
     public final void addLine(final String messageType, final Object... args) {
         frameParent.addLine(messageType, args);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     * 
+     * @deprecated Use corresponding methods in {@link FrameContainer} instead
+     */
     @Override
     @Deprecated
     public final void addLine(final StringBuffer messageType, final Object... args) {
         frameParent.addLine(messageType, args);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     * 
+     * @deprecated Call {@link IRCDocument#clear()} via {@link FrameContainer#getDocument()}
+     */
     @Override
+    @Deprecated
     public final void clear() {
         UIUtilities.invokeLater(new Runnable() {
 
@@ -742,8 +758,11 @@ public abstract class TextFrame extends JInternalFrame implements Window,
      * Returns the transcoder for this frame.
      *
      * @return String transcoder for this frame
+     *
+     * @deprecated Use {@link FrameContainer#getTranscoder()} instead
      */
     @Override
+    @Deprecated
     public StringTranscoder getTranscoder() {
         return transcoder;
     }
