@@ -27,7 +27,6 @@ import com.dmdirc.interfaces.FrameInfoListener;
 import com.dmdirc.interfaces.SelectionListener;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.WindowManager;
-import com.dmdirc.ui.interfaces.Window;
 
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -73,14 +72,13 @@ public class FrameContainerMenuItem extends JMenuItem implements FrameInfoListen
 
     /** {@inheritDoc} */
     @Override
-    public void iconChanged(final Window window, final String icon) {
+    public void iconChanged(final FrameContainer window, final String icon) {
         SwingUtilities.invokeLater(new Runnable() {
 
             /** {@inheritDoc} */
             @Override
             public void run() {
-                if ((frame != null && window != null) && frame.equals(window.
-                        getContainer())) {
+                if ((frame != null && window != null) && frame.equals(window)) {
                     setIcon(IconManager.getIconManager().getIcon(icon));
                 }
             }
@@ -89,14 +87,13 @@ public class FrameContainerMenuItem extends JMenuItem implements FrameInfoListen
 
     /** {@inheritDoc} */
     @Override
-    public void nameChanged(final Window window, final String name) {
+    public void nameChanged(final FrameContainer window, final String name) {
         SwingUtilities.invokeLater(new Runnable() {
 
             /** {@inheritDoc} */
             @Override
             public void run() {
-                if ((frame != null && window != null) && frame.equals(window.
-                        getContainer())) {
+                if ((frame != null && window != null) && frame.equals(window)) {
                     setText(name);
                 }
             }

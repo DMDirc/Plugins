@@ -104,32 +104,32 @@ public class NodeLabel extends JLabel implements SelectionListener,
 
     /** {@inheritDoc} */
     @Override
-    public void notificationSet(final Window window, final Color colour) {
-        if (equals(window)) {
+    public void notificationSet(final FrameContainer window, final Color colour) {
+        if (equals(window.getFrame())) {
             notificationColour = colour;
         }
     }
 
     /** {@inheritDoc} */
     @Override
-    public void notificationCleared(final Window window) {
-        if (equals(window)) {
+    public void notificationCleared(final FrameContainer window) {
+        if (equals(window.getFrame())) {
             notificationColour = null;
         }
     }
 
     /** {@inheritDoc} */
     @Override
-    public void iconChanged(final Window window, final String icon) {
-        if (equals(window)) {
+    public void iconChanged(final FrameContainer window, final String icon) {
+        if (equals(window.getFrame())) {
             setIcon(IconManager.getIconManager().getIcon(icon));
         }
     }
 
     /** {@inheritDoc} */
     @Override
-    public void nameChanged(final Window window, final String name) {
-        if (equals(window)) {
+    public void nameChanged(final FrameContainer window, final String name) {
+        if (equals(window.getFrame())) {
             setText(name);
         }
     }

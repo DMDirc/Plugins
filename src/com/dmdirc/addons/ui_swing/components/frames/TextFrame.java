@@ -985,7 +985,7 @@ public abstract class TextFrame extends JInternalFrame implements Window,
 
     /** {@inheritDoc} */
     @Override
-    public void iconChanged(final Window window, final String icon) {
+    public void iconChanged(final FrameContainer window, final String icon) {
         UIUtilities.invokeLater(new Runnable() {
 
             /** {@inheritDoc} */
@@ -998,7 +998,7 @@ public abstract class TextFrame extends JInternalFrame implements Window,
 
     /** {@inheritDoc} */
     @Override
-    public void nameChanged(final Window window, final String name) {
+    public void nameChanged(final FrameContainer window, final String name) {
         //Ignore
     }
 }

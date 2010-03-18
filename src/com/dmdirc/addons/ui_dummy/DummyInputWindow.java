@@ -81,12 +81,14 @@ public class DummyInputWindow implements InputWindow {
     
     /** {@inheritDoc} */
     @Override
+    @Deprecated
     public void addLine(final String messageType, final Object... args) {
         getContainer().addLine(messageType, args);
     }
     
     /** {@inheritDoc} */
     @Override
+    @Deprecated
     public void addLine(final StringBuffer messageType, final Object... args) {
         getContainer().addLine(messageType, args);
     }

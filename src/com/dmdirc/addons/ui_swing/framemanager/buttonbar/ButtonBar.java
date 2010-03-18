@@ -285,16 +285,16 @@ public final class ButtonBar implements FrameManager, ActionListener,
 
     /** {@inheritDoc} */
     @Override
-    public void notificationSet(final Window window, final Color colour) {
-        if (buttons.containsKey(window.getContainer())) {
-            buttons.get(window.getContainer()).setForeground(colour);
+    public void notificationSet(final FrameContainer window, final Color colour) {
+        if (buttons.containsKey(window)) {
+            buttons.get(window).setForeground(colour);
         }
     }
 
     /** {@inheritDoc} */
     @Override
-    public void notificationCleared(final Window window) {
-        notificationSet(window, window.getContainer().getNotification());
+    public void notificationCleared(final FrameContainer window) {
+        notificationSet(window, window.getNotification());
     }
 
     /** {@inheritDoc} */
@@ -314,14 +314,14 @@ public final class ButtonBar implements FrameManager, ActionListener,
 
     /** {@inheritDoc} */
     @Override
-    public void iconChanged(final Window window, final String icon) {
-        buttons.get(window.getContainer()).setIcon(IconManager.getIconManager().getIcon(icon));
+    public void iconChanged(final FrameContainer window, final String icon) {
+        buttons.get(window).setIcon(IconManager.getIconManager().getIcon(icon));
     }
 
 
     /** {@inheritDoc} */
     @Override
-    public void nameChanged(final Window window, final String name) {
-        buttons.get(window.getContainer()).setText(name);
+    public void nameChanged(final FrameContainer window, final String name) {
+        buttons.get(window).setText(name);
     }
 }

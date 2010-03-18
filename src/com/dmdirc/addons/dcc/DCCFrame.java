@@ -230,7 +230,7 @@ public abstract class DCCFrame extends WritableFrameContainer {
         plugin.delWindow(this);
 
         // 6: Remove the window from the window manager
-        WindowManager.removeWindow(myWindow);
+        WindowManager.removeWindow(this);
     }
 
     /** {@inheritDoc} */
