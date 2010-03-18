@@ -49,8 +49,8 @@ import net.miginfocom.swing.MigLayout;
 /**
  * Styled, scrollable text pane.
  */
-public final class TextPane extends JComponent implements AdjustmentListener,
-        MouseWheelListener, IRCDocumentListener {
+public final class TextPane extends JComponent implements MouseWheelListener,
+        AdjustmentListener, IRCDocumentListener {
 
     /**
      * A version number for this class. It should be changed whenever the class
@@ -136,26 +136,22 @@ public final class TextPane extends JComponent implements AdjustmentListener,
      * Sets the scrollbar's maximum position. If the current position is
      * within <code>linesAllowed</code> of the end of the document, the
      * scrollbar's current position is set to the end of the document.
-     * 
+     *
+     * @param lines Current number of lines
      * @param linesAllowed The number of lines allowed below the current position
      * @since 0.6
      */
-    protected void setScrollBarMax(final int linesAllowed) {
-        final int lines = document.getNumLines() - 1;
+    protected void setScrollBarMax(final int lines, final int linesAllowed) {
         final int currentLine = scrollModel.getValue();
         final int allowedDeviation = lines - linesAllowed;
-
-        scrollModel.setMaximum(lines);
-
         boolean setToMax = currentLine == allowedDeviation;
-        if (allowedDeviation == -1) {
+        if (allowedDeviation <= -1) {
             setToMax = true;
         }
-
-        if (!scrollModel.getValueIsAdjusting() && setToMax) {
+        scrollModel.setMaximum(lines);
+        if (setToMax) {
             scrollModel.setValue(lines);
         }
-        canvas.recalc();
     }
 
     /**
@@ -167,9 +163,9 @@ public final class TextPane extends JComponent implements AdjustmentListener,
         scrollModel.setValue(position);
     }
 
-    /** 
+    /**
      * {@inheritDoc}
-     * 
+     *
      * @param e Mouse wheel event
      */
     @Override
@@ -177,9 +173,9 @@ public final class TextPane extends JComponent implements AdjustmentListener,
         scrollModel.setValue(e.getValue());
     }
 
-    /** 
+    /**
      * {@inheritDoc}
-     * 
+     *
      * @param e Mouse wheel event
      */
     @Override
@@ -346,9 +342,6 @@ public final class TextPane extends JComponent implements AdjustmentListener,
     /** Clears the textpane. */
     public void clear() {
         document.clear();
-        scrollModel.setValue(0);
-        setScrollBarMax(1);
-        canvas.recalc();
     }
 
     /** Clears the selection. */
@@ -384,7 +377,7 @@ public final class TextPane extends JComponent implements AdjustmentListener,
             /** {@inheritDoc}. */
             @Override
             public void run() {
-                setScrollBarMax(1);
+                setScrollBarMax(size, 1);
             }
         });
     }
@@ -407,7 +400,7 @@ public final class TextPane extends JComponent implements AdjustmentListener,
                     selectedRange.setEndLine(0);
                 }
                 setSelectedTexT(selectedRange);
-                setScrollBarMax(1);
+                setScrollBarMax(newSize, 1);
             }
         });
     }
@@ -420,7 +413,8 @@ public final class TextPane extends JComponent implements AdjustmentListener,
             /** {@inheritDoc}. */
             @Override
             public void run() {
-                canvas.recalc();
+                scrollModel.setMaximum(0);
+                scrollModel.setValue(0);
             }
         });
     }
@@ -433,7 +427,7 @@ public final class TextPane extends JComponent implements AdjustmentListener,
             /** {@inheritDoc}. */
             @Override
             public void run() {
-                setScrollBarMax(length);
+                setScrollBarMax(size, length);
             }
         });
     }
