@@ -287,8 +287,7 @@ public final class TreeFrameManager implements FrameManager,
 
                 for (FrameContainer window : rootWindows) {
                     addWindow(window);
-                    final FrameContainer[] childWindows = WindowManager.getChildren(
-                            window);
+                    final Collection<FrameContainer> childWindows = window.getChildren();
                     for (FrameContainer childWindow : childWindows) {
                         addWindow(window, childWindow);
                     }
