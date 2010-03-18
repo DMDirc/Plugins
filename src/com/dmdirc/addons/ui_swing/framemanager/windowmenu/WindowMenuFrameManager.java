@@ -272,11 +272,8 @@ public final class WindowMenuFrameManager extends JMenu implements
     }
 
     private JMenu getParentMenu(final FrameContainer window) {
-        FrameContainer parent = null;
-        Window parentWindow = WindowManager.getParent(window.getFrame());
-        if (parentWindow != null) {
-            parent = parentWindow.getContainer();
-        }
+        FrameContainer parent = WindowManager.getParent(window);
+
         if (parent == null) {
             return this;
         } else {
@@ -328,13 +325,13 @@ public final class WindowMenuFrameManager extends JMenu implements
 
     /** {@inheritDoc} */
     @Override
-    public void selectionChanged(final Window window) {
+    public void selectionChanged(final FrameContainer window) {
         final Collection<SelectionListener> values =
                 new ArrayList<SelectionListener>();
         synchronized (menus) {
             synchronized (items) {
                 synchronized (menuItems) {
-                    activeWindow = window;
+                    activeWindow = window.getFrame();
                     values.addAll(menus.values());
                     values.addAll(items.values());
                     values.addAll(menuItems.values());

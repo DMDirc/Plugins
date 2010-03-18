@@ -299,16 +299,16 @@ public final class ButtonBar implements FrameManager, ActionListener,
 
     /** {@inheritDoc} */
     @Override
-    public void selectionChanged(final Window window) {
-        activeWindow = window;   
+    public void selectionChanged(final FrameContainer window) {
+        activeWindow = window.getFrame();
         if (selected != null && buttons.containsKey(selected)) {
             buttons.get(selected).setSelected(false);
         }
 
-        selected = window.getContainer();
+        selected = window;
 
-        if (buttons.containsKey(window.getContainer())) {
-            buttons.get(window.getContainer()).setSelected(true);
+        if (buttons.containsKey(window)) {
+            buttons.get(window).setSelected(true);
         }
     }
 

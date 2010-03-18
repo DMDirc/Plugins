@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.framemanager.tree;
 
+import com.dmdirc.FrameContainer;
 import com.dmdirc.interfaces.FrameInfoListener;
 import com.dmdirc.interfaces.NotificationListener;
 import com.dmdirc.interfaces.SelectionListener;
@@ -93,8 +94,8 @@ public class NodeLabel extends JLabel implements SelectionListener,
 
     /** {@inheritDoc} */
     @Override
-    public void selectionChanged(final Window window) {
-        if (equals(window)) {
+    public void selectionChanged(final FrameContainer window) {
+        if (equals(window.getFrame())) {
             selected = true;
         } else {
             selected = false;

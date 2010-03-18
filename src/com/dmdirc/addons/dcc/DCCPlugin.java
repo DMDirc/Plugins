@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.dcc;
 
+import com.dmdirc.FrameContainer;
 import com.dmdirc.Main;
 import com.dmdirc.Server;
 import com.dmdirc.actions.ActionManager;
@@ -48,7 +49,6 @@ import com.dmdirc.parser.interfaces.ClientInfo;
 import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.plugins.Plugin;
 import com.dmdirc.ui.WindowManager;
-import com.dmdirc.ui.interfaces.Window;
 
 import java.awt.Dialog.ModalityType;
 import java.io.File;
@@ -638,15 +638,15 @@ class PlaceholderDCCFrame extends DCCFrame {
 
     @Override
     public void close() {
-        final Window[] windows = WindowManager.getChildren(getFrame());
+        final FrameContainer[] windows = WindowManager.getChildren(this);
         int dccs = 0;
-        for (Window window : windows) {
-            if (window instanceof EmptyFrame) {
-                if (((DCCTransferWindow)((EmptyFrame) window).getContainer()).getDCC().isActive()) {
+        for (FrameContainer window : windows) {
+            if (window instanceof DCCTransferWindow) {
+                if (((DCCTransferWindow) window).getDCC().isActive()) {
                     dccs++;
                 }
             } else if (window instanceof DCCChatWindow) {
-                if (((DCCChatWindow)((EmptyFrame) window).getContainer()).getDCC().isActive()) {
+                if (((DCCChatWindow) window).getDCC().isActive()) {
                     dccs++;
                 }
             }

@@ -317,22 +317,22 @@ public class DMDircDesktopPane extends JDesktopPane implements FrameListener,
 
     /** {@inheritDoc} */
     @Override
-    public void selectionChanged(final Window window) {
+    public void selectionChanged(final FrameContainer window) {
         UIUtilities.invokeLater(new Runnable() {
 
             /** {@inheritDoc} */
             @Override
             public void run() {
-                selectedWindow = window;
+                selectedWindow = window.getFrame();
                 final TreeNode[] path =
-                        model.getPathToRoot(nodes.get(window.getContainer()));
+                        model.getPathToRoot(nodes.get(selectedWindow.getContainer()));
                 if (path != null && path.length > 0) {
                     selectionModel.setSelectionPath(new TreePath(path));
                 }
-                if (window instanceof InputTextFrame) {
-                    ((InputTextFrame) window).requestInputFieldFocus();
+                if (selectedWindow instanceof InputTextFrame) {
+                    ((InputTextFrame) selectedWindow).requestInputFieldFocus();
                 }
-                mainFrame.setTitle(window.getTitle());
+                mainFrame.setTitle(selectedWindow.getTitle());
             }
         });
     }
