@@ -32,15 +32,14 @@ import com.dmdirc.ui.interfaces.InputWindow;
 
 import java.awt.Toolkit;
 import java.util.Collections;
-import java.util.List;
 
 public class MircStyle implements TabCompletionStyle {
     
-    /** The last set of results we retrieved. */
-    private List<String> lastResult;
-    
     /** The last word that was tab completed. */
     private String lastWord;
+
+    /** The last string we tried to tab complete. */
+    private String tabString;
     
     /** The tab completer that we use. */
     protected final TabCompleter tabCompleter;
@@ -68,9 +67,11 @@ public class MircStyle implements TabCompletionStyle {
         final String word = original.substring(start, end);
         String target = "";
         if (word.equals(lastWord)) {
+            final TabCompleterResult res = tabCompleter.complete(tabString, additional);
             // We're continuing to tab through
-            target = lastResult.get((lastResult.indexOf(lastWord) + 
-                    (shiftPressed ? -1 : 1) + lastResult.size()) % lastResult.size());
+            target = res.getResults().get((res.getResults().indexOf(lastWord) +
+                    (shiftPressed ? -1 : 1) + res.getResults().size()) % res
+                    .getResults().size());
         } else {
             // New tab target
             final TabCompleterResult res = tabCompleter.complete(word, additional);
@@ -88,7 +89,7 @@ public class MircStyle implements TabCompletionStyle {
                 } else {
                     target = res.getResults().get(0);
                 }
-                lastResult = res.getResults();
+                tabString = word;
             }
         }
         
