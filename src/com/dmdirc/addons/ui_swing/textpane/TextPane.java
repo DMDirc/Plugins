@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.textpane;
 
+import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.ui.messages.IRCDocumentListener;
 import com.dmdirc.ui.messages.LinePosition;
 import com.dmdirc.ui.messages.IRCDocument;
@@ -378,45 +379,76 @@ public final class TextPane extends JComponent implements AdjustmentListener,
     /** {@inheritDoc}. */
     @Override
     public void lineAdded(final int line, final int size) {
-        setScrollBarMax(1);
+        UIUtilities.invokeLater(new Runnable() {
+
+            /** {@inheritDoc}. */
+            @Override
+            public void run() {
+                setScrollBarMax(1);
+            }
+        });
     }
 
     /** {@inheritDoc}. */
     @Override
     public void trimmed(final int newSize, final int numTrimmed) {
-        final LinePosition selectedRange = getSelectedRange();
+        UIUtilities.invokeLater(new Runnable() {
 
-        selectedRange.setStartLine(selectedRange.getStartLine() - numTrimmed);
-        selectedRange.setEndLine(selectedRange.getEndLine() - numTrimmed);
-
-        if (selectedRange.getStartLine() < 0) {
-            selectedRange.setStartLine(0);
-        }
-        if (selectedRange.getEndLine() < 0) {
-            selectedRange.setEndLine(0);
-        }
-
-        setSelectedTexT(selectedRange);
-        
-        setScrollBarMax(1);
+            /** {@inheritDoc}. */
+            @Override
+            public void run() {
+                final LinePosition selectedRange = getSelectedRange();
+                selectedRange.setStartLine(selectedRange.getStartLine() - numTrimmed);
+                selectedRange.setEndLine(selectedRange.getEndLine() - numTrimmed);
+                if (selectedRange.getStartLine() < 0) {
+                    selectedRange.setStartLine(0);
+                }
+                if (selectedRange.getEndLine() < 0) {
+                    selectedRange.setEndLine(0);
+                }
+                setSelectedTexT(selectedRange);
+                setScrollBarMax(1);
+            }
+        });
     }
 
     /** {@inheritDoc}. */
     @Override
     public void cleared() {
-        canvas.recalc();
+        UIUtilities.invokeLater(new Runnable() {
+
+            /** {@inheritDoc}. */
+            @Override
+            public void run() {
+                canvas.recalc();
+            }
+        });
     }
 
     /** {@inheritDoc}. */
     @Override
-    public void linesAdded(int line, int length, int size) {
-        setScrollBarMax(length);
+    public void linesAdded(final int line, final int length, final int size) {
+        UIUtilities.invokeLater(new Runnable() {
+
+            /** {@inheritDoc}. */
+            @Override
+            public void run() {
+                setScrollBarMax(length);
+            }
+        });
     }
 
     /** {@inheritDoc}. */
     @Override
     public void repaintNeeded() {
-        canvas.recalc();
+        UIUtilities.invokeLater(new Runnable() {
+
+            /** {@inheritDoc}. */
+            @Override
+            public void run() {
+                canvas.recalc();
+            }
+        });
     }
 
     /**
