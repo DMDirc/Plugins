@@ -121,7 +121,7 @@ public class FrameContainerMenuItem extends JMenuItem implements FrameInfoListen
     public void selectionChanged(final FrameContainer window) {
         if (frame.equals(window)) {
             setFont(getFont().deriveFont(Font.BOLD));
-            final FrameContainer parentWindow = WindowManager.getParent(window);
+            final FrameContainer parentWindow = window.getParent();
             if (parentWindow != null) {
                 manager.parentSelection(parentWindow);
             }
