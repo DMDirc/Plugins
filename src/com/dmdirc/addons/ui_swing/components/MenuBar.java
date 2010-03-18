@@ -22,13 +22,13 @@
 
 package com.dmdirc.addons.ui_swing.components;
 
+import com.dmdirc.Channel;
+import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialog;
 import com.dmdirc.ServerManager;
 import com.dmdirc.ServerState;
-import com.dmdirc.ui.interfaces.Window;
 import com.dmdirc.addons.ui_swing.Apple;
 import com.dmdirc.addons.ui_swing.MainFrame;
-import com.dmdirc.addons.ui_swing.components.frames.ChannelFrame;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.dialogs.FeedbackDialog;
 import com.dmdirc.addons.ui_swing.dialogs.NewServerDialog;
@@ -270,10 +270,9 @@ public class MenuBar extends JMenuBar implements ActionListener, MenuListener {
         } else if (e.getActionCommand().equals("feedback")) {
             FeedbackDialog.showFeedbackDialog(mainFrame);
         } else if (e.getActionCommand().equals("ChannelSettings")) {
-            final Window activeWindow = WindowManager.getActiveWindow();
-            if (activeWindow instanceof ChannelFrame) {
-                controller.showChannelSettingsDialog(((ChannelFrame) activeWindow).
-                        getChannel());
+            final FrameContainer activeWindow = WindowManager.getActiveWindow();
+            if (activeWindow instanceof Channel) {
+                controller.showChannelSettingsDialog(((Channel) activeWindow));
             }
         } else if (e.getActionCommand().equals("ServerSettings")) {
             controller.showServerSettingsDialog(WindowManager.getActiveServer());
@@ -306,20 +305,18 @@ public class MenuBar extends JMenuBar implements ActionListener, MenuListener {
     /** {@inheritDoc} */
     @Override
     public void menuSelected(final MenuEvent e) {
-        final Window activeWindow = WindowManager.getActiveWindow();
+        final FrameContainer activeWindow = WindowManager.getActiveWindow();
 
-        ssd.setEnabled(activeWindow != null && activeWindow.getContainer().
-                getServer() != null && activeWindow.getContainer().
-                getServer().getState() == ServerState.CONNECTED);
-        csd.setEnabled(activeWindow instanceof ChannelFrame && activeWindow.getContainer().
-                getServer() != null && activeWindow.getContainer().
-                getServer().getState() == ServerState.CONNECTED);
-        disconnect.setEnabled(activeWindow != null && activeWindow.getContainer().
-                getServer() != null && activeWindow.getContainer().
-                getServer().getState() == ServerState.CONNECTED);
-        join.setEnabled(activeWindow != null && activeWindow.getContainer().
-                getServer() != null && activeWindow.getContainer().
-                getServer().getState() == ServerState.CONNECTED);
+        ssd.setEnabled(activeWindow != null && activeWindow.getServer() != null
+                && activeWindow.getServer().getState() == ServerState.CONNECTED);
+        csd.setEnabled(activeWindow instanceof Channel
+                && activeWindow.getServer() != null
+                && activeWindow.getServer().getState() == ServerState.CONNECTED);
+        disconnect.setEnabled(activeWindow != null
+                && activeWindow.getServer() != null
+                && activeWindow.getServer().getState() == ServerState.CONNECTED);
+        join.setEnabled(activeWindow != null && activeWindow.getServer() != null
+                && activeWindow.getServer().getState() == ServerState.CONNECTED);
     }
 
     /** {@inheritDoc} */

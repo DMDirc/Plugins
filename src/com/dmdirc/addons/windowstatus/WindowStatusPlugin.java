@@ -44,8 +44,6 @@ import com.dmdirc.parser.interfaces.ChannelInfo;
 import com.dmdirc.parser.interfaces.ClientInfo;
 import com.dmdirc.plugins.Plugin;
 import com.dmdirc.ui.WindowManager;
-import com.dmdirc.ui.interfaces.InputWindow;
-import com.dmdirc.ui.interfaces.Window;
 import com.dmdirc.util.ReturnableThread;
 
 import java.util.Hashtable;
@@ -125,10 +123,10 @@ public final class WindowStatusPlugin extends Plugin implements ActionListener, 
      * Update the window status using the current active window.
      */
     public void updateStatus() {
-        final Window active = WindowManager.getActiveWindow();
+        final FrameContainer active = WindowManager.getActiveWindow();
 
         if (active != null) {
-            updateStatus(((InputWindow) active).getContainer());
+            updateStatus(active);
         }
     }
 

@@ -201,8 +201,8 @@ public class MDIBar extends JPanel implements FrameListener, SelectionListener,
     }
 
     @Override
-    public void selectionChanged(Window window) {
-        activeFrame = window;
+    public void selectionChanged(FrameContainer window) {
+        activeFrame = window.getFrame();
         check();
     }
 }

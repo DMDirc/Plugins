@@ -284,15 +284,14 @@ public final class TreeFrameManager implements FrameManager,
                 ((DefaultTreeModel) tree.getModel()).setRoot(new TreeViewNode(
                         null, null));
 
-                final Window[] rootWindows = WindowManager.getRootWindows();
+                final FrameContainer[] rootWindows = WindowManager.getRootWindows();
 
-                for (Window window : rootWindows) {
-                    addWindow(window.getContainer());
-                    final Window[] childWindows = WindowManager.getChildren(
+                for (FrameContainer window : rootWindows) {
+                    addWindow(window);
+                    final FrameContainer[] childWindows = WindowManager.getChildren(
                             window);
-                    for (Window childWindow : childWindows) {
-                        addWindow(window.getContainer(), childWindow.
-                                getContainer());
+                    for (FrameContainer childWindow : childWindows) {
+                        addWindow(window, childWindow);
                     }
                 }
             }
@@ -301,7 +300,7 @@ public final class TreeFrameManager implements FrameManager,
 
     /** {@inheritDoc} */
     @Override
-    public void selectionChanged(final Window window) {
+    public void selectionChanged(final FrameContainer window) {
         synchronized (nodes) {
             final Collection<TreeViewNode> collection =
                     new ArrayList<TreeViewNode>(nodes.values());
@@ -319,7 +318,7 @@ public final class TreeFrameManager implements FrameManager,
                 public void run() {
                     final TreeNode[] treePath =
                             ((DefaultTreeModel) tree.getModel()).getPathToRoot(
-                            nodes.get(window.getContainer()));
+                            nodes.get(window));
                     if (treePath != null && treePath.length > 0) {
                         final TreePath path = new TreePath(treePath);
                         if (path != null) {

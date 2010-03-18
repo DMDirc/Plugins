@@ -76,6 +76,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.IllegalCharsetNameException;
 import java.nio.charset.UnsupportedCharsetException;
 import java.util.concurrent.atomic.AtomicBoolean;
+
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JInternalFrame;
@@ -162,7 +163,7 @@ public abstract class TextFrame extends JInternalFrame implements Window,
 
         inputWindow = this;
         while (!(inputWindow instanceof InputWindow) && inputWindow != null) {
-            inputWindow = WindowManager.getParent(inputWindow);
+            inputWindow = WindowManager.getParent(inputWindow.getContainer()).getFrame();
         }
 
         initComponents();
