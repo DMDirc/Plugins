@@ -292,8 +292,8 @@ public class DCCTransferWindow extends DCCFrame implements DCCTransferHandler,
             title.append(dcc.getType() == DCCTransfer.TransferType.SEND ? "Sending: " : "Recieving: ");
             title.append(otherNickname);
             title.append(" ("+ String.format("%.0f", Math.floor(percent)) +"%)");
-            this.setName(title.toString());
-            this.getFrame().setTitle(title.toString());
+            setName(title.toString());
+            setTitle(title.toString());
         }
 
         updateSpeedAndTime();

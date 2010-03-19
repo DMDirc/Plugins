@@ -62,7 +62,7 @@ public class DCCChatWindow extends DCCFrame implements DCCChatHandler {
         myWindow = Main.getUI().getInputWindow(this, DCCCommandParser.getDCCCommandParser());
         plugin.addWindow(this);
 
-        myWindow.setTitle(title);
+        setTitle(title);
         myWindow.open();
     }
 

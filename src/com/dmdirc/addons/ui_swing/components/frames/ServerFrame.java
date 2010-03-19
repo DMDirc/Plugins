@@ -89,8 +89,6 @@ public final class ServerFrame extends InputTextFrame implements ServerWindow,
         settingsMI = new JMenuItem("Settings");
         settingsMI.addActionListener(this);
 
-        setTitle("Server Frame");
-
         getContentPane().setLayout(new MigLayout("ins 0, fill, hidemode 3, wrap 1"));
         getContentPane().add(getTextPane(), "grow, push");
         getContentPane().add(getSearchBar(), "growx, pushx");

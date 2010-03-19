@@ -417,4 +417,10 @@ public final class TreeFrameManager implements FrameManager,
             }
         });
     }
+
+    /** {@inheritDoc} */
+    @Override
+    public void titleChanged(final FrameContainer window, final String title) {
+        // Do nothing
+    }
 }
