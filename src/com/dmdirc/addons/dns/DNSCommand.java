@@ -22,10 +22,10 @@
 
 package com.dmdirc.addons.dns;
 
+import com.dmdirc.FrameContainer;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandManager;
 import com.dmdirc.commandparser.commands.GlobalCommand;
-import com.dmdirc.ui.interfaces.InputWindow;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -44,7 +44,7 @@ public final class DNSCommand extends GlobalCommand {
     
     /** {@inheritDoc} */
     @Override
-    public void execute(final InputWindow origin, final boolean isSilent,
+    public void execute(final FrameContainer origin, final boolean isSilent,
             final CommandArguments args) {
         if (args.getArguments().length == 0) {
             showUsage(origin, isSilent, "dns", "<IP|hostname>");

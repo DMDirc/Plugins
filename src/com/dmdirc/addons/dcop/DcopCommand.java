@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.dcop;
 
+import com.dmdirc.FrameContainer;
 import com.dmdirc.Server;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandManager;
@@ -47,7 +48,7 @@ public final class DcopCommand extends ServerCommand {
 
     /** {@inheritDoc} */
     @Override
-    public void execute(final InputWindow origin, final Server server,
+    public void execute(final FrameContainer origin, final Server server,
             final boolean isSilent, final CommandArguments args) {
         if (args.getArguments().length != 3) {
             showUsage(origin, isSilent, "dcop", "<app> <object> <function>");

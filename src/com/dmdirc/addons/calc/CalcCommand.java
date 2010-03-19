@@ -22,9 +22,10 @@
 
 package com.dmdirc.addons.calc;
 
+import com.dmdirc.FrameContainer;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.commands.GlobalCommand;
-import com.dmdirc.ui.interfaces.InputWindow;
+
 import java.text.ParseException;
 
 /**
@@ -37,7 +38,7 @@ public class CalcCommand extends GlobalCommand {
 
     /** {@inheritDoc} */
     @Override
-    public void execute(final InputWindow origin, final boolean isSilent,
+    public void execute(final FrameContainer origin, final boolean isSilent,
             final CommandArguments args) {
         try {
             int offset = 0;

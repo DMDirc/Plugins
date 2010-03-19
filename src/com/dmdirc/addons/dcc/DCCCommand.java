@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.dcc;
 
+import com.dmdirc.FrameContainer;
 import com.dmdirc.Main;
 import com.dmdirc.Server;
 import com.dmdirc.actions.ActionManager;
@@ -35,7 +36,6 @@ import com.dmdirc.config.IdentityManager;
 import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 import com.dmdirc.ui.input.TabCompletionType;
-import com.dmdirc.ui.interfaces.InputWindow;
 
 import java.io.File;
 
@@ -66,7 +66,7 @@ public final class DCCCommand extends ServerCommand implements IntelligentComman
 
     /** {@inheritDoc} */
     @Override
-    public void execute(final InputWindow origin, final Server server,
+    public void execute(final FrameContainer origin, final Server server,
             final boolean isSilent, final CommandArguments args) {
         if (args.getArguments().length > 1) {
             final String type = args.getArguments()[0];
@@ -136,7 +136,7 @@ public final class DCCCommand extends ServerCommand implements IntelligentComman
      * @param filename The file to send
      * @since 0.6.3m1
      */
-    public void sendFile(final String target, final InputWindow origin,
+    public void sendFile(final String target, final FrameContainer origin,
             final Server server, final boolean isSilent, final String filename) {
         // New thread to ask the user what file to send
         final File givenFile = new File(filename);

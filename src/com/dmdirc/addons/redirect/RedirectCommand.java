@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.redirect;
 
+import com.dmdirc.FrameContainer;
 import com.dmdirc.MessageTarget;
 import com.dmdirc.Server;
 import com.dmdirc.commandparser.CommandArguments;
@@ -29,7 +30,6 @@ import com.dmdirc.commandparser.commands.ChatCommand;
 import com.dmdirc.commandparser.commands.IntelligentCommand;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 import com.dmdirc.ui.input.TabCompleter;
-import com.dmdirc.ui.interfaces.InputWindow;
 
 /**
  * The redirect command allows the user to redirect the output from another
@@ -45,9 +45,9 @@ public class RedirectCommand extends ChatCommand implements IntelligentCommand {
     
     /** {@inheritDoc} */
     @Override
-    public void execute(final InputWindow origin, final Server server,
+    public void execute(final FrameContainer origin, final Server server,
             final MessageTarget target, final boolean isSilent, final CommandArguments args) {
-        target.getFrame().getCommandParser().parseCommand(new FakeInputWindow(target),
+        target.getFrame().getCommandParser().parseCommand(target, // TODO: This doesn't redirect
                 args.getArgumentsAsString());
     }
     

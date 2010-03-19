@@ -52,7 +52,7 @@ public class RedirectCommandTest {
         when(window.getCommandParser()).thenReturn(parser);
         when(window.getConfigManager()).thenReturn(IdentityManager.getGlobalConfig());
 
-        command.execute(window, null, target, false, new CommandArguments("/redirect /echo test"));
+        command.execute(target, null, target, false, new CommandArguments("/redirect /echo test"));
         
         verify(target).sendLine("test");
     }

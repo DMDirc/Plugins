@@ -22,13 +22,13 @@
 
 package com.dmdirc.addons.time;
 
+import com.dmdirc.FrameContainer;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandManager;
 import com.dmdirc.commandparser.commands.GlobalCommand;
 import com.dmdirc.commandparser.commands.IntelligentCommand;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 import com.dmdirc.ui.input.TabCompleter;
-import com.dmdirc.ui.interfaces.InputWindow;
 
 /**
  * The timer command allows users to schedule commands to occur after a certain
@@ -46,7 +46,7 @@ public final class TimerCommand extends GlobalCommand implements IntelligentComm
     
     /** {@inheritDoc} */
     @Override
-    public void execute(final InputWindow origin, final boolean isSilent, 
+    public void execute(final FrameContainer origin, final boolean isSilent,
             final CommandArguments args) {
         if (args.getArguments().length < 3) {
             doUsage(origin, isSilent);
@@ -73,7 +73,7 @@ public final class TimerCommand extends GlobalCommand implements IntelligentComm
      * @param origin The window that the command was entered in
      * @param isSilent Whether this command is being silenced or not
      */
-    private void doUsage(final InputWindow origin, final boolean isSilent) {
+    private void doUsage(final FrameContainer origin, final boolean isSilent) {
         showUsage(origin, isSilent, "timer", "<repetitions> <interval> <command>");
     }
     

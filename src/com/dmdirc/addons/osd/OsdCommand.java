@@ -22,12 +22,12 @@
 
 package com.dmdirc.addons.osd;
 
+import com.dmdirc.FrameContainer;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandManager;
 import com.dmdirc.commandparser.commands.GlobalCommand;
 import com.dmdirc.commandparser.commands.IntelligentCommand;
 import com.dmdirc.ui.input.AdditionalTabTargets;
-import com.dmdirc.ui.interfaces.InputWindow;
 import com.dmdirc.ui.messages.Styliser;
 
 /**
@@ -70,7 +70,7 @@ public final class OsdCommand extends GlobalCommand implements IntelligentComman
 
     /** {@inheritDoc} */
     @Override
-    public void execute(final InputWindow origin, final boolean isSilent,
+    public void execute(final FrameContainer origin, final boolean isSilent,
             final CommandArguments args) {
         if (args.getArguments().length > 0
                 && "--close".equalsIgnoreCase(args.getArguments()[0])) {

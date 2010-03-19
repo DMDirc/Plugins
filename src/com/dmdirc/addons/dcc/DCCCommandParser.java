@@ -22,13 +22,14 @@
 
 package com.dmdirc.addons.dcc;
 
+import com.dmdirc.FrameContainer;
+import com.dmdirc.WritableFrameContainer;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandManager;
 import com.dmdirc.commandparser.CommandType;
 import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.GlobalCommand;
 import com.dmdirc.commandparser.parsers.CommandParser;
-import com.dmdirc.ui.interfaces.InputWindow;
 
 /**
  * DCC CommandParser
@@ -76,7 +77,8 @@ public class DCCCommandParser extends CommandParser {
      * @param args The arguments to the command
      */
     @Override
-    protected void executeCommand(final InputWindow origin, final boolean isSilent, final Command command, final CommandArguments args) {
+    protected void executeCommand(final FrameContainer origin,
+            final boolean isSilent, final Command command, final CommandArguments args) {
         ((GlobalCommand) command).execute(origin, isSilent, args);
     }
 
@@ -89,8 +91,8 @@ public class DCCCommandParser extends CommandParser {
      * @param line The line input by the user
      */
     @Override
-    protected void handleNonCommand(final InputWindow origin, final String line) {
-        origin.getContainer().sendLine(line);
+    protected void handleNonCommand(final FrameContainer origin, final String line) {
+        ((WritableFrameContainer) origin).sendLine(line);
     }
 
 }
