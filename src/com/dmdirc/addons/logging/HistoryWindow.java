@@ -52,14 +52,13 @@ public class HistoryWindow extends FrameContainer {
      */
     public HistoryWindow(final String title, final ReverseFileReader reader,
                          final Window parent, final int numLines) {
-        super("raw", title, parent.getConfigManager());
+        super("raw", title, title, parent.getConfigManager());
 
         this.parent = parent;
 
         window = Main.getUI().getWindow(this);
 
         WindowManager.addWindow(parent, window);
-        window.setTitle(title);
         window.open();
         final int frameBufferSize = IdentityManager.getGlobalConfig().getOptionInt(
                 "ui", "frameBufferSize");

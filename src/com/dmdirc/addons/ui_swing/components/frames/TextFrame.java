@@ -57,7 +57,6 @@ import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.parser.common.ChannelJoinRequest;
 import com.dmdirc.ui.IconManager;
-import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.core.util.URLHandler;
 import com.dmdirc.ui.interfaces.InputWindow;
 import com.dmdirc.ui.interfaces.Window;
@@ -147,6 +146,7 @@ public abstract class TextFrame extends JInternalFrame implements Window,
         final ConfigManager config = owner.getConfigManager();
 
         setFrameIcon(IconManager.getIconManager().getIcon(owner.getIcon()));
+        setTitle(frameParent.getTitle());
 
         owner.addFrameInfoListener(this);
 
@@ -163,7 +163,7 @@ public abstract class TextFrame extends JInternalFrame implements Window,
 
         inputWindow = this;
         while (!(inputWindow instanceof InputWindow) && inputWindow != null) {
-            inputWindow = WindowManager.getParent(inputWindow.getContainer()).getFrame();
+            inputWindow = inputWindow.getContainer().getParent().getFrame();
         }
 
         initComponents();
@@ -212,6 +212,7 @@ public abstract class TextFrame extends JInternalFrame implements Window,
 
     /** {@inheritDoc} */
     @Override
+    @Deprecated
     public void setTitle(final String title) {
         UIUtilities.invokeLater(new Runnable() {
 
@@ -738,12 +739,9 @@ public abstract class TextFrame extends JInternalFrame implements Window,
         return textPane;
     }
 
-    /**
-     * Returns the transcoder for this frame.
-     *
-     * @return String transcoder for this frame
-     */
+    /** {@inheritDoc} */
     @Override
+    @Deprecated
     public StringTranscoder getTranscoder() {
         return transcoder;
     }
@@ -1000,5 +998,20 @@ public abstract class TextFrame extends JInternalFrame implements Window,
     @Override
     public void nameChanged(final FrameContainer window, final String name) {
         //Ignore
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void titleChanged(final FrameContainer window, final String title) {
+        UIUtilities.invokeLater(new Runnable() {
+
+            /** {@inheritDoc} */
+            @Override
+            public void run() {
+                // TODO: Can be changed back to setTitle once the deprecated
+                // method is removed
+                TextFrame.super.setTitle(title);
+            }
+        });
     }
 }

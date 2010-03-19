@@ -89,7 +89,7 @@ public class InputTextFrameTest {
     public void tearDown() {
         window.close();
         owner.window.close();
-        WindowManager.removeWindow(owner.window);
+        WindowManager.removeWindow(owner);
     }
 
     @Test
@@ -152,11 +152,10 @@ public class InputTextFrameTest {
         final CustomInputFrame titf = new CustomInputFrame(owner,
                 GlobalCommandParser.getGlobalCommandParser(), controller);
 
-        titf.setTitle("testing123");
-
+        owner.setTitle("testing123");
         owner.window = titf;
 
-        WindowManager.addWindow(titf);
+        WindowManager.addWindow(owner);
 
         titf.open();
 

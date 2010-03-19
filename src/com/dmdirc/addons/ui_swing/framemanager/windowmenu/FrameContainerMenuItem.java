@@ -100,6 +100,12 @@ public class FrameContainerMenuItem extends JMenuItem implements FrameInfoListen
         });
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public void titleChanged(final FrameContainer window, final String title) {
+        // Do nothing
+    }
+
     /** 
      * {@inheritDoc}
      * 

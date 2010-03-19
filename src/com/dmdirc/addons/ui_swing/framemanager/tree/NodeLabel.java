@@ -134,6 +134,12 @@ public class NodeLabel extends JLabel implements SelectionListener,
         }
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public void titleChanged(final FrameContainer window, final String title) {
+        // Do nothing
+    }
+
     /** 
      * Sets the rollover state for the node.
      * 

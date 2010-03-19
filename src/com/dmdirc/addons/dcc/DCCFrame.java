@@ -138,7 +138,7 @@ public abstract class DCCFrame extends WritableFrameContainer {
      * @param icon The icon to use
      */
     public DCCFrame(final DCCPlugin plugin, final String title, final String icon, final boolean defaultWindow) {
-        super(icon, title, IdentityManager.getGlobalConfig());
+        super(icon, title, title, IdentityManager.getGlobalConfig());
         this.plugin = plugin;
 
         if (defaultWindow) {
@@ -148,7 +148,7 @@ public abstract class DCCFrame extends WritableFrameContainer {
                 @Override
                 public void run() {
                     final EmptyFrame frame = new EmptyFrame(DCCFrame.this);
-                    frame.setTitle(title);
+                    setTitle(title);
                     setObject(frame);
                 }
 

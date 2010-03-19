@@ -77,8 +77,6 @@ public final class QueryFrame extends InputTextFrame implements QueryWindow {
      * Initialises components in this frame.
      */
     private void initComponents() {
-        setTitle("Query Frame");
-
         getContentPane().setLayout(new MigLayout("ins 0, fill, hidemode 3, wrap 1"));
         getContentPane().add(getTextPane(), "grow, push");
         getContentPane().add(getSearchBar(), "growx, pushx");

@@ -59,8 +59,6 @@ public class CustomFrame extends TextFrame {
      * Initialises components in this frame.
      */
     private void initComponents() {
-        setTitle("Custom Frame");
-
         getContentPane().setLayout(new MigLayout("ins 0, fill, hidemode 3, wrap 1"));
         getContentPane().add(getTextPane(), "grow, push");
         getContentPane().add(getSearchBar(), "growx, pushx");
