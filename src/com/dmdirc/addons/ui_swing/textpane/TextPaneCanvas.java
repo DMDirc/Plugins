@@ -25,9 +25,12 @@ import com.dmdirc.ui.messages.LinePosition;
 import com.dmdirc.ui.messages.IRCDocument;
 import com.dmdirc.addons.ui_swing.BackgroundOption;
 import com.dmdirc.addons.ui_swing.UIUtilities;
+import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.config.ConfigManager;
 import com.dmdirc.interfaces.ConfigChangeListener;
+import com.dmdirc.logger.ErrorLevel;
+import com.dmdirc.logger.Logger;
 import com.dmdirc.ui.messages.IRCTextAttribute;
 import com.dmdirc.util.ListenerList;
 import com.dmdirc.util.URLBuilder;
@@ -55,6 +58,7 @@ import java.text.AttributedCharacterIterator;
 import java.text.AttributedString;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
@@ -172,21 +176,50 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
     private void updateCachedSettings() {
         final String backgroundPath = manager.getOption(domain,
                 "textpanebackground");
-        UIUtilities.invokeAndWait(new Runnable() {
+        if (!backgroundPath.isEmpty()) {
+            UIUtilities.invokeAndWait(new Runnable() {
 
-            /** {@inheritDoc} */
-            @Override
-            public void run() {
-                try {
+                /** {@inheritDoc} */
+                @Override
+                public void run() {
                     final URL url = URLBuilder.buildURL(backgroundPath);
-                    if (url != null) {
-                        backgroundImage = ImageIO.read(url);
-                    }
-                } catch (IOException ex) {
-                    backgroundImage = null;
+                    new LoggingSwingWorker<Image, Void>() {
+
+                        /** {@inheritDoc} */
+                        @Override
+                        protected Image doInBackground() throws Exception {
+                            Image returnValue = null;
+                            try {
+                                if (url != null) {
+                                    returnValue = ImageIO.read(url);
+                                }
+                            } catch (IOException ex) {
+                                returnValue = null;
+                            }
+                            return returnValue;
+                        }
+
+                        /** {@inheritDoc} */
+                        @Override
+                        protected void done() {
+                            if (isCancelled()) {
+                                return;
+                            }
+                            try {
+                                System.out.println("done.");
+                                backgroundImage = get();
+                                recalc();
+                            } catch (InterruptedException ex) {
+                            //Ignore
+                            } catch (ExecutionException ex) {
+                                Logger.appError(ErrorLevel.MEDIUM,
+                                        ex.getMessage(), ex);
+                            }
+                        }
+                    }.execute();
                 }
-            }
-        });
+            });
+        }
         try {
             backgroundOption = BackgroundOption.valueOf(manager.getOption(domain,
                     "textpanebackgroundoption"));
