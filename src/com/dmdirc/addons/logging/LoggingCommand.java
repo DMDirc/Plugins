@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.logging;
 
+import com.dmdirc.FrameContainer;
 import com.dmdirc.Server;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandManager;
@@ -50,7 +51,7 @@ public final class LoggingCommand extends ServerCommand implements IntelligentCo
 
     /** {@inheritDoc} */
     @Override
-    public void execute(final InputWindow origin, final Server server,
+    public void execute(final FrameContainer origin, final Server server,
                         final boolean isSilent, final CommandArguments args) {
         final PluginInfo pluginInfo = PluginManager.getPluginManager().getPluginInfoByName("logging");
         if (pluginInfo == null) {
@@ -74,7 +75,7 @@ public final class LoggingCommand extends ServerCommand implements IntelligentCo
                     sendLine(origin, isSilent, FORMAT_ERROR, "Plugin failed to reload.");
                 }
             } else if (args.getArguments()[0].equalsIgnoreCase("history")) {
-                if (!plugin.showHistory(origin)) {
+                if (!plugin.showHistory((InputWindow) origin.getFrame())) {
                     sendLine(origin, isSilent, FORMAT_ERROR, "Unable to open history for this window.");
                 }
             } else if (args.getArguments()[0].equalsIgnoreCase("help")) {

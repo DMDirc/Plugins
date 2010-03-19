@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.nowplaying;
 
+import com.dmdirc.FrameContainer;
 import com.dmdirc.MessageTarget;
 import com.dmdirc.Server;
 import com.dmdirc.commandparser.CommandArguments;
@@ -31,7 +32,6 @@ import com.dmdirc.commandparser.commands.IntelligentCommand;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 import com.dmdirc.ui.input.TabCompleter;
-import com.dmdirc.ui.interfaces.InputWindow;
 
 import java.util.Arrays;
 import java.util.List;
@@ -61,7 +61,7 @@ public final class NowPlayingCommand extends ChatCommand implements IntelligentC
     
     /** {@inheritDoc} */
     @Override
-    public void execute(final InputWindow origin, final Server server,
+    public void execute(final FrameContainer origin, final Server server,
             final MessageTarget target, final boolean isSilent, final CommandArguments args) {
         if (args.getArguments().length > 0 && args.getArguments()[0]
                 .equalsIgnoreCase("--sources")) {
@@ -104,7 +104,7 @@ public final class NowPlayingCommand extends ChatCommand implements IntelligentC
      * @param isSilent Whether this command is being silenced
      * @param format Format to be passed to getInformation
      */
-    private void doSourceList(final InputWindow origin, final boolean isSilent,
+    private void doSourceList(final FrameContainer origin, final boolean isSilent,
             final String format) {
         final List<MediaSource> sources = parent.getSources();
         

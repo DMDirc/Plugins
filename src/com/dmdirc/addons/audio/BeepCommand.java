@@ -22,10 +22,10 @@
 
 package com.dmdirc.addons.audio;
 
+import com.dmdirc.FrameContainer;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandManager;
 import com.dmdirc.commandparser.commands.GlobalCommand;
-import com.dmdirc.ui.interfaces.InputWindow;
 
 import java.awt.Toolkit;
 
@@ -46,7 +46,7 @@ public final class BeepCommand extends GlobalCommand {
 
     /** {@inheritDoc} */
     @Override
-    public void execute(final InputWindow origin, final boolean isSilent,
+    public void execute(final FrameContainer origin, final boolean isSilent,
                         final CommandArguments args) {
         Toolkit.getDefaultToolkit().beep();
     }

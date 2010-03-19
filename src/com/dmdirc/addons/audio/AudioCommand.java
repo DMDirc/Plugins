@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.audio;
 
+import com.dmdirc.FrameContainer;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandManager;
 import com.dmdirc.commandparser.commands.GlobalCommand;
@@ -46,7 +47,7 @@ public final class AudioCommand extends GlobalCommand {
 
     /** {@inheritDoc} */
     @Override
-    public void execute(final InputWindow origin, final boolean isSilent,
+    public void execute(final FrameContainer origin, final boolean isSilent,
                         final CommandArguments args) {
         final String filename = args.getArgumentsAsString();
         final File file = new File(filename);

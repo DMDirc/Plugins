@@ -22,11 +22,11 @@
 
 package com.dmdirc.addons.scriptplugin;
 
+import com.dmdirc.FrameContainer;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.commandparser.CommandManager;
 import com.dmdirc.commandparser.commands.GlobalCommand;
-import com.dmdirc.ui.interfaces.InputWindow;
 import com.dmdirc.commandparser.commands.IntelligentCommand;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 
@@ -56,16 +56,9 @@ public final class ScriptCommand extends GlobalCommand implements IntelligentCom
         CommandManager.registerCommand(this);
     }
         
-    /**
-     * Executes this command.
-     *
-     * @param origin The frame in which this command was issued
-     * @param server The server object that this command is associated with
-     * @param isSilent Whether this command is silenced or not
-     * @param args The user supplied arguments
-     */
+    /** {@inheritDoc} */
     @Override
-    public void execute(final InputWindow origin, final boolean isSilent, final CommandArguments commandArgs) {
+    public void execute(final FrameContainer origin, final boolean isSilent, final CommandArguments commandArgs) {
         final String[] args = commandArgs.getArguments();
     
         if (args.length > 0 && (args[0].equalsIgnoreCase("rehash") || args[0].equalsIgnoreCase("reload"))) {
@@ -178,13 +171,7 @@ public final class ScriptCommand extends GlobalCommand implements IntelligentCom
         }
     }
 
-    /**
-     * Returns a list of suggestions for the specified argument, given the list
-     * of previous arguments.
-     * @param arg The argument that is being completed
-     * @param previousArgs The contents of the previous arguments, if any
-     * @return A list of suggestions for the argument
-     */
+    /** {@inheritDoc} */
     @Override
     public AdditionalTabTargets getSuggestions(final int arg,
             final IntelligentCommandContext context) {
