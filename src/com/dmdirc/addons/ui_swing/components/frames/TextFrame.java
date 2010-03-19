@@ -418,29 +418,46 @@ public abstract class TextFrame extends JInternalFrame implements Window,
         });
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     * 
+     * @deprecated Use corresponding methods in {@link FrameContainer} instead
+     */
     @Override
     @Deprecated
     public final void addLine(final String line, final boolean timestamp) {
         frameParent.addLine(line, timestamp);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     * 
+     * @deprecated Use corresponding methods in {@link FrameContainer} instead
+     */
     @Override
     @Deprecated
     public final void addLine(final String messageType, final Object... args) {
         frameParent.addLine(messageType, args);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     * 
+     * @deprecated Use corresponding methods in {@link FrameContainer} instead
+     */
     @Override
     @Deprecated
     public final void addLine(final StringBuffer messageType, final Object... args) {
         frameParent.addLine(messageType, args);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     * 
+     * @deprecated Call {@link IRCDocument#clear()} via {@link FrameContainer#getDocument()}
+     */
     @Override
+    @Deprecated
     public final void clear() {
         UIUtilities.invokeLater(new Runnable() {
 
@@ -739,7 +756,11 @@ public abstract class TextFrame extends JInternalFrame implements Window,
         return textPane;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc} 
+     *
+     * @deprecated Use {@link FrameContainer#getTranscoder()} instead
+     */
     @Override
     @Deprecated
     public StringTranscoder getTranscoder() {
