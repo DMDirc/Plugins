@@ -162,7 +162,8 @@ public abstract class TextFrame extends JInternalFrame implements Window,
         }
 
         inputWindow = this;
-        while (!(inputWindow instanceof InputWindow) && inputWindow != null) {
+        while (!(inputWindow instanceof InputWindow) && inputWindow != null
+                && inputWindow.getContainer().getParent() != null) {
             inputWindow = inputWindow.getContainer().getParent().getFrame();
         }
 
