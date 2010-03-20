@@ -37,7 +37,6 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
-import javax.swing.UIManager;
 
 import net.miginfocom.swing.MigLayout;
 

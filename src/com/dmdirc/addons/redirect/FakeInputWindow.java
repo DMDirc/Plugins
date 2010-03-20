@@ -28,10 +28,8 @@ import com.dmdirc.commandparser.parsers.CommandParser;
 import com.dmdirc.config.ConfigManager;
 import com.dmdirc.ui.input.InputHandler;
 import com.dmdirc.ui.interfaces.InputWindow;
-import com.dmdirc.ui.messages.Formatter;
 import com.dmdirc.util.StringTranscoder;
 
-import java.beans.PropertyVetoException;
 import java.nio.charset.Charset;
 
 /**
@@ -95,6 +93,7 @@ public class FakeInputWindow implements InputWindow {
 
     /** {@inheritDoc} */
     @Override
+    @Deprecated
     public void clear() {
         // Do nothing
     }
@@ -137,6 +136,7 @@ public class FakeInputWindow implements InputWindow {
 
     /** {@inheritDoc} */
     @Override
+    @Deprecated
     public void setTitle(final String title) {
         // Do nothing
     }
@@ -149,6 +149,7 @@ public class FakeInputWindow implements InputWindow {
 
     /** {@inheritDoc} */
     @Override
+    @Deprecated
     public StringTranscoder getTranscoder() {
         return new StringTranscoder(Charset.defaultCharset());
     }

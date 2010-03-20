@@ -102,6 +102,7 @@ public class DummyInputWindow implements InputWindow {
     
     /** {@inheritDoc} */
     @Override
+    @Deprecated
     public void clear() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
@@ -153,6 +154,7 @@ public class DummyInputWindow implements InputWindow {
     
     /** {@inheritDoc} */
     @Override
+    @Deprecated
     public void setTitle(final String title) {
         this.title = title;
     }
@@ -165,6 +167,7 @@ public class DummyInputWindow implements InputWindow {
     
     /** {@inheritDoc} */
     @Override
+    @Deprecated
     public StringTranscoder getTranscoder() {
         return new StringTranscoder(Charset.defaultCharset());
     }

@@ -838,7 +838,7 @@ public class LoggingPlugin extends Plugin implements ActionListener,
             return false;
         }
 
-        new HistoryWindow("History", reader, target, historyLines);
+        new HistoryWindow("History", reader, target.getContainer(), historyLines);
 
         return true;
     }
