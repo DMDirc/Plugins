@@ -152,7 +152,7 @@ public final class WindowMenuFrameManager extends JMenu implements
 
     /** {@inheritDoc} */
     @Override
-    public void addWindow(final FrameContainer window) {
+    public void addWindow(final FrameContainer window, final boolean focus) {
         final FrameContainerMenuItem item = UIUtilities.invokeAndWait(
                 new ReturnableThread<FrameContainerMenuItem>() {
 
@@ -203,7 +203,7 @@ public final class WindowMenuFrameManager extends JMenu implements
     /** {@inheritDoc} */
     @Override
     public void addWindow(final FrameContainer parent,
-            final FrameContainer window) {
+            final FrameContainer window, final boolean focus) {
         final FrameContainerMenuItem item = UIUtilities.invokeAndWait(
                 new ReturnableThread<FrameContainerMenuItem>() {
 

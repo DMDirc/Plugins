@@ -222,13 +222,13 @@ public class DMDircDesktopPane extends JDesktopPane implements FrameListener,
 
     /** {@inheritDoc} */
     @Override
-    public void addWindow(final FrameContainer window) {
+    public void addWindow(final FrameContainer window, final boolean focus) {
         addWindow(model.getRootNode(), window);
     }
 
     @Override
     public void addWindow(final FrameContainer parent,
-            final FrameContainer window) {
+            final FrameContainer window, final boolean focus) {
         UIUtilities.invokeAndWait(new Runnable() {
 
             /** {@inheritDoc} */

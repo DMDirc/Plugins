@@ -569,7 +569,7 @@ public final class MainFrame extends JFrame implements WindowListener,
 
     /** {@inheritDoc}. */
     @Override
-    public void addWindow(final FrameContainer window) {
+    public void addWindow(final FrameContainer window, final boolean focus) {
         UIUtilities.invokeAndWait(new Runnable() {
 
             /** {@inheritDoc} */
@@ -618,8 +618,8 @@ public final class MainFrame extends JFrame implements WindowListener,
     /** {@inheritDoc}. */
     @Override
     public void addWindow(final FrameContainer parent,
-            final FrameContainer window) {
-        addWindow(window);
+            final FrameContainer window, final boolean focus) {
+        addWindow(window, focus);
     }
 
     /** {@inheritDoc}. */
