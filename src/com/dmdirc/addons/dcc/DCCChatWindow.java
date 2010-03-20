@@ -81,11 +81,11 @@ public class DCCChatWindow extends DCCFrame implements DCCChatHandler {
         if (dcc.isWriteable()) {
             final StringBuffer buff = new StringBuffer("DCCChatSelfMessage");
             ActionManager.processEvent(DCCActions.DCC_CHAT_SELFMESSAGE, buff, this, line);
-            addLine(buff, nickname, myWindow.getTranscoder().encode(line));
+            addLine(buff, nickname, getTranscoder().encode(line));
             dcc.sendLine(line);
         } else {
             final StringBuffer buff = new StringBuffer("DCCChatError");
-            addLine(buff, "Socket is closed.", myWindow.getTranscoder().encode(line));
+            addLine(buff, "Socket is closed.", getTranscoder().encode(line));
         }
     }
 
@@ -95,7 +95,7 @@ public class DCCChatWindow extends DCCFrame implements DCCChatHandler {
         final StringBuffer buff = new StringBuffer("DCCChatMessage");
         ActionManager.processEvent(DCCActions.DCC_CHAT_MESSAGE, buff, this,
                 otherNickname, message);
-        addLine(buff, otherNickname, myWindow.getTranscoder().encode(message));
+        addLine(buff, otherNickname, getTranscoder().encode(message));
     }
 
     /** {@inheritDoc} */

@@ -119,6 +119,7 @@ public class WebWindow implements Window {
 
     /** {@inheritDoc} */
     @Override
+    @Deprecated
     public void clear() {
         // Do nothing
     }
@@ -169,6 +170,7 @@ public class WebWindow implements Window {
 
     /** {@inheritDoc} */
     @Override
+    @Deprecated
     public void setTitle(String title) {
         this.title = title;
     }
@@ -181,6 +183,7 @@ public class WebWindow implements Window {
 
     /** {@inheritDoc} */
     @Override
+    @Deprecated
     public StringTranscoder getTranscoder() {
         return new StringTranscoder(Charset.defaultCharset());
     }

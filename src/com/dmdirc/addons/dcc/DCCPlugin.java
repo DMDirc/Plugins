@@ -435,7 +435,7 @@ public final class DCCPlugin extends Plugin implements ActionListener {
         final TextLabel label = new TextLabel("This is a placeholder window to group DCCs together.");
         label.setText(label.getText() + "\n\nClosing this window will close all the active DCCs");
         ((TextFrame) container.getFrame()).getContentPane().add(label);
-        WindowManager.addWindow(container.getFrame());
+        WindowManager.addWindow(container);
         container.getFrame().open();
     }
 
@@ -452,7 +452,7 @@ public final class DCCPlugin extends Plugin implements ActionListener {
             createContainer();
         }
 
-        WindowManager.addWindow(container.getFrame(), window.getFrame());
+        WindowManager.addWindow(container, window);
         childFrames.add(window);
         window.getFrame().open();
     }
@@ -638,9 +638,8 @@ class PlaceholderDCCFrame extends DCCFrame {
 
     @Override
     public void close() {
-        final FrameContainer[] windows = WindowManager.getChildren(this);
         int dccs = 0;
-        for (FrameContainer window : windows) {
+        for (FrameContainer window : getChildren()) {
             if (window instanceof DCCTransferWindow) {
                 if (((DCCTransferWindow) window).getDCC().isActive()) {
                     dccs++;

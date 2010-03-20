@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_web;
 
-import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.interfaces.Window;
 import com.dmdirc.addons.ui_web.uicomponents.WebWindow;
 import java.util.LinkedList;
@@ -53,7 +52,7 @@ public class Client {
 
         while (!queued.isEmpty()) {
             final Window window = queued.remove(0);
-            final Window parent = WindowManager.getParent(window.getContainer()).getFrame();
+            final Window parent = window.getContainer().getParent().getFrame();
             
             if (parent == null) {
                 events.add(new Event("newwindow", window));
