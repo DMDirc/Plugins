@@ -176,9 +176,7 @@ public class OptionalJSpinner extends JPanel implements ActionListener,
      * @param listener Listener to add
      */
     public void addChangeListener(final ChangeListener listener) {
-        synchronized (listeners) {
-            listeners.add(ChangeListener.class, listener);
-        }
+        listeners.add(ChangeListener.class, listener);
     }
 
     /**
@@ -187,9 +185,7 @@ public class OptionalJSpinner extends JPanel implements ActionListener,
      * @param listener Listener to remove
      */
     public void removeChangeListener(final ChangeListener listener) {
-        synchronized (listeners) {
-            listeners.remove(ChangeListener.class, listener);
-        }
+        listeners.remove(ChangeListener.class, listener);
     }
 
     private void fireChangeListener() {

@@ -39,9 +39,6 @@ public class HistoryWindow extends FrameContainer {
     /** The window we're using. */
     private Window window;
 
-    /** Our parent window. */
-    private Window parent;
-
     /**
      * Creates a new HistoryWindow.
      *
@@ -51,14 +48,14 @@ public class HistoryWindow extends FrameContainer {
      * @param numLines The number of lines to show
      */
     public HistoryWindow(final String title, final ReverseFileReader reader,
-                         final Window parent, final int numLines) {
+                         final FrameContainer parent, final int numLines) {
         super("raw", title, title, parent.getConfigManager());
 
         this.parent = parent;
 
         window = Main.getUI().getWindow(this);
 
-        WindowManager.addWindow(parent, window);
+        WindowManager.addWindow(parent, this);
         window.open();
         final int frameBufferSize = IdentityManager.getGlobalConfig().getOptionInt(
                 "ui", "frameBufferSize");
@@ -97,7 +94,7 @@ public class HistoryWindow extends FrameContainer {
     /** {@inheritDoc} */
     @Override
     public Server getServer() {
-        return parent == null ? null : parent.getContainer().getServer();
+        return parent == null ? null : parent.getServer();
     }
 
 }

@@ -252,9 +252,7 @@ public class WizardPanel extends JPanel implements ActionListener {
      * @param listener
      */
     public void addStepListener(final StepListener listener) {
-        synchronized (stepListeners) {
-            stepListeners.add(StepListener.class, listener);
-        }
+        stepListeners.add(StepListener.class, listener);
     }
 
     /**
@@ -263,9 +261,7 @@ public class WizardPanel extends JPanel implements ActionListener {
      * @param listener
      */
     public void removeStepListener(final StepListener listener) {
-        synchronized (stepListeners) {
-            stepListeners.remove(StepListener.class, listener);
-        }
+        stepListeners.remove(StepListener.class, listener);
     }
 
     /**
@@ -274,9 +270,7 @@ public class WizardPanel extends JPanel implements ActionListener {
      * @param listener
      */
     public void addWizardListener(final WizardListener listener) {
-        synchronized (stepListeners) {
-            stepListeners.add(WizardListener.class, listener);
-        }
+        stepListeners.add(WizardListener.class, listener);
     }
 
     /**
@@ -285,9 +279,7 @@ public class WizardPanel extends JPanel implements ActionListener {
      * @param listener
      */
     public void removeWizardListener(final WizardListener listener) {
-        synchronized (stepListeners) {
-            stepListeners.remove(WizardListener.class, listener);
-        }
+        stepListeners.remove(WizardListener.class, listener);
     }
 
     /**
@@ -296,12 +288,8 @@ public class WizardPanel extends JPanel implements ActionListener {
      * @param step Step to be displayed
      */
     private void fireStepAboutToBeDisplayed(final Step step) {
-        synchronized (stepListeners) {
-            List<StepListener> listeners =
-                    stepListeners.get(StepListener.class);
-            for (StepListener listener : listeners) {
-                listener.stepAboutToDisplay(step);
-            }
+        for (StepListener listener : stepListeners.get(StepListener.class)) {
+            listener.stepAboutToDisplay(step);
         }
     }
 
@@ -311,12 +299,8 @@ public class WizardPanel extends JPanel implements ActionListener {
      * @param step step thats been hidden
      */
     private void fireStepHidden(final Step step) {
-        synchronized (stepListeners) {
-            List<StepListener> listeners =
-                    stepListeners.get(StepListener.class);
-            for (StepListener listener : listeners) {
-                listener.stepHidden(step);
-            }
+        for (StepListener listener : stepListeners.get(StepListener.class)) {
+            listener.stepHidden(step);
         }
     }
 
@@ -324,12 +308,8 @@ public class WizardPanel extends JPanel implements ActionListener {
      * Fires wizard finished events.
      */
     private void fireWizardFinished() {
-        synchronized (stepListeners) {
-            List<WizardListener> listeners =
-                    stepListeners.get(WizardListener.class);
-            for (WizardListener listener : listeners) {
-                listener.wizardFinished();
-            }
+        for (WizardListener listener : stepListeners.get(WizardListener.class)) {
+            listener.wizardFinished();
         }
     }
 
@@ -337,12 +317,8 @@ public class WizardPanel extends JPanel implements ActionListener {
      * Fires wizard cancelled events.
      */
     protected void fireWizardCancelled() {
-        synchronized (stepListeners) {
-            List<WizardListener> listeners =
-                    stepListeners.get(WizardListener.class);
-            for (WizardListener listener : listeners) {
-                listener.wizardCancelled();
-            }
+        for (WizardListener listener : stepListeners.get(WizardListener.class)) {
+            listener.wizardCancelled();
         }
     }
 }

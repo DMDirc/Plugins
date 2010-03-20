@@ -195,12 +195,11 @@ public class DurationEditor extends StandardDialog implements ActionListener {
      * @param listener Listener to add
      */
     public void addDurationListener(final DurationListener listener) {
-        synchronized (listeners) {
-            if (listener == null) {
-                return;
-            }
-            listeners.add(DurationListener.class, listener);
+        if (listener == null) {
+            return;
         }
+
+        listeners.add(DurationListener.class, listener);
     }
 
     /**
