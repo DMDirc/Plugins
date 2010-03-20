@@ -126,14 +126,14 @@ public final class TreeFrameManager implements FrameManager,
 
     /** {@inheritDoc} */
     @Override
-    public void addWindow(final FrameContainer window) {
+    public void addWindow(final FrameContainer window, final boolean focus) {
         addWindow(model.getRootNode(), window);
     }
 
     /** {@inheritDoc} */
     @Override
     public void addWindow(final FrameContainer parent,
-            final FrameContainer window) {
+            final FrameContainer window, final boolean focus) {
         addWindow(nodes.get(parent), window);
     }
 
@@ -286,10 +286,10 @@ public final class TreeFrameManager implements FrameManager,
                 final FrameContainer[] rootWindows = WindowManager.getRootWindows();
 
                 for (FrameContainer window : rootWindows) {
-                    addWindow(window);
+                    addWindow(window, false);
                     final Collection<FrameContainer> childWindows = window.getChildren();
                     for (FrameContainer childWindow : childWindows) {
-                        addWindow(window, childWindow);
+                        addWindow(window, childWindow, false);
                     }
                 }
             }

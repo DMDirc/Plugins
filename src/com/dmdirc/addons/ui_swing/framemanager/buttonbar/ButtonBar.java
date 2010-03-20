@@ -175,7 +175,7 @@ public final class ButtonBar implements FrameManager, ActionListener,
 
     /** {@inheritDoc} */
     @Override
-    public void addWindow(final FrameContainer window) {
+    public void addWindow(final FrameContainer window, final boolean focus) {
         windows.add(window);
         addButton(window);
 
@@ -198,7 +198,8 @@ public final class ButtonBar implements FrameManager, ActionListener,
 
     /** {@inheritDoc} */
     @Override
-    public void addWindow(final FrameContainer parent, final FrameContainer window) {
+    public void addWindow(final FrameContainer parent,
+            final FrameContainer window, final boolean focus) {
         windows.add(parent, window);
         addButton(window);
 

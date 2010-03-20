@@ -49,7 +49,7 @@ public class DummyFrameManager implements FrameManager {
     
     /** {@inheritDoc} */
     @Override
-    public void addWindow(final FrameContainer window) {
+    public void addWindow(final FrameContainer window, final boolean focus) {
         Main.getUI().getStatusBar()
                 .setMessage("DummyFrameManager: addServer: " + window);
     }
@@ -63,7 +63,8 @@ public class DummyFrameManager implements FrameManager {
     
     /** {@inheritDoc} */
     @Override
-    public void addWindow(final FrameContainer parent, final FrameContainer window) {
+    public void addWindow(final FrameContainer parent, 
+            final FrameContainer window, final boolean focus) {
         Main.getUI().getStatusBar()
                 .setMessage("DummyFrameManager: addCustom: " + window + "@" + parent);
     }
