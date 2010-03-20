@@ -83,7 +83,7 @@ public class HistoryWindow extends FrameContainer {
         // 5: Inform any parents that the window is closing
 
         // 6: Remove the window from the window manager
-        WindowManager.removeWindow(window);
+        WindowManager.removeWindow(this);
     }
 
     /** {@inheritDoc} */
