@@ -335,7 +335,9 @@ public final class ProfileDetailPanel extends JPanel implements ActionListener,
                 /** {@inheritDoc} */
                 @Override
                 public boolean save() {
-                    nicknames.getModel().removeElementAt(nicknames.getSelectedIndex());
+                    if (nicknames.getSelectedIndex() != -1) {
+                        nicknames.getModel().removeElementAt(nicknames.getSelectedIndex());
+                    }
                     return true;
                 }
 
