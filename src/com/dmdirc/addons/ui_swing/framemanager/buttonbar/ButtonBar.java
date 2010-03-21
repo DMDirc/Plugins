@@ -23,7 +23,6 @@ package com.dmdirc.addons.ui_swing.framemanager.buttonbar;
 
 import com.dmdirc.FrameContainer;
 import com.dmdirc.FrameContainerComparator;
-import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.interfaces.FrameInfoListener;
 import com.dmdirc.interfaces.NotificationListener;
@@ -49,7 +48,9 @@ import java.util.Map;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JToggleButton;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 
 import net.miginfocom.swing.MigLayout;
@@ -78,16 +79,16 @@ public final class ButtonBar implements FrameManager, ActionListener,
     private final FramemanagerPosition position;
     /** The parent for the manager. */
     private JComponent parent;
+    /** The Scrolling panel for our ButtonBar. */
+    private final JScrollPane scrollPane;
     /** The panel used for our buttons. */
-    private final JPanel panel;
+    private final JPanel buttonPanel;
     /** The currently selected window. */
     private transient FrameContainer<?> selected;
     /** Selected window. */
     private Window activeWindow;
     /** The number of buttons per row or column. */
     private int cells = 1;
-    /** The number of buttons to render per {cell,row}. */
-    private int maxButtons = Integer.MAX_VALUE;
     /** The width of buttons. */
     private int buttonWidth = 0;
     /** The height of buttons. */
@@ -97,23 +98,34 @@ public final class ButtonBar implements FrameManager, ActionListener,
     public ButtonBar() {
         windows = new MapList<FrameContainer<?>, FrameContainer<?>>();
         buttons = new HashMap<FrameContainer<?>, JToggleButton>();
+        scrollPane = new JScrollPane();
+        scrollPane.setBorder(null);
+        scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants
+                .HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants
+                .VERTICAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setMinimumSize(new Dimension(0,buttonHeight));
+
         position = FramemanagerPosition.getPosition(
-                IdentityManager.getGlobalConfig().getOption("ui", "framemanagerPosition"));
+                IdentityManager.getGlobalConfig().getOption("ui",
+                "framemanagerPosition"));
 
         if (position.isHorizontal()) {
-            panel = new JPanel(new MigLayout("ins 0, fill, flowx"));
+            buttonPanel = new JPanel(new MigLayout("ins 0, fill, flowx"));
         } else {
-            panel = new JPanel(new MigLayout("ins 0, fill, flowy"));
+            buttonPanel = new JPanel(new MigLayout("ins 0, fill, flowy"));
         }
+        scrollPane.getViewport().add(buttonPanel);
     }
 
     /** {@inheritDoc} */
     @Override
     public void setParent(final JComponent parent) {
         this.parent = parent;
-
-        parent.setLayout(new MigLayout());
-        parent.add(panel);
+        scrollPane.setSize(parent.getWidth(), parent.getHeight());
+        scrollPane.setAutoscrolls(true);
+        parent.setLayout(new MigLayout("ins 0"));
+        parent.add(scrollPane);
         parent.addComponentListener(this);
     }
 
@@ -121,20 +133,20 @@ public final class ButtonBar implements FrameManager, ActionListener,
      * Removes all buttons from the bar and readds them.
      */
     private void relayout() {
-        panel.removeAll();
+        buttonPanel.removeAll();
 
         for (Map.Entry<FrameContainer<?>, List<FrameContainer<?>>> entry : windows.entrySet()) {
             buttons.get(entry.getKey()).setPreferredSize(new Dimension(buttonWidth, buttonHeight));
-            panel.add(buttons.get(entry.getKey()));
+            buttonPanel.add(buttons.get(entry.getKey()));
 
             Collections.sort(entry.getValue(), new FrameContainerComparator());
 
             for (FrameContainer<?> child : entry.getValue()) {
                 buttons.get(child).setPreferredSize(new Dimension(buttonWidth, buttonHeight));
-                panel.add(buttons.get(child));
+                buttonPanel.add(buttons.get(child));
             }
         }
-        panel.validate();
+        buttonPanel.validate();
     }
 
     /**
@@ -146,13 +158,10 @@ public final class ButtonBar implements FrameManager, ActionListener,
     private void addButton(final FrameContainer<?> source) {
         final JToggleButton button = new JToggleButton(source.toString(),
                 IconManager.getIconManager().getIcon(source.getIcon()));
-
         button.addActionListener(this);
         button.setHorizontalAlignment(SwingConstants.LEFT);
-        button.setMinimumSize(new Dimension(0,buttonHeight));
         button.setMargin(new Insets(0, 0, 0, 0));
         buttons.put(source, button);
-
     }
 
     /** {@inheritDoc} */
@@ -184,6 +193,7 @@ public final class ButtonBar implements FrameManager, ActionListener,
     @Override
     public void delWindow(final FrameContainer<?> window) {
         windows.remove(window);
+        buttons.remove(window);
 
         relayout();
         window.removeNotificationListener(this);
@@ -209,7 +219,7 @@ public final class ButtonBar implements FrameManager, ActionListener,
     @Override
     public void delWindow(final FrameContainer<?> parent, final FrameContainer<?> window) {
         windows.remove(parent, window);
-
+        buttons.remove(window);
         relayout();
         window.removeNotificationListener(this);
         window.removeFrameInfoListener(this);
@@ -228,7 +238,6 @@ public final class ButtonBar implements FrameManager, ActionListener,
                 if (entry.getKey().getFrame().equals(activeWindow)) {
                     entry.getValue().setSelected(true);
                 }
-
                 entry.getKey().activateFrame();
             }
         }
@@ -241,13 +250,7 @@ public final class ButtonBar implements FrameManager, ActionListener,
      */
     @Override
     public void componentResized(final ComponentEvent e) {
-        buttonWidth = position.isHorizontal() ? 150 : (parent.getWidth() - UIUtilities.SMALL_BORDER * 3) / cells;
-        
-        if (position.isHorizontal()) {
-            maxButtons = parent.getWidth() / (buttonWidth + UIUtilities.SMALL_BORDER * 2);
-        } else {
-            maxButtons = parent.getHeight() / (buttonHeight + UIUtilities.SMALL_BORDER * 2);
-        }
+        buttonWidth = position.isHorizontal() ? 150 : (parent.getWidth() / cells);
         relayout();
     }
 
