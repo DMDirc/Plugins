@@ -364,6 +364,7 @@ public final class MainFrame extends JFrame implements WindowListener,
                     // the same way, so we might as well catch Exception
                     mainFrameManager = new TreeFrameManager();
                 }
+                mainFrameManager.setController(controller);
 
                 WindowManager.addFrameListener(mainFrameManager);
                 mainFrameManager.setParent(frameManagerPanel);

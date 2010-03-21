@@ -27,6 +27,7 @@ import com.dmdirc.ui.interfaces.FrameManager;
 import com.dmdirc.addons.ui_web.DynamicRequestHandler;
 import com.dmdirc.addons.ui_web.Event;
 import com.dmdirc.addons.ui_web.WebInterfaceUI;
+import com.dmdirc.ui.interfaces.UIController;
 import javax.swing.JComponent;
 
 /**
@@ -85,6 +86,11 @@ public class WebFrameManager implements FrameManager {
     public void delWindow(final FrameContainer<?> parent, final FrameContainer<?> window) {
         //TODO FIXME
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void setController(UIController controller) {
+        //Ignore
     }
 
 }

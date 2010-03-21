@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.framemanager.tree;
 
+import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.interfaces.ConfigChangeListener;
@@ -30,7 +31,6 @@ import com.dmdirc.addons.ui_swing.components.TreeScroller;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
-import com.dmdirc.ui.interfaces.Window;
 
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
@@ -68,17 +68,22 @@ public class Tree extends JTree implements MouseMotionListener,
     private boolean dragButton;
     /** Tree frame manager. */
     private TreeFrameManager manager;
+    /** UI Controller. */
+    private SwingController controller;
 
     /**
      * Specialised JTree for frame manager.
      *
      * @param manager Frame manager
      * @param model tree model.
+     * @param controller Swing controller
      */
-    public Tree(final TreeFrameManager manager, final TreeModel model) {
+    public Tree(final TreeFrameManager manager, final TreeModel model,
+            final SwingController controller) {
         super(model);
 
         this.manager = manager;
+        this.controller = controller;
 
         putClientProperty("JTree.lineStyle", "Angled");
         getInputMap().setParent(null);
@@ -280,17 +285,8 @@ public class Tree extends JTree implements MouseMotionListener,
             if (e.isPopupTrigger()) {
                 TextFrame frame = null;
 
-                for (Window window : ((TreeViewNode) localPath.
-                        getLastPathComponent()).getWindow().getWindows()) {
-                    if (window instanceof TextFrame) {
-                        frame = (TextFrame) window;
-                        break;
-                    }
-                }
-
-                if (frame == null) {
-                    return;
-                }
+                frame = (TextFrame) controller.getWindow(((TreeViewNode)
+                        localPath.getLastPathComponent()).getWindow());
 
                 final JPopupMenu popupMenu = frame.getPopupMenu(null, "");
                 frame.addCustomPopupItems(popupMenu);
