@@ -95,4 +95,10 @@ public class DCCCommandParser extends CommandParser {
         ((WritableFrameContainer) origin).sendLine(line);
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public void setOwner(final FrameContainer owner) {
+        // Don't care
+    }
+
 }

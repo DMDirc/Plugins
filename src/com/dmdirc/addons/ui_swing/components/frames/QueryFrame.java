@@ -25,7 +25,6 @@ import com.dmdirc.Query;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.commandparser.PopupType;
 import com.dmdirc.commandparser.parsers.CommandParser;
-import com.dmdirc.commandparser.parsers.QueryCommandParser;
 import com.dmdirc.ui.interfaces.QueryWindow;
 import com.dmdirc.addons.ui_swing.components.SwingInputHandler;
 
@@ -45,9 +44,7 @@ public final class QueryFrame extends InputTextFrame implements QueryWindow {
      */
     private static final long serialVersionUID = 8;
     /** This channel's command parser. */
-    private final QueryCommandParser commandParser;
-    /** This frame's parent. */
-    private final Query parentQuery;
+    private final CommandParser commandParser;
 
     /**
      * Creates a new QueryFrame.
@@ -58,11 +55,9 @@ public final class QueryFrame extends InputTextFrame implements QueryWindow {
     public QueryFrame(final Query owner, final SwingController controller) {
         super(owner, controller);
 
-        parentQuery = owner;
-
         initComponents();
 
-        commandParser = new QueryCommandParser(((Query) getContainer()).getServer(), (Query) getContainer());
+        commandParser = owner.getCommandParser();
 
         setInputHandler(new SwingInputHandler(getInputField(), commandParser, this));
     }

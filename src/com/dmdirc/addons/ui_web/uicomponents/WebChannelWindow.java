@@ -23,7 +23,6 @@
 package com.dmdirc.addons.ui_web.uicomponents;
 
 import com.dmdirc.Channel;
-import com.dmdirc.commandparser.parsers.ChannelCommandParser;
 import com.dmdirc.parser.interfaces.ChannelClientInfo;
 import com.dmdirc.ui.interfaces.ChannelWindow;
 import com.dmdirc.addons.ui_web.DynamicRequestHandler;
@@ -40,7 +39,7 @@ public class WebChannelWindow extends WebInputWindow implements ChannelWindow {
     private final Channel channel;
 
     public WebChannelWindow(Channel channel) {
-        super(channel, new ChannelCommandParser(channel.getServer(), channel));
+        super(channel, channel.getCommandParser());
         this.channel = channel;
     }
 

@@ -27,7 +27,6 @@ import com.dmdirc.FrameContainer;
 import com.dmdirc.Query;
 import com.dmdirc.Server;
 import com.dmdirc.WritableFrameContainer;
-import com.dmdirc.commandparser.parsers.CommandParser;
 import com.dmdirc.config.prefs.PreferencesInterface;
 import com.dmdirc.ui.core.dialogs.sslcertificate.SSLCertificateDialogModel;
 import com.dmdirc.ui.interfaces.ChannelWindow;
@@ -164,9 +163,8 @@ public class WebInterfaceUI implements UIController {
 
     /** {@inheritDoc} */
     @Override
-    public InputWindow getInputWindow(final WritableFrameContainer owner,
-            final CommandParser commandParser) {
-        return new WebInputWindow(owner, commandParser);
+    public InputWindow getInputWindow(final WritableFrameContainer owner) {
+        return new WebInputWindow(owner, owner.getCommandParser());
     }
 
     /** {@inheritDoc} */

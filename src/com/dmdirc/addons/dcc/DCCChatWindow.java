@@ -53,13 +53,14 @@ public class DCCChatWindow extends DCCFrame implements DCCChatHandler {
      */
     public DCCChatWindow(final DCCPlugin plugin, final DCCChat dcc,
             final String title, final String nick, final String targetNick) {
-        super(plugin, title, "dcc-chat-inactive", false);
+        super(plugin, title, "dcc-chat-inactive", false,
+                DCCCommandParser.getDCCCommandParser());
         this.dcc = dcc;
         dcc.setHandler(this);
         nickname = nick;
         otherNickname = targetNick;
 
-        myWindow = Main.getUI().getInputWindow(this, DCCCommandParser.getDCCCommandParser());
+        myWindow = Main.getUI().getInputWindow(this);
         plugin.addWindow(this);
 
         setTitle(title);

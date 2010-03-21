@@ -27,7 +27,6 @@ import com.dmdirc.ServerState;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.commandparser.PopupType;
 import com.dmdirc.commandparser.parsers.CommandParser;
-import com.dmdirc.commandparser.parsers.ServerCommandParser;
 import com.dmdirc.ui.interfaces.ServerWindow;
 import com.dmdirc.addons.ui_swing.components.SwingInputHandler;
 import com.dmdirc.addons.ui_swing.dialogs.serversetting.ServerSettingsDialog;
@@ -53,7 +52,7 @@ public final class ServerFrame extends InputTextFrame implements ServerWindow,
      */
     private static final long serialVersionUID = 9;
     /** This channel's command parser. */
-    private final ServerCommandParser commandParser;
+    private final CommandParser commandParser;
     /** popup menu item. */
     private JMenuItem settingsMI;
 
@@ -68,7 +67,7 @@ public final class ServerFrame extends InputTextFrame implements ServerWindow,
 
         initComponents();
         
-        commandParser = new ServerCommandParser((Server) getContainer());
+        commandParser = owner.getCommandParser();
 
         setInputHandler(new SwingInputHandler(getInputField(), commandParser, this));
     }

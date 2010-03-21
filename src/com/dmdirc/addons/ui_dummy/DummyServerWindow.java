@@ -40,7 +40,7 @@ public final class DummyServerWindow extends DummyInputWindow implements ServerW
      * @param parent Parent server
      */
     public DummyServerWindow(final Server parent) {
-        super(parent, new ServerCommandParser(parent));
+        super(parent, new ServerCommandParser());
         
         this.parent = parent;
     }

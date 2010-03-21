@@ -43,7 +43,7 @@ public final class DummyChannelWindow extends DummyInputWindow implements Channe
      * @param parent Parent channel
      */
     public DummyChannelWindow(final Channel parent) {
-        super(parent, new ChannelCommandParser(parent.getServer(), parent));
+        super(parent, parent.getCommandParser());
         this.parent = parent;
     }
 

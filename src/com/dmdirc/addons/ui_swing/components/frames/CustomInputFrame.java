@@ -45,23 +45,17 @@ public class CustomInputFrame extends InputTextFrame {
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 2;
-    /** The command parser to use. */
-    private final CommandParser commandParser;
 
     /**
      * Creates a new instance of CustomInputFrame.
      * 
      * @param owner The frame container that owns this frame
-     * @param commandParser The command parser to use for this frmae
      * @param controller Swing controller
      */
-    public CustomInputFrame(final WritableFrameContainer owner,
-            final CommandParser commandParser, final SwingController controller) {
+    public CustomInputFrame(final WritableFrameContainer owner, final SwingController controller) {
         super(owner, controller);
 
-        this.commandParser = commandParser;
-
-        setInputHandler(new SwingInputHandler(getInputField(), commandParser, this));
+        setInputHandler(new SwingInputHandler(getInputField(), owner.getCommandParser(), this));
 
         initComponents();
     }
@@ -69,7 +63,7 @@ public class CustomInputFrame extends InputTextFrame {
     /** {@inheritDoc} */
     @Override
     public final CommandParser getCommandParser() {
-        return commandParser;
+        return ((WritableFrameContainer) frameParent).getCommandParser();
     }
 
     /**
