@@ -275,6 +275,7 @@ public abstract class TextFrame extends JInternalFrame implements Window,
                     if (isIcon()) {
                         setIcon(false);
                     }
+                    setMaximum(controller.getMainFrame().getMaximised());
                     if (!isVisible()) {
                         TextFrame.super.setVisible(true);
                     }
