@@ -132,31 +132,43 @@ public class SwingWindowFactory implements FrameListener {
     @Override
     public void addWindow(final FrameContainer<?> parent,
             final FrameContainer<?> window, final boolean focus) {
-        final Window parentWindow = getSwingWindow(parent);
-        final Window childWindow = doAddWindow(window, focus);
+        UIUtilities.invokeLater(new Runnable() {
 
-        if (childWindow == null) {
-            return;
-        }
+            @Override
+            public void run() {
+                final Window parentWindow = getSwingWindow(parent);
+                final Window childWindow = doAddWindow(window, focus);
 
-        for (SwingWindowListener listener : listeners.get(SwingWindowListener.class)) {
-            listener.windowAdded(parentWindow, childWindow);
-        }
+                if (childWindow == null) {
+                    return;
+                }
 
-        if (focus) {
-            childWindow.open();
-        }
+                for (SwingWindowListener listener : listeners.get(SwingWindowListener.class)) {
+                    listener.windowAdded(parentWindow, childWindow);
+                }
+
+                if (focus) {
+                    childWindow.open();
+                }
+            }
+        });
     }
 
     /** {@inheritDoc} */
     @Override
     public void delWindow(final FrameContainer<?> parent, final FrameContainer<?> window) {
-        final Window parentWindow = getSwingWindow(parent);
-        final Window childWindow = getSwingWindow(window);
+        UIUtilities.invokeLater(new Runnable() {
 
-        for (SwingWindowListener listener : listeners.get(SwingWindowListener.class)) {
-            listener.windowDeleted(parentWindow, childWindow);
-        }
+            @Override
+            public void run() {
+                final Window parentWindow = getSwingWindow(parent);
+                final Window childWindow = getSwingWindow(window);
+
+                for (SwingWindowListener listener : listeners.get(SwingWindowListener.class)) {
+                    listener.windowDeleted(parentWindow, childWindow);
+                }
+            }
+        });
     }
 
     /**
