@@ -153,9 +153,9 @@ public final class LagDisplayPlugin extends Plugin implements ActionListener, Co
         boolean useAlternate = false;
 
         for (Object obj : arguments) {
-            if (obj instanceof FrameContainer
-                    && ((FrameContainer) obj).getConfigManager() != null) {
-                useAlternate = ((FrameContainer) obj).getConfigManager()
+            if (obj instanceof FrameContainer<?>
+                    && ((FrameContainer<?>) obj).getConfigManager() != null) {
+                useAlternate = ((FrameContainer<?>) obj).getConfigManager()
                         .getOptionBool(getDomain(), "usealternate");
                 break;
             }
@@ -189,12 +189,12 @@ public final class LagDisplayPlugin extends Plugin implements ActionListener, Co
 
             if (((Server) arguments[0]).ownsFrame(active)) {
                 panel.setText("Not connected");
-                pings.remove(arguments[0]);
+                pings.remove((Server) arguments[0]);
             }
 
             panel.refreshDialog();
         } else if (type.equals(CoreActionType.CLIENT_FRAME_CHANGED)) {
-            final FrameContainer source = (FrameContainer) arguments[0];
+            final FrameContainer<?> source = (FrameContainer<?>) arguments[0];
             if (source == null || source.getServer() == null) {
                 panel.setText("Unknown");
             } else if (source.getServer().getState() != ServerState.CONNECTED) {

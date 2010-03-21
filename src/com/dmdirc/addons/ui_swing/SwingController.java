@@ -65,6 +65,7 @@ import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.plugins.Plugin;
 import com.dmdirc.ui.IconManager;
+import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.core.dialogs.sslcertificate.SSLCertificateDialogModel;
 import com.dmdirc.ui.interfaces.ChannelWindow;
 import com.dmdirc.ui.interfaces.InputWindow;
@@ -123,6 +124,8 @@ public final class SwingController extends Plugin implements Serializable,
     private AtomicBoolean mainFrameCreated = new AtomicBoolean(false);
     /** Error dialog. */
     private ErrorListDialog errorDialog;
+    /** Window factory. */
+    private final SwingWindowFactory windowFactory = new SwingWindowFactory(this);
 
     /** Instantiates a new SwingController. */
     public SwingController() {
@@ -158,6 +161,16 @@ public final class SwingController extends Plugin implements Serializable,
     }
 
     /**
+     * Returns the window factory used by this controller.
+     *
+     * @return This controller's window factory
+     * @since 0.6.4
+     */
+    public SwingWindowFactory getWindowFactory() {
+        return windowFactory;
+    }
+
+    /**
      * Retrieves the main window used by this UI.
      *
      * @return This UI's main window
@@ -189,7 +202,7 @@ public final class SwingController extends Plugin implements Serializable,
             /** {@inheritDoc} */
             @Override
             public void run() {
-                setObject(new ChannelFrame(channel, SwingController.this));
+                setObject(new ChannelFrame(SwingController.this, channel));
             }
         });
     }
@@ -202,7 +215,7 @@ public final class SwingController extends Plugin implements Serializable,
             /** {@inheritDoc} */
             @Override
             public void run() {
-                setObject(new ServerFrame(server, SwingController.this));
+                setObject(new ServerFrame(SwingController.this, server));
             }
         });
     }
@@ -215,27 +228,27 @@ public final class SwingController extends Plugin implements Serializable,
             /** {@inheritDoc} */
             @Override
             public void run() {
-                setObject(new QueryFrame(query, SwingController.this));
+                setObject(new QueryFrame(SwingController.this, query));
             }
         });
     }
 
     /** {@inheritDoc} */
     @Override
-    public Window getWindow(final FrameContainer owner) {
+    public Window getWindow(final FrameContainer<?> owner) {
         return UIUtilities.invokeAndWait(new ReturnableThread<CustomFrame>() {
 
             /** {@inheritDoc} */
             @Override
             public void run() {
-                setObject(new CustomFrame(owner, SwingController.this));
+                setObject(new CustomFrame(SwingController.this, owner));
             }
         });
     }
 
     /** {@inheritDoc} */
     @Override
-    public InputWindow getInputWindow(final WritableFrameContainer owner) {
+    public InputWindow getInputWindow(final WritableFrameContainer<?> owner) {
         LOGGER.finest("getInputWindow()");
 
         return UIUtilities.invokeAndWait(new ReturnableThread<CustomInputFrame>() {
@@ -244,7 +257,7 @@ public final class SwingController extends Plugin implements Serializable,
             @Override
             public void run() {
                 LOGGER.finest("getInputWindow(): run");
-                setObject(new CustomInputFrame(owner, SwingController.this));
+                setObject(new CustomInputFrame(SwingController.this, owner));
                 LOGGER.finest("getInputWindow(): object set: " + getObject());
             }
         });
@@ -665,6 +678,7 @@ public final class SwingController extends Plugin implements Serializable,
                     + "consider using the official JRE.").display();
         }
 
+        WindowManager.addFrameListener(windowFactory);
         Main.setUI(this);
     }
 

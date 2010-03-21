@@ -23,7 +23,6 @@
 package com.dmdirc.addons.logging;
 
 import com.dmdirc.FrameContainer;
-import com.dmdirc.Main;
 import com.dmdirc.Server;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.ui.WindowManager;
@@ -34,10 +33,7 @@ import com.dmdirc.ui.interfaces.Window;
  *
  * @author Chris
  */
-public class HistoryWindow extends FrameContainer {
-
-    /** The window we're using. */
-    private Window window;
+public class HistoryWindow extends FrameContainer<Window> {
 
     /**
      * Creates a new HistoryWindow.
@@ -48,15 +44,13 @@ public class HistoryWindow extends FrameContainer {
      * @param numLines The number of lines to show
      */
     public HistoryWindow(final String title, final ReverseFileReader reader,
-                         final FrameContainer parent, final int numLines) {
-        super("raw", title, title, parent.getConfigManager());
+                         final FrameContainer<?> parent, final int numLines) {
+        super("raw", title, title, Window.class, parent.getConfigManager());
 
         this.parent = parent;
 
-        window = Main.getUI().getWindow(this);
-
         WindowManager.addWindow(parent, this);
-        window.open();
+
         final int frameBufferSize = IdentityManager.getGlobalConfig().getOptionInt(
                 "ui", "frameBufferSize");
         addLine(reader.getLinesAsString(Math.min(frameBufferSize, numLines)), false);
@@ -64,15 +58,9 @@ public class HistoryWindow extends FrameContainer {
 
     /** {@inheritDoc} */
     @Override
-    public Window getFrame() {
-        return window;
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public void windowClosing() {
         // 1: Make the window non-visible
-        window.setVisible(false);
+        getFrame().setVisible(false);
 
         // 2: Remove any callbacks or listeners
         // 3: Trigger any actions neccessary
@@ -87,7 +75,6 @@ public class HistoryWindow extends FrameContainer {
     @Override
     public void windowClosed() {
         // 7: Remove any references to the window and parents
-        window = null; // NOPMD
         parent = null; // NOPMD
     }
 

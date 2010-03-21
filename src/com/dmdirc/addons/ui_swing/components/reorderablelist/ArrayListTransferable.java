@@ -40,14 +40,14 @@ public final class ArrayListTransferable implements Transferable {
     /** Serial transfer flavour. */
     private final DataFlavor serialArrayListFlavor;
     /** Transferred ArrayList. */
-    private final ArrayList data; //NOPMD
+    private final ArrayList<?> data; //NOPMD
     
     /** 
      * Initialises the ArrayListTransferable. 
      *
      * @param alist ArrayList to transfer
      */
-    public ArrayListTransferable(final ArrayList alist) { //NOPMD
+    public ArrayListTransferable(final ArrayList<?> alist) { //NOPMD
         super();
         
         data = alist;

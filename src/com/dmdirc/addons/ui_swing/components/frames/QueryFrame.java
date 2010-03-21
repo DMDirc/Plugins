@@ -52,8 +52,8 @@ public final class QueryFrame extends InputTextFrame implements QueryWindow {
      * @param owner Parent Frame container
      * @param controller Swing controller
      */
-    public QueryFrame(final Query owner, final SwingController controller) {
-        super(owner, controller);
+    public QueryFrame(final SwingController controller, final Query owner) {
+        super(controller, owner);
 
         initComponents();
 

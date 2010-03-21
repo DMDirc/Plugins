@@ -38,7 +38,7 @@ public class CalcCommand extends GlobalCommand {
 
     /** {@inheritDoc} */
     @Override
-    public void execute(final FrameContainer origin, final boolean isSilent,
+    public void execute(final FrameContainer<?> origin, final boolean isSilent,
             final CommandArguments args) {
         try {
             int offset = 0;

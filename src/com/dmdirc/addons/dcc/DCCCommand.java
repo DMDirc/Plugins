@@ -66,7 +66,7 @@ public final class DCCCommand extends ServerCommand implements IntelligentComman
 
     /** {@inheritDoc} */
     @Override
-    public void execute(final FrameContainer origin, final Server server,
+    public void execute(final FrameContainer<?> origin, final Server server,
             final boolean isSilent, final CommandArguments args) {
         if (args.getArguments().length > 1) {
             final String type = args.getArguments()[0];
@@ -136,7 +136,7 @@ public final class DCCCommand extends ServerCommand implements IntelligentComman
      * @param filename The file to send
      * @since 0.6.3m1
      */
-    public void sendFile(final String target, final FrameContainer origin,
+    public void sendFile(final String target, final FrameContainer<?> origin,
             final Server server, final boolean isSilent, final String filename) {
         // New thread to ask the user what file to send
         final File givenFile = new File(filename);

@@ -70,7 +70,7 @@ public final class OsdCommand extends GlobalCommand implements IntelligentComman
 
     /** {@inheritDoc} */
     @Override
-    public void execute(final FrameContainer origin, final boolean isSilent,
+    public void execute(final FrameContainer<?> origin, final boolean isSilent,
             final CommandArguments args) {
         if (args.getArguments().length > 0
                 && "--close".equalsIgnoreCase(args.getArguments()[0])) {

@@ -62,8 +62,8 @@ public final class ServerFrame extends InputTextFrame implements ServerWindow,
      * @param owner Parent Frame container
      * @param controller Swing controller
      */
-    public ServerFrame(final Server owner, final SwingController controller) {
-        super(owner, controller);
+    public ServerFrame(final SwingController controller, final Server owner) {
+        super(controller, owner);
 
         initComponents();
         

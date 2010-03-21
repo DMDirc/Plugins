@@ -26,6 +26,8 @@ package com.dmdirc.addons.ui_swing.components;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.FrameContainer;
+import com.dmdirc.addons.ui_swing.SwingController;
+import com.dmdirc.addons.ui_swing.SwingWindowFactory.SwingWindowListener;
 import com.dmdirc.config.ConfigManager;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.interfaces.ConfigChangeListener;
@@ -33,7 +35,6 @@ import com.dmdirc.interfaces.SelectionListener;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.interfaces.Window;
-import com.dmdirc.ui.interfaces.FrameListener;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -49,7 +50,7 @@ import net.miginfocom.swing.MigLayout;
 /**
  * Provides an MDI style bar for restore/minimise/close.
  */
-public class MDIBar extends JPanel implements FrameListener, SelectionListener,
+public class MDIBar extends JPanel implements SwingWindowListener, SelectionListener,
         PropertyChangeListener, ActionListener, ConfigChangeListener {
 
     private static final long serialVersionUID = -8028057596226636245L;
@@ -66,9 +67,10 @@ public class MDIBar extends JPanel implements FrameListener, SelectionListener,
     /**
      * Instantiates a new MDI bar.
      *
+     * @param controller The controller that owns this MDI bar
      * @param mainFrame Main frame instance
      */
-    public MDIBar(final MainFrame mainFrame) {
+    public MDIBar(final SwingController controller, final MainFrame mainFrame) {
         this.mainFrame = mainFrame;
         this.config = IdentityManager.getGlobalConfig();
         visibility = config.getOption("ui", "mdiBarVisibility");
@@ -86,8 +88,8 @@ public class MDIBar extends JPanel implements FrameListener, SelectionListener,
         add(restoreButton, "w 17!, h 17!, right");
         add(closeButton, "w 17!, h 17!, right");
 
+        controller.getWindowFactory().addWindowListener(this);
 
-        WindowManager.addFrameListener(this);
         WindowManager.addSelectionListener(this);
         closeButton.addActionListener(this);
         minimiseButton.addActionListener(this);
@@ -129,36 +131,20 @@ public class MDIBar extends JPanel implements FrameListener, SelectionListener,
 
     /** {@inheritDoc} */
     @Override
-    public void addWindow(final FrameContainer window, final boolean focus) {
-        if (window.getFrame() instanceof JInternalFrame) {
-            ((JInternalFrame) window.getFrame()).addPropertyChangeListener(
-                    "maximum", this);
-        }
+    public void windowAdded(final Window parent, final Window window) {
+        ((JInternalFrame) window).addPropertyChangeListener(
+                "maximum", this);
+
         check();
     }
 
     /** {@inheritDoc} */
     @Override
-    public void delWindow(final FrameContainer window) {
-        if (window.getFrame() instanceof JInternalFrame) {
-            ((JInternalFrame) window.getFrame()).removePropertyChangeListener(
-                    this);
-        }
+    public void windowDeleted(final Window parent, final Window window) {
+        ((JInternalFrame) window).removePropertyChangeListener(
+                this);
+
         check();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void addWindow(final FrameContainer parent,
-            final FrameContainer window, final boolean focus) {
-        addWindow(window, focus);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void delWindow(final FrameContainer parent,
-                          final FrameContainer window) {
-        delWindow(window);
     }
 
     /** {@inheritDoc} */
@@ -200,8 +186,9 @@ public class MDIBar extends JPanel implements FrameListener, SelectionListener,
         check();
     }
 
+    /** {@inheritDoc} */
     @Override
-    public void selectionChanged(FrameContainer window) {
+    public void selectionChanged(final FrameContainer<?> window) {
         activeFrame = window.getFrame();
         check();
     }

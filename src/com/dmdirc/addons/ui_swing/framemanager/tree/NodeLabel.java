@@ -27,7 +27,6 @@ import com.dmdirc.interfaces.FrameInfoListener;
 import com.dmdirc.interfaces.NotificationListener;
 import com.dmdirc.interfaces.SelectionListener;
 import com.dmdirc.ui.IconManager;
-import com.dmdirc.ui.interfaces.Window;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -49,7 +48,7 @@ public class NodeLabel extends JLabel implements SelectionListener,
      */
     private static final long serialVersionUID = 1;
     /** Node window. */
-    private final Window window;
+    private final FrameContainer<?> window;
     /** Rollover colours. */
     private boolean rollover;
     /** notification colour */
@@ -62,7 +61,7 @@ public class NodeLabel extends JLabel implements SelectionListener,
      * 
      * @param window Window for this node
      */
-    public NodeLabel(final Window window) {
+    public NodeLabel(final FrameContainer<?> window) {
         super();
 
         this.window = window;
@@ -78,11 +77,11 @@ public class NodeLabel extends JLabel implements SelectionListener,
             return;
         }
 
-        setText(window.getContainer().toString());
+        setText(window.toString());
 
         setOpaque(true);
         setToolTipText(null);
-        setIcon(IconManager.getIconManager().getIcon(window.getContainer().getIcon()));
+        setIcon(IconManager.getIconManager().getIcon(window.getIcon()));
         setBorder(BorderFactory.createEmptyBorder(1, 0, 2, 0));
 
         setPreferredSize(new Dimension(100000, getFont().getSize() +
@@ -94,8 +93,8 @@ public class NodeLabel extends JLabel implements SelectionListener,
 
     /** {@inheritDoc} */
     @Override
-    public void selectionChanged(final FrameContainer window) {
-        if (equals(window.getFrame())) {
+    public void selectionChanged(final FrameContainer<?> window) {
+        if (equals(window)) {
             selected = true;
         } else {
             selected = false;
@@ -104,39 +103,39 @@ public class NodeLabel extends JLabel implements SelectionListener,
 
     /** {@inheritDoc} */
     @Override
-    public void notificationSet(final FrameContainer window, final Color colour) {
-        if (equals(window.getFrame())) {
+    public void notificationSet(final FrameContainer<?> window, final Color colour) {
+        if (equals(window)) {
             notificationColour = colour;
         }
     }
 
     /** {@inheritDoc} */
     @Override
-    public void notificationCleared(final FrameContainer window) {
-        if (equals(window.getFrame())) {
+    public void notificationCleared(final FrameContainer<?> window) {
+        if (equals(window)) {
             notificationColour = null;
         }
     }
 
     /** {@inheritDoc} */
     @Override
-    public void iconChanged(final FrameContainer window, final String icon) {
-        if (equals(window.getFrame())) {
+    public void iconChanged(final FrameContainer<?> window, final String icon) {
+        if (equals(window)) {
             setIcon(IconManager.getIconManager().getIcon(icon));
         }
     }
 
     /** {@inheritDoc} */
     @Override
-    public void nameChanged(final FrameContainer window, final String name) {
-        if (equals(window.getFrame())) {
+    public void nameChanged(final FrameContainer<?> window, final String name) {
+        if (equals(window)) {
             setText(name);
         }
     }
 
     /** {@inheritDoc} */
     @Override
-    public void titleChanged(final FrameContainer window, final String title) {
+    public void titleChanged(final FrameContainer<?> window, final String title) {
         // Do nothing
     }
 

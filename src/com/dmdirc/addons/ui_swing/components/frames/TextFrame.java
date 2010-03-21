@@ -113,7 +113,7 @@ public abstract class TextFrame extends JInternalFrame implements Window,
      */
     private static final long serialVersionUID = 5;
     /** The channel object that owns this frame. */
-    protected final FrameContainer frameParent;
+    protected final FrameContainer<?> frameParent;
     /** Frame output pane. */
     private TextPane textPane;
     /** search bar. */
@@ -137,7 +137,7 @@ public abstract class TextFrame extends JInternalFrame implements Window,
      * @param owner FrameContainer owning this frame.
      * @param controller Swing controller
      */
-    public TextFrame(final FrameContainer owner,
+    public TextFrame(final FrameContainer<?> owner,
             final SwingController controller) {
         super();
         this.controller = controller;
@@ -200,15 +200,6 @@ public abstract class TextFrame extends JInternalFrame implements Window,
     @Override
     public Container getContentPane() {
         return panel;
-    }
-
-    /**
-     * Returns this text frames swing controller.
-     * 
-     * @return Swing controller
-     */
-    public SwingController getController() {
-        return controller;
     }
 
     /** {@inheritDoc} */
@@ -738,11 +729,12 @@ public abstract class TextFrame extends JInternalFrame implements Window,
 
     /** {@inheritDoc} */
     @Override
-    public FrameContainer getContainer() {
+    public FrameContainer<?> getContainer() {
         return frameParent;
     }
 
     /** {@inheritDoc} */
+    @Deprecated
     @Override
     public ConfigManager getConfigManager() {
         return getContainer().getConfigManager();
@@ -1005,7 +997,7 @@ public abstract class TextFrame extends JInternalFrame implements Window,
 
     /** {@inheritDoc} */
     @Override
-    public void iconChanged(final FrameContainer window, final String icon) {
+    public void iconChanged(final FrameContainer<?> window, final String icon) {
         UIUtilities.invokeLater(new Runnable() {
 
             /** {@inheritDoc} */
@@ -1018,13 +1010,13 @@ public abstract class TextFrame extends JInternalFrame implements Window,
 
     /** {@inheritDoc} */
     @Override
-    public void nameChanged(final FrameContainer window, final String name) {
+    public void nameChanged(final FrameContainer<?> window, final String name) {
         //Ignore
     }
 
     /** {@inheritDoc} */
     @Override
-    public void titleChanged(final FrameContainer window, final String title) {
+    public void titleChanged(final FrameContainer<?> window, final String title) {
         UIUtilities.invokeLater(new Runnable() {
 
             /** {@inheritDoc} */
@@ -1035,5 +1027,11 @@ public abstract class TextFrame extends JInternalFrame implements Window,
                 TextFrame.super.setTitle(title);
             }
         });
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public SwingController getController() {
+        return controller;
     }
 }

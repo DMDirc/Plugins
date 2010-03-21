@@ -26,6 +26,7 @@ import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.commandparser.PopupType;
 import com.dmdirc.commandparser.parsers.CommandParser;
 import com.dmdirc.addons.ui_swing.components.SwingInputHandler;
+import com.dmdirc.ui.interfaces.InputWindow;
 
 import javax.swing.JPopupMenu;
 
@@ -52,8 +53,9 @@ public class CustomInputFrame extends InputTextFrame {
      * @param owner The frame container that owns this frame
      * @param controller Swing controller
      */
-    public CustomInputFrame(final WritableFrameContainer owner, final SwingController controller) {
-        super(owner, controller);
+    public CustomInputFrame(final SwingController controller,
+            final WritableFrameContainer<? extends InputWindow> owner) {
+        super(controller, owner);
 
         setInputHandler(new SwingInputHandler(getInputField(), owner.getCommandParser(), this));
 
@@ -63,7 +65,7 @@ public class CustomInputFrame extends InputTextFrame {
     /** {@inheritDoc} */
     @Override
     public final CommandParser getCommandParser() {
-        return ((WritableFrameContainer) frameParent).getCommandParser();
+        return ((WritableFrameContainer<? extends InputWindow>) frameParent).getCommandParser();
     }
 
     /**

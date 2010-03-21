@@ -108,7 +108,7 @@ public final class WindowStatusPlugin extends Plugin implements ActionListener, 
     @Override
     public void processEvent(final ActionType type, final StringBuffer format, final Object... arguments) {
         if (type.equals(CoreActionType.CLIENT_FRAME_CHANGED)) {
-            updateStatus((FrameContainer) arguments[0]);
+            updateStatus((FrameContainer<?>) arguments[0]);
         }
     }
 
@@ -123,7 +123,7 @@ public final class WindowStatusPlugin extends Plugin implements ActionListener, 
      * Update the window status using the current active window.
      */
     public void updateStatus() {
-        final FrameContainer active = WindowManager.getActiveWindow();
+        final FrameContainer<?> active = WindowManager.getActiveWindow();
 
         if (active != null) {
             updateStatus(active);
@@ -135,7 +135,7 @@ public final class WindowStatusPlugin extends Plugin implements ActionListener, 
      *
      * @param current Window to use when adding status.
      */
-    public void updateStatus(final FrameContainer current) {
+    public void updateStatus(final FrameContainer<?> current) {
         if (current == null) {
             return;
         }

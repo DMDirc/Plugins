@@ -28,11 +28,11 @@ import com.dmdirc.addons.ui_swing.components.SplitPane;
 import com.dmdirc.addons.ui_swing.components.desktopPane.DMDircDesktopPane;
 import com.dmdirc.addons.ui_swing.components.statusbar.SwingStatusBar;
 import com.dmdirc.addons.ui_swing.framemanager.tree.TreeFrameManager;
-import com.dmdirc.FrameContainer;
 import com.dmdirc.Main;
 import com.dmdirc.ServerManager;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionType;
+import com.dmdirc.addons.ui_swing.SwingWindowFactory.SwingWindowListener;
 import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.interfaces.ConfigChangeListener;
@@ -43,10 +43,9 @@ import com.dmdirc.ui.interfaces.FramemanagerPosition;
 import com.dmdirc.ui.interfaces.MainWindow;
 import com.dmdirc.ui.interfaces.Window;
 import com.dmdirc.ui.CoreUIUtils;
-import com.dmdirc.ui.interfaces.FrameListener;
 import com.dmdirc.util.ReturnableThread;
-import java.awt.Dialog.ModalityType;
 
+import java.awt.Dialog.ModalityType;
 import java.awt.Dimension;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
@@ -67,7 +66,7 @@ import net.miginfocom.swing.MigLayout;
  * The main application frame.
  */
 public final class MainFrame extends JFrame implements WindowListener,
-        MainWindow, ConfigChangeListener, FrameListener {
+        MainWindow, ConfigChangeListener, SwingWindowListener {
 
     /** Logger to use. */
     private static final java.util.logging.Logger LOGGER =
@@ -366,11 +365,10 @@ public final class MainFrame extends JFrame implements WindowListener,
                     mainFrameManager = new TreeFrameManager();
                 }
 
-
                 WindowManager.addFrameListener(mainFrameManager);
                 mainFrameManager.setParent(frameManagerPanel);
 
-                WindowManager.addFrameListener(MainFrame.this);
+                controller.getWindowFactory().addWindowListener(MainFrame.this);
             }
         });
     }
@@ -381,7 +379,7 @@ public final class MainFrame extends JFrame implements WindowListener,
     private void initComponents() {
         statusBar = new SwingStatusBar(controller, this);
         frameManagerPanel = new JPanel();
-        desktopPane = new DMDircDesktopPane(this, controller.getDomain());
+        desktopPane = new DMDircDesktopPane(controller, this, controller.getDomain());
 
         initFrameManagers();
 
@@ -569,7 +567,7 @@ public final class MainFrame extends JFrame implements WindowListener,
 
     /** {@inheritDoc}. */
     @Override
-    public void addWindow(final FrameContainer window, final boolean focus) {
+    public void windowAdded(final Window parent, final Window window) {
         UIUtilities.invokeAndWait(new Runnable() {
 
             /** {@inheritDoc} */
@@ -586,13 +584,13 @@ public final class MainFrame extends JFrame implements WindowListener,
      * @param window The server to be added
      * @param index Index of the window to be added
      */
-    public void addWindow(final FrameContainer window, final int index) {
+    public void addWindow(final Window window, final int index) {
         UIUtilities.invokeAndWait(new Runnable() {
 
             /** {@inheritDoc} */
             @Override
             public void run() {
-                final JInternalFrame frame = (JInternalFrame) window.getFrame();
+                final JInternalFrame frame = (JInternalFrame) window;
 
                 // Add the frame
                 desktopPane.add(frame, index);
@@ -602,30 +600,17 @@ public final class MainFrame extends JFrame implements WindowListener,
 
     /** {@inheritDoc}. */
     @Override
-    public void delWindow(final FrameContainer window) {
+    public void windowDeleted(final Window parent, final Window window) {
         UIUtilities.invokeAndWait(new Runnable() {
 
             /** {@inheritDoc} */
             @Override
             public void run() {
-                final JInternalFrame frame = (JInternalFrame) window.getFrame();
+                final JInternalFrame frame = (JInternalFrame) window;
 
                 desktopPane.remove(frame);
             }
         });
     }
 
-    /** {@inheritDoc}. */
-    @Override
-    public void addWindow(final FrameContainer parent,
-            final FrameContainer window, final boolean focus) {
-        addWindow(window, focus);
-    }
-
-    /** {@inheritDoc}. */
-    @Override
-    public void delWindow(final FrameContainer parent,
-            final FrameContainer window) {
-        delWindow(window);
-    }
 }

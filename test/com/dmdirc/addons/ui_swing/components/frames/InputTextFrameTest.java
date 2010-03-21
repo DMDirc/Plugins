@@ -23,7 +23,6 @@
 package com.dmdirc.addons.ui_swing.components.frames;
 
 import com.dmdirc.Main;
-import com.dmdirc.commandparser.parsers.GlobalCommandParser;
 import com.dmdirc.config.ConfigManager;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.InvalidIdentityFileException;
@@ -35,6 +34,7 @@ import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.TextAreaInputField;
 import com.dmdirc.plugins.PluginManager;
+import com.dmdirc.ui.interfaces.InputWindow;
 
 import java.awt.event.KeyEvent;
 
@@ -54,7 +54,7 @@ public class InputTextFrameTest {
     static FrameFixture mainframe;
     static JInternalFrameFixture window;
     static TestConfigManagerMap cmmap;
-    static TestWritableFrameContainer owner;
+    static TestWritableFrameContainer<InputWindow> owner;
     static SwingController controller;
 
     @BeforeClass
@@ -81,14 +81,14 @@ public class InputTextFrameTest {
         cmmap = new TestConfigManagerMap();
         cmmap.settings.put("ui.pasteProtectionLimit", "1");
 
-        owner = new TestWritableFrameContainer(512, cmmap);
+        owner = new TestWritableFrameContainer<InputWindow>(512, cmmap, InputWindow.class);
         setupWindow(cmmap);
     }
 
     @After
     public void tearDown() {
         window.close();
-        owner.window.close();
+        owner.getFrame().close();
         WindowManager.removeWindow(owner);
     }
 
@@ -149,10 +149,10 @@ public class InputTextFrameTest {
     }
 
     protected void setupWindow(final ConfigManager configManager) {
-        final CustomInputFrame titf = new CustomInputFrame(owner, controller);
+        final CustomInputFrame titf = new CustomInputFrame(controller, owner);
 
         owner.setTitle("testing123");
-        owner.window = titf;
+        owner.addWindow(titf);
 
         WindowManager.addWindow(owner);
 

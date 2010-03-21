@@ -25,6 +25,7 @@ package com.dmdirc.addons.dcc;
 import com.dmdirc.Server;
 import com.dmdirc.ServerState;
 import com.dmdirc.actions.ActionManager;
+import com.dmdirc.addons.dcc.DCCFrame.EmptyFrame;
 import com.dmdirc.addons.dcc.actions.DCCActions;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.logger.ErrorLevel;
@@ -50,7 +51,7 @@ import net.miginfocom.swing.MigLayout;
  *
  * @author Shane 'Dataforce' McCormack
  */
-public class DCCTransferWindow extends DCCFrame implements DCCTransferHandler,
+public class DCCTransferWindow extends DCCFrame<EmptyFrame> implements DCCTransferHandler,
         ActionListener, SocketCloseListener {
 
     /** The DCCSend object we are a window for */
@@ -112,7 +113,7 @@ public class DCCTransferWindow extends DCCFrame implements DCCTransferHandler,
             final String title, final String targetNick, final Server server) {
         super(plugin, title, dcc.getType() == DCCTransfer.TransferType.SEND
                 ? "dcc-send-inactive" : "dcc-receive-inactive",
-                DCCCommandParser.getDCCCommandParser());
+                EmptyFrame.class, DCCCommandParser.getDCCCommandParser());
         this.dcc = dcc;
         this.server = server;
         this.parser = server == null ? null : server.getParser();

@@ -25,6 +25,8 @@ package com.dmdirc.addons.ui_swing.components.desktopPane;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.ui_swing.BackgroundOption;
 import com.dmdirc.addons.ui_swing.MainFrame;
+import com.dmdirc.addons.ui_swing.SwingController;
+import com.dmdirc.addons.ui_swing.SwingWindowFactory.SwingWindowListener;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.TreeScroller;
 import com.dmdirc.addons.ui_swing.components.frames.InputTextFrame;
@@ -36,9 +38,7 @@ import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.interfaces.SelectionListener;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
-import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.interfaces.Window;
-import com.dmdirc.ui.interfaces.FrameListener;
 import com.dmdirc.util.ReturnableThread;
 import com.dmdirc.util.URLBuilder;
 
@@ -70,7 +70,7 @@ import javax.swing.tree.TreeSelectionModel;
 /**
  * DMDirc Extentions to JDesktopPane.
  */
-public class DMDircDesktopPane extends JDesktopPane implements FrameListener,
+public class DMDircDesktopPane extends JDesktopPane implements SwingWindowListener,
         SelectionListener, PropertyChangeListener, ConfigChangeListener {
 
     /** Logger to use. */
@@ -91,7 +91,7 @@ public class DMDircDesktopPane extends JDesktopPane implements FrameListener,
     /** The number of pixels each new internal frame is offset by. */
     private static final int FRAME_OPENING_OFFSET = 30;
     /** Node storage, used for adding and deleting nodes correctly. */
-    private final Map<FrameContainer, TreeViewNode> nodes;
+    private final Map<Window, TreeViewNode> nodes;
     /** Data model. */
     private final TreeViewModel model;
     /** Selected model. */
@@ -115,11 +115,13 @@ public class DMDircDesktopPane extends JDesktopPane implements FrameListener,
 
     /**
      * Initialises the DMDirc desktop pane.
-     * 
+     *
+     * @param controller The controller that owns this desktop pane
      * @param mainFrame Main frame
      * @param domain Config domain
      */
-    public DMDircDesktopPane(final MainFrame mainFrame, final String domain) {
+    public DMDircDesktopPane(final SwingController controller,
+            final MainFrame mainFrame, final String domain) {
         super();
 
         this.mainFrame = mainFrame;
@@ -128,7 +130,7 @@ public class DMDircDesktopPane extends JDesktopPane implements FrameListener,
         setBorder(BorderFactory.createEtchedBorder());
         setUI(new ProxyDesktopPaneUI(getUI(), this));
 
-        nodes = new HashMap<FrameContainer, TreeViewNode>();
+        nodes = new HashMap<Window, TreeViewNode>();
         model = new TreeViewModel(new TreeViewNode(null, null));
         selectionModel = new DefaultTreeSelectionModel();
         treeScroller = new TreeScroller(model, selectionModel, false) {
@@ -137,12 +139,13 @@ public class DMDircDesktopPane extends JDesktopPane implements FrameListener,
             @Override
             protected void setPath(final TreePath path) {
                 super.setPath(path);
-                ((TreeViewNode) path.getLastPathComponent()).getFrameContainer().
+                ((TreeViewNode) path.getLastPathComponent()).getWindow().
                         activateFrame();
             }
         };
 
-        WindowManager.addFrameListener(this);
+        controller.getWindowFactory().addWindowListener(this);
+        
         IdentityManager.getGlobalConfig().addChangeListener(domain,
                 "desktopbackground", this);
         IdentityManager.getGlobalConfig().addChangeListener(domain,
@@ -220,22 +223,15 @@ public class DMDircDesktopPane extends JDesktopPane implements FrameListener,
         });
     }
 
-    /** {@inheritDoc} */
     @Override
-    public void addWindow(final FrameContainer window, final boolean focus) {
-        addWindow(model.getRootNode(), window);
-    }
-
-    @Override
-    public void addWindow(final FrameContainer parent,
-            final FrameContainer window, final boolean focus) {
+    public void windowAdded(final Window parent, final Window window) {
         UIUtilities.invokeAndWait(new Runnable() {
 
             /** {@inheritDoc} */
             @Override
             public void run() {
                 synchronized (nodes) {
-                    addWindow(nodes.get(parent), window);
+                    addWindow(parent == null ? model.getRootNode() : nodes.get(parent), window);
                 }
             }
         });
@@ -243,14 +239,7 @@ public class DMDircDesktopPane extends JDesktopPane implements FrameListener,
 
     /** {@inheritDoc} */
     @Override
-    public void delWindow(final FrameContainer parent,
-            final FrameContainer window) {
-        delWindow(window);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void delWindow(final FrameContainer window) {
+    public void windowDeleted(final Window parent, final Window window) {
         UIUtilities.invokeAndWait(new Runnable() {
 
             /** {@inheritDoc} */
@@ -269,8 +258,8 @@ public class DMDircDesktopPane extends JDesktopPane implements FrameListener,
                     model.removeNodeFromParent(nodes.get(window));
                 }
                 nodes.remove(window);
-                window.removeSelectionListener(DMDircDesktopPane.this);
-                ((TextFrame) window.getFrame()).removePropertyChangeListener(
+                window.getContainer().removeSelectionListener(DMDircDesktopPane.this);
+                ((TextFrame) window).removePropertyChangeListener(
                         DMDircDesktopPane.this);
                 if (getAllFrames().length == 0) {
                     mainFrame.setTitle(null);
@@ -285,21 +274,20 @@ public class DMDircDesktopPane extends JDesktopPane implements FrameListener,
      * @param parent Parent node
      * @param window Window to add
      */
-    public void addWindow(final TreeViewNode parent,
-            final FrameContainer window) {
+    public void addWindow(final TreeViewNode parent, final Window window) {
         UIUtilities.invokeAndWait(new Runnable() {
 
             /** {@inheritDoc} */
             @Override
             public void run() {
-                final TreeViewNode node = new TreeViewNode(null, window);
+                final TreeViewNode node = new TreeViewNode(null, window.getContainer());
                 synchronized (nodes) {
                     nodes.put(window, node);
                 }
                 node.setUserObject(window);
                 model.insertNodeInto(node, parent);
-                window.addSelectionListener(DMDircDesktopPane.this);
-                ((TextFrame) window.getFrame()).addPropertyChangeListener(
+                window.getContainer().addSelectionListener(DMDircDesktopPane.this);
+                ((TextFrame) window).addPropertyChangeListener(
                         DMDircDesktopPane.this);
             }
         });
@@ -317,7 +305,7 @@ public class DMDircDesktopPane extends JDesktopPane implements FrameListener,
 
     /** {@inheritDoc} */
     @Override
-    public void selectionChanged(final FrameContainer window) {
+    public void selectionChanged(final FrameContainer<?> window) {
         UIUtilities.invokeLater(new Runnable() {
 
             /** {@inheritDoc} */

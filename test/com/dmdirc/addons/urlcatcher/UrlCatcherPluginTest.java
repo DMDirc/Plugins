@@ -35,7 +35,7 @@ import static org.mockito.Mockito.*;
 
 public class UrlCatcherPluginTest {
     
-    private static FrameContainer container;
+    private static FrameContainer<?> container;
 
     @BeforeClass
     public static void setupClass() {

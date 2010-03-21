@@ -46,7 +46,7 @@ public final class BeepCommand extends GlobalCommand {
 
     /** {@inheritDoc} */
     @Override
-    public void execute(final FrameContainer origin, final boolean isSilent,
+    public void execute(final FrameContainer<?> origin, final boolean isSilent,
                         final CommandArguments args) {
         Toolkit.getDefaultToolkit().beep();
     }

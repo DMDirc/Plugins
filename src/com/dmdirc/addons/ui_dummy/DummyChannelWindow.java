@@ -23,7 +23,6 @@
 package com.dmdirc.addons.ui_dummy;
 
 import com.dmdirc.Channel;
-import com.dmdirc.commandparser.parsers.ChannelCommandParser;
 import com.dmdirc.parser.interfaces.ChannelClientInfo;
 import com.dmdirc.ui.interfaces.ChannelWindow;
 
@@ -73,6 +72,7 @@ public final class DummyChannelWindow extends DummyInputWindow implements Channe
 
     /** {@inheritDoc} */
     @Override
+    @Deprecated
     public Channel getChannel() {
         return parent;
     }

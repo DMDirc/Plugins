@@ -160,7 +160,7 @@ public class ToolTipPanel extends JPanel implements MouseListener {
     public void registerTooltipHandler(final JComponent component,
             final String tooltipText) {
         tooltips.put(component, tooltipText);
-        if (component instanceof JXLayer) {
+        if (component instanceof JXLayer<?>) {
             final LayerUI<JComponent> layerUI = new AbstractLayerUI<JComponent>() {
 
                 private static final long serialVersionUID =

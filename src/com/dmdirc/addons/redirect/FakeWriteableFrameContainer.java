@@ -22,58 +22,73 @@
 
 package com.dmdirc.addons.redirect;
 
-import com.dmdirc.FrameContainer;
 import com.dmdirc.MessageTarget;
 import com.dmdirc.Server;
-import com.dmdirc.commandparser.CommandArguments;
-import com.dmdirc.commandparser.commands.ChatCommand;
-import com.dmdirc.commandparser.commands.IntelligentCommand;
-import com.dmdirc.ui.input.AdditionalTabTargets;
+import com.dmdirc.WritableFrameContainer;
 import com.dmdirc.ui.input.TabCompleter;
+import com.dmdirc.ui.interfaces.InputWindow;
 
 /**
- * The redirect command allows the user to redirect the output from another
- * command that would normally echo results locally to a query or channel
- * window instead.
- *
+ * Implements a fake input window, which sends echoed text to the specified
+ * chat window instead.
+ * 
  * @author Chris
  */
-public class RedirectCommand extends ChatCommand implements IntelligentCommand {
+public class FakeWriteableFrameContainer extends WritableFrameContainer<InputWindow> {
     
-    public RedirectCommand() {
-    }
-    
-    /** {@inheritDoc} */
-    @Override
-    public void execute(final FrameContainer<?> origin, final Server server,
-            final MessageTarget<?> target, final boolean isSilent, final CommandArguments args) {
-        target.getCommandParser().parseCommand(new FakeWriteableFrameContainer(target),
-                args.getArgumentsAsString());
-    }
-    
-    /** {@inheritDoc} */
-    @Override
-    public String getName() {
-        return "redirect";
-    }
-    
-    /** {@inheritDoc} */
-    @Override
-    public boolean showInHelp() {
-        return true;
-    }
-    
-    /** {@inheritDoc} */
-    @Override
-    public String getHelp() {
-        return "redirect <command> - sends the output of the command to a channel or query window";
+    /** The target for this window. */
+    private final MessageTarget<? extends InputWindow> target;
+
+    /**
+     * Creates a new instance of FakeInputWindow.
+     * 
+     * @param target The message target that output gets sent to
+     */
+    public FakeWriteableFrameContainer(final MessageTarget<?> target) {
+        super(target.getIcon(), target.getName(), target.getTitle(),
+                InputWindow.class, target.getConfigManager(), target.getCommandParser());
+        this.target = target;
     }
 
     /** {@inheritDoc} */
     @Override
-    public AdditionalTabTargets getSuggestions(final int arg,
-            final IntelligentCommandContext context) {
-        return TabCompleter.getIntelligentResults(arg, context, 0);
+    public void addLine(final String line, final boolean timestamp) {
+        target.sendLine(line);
     }
-    
+
+    /** {@inheritDoc} */
+    @Override
+    public void sendLine(final String line) {
+        target.sendLine(line);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public TabCompleter getTabCompleter() {
+        return target.getTabCompleter();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public int getMaxLineLength() {
+        return target.getMaxLineLength();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Server getServer() {
+        return target.getServer();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void windowClosing() {
+        // Do nothing
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void windowClosed() {
+        // Do nothing
+    }
 }

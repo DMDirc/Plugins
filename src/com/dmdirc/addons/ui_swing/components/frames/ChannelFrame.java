@@ -86,8 +86,8 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
      * @param owner The Channel object that owns this frame
      * @param controller Swing controller
      */
-    public ChannelFrame(final Channel owner, final SwingController controller) {
-        super(owner, controller);
+    public ChannelFrame(final SwingController controller, final Channel owner) {
+        super(controller, owner);
 
         parentChannel = owner;
 
@@ -157,6 +157,7 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
 
     /** {@inheritDoc} */
     @Override
+    @Deprecated
     public Channel getChannel() {
         return parentChannel;
     }

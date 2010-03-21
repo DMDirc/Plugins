@@ -28,6 +28,7 @@ import com.dmdirc.Server;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.actions.interfaces.ActionType;
+import com.dmdirc.addons.dcc.DCCFrame.EmptyFrame;
 import com.dmdirc.addons.dcc.kde.KFileChooser;
 import com.dmdirc.addons.dcc.actions.DCCActions;
 import com.dmdirc.addons.ui_swing.MainFrame;
@@ -625,7 +626,7 @@ public final class DCCPlugin extends Plugin implements ActionListener {
 /**
  * Creates a placeholder DCC Frame.
  */
-class PlaceholderDCCFrame extends DCCFrame {
+class PlaceholderDCCFrame extends DCCFrame<EmptyFrame> {
 
     /**
      * Creates a placeholder dcc frame.
@@ -633,13 +634,13 @@ class PlaceholderDCCFrame extends DCCFrame {
      * @param plugin Parent plugin
      */
     public PlaceholderDCCFrame(final DCCPlugin plugin) {
-        super(plugin, "DCCs", "dcc", DCCCommandParser.getDCCCommandParser());
+        super(plugin, "DCCs", "dcc", EmptyFrame.class, DCCCommandParser.getDCCCommandParser());
     }
 
     @Override
     public void close() {
         int dccs = 0;
-        for (FrameContainer window : getChildren()) {
+        for (FrameContainer<?> window : getChildren()) {
             if (window instanceof DCCTransferWindow) {
                 if (((DCCTransferWindow) window).getDCC().isActive()) {
                     dccs++;

@@ -45,7 +45,7 @@ public class RedirectCommandTest {
     @Test
     public void testExecute() {
         final RedirectCommand command = new RedirectCommand();
-        final MessageTarget target = mock(MessageTarget.class);
+        final MessageTarget<?> target = mock(MessageTarget.class);
         final InputWindow window = mock(InputWindow.class);
         when(target.getFrame()).thenReturn(window);
         final CommandParser parser = new ServerCommandParser();
