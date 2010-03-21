@@ -47,9 +47,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import java.util.TreeMap;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JToggleButton;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 
 import net.miginfocom.swing.MigLayout;
@@ -73,13 +76,15 @@ public final class ButtonBar implements FrameManager, ActionListener,
     /** A map of parent containers to their respective windows. */
     private final MapList<FrameContainer<?>, FrameContainer<?>> windows;
     /** A map of containers to the buttons we're using for them. */
-    private final Map<FrameContainer<?>, JToggleButton> buttons;
+    private final TreeMap<FrameContainer<?>, JToggleButton> buttons;
     /** The position of this frame manager. */
     private final FramemanagerPosition position;
     /** The parent for the manager. */
     private JComponent parent;
+    /** The scrolling panel for our ButtonBar */
+     private final JScrollPane scrollPane;
     /** The panel used for our buttons. */
-    private final JPanel panel;
+    private final JPanel buttonPanel;
     /** The currently selected window. */
     private transient FrameContainer<?> selected;
     /** Selected window. */
@@ -95,46 +100,67 @@ public final class ButtonBar implements FrameManager, ActionListener,
 
     /** Creates a new instance of DummyFrameManager. */
     public ButtonBar() {
+        scrollPane = new JScrollPane();
+        scrollPane.setBorder(null);
+        scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants
+                .HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants
+                .VERTICAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setMinimumSize(new Dimension(0,buttonHeight));
+
         windows = new MapList<FrameContainer<?>, FrameContainer<?>>();
-        buttons = new HashMap<FrameContainer<?>, JToggleButton>();
+        buttons = new TreeMap<FrameContainer<?>, JToggleButton>(FrameContainerComparator);
         position = FramemanagerPosition.getPosition(
-                IdentityManager.getGlobalConfig().getOption("ui", "framemanagerPosition"));
+                IdentityManager.getGlobalConfig().getOption("ui",
+                "framemanagerPosition"));
 
         if (position.isHorizontal()) {
-            panel = new JPanel(new MigLayout("ins 0, fill, flowx"));
+            buttonPanel = new JPanel(new MigLayout("ins 0, fill, flowx"));
         } else {
-            panel = new JPanel(new MigLayout("ins 0, fill, flowy"));
+            buttonPanel = new JPanel(new MigLayout("ins 0, fill, flowy"));
         }
+        scrollPane.getViewport().add(buttonPanel);
     }
 
     /** {@inheritDoc} */
     @Override
     public void setParent(final JComponent parent) {
-        this.parent = parent;
+        UIUtilities.invokeLater(new Runnable() {
 
-        parent.setLayout(new MigLayout());
-        parent.add(panel);
-        parent.addComponentListener(this);
+            /** {inheritDoc} */
+            @Override
+            public void run() {
+                ButtonBar.this.parent = parent;
+                scrollPane.setSize(parent.getWidth(), parent.getHeight());
+
+                parent.setLayout(new MigLayout("ins 0"));
+                parent.add(scrollPane);
+                parent.addComponentListener(ButtonBar.this);
+            }
+        });
     }
 
     /**
      * Removes all buttons from the bar and readds them.
      */
     private void relayout() {
-        panel.removeAll();
+        buttonPanel.removeAll();
 
-        for (Map.Entry<FrameContainer<?>, List<FrameContainer<?>>> entry : windows.entrySet()) {
-            buttons.get(entry.getKey()).setPreferredSize(new Dimension(buttonWidth, buttonHeight));
-            panel.add(buttons.get(entry.getKey()));
+        for (Map.Entry<FrameContainer<?>, List<FrameContainer<?>>> entry : windows
+                .entrySet()) {
+            buttons.get(entry.getKey()).setPreferredSize(new Dimension(
+                    buttonWidth, buttonHeight));
+            buttonPanel.add(buttons.get(entry.getKey()));
 
             Collections.sort(entry.getValue(), new FrameContainerComparator());
 
             for (FrameContainer<?> child : entry.getValue()) {
-                buttons.get(child).setPreferredSize(new Dimension(buttonWidth, buttonHeight));
-                panel.add(buttons.get(child));
+                buttons.get(child).setPreferredSize(new Dimension(
+                        buttonWidth, buttonHeight));
+                buttonPanel.add(buttons.get(child));
             }
         }
-        panel.validate();
+        buttonPanel.validate();
     }
 
     /**
@@ -146,13 +172,11 @@ public final class ButtonBar implements FrameManager, ActionListener,
     private void addButton(final FrameContainer<?> source) {
         final JToggleButton button = new JToggleButton(source.toString(),
                 IconManager.getIconManager().getIcon(source.getIcon()));
-
         button.addActionListener(this);
         button.setHorizontalAlignment(SwingConstants.LEFT);
         button.setMinimumSize(new Dimension(0,buttonHeight));
         button.setMargin(new Insets(0, 0, 0, 0));
         buttons.put(source, button);
-
     }
 
     /** {@inheritDoc} */
@@ -170,50 +194,81 @@ public final class ButtonBar implements FrameManager, ActionListener,
     /** {@inheritDoc} */
     @Override
     public void addWindow(final FrameContainer<?> window, final boolean focus) {
-        windows.add(window);
-        //This window is a root window
-        addButton(window);
+        UIUtilities.invokeLater(new Runnable() {
 
-        relayout();
-        window.addNotificationListener(this);
-        window.addSelectionListener(this);
-        window.addFrameInfoListener(this);
+            /** {inheritDoc} */
+            @Override
+            public void run() {
+                windows.add(window);
+                //This window is a root window
+                addButton(window);
+
+                relayout();
+                window.addNotificationListener(ButtonBar.this);
+                window.addSelectionListener(ButtonBar.this);
+                window.addFrameInfoListener(ButtonBar.this);
+            }
+
+        });
     }
 
     /** {@inheritDoc} */
     @Override
     public void delWindow(final FrameContainer<?> window) {
-        windows.remove(window);
+        UIUtilities.invokeLater(new Runnable() {
 
-        relayout();
-        window.removeNotificationListener(this);
-        window.removeFrameInfoListener(this);
-        window.removeSelectionListener(this);
+            /** {inheritDoc} */
+            @Override
+            public void run() {
+                windows.remove(window);
+                buttons.remove(window);
+
+                relayout();
+                window.removeNotificationListener(ButtonBar.this);
+                window.removeFrameInfoListener(ButtonBar.this);
+                window.removeSelectionListener(ButtonBar.this);
+            }
+        });
     }
 
     /** {@inheritDoc} */
     @Override
     public void addWindow(final FrameContainer<?> parent,
             final FrameContainer<?> window, final boolean focus) {
-        windows.add(parent, window);
-        //This window has a parent Window
-        addButton(window);
+        UIUtilities.invokeLater(new Runnable() {
 
-        relayout();
-        window.addNotificationListener(this);
-        window.addSelectionListener(this);
-        window.addFrameInfoListener(this);
+            /** {inheritDoc} */
+            @Override
+            public void run() {
+                windows.add(parent, window);
+                //This window has a parent Window
+                addButton(window);
+
+                relayout();
+                window.addNotificationListener(ButtonBar.this);
+                window.addSelectionListener(ButtonBar.this);
+                window.addFrameInfoListener(ButtonBar.this);
+            }
+        });
     }
 
     /** {@inheritDoc} */
     @Override
     public void delWindow(final FrameContainer<?> parent, final FrameContainer<?> window) {
-        windows.remove(parent, window);
+        UIUtilities.invokeLater(new Runnable() {
 
-        relayout();
-        window.removeNotificationListener(this);
-        window.removeFrameInfoListener(this);
-        window.removeSelectionListener(this);
+            /** {inheritDoc} */
+            @Override
+            public void run() {
+                windows.remove(parent, window);
+                buttons.remove(window);
+
+                relayout();
+            window.removeNotificationListener(ButtonBar.this);
+            window.removeFrameInfoListener(ButtonBar.this);
+            window.removeSelectionListener(ButtonBar.this);
+            }
+        });
     }
 
     /**
@@ -241,13 +296,7 @@ public final class ButtonBar implements FrameManager, ActionListener,
      */
     @Override
     public void componentResized(final ComponentEvent e) {
-        buttonWidth = position.isHorizontal() ? 150 : (parent.getWidth() - UIUtilities.SMALL_BORDER * 3) / cells;
-        
-        if (position.isHorizontal()) {
-            maxButtons = parent.getWidth() / (buttonWidth + UIUtilities.SMALL_BORDER * 2);
-        } else {
-            maxButtons = parent.getHeight() / (buttonHeight + UIUtilities.SMALL_BORDER * 2);
-        }
+        buttonWidth = position.isHorizontal() ? 150 : (parent.getWidth() / cells);
         relayout();
     }
 
