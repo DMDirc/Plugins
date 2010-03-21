@@ -35,7 +35,6 @@ import com.dmdirc.addons.ui_swing.components.SwingInputHandler;
 import com.dmdirc.addons.ui_swing.components.TopicBar;
 import com.dmdirc.addons.ui_swing.dialogs.channelsetting.ChannelSettingsDialog;
 import com.dmdirc.commandparser.PopupType;
-import com.dmdirc.commandparser.parsers.ChannelCommandParser;
 import com.dmdirc.commandparser.parsers.CommandParser;
 import com.dmdirc.config.Identity;
 import com.dmdirc.config.IdentityManager;
@@ -66,7 +65,7 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
      */
     private static final long serialVersionUID = 10;
     /** This channel's command parser. */
-    private final ChannelCommandParser commandParser;
+    private final CommandParser commandParser;
     /** split pane. */
     private SplitPane splitPane;
     /** popup menu item. */
@@ -104,8 +103,7 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
                 "shownicklist", this);
         ActionManager.addListener(this, CoreActionType.CLIENT_CLOSING);
 
-        commandParser = new ChannelCommandParser(((Channel) getContainer()).
-                getServer(),(Channel) getContainer());
+        commandParser = owner.getCommandParser();
 
         setInputHandler(new SwingInputHandler(getInputField(), commandParser,
                 this));

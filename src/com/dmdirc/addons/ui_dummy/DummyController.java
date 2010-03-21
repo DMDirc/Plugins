@@ -99,9 +99,8 @@ public final class DummyController extends Plugin implements UIController {
     
     /** {@inheritDoc} */
     @Override
-    public InputWindow getInputWindow(final WritableFrameContainer owner, 
-            final CommandParser commandParser) {
-        return new DummyInputWindow(owner, commandParser);
+    public InputWindow getInputWindow(final WritableFrameContainer owner) {
+        return new DummyInputWindow(owner, owner.getCommandParser());
     }
     
     /** {@inheritDoc} */

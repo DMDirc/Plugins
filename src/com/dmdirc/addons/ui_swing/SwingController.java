@@ -51,7 +51,6 @@ import com.dmdirc.addons.ui_swing.dialogs.updater.SwingUpdaterDialog;
 import com.dmdirc.addons.ui_swing.dialogs.url.URLDialog;
 import com.dmdirc.addons.ui_swing.wizard.WizardListener;
 import com.dmdirc.addons.ui_swing.wizard.firstrun.SwingFirstRunWizard;
-import com.dmdirc.commandparser.parsers.CommandParser;
 import com.dmdirc.config.Identity;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
@@ -236,8 +235,7 @@ public final class SwingController extends Plugin implements Serializable,
 
     /** {@inheritDoc} */
     @Override
-    public InputWindow getInputWindow(final WritableFrameContainer owner,
-            final CommandParser commandParser) {
+    public InputWindow getInputWindow(final WritableFrameContainer owner) {
         LOGGER.finest("getInputWindow()");
 
         return UIUtilities.invokeAndWait(new ReturnableThread<CustomInputFrame>() {
@@ -246,8 +244,7 @@ public final class SwingController extends Plugin implements Serializable,
             @Override
             public void run() {
                 LOGGER.finest("getInputWindow(): run");
-                setObject(new CustomInputFrame(owner, commandParser,
-                        SwingController.this));
+                setObject(new CustomInputFrame(owner, SwingController.this));
                 LOGGER.finest("getInputWindow(): object set: " + getObject());
             }
         });

@@ -111,7 +111,8 @@ public class DCCTransferWindow extends DCCFrame implements DCCTransferHandler,
     public DCCTransferWindow(final DCCPlugin plugin, final DCCTransfer dcc,
             final String title, final String targetNick, final Server server) {
         super(plugin, title, dcc.getType() == DCCTransfer.TransferType.SEND
-                ? "dcc-send-inactive" : "dcc-receive-inactive");
+                ? "dcc-send-inactive" : "dcc-receive-inactive",
+                DCCCommandParser.getDCCCommandParser());
         this.dcc = dcc;
         this.server = server;
         this.parser = server == null ? null : server.getParser();

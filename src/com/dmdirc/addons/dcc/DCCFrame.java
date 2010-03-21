@@ -124,9 +124,11 @@ public abstract class DCCFrame extends WritableFrameContainer {
      * @param plugin The DCCPlugin that owns this frame
      * @param title The title of this window
      * @param icon The icon to use
+     * @param parser Command parser to use for this window
      */
-    public DCCFrame(final DCCPlugin plugin, final String title, final String icon) {
-        this(plugin, title, icon, true);
+    public DCCFrame(final DCCPlugin plugin, final String title,
+            final String icon, final CommandParser parser) {
+        this(plugin, title, icon, true, parser);
     }
 
     /**
@@ -136,9 +138,11 @@ public abstract class DCCFrame extends WritableFrameContainer {
      * @param title The title of this window
      * @param defaultWindow Create default (empty) window. (non-default = chat frame)
      * @param icon The icon to use
+     * @param parser Command parser to use for this window
      */
-    public DCCFrame(final DCCPlugin plugin, final String title, final String icon, final boolean defaultWindow) {
-        super(icon, title, title, IdentityManager.getGlobalConfig());
+    public DCCFrame(final DCCPlugin plugin, final String title, final String icon,
+            final boolean defaultWindow, final CommandParser parser) {
+        super(icon, title, title, IdentityManager.getGlobalConfig(), parser);
         this.plugin = plugin;
 
         if (defaultWindow) {

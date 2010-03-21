@@ -633,7 +633,7 @@ class PlaceholderDCCFrame extends DCCFrame {
      * @param plugin Parent plugin
      */
     public PlaceholderDCCFrame(final DCCPlugin plugin) {
-        super(plugin, "DCCs", "dcc");
+        super(plugin, "DCCs", "dcc", DCCCommandParser.getDCCCommandParser());
     }
 
     @Override
