@@ -76,7 +76,7 @@ public final class NowPlayingCommand extends ChatCommand implements IntelligentC
                     sendLine(origin, isSilent, FORMAT_ERROR, "Source not found.");
                 } else {
                     if (source.getState() != MediaSourceState.CLOSED) {
-                        target.getFrame().getCommandParser().parseCommand(origin,
+                        target.getCommandParser().parseCommand(origin,
                                 getInformation(source, args.getArgumentsAsString(2)));
                     } else {
                         sendLine(origin, isSilent, FORMAT_ERROR, "Source is not running.");
@@ -88,7 +88,7 @@ public final class NowPlayingCommand extends ChatCommand implements IntelligentC
             }
         } else {
             if (parent.hasRunningSource()) {
-                target.getFrame().getCommandParser().parseCommand(origin,
+                target.getCommandParser().parseCommand(origin,
                         getInformation(parent.getBestSource(), args.
                         getArgumentsAsString(0)));
             } else {
