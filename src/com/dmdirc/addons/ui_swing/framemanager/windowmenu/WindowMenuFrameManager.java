@@ -161,7 +161,7 @@ public final class WindowMenuFrameManager extends JMenu implements
                     public void run() {
                         setObject(new FrameContainerMenuItem(window,
                                 WindowMenuFrameManager.this));
-                    }
+                        }
                 });
         items.put(window, item);
         final int index = getIndex(window, this);
@@ -403,9 +403,6 @@ public final class WindowMenuFrameManager extends JMenu implements
                     }
                 });
         for (int i = count; i < menuItemCount; i++) {
-            if (!(menu.getMenuComponent(i) instanceof FrameContainerMenuInterface)) {
-                continue;
-            }
             final int index = i;
             final Component component = UIUtilities.invokeAndWait(
                     new ReturnableThread<Component>() {
@@ -415,6 +412,9 @@ public final class WindowMenuFrameManager extends JMenu implements
                             setObject(menu.getMenuComponent(index));
                         }
                     });
+            if (!(component instanceof FrameContainerMenuInterface)) {
+                continue;
+            }
             final FrameContainer child = ((FrameContainerMenuInterface) component).getFrame();
             if (sortBefore(newChild, child)) {
                 return i;
@@ -426,7 +426,14 @@ public final class WindowMenuFrameManager extends JMenu implements
             }
         }
 
-        return menu.getMenuComponentCount();
+        return UIUtilities.invokeAndWait(new ReturnableThread<Integer>() {
+
+            /** {@inheritDoc} */
+            @Override
+            public void run() {
+                setObject(menu.getMenuComponentCount());
+            }
+        });
     }
 
     /**
