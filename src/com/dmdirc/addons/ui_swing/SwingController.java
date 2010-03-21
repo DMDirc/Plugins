@@ -194,8 +194,14 @@ public final class SwingController extends Plugin implements Serializable,
         return statusBar;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     *
+     * @deprecated Controllers should listen for window events using a
+     * {@link FrameListener} and create windows as needed.
+     */
     @Override
+    @Deprecated
     public ChannelWindow getChannel(final Channel channel) {
         return UIUtilities.invokeAndWait(new ReturnableThread<ChannelFrame>() {
 
@@ -207,8 +213,14 @@ public final class SwingController extends Plugin implements Serializable,
         });
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     *
+     * @deprecated Controllers should listen for window events using a
+     * {@link FrameListener} and create windows as needed.
+     */
     @Override
+    @Deprecated
     public ServerWindow getServer(final Server server) {
         return UIUtilities.invokeAndWait(new ReturnableThread<ServerFrame>() {
 
@@ -220,8 +232,14 @@ public final class SwingController extends Plugin implements Serializable,
         });
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     *
+     * @deprecated Controllers should listen for window events using a
+     * {@link FrameListener} and create windows as needed.
+     */
     @Override
+    @Deprecated
     public QueryWindow getQuery(final Query query) {
         return UIUtilities.invokeAndWait(new ReturnableThread<QueryFrame>() {
 
@@ -233,8 +251,14 @@ public final class SwingController extends Plugin implements Serializable,
         });
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     *
+     * @deprecated Controllers should listen for window events using a
+     * {@link FrameListener} and create windows as needed.
+     */
     @Override
+    @Deprecated
     public Window getWindow(final FrameContainer<?> owner) {
         return UIUtilities.invokeAndWait(new ReturnableThread<CustomFrame>() {
 
@@ -246,8 +270,14 @@ public final class SwingController extends Plugin implements Serializable,
         });
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     *
+     * @deprecated Controllers should listen for window events using a
+     * {@link FrameListener} and create windows as needed.
+     */
     @Override
+    @Deprecated
     public InputWindow getInputWindow(final WritableFrameContainer<?> owner) {
         LOGGER.finest("getInputWindow()");
 
