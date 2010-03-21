@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_swing.framemanager.tree;
 
 import com.dmdirc.FrameContainer;
+import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.interfaces.FrameInfoListener;
@@ -33,6 +34,7 @@ import com.dmdirc.logger.Logger;
 import com.dmdirc.ui.interfaces.FrameManager;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.ui.WindowManager;
+import com.dmdirc.ui.interfaces.UIController;
 
 import java.awt.Color;
 import java.awt.Rectangle;
@@ -68,26 +70,17 @@ public final class TreeFrameManager implements FrameManager,
      */
     private static final long serialVersionUID = 5;
     /** display tree. */
-    private final Tree tree;
+    private Tree tree;
     /** data model. */
-    private final TreeViewModel model;
+    private TreeViewModel model;
     /** node storage, used for adding and deleting nodes correctly. */
     private final Map<FrameContainer<?>, TreeViewNode> nodes;
+    /** UI Controller. */
+    private SwingController controller;
 
     /** creates a new instance of the TreeFrameManager. */
     public TreeFrameManager() {
         nodes = new HashMap<FrameContainer<?>, TreeViewNode>();
-        model = new TreeViewModel(new TreeViewNode(null, null));
-        tree = new Tree(this, model);
-
-        tree.setCellRenderer(new TreeViewTreeCellRenderer(this));
-        tree.setVisible(true);
-
-        IdentityManager.getGlobalConfig().addChangeListener("treeview", this);
-        IdentityManager.getGlobalConfig().addChangeListener("ui",
-                "backgroundcolour", this);
-        IdentityManager.getGlobalConfig().addChangeListener("ui",
-                "foregroundcolour", this);
     }
 
     /** {@inheritDoc} */
@@ -120,6 +113,37 @@ public final class TreeFrameManager implements FrameManager,
                 parent.setFocusable(false);
 
                 setColours();
+            }
+        });
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setController(final UIController controller) {
+        if (!(controller instanceof SwingController)) {
+            throw new IllegalArgumentException("Controller must be an instance "
+                    + "of SwingController");
+        }
+        this.controller = (SwingController) controller;
+
+        UIUtilities.invokeLater(new Runnable() {
+
+            @Override
+            public void run() {
+                model = new TreeViewModel(new TreeViewNode(null, null));
+                tree = new Tree(TreeFrameManager.this, model, 
+                        TreeFrameManager.this.controller.getWindowFactory());
+
+                tree.setCellRenderer(new TreeViewTreeCellRenderer(
+                        TreeFrameManager.this));
+                tree.setVisible(true);
+
+                IdentityManager.getGlobalConfig().addChangeListener("treeview",
+                        TreeFrameManager.this);
+                IdentityManager.getGlobalConfig().addChangeListener("ui",
+                        "backgroundcolour", TreeFrameManager.this);
+                IdentityManager.getGlobalConfig().addChangeListener("ui",
+                        "foregroundcolour", TreeFrameManager.this);
             }
         });
     }

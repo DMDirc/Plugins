@@ -23,6 +23,9 @@ package com.dmdirc.addons.ui_swing.framemanager.buttonbar;
 
 import com.dmdirc.FrameContainer;
 import com.dmdirc.FrameContainerComparator;
+import com.dmdirc.addons.ui_swing.SwingController;
+import com.dmdirc.addons.ui_swing.SwingWindowFactory;
+import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.interfaces.FrameInfoListener;
 import com.dmdirc.interfaces.NotificationListener;
@@ -30,6 +33,7 @@ import com.dmdirc.interfaces.SelectionListener;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.interfaces.FrameManager;
 import com.dmdirc.ui.interfaces.FramemanagerPosition;
+import com.dmdirc.ui.interfaces.UIController;
 import com.dmdirc.ui.interfaces.Window;
 import com.dmdirc.util.MapList;
 
@@ -93,6 +97,8 @@ public final class ButtonBar implements FrameManager, ActionListener,
     private int buttonWidth = 0;
     /** The height of buttons. */
     private int buttonHeight = 25;
+    /** UI Controller. */
+    private SwingWindowFactory controller;
 
     /** Creates a new instance of DummyFrameManager. */
     public ButtonBar() {
@@ -127,6 +133,16 @@ public final class ButtonBar implements FrameManager, ActionListener,
         parent.setLayout(new MigLayout("ins 0"));
         parent.add(scrollPane);
         parent.addComponentListener(this);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setController(final UIController controller) {
+        if (!(controller instanceof SwingController)) {
+            throw new IllegalArgumentException("Controller must be an instance "
+                    + "of SwingController");
+        }
+        this.controller = ((SwingController) controller).getWindowFactory();
     }
 
     /**
@@ -235,7 +251,7 @@ public final class ButtonBar implements FrameManager, ActionListener,
     public void actionPerformed(final ActionEvent e) {
         for (Map.Entry<FrameContainer<?>, JToggleButton> entry : buttons.entrySet()) {
             if (entry.getValue().equals(e.getSource())) {
-                if (entry.getKey().getFrame().equals(activeWindow)) {
+                if (controller.getSwingWindow(entry.getKey()).equals(activeWindow)) {
                     entry.getValue().setSelected(true);
                 }
                 entry.getKey().activateFrame();
@@ -301,7 +317,7 @@ public final class ButtonBar implements FrameManager, ActionListener,
     /** {@inheritDoc} */
     @Override
     public void selectionChanged(final FrameContainer<?> window) {
-        activeWindow = window.getFrame();
+        activeWindow = (TextFrame) controller.getSwingWindow(window);
         if (selected != null && buttons.containsKey(selected)) {
             buttons.get(selected).setSelected(false);
         }
