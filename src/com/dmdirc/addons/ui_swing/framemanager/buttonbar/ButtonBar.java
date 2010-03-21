@@ -89,7 +89,9 @@ public final class ButtonBar implements FrameManager, ActionListener,
     /** The number of buttons to render per {cell,row}. */
     private int maxButtons = Integer.MAX_VALUE;
     /** The width of buttons. */
-    private int buttonWidth;
+    private int buttonWidth = 0;
+    /** The height of buttons. */
+    private int buttonHeight = 25;
 
     /** Creates a new instance of DummyFrameManager. */
     public ButtonBar() {
@@ -112,13 +114,6 @@ public final class ButtonBar implements FrameManager, ActionListener,
 
         parent.setLayout(new MigLayout());
         parent.add(panel);
-
-        buttonWidth = position.isHorizontal() ? 150 : (parent.getWidth() - UIUtilities.SMALL_BORDER * 3) / cells;
-
-        if (position.isHorizontal()) {
-            maxButtons = parent.getWidth() / (buttonWidth + UIUtilities.SMALL_BORDER * 2);
-        }
-
         parent.addComponentListener(this);
     }
 
@@ -129,15 +124,13 @@ public final class ButtonBar implements FrameManager, ActionListener,
         panel.removeAll();
 
         for (Map.Entry<FrameContainer, List<FrameContainer>> entry : windows.entrySet()) {
-            buttons.get(entry.getKey()).setPreferredSize(new Dimension(buttonWidth, 25));
-            buttons.get(entry.getKey()).setMinimumSize(new Dimension(buttonWidth, 25));
+            buttons.get(entry.getKey()).setPreferredSize(new Dimension(buttonWidth, buttonHeight));
             panel.add(buttons.get(entry.getKey()));
 
             Collections.sort(entry.getValue(), new FrameContainerComparator());
 
             for (FrameContainer child : entry.getValue()) {
-                buttons.get(child).setPreferredSize(new Dimension(buttonWidth, 25));
-                buttons.get(child).setMinimumSize(new Dimension(buttonWidth, 25));
+                buttons.get(child).setPreferredSize(new Dimension(buttonWidth, buttonHeight));
                 panel.add(buttons.get(child));
             }
         }
@@ -156,9 +149,10 @@ public final class ButtonBar implements FrameManager, ActionListener,
 
         button.addActionListener(this);
         button.setHorizontalAlignment(SwingConstants.LEFT);
+        button.setMinimumSize(new Dimension(0,buttonHeight));
         button.setMargin(new Insets(0, 0, 0, 0));
-
         buttons.put(source, button);
+
     }
 
     /** {@inheritDoc} */
@@ -177,6 +171,7 @@ public final class ButtonBar implements FrameManager, ActionListener,
     @Override
     public void addWindow(final FrameContainer window, final boolean focus) {
         windows.add(window);
+        //This window is a root window
         addButton(window);
 
         relayout();
@@ -201,6 +196,7 @@ public final class ButtonBar implements FrameManager, ActionListener,
     public void addWindow(final FrameContainer parent,
             final FrameContainer window, final boolean focus) {
         windows.add(parent, window);
+        //This window has a parent Window
         addButton(window);
 
         relayout();
@@ -246,11 +242,12 @@ public final class ButtonBar implements FrameManager, ActionListener,
     @Override
     public void componentResized(final ComponentEvent e) {
         buttonWidth = position.isHorizontal() ? 150 : (parent.getWidth() - UIUtilities.SMALL_BORDER * 3) / cells;
-
+        
         if (position.isHorizontal()) {
             maxButtons = parent.getWidth() / (buttonWidth + UIUtilities.SMALL_BORDER * 2);
+        } else {
+            maxButtons = parent.getHeight() / (buttonHeight + UIUtilities.SMALL_BORDER * 2);
         }
-
         relayout();
     }
 
