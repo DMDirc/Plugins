@@ -30,6 +30,7 @@ import com.dmdirc.addons.ui_swing.components.TreeScroller;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
+import com.dmdirc.ui.interfaces.Window;
 
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
@@ -110,13 +111,13 @@ public class Tree extends JTree implements MouseMotionListener,
                             new IllegalArgumentException("Last component == null"));
                     return;
                 }
-                if (((TreeViewNode) path.getLastPathComponent()).getFrameContainer() == null) {
+                if (((TreeViewNode) path.getLastPathComponent()).getWindow() == null) {
                     Logger.appError(ErrorLevel.HIGH, "Unable to change focus",
                             new IllegalArgumentException("Frame is null"));
                     return;
                 }
                 super.setPath(path);
-                ((TreeViewNode) path.getLastPathComponent()).getFrameContainer().
+                ((TreeViewNode) path.getLastPathComponent()).getWindow().
                         activateFrame();
             }
         };
@@ -193,7 +194,7 @@ public class Tree extends JTree implements MouseMotionListener,
             final TreeViewNode node = getNodeForLocation(e.getX(), e.getY());
             if (node != null) {
                 ((TreeViewNode) new TreePath(node.getPath()).
-                        getLastPathComponent()).getFrameContainer().
+                        getLastPathComponent()).getWindow().
                         activateFrame();
             }
         }
@@ -232,7 +233,7 @@ public class Tree extends JTree implements MouseMotionListener,
             final TreePath selectedPath = getPathForLocation(e.getX(), e.getY());
             if (selectedPath != null) {
                 ((TreeViewNode) selectedPath.getLastPathComponent()).
-                        getFrameContainer().activateFrame();
+                        getWindow().activateFrame();
             }
         }
         processMouseEvents(e);
@@ -277,26 +278,38 @@ public class Tree extends JTree implements MouseMotionListener,
         final TreePath localPath = getPathForLocation(e.getX(), e.getY());
         if (localPath != null) {
             if (e.isPopupTrigger()) {
-                final TextFrame frame = (TextFrame) ((TreeViewNode) localPath.
-                        getLastPathComponent()).getFrameContainer().
-                        getFrame();
+                TextFrame frame = null;
+
+                for (Window window : ((TreeViewNode) localPath.
+                        getLastPathComponent()).getWindow().getWindows()) {
+                    if (window instanceof TextFrame) {
+                        frame = (TextFrame) window;
+                        break;
+                    }
+                }
+
+                if (frame == null) {
+                    return;
+                }
+
                 final JPopupMenu popupMenu = frame.getPopupMenu(null, "");
                 frame.addCustomPopupItems(popupMenu);
                 if (popupMenu.getComponentCount() > 0) {
                     popupMenu.addSeparator();
                 }
-                    final TreeViewNodeMenuItem moveUp =
-                            new TreeViewNodeMenuItem("Move Up", "Up",
-                            (TreeViewNode) localPath.getLastPathComponent());
-                    final TreeViewNodeMenuItem moveDown =
-                            new TreeViewNodeMenuItem("Move Down", "Down",
-                            (TreeViewNode) localPath.getLastPathComponent());
 
-                    moveUp.addActionListener(this);
-                    moveDown.addActionListener(this);
+                final TreeViewNodeMenuItem moveUp =
+                        new TreeViewNodeMenuItem("Move Up", "Up",
+                        (TreeViewNode) localPath.getLastPathComponent());
+                final TreeViewNodeMenuItem moveDown =
+                        new TreeViewNodeMenuItem("Move Down", "Down",
+                        (TreeViewNode) localPath.getLastPathComponent());
 
-                    popupMenu.add(moveUp);
-                    popupMenu.add(moveDown);
+                moveUp.addActionListener(this);
+                moveDown.addActionListener(this);
+
+                popupMenu.add(moveUp);
+                popupMenu.add(moveDown);
                 popupMenu.add(new JMenuItem(new CloseFrameContainerAction(frame.
                         getContainer())));
                 popupMenu.show(this, e.getX(), e.getY());

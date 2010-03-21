@@ -64,7 +64,7 @@ public final class PopupCommand extends ServerCommand {
 
     /** {@inheritDoc} */
     @Override
-    public void execute(final FrameContainer origin, final Server server,
+    public void execute(final FrameContainer<?> origin, final Server server,
             final boolean isSilent, final CommandArguments args) {
         showPopup("DMDirc", args.getArgumentsAsString());
     }

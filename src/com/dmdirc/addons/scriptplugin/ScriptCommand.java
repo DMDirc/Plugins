@@ -58,7 +58,8 @@ public final class ScriptCommand extends GlobalCommand implements IntelligentCom
         
     /** {@inheritDoc} */
     @Override
-    public void execute(final FrameContainer origin, final boolean isSilent, final CommandArguments commandArgs) {
+    public void execute(final FrameContainer<?> origin, final boolean isSilent,
+            final CommandArguments commandArgs) {
         final String[] args = commandArgs.getArguments();
     
         if (args.length > 0 && (args[0].equalsIgnoreCase("rehash") || args[0].equalsIgnoreCase("reload"))) {

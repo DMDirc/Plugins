@@ -36,8 +36,8 @@ public class DummyQueryWindow extends DummyInputWindow implements QueryWindow {
      * 
      * @param owner The window that owns this one
      */
-    public DummyQueryWindow(final WritableFrameContainer owner) {
-        super(owner, owner.getServer().getFrame().getCommandParser());
+    public DummyQueryWindow(final WritableFrameContainer<? extends QueryWindow> owner) {
+        super(owner, owner.getCommandParser());
     }
 
 }

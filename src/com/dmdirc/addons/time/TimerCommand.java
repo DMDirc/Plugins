@@ -46,7 +46,7 @@ public final class TimerCommand extends GlobalCommand implements IntelligentComm
     
     /** {@inheritDoc} */
     @Override
-    public void execute(final FrameContainer origin, final boolean isSilent,
+    public void execute(final FrameContainer<?> origin, final boolean isSilent,
             final CommandArguments args) {
         if (args.getArguments().length < 3) {
             doUsage(origin, isSilent);
@@ -73,7 +73,7 @@ public final class TimerCommand extends GlobalCommand implements IntelligentComm
      * @param origin The window that the command was entered in
      * @param isSilent Whether this command is being silenced or not
      */
-    private void doUsage(final FrameContainer origin, final boolean isSilent) {
+    private void doUsage(final FrameContainer<?> origin, final boolean isSilent) {
         showUsage(origin, isSilent, "timer", "<repetitions> <interval> <command>");
     }
     

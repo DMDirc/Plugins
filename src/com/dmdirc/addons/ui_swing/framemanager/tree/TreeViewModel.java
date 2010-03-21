@@ -101,7 +101,7 @@ public class TreeViewModel extends DefaultTreeModel {
      * @return index where new node is to be inserted.
      */
     private int getIndex(final TreeViewNode newChild, final TreeViewNode parent) {
-        if (newChild.getFrameContainer() instanceof GlobalWindow) {
+        if (newChild.getWindow() instanceof GlobalWindow) {
             return 0;
         }
 
@@ -139,8 +139,8 @@ public class TreeViewModel extends DefaultTreeModel {
      */
     private boolean sortBefore(final TreeViewNode newChild,
             final TreeViewNode child) {
-        return comparator.compare(newChild.getFrameContainer(), child.
-                getFrameContainer()) <= -1;
+        return comparator.compare(newChild.getWindow(), child.
+                getWindow()) <= -1;
     }
 
     /**
@@ -154,8 +154,8 @@ public class TreeViewModel extends DefaultTreeModel {
      */
     private boolean sortAfter(final TreeViewNode newChild,
             final TreeViewNode child) {
-        return comparator.compare(newChild.getFrameContainer(), child.
-                getFrameContainer()) >= 1;
+        return comparator.compare(newChild.getWindow(), child.
+                getWindow()) >= 1;
     }
 
     /**

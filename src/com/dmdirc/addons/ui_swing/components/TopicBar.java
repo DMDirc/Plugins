@@ -104,7 +104,7 @@ public class TopicBar extends JComponent implements ActionListener,
      * @param channelFrame Parent channel frame
      */
     public TopicBar(final ChannelFrame channelFrame) {
-        this.channel = channelFrame.getChannel();
+        this.channel = (Channel) channelFrame.getContainer();
         controller = channelFrame.getController();
         topicText = new TextPaneInputField();
         topicLengthMax = channel.getMaxTopicLength();

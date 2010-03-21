@@ -98,7 +98,7 @@ public class MenuBar extends JMenuBar implements ActionListener, MenuListener {
         add(new WindowMenuFrameManager(controller));
         initHelpMenu();
         add(Box.createHorizontalGlue(), "growx, pushx");
-        add(new MDIBar(mainFrame));
+        add(new MDIBar(controller, mainFrame));
         add(Box.createHorizontalStrut(PlatformDefaults.getPanelInsets(1).getUnit()));
 
         getActionMap().setParent(null);
@@ -270,7 +270,7 @@ public class MenuBar extends JMenuBar implements ActionListener, MenuListener {
         } else if (e.getActionCommand().equals("feedback")) {
             FeedbackDialog.showFeedbackDialog(mainFrame);
         } else if (e.getActionCommand().equals("ChannelSettings")) {
-            final FrameContainer activeWindow = WindowManager.getActiveWindow();
+            final FrameContainer<?> activeWindow = WindowManager.getActiveWindow();
             if (activeWindow instanceof Channel) {
                 controller.showChannelSettingsDialog(((Channel) activeWindow));
             }
@@ -305,7 +305,7 @@ public class MenuBar extends JMenuBar implements ActionListener, MenuListener {
     /** {@inheritDoc} */
     @Override
     public void menuSelected(final MenuEvent e) {
-        final FrameContainer activeWindow = WindowManager.getActiveWindow();
+        final FrameContainer<?> activeWindow = WindowManager.getActiveWindow();
 
         ssd.setEnabled(activeWindow != null && activeWindow.getServer() != null
                 && activeWindow.getServer().getState() == ServerState.CONNECTED);

@@ -49,29 +49,29 @@ public class DummyFrameManager implements FrameManager {
     
     /** {@inheritDoc} */
     @Override
-    public void addWindow(final FrameContainer window, final boolean focus) {
+    public void addWindow(final FrameContainer<?> window, final boolean focus) {
         Main.getUI().getStatusBar()
                 .setMessage("DummyFrameManager: addServer: " + window);
     }
     
     /** {@inheritDoc} */
     @Override
-    public void delWindow(final FrameContainer window) {
+    public void delWindow(final FrameContainer<?> window) {
         Main.getUI().getStatusBar()
                 .setMessage("DummyFrameManager: delServer: " + window);
     }
     
     /** {@inheritDoc} */
     @Override
-    public void addWindow(final FrameContainer parent, 
-            final FrameContainer window, final boolean focus) {
+    public void addWindow(final FrameContainer<?> parent,
+            final FrameContainer<?> window, final boolean focus) {
         Main.getUI().getStatusBar()
                 .setMessage("DummyFrameManager: addCustom: " + window + "@" + parent);
     }
     
     /** {@inheritDoc} */
     @Override
-    public void delWindow(final FrameContainer parent, final FrameContainer window) {
+    public void delWindow(final FrameContainer<?> parent, final FrameContainer<?> window) {
         Main.getUI().getStatusBar()
                 .setMessage("DummyFrameManager: delCustom: " + window + "@" + parent);
     }

@@ -28,10 +28,10 @@ import com.dmdirc.config.ConfigManager;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.ui.input.InputHandler;
 import com.dmdirc.ui.interfaces.InputWindow;
+import com.dmdirc.ui.interfaces.UIController;
 import com.dmdirc.util.StringTranscoder;
 
 import java.nio.charset.Charset;
-import java.util.Arrays;
 
 /**
  * Dummy input window, used for testing.
@@ -45,7 +45,7 @@ public class DummyInputWindow implements InputWindow {
     /** are we maximised? */
     private boolean maximised;
     /** Our container. */
-    private final WritableFrameContainer container;
+    private final WritableFrameContainer<? extends InputWindow> container;
     /** Our command parser. */
     private final CommandParser commandParser;
     
@@ -55,7 +55,7 @@ public class DummyInputWindow implements InputWindow {
      * @param owner Parent window
      * @param commandParser Parent command parser
      */
-    public DummyInputWindow(final WritableFrameContainer owner, 
+    public DummyInputWindow(final WritableFrameContainer<? extends InputWindow> owner,
             final CommandParser commandParser) {
         this.container = owner;
         this.commandParser = commandParser;
@@ -75,6 +75,7 @@ public class DummyInputWindow implements InputWindow {
     
     /** {@inheritDoc} */
     @Override
+    @Deprecated
     public void setAwayIndicator(final boolean isAway) {
         // Do nothing
     }
@@ -109,13 +110,14 @@ public class DummyInputWindow implements InputWindow {
     
     /** {@inheritDoc} */
     @Override
+    @Deprecated
     public ConfigManager getConfigManager() {
         return IdentityManager.getGlobalConfig();
     }
     
     /** {@inheritDoc} */
     @Override
-    public WritableFrameContainer getContainer() {
+    public WritableFrameContainer<? extends InputWindow> getContainer() {
         return container;
     }
     
@@ -133,6 +135,7 @@ public class DummyInputWindow implements InputWindow {
     
     /** {@inheritDoc} */
     @Override
+    @Deprecated
     public String getTitle() {
         return title;
     }
@@ -206,6 +209,12 @@ public class DummyInputWindow implements InputWindow {
     @Override
     public void activateFrame() {
         // Do nothing
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public UIController getController() {
+        return new DummyController();
     }
     
 }

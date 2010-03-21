@@ -49,7 +49,7 @@ public class CustomFrame extends TextFrame {
      * @param owner The frame container that owns this frame
      * @param controller Swing controller
      */
-    public CustomFrame(final FrameContainer owner, final SwingController controller) {
+    public CustomFrame(final SwingController controller, final FrameContainer<?> owner) {
         super(owner, controller);
 
         initComponents();

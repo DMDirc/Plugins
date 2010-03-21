@@ -28,7 +28,6 @@ import com.dmdirc.Main;
 import com.dmdirc.Query;
 import com.dmdirc.Server;
 import com.dmdirc.WritableFrameContainer;
-import com.dmdirc.commandparser.parsers.CommandParser;
 import com.dmdirc.config.prefs.PreferencesInterface;
 import com.dmdirc.plugins.Plugin;
 import com.dmdirc.ui.core.dialogs.sslcertificate.SSLCertificateDialogModel;
@@ -93,13 +92,13 @@ public final class DummyController extends Plugin implements UIController {
     
     /** {@inheritDoc} */
     @Override
-    public Window getWindow(final FrameContainer owner) {
+    public Window getWindow(final FrameContainer<?> owner) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
     
     /** {@inheritDoc} */
     @Override
-    public InputWindow getInputWindow(final WritableFrameContainer owner) {
+    public InputWindow getInputWindow(final WritableFrameContainer<?> owner) {
         return new DummyInputWindow(owner, owner.getCommandParser());
     }
     

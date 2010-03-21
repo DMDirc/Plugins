@@ -100,7 +100,7 @@ public final class NickColourPlugin extends Plugin implements ActionListener,
      */
     private void colourClient(final String network,
             final ChannelClientInfo client) {
-        final Map map = client.getMap();
+        final Map<Object, Object> map = client.getMap();
         final ClientInfo myself =
                 client.getClient().getParser().getLocalClient();
         final String nickOption1 = "color:"
@@ -151,8 +151,7 @@ public final class NickColourPlugin extends Plugin implements ActionListener,
      * @param textColour Text colour to be inserted
      * @param nickColour Nick colour to be inserted
      */
-    @SuppressWarnings("unchecked")
-    private void putColour(final Map map, final Color textColour,
+    private void putColour(final Map<Object, Object> map, final Color textColour,
             final Color nickColour) {
         if (settext && textColour != null) {
             map.put(ChannelClientProperty.TEXT_FOREGROUND, textColour);

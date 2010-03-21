@@ -72,11 +72,11 @@ public final class TreeFrameManager implements FrameManager,
     /** data model. */
     private final TreeViewModel model;
     /** node storage, used for adding and deleting nodes correctly. */
-    private final Map<FrameContainer, TreeViewNode> nodes;
+    private final Map<FrameContainer<?>, TreeViewNode> nodes;
 
     /** creates a new instance of the TreeFrameManager. */
     public TreeFrameManager() {
-        nodes = new HashMap<FrameContainer, TreeViewNode>();
+        nodes = new HashMap<FrameContainer<?>, TreeViewNode>();
         model = new TreeViewModel(new TreeViewNode(null, null));
         tree = new Tree(this, model);
 
@@ -126,27 +126,27 @@ public final class TreeFrameManager implements FrameManager,
 
     /** {@inheritDoc} */
     @Override
-    public void addWindow(final FrameContainer window, final boolean focus) {
+    public void addWindow(final FrameContainer<?> window, final boolean focus) {
         addWindow(model.getRootNode(), window);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void addWindow(final FrameContainer parent,
-            final FrameContainer window, final boolean focus) {
+    public void addWindow(final FrameContainer<?> parent,
+            final FrameContainer<?> window, final boolean focus) {
         addWindow(nodes.get(parent), window);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void delWindow(final FrameContainer parent,
-            final FrameContainer window) {
+    public void delWindow(final FrameContainer<?> parent,
+            final FrameContainer<?> window) {
         delWindow(window);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void delWindow(final FrameContainer window) {
+    public void delWindow(final FrameContainer<?> window) {
         UIUtilities.invokeAndWait(new Runnable() {
 
             /** {@inheritDoc} */
@@ -182,14 +182,14 @@ public final class TreeFrameManager implements FrameManager,
      * @param window Window to add
      */
     public void addWindow(final TreeViewNode parent,
-            final FrameContainer window) {
+            final FrameContainer<?> window) {
         UIUtilities.invokeAndWait(new Runnable() {
 
             /** {@inheritDoc} */
             @Override
             public void run() {
                 final TreeViewNode node =
-                        new TreeViewNode(new NodeLabel(window.getFrame()),
+                        new TreeViewNode(new NodeLabel(window),
                         window);
                 synchronized (nodes) {
                     nodes.put(window, node);
@@ -283,11 +283,9 @@ public final class TreeFrameManager implements FrameManager,
                 ((DefaultTreeModel) tree.getModel()).setRoot(new TreeViewNode(
                         null, null));
 
-                final FrameContainer[] rootWindows = WindowManager.getRootWindows();
-
-                for (FrameContainer window : rootWindows) {
+                for (FrameContainer<?> window : WindowManager.getRootWindows()) {
                     addWindow(window, false);
-                    final Collection<FrameContainer> childWindows = window.getChildren();
+                    final Collection<FrameContainer<?>> childWindows = window.getChildren();
                     for (FrameContainer childWindow : childWindows) {
                         addWindow(window, childWindow, false);
                     }

@@ -22,21 +22,19 @@
 
 package com.dmdirc.addons.dcc;
 
-import com.dmdirc.Main;
 import com.dmdirc.Server;
 import com.dmdirc.WritableFrameContainer;
 import com.dmdirc.addons.ui_swing.components.frames.InputTextFrame;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.addons.ui_swing.SwingController;
-import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.commandparser.PopupType;
 import com.dmdirc.commandparser.parsers.CommandParser;
 import com.dmdirc.commandparser.parsers.GlobalCommandParser;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.ui.WindowManager;
+import com.dmdirc.ui.input.TabCompleter;
 import com.dmdirc.ui.interfaces.InputWindow;
 
-import com.dmdirc.util.ReturnableThread;
 import java.awt.Container;
 
 import javax.swing.JPopupMenu;
@@ -44,14 +42,15 @@ import javax.swing.JPopupMenu;
 /**
  * This class links DCC objects to a window.
  *
+ * @param <T> The type of window which corresponds to this DCC frame
  * @author Shane 'Dataforce' McCormack
  */
-public abstract class DCCFrame extends WritableFrameContainer {
+public abstract class DCCFrame<T extends InputWindow> extends WritableFrameContainer<T> {
 
     /**
      * Empty Frame.
      */
-    class EmptyFrame extends InputTextFrame {
+    static class EmptyFrame extends InputTextFrame {
 
         /** A version number for this class. */
         private static final long serialVersionUID = 200711271;
@@ -61,8 +60,8 @@ public abstract class DCCFrame extends WritableFrameContainer {
          *
          * @param owner The frame container that owns this frame
          */
-        public EmptyFrame(final WritableFrameContainer owner) {
-            super(owner, (SwingController) Main.getUI());
+        public EmptyFrame(final SwingController controller, final WritableFrameContainer<?> owner) {
+            super(controller, owner);
             setTextPane(null);
             pack();
         }
@@ -109,9 +108,6 @@ public abstract class DCCFrame extends WritableFrameContainer {
 
     }
 
-    /** The Window we're using. */
-    protected InputWindow myWindow = null;
-
     /** The dcc plugin that owns this frame */
     protected final DCCPlugin plugin;
 
@@ -119,45 +115,18 @@ public abstract class DCCFrame extends WritableFrameContainer {
     private boolean windowClosing = false;
 
     /**
-     * Creates a new instance of DCCFrame with an empty window.
-     *
-     * @param plugin The DCCPlugin that owns this frame
-     * @param title The title of this window
-     * @param icon The icon to use
-     * @param parser Command parser to use for this window
-     */
-    public DCCFrame(final DCCPlugin plugin, final String title,
-            final String icon, final CommandParser parser) {
-        this(plugin, title, icon, true, parser);
-    }
-
-    /**
      * Creates a new instance of DCCFrame.
      *
      * @param plugin The DCCPlugin that owns this frame
      * @param title The title of this window
-     * @param defaultWindow Create default (empty) window. (non-default = chat frame)
      * @param icon The icon to use
+     * @param windowClass The class of window to use for this container
      * @param parser Command parser to use for this window
      */
     public DCCFrame(final DCCPlugin plugin, final String title, final String icon,
-            final boolean defaultWindow, final CommandParser parser) {
-        super(icon, title, title, IdentityManager.getGlobalConfig(), parser);
+            final Class<T> windowClass, final CommandParser parser) {
+        super(icon, title, title, windowClass, IdentityManager.getGlobalConfig(), parser);
         this.plugin = plugin;
-
-        if (defaultWindow) {
-            myWindow = UIUtilities.invokeAndWait(new ReturnableThread<EmptyFrame>() {
-
-                /** {@inheritDoc} */
-                @Override
-                public void run() {
-                    final EmptyFrame frame = new EmptyFrame(DCCFrame.this);
-                    setTitle(title);
-                    setObject(frame);
-                }
-
-            });
-        }
     }
 
     /**
@@ -181,16 +150,6 @@ public abstract class DCCFrame extends WritableFrameContainer {
     }
 
     /**
-     * Returns the internal frame associated with this object.
-     *
-     * @return The internal frame associated with this object
-     */
-    @Override
-    public InputWindow getFrame() {
-        return myWindow;
-    }
-
-    /**
      * Returns the content pane of the internal frame associated with this object.
      *
      * @return The content pane of the internal frame associated with this object
@@ -209,6 +168,12 @@ public abstract class DCCFrame extends WritableFrameContainer {
         return null;
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public TabCompleter getTabCompleter() {
+        return new TabCompleter();
+    }
+
     /**
      * Is the window closing?
      *
@@ -224,7 +189,7 @@ public abstract class DCCFrame extends WritableFrameContainer {
         windowClosing = true;
 
         // 1: Make the window non-visible
-        myWindow.setVisible(false);
+        getFrame().setVisible(false);
 
         // 2: Remove any callbacks or listeners
         // 3: Trigger any actions neccessary
@@ -241,7 +206,6 @@ public abstract class DCCFrame extends WritableFrameContainer {
     @Override
     public void windowClosed() {
         // 7: Remove any references to the window and parents
-        myWindow = null; // NOPMD
     }
 
 }

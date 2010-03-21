@@ -32,7 +32,6 @@ import com.dmdirc.plugins.Plugin;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.input.AdditionalTabTargets;
-import com.dmdirc.ui.interfaces.InputWindow;
 
 /**
  * The dcop command retrieves information from a dcop application.
@@ -51,7 +50,7 @@ public final class LoggingCommand extends ServerCommand implements IntelligentCo
 
     /** {@inheritDoc} */
     @Override
-    public void execute(final FrameContainer origin, final Server server,
+    public void execute(final FrameContainer<?> origin, final Server server,
                         final boolean isSilent, final CommandArguments args) {
         final PluginInfo pluginInfo = PluginManager.getPluginManager().getPluginInfoByName("logging");
         if (pluginInfo == null) {
@@ -75,7 +74,7 @@ public final class LoggingCommand extends ServerCommand implements IntelligentCo
                     sendLine(origin, isSilent, FORMAT_ERROR, "Plugin failed to reload.");
                 }
             } else if (args.getArguments()[0].equalsIgnoreCase("history")) {
-                if (!plugin.showHistory((InputWindow) origin.getFrame())) {
+                if (!plugin.showHistory(origin)) {
                     sendLine(origin, isSilent, FORMAT_ERROR, "Unable to open history for this window.");
                 }
             } else if (args.getArguments()[0].equalsIgnoreCase("help")) {
@@ -90,14 +89,7 @@ public final class LoggingCommand extends ServerCommand implements IntelligentCo
         }
     }
 
-    /**
-     * Returns a list of suggestions for the specified argument, given the list
-     * of previous arguments.
-     *
-     * @param arg The argument that is being completed
-     * @param previousArgs The contents of the previous arguments, if any
-     * @return A list of suggestions for the argument
-     */
+    /** {@inheritDoc} */
     @Override
     public AdditionalTabTargets getSuggestions(final int arg,
             final IntelligentCommandContext context) {

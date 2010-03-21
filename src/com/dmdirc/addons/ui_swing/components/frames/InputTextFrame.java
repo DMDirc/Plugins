@@ -98,8 +98,8 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
      * @param owner WritableFrameContainer owning this frame.
      * @param controller Swing controller
      */
-    public InputTextFrame(final WritableFrameContainer owner,
-            final SwingController controller) {
+    public InputTextFrame(final SwingController controller,
+            final WritableFrameContainer<? extends InputWindow> owner) {
         super(owner, controller);
 
         initComponents();
@@ -207,8 +207,8 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
      * @return This frame's container.
      */
     @Override
-    public WritableFrameContainer getContainer() {
-        return (WritableFrameContainer) super.getContainer();
+    public WritableFrameContainer<? extends InputWindow> getContainer() {
+        return (WritableFrameContainer<? extends InputWindow>) super.getContainer();
     }
 
     /**
@@ -229,6 +229,7 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
     public final void setInputHandler(final InputHandler newInputHandler) {
         this.inputHandler = newInputHandler;
         inputHandler.addValidationListener(inputField);
+        inputHandler.setTabCompleter(((WritableFrameContainer<?>) frameParent).getTabCompleter());
     }
 
     /**
@@ -264,6 +265,7 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
      * @param awayState away state
      */
     @Override
+    @Deprecated
     public void setAwayIndicator(final boolean awayState) {
         UIUtilities.invokeLater(new Runnable() {
 

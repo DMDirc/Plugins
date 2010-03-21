@@ -71,9 +71,9 @@ public final class ButtonBar implements FrameManager, ActionListener,
      */
     private static final long serialVersionUID = 3;
     /** A map of parent containers to their respective windows. */
-    private final MapList<FrameContainer, FrameContainer> windows;
+    private final MapList<FrameContainer<?>, FrameContainer<?>> windows;
     /** A map of containers to the buttons we're using for them. */
-    private final Map<FrameContainer, JToggleButton> buttons;
+    private final Map<FrameContainer<?>, JToggleButton> buttons;
     /** The position of this frame manager. */
     private final FramemanagerPosition position;
     /** The parent for the manager. */
@@ -81,7 +81,7 @@ public final class ButtonBar implements FrameManager, ActionListener,
     /** The panel used for our buttons. */
     private final JPanel panel;
     /** The currently selected window. */
-    private transient FrameContainer selected;
+    private transient FrameContainer<?> selected;
     /** Selected window. */
     private Window activeWindow;
     /** The number of buttons per row or column. */
@@ -95,8 +95,8 @@ public final class ButtonBar implements FrameManager, ActionListener,
 
     /** Creates a new instance of DummyFrameManager. */
     public ButtonBar() {
-        windows = new MapList<FrameContainer, FrameContainer>();
-        buttons = new HashMap<FrameContainer, JToggleButton>();
+        windows = new MapList<FrameContainer<?>, FrameContainer<?>>();
+        buttons = new HashMap<FrameContainer<?>, JToggleButton>();
         position = FramemanagerPosition.getPosition(
                 IdentityManager.getGlobalConfig().getOption("ui", "framemanagerPosition"));
 
@@ -123,13 +123,13 @@ public final class ButtonBar implements FrameManager, ActionListener,
     private void relayout() {
         panel.removeAll();
 
-        for (Map.Entry<FrameContainer, List<FrameContainer>> entry : windows.entrySet()) {
+        for (Map.Entry<FrameContainer<?>, List<FrameContainer<?>>> entry : windows.entrySet()) {
             buttons.get(entry.getKey()).setPreferredSize(new Dimension(buttonWidth, buttonHeight));
             panel.add(buttons.get(entry.getKey()));
 
             Collections.sort(entry.getValue(), new FrameContainerComparator());
 
-            for (FrameContainer child : entry.getValue()) {
+            for (FrameContainer<?> child : entry.getValue()) {
                 buttons.get(child).setPreferredSize(new Dimension(buttonWidth, buttonHeight));
                 panel.add(buttons.get(child));
             }
@@ -143,7 +143,7 @@ public final class ButtonBar implements FrameManager, ActionListener,
      *
      * @param source The Container to get title/icon info from
      */
-    private void addButton(final FrameContainer source) {
+    private void addButton(final FrameContainer<?> source) {
         final JToggleButton button = new JToggleButton(source.toString(),
                 IconManager.getIconManager().getIcon(source.getIcon()));
 
@@ -169,7 +169,7 @@ public final class ButtonBar implements FrameManager, ActionListener,
 
     /** {@inheritDoc} */
     @Override
-    public void addWindow(final FrameContainer window, final boolean focus) {
+    public void addWindow(final FrameContainer<?> window, final boolean focus) {
         windows.add(window);
         //This window is a root window
         addButton(window);
@@ -182,7 +182,7 @@ public final class ButtonBar implements FrameManager, ActionListener,
 
     /** {@inheritDoc} */
     @Override
-    public void delWindow(final FrameContainer window) {
+    public void delWindow(final FrameContainer<?> window) {
         windows.remove(window);
 
         relayout();
@@ -193,8 +193,8 @@ public final class ButtonBar implements FrameManager, ActionListener,
 
     /** {@inheritDoc} */
     @Override
-    public void addWindow(final FrameContainer parent,
-            final FrameContainer window, final boolean focus) {
+    public void addWindow(final FrameContainer<?> parent,
+            final FrameContainer<?> window, final boolean focus) {
         windows.add(parent, window);
         //This window has a parent Window
         addButton(window);
@@ -207,7 +207,7 @@ public final class ButtonBar implements FrameManager, ActionListener,
 
     /** {@inheritDoc} */
     @Override
-    public void delWindow(final FrameContainer parent, final FrameContainer window) {
+    public void delWindow(final FrameContainer<?> parent, final FrameContainer<?> window) {
         windows.remove(parent, window);
 
         relayout();
@@ -223,7 +223,7 @@ public final class ButtonBar implements FrameManager, ActionListener,
      */
     @Override
     public void actionPerformed(final ActionEvent e) {
-        for (Map.Entry<FrameContainer, JToggleButton> entry : buttons.entrySet()) {
+        for (Map.Entry<FrameContainer<?>, JToggleButton> entry : buttons.entrySet()) {
             if (entry.getValue().equals(e.getSource())) {
                 if (entry.getKey().getFrame().equals(activeWindow)) {
                     entry.getValue().setSelected(true);
@@ -283,7 +283,7 @@ public final class ButtonBar implements FrameManager, ActionListener,
 
     /** {@inheritDoc} */
     @Override
-    public void notificationSet(final FrameContainer window, final Color colour) {
+    public void notificationSet(final FrameContainer<?> window, final Color colour) {
         if (buttons.containsKey(window)) {
             buttons.get(window).setForeground(colour);
         }
@@ -291,13 +291,13 @@ public final class ButtonBar implements FrameManager, ActionListener,
 
     /** {@inheritDoc} */
     @Override
-    public void notificationCleared(final FrameContainer window) {
+    public void notificationCleared(final FrameContainer<?> window) {
         notificationSet(window, window.getNotification());
     }
 
     /** {@inheritDoc} */
     @Override
-    public void selectionChanged(final FrameContainer window) {
+    public void selectionChanged(final FrameContainer<?> window) {
         activeWindow = window.getFrame();
         if (selected != null && buttons.containsKey(selected)) {
             buttons.get(selected).setSelected(false);
@@ -312,19 +312,19 @@ public final class ButtonBar implements FrameManager, ActionListener,
 
     /** {@inheritDoc} */
     @Override
-    public void iconChanged(final FrameContainer window, final String icon) {
+    public void iconChanged(final FrameContainer<?> window, final String icon) {
         buttons.get(window).setIcon(IconManager.getIconManager().getIcon(icon));
     }
 
     /** {@inheritDoc} */
     @Override
-    public void nameChanged(final FrameContainer window, final String name) {
+    public void nameChanged(final FrameContainer<?> window, final String name) {
         buttons.get(window).setText(name);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void titleChanged(final FrameContainer window, final String title) {
+    public void titleChanged(final FrameContainer<?> window, final String title) {
         // Do nothing
     }
 }

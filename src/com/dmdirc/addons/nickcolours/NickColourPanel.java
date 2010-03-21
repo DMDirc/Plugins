@@ -210,7 +210,7 @@ public class NickColourPanel extends JPanel implements ActionListener,
         final DefaultTableModel model = ((DefaultTableModel) table.getModel());
 
         for (Object row : model.getDataVector()) {
-            final Vector vrow = (Vector) row;
+            final Vector<?> vrow = (Vector<?>) row;
 
             res.add(new Object[]{vrow.elementAt(0), vrow.elementAt(1), vrow.
                         elementAt(2), vrow.elementAt(3)});

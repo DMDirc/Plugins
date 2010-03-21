@@ -61,8 +61,8 @@ public final class NowPlayingCommand extends ChatCommand implements IntelligentC
     
     /** {@inheritDoc} */
     @Override
-    public void execute(final FrameContainer origin, final Server server,
-            final MessageTarget target, final boolean isSilent, final CommandArguments args) {
+    public void execute(final FrameContainer<?> origin, final Server server,
+            final MessageTarget<?> target, final boolean isSilent, final CommandArguments args) {
         if (args.getArguments().length > 0 && args.getArguments()[0]
                 .equalsIgnoreCase("--sources")) {
             doSourceList(origin, isSilent, args.getArgumentsAsString(1));
@@ -104,7 +104,7 @@ public final class NowPlayingCommand extends ChatCommand implements IntelligentC
      * @param isSilent Whether this command is being silenced
      * @param format Format to be passed to getInformation
      */
-    private void doSourceList(final FrameContainer origin, final boolean isSilent,
+    private void doSourceList(final FrameContainer<?> origin, final boolean isSilent,
             final String format) {
         final List<MediaSource> sources = parent.getSources();
         

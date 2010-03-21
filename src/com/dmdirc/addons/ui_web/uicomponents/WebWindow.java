@@ -33,6 +33,7 @@ import com.dmdirc.util.StringTranscoder;
 import com.dmdirc.addons.ui_web.DynamicRequestHandler;
 import com.dmdirc.addons.ui_web.Event;
 import com.dmdirc.addons.ui_web.Message;
+import com.dmdirc.ui.interfaces.UIController;
 
 import java.awt.Color;
 import java.awt.font.TextAttribute;
@@ -60,13 +61,13 @@ public class WebWindow implements Window {
     
     protected int myID = ++counter;
     
-    private final FrameContainer parent;
+    private final FrameContainer<?> parent;
     
     private List<String> messages = new ArrayList<String>();
     
     private String title;
     
-    public WebWindow(final FrameContainer parent) {
+    public WebWindow(final FrameContainer<?> parent) {
         super();
         
         this.parent = parent;
@@ -126,13 +127,14 @@ public class WebWindow implements Window {
 
     /** {@inheritDoc} */
     @Override
+    @Deprecated
     public ConfigManager getConfigManager() {
         return parent.getConfigManager();
     }
 
     /** {@inheritDoc} */
     @Override
-    public FrameContainer getContainer() {
+    public FrameContainer<?> getContainer() {
         return parent;
     }
 
@@ -150,6 +152,7 @@ public class WebWindow implements Window {
 
     /** {@inheritDoc} */
     @Override
+    @Deprecated
     public String getTitle() {
         return title;
     }
@@ -331,6 +334,13 @@ public class WebWindow implements Window {
     public void activateFrame() {
         //TODO FIXME
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public UIController getController() {
+        //TODO FIXME
+        return null;
     }
 
 }

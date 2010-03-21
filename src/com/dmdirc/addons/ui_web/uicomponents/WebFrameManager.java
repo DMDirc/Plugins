@@ -58,22 +58,22 @@ public class WebFrameManager implements FrameManager {
 
     /** {@inheritDoc} */
     @Override
-    public void addWindow(final FrameContainer window, final boolean focus) {
+    public void addWindow(final FrameContainer<?> window, final boolean focus) {
         DynamicRequestHandler.addEvent(new Event("newwindow", window.getFrame()));
         WebInterfaceUI.active = (WebWindow) window.getFrame();
     }
 
     /** {@inheritDoc} */
     @Override
-    public void delWindow(final FrameContainer window) {
+    public void delWindow(final FrameContainer<?> window) {
         //TODO FIXME
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     /** {@inheritDoc} */
     @Override
-    public void addWindow(final FrameContainer parent, 
-            final FrameContainer window, final boolean focus) {
+    public void addWindow(final FrameContainer<?> parent,
+            final FrameContainer<?> window, final boolean focus) {
         DynamicRequestHandler.addEvent(new Event("newchildwindow", new Object[]{
             parent.getFrame(), window.getFrame()
         }));
@@ -82,7 +82,7 @@ public class WebFrameManager implements FrameManager {
 
     /** {@inheritDoc} */
     @Override
-    public void delWindow(final FrameContainer parent, final FrameContainer window) {
+    public void delWindow(final FrameContainer<?> parent, final FrameContainer<?> window) {
         //TODO FIXME
         throw new UnsupportedOperationException("Not supported yet.");
     }

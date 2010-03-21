@@ -24,14 +24,14 @@ package com.dmdirc.addons.dcc;
 
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.addons.dcc.actions.DCCActions;
-import com.dmdirc.Main;
+import com.dmdirc.ui.interfaces.InputWindow;
 
 /**
  * This class links DCC Chat objects to a window.
  *
  * @author Shane 'Dataforce' McCormack
  */
-public class DCCChatWindow extends DCCFrame implements DCCChatHandler {
+public class DCCChatWindow extends DCCFrame<InputWindow> implements DCCChatHandler {
 
     /** The DCCChat object we are a window for */
     private final DCCChat dcc;
@@ -53,18 +53,16 @@ public class DCCChatWindow extends DCCFrame implements DCCChatHandler {
      */
     public DCCChatWindow(final DCCPlugin plugin, final DCCChat dcc,
             final String title, final String nick, final String targetNick) {
-        super(plugin, title, "dcc-chat-inactive", false,
+        super(plugin, title, "dcc-chat-inactive", InputWindow.class,
                 DCCCommandParser.getDCCCommandParser());
         this.dcc = dcc;
         dcc.setHandler(this);
         nickname = nick;
         otherNickname = targetNick;
 
-        myWindow = Main.getUI().getInputWindow(this);
         plugin.addWindow(this);
 
         setTitle(title);
-        myWindow.open();
     }
 
     /**

@@ -77,7 +77,7 @@ public class DCCCommandParser extends CommandParser {
      * @param args The arguments to the command
      */
     @Override
-    protected void executeCommand(final FrameContainer origin,
+    protected void executeCommand(final FrameContainer<?> origin,
             final boolean isSilent, final Command command, final CommandArguments args) {
         ((GlobalCommand) command).execute(origin, isSilent, args);
     }
@@ -91,13 +91,13 @@ public class DCCCommandParser extends CommandParser {
      * @param line The line input by the user
      */
     @Override
-    protected void handleNonCommand(final FrameContainer origin, final String line) {
-        ((WritableFrameContainer) origin).sendLine(line);
+    protected void handleNonCommand(final FrameContainer<?> origin, final String line) {
+        ((WritableFrameContainer<?>) origin).sendLine(line);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void setOwner(final FrameContainer owner) {
+    public void setOwner(final FrameContainer<?> owner) {
         // Don't care
     }
 

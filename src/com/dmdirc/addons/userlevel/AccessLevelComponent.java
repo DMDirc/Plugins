@@ -41,13 +41,13 @@ public class AccessLevelComponent implements ActionComponent {
 
     /** {@inheritDoc} */
     @Override    
-    public Class appliesTo() {
+    public Class<?> appliesTo() {
         return ClientInfo.class;
     }
 
     /** {@inheritDoc} */
     @Override    
-    public Class getType() {
+    public Class<?> getType() {
         return Integer.class;
     }
 

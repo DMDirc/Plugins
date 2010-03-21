@@ -157,13 +157,13 @@ public class WebInterfaceUI implements UIController {
 
     /** {@inheritDoc} */
     @Override
-    public Window getWindow(final FrameContainer owner) {
+    public Window getWindow(final FrameContainer<?> owner) {
         return new WebWindow(owner);
     }
 
     /** {@inheritDoc} */
     @Override
-    public InputWindow getInputWindow(final WritableFrameContainer owner) {
+    public InputWindow getInputWindow(final WritableFrameContainer<?> owner) {
         return new WebInputWindow(owner, owner.getCommandParser());
     }
 

@@ -23,6 +23,7 @@
 package com.dmdirc.addons.logging;
 
 import com.dmdirc.Channel;
+import com.dmdirc.FrameContainer;
 import com.dmdirc.Main;
 import com.dmdirc.Query;
 import com.dmdirc.Server;
@@ -45,8 +46,6 @@ import com.dmdirc.parser.interfaces.ChannelInfo;
 import com.dmdirc.parser.interfaces.ClientInfo;
 import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.plugins.Plugin;
-import com.dmdirc.ui.interfaces.InputWindow;
-import com.dmdirc.ui.interfaces.Window;
 import com.dmdirc.ui.messages.Styliser;
 
 import java.awt.Color;
@@ -298,7 +297,7 @@ public class LoggingPlugin extends Plugin implements ActionListener,
         switch (type) {
             case QUERY_OPENED:
                 if (autobackbuffer) {
-                    showBackBuffer(query.getFrame(), filename);
+                    showBackBuffer(query, filename);
                 }
 
                 appendLine(filename, "*** Query opened at: %s", openedAtFormat.format(new Date()));
@@ -353,7 +352,7 @@ public class LoggingPlugin extends Plugin implements ActionListener,
         switch (type) {
             case CHANNEL_OPENED:
                 if (autobackbuffer) {
-                    showBackBuffer(chan.getFrame(), filename);
+                    showBackBuffer(chan, filename);
                 }
 
                 appendLine(filename, "*** Channel opened at: %s", openedAtFormat.format(new Date()));
@@ -487,7 +486,7 @@ public class LoggingPlugin extends Plugin implements ActionListener,
      * @param frame The frame to add the backbuffer lines to
      * @param filename File to get backbuffer from
      */
-    protected void showBackBuffer(final Window frame, final String filename) {
+    protected void showBackBuffer(final FrameContainer<?> frame, final String filename) {
         if (frame == null) {
             Logger.userError(ErrorLevel.LOW, "Given a null frame");
             return;
@@ -804,16 +803,16 @@ public class LoggingPlugin extends Plugin implements ActionListener,
      * @param target The window whose history we're trying to open
      * @return True if the history is available, false otherwise
      */
-    protected boolean showHistory(final InputWindow target) {
+    protected boolean showHistory(final FrameContainer<?> target) {
         Object component;
 
-        if (target.getContainer() instanceof Channel) {
-            component = ((Channel) target.getContainer()).getChannelInfo();
-        } else if (target.getContainer() instanceof Query) {
-            final Parser parser = ((Query) target.getContainer()).getServer().getParser();
-            component = parser.getClient(((Query) target.getContainer()).getHost());
-        } else if (target.getContainer() instanceof Server) {
-            component = target.getContainer().getServer().getParser();
+        if (target instanceof Channel) {
+            component = ((Channel) target).getChannelInfo();
+        } else if (target instanceof Query) {
+            final Parser parser = ((Query) target).getServer().getParser();
+            component = parser.getClient(((Query) target).getHost());
+        } else if (target instanceof Server) {
+            component = ((Server) target).getParser();
         } else {
             // Unknown component
             return false;
@@ -838,7 +837,7 @@ public class LoggingPlugin extends Plugin implements ActionListener,
             return false;
         }
 
-        new HistoryWindow("History", reader, target.getContainer(), historyLines);
+        new HistoryWindow("History", reader, target, historyLines);
 
         return true;
     }

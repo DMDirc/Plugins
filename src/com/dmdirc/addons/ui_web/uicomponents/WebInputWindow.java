@@ -36,7 +36,7 @@ import java.util.Map;
  */
 public class WebInputWindow extends WebWindow implements InputWindow {
     
-    private final WritableFrameContainer parent;
+    private final WritableFrameContainer<?> parent;
     
     private final CommandParser commandparser;
     
@@ -45,7 +45,7 @@ public class WebInputWindow extends WebWindow implements InputWindow {
     private final Map<String, WebInputHandler> inputHandlers
             = new HashMap<String, WebInputHandler>();
 
-    public WebInputWindow(WritableFrameContainer parent, CommandParser parser) {
+    public WebInputWindow(WritableFrameContainer<?> parent, CommandParser parser) {
         super(parent);
         this.parent = parent;
         this.commandparser = parser;
@@ -98,13 +98,14 @@ public class WebInputWindow extends WebWindow implements InputWindow {
 
     /** {@inheritDoc} */
     @Override
+    @Deprecated
     public void setAwayIndicator(boolean isAway) {
         // Do nothing
     }
 
     /** {@inheritDoc} */
     @Override
-    public WritableFrameContainer getContainer() {
+    public WritableFrameContainer<?> getContainer() {
         return parent;
     }
 
