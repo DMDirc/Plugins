@@ -149,8 +149,7 @@ public class InputTextFrameTest {
     }
 
     protected void setupWindow(final ConfigManager configManager) {
-        final CustomInputFrame titf = new CustomInputFrame(owner,
-                GlobalCommandParser.getGlobalCommandParser(), controller);
+        final CustomInputFrame titf = new CustomInputFrame(owner, controller);
 
         owner.setTitle("testing123");
         owner.window = titf;
