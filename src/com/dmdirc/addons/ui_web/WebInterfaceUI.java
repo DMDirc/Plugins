@@ -42,7 +42,6 @@ import com.dmdirc.ui.WindowManager;
 import com.dmdirc.updater.Update;
 
 import com.dmdirc.addons.ui_web.uicomponents.WebChannelWindow;
-import com.dmdirc.addons.ui_web.uicomponents.WebFrameManager;
 import com.dmdirc.addons.ui_web.uicomponents.WebInputWindow;
 import com.dmdirc.addons.ui_web.uicomponents.WebMainWindow;
 import com.dmdirc.addons.ui_web.uicomponents.WebQueryWindow;
@@ -82,9 +81,7 @@ public class WebInterfaceUI implements UIController {
      * 
      * @param plugin The plugin which owns this Web UI
      */
-    public WebInterfaceUI(final WebInterfacePlugin plugin) {
-        WindowManager.addFrameListener(new WebFrameManager());
-        
+    public WebInterfaceUI(final WebInterfacePlugin plugin) {       
         final SecurityHandler sh = new SecurityHandler();
         final Constraint constraint = new Constraint();
         final ConstraintMapping cm = new ConstraintMapping();

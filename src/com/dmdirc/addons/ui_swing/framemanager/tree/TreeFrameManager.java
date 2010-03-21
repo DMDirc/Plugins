@@ -31,10 +31,11 @@ import com.dmdirc.interfaces.NotificationListener;
 import com.dmdirc.interfaces.SelectionListener;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
-import com.dmdirc.ui.interfaces.FrameManager;
+import com.dmdirc.addons.ui_swing.framemanager.FrameManager;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.interfaces.UIController;
+import com.dmdirc.ui.interfaces.Window;
 
 import java.awt.Color;
 import java.awt.Rectangle;
@@ -150,51 +151,41 @@ public final class TreeFrameManager implements FrameManager,
 
     /** {@inheritDoc} */
     @Override
-    public void addWindow(final FrameContainer<?> window, final boolean focus) {
-        addWindow(model.getRootNode(), window);
+    public void windowAdded(final Window parent, final Window window) {
+        if (parent == null) {
+            addWindow(model.getRootNode(), window.getContainer());
+        } else {
+            addWindow(nodes.get(parent.getContainer()), window.getContainer());
+        }
     }
 
     /** {@inheritDoc} */
     @Override
-    public void addWindow(final FrameContainer<?> parent,
-            final FrameContainer<?> window, final boolean focus) {
-        addWindow(nodes.get(parent), window);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void delWindow(final FrameContainer<?> parent,
-            final FrameContainer<?> window) {
-        delWindow(window);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void delWindow(final FrameContainer<?> window) {
+    public void windowDeleted(final Window parent, final Window window) {
         UIUtilities.invokeAndWait(new Runnable() {
 
             /** {@inheritDoc} */
             @Override
             public void run() {
-                if (nodes == null || nodes.get(window) == null) {
+                if (nodes == null || nodes.get(window.getContainer()) == null) {
                     return;
                 }
                 final DefaultMutableTreeNode node =
-                        nodes.get(window);
+                        nodes.get(window.getContainer());
                 if (node.getLevel() == 0) {
                     Logger.appError(ErrorLevel.MEDIUM,
                             "delServer triggered for root node" +
                             node.toString(),
                             new IllegalArgumentException());
                 } else {
-                    model.removeNodeFromParent(nodes.get(window));
+                    model.removeNodeFromParent(nodes.get(window.getContainer()));
                 }
                 synchronized (nodes) {
-                    nodes.remove(window);
+                    nodes.remove(window.getContainer());
                 }
-                window.removeSelectionListener(TreeFrameManager.this);
-                window.removeFrameInfoListener(TreeFrameManager.this);
-                window.removeNotificationListener(TreeFrameManager.this);
+                window.getContainer().removeSelectionListener(TreeFrameManager.this);
+                window.getContainer().removeFrameInfoListener(TreeFrameManager.this);
+                window.getContainer().removeNotificationListener(TreeFrameManager.this);
             }
         });
     }
@@ -308,10 +299,10 @@ public final class TreeFrameManager implements FrameManager,
                         null, null));
 
                 for (FrameContainer<?> window : WindowManager.getRootWindows()) {
-                    addWindow(window, false);
+                    addWindow(null, window);
                     final Collection<FrameContainer<?>> childWindows = window.getChildren();
                     for (FrameContainer childWindow : childWindows) {
-                        addWindow(window, childWindow, false);
+                        addWindow(nodes.get(window), childWindow);
                     }
                 }
             }

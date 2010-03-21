@@ -32,8 +32,8 @@ import com.dmdirc.interfaces.FrameInfoListener;
 import com.dmdirc.interfaces.NotificationListener;
 import com.dmdirc.interfaces.SelectionListener;
 import com.dmdirc.ui.IconManager;
-import com.dmdirc.ui.interfaces.FrameManager;
-import com.dmdirc.ui.interfaces.FramemanagerPosition;
+import com.dmdirc.addons.ui_swing.framemanager.FrameManager;
+import com.dmdirc.addons.ui_swing.framemanager.FramemanagerPosition;
 import com.dmdirc.ui.interfaces.UIController;
 import com.dmdirc.ui.interfaces.Window;
 import com.dmdirc.util.MapList;
@@ -210,20 +210,26 @@ public final class ButtonBar implements FrameManager, ActionListener,
 
     /** {@inheritDoc} */
     @Override
-    public void addWindow(final FrameContainer<?> window, final boolean focus) {
+    public void windowAdded(final Window parent, final Window window) {
         UIUtilities.invokeLater(new Runnable() {
 
             /** {inheritDoc} */
             @Override
             public void run() {
-                windows.add(window);
-                //This window is a root window
-                addButton(window);
+                if (parent == null) {
+                    windows.add(window.getContainer());
+                    //This window is a root window
+                    addButton(window.getContainer());
+                } else {
+                    windows.add(parent.getContainer(), window.getContainer());
+                    //This window is a root window
+                    addButton(window.getContainer());
+                }
 
                 relayout();
-                window.addNotificationListener(ButtonBar.this);
-                window.addSelectionListener(ButtonBar.this);
-                window.addFrameInfoListener(ButtonBar.this);
+                window.getContainer().addNotificationListener(ButtonBar.this);
+                window.getContainer().addSelectionListener(ButtonBar.this);
+                window.getContainer().addFrameInfoListener(ButtonBar.this);
             }
 
         });
@@ -231,59 +237,24 @@ public final class ButtonBar implements FrameManager, ActionListener,
 
     /** {@inheritDoc} */
     @Override
-    public void delWindow(final FrameContainer<?> window) {
+    public void windowDeleted(final Window parent, final Window window) {
         UIUtilities.invokeLater(new Runnable() {
 
             /** {inheritDoc} */
             @Override
             public void run() {
-                windows.remove(window);
-                buttons.remove(window);
+                if (parent == null) {
+                    windows.remove(window.getContainer());
+                    buttons.remove(window.getContainer());
+                } else {
+                    windows.remove(parent.getContainer(), window.getContainer());
+                    buttons.remove(parent.getContainer());
+                }
 
                 relayout();
-                window.removeNotificationListener(ButtonBar.this);
-                window.removeFrameInfoListener(ButtonBar.this);
-                window.removeSelectionListener(ButtonBar.this);
-            }
-        });
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void addWindow(final FrameContainer<?> parent,
-            final FrameContainer<?> window, final boolean focus) {
-        UIUtilities.invokeLater(new Runnable() {
-
-            /** {inheritDoc} */
-            @Override
-            public void run() {
-                windows.add(parent, window);
-                //This window has a parent Window
-                addButton(window);
-
-                relayout();
-                window.addNotificationListener(ButtonBar.this);
-                window.addSelectionListener(ButtonBar.this);
-                window.addFrameInfoListener(ButtonBar.this);
-            }
-        });
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void delWindow(final FrameContainer<?> parent, final FrameContainer<?> window) {
-        UIUtilities.invokeLater(new Runnable() {
-
-            /** {inheritDoc} */
-            @Override
-            public void run() {
-                windows.remove(parent, window);
-                buttons.remove(window);
-
-                relayout();
-            window.removeNotificationListener(ButtonBar.this);
-            window.removeFrameInfoListener(ButtonBar.this);
-            window.removeSelectionListener(ButtonBar.this);
+                window.getContainer().removeNotificationListener(ButtonBar.this);
+                window.getContainer().removeFrameInfoListener(ButtonBar.this);
+                window.getContainer().removeSelectionListener(ButtonBar.this);
             }
         });
     }

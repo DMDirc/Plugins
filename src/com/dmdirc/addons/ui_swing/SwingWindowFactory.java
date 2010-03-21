@@ -170,28 +170,4 @@ public class SwingWindowFactory implements FrameListener {
             }
         });
     }
-
-    /**
-     * An interface for objects interested in Swing UI window events.
-     */
-    public static interface SwingWindowListener {
-
-        /**
-         * Called when a new window is added.
-         *
-         * @param parent The parent of the added window (may be null)
-         * @param window The window that was added
-         */
-        void windowAdded(final Window parent, final Window window);
-
-        /**
-         * Called when a new window was deleted.
-         *
-         * @param parent The parent of the added window (may be null)
-         * @param window The window that was deleted
-         */
-        void windowDeleted(final Window parent, final Window window);
-        
-    }
-
 }

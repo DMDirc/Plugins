@@ -32,14 +32,12 @@ import com.dmdirc.Main;
 import com.dmdirc.ServerManager;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionType;
-import com.dmdirc.addons.ui_swing.SwingWindowFactory.SwingWindowListener;
 import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.ui.IconManager;
-import com.dmdirc.ui.WindowManager;
-import com.dmdirc.ui.interfaces.FrameManager;
-import com.dmdirc.ui.interfaces.FramemanagerPosition;
+import com.dmdirc.addons.ui_swing.framemanager.FrameManager;
+import com.dmdirc.addons.ui_swing.framemanager.FramemanagerPosition;
 import com.dmdirc.ui.interfaces.MainWindow;
 import com.dmdirc.ui.interfaces.Window;
 import com.dmdirc.ui.CoreUIUtils;
@@ -365,10 +363,8 @@ public final class MainFrame extends JFrame implements WindowListener,
                     mainFrameManager = new TreeFrameManager();
                 }
                 mainFrameManager.setController(controller);
-
-                WindowManager.addFrameListener(mainFrameManager);
                 mainFrameManager.setParent(frameManagerPanel);
-
+                controller.getWindowFactory().addWindowListener(mainFrameManager);
                 controller.getWindowFactory().addWindowListener(MainFrame.this);
             }
         });
