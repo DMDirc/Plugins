@@ -25,6 +25,7 @@ package com.dmdirc.addons.ui_dummy;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.Main;
 import com.dmdirc.ui.interfaces.FrameManager;
+import com.dmdirc.ui.interfaces.UIController;
 
 import java.awt.Color;
 
@@ -86,6 +87,11 @@ public class DummyFrameManager implements FrameManager {
     @Override
     public boolean canPositionHorizontally() {
         return true;
+    }
+
+    @Override
+    public void setController(UIController controller) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
 }
