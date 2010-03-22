@@ -34,9 +34,9 @@ import com.dmdirc.interfaces.SelectionListener;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.addons.ui_swing.framemanager.FrameManager;
 import com.dmdirc.addons.ui_swing.framemanager.FramemanagerPosition;
+import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.interfaces.UIController;
 import com.dmdirc.ui.interfaces.Window;
-import com.dmdirc.util.MapList;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -46,8 +46,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.io.Serializable;
-import java.util.Collections;
-import java.util.List;
+import java.util.Collection;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -57,6 +56,7 @@ import javax.swing.JToggleButton;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 
+import net.miginfocom.layout.PlatformDefaults;
 import net.miginfocom.swing.MigLayout;
 
 /**
@@ -75,8 +75,6 @@ public final class ButtonBar implements FrameManager, ActionListener,
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 3;
-    /** A map of parent containers to their respective windows. */
-    private final MapList<FrameContainer<?>, FrameContainer<?>> windows;
     /** A map of containers to the buttons we're using for them. */
     private final Map<FrameContainer<?>, JToggleButton> buttons;
     /** The position of this frame manager. */
@@ -110,9 +108,9 @@ public final class ButtonBar implements FrameManager, ActionListener,
                 .HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants
                 .VERTICAL_SCROLLBAR_AS_NEEDED);
-        scrollPane.setMinimumSize(new Dimension(0,buttonHeight));
+        scrollPane.setMinimumSize(new Dimension(0,buttonHeight
+                + ((int) PlatformDefaults.getUnitValueX("related").getValue()) * 2));
 
-        windows = new MapList<FrameContainer<?>, FrameContainer<?>>();
         buttons = new TreeMap<FrameContainer<?>, JToggleButton>(
                 new FrameContainerComparator());
         position = FramemanagerPosition.getPosition(
@@ -133,6 +131,7 @@ public final class ButtonBar implements FrameManager, ActionListener,
      * Retreives button height.
      *
      * @return Button height
+     *
      * @since 0.6.4
      */
     public int getButtonHeight() {
@@ -168,25 +167,38 @@ public final class ButtonBar implements FrameManager, ActionListener,
     }
 
     /**
+     * Adds buttons for the collection of windows that is passed to it.
+     * This method also iterates through any children for each item in the
+     * collection.
+     *
+     * This method has no boundaries as to how many generations it can iterate
+     * through.
+     *
+     * @param windowCollection Collection of windows {@link FrameContainer}
+     *
+     * @author Simon Mott
+     * @since 0.6.4
+     */
+    private synchronized void insertButtons(Collection<FrameContainer<?>> windowCollection) {
+        for (FrameContainer<?> window : windowCollection) {
+            if (buttons.get(window) != null) {
+                buttons.get(window).setPreferredSize(new Dimension(
+                            buttonWidth, buttonHeight));
+                buttonPanel.add(buttons.get(window));
+                if (window.getChildren().size() > 0) {
+                    insertButtons(window.getChildren());
+                }
+            }
+        }
+    }
+    /**
      * Removes all buttons from the bar and readds them.
      */
-    private void relayout() {
+    private synchronized void relayout() {
         buttonPanel.removeAll();
 
-        for (Map.Entry<FrameContainer<?>, List<FrameContainer<?>>> entry : windows
-                .entrySet()) {
-
-            buttons.get(entry.getKey()).setPreferredSize(new Dimension(
-                    buttonWidth, buttonHeight));
-            buttonPanel.add(buttons.get(entry.getKey()));
-
-            Collections.sort(entry.getValue(), new FrameContainerComparator());
-
-            for (FrameContainer<?> child : entry.getValue()) {
-                buttons.get(child).setPreferredSize(new Dimension(
-                        buttonWidth, buttonHeight));
-                buttonPanel.add(buttons.get(child));
-            }
+        if (buttons.size() > 0) {
+            insertButtons(WindowManager.getRootWindows());
         }
         buttonPanel.validate();
     }
@@ -204,7 +216,9 @@ public final class ButtonBar implements FrameManager, ActionListener,
         button.setHorizontalAlignment(SwingConstants.LEFT);
         button.setMinimumSize(new Dimension(0,buttonHeight));
         button.setMargin(new Insets(0, 0, 0, 0));
-        buttons.put(source, button);
+        synchronized(buttons) {
+            buttons.put(source, button);
+        }
     }
 
     /** {@inheritDoc} */
@@ -224,18 +238,10 @@ public final class ButtonBar implements FrameManager, ActionListener,
     public void windowAdded(final Window parent, final Window window) {
         UIUtilities.invokeLater(new Runnable() {
 
-            /** {inheritDoc} */
+            /** {@inheritDoc} */
             @Override
             public void run() {
-                if (parent == null) {
-                    windows.add(window.getContainer());
-                    //This window is a root window
-                    addButton(window.getContainer());
-                } else {
-                    windows.add(parent.getContainer(), window.getContainer());
-                    //This window is a root window
-                    addButton(window.getContainer());
-                }
+                addButton(window.getContainer());
 
                 relayout();
                 window.getContainer().addNotificationListener(ButtonBar.this);
@@ -251,15 +257,11 @@ public final class ButtonBar implements FrameManager, ActionListener,
     public void windowDeleted(final Window parent, final Window window) {
         UIUtilities.invokeLater(new Runnable() {
 
-            /** {inheritDoc} */
+            /** {@inheritDoc} */
             @Override
             public void run() {
-                if (parent == null) {
-                    windows.remove(window.getContainer());
+                synchronized(buttons) {
                     buttons.remove(window.getContainer());
-                } else {
-                    windows.remove(parent.getContainer(), window.getContainer());
-                    buttons.remove(parent.getContainer());
                 }
 
                 relayout();
@@ -276,7 +278,7 @@ public final class ButtonBar implements FrameManager, ActionListener,
      * @param e The action event associated with this action
      */
     @Override
-    public void actionPerformed(final ActionEvent e) {
+    public synchronized void actionPerformed(final ActionEvent e) {
         for (Map.Entry<FrameContainer<?>, JToggleButton> entry : buttons.entrySet()) {
             if (entry.getValue().equals(e.getSource())) {
                 final TextFrame frame = (TextFrame) controller.getSwingWindow(
@@ -284,7 +286,6 @@ public final class ButtonBar implements FrameManager, ActionListener,
                 if (frame != null && frame.equals(activeWindow)) {
                     entry.getValue().setSelected(true);
                 }
-
                 entry.getKey().activateFrame();
             }
         }
@@ -333,7 +334,7 @@ public final class ButtonBar implements FrameManager, ActionListener,
 
     /** {@inheritDoc} */
     @Override
-    public void notificationSet(final FrameContainer<?> window, final Color colour) {
+    public synchronized void notificationSet(final FrameContainer<?> window, final Color colour) {
         if (buttons.containsKey(window)) {
             buttons.get(window).setForeground(colour);
         }
@@ -347,7 +348,7 @@ public final class ButtonBar implements FrameManager, ActionListener,
 
     /** {@inheritDoc} */
     @Override
-    public void selectionChanged(final FrameContainer<?> window) {
+    public synchronized void selectionChanged(final FrameContainer<?> window) {
         activeWindow = (TextFrame) controller.getSwingWindow(window);
         if (selected != null && buttons.containsKey(selected)) {
             buttons.get(selected).setSelected(false);
@@ -362,13 +363,13 @@ public final class ButtonBar implements FrameManager, ActionListener,
 
     /** {@inheritDoc} */
     @Override
-    public void iconChanged(final FrameContainer<?> window, final String icon) {
+    public synchronized void iconChanged(final FrameContainer<?> window, final String icon) {
         buttons.get(window).setIcon(IconManager.getIconManager().getIcon(icon));
     }
 
     /** {@inheritDoc} */
     @Override
-    public void nameChanged(final FrameContainer<?> window, final String name) {
+    public synchronized void nameChanged(final FrameContainer<?> window, final String name) {
         buttons.get(window).setText(name);
     }
 
