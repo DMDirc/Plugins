@@ -278,7 +278,7 @@ public final class TreeFrameManager implements FrameManager,
     /** {@inheritDoc} */
     @Override
     public void configChanged(final String domain, final String key) {
-        if ("sortservers".equals(key) || "sortwindows".equals(key)) {
+        if ("sortrootwindows".equals(key) || "sortchildwindows".equals(key)) {
             redoTreeView();
         } else {
             setColours();

@@ -793,6 +793,12 @@ public final class SwingController extends Plugin implements Serializable,
         general.addSetting(new PreferencesSetting(PreferencesType.INTEGER,
                 "ui", "textPaneFontSize", "Textpane font size",
                 "Font size for the textpane"));
+        general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
+                "ui", "sortrootwindows", "Sort root windows",
+                "Sort child windows in the frame managers?"));
+        general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
+                "ui", "sortchildwindows", "Sort child windows",
+                "Sort root windows in the frame managers?"));
 
         general.addSubCategory(createNicklistCategory());
         general.addSubCategory(createTreeViewCategory());
@@ -869,12 +875,6 @@ public final class SwingController extends Plugin implements Serializable,
                 PreferencesType.OPTIONALCOLOUR,
                 "ui", "treeviewRolloverColour", "Treeview rollover colour",
                 "Background colour to use when the mouse cursor is over a node"));
-        treeview.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
-                "treeview", "sortwindows", "Sort windows",
-                "Sort windows belonging to servers in the treeview?"));
-        treeview.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
-                "treeview", "sortservers", "Sort servers",
-                "Sort servers in the treeview?"));
         treeview.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
                 "ui", "treeviewActiveBold", "Active node bold",
                 "Make the active node bold?"));
