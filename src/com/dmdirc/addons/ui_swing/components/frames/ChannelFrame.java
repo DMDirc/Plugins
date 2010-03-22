@@ -111,6 +111,8 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
 
         identity = IdentityManager.getChannelConfig(getChannel().getServer().
                 getNetwork(), getChannel().getChannelInfo().getName());
+        updateNames(((Channel) getContainer()).getChannelInfo()
+                .getChannelClients());
     }
 
     /**
