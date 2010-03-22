@@ -31,6 +31,7 @@ import com.dmdirc.addons.ui_swing.actions.TopicEnterAction;
 import com.dmdirc.addons.ui_swing.components.SwingInputHandler;
 import com.dmdirc.addons.ui_swing.components.TextAreaInputField;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
+import com.dmdirc.ui.interfaces.InputWindow;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.util.Date;
@@ -57,10 +58,10 @@ public class TopicDisplayPane extends JPanel implements DocumentListener {
     private static final long serialVersionUID = 1;
     /** Parent topic pane. */
     private ChannelSettingsDialog parent;
-    /** Topic to display. */
-    private Topic topic;
     /** Associated channel. */
     private Channel channel;
+    /** Channel window. */
+    private InputWindow channelWindow;
     /** the maximum length allowed for a topic. */
     private int topicLengthMax;
     /** label showing the number of characters left in a topic.*/
@@ -77,12 +78,14 @@ public class TopicDisplayPane extends JPanel implements DocumentListener {
      *
      * @param channel Associated channel
      * @param parent Parent channel settings dialog
+     * @param channelWindow Channel window
      */
     public TopicDisplayPane(final Channel channel,
-            final ChannelSettingsDialog parent) {
+            final ChannelSettingsDialog parent, final InputWindow channelWindow) {
         this.channel = channel;
         this.parent = parent;
         this.topicLengthMax = channel.getServer().getParser().getMaxTopicLength();
+        this.channelWindow = channelWindow;
 
         initComponents();
         addListeners();
@@ -102,7 +105,7 @@ public class TopicDisplayPane extends JPanel implements DocumentListener {
         topicText.setRows(5);
         topicText.setColumns(30);
         final SwingInputHandler handler = new SwingInputHandler(topicText,
-                channel.getFrame().getCommandParser(), channel.getFrame());
+                channel.getCommandParser(), channelWindow);
         handler.setTypes(true, false, true, false);
         handler.setTabCompleter(channel.getTabCompleter());
 
@@ -136,8 +139,6 @@ public class TopicDisplayPane extends JPanel implements DocumentListener {
      * @param topic New topic or null
      */
     public void setTopic(final Topic topic) {
-        this.topic = topic;
-
         if (topic == null) {
             topicWho.setText("No topic set.");
         } else {

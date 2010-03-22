@@ -63,6 +63,8 @@ public class MDIBar extends JPanel implements SwingWindowListener, SelectionList
     private String visibility;
     /** Active frame. */
     private Window activeFrame;
+    /** Swing controller. */
+    private SwingController controller;
 
     /**
      * Instantiates a new MDI bar.
@@ -73,6 +75,7 @@ public class MDIBar extends JPanel implements SwingWindowListener, SelectionList
     public MDIBar(final SwingController controller, final MainFrame mainFrame) {
         this.mainFrame = mainFrame;
         this.config = IdentityManager.getGlobalConfig();
+        this.controller = controller;
         visibility = config.getOption("ui", "mdiBarVisibility");
 
         closeButton = new NoFocusButton(IconManager.getIconManager().
@@ -189,7 +192,7 @@ public class MDIBar extends JPanel implements SwingWindowListener, SelectionList
     /** {@inheritDoc} */
     @Override
     public void selectionChanged(final FrameContainer<?> window) {
-        activeFrame = window.getFrame();
+        activeFrame = controller.getWindowFactory().getSwingWindow(window);
         check();
     }
 }

@@ -68,6 +68,7 @@ import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.core.dialogs.sslcertificate.SSLCertificateDialogModel;
 import com.dmdirc.ui.interfaces.ChannelWindow;
+import com.dmdirc.ui.interfaces.FrameListener;
 import com.dmdirc.ui.interfaces.InputWindow;
 import com.dmdirc.ui.interfaces.QueryWindow;
 import com.dmdirc.ui.interfaces.ServerWindow;
@@ -363,7 +364,8 @@ public final class SwingController extends Plugin implements Serializable,
             /** {@inheritDoc} */
             @Override
             public void run() {
-                ChannelSettingsDialog.showChannelSettingsDialog(channel, me);
+                ChannelSettingsDialog.showChannelSettingsDialog(channel, me,
+                        (InputWindow) getWindowFactory().getSwingWindow(channel));
             }
         });
     }

@@ -64,6 +64,7 @@ public class CustomInputFrame extends InputTextFrame {
 
     /** {@inheritDoc} */
     @Override
+    @SuppressWarnings("unchecked")
     public final CommandParser getCommandParser() {
         return ((WritableFrameContainer<? extends InputWindow>) frameParent).getCommandParser();
     }

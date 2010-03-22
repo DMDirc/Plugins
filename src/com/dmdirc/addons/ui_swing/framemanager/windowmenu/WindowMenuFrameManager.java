@@ -331,7 +331,8 @@ public final class WindowMenuFrameManager extends JMenu implements
         synchronized (menus) {
             synchronized (items) {
                 synchronized (menuItems) {
-                    activeWindow = window.getFrame();
+                    activeWindow = controller.getWindowFactory()
+                            .getSwingWindow(window);
                     values.addAll(menus.values());
                     values.addAll(items.values());
                     values.addAll(menuItems.values());

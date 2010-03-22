@@ -110,8 +110,8 @@ public class TopicBar extends JComponent implements ActionListener,
         topicLengthMax = channel.getMaxTopicLength();
         errorIcon =
                 new JLabel(IconManager.getIconManager().getIcon("input-error"));
-        if (channelFrame.getConfigManager().getOptionBool(controller.getDomain(),
-                "showfulltopic")) {
+        if (channelFrame.getContainer().getConfigManager().getOptionBool(
+                controller.getDomain(), "showfulltopic")) {
             topicText.setEditorKit(new StyledEditorKit());
         } else {
             topicText.setEditorKit(new WrapEditorKit());
@@ -257,7 +257,8 @@ public class TopicBar extends JComponent implements ActionListener,
                 && !channel.getCurrentTopic().getTopic().equals(topicText.getText()))) {
             channel.setTopic(topicText.getText());
         }
-        ((ChannelFrame) channel.getFrame()).getInputField().requestFocusInWindow();
+        ((ChannelFrame) controller.getWindowFactory().getSwingWindow(channel))
+                .getInputField().requestFocusInWindow();
         topicChanged(channel, null);
         topicText.setFocusable(false);
         topicText.setEditable(false);
@@ -283,7 +284,8 @@ public class TopicBar extends JComponent implements ActionListener,
         topicText.setFocusable(false);
         topicText.setEditable(false);
         topicCancel.setVisible(false);
-        ((ChannelFrame) channel.getFrame()).getInputField().requestFocusInWindow();
+        ((ChannelFrame) controller.getWindowFactory().getSwingWindow(channel))
+                .getInputField().requestFocusInWindow();
         topicChanged(channel, null);
     }
 

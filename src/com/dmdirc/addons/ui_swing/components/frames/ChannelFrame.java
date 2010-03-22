@@ -40,6 +40,7 @@ import com.dmdirc.config.Identity;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.parser.interfaces.ChannelClientInfo;
 import com.dmdirc.ui.interfaces.ChannelWindow;
+import com.dmdirc.ui.interfaces.InputWindow;
 
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -155,7 +156,11 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
         return nicklist;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     * 
+     * @deprecated @deprecated Use {@link #getContainer()}
+     */
     @Override
     @Deprecated
     public Channel getChannel() {
@@ -177,10 +182,10 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
     private void initComponents() {
         topicBar = new TopicBar(this);
 
-        nicklist = new NickList(this, getConfigManager());
+        nicklist = new NickList(this, getContainer().getConfigManager());
         settingsMI = new JMenuItem("Settings");
         settingsMI.addActionListener(this);
-        topicBar.setVisible(getConfigManager().getOptionBool(
+        topicBar.setVisible(getContainer().getConfigManager().getOptionBool(
                 getController().getDomain(), "showtopicbar"));
 
         splitPane = new SplitPane(
@@ -195,8 +200,8 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
         getContentPane().add(inputPanel, "growx, pushx");
 
         splitPane.setLeftComponent(getTextPane());
-        if (getConfigManager().getOptionBool(getController().getDomain(),
-                "shownicklist")) {
+        if (getContainer().getConfigManager().getOptionBool(getController()
+                .getDomain(), "shownicklist")) {
             splitPane.setRightComponent(nicklist);
         } else {
             splitPane.setRightComponent(null);
@@ -216,7 +221,9 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
     public void actionPerformed(final ActionEvent actionEvent) {
         if (actionEvent.getSource() == settingsMI) {
             ChannelSettingsDialog.showChannelSettingsDialog(
-                    (Channel) getContainer(), getController().getMainFrame());
+                    (Channel) getContainer(), getController().getMainFrame(),
+                    (InputWindow) getController().getWindowFactory()
+                    .getSwingWindow(frameParent));
         }
     }
 
@@ -234,8 +241,8 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
         super.configChanged(domain, key);
         
         if ("channelSplitPanePosition".equals(key)) {
-            final int splitPanePosition = getConfigManager().getOptionInt("ui",
-                    "channelSplitPanePosition");
+            final int splitPanePosition = getContainer().getConfigManager()
+                    .getOptionInt("ui", "channelSplitPanePosition");
             UIUtilities.invokeLater(new Runnable() {
 
                 /** {@inheritDoc} */
@@ -249,12 +256,12 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
             });
         }
         if ("showtopicbar".equals(key)) {
-            topicBar.setVisible(getConfigManager().getOptionBool(
+            topicBar.setVisible(getContainer().getConfigManager().getOptionBool(
                     getController().getDomain(), "showtopicbar"));
         }
         if ("shownicklist".equals(key)) {
-            if (getConfigManager().getOptionBool(getController().getDomain(),
-                    "shownicklist")) {
+            if (getContainer().getConfigManager().getOptionBool(getController()
+                    .getDomain(), "shownicklist")) {
                 splitPane.setRightComponent(nicklist);
             } else {
                 splitPane.setRightComponent(null);

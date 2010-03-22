@@ -112,6 +112,8 @@ public class DMDircDesktopPane extends JDesktopPane implements SwingWindowListen
     private BackgroundOption backgroundOption;
     /** Config domain. */
     private String domain;
+    /** Swing controller. */
+    private SwingController controller;
 
     /**
      * Initialises the DMDirc desktop pane.
@@ -126,6 +128,7 @@ public class DMDircDesktopPane extends JDesktopPane implements SwingWindowListen
 
         this.mainFrame = mainFrame;
         this.domain = domain;
+        this.controller = controller;
         setBackground(new Color(238, 238, 238));
         setBorder(BorderFactory.createEtchedBorder());
         setUI(new ProxyDesktopPaneUI(getUI(), this));
@@ -311,16 +314,17 @@ public class DMDircDesktopPane extends JDesktopPane implements SwingWindowListen
             /** {@inheritDoc} */
             @Override
             public void run() {
-                selectedWindow = window.getFrame();
-                final TreeNode[] path =
-                        model.getPathToRoot(nodes.get(selectedWindow.getContainer()));
+                selectedWindow = controller.getWindowFactory()
+                        .getSwingWindow(window);
+                final TreeNode[] path = model.getPathToRoot(nodes.get(
+                        selectedWindow));
                 if (path != null && path.length > 0) {
                     selectionModel.setSelectionPath(new TreePath(path));
                 }
                 if (selectedWindow instanceof InputTextFrame) {
                     ((InputTextFrame) selectedWindow).requestInputFieldFocus();
                 }
-                mainFrame.setTitle(selectedWindow.getTitle());
+                mainFrame.setTitle(selectedWindow.getContainer().getTitle());
             }
         });
     }
@@ -330,10 +334,10 @@ public class DMDircDesktopPane extends JDesktopPane implements SwingWindowListen
     public void propertyChange(final PropertyChangeEvent evt) {
         if ("title".equals(evt.getPropertyName())) {
             handleTitleEvent((Window) evt.getSource(),
-                    ((Window) evt.getSource()).getTitle());
+                    ((Window) evt.getSource()).getContainer().getTitle());
         } else if ("maximum".equals(evt.getPropertyName())) {
             handleMaximiseEvent((Boolean) evt.getNewValue(),
-                    ((Window) evt.getSource()).getTitle());
+                    ((Window) evt.getSource()).getContainer().getTitle());
         }
     }
 
