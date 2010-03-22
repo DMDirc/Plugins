@@ -106,12 +106,12 @@ public class TreeViewModel extends DefaultTreeModel {
         }
 
         if (parent.equals(root) && !IdentityManager.getGlobalConfig().
-                getOptionBool("treeview", "sortservers")) {
+                getOptionBool("ui", "sortrootwindows")) {
             return parent.getChildCount();
         }
 
-        if (IdentityManager.getGlobalConfig().getOptionBool("treeview",
-                "sortwindows")) {
+        if (IdentityManager.getGlobalConfig().getOptionBool("ui",
+                "sortchildwindows")) {
             for (int i = 0; i < parent.getChildCount(); i++) {
                 final TreeViewNode child = (TreeViewNode) parent.getChildAt(i);
                 if (sortBefore(newChild, child)) {
