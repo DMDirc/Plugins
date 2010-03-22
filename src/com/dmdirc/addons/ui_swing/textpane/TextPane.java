@@ -115,6 +115,8 @@ public final class TextPane extends JComponent implements MouseWheelListener,
             }
         };
         addMouseMotionListener(doScrollRectToVisible);
+
+        setScrollBarMax(document.getNumLines(), document.getNumLines());
     }
 
     /** {@inheritDoc} */
