@@ -193,7 +193,7 @@ public class TopicBar extends JComponent implements ActionListener,
         topicText.setEditable(false);
         topicCancel.setVisible(false);
         setColours();
-        validateTopic();
+        topicChanged(channel, channel.getCurrentTopic());
     }
 
     /** {@inheritDoc} */
