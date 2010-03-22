@@ -87,7 +87,7 @@ public final class ButtonBar implements FrameManager, ActionListener,
     /** The scrolling panel for our ButtonBar */
      private final JScrollPane scrollPane;
     /** The panel used for our buttons. */
-    private final JPanel buttonPanel;
+    private final ButtonPanel buttonPanel;
     /** The currently selected window. */
     private transient FrameContainer<?> selected;
     /** Selected window. */
@@ -121,9 +121,9 @@ public final class ButtonBar implements FrameManager, ActionListener,
                 "framemanagerPosition"));
 
         if (position.isHorizontal()) {
-            buttonPanel = new JPanel(new MigLayout("ins 0, fill, flowx"));
+            buttonPanel = new ButtonPanel(new MigLayout("ins 0, fill, flowx"));
         } else {
-            buttonPanel = new JPanel(new MigLayout("ins 0, fill, flowy"));
+            buttonPanel = new ButtonPanel(new MigLayout("ins 0, fill, flowy"));
         }
         scrollPane.getViewport().add(buttonPanel);
     }
