@@ -24,6 +24,7 @@ package com.dmdirc.addons.ui_swing.dialogs.channelsetting;
 
 import com.dmdirc.Channel;
 import com.dmdirc.addons.ui_swing.UIUtilities;
+import com.dmdirc.ui.interfaces.InputWindow;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -49,20 +50,24 @@ public final class TopicPane extends JPanel implements ActionListener {
     private TopicHistoryPane topicHistoryPane;
     /** Topic display pane. */
     private TopicDisplayPane topicDisplayPane;
+    /** Channel window. */
+    private InputWindow channelWindow;
 
     /**
      * Creates a new instance of TopicModesPane.
      *
      * @param channel Parent channel
      * @param parent Parent dialog
+     * @param channelWindow Channel window
      */
     public TopicPane(final Channel channel,
-            final ChannelSettingsDialog parent) {
+            final ChannelSettingsDialog parent, final InputWindow channelWindow) {
         super();
 
         this.setOpaque(UIUtilities.getTabbedPaneOpaque());
         this.channel = channel;
         this.parent = parent;
+        this.channelWindow = channelWindow;
 
         update();
     }
@@ -82,7 +87,7 @@ public final class TopicPane extends JPanel implements ActionListener {
 
     /** Initialises the topic panel. */
     private void initTopicsPanel() {
-        topicDisplayPane = new TopicDisplayPane(channel, parent);
+        topicDisplayPane = new TopicDisplayPane(channel, parent, channelWindow);
         topicHistoryPane = new TopicHistoryPane(channel);
     }
 

@@ -123,7 +123,7 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
         super();
         this.document = document;
         textPane = parent;
-        this.manager = parent.getWindow().getConfigManager();
+        this.manager = parent.getWindow().getContainer().getConfigManager();
         this.domain = ((TextFrame) parent.getWindow()).getController().
                 getDomain();
         startLine = 0;

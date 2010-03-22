@@ -29,6 +29,7 @@ import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.addons.ui_swing.components.expandingsettings.SettingsPanel;
 import com.dmdirc.addons.ui_swing.components.expandingsettings.SettingsPanel.OptionType;
+import com.dmdirc.ui.interfaces.InputWindow;
 
 import java.awt.Window;
 import java.awt.event.ActionEvent;
@@ -69,6 +70,8 @@ public final class ChannelSettingsDialog extends StandardDialog implements
     private ChannelListModesPane channelListModesPane;
     /** Channel identity file. */
     private final Identity identity;
+    /** Channel window. */
+    private InputWindow channelWindow;
 
     /**
      * Creates a new instance of ChannelSettingsDialog.
@@ -76,12 +79,13 @@ public final class ChannelSettingsDialog extends StandardDialog implements
      * @param newChannel The channel object that we're editing settings for
      */
     private ChannelSettingsDialog(final Channel newChannel,
-            final Window parentWindow) {
+            final Window parentWindow, final InputWindow channelWindow) {
         super(parentWindow, ModalityType.MODELESS);
         
         channel = newChannel;
         identity = IdentityManager.getChannelConfig(channel.getServer().
                 getNetwork(), channel.getChannelInfo().getName());
+        this.channelWindow = channelWindow;
 
         initComponents();
         initListeners();
@@ -92,10 +96,12 @@ public final class ChannelSettingsDialog extends StandardDialog implements
      *
      * @param channel The channel object that we're editing settings for
      * @param parentWindow Parent window
+     * @param channelWindow Channel window
      */
     public static void showChannelSettingsDialog(
-            final Channel channel, final Window parentWindow) {
-        me = getChannelSettingsDialog(channel, parentWindow);
+            final Channel channel, final Window parentWindow, 
+            final InputWindow channelWindow) {
+        me = getChannelSettingsDialog(channel, parentWindow, channelWindow);
 
         me.display();
         me.requestFocusInWindow();
@@ -106,14 +112,17 @@ public final class ChannelSettingsDialog extends StandardDialog implements
      *
      * @param channel The channel object that we're editing settings for
      * @param parentWindow Parent window
+     * @param channelWindow Channel window
      *
      * @return The current ChannelSettingsDialog instance
      */
     public static ChannelSettingsDialog getChannelSettingsDialog(
-            final Channel channel, final Window parentWindow) {
+            final Channel channel, final Window parentWindow,
+            final InputWindow channelWindow) {
         synchronized (ChannelSettingsDialog.class) {
             if (me == null) {
-                me = new ChannelSettingsDialog(channel, parentWindow);
+                me = new ChannelSettingsDialog(channel, parentWindow,
+                        channelWindow);
             }
         }
 
@@ -150,7 +159,7 @@ public final class ChannelSettingsDialog extends StandardDialog implements
 
     /** Initialises the Topic tab. */
     private void initTopicTab() {
-        topicModesPane = new TopicPane(channel, this);
+        topicModesPane = new TopicPane(channel, this, channelWindow);
         tabbedPane.addTab("Topic", topicModesPane);
     }
 
