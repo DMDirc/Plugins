@@ -52,7 +52,6 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import javax.swing.JComponent;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JToggleButton;
 import javax.swing.ScrollPaneConstants;
@@ -87,7 +86,7 @@ public final class ButtonBar implements FrameManager, ActionListener,
     /** The scrolling panel for our ButtonBar */
      private final JScrollPane scrollPane;
     /** The panel used for our buttons. */
-    private final JPanel buttonPanel;
+    private final ButtonPanel buttonPanel;
     /** The currently selected window. */
     private transient FrameContainer<?> selected;
     /** Selected window. */
@@ -121,11 +120,23 @@ public final class ButtonBar implements FrameManager, ActionListener,
                 "framemanagerPosition"));
 
         if (position.isHorizontal()) {
-            buttonPanel = new JPanel(new MigLayout("ins 0, fill, flowx"));
+            buttonPanel = new ButtonPanel(new MigLayout("ins rel, fill, flowx"),
+                    this);
         } else {
-            buttonPanel = new JPanel(new MigLayout("ins 0, fill, flowy"));
+            buttonPanel = new ButtonPanel(new MigLayout("ins rel, fill, flowy"),
+                    this);
         }
         scrollPane.getViewport().add(buttonPanel);
+    }
+
+    /**
+     * Retreives button height.
+     *
+     * @return Button height
+     * @since 0.6.4
+     */
+    public int getButtonHeight() {
+        return buttonHeight;
     }
 
     /** {@inheritDoc} */
