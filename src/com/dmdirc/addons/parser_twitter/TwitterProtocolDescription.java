@@ -20,55 +20,28 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.parser_irc;
+package com.dmdirc.addons.parser_twitter;
 
-import com.dmdirc.parser.common.MyInfo;
-import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.parser.interfaces.ProtocolDescription;
-import com.dmdirc.parser.irc.IRCParser;
-import com.dmdirc.parser.irc.IRCProtocolDescription;
-import com.dmdirc.plugins.Plugin;
-
-import java.net.URI;
 
 /**
- * A plugin which provides access to the IRC Parser.
+ * Describes the twitter protocol.
  *
  * @since 0.6.4
  * @author chris
  */
-public class IrcPlugin extends Plugin {
+public class TwitterProtocolDescription implements ProtocolDescription {
 
     /** {@inheritDoc} */
     @Override
-    public void onLoad() {
-        // Do nothing
+    public int getDefaultPort() {
+        return 80;
     }
 
     /** {@inheritDoc} */
     @Override
-    public void onUnload() {
-        // Do nothing
-    }
-
-    /**
-     * Get an IRC parser instance.
-     *
-     * @param myInfo The client information to use
-     * @param address The address of the server to connect to
-     * @return An appropriately configured parser
-     */
-    public Parser getParser(final MyInfo myInfo, final URI address) {
-        return new IRCParser(myInfo, address);
-    }
-
-    /**
-     * Retrieves a description of the IRC protocol.
-     *
-     * @return An appropriate protocol description object
-     */
-    public ProtocolDescription getDescription() {
-        return new IRCProtocolDescription();
+    public String[] parseHostmask(final String hostmask) {
+        return TwitterClientInfo.parseHostFull(hostmask, null, null);
     }
 
 }

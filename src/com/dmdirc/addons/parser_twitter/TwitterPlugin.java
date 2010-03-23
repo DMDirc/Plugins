@@ -29,6 +29,7 @@ import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.parser.common.MyInfo;
 import com.dmdirc.parser.interfaces.Parser;
+import com.dmdirc.parser.interfaces.ProtocolDescription;
 import com.dmdirc.plugins.Plugin;
 import java.net.URI;
 import java.util.ArrayList;
@@ -67,6 +68,16 @@ public class TwitterPlugin extends Plugin  {
      */
     public Parser getParser(final MyInfo myInfo, final URI address) {
         return (unloading) ? null : new Twitter(myInfo, address, this);
+    }
+
+    /**
+     * Retrieves a protocol description for the twitter protocol.
+     *
+     * @return A description of the twitter protocol
+     * @since 0.6.4
+     */
+    public ProtocolDescription getDescription() {
+        return new TwitterProtocolDescription();
     }
 
     /** {@inheritDoc} */
