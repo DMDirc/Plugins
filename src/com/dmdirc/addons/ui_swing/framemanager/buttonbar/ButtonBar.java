@@ -173,9 +173,19 @@ public final class ButtonBar implements FrameManager, ActionListener,
             @Override
             public void run() {
                 ButtonBar.this.parent = parent;
+<<<<<<< HEAD
                 parent.setLayout(new MigLayout("ins 0, fill"));
                 parent.add(scrollPane, "top, left");
+=======
+                scrollPane.setSize(parent.getWidth(), parent.getHeight());
+
+                parent.setVisible(false);
+                parent.setLayout(new MigLayout("ins 0"));
+                parent.add(scrollPane);
+>>>>>>> 36c0355... Initial work for OTF frame manager switching
                 parent.addComponentListener(ButtonBar.this);
+                parent.setVisible(true);
+                relayout();
             }
         });
     }
