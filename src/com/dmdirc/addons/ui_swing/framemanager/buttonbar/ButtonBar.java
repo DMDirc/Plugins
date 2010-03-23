@@ -173,9 +173,14 @@ public final class ButtonBar implements FrameManager, ActionListener,
             @Override
             public void run() {
                 ButtonBar.this.parent = parent;
-                parent.setLayout(new MigLayout("ins 0, fill"));
-                parent.add(scrollPane, "top, left");
+                scrollPane.setSize(parent.getWidth(), parent.getHeight());
+
+                parent.setVisible(false);
+                parent.setLayout(new MigLayout("ins 0"));
+                parent.add(scrollPane);
                 parent.addComponentListener(ButtonBar.this);
+                parent.setVisible(true);
+                relayout();
             }
         });
     }
