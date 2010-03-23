@@ -109,11 +109,21 @@ public final class TreeFrameManager implements FrameManager,
                 scrollPane.setHorizontalScrollBarPolicy(
                         JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
+
+                parent.setVisible(false);
+                parent.removeAll();
                 parent.setLayout(new MigLayout("ins 0, fill"));
                 parent.add(scrollPane, "grow");
                 parent.setFocusable(false);
+                parent.setVisible(true);
 
                 setColours();
+
+                redoTreeView();
+                final Window active = controller.getMainFrame().getActiveFrame();
+                if (active != null) {
+                    selectionChanged(active.getContainer());
+                }
             }
         });
     }
@@ -298,6 +308,7 @@ public final class TreeFrameManager implements FrameManager,
             /** {@inheritDoc} */
             @Override
             public void run() {
+                tree.setVisible(false);
                 ((DefaultTreeModel) tree.getModel()).setRoot(null);
                 ((DefaultTreeModel) tree.getModel()).setRoot(new TreeViewNode(
                         null, null));
@@ -309,6 +320,7 @@ public final class TreeFrameManager implements FrameManager,
                         addWindow(nodes.get(window), childWindow);
                     }
                 }
+                tree.setVisible(true);
             }
         });
     }

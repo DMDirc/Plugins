@@ -97,6 +97,8 @@ public final class MainFrame extends JFrame implements WindowListener,
     private SwingStatusBar statusBar;
     /** Client Version. */
     private String version;
+    /** Main split pane. */
+    private SplitPane mainSplitPane;
 
     /**
      * Creates new form MainFrame.
@@ -110,8 +112,7 @@ public final class MainFrame extends JFrame implements WindowListener,
 
         initComponents();
 
-        imageIcon =
-                new ImageIcon(IconManager.getIconManager().getImage("icon"));
+        imageIcon = new ImageIcon(IconManager.getIconManager().getImage("icon"));
         setIconImage(imageIcon.getImage());
 
         CoreUIUtils.centreWindow(this);
@@ -127,6 +128,8 @@ public final class MainFrame extends JFrame implements WindowListener,
         IdentityManager.getGlobalConfig().addChangeListener("ui", "lookandfeel",
                 this);
         IdentityManager.getGlobalConfig().addChangeListener("ui", "showversion",
+                this);
+        IdentityManager.getGlobalConfig().addChangeListener("ui", "framemanager",
                 this);
         IdentityManager.getGlobalConfig().addChangeListener("icon", "icon", this);
 
@@ -350,9 +353,9 @@ public final class MainFrame extends JFrame implements WindowListener,
             /** {@inheritDoc} */
             @Override
             public void run() {
+                frameManagerPanel.removeAll();
                 final String manager = IdentityManager.getGlobalConfig().
-                        getOption("ui",
-                        "framemanager");
+                        getOption("ui", "framemanager");
 
                 try {
                     mainFrameManager = (FrameManager) Class.forName(manager).
@@ -377,6 +380,7 @@ public final class MainFrame extends JFrame implements WindowListener,
         statusBar = new SwingStatusBar(controller, this);
         frameManagerPanel = new JPanel();
         desktopPane = new DMDircDesktopPane(controller, this, controller.getDomain());
+        mainSplitPane = new SplitPane(SplitPane.Orientation.HORIZONTAL);
 
         initFrameManagers();
 
@@ -388,7 +392,7 @@ public final class MainFrame extends JFrame implements WindowListener,
 
         getContentPane().setLayout(new MigLayout(
                 "fill, ins rel, wrap 1, hidemode 2"));
-        getContentPane().add(initSplitPane(), "grow, push");
+        getContentPane().add(initSplitPane(mainSplitPane), "grow, push");
         getContentPane().add(statusBar,
                 "hmax 20, wmax 100%-2*rel, wmin 100%-2*rel");
 
@@ -402,12 +406,9 @@ public final class MainFrame extends JFrame implements WindowListener,
      * 
      * @return Returns the initialised split pane
      */
-    private JSplitPane initSplitPane() {
-        final JSplitPane mainSplitPane =
-                new SplitPane(SplitPane.Orientation.HORIZONTAL);
-        position =
-                FramemanagerPosition.getPosition(IdentityManager.getGlobalConfig().
-                getOption("ui", "framemanagerPosition"));
+    private JSplitPane initSplitPane(final SplitPane mainSplitPane) {
+        position = FramemanagerPosition.getPosition(IdentityManager
+                .getGlobalConfig().getOption("ui", "framemanagerPosition"));
 
         if (position == FramemanagerPosition.UNKNOWN) {
             position = FramemanagerPosition.LEFT;
@@ -559,6 +560,11 @@ public final class MainFrame extends JFrame implements WindowListener,
             imageIcon = new ImageIcon(IconManager.getIconManager().getImage(
                     "icon"));
             setIconImage(imageIcon.getImage());
+        }
+        if ("framemanager".equals(key)) {
+            initFrameManagers();
+            initSplitPane(mainSplitPane);
+            frameManagerPanel.repaint();
         }
     }
 
