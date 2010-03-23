@@ -27,10 +27,7 @@ import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.addons.ui_swing.actions.CloseFrameContainerAction;
-import com.dmdirc.addons.ui_swing.components.TreeScroller;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
-import com.dmdirc.logger.ErrorLevel;
-import com.dmdirc.logger.Logger;
 
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
@@ -101,31 +98,6 @@ public class Tree extends JTree implements MouseMotionListener,
                 (int) PlatformDefaults.getUnitValueX("related").getValue(),
                 (int) PlatformDefaults.getUnitValueX("related").getValue(),
                 (int) PlatformDefaults.getUnitValueX("related").getValue()));
-        new TreeScroller(this) {
-
-            /** {@inheritDoc} */
-            @Override
-            protected void setPath(final TreePath path) {
-                if (path == null) {
-                    Logger.appError(ErrorLevel.HIGH, "Unable to change focus",
-                            new IllegalArgumentException("path == null"));
-                    return;
-                }
-                if (path.getLastPathComponent() == null) {
-                    Logger.appError(ErrorLevel.HIGH, "Unable to change focus",
-                            new IllegalArgumentException("Last component == null"));
-                    return;
-                }
-                if (((TreeViewNode) path.getLastPathComponent()).getWindow() == null) {
-                    Logger.appError(ErrorLevel.HIGH, "Unable to change focus",
-                            new IllegalArgumentException("Frame is null"));
-                    return;
-                }
-                super.setPath(path);
-                ((TreeViewNode) path.getLastPathComponent()).getWindow().
-                        activateFrame();
-            }
-        };
         setFocusable(false);
 
         dragSelect = IdentityManager.getGlobalConfig().getOptionBool("treeview",
@@ -237,8 +209,8 @@ public class Tree extends JTree implements MouseMotionListener,
             dragButton = true;
             final TreePath selectedPath = getPathForLocation(e.getX(), e.getY());
             if (selectedPath != null) {
-                ((TreeViewNode) selectedPath.getLastPathComponent()).
-                        getWindow().activateFrame();
+                ((TreeViewNode) selectedPath.getLastPathComponent()).getWindow().
+                        activateFrame();
             }
         }
         processMouseEvents(e);
@@ -285,8 +257,8 @@ public class Tree extends JTree implements MouseMotionListener,
             if (e.isPopupTrigger()) {
                 TextFrame frame = null;
 
-                frame = (TextFrame) controller.getSwingWindow(((TreeViewNode)
-                        localPath.getLastPathComponent()).getWindow());
+                frame = (TextFrame) controller.getSwingWindow(((TreeViewNode) localPath.
+                        getLastPathComponent()).getWindow());
 
                 if (frame == null) {
                     return;
