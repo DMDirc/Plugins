@@ -33,6 +33,7 @@ import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.addons.ui_swing.framemanager.FrameManager;
 import com.dmdirc.addons.ui_swing.UIUtilities;
+import com.dmdirc.addons.ui_swing.components.TreeScroller;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.interfaces.UIController;
 import com.dmdirc.ui.interfaces.Window;
@@ -109,11 +110,20 @@ public final class TreeFrameManager implements FrameManager,
                 scrollPane.setHorizontalScrollBarPolicy(
                         JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
+
+                parent.setVisible(false);
                 parent.setLayout(new MigLayout("ins 0, fill"));
                 parent.add(scrollPane, "grow");
                 parent.setFocusable(false);
+                parent.setVisible(true);
 
                 setColours();
+
+                redoTreeView();
+                if (controller.getMainFrame().getActiveFrame() != null) {
+                    selectionChanged(controller.getMainFrame().getActiveFrame().
+                            getContainer());
+                }
             }
         });
     }
@@ -132,7 +142,7 @@ public final class TreeFrameManager implements FrameManager,
             @Override
             public void run() {
                 model = new TreeViewModel(new TreeViewNode(null, null));
-                tree = new Tree(TreeFrameManager.this, model, 
+                tree = new Tree(TreeFrameManager.this, model,
                         TreeFrameManager.this.controller.getWindowFactory());
 
                 tree.setCellRenderer(new TreeViewTreeCellRenderer(
@@ -178,8 +188,8 @@ public final class TreeFrameManager implements FrameManager,
                         nodes.get(window.getContainer());
                 if (node.getLevel() == 0) {
                     Logger.appError(ErrorLevel.MEDIUM,
-                            "delServer triggered for root node" +
-                            node.toString(),
+                            "delServer triggered for root node"
+                            + node.toString(),
                             new IllegalArgumentException());
                 } else {
                     model.removeNodeFromParent(nodes.get(window.getContainer()));
@@ -187,9 +197,12 @@ public final class TreeFrameManager implements FrameManager,
                 synchronized (nodes) {
                     nodes.remove(window.getContainer());
                 }
-                window.getContainer().removeSelectionListener(TreeFrameManager.this);
-                window.getContainer().removeFrameInfoListener(TreeFrameManager.this);
-                window.getContainer().removeNotificationListener(TreeFrameManager.this);
+                window.getContainer().removeSelectionListener(
+                        TreeFrameManager.this);
+                window.getContainer().removeFrameInfoListener(
+                        TreeFrameManager.this);
+                window.getContainer().removeNotificationListener(
+                        TreeFrameManager.this);
             }
         });
     }
@@ -252,8 +265,8 @@ public final class TreeFrameManager implements FrameManager,
 
         if (event == null) {
             node = null;
-        } else if (tree.getNodeForLocation(event.getX(), event.getY()) !=
-                null) {
+        } else if (tree.getNodeForLocation(event.getX(), event.getY())
+                != null) {
             node =
                     tree.getNodeForLocation(event.getX(), event.getY()).getLabel();
         }
@@ -301,10 +314,12 @@ public final class TreeFrameManager implements FrameManager,
                 ((DefaultTreeModel) tree.getModel()).setRoot(null);
                 ((DefaultTreeModel) tree.getModel()).setRoot(new TreeViewNode(
                         null, null));
+                new TreeTreeScroller(tree);
 
                 for (FrameContainer<?> window : WindowManager.getRootWindows()) {
                     addWindow(null, window);
-                    final Collection<FrameContainer<?>> childWindows = window.getChildren();
+                    final Collection<FrameContainer<?>> childWindows = window.
+                            getChildren();
                     for (FrameContainer childWindow : childWindows) {
                         addWindow(nodes.get(window), childWindow);
                     }
