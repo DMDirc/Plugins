@@ -197,12 +197,9 @@ public final class ButtonBar implements FrameManager, ActionListener,
      * Removes all buttons from the bar and readds them.
      */
     private void relayout() {
-        buttonPanel.removeAll();
-
-        if (!buttons.isEmpty()) {
-            insertButtons(WindowManager.getRootWindows());
-        }
-        buttonPanel.validate();
+       buttonPanel.removeAll();
+       insertButtons(WindowManager.getRootWindows());
+       buttonPanel.repaint();
     }
 
     /**
@@ -242,7 +239,6 @@ public final class ButtonBar implements FrameManager, ActionListener,
             @Override
             public void run() {
                 addButton(window.getContainer());
-
                 relayout();
                 window.getContainer().addNotificationListener(ButtonBar.this);
                 window.getContainer().addSelectionListener(ButtonBar.this);
@@ -261,7 +257,6 @@ public final class ButtonBar implements FrameManager, ActionListener,
             @Override
             public void run() {
                 buttons.remove(window.getContainer());
-
                 relayout();
                 window.getContainer().removeNotificationListener(ButtonBar.this);
                 window.getContainer().removeFrameInfoListener(ButtonBar.this);
@@ -296,15 +291,8 @@ public final class ButtonBar implements FrameManager, ActionListener,
      */
     @Override
     public void componentResized(final ComponentEvent e) {
-        UIUtilities.invokeLater(new Runnable() {
-
-            /** {@inheritDoc} */
-            @Override
-            public void run() {
-                buttonWidth = position.isHorizontal() ? 150 : (parent.getWidth() / cells);
-                relayout();
-            }
-        });
+        buttonWidth = position.isHorizontal() ? 150 : (parent.getWidth() / cells);
+        relayout();
     }
 
     /**
