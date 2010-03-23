@@ -109,11 +109,20 @@ public final class TreeFrameManager implements FrameManager,
                 scrollPane.setHorizontalScrollBarPolicy(
                         JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
+
+                parent.setVisible(false);
                 parent.setLayout(new MigLayout("ins 0, fill"));
                 parent.add(scrollPane, "grow");
                 parent.setFocusable(false);
+                parent.setVisible(true);
 
                 setColours();
+
+                redoTreeView();
+                if (controller.getMainFrame().getActiveFrame() != null) {
+                    selectionChanged(controller.getMainFrame().getActiveFrame()
+                            .getContainer());
+                }
             }
         });
     }

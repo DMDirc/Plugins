@@ -779,10 +779,10 @@ public final class SwingController extends Plugin implements Serializable,
                 "Look and feel", "The Java look and feel to use", lafs));
         general.addSetting(new PreferencesSetting("ui", "framemanager",
                 "Window manager", "Which window manager should be used?",
-                framemanagers).setRestartNeeded());
+                framemanagers));
         general.addSetting(new PreferencesSetting("ui", "framemanagerPosition",
                 "Window manager position", "Where should the window "
-                + "manager be positioned?", fmpositions).setRestartNeeded());
+                + "manager be positioned?", fmpositions));
         general.addSetting(new PreferencesSetting(PreferencesType.FONT,
                 "ui", "textPaneFontName", "Textpane font",
                 "Font for the textpane"));
