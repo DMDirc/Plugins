@@ -256,11 +256,11 @@ public final class ButtonBar implements FrameManager, ActionListener,
             /** {@inheritDoc} */
             @Override
             public void run() {
-                buttons.remove(window.getContainer());
-                relayout();
                 window.getContainer().removeNotificationListener(ButtonBar.this);
                 window.getContainer().removeFrameInfoListener(ButtonBar.this);
                 window.getContainer().removeSelectionListener(ButtonBar.this);
+                buttons.remove(window.getContainer());
+                relayout();
             }
         });
     }
@@ -383,7 +383,9 @@ public final class ButtonBar implements FrameManager, ActionListener,
             /** {@inheritDoc} */
             @Override
             public void run() {
-                buttons.get(window).setIcon(IconManager.getIconManager().getIcon(icon));
+                if (buttons.containsKey(window)) {
+                    buttons.get(window).setIcon(IconManager.getIconManager().getIcon(icon));
+                }
             }
         });
     }
@@ -396,7 +398,9 @@ public final class ButtonBar implements FrameManager, ActionListener,
             /** {@inheritDoc} */
             @Override
             public void run() {
-                buttons.get(window).setText(name);
+                if (buttons.containsKey(window)) {
+                    buttons.get(window).setText(name);
+                }
             }
         });
     }
