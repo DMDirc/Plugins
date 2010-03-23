@@ -142,6 +142,10 @@ public final class TreeFrameManager implements FrameManager,
                 IdentityManager.getGlobalConfig().addChangeListener("treeview",
                         TreeFrameManager.this);
                 IdentityManager.getGlobalConfig().addChangeListener("ui",
+                        "sortrootwindows", TreeFrameManagerthis);
+                IdentityManager.getGlobalConfig().addChangeListener("ui",
+                        "sortchildwindows", TreeFrameManager.this);
+                IdentityManager.getGlobalConfig().addChangeListener("ui",
                         "backgroundcolour", TreeFrameManager.this);
                 IdentityManager.getGlobalConfig().addChangeListener("ui",
                         "foregroundcolour", TreeFrameManager.this);
