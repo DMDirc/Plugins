@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2006-2010 Chris Smith, Shane Mc Cormack, Gregory Holmes
+ * Copyright (c) 2006-2010 Chris Smith, Shane Mc Cormack, Gregory Holmes,
+ * Simon Mott
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,10 +23,8 @@
 package com.dmdirc.addons.ui_swing.framemanager.buttonbar;
 
 import com.dmdirc.FrameContainer;
-import com.dmdirc.FrameContainerComparator;
-import com.dmdirc.addons.ui_swing.SwingController;
-import com.dmdirc.addons.ui_swing.SwingWindowFactory;
 import com.dmdirc.addons.ui_swing.UIUtilities;
+import com.dmdirc.addons.ui_swing.actions.CloseFrameContainerAction;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.interfaces.FrameInfoListener;
@@ -45,15 +44,17 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Map;
-import java.util.TreeMap;
 
 import javax.swing.JComponent;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
-import javax.swing.JToggleButton;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 
@@ -68,7 +69,7 @@ import net.miginfocom.swing.MigLayout;
  */
 public final class ButtonBar implements FrameManager, ActionListener,
         ComponentListener, Serializable, NotificationListener,
-        SelectionListener, FrameInfoListener {
+        SelectionListener, FrameInfoListener, MouseListener {
 
     /**
      * A version number for this class. It should be changed whenever the class
@@ -77,7 +78,7 @@ public final class ButtonBar implements FrameManager, ActionListener,
      */
     private static final long serialVersionUID = 3;
     /** A map of containers to the buttons we're using for them. */
-    private final Map<FrameContainer<?>, JToggleButton> buttons;
+    private final Collection<FrameToggleButton> buttons;
     /** The position of this frame manager. */
     private final FramemanagerPosition position;
     /** The parent for the manager. */
@@ -98,8 +99,6 @@ public final class ButtonBar implements FrameManager, ActionListener,
     private int buttonWidth = 0;
     /** The height of buttons. */
     private int buttonHeight = 25;
-    /** UI Controller. */
-    private SwingWindowFactory controller;
 
     /** Creates a new instance of DummyFrameManager. */
     public ButtonBar() {
@@ -112,8 +111,7 @@ public final class ButtonBar implements FrameManager, ActionListener,
         scrollPane.setMinimumSize(new Dimension(0,buttonHeight
                 + ((int) PlatformDefaults.getUnitValueX("related").getValue()) * 2));
 
-        buttons = Collections.synchronizedMap(new TreeMap<FrameContainer<?>,
-                JToggleButton>(new FrameContainerComparator()));
+        buttons = Collections.synchronizedCollection(new ArrayList<FrameToggleButton>());
         position = FramemanagerPosition.getPosition(
                 IdentityManager.getGlobalConfig().getOption("ui",
                 "framemanagerPosition"));
@@ -157,14 +155,26 @@ public final class ButtonBar implements FrameManager, ActionListener,
         });
     }
 
+    /**
+     * Retreives the button object associated with {@link FrameContainer}.
+     *
+     * @param frame FrameContainer to find associated button for
+     * @return {@link FrameToggleButton} object asociated with this FrameContainer.
+     * Returns null if none exist
+     */
+    public FrameToggleButton getButton(final FrameContainer<?> frame) {
+        for (FrameToggleButton button : buttons) {
+            if (button.getFrameContainer() == frame) {
+                return button;
+            }
+        }
+        return null;
+    }
+
     /** {@inheritDoc} */
     @Override
     public void setController(final UIController controller) {
-        if (!(controller instanceof SwingController)) {
-            throw new IllegalArgumentException("Controller must be an instance "
-                    + "of SwingController");
-        }
-        this.controller = ((SwingController) controller).getWindowFactory();
+        //Do Nothing
     }
 
     /**
@@ -180,12 +190,14 @@ public final class ButtonBar implements FrameManager, ActionListener,
      * @author Simon Mott
      * @since 0.6.4
      */
-    private void insertButtons(Collection<FrameContainer<?>> windowCollection) {
+    private void insertButtons(final Collection<FrameContainer<?>> windowCollection) {
+        FrameToggleButton button;
         for (FrameContainer<?> window : windowCollection) {
-            if (buttons.get(window) != null) {
-                buttons.get(window).setPreferredSize(new Dimension(
+            button = getButton(window);
+            if (button != null) {
+                button.setPreferredSize(new Dimension(
                             buttonWidth, buttonHeight));
-                buttonPanel.add(buttons.get(window));
+                buttonPanel.add(button);
                 if (!window.getChildren().isEmpty()) {
                     insertButtons(window.getChildren());
                 }
@@ -208,14 +220,16 @@ public final class ButtonBar implements FrameManager, ActionListener,
      *
      * @param source The Container to get title/icon info from
      */
-    private void addButton(final FrameContainer<?> source) {
-        final JToggleButton button = new JToggleButton(source.toString(),
-                IconManager.getIconManager().getIcon(source.getIcon()));
+    private void addButton(final Window source) {
+        final FrameToggleButton button = new FrameToggleButton(source.getContainer()
+                .toString(), IconManager.getIconManager().getIcon(
+                source.getContainer().getIcon()), source);
         button.addActionListener(this);
+        button.addMouseListener(this);
         button.setHorizontalAlignment(SwingConstants.LEFT);
         button.setMinimumSize(new Dimension(0,buttonHeight));
         button.setMargin(new Insets(0, 0, 0, 0));
-        buttons.put(source, button);
+        buttons.add(button);
     }
 
     /** {@inheritDoc} */
@@ -238,7 +252,7 @@ public final class ButtonBar implements FrameManager, ActionListener,
             /** {@inheritDoc} */
             @Override
             public void run() {
-                addButton(window.getContainer());
+                addButton(window);
                 relayout();
                 window.getContainer().addNotificationListener(ButtonBar.this);
                 window.getContainer().addSelectionListener(ButtonBar.this);
@@ -259,7 +273,10 @@ public final class ButtonBar implements FrameManager, ActionListener,
                 window.getContainer().removeNotificationListener(ButtonBar.this);
                 window.getContainer().removeFrameInfoListener(ButtonBar.this);
                 window.getContainer().removeSelectionListener(ButtonBar.this);
-                buttons.remove(window.getContainer());
+                final FrameToggleButton button = getButton(window.getContainer());
+                if (button != null) {
+                    buttons.remove(button);
+                }
                 relayout();
             }
         });
@@ -272,16 +289,13 @@ public final class ButtonBar implements FrameManager, ActionListener,
      */
     @Override
     public void actionPerformed(final ActionEvent e) {
-        for (Map.Entry<FrameContainer<?>, JToggleButton> entry : buttons.entrySet()) {
-            if (entry.getValue().equals(e.getSource())) {
-                final TextFrame frame = (TextFrame) controller.getSwingWindow(
-                        entry.getKey());
-                if (frame != null && frame.equals(activeWindow)) {
-                    entry.getValue().setSelected(true);
-                }
-                entry.getKey().activateFrame();
-            }
+        final FrameToggleButton button = (FrameToggleButton) e.getSource();
+        final FrameContainer<?> window =  button.getFrameContainer();
+        final TextFrame frame = (TextFrame) button.getWindow();
+        if (frame != null && window.equals(activeWindow.getContainer())) {
+            button.setSelected(true);
         }
+        window.activateFrame();
     }
 
     /**
@@ -333,8 +347,9 @@ public final class ButtonBar implements FrameManager, ActionListener,
             /** {@inheritDoc} */
             @Override
             public void run() {
-                if (buttons.containsKey(window)) {
-                    buttons.get(window).setForeground(colour);
+                final FrameToggleButton button = getButton(window);
+                if (button != null) {
+                    button.setForeground(colour);
                 }
             }
         });
@@ -361,15 +376,17 @@ public final class ButtonBar implements FrameManager, ActionListener,
             /** {@inheritDoc} */
             @Override
             public void run() {
-                activeWindow = (TextFrame) controller.getSwingWindow(window);
-                if (selected != null && buttons.containsKey(selected)) {
-                    buttons.get(selected).setSelected(false);
+                activeWindow = (TextFrame) (getButton(window)).getWindow();
+                FrameToggleButton button;
+                button = getButton(selected);
+                if (selected != null && button != null) {
+                    button.setSelected(false);
                 }
 
                 selected = window;
-
-                if (buttons.containsKey(window)) {
-                    buttons.get(window).setSelected(true);
+                button = getButton(window);
+                if (button != null) {
+                    button.setSelected(true);
                 }
             }
         });
@@ -383,8 +400,9 @@ public final class ButtonBar implements FrameManager, ActionListener,
             /** {@inheritDoc} */
             @Override
             public void run() {
-                if (buttons.containsKey(window)) {
-                    buttons.get(window).setIcon(IconManager.getIconManager().getIcon(icon));
+                final FrameToggleButton button = getButton(window);
+                if (button != null) {
+                    button.setIcon(IconManager.getIconManager().getIcon(icon));
                 }
             }
         });
@@ -398,8 +416,9 @@ public final class ButtonBar implements FrameManager, ActionListener,
             /** {@inheritDoc} */
             @Override
             public void run() {
-                if (buttons.containsKey(window)) {
-                    buttons.get(window).setText(name);
+                final FrameToggleButton button = getButton(window);
+                if (button != null) {
+                    button.setText(name);
                 }
             }
         });
@@ -409,5 +428,56 @@ public final class ButtonBar implements FrameManager, ActionListener,
     @Override
     public void titleChanged(final FrameContainer<?> window, final String title) {
         // Do nothing
+    }
+
+    /**
+     * Creates and displays a Popup menu for the button that was clicked.
+     *
+     * @param e MouseEvent for this event
+     */
+    public void processMouseEvents(MouseEvent e) {
+        if (e.isPopupTrigger()) {
+            final FrameToggleButton button = (FrameToggleButton) e.getSource();
+
+            TextFrame frame = (TextFrame) button.getWindow();
+            if (frame == null) {
+                return;
+            }
+            final JPopupMenu popupMenu = frame.getPopupMenu(null, "");
+            frame.addCustomPopupItems(popupMenu);
+            popupMenu.add(new JMenuItem(new CloseFrameContainerAction(frame.
+                        getContainer())));
+            popupMenu.show(button, e.getX(), e.getY());
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        processMouseEvents(e);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void mousePressed(MouseEvent e) {
+        processMouseEvents(e);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        processMouseEvents(e);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void mouseEntered(MouseEvent e) {
+        //Do nothing
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void mouseExited(MouseEvent e) {
+        //Do nothing
     }
 }
