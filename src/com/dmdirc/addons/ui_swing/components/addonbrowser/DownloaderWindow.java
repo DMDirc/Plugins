@@ -6,6 +6,7 @@
 package com.dmdirc.addons.ui_swing.components.addonbrowser;
 
 import com.dmdirc.Main;
+import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.ui.CoreUIUtils;
 import com.dmdirc.util.DownloadListener;
@@ -41,8 +42,10 @@ public class DownloaderWindow extends JDialog implements Runnable, DownloadListe
      * Instantiates a new downloader window.
      *
      * @param parentWindow Parent window
+     * @param controller Swing controller
      */
-    public DownloaderWindow(final Window parentWindow) {
+    public DownloaderWindow(final Window parentWindow,
+            final SwingController controller) {
         super(parentWindow, "DMDirc Addon Browser", ModalityType.MODELESS);
         this.parentWindow = parentWindow;
         setTitle("Downloading addon information...");
@@ -51,7 +54,7 @@ public class DownloaderWindow extends JDialog implements Runnable, DownloadListe
         pack();
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         CoreUIUtils.centreWindow(this);
-        setIconImage(Main.getUI().getMainWindow().getIcon().getImage());
+        setIconImage(controller.getMainFrame().getIcon().getImage());
         setVisible(true);
         
         new Thread(this, "Addon downloader thread").start();

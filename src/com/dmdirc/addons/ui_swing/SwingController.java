@@ -348,7 +348,8 @@ public final class SwingController extends Plugin implements Serializable,
                     }
                 };
                 final SwingFirstRunWizard wizard =
-                        new SwingFirstRunWizard(parentWindow, firstRun);
+                        new SwingFirstRunWizard(parentWindow, firstRun,
+                        SwingController.this);
                 wizard.getWizardDialog().addWizardListener(listener);
                 wizard.display();
             }
