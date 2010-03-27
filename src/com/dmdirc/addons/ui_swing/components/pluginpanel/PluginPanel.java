@@ -136,8 +136,7 @@ public final class PluginPanel extends JPanel implements
     private void layoutComponents() {
         final int panelHeight;
         if (controller == null) {
-            panelHeight = ((SwingController) Main.getUI()).getPrefsDialog().
-                    getPanelHeight();
+            panelHeight = controller.getPrefsDialog().getPanelHeight();
         } else {
             panelHeight = controller.getPrefsDialog().getPanelHeight();
         }
@@ -206,7 +205,7 @@ public final class PluginPanel extends JPanel implements
 
             pluginList.repaint();
         } else if (e.getSource() != toggleButton) {
-            new DownloaderWindow(parentWindow);
+            new DownloaderWindow(parentWindow, controller);
         }
     }
 
