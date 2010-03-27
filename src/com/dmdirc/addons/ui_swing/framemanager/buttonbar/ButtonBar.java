@@ -283,9 +283,11 @@ public final class ButtonBar implements FrameManager, ActionListener,
                 window.getContainer().removeFrameInfoListener(ButtonBar.this);
                 window.getContainer().removeSelectionListener(ButtonBar.this);
                 if (buttons.containsKey(window)) {
+                    buttonPanel.setVisible(false);
+                    buttonPanel.remove(buttons.get(window));
+                    buttonPanel.setVisible(true);
                     buttons.remove(window);
                 }
-                relayout();
             }
         });
     }
