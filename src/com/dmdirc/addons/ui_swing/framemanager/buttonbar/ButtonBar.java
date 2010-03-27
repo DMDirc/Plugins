@@ -217,9 +217,10 @@ public final class ButtonBar implements FrameManager, ActionListener,
      * Removes all buttons from the bar and readds them.
      */
     private void relayout() {
+       buttonPanel.setVisible(false);
        buttonPanel.removeAll();
        insertButtons(WindowManager.getRootWindows());
-       buttonPanel.repaint();
+       buttonPanel.setVisible(true);
     }
 
     /**
