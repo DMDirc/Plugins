@@ -134,32 +134,57 @@ public class WebInterfaceUI implements UIController {
         return new WebStatusBar();
     }
 
-    /** {@inheritDoc} */
-    @Override
+    /**
+     * {@inheritDoc}
+     *
+     * @deprecated Controllers should listen for window events using a
+     * {@link FrameListener} and create windows as needed.
+     */
+    @Override @Deprecated
     public ChannelWindow getChannel(final Channel channel) {
         return new WebChannelWindow(channel);
     }
 
-    /** {@inheritDoc} */
-    @Override
+    /**
+     * {@inheritDoc}
+     *
+     * @deprecated Controllers should listen for window events using a
+     * {@link FrameListener} and create windows as needed.
+     */
+    @Override @Deprecated
     public ServerWindow getServer(final Server server) {
         return new WebServerWindow(server);
     }
 
-    /** {@inheritDoc} */
-    @Override
+    /**
+     * {@inheritDoc}
+     *
+     * @deprecated Controllers should listen for window events using a
+     * {@link FrameListener} and create windows as needed.
+     */
+    @Override @Deprecated
     public QueryWindow getQuery(final Query query) {
         return new WebQueryWindow(query);
     }
 
-    /** {@inheritDoc} */
-    @Override
+    /**
+     * {@inheritDoc}
+     *
+     * @deprecated Controllers should listen for window events using a
+     * {@link FrameListener} and create windows as needed.
+     */
+    @Override @Deprecated
     public Window getWindow(final FrameContainer<?> owner) {
         return new WebWindow(owner);
     }
 
-    /** {@inheritDoc} */
-    @Override
+    /**
+     * {@inheritDoc}
+     *
+     * @deprecated Controllers should listen for window events using a
+     * {@link FrameListener} and create windows as needed.
+     */
+    @Override @Deprecated
     public InputWindow getInputWindow(final WritableFrameContainer<?> owner) {
         return new WebInputWindow(owner, owner.getCommandParser());
     }
@@ -205,13 +230,21 @@ public class WebInterfaceUI implements UIController {
         // Do nothing
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     * 
+     * @deprecated Use {@link WindowManager#getActiveWindow()} instead
+     */
     @Override @Deprecated
     public Window getActiveWindow() {
         return active;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     * 
+     * @deprecated Use {@link WindowManager#getActiveWindow()} instead
+     */
     @Override @Deprecated
     public Server getActiveServer() {
         //TODO FIXME

@@ -72,32 +72,57 @@ public final class DummyController extends Plugin implements UIController {
         return new DummyStatusBar();
     }
        
-    /** {@inheritDoc} */
-    @Override
+    /**
+     * {@inheritDoc}
+     *
+     * @deprecated Controllers should listen for window events using a
+     * {@link FrameListener} and create windows as needed.
+     */
+    @Override  @Deprecated
     public ChannelWindow getChannel(final Channel channel) {
         return new DummyChannelWindow(channel);
     }
     
-    /** {@inheritDoc} */
-    @Override
+    /**
+     * {@inheritDoc}
+     *
+     * @deprecated Controllers should listen for window events using a
+     * {@link FrameListener} and create windows as needed.
+     */
+    @Override  @Deprecated
     public ServerWindow getServer(final Server server) {
         return new DummyServerWindow(server);
     }
     
-    /** {@inheritDoc} */
-    @Override
+    /**
+     * {@inheritDoc}
+     *
+     * @deprecated Controllers should listen for window events using a
+     * {@link FrameListener} and create windows as needed.
+     */
+    @Override  @Deprecated
     public QueryWindow getQuery(final Query query) {
         return new DummyQueryWindow(query);
     }
     
-    /** {@inheritDoc} */
-    @Override
+    /**
+     * {@inheritDoc}
+     *
+     * @deprecated Controllers should listen for window events using a
+     * {@link FrameListener} and create windows as needed.
+     */
+    @Override  @Deprecated
     public Window getWindow(final FrameContainer<?> owner) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
     
-    /** {@inheritDoc} */
-    @Override
+    /**
+     * {@inheritDoc}
+     *
+     * @deprecated Controllers should listen for window events using a
+     * {@link FrameListener} and create windows as needed.
+     */
+    @Override  @Deprecated
     public InputWindow getInputWindow(final WritableFrameContainer<?> owner) {
         return new DummyInputWindow(owner, owner.getCommandParser());
     }
