@@ -26,13 +26,13 @@ import com.dmdirc.Main;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.actions.interfaces.ActionType;
-import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.interfaces.ActionListener;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.ui.interfaces.FirstRunWizard;
 import com.dmdirc.addons.ui_swing.Apple;
+import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.dialogs.profiles.ProfileManagerDialog;
 import com.dmdirc.addons.ui_swing.wizard.Step;
 import com.dmdirc.addons.ui_swing.wizard.WizardDialog;
@@ -57,14 +57,18 @@ public final class SwingFirstRunWizard implements WizardListener,
     private WizardDialog wizardDialog;
     /** First run or update. */
     private boolean firstRun = true;
+    /** Swing controller. */
+    private SwingController controller;
 
     /**
      * Instatiate the wizard.
      *
      * @param parentWindow Parent window
+     * @param controller Swing controller
      */
-    public SwingFirstRunWizard(final Window parentWindow) {
-        this(parentWindow, true);
+    public SwingFirstRunWizard(final Window parentWindow,
+            final SwingController controller) {
+        this(parentWindow, true, controller);
     }
 
     /**
@@ -72,9 +76,12 @@ public final class SwingFirstRunWizard implements WizardListener,
      *
      * @param parentWindow Parent window
      * @param firstRun is this the first run or an update?
+     * @param controller Swing controller
      */
-    public SwingFirstRunWizard(final Window parentWindow, final boolean firstRun) {
+    public SwingFirstRunWizard(final Window parentWindow, 
+            final boolean firstRun, final SwingController controller) {
         this.firstRun = firstRun;
+        this.controller = controller;
         
         wizardDialog = new WizardDialog("DMDirc: " + (firstRun ? "Setup wizard" 
                 : "Migration wizard"), new ArrayList<Step>(), this, parentWindow,
@@ -115,7 +122,7 @@ public final class SwingFirstRunWizard implements WizardListener,
                 @Override
                 public void processEvent(final ActionType type,
                         final StringBuffer format, final Object... arguments) {
-                    ProfileManagerDialog.showProfileManagerDialog((MainFrame) Main.getUI().getMainWindow());
+                    ProfileManagerDialog.showProfileManagerDialog(controller.getMainWindow());
                 }
             }, CoreActionType.CLIENT_OPENED);
             
