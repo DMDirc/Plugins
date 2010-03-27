@@ -207,6 +207,7 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
      * @return This frame's container.
      */
     @Override
+    @SuppressWarnings("unchecked")
     public WritableFrameContainer<? extends InputWindow> getContainer() {
         return (WritableFrameContainer<? extends InputWindow>) super.getContainer();
     }
@@ -263,6 +264,8 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
      * Sets the away indicator on or off.
      *
      * @param awayState away state
+     *
+     * @deprecated Use {@link AwayStateListener}s to listen for changes instead
      */
     @Override
     @Deprecated
@@ -400,8 +403,8 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
             final String text = inputFieldText.substring(0, caretPosition)
                     + clipboard + inputFieldText.substring(caretPosition);
             //check the limit
-            final Integer pasteTrigger = getConfigManager().getOptionInt("ui",
-                    "pasteProtectionLimit");
+            final Integer pasteTrigger = getContainer().getConfigManager()
+                    .getOptionInt("ui", "pasteProtectionLimit");
             //check whether the number of lines is over the limit
             if (pasteTrigger != null && getContainer().getNumLines(text)
                     > pasteTrigger) {
@@ -436,29 +439,29 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
     public void configChanged(final String domain, final String key) {
         super.configChanged(domain, key);
 
-        if ("ui".equals(domain) && getConfigManager() != null) {
+        if ("ui".equals(domain) && getContainer().getConfigManager() != null) {
             if (getInputField() != null) {
                 if ("inputbackgroundcolour".equals(key) || "backgroundcolour".
                         equals(key)) {
-                    getInputField().setBackground(getConfigManager().
-                            getOptionColour(
+                    getInputField().setBackground(getContainer()
+                            .getConfigManager().getOptionColour(
                             "ui", "inputbackgroundcolour",
                             "ui", "backgroundcolour"));
                 } else if ("inputforegroundcolour".equals(key) || "foregroundcolour".
                         equals(key)) {
-                    getInputField().setForeground(getConfigManager().
-                            getOptionColour(
+                    getInputField().setForeground(getContainer()
+                            .getConfigManager().getOptionColour(
                             "ui", "inputforegroundcolour",
                             "ui", "foregroundcolour"));
-                    getInputField().setCaretColor(getConfigManager().
-                            getOptionColour(
+                    getInputField().setCaretColor(getContainer()
+                            .getConfigManager().getOptionColour(
                             "ui", "inputforegroundcolour",
                             "ui", "foregroundcolour"));
                 }
             }
             if ("awayindicator".equals(key)) {
-                useAwayIndicator = getConfigManager().getOptionBool("ui",
-                        "awayindicator");
+                useAwayIndicator = getContainer().getConfigManager()
+                        .getOptionBool("ui", "awayindicator");
             }
         }
     }
@@ -470,7 +473,7 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
      */
     protected final void popuplateNicklistPopup(final String nickname) {
         final PopupMenu popups = PopupManager.getMenu(PopupType.CHAN_NICK,
-                getConfigManager());
+                getContainer().getConfigManager());
 
         nickPopup = (JPopupMenu) populatePopupMenu(new JPopupMenu(), popups,
                 nickname);

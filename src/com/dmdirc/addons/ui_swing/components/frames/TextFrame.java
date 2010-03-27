@@ -146,7 +146,7 @@ public abstract class TextFrame extends JInternalFrame implements Window,
         final ConfigManager config = owner.getConfigManager();
 
         setFrameIcon(IconManager.getIconManager().getIcon(owner.getIcon()));
-        setTitle(frameParent.getTitle());
+        getContainer().setTitle(frameParent.getTitle());
 
         owner.addFrameInfoListener(this);
 
@@ -164,7 +164,8 @@ public abstract class TextFrame extends JInternalFrame implements Window,
         inputWindow = this;
         while (!(inputWindow instanceof InputWindow) && inputWindow != null
                 && inputWindow.getContainer().getParent() != null) {
-            inputWindow = inputWindow.getContainer().getParent().getFrame();
+            inputWindow = controller.getWindowFactory().getSwingWindow(
+                    inputWindow.getContainer().getParent());
         }
 
         initComponents();
@@ -202,7 +203,11 @@ public abstract class TextFrame extends JInternalFrame implements Window,
         return panel;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     * 
+     * @deprecated Should use {@link FrameContainer#setTitle(java.lang.String)}
+     */
     @Override
     @Deprecated
     public void setTitle(final String title) {
@@ -214,6 +219,17 @@ public abstract class TextFrame extends JInternalFrame implements Window,
                 TextFrame.super.setTitle(title);
             }
         });
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @deprecated Use {@link FrameContainer#getTitle()} instead
+     */
+    @Override
+    @Deprecated
+    public String getTitle() {
+        return super.getTitle();
     }
 
     /** {@inheritDoc} */
@@ -617,15 +633,7 @@ public abstract class TextFrame extends JInternalFrame implements Window,
      */
     @Override
     public void internalFrameOpened(final InternalFrameEvent event) {
-        new LoggingSwingWorker() {
-
-            /** {@inheritDoc} */
-            @Override
-            protected Object doInBackground() throws Exception {
-                frameParent.windowOpened();
-                return null;
-            }
-        }.execute();
+        //Ignore
     }
 
     /**
@@ -717,15 +725,6 @@ public abstract class TextFrame extends JInternalFrame implements Window,
         if (maximiseRestoreInProgress.get()) {
             return;
         }
-        new LoggingSwingWorker() {
-
-            /** {@inheritDoc} */
-            @Override
-            protected Object doInBackground() throws Exception {
-                frameParent.windowDeactivated();
-                return null;
-            }
-        }.execute();
     }
 
     /** {@inheritDoc} */
@@ -734,7 +733,11 @@ public abstract class TextFrame extends JInternalFrame implements Window,
         return frameParent;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     * 
+     * @deprecated Use {@link FrameContainer#getConfigManager()}
+     */
     @Deprecated
     @Override
     public ConfigManager getConfigManager() {

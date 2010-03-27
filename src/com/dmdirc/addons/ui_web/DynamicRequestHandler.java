@@ -273,8 +273,9 @@ public class DynamicRequestHandler extends AbstractHandler {
 
         nickEvents.add(new Event("clearnicklist", false));
 
-        for (ChannelClientInfo cci : ((WebChannelWindow) WebInterfaceUI.active)
-                .getChannel().getChannelInfo().getChannelClients()) {
+        for (ChannelClientInfo cci : ((Channel) ((WebChannelWindow)
+                WebInterfaceUI.active).getContainer()).getChannelInfo()
+                .getChannelClients()) {
             nickEvents.add(new Event("addnicklist",
                     cci.getClient().getNickname()));
         }

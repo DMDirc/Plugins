@@ -35,6 +35,12 @@ import javax.swing.JToggleButton;
  */
 public class FrameToggleButton extends JToggleButton {
 
+    /**
+     * A version number for this class. It should be changed whenever the class
+     * structure is changed (or anything else that would prevent serialized
+     * objects being unserialized with the new class).
+     */
+    private static final long serialVersionUID = 1;
     /** Contains the window associated with this button. */
     private final Window window;
 

@@ -92,7 +92,7 @@ public class BashStyle implements TabCompletionStyle {
             
             final String sub = res.getBestSubstring();
             if (sub.equalsIgnoreCase(word) && tabCount >= 2) {
-                window.addLine("tabCompletion", res.toString());
+                window.getContainer().addLine("tabCompletion", res.toString());
                 
                 return null;
             } else {

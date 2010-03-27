@@ -70,8 +70,13 @@ public class WebChannelWindow extends WebInputWindow implements ChannelWindow {
         }
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     *
+     * @deprecated Use {@link #getContainer()}
+     */
     @Override
+    @Deprecated
     public Channel getChannel() {
         return channel;
     }
