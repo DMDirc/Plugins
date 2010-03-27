@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_swing.framemanager.buttonbar;
 
 import com.dmdirc.FrameContainer;
+import com.dmdirc.FrameContainerComparator;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.SwingWindowFactory;
 import com.dmdirc.addons.ui_swing.UIUtilities;
@@ -35,6 +36,7 @@ import com.dmdirc.interfaces.SelectionListener;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.addons.ui_swing.framemanager.FrameManager;
 import com.dmdirc.addons.ui_swing.framemanager.FramemanagerPosition;
+import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.interfaces.UIController;
 import com.dmdirc.ui.interfaces.Window;
@@ -49,6 +51,7 @@ import java.awt.event.ComponentListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -72,7 +75,7 @@ import net.miginfocom.swing.MigLayout;
  */
 public final class ButtonBar implements FrameManager, ActionListener,
         ComponentListener, Serializable, NotificationListener,
-        SelectionListener, FrameInfoListener, MouseListener {
+        SelectionListener, FrameInfoListener, MouseListener, ConfigChangeListener {
 
     /**
      * A version number for this class. It should be changed whenever the class
@@ -102,6 +105,12 @@ public final class ButtonBar implements FrameManager, ActionListener,
     private int buttonWidth = 0;
     /** The height of buttons. */
     private int buttonHeight = 25;
+    /** Sort root windows */
+    private boolean sortRootWindows = IdentityManager.getGlobalConfig()
+            .getOptionBool("ui", "sortrootwindows");
+    /** Sort child windows */
+    private boolean sortChildWindows = IdentityManager.getGlobalConfig()
+            .getOptionBool("ui", "sortchildwindows");
     /** UI Controller. */
     private SwingWindowFactory controller;
 
@@ -120,7 +129,10 @@ public final class ButtonBar implements FrameManager, ActionListener,
         position = FramemanagerPosition.getPosition(
                 IdentityManager.getGlobalConfig().getOption("ui",
                 "framemanagerPosition"));
-
+        IdentityManager.getGlobalConfig().addChangeListener("ui",
+                        "sortrootwindows", this);
+        IdentityManager.getGlobalConfig().addChangeListener("ui",
+                        "sortchildwindows", this);
         if (position.isHorizontal()) {
             buttonPanel = new ButtonPanel(new MigLayout("ins rel, fill, flowx"),
                     this);
@@ -207,7 +219,12 @@ public final class ButtonBar implements FrameManager, ActionListener,
                             buttonWidth, buttonHeight));
                 buttonPanel.add(button);
                 if (!window.getChildren().isEmpty()) {
-                    insertButtons(window.getChildren());
+                    final ArrayList childList = new ArrayList<FrameContainer<?>>(
+                            window.getChildren());
+                    if (sortChildWindows) {
+                         Collections.sort(childList, new FrameContainerComparator());
+                    }
+                    insertButtons(childList);
                 }
             }
         }
@@ -219,7 +236,14 @@ public final class ButtonBar implements FrameManager, ActionListener,
     private void relayout() {
         buttonPanel.setVisible(false);
         buttonPanel.removeAll();
-        insertButtons(WindowManager.getRootWindows());
+
+        final ArrayList windowList = new ArrayList<FrameContainer<?>>(
+                WindowManager.getRootWindows());
+        if (sortRootWindows) {
+            Collections.sort(windowList, new FrameContainerComparator());
+        }
+
+        insertButtons(windowList);
         buttonPanel.setVisible(true);
     }
 
@@ -508,5 +532,17 @@ public final class ButtonBar implements FrameManager, ActionListener,
     @Override
     public void mouseExited(MouseEvent e) {
         //Do nothing
+    }
+
+    @Override
+    public void configChanged(String domain, String key) {
+        if ("sortrootwindows".equals(key)) {
+            sortRootWindows = IdentityManager.getGlobalConfig()
+                    .getOptionBool("ui", "sortrootwindows");
+        } else if ("sortchildwindows".equals(key)) {
+            sortChildWindows = IdentityManager.getGlobalConfig()
+                    .getOptionBool("ui", "sortrootwindows");
+        }
+        relayout();
     }
 }
