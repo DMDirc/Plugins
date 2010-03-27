@@ -267,7 +267,6 @@ public final class ButtonBar implements FrameManager, ActionListener,
                 window.getContainer().addSelectionListener(ButtonBar.this);
                 window.getContainer().addFrameInfoListener(ButtonBar.this);
             }
-
         });
     }
 
@@ -283,9 +282,11 @@ public final class ButtonBar implements FrameManager, ActionListener,
                 window.getContainer().removeFrameInfoListener(ButtonBar.this);
                 window.getContainer().removeSelectionListener(ButtonBar.this);
                 if (buttons.containsKey(window)) {
+                    buttonPanel.setVisible(false);
+                    buttonPanel.remove(buttons.get(window));
                     buttons.remove(window);
+                    buttonPanel.setVisible(true);
                 }
-                relayout();
             }
         });
     }
@@ -459,31 +460,51 @@ public final class ButtonBar implements FrameManager, ActionListener,
         }
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     *
+     * @param e MouseEvent for this event
+     */
     @Override
     public void mouseClicked(MouseEvent e) {
         processMouseEvents(e);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     *
+     * @param e MouseEvent for this event
+     */
     @Override
     public void mousePressed(MouseEvent e) {
         processMouseEvents(e);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     *
+     * @param e MouseEvent for this event
+     */
     @Override
     public void mouseReleased(MouseEvent e) {
         processMouseEvents(e);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     *
+     * @param e MouseEvent for this event
+     */
     @Override
     public void mouseEntered(MouseEvent e) {
         //Do nothing
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     *
+     * @param e MouseEvent for this event
+     */
     @Override
     public void mouseExited(MouseEvent e) {
         //Do nothing
