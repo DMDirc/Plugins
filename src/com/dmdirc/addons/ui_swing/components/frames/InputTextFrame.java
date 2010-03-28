@@ -140,8 +140,7 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
             @Override
             public void run() {
                 InputTextFrame.super.open();
-                if (useAwayIndicator && getContainer().
-                        getServer() != null) {
+                if (useAwayIndicator && getContainer().getServer() != null) {
                     awayLabel.setVisible(getContainer().getServer().isAway());
                 }
 
@@ -230,7 +229,8 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
     public final void setInputHandler(final InputHandler newInputHandler) {
         this.inputHandler = newInputHandler;
         inputHandler.addValidationListener(inputField);
-        inputHandler.setTabCompleter(((WritableFrameContainer<?>) frameParent).getTabCompleter());
+        inputHandler.setTabCompleter(((WritableFrameContainer<?>) frameParent)
+                .getTabCompleter());
     }
 
     /**
@@ -270,23 +270,7 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
     @Override
     @Deprecated
     public void setAwayIndicator(final boolean awayState) {
-        UIUtilities.invokeLater(new Runnable() {
-
-            /** {@inheritDoc} */
-            @Override
-            public void run() {
-                final boolean awayIndicator = getConfigManager().
-                        getOptionBool("ui", "awayindicator");
-                if (awayIndicator || !awayState) {
-                    if (awayState) {
-                        inputPanel.add(awayLabel, BorderLayout.LINE_START);
-                        awayLabel.setVisible(true);
-                    } else {
-                        awayLabel.setVisible(false);
-                    }
-                }
-            }
-        });
+        //Ignore
     }
 
     /**
@@ -354,8 +338,8 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
             if (point != null) {
                 initPopupMenu();
                 inputFieldPopup.show(this, (int) point.getX(),
-                        (int) point.getY() + getTextPane().getHeight() + (int) PlatformDefaults.
-                        getUnitValueX("related").getValue());
+                        (int) point.getY() + getTextPane().getHeight() + (int)
+                        PlatformDefaults.getUnitValueX("related").getValue());
             }
         }
     }
@@ -516,13 +500,31 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
     /** {@inheritDoc} */
     @Override
     public void onAway(final String reason) {
-        setAwayIndicator(true);
+        UIUtilities.invokeLater(new Runnable() {
+
+            /** {@inheritDoc} */
+            @Override
+            public void run() {
+                if (useAwayIndicator) {
+                    awayLabel.setVisible(true);
+                }
+            }
+        });
     }
 
     /** {@inheritDoc} */
     @Override
     public void onBack() {
-        setAwayIndicator(false);
+        UIUtilities.invokeLater(new Runnable() {
+
+            /** {@inheritDoc} */
+            @Override
+            public void run() {
+                if (useAwayIndicator) {
+                    awayLabel.setVisible(false);
+                }
+            }
+        });
     }
 
     /** {@inheritDoc} */
