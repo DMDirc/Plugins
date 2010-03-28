@@ -115,7 +115,7 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
         getInputField().setCaretColor(config.getOptionColour(
                 "ui", "inputforegroundcolour",
                 "ui", "foregroundcolour"));
-        config.getOptionBool("ui", "awayindicator");
+        useAwayIndicator = config.getOptionBool("ui", "awayindicator");
 
         config.addChangeListener("ui", "inputforegroundcolour", this);
         config.addChangeListener("ui", "inputbackgroundcolour", this);
@@ -129,24 +129,6 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
         getInputField().getTextField().getActionMap().put("textpaneCopy",
                 new InputFieldCopyAction(getTextPane(),
                 getInputField().getTextField()));
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void open() {
-        UIUtilities.invokeLater(new Runnable() {
-
-            /** {@inheritDoc} */
-            @Override
-            public void run() {
-                InputTextFrame.super.open();
-                if (useAwayIndicator && getContainer().getServer() != null) {
-                    awayLabel.setVisible(getContainer().getServer().isAway());
-                }
-
-                inputField.requestFocusInWindow();
-            }
-        });
     }
 
     /**
@@ -545,6 +527,9 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
     @Override
     public void internalFrameActivated(final InternalFrameEvent event) {
         super.internalFrameActivated(event);
-        getInputField().requestFocusInWindow();
+        if (useAwayIndicator && getContainer().getServer() != null) {
+            awayLabel.setVisible(getContainer().getServer().isAway());
+        }
+        inputField.requestFocusInWindow();
     }
 }
