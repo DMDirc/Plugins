@@ -140,6 +140,7 @@ public final class ButtonBar implements FrameManager, ActionListener,
             buttonPanel = new ButtonPanel(new MigLayout("ins rel, fill, flowy"),
                     this);
         }
+        scrollPane.getViewport().addMouseWheelListener(buttonPanel);
         scrollPane.getViewport().add(buttonPanel);
     }
 
@@ -154,6 +155,15 @@ public final class ButtonBar implements FrameManager, ActionListener,
         return buttonHeight;
     }
 
+    /**
+     * Returns the button object of the current selected window
+     *
+     * @return Button object for the current selected window
+     */
+    public FrameToggleButton getSelectedButton() {
+        return getButton(selected);
+    }
+
     /** {@inheritDoc} */
     @Override
     public void setParent(final JComponent parent) {
@@ -163,10 +173,8 @@ public final class ButtonBar implements FrameManager, ActionListener,
             @Override
             public void run() {
                 ButtonBar.this.parent = parent;
-                scrollPane.setSize(parent.getWidth(), parent.getHeight());
-
-                parent.setLayout(new MigLayout("ins 0"));
-                parent.add(scrollPane);
+                parent.setLayout(new MigLayout("ins 0, fill"));
+                parent.add(scrollPane, "top, left");
                 parent.addComponentListener(ButtonBar.this);
             }
         });
@@ -219,8 +227,8 @@ public final class ButtonBar implements FrameManager, ActionListener,
                             buttonWidth, buttonHeight));
                 buttonPanel.add(button);
                 if (!window.getChildren().isEmpty()) {
-                    final ArrayList childList = new ArrayList<FrameContainer<?>>(
-                            window.getChildren());
+                    final ArrayList<FrameContainer<?>> childList = new ArrayList
+                            <FrameContainer<?>>(window.getChildren());
                     if (sortChildWindows) {
                          Collections.sort(childList, new FrameContainerComparator());
                     }
@@ -237,8 +245,8 @@ public final class ButtonBar implements FrameManager, ActionListener,
         buttonPanel.setVisible(false);
         buttonPanel.removeAll();
 
-        final ArrayList windowList = new ArrayList<FrameContainer<?>>(
-                WindowManager.getRootWindows());
+        final ArrayList<FrameContainer<?>> windowList = new
+                ArrayList<FrameContainer<?>>(WindowManager.getRootWindows());
         if (sortRootWindows) {
             Collections.sort(windowList, new FrameContainerComparator());
         }
@@ -419,6 +427,7 @@ public final class ButtonBar implements FrameManager, ActionListener,
                 selected = window;
                 button = getButton(window);
                 if (button != null) {
+                    scrollPane.getViewport().scrollRectToVisible(button.getBounds());
                     button.setSelected(true);
                 }
             }
@@ -534,6 +543,7 @@ public final class ButtonBar implements FrameManager, ActionListener,
         //Do nothing
     }
 
+    /** {@inheritDoc} */
     @Override
     public void configChanged(String domain, String key) {
         if ("sortrootwindows".equals(key)) {

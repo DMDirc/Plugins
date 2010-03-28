@@ -22,8 +22,12 @@
  */
 package com.dmdirc.addons.ui_swing.framemanager.buttonbar;
 
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Rectangle;
+
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 
 import javax.swing.JPanel;
 import javax.swing.Scrollable;
@@ -36,7 +40,7 @@ import net.miginfocom.swing.MigLayout;
  * @author Simon Mott
  * @since 0.6.4
  */
-public class ButtonPanel extends JPanel implements Scrollable {
+public class ButtonPanel extends JPanel implements Scrollable, MouseWheelListener {
 
     /** The ButtonBar that created this Panel. */
     private ButtonBar buttonBar;
@@ -80,6 +84,43 @@ public class ButtonPanel extends JPanel implements Scrollable {
     @Override
     public boolean getScrollableTracksViewportHeight() {
         return false;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void mouseWheelMoved(MouseWheelEvent e) {
+        e.consume();
+        final int selectedIndex = getSelectedIndex();
+        int newIndex = 0;
+        if (e.getWheelRotation() < 0) {
+            //Up
+            newIndex = selectedIndex > 0 ? selectedIndex - 1 :
+                getComponentCount() - 1;
+        } else if (e.getWheelRotation() > 0) {
+            //Down
+            newIndex = (selectedIndex + 1) % getComponentCount();
+        }
+        ((FrameToggleButton) getComponent(newIndex)).getWindow().activateFrame();
+    }
+
+    /**
+     * Gets the component index of the button associated with the current
+     * selected window.
+     *
+     * @return Integer Index for the button of the selected window
+     *
+     * @since 0.6.4
+     */
+    private int getSelectedIndex() {
+        int selectedIndex = 0;
+        final FrameToggleButton selectedButton = buttonBar.getSelectedButton();
+        for (Component c : getComponents()) {
+            if (c == selectedButton) {
+                break;
+            }
+            selectedIndex++;
+        }
+        return selectedIndex;
     }
 
 }
