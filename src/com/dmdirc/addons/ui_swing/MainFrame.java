@@ -38,6 +38,8 @@ import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.addons.ui_swing.framemanager.FrameManager;
 import com.dmdirc.addons.ui_swing.framemanager.FramemanagerPosition;
+import com.dmdirc.logger.ErrorLevel;
+import com.dmdirc.logger.Logger;
 import com.dmdirc.ui.interfaces.MainWindow;
 import com.dmdirc.ui.interfaces.Window;
 import com.dmdirc.ui.CoreUIUtils;
@@ -48,6 +50,7 @@ import java.awt.Dimension;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
 import java.awt.event.WindowListener;
+import java.lang.reflect.InvocationTargetException;
 
 import javax.swing.ImageIcon;
 import javax.swing.JDesktopPane;
@@ -351,16 +354,38 @@ public final class MainFrame extends JFrame implements WindowListener,
             @Override
             public void run() {
                 final String manager = IdentityManager.getGlobalConfig().
-                        getOption("ui",
-                        "framemanager");
-
+                        getOption("ui", "framemanager");
                 try {
-                    mainFrameManager = (FrameManager) Class.forName(manager).
-                            getConstructor().newInstance();
-                } catch (Exception ex) {
-                    // Throws craploads of exceptions and we want to handle them all
-                    // the same way, so we might as well catch Exception
-                    mainFrameManager = new TreeFrameManager();
+                    mainFrameManager = (FrameManager) Class.forName(manager)
+                            .getConstructor().newInstance();
+                } catch (InvocationTargetException ex) {
+                    Logger.appError(ErrorLevel.MEDIUM, "Unable to load frame " 
+                            + "manager, falling back to default.", ex);
+                } catch (InstantiationException ex) {
+                    Logger.userError(ErrorLevel.MEDIUM, "Unable to load frame " 
+                            + "manager, falling back to default.", ex);
+                } catch (NoSuchMethodException ex) {
+                    Logger.userError(ErrorLevel.MEDIUM, "Unable to load frame " 
+                            + "manager, falling back to default.", ex);
+                } catch (SecurityException ex) {
+                    Logger.userError(ErrorLevel.MEDIUM, "Unable to load frame " 
+                            + "manager, falling back to default.", ex);
+                } catch (IllegalAccessException ex) {
+                    Logger.userError(ErrorLevel.MEDIUM, "Unable to load frame "
+                            + "manager, falling back to default.", ex);
+                } catch (IllegalArgumentException ex) {
+                    Logger.userError(ErrorLevel.MEDIUM, "Unable to load frame " 
+                            + "manager, falling back to default.", ex);
+                } catch (ClassNotFoundException ex) {
+                    Logger.userError(ErrorLevel.MEDIUM, "Unable to load frame "
+                            + "manager, falling back to default." , ex);
+                } catch (LinkageError ex) {
+                    Logger.userError(ErrorLevel.MEDIUM, "Unable to load frame " 
+                            + "manager, falling back to default." , ex);
+                } finally {
+                    if (mainFrameManager == null) {
+                        mainFrameManager = new TreeFrameManager();
+                    }
                 }
                 mainFrameManager.setController(controller);
                 mainFrameManager.setParent(frameManagerPanel);
