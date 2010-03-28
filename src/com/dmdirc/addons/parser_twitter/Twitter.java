@@ -76,6 +76,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -808,19 +809,20 @@ public class Twitter implements Parser, TwitterErrorHandler, TwitterRawHandler, 
      * @param hostname Hostname that the message is from.
      */
     private void sendChannelMessage(final ChannelInfo channel, final String message, final String hostname) {
-        sendChannelMessage(channel, message, null, hostname);
+        sendChannelMessage(channel, new Date(), message, null, hostname);
     }
 
     /**
      * Send a message to the given channel.
      *
      * @param channel Channel to send message to
+     * @param date The timestamp to be used for the message
      * @param message Message to send.
      * @param cci Channel Client to send from
      * @param hostname Hostname that the message is from.
      */
-    private void sendChannelMessage(final ChannelInfo channel, final String message, final ChannelClientInfo cci, final String hostname) {
-        getCallbackManager().getCallbackType(ChannelMessageListener.class).call(channel, cci, message, hostname);
+    private void sendChannelMessage(final ChannelInfo channel, final Date date, final String message, final ChannelClientInfo cci, final String hostname) {
+        getCallbackManager().getCallbackType(ChannelMessageListener.class).call(date, channel, cci, message, hostname);
     }
 
     /**
@@ -1047,7 +1049,7 @@ public class Twitter implements Parser, TwitterErrorHandler, TwitterRawHandler, 
                     }
                     
                     final String hostname = status.getUser().getScreenName();
-                    sendChannelMessage(channel, message, cci, hostname);
+                    sendChannelMessage(channel, new Date(status.getTime()), message, cci, hostname);
                 }
 
                 final List<TwitterMessage> directMessages = new ArrayList<TwitterMessage>();
