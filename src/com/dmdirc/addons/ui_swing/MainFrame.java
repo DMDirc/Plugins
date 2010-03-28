@@ -38,6 +38,8 @@ import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.addons.ui_swing.framemanager.FrameManager;
 import com.dmdirc.addons.ui_swing.framemanager.FramemanagerPosition;
+import com.dmdirc.logger.ErrorLevel;
+import com.dmdirc.logger.Logger;
 import com.dmdirc.ui.interfaces.MainWindow;
 import com.dmdirc.ui.interfaces.Window;
 import com.dmdirc.ui.CoreUIUtils;
@@ -360,6 +362,8 @@ public final class MainFrame extends JFrame implements WindowListener,
                 } catch (Exception ex) {
                     // Throws craploads of exceptions and we want to handle them all
                     // the same way, so we might as well catch Exception
+                    Logger.appError(ErrorLevel.HIGH, "Unable to load" +
+                            "preferred frame manager." ,ex);
                     mainFrameManager = new TreeFrameManager();
                 }
                 mainFrameManager.setController(controller);
