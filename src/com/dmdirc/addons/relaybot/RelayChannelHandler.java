@@ -38,6 +38,7 @@ import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.messages.Styliser;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -105,7 +106,7 @@ public class RelayChannelHandler implements ChannelMessageListener {
      * @param sendJoinIfNew
      * @return Requested ChannelClient Info.
      */
-    private IRCChannelClientInfo getChannelClient(final ChannelInfo channel, final String nick, final boolean sendJoinIfNew) {
+    private IRCChannelClientInfo getChannelClient(final ChannelInfo channel, final Date date, final String nick, final boolean sendJoinIfNew) {
         final Parser parser = channel.getParser();
         final String storeName = parser.getStringConverter().toLowerCase(nick);
         synchronized (channelClients) {
@@ -116,7 +117,7 @@ public class RelayChannelHandler implements ChannelMessageListener {
 
                 channelClients.put(storeName, newChannelClient);
                 if (sendJoinIfNew && !client.isServer()) {
-                    coreChannelHandler.onChannelJoin(parser, channel, newChannelClient);
+                    coreChannelHandler.onChannelJoin(parser, date, channel, newChannelClient);
                     // The nickcolour plugin colours the nicknames on join
                     // and uses nickname@server when colouring rather than
                     // the setting the user wanted, we can recolour here to
@@ -226,7 +227,7 @@ public class RelayChannelHandler implements ChannelMessageListener {
      * @param host Host of client
      */
     @Override
-    public void onChannelMessage(final Parser parser, final ChannelInfo channel, final ChannelClientInfo channelClient, final String message, final String host) {
+    public void onChannelMessage(final Parser parser, final Date date, final ChannelInfo channel, final ChannelClientInfo channelClient, final String message, final String host) {
         final String channelName = parser.getStringConverter().toLowerCase(channel.getName());
         String botName;
         try {
@@ -245,16 +246,16 @@ public class RelayChannelHandler implements ChannelMessageListener {
 
             if (initial.charAt(0) == '+') {
                 // Channel Message
-                final IRCChannelClientInfo newChannelClient = getChannelClient(channel, bits[0].substring(2, bits[0].length() - 1), joinNew);
+                final IRCChannelClientInfo newChannelClient = getChannelClient(channel, date, bits[0].substring(2, bits[0].length() - 1), joinNew);
 
-                coreChannelHandler.onChannelMessage(parser, channel, newChannelClient, bits[1], host);
+                coreChannelHandler.onChannelMessage(parser, date, channel, newChannelClient, bits[1], host);
                 return;
             } else if (initial.equalsIgnoreCase("***")) {
                 // Some kind of state-changing action
                 final String[] newBits = bits[1].split(" ");
 
                 if (newBits.length > 2) {
-                    final IRCChannelClientInfo newChannelClient = getChannelClient(channel, newBits[0], joinNew);
+                    final IRCChannelClientInfo newChannelClient = getChannelClient(channel, date, newBits[0], joinNew);
 
                     if (newBits[2].equalsIgnoreCase("joined")) {
                         // User joined a relayed channel.
@@ -262,7 +263,7 @@ public class RelayChannelHandler implements ChannelMessageListener {
                             // If auto join on discover isn't enabled, we will
                             // need to send this join, else it will already
                             // have been sent.
-                            coreChannelHandler.onChannelJoin(parser, channel, newChannelClient);
+                            coreChannelHandler.onChannelJoin(parser, date, channel, newChannelClient);
                             // And recolour to combat the nickcolour plugin
                             // changing the colour on join.
                             colourClient(newChannelClient);
@@ -273,7 +274,7 @@ public class RelayChannelHandler implements ChannelMessageListener {
                         String reason = (newBits.length > 4) ? mergeBits(newBits, 4, newBits.length - 1, " ") : "()";
                         reason = reason.substring(1, reason.length() - 1);
 
-                        coreChannelHandler.onChannelPart(parser, channel, newChannelClient, reason);
+                        coreChannelHandler.onChannelPart(parser, date, channel, newChannelClient, reason);
                         removeChannelClient(channel, newBits[0]);
                         return;
                     } else if (newBits[2].equalsIgnoreCase("quit")) {
@@ -281,7 +282,7 @@ public class RelayChannelHandler implements ChannelMessageListener {
                         String reason = (newBits.length > 4) ? mergeBits(newBits, 4, newBits.length - 1, " ") : "()";
                         reason = reason.substring(1, reason.length() - 1);
 
-                        coreChannelHandler.onChannelQuit(parser, channel, newChannelClient, reason);
+                        coreChannelHandler.onChannelQuit(parser, date, channel, newChannelClient, reason);
                         removeChannelClient(channel, newBits[0]);
                         return;
                     } else if (newBits[2].equalsIgnoreCase("kicked")) {
@@ -289,9 +290,9 @@ public class RelayChannelHandler implements ChannelMessageListener {
                         String reason = (newBits.length > 7) ? mergeBits(newBits, 7, newBits.length - 1, " ") : "()";
                         reason = reason.substring(1, reason.length() - 1);
 
-                        final IRCChannelClientInfo kickingChannelClient = (newBits.length > 6) ? getChannelClient(channel, newBits[6], joinNew) : null;
+                        final IRCChannelClientInfo kickingChannelClient = (newBits.length > 6) ? getChannelClient(channel, date, newBits[6], joinNew) : null;
 
-                        coreChannelHandler.onChannelKick(parser, channel, newChannelClient, kickingChannelClient, reason, "");
+                        coreChannelHandler.onChannelKick(parser, date, channel, newChannelClient, kickingChannelClient, reason, "");
                         removeChannelClient(channel, newBits[0]);
                         return;
                     } else if (newBits[2].equalsIgnoreCase("now")) {
@@ -299,7 +300,7 @@ public class RelayChannelHandler implements ChannelMessageListener {
                         if (newBits.length > 3) {
                             renameChannelClient(newChannelClient, newBits[3]);
 
-                            coreChannelHandler.onChannelNickChanged(parser, channel, newChannelClient, newBits[0]);
+                            coreChannelHandler.onChannelNickChanged(parser, date, channel, newChannelClient, newBits[0]);
                             return;
                         }
                     }
@@ -308,15 +309,15 @@ public class RelayChannelHandler implements ChannelMessageListener {
                 // Channel Action
                 final String[] newBits = bits[1].split(" ", 2);
 
-                final IRCChannelClientInfo newChannelClient = getChannelClient(channel, newBits[0], joinNew);
+                final IRCChannelClientInfo newChannelClient = getChannelClient(channel, date, newBits[0], joinNew);
 
-                coreChannelHandler.onChannelAction(parser, channel, newChannelClient, newBits[1], "");
+                coreChannelHandler.onChannelAction(parser, date, channel, newChannelClient, newBits[1], "");
                 return;
             }
         }
 
         // Pass it on unchanged.
-        coreChannelHandler.onChannelMessage(parser, channel, channelClient, message, host);
+        coreChannelHandler.onChannelMessage(parser, date, channel, channelClient, message, host);
     }
 
     /**
@@ -344,6 +345,6 @@ public class RelayChannelHandler implements ChannelMessageListener {
      * This will cause all remote clients to vanish from the nicklist.
      */
     public void updateNames() {
-        coreChannelHandler.onChannelGotNames(myChannel.getServer().getParser(), myChannel.getChannelInfo());
+        coreChannelHandler.onChannelGotNames(myChannel.getServer().getParser(), new Date(), myChannel.getChannelInfo());
     }
 }
