@@ -27,7 +27,6 @@ import com.dmdirc.ChannelEventHandler;
 import com.dmdirc.parser.common.CallbackManager;
 import com.dmdirc.parser.common.CallbackNotFoundException;
 import com.dmdirc.parser.common.CallbackObject;
-import com.dmdirc.parser.common.CallbackObjectSpecific;
 import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.parser.interfaces.callbacks.CallbackInterface;
 import com.dmdirc.parser.interfaces.callbacks.ChannelMessageListener;
@@ -35,6 +34,7 @@ import com.dmdirc.parser.irc.IRCCallbackManager;
 import com.dmdirc.parser.irc.IRCParser;
 import com.dmdirc.parser.interfaces.callbacks.SocketCloseListener;
 import java.lang.reflect.Field;
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -174,7 +174,8 @@ public class RelayCallbackManager extends IRCCallbackManager implements SocketCl
      *
      * @param parser
      */
-    public void onSocketClosed(final Parser parser) {
+    @Override
+    public void onSocketClosed(final Parser parser, final Date date) {
         if (parser.getCallbackManager() instanceof RelayCallbackManager) {
             setCallbackManager((IRCParser)parser, originalCBM);
         }

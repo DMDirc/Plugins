@@ -38,6 +38,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.Date;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -158,7 +159,7 @@ public class DCCTransferWindow extends DCCFrame<EmptyFrame> implements DCCTransf
 
     /** {@inheritDoc} */
     @Override
-    public void onSocketClosed(final Parser tParser) {
+    public void onSocketClosed(final Parser tParser, final Date date) {
         // Remove our reference to the parser (and its reference to us)
         parser.getCallbackManager().delAllCallback(this);
         parser = null;
