@@ -36,6 +36,7 @@ import com.dmdirc.parser.interfaces.ChannelClientInfo;
 import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.parser.irc.IRCParser;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -88,7 +89,7 @@ public class RelayBotPlugin extends Plugin implements ActionListener, ConfigChan
         for (Server server : ServerManager.getServerManager().getServers()) {
             final Parser parser = server.getParser();
             if (parser instanceof IRCParser && parser.getCallbackManager() instanceof RelayCallbackManager) {
-                ((RelayCallbackManager) parser.getCallbackManager()).onSocketClosed(parser);
+                ((RelayCallbackManager) parser.getCallbackManager()).onSocketClosed(parser, new Date());
             }
         }
 
