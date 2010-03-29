@@ -38,25 +38,31 @@ public class DllSource implements MediaSource {
     /** Use getArtistTitle */
     private final boolean useArtistTitle;
 
+    /** Parent Plugin. */
+    final WindowsMediaSourcePlugin parent;
+
     /**
      * Instantiates the media source.
      *
+     * @param parent The plugin that owns this DllSource
      * @param playerName Name of Player and DLL
      */
-    public DllSource(final String playerName) {
-        this(playerName, false);
+    public DllSource(final WindowsMediaSourcePlugin parent, final String playerName) {
+        this(parent, playerName, false);
     }
 
     /**
      * Instantiates the media source.
      *
+     * @param parent The plugin that owns this DllSource
      * @param playerName Name of Player and DLL
      * @param useArtistTitle True if getArtistTitle should be parsed rather than
      *                       using getArtist() and getTitle()
      */
-    public DllSource(final String playerName, final boolean useArtistTitle) {
+    public DllSource(final WindowsMediaSourcePlugin parent, final String playerName, final boolean useArtistTitle) {
         this.playerName = playerName;
         this.useArtistTitle = useArtistTitle;
+        this.parent = parent;
     }
 
     /** {@inheritDoc} */
@@ -72,13 +78,13 @@ public class DllSource implements MediaSource {
      * @return "Good" Output
      */
     private String getOutput(final String command) {
-        return WindowsMediaSourcePlugin.getOutput(playerName, command).getGoodOutput();
+        return parent.getOutput(playerName, command).getGoodOutput();
     }
 
     /** {@inheritDoc} */
     @Override
     public MediaSourceState getState() {
-        final MediaInfoOutput result = WindowsMediaSourcePlugin.getOutput(playerName, "getPlayState");
+        final MediaInfoOutput result = parent.getOutput(playerName, "getPlayState");
 
         if (result.getExitCode() == 0) {
             final String output = result.getGoodOutput();

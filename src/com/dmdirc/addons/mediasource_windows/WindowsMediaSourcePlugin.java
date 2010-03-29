@@ -47,17 +47,14 @@ public class WindowsMediaSourcePlugin extends Plugin implements MediaSourceManag
     /** Media sources. */
     private final List<MediaSource> sources;
 
-    /** Files dir */
-    private static final String filesDir = Main.getConfigDir() + "plugins/windowsmediasource_files/";
-
     /**
      * Creates a new instance of DcopMediaSourcePlugin.
      */
     public WindowsMediaSourcePlugin() {
         super();
         sources = new ArrayList<MediaSource>();
-        sources.add(new DllSource("Winamp", true));
-        sources.add(new DllSource("iTunes", false));
+        sources.add(new DllSource(this, "Winamp", true));
+        sources.add(new DllSource(this, "iTunes", false));
     }
 
     /** {@inheritDoc} */
@@ -73,9 +70,9 @@ public class WindowsMediaSourcePlugin extends Plugin implements MediaSourceManag
      * @param method Method to call
      * @return a MediaInfoOutput with the results
      */
-    protected static MediaInfoOutput getOutput(final String player, final String method) {
+    protected MediaInfoOutput getOutput(final String player, final String method) {
         try {
-            final Process myProcess = Runtime.getRuntime().exec(new String[]{filesDir + "GetMediaInfo.exe", player, method});
+            final Process myProcess = Runtime.getRuntime().exec(new String[]{getFilesDirString() + "GetMediaInfo.exe", player, method});
             final StringBuffer data = new StringBuffer();
             new StreamReader(myProcess.getErrorStream()).start();
             new StreamReader(myProcess.getInputStream(), data).start();
@@ -107,16 +104,10 @@ public class WindowsMediaSourcePlugin extends Plugin implements MediaSourceManag
         try {
             final ResourceManager res = pi.getResourceManager();
 
-            // Make sure our files dir exists
-            final File newDir = new File(filesDir);
-            if (!newDir.exists()) {
-                newDir.mkdirs();
-            }
-
-            // Now extract the .dlls and .exe
+            // Extract the .dlls and .exe
             try {
-                res.extractResoucesEndingWith(newDir, ".dll");
-                res.extractResoucesEndingWith(newDir, ".exe");
+                res.extractResoucesEndingWith(getFilesDir(), ".dll");
+                res.extractResoucesEndingWith(getFilesDir(), ".exe");
             } catch (IOException ex) {
                 Logger.userError(ErrorLevel.MEDIUM, "Unable to extract files for windows media source: " + ex.getMessage(), ex);
             }
