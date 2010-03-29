@@ -50,12 +50,9 @@ import java.util.ArrayList;
  *
  * @author Shane 'Dataforce' McCormack
  */
-public final class FreeDesktopNotificationsPlugin extends Plugin implements
-        ConfigChangeListener{
+public final class FreeDesktopNotificationsPlugin extends Plugin implements ConfigChangeListener {
     /** The DcopCommand we created */
     private FDNotifyCommand command = null;
-    /** Files dir */
-    private static final String filesDir  = Main.getConfigDir() + "plugins/freedesktop_notifications_files/";
     /** notification timeout. */
     private int timeout;
     /** notification icon. */
@@ -82,11 +79,13 @@ public final class FreeDesktopNotificationsPlugin extends Plugin implements
      * @return True if the notification was shown.
      */
     public boolean showNotification(final String title, final String message) {
+        if (getFilesDir() == null) { return false; }
+        
         final ArrayList<String> args = new ArrayList<String>();
         
         args.add("/usr/bin/env");
         args.add("python");
-        args.add(filesDir+"notify.py");
+        args.add(getFilesDirString() + "notify.py");
         args.add("-a");
         args.add("DMDirc");
         args.add("-i");
@@ -157,16 +156,10 @@ public final class FreeDesktopNotificationsPlugin extends Plugin implements
             try {
                 final ResourceManager res = pi.getResourceManager();
                 
-                // Make sure our files dir exists
-                final File newDir = new File(filesDir);
-                if (!newDir.exists()) {
-                    newDir.mkdirs();
-                }
-            
-                // Now extract the files needed
+                // Extract the files needed
                 try {
-                    res.extractResoucesEndingWith(newDir, ".py");
-                    res.extractResoucesEndingWith(newDir, ".png");
+                    res.extractResoucesEndingWith(getFilesDir(), ".py");
+                    res.extractResoucesEndingWith(getFilesDir(), ".png");
                 } catch (IOException ex) {
                     Logger.userError(ErrorLevel.MEDIUM, "Unable to extract files for Free desktop notifications: " + ex.getMessage(), ex);
                 }
@@ -188,7 +181,7 @@ public final class FreeDesktopNotificationsPlugin extends Plugin implements
     /** {@inheritDoc} */
     @Override
     public void domainUpdated() {
-        IdentityManager.getAddonIdentity().setOption(getDomain(), "general.icon", filesDir+"icon.png");
+        IdentityManager.getAddonIdentity().setOption(getDomain(), "general.icon", getFilesDirString() + "icon.png");
     }
     
     /** {@inheritDoc} */
