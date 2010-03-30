@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.components.pluginpanel;
 
-import com.dmdirc.Main;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.config.prefs.PreferencesInterface;
@@ -136,7 +135,7 @@ public final class PluginPanel extends JPanel implements
     private void layoutComponents() {
         final int panelHeight;
         if (controller == null) {
-            panelHeight = controller.getPrefsDialog().getPanelHeight();
+            panelHeight = 300;
         } else {
             panelHeight = controller.getPrefsDialog().getPanelHeight();
         }
