@@ -24,20 +24,12 @@ package com.dmdirc.addons.dcc;
 
 import com.dmdirc.Server;
 import com.dmdirc.WritableFrameContainer;
-import com.dmdirc.addons.ui_swing.components.frames.InputTextFrame;
-import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
-import com.dmdirc.addons.ui_swing.SwingController;
-import com.dmdirc.commandparser.PopupType;
 import com.dmdirc.commandparser.parsers.CommandParser;
-import com.dmdirc.commandparser.parsers.GlobalCommandParser;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.input.TabCompleter;
 import com.dmdirc.ui.interfaces.InputWindow;
-
-import java.awt.Container;
-
-import javax.swing.JPopupMenu;
+import com.dmdirc.ui.interfaces.Window;
 
 /**
  * This class links DCC objects to a window.
@@ -45,68 +37,7 @@ import javax.swing.JPopupMenu;
  * @param <T> The type of window which corresponds to this DCC frame
  * @author Shane 'Dataforce' McCormack
  */
-public abstract class DCCFrame<T extends InputWindow> extends WritableFrameContainer<T> {
-
-    /**
-     * Empty Frame.
-     */
-    static class EmptyFrame extends InputTextFrame {
-
-        /** A version number for this class. */
-        private static final long serialVersionUID = 200711271;
-
-        /**
-         * Creates a new instance of EmptyFrame.
-         *
-         * @param owner The frame container that owns this frame
-         */
-        public EmptyFrame(final SwingController controller, final WritableFrameContainer<?> owner) {
-            super(controller, owner);
-            setTextPane(null);
-            pack();
-        }
-
-        /**
-         * Retrieves the command Parser for this input window.
-         *
-         * @return This window's command parser
-         */
-        @Override
-        public final CommandParser getCommandParser() {
-            return GlobalCommandParser.getGlobalCommandParser();
-        }
-
-        /** {@inheritDoc} */
-        @Override
-        public PopupType getNicknamePopupType() {
-            return null;
-        }
-
-        /** {@inheritDoc} */
-        @Override
-        public PopupType getChannelPopupType() {
-            return null;
-        }
-
-        /** {@inheritDoc} */
-        @Override
-        public PopupType getHyperlinkPopupType() {
-            return null;
-        }
-
-        /** {@inheritDoc} */
-        @Override
-        public PopupType getNormalPopupType() {
-            return null;
-        }
-
-        /** {@inheritDoc} */
-        @Override
-        public void addCustomPopupItems(final JPopupMenu popupMenu) {
-            //Add no custom popup items
-        }
-
-    }
+public abstract class DCCFrameContainer<T extends InputWindow> extends WritableFrameContainer<T> {
 
     /** The dcc plugin that owns this frame */
     protected final DCCPlugin plugin;
@@ -123,7 +54,7 @@ public abstract class DCCFrame<T extends InputWindow> extends WritableFrameConta
      * @param windowClass The class of window to use for this container
      * @param parser Command parser to use for this window
      */
-    public DCCFrame(final DCCPlugin plugin, final String title, final String icon,
+    public DCCFrameContainer(final DCCPlugin plugin, final String title, final String icon,
             final Class<T> windowClass, final CommandParser parser) {
         super(icon, title, title, windowClass, IdentityManager.getGlobalConfig(), parser);
         this.plugin = plugin;
@@ -147,15 +78,6 @@ public abstract class DCCFrame<T extends InputWindow> extends WritableFrameConta
     @Override
     public int getMaxLineLength() {
         return 512;
-    }
-
-    /**
-     * Returns the content pane of the internal frame associated with this object.
-     *
-     * @return The content pane of the internal frame associated with this object
-     */
-    public Container getContentPane() {
-        return ((TextFrame) getFrame()).getContentPane();
     }
 
     /**
@@ -189,15 +111,14 @@ public abstract class DCCFrame<T extends InputWindow> extends WritableFrameConta
         windowClosing = true;
 
         // 1: Make the window non-visible
-        getFrame().setVisible(false);
+        for (Window window : getWindows()) {
+            window.setVisible(false);
+        }
 
         // 2: Remove any callbacks or listeners
         // 3: Trigger any actions neccessary
         // 4: Trigger action for the window closing
-
         // 5: Inform any parents that the window is closing
-        plugin.delWindow(this);
-
         // 6: Remove the window from the window manager
         WindowManager.removeWindow(this);
     }

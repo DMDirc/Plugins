@@ -25,8 +25,8 @@ package com.dmdirc.addons.dcc.actions;
 import com.dmdirc.Server;
 import com.dmdirc.actions.interfaces.ActionMetaType;
 
-import com.dmdirc.addons.dcc.DCCChatWindow;
-import com.dmdirc.addons.dcc.DCCTransferWindow;
+import com.dmdirc.addons.dcc.ChatContainer;
+import com.dmdirc.addons.dcc.TransferContainer;
 
 import java.io.File;
 
@@ -42,19 +42,19 @@ public enum DCCEvents implements ActionMetaType {
     /** DCC Chat Request Sent. */
     DCC_CHAT_REQUEST_SENT(new String[]{"server", "client"}, Server.class, String.class),
     /** DCC Message from another person. */
-    DCC_CHAT_MESSAGE(new String[]{"DCCChatWindow", "Nickname", "Message"}, DCCChatWindow.class, String.class, String.class),
+    DCC_CHAT_MESSAGE(new String[]{"DCCChatWindow", "Nickname", "Message"}, ChatContainer.class, String.class, String.class),
     /** DCC Message to another person. */
-    DCC_CHAT_SELFMESSAGE(new String[]{"DCCChatWindow", "Message"}, DCCChatWindow.class, String.class),
+    DCC_CHAT_SELFMESSAGE(new String[]{"DCCChatWindow", "Message"}, ChatContainer.class, String.class),
     /** DCC Chat Socket Closed. */
-    DCC_CHAT_SOCKETCLOSED(new String[]{"DCCChatWindow"}, DCCChatWindow.class),
+    DCC_CHAT_SOCKETCLOSED(new String[]{"DCCChatWindow"}, ChatContainer.class),
     /** DCC Chat Socket Opened. */
-    DCC_CHAT_SOCKETOPENED(new String[]{"DCCChatWindow"}, DCCChatWindow.class),
+    DCC_CHAT_SOCKETOPENED(new String[]{"DCCChatWindow"}, ChatContainer.class),
     /** DCC Send Socket Closed. */
-    DCC_SEND_SOCKETCLOSED(new String[]{"DCCSendWindow"}, DCCTransferWindow.class),
+    DCC_SEND_SOCKETCLOSED(new String[]{"DCCSendWindow"}, TransferContainer.class),
     /** DCC Send Socket Opened. */
-    DCC_SEND_SOCKETOPENED(new String[]{"DCCSendWindow"}, DCCTransferWindow.class),
+    DCC_SEND_SOCKETOPENED(new String[]{"DCCSendWindow"}, TransferContainer.class),
     /** DCC Send Data Transfered */
-    DCC_SEND_DATATRANSFERED(new String[]{"DCCSendWindow", "Bytes Transfered"}, DCCTransferWindow.class, int.class),
+    DCC_SEND_DATATRANSFERED(new String[]{"DCCSendWindow", "Bytes Transfered"}, TransferContainer.class, int.class),
     /** DCC Send Request. */
     DCC_SEND_REQUEST(new String[]{"server", "client", "file"}, Server.class, String.class, String.class),
     /** DCC Send Request Sent. */

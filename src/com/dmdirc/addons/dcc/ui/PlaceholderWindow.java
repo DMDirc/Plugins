@@ -20,37 +20,37 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.dcc;
+package com.dmdirc.addons.dcc.ui;
 
-import com.dmdirc.addons.dcc.io.DCCChat;
+import com.dmdirc.FrameContainer;
+import com.dmdirc.addons.ui_swing.SwingController;
+import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 
 /**
- * This interfaces allows DCC Chat Windows to receive data from a DCCChat
- *
- * @author Shane 'Dataforce' McCormack
+ * A virtually empty window which serves as a top-level placeholder for other
+ * DCC windows.
+ * 
+ * @author chris
+ * @since 0.6.4
  */
-public interface DCCChatHandler {
+public class PlaceholderWindow extends EmptyWindow {
+
+    /** A version number for this class. */
+    private static final long serialVersionUID = 1l;
 
     /**
-     * Handle a received message
+     * Creates a new placeholder window for the specified UI controller and owner.
      *
-     * @param dcc The DCCChat that this message is from
-     * @param message The message
+     * @param controller The UIController that owns this window
+     * @param owner The frame container that owns this window
      */
-    void handleChatMessage(final DCCChat dcc, final String message);
+    public PlaceholderWindow(final SwingController controller,
+            final FrameContainer<?> owner) {
+        super(controller, owner);
 
-    /**
-     * Called when the socket is closed
-     *
-     * @param dcc The DCCChat that this message is from
-     */
-    void socketClosed(final DCCChat dcc);
-
-    /**
-     * Called when the socket is opened
-     *
-     * @param dcc The DCCChat that this message is from
-     */
-    void socketOpened(final DCCChat dcc);
+        add(new TextLabel(
+                "This is a placeholder window to group DCCs together."
+                + "\n\nClosing this window will close all the active DCCs"));
+    }
 
 }
