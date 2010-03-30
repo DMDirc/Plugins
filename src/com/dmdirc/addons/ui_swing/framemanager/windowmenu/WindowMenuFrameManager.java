@@ -25,13 +25,12 @@ package com.dmdirc.addons.ui_swing.framemanager.windowmenu;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.FrameContainerComparator;
 import com.dmdirc.addons.ui_swing.SwingController;
+import com.dmdirc.addons.ui_swing.SwingWindowListener;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.interfaces.SelectionListener;
 import com.dmdirc.ui.IconManager;
-import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.interfaces.Window;
-import com.dmdirc.ui.interfaces.FrameListener;
 import com.dmdirc.util.ReturnableThread;
 
 import java.awt.Component;
@@ -56,7 +55,7 @@ import javax.swing.event.MenuListener;
  * Manages the window menu window list.
  */
 public final class WindowMenuFrameManager extends JMenu implements
-        FrameListener, ActionListener, SelectionListener, MenuListener {
+        SwingWindowListener, ActionListener, SelectionListener, MenuListener {
 
     /**
      * A version number for this class. It should be changed whenever the class
@@ -102,7 +101,7 @@ public final class WindowMenuFrameManager extends JMenu implements
 
         setText("Window");
         setMnemonic('w');
-        WindowManager.addFrameListener(this);
+        controller.getWindowFactory().addWindowListener(this);
         addMenuListener(this);
 
         minimiseMenuItem = new JMenuItem(IconManager.getIconManager().getIcon(
@@ -152,123 +151,125 @@ public final class WindowMenuFrameManager extends JMenu implements
 
     /** {@inheritDoc} */
     @Override
-    public void addWindow(final FrameContainer window, final boolean focus) {
-        final FrameContainerMenuItem item = UIUtilities.invokeAndWait(
-                new ReturnableThread<FrameContainerMenuItem>() {
-
-                    /** {@inheritDoc} */
-                    @Override
-                    public void run() {
-                        setObject(new FrameContainerMenuItem(window,
-                                WindowMenuFrameManager.this));
-                        }
-                });
-        items.put(window, item);
-        final int index = getIndex(window, this);
-        window.addSelectionListener(this);
-        UIUtilities.invokeLater(new Runnable() {
-
-            /** {@inheritDoc} */
-            @Override
-            public void run() {
-                add(item, index);
-            }
-        });
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void delWindow(final FrameContainer window) {
-        final AbstractButton item;
-        if (items.containsKey(window)) {
-            item = items.get(window);
-            items.remove(window);
-        } else if (menus.containsKey(window)) {
-            item = menus.get(window);
-            menus.remove(window);
-        } else {
-            item = null;
-        }
-        UIUtilities.invokeLater(new Runnable() {
-
-            /** {@inheritDoc} */
-            @Override
-            public void run() {
-                remove(item);
-            }
-        });
-        window.removeSelectionListener(this);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void addWindow(final FrameContainer parent,
-            final FrameContainer window, final boolean focus) {
-        final FrameContainerMenuItem item = UIUtilities.invokeAndWait(
-                new ReturnableThread<FrameContainerMenuItem>() {
-
-                    /** {@inheritDoc} */
-                    @Override
-                    public void run() {
-                        setObject(new FrameContainerMenuItem(window,
-                                WindowMenuFrameManager.this));
-                    }
-                });
-        final JMenu parentMenu;
-        if (!menus.containsKey(parent)) {
-            final FrameContainerMenu replacement = UIUtilities.invokeAndWait(
-                    new ReturnableThread<FrameContainerMenu>() {
+    public void windowAdded(final Window parent, final Window window) {
+        if (parent == null) {
+            final FrameContainerMenuItem item = UIUtilities.invokeAndWait(
+                    new ReturnableThread<FrameContainerMenuItem>() {
 
                         /** {@inheritDoc} */
                         @Override
                         public void run() {
-                            setObject(new FrameContainerMenu(parent, controller));
+                            setObject(new FrameContainerMenuItem(window.
+                                    getContainer(), WindowMenuFrameManager.this));
                         }
                     });
-            replaceItemWithMenu(getParentMenu(parent), items.get(parent),
-                    replacement);
-            parentMenu = replacement;
-        } else {
-            parentMenu = menus.get(parent);
-        }
-        items.put(window, item);
-        window.addSelectionListener(this);
-        UIUtilities.invokeLater(new Runnable() {
-
-            /** {@inheritDoc} */
-            @Override
-            public void run() {
-                parentMenu.add(item, getIndex(window, parentMenu));
-            }
-        });
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void delWindow(final FrameContainer parent,
-            final FrameContainer window) {
-        if (items.containsKey(window)) {
-            final JMenu menu = getParentMenu(window);
-            final FrameContainerMenuItem item = items.get(window);
-            items.remove(window);
-            UIUtilities.invokeAndWait(new Runnable() {
+            items.put(window.getContainer(), item);
+            final int index = getIndex(window.getContainer(), this);
+            window.getContainer().addSelectionListener(this);
+            UIUtilities.invokeLater(new Runnable() {
 
                 /** {@inheritDoc} */
                 @Override
                 public void run() {
-                    menu.remove(item);
-                    if (menu.getMenuComponentCount() == 1) {
-                        replaceMenuWithItem(getParentMenu(parent),
-                                menus.get(parent), new FrameContainerMenuItem(
-                                parent, WindowMenuFrameManager.this));
-                    }
+                    add(item, index);
                 }
             });
-        } else if (menus.containsKey(window)) {
-            menus.get(parent).remove(menus.get(window));
-            menus.remove(window);
+        } else {
+            final FrameContainerMenuItem item = UIUtilities.invokeAndWait(
+                    new ReturnableThread<FrameContainerMenuItem>() {
+
+                        /** {@inheritDoc} */
+                        @Override
+                        public void run() {
+                            setObject(new FrameContainerMenuItem(window.
+                                    getContainer(),
+                                    WindowMenuFrameManager.this));
+                        }
+                    });
+            final JMenu parentMenu;
+            if (!menus.containsKey(parent.getContainer())) {
+                final FrameContainerMenu replacement = UIUtilities.invokeAndWait(
+                        new ReturnableThread<FrameContainerMenu>() {
+
+                            /** {@inheritDoc} */
+                            @Override
+                            public void run() {
+                                setObject(new FrameContainerMenu(parent.
+                                        getContainer(), controller));
+                            }
+                        });
+                replaceItemWithMenu(getParentMenu(parent.getContainer()),
+                        items.get(parent.getContainer()), replacement);
+                parentMenu = replacement;
+            } else {
+                parentMenu = menus.get(parent.getContainer());
+            }
+            items.put(window.getContainer(), item);
+            window.getContainer().addSelectionListener(this);
+            UIUtilities.invokeLater(new Runnable() {
+
+                /** {@inheritDoc} */
+                @Override
+                public void run() {
+                    parentMenu.add(item, getIndex(window.getContainer(),
+                            parentMenu));
+                }
+            });
         }
-        window.removeSelectionListener(this);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void windowDeleted(final Window parent, final Window window) {
+        if (parent == null) {
+            final AbstractButton item;
+            if (items.containsKey(window.getContainer())) {
+                item = items.get(window.getContainer());
+                items.remove(window.getContainer());
+            } else if (menus.containsKey(window.getContainer())) {
+                item = menus.get(window.getContainer());
+                menus.remove(window.getContainer());
+            } else {
+                item = null;
+            }
+            UIUtilities.invokeLater(new Runnable() {
+
+                /** {@inheritDoc} */
+                @Override
+                public void run() {
+                    remove(item);
+                }
+            });
+            window.getContainer().removeSelectionListener(this);
+        } else {
+            if (items.containsKey(window.getContainer())) {
+                final JMenu menu = getParentMenu(window.getContainer());
+                final FrameContainerMenuItem item = items.get(window.
+                        getContainer());
+                items.remove(window.getContainer());
+                UIUtilities.invokeAndWait(new Runnable() {
+
+                    /** {@inheritDoc} */
+                    @Override
+                    public void run() {
+                        menu.remove(item);
+                        if (menu.getMenuComponentCount() == 1) {
+                            replaceMenuWithItem(getParentMenu(parent.
+                                    getContainer()),
+                                    menus.get(parent.getContainer()),
+                                    new FrameContainerMenuItem(parent.
+                                    getContainer(),
+                                    WindowMenuFrameManager.this));
+                        }
+                    }
+                });
+            } else if (menus.containsKey(window.getContainer())) {
+                menus.get(parent.getContainer()).remove(menus.get(window.
+                        getContainer()));
+                menus.remove(window.getContainer());
+            }
+            window.getContainer().removeSelectionListener(this);
+        }
     }
 
     private JMenu getParentMenu(final FrameContainer window) {
@@ -331,8 +332,8 @@ public final class WindowMenuFrameManager extends JMenu implements
         synchronized (menus) {
             synchronized (items) {
                 synchronized (menuItems) {
-                    activeWindow = controller.getWindowFactory()
-                            .getSwingWindow(window);
+                    activeWindow = controller.getWindowFactory().getSwingWindow(
+                            window);
                     values.addAll(menus.values());
                     values.addAll(items.values());
                     values.addAll(menuItems.values());
@@ -416,7 +417,8 @@ public final class WindowMenuFrameManager extends JMenu implements
             if (!(component instanceof FrameContainerMenuInterface)) {
                 continue;
             }
-            final FrameContainer child = ((FrameContainerMenuInterface) component).getFrame();
+            final FrameContainer child = ((FrameContainerMenuInterface) component).
+                    getFrame();
             if (sortBefore(newChild, child)) {
                 return i;
             } else if (!sortAfter(newChild, child) && IdentityManager.
