@@ -22,8 +22,10 @@
 
 package com.dmdirc.addons.dcc;
 
+import com.dmdirc.addons.dcc.io.DCCChat;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.addons.dcc.actions.DCCActions;
+import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.interfaces.InputWindow;
 
 /**
@@ -31,7 +33,7 @@ import com.dmdirc.ui.interfaces.InputWindow;
  *
  * @author Shane 'Dataforce' McCormack
  */
-public class DCCChatWindow extends DCCFrame<InputWindow> implements DCCChatHandler {
+public class ChatContainer extends DCCFrameContainer<InputWindow> implements DCCChatHandler {
 
     /** The DCCChat object we are a window for */
     private final DCCChat dcc;
@@ -51,7 +53,7 @@ public class DCCChatWindow extends DCCFrame<InputWindow> implements DCCChatHandl
      * @param nick My Current Nickname
      * @param targetNick Nickname of target
      */
-    public DCCChatWindow(final DCCPlugin plugin, final DCCChat dcc,
+    public ChatContainer(final DCCPlugin plugin, final DCCChat dcc,
             final String title, final String nick, final String targetNick) {
         super(plugin, title, "dcc-chat-inactive", InputWindow.class,
                 DCCCommandParser.getDCCCommandParser());
@@ -60,9 +62,7 @@ public class DCCChatWindow extends DCCFrame<InputWindow> implements DCCChatHandl
         nickname = nick;
         otherNickname = targetNick;
 
-        plugin.addWindow(this);
-
-        setTitle(title);
+        WindowManager.addWindow(plugin.getContainer(), this);
     }
 
     /**

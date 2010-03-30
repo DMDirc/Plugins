@@ -22,6 +22,8 @@
 
 package com.dmdirc.addons.dcc;
 
+import com.dmdirc.addons.dcc.io.DCCTransfer;
+
 /**
  * This interfaces allows DCC Transfer Windows to receive data from a
  * DCCTransfer.

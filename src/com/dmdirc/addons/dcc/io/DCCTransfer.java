@@ -20,7 +20,10 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.dcc;
+package com.dmdirc.addons.dcc.io;
+
+import com.dmdirc.addons.dcc.DCCTransferHandler;
+import com.dmdirc.util.ListenerList;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -52,8 +55,8 @@ public class DCCTransfer extends DCC {
     /** The File transfer type for this file. */
     private TransferType transferType = TransferType.RECEIVE;
 
-    /** The handler for this DCCSend. */
-    private DCCTransferHandler handler;
+    /** The handlers for this DCCSend. */
+    private final ListenerList handlers = new ListenerList();
 
     /** Used to send data out the socket. */
     private DataOutputStream out;
@@ -326,8 +329,8 @@ public class DCCTransfer extends DCC {
      *
      * @param handler A class implementing DCCTransferHandler
      */
-    public void setHandler(final DCCTransferHandler handler) {
-        this.handler = handler;
+    public void addHandler(final DCCTransferHandler handler) {
+        handlers.add(DCCTransferHandler.class, handler);
     }
 
     /** {@inheritDoc} */
@@ -342,7 +345,8 @@ public class DCCTransfer extends DCC {
             }
             out = new DataOutputStream(socket.getOutputStream());
             in = new DataInputStream(socket.getInputStream());
-            if (handler != null) {
+
+            for (DCCTransferHandler handler : handlers.get(DCCTransferHandler.class)) {
                 handler.socketOpened(this);
             }
         } catch (IOException ioe) {
@@ -368,7 +372,8 @@ public class DCCTransfer extends DCC {
         }
         out = null;
         in = null;
-        if (handler != null) {
+        
+        for (DCCTransferHandler handler : handlers.get(DCCTransferHandler.class)) {
             handler.socketClosed(this);
         }
         // Try to delete empty files.
@@ -408,7 +413,7 @@ public class DCCTransfer extends DCC {
             readSize = readSize + bytesRead;
 
             if (bytesRead > 0) {
-                if (handler != null) {
+                for (DCCTransferHandler handler : handlers.get(DCCTransferHandler.class)) {
                     handler.dataTransfered(this, bytesRead);
                 }
                 fileOut.write(data, 0, bytesRead);
@@ -453,7 +458,7 @@ public class DCCTransfer extends DCC {
             readSize = readSize + bytesRead;
 
             if (bytesRead > 0) {
-                if (handler != null) {
+                for (DCCTransferHandler handler : handlers.get(DCCTransferHandler.class)) {
                     handler.dataTransfered(this, bytesRead);
                 }
                 out.write(data, 0, bytesRead);

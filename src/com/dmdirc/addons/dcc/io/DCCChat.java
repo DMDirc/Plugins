@@ -20,8 +20,9 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.dcc;
+package com.dmdirc.addons.dcc.io;
 
+import com.dmdirc.addons.dcc.DCCChatHandler;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;

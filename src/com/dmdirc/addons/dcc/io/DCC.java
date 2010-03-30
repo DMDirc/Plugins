@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.dcc;
+package com.dmdirc.addons.dcc.io;
 
 import java.net.Socket;
 import java.net.ServerSocket;
@@ -206,7 +206,7 @@ public abstract class DCC implements Runnable {
     /**
      * Called to close the socket
      */
-    protected void close() {
+    public void close() {
         boolean haveSLS = false;
 
         while (!serverSocketSem.tryAcquire() && !(haveSLS = serverListeningSem.tryAcquire())) {

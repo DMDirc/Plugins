@@ -22,6 +22,9 @@
 
 package com.dmdirc.addons.dcc;
 
+import com.dmdirc.addons.dcc.io.DCCTransfer;
+import com.dmdirc.addons.dcc.io.DCC;
+import com.dmdirc.addons.dcc.io.DCCChat;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.Main;
 import com.dmdirc.Server;
@@ -97,7 +100,7 @@ public final class DCCCommand extends ServerCommand implements IntelligentComman
             if (type.equalsIgnoreCase("chat")) {
                 final DCCChat chat = new DCCChat();
                 if (myPlugin.listen(chat)) {
-                    final DCCChatWindow window = new DCCChatWindow(myPlugin, chat,
+                    final ChatContainer window = new ChatContainer(myPlugin, chat,
                             "*Chat: " + target, myNickname, target);
 
                     parser.sendCTCP(target, "DCC", "CHAT chat "
@@ -189,7 +192,7 @@ public final class DCCCommand extends ServerCommand implements IntelligentComman
 
                     if (IdentityManager.getGlobalConfig().getOptionBool(
                             myPlugin.getDomain(), "send.reverse")) {
-                        new DCCTransferWindow(myPlugin, send, "Send: "
+                        new TransferContainer(myPlugin, send, "Send: "
                                 + target, target, server);
                         parser.sendCTCP(target, "DCC", "SEND \""
                                 + jc.getSelectedFile().getName() + "\" "
@@ -198,7 +201,7 @@ public final class DCCCommand extends ServerCommand implements IntelligentComman
                                 + (send.isTurbo() ? " T" : ""));
                     } else {
                         if (myPlugin.listen(send)) {
-                            new DCCTransferWindow(myPlugin, send, "*Send: "
+                            new TransferContainer(myPlugin, send, "*Send: "
                                     + target, target, server);
                             parser.sendCTCP(target, "DCC", "SEND \""
                                     + jc.getSelectedFile().getName() + "\" "
