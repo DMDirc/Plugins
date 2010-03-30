@@ -234,7 +234,8 @@ public class DMDircDesktopPane extends JDesktopPane implements SwingWindowListen
             @Override
             public void run() {
                 synchronized (nodes) {
-                    addWindow(parent == null ? model.getRootNode() : nodes.get(parent), window);
+                    addWindow(parent == null ? model.getRootNode() :
+                        nodes.get(parent), window);
                 }
             }
         });
