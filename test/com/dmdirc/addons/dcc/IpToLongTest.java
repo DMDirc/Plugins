@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.dcc;
 
+import com.dmdirc.addons.dcc.io.DCC;
 import java.util.Arrays;
 import java.util.List;
 
