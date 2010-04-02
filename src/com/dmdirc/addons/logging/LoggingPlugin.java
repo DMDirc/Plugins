@@ -78,10 +78,10 @@ public class LoggingPlugin extends Plugin implements ActionListener,
     /** The command we registered. */
     private LoggingCommand command;
     /** Cached boolean settings. */
-    private boolean networkfolders, filenamehash, addtime, stripcodes,
+    private boolean networkfolders, filenamehash, stripcodes,
             channelmodeprefix, autobackbuffer, backbufferTimestamp, usedate;
     /** Cached string settings. */
-    private String timestamp, usedateformat, logDirectory, colour;
+    private String usedateformat, logDirectory, colour;
     /** Cached int settings. */
     private int historyLines, backbufferLines;
 
@@ -244,8 +244,6 @@ public class LoggingPlugin extends Plugin implements ActionListener,
 
         general.addSetting(new PreferencesSetting(PreferencesType.DIRECTORY, getDomain(), "general.directory", "Directory", "Directory for log files"));
         general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN, getDomain(), "general.networkfolders", "Separate logs by network", "Should the files be stored in a sub-dir with the networks name?"));
-        general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN, getDomain(), "general.addtime", "Timestamp logs", "Should a timestamp be added to the log files?"));
-        general.addSetting(new PreferencesSetting(PreferencesType.TEXT, getDomain(), "general.timestamp", "Timestamp format", "The String to pass to 'SimpleDateFormat' to format the timestamp"));
         general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN, getDomain(), "general.stripcodes", "Strip Control Codes", "Remove known irc control codes from lines before saving?"));
         general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN, getDomain(), "general.channelmodeprefix", "Show channel mode prefix", "Show the @,+ etc next to nicknames"));
 
@@ -573,21 +571,11 @@ public class LoggingPlugin extends Plugin implements ActionListener,
     protected boolean appendLine(final String filename, final String line) {
         final StringBuffer finalLine = new StringBuffer();
 
-        if (addtime) {
-            String dateString;
-            try {
-                final DateFormat dateFormat = new SimpleDateFormat(timestamp);
-                dateString = dateFormat.format(new Date()).trim();
-            } catch (IllegalArgumentException iae) {
-                // Default to known good format
-                final DateFormat dateFormat = new SimpleDateFormat("[dd/MM/yyyy HH:mm:ss]");
-                dateString = dateFormat.format(new Date()).trim();
+        final DateFormat dateFormat = new SimpleDateFormat("[dd/MM/yyyy HH:mm:ss]");
+        String dateString = dateFormat.format(new Date()).trim();
 
-                Logger.userError(ErrorLevel.LOW, "Dateformat String '" + timestamp + "' is invalid. For more information: http://java.sun.com/javase/6/docs/api/java/text/SimpleDateFormat.html");
-            }
-            finalLine.append(dateString);
-            finalLine.append(" ");
-        }
+        finalLine.append(dateString);
+        finalLine.append(" ");
 
         if (stripcodes) {
             finalLine.append(Styliser.stipControlCodes(line));
@@ -846,13 +834,11 @@ public class LoggingPlugin extends Plugin implements ActionListener,
     public void setCachedSettings() {
         networkfolders = IdentityManager.getGlobalConfig().getOptionBool(getDomain(), "general.networkfolders");
         filenamehash = IdentityManager.getGlobalConfig().getOptionBool(getDomain(), "advanced.filenamehash");
-        addtime = IdentityManager.getGlobalConfig().getOptionBool(getDomain(), "general.addtime");
         stripcodes = IdentityManager.getGlobalConfig().getOptionBool(getDomain(), "general.stripcodes");
         channelmodeprefix = IdentityManager.getGlobalConfig().getOptionBool(getDomain(), "general.channelmodeprefix");
         autobackbuffer = IdentityManager.getGlobalConfig().getOptionBool(getDomain(), "backbuffer.autobackbuffer");
         backbufferTimestamp = IdentityManager.getGlobalConfig().getOptionBool(getDomain(), "backbuffer.timestamp");
         usedate = IdentityManager.getGlobalConfig().getOptionBool(getDomain(), "advanced.usedate");
-        timestamp = IdentityManager.getGlobalConfig().getOption(getDomain(), "general.timestamp");
         usedateformat = IdentityManager.getGlobalConfig().getOption(getDomain(), "advanced.usedateformat");
         historyLines = IdentityManager.getGlobalConfig().getOptionInt(getDomain(), "history.lines");
         colour = IdentityManager.getGlobalConfig().getOption(getDomain(), "backbuffer.colour");
