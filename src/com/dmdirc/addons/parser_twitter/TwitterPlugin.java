@@ -22,6 +22,8 @@
 
 package com.dmdirc.addons.parser_twitter;
 
+import com.dmdirc.actions.ActionManager;
+import com.dmdirc.addons.parser_twitter.actions.TwitterActionComponents;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesManager;
@@ -47,10 +49,13 @@ public class TwitterPlugin extends Plugin  {
      */
     public TwitterPlugin() { }
 
-
+    /** {@inheritDoc} */
     @Override
-    public void onLoad() { }
+    public void onLoad() {
+        ActionManager.registerActionComponents(TwitterActionComponents.values());
+    }
 
+    /** {@inheritDoc} */
     @Override
     public void onUnload() {
         unloading = true;
