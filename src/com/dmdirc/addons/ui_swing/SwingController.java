@@ -488,6 +488,10 @@ public final class SwingController extends Plugin implements Serializable,
         if ("Metal".equals(UIManager.getLookAndFeel().getName())) {
             PlatformDefaults.setPlatform(PlatformDefaults.WINDOWS_XP);
         }
+
+        if (Apple.isAppleUI()) {
+            PlatformDefaults.setPlatform(PlatformDefaults.WINDOWS_XP);
+        }
     }
 
     /**
