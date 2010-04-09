@@ -25,12 +25,15 @@ package com.dmdirc.addons.ui_swing.dialogs;
 import com.dmdirc.Server;
 import com.dmdirc.ServerManager;
 import com.dmdirc.addons.ui_swing.MainFrame;
+import com.dmdirc.addons.ui_swing.components.vetoable.VetoableChangeEvent;
 import com.dmdirc.config.Identity;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.prefs.validator.PortValidator;
 import com.dmdirc.config.prefs.validator.RegexStringValidator;
 import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
 import com.dmdirc.addons.ui_swing.components.validating.ValidatingJTextField;
+import com.dmdirc.addons.ui_swing.components.vetoable.VetoableComboBoxModel;
+import com.dmdirc.addons.ui_swing.components.vetoable.VetoableComboBoxSelectionListener;
 import com.dmdirc.addons.ui_swing.dialogs.profiles.ProfileManagerDialog;
 
 import com.dmdirc.logger.ErrorLevel;
@@ -58,7 +61,8 @@ import net.miginfocom.swing.MigLayout;
 /**
  * Dialog that allows the user to enter details of a new server to connect to.
  */
-public final class NewServerDialog extends StandardDialog implements ActionListener {
+public final class NewServerDialog extends StandardDialog implements 
+        ActionListener, VetoableComboBoxSelectionListener {
 
     /**
      * A version number for this class. It should be changed whenever the class
@@ -174,6 +178,8 @@ public final class NewServerDialog extends StandardDialog implements ActionListe
         getCancelButton().addActionListener(this);
         getOkButton().addActionListener(this);
         editProfileButton.addActionListener(this);
+        ((VetoableComboBoxModel) identityField.getModel()).
+                addVetoableSelectionListener(this);
     }
 
     /**
@@ -187,7 +193,7 @@ public final class NewServerDialog extends StandardDialog implements ActionListe
         newServerWindowCheck = new JCheckBox();
         newServerWindowCheck.setSelected(true);
         sslCheck = new JCheckBox();
-        identityField = new JComboBox();
+        identityField = new JComboBox(new VetoableComboBoxModel());
         editProfileButton = new JButton();
 
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
@@ -266,11 +272,11 @@ public final class NewServerDialog extends StandardDialog implements ActionListe
         dispose();
         openingServer = true;
 
-        final Identity profile =
-                (Identity) identityField.getSelectedItem();
+        final Identity profile = (Identity) identityField.getSelectedItem();
 
         try {
-            final URI address = new URI("irc" + (sslCheck.isSelected() ? "s" : ""), pass, host, port, null, null, null);
+            final URI address = new URI("irc" + (sslCheck.isSelected() ? "s" :
+                ""), pass, host, port, null, null, null);
 
             // Open in a new window?
             if (newServerWindowCheck.isSelected() || ServerManager.getServerManager()
@@ -317,7 +323,7 @@ public final class NewServerDialog extends StandardDialog implements ActionListe
         if (e.getSource() == getOkButton()) {
             save();
         } else if (e.getSource() == editProfileButton) {
-            ProfileManagerDialog.showProfileManagerDialog(mainFrame );
+            ProfileManagerDialog.showProfileManagerDialog(mainFrame);
         } else if (e.getSource() == getCancelButton()) {
             dispose();
         }
@@ -340,5 +346,14 @@ public final class NewServerDialog extends StandardDialog implements ActionListe
             super.dispose();
             me = null;
         }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public boolean selectionChanged(final VetoableChangeEvent e) {
+        if (e.getNewValue() == null) {
+            return false;
+        }
+        return true;
     }
 }
