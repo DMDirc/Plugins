@@ -121,7 +121,7 @@ public final class ActionsManagerDialog extends StandardDialog implements
         layoutComponents();
 
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-        setTitle("DMDirc: Actions Manager");
+        setTitle("Actions Manager");
         setResizable(false);
     }
 

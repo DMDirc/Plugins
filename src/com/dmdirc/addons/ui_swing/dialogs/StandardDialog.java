@@ -100,6 +100,12 @@ public class StandardDialog extends JDialog {
         orderButtons(new JButton(), new JButton());
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public void setTitle(final String title) {
+        super.setTitle("DMDirc: " + title);
+    }
+
     /**
      * Displays the dialog centering on the parent window.
      */
@@ -173,7 +179,7 @@ public class StandardDialog extends JDialog {
      *
      * @return Parent window or null
      */
-    public Window getOwner() {
+    public Window getParentWindow() {
         return owner;
     }
 

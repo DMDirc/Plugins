@@ -94,7 +94,7 @@ public class FeedbackDialog extends StandardDialog implements ActionListener,
         layoutComponents();
         addListeners();
 
-        setTitle("DMDirc: Feedback");
+        setTitle("Feedback");
         setResizable(false);
     }
 
