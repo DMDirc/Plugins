@@ -95,7 +95,7 @@ public final class AliasManagerDialog extends StandardDialog implements
     private AliasManagerDialog(final Window parentWindow) {
         super(parentWindow, ModalityType.MODELESS);
 
-        setTitle("DMDirc: Alias manager");
+        setTitle("Alias manager");
 
         selectedRow = -1;
 

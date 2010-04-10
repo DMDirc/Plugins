@@ -82,7 +82,7 @@ public class SSLCertificateDialog extends StandardDialog implements ActionListen
         layoutComponents();
 
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-        setTitle("DMDirc: Certificate Information");
+        setTitle("Certificate Information");
         chain.setSelectedIndex(0);
     }
 

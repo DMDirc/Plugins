@@ -72,7 +72,7 @@ public class URLDialog extends StandardDialog implements ActionListener {
         layoutComponents();
         addListeners();
 
-        setTitle("DMDirc: Unknown URL Protocol");
+        setTitle("Unknown URL Protocol");
     }
 
     /**

@@ -100,7 +100,7 @@ public final class AboutDialog extends StandardDialog implements
         tabbedPane = new JTabbedPane();
 
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("About DMDirc");
+        setTitle("About");
         setResizable(false);
 
         orderButtons(new JButton(), new JButton());

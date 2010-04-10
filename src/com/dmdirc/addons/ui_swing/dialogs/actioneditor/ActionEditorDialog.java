@@ -95,7 +95,7 @@ public class ActionEditorDialog extends StandardDialog implements ActionListener
             final Action action) {
         super(window, ModalityType.DOCUMENT_MODAL);
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-        setTitle("DMDirc: Action Editor");
+        setTitle("Action Editor");
 
         this.group = group;
         this.action = action;

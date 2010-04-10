@@ -84,7 +84,7 @@ public final class ErrorListDialog extends StandardDialog implements
     public ErrorListDialog(final MainFrame mainFrame) {
         super(mainFrame, ModalityType.MODELESS);
 
-        setTitle("DMDirc: Error list");
+        setTitle("Error list");
         setMinimumSize(new Dimension(600, 550));
 
         tableModel = new ErrorTableModel();
