@@ -47,8 +47,6 @@ public class HistoryWindow extends FrameContainer<Window> {
                          final FrameContainer<?> parent, final int numLines) {
         super("raw", title, title, Window.class, parent.getConfigManager());
 
-        this.parent = parent;
-
         WindowManager.addWindow(parent, this);
 
         final int frameBufferSize = IdentityManager.getGlobalConfig().getOptionInt(
