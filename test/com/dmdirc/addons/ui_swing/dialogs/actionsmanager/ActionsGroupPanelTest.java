@@ -132,7 +132,7 @@ public class ActionsGroupPanelTest extends UISpecTestCase {
         table.selectRow(1);
 
         WindowInterceptor.init(panel.getButton("Delete").triggerClick())
-                .process(new WindowButtonHandler("Confirm deletion", "No")).run();
+                .process(new WindowButtonHandler("DMDirc: Confirm deletion", "No")).run();
 
         assertTrue(table.contentEquals(new String[][]{
             {"name 1", "Action created", "A"},
@@ -147,7 +147,7 @@ public class ActionsGroupPanelTest extends UISpecTestCase {
         table.selectRow(1);
 
         WindowInterceptor.init(panel.getButton("Delete").triggerClick())
-                .process(new WindowButtonHandler("Confirm deletion", "Yes")).run();
+                .process(new WindowButtonHandler("DMDirc: Confirm deletion", "Yes")).run();
 
         verify(group).deleteAction(same(action2));
     }
@@ -158,7 +158,7 @@ public class ActionsGroupPanelTest extends UISpecTestCase {
         table.selectRow(1);
 
         WindowInterceptor.init(panel.getButton("Delete").triggerClick())
-                .process(new WindowButtonHandler("Confirm deletion", "Yes")).run();
+                .process(new WindowButtonHandler("DMDirc: Confirm deletion", "Yes")).run();
 
         verify(group).deleteAction(same(action3));
     }
