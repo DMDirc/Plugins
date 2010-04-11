@@ -110,7 +110,7 @@ public class ActionsManagerDialogTest extends FestSwingJUnitTestCase {
                 .withTimeout(5000).using(window.robot);
                 
         newwin.requireVisible();
-        assertEquals("New action group", newwin.target.getTitle());
+        assertEquals("DMDirc: New action group", newwin.target.getTitle());
         
         newwin.button(JButtonMatcher.withText("Cancel")).click();
         
@@ -208,7 +208,7 @@ public class ActionsManagerDialogTest extends FestSwingJUnitTestCase {
                 .withTimeout(5000).using(window.robot);
                 
         newwin.requireVisible();
-        assertEquals("Edit action group", newwin.target.getTitle());
+        assertEquals("DMDirc: Edit action group", newwin.target.getTitle());
         
         assertEquals("amd-ui-test1", 
                 newwin.textBox(new ClassFinder<JTextField>(JTextField.class,

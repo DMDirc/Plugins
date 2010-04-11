@@ -106,7 +106,7 @@ public final class MainFrame extends JFrame implements WindowListener,
      *
      * @param controller Swing controller
      */
-    protected MainFrame(final SwingController controller) {
+    public MainFrame(final SwingController controller) {
         super();
 
         this.controller = controller;
