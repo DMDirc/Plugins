@@ -97,7 +97,7 @@ public class InputTextFrameTest {
         ((InputTextFrame) window.target).doPaste("line1\nline2");
 
         final DialogFixture dlg = mainframe.dialog(DialogMatcher
-                .withTitle("Multi-line paste").andShowing());
+                .withTitle("DMDirc: Multi-line paste").andShowing());
 
         dlg.requireVisible().button(JButtonMatcher.withText("Edit")).click();
         dlg.textBox(new ClassFinder<TextAreaInputField>(TextAreaInputField.class, null))
@@ -111,7 +111,7 @@ public class InputTextFrameTest {
         ((InputTextFrame) window.target).doPaste("line1\nline2");
 
         final DialogFixture dlg = mainframe.dialog(DialogMatcher
-                .withTitle("Multi-line paste").andShowing());
+                .withTitle("DMDirc: Multi-line paste").andShowing());
 
         dlg.requireVisible().button(JButtonMatcher.withText("Edit")).click();
         dlg.textBox(new ClassFinder<TextAreaInputField>(TextAreaInputField.class, null))
@@ -126,7 +126,7 @@ public class InputTextFrameTest {
         ((InputTextFrame) window.target).doPaste("line1\nline2");
 
         final DialogFixture dlg = mainframe.dialog(DialogMatcher
-                .withTitle("Multi-line paste").andShowing());
+                .withTitle("DMDirc: Multi-line paste").andShowing());
 
         dlg.requireVisible().button(JButtonMatcher.withText("Edit")).click();
         dlg.textBox(new ClassFinder<TextAreaInputField>(TextAreaInputField.class, null))
@@ -140,7 +140,7 @@ public class InputTextFrameTest {
         ((InputTextFrame) window.target).doPaste("line1\nline2");
 
         final DialogFixture dlg = mainframe.dialog(DialogMatcher
-                .withTitle("Multi-line paste").andShowing());
+                .withTitle("DMDirc: Multi-line paste").andShowing());
 
         dlg.requireVisible().button(JButtonMatcher.withText("Edit")).click();
         dlg.textBox(new ClassFinder<TextAreaInputField>(TextAreaInputField.class, null))
