@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.ui_swing.dialogs.actionsmanager;
+package com.dmdirc.addons.ui_swing.dialogs;
 
 import java.util.Arrays;
 import java.util.Comparator;
