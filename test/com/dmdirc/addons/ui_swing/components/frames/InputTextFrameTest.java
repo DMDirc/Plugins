@@ -60,11 +60,15 @@ public class InputTextFrameTest {
     @BeforeClass
     public static void setUpClass() throws InvalidIdentityFileException {
         IdentityManager.load();
-        IdentityManager.getAddonIdentity().setOption("test", "windowMenuItems", "1");
-        IdentityManager.getAddonIdentity().setOption("test", "windowMenuScrollInterval", "1");
+        IdentityManager.getAddonIdentity().setOption("test", "windowMenuItems",
+                "1");
+        IdentityManager.getAddonIdentity().setOption("test",
+                "windowMenuScrollInterval", "1");
         IdentityManager.getAddonIdentity().setOption("test", "debugEDT", "false");
-        IdentityManager.getAddonIdentity().setOption("test", "textpanebackground", "");
-        IdentityManager.getAddonIdentity().setOption("test", "desktopbackground", "");
+        IdentityManager.getAddonIdentity().setOption("test",
+                "textpanebackground", "");
+        IdentityManager.getAddonIdentity().setOption("test", "desktopbackground",
+                "");
         controller = new SwingController();
         controller.setDomain("test");
         controller.onLoad();
@@ -81,71 +85,113 @@ public class InputTextFrameTest {
         cmmap = new TestConfigManagerMap();
         cmmap.settings.put("ui.pasteProtectionLimit", "1");
 
-        owner = new TestWritableFrameContainer<InputWindow>(512, cmmap, InputWindow.class);
+        owner = new TestWritableFrameContainer<InputWindow>(512, cmmap,
+                InputWindow.class);
         setupWindow(cmmap);
     }
 
     @After
     public void tearDown() {
-        window.close();
-        owner.getFrame().close();
-        WindowManager.removeWindow(owner);
+        UIUtilities.invokeAndWait(new Runnable() {
+
+            @Override
+            public void run() {
+                window.close();
+                controller.getWindowFactory().getSwingWindow(owner).close();
+                WindowManager.removeWindow(owner);
+            }
+        });
     }
 
     @Test
     public void testPasteDialogContents() throws InterruptedException {
-        ((InputTextFrame) window.target).doPaste("line1\nline2");
+        UIUtilities.invokeAndWait(new Runnable() {
 
-        final DialogFixture dlg = mainframe.dialog(DialogMatcher
-                .withTitle("DMDirc: Multi-line paste").andShowing());
+            @Override
+            public void run() {
+                ((InputTextFrame) window.target).doPaste("line1\nline2");
 
-        dlg.requireVisible().button(JButtonMatcher.withText("Edit")).click();
-        dlg.textBox(new ClassFinder<TextAreaInputField>(TextAreaInputField.class, null))
-                .requireText("line1\nline2");
-        dlg.target.dispose();
+                final DialogFixture dlg = mainframe.dialog(DialogMatcher.
+                        withTitle(
+                        "DMDirc: Multi-line paste").andShowing());
+
+                dlg.requireVisible().button(JButtonMatcher.withText("Edit")).
+                        click();
+                dlg.textBox(new ClassFinder<TextAreaInputField>(
+                        TextAreaInputField.class,
+                        null)).requireText("line1\nline2");
+                dlg.target.dispose();
+            }
+        });
     }
 
     @Test
     public void testPasteDialogWithTextBefore() throws InterruptedException {
-        window.textBox().enterText("testing:");
-        ((InputTextFrame) window.target).doPaste("line1\nline2");
+        UIUtilities.invokeAndWait(new Runnable() {
 
-        final DialogFixture dlg = mainframe.dialog(DialogMatcher
-                .withTitle("DMDirc: Multi-line paste").andShowing());
+            @Override
+            public void run() {
+                window.textBox().enterText("testing:");
+                ((InputTextFrame) window.target).doPaste("line1\nline2");
 
-        dlg.requireVisible().button(JButtonMatcher.withText("Edit")).click();
-        dlg.textBox(new ClassFinder<TextAreaInputField>(TextAreaInputField.class, null))
-                .requireText("testing:line1\nline2");
-        dlg.target.dispose();
+                final DialogFixture dlg = mainframe.dialog(DialogMatcher.
+                        withTitle("DMDirc: Multi-line paste").andShowing());
+
+                dlg.requireVisible().button(JButtonMatcher.withText("Edit")).
+                        click();
+                dlg.textBox(new ClassFinder<TextAreaInputField>(
+                        TextAreaInputField.class, null)).requireText(
+                        "testing:line1\nline2");
+                dlg.target.dispose();
+            }
+        });
     }
 
     @Test
     public void testPasteDialogWithTextAfter() throws InterruptedException {
-        window.textBox().enterText("<- testing").pressAndReleaseKey(
-                KeyPressInfo.keyCode(KeyEvent.VK_HOME));
-        ((InputTextFrame) window.target).doPaste("line1\nline2");
+        UIUtilities.invokeAndWait(new Runnable() {
 
-        final DialogFixture dlg = mainframe.dialog(DialogMatcher
-                .withTitle("DMDirc: Multi-line paste").andShowing());
+            @Override
+            public void run() {
+                window.textBox().enterText("<- testing").pressAndReleaseKey(
+                        KeyPressInfo.keyCode(KeyEvent.VK_HOME));
+                ((InputTextFrame) window.target).doPaste("line1\nline2");
 
-        dlg.requireVisible().button(JButtonMatcher.withText("Edit")).click();
-        dlg.textBox(new ClassFinder<TextAreaInputField>(TextAreaInputField.class, null))
-                .requireText("line1\nline2<- testing");
-        dlg.target.dispose();
+                final DialogFixture dlg = mainframe.dialog(DialogMatcher.
+                        withTitle(
+                        "DMDirc: Multi-line paste").andShowing());
+
+                dlg.requireVisible().button(JButtonMatcher.withText("Edit")).
+                        click();
+                dlg.textBox(new ClassFinder<TextAreaInputField>(
+                        TextAreaInputField.class,
+                        null)).requireText("line1\nline2<- testing");
+                dlg.target.dispose();
+            }
+        });
     }
 
     @Test
     public void testPasteDialogWithTextAround() throws InterruptedException {
-        window.textBox().enterText("testing:<- testing").selectText(8, 8);
-        ((InputTextFrame) window.target).doPaste("line1\nline2");
+        UIUtilities.invokeAndWait(new Runnable() {
 
-        final DialogFixture dlg = mainframe.dialog(DialogMatcher
-                .withTitle("DMDirc: Multi-line paste").andShowing());
+            @Override
+            public void run() {
+                window.textBox().enterText("testing:<- testing").selectText(8, 8);
+                ((InputTextFrame) window.target).doPaste("line1\nline2");
 
-        dlg.requireVisible().button(JButtonMatcher.withText("Edit")).click();
-        dlg.textBox(new ClassFinder<TextAreaInputField>(TextAreaInputField.class, null))
-                .requireText("testing:line1\nline2<- testing");
-        dlg.target.dispose();
+                final DialogFixture dlg = mainframe.dialog(DialogMatcher.
+                        withTitle(
+                        "DMDirc: Multi-line paste").andShowing());
+
+                dlg.requireVisible().button(JButtonMatcher.withText("Edit")).
+                        click();
+                dlg.textBox(new ClassFinder<TextAreaInputField>(
+                        TextAreaInputField.class,
+                        null)).requireText("testing:line1\nline2<- testing");
+                dlg.target.dispose();
+            }
+        });
     }
 
     protected void setupWindow(final ConfigManager configManager) {
@@ -154,12 +200,11 @@ public class InputTextFrameTest {
         owner.setTitle("testing123");
         owner.addWindow(titf);
 
-        WindowManager.addWindow(owner);
-
         titf.open();
+
+        WindowManager.addWindow(owner);
 
         window = new JInternalFrameFixture(mainframe.robot, titf);
         window.robot.settings().eventPostingDelay(250);
     }
-
 }
