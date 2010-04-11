@@ -188,7 +188,8 @@ public final class ProfileManagerDialog extends StandardDialog implements
     public void populateList() {
         final String profileString = "profile";
         model.clear();
-        final List<Identity> profiles = IdentityManager.getProfiles();
+        final List<Identity> profiles = IdentityManager.getCustomIdentities(
+                "profile");
         for (Identity profile : profiles) {
             model.add(new Profile(profile.getName(),
                     profile.getOptionList(profileString, "nicknames"),

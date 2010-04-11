@@ -216,7 +216,8 @@ public final class NewServerDialog extends StandardDialog implements
 
     /** Populates the profiles list. */
     public void populateProfiles() {
-        final List<Identity> profiles = IdentityManager.getProfiles();
+        final List<Identity> profiles = IdentityManager.getCustomIdentities(
+                "profile");
         ((DefaultComboBoxModel) identityField.getModel()).removeAllElements();
         for (Identity profile : profiles) {
             ((DefaultComboBoxModel) identityField.getModel()).addElement(profile);
