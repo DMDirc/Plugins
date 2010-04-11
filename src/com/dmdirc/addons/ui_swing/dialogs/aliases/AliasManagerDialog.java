@@ -33,6 +33,7 @@ import com.dmdirc.actions.wrappers.AliasWrapper;
 import com.dmdirc.addons.ui_swing.components.PackingTable;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
+import com.dmdirc.addons.ui_swing.dialogs.actionsmanager.StringArrayComparator;
 
 import java.awt.Dimension;
 import java.awt.Window;
@@ -50,6 +51,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableRowSorter;
 
 import net.miginfocom.layout.PlatformDefaults;
 import net.miginfocom.swing.MigLayout;
@@ -166,8 +168,6 @@ public final class AliasManagerDialog extends StandardDialog implements
                 }
             }
         };
-
-        table.setAutoCreateRowSorter(true);
         table.setAutoCreateColumnsFromModel(true);
         table.setColumnSelectionAllowed(false);
         table.setCellSelectionEnabled(false);
@@ -175,9 +175,13 @@ public final class AliasManagerDialog extends StandardDialog implements
         table.setFillsViewportHeight(false);
         table.setRowSelectionAllowed(true);
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        table.getRowSorter().toggleSortOrder(0);
-
         table.getTableHeader().setReorderingAllowed(false);
+
+        final TableRowSorter<AliasTableModel> sorter =
+                new TableRowSorter<AliasTableModel>(tableModel);
+        sorter.setComparator(2, new StringArrayComparator());
+        table.setRowSorter(sorter);
+        table.getRowSorter().toggleSortOrder(0);
 
         scrollPane.setViewportView(table);
 
