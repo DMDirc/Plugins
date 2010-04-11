@@ -281,7 +281,8 @@ public class Profile {
     public void save() {
         if (modified) {
             final String profileString = "profile";
-            final List<Identity> identities = IdentityManager.getProfiles();
+            final List<Identity> identities = IdentityManager
+                    .getCustomIdentities("profile");
             Identity profile = null;
 
             for (Identity identity : identities) {
@@ -310,7 +311,8 @@ public class Profile {
 
     /** Deletes the profile. */
     public void delete() {
-        final List<Identity> identities = IdentityManager.getProfiles();
+        final List<Identity> identities = IdentityManager.getCustomIdentities(
+                "profile");
         Identity profile = null;
 
         for (Identity identity : identities) {
