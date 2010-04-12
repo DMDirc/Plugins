@@ -87,6 +87,7 @@ public final class PluginPanel extends JPanel implements
         super();
 
         this.parentWindow = parentWindow;
+        this.controller = controller;
 
         initComponents();
         addListeners();
@@ -114,7 +115,7 @@ public final class PluginPanel extends JPanel implements
                 "Plugins allow you to extend the functionality of DMDirc.");
 
         /** {@inheritDoc}. */
-        new LoggingSwingWorker() {
+        new LoggingSwingWorker<Object, Object>() {
 
             /** {@inheritDoc}. */
             @Override
