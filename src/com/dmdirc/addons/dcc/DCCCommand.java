@@ -26,24 +26,24 @@ import com.dmdirc.addons.dcc.io.DCCTransfer;
 import com.dmdirc.addons.dcc.io.DCC;
 import com.dmdirc.addons.dcc.io.DCCChat;
 import com.dmdirc.FrameContainer;
-import com.dmdirc.Main;
 import com.dmdirc.Server;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.addons.dcc.actions.DCCActions;
 import com.dmdirc.addons.dcc.kde.KFileChooser;
+import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandManager;
 import com.dmdirc.commandparser.commands.IntelligentCommand;
 import com.dmdirc.commandparser.commands.ServerCommand;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.parser.interfaces.Parser;
+import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 import com.dmdirc.ui.input.TabCompletionType;
 
 import java.io.File;
 
 import javax.swing.JFileChooser;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 /**
@@ -156,7 +156,9 @@ public final class DCCCommand extends ServerCommand implements IntelligentComman
                     jc.setDialogTitle("Send file to " + target + " - DMDirc ");
                     jc.setFileSelectionMode(JFileChooser.FILES_ONLY);
                     jc.setMultiSelectionEnabled(false);
-                    result = jc.showOpenDialog((JFrame) Main.getUI().getMainWindow());
+                    result = jc.showOpenDialog(((SwingController) PluginManager
+                            .getPluginManager().getPluginInfoByName("ui_swing")
+                            .getPlugin()).getMainFrame());
                 } else {
                     jc.setSelectedFile(givenFile);
                     result = JFileChooser.APPROVE_OPTION;

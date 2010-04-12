@@ -22,10 +22,10 @@
 
 package com.dmdirc.addons.nickcolours;
 
-import com.dmdirc.Main;
-import com.dmdirc.addons.ui_swing.MainFrame;
+import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.addons.ui_swing.components.colours.ColourChooser;
+import com.dmdirc.plugins.PluginManager;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -77,7 +77,8 @@ public class NickColourInputDialog extends StandardDialog
     public NickColourInputDialog(final NickColourPanel panel, final int row,
             final String nickname, final String network,
             final String textcolour, final String nickcolour) {
-        super((MainFrame) Main.getUI().getMainWindow(), false);
+        super(((SwingController) PluginManager.getPluginManager()
+                .getPluginInfoByName("ui_swing").getPlugin()).getMainFrame(), false);
         
         this.panel = panel;
         this.row = row;
