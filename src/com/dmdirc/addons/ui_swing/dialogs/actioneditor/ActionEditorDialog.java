@@ -61,8 +61,12 @@ public class ActionEditorDialog extends StandardDialog implements ActionListener
     private ActionConditionsPanel conditions;
     /** Substitutions panel. */
     private ActionSubstitutionsPanel substitutions;
+    /** Advanced panel. */
+    private ActionAdvancedPanel advanced;
     /** Show substitutions button. */
     private JButton showSubstitutions;
+    /** Show advanced button. */
+    private JButton showAdvanced;
     /** Is the name valid? */
     private boolean nameValid = false;
     /** Are the triggers valid? */
@@ -183,6 +187,7 @@ public class ActionEditorDialog extends StandardDialog implements ActionListener
         response.setEnabled(action != null);
         conditions.setEnabled(action != null);
         substitutions.setVisible(false);
+        advanced.setVisible(false);
 
         triggersValid = action != null;
         conditionsValid = true;
@@ -197,6 +202,8 @@ public class ActionEditorDialog extends StandardDialog implements ActionListener
             conditions.setActionTrigger(action.getTriggers()[0]);
             conditions.setConditions(action.getConditions());
             conditions.setConditionTree(action.getRealConditionTree());
+            advanced.setActionEnabled(action.isEnabled());
+            advanced.setConcurrencyGroup(action.getConcurrencyGroup());
         }
     }
 
@@ -208,12 +215,15 @@ public class ActionEditorDialog extends StandardDialog implements ActionListener
         response = new ActionResponsePanel();
         conditions = new ActionConditionsPanel();
         substitutions = new ActionSubstitutionsPanel();
+        advanced = new ActionAdvancedPanel();
         showSubstitutions = new JButton("Show Substitutions");
+        showAdvanced = new JButton("Show Advanced Options");
     }
 
     /** Adds the listeners. */
     private void addListeners() {
         showSubstitutions.addActionListener(this);
+        showAdvanced.addActionListener(this);
         getOkButton().addActionListener(this);
         getCancelButton().addActionListener(this);
 
@@ -232,8 +242,10 @@ public class ActionEditorDialog extends StandardDialog implements ActionListener
         add(triggers, "grow, w 50%");
         add(response, "grow, pushy, w 50%");
         add(substitutions, "spanx, grow, push");
-        add(showSubstitutions, "left, sgx button, split 3, spanx 2");
-        add(getLeftButton(), "right, sgx button, gapleft push");
+        add(advanced, "spanx, grow, push");
+        add(showSubstitutions, "left, sgx button, split 2");
+        add(showAdvanced, "left, sgx button");
+        add(getLeftButton(), "right, sgx button, gapleft push, split");
         add(getRightButton(), "right, sgx button");
     }
 
@@ -249,6 +261,10 @@ public class ActionEditorDialog extends StandardDialog implements ActionListener
             showSubstitutions.setText(substitutions.isVisible() ? "Hide Substitutions"
                     : "Show Substitutions");
                     pack();
+        } else if (e.getSource().equals(showAdvanced)) {
+            advanced.setVisible(!advanced.isVisible());
+            showAdvanced.setText(advanced.isVisible() ? "Hide Advanced Options"
+                    : "Show Advanced Options");
         } else if (e.getSource().equals(getOkButton())) {
             save();
             dispose();
@@ -281,9 +297,12 @@ public class ActionEditorDialog extends StandardDialog implements ActionListener
         conditions.getConditions();
         conditions.getConditionTree();
         if (action == null) {
-            new Action(group, name.getActionName(), triggers.getTriggers(),
-                    response.getResponse(), conditions.getConditions(),
-                    conditions.getConditionTree(), response.getFormatter());
+            final Action newAction = new Action(group, name.getActionName(),
+                    triggers.getTriggers(), response.getResponse(),
+                    conditions.getConditions(), conditions.getConditionTree(),
+                    response.getFormatter());
+            newAction.setConcurrencyGroup(advanced.getConcurrencyGroup());
+            newAction.setEnabled(advanced.isActionEnabled());
         } else {
             action.setName(name.getActionName());
             action.setConditionTree(conditions.getConditionTree());
@@ -291,6 +310,8 @@ public class ActionEditorDialog extends StandardDialog implements ActionListener
             action.setNewFormat(response.getFormatter());
             action.setResponse(response.getResponse());
             action.setTriggers(triggers.getTriggers());
+            action.setConcurrencyGroup(advanced.getConcurrencyGroup());
+            action.setEnabled(advanced.isActionEnabled());
             action.save();
         }
     }
@@ -309,6 +330,7 @@ public class ActionEditorDialog extends StandardDialog implements ActionListener
             response.setEnabled((Boolean) evt.getNewValue());
             conditions.setEnabled((Boolean) evt.getNewValue());
             substitutions.setEnabled((Boolean) evt.getNewValue());
+            advanced.setEnabled((Boolean) evt.getNewValue());
 
             substitutions.setType(triggers.getPrimaryTrigger());
             conditions.setActionTrigger(triggers.getPrimaryTrigger());
