@@ -32,6 +32,7 @@ import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.actions.interfaces.ActionType;
 import com.dmdirc.addons.dcc.kde.KFileChooser;
 import com.dmdirc.addons.dcc.actions.DCCActions;
+import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.commandparser.CommandManager;
 import com.dmdirc.config.Identity;
 import com.dmdirc.config.IdentityManager;
@@ -46,6 +47,7 @@ import com.dmdirc.logger.Logger;
 import com.dmdirc.parser.interfaces.ClientInfo;
 import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.plugins.Plugin;
+import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.WindowManager;
 
 import java.io.File;
@@ -54,7 +56,6 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 import javax.swing.JFileChooser;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 /**
@@ -131,7 +132,9 @@ public final class DCCPlugin extends Plugin implements ActionListener {
                 if (IdentityManager.getGlobalConfig().getOptionBool(getDomain(), "receive.autoaccept")) {
                     result = JFileChooser.APPROVE_OPTION;
                 } else {
-                    result = jc.showSaveDialog((JFrame) Main.getUI().getMainWindow());
+                    result = jc.showSaveDialog(((SwingController) PluginManager
+                            .getPluginManager().getPluginInfoByName("ui_swing")
+                            .getPlugin()).getMainFrame());
                 }
                 if (result == JFileChooser.APPROVE_OPTION) {
                     send.setFileName(jc.getSelectedFile().getPath());
@@ -141,7 +144,10 @@ public final class DCCPlugin extends Plugin implements ActionListener {
                             if (IdentityManager.getGlobalConfig().getOptionBool(getDomain(), "receive.autoaccept")) {
                                 return;
                             } else {
-                                JOptionPane.showMessageDialog((JFrame) Main.getUI().getMainWindow(), "This file has already been completed, or is longer than the file you are receiving.\nPlease choose a different file.", "Problem with selected file", JOptionPane.ERROR_MESSAGE);
+                                JOptionPane.showMessageDialog(
+                                        ((SwingController) PluginManager
+                                        .getPluginManager().getPluginInfoByName("ui_swing")
+                                        .getPlugin()).getMainFrame(), "This file has already been completed, or is longer than the file you are receiving.\nPlease choose a different file.", "Problem with selected file", JOptionPane.ERROR_MESSAGE);
                                 saveFile(nickname, send, parser, reverse, sendFilename, token);
                                 return;
                             }
@@ -149,7 +155,10 @@ public final class DCCPlugin extends Plugin implements ActionListener {
                             if (IdentityManager.getGlobalConfig().getOptionBool(getDomain(), "receive.autoaccept")) {
                                 resume = true;
                             } else {
-                                result = JOptionPane.showConfirmDialog((JFrame) Main.getUI().getMainWindow(), "This file exists already, do you want to resume an exisiting download?", "Resume Download?", JOptionPane.YES_NO_OPTION);
+                                result = JOptionPane.showConfirmDialog(
+                                        ((SwingController) PluginManager
+                                        .getPluginManager().getPluginInfoByName("ui_swing")
+                                        .getPlugin()).getMainFrame(), "This file exists already, do you want to resume an exisiting download?", "Resume Download?", JOptionPane.YES_NO_OPTION);
                                 resume = (result == JOptionPane.YES_OPTION);
                             }
                         }
