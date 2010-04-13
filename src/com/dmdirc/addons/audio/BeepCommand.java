@@ -26,6 +26,7 @@ import com.dmdirc.FrameContainer;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandManager;
 import com.dmdirc.commandparser.commands.GlobalCommand;
+import com.dmdirc.commandparser.commands.context.CommandContext;
 
 import java.awt.Toolkit;
 
@@ -46,8 +47,8 @@ public final class BeepCommand extends GlobalCommand {
 
     /** {@inheritDoc} */
     @Override
-    public void execute(final FrameContainer<?> origin, final boolean isSilent,
-                        final CommandArguments args) {
+    public void execute(final FrameContainer<?> origin,
+            final CommandArguments args, final CommandContext context) {
         Toolkit.getDefaultToolkit().beep();
     }
 

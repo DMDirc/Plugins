@@ -26,6 +26,7 @@ import com.dmdirc.FrameContainer;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.commands.GlobalCommand;
 import com.dmdirc.commandparser.commands.IntelligentCommand;
+import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 
 import java.util.Map;
@@ -44,8 +45,8 @@ public class UrlListCommand extends GlobalCommand implements IntelligentCommand 
 
     /** {@inheritDoc} */
     @Override
-    public void execute(final FrameContainer<?> origin, final boolean isSilent,
-            final CommandArguments args) {
+    public void execute(final FrameContainer<?> origin,
+            final CommandArguments args, final CommandContext context) {
         final String[] headers = {"URL", "Count"};
         final Map<String, Integer> map = plugin.getURLS();
         final String[][] data = new String[map.size()][];
@@ -55,7 +56,7 @@ public class UrlListCommand extends GlobalCommand implements IntelligentCommand 
             data[i++] = new String[]{entry.getKey(), entry.getValue().toString()};
         }
         
-        sendLine(origin, isSilent, FORMAT_OUTPUT, doTable(headers, data));
+        sendLine(origin, args.isSilent(), FORMAT_OUTPUT, doTable(headers, data));
     }
 
     /** {@inheritDoc} */

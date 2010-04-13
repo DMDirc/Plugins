@@ -28,6 +28,8 @@ import com.dmdirc.Server;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.commands.ChatCommand;
 import com.dmdirc.commandparser.commands.IntelligentCommand;
+import com.dmdirc.commandparser.commands.context.ChatCommandContext;
+import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 import com.dmdirc.ui.input.TabCompleter;
 
@@ -45,10 +47,11 @@ public class RedirectCommand extends ChatCommand implements IntelligentCommand {
     
     /** {@inheritDoc} */
     @Override
-    public void execute(final FrameContainer<?> origin, final Server server,
-            final MessageTarget<?> target, final boolean isSilent, final CommandArguments args) {
+    public void execute(final FrameContainer<?> origin,
+            final CommandArguments args, final CommandContext context) {
+        final MessageTarget<?> target = ((ChatCommandContext) context).getChat();
         target.getCommandParser().parseCommand(new FakeWriteableFrameContainer(target),
-                args.getArgumentsAsString());
+                context.getSource(), args.getArgumentsAsString());
     }
     
     /** {@inheritDoc} */

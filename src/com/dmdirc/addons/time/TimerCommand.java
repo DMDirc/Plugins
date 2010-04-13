@@ -27,6 +27,7 @@ import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandManager;
 import com.dmdirc.commandparser.commands.GlobalCommand;
 import com.dmdirc.commandparser.commands.IntelligentCommand;
+import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 import com.dmdirc.ui.input.TabCompleter;
 
@@ -46,10 +47,10 @@ public final class TimerCommand extends GlobalCommand implements IntelligentComm
     
     /** {@inheritDoc} */
     @Override
-    public void execute(final FrameContainer<?> origin, final boolean isSilent,
-            final CommandArguments args) {
+    public void execute(final FrameContainer<?> origin,
+            final CommandArguments args, final CommandContext context) {
         if (args.getArguments().length < 3) {
-            doUsage(origin, isSilent);
+            doUsage(origin, args.isSilent());
         } else {
             int repetitions = 0;
             int interval = 0;
@@ -59,12 +60,12 @@ public final class TimerCommand extends GlobalCommand implements IntelligentComm
                 repetitions = Integer.parseInt(args.getArguments()[0]);
                 interval = Integer.parseInt(args.getArguments()[1]);
             } catch (NumberFormatException ex) {
-                doUsage(origin, isSilent);
+                doUsage(origin, args.isSilent());
                 return;
             }
             
-            new TimedCommand(repetitions, interval, command, origin);
-            sendLine(origin, isSilent, FORMAT_OUTPUT, "Command scheduled.");
+            new TimedCommand(repetitions, interval, command, origin, context.getSource());
+            sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Command scheduled.");
         }
     }
     

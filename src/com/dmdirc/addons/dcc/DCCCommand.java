@@ -35,6 +35,8 @@ import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandManager;
 import com.dmdirc.commandparser.commands.IntelligentCommand;
 import com.dmdirc.commandparser.commands.ServerCommand;
+import com.dmdirc.commandparser.commands.context.CommandContext;
+import com.dmdirc.commandparser.commands.context.ServerCommandContext;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.ui.input.AdditionalTabTargets;
@@ -69,8 +71,10 @@ public final class DCCCommand extends ServerCommand implements IntelligentComman
 
     /** {@inheritDoc} */
     @Override
-    public void execute(final FrameContainer<?> origin, final Server server,
-            final boolean isSilent, final CommandArguments args) {
+    public void execute(final FrameContainer<?> origin,
+            final CommandArguments args, final CommandContext context) {
+        final Server server = ((ServerCommandContext) context).getServer();
+        
         if (args.getArguments().length > 1) {
             final String type = args.getArguments()[0];
             final String target = args.getArguments()[1];
@@ -110,22 +114,22 @@ public final class DCCCommand extends ServerCommand implements IntelligentComman
                     ActionManager.processEvent(DCCActions.DCC_CHAT_REQUEST_SENT,
                             null, server, target);
 
-                    sendLine(origin, isSilent, "DCCChatStarting", target,
+                    sendLine(origin, args.isSilent(), "DCCChatStarting", target,
                             chat.getHost(), chat.getPort());
                     window.addLine("DCCChatStarting", target,
                             chat.getHost(), chat.getPort());
                 } else {
-                    sendLine(origin, isSilent, "DCCChatError",
+                    sendLine(origin, args.isSilent(), "DCCChatError",
                             "Unable to start chat with " + target
                             + " - unable to create listen socket");
                 }
             } else if (type.equalsIgnoreCase("send")) {
-                sendFile(target, origin, server, isSilent, args.getArgumentsAsString(2));
+                sendFile(target, origin, server, args.isSilent(), args.getArgumentsAsString(2));
             } else {
-                sendLine(origin, isSilent, FORMAT_ERROR, "Unknown DCC Type: '" + type + "'");
+                sendLine(origin, args.isSilent(), FORMAT_ERROR, "Unknown DCC Type: '" + type + "'");
             }
         } else {
-            sendLine(origin, isSilent, FORMAT_ERROR, "Syntax: dcc <type> <target> [params]");
+            sendLine(origin, args.isSilent(), FORMAT_ERROR, "Syntax: dcc <type> <target> [params]");
         }
     }
 

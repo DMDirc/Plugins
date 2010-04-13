@@ -24,11 +24,12 @@ package com.dmdirc.addons.nowplaying;
 
 import com.dmdirc.FrameContainer;
 import com.dmdirc.MessageTarget;
-import com.dmdirc.Server;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.commands.ChatCommand;
 import com.dmdirc.commandparser.CommandManager;
 import com.dmdirc.commandparser.commands.IntelligentCommand;
+import com.dmdirc.commandparser.commands.context.ChatCommandContext;
+import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 import com.dmdirc.ui.input.TabCompleter;
@@ -61,11 +62,12 @@ public final class NowPlayingCommand extends ChatCommand implements IntelligentC
     
     /** {@inheritDoc} */
     @Override
-    public void execute(final FrameContainer<?> origin, final Server server,
-            final MessageTarget<?> target, final boolean isSilent, final CommandArguments args) {
+    public void execute(final FrameContainer<?> origin,
+            final CommandArguments args, final CommandContext context) {
+        final MessageTarget<?> target = ((ChatCommandContext) context).getChat();
         if (args.getArguments().length > 0 && args.getArguments()[0]
                 .equalsIgnoreCase("--sources")) {
-            doSourceList(origin, isSilent, args.getArgumentsAsString(1));
+            doSourceList(origin, args.isSilent(), args.getArgumentsAsString(1));
         } else if (args.getArguments().length > 0 && args.getArguments()[0]
                 .equalsIgnoreCase("--source")) {
             if (args.getArguments().length > 1) {
@@ -73,26 +75,26 @@ public final class NowPlayingCommand extends ChatCommand implements IntelligentC
                 final MediaSource source = parent.getSource(sourceName);
                 
                 if (source == null) {
-                    sendLine(origin, isSilent, FORMAT_ERROR, "Source not found.");
+                    sendLine(origin, args.isSilent(), FORMAT_ERROR, "Source not found.");
                 } else {
                     if (source.getState() != MediaSourceState.CLOSED) {
-                        target.getCommandParser().parseCommand(origin,
+                        target.getCommandParser().parseCommand(origin, context.getSource(),
                                 getInformation(source, args.getArgumentsAsString(2)));
                     } else {
-                        sendLine(origin, isSilent, FORMAT_ERROR, "Source is not running.");
+                        sendLine(origin, args.isSilent(), FORMAT_ERROR, "Source is not running.");
                     }
                 }
             } else {
-                sendLine(origin, isSilent, FORMAT_ERROR,
+                sendLine(origin, args.isSilent(), FORMAT_ERROR,
                         "You must specify a source when using --source.");
             }
         } else {
             if (parent.hasRunningSource()) {
-                target.getCommandParser().parseCommand(origin,
+                target.getCommandParser().parseCommand(origin, context.getSource(),
                         getInformation(parent.getBestSource(), args.
                         getArgumentsAsString(0)));
             } else {
-                sendLine(origin, isSilent, FORMAT_ERROR, "No running media sources available.");
+                sendLine(origin, args.isSilent(), FORMAT_ERROR, "No running media sources available.");
             }
         }
     }

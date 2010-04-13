@@ -25,6 +25,7 @@ package com.dmdirc.addons.calc;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.commands.GlobalCommand;
+import com.dmdirc.commandparser.commands.context.CommandContext;
 
 import java.text.ParseException;
 
@@ -38,8 +39,8 @@ public class CalcCommand extends GlobalCommand {
 
     /** {@inheritDoc} */
     @Override
-    public void execute(final FrameContainer<?> origin, final boolean isSilent,
-            final CommandArguments args) {
+    public void execute(final FrameContainer<?> origin,
+            final CommandArguments args, final CommandContext context) {
         try {
             int offset = 0;
             boolean showexpr = false;
@@ -54,13 +55,13 @@ public class CalcCommand extends GlobalCommand {
             final Parser parser = new Parser(lexer);
             final Evaluator evaluator = new Evaluator(parser.parse());
             final Number result = evaluator.evaluate();
-            sendLine(origin, isSilent, FORMAT_OUTPUT,
+            sendLine(origin, args.isSilent(), FORMAT_OUTPUT,
                     (showexpr ? input + " = " : "") + result);
         } catch (ParseException ex) {
-            sendLine(origin, isSilent, FORMAT_ERROR, "Unable to parse expression: "
+            sendLine(origin, args.isSilent(), FORMAT_ERROR, "Unable to parse expression: "
                     + ex.getMessage());
         } catch (ArithmeticException ex) {
-            sendLine(origin, isSilent, FORMAT_ERROR, "Unable to calculate expression: "
+            sendLine(origin, args.isSilent(), FORMAT_ERROR, "Unable to calculate expression: "
                     + ex.getMessage());
         }
     }

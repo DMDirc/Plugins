@@ -26,6 +26,7 @@ import com.dmdirc.FrameContainer;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandManager;
 import com.dmdirc.commandparser.commands.GlobalCommand;
+import com.dmdirc.commandparser.commands.context.CommandContext;
 
 /**
  * The FDNotify Command shows a nice popup on using the FreeDesktop
@@ -50,8 +51,8 @@ public final class FDNotifyCommand extends GlobalCommand {
 
     /** {@inheritDoc} */
     @Override
-    public void execute(final FrameContainer<?> origin, final boolean isSilent,
-            final CommandArguments args) {
+    public void execute(final FrameContainer<?> origin,
+            final CommandArguments args, final CommandContext context) {
         myPlugin.showNotification("", args.getArgumentsAsString());
     }
     

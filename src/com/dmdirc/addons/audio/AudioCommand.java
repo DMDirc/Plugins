@@ -26,6 +26,7 @@ import com.dmdirc.FrameContainer;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandManager;
 import com.dmdirc.commandparser.commands.GlobalCommand;
+import com.dmdirc.commandparser.commands.context.CommandContext;
 
 import java.io.File;
 
@@ -46,18 +47,18 @@ public final class AudioCommand extends GlobalCommand {
 
     /** {@inheritDoc} */
     @Override
-    public void execute(final FrameContainer<?> origin, final boolean isSilent,
-                        final CommandArguments args) {
+    public void execute(final FrameContainer<?> origin,
+            final CommandArguments args, final CommandContext context) {
         final String filename = args.getArgumentsAsString();
         final File file = new File(filename);
         if (file.exists()) {
             if (AudioPlayer.isValid(file)) {
                 new AudioPlayer(file).play();
             } else {
-                sendLine(origin, isSilent, FORMAT_ERROR, "Invalid file type");
+                sendLine(origin, args.isSilent(), FORMAT_ERROR, "Invalid file type");
             }
         } else {
-            sendLine(origin, isSilent, FORMAT_ERROR, "File does not exist");
+            sendLine(origin, args.isSilent(), FORMAT_ERROR, "File does not exist");
         }
     }
 

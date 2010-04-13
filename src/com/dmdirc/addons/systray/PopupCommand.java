@@ -23,10 +23,10 @@
 package com.dmdirc.addons.systray;
 
 import com.dmdirc.FrameContainer;
-import com.dmdirc.Server;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandManager;
 import com.dmdirc.commandparser.commands.ServerCommand;
+import com.dmdirc.commandparser.commands.context.CommandContext;
 
 /**
  * The /popup command allows the user to show a popup message from the system
@@ -64,8 +64,8 @@ public final class PopupCommand extends ServerCommand {
 
     /** {@inheritDoc} */
     @Override
-    public void execute(final FrameContainer<?> origin, final Server server,
-            final boolean isSilent, final CommandArguments args) {
+    public void execute(final FrameContainer<?> origin,
+            final CommandArguments args, final CommandContext context) {
         showPopup("DMDirc", args.getArgumentsAsString());
     }
 

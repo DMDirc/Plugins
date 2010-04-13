@@ -26,6 +26,7 @@ import com.dmdirc.FrameContainer;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandManager;
 import com.dmdirc.commandparser.commands.GlobalCommand;
+import com.dmdirc.commandparser.commands.context.CommandContext;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -44,24 +45,24 @@ public final class DNSCommand extends GlobalCommand {
     
     /** {@inheritDoc} */
     @Override
-    public void execute(final FrameContainer<?> origin, final boolean isSilent,
-            final CommandArguments args) {
+    public void execute(final FrameContainer<?> origin,
+            final CommandArguments args, final CommandContext context) {
         if (args.getArguments().length == 0) {
-            showUsage(origin, isSilent, "dns", "<IP|hostname>");
+            showUsage(origin, args.isSilent(), "dns", "<IP|hostname>");
             return;
         }
         
-        sendLine(origin, isSilent, FORMAT_OUTPUT, "Resolving: " + args.getArguments()[0]);
+        sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Resolving: " + args.getArguments()[0]);
         new Timer("DNS Command Timer").schedule(new TimerTask() {
             /** {@inheritDoc} */
             @Override
             public void run() {
                 if (args.getArguments()[0].matches("\\b(?:\\d{1,3}\\.){3}\\d{1,3}\\b")) {
-                    sendLine(origin, isSilent, FORMAT_OUTPUT, "Resolved: "
+                    sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Resolved: "
                             + args.getArguments()[0] + ": "
                             + DNSPlugin.getHostname(args.getArguments()[0]));
                 } else {
-                    sendLine(origin, isSilent, FORMAT_OUTPUT, "Resolved: "
+                    sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Resolved: "
                             + args.getArguments()[0] + ": "
                             + DNSPlugin.getIPs(args.getArguments()[0]));
                 }

@@ -28,6 +28,8 @@ import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandManager;
 import com.dmdirc.commandparser.commands.IntelligentCommand;
 import com.dmdirc.commandparser.commands.ServerCommand;
+import com.dmdirc.commandparser.commands.context.CommandContext;
+import com.dmdirc.commandparser.commands.context.ServerCommandContext;
 import com.dmdirc.plugins.Plugin;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.PluginManager;
@@ -50,17 +52,18 @@ public final class LoggingCommand extends ServerCommand implements IntelligentCo
 
     /** {@inheritDoc} */
     @Override
-    public void execute(final FrameContainer<?> origin, final Server server,
-                        final boolean isSilent, final CommandArguments args) {
+    public void execute(final FrameContainer<?> origin,
+            final CommandArguments args, final CommandContext context) {
+        final Server server = ((ServerCommandContext) context).getServer();
         final PluginInfo pluginInfo = PluginManager.getPluginManager().getPluginInfoByName("logging");
         if (pluginInfo == null) {
-            sendLine(origin, isSilent, FORMAT_ERROR, "Logging Plugin is not loaded.");
+            sendLine(origin, args.isSilent(), FORMAT_ERROR, "Logging Plugin is not loaded.");
             return;
         }
         final Plugin gotPlugin = pluginInfo.getPlugin();
 
         if (!(gotPlugin instanceof LoggingPlugin)) {
-            sendLine(origin, isSilent, FORMAT_ERROR, "Logging Plugin is not loaded.");
+            sendLine(origin, args.isSilent(), FORMAT_ERROR, "Logging Plugin is not loaded.");
             return;
         }
 
@@ -69,23 +72,23 @@ public final class LoggingCommand extends ServerCommand implements IntelligentCo
         if (args.getArguments().length > 0) {
             if (args.getArguments()[0].equalsIgnoreCase("reload")) {
                 if (PluginManager.getPluginManager().reloadPlugin(pluginInfo.getFilename())) {
-                    sendLine(origin, isSilent, FORMAT_OUTPUT, "Plugin reloaded.");
+                    sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Plugin reloaded.");
                 } else {
-                    sendLine(origin, isSilent, FORMAT_ERROR, "Plugin failed to reload.");
+                    sendLine(origin, args.isSilent(), FORMAT_ERROR, "Plugin failed to reload.");
                 }
             } else if (args.getArguments()[0].equalsIgnoreCase("history")) {
                 if (!plugin.showHistory(origin)) {
-                    sendLine(origin, isSilent, FORMAT_ERROR, "Unable to open history for this window.");
+                    sendLine(origin, args.isSilent(), FORMAT_ERROR, "Unable to open history for this window.");
                 }
             } else if (args.getArguments()[0].equalsIgnoreCase("help")) {
-                sendLine(origin, isSilent, FORMAT_OUTPUT, getName() + " reload           - Reload the logging plugin.");
-                sendLine(origin, isSilent, FORMAT_OUTPUT, getName() + " history          - Open the history of this window, if available.");
-                sendLine(origin, isSilent, FORMAT_OUTPUT, getName() + " help             - Show this help.");
+                sendLine(origin, args.isSilent(), FORMAT_OUTPUT, getName() + " reload           - Reload the logging plugin.");
+                sendLine(origin, args.isSilent(), FORMAT_OUTPUT, getName() + " history          - Open the history of this window, if available.");
+                sendLine(origin, args.isSilent(), FORMAT_OUTPUT, getName() + " help             - Show this help.");
             } else {
-                sendLine(origin, isSilent, FORMAT_ERROR, "Unknown command '" + args.getArguments()[0] + "'. Use " + getName() + " help for a list of commands.");
+                sendLine(origin, args.isSilent(), FORMAT_ERROR, "Unknown command '" + args.getArguments()[0] + "'. Use " + getName() + " help for a list of commands.");
             }
         } else {
-            sendLine(origin, isSilent, FORMAT_ERROR, "Use " + getName() + " help for a list of commands.");
+            sendLine(origin, args.isSilent(), FORMAT_ERROR, "Use " + getName() + " help for a list of commands.");
         }
     }
 

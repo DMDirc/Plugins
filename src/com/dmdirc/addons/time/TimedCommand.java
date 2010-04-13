@@ -26,6 +26,7 @@ import com.dmdirc.FrameContainer;
 import com.dmdirc.WritableFrameContainer;
 import com.dmdirc.commandparser.parsers.CommandParser;
 import com.dmdirc.commandparser.parsers.GlobalCommandParser;
+import com.dmdirc.ui.interfaces.Window;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -41,8 +42,11 @@ public final class TimedCommand extends TimerTask {
     /** The command to execute. */
     private final String command;
     
-    /** The window to use for executing commands. */
+    /** The container to use for executing commands. */
     private final FrameContainer<?> origin;
+
+    /** The window the command came from. */
+    private final Window window;
     
     /** The timer we're using for scheduling this command. */
     private final Timer timer;
@@ -52,15 +56,18 @@ public final class TimedCommand extends TimerTask {
      * @param repetitions The number of times this command will be executed
      * @param delay The number of seconds between each execution
      * @param command The command to be executed
-     * @param origin The command window to use for the execution
+     * @param origin The frame container to use for the execution
+     * @param window The window the command came from
      */
     public TimedCommand(final int repetitions, final int delay,
-            final String command, final FrameContainer<?> origin) {
+            final String command, final FrameContainer<?> origin,
+            final Window window) {
         super();
         
         this.repetitions = repetitions;
         this.command = command;
         this.origin = origin;
+        this.window = window;
         
         timer = new Timer("Timed Command Timer");
         timer.schedule(this, delay * 1000L, delay * 1000L);
@@ -76,7 +83,7 @@ public final class TimedCommand extends TimerTask {
             parser = ((WritableFrameContainer<?>) origin).getCommandParser();
         }
         
-        parser.parseCommand(origin, command);
+        parser.parseCommand(origin, window, command);
                 
         if (--repetitions <= 0) {
             timer.cancel();
