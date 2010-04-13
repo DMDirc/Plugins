@@ -24,17 +24,14 @@ package com.dmdirc.addons.dcc;
 
 import com.dmdirc.FrameContainer;
 import com.dmdirc.WritableFrameContainer;
-import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandManager;
 import com.dmdirc.commandparser.CommandType;
-import com.dmdirc.commandparser.commands.Command;
-import com.dmdirc.commandparser.commands.GlobalCommand;
-import com.dmdirc.commandparser.parsers.CommandParser;
+import com.dmdirc.commandparser.parsers.GlobalCommandParser;
 
 /**
  * DCC CommandParser
  */
-public class DCCCommandParser extends CommandParser {
+public class DCCCommandParser extends GlobalCommandParser {
 
     /** The singleton instance of the DCC command parser. */
     private static DCCCommandParser me;
@@ -66,20 +63,6 @@ public class DCCCommandParser extends CommandParser {
     @Override
     protected void loadCommands() {
         CommandManager.loadCommands(this, CommandType.TYPE_GLOBAL);
-    }
-
-    /**
-     * Executes the specified command with the given arguments.
-     *
-     * @param origin The window in which the command was typed
-     * @param isSilent Whether the command is being silenced or not
-     * @param command The command to be executed
-     * @param args The arguments to the command
-     */
-    @Override
-    protected void executeCommand(final FrameContainer<?> origin,
-            final boolean isSilent, final Command command, final CommandArguments args) {
-        ((GlobalCommand) command).execute(origin, isSilent, args);
     }
 
     /**

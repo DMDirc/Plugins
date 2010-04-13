@@ -25,11 +25,14 @@ package com.dmdirc.addons.redirect;
 import com.dmdirc.MessageTarget;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandManager;
+import com.dmdirc.commandparser.commands.context.ChatCommandContext;
 import com.dmdirc.commandparser.parsers.CommandParser;
 import com.dmdirc.commandparser.parsers.ServerCommandParser;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.InvalidIdentityFileException;
 import com.dmdirc.ui.interfaces.InputWindow;
+import java.util.ArrayList;
+import java.util.Arrays;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -47,14 +50,15 @@ public class RedirectCommandTest {
     @Test
     public void testExecute() {
         final RedirectCommand command = new RedirectCommand();
-        final MessageTarget<?> target = mock(MessageTarget.class);
+        final MessageTarget<InputWindow> target = mock(MessageTarget.class);
         final InputWindow window = mock(InputWindow.class);
-        when(target.getFrame()).thenReturn(window);
+        when(target.getWindows()).thenReturn(new ArrayList<InputWindow>(Arrays.asList(window)));
         final CommandParser parser = new ServerCommandParser();
         when(window.getCommandParser()).thenReturn(parser);
-        when(window.getConfigManager()).thenReturn(IdentityManager.getGlobalConfig());
+        when(window.getContainer().getConfigManager()).thenReturn(IdentityManager.getGlobalConfig());
 
-        command.execute(target, null, target, false, new CommandArguments("/redirect /echo test"));
+        command.execute(target, new CommandArguments("/redirect /echo test"),
+                new ChatCommandContext(window, command, target));
         
         verify(target).sendLine("test");
     }
