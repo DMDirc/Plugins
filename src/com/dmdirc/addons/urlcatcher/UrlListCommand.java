@@ -24,8 +24,11 @@ package com.dmdirc.addons.urlcatcher;
 
 import com.dmdirc.FrameContainer;
 import com.dmdirc.commandparser.CommandArguments;
-import com.dmdirc.commandparser.commands.GlobalCommand;
+import com.dmdirc.commandparser.CommandInfo;
+import com.dmdirc.commandparser.CommandType;
+import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.IntelligentCommand;
+import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 
 import java.util.Map;
@@ -34,18 +37,25 @@ import java.util.Map;
  *
  * @author chris
  */
-public class UrlListCommand extends GlobalCommand implements IntelligentCommand {
+public class UrlListCommand extends Command implements IntelligentCommand,
+        CommandInfo {
     
     private final UrlCatcherPlugin plugin;
-    
+
+    /**
+     * Creates a new URL List command, outputting all known URLs seen by the URL
+     * catcher plugin to the active window.
+     *
+     * @param plugin Parent plugin
+     */
     public UrlListCommand(final UrlCatcherPlugin plugin) {
         this.plugin = plugin;
     }
 
     /** {@inheritDoc} */
     @Override
-    public void execute(final FrameContainer<?> origin, final boolean isSilent,
-            final CommandArguments args) {
+    public void execute(final FrameContainer<?> origin,
+            final CommandArguments args, final CommandContext context) {
         final String[] headers = {"URL", "Count"};
         final Map<String, Integer> map = plugin.getURLS();
         final String[][] data = new String[map.size()][];
@@ -55,7 +65,7 @@ public class UrlListCommand extends GlobalCommand implements IntelligentCommand 
             data[i++] = new String[]{entry.getKey(), entry.getValue().toString()};
         }
         
-        sendLine(origin, isSilent, FORMAT_OUTPUT, doTable(headers, data));
+        sendLine(origin, args.isSilent(), FORMAT_OUTPUT, doTable(headers, data));
     }
 
     /** {@inheritDoc} */
@@ -68,6 +78,12 @@ public class UrlListCommand extends GlobalCommand implements IntelligentCommand 
     @Override
     public boolean showInHelp() {
         return true;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public CommandType getType() {
+        return CommandType.TYPE_GLOBAL;
     }
 
     /** {@inheritDoc} */

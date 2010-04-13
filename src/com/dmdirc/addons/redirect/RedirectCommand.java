@@ -24,10 +24,13 @@ package com.dmdirc.addons.redirect;
 
 import com.dmdirc.FrameContainer;
 import com.dmdirc.MessageTarget;
-import com.dmdirc.Server;
 import com.dmdirc.commandparser.CommandArguments;
-import com.dmdirc.commandparser.commands.ChatCommand;
+import com.dmdirc.commandparser.CommandInfo;
+import com.dmdirc.commandparser.CommandType;
+import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.IntelligentCommand;
+import com.dmdirc.commandparser.commands.context.ChatCommandContext;
+import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 import com.dmdirc.ui.input.TabCompleter;
 
@@ -38,17 +41,19 @@ import com.dmdirc.ui.input.TabCompleter;
  *
  * @author Chris
  */
-public class RedirectCommand extends ChatCommand implements IntelligentCommand {
+public class RedirectCommand extends Command implements IntelligentCommand,
+        CommandInfo {
     
     public RedirectCommand() {
     }
     
     /** {@inheritDoc} */
     @Override
-    public void execute(final FrameContainer<?> origin, final Server server,
-            final MessageTarget<?> target, final boolean isSilent, final CommandArguments args) {
+    public void execute(final FrameContainer<?> origin,
+            final CommandArguments args, final CommandContext context) {
+        final MessageTarget<?> target = ((ChatCommandContext) context).getChat();
         target.getCommandParser().parseCommand(new FakeWriteableFrameContainer(target),
-                args.getArgumentsAsString());
+                context.getSource(), args.getArgumentsAsString());
     }
     
     /** {@inheritDoc} */
@@ -61,6 +66,12 @@ public class RedirectCommand extends ChatCommand implements IntelligentCommand {
     @Override
     public boolean showInHelp() {
         return true;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public CommandType getType() {
+        return CommandType.TYPE_CHAT;
     }
     
     /** {@inheritDoc} */

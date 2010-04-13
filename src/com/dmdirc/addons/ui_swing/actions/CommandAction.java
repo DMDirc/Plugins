@@ -74,7 +74,7 @@ public class CommandAction extends AbstractAction {
      */
     @Override
     public void actionPerformed(final ActionEvent e) {
-        parser.parseCommand(window.getContainer(), command);
+        parser.parseCommand(window.getContainer(), window, command);
     }
     
 }

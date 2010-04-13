@@ -25,8 +25,12 @@ package com.dmdirc.addons.dcop;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.Server;
 import com.dmdirc.commandparser.CommandArguments;
+import com.dmdirc.commandparser.CommandInfo;
 import com.dmdirc.commandparser.CommandManager;
-import com.dmdirc.commandparser.commands.ServerCommand;
+import com.dmdirc.commandparser.CommandType;
+import com.dmdirc.commandparser.commands.Command;
+import com.dmdirc.commandparser.commands.context.CommandContext;
+import com.dmdirc.commandparser.commands.context.ServerCommandContext;
 
 import java.util.List;
 
@@ -34,7 +38,7 @@ import java.util.List;
  * The dcop command retrieves information from a dcop application.
  * @author chris
  */
-public final class DcopCommand extends ServerCommand {
+public final class DcopCommand extends Command implements CommandInfo {
     
     /**
      * Creates a new instance of DcopCommand.
@@ -47,16 +51,17 @@ public final class DcopCommand extends ServerCommand {
 
     /** {@inheritDoc} */
     @Override
-    public void execute(final FrameContainer<?> origin, final Server server,
-            final boolean isSilent, final CommandArguments args) {
+    public void execute(final FrameContainer<?> origin,
+            final CommandArguments args, final CommandContext context) {
+        final Server server = ((ServerCommandContext) context).getServer();
         if (args.getArguments().length != 3) {
-            showUsage(origin, isSilent, "dcop", "<app> <object> <function>");
+            showUsage(origin, args.isSilent(), "dcop", "<app> <object> <function>");
             return;
         }
         
         final List<String> res = DcopPlugin.getDcopResult("dcop " + args.getArgumentsAsString());
         for (String line : res) {
-            sendLine(origin, isSilent, FORMAT_OUTPUT, line);
+            sendLine(origin, args.isSilent(), FORMAT_OUTPUT, line);
         }
     }
     
@@ -71,6 +76,12 @@ public final class DcopCommand extends ServerCommand {
     @Override
     public boolean showInHelp() {
         return true;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public CommandType getType() {
+        return CommandType.TYPE_SERVER;
     }
     
     /** {@inheritDoc} */
