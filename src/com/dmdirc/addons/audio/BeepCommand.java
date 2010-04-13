@@ -24,8 +24,11 @@ package com.dmdirc.addons.audio;
 
 import com.dmdirc.FrameContainer;
 import com.dmdirc.commandparser.CommandArguments;
+import com.dmdirc.commandparser.CommandInfo;
 import com.dmdirc.commandparser.CommandManager;
-import com.dmdirc.commandparser.commands.GlobalCommand;
+import com.dmdirc.commandparser.CommandType;
+import com.dmdirc.commandparser.commands.Command;
+import com.dmdirc.commandparser.commands.context.CommandContext;
 
 import java.awt.Toolkit;
 
@@ -34,7 +37,7 @@ import java.awt.Toolkit;
  *
  * @author Shane "Dataforce" Mc Cormack
  */
-public final class BeepCommand extends GlobalCommand {
+public final class BeepCommand extends Command implements CommandInfo {
 
     /**
      * Creates a new instance of BeepCommand.
@@ -46,36 +49,30 @@ public final class BeepCommand extends GlobalCommand {
 
     /** {@inheritDoc} */
     @Override
-    public void execute(final FrameContainer<?> origin, final boolean isSilent,
-                        final CommandArguments args) {
+    public void execute(final FrameContainer<?> origin,
+            final CommandArguments args, final CommandContext context) {
         Toolkit.getDefaultToolkit().beep();
     }
 
-    /**
-     * Returns this command's name.
-     *
-     * @return The name of this command
-     */
+    /** {@inheritDoc} */
     @Override
     public String getName() {
         return "beep";
     }
 
-    /**
-     * Returns whether or not this command should be shown in help messages.
-     *
-     * @return True iff the command should be shown, false otherwise
-     */
+    /** {@inheritDoc} */
     @Override
     public boolean showInHelp() {
         return true;
     }
 
-    /**
-     * Returns a string representing the help message for this command.
-     *
-     * @return the help message for this command
-     */
+    /** {@inheritDoc} */
+    @Override
+    public CommandType getType() {
+        return CommandType.TYPE_GLOBAL;
+    }
+
+    /** {@inheritDoc} */
     @Override
     public String getHelp() {
         return this.getName();

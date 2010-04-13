@@ -24,9 +24,12 @@ package com.dmdirc.addons.osd;
 
 import com.dmdirc.FrameContainer;
 import com.dmdirc.commandparser.CommandArguments;
+import com.dmdirc.commandparser.CommandInfo;
 import com.dmdirc.commandparser.CommandManager;
-import com.dmdirc.commandparser.commands.GlobalCommand;
+import com.dmdirc.commandparser.CommandType;
+import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.IntelligentCommand;
+import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 import com.dmdirc.ui.messages.Styliser;
 
@@ -34,7 +37,8 @@ import com.dmdirc.ui.messages.Styliser;
  * The osd command shows an on screen message.
  * @author chris
  */
-public final class OsdCommand extends GlobalCommand implements IntelligentCommand {
+public final class OsdCommand extends Command implements 
+        IntelligentCommand, CommandInfo {
 
     /** The plugin that owns this command. */
     private final OsdPlugin plugin;
@@ -70,8 +74,8 @@ public final class OsdCommand extends GlobalCommand implements IntelligentComman
 
     /** {@inheritDoc} */
     @Override
-    public void execute(final FrameContainer<?> origin, final boolean isSilent,
-            final CommandArguments args) {
+    public void execute(final FrameContainer<?> origin,
+            final CommandArguments args, final CommandContext context) {
         if (args.getArguments().length > 0
                 && "--close".equalsIgnoreCase(args.getArguments()[0])) {
             osdManager.closeAll();
@@ -90,6 +94,12 @@ public final class OsdCommand extends GlobalCommand implements IntelligentComman
     @Override
     public boolean showInHelp() {
         return true;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public CommandType getType() {
+        return CommandType.TYPE_GLOBAL;
     }
     
     /** {@inheritDoc}. */

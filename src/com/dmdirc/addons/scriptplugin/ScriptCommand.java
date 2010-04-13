@@ -24,10 +24,13 @@ package com.dmdirc.addons.scriptplugin;
 
 import com.dmdirc.FrameContainer;
 import com.dmdirc.commandparser.CommandArguments;
+import com.dmdirc.commandparser.CommandInfo;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.commandparser.CommandManager;
-import com.dmdirc.commandparser.commands.GlobalCommand;
+import com.dmdirc.commandparser.CommandType;
+import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.IntelligentCommand;
+import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 
 import java.util.LinkedList;
@@ -43,12 +46,15 @@ import java.lang.reflect.Method;
  *
  * @author Shane 'Dataforce' McCormack
  */
-public final class ScriptCommand extends GlobalCommand implements IntelligentCommand {
+public final class ScriptCommand extends Command implements IntelligentCommand,
+        CommandInfo {
     /** My Plugin */
     final ScriptPlugin myPlugin;
 
     /**
      * Creates a new instance of ScriptCommand.
+     *
+     * @param plugin Parent plugin
      */
     public ScriptCommand(final ScriptPlugin plugin) {
         super();
@@ -58,31 +64,31 @@ public final class ScriptCommand extends GlobalCommand implements IntelligentCom
         
     /** {@inheritDoc} */
     @Override
-    public void execute(final FrameContainer<?> origin, final boolean isSilent,
-            final CommandArguments commandArgs) {
-        final String[] args = commandArgs.getArguments();
+    public void execute(final FrameContainer<?> origin,
+            final CommandArguments args, final CommandContext context) {
+        final String[] sargs = args.getArguments();
     
-        if (args.length > 0 && (args[0].equalsIgnoreCase("rehash") || args[0].equalsIgnoreCase("reload"))) {
-            sendLine(origin, isSilent, FORMAT_OUTPUT, "Reloading scripts");
+        if (sargs.length > 0 && (sargs[0].equalsIgnoreCase("rehash") || sargs[0].equalsIgnoreCase("reload"))) {
+            sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Reloading scripts");
             myPlugin.rehash();
-        } else if (args.length > 0 && args[0].equalsIgnoreCase("load")) {
-            if (args.length > 1) {
-                final String filename = commandArgs.getArgumentsAsString(1);
-                sendLine(origin, isSilent, FORMAT_OUTPUT, "Loading: "+filename+" ["+myPlugin.loadScript(myPlugin.getScriptDir()+filename)+"]");
+        } else if (sargs.length > 0 && sargs[0].equalsIgnoreCase("load")) {
+            if (sargs.length > 1) {
+                final String filename = args.getArgumentsAsString(1);
+                sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Loading: "+filename+" ["+myPlugin.loadScript(myPlugin.getScriptDir()+filename)+"]");
             } else {
-                sendLine(origin, isSilent, FORMAT_ERROR, "You must specify a script to load");
+                sendLine(origin, args.isSilent(), FORMAT_ERROR, "You must specify a script to load");
             }
-        } else if (args.length > 0 && args[0].equalsIgnoreCase("unload")) {
-            if (args.length > 1) {
-                final String filename = commandArgs.getArgumentsAsString(1);
-                sendLine(origin, isSilent, FORMAT_OUTPUT, "Unloading: "+filename+" ["+myPlugin.loadScript(myPlugin.getScriptDir()+filename)+"]");
+        } else if (sargs.length > 0 && sargs[0].equalsIgnoreCase("unload")) {
+            if (sargs.length > 1) {
+                final String filename = args.getArgumentsAsString(1);
+                sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Unloading: "+filename+" ["+myPlugin.loadScript(myPlugin.getScriptDir()+filename)+"]");
             } else {
-                sendLine(origin, isSilent, FORMAT_ERROR, "You must specify a script to unload");
+                sendLine(origin, args.isSilent(), FORMAT_ERROR, "You must specify a script to unload");
             }
-        } else if (args.length > 0 && args[0].equalsIgnoreCase("eval")) {
-            if (args.length > 1) {
-                final String script = commandArgs.getArgumentsAsString(1);
-                sendLine(origin, isSilent, FORMAT_OUTPUT, "Evaluating: "+script);
+        } else if (sargs.length > 0 && sargs[0].equalsIgnoreCase("eval")) {
+            if (sargs.length > 1) {
+                final String script = args.getArgumentsAsString(1);
+                sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Evaluating: "+script);
                 try {
                     ScriptEngineWrapper wrapper;
                     if (IdentityManager.getGlobalConfig().hasOptionString(myPlugin.getDomain(), "eval.baseFile")) {
@@ -96,11 +102,11 @@ public final class ScriptCommand extends GlobalCommand implements IntelligentCom
                         wrapper = new ScriptEngineWrapper(myPlugin, null);
                     }
                     wrapper.getScriptEngine().put("cmd_origin", origin);
-                    wrapper.getScriptEngine().put("cmd_isSilent", isSilent);
-                    wrapper.getScriptEngine().put("cmd_args", args);
-                    sendLine(origin, isSilent, FORMAT_OUTPUT, "Result: "+wrapper.getScriptEngine().eval(script));
+                    wrapper.getScriptEngine().put("cmd_isSilent", args.isSilent());
+                    wrapper.getScriptEngine().put("cmd_args", sargs);
+                    sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Result: "+wrapper.getScriptEngine().eval(script));
                 } catch (Exception e) {
-                    sendLine(origin, isSilent, FORMAT_OUTPUT, "Exception: "+e+" -> "+e.getMessage());
+                    sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Exception: "+e+" -> "+e.getMessage());
                     
                     if (IdentityManager.getGlobalConfig().getOptionBool(myPlugin.getDomain(), "eval.showStackTrace")) {
                         try {
@@ -111,24 +117,24 @@ public final class ScriptCommand extends GlobalCommand implements IntelligentCom
                                 
                                 final String[] stacktrace = (String[])exceptionToStringArray.invoke(null, e);
                                 for (String line : stacktrace) {
-                                    sendLine(origin, isSilent, FORMAT_OUTPUT, "Stack trace: "+line);
+                                    sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Stack trace: "+line);
                                 }
                             }
                         } catch (Exception ex) {
-                            sendLine(origin, isSilent, FORMAT_OUTPUT, "Stack trace: Exception showing stack trace: "+ex+" -> "+ex.getMessage());
+                            sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Stack trace: Exception showing stack trace: "+ex+" -> "+ex.getMessage());
                         }
                     }
                     
                 }
             } else {
-                sendLine(origin, isSilent, FORMAT_ERROR, "You must specify some script to eval.");
+                sendLine(origin, args.isSilent(), FORMAT_ERROR, "You must specify some script to eval.");
             }
-        } else if (args.length > 0 && args[0].equalsIgnoreCase("savetobasefile")) {
-            if (args.length > 2) {
-                final String[] bits = args[1].split("/");
+        } else if (sargs.length > 0 && sargs[0].equalsIgnoreCase("savetobasefile")) {
+            if (sargs.length > 2) {
+                final String[] bits = sargs[1].split("/");
                 final String functionName = bits[0];
-                final String script = commandArgs.getArgumentsAsString(2);
-                sendLine(origin, isSilent, FORMAT_OUTPUT, "Saving as '"+functionName+"': "+script);
+                final String script = args.getArgumentsAsString(2);
+                sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Saving as '"+functionName+"': "+script);
                 if (IdentityManager.getGlobalConfig().hasOptionString(myPlugin.getDomain(), "eval.baseFile")) {
                     try {
                         final String baseFile = myPlugin.getScriptDir()+'/'+IdentityManager.getGlobalConfig().getOption(myPlugin.getDomain(), "eval.baseFile");
@@ -146,29 +152,29 @@ public final class ScriptCommand extends GlobalCommand implements IntelligentCom
                         writer.flush();
                         writer.close();
                     } catch (IOException ioe) {
-                        sendLine(origin, isSilent, FORMAT_ERROR, "IOException: "+ioe.getMessage());
+                        sendLine(origin, args.isSilent(), FORMAT_ERROR, "IOException: "+ioe.getMessage());
                     }
                 } else {
-                    sendLine(origin, isSilent, FORMAT_ERROR, "No baseFile specified, please /set "+myPlugin.getDomain()+" eval.baseFile filename (stored in scripts dir of profile)");
+                    sendLine(origin, args.isSilent(), FORMAT_ERROR, "No baseFile specified, please /set "+myPlugin.getDomain()+" eval.baseFile filename (stored in scripts dir of profile)");
                 }
-            } else if (args.length > 1) {
-                sendLine(origin, isSilent, FORMAT_ERROR, "You must specify some script to save.");
+            } else if (sargs.length > 1) {
+                sendLine(origin, args.isSilent(), FORMAT_ERROR, "You must specify some script to save.");
             } else {
-                sendLine(origin, isSilent, FORMAT_ERROR, "You must specify a function name and some script to save.");
+                sendLine(origin, args.isSilent(), FORMAT_ERROR, "You must specify a function name and some script to save.");
             }
-        } else if (args.length > 0 && args[0].equalsIgnoreCase("help")) {
-            sendLine(origin, isSilent, FORMAT_OUTPUT, "This command allows you to interact with the script plugin");
-            sendLine(origin, isSilent, FORMAT_OUTPUT, "-------------------");
-            sendLine(origin, isSilent, FORMAT_OUTPUT, "reload/rehash                  - Reload all loaded scripts");
-            sendLine(origin, isSilent, FORMAT_OUTPUT, "load <script>                  - load scripts/<script> (file name relative to scripts dir)");
-            sendLine(origin, isSilent, FORMAT_OUTPUT, "unload <script>                - unload <script> (full file name)");
-            sendLine(origin, isSilent, FORMAT_OUTPUT, "eval <script>                  - evaluate the code <script> and return the result");
-            sendLine(origin, isSilent, FORMAT_OUTPUT, "savetobasefile <name> <script> - save the code <script> to the eval basefile ("+myPlugin.getDomain()+".eval.basefile)");
-            sendLine(origin, isSilent, FORMAT_OUTPUT, "                                 as the function <name> (name/foo/bar will save it as 'name' with foo and");
-            sendLine(origin, isSilent, FORMAT_OUTPUT, "                                 bar as arguments.");
-            sendLine(origin, isSilent, FORMAT_OUTPUT, "-------------------");
+        } else if (sargs.length > 0 && sargs[0].equalsIgnoreCase("help")) {
+            sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "This command allows you to interact with the script plugin");
+            sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "-------------------");
+            sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "reload/rehash                  - Reload all loaded scripts");
+            sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "load <script>                  - load scripts/<script> (file name relative to scripts dir)");
+            sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "unload <script>                - unload <script> (full file name)");
+            sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "eval <script>                  - evaluate the code <script> and return the result");
+            sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "savetobasefile <name> <script> - save the code <script> to the eval basefile ("+myPlugin.getDomain()+".eval.basefile)");
+            sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "                                 as the function <name> (name/foo/bar will save it as 'name' with foo and");
+            sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "                                 bar as arguments.");
+            sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "-------------------");
         } else {
-            sendLine(origin, isSilent, FORMAT_ERROR, "Unknown subcommand.");
+            sendLine(origin, args.isSilent(), FORMAT_ERROR, "Unknown subcommand.");
         }
     }
 
@@ -230,28 +236,28 @@ public final class ScriptCommand extends GlobalCommand implements IntelligentCom
         return res;
     }
 
-    /**
-     * Returns this command's name.
-     *
-     * @return The name of this command
-     */
+    /** {@inheritDoc} */
     @Override
-    public String getName() { return "script"; }
+    public String getName() { 
+        return "script";
+    }
     
-    /**
-     * Returns whether or not this command should be shown in help messages.
-     *
-     * @return True iff the command should be shown, false otherwise
-     */
+    /** {@inheritDoc} */
     @Override
-    public boolean showInHelp() { return true; }
+    public boolean showInHelp() { 
+        return true;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public CommandType getType() {
+        return CommandType.TYPE_GLOBAL;
+    }
     
-    /**
-     * Returns a string representing the help message for this command.
-     *
-     * @return the help message for this command
-     */
+    /** {@inheritDoc} */
     @Override
-    public String getHelp() { return "script - Allows controlling the script plugin"; }
+    public String getHelp() { 
+        return "script - Allows controlling the script plugin";
+    }
 }
 

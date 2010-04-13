@@ -24,8 +24,11 @@ package com.dmdirc.addons.audio;
 
 import com.dmdirc.FrameContainer;
 import com.dmdirc.commandparser.CommandArguments;
+import com.dmdirc.commandparser.CommandInfo;
 import com.dmdirc.commandparser.CommandManager;
-import com.dmdirc.commandparser.commands.GlobalCommand;
+import com.dmdirc.commandparser.CommandType;
+import com.dmdirc.commandparser.commands.Command;
+import com.dmdirc.commandparser.commands.context.CommandContext;
 
 import java.io.File;
 
@@ -34,7 +37,7 @@ import java.io.File;
  *
  * @author Shane "Dataforce" Mc Cormack
  */
-public final class AudioCommand extends GlobalCommand {
+public final class AudioCommand extends Command implements CommandInfo {
 
     /**
      * Creates a new instance of LoggingCommand.
@@ -46,46 +49,40 @@ public final class AudioCommand extends GlobalCommand {
 
     /** {@inheritDoc} */
     @Override
-    public void execute(final FrameContainer<?> origin, final boolean isSilent,
-                        final CommandArguments args) {
+    public void execute(final FrameContainer<?> origin,
+            final CommandArguments args, final CommandContext context) {
         final String filename = args.getArgumentsAsString();
         final File file = new File(filename);
         if (file.exists()) {
             if (AudioPlayer.isValid(file)) {
                 new AudioPlayer(file).play();
             } else {
-                sendLine(origin, isSilent, FORMAT_ERROR, "Invalid file type");
+                sendLine(origin, args.isSilent(), FORMAT_ERROR, "Invalid file type");
             }
         } else {
-            sendLine(origin, isSilent, FORMAT_ERROR, "File does not exist");
+            sendLine(origin, args.isSilent(), FORMAT_ERROR, "File does not exist");
         }
     }
 
-    /**
-     * Returns this command's name.
-     *
-     * @return The name of this command
-     */
+    /** {@inheritDoc} */
     @Override
     public String getName() {
         return "audio";
     }
 
-    /**
-     * Returns whether or not this command should be shown in help messages.
-     *
-     * @return True iff the command should be shown, false otherwise
-     */
+    /** {@inheritDoc} */
     @Override
     public boolean showInHelp() {
         return true;
     }
 
-    /**
-     * Returns a string representing the help message for this command.
-     *
-     * @return the help message for this command
-     */
+    /** {@inheritDoc} */
+    @Override
+    public CommandType getType() {
+        return CommandType.TYPE_GLOBAL;
+    }
+
+    /** {@inheritDoc} */
     @Override
     public String getHelp() {
         return this.getName() + " <file>";

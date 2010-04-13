@@ -24,8 +24,11 @@ package com.dmdirc.addons.freedesktop_notifications;
 
 import com.dmdirc.FrameContainer;
 import com.dmdirc.commandparser.CommandArguments;
+import com.dmdirc.commandparser.CommandInfo;
 import com.dmdirc.commandparser.CommandManager;
-import com.dmdirc.commandparser.commands.GlobalCommand;
+import com.dmdirc.commandparser.CommandType;
+import com.dmdirc.commandparser.commands.Command;
+import com.dmdirc.commandparser.commands.context.CommandContext;
 
 /**
  * The FDNotify Command shows a nice popup on using the FreeDesktop
@@ -33,7 +36,7 @@ import com.dmdirc.commandparser.commands.GlobalCommand;
  *
  * @author Shane 'Dataforce' McCormack
  */
-public final class FDNotifyCommand extends GlobalCommand {
+public final class FDNotifyCommand extends Command implements CommandInfo {
     /** Plugin that owns this command. */
     final FreeDesktopNotificationsPlugin myPlugin;
     
@@ -50,8 +53,8 @@ public final class FDNotifyCommand extends GlobalCommand {
 
     /** {@inheritDoc} */
     @Override
-    public void execute(final FrameContainer<?> origin, final boolean isSilent,
-            final CommandArguments args) {
+    public void execute(final FrameContainer<?> origin,
+            final CommandArguments args, final CommandContext context) {
         myPlugin.showNotification("", args.getArgumentsAsString());
     }
     
@@ -66,6 +69,12 @@ public final class FDNotifyCommand extends GlobalCommand {
     @Override
     public boolean showInHelp() {
         return true;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public CommandType getType() {
+        return CommandType.TYPE_GLOBAL;
     }
     
     /** {@inheritDoc} */
