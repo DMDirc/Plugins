@@ -783,7 +783,9 @@ public class TwitterAPI {
         BufferedReader in = null;
         try {
             signURL(request);
-            
+
+            request.setConnectTimeout(5000);
+            request.setReadTimeout(5000);
             request.connect();
             in = new BufferedReader(new InputStreamReader(request.getInputStream()));
         } catch (IOException ex) {
