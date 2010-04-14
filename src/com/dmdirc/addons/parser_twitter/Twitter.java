@@ -367,54 +367,58 @@ public class Twitter implements Parser, TwitterErrorHandler, TwitterRawHandler, 
             joinChannel(bits[1]);
         } else if (bits[0].equalsIgnoreCase("WHOIS") && bits.length > 1) {
             if (bits[1].equalsIgnoreCase(myServerName)) {
-                sendNumericOutput(311, new String[]{":"+myServerName, "311", myself.getNickname(), bits[1], "user", myServerName, "*", "Psuedo-User for DMDirc "+myServerName+" plugin"});
-                sendNumericOutput(312, new String[]{":"+myServerName, "312", myself.getNickname(), bits[1], myServerName, "DMDirc "+myServerName+" plugin"});
+                sendNumericOutput(311, new String[]{":" + myServerName, "311", myself.getNickname(), bits[1], "user", myServerName, "*", "Psuedo-User for DMDirc " + myServerName + " plugin"});
+                sendNumericOutput(312, new String[]{":" + myServerName, "312", myself.getNickname(), bits[1], myServerName, "DMDirc " + myServerName + " plugin"});
             } else {
-                final boolean forced = (bits.length > 2 && bits[1].equalsIgnoreCase(bits[2]));
-                final TwitterUser user = (forced) ? api.getUser(bits[1], true) : api.getCachedUser(bits[1]);
+                final boolean forced = bits.length > 2 && bits[1].equalsIgnoreCase(bits[2]);
+                final TwitterUser user = forced ? api.getUser(bits[1], true) : api.getCachedUser(bits[1]);
                 
                 if (user == null) {
-                    final String reason = (forced) ? "No such user found, see http://"+myAddress.getHost()+"/"+user.getScreenName() : "No such user found in cache, try /WHOIS "+bits[1]+" "+bits[1]+" to poll twitter (uses 1 API call) or try http://"+myAddress.getHost()+"/"+user.getScreenName();
-                    getCallbackManager().getCallbackType(NumericListener.class).call(401, new String[]{":"+myServerName, "401", myself.getNickname(), bits[1], reason});
+                    final String reason = "No such user found" + (forced ? ", see" : "in cache, try /WHOIS " + bits[1] + " " + bits[1] + " to poll twitter (uses 1 API call) or try") + " http://" + myAddress.getHost() + "/" + bits[1];
+                    getCallbackManager().getCallbackType(NumericListener.class).call(401, new String[]{":" + myServerName, "401", myself.getNickname(), bits[1], reason});
                 } else {
                     // Time since last update
-                    final long secondsIdle = ((user.getStatus() != null) ? System.currentTimeMillis() - user.getStatus().getTime() : user.getRegisteredTime()) / 1000;
+                    final long secondsIdle = (user.getStatus() == null ? user.getRegisteredTime() : System.currentTimeMillis() - user.getStatus().getTime()) / 1000;
                     final long signonTime = user.getRegisteredTime() / 1000;
 
-                    getCallbackManager().getCallbackType(NumericListener.class).call(311, new String[]{":"+myServerName, "311", myself.getNickname(), bits[1], "user", myServerName, "*", user.getRealName()+" (http://"+myAddress.getHost()+"/"+user.getScreenName()+")"});
+                    getCallbackManager().getCallbackType(NumericListener.class).call(311, new String[]{":" + myServerName, "311", myself.getNickname(), bits[1], "user", myServerName, "*", user.getRealName() + " (http://" + myAddress.getHost() + "/" + user.getScreenName() + ")"});
 
-                    final TwitterClientInfo client = (TwitterClientInfo)getClient(bits[1]);
+                    final TwitterClientInfo client = (TwitterClientInfo) getClient(bits[1]);
                     if (client != null) {
                         final StringBuilder channelList = new StringBuilder();
 
                         for (ChannelClientInfo cci : client.getChannelClients()) {
-                            if (channelList.length() > 0) { channelList.append(" "); }
-                            channelList.append(cci.getImportantModePrefix()+cci.getChannel().getName());
+                            if (channelList.length() > 0) {
+                                channelList.append(' ');
+                            }
+
+                            channelList.append(cci.getImportantModePrefix());
+                            channelList.append(cci.getChannel().getName());
                         }
 
                         if (channelList.length() > 0) {
-                            getCallbackManager().getCallbackType(NumericListener.class).call(319, new String[]{":"+myServerName, "319", myself.getNickname(), bits[1], channelList.toString()});
+                            getCallbackManager().getCallbackType(NumericListener.class).call(319, new String[]{":" + myServerName, "319", myself.getNickname(), bits[1], channelList.toString()});
                         }
                     }
 
                     // AWAY Message Abuse!
-                    getCallbackManager().getCallbackType(NumericListener.class).call(301, new String[]{":"+myServerName, "301", myself.getNickname(), bits[1], "URL: "+user.getURL()});
-                    getCallbackManager().getCallbackType(NumericListener.class).call(301, new String[]{":"+myServerName, "301", myself.getNickname(), bits[1], "Bio: "+user.getDescription()});
-                    getCallbackManager().getCallbackType(NumericListener.class).call(301, new String[]{":"+myServerName, "301", myself.getNickname(), bits[1], "Location: "+user.getLocation()});
-                    getCallbackManager().getCallbackType(NumericListener.class).call(301, new String[]{":"+myServerName, "301", myself.getNickname(), bits[1], "Status: "+user.getStatus().getText()});
+                    getCallbackManager().getCallbackType(NumericListener.class).call(301, new String[]{":" + myServerName, "301", myself.getNickname(), bits[1], "URL: " + user.getURL()});
+                    getCallbackManager().getCallbackType(NumericListener.class).call(301, new String[]{":" + myServerName, "301", myself.getNickname(), bits[1], "Bio: " + user.getDescription()});
+                    getCallbackManager().getCallbackType(NumericListener.class).call(301, new String[]{":" + myServerName, "301", myself.getNickname(), bits[1], "Location: " + user.getLocation()});
+                    getCallbackManager().getCallbackType(NumericListener.class).call(301, new String[]{":" + myServerName, "301", myself.getNickname(), bits[1], "Status: " + user.getStatus().getText()});
                     if (bits[1].equalsIgnoreCase(myself.getNickname())) {
                         final Long[] apiCalls = api.getRemainingApiCalls();
-                        getCallbackManager().getCallbackType(NumericListener.class).call(301, new String[]{":"+myServerName, "301", myself.getNickname(), bits[1], "API Allowance: "+apiCalls[1]});
-                        getCallbackManager().getCallbackType(NumericListener.class).call(301, new String[]{":"+myServerName, "301", myself.getNickname(), bits[1], "API Allowance Remaining: "+apiCalls[0]});
-                        getCallbackManager().getCallbackType(NumericListener.class).call(301, new String[]{":"+myServerName, "301", myself.getNickname(), bits[1], "API Calls Used: "+apiCalls[3]});
+                        getCallbackManager().getCallbackType(NumericListener.class).call(301, new String[]{":" + myServerName, "301", myself.getNickname(), bits[1], "API Allowance: " + apiCalls[1]});
+                        getCallbackManager().getCallbackType(NumericListener.class).call(301, new String[]{":" + myServerName, "301", myself.getNickname(), bits[1], "API Allowance Remaining: " + apiCalls[0]});
+                        getCallbackManager().getCallbackType(NumericListener.class).call(301, new String[]{":" + myServerName, "301", myself.getNickname(), bits[1], "API Calls Used: " + apiCalls[3]});
                     }
 
-                    getCallbackManager().getCallbackType(NumericListener.class).call(312, new String[]{":"+myServerName, "312", myself.getNickname(), bits[1], myServerName, "DMDirc "+myServerName+" plugin"});
-                    getCallbackManager().getCallbackType(NumericListener.class).call(317, new String[]{":"+myServerName, "317", myself.getNickname(), bits[1], Long.toString(secondsIdle), Long.toString(signonTime), "seconds idle, signon time"});
+                    getCallbackManager().getCallbackType(NumericListener.class).call(312, new String[]{":" + myServerName, "312", myself.getNickname(), bits[1], myServerName, "DMDirc " + myServerName + " plugin"});
+                    getCallbackManager().getCallbackType(NumericListener.class).call(317, new String[]{":" + myServerName, "317", myself.getNickname(), bits[1], Long.toString(secondsIdle), Long.toString(signonTime), "seconds idle, signon time"});
                 }
             }
 
-            getCallbackManager().getCallbackType(NumericListener.class).call(318, new String[]{":"+myServerName, "318", myself.getNickname(), bits[1], "End of /WHOIS list."});
+            getCallbackManager().getCallbackType(NumericListener.class).call(318, new String[]{":" + myServerName, "318", myself.getNickname(), bits[1], "End of /WHOIS list."});
         } else if (bits[0].equalsIgnoreCase("INVITE") && bits.length > 2) {
             if (bits[2].equalsIgnoreCase(mainChannelName)) {
                 final TwitterUser user = api.addFriend(bits[1]);
@@ -450,7 +454,7 @@ public class Twitter implements Parser, TwitterErrorHandler, TwitterRawHandler, 
     /** {@inheritDoc} */
     @Override
     public boolean isValidChannelName(final String name) {
-        return (name.matches("^&[0-9]+$") || name.equalsIgnoreCase(mainChannelName) || name.startsWith("#"));
+        return name.matches("^&[0-9]+$") || name.equalsIgnoreCase(mainChannelName) || name.startsWith("#");
     }
 
     /** {@inheritDoc} */
