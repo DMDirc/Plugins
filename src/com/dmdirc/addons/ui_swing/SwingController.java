@@ -102,7 +102,7 @@ import net.miginfocom.layout.PlatformDefaults;
 /**
  * Controls the main swing UI.
  */
-public final class SwingController extends Plugin implements Serializable,
+public class SwingController extends Plugin implements Serializable,
         UIController {
 
     /**
@@ -695,6 +695,7 @@ public final class SwingController extends Plugin implements Serializable,
             public void run() {
                 initUISettings();
                 me = new MainFrame(SwingController.this);
+                me.setVisible(true);
                 mainFrameCreated.set(true);
                 statusBar = me.getStatusBar();
                 errorDialog = new ErrorListDialog(me);

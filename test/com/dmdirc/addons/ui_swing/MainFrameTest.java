@@ -24,134 +24,94 @@ package com.dmdirc.addons.ui_swing;
 
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.InvalidIdentityFileException;
-import com.dmdirc.addons.ui_swing.dialogs.FeedbackDialog;
-import com.dmdirc.addons.ui_swing.dialogs.NewServerDialog;
-import com.dmdirc.addons.ui_swing.dialogs.about.AboutDialog;
-import com.dmdirc.addons.ui_swing.dialogs.actionsmanager.ActionsManagerDialog;
-import com.dmdirc.addons.ui_swing.dialogs.aliases.AliasManagerDialog;
-import com.dmdirc.addons.ui_swing.dialogs.prefs.SwingPreferencesDialog;
-import com.dmdirc.addons.ui_swing.dialogs.profiles.ProfileManagerDialog;
-import java.lang.reflect.InvocationTargetException;
-import javax.swing.SwingUtilities;
-import org.fest.swing.finder.WindowFinder;
 import org.fest.swing.fixture.DialogFixture;
-import org.fest.swing.fixture.FrameFixture;
-import org.junit.After;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
+import org.uispec4j.UISpecTestCase;
+import org.uispec4j.Window;
+import org.uispec4j.interception.WindowInterceptor;
+import static org.mockito.Mockito.*;
 
-public class MainFrameTest {
+public class MainFrameTest extends UISpecTestCase {
     
-    private static FrameFixture window;
+    private Window window;
     private DialogFixture newwin;
-    private static SwingController controller;
+    private SwingController controller;
 
-    @BeforeClass
-    public static void setUpClass() throws InvalidIdentityFileException {
+    @Before
+    public void setUp() throws InvalidIdentityFileException {
         IdentityManager.load();
-        IdentityManager.getAddonIdentity().setOption("test", "debugEDT", "false");
-        IdentityManager.getAddonIdentity().setOption("test", "windowMenuItems", "1");
+        controller = mock(SwingController.class);
+        final SwingWindowFactory windowFactory = mock(SwingWindowFactory.class);
+        when(controller.getDomain()).thenReturn("test");
+        when(controller.getWindowFactory()).thenReturn(windowFactory);
+        
         IdentityManager.getAddonIdentity().setOption("test", "windowMenuScrollInterval", "1");
         IdentityManager.getAddonIdentity().setOption("test", "desktopbackground", "");
         IdentityManager.getAddonIdentity().setOption("test", "desktopbackgroundoption", "STRETCH");
-        controller = new SwingController();
-        controller.setDomain("test");
-        controller.onLoad();
-    }
+        IdentityManager.getAddonIdentity().setOption("test", "windowMenuItems", "1");
+        IdentityManager.getAddonIdentity().setOption("test", "windowMenuScrollInterval", "1");
 
-    @Before
-    public void setUp() {
-        if (window == null) {
-            window = new FrameFixture(controller.getMainWindow());
-            window.show();
-        }
+        window = new Window(new MainFrame(controller));
+        window.containsMenuBar().check();
     }
     
     @Test
     public void testNewServerDialog() {
-        window.menuItemWithPath("Server", "New Server...").click();
-        newwin = WindowFinder.findDialog(NewServerDialog.class)
-                .withTimeout(5000).using(window.robot);
-        newwin.requireVisible();
+        Window popup = WindowInterceptor.run(window.getMenuBar()
+                .getMenu("Server").getSubMenu("New Server...").triggerClick());
+        popup.titleEquals("DMDirc: Connect to a new server").check();
     }
-    
+
     @Test
     public void testAboutDialog() {
-        window.menuItemWithPath("Help", "About").click();
-        newwin = WindowFinder.findDialog(AboutDialog.class)
-                .withTimeout(5000).using(window.robot);
-        newwin.requireVisible();
+        Window popup = WindowInterceptor.run(window.getMenuBar()
+                .getMenu("Help").getSubMenu("About").triggerClick());
+        popup.titleEquals("DMDirc: About").check();
     }
-    
+
     @Test
     public void testFeedbackDialog() {
-        window.menuItemWithPath("Help", "Send Feedback").click();
-        newwin = WindowFinder.findDialog(FeedbackDialog.class)
-                .withTimeout(5000).using(window.robot);
-        newwin.requireVisible();
+        Window popup = WindowInterceptor.run(window.getMenuBar()
+                .getMenu("Help").getSubMenu("Send Feedback").triggerClick());
+        popup.titleEquals("DMDirc: Feedback").check();
     }
-    
+
     @Test
     public void testPreferencesDialog() {
-        window.menuItemWithPath("Settings", "Preferences").click();
-        newwin = WindowFinder.findDialog(SwingPreferencesDialog.class)
-                .withTimeout(5000).using(window.robot);
-        newwin.requireVisible();
+        Window popup = WindowInterceptor.run(window.getMenuBar()
+                .getMenu("Settings").getSubMenu("Preferences").triggerClick());
+        popup.titleEquals("DMDirc: Preferences").check();
     }
-    
+
     @Test
     public void testProfileManagerDialog() {
-        window.menuItemWithPath("Settings", "Profile Manager").click();
-        newwin = WindowFinder.findDialog(ProfileManagerDialog.class)
-                .withTimeout(5000).using(window.robot);
-        newwin.requireVisible();
+        Window popup = WindowInterceptor.run(window.getMenuBar()
+                .getMenu("Settings").getSubMenu("Profile Manager").triggerClick());
+        popup.titleEquals("DMDirc: Profile Editor").check();
     }
-    
+
     @Test
     public void testActionsManagerDialog() {
-        window.menuItemWithPath("Settings", "Actions Manager").click();
-        newwin = WindowFinder.findDialog(ActionsManagerDialog.class)
-                .withTimeout(5000).using(window.robot);
-        newwin.requireVisible();
+        Window popup = WindowInterceptor.run(window.getMenuBar()
+                .getMenu("Settings").getSubMenu("Actions Manager").triggerClick());
+        popup.titleEquals("DMDirc: Actions Manager").check();
     }
-    
+
     @Test
     public void testAliasManagerDialog() {
-        window.menuItemWithPath("Settings", "Alias Manager").click();
-        newwin = WindowFinder.findDialog(AliasManagerDialog.class)
-                .withTimeout(5000).using(window.robot);
-        newwin.requireVisible();
+        Window popup = WindowInterceptor.run(window.getMenuBar()
+                .getMenu("Settings").getSubMenu("Alias Manager").triggerClick());
+        popup.titleEquals("DMDirc: Alias manager").check();
     }
-    
+
     @Test
     public void testChannelServerSettings() {
-        window.menuItemWithPath("Channel", "Channel Settings").requireDisabled();
+        assertFalse(window.getMenuBar().getMenu("Channel").getSubMenu("Channel Settings").isEnabled());
     }
-    
+
     @Test
     public void testServerServerSettings() {
-        window.menuItemWithPath("Server", "Server settings").requireDisabled();
+        assertFalse(window.getMenuBar().getMenu("Server").getSubMenu("Server Settings").isEnabled());
     }
-
-    @After
-    public void tearDown() throws InterruptedException, InvocationTargetException {
-        SwingUtilities.invokeAndWait(new Runnable() {
-            @Override
-            public void run() {
-                close();
-            }
-        });
-    }
-
-    protected void close() {
-        if (newwin != null && newwin.target != null) {
-            try {
-                newwin.target.dispose();
-            } catch (Throwable ex) {
-                ex.printStackTrace();
-            }
-        }
-    }
-
 }
