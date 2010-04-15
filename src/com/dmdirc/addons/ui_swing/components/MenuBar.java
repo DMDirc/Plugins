@@ -103,6 +103,7 @@ public class MenuBar extends JMenuBar implements ActionListener, MenuListener {
 
         getActionMap().setParent(null);
         getActionMap().clear();
+        menuSelected(null);
     }
 
     /**
