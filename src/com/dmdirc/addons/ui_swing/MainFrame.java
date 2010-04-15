@@ -119,8 +119,6 @@ public final class MainFrame extends JFrame implements WindowListener,
 
         CoreUIUtils.centreWindow(this);
 
-        setVisible(true);
-
         addWindowListener(this);
 
         showVersion = IdentityManager.getGlobalConfig().getOptionBool("ui",
