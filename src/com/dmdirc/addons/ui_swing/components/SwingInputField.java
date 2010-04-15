@@ -439,6 +439,36 @@ public class SwingInputField extends JComponent implements InputField,
         });
     }
 
+    /**
+     * Sets the start index of the selection for this component.
+     *
+     * @param selectionStart Start index
+     */
+    public void setSelectionStart(final int selectionStart) {
+        UIUtilities.invokeLater(new Runnable() {
+
+            @Override
+            public void run() {
+                textField.setSelectionStart(selectionStart);
+            }
+        });
+    }
+
+    /**
+     * Sets the end index of the selection for this component
+     *
+     * @param selectionEnd End index
+     */
+    public void setSelectionEnd(final int selectionEnd) {
+        UIUtilities.invokeLater(new Runnable() {
+
+            @Override
+            public void run() {
+                textField.setSelectionEnd(selectionEnd);
+            }
+        });
+    }
+
     /** 
      * {@inheritDoc}
      * 

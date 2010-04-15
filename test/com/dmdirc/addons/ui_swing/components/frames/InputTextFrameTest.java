@@ -23,43 +23,39 @@
 package com.dmdirc.addons.ui_swing.components.frames;
 
 import com.dmdirc.Main;
+import com.dmdirc.WritableFrameContainer;
+import com.dmdirc.addons.ui_swing.ClassComponentMatcher;
+import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.config.ConfigManager;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.InvalidIdentityFileException;
-import com.dmdirc.harness.TestConfigManagerMap;
-import com.dmdirc.harness.TestWritableFrameContainer;
-import com.dmdirc.harness.ui.ClassFinder;
-import com.dmdirc.ui.WindowManager;
 import com.dmdirc.addons.ui_swing.SwingController;
-import com.dmdirc.addons.ui_swing.UIUtilities;
+import com.dmdirc.addons.ui_swing.SwingWindowFactory;
 import com.dmdirc.addons.ui_swing.components.TextAreaInputField;
 import com.dmdirc.plugins.PluginManager;
-import com.dmdirc.ui.interfaces.InputWindow;
+import com.dmdirc.ui.messages.IRCDocument;
 
-import java.awt.event.KeyEvent;
 
-import org.fest.swing.core.KeyPressInfo;
-import org.fest.swing.core.matcher.DialogMatcher;
-import org.fest.swing.core.matcher.JButtonMatcher;
-import org.fest.swing.fixture.DialogFixture;
-import org.fest.swing.fixture.FrameFixture;
-import org.fest.swing.fixture.JInternalFrameFixture;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
+import org.uispec4j.Trigger;
+import org.uispec4j.UISpecTestCase;
+import org.uispec4j.Window;
+import org.uispec4j.interception.WindowInterceptor;
+import static org.mockito.Mockito.*;
 
-public class InputTextFrameTest {
+public class InputTextFrameTest extends UISpecTestCase {
 
-    static FrameFixture mainframe;
-    static JInternalFrameFixture window;
-    static TestConfigManagerMap cmmap;
-    static TestWritableFrameContainer<InputWindow> owner;
-    static SwingController controller;
+    static InputTextFrame tf;
+    static String text;
 
-    @BeforeClass
-    public static void setUpClass() throws InvalidIdentityFileException {
-        IdentityManager.load();
+    static {
+        try {
+            IdentityManager.load();
+        } catch (InvalidIdentityFileException ex) {
+            //Ignore
+        }
         IdentityManager.getAddonIdentity().setOption("test", "windowMenuItems",
                 "1");
         IdentityManager.getAddonIdentity().setOption("test",
@@ -69,142 +65,119 @@ public class InputTextFrameTest {
                 "textpanebackground", "");
         IdentityManager.getAddonIdentity().setOption("test", "desktopbackground",
                 "");
-        controller = new SwingController();
-        controller.setDomain("test");
-        controller.onLoad();
-
         Main.ensureExists(PluginManager.getPluginManager(), "tabcompletion");
 
-        UIUtilities.initUISettings();
+        final IRCDocument document = mock(IRCDocument.class);
+        @SuppressWarnings("unchecked")
+        final WritableFrameContainer<CustomInputFrame> container = mock(
+                WritableFrameContainer.class);
+        final ConfigManager config = mock(ConfigManager.class);
+        when(container.getDocument()).thenReturn(document);
+        when(container.getConfigManager()).thenReturn(config);
+        when(config.getOption(anyString(), anyString())).thenReturn("mirc");
+        final SwingController controller = mock(SwingController.class);
+        when(controller.getDomain()).thenReturn("test");
+        final SwingWindowFactory wf = new SwingWindowFactory(controller);
+        when(controller.getWindowFactory()).thenReturn(wf);
+        final MainFrame mainFrame = new MainFrame(controller);
+        when(controller.getMainFrame()).thenReturn(mainFrame);
 
-        mainframe = new FrameFixture(controller.getMainWindow());
-    }
-
-    @Before
-    public void setUp() {
-        cmmap = new TestConfigManagerMap();
-        cmmap.settings.put("ui.pasteProtectionLimit", "1");
-
-        owner = new TestWritableFrameContainer<InputWindow>(512, cmmap,
-                InputWindow.class);
-        setupWindow(cmmap);
-    }
-
-    @After
-    public void tearDown() {
-        UIUtilities.invokeAndWait(new Runnable() {
-
-            @Override
-            public void run() {
-                window.close();
-                controller.getWindowFactory().getSwingWindow(owner).close();
-                WindowManager.removeWindow(owner);
-            }
-        });
+        tf = new CustomInputFrame(controller, container);
+        text = "line1\nline2";
     }
 
     @Test
     public void testPasteDialogContents() throws InterruptedException {
-        UIUtilities.invokeAndWait(new Runnable() {
-
-            @Override
-            public void run() {
-                ((InputTextFrame) window.target).doPaste("line1\nline2");
-
-                final DialogFixture dlg = mainframe.dialog(DialogMatcher.
-                        withTitle(
-                        "DMDirc: Multi-line paste").andShowing());
-
-                dlg.requireVisible().button(JButtonMatcher.withText("Edit")).
-                        click();
-                dlg.textBox(new ClassFinder<TextAreaInputField>(
-                        TextAreaInputField.class,
-                        null)).requireText("line1\nline2");
-                dlg.target.dispose();
-            }
-        });
+        final Window dialog = getDialog();
+        dialog.titleEquals("DMDirc: Multi-line paste").check();
+        dialog.getButton("Edit").click();
+        assertTrue(dialog.getTextBox(new ClassComponentMatcher(dialog,
+                TextAreaInputField.class)).getText().equals(text));
     }
 
     @Test
     public void testPasteDialogWithTextBefore() throws InterruptedException {
-        UIUtilities.invokeAndWait(new Runnable() {
-
-            @Override
-            public void run() {
-                window.textBox().enterText("testing:");
-                ((InputTextFrame) window.target).doPaste("line1\nline2");
-
-                final DialogFixture dlg = mainframe.dialog(DialogMatcher.
-                        withTitle("DMDirc: Multi-line paste").andShowing());
-
-                dlg.requireVisible().button(JButtonMatcher.withText("Edit")).
-                        click();
-                dlg.textBox(new ClassFinder<TextAreaInputField>(
-                        TextAreaInputField.class, null)).requireText(
-                        "testing:line1\nline2");
-                dlg.target.dispose();
-            }
-        });
+        tf.getInputField().setText("testing:");
+        final Window dialog = getDialog();
+        dialog.titleEquals("DMDirc: Multi-line paste").check();
+        dialog.getButton("Edit").click();
+        assertTrue(dialog.getTextBox(new ClassComponentMatcher(dialog,
+                TextAreaInputField.class)).getText().equals("testing:" + text));
     }
 
     @Test
     public void testPasteDialogWithTextAfter() throws InterruptedException {
-        UIUtilities.invokeAndWait(new Runnable() {
-
-            @Override
-            public void run() {
-                window.textBox().enterText("<- testing").pressAndReleaseKey(
-                        KeyPressInfo.keyCode(KeyEvent.VK_HOME));
-                ((InputTextFrame) window.target).doPaste("line1\nline2");
-
-                final DialogFixture dlg = mainframe.dialog(DialogMatcher.
-                        withTitle(
-                        "DMDirc: Multi-line paste").andShowing());
-
-                dlg.requireVisible().button(JButtonMatcher.withText("Edit")).
-                        click();
-                dlg.textBox(new ClassFinder<TextAreaInputField>(
-                        TextAreaInputField.class,
-                        null)).requireText("line1\nline2<- testing");
-                dlg.target.dispose();
-            }
-        });
+        tf.getInputField().setText(":testing");
+        tf.getInputField().setCaretPosition(0);
+        final Window dialog = getDialog();
+        dialog.titleEquals("DMDirc: Multi-line paste").check();
+        dialog.getButton("Edit").click();
+        assertTrue(dialog.getTextBox(new ClassComponentMatcher(dialog,
+                TextAreaInputField.class)).getText().equals(text + ":testing"));
     }
 
     @Test
     public void testPasteDialogWithTextAround() throws InterruptedException {
-        UIUtilities.invokeAndWait(new Runnable() {
-
-            @Override
-            public void run() {
-                window.textBox().enterText("testing:<- testing").selectText(8, 8);
-                ((InputTextFrame) window.target).doPaste("line1\nline2");
-
-                final DialogFixture dlg = mainframe.dialog(DialogMatcher.
-                        withTitle(
-                        "DMDirc: Multi-line paste").andShowing());
-
-                dlg.requireVisible().button(JButtonMatcher.withText("Edit")).
-                        click();
-                dlg.textBox(new ClassFinder<TextAreaInputField>(
-                        TextAreaInputField.class,
-                        null)).requireText("testing:line1\nline2<- testing");
-                dlg.target.dispose();
-            }
-        });
+        tf.getInputField().setText("testing::testing");
+        tf.getInputField().setCaretPosition(8);
+        final Window dialog = getDialog();
+        dialog.titleEquals("DMDirc: Multi-line paste").check();
+        dialog.getButton("Edit").click();
+        assertEquals("testing:" + text + ":testing",
+                dialog.getTextBox(new ClassComponentMatcher(dialog,
+                TextAreaInputField.class)).getText());
     }
 
-    protected void setupWindow(final ConfigManager configManager) {
-        final CustomInputFrame titf = new CustomInputFrame(controller, owner);
-
-        owner.setTitle("testing123");
-        owner.addWindow(titf);
-
-        WindowManager.addWindow(owner);
-
-        titf.open();
-
-        window = new JInternalFrameFixture(mainframe.robot, titf);
-        window.robot.settings().eventPostingDelay(250);
+    @Test
+    public void testPasteDialogWithSelection() {
+        tf.getInputField().setText("testing:SELECTED:testing");
+        tf.getInputField().setSelectionStart(8);
+        tf.getInputField().setSelectionEnd(16);
+        final Window dialog = getDialog();
+        dialog.titleEquals("DMDirc: Multi-line paste").check();
+        dialog.getButton("Edit").click();
+        assertEquals("testing:" + text + ":testing",
+                dialog.getTextBox(new ClassComponentMatcher(dialog,
+                TextAreaInputField.class)).getText());
     }
+
+    /**
+     * Creates a new paste dialog with the specified text for the specified
+     * frame.
+     *
+     * @param frame Parent frame
+     * @param text Text to "paste"
+     *
+     * @return Wrapped Dialog
+     */
+    private Window getDialog() {
+        return WindowInterceptor.run(new PasteDialogTrigger(tf, text));
+    }
+
+    /**
+     * Creates a new paste dialog for the specified frame with the specified text.
+     */
+    private class PasteDialogTrigger implements Trigger {
+
+        private InputTextFrame frame;
+        private String text;
+
+        /**
+         * Creates a new paste dialog for the specified frame with the specified text.
+         *
+         * @param frame Parent frame
+         * @param text Text to "paste"
+         */
+        public PasteDialogTrigger(final InputTextFrame frame, final String text) {
+            this.frame = frame;
+            this.text = text;
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public void run() throws Exception {
+            frame.doPaste(text);
+        }
+    }
+
 }
