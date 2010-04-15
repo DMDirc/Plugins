@@ -364,6 +364,7 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
         //check theres something to paste
         if (clipboard != null && (clipboardLines = getSplitLine(clipboard)).length
                 > 1) {
+            getInputField().replaceSelection("");
             final int caretPosition = getInputField().getCaretPosition();
             final String inputFieldText = getInputField().getText();
             final String text = inputFieldText.substring(0, caretPosition)
