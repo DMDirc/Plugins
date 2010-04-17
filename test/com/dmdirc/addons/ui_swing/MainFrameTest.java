@@ -22,34 +22,17 @@
 
 package com.dmdirc.addons.ui_swing;
 
-import com.dmdirc.config.IdentityManager;
-import com.dmdirc.config.InvalidIdentityFileException;
+import com.dmdirc.harness.ui.DMDircUITest;
 import org.junit.Test;
-import org.uispec4j.UISpecTestCase;
 import org.uispec4j.Window;
 import org.uispec4j.interception.WindowInterceptor;
-import static org.mockito.Mockito.*;
 
-public class MainFrameTest extends UISpecTestCase {
+public class MainFrameTest extends DMDircUITest {
     
     private static Window window;
 
     static {
-        try {
-            IdentityManager.load();
-        } catch (InvalidIdentityFileException ex) {
-            //Ignore
-        }
-        SwingController controller = mock(SwingController.class);
-        final SwingWindowFactory windowFactory = mock(SwingWindowFactory.class);
-        when(controller.getDomain()).thenReturn("test");
-        when(controller.getWindowFactory()).thenReturn(windowFactory);
-
-        IdentityManager.getAddonIdentity().setOption("test", "windowMenuScrollInterval", "1");
-        IdentityManager.getAddonIdentity().setOption("test", "desktopbackground", "");
-        IdentityManager.getAddonIdentity().setOption("test", "desktopbackgroundoption", "STRETCH");
-        IdentityManager.getAddonIdentity().setOption("test", "windowMenuItems", "1");
-        IdentityManager.getAddonIdentity().setOption("test", "windowMenuScrollInterval", "1");
+        SwingController controller = getMockedController();
 
         window = new Window(new MainFrame(controller));
         window.containsMenuBar().check();

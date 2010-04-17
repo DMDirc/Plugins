@@ -97,6 +97,7 @@ public class ActionConditionEditorPanel extends JPanel implements ActionListener
 
         addListeners();
         layoutComponents();
+        setEnabled(trigger != null);
     }
 
     /** Initialises the components. */

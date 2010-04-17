@@ -22,67 +22,22 @@
 
 package com.dmdirc.addons.ui_swing.components.frames;
 
-import com.dmdirc.Main;
-import com.dmdirc.WritableFrameContainer;
-import com.dmdirc.addons.ui_swing.ClassComponentMatcher;
-import com.dmdirc.addons.ui_swing.MainFrame;
-import com.dmdirc.config.ConfigManager;
-import com.dmdirc.config.IdentityManager;
-import com.dmdirc.config.InvalidIdentityFileException;
-import com.dmdirc.addons.ui_swing.SwingController;
-import com.dmdirc.addons.ui_swing.SwingWindowFactory;
+import com.dmdirc.harness.ui.ClassComponentMatcher;
+import com.dmdirc.harness.ui.DMDircUITest;
 import com.dmdirc.addons.ui_swing.components.TextAreaInputField;
-import com.dmdirc.plugins.PluginManager;
-import com.dmdirc.ui.messages.IRCDocument;
-
-
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.uispec4j.Trigger;
-import org.uispec4j.UISpecTestCase;
 import org.uispec4j.Window;
 import org.uispec4j.interception.WindowInterceptor;
-import static org.mockito.Mockito.*;
 
-public class InputTextFrameTest extends UISpecTestCase {
+public class InputTextFrameTest extends DMDircUITest {
 
     static InputTextFrame tf;
     static String text;
 
     static {
-        try {
-            IdentityManager.load();
-        } catch (InvalidIdentityFileException ex) {
-            //Ignore
-        }
-        IdentityManager.getAddonIdentity().setOption("test", "windowMenuItems",
-                "1");
-        IdentityManager.getAddonIdentity().setOption("test",
-                "windowMenuScrollInterval", "1");
-        IdentityManager.getAddonIdentity().setOption("test", "debugEDT", "false");
-        IdentityManager.getAddonIdentity().setOption("test",
-                "textpanebackground", "");
-        IdentityManager.getAddonIdentity().setOption("test", "desktopbackground",
-                "");
-        Main.ensureExists(PluginManager.getPluginManager(), "tabcompletion");
-
-        final IRCDocument document = mock(IRCDocument.class);
-        @SuppressWarnings("unchecked")
-        final WritableFrameContainer<CustomInputFrame> container = mock(
-                WritableFrameContainer.class);
-        final ConfigManager config = mock(ConfigManager.class);
-        when(container.getDocument()).thenReturn(document);
-        when(container.getConfigManager()).thenReturn(config);
-        when(config.getOption(anyString(), anyString())).thenReturn("mirc");
-        final SwingController controller = mock(SwingController.class);
-        when(controller.getDomain()).thenReturn("test");
-        final SwingWindowFactory wf = new SwingWindowFactory(controller);
-        when(controller.getWindowFactory()).thenReturn(wf);
-        final MainFrame mainFrame = new MainFrame(controller);
-        when(controller.getMainFrame()).thenReturn(mainFrame);
-
-        tf = new CustomInputFrame(controller, container);
+        tf = new CustomInputFrame(getMockedControllerAndMainFrame(),
+                getMockedContainer());
         text = "line1\nline2";
     }
 
@@ -91,7 +46,7 @@ public class InputTextFrameTest extends UISpecTestCase {
         final Window dialog = getDialog();
         dialog.titleEquals("DMDirc: Multi-line paste").check();
         dialog.getButton("Edit").click();
-        assertTrue(dialog.getTextBox(new ClassComponentMatcher(dialog,
+        assertTrue(dialog.getTextBox(new ClassComponentMatcher(
                 TextAreaInputField.class)).getText().equals(text));
     }
 
@@ -101,7 +56,7 @@ public class InputTextFrameTest extends UISpecTestCase {
         final Window dialog = getDialog();
         dialog.titleEquals("DMDirc: Multi-line paste").check();
         dialog.getButton("Edit").click();
-        assertTrue(dialog.getTextBox(new ClassComponentMatcher(dialog,
+        assertTrue(dialog.getTextBox(new ClassComponentMatcher(
                 TextAreaInputField.class)).getText().equals("testing:" + text));
     }
 
@@ -112,7 +67,7 @@ public class InputTextFrameTest extends UISpecTestCase {
         final Window dialog = getDialog();
         dialog.titleEquals("DMDirc: Multi-line paste").check();
         dialog.getButton("Edit").click();
-        assertTrue(dialog.getTextBox(new ClassComponentMatcher(dialog,
+        assertTrue(dialog.getTextBox(new ClassComponentMatcher(
                 TextAreaInputField.class)).getText().equals(text + ":testing"));
     }
 
@@ -124,7 +79,7 @@ public class InputTextFrameTest extends UISpecTestCase {
         dialog.titleEquals("DMDirc: Multi-line paste").check();
         dialog.getButton("Edit").click();
         assertEquals("testing:" + text + ":testing",
-                dialog.getTextBox(new ClassComponentMatcher(dialog,
+                dialog.getTextBox(new ClassComponentMatcher(
                 TextAreaInputField.class)).getText());
     }
 
@@ -137,7 +92,7 @@ public class InputTextFrameTest extends UISpecTestCase {
         dialog.titleEquals("DMDirc: Multi-line paste").check();
         dialog.getButton("Edit").click();
         assertEquals("testing:" + text + ":testing",
-                dialog.getTextBox(new ClassComponentMatcher(dialog,
+                dialog.getTextBox(new ClassComponentMatcher(
                 TextAreaInputField.class)).getText());
     }
 
