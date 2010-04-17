@@ -101,7 +101,8 @@ public class MPRISSource implements MediaSource {
      * @return The value of the specified key or "Unknown".
      */
     protected String getData(final String key) {
-        return data == null || !data.containsKey(key) ? "Unknown" : data.get(key);
+        return data == null || !data.containsKey(key) || data.get(key) == null
+                ? "Unknown" : data.get(key);
     }
 
     /** {@inheritDoc} */
