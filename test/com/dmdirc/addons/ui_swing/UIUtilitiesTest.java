@@ -23,7 +23,6 @@
 package com.dmdirc.addons.ui_swing;
 
 
-import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.actions.RedoAction;
 import com.dmdirc.addons.ui_swing.actions.UndoAction;
 import javax.swing.JTextField;

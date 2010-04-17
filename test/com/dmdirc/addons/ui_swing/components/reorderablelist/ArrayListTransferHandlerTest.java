@@ -21,8 +21,6 @@
  */
 package com.dmdirc.addons.ui_swing.components.reorderablelist;
 
-import com.dmdirc.addons.ui_swing.components.reorderablelist.ArrayListTransferHandler;
-import com.dmdirc.addons.ui_swing.components.reorderablelist.ArrayListTransferable;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
@@ -31,8 +29,6 @@ import java.util.ArrayList;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import javax.swing.TransferHandler;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
