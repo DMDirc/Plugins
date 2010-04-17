@@ -21,7 +21,6 @@
  */
 package com.dmdirc.addons.ui_swing.components.reorderablelist;
 
-import com.dmdirc.addons.ui_swing.components.reorderablelist.ArrayListTransferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.util.ArrayList;
 

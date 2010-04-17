@@ -85,6 +85,7 @@ public class ActionConditionDisplayPanel extends JPanel implements ActionListene
         initComponents();
         addListeners();
         layoutComponents();
+        setTrigger(trigger);
         validate();
         layoutComponents();
 
@@ -106,6 +107,17 @@ public class ActionConditionDisplayPanel extends JPanel implements ActionListene
 
         editPanel.setVisible(trigger == null);
         editButton.setSelected(trigger == null);
+
+        label.setText(updateSentence());
+    }
+
+    /**
+     * Sets the action condition.
+     *
+     * @param condition new condition
+     */
+    protected void setCondition(final ActionCondition condition) {
+        this.condition = condition;
 
         label.setText(updateSentence());
     }

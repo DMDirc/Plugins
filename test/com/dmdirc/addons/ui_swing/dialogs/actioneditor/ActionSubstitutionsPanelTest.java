@@ -20,42 +20,18 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.ui_swing;
+package com.dmdirc.addons.ui_swing.dialogs.actioneditor;
 
-import java.awt.Component;
-
-import org.uispec4j.Panel;
-import org.uispec4j.finder.ComponentMatcher;
+import com.dmdirc.harness.ui.DMDircUITest;
+import org.junit.Test;
 
 /**
- * Simple UISpec4J component matcher that matches by type.
+ *
  */
-public class ClassComponentMatcher implements ComponentMatcher {
+public class ActionSubstitutionsPanelTest extends DMDircUITest {
 
-    private final Panel comp;
-    private final Class clazz;
+    @Test
+    public void testNothing() {
 
-    /**
-     * Creates a new component matcher, searching for any components matching
-     * the specified class in the specified component.
-     *
-     * @param comp Component to search in
-     * @param clazz Class to search for
-     */
-    public ClassComponentMatcher(final Panel comp, final Class clazz) {
-        this.comp = comp;
-        this.clazz = clazz;
-    }
-
-    /**
-     * {@inheritDoc}
-     * 
-     * @param component Component to match against
-     * 
-     * @return true iif the component matches
-     */
-    @Override
-    public boolean matches(final Component component) {
-        return component    .getClass() == clazz;
     }
 }
