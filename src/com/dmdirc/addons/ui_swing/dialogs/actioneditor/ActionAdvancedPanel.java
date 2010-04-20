@@ -46,6 +46,8 @@ public class ActionAdvancedPanel extends JPanel {
     private JCheckBox enabled;
     private JLabel groupLabel;
     private JTextField group;
+    private JLabel stopLabel;
+    private JCheckBox stop;
 
     /**
      * Creates a new panel to configure advanced options for actions.
@@ -61,16 +63,20 @@ public class ActionAdvancedPanel extends JPanel {
                 "TitledBorder.border"), "Advanced"));
         enabled = new JCheckBox("", true);
         group = new JTextField();
+        stop = new JCheckBox("", false);
         enabledLabel = new JLabel("Enabled: ");
         groupLabel = new JLabel("Concurrency group: ");
+        stopLabel = new JLabel("Stop default behaviour: ");
     }
 
     private void layoutComponents() {
-        setLayout(new MigLayout("fill, pack"));
+        setLayout(new MigLayout("fillx, pack"));
         add(enabledLabel, "");
         add(enabled, "growx");
+        add(stopLabel, "");
+        add(stop, "growx, pushx, wrap");
         add(groupLabel, "");
-        add(group, "growx, pushx");
+        add(group, "growx, pushx, spanx");
     }
 
     /**
@@ -107,5 +113,23 @@ public class ActionAdvancedPanel extends JPanel {
      */
     public void setConcurrencyGroup(final String actionGroup) {
         group.setText(actionGroup);
+    }
+
+    /**
+     * Does the action currently stop the default behaviour?
+     *
+     * @return true iif stopped
+     */
+    public boolean isActionStopped() {
+        return stop.isSelected();
+    }
+
+    /**
+     * Sets whether this action should be enabled.
+     *
+     * @param actionStopped true to enable, false to disable
+     */
+    public void setActionStopped(final boolean actionStopped) {
+        stop.setSelected(actionStopped);
     }
 }

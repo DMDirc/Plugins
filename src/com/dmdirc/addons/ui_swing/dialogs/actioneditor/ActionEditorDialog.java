@@ -204,6 +204,7 @@ public class ActionEditorDialog extends StandardDialog implements ActionListener
             conditions.setConditionTree(action.getRealConditionTree());
             advanced.setActionEnabled(action.isEnabled());
             advanced.setConcurrencyGroup(action.getConcurrencyGroup());
+            advanced.setActionStopped(action.isStopping());
         }
     }
 
@@ -303,6 +304,7 @@ public class ActionEditorDialog extends StandardDialog implements ActionListener
                     response.getFormatter());
             newAction.setConcurrencyGroup(advanced.getConcurrencyGroup());
             newAction.setEnabled(advanced.isActionEnabled());
+            newAction.setStopping(advanced.isActionStopped());
         } else {
             action.setName(name.getActionName());
             action.setConditionTree(conditions.getConditionTree());
@@ -312,6 +314,7 @@ public class ActionEditorDialog extends StandardDialog implements ActionListener
             action.setTriggers(triggers.getTriggers());
             action.setConcurrencyGroup(advanced.getConcurrencyGroup());
             action.setEnabled(advanced.isActionEnabled());
+            action.setStopping(advanced.isActionStopped());
             action.save();
         }
     }
