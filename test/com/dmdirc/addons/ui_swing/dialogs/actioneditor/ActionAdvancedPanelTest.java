@@ -22,8 +22,11 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.actioneditor;
 
+import com.dmdirc.harness.ui.ClassAndNameComponentMatcher;
 import com.dmdirc.harness.ui.DMDircUITestCase;
+import javax.swing.JCheckBox;
 import org.junit.Test;
+import org.uispec4j.CheckBox;
 import org.uispec4j.Panel;
 
 public class ActionAdvancedPanelTest extends DMDircUITestCase {
@@ -33,17 +36,19 @@ public class ActionAdvancedPanelTest extends DMDircUITestCase {
         final ActionAdvancedPanel panel = new ActionAdvancedPanel();
         final Panel test = new Panel(panel);
 
-        test.getCheckBox().isEnabled().check();
-        assertTrue(test.getCheckBox().isSelected());
+        final CheckBox cb = test.getCheckBox(new ClassAndNameComponentMatcher(
+                JCheckBox.class, "enabled"));
+        cb.isEnabled().check();
+        assertTrue(cb.isSelected());
         assertTrue(panel.isActionEnabled());
-        test.getCheckBox().click();
-        assertFalse(test.getCheckBox().isSelected());
+        cb.click();
+        assertFalse(cb.isSelected());
         assertFalse(panel.isActionEnabled());
 
         panel.setActionEnabled(false);
-        assertFalse(test.getCheckBox().isSelected());
+        assertFalse(cb.isSelected());
         panel.setActionEnabled(true);
-        assertTrue(test.getCheckBox().isSelected());
+        assertTrue(cb.isSelected());
     }
 
     @Test
