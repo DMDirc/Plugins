@@ -57,4 +57,10 @@ public class AccessLevelComponent implements ActionComponent {
         return "access level";
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public String name() {
+        return "CLIENT_ACCESSLEVEL";
+    }
+
 }
