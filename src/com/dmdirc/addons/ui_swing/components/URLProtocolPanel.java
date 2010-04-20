@@ -163,7 +163,7 @@ public class URLProtocolPanel extends JPanel implements ActionListener,
     /** Saves the settings. */
     public void save() {
         IdentityManager.getConfigIdentity().setOption("protocol",
-                uri.getScheme(), getSelection());
+                uri.getScheme().toLowerCase(), getSelection());
     }
 
     /**
