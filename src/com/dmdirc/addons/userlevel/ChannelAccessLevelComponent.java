@@ -64,4 +64,10 @@ public class ChannelAccessLevelComponent implements ActionComponent {
         return "channel access level";
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public String name() {
+        return "USER_ACCESSLEVEL";
+    }
+
 }
