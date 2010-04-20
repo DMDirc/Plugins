@@ -62,8 +62,10 @@ public class ActionAdvancedPanel extends JPanel {
         setBorder(BorderFactory.createTitledBorder(UIManager.getBorder(
                 "TitledBorder.border"), "Advanced"));
         enabled = new JCheckBox("", true);
+        enabled.setName("enabled");
         group = new JTextField();
         stop = new JCheckBox("", false);
+        stop.setName("stop");
         enabledLabel = new JLabel("Enabled: ");
         groupLabel = new JLabel("Concurrency group: ");
         stopLabel = new JLabel("Stop default behaviour: ");
