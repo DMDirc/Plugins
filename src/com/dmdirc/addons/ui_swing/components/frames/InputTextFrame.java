@@ -360,16 +360,17 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
      * @since 0.6.3m1
      */
     protected void doPaste(final String clipboard) {
-        String[] clipboardLines;
+        final String inputFieldText = getInputField().getText();
+        //Get the text that would result from the paste (inputfield
+        //- selection + clipboard)
+        final String text = inputFieldText.substring(0, getInputField()
+                .getSelectionStart()) + clipboard + inputFieldText.substring(
+                getInputField().getSelectionEnd());
+        final String[] clipboardLines = getSplitLine(text);
         //check theres something to paste
-        if (clipboard != null && (clipboardLines = getSplitLine(clipboard)).length
-                > 1) {
-            getInputField().replaceSelection("");
-            final int caretPosition = getInputField().getCaretPosition();
-            final String inputFieldText = getInputField().getText();
-            final String text = inputFieldText.substring(0, caretPosition)
-                    + clipboard + inputFieldText.substring(caretPosition);
-            //check the limit
+        if (clipboardLines.length > 1) {
+            //Clear the input field
+            inputField.setText("");
             final Integer pasteTrigger = getContainer().getConfigManager()
                     .getOptionInt("ui", "pasteProtectionLimit");
             //check whether the number of lines is over the limit
@@ -378,7 +379,6 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
                 //show the multi line paste dialog
                 new PasteDialog(this, text, getController().getMainFrame()).
                         display();
-                inputField.setText("");
             } else {
                 //send the lines
                 for (String clipboardLine : clipboardLines) {
@@ -386,6 +386,7 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
                 }
             }
         } else {
+            //put clipboard text in input field
             inputField.replaceSelection(clipboard);
         }
     }
