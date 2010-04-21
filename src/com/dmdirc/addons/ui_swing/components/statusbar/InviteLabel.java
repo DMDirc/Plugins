@@ -39,7 +39,6 @@ import com.dmdirc.util.MapList;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -53,9 +52,9 @@ import javax.swing.JSeparator;
 /**
  * Invite label.
  */
-public class InviteLabel extends StatusbarPopupPanel implements
-        StatusBarComponent,
-        InviteListener, ActionListener {
+public class InviteLabel extends StatusbarPopupPanel implements 
+        StatusBarComponent, InviteListener, ActionListener,
+        java.awt.event.ActionListener {
 
     /**
      * A version number for this class. It should be changed whenever the class
@@ -94,36 +93,11 @@ public class InviteLabel extends StatusbarPopupPanel implements
         inviteList = new MapList<Server, Invite>();
         menu = new JPopupMenu();
         dismiss = new JMenuItem("Dismiss all invites");
-        dismiss.addActionListener(new java.awt.event.ActionListener() {
-
-            /** {@inheritDoc} */
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                for (Server server : inviteList.keySet()) {
-                    final List<Invite> invites = new ArrayList<Invite>(
-                            inviteList.values(server));
-                    for (Invite invite : invites) {
-                        invite.getServer().removeInvite(invite);
-                    }
-                }
-            }
-        });
-
+        dismiss.setActionCommand("dismissAll");
+        dismiss.addActionListener(this);
         accept = new JMenuItem("Accept all invites");
-        accept.addActionListener(new java.awt.event.ActionListener() {
-
-            /** {@inheritDoc} */
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                for (Server server : inviteList.keySet()) {
-                    final List<Invite> invites = new ArrayList<Invite>(
-                            inviteList.values(server));
-                    for (Invite invite : invites) {
-                        invite.accept();
-                    }
-                }
-            }
-        });
+        accept.setActionCommand("acceptAll");
+        accept.addActionListener(this);
 
         for (Server server : ServerManager.getServerManager().getServers()) {
             inviteList.add(server, server.getInvites());
@@ -241,6 +215,24 @@ public class InviteLabel extends StatusbarPopupPanel implements
         popuplateMenu();
         if (menu.getComponentCount() > 0) {
             menu.show(this, e.getX(), e.getY());
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @param e Action event
+     */
+    @Override
+    public void actionPerformed(final ActionEvent e) {
+        if ("acceptAll".equals(e.getActionCommand())) {
+            for (Invite invite : inviteList.get(activeServer)) {
+                invite.accept();
+            }
+        } else if ("dismissAll".equals(e.getActionCommand())) {
+            for (Invite invite : inviteList.get(activeServer)) {
+                invite.getServer().removeInvite(invite);
+            }
         }
     }
 }
