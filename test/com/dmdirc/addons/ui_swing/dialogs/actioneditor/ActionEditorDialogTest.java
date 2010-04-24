@@ -246,7 +246,7 @@ public class ActionEditorDialogTest extends FestSwingJUnitTestCase {
                 null)).textBox(new ClassFinder<TextLabel>(TextLabel.class,
                 null)).target.getText());
         matcher.find();
-        assertEquals("<p style=\"margin-top: 0\">\n      \n    </p>", matcher.group(1).trim());
+        assertEquals("The ...", matcher.group(1).trim());
 
         window.panel(new ClassFinder<ActionConditionEditorPanel>(ActionConditionEditorPanel.class,
                 null)).comboBox("argument").selectItem("message");
