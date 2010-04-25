@@ -64,8 +64,6 @@ public class InviteLabel extends StatusbarPopupPanel implements
     private static final long serialVersionUID = 1;
     /** Active server. */
     private Server activeServer;
-    /** Invite map list. */
-    private final MapList<Server, Invite> inviteList;
     /** Invite popup menu. */
     private final JPopupMenu menu;
     /** Dismiss invites menu item. */
@@ -90,7 +88,6 @@ public class InviteLabel extends StatusbarPopupPanel implements
         setBorder(BorderFactory.createEtchedBorder());
         label.setIcon(IconManager.getIconManager().getIcon("invite"));
 
-        inviteList = new MapList<Server, Invite>();
         menu = new JPopupMenu();
         dismiss = new JMenuItem("Dismiss all invites");
         dismiss.setActionCommand("dismissAll");
@@ -100,7 +97,6 @@ public class InviteLabel extends StatusbarPopupPanel implements
         accept.addActionListener(this);
 
         for (Server server : ServerManager.getServerManager().getServers()) {
-            inviteList.add(server, server.getInvites());
             server.addInviteListener(this);
         }
 
@@ -142,18 +138,13 @@ public class InviteLabel extends StatusbarPopupPanel implements
         } else {
             activeServer = activeFrame.getServer();
         }
-        if (activeServer != null && !inviteList.containsKey(activeServer)) {
-            inviteList.add(activeServer, activeServer.getInvites());
-            activeServer.addInviteListener(this);
-        }
 
         UIUtilities.invokeLater(new Runnable() {
 
             /** {@inheritDoc} */
             @Override
             public void run() {
-                if (activeServer == null ||
-                        inviteList.get(activeServer).isEmpty()) {
+                if (activeServer == null || activeServer.getInvites().isEmpty()) {
                     setVisible(false);
                     closeDialog();
                 } else {
@@ -167,20 +158,12 @@ public class InviteLabel extends StatusbarPopupPanel implements
     /** {@inheritDoc} */
     @Override
     public void inviteReceived(final Server server, final Invite invite) {
-        if (!inviteList.containsKey(server)) {
-            inviteList.add(server);
-        }
-        inviteList.add(server, invite);
         update();
     }
 
     /** {@inheritDoc} */
     @Override
     public void inviteExpired(final Server server, final Invite invite) {
-        if (!inviteList.containsKey(server)) {
-            inviteList.add(server);
-        }
-        inviteList.remove(server, invite);
         update();
     }
 
@@ -226,13 +209,9 @@ public class InviteLabel extends StatusbarPopupPanel implements
     @Override
     public void actionPerformed(final ActionEvent e) {
         if ("acceptAll".equals(e.getActionCommand())) {
-            for (Invite invite : inviteList.get(activeServer)) {
-                invite.accept();
-            }
+            activeServer.acceptInvites();
         } else if ("dismissAll".equals(e.getActionCommand())) {
-            for (Invite invite : inviteList.get(activeServer)) {
-                invite.getServer().removeInvite(invite);
-            }
+            activeServer.removeInvites();
         }
     }
 }
