@@ -73,6 +73,7 @@ import com.dmdirc.ui.messages.Styliser;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
@@ -1468,6 +1469,12 @@ public class Twitter implements Parser, TwitterErrorHandler, TwitterRawHandler, 
     @Override
     public Collection<? extends ChannelJoinRequest> extractChannels(final URI uri) {
         return new ArrayList<ChannelJoinRequest>();
+    }
+    /** {@inheritDoc} */
+    @Override
+    public List<String> getServerInformationLines() {
+        return Arrays.asList(new String[]{"Twitter IRC parser: "
+                + getServerName(), });
     }
 
 }
