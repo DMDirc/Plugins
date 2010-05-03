@@ -27,6 +27,8 @@ import com.dmdirc.Server;
 import com.dmdirc.WritableFrameContainer;
 import com.dmdirc.ui.input.TabCompleter;
 import com.dmdirc.ui.interfaces.InputWindow;
+import com.dmdirc.ui.messages.Formatter;
+import java.util.Date;
 
 /**
  * Implements a fake input window, which sends echoed text to the specified
@@ -53,13 +55,43 @@ public class FakeWriteableFrameContainer extends WritableFrameContainer<InputWin
     /** {@inheritDoc} */
     @Override
     public void addLine(final String line, final boolean timestamp) {
-        target.sendLine(line);
+        addLine(line);
     }
 
     /** {@inheritDoc} */
     @Override
     public void sendLine(final String line) {
         target.sendLine(line);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void addLine(String type, Date timestamp, Object... args) {
+        addLine(type, args);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void addLine(String type, Object... args) {
+        sendLine(Formatter.formatMessage(getConfigManager(), type, args));
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void addLine(StringBuffer type, Date timestamp, Object... args) {
+        addLine(type, args);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void addLine(StringBuffer type, Object... args) {
+        addLine(type.toString(), args);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void addLine(String line, Date timestamp) {
+        addLine(line);
     }
 
     /** {@inheritDoc} */
