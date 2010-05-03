@@ -44,6 +44,7 @@ import javax.swing.JTextField;
 
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+import javax.swing.table.DefaultTableModel;
 import net.miginfocom.swing.MigLayout;
 
 /**
@@ -158,11 +159,7 @@ public class BrowserWindow extends JDialog implements ActionListener {
         list.setRowSorter(sorter);
         list.setShowGrid(false);
 
-        try {
-            loadData();
-        } catch (IOException ex) {
-        } catch (InvalidConfigFileException ex) {
-        }
+        loadData();
 
         pack();
         setLocationRelativeTo(parentWindow);
@@ -199,14 +196,17 @@ public class BrowserWindow extends JDialog implements ActionListener {
 
     /**
      * Loads addon data from the locally cached feed file.
-     * 
-     * @throws IOException If the file can't be read
-     * @throws InvalidConfigFileException If the file is corrupt somehow
      */
-    private void loadData() throws IOException, InvalidConfigFileException {
+    public void loadData() {
         ConfigFile data = new ConfigFile(Main.getConfigDir() + File.separator +
                 "addons.feed");
-        data.read();
+        try {
+            data.read();
+        } catch (IOException ex) {
+        } catch (InvalidConfigFileException ex) {
+        }
+
+        list.getModel().setRowCount(0);
 
         for (Map<String, String> entry : data.getKeyDomains().values()) {
             final AddonInfo info = new AddonInfo(entry);

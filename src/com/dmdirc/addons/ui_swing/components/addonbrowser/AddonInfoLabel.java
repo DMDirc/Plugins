@@ -27,7 +27,6 @@ import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.Window;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -51,7 +50,7 @@ public class AddonInfoLabel extends JPanel {
     /** Addon info to be represented. */
     private final AddonInfo addonInfo;
     /** Parent window. */
-    private Window parentWindow;
+    private BrowserWindow parentWindow;
 
     /**
      * Creates a new addon info label to describe the specified addon info.
@@ -59,7 +58,8 @@ public class AddonInfoLabel extends JPanel {
      * @param addonInfo Addon to describe
      * @param parentWindow Parent window
      */
-    public AddonInfoLabel(final AddonInfo addonInfo, final Window parentWindow) {
+    public AddonInfoLabel(final AddonInfo addonInfo, 
+            final BrowserWindow parentWindow) {
         this.addonInfo = addonInfo;
         this.parentWindow = parentWindow;
 
