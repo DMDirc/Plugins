@@ -26,7 +26,6 @@ import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 
 import java.awt.Dialog.ModalityType;
-import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -49,7 +48,7 @@ public class InstallerWindow extends StandardDialog implements ActionListener {
     /** Downloader progress bar. */
     private final JProgressBar jpb = new JProgressBar(0, 100);
     /** Parent window. */
-    private Window parentWindow;
+    private BrowserWindow parentWindow;
     /** Message label. */
     private TextLabel label;
     /** Addon info. */
@@ -61,7 +60,7 @@ public class InstallerWindow extends StandardDialog implements ActionListener {
      * @param parentWindow Parent window
      * @param info Assocaited addon info
      */
-    public InstallerWindow(final Window parentWindow, final AddonInfo info) {
+    public InstallerWindow(final BrowserWindow parentWindow, final AddonInfo info) {
         super(parentWindow, ModalityType.DOCUMENT_MODAL);
         this.info = info;
         this.parentWindow = parentWindow;
@@ -106,5 +105,6 @@ public class InstallerWindow extends StandardDialog implements ActionListener {
         jpb.setValue(100);
         getOkButton().setEnabled(true);
         pack();
+        parentWindow.loadData();
     }
 }
