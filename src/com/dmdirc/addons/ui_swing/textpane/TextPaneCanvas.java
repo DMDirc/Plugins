@@ -789,10 +789,13 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
                 }
             }
             LineInfo info = getClickPosition(point, true);
-            if (info.getLine() == -1 && info.getPart() == -1 && contains(point) && document.getNumLines() != 0) {
-                if (getFirstLineRectangle().getY() >= point.getY()) {
+            Rectangle first = getFirstLineRectangle();
+            Rectangle last = getLastLineRectangle();
+            if (info.getLine() == -1 && info.getPart() == -1 && contains(point)
+                    && document.getNumLines() != 0 && first != null && last != null) {
+                if (first.getY() >= point.getY()) {
                     info = getFirstLineInfo();
-                } else if (getLastLineRectangle().getY() <= point.getY()) {
+                } else if (last.getY() <= point.getY()) {
                     info = getLastLineInfo();
                 }
             }
