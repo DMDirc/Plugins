@@ -360,6 +360,13 @@ public class Twitter implements Parser, TwitterErrorHandler, TwitterRawHandler, 
 
     /** {@inheritDoc} */
     @Override
+    public void sendInvite(final String channel, final String user) {
+        // TODO: Handle this properly here instead of faking IRC messages
+        sendRawMessage("INVITE " + user + " " + channel);
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public void sendRawMessage(final String message, final QueuePriority priority) {
         // TODO: Parse some lines in order to fake IRC.
         final String[] bits = tokeniseLine(message);
