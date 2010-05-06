@@ -180,7 +180,8 @@ public final class ButtonBar implements FrameManager, ActionListener,
                 parent.add(scrollPane);
                 parent.addComponentListener(ButtonBar.this);
                 parent.setVisible(true);
-                relayout();
+                initButtons(WindowManager.getRootWindows());
+                //relayout();
             }
         });
     }
@@ -208,6 +209,22 @@ public final class ButtonBar implements FrameManager, ActionListener,
                     " of SwingController");
         }
         this.controller = ((SwingController) controller).getWindowFactory();
+    }
+
+    private void initButtons(final Collection<FrameContainer<?>> windowCollection) {
+        Window window;
+        Window parentWindow;
+        for (FrameContainer<?> frame : windowCollection) {
+            window = controller.getSwingWindow(frame);
+            parentWindow = controller.getSwingWindow(frame.getParent());
+            windowAdded(parentWindow, window);
+
+            if (!frame.getChildren().isEmpty()) {
+                final ArrayList<FrameContainer<?>> childList = new ArrayList
+                        <FrameContainer<?>>(frame.getChildren());
+                insertButtons(childList);
+            }
+        }
     }
 
     /**
