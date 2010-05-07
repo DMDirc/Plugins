@@ -211,7 +211,9 @@ public final class ButtonBar implements FrameManager, ActionListener,
         for (FrameContainer<?> frame : windowCollection) {
             window = windowFactory.getSwingWindow(frame);
             parentWindow = windowFactory.getSwingWindow(frame.getParent());
-            windowAdded(parentWindow, window);
+            if (window != null) {
+                windowAdded(parentWindow, window);
+            }
 
             if (!frame.getChildren().isEmpty()) {
                 final ArrayList<FrameContainer<?>> childList = new ArrayList
