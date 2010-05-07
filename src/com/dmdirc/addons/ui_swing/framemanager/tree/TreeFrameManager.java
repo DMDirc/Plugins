@@ -33,7 +33,6 @@ import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.addons.ui_swing.framemanager.FrameManager;
 import com.dmdirc.addons.ui_swing.UIUtilities;
-import com.dmdirc.addons.ui_swing.components.TreeScroller;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.interfaces.UIController;
 import com.dmdirc.ui.interfaces.Window;
@@ -166,6 +165,9 @@ public final class TreeFrameManager implements FrameManager,
     /** {@inheritDoc} */
     @Override
     public void windowAdded(final Window parent, final Window window) {
+        if (nodes.containsKey(window.getContainer())) {
+            return;
+        }
         if (parent == null) {
             addWindow(model.getRootNode(), window.getContainer());
         } else {
