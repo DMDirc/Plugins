@@ -1,16 +1,16 @@
 /*
  * Copyright (c) 2006-2010 Chris Smith, Shane Mc Cormack, Gregory Holmes
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -37,6 +37,7 @@ import com.dmdirc.addons.ui_swing.dialogs.actionsmanager.ActionsManagerDialog;
 import com.dmdirc.addons.ui_swing.dialogs.aliases.AliasManagerDialog;
 import com.dmdirc.addons.ui_swing.dialogs.prefs.SwingPreferencesDialog;
 import com.dmdirc.addons.ui_swing.dialogs.profiles.ProfileManagerDialog;
+import com.dmdirc.addons.ui_swing.dialogs.serverlist.ServerListDialog;
 import com.dmdirc.addons.ui_swing.framemanager.windowmenu.WindowMenuFrameManager;
 import com.dmdirc.parser.common.ChannelJoinRequest;
 import com.dmdirc.ui.WindowManager;
@@ -75,21 +76,22 @@ public class MenuBar extends JMenuBar implements ActionListener, MenuListener {
     /** join. */
     private JMenuItem join;
     /** Swing controller. */
-    private SwingController controller;
+    private final SwingController controller;
     /** Main frame. */
-    private MainFrame mainFrame;
+    private final MainFrame mainFrame;
 
     /**
      * Instantiates a new menu bar.
-     * 
+     *
      * @param controller Swing controller
      * @param mainFrame Main frame
      */
-    public MenuBar(final SwingController controller, final MainFrame mainFrame) {
+    public MenuBar(final SwingController controller, 
+            final MainFrame mainFrame) {
         super();
         this.controller = controller;
         this.mainFrame = mainFrame;
-        
+
         setLayout(new MigLayout("ins 0, fillx"));
 
         initServerMenu();
@@ -99,7 +101,8 @@ public class MenuBar extends JMenuBar implements ActionListener, MenuListener {
         initHelpMenu();
         add(Box.createHorizontalGlue(), "growx, pushx");
         add(new MDIBar(controller, mainFrame));
-        add(Box.createHorizontalStrut(PlatformDefaults.getPanelInsets(1).getUnit()));
+        add(Box.createHorizontalStrut(PlatformDefaults.getPanelInsets(1)
+                .getUnit()));
 
         getActionMap().setParent(null);
         getActionMap().clear();
@@ -115,6 +118,13 @@ public class MenuBar extends JMenuBar implements ActionListener, MenuListener {
         menu.setMnemonic('s');
         menu.addMenuListener(this);
         add(menu);
+
+        menuItem = new JMenuItem();
+        menuItem.setText("Server list dialog");
+        menuItem.setMnemonic('l');
+        menuItem.setActionCommand("ServerList");
+        menuItem.addActionListener(this);
+        menu.add(menuItem);
 
         menuItem = new JMenuItem();
         menuItem.setText("New Server...");
@@ -245,14 +255,16 @@ public class MenuBar extends JMenuBar implements ActionListener, MenuListener {
         }
     }
 
-    /** 
+    /**
      * {@inheritDoc}
-     *  
-     * @param e Action event    
+     *
+     * @param e Action event
      */
     @Override
     public void actionPerformed(final ActionEvent e) {
-        if ("NewServer".equals(e.getActionCommand())) {
+        if ("ServerList".equals(e.getActionCommand())) {
+            ServerListDialog.showServerListDialog(mainFrame);
+        } else if ("NewServer".equals(e.getActionCommand())) {
             NewServerDialog.showNewServerDialog(mainFrame);
         } else if ("Preferences".equals(e.getActionCommand())) {
             SwingPreferencesDialog.showSwingPreferencesDialog(mainFrame);
@@ -263,7 +275,8 @@ public class MenuBar extends JMenuBar implements ActionListener, MenuListener {
         } else if (e.getActionCommand().equals("Exit")) {
             mainFrame.quit();
         } else if (e.getActionCommand().equals("Actions")) {
-            ActionsManagerDialog.showActionsManagerDialog(mainFrame, controller);
+            ActionsManagerDialog.showActionsManagerDialog(mainFrame,
+                    controller);
         } else if (e.getActionCommand().equals("Aliases")) {
             AliasManagerDialog.showAliasManagerDialog(mainFrame);
         } else if (e.getActionCommand().equals("JoinDevChat")) {
@@ -271,12 +284,14 @@ public class MenuBar extends JMenuBar implements ActionListener, MenuListener {
         } else if (e.getActionCommand().equals("feedback")) {
             FeedbackDialog.showFeedbackDialog(mainFrame);
         } else if (e.getActionCommand().equals("ChannelSettings")) {
-            final FrameContainer<?> activeWindow = WindowManager.getActiveWindow();
+            final FrameContainer<?> activeWindow = WindowManager
+                    .getActiveWindow();
             if (activeWindow instanceof Channel) {
                 controller.showChannelSettingsDialog(((Channel) activeWindow));
             }
         } else if (e.getActionCommand().equals("ServerSettings")) {
-            controller.showServerSettingsDialog(WindowManager.getActiveServer());
+            controller.showServerSettingsDialog(WindowManager
+                    .getActiveServer());
         } else if (e.getActionCommand().equals("Disconnect")) {
             WindowManager.getActiveServer().disconnect();
         } else if (e.getActionCommand().equals("JoinChannel")) {
