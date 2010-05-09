@@ -107,6 +107,7 @@ public final class SettingsPanel extends JPanel {
         types = new LinkedHashMap<String, OptionType>();
 
         infoLabel = new TextLabel(infoText);
+        infoLabel.setVisible(!infoText.isEmpty());
 
         addOptionPanel =
                 new AddOptionPanel(this);
@@ -127,7 +128,7 @@ public final class SettingsPanel extends JPanel {
      * Lays out the components.
      */
     private void layoutComponents() {
-        setLayout(new MigLayout("fill, wrap 1"));
+        setLayout(new MigLayout("fill, wrap 1, hidemode 3, ins 0"));
 
         add(infoLabel, "growx, pushx");
         add(scrollPane, "grow, push");

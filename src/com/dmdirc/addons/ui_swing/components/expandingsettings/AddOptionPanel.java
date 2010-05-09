@@ -97,7 +97,7 @@ public final class AddOptionPanel extends JPanel implements ActionListener {
         this.setOpaque(UIUtilities.getTabbedPaneOpaque());
         initComponents();
         initListeners();
-        setLayout(new MigLayout("ins 0"));
+        setLayout(new MigLayout("ins 0, wmax 100%"));
         layoutComponents();
     }
     
@@ -116,6 +116,7 @@ public final class AddOptionPanel extends JPanel implements ActionListener {
         addInputNone = new JLabel("");
         addInputFontPicker = new FontPicker("Dialog");
         addInputComboBox = new JComboBox(new DefaultComboBoxModel());
+        addInputComboBox.setPrototypeDisplayValue("test");
         
         addInputCurrent = addInputNone;
         

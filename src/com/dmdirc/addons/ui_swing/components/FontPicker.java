@@ -49,6 +49,7 @@ public class FontPicker extends JComboBox {
      */
     public FontPicker(final String fontFamily) {
         super(new DefaultComboBoxModel());
+        setPrototypeDisplayValue("test");
         this.fontFamily = fontFamily;
 
         setRenderer(new FontListCellRenderer());
