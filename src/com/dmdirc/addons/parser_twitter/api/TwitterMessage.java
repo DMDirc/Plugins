@@ -66,7 +66,8 @@ public class TwitterMessage implements Comparable<TwitterMessage> {
      * @param api
      * @param message Message contents
      * @param id ID of message
-     * @param sender User who send this.
+     * @param sender User who send this
+     * @param target User this message was sent to
      * @param time Time this message was sent
      */
     protected TwitterMessage(final TwitterAPI api, final String message, final long id, final String sender, final String target, final Long time) {

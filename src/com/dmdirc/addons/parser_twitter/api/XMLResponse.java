@@ -24,15 +24,18 @@ package com.dmdirc.addons.parser_twitter.api;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 /**
+ * Describes an XML formatted response from a URL connection.
  *
  * @author shane
  */
 public class XMLResponse {
+
     /** The HttpURLConnection that was used. */
     private final HttpURLConnection request;
 

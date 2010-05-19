@@ -267,7 +267,13 @@ public class Twitter implements Parser, TwitterErrorHandler, TwitterRawHandler, 
                             this.channels.put(channel, newChannel);
                         }
                     } catch (NumberFormatException nfe) { }
+                } else if (channel.startsWith("#")) {
+                    newChannel.setLocalTopic("Search results for " + channel);
+                    synchronized (this.channels) {
+                        this.channels.put(channel, newChannel);
+                    }
                 }
+                
                 doJoinChannel(newChannel);
             } else {
                 sendNumericOutput(474, new String[]{":"+myServerName, "474", myself.getNickname(), channel, "Cannot join channel - name is not valid, or you are already there."});
@@ -1000,6 +1006,7 @@ public class Twitter implements Parser, TwitterErrorHandler, TwitterRawHandler, 
         long lastReplyId = -1;
         long lastTimelineId = -1;
         long lastDirectMessageId = -1;
+        final Map<TwitterChannelInfo, Long> lastSearchIds = new HashMap<TwitterChannelInfo, Long>();
 
         if (saveLastIDs) {
             if (getConfigManager().hasOptionString(myPlugin.getDomain(), "lastReplyId-"+myServerName+"-"+myUsername)) {
@@ -1091,6 +1098,25 @@ public class Twitter implements Parser, TwitterErrorHandler, TwitterRawHandler, 
                     if (!foundItems) {
                         sendChannelMessage(channel, "No new items found.");
                     }
+                }
+            }
+
+            for (TwitterChannelInfo searchChannel : channels.values()) {
+                if (searchChannel.getName().startsWith("#")) {
+                    long lastId = lastSearchIds.containsKey(searchChannel)
+                            ? lastSearchIds.get(searchChannel) : -1;
+                    final List<TwitterStatus> statuses
+                            = api.getSearchResults(searchChannel.getName(), lastId);
+
+                    for (TwitterStatus status : statuses) {
+                        final ChannelClientInfo cci = searchChannel
+                                .getChannelClient(status.getUserName(), true);
+                        sendChannelMessage(searchChannel, new Date(status.getTime()),
+                                status.getText(), cci, status.getUserName());
+                        lastId = Math.max(lastId, status.getID());
+                    }
+
+                    lastSearchIds.put(searchChannel, lastId);
                 }
             }
 

@@ -23,15 +23,28 @@
 package com.dmdirc.addons.parser_twitter.api;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.NoRouteToHostException;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.net.URLEncoder;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+
 import oauth.signpost.OAuth;
 import oauth.signpost.OAuthConsumer;
 import oauth.signpost.OAuthProvider;
@@ -42,19 +55,6 @@ import oauth.signpost.exception.OAuthExpectationFailedException;
 import oauth.signpost.exception.OAuthMessageSignerException;
 import oauth.signpost.exception.OAuthNotAuthorizedException;
 import oauth.signpost.signature.SignatureMethod;
-
-import java.io.ByteArrayInputStream;
-
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.net.NoRouteToHostException;
-import java.net.URLEncoder;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -1117,6 +1117,57 @@ public class TwitterAPI {
             final NodeList nodes = doc.getElementsByTagName("status");
             for (int i = 0; i < nodes.getLength(); i++) {
                 result.add(new TwitterStatus(this, nodes.item(i)));
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * Retrieves the search results for the specified term.
+     *
+     * @param term The term to be searched for
+     * @return A list of matching statuses
+     */
+    public List<TwitterStatus> getSearchResults(final String term) {
+        return getSearchResults(term, -1);
+    }
+
+    /**
+     * Retrieves the search results for the specified term, requesting only
+     * statuses newer than the specified lastStatusId.
+     *
+     * @param term The term to be searched for
+     * @param lastStatusId Maximum status ID to not be returned
+     * @return A list of matching statuses
+     */
+    public List<TwitterStatus> getSearchResults(final String term, final long lastStatusId) {
+        final List<TwitterStatus> result = new ArrayList<TwitterStatus>();
+
+        try {
+            final XMLResponse doc = getXML("http://search.twitter.com/search.atom?since_id="
+                    +lastStatusId + "&rpp=100&q=" + URLEncoder.encode(term, "utf-8"));
+
+            if (doc.isGood()) {
+                final NodeList nodes = doc.getElementsByTagName("entry");
+                for (int i = 0; i < nodes.getLength(); i++) {
+                    final Element element = (Element) nodes.item(i);
+                    final String message = TwitterAPI.getElementContents(element, "title", "");
+                    final long id = Long.parseLong(TwitterAPI.getElementContents(element, "id", "::-1").split(":")[2]);
+                    final String user = TwitterAPI.getElementContents((Element) element.getElementsByTagName("author").item(0), "name", "").split(" ")[0];
+
+                    final long time = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").parse(TwitterAPI.getElementContents(element, "published", "")).getTime();
+
+                    result.add(0, new TwitterStatus(this, message, -1, id, user, time));
+                }
+            }
+        } catch (UnsupportedEncodingException ex) {
+            if (isDebug()) {
+                handleError(ex, "* (1) getSearchResults: "+term+" | "+lastStatusId, apiInput, apiOutput);
+            }
+        } catch (ParseException ex) {
+            if (isDebug()) {
+                handleError(ex, "* (2) getSearchResults: "+term+" | "+lastStatusId, apiInput, apiOutput);
             }
         }
 
