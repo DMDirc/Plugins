@@ -23,6 +23,7 @@
 package com.dmdirc.addons.parser_twitter.api;
 
 import com.dmdirc.addons.parser_twitter.api.commons.StringEscapeUtils;
+
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -172,6 +173,15 @@ public class TwitterStatus implements Comparable<TwitterStatus> {
      */
     public TwitterUser getUser() {
         return (this.retweet) ? this.originalStatus.getUser() : myAPI.getUser(this.user);
+    }
+
+    /**
+     * Retrieves the username of the owner of this message.
+     *
+     * @return This message's owner.
+     */
+    public String getUserName() {
+        return retweet ? originalStatus.getUserName() : user;
     }
 
     /**
