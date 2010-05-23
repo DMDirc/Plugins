@@ -34,7 +34,6 @@ import com.dmdirc.config.Identity;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import javax.swing.JButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
@@ -61,7 +60,7 @@ public final class ServerSettingsDialog extends StandardDialog implements Action
     /** Ignore list panel. */
     private IgnoreListPanel ignoreList;
     /** Perform panel. */
-    private PerformPanel performPanel;
+    private PerformTab performPanel;
     /** Settings panel. */
     private SettingsPanel settingsPanel;    
     /** The tabbed pane. */
@@ -144,7 +143,7 @@ public final class ServerSettingsDialog extends StandardDialog implements Action
                 new IgnoreListPanel(server, parentWindow);
 
         performPanel =
-                new PerformPanel(server);
+                new PerformTab(server);
 
         settingsPanel =
                 new SettingsPanel(server.getNetworkIdentity(),
