@@ -61,7 +61,7 @@ public final class ServerSettingsDialog extends StandardDialog implements Action
     /** Ignore list panel. */
     private IgnoreListPanel ignoreList;
     /** Perform panel. */
-    private PerformPanel performPanel;
+    private PerformTab performPanel;
     /** Settings panel. */
     private SettingsPanel settingsPanel;    
     /** The tabbed pane. */
@@ -144,7 +144,7 @@ public final class ServerSettingsDialog extends StandardDialog implements Action
                 new IgnoreListPanel(server, parentWindow);
 
         performPanel =
-                new PerformPanel(server);
+                new PerformTab(server);
 
         settingsPanel =
                 new SettingsPanel(server.getNetworkIdentity(),
