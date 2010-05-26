@@ -22,15 +22,19 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.actionsmanager;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import com.dmdirc.Main;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.addons.ui_swing.SwingController;
-import com.dmdirc.config.IdentityManager;
-import com.dmdirc.config.InvalidIdentityFileException;
-import com.dmdirc.harness.ui.ClassFinder;
 import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialog;
 import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
 import com.dmdirc.addons.ui_swing.dialogs.actioneditor.ActionEditorDialog;
+import com.dmdirc.config.IdentityManager;
+import com.dmdirc.config.InvalidIdentityFileException;
+import com.dmdirc.harness.ui.ClassFinder;
 
 import java.awt.Dialog;
 
@@ -49,7 +53,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 public class ActionsManagerDialogTest extends FestSwingJUnitTestCase {
     

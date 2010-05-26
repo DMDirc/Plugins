@@ -22,16 +22,20 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.actioneditor;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertTrue;
+
 import com.dmdirc.Main;
 import com.dmdirc.actions.Action;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.addons.ui_swing.SwingController;
+import com.dmdirc.addons.ui_swing.components.ImageButton;
+import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.InvalidIdentityFileException;
 import com.dmdirc.harness.ui.ClassFinder;
 import com.dmdirc.harness.ui.JRadioButtonByTextMatcher;
-import com.dmdirc.addons.ui_swing.components.ImageButton;
-import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 
 import java.awt.Component;
 import java.awt.Dialog;
@@ -52,7 +56,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 public class ActionEditorDialogTest extends FestSwingJUnitTestCase {
 

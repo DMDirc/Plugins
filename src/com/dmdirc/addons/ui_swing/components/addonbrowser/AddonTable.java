@@ -79,7 +79,6 @@ public class AddonTable extends JTable {
 
     /** {@inheritDoc} */
     @Override
-    @SuppressWarnings("unchecked")
     public AddonSorter getRowSorter() {
         return (AddonSorter) super.getRowSorter();
     }

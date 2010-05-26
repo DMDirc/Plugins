@@ -83,9 +83,9 @@ public final class ArrayListTransferHandler extends TransferHandler {
 
         try {
             if (hasLocalArrayListFlavor(t.getTransferDataFlavors())) {
-                return doImport((JList) comp, (ArrayList) t.getTransferData(localArrayListFlavor));
+                return doImport((JList) comp, (ArrayList<?>) t.getTransferData(localArrayListFlavor));
             } else if (hasSerialArrayListFlavor(t.getTransferDataFlavors())) {
-                return doImport((JList) comp, (ArrayList) t.getTransferData(serialArrayListFlavor));
+                return doImport((JList) comp, (ArrayList<?>) t.getTransferData(serialArrayListFlavor));
             } else {
                 return false;
             }
@@ -106,7 +106,7 @@ public final class ArrayListTransferHandler extends TransferHandler {
      * 
      * @return Whether the data was imported
      */
-    private boolean doImport(final JList target, final List transferList) {
+    private boolean doImport(final JList target, final List<?> transferList) {
         int index = target.getSelectedIndex();
         if (sourceList.equals(target) && indices != null && index >= indices[0] - 1 && index <= indices[indices.length - 1]) {
             indices = null;

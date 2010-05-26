@@ -22,20 +22,28 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.actionsmanager;
 
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Matchers.same;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import com.dmdirc.actions.Action;
 import com.dmdirc.actions.ActionGroup;
 import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.actions.interfaces.ActionType;
 import com.dmdirc.harness.ui.WindowButtonHandler;
+
 import java.util.ArrayList;
 import java.util.Arrays;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.uispec4j.Panel;
 import org.uispec4j.Table;
 import org.uispec4j.UISpecTestCase;
 import org.uispec4j.interception.WindowInterceptor;
-import static org.mockito.Mockito.*;
 
 public class ActionsGroupPanelTest extends UISpecTestCase {
 

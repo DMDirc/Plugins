@@ -41,10 +41,9 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
-
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
-import javax.swing.table.DefaultTableModel;
+
 import net.miginfocom.swing.MigLayout;
 
 /**
@@ -203,7 +202,9 @@ public class BrowserWindow extends JDialog implements ActionListener {
         try {
             data.read();
         } catch (IOException ex) {
+            //Ignore this
         } catch (InvalidConfigFileException ex) {
+            //Ignore this
         }
 
         list.getModel().setRowCount(0);

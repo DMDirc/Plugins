@@ -30,7 +30,7 @@ import org.uispec4j.finder.ComponentMatcher;
  */
 public class ClassAndNameComponentMatcher implements ComponentMatcher {
 
-    private Class clazz;
+    private Class<?> clazz;
     private String name;
 
     /**
@@ -40,7 +40,7 @@ public class ClassAndNameComponentMatcher implements ComponentMatcher {
      * @param clazz Class to match
      * @param name Component name to match
      */
-    public ClassAndNameComponentMatcher(final Class clazz, final String name) {
+    public ClassAndNameComponentMatcher(final Class<?> clazz, final String name) {
         this.clazz = clazz;
         this.name = name;
     }

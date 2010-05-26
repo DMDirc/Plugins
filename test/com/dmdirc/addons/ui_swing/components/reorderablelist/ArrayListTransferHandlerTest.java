@@ -21,16 +21,23 @@
  */
 package com.dmdirc.addons.ui_swing.components.reorderablelist;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
 import java.util.ArrayList;
+
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import javax.swing.TransferHandler;
+
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 public class ArrayListTransferHandlerTest {
 
@@ -51,9 +58,9 @@ public class ArrayListTransferHandlerTest {
         assertNotNull(transferable);
         final Object data = transferable.getTransferData(transferable.getTransferDataFlavors()[0]);
         
-        assertTrue(data instanceof ArrayList);
-        assertEquals(1, ((ArrayList) data).size());
-        assertEquals("abc", ((ArrayList) data).get(0));
+        assertTrue(data instanceof ArrayList<?>);
+        assertEquals(1, ((ArrayList<?>) data).size());
+        assertEquals("abc", ((ArrayList<?>) data).get(0));
     }
     
     @Test
@@ -94,9 +101,9 @@ public class ArrayListTransferHandlerTest {
         assertNotNull(transferable);
         final Object data = transferable.getTransferData(transferable.getTransferDataFlavors()[0]);
         
-        assertTrue(data instanceof ArrayList);
-        assertEquals(1, ((ArrayList) data).size());
-        assertEquals("", ((ArrayList) data).get(0));
+        assertTrue(data instanceof ArrayList<?>);
+        assertEquals(1, ((ArrayList<?>) data).size());
+        assertEquals("", ((ArrayList<?>	) data).get(0));
     }    
     
     @Test

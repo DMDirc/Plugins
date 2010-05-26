@@ -22,6 +22,9 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.actioneditor;
 
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+
 import com.dmdirc.actions.ActionCondition;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionComparison;
@@ -32,14 +35,15 @@ import com.dmdirc.addons.ui_swing.components.ImageToggleButton;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.harness.ui.ClassComponentMatcher;
 import com.dmdirc.harness.ui.DMDircUITestCase;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import org.junit.Test;
 import org.uispec4j.Button;
 import org.uispec4j.Panel;
 import org.uispec4j.ToggleButton;
 import org.uispec4j.UIComponent;
-import static org.mockito.Mockito.*;
 
 public class ActionConditionDisplayPanelTest extends DMDircUITestCase {
 

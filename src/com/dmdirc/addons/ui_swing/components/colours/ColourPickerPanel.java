@@ -246,9 +246,9 @@ public final class ColourPickerPanel extends JPanel implements MouseListener,
      * Retrieves the irc colour beneath the mouse. It is assumed that this
      * method is only called if the mouse is within the irc colour area.
      * @param e The mouse event that triggered this call
-     * @return A colour object representing the colour beneat the mouse
+     * @return A colour object representing the colour beneath the mouse
      */
-    private Color getIrcColour(final MouseEvent e) {
+    private static Color getIrcColour(final MouseEvent e) {
         final int i = (e.getX() - BORDER_SIZE) / IRC_WIDTH;
 
         return ColourManager.getColour(i);
@@ -291,7 +291,7 @@ public final class ColourPickerPanel extends JPanel implements MouseListener,
      * @param value The integer to convert
      * @return A char digit hex string representing the specified integer
      */
-    private String toHex(final int value) {
+    private static String toHex(final int value) {
         final char[] chars = {
             '0', '1', '2', '3', '4', '5', '6', '7',
             '8', '9', 'A', 'B', 'C', 'D', 'E', 'F',
@@ -417,7 +417,7 @@ public final class ColourPickerPanel extends JPanel implements MouseListener,
     @Override
     public void mouseWheelMoved(final MouseWheelEvent e) {
         if (showHex) {
-            saturation = saturation + (e.getWheelRotation() >= 0 ? 0.02f : -0.02f);
+            saturation += (e.getWheelRotation() >= 0 ? 0.02f : -0.02f);
 
             if (saturation < 0) {
                 saturation = 0f;

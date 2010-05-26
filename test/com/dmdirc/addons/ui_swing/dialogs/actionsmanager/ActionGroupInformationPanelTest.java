@@ -22,13 +22,15 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.actionsmanager;
 
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import com.dmdirc.actions.ActionGroup;
 import com.dmdirc.updater.Version;
+
 import org.junit.Test;
 import org.uispec4j.Panel;
 import org.uispec4j.UISpecTestCase;
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
 
 public class ActionGroupInformationPanelTest extends UISpecTestCase {
 

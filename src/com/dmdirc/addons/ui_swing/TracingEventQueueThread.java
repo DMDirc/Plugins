@@ -102,7 +102,7 @@ class TracingEventQueueThread extends Thread {
                     currProcessingTime + ")");
 
             if (this.threadBean != null) {
-                long threadIds[] = threadBean.getAllThreadIds();
+                long[] threadIds = threadBean.getAllThreadIds();
                 for (long threadId : threadIds) {
                     ThreadInfo threadInfo = threadBean.getThreadInfo(threadId,
                             Integer.MAX_VALUE);
@@ -160,6 +160,7 @@ class TracingEventQueueThread extends Thread {
             try {
                 Thread.sleep(100);
             } catch (InterruptedException ie) {
+        	//Ignore
             }
         }
     }
