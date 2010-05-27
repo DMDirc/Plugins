@@ -31,7 +31,7 @@ import org.uispec4j.finder.ComponentMatcher;
  */
 public class ClassComponentMatcher implements ComponentMatcher {
 
-    private final Class clazz;
+    private final Class<?> clazz;
 
     /**
      * Creates a new component matcher, searching for any components matching
@@ -39,7 +39,7 @@ public class ClassComponentMatcher implements ComponentMatcher {
      *
      * @param clazz Class to search for
      */
-    public ClassComponentMatcher(final Class clazz) {
+    public ClassComponentMatcher(final Class<?> clazz) {
         this.clazz = clazz;
     }
 

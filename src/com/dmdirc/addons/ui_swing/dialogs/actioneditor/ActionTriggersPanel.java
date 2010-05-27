@@ -24,8 +24,8 @@ package com.dmdirc.addons.ui_swing.dialogs.actioneditor;
 
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.interfaces.ActionType;
-import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.addons.ui_swing.components.renderers.ActionTypeRenderer;
+import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;

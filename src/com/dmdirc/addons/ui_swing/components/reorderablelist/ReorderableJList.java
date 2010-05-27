@@ -270,7 +270,7 @@ public final class ReorderableJList extends JList implements DragSourceListener,
         final DefaultListModel mod = getModel();
         final int newIndex = sourceBeforeTarget ? index - 1 : index;
         mod.remove(draggedIndex);
-        for (Object item : (ArrayList) dragged) {
+        for (Object item : (ArrayList<?>) dragged) {
             mod.add(newIndex, item);
         }
         
