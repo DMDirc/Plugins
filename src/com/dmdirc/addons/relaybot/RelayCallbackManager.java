@@ -81,7 +81,6 @@ public class RelayCallbackManager extends IRCCallbackManager implements SocketCl
                 // Get the old callback manager
                 final Field field = o.getClass().getDeclaredField("owner");
                 field.setAccessible(true);
-                @SuppressWarnings("unchecked")
                 final Channel channel = (Channel) field.get(o);
 
                 if (myPlugin.isListening(channel)) {

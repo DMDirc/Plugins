@@ -22,8 +22,8 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.aliases;
 
-import com.dmdirc.actions.wrappers.Alias;
 import com.dmdirc.actions.ActionCondition;
+import com.dmdirc.actions.wrappers.Alias;
 
 import java.util.ArrayList;
 import java.util.List;

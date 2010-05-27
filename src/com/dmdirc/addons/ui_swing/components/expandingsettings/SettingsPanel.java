@@ -22,9 +22,9 @@
 
 package com.dmdirc.addons.ui_swing.components.expandingsettings;
 
-import com.dmdirc.config.Identity;
-import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.addons.ui_swing.UIUtilities;
+import com.dmdirc.addons.ui_swing.components.text.TextLabel;
+import com.dmdirc.config.Identity;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -33,14 +33,14 @@ import java.util.Map.Entry;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-
 import javax.swing.UIManager;
+
 import net.miginfocom.swing.MigLayout;
 
 /**
  * Settings panel.
  */
-public final class SettingsPanel extends JPanel {
+public class SettingsPanel extends JPanel {
 
     /**
      * A version number for this class. It should be changed whenever the class

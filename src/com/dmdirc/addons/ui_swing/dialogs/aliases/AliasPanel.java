@@ -22,17 +22,17 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.aliases;
 
-import com.dmdirc.addons.ui_swing.components.renderers.ActionComparisonCellRenderer;
-import com.dmdirc.actions.wrappers.Alias;
 import com.dmdirc.actions.ActionCondition;
 import com.dmdirc.actions.CoreActionComparison;
 import com.dmdirc.actions.CoreActionComponent;
-import com.dmdirc.config.prefs.validator.FileNameValidator;
+import com.dmdirc.actions.wrappers.Alias;
 import com.dmdirc.addons.ui_swing.UIUtilities;
+import com.dmdirc.addons.ui_swing.components.renderers.ActionComparisonCellRenderer;
 import com.dmdirc.addons.ui_swing.components.validating.ValidatingJTextField;
-
 import com.dmdirc.config.prefs.validator.CommandNameValidator;
+import com.dmdirc.config.prefs.validator.FileNameValidator;
 import com.dmdirc.config.prefs.validator.ValidatorChain;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;

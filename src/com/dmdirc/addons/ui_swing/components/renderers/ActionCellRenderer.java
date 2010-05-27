@@ -43,13 +43,6 @@ public final class ActionCellRenderer extends DefaultListCellRenderer {
      */
     private static final long serialVersionUID = 1;
     
-    /**
-     * Creates a new instance of ActionCellRenderer.
-     */
-    public ActionCellRenderer() {
-        super();
-    }
-    
     /** {@inheritDoc} */
     @Override
     public Component getListCellRendererComponent(final JList list,
@@ -63,8 +56,8 @@ public final class ActionCellRenderer extends DefaultListCellRenderer {
             setText(((ActionComponent) value).getName());
         } else if (value instanceof ActionType) {
             setText(((ActionType) value).getName());
-        } else if (value instanceof Class) {
-            setText(((Class) value).getSimpleName());
+        } else if (value instanceof Class<?>) {
+            setText(((Class<?>) value).getSimpleName());
         } else if (value == null) {
             setText("");
         } else {

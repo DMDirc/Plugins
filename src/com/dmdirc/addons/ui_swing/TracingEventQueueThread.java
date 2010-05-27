@@ -1,19 +1,16 @@
 /*
  * Copyright (c) 2007, Kirill Grouchnikov
  * All rights reserved.
- *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *
  * - Redistributions of source code must retain the above copyright notice,
- *   this list of conditions and the following disclaimer.
+ * this list of conditions and the following disclaimer.
  * - Redistributions in binary form must reproduce the above copyright notice,
- *   this list of conditions and the following disclaimer in the documentation
- *   and/or other materials provided with the distribution.
+ * this list of conditions and the following disclaimer in the documentation
+ * and/or other materials provided with the distribution.
  * - Neither the name of the <ORGANIZATION> nor the names of its contributors
- *   may be used to endorse or promote products derived from this software
- *   without specific prior written permission.
- *
+ * may be used to endorse or promote products derived from this software
+ * without specific prior written permission.
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -41,98 +38,108 @@ import javax.management.MBeanServer;
 import javax.management.ObjectName;
 
 /**
- * Event queue extention to monitor long running tasks on the EDT.  Found at
+ * Event queue extention to monitor long running tasks on the EDT. Found at
  * http://today.java.net/lpt/a/433
  */
-class TracingEventQueueThread extends Thread {
+public class TracingEventQueueThread extends Thread {
 
-    private long thresholdDelay;
-    private Map<AWTEvent, Long> eventTimeMap;
+    private final long thresholdDelay;
+    private final Map<AWTEvent, Long> eventTimeMap;
     private ThreadMXBean threadBean;
     private boolean running = false;
 
     /**
      * Instantiates a new tracing thread.
-     *
-     * @param thresholdDelay Length to consider a long running task
+     * 
+     * @param thresholdDelay
+     *            Length to consider a long running task
      */
-    public TracingEventQueueThread(long thresholdDelay) {
+    public TracingEventQueueThread(final long thresholdDelay) {
         this.thresholdDelay = thresholdDelay;
-        this.eventTimeMap = new HashMap<AWTEvent, Long>();
+        eventTimeMap = new HashMap<AWTEvent, Long>();
 
         try {
-            MBeanServer mbeanServer = ManagementFactory.getPlatformMBeanServer();
-            ObjectName objName = new ObjectName(
+            final MBeanServer mbeanServer = ManagementFactory
+                    .getPlatformMBeanServer();
+            final ObjectName objName = new ObjectName(
                     ManagementFactory.THREAD_MXBEAN_NAME);
-            Set<ObjectName> mbeans = mbeanServer.queryNames(objName, null);
-            for (ObjectName name : mbeans) {
-                this.threadBean = ManagementFactory.newPlatformMXBeanProxy(
+            final Set<ObjectName> mbeans = mbeanServer
+                    .queryNames(objName, null);
+            for (final ObjectName name : mbeans) {
+                threadBean = ManagementFactory.newPlatformMXBeanProxy(
                         mbeanServer, name.toString(), ThreadMXBean.class);
             }
-        } catch (Exception e) {
+        } catch (final Exception e) {
             e.printStackTrace();
         }
     }
 
     /**
      * Marks the start time for the specified event.
-     *
-     * @param event Event to monitor
+     * 
+     * @param event
+     *            Event to monitor
      */
-    public synchronized void eventDispatched(AWTEvent event) {
-        this.eventTimeMap.put(event, System.currentTimeMillis());
+    public synchronized void eventDispatched(final AWTEvent event) {
+        eventTimeMap.put(event, System.currentTimeMillis());
     }
 
     /**
      * Marks the end time for the specified event.
-     *
-     * @param event Event to finish monitoring.
+     * 
+     * @param event
+     *            Event to finish monitoring.
      */
-    public synchronized void eventProcessed(AWTEvent event) {
-        this.checkEventTime(event, System.currentTimeMillis(),
-                this.eventTimeMap.get(event));
-        this.eventTimeMap.put(event, null);
+    public synchronized void eventProcessed(final AWTEvent event) {
+        checkEventTime(event, System.currentTimeMillis(), eventTimeMap
+                .get(event));
+        eventTimeMap.put(event, null);
     }
 
-    private void checkEventTime(AWTEvent event, long currTime, long startTime) {
-        long currProcessingTime = currTime - startTime;
-        if (currProcessingTime >= this.thresholdDelay) {
-            System.out.println("Event [" + event.hashCode() + "] " + event.
-                    getClass().getName() + " is taking too much time on EDT (" +
-                    currProcessingTime + ")");
+    private void checkEventTime(final AWTEvent event, final long currTime,
+            final long startTime) {
+        final long currProcessingTime = currTime - startTime;
+        if (currProcessingTime >= thresholdDelay) {
+            System.out.println("Event [" + event.hashCode() + "] "
+                    + event.getClass().getName()
+                    + " is taking too much time on EDT (" + currProcessingTime
+                    + ")");
 
-            if (this.threadBean != null) {
-                long threadIds[] = threadBean.getAllThreadIds();
-                for (long threadId : threadIds) {
-                    ThreadInfo threadInfo = threadBean.getThreadInfo(threadId,
-                            Integer.MAX_VALUE);
-                    if (threadInfo != null && threadInfo.getThreadName().
-                            startsWith("AWT-EventQueue")) {
-                        System.out.println(threadInfo.getThreadName() + " / " +
-                                threadInfo.getThreadState());
-                        StackTraceElement[] stack = threadInfo.getStackTrace();
-                        for (StackTraceElement stackEntry : stack) {
-                            System.out.println("\t" + stackEntry.getClassName() +
-                                    "." + stackEntry.getMethodName() + " [" +
-                                    stackEntry.getLineNumber() + "]");
+            if (threadBean != null) {
+                final long[] threadIds = threadBean.getAllThreadIds();
+                for (final long threadId : threadIds) {
+                    final ThreadInfo threadInfo = threadBean.getThreadInfo(
+                            threadId, Integer.MAX_VALUE);
+                    if (threadInfo != null
+                            && threadInfo.getThreadName().startsWith(
+                                    "AWT-EventQueue")) {
+                        System.out.println(threadInfo.getThreadName() + " / "
+                                + threadInfo.getThreadState());
+                        final StackTraceElement[] stack = threadInfo
+                                .getStackTrace();
+                        for (final StackTraceElement stackEntry : stack) {
+                            System.out.println("\t" + stackEntry.getClassName()
+                                    + "." + stackEntry.getMethodName() + " ["
+                                    + stackEntry.getLineNumber() + "]");
                         }
                     }
                 }
 
-                long[] deadlockedThreads = threadBean.findDeadlockedThreads();
-                if ((deadlockedThreads != null) &&
-                        (deadlockedThreads.length > 0)) {
+                final long[] deadlockedThreads = threadBean
+                        .findDeadlockedThreads();
+                if (deadlockedThreads != null && deadlockedThreads.length > 0) {
                     System.out.println("Deadlocked threads:");
-                    for (long threadId : deadlockedThreads) {
-                        ThreadInfo threadInfo = threadBean.getThreadInfo(
+                    for (final long threadId : deadlockedThreads) {
+                        final ThreadInfo threadInfo = threadBean.getThreadInfo(
                                 threadId, Integer.MAX_VALUE);
-                        System.out.println(threadInfo.getThreadName() + " / " +
-                                threadInfo.getThreadState());
-                        StackTraceElement[] stack = threadInfo.getStackTrace();
-                        for (StackTraceElement stackEntry : stack) {
-                            System.out.println("\t" + stackEntry.getClassName() +
-                                    "." + stackEntry.getMethodName() + " [" +
-                                    stackEntry.getLineNumber() + "]");
+                        System.out.println(threadInfo.getThreadName() + " / "
+                                + threadInfo.getThreadState());
+                        final StackTraceElement[] stack = threadInfo
+                                .getStackTrace();
+                        for (final StackTraceElement stackEntry : stack) {
+                            System.out.println("\t" + stackEntry.getClassName()
+                                    + "." + stackEntry.getMethodName() + " ["
+                                    + stackEntry.getLineNumber() + "]");
                         }
                     }
                 }
@@ -145,21 +152,22 @@ class TracingEventQueueThread extends Thread {
     public void run() {
         running = true;
         while (running) {
-            long currTime = System.currentTimeMillis();
+            final long currTime = System.currentTimeMillis();
             synchronized (this) {
-                for (Map.Entry<AWTEvent, Long> entry : this.eventTimeMap.
-                        entrySet()) {
-                    AWTEvent event = entry.getKey();
+                for (final Map.Entry<AWTEvent, Long> entry : eventTimeMap
+                        .entrySet()) {
+                    final AWTEvent event = entry.getKey();
                     if (entry.getValue() == null) {
                         continue;
                     }
-                    long startTime = entry.getValue();
-                    this.checkEventTime(event, currTime, startTime);
+                    final long startTime = entry.getValue();
+                    checkEventTime(event, currTime, startTime);
                 }
             }
             try {
                 Thread.sleep(100);
-            } catch (InterruptedException ie) {
+            } catch (final InterruptedException ie) {
+                // Ignore
             }
         }
     }

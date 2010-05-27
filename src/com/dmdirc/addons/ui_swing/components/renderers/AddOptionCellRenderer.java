@@ -26,9 +26,8 @@ import com.dmdirc.addons.ui_swing.components.expandingsettings.SettingsPanel;
 
 import java.awt.Component;
 
-import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.DefaultListCellRenderer;
+import javax.swing.JList;
 
 /**
  * Add option combo box cell renderer.

@@ -51,9 +51,9 @@ public class ArrayListTransferHandlerTest {
         assertNotNull(transferable);
         final Object data = transferable.getTransferData(transferable.getTransferDataFlavors()[0]);
         
-        assertTrue(data instanceof ArrayList);
-        assertEquals(1, ((ArrayList) data).size());
-        assertEquals("abc", ((ArrayList) data).get(0));
+        assertTrue(data instanceof ArrayList<?>);
+        assertEquals(1, ((ArrayList<?>) data).size());
+        assertEquals("abc", ((ArrayList<?>) data).get(0));
     }
     
     @Test
@@ -94,9 +94,9 @@ public class ArrayListTransferHandlerTest {
         assertNotNull(transferable);
         final Object data = transferable.getTransferData(transferable.getTransferDataFlavors()[0]);
         
-        assertTrue(data instanceof ArrayList);
-        assertEquals(1, ((ArrayList) data).size());
-        assertEquals("", ((ArrayList) data).get(0));
+        assertTrue(data instanceof ArrayList<?>);
+        assertEquals(1, ((ArrayList<?>) data).size());
+        assertEquals("", ((ArrayList<?>) data).get(0));
     }    
     
     @Test

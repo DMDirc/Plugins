@@ -23,10 +23,10 @@
 package com.dmdirc.addons.ui_swing;
 
 import com.dmdirc.ServerManager;
-import com.dmdirc.addons.ui_swing.components.MenuBar;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.actions.interfaces.ActionType;
+import com.dmdirc.addons.ui_swing.components.MenuBar;
 import com.dmdirc.commandparser.commands.global.NewServer;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.interfaces.ActionListener;
@@ -34,20 +34,18 @@ import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 
 import java.awt.event.ActionEvent;
-
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
 import java.lang.reflect.Field;
-import java.lang.reflect.Proxy;
+import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
-
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.net.URI;
 import java.net.URISyntaxException;
-import javax.swing.UIManager;
+import java.util.ArrayList;
+
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
-
-import java.util.ArrayList;
+import javax.swing.UIManager;
 
 /**
  * Integrate DMDirc with OS X better.
