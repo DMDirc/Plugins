@@ -23,8 +23,8 @@
 package com.dmdirc.addons.ui_swing.wizard;
 
 import com.dmdirc.addons.ui_swing.components.EtchedLineBorder;
-import com.dmdirc.addons.ui_swing.components.EtchedLineBorder.BorderSide;
 import com.dmdirc.addons.ui_swing.components.TitlePanel;
+import com.dmdirc.addons.ui_swing.components.EtchedLineBorder.BorderSide;
 import com.dmdirc.util.ListenerList;
 
 import java.awt.Color;

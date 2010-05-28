@@ -22,16 +22,16 @@
 
 package com.dmdirc.addons.dcc;
 
-import com.dmdirc.addons.dcc.io.DCCTransfer;
-import com.dmdirc.addons.dcc.io.DCC;
-import com.dmdirc.addons.dcc.io.DCCChat;
 import com.dmdirc.Main;
 import com.dmdirc.Server;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.actions.interfaces.ActionType;
-import com.dmdirc.addons.dcc.kde.KFileChooser;
 import com.dmdirc.addons.dcc.actions.DCCActions;
+import com.dmdirc.addons.dcc.io.DCC;
+import com.dmdirc.addons.dcc.io.DCCChat;
+import com.dmdirc.addons.dcc.io.DCCTransfer;
+import com.dmdirc.addons.dcc.kde.KFileChooser;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.commandparser.CommandManager;
 import com.dmdirc.config.Identity;

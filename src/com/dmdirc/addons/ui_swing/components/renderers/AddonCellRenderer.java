@@ -40,6 +40,8 @@ import javax.swing.ListCellRenderer;
 
 import net.miginfocom.swing.MigLayout;
 
+import static com.dmdirc.addons.ui_swing.UIUtilities.SMALL_BORDER;
+
 /**
  * Handles the rendering of the JList used for plugin and theme management.
  * @author chris

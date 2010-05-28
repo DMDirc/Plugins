@@ -35,9 +35,9 @@ import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.interfaces.TopicChangeListener;
 import com.dmdirc.parser.common.ChannelJoinRequest;
 import com.dmdirc.ui.IconManager;
+import com.dmdirc.ui.core.util.URLHandler;
 import com.dmdirc.ui.messages.ColourManager;
 import com.dmdirc.ui.messages.Styliser;
-import com.dmdirc.ui.core.util.URLHandler;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;

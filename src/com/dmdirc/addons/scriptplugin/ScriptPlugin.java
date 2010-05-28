@@ -23,24 +23,23 @@
 package com.dmdirc.addons.scriptplugin;
 
 import com.dmdirc.Main;
-import com.dmdirc.config.prefs.validator.ValidationResponse;
-import com.dmdirc.plugins.Plugin;
-import com.dmdirc.commandparser.CommandManager;
-import com.dmdirc.interfaces.ActionListener;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.actions.interfaces.ActionType;
-import com.dmdirc.logger.Logger;
+import com.dmdirc.commandparser.CommandManager;
+import com.dmdirc.config.prefs.validator.ValidationResponse;
+import com.dmdirc.interfaces.ActionListener;
 import com.dmdirc.logger.ErrorLevel;
+import com.dmdirc.logger.Logger;
+import com.dmdirc.plugins.Plugin;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.util.ArrayList;
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
 
 import javax.script.ScriptEngineManager;
 

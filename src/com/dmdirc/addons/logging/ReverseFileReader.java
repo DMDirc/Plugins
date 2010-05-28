@@ -22,14 +22,14 @@
 
 package com.dmdirc.addons.logging;
 
+import java.io.EOFException;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.RandomAccessFile;
 import java.io.IOException;
-import java.io.EOFException;
+import java.io.RandomAccessFile;
 import java.nio.charset.Charset;
-import java.util.Stack;
 import java.util.ArrayList;
+import java.util.Stack;
 
 /**
  * Reads a file in reverse.

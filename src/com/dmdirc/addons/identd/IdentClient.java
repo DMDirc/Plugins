@@ -30,8 +30,8 @@ import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 
 import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 

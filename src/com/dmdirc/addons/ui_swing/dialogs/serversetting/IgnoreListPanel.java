@@ -23,16 +23,16 @@
 package com.dmdirc.addons.ui_swing.dialogs.serversetting;
 
 import com.dmdirc.Server;
+import com.dmdirc.addons.ui_swing.UIUtilities;
+import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialog;
+import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
 import com.dmdirc.config.prefs.validator.NotEmptyValidator;
 import com.dmdirc.config.prefs.validator.RegexValidator;
 import com.dmdirc.config.prefs.validator.ValidatorChain;
-import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialog;
-import com.dmdirc.addons.ui_swing.UIUtilities;
-import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
 import com.dmdirc.parser.common.IgnoreList;
 
-import java.awt.Dialog.ModalityType;
 import java.awt.Window;
+import java.awt.Dialog.ModalityType;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 

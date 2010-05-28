@@ -22,12 +22,12 @@
 
 package com.dmdirc.addons.ui_swing.components;
 
+import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.colours.ColourPickerDialog;
-import com.dmdirc.ui.IconManager;
 import com.dmdirc.config.IdentityManager;
+import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.interfaces.InputField;
 import com.dmdirc.ui.interfaces.InputValidationListener;
-import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.util.ListenerList;
 import com.dmdirc.util.ReturnableThread;
 

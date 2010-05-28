@@ -22,14 +22,15 @@
 
 package com.dmdirc.addons.scriptplugin;
 
-import com.dmdirc.logger.Logger;
 import com.dmdirc.logger.ErrorLevel;
+import com.dmdirc.logger.Logger;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import javax.script.ScriptEngine;
+
 import javax.script.Invocable;
+import javax.script.ScriptEngine;
 import javax.script.ScriptException;
 
 /**

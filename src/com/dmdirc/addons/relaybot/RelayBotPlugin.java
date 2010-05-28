@@ -22,19 +22,20 @@
 
 package com.dmdirc.addons.relaybot;
 
-import com.dmdirc.interfaces.ActionListener;
-import com.dmdirc.actions.interfaces.ActionType;
-import com.dmdirc.actions.CoreActionType;
-import com.dmdirc.actions.ActionManager;
 import com.dmdirc.Channel;
 import com.dmdirc.Server;
 import com.dmdirc.ServerManager;
-import com.dmdirc.plugins.Plugin;
+import com.dmdirc.actions.ActionManager;
+import com.dmdirc.actions.CoreActionType;
+import com.dmdirc.actions.interfaces.ActionType;
 import com.dmdirc.config.IdentityManager;
+import com.dmdirc.interfaces.ActionListener;
 import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.parser.interfaces.ChannelClientInfo;
 import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.parser.irc.IRCParser;
+import com.dmdirc.plugins.Plugin;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;

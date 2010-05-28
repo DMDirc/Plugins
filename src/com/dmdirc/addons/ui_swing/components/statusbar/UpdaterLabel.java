@@ -25,10 +25,10 @@ package com.dmdirc.addons.ui_swing.components.statusbar;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.dialogs.updater.SwingRestartDialog;
 import com.dmdirc.addons.ui_swing.dialogs.updater.SwingUpdaterDialog;
-import com.dmdirc.updater.UpdateCheckerListener;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.interfaces.StatusBarComponent;
 import com.dmdirc.updater.UpdateChecker;
+import com.dmdirc.updater.UpdateCheckerListener;
 import com.dmdirc.updater.UpdateChecker.STATE;
 
 import java.awt.Dialog.ModalityType;

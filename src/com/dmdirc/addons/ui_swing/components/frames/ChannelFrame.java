@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.components.frames;
 
-import com.dmdirc.addons.ui_swing.components.NickList;
 import com.dmdirc.Channel;
 import com.dmdirc.ServerState;
 import com.dmdirc.actions.ActionManager;
@@ -30,6 +29,7 @@ import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.actions.interfaces.ActionType;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
+import com.dmdirc.addons.ui_swing.components.NickList;
 import com.dmdirc.addons.ui_swing.components.SplitPane;
 import com.dmdirc.addons.ui_swing.components.SwingInputHandler;
 import com.dmdirc.addons.ui_swing.components.TopicBar;

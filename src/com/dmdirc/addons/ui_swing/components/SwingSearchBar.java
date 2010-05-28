@@ -22,26 +22,26 @@
 
 package com.dmdirc.addons.ui_swing.components;
 
-import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
-import com.dmdirc.addons.ui_swing.components.frames.InputTextFrame;
-import com.dmdirc.config.prefs.validator.ValidationResponse;
-import com.dmdirc.ui.IconManager;
-import com.dmdirc.ui.interfaces.SearchBar;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.actions.SearchAction;
+import com.dmdirc.addons.ui_swing.components.frames.InputTextFrame;
+import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.addons.ui_swing.components.validating.ValidatingJTextField;
 import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
+import com.dmdirc.addons.ui_swing.textpane.TextPane;
+import com.dmdirc.config.IdentityManager;
+import com.dmdirc.config.prefs.validator.ValidationResponse;
+import com.dmdirc.config.prefs.validator.Validator;
+import com.dmdirc.interfaces.ConfigChangeListener;
+import com.dmdirc.ui.IconManager;
+import com.dmdirc.ui.interfaces.SearchBar;
 import com.dmdirc.ui.messages.IRCDocument;
 import com.dmdirc.ui.messages.IRCDocumentSearcher;
 import com.dmdirc.ui.messages.LinePosition;
-import com.dmdirc.addons.ui_swing.textpane.TextPane;
-import com.dmdirc.config.IdentityManager;
-import com.dmdirc.config.prefs.validator.Validator;
-import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.util.ListenerList;
-import java.awt.Dialog.ModalityType;
 
 import java.awt.Window;
+import java.awt.Dialog.ModalityType;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;

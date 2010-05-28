@@ -22,9 +22,9 @@
 
 package com.dmdirc.addons.dcc;
 
-import com.dmdirc.addons.dcc.io.DCCChat;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.addons.dcc.actions.DCCActions;
+import com.dmdirc.addons.dcc.io.DCCChat;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.interfaces.InputWindow;
 

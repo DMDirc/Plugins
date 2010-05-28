@@ -23,12 +23,11 @@
 package com.dmdirc.addons.ui_swing.dialogs.about;
 
 import com.dmdirc.Main;
-import com.dmdirc.ui.core.util.Info;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.config.IdentityManager;
+import com.dmdirc.ui.core.util.Info;
 import com.dmdirc.ui.messages.Formatter;
-
 
 import java.awt.Font;
 import java.nio.charset.Charset;

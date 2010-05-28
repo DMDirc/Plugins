@@ -25,8 +25,9 @@ package com.dmdirc.addons.parser_twitter;
 import com.dmdirc.parser.interfaces.ChannelClientInfo;
 import com.dmdirc.parser.interfaces.ChannelInfo;
 import com.dmdirc.parser.interfaces.ClientInfo;
-import java.util.Map;
+
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * ChannelClientInfo class for the Twitter plugin.

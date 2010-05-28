@@ -51,7 +51,7 @@ import net.miginfocom.swing.MigLayout;
 /**
  * Add option panel.
  */
-public final class AddOptionPanel extends JPanel implements ActionListener {
+public class AddOptionPanel extends JPanel implements ActionListener {
     
     /**
      * A version number for this class. It should be changed whenever the class

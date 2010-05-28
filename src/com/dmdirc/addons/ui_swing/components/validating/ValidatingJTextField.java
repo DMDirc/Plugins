@@ -23,15 +23,15 @@
 package com.dmdirc.addons.ui_swing.components.validating;
 
 import com.dmdirc.addons.ui_swing.UIUtilities;
+import com.dmdirc.config.prefs.validator.ValidationResponse;
 import com.dmdirc.config.prefs.validator.Validator;
 import com.dmdirc.ui.IconManager;
-import com.dmdirc.config.prefs.validator.ValidationResponse;
-import java.awt.Color;
 
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.KeyListener;
-
 import java.awt.event.MouseListener;
+
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JTextField;

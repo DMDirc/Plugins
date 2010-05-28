@@ -22,22 +22,22 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.profiles;
 
-import com.dmdirc.addons.ui_swing.components.validating.NoDuplicatesInListValidator;
 import com.dmdirc.addons.ui_swing.MainFrame;
+import com.dmdirc.addons.ui_swing.components.reorderablelist.ReorderableJList;
+import com.dmdirc.addons.ui_swing.components.validating.NoDuplicatesInListValidator;
+import com.dmdirc.addons.ui_swing.components.validating.ValidatingJTextField;
+import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialog;
+import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
 import com.dmdirc.config.prefs.validator.FileNameValidator;
 import com.dmdirc.config.prefs.validator.IdentValidator;
 import com.dmdirc.config.prefs.validator.NicknameValidator;
 import com.dmdirc.config.prefs.validator.NotEmptyValidator;
 import com.dmdirc.config.prefs.validator.ValidationResponse;
-import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialog;
-import com.dmdirc.addons.ui_swing.components.reorderablelist.ReorderableJList;
-import com.dmdirc.addons.ui_swing.components.validating.ValidatingJTextField;
-import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
 import com.dmdirc.config.prefs.validator.ValidatorChain;
 
 import java.awt.Color;
-import java.awt.Dialog.ModalityType;
 import java.awt.Window;
+import java.awt.Dialog.ModalityType;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;

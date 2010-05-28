@@ -22,15 +22,14 @@
 
 package com.dmdirc.addons.audio;
 
+import java.applet.Applet;
+import java.applet.AudioClip;
 import java.io.File;
 import java.io.IOException;
-import java.applet.AudioClip;
-import java.applet.Applet;
-
-import javax.sound.sampled.UnsupportedAudioFileException;
-import javax.sound.sampled.AudioSystem;
-
 import java.net.MalformedURLException;
+
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.UnsupportedAudioFileException;
 
 /**
  * The AudioPlayer handles the playing of the audio
