@@ -22,9 +22,9 @@
 
 package com.dmdirc.addons.ui_web.uicomponents;
 
-import com.dmdirc.ui.interfaces.InputField;
 import com.dmdirc.addons.ui_web.DynamicRequestHandler;
 import com.dmdirc.addons.ui_web.Event;
+import com.dmdirc.ui.interfaces.InputField;
 
 import java.awt.event.ActionListener;
 import java.awt.event.KeyListener;

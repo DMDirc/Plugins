@@ -21,8 +21,6 @@
  */
 package com.dmdirc.addons.ui_swing.textpane;
 
-import com.dmdirc.ui.messages.LinePosition;
-import com.dmdirc.ui.messages.IRCDocument;
 import com.dmdirc.addons.ui_swing.BackgroundOption;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
@@ -31,7 +29,9 @@ import com.dmdirc.config.ConfigManager;
 import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
+import com.dmdirc.ui.messages.IRCDocument;
 import com.dmdirc.ui.messages.IRCTextAttribute;
+import com.dmdirc.ui.messages.LinePosition;
 import com.dmdirc.util.ListenerList;
 import com.dmdirc.util.URLBuilder;
 

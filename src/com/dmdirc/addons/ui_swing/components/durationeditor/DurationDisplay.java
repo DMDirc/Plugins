@@ -22,8 +22,8 @@
 
 package com.dmdirc.addons.ui_swing.components.durationeditor;
 
-import com.dmdirc.ui.messages.Formatter;
 import com.dmdirc.addons.ui_swing.UIUtilities;
+import com.dmdirc.ui.messages.Formatter;
 import com.dmdirc.util.ListenerList;
 
 import java.awt.Insets;

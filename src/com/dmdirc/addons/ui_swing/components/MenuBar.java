@@ -24,7 +24,6 @@ package com.dmdirc.addons.ui_swing.components;
 
 import com.dmdirc.Channel;
 import com.dmdirc.FrameContainer;
-import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialog;
 import com.dmdirc.ServerManager;
 import com.dmdirc.ServerState;
 import com.dmdirc.addons.ui_swing.Apple;
@@ -32,6 +31,7 @@ import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.dialogs.FeedbackDialog;
 import com.dmdirc.addons.ui_swing.dialogs.NewServerDialog;
+import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialog;
 import com.dmdirc.addons.ui_swing.dialogs.about.AboutDialog;
 import com.dmdirc.addons.ui_swing.dialogs.actionsmanager.ActionsManagerDialog;
 import com.dmdirc.addons.ui_swing.dialogs.aliases.AliasManagerDialog;
@@ -41,9 +41,9 @@ import com.dmdirc.addons.ui_swing.framemanager.windowmenu.WindowMenuFrameManager
 import com.dmdirc.parser.common.ChannelJoinRequest;
 import com.dmdirc.ui.WindowManager;
 
+import java.awt.Dialog.ModalityType;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.Dialog.ModalityType;
 
 import javax.swing.Box;
 import javax.swing.JMenu;

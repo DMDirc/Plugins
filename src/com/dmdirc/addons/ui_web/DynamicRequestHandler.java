@@ -24,14 +24,14 @@ package com.dmdirc.addons.ui_web;
 
 import com.dmdirc.Channel;
 import com.dmdirc.Server;
-import com.dmdirc.config.Identity;
-import com.dmdirc.config.IdentityManager;
-import com.dmdirc.parser.interfaces.ChannelClientInfo;
 import com.dmdirc.addons.ui_web.uicomponents.WebChannelWindow;
 import com.dmdirc.addons.ui_web.uicomponents.WebInputHandler;
 import com.dmdirc.addons.ui_web.uicomponents.WebInputWindow;
 import com.dmdirc.addons.ui_web.uicomponents.WebWindow;
+import com.dmdirc.config.Identity;
+import com.dmdirc.config.IdentityManager;
 import com.dmdirc.parser.common.ChannelJoinRequest;
+import com.dmdirc.parser.interfaces.ChannelClientInfo;
 
 import java.io.IOException;
 import java.net.URI;

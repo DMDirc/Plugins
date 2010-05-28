@@ -22,13 +22,13 @@
 
 package com.dmdirc.addons.relaybot;
 
-import com.dmdirc.parser.interfaces.callbacks.ChannelMessageListener;
 import com.dmdirc.Channel;
 import com.dmdirc.ChannelEventHandler;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.parser.interfaces.ChannelClientInfo;
 import com.dmdirc.parser.interfaces.ChannelInfo;
 import com.dmdirc.parser.interfaces.Parser;
+import com.dmdirc.parser.interfaces.callbacks.ChannelMessageListener;
 import com.dmdirc.parser.irc.IRCCallbackManager;
 import com.dmdirc.parser.irc.IRCChannelClientInfo;
 import com.dmdirc.parser.irc.IRCParser;
@@ -36,6 +36,7 @@ import com.dmdirc.plugins.PluginClassLoader;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.messages.Styliser;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Date;

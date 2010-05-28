@@ -23,10 +23,10 @@
 package com.dmdirc.addons.ui_swing.textpane;
 
 import com.dmdirc.addons.ui_swing.UIUtilities;
+import com.dmdirc.ui.interfaces.Window;
+import com.dmdirc.ui.messages.IRCDocument;
 import com.dmdirc.ui.messages.IRCDocumentListener;
 import com.dmdirc.ui.messages.LinePosition;
-import com.dmdirc.ui.messages.IRCDocument;
-import com.dmdirc.ui.interfaces.Window;
 
 import java.awt.Point;
 import java.awt.Toolkit;

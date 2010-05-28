@@ -22,9 +22,9 @@
 
 package com.dmdirc.addons.ui_web.uicomponents;
 
+import com.dmdirc.addons.ui_web.WebInterfaceUI;
 import com.dmdirc.ui.interfaces.MainWindow;
 import com.dmdirc.ui.interfaces.Window;
-import com.dmdirc.addons.ui_web.WebInterfaceUI;
 
 import javax.swing.ImageIcon;
 

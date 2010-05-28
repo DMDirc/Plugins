@@ -24,14 +24,14 @@ package com.dmdirc.addons.nowplaying;
 
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.reorderablelist.ListReorderButtonPanel;
+import com.dmdirc.addons.ui_swing.components.reorderablelist.ReorderableJList;
+import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.prefs.PreferencesInterface;
-import com.dmdirc.addons.ui_swing.components.text.TextLabel;
-import com.dmdirc.addons.ui_swing.components.reorderablelist.ReorderableJList;
-
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.util.ReturnableThread;
+
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.Arrays;

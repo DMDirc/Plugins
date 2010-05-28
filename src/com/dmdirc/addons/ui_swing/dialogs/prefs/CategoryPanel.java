@@ -24,12 +24,12 @@
 package com.dmdirc.addons.ui_swing.dialogs.prefs;
 
 import com.dmdirc.addons.ui_swing.UIUtilities;
-import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.addons.ui_swing.components.TitlePanel;
 import com.dmdirc.addons.ui_swing.components.ToolTipPanel;
+import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.config.prefs.PreferencesCategory;
-import java.awt.Component;
 
+import java.awt.Component;
 import java.awt.Window;
 import java.util.Collections;
 import java.util.HashMap;
@@ -41,9 +41,9 @@ import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
+
 import net.miginfocom.layout.ComponentWrapper;
 import net.miginfocom.layout.LayoutCallback;
-
 import net.miginfocom.swing.MigLayout;
 
 /**

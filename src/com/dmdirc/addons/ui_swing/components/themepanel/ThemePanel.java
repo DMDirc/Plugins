@@ -23,14 +23,14 @@
 package com.dmdirc.addons.ui_swing.components.themepanel;
 
 import com.dmdirc.addons.ui_swing.UIUtilities;
+import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
+import com.dmdirc.addons.ui_swing.components.renderers.AddonCellRenderer;
+import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.prefs.PreferencesInterface;
-import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
+import com.dmdirc.ui.core.util.URLHandler;
 import com.dmdirc.ui.themes.Theme;
 import com.dmdirc.ui.themes.ThemeManager;
-import com.dmdirc.addons.ui_swing.components.text.TextLabel;
-import com.dmdirc.addons.ui_swing.components.renderers.AddonCellRenderer;
-import com.dmdirc.ui.core.util.URLHandler;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

@@ -22,8 +22,8 @@
 
 package com.dmdirc.addons.audio;
 
-import com.dmdirc.plugins.Plugin;
 import com.dmdirc.commandparser.CommandManager;
+import com.dmdirc.plugins.Plugin;
 
 /**
  * Adds Audio playing facility to client.

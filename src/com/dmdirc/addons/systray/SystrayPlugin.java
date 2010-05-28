@@ -22,11 +22,10 @@
 
 package com.dmdirc.addons.systray;
 
-import com.dmdirc.ui.IconManager;
 import com.dmdirc.Main;
 import com.dmdirc.actions.ActionManager;
-import com.dmdirc.actions.interfaces.ActionType;
 import com.dmdirc.actions.CoreActionType;
+import com.dmdirc.actions.interfaces.ActionType;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
@@ -36,6 +35,7 @@ import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.config.prefs.validator.ValidationResponse;
 import com.dmdirc.plugins.Plugin;
+import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.messages.Styliser;
 
 import java.awt.AWTException;

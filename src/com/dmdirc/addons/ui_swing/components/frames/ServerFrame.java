@@ -25,11 +25,11 @@ package com.dmdirc.addons.ui_swing.components.frames;
 import com.dmdirc.Server;
 import com.dmdirc.ServerState;
 import com.dmdirc.addons.ui_swing.SwingController;
+import com.dmdirc.addons.ui_swing.components.SwingInputHandler;
+import com.dmdirc.addons.ui_swing.dialogs.serversetting.ServerSettingsDialog;
 import com.dmdirc.commandparser.PopupType;
 import com.dmdirc.commandparser.parsers.CommandParser;
 import com.dmdirc.ui.interfaces.ServerWindow;
-import com.dmdirc.addons.ui_swing.components.SwingInputHandler;
-import com.dmdirc.addons.ui_swing.dialogs.serversetting.ServerSettingsDialog;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

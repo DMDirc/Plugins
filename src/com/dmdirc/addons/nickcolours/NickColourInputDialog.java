@@ -23,8 +23,8 @@
 package com.dmdirc.addons.nickcolours;
 
 import com.dmdirc.addons.ui_swing.SwingController;
-import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.addons.ui_swing.components.colours.ColourChooser;
+import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.plugins.PluginManager;
 
 import java.awt.event.ActionEvent;

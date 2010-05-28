@@ -22,19 +22,19 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.channelsetting;
 
-import com.dmdirc.addons.ui_swing.components.renderers.ListModeCellRenderer;
-import com.dmdirc.addons.ui_swing.components.renderers.ExtendedListModeCellRenderer;
-import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.Channel;
+import com.dmdirc.addons.ui_swing.UIUtilities;
+import com.dmdirc.addons.ui_swing.components.renderers.ExtendedListModeCellRenderer;
+import com.dmdirc.addons.ui_swing.components.renderers.ListModeCellRenderer;
 import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialog;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.prefs.validator.NotEmptyValidator;
 import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.parser.common.ChannelListModeItem;
 import com.dmdirc.util.MapList;
-import java.awt.Dialog.ModalityType;
-import java.awt.Window;
 
+import java.awt.Window;
+import java.awt.Dialog.ModalityType;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -45,16 +45,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.ListCellRenderer;
+import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 

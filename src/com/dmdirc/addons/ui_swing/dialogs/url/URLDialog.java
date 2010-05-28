@@ -22,9 +22,9 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.url;
 
+import com.dmdirc.addons.ui_swing.components.URLProtocolPanel;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
-import com.dmdirc.addons.ui_swing.components.URLProtocolPanel;
 import com.dmdirc.ui.core.util.URLHandler;
 
 import java.awt.Window;
