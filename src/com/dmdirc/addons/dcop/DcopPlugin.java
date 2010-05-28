@@ -22,8 +22,8 @@
 
 package com.dmdirc.addons.dcop;
 
-import com.dmdirc.plugins.Plugin;
 import com.dmdirc.commandparser.CommandManager;
+import com.dmdirc.plugins.Plugin;
 
 import java.io.BufferedReader;
 import java.io.IOException;

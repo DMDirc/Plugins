@@ -22,31 +22,31 @@
 
 package com.dmdirc.addons.ui_swing;
 
-import com.dmdirc.addons.ui_swing.components.MenuBar;
-import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
-import com.dmdirc.addons.ui_swing.components.SplitPane;
-import com.dmdirc.addons.ui_swing.components.desktopPane.DMDircDesktopPane;
-import com.dmdirc.addons.ui_swing.components.statusbar.SwingStatusBar;
-import com.dmdirc.addons.ui_swing.framemanager.tree.TreeFrameManager;
 import com.dmdirc.Main;
 import com.dmdirc.ServerManager;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionType;
+import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
+import com.dmdirc.addons.ui_swing.components.MenuBar;
+import com.dmdirc.addons.ui_swing.components.SplitPane;
+import com.dmdirc.addons.ui_swing.components.desktopPane.DMDircDesktopPane;
+import com.dmdirc.addons.ui_swing.components.statusbar.SwingStatusBar;
 import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
-import com.dmdirc.config.IdentityManager;
-import com.dmdirc.interfaces.ConfigChangeListener;
-import com.dmdirc.ui.IconManager;
 import com.dmdirc.addons.ui_swing.framemanager.FrameManager;
 import com.dmdirc.addons.ui_swing.framemanager.FramemanagerPosition;
+import com.dmdirc.addons.ui_swing.framemanager.tree.TreeFrameManager;
+import com.dmdirc.config.IdentityManager;
+import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
+import com.dmdirc.ui.CoreUIUtils;
+import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.interfaces.MainWindow;
 import com.dmdirc.ui.interfaces.Window;
-import com.dmdirc.ui.CoreUIUtils;
 import com.dmdirc.util.ReturnableThread;
 
-import java.awt.Dialog.ModalityType;
 import java.awt.Dimension;
+import java.awt.Dialog.ModalityType;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
 import java.awt.event.WindowListener;

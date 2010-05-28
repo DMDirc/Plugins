@@ -22,8 +22,8 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.sslcertificate;
 
-import com.dmdirc.ui.core.dialogs.sslcertificate.CertificateInformationEntry;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
+import com.dmdirc.ui.core.dialogs.sslcertificate.CertificateInformationEntry;
 
 import java.awt.Color;
 import java.util.ArrayList;

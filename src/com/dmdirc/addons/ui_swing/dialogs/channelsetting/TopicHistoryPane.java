@@ -22,9 +22,9 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.channelsetting;
 
-import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.Channel;
 import com.dmdirc.Topic;
+import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.util.ListenerList;
 
 import java.awt.event.ActionEvent;

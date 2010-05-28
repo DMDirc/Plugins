@@ -22,10 +22,12 @@
 
 package com.dmdirc.addons.ui_web;
 
-import com.dmdirc.ui.interfaces.Window;
 import com.dmdirc.addons.ui_web.uicomponents.WebWindow;
+import com.dmdirc.ui.interfaces.Window;
+
 import java.util.LinkedList;
 import java.util.List;
+
 import org.mortbay.util.ajax.Continuation;
 
 /**

@@ -23,15 +23,15 @@
 package com.dmdirc.addons.ui_swing.dialogs.updater;
 
 import com.dmdirc.addons.ui_swing.MainFrame;
-import com.dmdirc.updater.UpdateCheckerListener;
-import com.dmdirc.ui.interfaces.UpdaterDialog;
-import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.addons.ui_swing.components.PackingTable;
-import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.addons.ui_swing.components.renderers.UpdateComponentTableCellRenderer;
 import com.dmdirc.addons.ui_swing.components.renderers.UpdateStatusTableCellRenderer;
+import com.dmdirc.addons.ui_swing.components.text.TextLabel;
+import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
+import com.dmdirc.ui.interfaces.UpdaterDialog;
 import com.dmdirc.updater.Update;
 import com.dmdirc.updater.UpdateChecker;
+import com.dmdirc.updater.UpdateCheckerListener;
 import com.dmdirc.updater.UpdateChecker.STATE;
 
 import java.awt.Dimension;

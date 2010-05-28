@@ -25,21 +25,21 @@ package com.dmdirc.addons.scriptplugin;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandInfo;
-import com.dmdirc.config.IdentityManager;
 import com.dmdirc.commandparser.CommandManager;
 import com.dmdirc.commandparser.CommandType;
 import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.IntelligentCommand;
 import com.dmdirc.commandparser.commands.context.CommandContext;
+import com.dmdirc.config.IdentityManager;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * The Script Command allows controlling of the scriptplugin.

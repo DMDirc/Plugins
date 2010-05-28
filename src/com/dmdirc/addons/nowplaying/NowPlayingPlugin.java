@@ -23,8 +23,8 @@
 package com.dmdirc.addons.nowplaying;
 
 import com.dmdirc.actions.ActionManager;
-import com.dmdirc.actions.interfaces.ActionType;
 import com.dmdirc.actions.CoreActionType;
+import com.dmdirc.actions.interfaces.ActionType;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.commandparser.CommandManager;
 import com.dmdirc.config.IdentityManager;

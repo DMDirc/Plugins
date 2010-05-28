@@ -35,8 +35,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.TreeMap;
+import java.util.Map.Entry;
 
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;

@@ -22,11 +22,11 @@
 
 package com.dmdirc.addons.ui_swing;
 
-import com.dmdirc.logger.ErrorLevel;
-import com.dmdirc.logger.Logger;
 import com.dmdirc.addons.ui_swing.actions.RedoAction;
 import com.dmdirc.addons.ui_swing.actions.UndoAction;
 import com.dmdirc.addons.ui_swing.components.DMDircUndoableEditListener;
+import com.dmdirc.logger.ErrorLevel;
+import com.dmdirc.logger.Logger;
 import com.dmdirc.util.ReturnableThread;
 
 import java.awt.Dimension;
@@ -43,8 +43,8 @@ import javax.swing.JScrollPane;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
-import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.text.JTextComponent;
 import javax.swing.undo.UndoManager;
 
