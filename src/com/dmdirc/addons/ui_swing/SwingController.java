@@ -77,12 +77,12 @@ import com.dmdirc.ui.interfaces.UIController;
 import com.dmdirc.ui.interfaces.Window;
 import com.dmdirc.updater.Update;
 import com.dmdirc.util.ReturnableThread;
-import java.awt.Dialog.ModalityType;
 
 import java.awt.Font;
 import java.awt.GraphicsEnvironment;
 import java.awt.KeyboardFocusManager;
 import java.awt.Toolkit;
+import java.awt.Dialog.ModalityType;
 import java.io.Serializable;
 import java.net.URI;
 import java.util.ArrayList;
@@ -90,12 +90,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Semaphore;
-
 import java.util.concurrent.atomic.AtomicBoolean;
+
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
-import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.UIManager.LookAndFeelInfo;
 
 import net.miginfocom.layout.PlatformDefaults;
 

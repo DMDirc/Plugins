@@ -22,9 +22,9 @@
 
 package com.dmdirc.addons.ui_swing.components.colours;
 
+import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.ui.messages.ColourManager;
 import com.dmdirc.util.ListenerList;
-import com.dmdirc.addons.ui_swing.UIUtilities;
 
 import java.awt.Color;
 import java.awt.Dimension;

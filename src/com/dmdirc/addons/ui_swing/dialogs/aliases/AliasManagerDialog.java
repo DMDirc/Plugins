@@ -22,15 +22,15 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.aliases;
 
-import com.dmdirc.addons.ui_swing.components.renderers.ArrayCellRenderer;
-import com.dmdirc.addons.ui_swing.components.renderers.ActionConditionCellRenderer;
-import com.dmdirc.actions.wrappers.Alias;
 import com.dmdirc.actions.Action;
 import com.dmdirc.actions.ActionCondition;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionComparison;
+import com.dmdirc.actions.wrappers.Alias;
 import com.dmdirc.actions.wrappers.AliasWrapper;
 import com.dmdirc.addons.ui_swing.components.PackingTable;
+import com.dmdirc.addons.ui_swing.components.renderers.ActionConditionCellRenderer;
+import com.dmdirc.addons.ui_swing.components.renderers.ArrayCellRenderer;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
 import com.dmdirc.addons.ui_swing.dialogs.StringArrayComparator;

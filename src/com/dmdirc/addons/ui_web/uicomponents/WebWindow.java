@@ -23,17 +23,16 @@
 package com.dmdirc.addons.ui_web.uicomponents;
 
 import com.dmdirc.FrameContainer;
+import com.dmdirc.addons.ui_web.DynamicRequestHandler;
+import com.dmdirc.addons.ui_web.Event;
+import com.dmdirc.addons.ui_web.Message;
 import com.dmdirc.config.ConfigManager;
 import com.dmdirc.ui.core.util.Utils;
+import com.dmdirc.ui.interfaces.UIController;
 import com.dmdirc.ui.interfaces.Window;
 import com.dmdirc.ui.messages.Formatter;
 import com.dmdirc.ui.messages.IRCTextAttribute;
 import com.dmdirc.util.StringTranscoder;
-
-import com.dmdirc.addons.ui_web.DynamicRequestHandler;
-import com.dmdirc.addons.ui_web.Event;
-import com.dmdirc.addons.ui_web.Message;
-import com.dmdirc.ui.interfaces.UIController;
 
 import java.awt.Color;
 import java.awt.font.TextAttribute;

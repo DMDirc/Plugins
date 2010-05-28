@@ -25,12 +25,12 @@ package com.dmdirc.addons.ui_swing.dialogs;
 import com.dmdirc.Main;
 import com.dmdirc.Server;
 import com.dmdirc.ServerManager;
-import com.dmdirc.ui.core.util.Info;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.config.IdentityManager;
+import com.dmdirc.ui.core.util.Info;
 import com.dmdirc.util.Downloader;
 
 import java.awt.Insets;

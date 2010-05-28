@@ -22,13 +22,13 @@
 
 package com.dmdirc.addons.ui_swing.components.expandingsettings;
 
-import com.dmdirc.ui.IconManager;
-import com.dmdirc.addons.ui_swing.components.colours.ColourChooser;
-import com.dmdirc.addons.ui_swing.components.ImageButton;
-import com.dmdirc.addons.ui_swing.components.expandingsettings.SettingsPanel.OptionType;
 import com.dmdirc.addons.ui_swing.UIUtilities;
-
 import com.dmdirc.addons.ui_swing.components.FontPicker;
+import com.dmdirc.addons.ui_swing.components.ImageButton;
+import com.dmdirc.addons.ui_swing.components.colours.ColourChooser;
+import com.dmdirc.addons.ui_swing.components.expandingsettings.SettingsPanel.OptionType;
+import com.dmdirc.ui.IconManager;
+
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -36,6 +36,7 @@ import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;

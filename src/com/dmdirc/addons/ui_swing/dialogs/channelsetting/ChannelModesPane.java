@@ -23,8 +23,8 @@
 package com.dmdirc.addons.ui_swing.dialogs.channelsetting;
 
 import com.dmdirc.Channel;
-import com.dmdirc.addons.ui_swing.components.ParamModePanel;
 import com.dmdirc.addons.ui_swing.UIUtilities;
+import com.dmdirc.addons.ui_swing.components.ParamModePanel;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.parser.interfaces.Parser;
 

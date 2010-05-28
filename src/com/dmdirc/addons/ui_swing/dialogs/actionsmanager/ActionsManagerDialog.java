@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.actionsmanager;
 
-import com.dmdirc.addons.ui_swing.components.frames.AppleJFrame;
 import com.dmdirc.actions.Action;
 import com.dmdirc.actions.ActionGroup;
 import com.dmdirc.actions.ActionManager;
@@ -31,17 +30,18 @@ import com.dmdirc.actions.interfaces.ActionType;
 import com.dmdirc.addons.ui_swing.Apple;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SwingController;
+import com.dmdirc.addons.ui_swing.components.ListScroller;
+import com.dmdirc.addons.ui_swing.components.SortedListModel;
+import com.dmdirc.addons.ui_swing.components.frames.AppleJFrame;
+import com.dmdirc.addons.ui_swing.components.renderers.ActionGroupListCellRenderer;
+import com.dmdirc.addons.ui_swing.components.text.TextLabel;
+import com.dmdirc.addons.ui_swing.components.validating.NoDuplicatesInListValidator;
+import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
+import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialog;
+import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.prefs.validator.FileNameValidator;
 import com.dmdirc.config.prefs.validator.ValidatorChain;
-import com.dmdirc.addons.ui_swing.components.text.TextLabel;
-import com.dmdirc.addons.ui_swing.components.ListScroller;
-import com.dmdirc.addons.ui_swing.components.SortedListModel;
-import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
-import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialog;
-import com.dmdirc.addons.ui_swing.components.renderers.ActionGroupListCellRenderer;
-import com.dmdirc.addons.ui_swing.components.validating.NoDuplicatesInListValidator;
-import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
 
 import java.awt.Window;
 import java.awt.event.ActionEvent;

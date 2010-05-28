@@ -23,10 +23,10 @@
 package com.dmdirc.addons.ui_web.uicomponents;
 
 import com.dmdirc.Channel;
-import com.dmdirc.parser.interfaces.ChannelClientInfo;
-import com.dmdirc.ui.interfaces.ChannelWindow;
 import com.dmdirc.addons.ui_web.DynamicRequestHandler;
 import com.dmdirc.addons.ui_web.Event;
+import com.dmdirc.parser.interfaces.ChannelClientInfo;
+import com.dmdirc.ui.interfaces.ChannelWindow;
 
 import java.util.Collection;
 

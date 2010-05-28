@@ -22,25 +22,25 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.prefs;
 
-import com.dmdirc.addons.ui_swing.components.renderers.URISchemeCellRenderer;
+import com.dmdirc.addons.ui_swing.components.PackingTable;
+import com.dmdirc.addons.ui_swing.components.URLProtocolPanel;
 import com.dmdirc.addons.ui_swing.components.renderers.URIHandlerCellRenderer;
+import com.dmdirc.addons.ui_swing.components.renderers.URISchemeCellRenderer;
+import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialog;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.prefs.PreferencesInterface;
 import com.dmdirc.config.prefs.validator.URLProtocolValidator;
-import com.dmdirc.addons.ui_swing.components.PackingTable;
-import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialog;
-import com.dmdirc.addons.ui_swing.components.URLProtocolPanel;
 
-import java.awt.Dialog.ModalityType;
 import java.awt.Window;
+import java.awt.Dialog.ModalityType;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
+import java.util.Map.Entry;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;

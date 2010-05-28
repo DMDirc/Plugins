@@ -23,14 +23,14 @@
 package com.dmdirc.addons.identd;
 
 import com.dmdirc.config.IdentityManager;
-import com.dmdirc.logger.Logger;
 import com.dmdirc.logger.ErrorLevel;
+import com.dmdirc.logger.Logger;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.PluginManager;
 
-import java.net.Socket;
-import java.net.ServerSocket;
 import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 

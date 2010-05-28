@@ -22,9 +22,9 @@
 
 package com.dmdirc.addons.mediasource_windows;
 
-import com.dmdirc.Main;
 import com.dmdirc.addons.nowplaying.MediaSource;
 import com.dmdirc.addons.nowplaying.MediaSourceManager;
+import com.dmdirc.installer.StreamReader;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.plugins.Plugin;
@@ -32,12 +32,9 @@ import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.util.resourcemanager.ResourceManager;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.io.File;
-import java.io.IOException;
-
-import com.dmdirc.installer.StreamReader;
 
 /**
  * Manages all Windows based media sources.

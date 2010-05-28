@@ -24,7 +24,6 @@ package com.dmdirc.addons.ui_swing.components.renderers;
 
 import com.dmdirc.addons.ui_swing.components.pluginpanel.PluginInfoToggle;
 import com.dmdirc.addons.ui_swing.components.themepanel.ThemeToggle;
-import static com.dmdirc.addons.ui_swing.UIUtilities.SMALL_BORDER;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -38,6 +37,8 @@ import javax.swing.JSeparator;
 import javax.swing.ListCellRenderer;
 
 import net.miginfocom.swing.MigLayout;
+
+import static com.dmdirc.addons.ui_swing.UIUtilities.SMALL_BORDER;
 
 /**
  * Handles the rendering of the JList used for plugin and theme management.

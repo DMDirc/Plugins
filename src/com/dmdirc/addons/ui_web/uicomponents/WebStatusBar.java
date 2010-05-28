@@ -22,11 +22,11 @@
 
 package com.dmdirc.addons.ui_web.uicomponents;
 
+import com.dmdirc.addons.ui_web.DynamicRequestHandler;
+import com.dmdirc.addons.ui_web.Event;
 import com.dmdirc.ui.interfaces.StatusBar;
 import com.dmdirc.ui.interfaces.StatusBarComponent;
 import com.dmdirc.ui.interfaces.StatusMessageNotifier;
-import com.dmdirc.addons.ui_web.DynamicRequestHandler;
-import com.dmdirc.addons.ui_web.Event;
 
 /**
  *

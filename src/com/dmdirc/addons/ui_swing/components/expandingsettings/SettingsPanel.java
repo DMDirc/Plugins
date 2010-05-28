@@ -22,9 +22,9 @@
 
 package com.dmdirc.addons.ui_swing.components.expandingsettings;
 
-import com.dmdirc.config.Identity;
-import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.addons.ui_swing.UIUtilities;
+import com.dmdirc.addons.ui_swing.components.text.TextLabel;
+import com.dmdirc.config.Identity;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -33,8 +33,8 @@ import java.util.Map.Entry;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-
 import javax.swing.UIManager;
+
 import net.miginfocom.swing.MigLayout;
 
 /**

@@ -22,29 +22,19 @@
 
 package com.dmdirc.addons.ui_swing.components.expandingsettings;
 
-import com.dmdirc.addons.ui_swing.components.renderers.AddOptionCellRenderer;
-import com.dmdirc.addons.ui_swing.components.colours.ColourChooser;
-import com.dmdirc.addons.ui_swing.components.expandingsettings.SettingsPanel.OptionType;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.FontPicker;
+import com.dmdirc.addons.ui_swing.components.colours.ColourChooser;
+import com.dmdirc.addons.ui_swing.components.expandingsettings.SettingsPanel.OptionType;
+import com.dmdirc.addons.ui_swing.components.renderers.AddOptionCellRenderer;
 
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import java.nio.charset.Charset;
-import javax.swing.AbstractAction;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JSpinner;
-import javax.swing.JTextField;
-import javax.swing.KeyStroke;
-import javax.swing.SpinnerNumberModel;
+
+import javax.swing.*;
 
 import net.miginfocom.swing.MigLayout;
 
