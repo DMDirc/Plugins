@@ -115,7 +115,7 @@ public final class ScriptCommand extends Command implements IntelligentCommand,
                                 final Method exceptionToStringArray = logger.getDeclaredMethod("exceptionToStringArray", new Class[]{Throwable.class});
                                 exceptionToStringArray.setAccessible(true);
                                 
-                                final String[] stacktrace = (String[])exceptionToStringArray.invoke(null, e);
+                                final String[] stacktrace = (String[]) exceptionToStringArray.invoke(null, e);
                                 for (String line : stacktrace) {
                                     sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Stack trace: "+line);
                                 }
@@ -194,7 +194,7 @@ public final class ScriptCommand extends Command implements IntelligentCommand,
             res.add("eval");
             res.add("savetobasefile");
         } else if (arg == 1) {
-            final Map<String,ScriptEngineWrapper> scripts = myPlugin.getScripts();
+            final Map<String, ScriptEngineWrapper> scripts = myPlugin.getScripts();
             if (context.getPreviousArgs().get(0).equalsIgnoreCase("load")) {
                 for (String filename : getPossibleScripts()) {
                     res.add(filename);
