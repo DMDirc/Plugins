@@ -59,7 +59,7 @@ public class TwitterPlugin extends Plugin  {
     @Override
     public void onUnload() {
         unloading = true;
-        for (Twitter parser : new ArrayList<Twitter>(Twitter.currentParsers)) {
+        for (Twitter parser : new ArrayList<Twitter>(Twitter.PARSERS)) {
             parser.disconnect("");
         }
     }

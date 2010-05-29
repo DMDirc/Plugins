@@ -42,7 +42,7 @@ import net.miginfocom.swing.MigLayout;
  */
 public class NickColourInputDialog extends StandardDialog
         implements ActionListener {
-    
+
     /**
      * A version number for this class. It should be changed whenever the class
      * structure is changed (or anything else that would prevent serialized
@@ -63,7 +63,7 @@ public class NickColourInputDialog extends StandardDialog
     private ColourChooser textColour;
     /** nicklist colour input. */
     private ColourChooser nicklistColour;
-    
+
     /**
      * Creates a new instance of NickColourInputDialog.
      *
@@ -79,20 +79,20 @@ public class NickColourInputDialog extends StandardDialog
             final String textcolour, final String nickcolour) {
         super(((SwingController) PluginManager.getPluginManager()
                 .getPluginInfoByName("ui_swing").getPlugin()).getMainFrame(), false);
-        
+
         this.panel = panel;
         this.row = row;
-        
+
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        
+
         initComponents(nickname, network, textcolour, nickcolour);
         initListeners();
         layoutComponents();
-        
+
         setTitle("Nick colour editor");
         display();
     }
-    
+
     /**
      * Creates a new instance of NickColourInputDialog.
      *
@@ -100,10 +100,10 @@ public class NickColourInputDialog extends StandardDialog
      */
     public NickColourInputDialog(final NickColourPanel panel) {
         this(panel, -1, "", "", "", "");
-        
+
         isnew = true;
     }
-    
+
     /**
      * Initialises the components.
      *
@@ -114,46 +114,46 @@ public class NickColourInputDialog extends StandardDialog
      */
     private void initComponents(final String defaultNickname,
             final String defaultNetwork, final String defaultTextColour,
-            final String defaultNickColour) {        
+            final String defaultNickColour) {
         orderButtons(new JButton(), new JButton());
-        
+
         nickname = new JTextField(defaultNickname);
         network = new JTextField(defaultNetwork);
         textColour = new ColourChooser(defaultTextColour, true, true);
         nicklistColour = new ColourChooser(defaultNickColour, true, true);
     }
-    
+
     /** Initialises the listeners. */
     private void initListeners() {
         getOkButton().addActionListener(this);
         getCancelButton().addActionListener(this);
     }
-    
+
     /** Lays out the components. */
-    private void layoutComponents() {        
+    private void layoutComponents() {
         setLayout(new MigLayout("wrap 2"));
-        
+
         add(new JLabel("Nickname: "));
         add(nickname, "growx");
-        
+
         add(new JLabel("Network: "));
         add(network, "growx");
-        
+
         add(new JLabel("Text colour: "));
         add(textColour, "growx");
-        
+
         add(new JLabel("Nicklist colour: "));
         add(nicklistColour, "growx");
-        
+
         add(getLeftButton(), "right");
         add(getRightButton(), "right");
-        
+
         pack();
     }
-    
-    /** 
-     * {@inheritDoc} 
-     * 
+
+    /**
+     * {@inheritDoc}
+     *
      * @param e Action event
      */
     @Override
@@ -163,16 +163,16 @@ public class NickColourInputDialog extends StandardDialog
         }
         dispose();
     }
-    
+
     /** Saves settings. */
-    public void saveSettings() {        
+    public void saveSettings() {
         if (!isnew) {
             panel.removeRow(row);
         }
-        
+
         panel.addRow(network.getText().toLowerCase(),
                 nickname.getText().toLowerCase(),
                 nickname.getText().toLowerCase(), nicklistColour.getColour());
     }
-    
+
 }

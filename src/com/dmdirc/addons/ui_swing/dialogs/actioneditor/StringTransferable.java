@@ -65,7 +65,7 @@ public class StringTransferable implements Transferable {
     /** {@inheritDoc} */
     @Override
     public DataFlavor[] getTransferDataFlavors() {
-        return new DataFlavor[]{localStringFlavor, serialStringFlavor,};
+        return new DataFlavor[]{localStringFlavor, serialStringFlavor, };
     }
 
     /** {@inheritDoc} */

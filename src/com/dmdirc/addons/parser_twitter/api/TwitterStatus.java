@@ -261,7 +261,7 @@ public class TwitterStatus implements Comparable<TwitterStatus> {
     @Override
     public boolean equals(final Object status) {
         if (status instanceof TwitterStatus) {
-            return ((TwitterStatus)status).getID() == this.id;
+            return ((TwitterStatus) status).getID() == this.id;
         } else {
             return false;
         }

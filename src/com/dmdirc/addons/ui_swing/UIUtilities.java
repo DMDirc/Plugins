@@ -69,7 +69,7 @@ public final class UIUtilities {
     /**
      * Adds an undo manager and associated key bindings to the specified text
      * component.
-     * 
+     *
      * @param component component Text component to add an undo manager to
      */
     public static void addUndoManager(final JTextComponent component) {
@@ -168,7 +168,7 @@ public final class UIUtilities {
 
     /**
      * Invokes and waits for the specified runnable, executed on the EDT.
-     * 
+     *
      * @param runnable Thread to be executed
      */
     public static void invokeAndWait(final Runnable runnable) {
@@ -187,7 +187,7 @@ public final class UIUtilities {
 
     /**
      * Invokes and waits for the specified runnable, executed on the EDT.
-     * 
+     *
      * @param <T> The return type of the returnable thread
      * @param returnable Thread to be executed
      * @return Result from the compelted thread
@@ -210,7 +210,7 @@ public final class UIUtilities {
 
     /**
      * Queues the runnable to be executed on the EDT.
-     * 
+     *
      * @param runnable Runnable to be executed.
      */
     public static void invokeLater(final Runnable runnable) {
@@ -223,7 +223,7 @@ public final class UIUtilities {
 
     /**
      * Check if we are using one of the Windows Look and Feels
-     * 
+     *
      * @return True iff the current LAF is "Windows" or "Windows Classic"
      */
     public static boolean isWindowsUI() {
@@ -238,7 +238,7 @@ public final class UIUtilities {
 
     /**
      * Get the value to pass to set Opaque on items being added to a JTabbedPane
-     * 
+     *
      * @return True iff the current LAF is not Windows or OS X.
      * @since 0.6
      */
@@ -254,7 +254,7 @@ public final class UIUtilities {
 
     /**
      * Get the DOWN_MASK for the command/ctrl key.
-     * 
+     *
      * @return on OSX this returns META_DOWN_MASK, else CTRL_DOWN_MASK
      * @since 0.6
      */
@@ -264,7 +264,7 @@ public final class UIUtilities {
 
     /**
      * Get the MASK for the command/ctrl key.
-     * 
+     *
      * @return on OSX this returns META_MASK, else CTRL_MASK
      * @since 0.6
      */
@@ -274,7 +274,7 @@ public final class UIUtilities {
 
     /**
      * Check if the command/ctrl key is pressed down.
-     * 
+     *
      * @param e The KeyEvent to check
      * @return on OSX this returns e.isMetaDown(), else e.isControlDown()
      * @since 0.6
@@ -285,11 +285,11 @@ public final class UIUtilities {
 
     /**
      * Clips a string if its longer than the specified width.
-     * 
+     *
      * @param component Component containing string
      * @param string String to check
      * @param avaiableWidth Available Width
-     * 
+     *
      * @return String (clipped if required)
      */
     public static String clipStringifNeeded(final JComponent component,
@@ -307,11 +307,11 @@ public final class UIUtilities {
 
     /**
      * Clips the passed string .
-     * 
+     *
      * @param component Component containing string
      * @param string String to check
      * @param avaiableWidth Available Width
-     * 
+     *
      * @return String (clipped if required)
      */
     public static String clipString(final JComponent component,

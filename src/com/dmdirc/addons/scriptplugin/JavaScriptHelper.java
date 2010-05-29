@@ -38,7 +38,7 @@ public class JavaScriptHelper {
     private static final int VERSION = 2;
 
     /** Hashtable for storing stuff. */
-    private static final Map<String,Object> SETTINGS = new HashMap<String,Object>();
+    private static final Map<String, Object> SETTINGS = new HashMap<String, Object>();
     
     /**
      * Method to set Stuff.
@@ -50,7 +50,7 @@ public class JavaScriptHelper {
         if (setting.equals("")) { return; }
         setting = setting.toLowerCase();
         if (SETTINGS.containsKey(setting)) { SETTINGS.remove(setting); }
-        if (value != null) { SETTINGS.put(setting,value); }
+        if (value != null) { SETTINGS.put(setting, value); }
     }
     
     /**

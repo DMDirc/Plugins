@@ -83,7 +83,7 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
     /**
      * Creates a new instance of ChannelFrame. Sets up callbacks and handlers,
      * and default options for the form.
-     * 
+     *
      * @param owner The Channel object that owns this frame
      * @param controller Swing controller
      */
@@ -117,7 +117,7 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
 
     /**
      * Retrieves the command Parser for this command window.
-     * 
+     *
      * @return This window's command Parser
      */
     @Override
@@ -151,7 +151,7 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
 
     /**
      * Retrieves this channel frame's nicklist component.
-     * 
+     *
      * @return This channel's nicklist
      */
     public NickList getNickList() {
@@ -160,7 +160,7 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @deprecated @deprecated Use {@link #getContainer()}
      */
     @Override
@@ -216,7 +216,7 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
 
     /**
      * {@inheritDoc}.
-     * 
+     *
      * @param actionEvent Action event
      */
     @Override
@@ -241,7 +241,7 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
     @Override
     public void configChanged(final String domain, final String key) {
         super.configChanged(domain, key);
-        
+
         if ("channelSplitPanePosition".equals(key)) {
             final int splitPanePosition = getContainer().getConfigManager()
                     .getOptionInt("ui", "channelSplitPanePosition");

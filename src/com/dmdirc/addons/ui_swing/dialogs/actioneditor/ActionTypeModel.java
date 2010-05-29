@@ -39,44 +39,44 @@ import javax.swing.SwingUtilities;
  * and ensures they can't be selected.
  */
 public final class ActionTypeModel extends DefaultComboBoxModel {
-    
+
     /**
      * A version number for this class. It should be changed whenever the class
      * structure is changed (or anything else that would prevent serialized
      * objects being unserialized with the new class).
      */
-    private static final long serialVersionUID = 1;    
+    private static final long serialVersionUID = 1;
     /** Max Width. */
     private int maxWidth = -1;
     /** Font metrics. */
     private FontMetrics fm;
-    
+
     /**
      * Creates a new instance of ActionTypeModel.
-     * 
+     *
      * @param fm Font metrics
      * @param typeGroups The action type groups to use
      */
     public ActionTypeModel(final FontMetrics fm, final MapList<String, ActionType> typeGroups) {
         super();
-        
+
         this.fm = fm;
-        
+
         for (Map.Entry<String, List<ActionType>> entry : typeGroups.entrySet()) {
             addElement(entry.getKey());
-            
+
             final List<ActionType> types = entry.getValue();
             Collections.sort(types, new ActionTypeComparator());
-            
+
             for (ActionType type : types) {
                 addElement(type);
             }
         }
     }
 
-    /** 
+    /**
      * {@inheritDoc}
-     * 
+     *
      * @param anObject Objerct to add
      */
     @Override
@@ -98,30 +98,30 @@ public final class ActionTypeModel extends DefaultComboBoxModel {
             super.setSelectedItem(anObject);
         }
     }
-    
+
     /**
      * Sets the type group for this model.
-     * 
+     *
      * @param typeGroup New type group
      */
     public void setTypeGroup(final MapList<String, ActionType> typeGroup) {
         removeAllElements();
-        
+
         for (Map.Entry<String, List<ActionType>> entry : typeGroup.entrySet()) {
             addElement(entry.getKey());
-            
+
             final List<ActionType> types = entry.getValue();
             Collections.sort(types, new ActionTypeComparator());
-            
+
             for (ActionType type : types) {
                 addElement(type);
             }
         }
     }
-    
+
     /**
      * Returns the maximum width of a string in this model.
-     * 
+     *
      * @return String max width
      */
     public int getMaxWidth() {

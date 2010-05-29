@@ -70,7 +70,6 @@ public final class ParserDebugCommand extends Command implements CommandInfo {
      */
     @Override
     public void execute(final FrameContainer<?> origin, final CommandArguments commandArgs, final CommandContext context) {
-        final String[] args = commandArgs.getArguments();
         final boolean isSilent = commandArgs.isSilent();
   
         Parser parser = ((ServerCommandContext) context).getServer().getParser();
@@ -84,7 +83,7 @@ public final class ParserDebugCommand extends Command implements CommandInfo {
                 parser.getCallbackManager().delCallback(DebugInfoListener.class, myPlugin);
                 DebugWindow window = myPlugin.registeredParsers.get(parser);
                 window.addLine("======================", true);
-                window.addLine("No Longer Monitoring: "+parser+" (User Requested)", true);
+                window.addLine("No Longer Monitoring: " + parser + " (User Requested)", true);
                 window.addLine("======================", true);
                 myPlugin.registeredParsers.remove(parser);
                 sendLine(origin, isSilent, FORMAT_OUTPUT, "Removing callback ok");
@@ -98,7 +97,7 @@ public final class ParserDebugCommand extends Command implements CommandInfo {
                 myPlugin.registeredParsers.put(parser, window);
                 sendLine(origin, isSilent, FORMAT_OUTPUT, "Adding callback ok");
                 window.addLine("======================", true);
-                window.addLine("Started Monitoring: "+parser, true);
+                window.addLine("Started Monitoring: " + parser, true);
                 window.addLine("======================", true);
             } catch (Exception e) {
                 sendLine(origin, isSilent, FORMAT_ERROR, "Adding callback failed");

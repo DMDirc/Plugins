@@ -70,7 +70,7 @@ public class StringEscapeUtils {
             return null;
         }
         try {
-            StringWriter writer = new StringWriter((int)(str.length() * 1.5));
+            StringWriter writer = new StringWriter((int) (str.length() * 1.5));
             escapeHtml(writer, str);
             return writer.toString();
         } catch (IOException ioe) {
@@ -140,7 +140,7 @@ public class StringEscapeUtils {
             return null;
         }
         try {
-            StringWriter writer = new StringWriter((int)(str.length() * 1.5));
+            StringWriter writer = new StringWriter((int) (str.length() * 1.5));
             unescapeHtml(writer, str);
             return writer.toString();
         } catch (IOException ioe) {

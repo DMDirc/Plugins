@@ -52,17 +52,17 @@ import net.miginfocom.swing.MigLayout;
  * Add option panel.
  */
 public class AddOptionPanel extends JPanel implements ActionListener {
-    
+
     /**
      * A version number for this class. It should be changed whenever the class
      * structure is changed (or anything else that would prevent serialized
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 2;
-    
+
     /** Parent settings panel. */
     private final SettingsPanel parent;
-    
+
     /** Add options combobox. */
     private JComboBox addOptionComboBox;
     /** Add option button. */
@@ -83,7 +83,7 @@ public class AddOptionPanel extends JPanel implements ActionListener {
     private JComboBox addInputComboBox;
     /** Add option checkbox. */
     private JLabel addInputNone;
-    
+
     /**
      * Creates a new instance of AddOptionPanel.
      *
@@ -91,23 +91,23 @@ public class AddOptionPanel extends JPanel implements ActionListener {
      */
     protected AddOptionPanel(final SettingsPanel parent) {
         super();
-        
+
         this.parent = parent;
-        
+
         this.setOpaque(UIUtilities.getTabbedPaneOpaque());
         initComponents();
         initListeners();
         setLayout(new MigLayout("ins 0"));
         layoutComponents();
     }
-    
+
     /** Initialises the components. */
     private void initComponents() {
         addOptionComboBox = new JComboBox(new DefaultComboBoxModel());
         addOptionButton = new JButton("Add");
-        
+
         addOptionComboBox.setRenderer(new AddOptionCellRenderer(parent));
-        
+
         addInputColourChooser = new ColourChooser();
         addInputText = new JTextField();
         addInputCheckbox = new JCheckBox();
@@ -116,13 +116,13 @@ public class AddOptionPanel extends JPanel implements ActionListener {
         addInputNone = new JLabel("");
         addInputFontPicker = new FontPicker("Dialog");
         addInputComboBox = new JComboBox(new DefaultComboBoxModel());
-        
+
         addInputCurrent = addInputNone;
-        
+
         addOptionComboBox.setEnabled(false);
         addOptionButton.setEnabled(false);
     }
-    
+
     /** Initialises listeners. */
     private void initListeners() {
         //Only fire events on selection not on highlight
@@ -131,7 +131,7 @@ public class AddOptionPanel extends JPanel implements ActionListener {
         addOptionButton.addActionListener(this);
 
         addInputText.getActionMap().put("enter", new AbstractAction() {
-            
+
             private static final long serialVersionUID = 2;
 
             /** {@inheritDoc} */
@@ -142,20 +142,20 @@ public class AddOptionPanel extends JPanel implements ActionListener {
         });
         addInputText.getInputMap().put(KeyStroke.getKeyStroke("ENTER"), "enter");
     }
-    
+
     /** Lays out the components. */
     private void layoutComponents() {
         setVisible(false);
-        
+
         removeAll();
-        
+
         add(addOptionComboBox, "left, aligny top");
         add(addInputCurrent, "growx, pushx, aligny top");
         add(addOptionButton, "right, aligny top");
-        
+
         setVisible(true);
     }
-    
+
     /**
      * Adds an addable option.
      *
@@ -173,7 +173,7 @@ public class AddOptionPanel extends JPanel implements ActionListener {
         addOptionButton.setEnabled(true);
         addOptionComboBox.setEnabled(true);
     }
-    
+
     /**
      * Removes an addable option.
      *
@@ -187,14 +187,14 @@ public class AddOptionPanel extends JPanel implements ActionListener {
             addOptionButton.setEnabled(false);
         }
     }
-    
+
     /** Clears the options. */
     protected void clearOptions() {
         addOptionComboBox.removeAllItems();
         addInputCurrent = addInputNone;
         layoutComponents();
     }
-    
+
     /**
      * Swaps the input field type to the appropriate type.
      *
@@ -232,12 +232,12 @@ public class AddOptionPanel extends JPanel implements ActionListener {
                     break;
             }
         }
-        
+
         layoutComponents();
-        
+
         addOptionComboBox.requestFocusInWindow();
     }
-    
+
     /**
      * {@inheritDoc}
      *
@@ -255,7 +255,7 @@ public class AddOptionPanel extends JPanel implements ActionListener {
         } else if (e.getSource() == addOptionButton) {
             final OptionType type = parent.getOptionType(
                     (String) addOptionComboBox.getSelectedItem());
-            
+
             switch (type) {
                 case TEXTFIELD:
                     parent.addCurrentOption(
@@ -295,9 +295,9 @@ public class AddOptionPanel extends JPanel implements ActionListener {
                 default:
                     break;
             }
-            
+
             delOption((String) addOptionComboBox.getSelectedItem());
         }
     }
-    
+
 }

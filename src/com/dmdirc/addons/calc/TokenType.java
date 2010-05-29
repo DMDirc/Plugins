@@ -139,8 +139,7 @@ public enum TokenType {
             return new Float(Math.pow(token.getChildren().get(0).evaluate().doubleValue(),
                     token.getChildren().get(1).evaluate().doubleValue()));
         }
-    },
-    ;
+    };
 
     /** The string representation of tokens that may follow this one. */
     private final String[] strfollows;

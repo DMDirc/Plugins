@@ -53,35 +53,35 @@ import org.apache.commons.lang.StringEscapeUtils;
  * @author chris
  */
 public class WebWindow implements Window {
-    
+
     protected static int counter = 0;
-    
-    protected static Map<String, WebWindow> windows = new HashMap<String, WebWindow>();
-    
+
+    protected static final Map<String, WebWindow> WINDOWS = new HashMap<String, WebWindow>();
+
     protected int myID = ++counter;
-    
+
     private final FrameContainer<?> parent;
-    
+
     private List<String> messages = new ArrayList<String>();
-    
+
     private String title;
-    
+
     public WebWindow(final FrameContainer<?> parent) {
         super();
-        
+
         this.parent = parent;
-        
-        windows.put(getId(), this);
+
+        WINDOWS.put(getId(), this);
     }
-    
+
     public static Collection<WebWindow> getWindows() {
-        return windows.values();
+        return WINDOWS.values();
     }
-    
+
     public static WebWindow getWindow(final String id) {
-        return windows.get(id);
+        return WINDOWS.get(id);
     }
-    
+
     public List<String> getMessages() {
         return messages;
     }
@@ -109,7 +109,7 @@ public class WebWindow implements Window {
     @Deprecated
     public void addLine(String line, boolean timestamp) {
         for (String linepart : line.split("\n")) {
-            final String message = 
+            final String message =
                     style(Formatter.formatMessage(parent.getConfigManager(), "timestamp",
                     new Date()), getConfigManager()) + style(linepart, getConfigManager());
             messages.add(message);
@@ -155,7 +155,7 @@ public class WebWindow implements Window {
     public String getTitle() {
         return title;
     }
-    
+
     public String getName() {
         return parent.toString();
     }
@@ -195,7 +195,7 @@ public class WebWindow implements Window {
     public void close() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-    
+
     public String getType() {
         if (this instanceof WebServerWindow) {
             return "server";
@@ -207,44 +207,44 @@ public class WebWindow implements Window {
             return "window";
         }
     }
-    
+
     public String getId() {
         return String.valueOf(myID);
     }
-    
+
     protected String style(final String input, final ConfigManager config) {
         final StringBuilder builder = new StringBuilder();
         final AttributedCharacterIterator aci = Utils.getAttributedString(parent.getStyliser(),
                 new String[]{input}, "dialog", 12).getAttributedString().getIterator();
-         
+
         Map<AttributedCharacterIterator.Attribute, Object> map = null;
         char chr = aci.current();
-        
+
         while (aci.getIndex() < aci.getEndIndex()) {
-            if (!aci.getAttributes().equals(map)) {                
+            if (!aci.getAttributes().equals(map)) {
                 style(aci.getAttributes(), builder);
                 map = aci.getAttributes();
             }
-            
+
             builder.append(StringEscapeUtils.escapeHtml(String.valueOf(chr)));
             chr = aci.next();
         }
-        
+
         return builder.toString();
     }
-    
+
     protected static void style(final Map<AttributedCharacterIterator.Attribute, Object> map,
             final StringBuilder builder) {
         if (builder.length() > 0) {
             builder.append("</span>");
         }
-        
+
         String link = null;
-                
+
         builder.append("<span style=\"");
-        
+
         for (Map.Entry<AttributedCharacterIterator.Attribute, Object> entry : map.entrySet()) {
-        
+
             if (entry.getKey().equals(TextAttribute.FOREGROUND)) {
                 builder.append("color: ");
                 builder.append(toColour(entry.getValue()));
@@ -253,7 +253,7 @@ public class WebWindow implements Window {
                 builder.append("background-color: ");
                 builder.append(toColour(entry.getValue()));
                 builder.append("; ");
-            } else if (entry.getKey().equals(TextAttribute.WEIGHT)) { 
+            } else if (entry.getKey().equals(TextAttribute.WEIGHT)) {
                 builder.append("font-weight: bold; ");
             } else if (entry.getKey().equals(TextAttribute.FAMILY)) {
                 builder.append("font-family: monospace; ");
@@ -281,21 +281,21 @@ public class WebWindow implements Window {
                         + "');";
             }
         }
-        
+
         builder.append('"');
-        
+
         if (link != null) {
             builder.append(" onClick=\"");
             builder.append(link);
             builder.append('"');
         }
-        
+
         builder.append('>');
     }
-    
+
     protected static String toColour(final Object object) {
         final Color colour = (Color) object;
-        
+
         return "rgb(" + colour.getRed() + ", " + colour.getGreen() + ", "
                 + colour.getBlue() + ")";
     }

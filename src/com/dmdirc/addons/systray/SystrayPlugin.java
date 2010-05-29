@@ -56,32 +56,32 @@ import java.awt.event.MouseListener;
  */
 public final class SystrayPlugin extends Plugin implements ActionListener,
         MouseListener, com.dmdirc.interfaces.ActionListener {
-    
+
     /** The command we registered. */
     private PopupCommand command;
-    
+
     /** The tray icon we're currently using. */
     private final TrayIcon icon;
-    
+
     /** Creates a new system tray plugin. */
     public SystrayPlugin() {
         super();
         final MenuItem show = new MenuItem("Show/hide");
         final MenuItem quit = new MenuItem("Quit");
-        
+
         final PopupMenu menu = new PopupMenu();
         menu.add(show);
         menu.add(quit);
-        
+
         show.addActionListener(this);
         quit.addActionListener(this);
-        
-        icon = new TrayIcon(IconManager.getIconManager().getImage("logo"), 
+
+        icon = new TrayIcon(IconManager.getIconManager().getImage("logo"),
                 "DMDirc", menu);
         icon.setImageAutoSize(true);
         icon.addMouseListener(this);
     }
-    
+
     /**
      * Sends a notification via the system tray icon.
      * @param title The title of the notification
@@ -91,7 +91,7 @@ public final class SystrayPlugin extends Plugin implements ActionListener,
     public void notify(final String title, final String message, final TrayIcon.MessageType type) {
         icon.displayMessage(title, Styliser.stipControlCodes(message), type);
     }
-    
+
     /**
      * Sends a notification via the system tray icon.
      * @param title The title of the notification
@@ -100,10 +100,10 @@ public final class SystrayPlugin extends Plugin implements ActionListener,
     public void notify(final String title, final String message) {
         notify(title, message, TrayIcon.MessageType.NONE);
     }
-    
+
     /**
      * {@inheritDoc}
-     * 
+     *
      * @param e Action event
      */
     @Override
@@ -114,7 +114,7 @@ public final class SystrayPlugin extends Plugin implements ActionListener,
             Main.quit();
         }
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public ValidationResponse checkPrerequisites() {
@@ -124,7 +124,7 @@ public final class SystrayPlugin extends Plugin implements ActionListener,
             return new ValidationResponse("System tray is not supported on this platform.");
         }
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public void onLoad() {
@@ -134,16 +134,16 @@ public final class SystrayPlugin extends Plugin implements ActionListener,
         } catch (AWTException ex) {
             // Should probably unload ourself here?
         }
-        
+
         ActionManager.addListener(this, CoreActionType.CLIENT_MINIMISED);
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public void onUnload() {
         SystemTray.getSystemTray().remove(icon);
         command.unregister();
-        
+
         ActionManager.removeListener(this);
     }
 
@@ -153,25 +153,25 @@ public final class SystrayPlugin extends Plugin implements ActionListener,
         final PreferencesCategory category = new PluginPreferencesCategory(
                 getPluginInfo(), "System Tray",
                 "General configuration settings");
-        
+
         category.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
                 getDomain(), "autominimise", "Auto-hide DMDirc " +
                 "when minimised", "If this option is enabled, the systray " +
                 "plugin will hide DMDirc to the system tray whenever DMDirc is" +
                 " minimised"));
-        
+
         manager.getCategory("Plugins").addSubCategory(category);
     }
-    
-    /** 
+
+    /**
      * {@inheritDoc}
-     * 
+     *
      * @param e Mouse event
      */
     @Override
     public void mouseClicked(final MouseEvent e) {
         if (e.getButton() == MouseEvent.BUTTON1) {
-            if (Main.getUI().getMainWindow().isVisible()) {               
+            if (Main.getUI().getMainWindow().isVisible()) {
                 Main.getUI().getMainWindow().setVisible(false);
             } else {
                 Main.getUI().getMainWindow().setVisible(true);
@@ -180,47 +180,47 @@ public final class SystrayPlugin extends Plugin implements ActionListener,
             }
         }
     }
-    
-    /** 
+
+    /**
      * {@inheritDoc}
-     * 
+     *
      * @param e Mouse event
      */
     @Override
     public void mousePressed(final MouseEvent e) {
         //Ignore
     }
-    
-    /** 
+
+    /**
      * {@inheritDoc}
-     * 
+     *
      * @param e Mouse event
      */
     @Override
     public void mouseReleased(final MouseEvent e) {
         //Ignore
     }
-    
-    /** 
+
+    /**
      * {@inheritDoc}
-     * 
+     *
      * @param e Mouse event
      */
     @Override
     public void mouseEntered(final MouseEvent e) {
         //Ignore
     }
-    
-    /** 
+
+    /**
      * {@inheritDoc}
-     * 
+     *
      * @param e Mouse event
      */
     @Override
     public void mouseExited(final MouseEvent e) {
         //Ignore
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public void processEvent(final ActionType type, final StringBuffer format,
@@ -231,5 +231,5 @@ public final class SystrayPlugin extends Plugin implements ActionListener,
             Main.getUI().getMainWindow().setVisible(false);
         }
     }
-    
+
 }

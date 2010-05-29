@@ -74,7 +74,7 @@ public class AddonInfo {
             this.screenshot = new ImageIcon(URLBuilder.buildURL(
                     "http://addons.dmdirc.com/addonimg/" + id));
             this.screenshot.setImage(this.screenshot.getImage().
-                   getScaledInstance(150, 150,Image.SCALE_SMOOTH));
+                   getScaledInstance(150, 150, Image.SCALE_SMOOTH));
         } else {
             this.screenshot = new ImageIcon(URLBuilder.buildURL(
                     "dmdirc://com/dmdirc/res/logo.png"));

@@ -44,12 +44,12 @@ import java.util.List;
  * variety of media players.
  * @author chris
  */
-public final class NowPlayingCommand extends Command implements 
+public final class NowPlayingCommand extends Command implements
         IntelligentCommand, CommandInfo {
-    
+
     /** The plugin that's using this command. */
     final NowPlayingPlugin parent;
-    
+
     /**
      * Creates a new instance of NowPlayingCommand.
      *
@@ -57,12 +57,12 @@ public final class NowPlayingCommand extends Command implements
      */
     public NowPlayingCommand(final NowPlayingPlugin parent) {
         super();
-        
+
         this.parent = parent;
-        
+
         CommandManager.registerCommand(this);
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public void execute(final FrameContainer<?> origin,
@@ -76,7 +76,7 @@ public final class NowPlayingCommand extends Command implements
             if (args.getArguments().length > 1) {
                 final String sourceName = args.getArguments()[1];
                 final MediaSource source = parent.getSource(sourceName);
-                
+
                 if (source == null) {
                     sendLine(origin, args.isSilent(), FORMAT_ERROR, "Source not found.");
                 } else {
@@ -101,7 +101,7 @@ public final class NowPlayingCommand extends Command implements
             }
         }
     }
-    
+
     /**
      * Outputs a list of sources for the nowplaying command.
      *
@@ -112,17 +112,17 @@ public final class NowPlayingCommand extends Command implements
     private void doSourceList(final FrameContainer<?> origin, final boolean isSilent,
             final String format) {
         final List<MediaSource> sources = parent.getSources();
-        
+
         if (sources.isEmpty()) {
             sendLine(origin, isSilent, FORMAT_ERROR, "No media sources available.");
         } else {
             final String[] headers = {"Source", "Status", "Information"};
             final String[][] data = new String[sources.size()][3];
             int i = 0;
-            
+
             for (MediaSource source : sources) {
                 data[i][0] = source.getAppName();
-                
+
                 if (source.getState() != MediaSourceState.CLOSED) {
                     data[i][1] = source.getState().getNiceName().toLowerCase();
                     data[i][2] = getInformation(source, format);
@@ -130,14 +130,14 @@ public final class NowPlayingCommand extends Command implements
                     data[i][1] = "not running";
                     data[i][2] = "-";
                 }
-                
+
                 i++;
             }
-            
+
             sendLine(origin, isSilent, FORMAT_OUTPUT, doTable(headers, data));
         }
     }
-       
+
     /**
      * Returns a formatted information string from the requested soruce.
      *
@@ -155,19 +155,19 @@ public final class NowPlayingCommand extends Command implements
             return parent.doSubstitution(format, source);
         }
     }
-    
+
     /** {@inheritDoc}. */
     @Override
     public String getName() {
         return "nowplaying";
     }
-    
+
     /** {@inheritDoc}. */
     @Override
     public boolean showInHelp() {
         return true;
     }
-    
+
     /** {@inheritDoc}. */
     @Override
     public String getHelp() {
@@ -180,7 +180,7 @@ public final class NowPlayingCommand extends Command implements
     public CommandType getType() {
         return CommandType.TYPE_CHAT;
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public AdditionalTabTargets getSuggestions(final int arg,

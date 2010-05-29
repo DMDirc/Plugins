@@ -30,59 +30,59 @@ import javax.swing.ImageIcon;
  * Dummy main window, used for testing.
  */
 public final class DummyMainWindow implements MainWindow {
-    
+
     /** Are the windows maximised? */
     private boolean maximised;
     /** Are we visible? */
     private boolean visible = true;
-    
+
     /**
      * Creates a new instance of DummyMainWindow.
      */
     public DummyMainWindow() {
         //Do nothing.
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public ImageIcon getIcon() {
         return null;
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public void quit() {
         // Do nothing
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public void setMaximised(final boolean max) {
         maximised = max;
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public boolean getMaximised() {
         return maximised;
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public String getTitlePrefix() {
         return "DMDirc: Dummy UI: ";
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public void setVisible(final boolean visible) {
         this.visible = visible;
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public boolean isVisible() {
         return visible;
     }
-    
+
 }

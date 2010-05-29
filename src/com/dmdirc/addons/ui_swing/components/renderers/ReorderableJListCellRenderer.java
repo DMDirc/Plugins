@@ -39,17 +39,17 @@ import net.miginfocom.swing.MigLayout;
  * Renderer for the reorderable JList, procides visual clues to DnD.
  */
 public class ReorderableJListCellRenderer implements ListCellRenderer {
-    
+
     /**
      * A version number for this class. It should be changed whenever the class
      * structure is changed (or anything else that would prevent serialized
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 1;
-    
+
     /** Parent list. */
     private final ReorderableJList parent;
-    
+
     /**
      * Instantiates a new ReorderableJListCellRenderer.
      *
@@ -57,10 +57,10 @@ public class ReorderableJListCellRenderer implements ListCellRenderer {
      */
     public ReorderableJListCellRenderer(final ReorderableJList parent) {
         super();
-        
+
         this.parent = parent;
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public Component getListCellRendererComponent(final JList list,
@@ -69,11 +69,11 @@ public class ReorderableJListCellRenderer implements ListCellRenderer {
         final JPanel panel = new JPanel();
         panel.setLayout(new MigLayout("fill, ins 0"));
         final boolean isTargetCell = value == parent.getTargetCell();
-        
+
         final boolean showSelected = isSelected & (parent.getTargetCell() == null);
-        
+
         panel.add(new JLabel(value.toString()), "dock center");
-        
+
         if (showSelected) {
             panel.setForeground(UIManager.getColor("List.selectionForeground"));
             panel.setBackground(UIManager.getColor("List.selectionBackground"));
@@ -86,8 +86,8 @@ public class ReorderableJListCellRenderer implements ListCellRenderer {
                 panel.setBackground(UIManager.getColor("List.background"));
             }
         }
-        
-        
+
+
         if (isTargetCell) {
             if (parent.getBelowTarget()) {
                 panel.add(new JSeparator(), "dock south");
@@ -95,7 +95,7 @@ public class ReorderableJListCellRenderer implements ListCellRenderer {
                 panel.add(new JSeparator(), "dock north");
             }
         }
-        
+
         return panel;
     }
 }

@@ -31,40 +31,40 @@ import net.miginfocom.swing.MigLayout;
  * Queries the user for which core actions they wish to extract.
  */
 public final class MigrationExtrationStep extends ExtractionStep {
-    
+
     /**
      * A version number for this class. It should be changed whenever the class
      * structure is changed (or anything else that would prevent serialized
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 2;
-    
+
     /**
      * Creates a new instance of StepOne.
      */
     public MigrationExtrationStep() {
         super();
     }
-    
+
     /** {@inheritDoc} */
     @Override
     protected void initComponents() {
         setLayout(new MigLayout("fillx, wrap 1"));
-        
+
         TextLabel infoLabel;
-        
+
         infoLabel = new TextLabel("This version of DMDirc contains an update to "
                 + " the core plugins and actions.\n\nWould you like to extract the"
                 + " core plugins to update them? Note that older plugins may not"
                 + " function correctly with this version of DMDirc.");
         add(infoLabel, "growx, pushx");
         add(plugins, "");
-        
+
         infoLabel = new TextLabel("Would you like to extract the default actions"
                 + " to update them? Any changes you have made to the default"
                 + " actions will be lost.");
         add(infoLabel, "growx, pushx");
         add(actions, "");
     }
-    
+
 }

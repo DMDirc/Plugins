@@ -57,9 +57,9 @@ public final class AboutDialog extends StandardDialog implements
     /** Tab history. */
     private int history = 0;
 
-    /** 
-     * Creates a new instance of AboutDialog. 
-     * 
+    /**
+     * Creates a new instance of AboutDialog.
+     *
      * @param parentWindow Parent window
      */
     private AboutDialog(final Window parentWindow) {
@@ -67,9 +67,9 @@ public final class AboutDialog extends StandardDialog implements
         initComponents();
     }
 
-    /** 
-     * Creates the dialog if one doesn't exist, and displays it. 
-     * 
+    /**
+     * Creates the dialog if one doesn't exist, and displays it.
+     *
      * @param parentWindow Parent window*/
     public static void showAboutDialog(final Window parentWindow) {
         me = getAboutDialog(parentWindow);
@@ -80,7 +80,7 @@ public final class AboutDialog extends StandardDialog implements
 
     /**
      * Returns the current instance of the AboutDialog.
-     * 
+     *
      * @param parentWindow Parent window
      *
      * @return The current AboutDialog instance
@@ -122,9 +122,9 @@ public final class AboutDialog extends StandardDialog implements
         getContentPane().add(getOkButton(), "right");
     }
 
-    /** 
+    /**
      * {@inheritDoc}.
-     * 
+     *
      * @param e Action event
      */
     @Override

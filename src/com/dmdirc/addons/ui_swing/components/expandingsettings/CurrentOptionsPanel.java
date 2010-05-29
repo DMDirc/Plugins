@@ -53,17 +53,17 @@ import net.miginfocom.swing.MigLayout;
  * Current options panel.
  */
 public final class CurrentOptionsPanel extends JPanel implements ActionListener {
-    
+
     /**
      * A version number for this class. It should be changed whenever the class
      * structure is changed (or anything else that would prevent serialized
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 2;
-    
+
     /** Parent settings panel. */
     private final SettingsPanel parent;
-    
+
     /** config option -> text fields. */
     private Map<String, JTextField> textFields;
     /** config option -> checkboxes. */
@@ -76,7 +76,7 @@ public final class CurrentOptionsPanel extends JPanel implements ActionListener 
     private Map<String, FontPicker> fonts;
     /** config option -> comboboxes. */
     private Map<String, JComboBox> comboboxes;
-    
+
     /**
      * Creates a new instance of CurrentOptionsPanel.
      *
@@ -84,13 +84,13 @@ public final class CurrentOptionsPanel extends JPanel implements ActionListener 
      */
     protected CurrentOptionsPanel(final SettingsPanel parent) {
         super();
-        
+
         this.parent = parent;
-        
+
         this.setOpaque(UIUtilities.getTabbedPaneOpaque());
         initComponents();
     }
-    
+
     /** Initialises the components. */
     private void initComponents() {
         textFields = new HashMap<String, JTextField>();
@@ -100,7 +100,7 @@ public final class CurrentOptionsPanel extends JPanel implements ActionListener 
         fonts = new HashMap<String, FontPicker>();
         comboboxes = new HashMap<String, JComboBox>();
     }
-    
+
     /** Clears all the current options. */
     protected void clearOptions() {
         textFields.clear();
@@ -111,7 +111,7 @@ public final class CurrentOptionsPanel extends JPanel implements ActionListener 
         comboboxes.clear();
         populateCurrentSettings();
     }
-    
+
     /**
      * Adds a current option.
      *
@@ -149,10 +149,10 @@ public final class CurrentOptionsPanel extends JPanel implements ActionListener 
             default:
                 throw new IllegalArgumentException("Illegal Type: " + type);
         }
-        
+
         populateCurrentSettings();
     }
-    
+
     /**
      * Deletes a current option.
      *
@@ -183,10 +183,10 @@ public final class CurrentOptionsPanel extends JPanel implements ActionListener 
             default:
                 throw new IllegalArgumentException("Illegal Type: " + type);
         }
-        
+
         populateCurrentSettings();
     }
-    
+
     /**
      * Retrives an options value.
      *
@@ -237,7 +237,7 @@ public final class CurrentOptionsPanel extends JPanel implements ActionListener 
         }
         return returnValue;
     }
-    
+
     /**
      * Adds an option to the current options pane.
      * @param configName config option name
@@ -251,44 +251,44 @@ public final class CurrentOptionsPanel extends JPanel implements ActionListener 
         final ImageButton button = new ImageButton(configName,
                 IconManager.getIconManager().getIcon("close-inactive"),
                 IconManager.getIconManager().getIcon("close-active"));
-        
+
         label.setText(displayName + ": ");
         label.setLabelFor(component);
-        
+
         button.addActionListener(this);
-        
+
         panel.add(label);
         panel.add(component, "growx, pushx");
         panel.add(button, "wrap");
     }
-    
-    
+
+
     /** Populates the current settings. */
     protected void populateCurrentSettings() {
         setVisible(false);
-        
+
         setLayout(new MigLayout("fillx, aligny top"));
-        
+
         removeAll();
-        
+
         for (Entry<String, JTextField> entry : textFields.entrySet()) {
             addCurrentOption(entry.getKey(),
                     parent.getOptionName(entry.getKey()),
                     this, entry.getValue());
         }
-        
+
         for (Entry<String, JCheckBox> entry : checkBoxes.entrySet()) {
             addCurrentOption(entry.getKey(),
                     parent.getOptionName(entry.getKey()),
                     this, entry.getValue());
         }
-        
+
         for (Entry<String, ColourChooser> entry : colours.entrySet()) {
             addCurrentOption(entry.getKey(),
                     parent.getOptionName(entry.getKey()),
                     this, entry.getValue());
         }
-        
+
         for (Entry<String, JSpinner> entry : spinners.entrySet()) {
             addCurrentOption(entry.getKey(),
                     parent.getOptionName(entry.getKey()),
@@ -306,13 +306,13 @@ public final class CurrentOptionsPanel extends JPanel implements ActionListener 
                     parent.getOptionName(entry.getKey()),
                     this, entry.getValue());
         }
-        
+
         setVisible(true);
     }
-    
-    /** 
+
+    /**
      * {@inheritDoc}
-     * 
+     *
      * @param e Action performed
      */
     @Override
@@ -320,5 +320,5 @@ public final class CurrentOptionsPanel extends JPanel implements ActionListener 
         delOption(e.getActionCommand(), parent.getOptionType(e.getActionCommand()));
         parent.addAddableOption(e.getActionCommand());
     }
-    
+
 }

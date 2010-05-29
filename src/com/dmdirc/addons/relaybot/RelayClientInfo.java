@@ -41,7 +41,7 @@ public class RelayClientInfo extends IRCClientInfo {
      * @param host Host of client.
      */
     public RelayClientInfo(final Parser parser, final String host) {
-        super((IRCParser)parser, host);
+        super((IRCParser) parser, host);
         super.setFake(true);
     }
 

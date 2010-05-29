@@ -54,7 +54,7 @@ public class AddonInfoCellRenderer implements TableCellRenderer {
         if (value instanceof AddonInfoLabel) {
             final AddonInfoLabel label = (AddonInfoLabel) value;
 
-            final Color colour = row % 2 == 1 ? new Color(0xEE, 0xEE, 0xFF) : Color.WHITE;
+            final Color colour = (row & 1) == 1 ? new Color(0xEE, 0xEE, 0xFF) : Color.WHITE;
             if (!label.getBackground().equals(colour)) {
                 label.setBackground(colour);
             }

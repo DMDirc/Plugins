@@ -180,7 +180,7 @@ public class TwitterChannelInfo implements ChannelInfo {
     public ChannelClientInfo getChannelClient(final String client, final boolean create) {
         ChannelClientInfo cci = getChannelClient(client);
         if (create && cci == null) {
-            cci = new TwitterChannelClientInfo(this, (TwitterClientInfo)myParser.getClient(client));
+            cci = new TwitterChannelClientInfo(this, (TwitterClientInfo) myParser.getClient(client));
         }
         return cci;
     }
