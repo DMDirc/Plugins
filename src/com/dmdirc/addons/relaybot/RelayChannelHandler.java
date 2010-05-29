@@ -32,7 +32,6 @@ import com.dmdirc.parser.interfaces.callbacks.ChannelMessageListener;
 import com.dmdirc.parser.irc.IRCCallbackManager;
 import com.dmdirc.parser.irc.IRCChannelClientInfo;
 import com.dmdirc.parser.irc.IRCParser;
-import com.dmdirc.plugins.PluginClassLoader;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.messages.Styliser;
@@ -205,7 +204,6 @@ public class RelayChannelHandler implements ChannelMessageListener {
             try {
                 final Method gpcl = PluginInfo.class.getDeclaredMethod("getPluginClassLoader");
                 gpcl.setAccessible(true);
-                final PluginClassLoader pcl = (PluginClassLoader) gpcl.invoke(nickColour);
 
                 final Class<?> nc = nickColour.getPlugin().getClass();
                 final Method colourClient = nc.getDeclaredMethod("colourClient", new Class<?>[]{String.class, ChannelClientInfo.class});

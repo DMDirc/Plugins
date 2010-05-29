@@ -25,10 +25,8 @@ package com.dmdirc.addons.ui_swing.components.renderers;
 import com.dmdirc.actions.interfaces.ActionType;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Font;
 
-import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 
 /**

@@ -261,7 +261,7 @@ public class ConfigPanel extends JPanel implements PreferencesInterface,
     /**
      * A dummy media source for use in previews.
      */
-    private class DummyMediaSource implements MediaSource {
+    private static class DummyMediaSource implements MediaSource {
 
         /** {@inheritDoc} */
         @Override

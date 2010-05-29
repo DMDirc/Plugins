@@ -27,7 +27,7 @@ import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.ui.IconManager;
-import java.awt.Color;
+
 import java.awt.Dimension;
 import java.util.concurrent.ExecutionException;
 import javax.swing.BorderFactory;
@@ -123,7 +123,7 @@ public class CategoryLabel extends JLabel {
         }
     }
 
-    private class IconLoader extends SwingWorker<Icon, Void> {
+    private static class IconLoader extends SwingWorker<Icon, Void> {
 
         private CategoryLabel label;
         private String icon;

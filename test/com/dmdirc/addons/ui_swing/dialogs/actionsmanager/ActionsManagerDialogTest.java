@@ -157,7 +157,7 @@ public class ActionsManagerDialogTest extends FestSwingJUnitTestCase {
 
         newwin = WindowFinder.findDialog(StandardQuestionDialog.
                 class).withTimeout(5000).using(window.robot);
-        button = newwin.button(JButtonMatcher.withText("Yes")).click();
+        newwin.button(JButtonMatcher.withText("Yes")).click();
         
         assertTrue(window.list().selection().length != 1 ||   
                 !window.list().selection()[0].equals("amd-ui-test1"));

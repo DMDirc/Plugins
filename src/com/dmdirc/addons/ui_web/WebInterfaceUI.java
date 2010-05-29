@@ -35,7 +35,6 @@ import com.dmdirc.addons.ui_web.uicomponents.WebServerWindow;
 import com.dmdirc.addons.ui_web.uicomponents.WebStatusBar;
 import com.dmdirc.addons.ui_web.uicomponents.WebWindow;
 import com.dmdirc.config.prefs.PreferencesInterface;
-import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.core.dialogs.sslcertificate.SSLCertificateDialogModel;
 import com.dmdirc.ui.interfaces.*;
 import com.dmdirc.updater.Update;

@@ -117,7 +117,7 @@ public abstract class StandardInputDialog extends StandardDialog {
     /**
      * Initialises the components.
      */
-    private final void initComponents() {
+    private void initComponents() {
         orderButtons(new JButton(), new JButton());
         textField = new ValidatingJTextField(validator);
         blurb = new TextLabel(message);
@@ -127,7 +127,7 @@ public abstract class StandardInputDialog extends StandardDialog {
     /**
      * Adds the listeners
      */
-    private final void addListeners() {
+    private void addListeners() {
         getOkButton().addActionListener(new ActionListener() {
 
             /** {@inheritDoc} */
@@ -201,7 +201,7 @@ public abstract class StandardInputDialog extends StandardDialog {
     /**
      * Lays out the components.
      */
-    private final void layoutComponents() {
+    private void layoutComponents() {
         setLayout(new MigLayout("fill, wrap 1"));
 
         add(blurb, "growx");

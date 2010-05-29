@@ -116,7 +116,7 @@ public class DllSource implements MediaSource {
     @Override
     public String getTitle() {
         if (useArtistTitle) {
-            String bits[] = getOutput("getArtistTitle").split("\\s-\\s", 2);
+            final String[] bits = getOutput("getArtistTitle").split("\\s-\\s", 2);
             return (bits.length > 1) ? bits[1] : "";
         } else {
             return getOutput("getTitle");

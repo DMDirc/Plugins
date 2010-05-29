@@ -26,7 +26,6 @@ import com.dmdirc.FrameContainer;
 import com.dmdirc.interfaces.FrameInfoListener;
 import com.dmdirc.interfaces.SelectionListener;
 import com.dmdirc.ui.IconManager;
-import com.dmdirc.ui.WindowManager;
 
 import java.awt.Font;
 import java.awt.event.ActionEvent;

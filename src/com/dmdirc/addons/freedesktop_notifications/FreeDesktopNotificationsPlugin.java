@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.freedesktop_notifications;
 
-import com.dmdirc.Main;
 import com.dmdirc.addons.freedesktop_notifications.commons.StringEscapeUtils;
 import com.dmdirc.commandparser.CommandManager;
 import com.dmdirc.config.IdentityManager;
@@ -41,7 +40,6 @@ import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.messages.Styliser;
 import com.dmdirc.util.resourcemanager.ResourceManager;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -121,11 +119,11 @@ public final class FreeDesktopNotificationsPlugin extends Plugin implements Conf
      * @param input Input string
      * @return Input string after being processed according to config settings.
      */
-    public final String prepareString(final String input) {
+    public String prepareString(final String input) {
         String output = input;
         if (stripcodes) { output = Styliser.stipControlCodes(output); }
         if (escapehtml) {
-	    if (strictescape) {
+            if (strictescape) {
                 output = StringEscapeUtils.escapeHtml(output);
             } else {
                 output = output.replace("&", "&amp;");
@@ -192,7 +190,7 @@ public final class FreeDesktopNotificationsPlugin extends Plugin implements Conf
         general.addSetting(new PreferencesSetting(PreferencesType.INTEGER, getDomain(), "general.timeout", "Timeout", "Length of time in seconds before the notification popup closes."));
         general.addSetting(new PreferencesSetting(PreferencesType.FILE, getDomain(), "general.icon", "icon", "Path to icon to use on the notification."));
         general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN, getDomain(), "advanced.escapehtml", "Escape HTML", "Some Implementations randomly parse HTML, escape it before showing?"));
-	general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN, getDomain(), "advanced.strictescape", "Strict Escape HTML", "Strictly escape HTML or just the basic characters? (&, < and >)"));
+        general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN, getDomain(), "advanced.strictescape", "Strict Escape HTML", "Strictly escape HTML or just the basic characters? (&, < and >)"));
         general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN, getDomain(), "advanced.stripcodes", "Strip Control Codes", "Strip IRC Control codes from messages?"));
         
         manager.getCategory("Plugins").addSubCategory(general);
@@ -202,7 +200,7 @@ public final class FreeDesktopNotificationsPlugin extends Plugin implements Conf
         timeout = IdentityManager.getGlobalConfig().getOptionInt(getDomain(), "general.timeout");
         icon = IdentityManager.getGlobalConfig().getOption(getDomain(), "general.icon");
         escapehtml = IdentityManager.getGlobalConfig().getOptionBool(getDomain(), "advanced.escapehtml");
-	strictescape = IdentityManager.getGlobalConfig().getOptionBool(getDomain(), "advanced.strictescape");
+        strictescape = IdentityManager.getGlobalConfig().getOptionBool(getDomain(), "advanced.strictescape");
         stripcodes = IdentityManager.getGlobalConfig().getOptionBool(getDomain(), "advanced.stripcodes");
     }
 

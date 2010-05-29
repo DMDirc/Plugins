@@ -40,8 +40,6 @@ import javax.swing.ListCellRenderer;
 
 import net.miginfocom.swing.MigLayout;
 
-import static com.dmdirc.addons.ui_swing.UIUtilities.SMALL_BORDER;
-
 /**
  * Handles the rendering of the JList used for plugin and theme management.
  * @author chris
@@ -53,7 +51,7 @@ public final class AddonCellRenderer extends JPanel implements ListCellRenderer 
      * structure is changed (or anything else that would prevent serialized
      * objects being unserialized with the new class).
      */
-    private static final long serialVersionUID = 1;    
+    private static final long serialVersionUID = 1;
     
     /** Creates a new instance of AddonCellRenderer. */
     public AddonCellRenderer() {

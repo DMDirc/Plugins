@@ -59,7 +59,6 @@ import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.core.util.URLHandler;
 import com.dmdirc.ui.interfaces.InputWindow;
 import com.dmdirc.ui.interfaces.Window;
-import com.dmdirc.ui.messages.IRCDocument;
 import com.dmdirc.util.StringTranscoder;
 
 import java.awt.Container;
@@ -778,7 +777,7 @@ public abstract class TextFrame extends JInternalFrame implements Window,
     public void mouseClicked(final ClickTypeValue clicktype,
             final MouseEventType eventType, final MouseEvent event) {
         if (event.isPopupTrigger()) {
-            showPopupMenuInternal(clicktype, event.getPoint()   );
+            showPopupMenuInternal(clicktype, event.getPoint());
         }
         if (eventType == MouseEventType.CLICK
                 && event.getButton() == MouseEvent.BUTTON1) {

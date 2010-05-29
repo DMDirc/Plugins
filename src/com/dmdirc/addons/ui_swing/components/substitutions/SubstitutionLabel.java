@@ -58,7 +58,7 @@ public class SubstitutionLabel extends JButton implements MouseListener,
     /** Drag source. */
     private DragSource dragSource;
     /** Substitution. */
-    private transient final Substitution substitution;
+    private final transient Substitution substitution;
     /** Previously selected component. */
     private Component previousComponent;
 

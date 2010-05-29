@@ -78,7 +78,7 @@ public class FeedbackDialog extends StandardDialog implements ActionListener,
     /** Server info checkbox. */
     private JCheckBox serverCheckbox;
     /** DMDirc info checkbox. */
-    private JCheckBox DMDircCheckbox;
+    private JCheckBox dmdircCheckbox;
     /** Sent. */
     private boolean sentReport = false;
 
@@ -156,7 +156,7 @@ public class FeedbackDialog extends StandardDialog implements ActionListener,
         feedback = new JTextArea();
         serverCheckbox =
                 new JCheckBox("Include information about connected servers.");
-        DMDircCheckbox = new JCheckBox("Include information about DMDirc.");
+        dmdircCheckbox = new JCheckBox("Include information about DMDirc.");
 
         UIUtilities.addUndoManager(name);
         UIUtilities.addUndoManager(email);
@@ -167,8 +167,8 @@ public class FeedbackDialog extends StandardDialog implements ActionListener,
     private void layoutComponents() {
         serverCheckbox.setMargin(new Insets(0, 0, 0, 0));
         serverCheckbox.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
-        DMDircCheckbox.setMargin(new Insets(0, 0, 0, 0));
-        DMDircCheckbox.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        dmdircCheckbox.setMargin(new Insets(0, 0, 0, 0));
+        dmdircCheckbox.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
 
         setLayout(new MigLayout("fill, wmin 600, wmax 600, hmin 400, hmax 400"));
 
@@ -183,7 +183,7 @@ public class FeedbackDialog extends StandardDialog implements ActionListener,
         add(new JLabel("Feedback: "), "aligny top, shrink");
         add(new JScrollPane(feedback), "grow, push, wrap");
         add(serverCheckbox, "skip 1, growx, wrap");
-        add(DMDircCheckbox, "skip 1, growx, wrap");
+        add(dmdircCheckbox, "skip 1, growx, wrap");
 
         add(getCancelButton(), "skip, split 2, right, sg button");
         add(getOkButton(), "right, sg button");
@@ -249,7 +249,7 @@ public class FeedbackDialog extends StandardDialog implements ActionListener,
                 }
             }
         }
-        if (DMDircCheckbox.isSelected()) {
+        if (dmdircCheckbox.isSelected()) {
             dmdircInfo.append("DMDirc version: " + Info.getDMDircVersion()).
                     append("\n");
             dmdircInfo.append("Profile directory: " + Main.getConfigDir()).

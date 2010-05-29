@@ -65,7 +65,7 @@ public class NickColourPanel extends JPanel implements ActionListener,
     /** The plugin we're associated with. */
     private final transient NickColourPlugin plugin;
     /** The table headings. */
-    private static final String[] headers = {"Network", "Nickname",
+    private static final String[] HEADERS = {"Network", "Nickname",
         "Text colour", "Nicklist colour"};
 
     /** Edit and delete buttons. */
@@ -83,7 +83,7 @@ public class NickColourPanel extends JPanel implements ActionListener,
 
         final Object[][] data = plugin.getData();
 
-        table = new JTable(new DefaultTableModel(data, headers)) {
+        table = new JTable(new DefaultTableModel(data, HEADERS)) {
 
             /**
              * A version number for this class. It should be changed whenever the class

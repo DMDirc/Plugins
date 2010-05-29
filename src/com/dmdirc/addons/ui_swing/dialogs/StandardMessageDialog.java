@@ -91,7 +91,7 @@ public class StandardMessageDialog extends StandardDialog {
     /**
      * Initialises the components.
      */
-    private final void initComponents() {
+    private void initComponents() {
         orderButtons(new JButton(), new JButton());
         getOkButton().setText("OK");
         blurb = new TextLabel(message);
@@ -100,7 +100,7 @@ public class StandardMessageDialog extends StandardDialog {
     /**
      * Adds the listeners
      */
-    private final void addListeners() {
+    private void addListeners() {
         final ActionListener listener = new ActionListener() {
 
             /** {@inheritDoc} */
@@ -132,7 +132,7 @@ public class StandardMessageDialog extends StandardDialog {
     /**
      * Lays out the components.
      */
-    private final void layoutComponents() {
+    private void layoutComponents() {
         setLayout(new MigLayout("fill, wrap 1, hidemode 3, wmax min(80sp, 500),"
                 + " wmin min(80sp, 500), pack"));
 

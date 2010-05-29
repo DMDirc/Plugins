@@ -32,10 +32,10 @@ import java.util.ArrayList;
 public class KDialogProcess {
 
     /** Is kdialog in /bin? */
-    private final static boolean isBin = (new File("/bin/kdialog")).exists();
+    private static final boolean IS_BIN = (new File("/bin/kdialog")).exists();
 
     /** Does KDialog exist? */
-    private final static boolean hasKDialog = (new File("/usr/bin/kdialog")).exists() || isBin;
+    private static final boolean HAS_KDIALOG = (new File("/usr/bin/kdialog")).exists() || IS_BIN;
 
     /** Stream for the stdout stream for this process */
     private final StreamReader stdOutputStream;
@@ -54,7 +54,7 @@ public class KDialogProcess {
     public KDialogProcess(final String[] params) throws IOException {
         final String[] exec = new String[params.length + 1];
         System.arraycopy(params, 0, exec, 1, params.length);
-        exec[0] = (isBin) ? "/bin/kdialog" : "/usr/bin/kdialog";
+        exec[0] = (IS_BIN) ? "/bin/kdialog" : "/usr/bin/kdialog";
         process = Runtime.getRuntime().exec(exec);
         stdOutputStream = new StreamReader(process.getInputStream(), new ArrayList<String>());
         stdErrorStream = new StreamReader(process.getErrorStream(), new ArrayList<String>());
@@ -68,7 +68,7 @@ public class KDialogProcess {
      * @return True if kdialog was found, else false
      */
     public static boolean hasKDialog() {
-        return hasKDialog;
+        return HAS_KDIALOG;
     }
 
     /**

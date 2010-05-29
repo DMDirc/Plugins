@@ -56,7 +56,7 @@ public class PingHistoryPanel extends JPanel {
     protected final RollingList<Long> history;
 
     /** The maximum ping value. */
-    protected long maximum = 0l;
+    protected long maximum = 0L;
 
     /**
      * Creates a new history panel for the specified plugin.

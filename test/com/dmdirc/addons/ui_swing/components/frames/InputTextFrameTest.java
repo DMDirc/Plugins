@@ -112,7 +112,7 @@ public class InputTextFrameTest extends DMDircUITestCase {
     /**
      * Creates a new paste dialog for the specified frame with the specified text.
      */
-    private class PasteDialogTrigger implements Trigger {
+    private static class PasteDialogTrigger implements Trigger {
 
         private InputTextFrame frame;
         private String text;

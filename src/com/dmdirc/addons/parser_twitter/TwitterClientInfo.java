@@ -23,13 +23,11 @@
 package com.dmdirc.addons.parser_twitter;
 
 import com.dmdirc.addons.parser_twitter.api.TwitterUser;
-import com.dmdirc.config.IdentityManager;
 import com.dmdirc.parser.interfaces.ChannelClientInfo;
 import com.dmdirc.parser.interfaces.LocalClientInfo;
 import com.dmdirc.parser.interfaces.Parser;
-import com.dmdirc.parser.interfaces.callbacks.ChannelNickChangeListener;
-import com.dmdirc.parser.interfaces.callbacks.ChannelUserModeChangeListener;
 import com.dmdirc.plugins.Plugin;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

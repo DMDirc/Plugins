@@ -36,7 +36,7 @@ import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 public class PlaceholderWindow extends EmptyWindow {
 
     /** A version number for this class. */
-    private static final long serialVersionUID = 1l;
+    private static final long serialVersionUID = 1L;
 
     /**
      * Creates a new placeholder window for the specified UI controller and owner.
