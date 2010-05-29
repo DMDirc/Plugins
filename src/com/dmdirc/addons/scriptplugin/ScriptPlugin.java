@@ -32,6 +32,7 @@ import com.dmdirc.interfaces.ActionListener;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.plugins.Plugin;
+import com.dmdirc.util.StreamUtil;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -51,19 +52,19 @@ import javax.script.ScriptEngineManager;
 public final class ScriptPlugin extends Plugin implements ActionListener {
     /** The ScriptCommand we created */
     private ScriptCommand command = null;
-    
+
     /** Script Directory */
     private final String scriptDir = Main.getConfigDir() + "scripts/";
-    
+
     /** Script Engine Manager */
     private ScriptEngineManager scriptFactory = new ScriptEngineManager();
-    
+
     /** Instance of the javaScriptHelper class */
     private JavaScriptHelper jsHelper = new JavaScriptHelper();
-    
+
     /** Store Script State Name,Engine */
-    private Map<String,ScriptEngineWrapper> scripts = new HashMap<String,ScriptEngineWrapper>();
-    
+    private Map<String, ScriptEngineWrapper> scripts = new HashMap<String, ScriptEngineWrapper>();
+
     /** Used to store permanent variables */
     protected TypedProperties globalVariables = new TypedProperties();
 
@@ -72,12 +73,12 @@ public final class ScriptPlugin extends Plugin implements ActionListener {
      */
     public ScriptPlugin() {
         super();
-        
+
         // Add the JS Helper to the scriptFactory
         getScriptFactory().put("globalHelper", getJavaScriptHelper());
         getScriptFactory().put("globalVariables", getGlobalVariables());
     }
-    
+
     /**
      * Called when the plugin is loaded.
      */
@@ -87,21 +88,25 @@ public final class ScriptPlugin extends Plugin implements ActionListener {
         // after this method finishes for us to register the rest.
         ActionManager.addListener(this, CoreActionType.PLUGIN_LOADED);
         command = new ScriptCommand(this);
-        
+
         // Make sure our scripts dir exists
         final File newDir = new File(scriptDir);
         if (!newDir.exists()) { newDir.mkdirs(); }
-        
+
         final File savedVariables = new File(scriptDir+"storedVariables");
         if (savedVariables.exists()) {
+            FileInputStream fis = null;
             try {
-                globalVariables.load(new FileInputStream(savedVariables));
+                fis = new FileInputStream(savedVariables);
+                globalVariables.load(fis);
             } catch (IOException e) {
                 Logger.userError(ErrorLevel.LOW, "Error reading savedVariables from '"+savedVariables.getPath()+"': "+e.getMessage(), e);
+            } finally {
+                StreamUtil.close(fis);
             }
         }
     }
-    
+
     /**
      * Called when this plugin is Unloaded
      */
@@ -109,15 +114,19 @@ public final class ScriptPlugin extends Plugin implements ActionListener {
     public void onUnload() {
         ActionManager.removeListener(this);
         CommandManager.unregisterCommand(command);
-        
+
         final File savedVariables = new File(scriptDir+"storedVariables");
+        FileOutputStream fos = null;
         try {
-            globalVariables.store(new FileOutputStream(savedVariables), "# DMDirc Script Plugin savedVariables");
+            fos = new FileOutputStream(savedVariables);
+            globalVariables.store(fos, "# DMDirc Script Plugin savedVariables");
         } catch (IOException e) {
             Logger.userError(ErrorLevel.LOW, "Error reading savedVariables to '"+savedVariables.getPath()+"': "+e.getMessage(), e);
+        } finally {
+            StreamUtil.close(fos);
         }
     }
-    
+
     /**
      * Register all the action types.
      * This will unregister all the actions first.
@@ -129,7 +138,7 @@ public final class ScriptPlugin extends Plugin implements ActionListener {
             ActionManager.addListener(this, types.toArray(new ActionType[0]));
         }
     }
-    
+
     /**
      * Process an event of the specified type.
      *
@@ -140,48 +149,48 @@ public final class ScriptPlugin extends Plugin implements ActionListener {
     @Override
     public void processEvent(final ActionType type, final StringBuffer format, final Object... arguments) {
         // Plugins may to register/unregister action types, so lets reregister all
-        // the action types. This 
+        // the action types. This
         if (type.equals(CoreActionType.PLUGIN_LOADED) || type.equals(CoreActionType.PLUGIN_UNLOADED)) {
             registerAll();
         }
         callFunctionAll("action_"+type.toString().toLowerCase(), arguments);
     }
-    
+
     /**
      * Get a clone of the scripts map.
      *
      * @return a clone of the scripts map
      */
-    protected Map<String,ScriptEngineWrapper> getScripts() { return new HashMap<String,ScriptEngineWrapper>(scripts); }
-    
+    protected Map<String, ScriptEngineWrapper> getScripts() { return new HashMap<String, ScriptEngineWrapper>(scripts); }
+
     /**
      * Get a reference to the scriptFactory.
      *
      * @return a reference to the scriptFactory
      */
     protected ScriptEngineManager getScriptFactory() { return scriptFactory; }
-    
+
     /**
      * Get a reference to the JavaScriptHelper
      *
      * @return a reference to the JavaScriptHelper
      */
     protected JavaScriptHelper getJavaScriptHelper() { return jsHelper; }
-    
+
     /**
      * Get a reference to the GlobalVariables Properties
      *
      * @return a reference to the GlobalVariables Properties
      */
     protected TypedProperties getGlobalVariables() { return globalVariables; }
-    
+
     /**
      * Get the name of the directory where scripts should be stored.
      *
      * @return The name of the directory where scripts should be stored.
      */
     protected String getScriptDir() { return scriptDir; }
-    
+
     /** Reload all scripts */
     public void rehash() {
         for (final ScriptEngineWrapper engine : scripts.values()) {
@@ -190,7 +199,7 @@ public final class ScriptPlugin extends Plugin implements ActionListener {
         // Advise the Garbage collector that now would be a good time to run
         System.gc();
     }
-    
+
     /**
      * Call a function in all scripts.
      *
@@ -218,7 +227,7 @@ public final class ScriptPlugin extends Plugin implements ActionListener {
             System.gc();
         }
     }
-        
+
     /**
      * Load a script file into a new jsEngine
      *
@@ -237,7 +246,7 @@ public final class ScriptPlugin extends Plugin implements ActionListener {
         }
         return true;
     }
-    
+
     /**
      * Check any further Prerequisites for this plugin to load that can not be
      * checked using metainfo.
@@ -252,7 +261,7 @@ public final class ScriptPlugin extends Plugin implements ActionListener {
             return new ValidationResponse();
         }
     }
-    
+
     /**
      * Get the reason for checkPrerequisites failing.
      *
