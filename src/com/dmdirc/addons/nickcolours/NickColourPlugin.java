@@ -59,7 +59,7 @@ public final class NickColourPlugin extends Plugin implements ActionListener,
     /** "Random" colours to use to colour nicknames. */
     private String[] randColours = new String[]{
         "E90E7F", "8E55E9", "B30E0E", "18B33C",
-        "58ADB3", "9E54B3", "B39875", "3176B3",};
+        "58ADB3", "9E54B3", "B39875", "3176B3", };
     private boolean useowncolour;
     private String owncolour;
     private boolean userandomcolour;

@@ -125,7 +125,7 @@ public final class ButtonBar implements FrameManager, ActionListener,
                 .HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants
                 .VERTICAL_SCROLLBAR_AS_NEEDED);
-        scrollPane.setMinimumSize(new Dimension(0,buttonHeight
+        scrollPane.setMinimumSize(new Dimension(0, buttonHeight
                 + ((int) PlatformDefaults.getUnitValueX("related").getValue()) * 2));
 
         buttons = Collections.synchronizedMap(new HashMap<Window, FrameToggleButton>());
@@ -311,7 +311,7 @@ public final class ButtonBar implements FrameManager, ActionListener,
         button.addActionListener(this);
         button.addMouseListener(this);
         button.setHorizontalAlignment(SwingConstants.LEFT);
-        button.setMinimumSize(new Dimension(0,buttonHeight));
+        button.setMinimumSize(new Dimension(0, buttonHeight));
         button.setMargin(new Insets(0, 0, 0, 0));
         buttons.put(source, button);
     }

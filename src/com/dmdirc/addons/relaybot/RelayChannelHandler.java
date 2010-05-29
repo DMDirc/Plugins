@@ -112,7 +112,7 @@ public class RelayChannelHandler implements ChannelMessageListener {
         synchronized (channelClients) {
             if (!channelClients.containsKey(storeName)) {
                 final RelayClientInfo client = new RelayClientInfo(channel.getParser(), nick);
-                final IRCChannelClientInfo newChannelClient = new IRCChannelClientInfo((IRCParser)channel.getParser(), client, channel);
+                final IRCChannelClientInfo newChannelClient = new IRCChannelClientInfo((IRCParser) channel.getParser(), client, channel);
                 colourClient(newChannelClient);
 
                 channelClients.put(storeName, newChannelClient);
@@ -157,7 +157,7 @@ public class RelayChannelHandler implements ChannelMessageListener {
         synchronized (channelClients) {
             channelClients.remove(channelClient.getClient().toString());
             ((RelayClientInfo) channelClient.getClient()).changeNickname(newNick);
-            channelClients.put(storeName,channelClient);
+            channelClients.put(storeName, channelClient);
         }
     }
 
@@ -196,7 +196,7 @@ public class RelayChannelHandler implements ChannelMessageListener {
         final PluginInfo nickColour = PluginManager.getPluginManager().getPluginInfoByName("nickcolour");
 
         final boolean fullColour = IdentityManager.getGlobalConfig().getOptionBool(myPlugin.getDomain(), "colourFullName");
-        final RelayClientInfo client = (RelayClientInfo)channelClient.getClient();
+        final RelayClientInfo client = (RelayClientInfo) channelClient.getClient();
         final boolean oldValue = client.getShowFullNickname();
         client.setShowFullNickname(fullColour);
 

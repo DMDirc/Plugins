@@ -52,29 +52,29 @@ import net.miginfocom.swing.MigLayout;
  */
 public class OsdWindow extends JDialog implements MouseListener,
         MouseMotionListener {
-    
+
     /**
      * A version number for this class. It should be changed whenever the class
      * structure is changed (or anything else that would prevent serialized
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 2;
-    
+
     /** The OSD Manager that owns this window. */
     private final OsdManager osdManager;
-    
+
     /** OSD Label. */
     private final JLabel label;
-    
+
     /** OSD Panel. */
     private final JPanel panel;
-    
+
     /** Starting positions of the mouse. */
     private int startX, startY;
 
     /** Desired position. */
     private volatile int desiredX, desiredY;
-    
+
     /** Is this a config instance? */
     private final boolean config;
 
@@ -93,7 +93,7 @@ public class OsdWindow extends JDialog implements MouseListener,
             final int y, final OsdPlugin plugin, final OsdManager osdManager) {
         super(((SwingController) PluginManager.getPluginManager()
                 .getPluginInfoByName("ui_swing").getPlugin()).getMainFrame(), false);
-        
+
         this.config = config;
         this.osdManager = osdManager;
 
@@ -137,7 +137,7 @@ public class OsdWindow extends JDialog implements MouseListener,
         } else {
             addMouseListener(this);
             new Timer("OSD Display Timer").schedule(new TimerTask() {
-                
+
                 /** {@inheritDoc} */
                 @Override
                 public void run() {
@@ -147,11 +147,11 @@ public class OsdWindow extends JDialog implements MouseListener,
                     "timeout") * 1000);
         }
     }
-    
-   
-    /** 
+
+
+    /**
      * {@inheritDoc}
-     * 
+     *
      * @param e Mouse event
      */
     @Override
@@ -160,10 +160,10 @@ public class OsdWindow extends JDialog implements MouseListener,
             osdManager.closeWindow(this);
         }
     }
-    
-    /** 
+
+    /**
      * {@inheritDoc}
-     * 
+     *
      * @param e Mouse event
      */
     @Override
@@ -173,40 +173,40 @@ public class OsdWindow extends JDialog implements MouseListener,
             startY = e.getPoint().y;
         }
     }
-    
-    /** 
+
+    /**
      * {@inheritDoc}
-     * 
+     *
      * @param e Mouse event
      */
     @Override
     public void mouseReleased(final MouseEvent e) {
         // Do nothing
     }
-    
-    /** 
+
+    /**
      * {@inheritDoc}
-     * 
+     *
      * @param e Mouse event
      */
     @Override
     public void mouseEntered(final MouseEvent e) {
         // Do nothing
     }
-    
-    /** 
+
+    /**
      * {@inheritDoc}
-     * 
+     *
      * @param e Mouse event
      */
     @Override
     public void mouseExited(final MouseEvent e) {
         // Do nothing
     }
-    
-    /** 
+
+    /**
      * {@inheritDoc}
-     * 
+     *
      * @param e Mouse event
      */
     @Override
@@ -215,20 +215,20 @@ public class OsdWindow extends JDialog implements MouseListener,
         p.translate(-1 * startX, -1 * startY);
         setLocation(p);
     }
-    
-    /** 
+
+    /**
      * {@inheritDoc}
-     * 
+     *
      * @param e Mouse event
      */
     @Override
     public void mouseMoved(final MouseEvent e) {
         // Do nothing
     }
-    
+
     /**
      * Sets the font size that this OSD uses.
-     * 
+     *
      * @param size The new size of the font
      */
     public void setFontSize(final int size) {
@@ -237,7 +237,7 @@ public class OsdWindow extends JDialog implements MouseListener,
 
     /**
      * Sets the background colour for this OSD.
-     * 
+     *
      * @param colour The background colour to use
      */
     public void setBackgroundColour(final String colour) {
@@ -246,7 +246,7 @@ public class OsdWindow extends JDialog implements MouseListener,
 
     /**
      * Sets the foreground colour for this OSD.
-     * 
+     *
      * @param colour The foreground colour to use
      */
     public void setForegroundColour(final String colour) {
@@ -257,7 +257,7 @@ public class OsdWindow extends JDialog implements MouseListener,
     @Override
     public void setVisible(final boolean b) {
         super.setVisible(b);
-        
+
         if (b) {
             transferFocusBackward();
         }

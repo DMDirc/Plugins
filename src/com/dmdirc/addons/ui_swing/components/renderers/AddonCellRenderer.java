@@ -45,34 +45,34 @@ import net.miginfocom.swing.MigLayout;
  * @author chris
  */
 public final class AddonCellRenderer extends JPanel implements ListCellRenderer {
-    
+
     /**
      * A version number for this class. It should be changed whenever the class
      * structure is changed (or anything else that would prevent serialized
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 1;
-    
+
     /** Creates a new instance of AddonCellRenderer. */
     public AddonCellRenderer() {
         super();
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public Component getListCellRendererComponent(final JList list,
             final Object value, final int index, final boolean isSelected,
             final boolean cellHasFocus) {
-       
+
         removeAll();
-        setLayout(new MigLayout("fill, ins 3 0 0 0"));        
-        
+        setLayout(new MigLayout("fill, ins 3 0 0 0"));
+
         if (isSelected) {
             setBackground(list.getSelectionBackground());
         } else {
             setBackground(list.getBackground());
         }
-        
+
         Color foreground = Color.BLACK;
         final JLabel name = new JLabel(), version = new JLabel(),
                 author = new JLabel(), desc = new JLabel();
@@ -90,17 +90,17 @@ public final class AddonCellRenderer extends JPanel implements ListCellRenderer 
             desc.setText(plugin.getPluginInfo().getDescription());
         } else if (value instanceof ThemeToggle) {
             final ThemeToggle theme = (ThemeToggle) value;
-            
+
             if (!theme.getState()) {
                 foreground = Color.GRAY;
             }
-            
+
             name.setText(theme.getTheme().getName());
             version.setText(theme.getTheme().getVersion());
             author.setText(theme.getTheme().getAuthor());
             desc.setText(theme.getTheme().getDescription());
         }
-        
+
         name.setForeground(foreground);
         name.setFont(name.getFont().deriveFont(Font.BOLD));
         version.setForeground(foreground);
@@ -108,14 +108,14 @@ public final class AddonCellRenderer extends JPanel implements ListCellRenderer 
         author.setForeground(foreground);
         desc.setForeground(foreground);
         desc.setBorder(BorderFactory.createEmptyBorder(SMALL_BORDER, 0, 0, 0));
-        
+
         add(name, "gapleft 3");
         add(version, "pushx");
         add(author, "wrap, gapright 3");
         add(desc, "span 3, growx, pushx, wrap, gapleft 3, gapright 3");
         add(new JSeparator(), "span 3, growx, pushx");
-        
+
         return this;
     }
-    
+
 }

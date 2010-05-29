@@ -1,16 +1,16 @@
 /*
  * Copyright (c) 2006-2009 Chris Smith, Shane Mc Cormack, Gregory Holmes
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -61,7 +61,7 @@ import java.util.Map;
 
 /**
  * Twitter Parser for DMDirc.
- * 
+ *
  * @author shane
  */
 public class Twitter implements Parser, TwitterErrorHandler, TwitterRawHandler,
@@ -104,7 +104,7 @@ public class Twitter implements Parser, TwitterErrorHandler, TwitterRawHandler,
     private TwitterClientInfo myself = null;
 
     /** List of currently active twitter parsers. */
-    protected static List<Twitter> currentParsers = new ArrayList<Twitter>();
+    protected static final List<Twitter> PARSERS = new ArrayList<Twitter>();
 
     /** Are we waiting for authentication? */
     private boolean wantAuth = false;
@@ -152,7 +152,7 @@ public class Twitter implements Parser, TwitterErrorHandler, TwitterRawHandler,
 
     /**
      * Create a new Twitter Parser!
-     * 
+     *
      * @param myInfo
      *            The client information to use
      * @param address
@@ -204,7 +204,7 @@ public class Twitter implements Parser, TwitterErrorHandler, TwitterRawHandler,
     @Override
     public void disconnect(final String message) {
         connected = false;
-        currentParsers.remove(this);
+        PARSERS.remove(this);
         api = new TwitterAPI("", "", "", false, -1, false);
 
         getCallbackManager().getCallbackType(SocketCloseListener.class).call();
@@ -288,7 +288,7 @@ public class Twitter implements Parser, TwitterErrorHandler, TwitterRawHandler,
 
     /**
      * Remove a channel from the known channels list.
-     * 
+     *
      * @param channel
      */
     protected void partChannel(final TwitterChannelInfo channel) {
@@ -343,7 +343,7 @@ public class Twitter implements Parser, TwitterErrorHandler, TwitterRawHandler,
      * Tokenise a line.
      * splits by " " up to the first " :" everything after this is a single
      * token
-     * 
+     *
      * @param line
      *            Line to tokenise
      * @return Array of tokens
@@ -941,7 +941,7 @@ public class Twitter implements Parser, TwitterErrorHandler, TwitterRawHandler,
 
     /**
      * Send a notice to the client.
-     * 
+     *
      * @param message
      *            Message to send.
      */
@@ -952,29 +952,7 @@ public class Twitter implements Parser, TwitterErrorHandler, TwitterRawHandler,
 
     /**
      * Send a PM to the client.
-     * 
-     * @param message
-     *            Message to send.
-     */
-    private void sendPrivateMessage(final String message) {
-        sendPrivateMessage(message, myServerName);
-    }
-
-    /**
-     * Send a PM to the client.
-     * 
-     * @param message
-     *            Message to send.
-     * @param hostname
-     *            Who is the message from?
-     */
-    private void sendPrivateMessage(final String message, final String hostname) {
-        sendPrivateMessage(message, hostname, myUsername);
-    }
-
-    /**
-     * Send a PM to the client.
-     * 
+     *
      * @param message
      *            Message to send.
      * @param hostname
@@ -995,7 +973,7 @@ public class Twitter implements Parser, TwitterErrorHandler, TwitterRawHandler,
 
     /**
      * Send a message to the given channel.
-     * 
+     *
      * @param channel
      *            Channel to send message to
      * @param message
@@ -1008,7 +986,7 @@ public class Twitter implements Parser, TwitterErrorHandler, TwitterRawHandler,
 
     /**
      * Send a message to the given channel.
-     * 
+     *
      * @param channel
      *            Channel to send message to
      * @param message
@@ -1023,7 +1001,7 @@ public class Twitter implements Parser, TwitterErrorHandler, TwitterRawHandler,
 
     /**
      * Send a message to the given channel.
-     * 
+     *
      * @param channel
      *            Channel to send message to
      * @param date
@@ -1094,7 +1072,7 @@ public class Twitter implements Parser, TwitterErrorHandler, TwitterRawHandler,
     /**
      * Check if the given user is known on the channel, and add them if they
      * are not.
-     * 
+     *
      * @param user
      *            User to check
      * @return true if user was already on the channel, false if they were
@@ -1128,7 +1106,7 @@ public class Twitter implements Parser, TwitterErrorHandler, TwitterRawHandler,
 
     /**
      * Send a Debug Message using the parser debug api.
-     * 
+     *
      * @param code
      *            Debug Code for the message.
      * @param message
@@ -1198,7 +1176,7 @@ public class Twitter implements Parser, TwitterErrorHandler, TwitterRawHandler,
                 apiVersion, getConfigManager().getOptionBool(
                         myPlugin.getDomain(), "autoAt"));
         api.setSource("DMDirc");
-        currentParsers.add(this);
+        PARSERS.add(this);
         api.addErrorHandler(this);
         api.addRawHandler(this);
         api.setDebug(debugEnabled);
@@ -1557,7 +1535,7 @@ public class Twitter implements Parser, TwitterErrorHandler, TwitterRawHandler,
 
     /**
      * Reset the state of the parser.
-     * 
+     *
      * @param simpleMyself
      *            Don't check the config when setting myself if true.
      */
@@ -1578,7 +1556,7 @@ public class Twitter implements Parser, TwitterErrorHandler, TwitterRawHandler,
 
     /**
      * Get the Twitter API Object
-     * 
+     *
      * @return The Twitter API Object
      */
     public TwitterAPI getApi() {
@@ -1605,7 +1583,7 @@ public class Twitter implements Parser, TwitterErrorHandler, TwitterRawHandler,
 
     /**
      * Set the twitter status.
-     * 
+     *
      * @param message
      *            Status to use.
      * @return True if status was updated, else false.
@@ -1616,7 +1594,7 @@ public class Twitter implements Parser, TwitterErrorHandler, TwitterRawHandler,
 
     /**
      * Set the twitter status.
-     * 
+     *
      * @param message
      *            Status to use.
      * @param id
@@ -1660,7 +1638,7 @@ public class Twitter implements Parser, TwitterErrorHandler, TwitterRawHandler,
 
     /**
      * Rename the given client from the given name.
-     * 
+     *
      * @param client
      *            Client to rename
      * @param old
@@ -1681,7 +1659,7 @@ public class Twitter implements Parser, TwitterErrorHandler, TwitterRawHandler,
 
     /**
      * Make the core think a channel was joined.
-     * 
+     *
      * @param channel
      *            Channel to join.
      */
@@ -1724,7 +1702,7 @@ public class Twitter implements Parser, TwitterErrorHandler, TwitterRawHandler,
     /**
      * Check if the topic in the given channel has been changed, and if it has
      * fire the callback.
-     * 
+     *
      * @param channel
      *            channel to check.
      * @param status
@@ -1795,7 +1773,7 @@ public class Twitter implements Parser, TwitterErrorHandler, TwitterRawHandler,
 
     /**
      * This method will send data to the NumericListener and the DataInListener
-     * 
+     *
      * @param numeric
      *            Numeric
      * @param token
@@ -1841,7 +1819,7 @@ public class Twitter implements Parser, TwitterErrorHandler, TwitterRawHandler,
 
     /**
      * Let the user know twitter failed in some way.
-     * 
+     *
      * @param message
      *            Message to send to the user
      */
@@ -1855,7 +1833,7 @@ public class Twitter implements Parser, TwitterErrorHandler, TwitterRawHandler,
 
     /**
      * Returns the TwitterPlugin that owns us.
-     * 
+     *
      * @return The TwitterPlugin that owns us.
      */
     public TwitterPlugin getMyPlugin() {
@@ -1878,7 +1856,7 @@ public class Twitter implements Parser, TwitterErrorHandler, TwitterRawHandler,
 
     /**
      * Get the config manager for this parser instance.
-     * 
+     *
      * @return the ConfigManager for this parser.
      */
     protected ConfigManager getConfigManager() {

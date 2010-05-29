@@ -1,5 +1,5 @@
 /**
- * @(#)MenuScroller.java	1.3.0 05/04/09
+ * @(#)MenuScroller.java 1.3.0 05/04/09
  */
 package com.dmdirc.addons.ui_swing.components;
 

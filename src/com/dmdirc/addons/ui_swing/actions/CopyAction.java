@@ -31,44 +31,44 @@ import javax.swing.text.JTextComponent;
 /**
  * Copy action.
  */
-public final class CopyAction extends AbstractAction { 
-    
+public final class CopyAction extends AbstractAction {
+
     /**
      * A version number for this class. It should be changed whenever the class
      * structure is changed (or anything else that would prevent serialized
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 1;
-    
+
     /** Text component to be acted upon. */
-    private final JTextComponent comp; 
- 
-    /** 
+    private final JTextComponent comp;
+
+    /**
      * Instantiates a new copy action.
-     * 
+     *
      * @param comp Component to be acted upon
      */
-    public CopyAction(final JTextComponent comp) { 
-        super("Copy"); 
-        
-        this.comp = comp; 
-    } 
- 
+    public CopyAction(final JTextComponent comp) {
+        super("Copy");
+
+        this.comp = comp;
+    }
+
     /**
      * {@inheritDoc}
      *
      * @param e Action event
      */
     @Override
-    public void actionPerformed(final ActionEvent e) { 
-        comp.copy(); 
-    } 
- 
+    public void actionPerformed(final ActionEvent e) {
+        comp.copy();
+    }
+
     /** {@inheritDoc} */
     @Override
-    public boolean isEnabled() { 
-        return comp.isEnabled() 
+    public boolean isEnabled() {
+        return comp.isEnabled()
                 && comp.getSelectedText() != null
-                && !(comp instanceof JPasswordField); 
-    } 
-} 
+                && !(comp instanceof JPasswordField);
+    }
+}

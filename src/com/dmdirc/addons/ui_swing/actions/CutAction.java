@@ -31,45 +31,45 @@ import javax.swing.text.JTextComponent;
 /**
  * Cut action.
  */
-public final class CutAction extends AbstractAction { 
-    
+public final class CutAction extends AbstractAction {
+
     /**
      * A version number for this class. It should be changed whenever the class
      * structure is changed (or anything else that would prevent serialized
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 1;
-    
+
     /** Text component to be acted upon. */
-    private final JTextComponent comp; 
- 
-    /** 
+    private final JTextComponent comp;
+
+    /**
      * Instantiates a new cut action.
-     * 
+     *
      * @param comp Component to be acted upon
      */
-    public CutAction(final JTextComponent comp) { 
-        super("Cut"); 
-        
-        this.comp = comp; 
-    } 
- 
+    public CutAction(final JTextComponent comp) {
+        super("Cut");
+
+        this.comp = comp;
+    }
+
     /**
      * {@inheritDoc}
      *
      * @param e Action event
      */
     @Override
-    public void actionPerformed(final ActionEvent e) { 
-        comp.cut(); 
-    } 
- 
+    public void actionPerformed(final ActionEvent e) {
+        comp.cut();
+    }
+
     /** {@inheritDoc} */
     @Override
-    public boolean isEnabled() { 
-        return comp.isEditable() 
-                && comp.isEnabled() 
+    public boolean isEnabled() {
+        return comp.isEditable()
+                && comp.isEnabled()
                 && comp.getSelectedText() != null
-                && !(comp instanceof JPasswordField); 
+                && !(comp instanceof JPasswordField);
     }
-} 
+}

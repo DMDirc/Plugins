@@ -35,27 +35,27 @@ import org.mortbay.util.ajax.Continuation;
  * @author chris
  */
 public class Client {
-    
+
     private long lastSeenTime = System.currentTimeMillis();
 
     private Continuation continuation;
-    
+
     private final String ip;
-    
+
     private final List<Event> events = new LinkedList<Event>();
 
     public Client(final String ip) {
         events.add(new Event("statusbar", "Welcome to the DMDirc web interface"));
-        
+
         this.ip = ip;
-        
+
         final List<Window> added = new LinkedList<Window>();
         final List<Window> queued = new LinkedList<Window>(WebWindow.getWindows());
 
         while (!queued.isEmpty()) {
             final Window window = queued.remove(0);
             final Window parent = window.getContainer().getParent().getFrame();
-            
+
             if (parent == null) {
                 events.add(new Event("newwindow", window));
                 added.add(window);
@@ -67,11 +67,11 @@ public class Client {
             }
         }
     }
-    
+
     public String getIp() {
         return ip;
     }
-    
+
     public long getTime() {
         return System.currentTimeMillis() - lastSeenTime;
     }
@@ -83,11 +83,11 @@ public class Client {
     public void setContinuation(Continuation continuation) {
         this.continuation = continuation;
     }
-    
+
     public void touch() {
         lastSeenTime = System.currentTimeMillis();
     }
-    
+
     public void addEvent(final Event event) {
         synchronized (events) {
             events.add(event);
@@ -97,7 +97,7 @@ public class Client {
             }
         }
     }
-    
+
     public List<Event> retrieveEvents() {
         synchronized (events) {
             final List<Event> res = new LinkedList<Event>(events);
@@ -105,7 +105,7 @@ public class Client {
             return res;
         }
     }
-    
+
     public int getEventCount() {
         return events.size();
     }

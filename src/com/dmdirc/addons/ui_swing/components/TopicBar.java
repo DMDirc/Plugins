@@ -214,7 +214,7 @@ public class TopicBar extends JComponent implements ActionListener,
                             new String[]{Styliser.CODE_HEXCOLOUR + ColourManager.
                                 getHex(
                                 foregroundColour) + channel.getCurrentTopic().
-                                getTopic(),},
+                                getTopic(), },
                             as);
                 }
                 if (channel.getConfigManager().getOptionBool(controller.

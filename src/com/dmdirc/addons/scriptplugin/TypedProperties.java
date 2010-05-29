@@ -1,16 +1,16 @@
 /*
  * Copyright (c) 2006-2010 Shane Mc Cormack
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -30,7 +30,7 @@ import java.util.Properties;
 
 /**
  * Properties file that allows for getting/setting of typed properties
- * 
+ *
  * @author Shane 'Dataforce' McCormack
  */
 public class TypedProperties extends Properties {
@@ -55,7 +55,7 @@ public class TypedProperties extends Properties {
 
     /**
      * Creates an empty property list with the specified defaults.
-     * 
+     *
      * @param defaults
      *            The Defaults
      */
@@ -65,7 +65,7 @@ public class TypedProperties extends Properties {
 
     /**
      * Set case sensitivity of this properties file.
-     * 
+     *
      * @param value
      *            True/False for the case sensitivity of this file
      */
@@ -91,7 +91,7 @@ public class TypedProperties extends Properties {
      * After loading, setCaseSensitivity(caseSensitive) is called.
      * If this properties file is ment to be case Insensitive, all non-lowercase
      * property names will be lowercased.
-     * 
+     *
      * @param inStream
      *            InputStream to load from.
      * @throws IOException
@@ -108,7 +108,7 @@ public class TypedProperties extends Properties {
      * After loading, setCaseSensitivity(caseSensitive) is called.
      * If this properties file is ment to be case Insensitive, all non-lowercase
      * property names will be lowercased.
-     * 
+     *
      * @param reader
      *            Reader to load from.
      * @throws IOException
@@ -125,7 +125,7 @@ public class TypedProperties extends Properties {
      * After loading, setCaseSensitivity(caseSensitive) is called.
      * If this properties file is ment to be case Insensitive, all non-lowercase
      * property names will be lowercased.
-     * 
+     *
      * @param in
      *            InputStream to load from.
      * @throws java.io.IOException
@@ -138,7 +138,7 @@ public class TypedProperties extends Properties {
 
     /**
      * Get a property from the config
-     * 
+     *
      * @param key
      *            key for property
      * @return the requested property, or null if not defined
@@ -154,7 +154,7 @@ public class TypedProperties extends Properties {
 
     /**
      * Get a property from the config
-     * 
+     *
      * @param key
      *            key for property
      * @param fallback
@@ -172,7 +172,7 @@ public class TypedProperties extends Properties {
 
     /**
      * Set a property in the config
-     * 
+     *
      * @param key
      *            key for property
      * @param value
@@ -190,7 +190,7 @@ public class TypedProperties extends Properties {
 
     /**
      * Check if a property exists
-     * 
+     *
      * @param key
      *            key for property
      * @return True if the property exists, else false
@@ -201,7 +201,7 @@ public class TypedProperties extends Properties {
 
     /**
      * Get a Byte property from the config
-     * 
+     *
      * @param key
      *            key for property
      * @param fallback
@@ -218,7 +218,7 @@ public class TypedProperties extends Properties {
 
     /**
      * Set a Byte property in the config
-     * 
+     *
      * @param key
      *            key for property
      * @param value
@@ -230,7 +230,7 @@ public class TypedProperties extends Properties {
 
     /**
      * Get a Short property from the config
-     * 
+     *
      * @param key
      *            key for property
      * @param fallback
@@ -247,7 +247,7 @@ public class TypedProperties extends Properties {
 
     /**
      * Set a Short property in the config
-     * 
+     *
      * @param key
      *            key for property
      * @param value
@@ -259,7 +259,7 @@ public class TypedProperties extends Properties {
 
     /**
      * Get an integer property from the config
-     * 
+     *
      * @param key
      *            key for property
      * @param fallback
@@ -277,7 +277,7 @@ public class TypedProperties extends Properties {
 
     /**
      * Set an integer property in the config
-     * 
+     *
      * @param key
      *            key for property
      * @param value
@@ -289,7 +289,7 @@ public class TypedProperties extends Properties {
 
     /**
      * Get a Long property from the config
-     * 
+     *
      * @param key
      *            key for property
      * @param fallback
@@ -306,7 +306,7 @@ public class TypedProperties extends Properties {
 
     /**
      * Set a Long property in the config
-     * 
+     *
      * @param key
      *            key for property
      * @param value
@@ -318,7 +318,7 @@ public class TypedProperties extends Properties {
 
     /**
      * Get a float property from the config
-     * 
+     *
      * @param key
      *            key for property
      * @param fallback
@@ -335,7 +335,7 @@ public class TypedProperties extends Properties {
 
     /**
      * Set a float property in the config
-     * 
+     *
      * @param key
      *            key for property
      * @param value
@@ -347,7 +347,7 @@ public class TypedProperties extends Properties {
 
     /**
      * Get a double property from the config
-     * 
+     *
      * @param key
      *            key for property
      * @param fallback
@@ -365,7 +365,7 @@ public class TypedProperties extends Properties {
 
     /**
      * Set a double property in the config
-     * 
+     *
      * @param key
      *            key for property
      * @param value
@@ -377,7 +377,7 @@ public class TypedProperties extends Properties {
 
     /**
      * Get a boolean property from the config
-     * 
+     *
      * @param key
      *            key for property
      * @param fallback
@@ -391,7 +391,7 @@ public class TypedProperties extends Properties {
 
     /**
      * Set a Boolean property in the config
-     * 
+     *
      * @param key
      *            key for property
      * @param value
@@ -403,7 +403,7 @@ public class TypedProperties extends Properties {
 
     /**
      * Get a Char property from the config
-     * 
+     *
      * @param key
      *            key for property
      * @param fallback
@@ -421,7 +421,7 @@ public class TypedProperties extends Properties {
 
     /**
      * Set a Char property in the config
-     * 
+     *
      * @param key
      *            key for property
      * @param value
@@ -433,7 +433,7 @@ public class TypedProperties extends Properties {
 
     /**
      * Get a List property from the config.
-     * 
+     *
      * @param key
      *            key for property
      * @param fallback
@@ -457,7 +457,7 @@ public class TypedProperties extends Properties {
 
     /**
      * Set a List property in the config
-     * 
+     *
      * @param key
      *            key for property
      * @param value

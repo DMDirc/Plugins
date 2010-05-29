@@ -1061,9 +1061,9 @@ public class TwitterAPI {
         synchronized (statusCache) {
             final Map<Long, TwitterStatus> current = new HashMap<Long, TwitterStatus>(statusCache);
 
-            for (Long item : current.keySet()) {
-                if (current.get(item).getTime() < time) {
-                    statusCache.remove(item);
+            for (Map.Entry<Long, TwitterStatus> item : current.entrySet()) {
+                if (item.getValue().getTime() < time) {
+                    statusCache.remove(item.getKey());
                 }
             }
         }
@@ -1243,7 +1243,7 @@ public class TwitterAPI {
             if (doc.isGood()) {
                 final NodeList nodes = doc.getElementsByTagName("id");
                 for (int i = 0; i < nodes.getLength(); i++) {
-                    final Element element = (Element)nodes.item(i);
+                    final Element element = (Element) nodes.item(i);
                     final Long id = parseLong(element.getTextContent(), -1);
                     result.add(id);
 
@@ -1490,9 +1490,9 @@ public class TwitterAPI {
             final String resetTimeString = getElementContents(element, "reset-time-in-seconds", getElementContents(element, "reset_time_in_seconds", "0"));
             resetTime = 1000 * parseLong(resetTimeString, -1);
 
-            return new Long[]{remaining, total, resetTime, (long)usedCalls};
+            return new Long[]{remaining, total, resetTime, (long) usedCalls};
         } else {
-            return new Long[]{0L, 0L, System.currentTimeMillis(), (long)usedCalls};
+            return new Long[]{0L, 0L, System.currentTimeMillis(), (long) usedCalls};
         }
     }
 

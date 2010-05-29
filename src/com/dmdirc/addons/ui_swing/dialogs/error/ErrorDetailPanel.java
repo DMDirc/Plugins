@@ -41,43 +41,43 @@ import net.miginfocom.swing.MigLayout;
  * Shows information about an error.
  */
 public final class ErrorDetailPanel extends JPanel implements ErrorListener {
-    
+
     /**
      * A version number for this class. It should be changed whenever the class
      * structure is changed (or anything else that would prevent serialized
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 3;
-    
+
     /** Error to show. */
     private ProgramError error;
-    
+
     /** ID field. */
     private JTextField id;
-    
+
     /** Date field. */
     private JTextField date;
-    
+
     /** Severity field. */
     private JTextField level;
-    
+
     /** Report Status field. */
     private JTextField reportStatus;
-    
+
     /** Error status field. */
     private JTextField errorStatus;
-    
+
     /** Details field. */
     private JTextArea details;
-    
+
     /** Details scrollpane. */
     private JScrollPane scrollPane;
-    
+
     /** Creates a new instance of ErrorDetailPanel. */
     public ErrorDetailPanel() {
         this(null);
     }
-    
+
     /**
      * Creates a new instance of ErrorDetailPanel.
      *
@@ -85,16 +85,16 @@ public final class ErrorDetailPanel extends JPanel implements ErrorListener {
      */
     public ErrorDetailPanel(final ProgramError error) {
         super();
-        
+
         this.error = error;
-        
+
         initComponents();
-        
+
         updateDetails();
-        
+
         layoutComponents();
     }
-    
+
     /**
      * Sets the error used for this panel.
      *
@@ -104,7 +104,7 @@ public final class ErrorDetailPanel extends JPanel implements ErrorListener {
         error = newError;
         updateDetails();
     }
-    
+
     /** Initialises the components. */
     private void initComponents() {
         id = new JTextField();
@@ -123,10 +123,10 @@ public final class ErrorDetailPanel extends JPanel implements ErrorListener {
         details.setEditable(false);
         details.setRows(5);
         details.setWrapStyleWord(true);
-        
+
         ErrorManager.getErrorManager().addErrorListener(this);
     }
-    
+
     /** Updates the panels details. */
     private void updateDetails() {
         SwingUtilities.invokeLater(new Runnable() {
@@ -139,16 +139,16 @@ public final class ErrorDetailPanel extends JPanel implements ErrorListener {
                     level.setText("");
                     reportStatus.setText("");
                     errorStatus.setText("");
-                    
+
                     return;
                 }
-                
+
                 id.setText(String.valueOf(error.getID()));
                 date.setText(error.occurrencesString());
                 level.setText(error.getLevel().toString());
                 reportStatus.setText(error.getReportStatus().toString());
                 errorStatus.setText(error.getFixedStatus().toString());
-                
+
                 details.append(error.getMessage() + '\n');
                 final String[] trace = error.getTrace();
                 if (trace.length > 0) {
@@ -162,31 +162,31 @@ public final class ErrorDetailPanel extends JPanel implements ErrorListener {
                 } catch (BadLocationException ex) {
                     //Ignore
                 }
-                
+
                 UIUtilities.resetScrollPane(scrollPane);
             }
         });
     }
-    
+
     /** Lays out the components. */
     private void layoutComponents() {
         setLayout(new MigLayout("fill, wrap 2", "[right]rel[grow,fill]", ""));
-        
+
         add(new JLabel("ID: "));
         add(id);
-        
+
         add(new JLabel("Date: "));
         add(date);
-        
+
         add(new JLabel("Severity: "));
         add(level);
-        
+
         add(new JLabel("Report status: "));
         add(reportStatus);
-        
+
         add(new JLabel("Error status: "));
         add(errorStatus);
-        
+
         add(new JLabel("Details: "));
         add(scrollPane, "grow, push");
     }
@@ -215,5 +215,5 @@ public final class ErrorDetailPanel extends JPanel implements ErrorListener {
     public boolean isReady() {
         return isVisible();
     }
-    
+
 }

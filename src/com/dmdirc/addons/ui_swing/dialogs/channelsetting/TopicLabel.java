@@ -117,7 +117,7 @@ public class TopicLabel extends JPanel {
 
         if (!topic.getTopic().isEmpty()) {
             channel.getStyliser().addStyledString((StyledDocument) pane.getDocument(),
-                    new String[]{topic.getTopic(),},
+                    new String[]{topic.getTopic(), },
                     as);
             add(pane, "wmax 450, grow, push, wrap, gapleft 5, gapleft 5");
         }

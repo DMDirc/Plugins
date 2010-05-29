@@ -1,16 +1,16 @@
 /*
  * Copyright (c) 2006-2010 Chris Smith, Shane Mc Cormack, Gregory Holmes
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -62,7 +62,7 @@ public class SplitPane extends JSplitPane implements ConfigChangeListener {
     }
 
     /**
-     * Instantiates a new snapping split pane. Defaults to using a horizontal 
+     * Instantiates a new snapping split pane. Defaults to using a horizontal
      * split, two null components and snapping to the left component.
      */
     public SplitPane() {
@@ -70,9 +70,9 @@ public class SplitPane extends JSplitPane implements ConfigChangeListener {
     }
 
     /**
-     * Instantiates a new snapping split pane. Defaults to using a horizontal 
+     * Instantiates a new snapping split pane. Defaults to using a horizontal
      * split, two null components and snapping to the left component.
-     * 
+     *
      * @param snapDistance Distance to around the preferred size
      */
     public SplitPane(final int snapDistance) {
@@ -80,9 +80,9 @@ public class SplitPane extends JSplitPane implements ConfigChangeListener {
     }
 
     /**
-     * Instantiates a new snapping split pane. Defaults to using a horizontal 
+     * Instantiates a new snapping split pane. Defaults to using a horizontal
      * split and two null components.
-     * 
+     *
      * @param leftComponentSnap Snap to the preferred size of the left component?
      */
     public SplitPane(final boolean leftComponentSnap) {
@@ -90,9 +90,9 @@ public class SplitPane extends JSplitPane implements ConfigChangeListener {
     }
 
     /**
-     * Instantiates a new snapping split pane. Defaults to using a horizontal 
+     * Instantiates a new snapping split pane. Defaults to using a horizontal
      * split and two null components.
-     * 
+     *
      * @param leftComponentSnap Snap to the preferred size of the left component?
      * @param snapDistance Distance to around the preferred size
      */
@@ -102,11 +102,11 @@ public class SplitPane extends JSplitPane implements ConfigChangeListener {
     }
 
     /**
-     * Instantiates a new snapping split pane. Defaults to using two null 
+     * Instantiates a new snapping split pane. Defaults to using two null
      * components and snapping to the left component.
-     * 
-     * @param orientation Split pane orientation 
-     * <code>JSplitPane.HORIZONTAL_SPLIT</code> or 
+     *
+     * @param orientation Split pane orientation
+     * <code>JSplitPane.HORIZONTAL_SPLIT</code> or
      * <code>JSplitPane.VERTICAL_SPLIT</code>
      */
     public SplitPane(final Orientation orientation) {
@@ -114,11 +114,11 @@ public class SplitPane extends JSplitPane implements ConfigChangeListener {
     }
 
     /**
-     * Instantiates a new snapping split pane. Defaults to using two null 
+     * Instantiates a new snapping split pane. Defaults to using two null
      * components and snapping to the left component.
-     * 
-     * @param orientation Split pane orientation 
-     * <code>JSplitPane.HORIZONTAL_SPLIT</code> or 
+     *
+     * @param orientation Split pane orientation
+     * <code>JSplitPane.HORIZONTAL_SPLIT</code> or
      * <code>JSplitPane.VERTICAL_SPLIT</code>
      * @param snapDistance Distance to around the preferred size
      */
@@ -128,11 +128,11 @@ public class SplitPane extends JSplitPane implements ConfigChangeListener {
     }
 
     /**
-     * Instantiates a new snapping split pane. Defaults to using two null 
+     * Instantiates a new snapping split pane. Defaults to using two null
      * components.
-     * 
-     * @param orientation Split pane orientation 
-     * <code>JSplitPane.HORIZONTAL_SPLIT</code> or 
+     *
+     * @param orientation Split pane orientation
+     * <code>JSplitPane.HORIZONTAL_SPLIT</code> or
      * <code>JSplitPane.VERTICAL_SPLIT</code>
      * @param leftComponentSnap Snap to the preferred size of the left component?
      */
@@ -142,11 +142,11 @@ public class SplitPane extends JSplitPane implements ConfigChangeListener {
     }
 
     /**
-     * Instantiates a new snapping split pane. Defaults to using two null 
+     * Instantiates a new snapping split pane. Defaults to using two null
      * components.
-     * 
-     * @param orientation Split pane orientation 
-     * <code>JSplitPane.HORIZONTAL_SPLIT</code> or 
+     *
+     * @param orientation Split pane orientation
+     * <code>JSplitPane.HORIZONTAL_SPLIT</code> or
      * <code>JSplitPane.VERTICAL_SPLIT</code>
      * @param leftComponentSnap Snap to the preferred size of the left component?
      * @param snapDistance Distance to around the preferred size
@@ -157,11 +157,11 @@ public class SplitPane extends JSplitPane implements ConfigChangeListener {
     }
 
     /**
-     * Instantiates a new snapping split pane. Defaults to using two null 
+     * Instantiates a new snapping split pane. Defaults to using two null
      * components and snapping to the left component.
-     * 
-     * @param orientation Split pane orientation 
-     * <code>JSplitPane.HORIZONTAL_SPLIT</code> or 
+     *
+     * @param orientation Split pane orientation
+     * <code>JSplitPane.HORIZONTAL_SPLIT</code> or
      * <code>JSplitPane.VERTICAL_SPLIT</code>
      * @param leftComponent left component
      * @param rightComponent right component
@@ -172,11 +172,11 @@ public class SplitPane extends JSplitPane implements ConfigChangeListener {
     }
 
     /**
-     * Instantiates a new snapping split pane. Defaults to using two null 
+     * Instantiates a new snapping split pane. Defaults to using two null
      * components and snapping to the left component.
-     * 
-     * @param orientation Split pane orientation 
-     * <code>JSplitPane.HORIZONTAL_SPLIT</code> or 
+     *
+     * @param orientation Split pane orientation
+     * <code>JSplitPane.HORIZONTAL_SPLIT</code> or
      * <code>JSplitPane.VERTICAL_SPLIT</code>
      * @param leftComponent left component
      * @param rightComponent right component
@@ -189,11 +189,11 @@ public class SplitPane extends JSplitPane implements ConfigChangeListener {
     }
 
     /**
-     * Instantiates a new snapping split pane. Defaults to using two null 
+     * Instantiates a new snapping split pane. Defaults to using two null
      * components.
-     * 
-     * @param orientation Split pane orientation 
-     * <code>JSplitPane.HORIZONTAL_SPLIT</code> or 
+     *
+     * @param orientation Split pane orientation
+     * <code>JSplitPane.HORIZONTAL_SPLIT</code> or
      * <code>JSplitPane.VERTICAL_SPLIT</code>
      * @param leftComponent left component
      * @param rightComponent right component
@@ -206,11 +206,11 @@ public class SplitPane extends JSplitPane implements ConfigChangeListener {
     }
 
     /**
-     * Instantiates a new snapping split pane. Defaults to using two null 
+     * Instantiates a new snapping split pane. Defaults to using two null
      * components.
-     * 
-     * @param orientation Split pane orientation 
-     * <code>JSplitPane.HORIZONTAL_SPLIT</code> or 
+     *
+     * @param orientation Split pane orientation
+     * <code>JSplitPane.HORIZONTAL_SPLIT</code> or
      * <code>JSplitPane.VERTICAL_SPLIT</code>
      * @param leftComponent left component
      * @param rightComponent right component
@@ -231,7 +231,7 @@ public class SplitPane extends JSplitPane implements ConfigChangeListener {
 
         setOneTouchExpandable(useOneTouchExpandable);
         setContinuousLayout(true);
-        
+
         getActionMap().setParent(null);
         getActionMap().clear();
 
@@ -253,4 +253,4 @@ public class SplitPane extends JSplitPane implements ConfigChangeListener {
         });
     }
 }
-    
+

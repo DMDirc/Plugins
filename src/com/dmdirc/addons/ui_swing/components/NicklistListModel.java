@@ -72,13 +72,13 @@ public final class NicklistListModel extends AbstractListModel implements
         super();
 
         this.config = config;
-        
+
         sortByMode = config.getOptionBool("nicklist", "sortByMode");
         sortByCase = config.getOptionBool("nicklist", "sortByCase");
         config.addChangeListener("nicklist", "sortByMode", this);
         config.addChangeListener("nicklist", "sortByCase", this);
         nicknames = Collections.synchronizedList(newNicknames);
-        
+
         sort();
     }
 
@@ -93,9 +93,9 @@ public final class NicklistListModel extends AbstractListModel implements
 
     /**
      * Returns the element at the specified place in the nicklist.
-     * 
+     *
      * @param index index of nick required
-     * 
+     *
      * @return nicklist entry requested
      */
     @Override
@@ -116,9 +116,9 @@ public final class NicklistListModel extends AbstractListModel implements
 
     /**
      * Replaces the entire nicklist with the arraylist specified.
-     * 
+     *
      * @param clients replacement nicklist
-     * 
+     *
      * @return boolean success
      */
     public boolean replace(final Collection<ChannelClientInfo> clients) {
@@ -133,9 +133,9 @@ public final class NicklistListModel extends AbstractListModel implements
 
     /**
      * Adds the specified client to the nicklist.
-     * 
+     *
      * @param client client to add to the nicklist
-     * 
+     *
      * @return boolean success
      */
     public boolean add(final ChannelClientInfo client) {
@@ -149,38 +149,38 @@ public final class NicklistListModel extends AbstractListModel implements
 
     /**
      * Removes the specified client from the nicklist.
-     * 
+     *
      * @param client client to remove
-     * 
+     *
      * @return boolean success
      */
     public boolean remove(final ChannelClientInfo client) {
         boolean returnValue;
-        
+
         returnValue = nicknames.remove(client);
         rerender();
-        
+
         return returnValue;
     }
 
     /**
      * Removes the specified index from the nicklist.
-     * 
+     *
      * @param index index to remove
-     * 
+     *
      * @return ChannelClientInfo client removed
      */
     public ChannelClientInfo remove(final int index) {
         ChannelClientInfo returnValue;
-        
+
         returnValue = nicknames.remove(index);
         rerender();
-        
+
         return returnValue;
     }
 
-    /** 
-     * Fires the model changed event forcing the model to re-render. 
+    /**
+     * Fires the model changed event forcing the model to re-render.
      */
     public void rerender() {
         fireContentsChanged(this, 0, nicknames.size());
@@ -194,7 +194,7 @@ public final class NicklistListModel extends AbstractListModel implements
         } else if ("sortByCase".equals(key)) {
             sortByCase = config.getOptionBool("nicklist", "sortByCase");
         }
-        
+
         sort();
     }
 }

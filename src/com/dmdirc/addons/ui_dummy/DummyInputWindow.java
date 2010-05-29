@@ -37,7 +37,7 @@ import java.nio.charset.Charset;
  * Dummy input window, used for testing.
  */
 public class DummyInputWindow implements InputWindow {
-    
+
     /** Window title. */
     private String title;
     /** Are we visible? */
@@ -48,10 +48,10 @@ public class DummyInputWindow implements InputWindow {
     private final WritableFrameContainer<? extends InputWindow> container;
     /** Our command parser. */
     private final CommandParser commandParser;
-    
-    /** 
+
+    /**
      * Instantiates a new DummyInputWindow.
-     * 
+     *
      * @param owner Parent window
      * @param commandParser Parent command parser
      */
@@ -60,114 +60,114 @@ public class DummyInputWindow implements InputWindow {
         this.container = owner;
         this.commandParser = commandParser;
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public CommandParser getCommandParser() {
         return commandParser;
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public InputHandler getInputHandler() {
         return new DummyInputHandler(new DummyInputField(), null, this);
     }
-    
+
     /** {@inheritDoc} */
     @Override
     @Deprecated
     public void setAwayIndicator(final boolean isAway) {
         // Do nothing
     }
-    
+
     /** {@inheritDoc} */
     @Override
     @Deprecated
     public void addLine(final String messageType, final Object... args) {
         getContainer().addLine(messageType, args);
     }
-    
+
     /** {@inheritDoc} */
     @Override
     @Deprecated
     public void addLine(final StringBuffer messageType, final Object... args) {
         getContainer().addLine(messageType, args);
     }
-    
+
     /** {@inheritDoc} */
     @Override
     @Deprecated
     public void addLine(final String line, final boolean timestamp) {
         getContainer().addLine(line, timestamp);
     }
-    
+
     /** {@inheritDoc} */
     @Override
     @Deprecated
     public void clear() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-    
+
     /** {@inheritDoc} */
     @Override
     @Deprecated
     public ConfigManager getConfigManager() {
         return IdentityManager.getGlobalConfig();
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public WritableFrameContainer<? extends InputWindow> getContainer() {
         return container;
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public boolean isVisible() {
         return visible;
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public void setVisible(final boolean isVisible) {
         visible = isVisible;
     }
-    
+
     /** {@inheritDoc} */
     @Override
     @Deprecated
     public String getTitle() {
         return title;
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public boolean isMaximum() {
         return maximised;
     }
-    
-    /** 
-     * {@inheritDoc} 
-     * 
+
+    /**
+     * {@inheritDoc}
+     *
      * @param b maximised or not
      */
     public void setMaximum(final boolean b) {
         maximised = b;
     }
-    
+
     /** {@inheritDoc} */
     @Override
     @Deprecated
     public void setTitle(final String title) {
         this.title = title;
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public void open() {
         // Do nothing
     }
-    
+
     /** {@inheritDoc} */
     @Override
     @Deprecated
@@ -216,5 +216,5 @@ public class DummyInputWindow implements InputWindow {
     public UIController getController() {
         return new DummyController();
     }
-    
+
 }

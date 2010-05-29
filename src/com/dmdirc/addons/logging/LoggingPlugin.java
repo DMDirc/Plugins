@@ -86,7 +86,7 @@ public class LoggingPlugin extends Plugin implements ActionListener,
     private int historyLines, backbufferLines;
 
     /** Open File */
-    protected class OpenFile {
+    protected static class OpenFile {
 
         /** Last used time. */
         public long lastUsedTime = System.currentTimeMillis();
@@ -99,7 +99,7 @@ public class LoggingPlugin extends Plugin implements ActionListener,
          *
          * @param writer Writer that has file open
          */
-        public OpenFile(final BufferedWriter writer) {
+        protected OpenFile(final BufferedWriter writer) {
             this.writer = writer;
         }
 

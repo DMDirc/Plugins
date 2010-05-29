@@ -1,16 +1,16 @@
 /*
  * Copyright (c) 2006-2010 Chris Smith, Shane Mc Cormack, Gregory Holmes
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -36,7 +36,7 @@ import net.miginfocom.swing.MigLayout;
 
 /**
  * Generic substitutions panel
- * 
+ *
  * @param <T> Type of substitution
  */
 public abstract class SubstitutionsPanel<T> extends JPanel {
@@ -63,18 +63,18 @@ public abstract class SubstitutionsPanel<T> extends JPanel {
         VERTICAL;
     }
 
-    /** 
+    /**
      * Instantiates the panel.
-     * 
+     *
      * @param description Description
      */
     public SubstitutionsPanel(final String description) {
         this(description, Alignment.VERTICAL, null);
     }
 
-    /** 
+    /**
      * Instantiates the panel.
-     * 
+     *
      * @param description Description
      * @param type Action type
      */
@@ -82,9 +82,9 @@ public abstract class SubstitutionsPanel<T> extends JPanel {
         this(description, Alignment.VERTICAL, type);
     }
 
-    /** 
+    /**
      * Instantiates the panel.
-     * 
+     *
      * @param description Description
      * @param alignment Alignment of the separator
      */
@@ -93,9 +93,9 @@ public abstract class SubstitutionsPanel<T> extends JPanel {
         this(description, alignment, null);
     }
 
-    /** 
+    /**
      * Instantiates the panel.
-     * 
+     *
      * @param description Description
      * @param alignment Alignment of the separator
      * @param type Action type
@@ -158,7 +158,7 @@ public abstract class SubstitutionsPanel<T> extends JPanel {
 
     /**
      * Sets the type for this substitution panel.
-     * 
+     *
      * @param type New action type
      */
     public abstract void setType(final T type);

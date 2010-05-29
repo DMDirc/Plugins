@@ -122,7 +122,7 @@ public class SwingInputField extends JComponent implements InputField,
             }
         });
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public boolean requestFocusInWindow() {
@@ -190,7 +190,7 @@ public class SwingInputField extends JComponent implements InputField,
 
     /**
      * Returns the textfield for this inputfield.
-     * 
+     *
      * @return JTextField
      */
     public JTextField getTextField() {
@@ -349,7 +349,7 @@ public class SwingInputField extends JComponent implements InputField,
 
     /**
      * Replaces the selection with the specified text.
-     * 
+     *
      * @param clipboard Text to replace selection with
      */
     public void replaceSelection(final String clipboard) {
@@ -365,7 +365,7 @@ public class SwingInputField extends JComponent implements InputField,
 
     /**
      * Sets the caret colour to the specified coloour.
-     * 
+     *
      * @param optionColour Colour for the caret
      */
     public void setCaretColor(final Color optionColour) {
@@ -381,7 +381,7 @@ public class SwingInputField extends JComponent implements InputField,
 
     /**
      * Sets the foreground colour to the specified coloour.
-     * 
+     *
      * @param optionColour Colour for the caret
      */
     @Override
@@ -398,7 +398,7 @@ public class SwingInputField extends JComponent implements InputField,
 
     /**
      * Sets the background colour to the specified coloour.
-     * 
+     *
      * @param optionColour Colour for the caret
      */
     @Override
@@ -469,9 +469,9 @@ public class SwingInputField extends JComponent implements InputField,
         });
     }
 
-    /** 
+    /**
      * {@inheritDoc}
-     * 
+     *
      * @param e Key event
      */
     @Override
@@ -481,9 +481,9 @@ public class SwingInputField extends JComponent implements InputField,
         }
     }
 
-    /** 
+    /**
      * {@inheritDoc}
-     * 
+     *
      * @param e Key event
      */
     @Override
@@ -493,9 +493,9 @@ public class SwingInputField extends JComponent implements InputField,
         }
     }
 
-    /** 
+    /**
      * {@inheritDoc}
-     * 
+     *
      * @param e Key event
      */
     @Override

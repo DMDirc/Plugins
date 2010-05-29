@@ -48,7 +48,7 @@ import net.miginfocom.swing.MigLayout;
 
 /**
  * The main window that allows users to browse addons.
- * 
+ *
  * @author chris
  */
 public class BrowserWindow extends JDialog implements ActionListener {
@@ -211,7 +211,7 @@ public class BrowserWindow extends JDialog implements ActionListener {
 
         for (Map<String, String> entry : data.getKeyDomains().values()) {
             final AddonInfo info = new AddonInfo(entry);
-            list.getModel().addRow(new Object[]{new AddonInfoLabel(info, this),});
+            list.getModel().addRow(new Object[]{new AddonInfoLabel(info, this), });
         }
     }
 

@@ -1,16 +1,16 @@
 /*
  * Copyright (c) 2006-2010 Chris Smith, Shane Mc Cormack, Gregory Holmes
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -66,21 +66,21 @@ public class DurationDisplay extends JPanel implements ActionListener,
     public DurationDisplay() {
         this(0);
     }
-    
+
     /**
      * Instantiates a new duration display.
-     * 
+     *
      * @param window Parent window.
-     * 
+     *
      * @since 0.6
      */
     public DurationDisplay(final Window window) {
         this(window, 0);
     }
-    
+
     /**
      * Instantiates a new duration display.
-     * 
+     *
      * @param duration Starting duration
      */
     public DurationDisplay(final long duration) {
@@ -89,10 +89,10 @@ public class DurationDisplay extends JPanel implements ActionListener,
 
     /**
      * Initialises a new duration display showing the specified millisecond duration.
-     * 
+     *
      * @param window Parent window.
      * @param duration Duration to display in milliseconds
-     * 
+     *
      * @since 0.6
      */
     public DurationDisplay(final Window window, final long duration) {
@@ -141,9 +141,9 @@ public class DurationDisplay extends JPanel implements ActionListener,
         add(button, "");
     }
 
-    /** 
+    /**
      * {@inheritDoc}
-     * 
+     *
      * @param e Action event
      */
     @Override
@@ -153,7 +153,7 @@ public class DurationDisplay extends JPanel implements ActionListener,
         editor.addDurationListener(this);
     }
 
-    /** 
+    /**
      * {@inheritDoc}
      */
     @Override
@@ -169,7 +169,7 @@ public class DurationDisplay extends JPanel implements ActionListener,
 
     /**
      * Returns the duration of this display in milliseconds.
-     * 
+     *
      * @return Displayed duration in milliseconds
      */
     public long getDuration() {
@@ -200,7 +200,7 @@ public class DurationDisplay extends JPanel implements ActionListener,
 
     /**
      * Fires the duration updated method on all listeners.
-     * 
+     *
      * @param newDuration New duration
      */
     protected void fireDurationListener(final int newDuration) {
@@ -208,10 +208,10 @@ public class DurationDisplay extends JPanel implements ActionListener,
             listener.durationUpdated(newDuration);
         }
     }
-    
+
     /**
      * Sets the Parent window.
-     * 
+     *
      * @param window Parent window
      */
     public void setWindow(final Window window) {

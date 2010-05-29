@@ -71,7 +71,7 @@ public class RelayBotPlugin extends Plugin implements ActionListener, ConfigChan
         for (Server server : ServerManager.getServerManager().getServers()) {
             final Parser parser = server.getParser();
             if (parser instanceof IRCParser && !(parser.getCallbackManager() instanceof RelayCallbackManager)) {
-                new RelayCallbackManager(this, (IRCParser)parser);
+                new RelayCallbackManager(this, (IRCParser) parser);
             }
             for (String channel : server.getChannels()) {
                 final Channel chan = server.getChannel(channel);
@@ -113,17 +113,17 @@ public class RelayBotPlugin extends Plugin implements ActionListener, ConfigChan
     @Override
     public void processEvent(final ActionType type, final StringBuffer format, final Object... arguments) {
         if (type == CoreActionType.CHANNEL_OPENED) {
-            final Channel chan = (Channel)arguments[0];
+            final Channel chan = (Channel) arguments[0];
             
             final String channelName = chan.getServer().getParser().getStringConverter().toLowerCase(chan.getName());
             getHandler(chan);
         } else if (type == CoreActionType.CHANNEL_CLOSED) {
-            final Channel chan = (Channel)arguments[0];
+            final Channel chan = (Channel) arguments[0];
             removeHandler(chan);
         } else if (type == CoreActionType.CHANNEL_QUIT) {
-            final Channel chan = (Channel)arguments[0];
+            final Channel chan = (Channel) arguments[0];
             final Parser parser = chan.getServer().getParser();
-            final ChannelClientInfo cci = (ChannelClientInfo)arguments[1];
+            final ChannelClientInfo cci = (ChannelClientInfo) arguments[1];
             final String channelName = parser.getStringConverter().toLowerCase(chan.getName());
 
             if (IdentityManager.getGlobalConfig().hasOptionString(getDomain(), channelName)) {
@@ -137,14 +137,14 @@ public class RelayBotPlugin extends Plugin implements ActionListener, ConfigChan
                 }
             }
         } else if (type == CoreActionType.SERVER_CONNECTED) {
-            final Server server = (Server)arguments[0];
+            final Server server = (Server) arguments[0];
 
             final Parser parser = server.getParser();
             if (parser instanceof IRCParser && !(parser.getCallbackManager() instanceof RelayCallbackManager)) {
-                new RelayCallbackManager(this, (IRCParser)parser);
+                new RelayCallbackManager(this, (IRCParser) parser);
             }
         } else if (type == CoreActionType.SERVER_DISCONNECTED) {
-            final Server server = (Server)arguments[0];
+            final Server server = (Server) arguments[0];
 
             // RelayCallbackManager will revert itself when this happens.
 

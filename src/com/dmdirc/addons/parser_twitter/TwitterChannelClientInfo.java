@@ -132,7 +132,7 @@ public class TwitterChannelClientInfo implements ChannelClientInfo {
     /** {@inheritDoc} */
     @Override
     public void kick(final String message) {
-        ((Twitter)myClient.getParser()).getApi().delFriend(myClient.getUser().getScreenName());
+        ((Twitter) myClient.getParser()).getApi().delFriend(myClient.getUser().getScreenName());
         myChannel.delChannelClient(this);
         myClient.delChannelClient(this);
     }

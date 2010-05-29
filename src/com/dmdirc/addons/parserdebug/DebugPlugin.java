@@ -47,8 +47,8 @@ public final class DebugPlugin extends Plugin implements DebugInfoListener, Acti
     private ParserDebugCommand command = null;
 
     /** Map of parsers registered. */
-    protected final HashMap<Parser,DebugWindow> registeredParsers
-            = new HashMap<Parser,DebugWindow>();
+    protected final HashMap<Parser, DebugWindow> registeredParsers
+            = new HashMap<Parser, DebugWindow>();
 
     /**
      * Creates a new instance of the Debug Plugin.
@@ -93,7 +93,7 @@ public final class DebugPlugin extends Plugin implements DebugInfoListener, Acti
     @Override
     public void processEvent(final ActionType type, final StringBuffer format, final Object... arguments) {
         if (type == CoreActionType.SERVER_DISCONNECTED) {
-            final Server thisServer = (Server)arguments[0];
+            final Server thisServer = (Server) arguments[0];
             final Parser parser = thisServer.getParser();
             if (registeredParsers.containsKey(parser)) {
                 try {

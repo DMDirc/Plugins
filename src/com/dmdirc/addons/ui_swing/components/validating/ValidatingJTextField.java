@@ -1,16 +1,16 @@
 /*
  * Copyright (c) 2006-2010 Chris Smith, Shane Mc Cormack, Gregory Holmes
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -63,7 +63,7 @@ public class ValidatingJTextField extends JComponent implements DocumentListener
 
     /**
      * Instantiates a new Validating text field.
-     * 
+     *
      * @param validator Validator instance
      */
     public ValidatingJTextField(final Validator<String> validator) {
@@ -72,7 +72,7 @@ public class ValidatingJTextField extends JComponent implements DocumentListener
 
     /**
      * Instantiates a new Validating text field.
-     * 
+     *
      * @param textField JTextField to wrap
      * @param validator Validator instance
      */
@@ -121,9 +121,9 @@ public class ValidatingJTextField extends JComponent implements DocumentListener
 
     /**
      * Checks if the text validates.
-     * 
+     *
      * @see com.dmdirc.ui.swing.components.validating.Validator#validate(Object)
-     * 
+     *
      * @return true iif the text validates
      */
     public boolean validateText() {
@@ -164,7 +164,7 @@ public class ValidatingJTextField extends JComponent implements DocumentListener
         textField.setEnabled(enabled);
         checkError();
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public void requestFocus() {
@@ -179,9 +179,9 @@ public class ValidatingJTextField extends JComponent implements DocumentListener
 
     /**
      * Sets the text in the textfield.
-     * 
+     *
      * @see javax.swing.JTextField#setText(String)
-     * 
+     *
      * @param t Text to set
      */
     public void setText(final String t) {
@@ -190,9 +190,9 @@ public class ValidatingJTextField extends JComponent implements DocumentListener
 
     /**
      * Sets the selection start.
-     * 
+     *
      * @see javax.swing.JTextField#setSelectionStart(int)
-     * 
+     *
      * @param selectionStart Start of the selection
      */
     public void setSelectionStart(final int selectionStart) {
@@ -201,9 +201,9 @@ public class ValidatingJTextField extends JComponent implements DocumentListener
 
     /**
      * Sets the selection end.
-     * 
+     *
      * @see javax.swing.JTextField#setSelectionEnd(int)
-     * 
+     *
      * @param selectionEnd End of the selection
      */
     public void setSelectionEnd(final int selectionEnd) {
@@ -212,9 +212,9 @@ public class ValidatingJTextField extends JComponent implements DocumentListener
 
     /**
      * Sets whether the component is editable.
-     * 
+     *
      * @see javax.swing.JTextField#setEditable(boolean)
-     * 
+     *
      * @param b editable state for the component
      */
     public void setEditable(final boolean b) {
@@ -223,7 +223,7 @@ public class ValidatingJTextField extends JComponent implements DocumentListener
 
     /**
      * Selects all text in the textfield.
-     * 
+     *
      * @see javax.swing.JTextField#selectAll()
      */
     public void selectAll() {
@@ -232,9 +232,9 @@ public class ValidatingJTextField extends JComponent implements DocumentListener
 
     /**
      * Selects the specified text in the textfield.
-     * 
+     *
      * @see javax.swing.JTextField#select(int, int)
-     * 
+     *
      * @param selectionStart Selection start
      * @param selectionEnd Selection end
      */
@@ -244,9 +244,9 @@ public class ValidatingJTextField extends JComponent implements DocumentListener
 
     /**
      * Replaces the textfields selection with the specified content.
-     * 
+     *
      * @see javax.swing.JTextField#replaceSelection(String)
-     * 
+     *
      * @param content Text to replace selection with
      */
     public void replaceSelection(final String content) {
@@ -255,7 +255,7 @@ public class ValidatingJTextField extends JComponent implements DocumentListener
 
     /**
      * Paste's the system clipboard into the textfield.
-     * 
+     *
      * @see javax.swing.JTextField#paste()
      */
     public void paste() {
@@ -264,9 +264,9 @@ public class ValidatingJTextField extends JComponent implements DocumentListener
 
     /**
      * Checks if the textfield is editable.
-     * 
+     *
      * @see javax.swing.JTextField#isEditable()
-     * 
+     *
      * @return true iif the textfield is editable
      */
     public boolean isEditable() {
@@ -275,9 +275,9 @@ public class ValidatingJTextField extends JComponent implements DocumentListener
 
     /**
      * Returns the text in the textfield.
-     * 
+     *
      * @see javax.swing.JTextField#getText()
-     * 
+     *
      * @return Textfield content
      */
     public String getText() {
@@ -286,14 +286,14 @@ public class ValidatingJTextField extends JComponent implements DocumentListener
 
     /**
      * Returns the specified section of text in the textfield.
-     * 
+     *
      * @see javax.swing.JTextField#getText(int, int)
-     * 
+     *
      * @param offs Start offset
      * @param len section length
-     * 
+     *
      * @return Specified textfield content
-     * 
+     *
      * @throws javax.swing.text.BadLocationException
      */
     public String getText(final int offs, final int len) throws BadLocationException {
@@ -302,9 +302,9 @@ public class ValidatingJTextField extends JComponent implements DocumentListener
 
     /**
      * Returns the start of the selection in the textfield.
-     * 
+     *
      * @see javax.swing.JTextField#getSelectionStart()
-     * 
+     *
      * @return Selection start
      */
     public int getSelectionStart() {
@@ -313,9 +313,9 @@ public class ValidatingJTextField extends JComponent implements DocumentListener
 
     /**
      * Returns the end of the textfield selection.
-     * 
+     *
      * @see javax.swing.JTextField#getSelectionEnd()
-     * 
+     *
      * @return Selection end
      */
     public int getSelectionEnd() {
@@ -324,9 +324,9 @@ public class ValidatingJTextField extends JComponent implements DocumentListener
 
     /**
      * Returns the selected text in the textfield.
-     * 
+     *
      * @see javax.swing.JTextField#getSelectedText()
-     * 
+     *
      * @return Selected text
      */
     public String getSelectedText() {
@@ -335,9 +335,9 @@ public class ValidatingJTextField extends JComponent implements DocumentListener
 
     /**
      * Returns the textfield's document.
-     * 
+     *
      * @see javax.swing.JTextField#getDocument()
-     * 
+     *
      * @return Textfield's document
      */
     public Document getDocument() {
@@ -346,7 +346,7 @@ public class ValidatingJTextField extends JComponent implements DocumentListener
 
     /**
      * Cuts the selected text from the textfield into the clipboard.
-     * 
+     *
      * @see javax.swing.JTextField#cut()
      */
     public void cut() {
@@ -355,7 +355,7 @@ public class ValidatingJTextField extends JComponent implements DocumentListener
 
     /**
      * Copies the selected text from the textfield into the clipboard.
-     * 
+     *
      * @see javax.swing.JTextField#copy()
      */
     public void copy() {
@@ -364,7 +364,7 @@ public class ValidatingJTextField extends JComponent implements DocumentListener
 
     /**
      * Returns the font for the textfield.
-     * 
+     *
      * @see javax.swing.JTextField#copy()
      */
     @Override
@@ -395,16 +395,16 @@ public class ValidatingJTextField extends JComponent implements DocumentListener
     public synchronized void removeMouseListener(final MouseListener l) {
         textField.removeMouseListener(l);
     }
-    
+
     /**
      * Sets the drag enabled property on the textfield.
-     * 
+     *
      * @param enabled Enabled?
      */
     public void setDragEnabled(final boolean enabled) {
         textField.setDragEnabled(enabled);
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public void setTransferHandler(final TransferHandler newHandler) {
@@ -413,9 +413,9 @@ public class ValidatingJTextField extends JComponent implements DocumentListener
 
     /**
      * Returns the validator used by this text field.
-     * 
+     *
      * @since 0.6.3m1
-     * 
+     *
      * @return This field's validator
      */
     public Validator<String> getValidator() {

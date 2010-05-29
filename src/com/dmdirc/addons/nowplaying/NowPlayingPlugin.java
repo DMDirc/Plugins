@@ -44,61 +44,61 @@ import java.util.List;
 /**
  * Plugin that allows users to advertise what they're currently playing or
  * listening to.
- * 
+ *
  * @author chris
  */
 public class NowPlayingPlugin extends Plugin implements ActionListener  {
-    
+
     /** The sources that we know of. */
     private final List<MediaSource> sources = new ArrayList<MediaSource>();
 
     /** The managers that we know of. */
     private final List<MediaSourceManager> managers = new ArrayList<MediaSourceManager>();
-    
+
     /** The now playing command we're registering. */
     private NowPlayingCommand command;
-    
+
     /** The user's preferred order for source usage. */
     private List<String> order;
-    
+
     /**
      * Creates a new instance of NowPlayingPlugin.
      */
     public NowPlayingPlugin() {
         super();
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public void onLoad() {
         sources.clear();
         managers.clear();
-        
+
         loadSettings();
-        
+
         ActionManager.addListener(this, CoreActionType.PLUGIN_LOADED,
                 CoreActionType.PLUGIN_UNLOADED);
-        
+
         for (PluginInfo target : PluginManager.getPluginManager().getPluginInfos()) {
             if (target.isLoaded()) {
                 addPlugin(target);
             }
         }
-        
+
         command = new NowPlayingCommand(this);
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public void onUnload() {
         sources.clear();
         managers.clear();
-        
+
         ActionManager.removeListener(this);
-        
+
         CommandManager.unregisterCommand(command);
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public void showConfig(final PreferencesManager manager) {
@@ -110,23 +110,23 @@ public class NowPlayingPlugin extends Plugin implements ActionListener  {
                 setObject(new ConfigPanel(NowPlayingPlugin.this, order));
             }
         });
-        
+
         final PreferencesCategory category = new PluginPreferencesCategory(
                 getPluginInfo(), "Now Playing",
                 "", "category-nowplaying", configPanel);
         manager.getCategory("Plugins").addSubCategory(category);
     }
-    
+
     /**
      * Saves the plugins settings.
-     * 
+     *
      * @param newOrder The new order for sources
      */
     protected void saveSettings(final List<String> newOrder) {
         order = newOrder;
         IdentityManager.getConfigIdentity().setOption(getDomain(), "sourceOrder", order);
     }
-    
+
     /** Loads the plugins settings. */
     private void loadSettings() {
         if (IdentityManager.getGlobalConfig().hasOptionString(getDomain(), "sourceOrder")) {
@@ -135,7 +135,7 @@ public class NowPlayingPlugin extends Plugin implements ActionListener  {
             order = new ArrayList<String>();
         }
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public void processEvent(final ActionType type, final StringBuffer format,
@@ -146,7 +146,7 @@ public class NowPlayingPlugin extends Plugin implements ActionListener  {
             removePlugin((PluginInfo) arguments[0]);
         }
     }
-    
+
     /**
      * Checks to see if a plugin implements one of the Media Source interfaces
      * and if it does, adds the source(s) to our list.
@@ -159,7 +159,7 @@ public class NowPlayingPlugin extends Plugin implements ActionListener  {
             sources.add((MediaSource) targetPlugin);
             addSourceToOrder((MediaSource) targetPlugin);
         }
-        
+
         if (targetPlugin instanceof MediaSourceManager) {
             managers.add((MediaSourceManager) targetPlugin);
 
@@ -170,7 +170,7 @@ public class NowPlayingPlugin extends Plugin implements ActionListener  {
             }
         }
     }
-    
+
     /**
      * Checks to see if the specified media source needs to be added to our
      * order list, and adds it if neccessary.
@@ -182,7 +182,7 @@ public class NowPlayingPlugin extends Plugin implements ActionListener  {
             order.add(source.getAppName());
         }
     }
-    
+
     /**
      * Checks to see if a plugin implements one of the Media Source interfaces
      * and if it does, removes the source(s) from our list.
@@ -194,12 +194,12 @@ public class NowPlayingPlugin extends Plugin implements ActionListener  {
         if (targetPlugin instanceof MediaSource) {
             sources.remove((MediaSource) targetPlugin);
         }
-        
+
         if (targetPlugin instanceof MediaSourceManager) {
             managers.remove((MediaSourceManager) targetPlugin);
         }
     }
-    
+
     /**
      * Determines if there are any valid sources (paused or not).
      *
@@ -211,10 +211,10 @@ public class NowPlayingPlugin extends Plugin implements ActionListener  {
                 return true;
             }
         }
-        
+
         return false;
     }
-    
+
     /**
      * Retrieves the "best" source to use for displaying media information.
      * The best source is defined as the earliest in the list that is running
@@ -227,9 +227,9 @@ public class NowPlayingPlugin extends Plugin implements ActionListener  {
     public MediaSource getBestSource() {
         MediaSource paused = null;
         final List<MediaSource> possibleSources = getSources();
-        
+
         Collections.sort(possibleSources, new MediaSourceComparator(order));
-        
+
         for (final MediaSource source : possibleSources) {
             if (source.getState() != MediaSourceState.CLOSED) {
                 if (source.getState() == MediaSourceState.PLAYING) {
@@ -239,14 +239,14 @@ public class NowPlayingPlugin extends Plugin implements ActionListener  {
                 }
             }
         }
-        
+
         return paused;
     }
-    
+
     /**
      * Substitutes the keywords in the specified format with the values with
      * values from the specified source.
-     * 
+     *
      * @param format The format to be substituted
      * @param source The source whose values should be used
      * @return The substituted string
@@ -261,7 +261,7 @@ public class NowPlayingPlugin extends Plugin implements ActionListener  {
         final String length = source.getLength();
         final String time = source.getTime();
         final String state = source.getState().getNiceName();
-        
+
         return format.replace("$artist", sanitise(artist))
                      .replace("$title", sanitise(title))
                      .replace("$album", sanitise(album))
@@ -286,7 +286,7 @@ public class NowPlayingPlugin extends Plugin implements ActionListener  {
     protected static String sanitise(final String input) {
         return input == null ? "" : input;
     }
-    
+
     /**
      * Retrieves a source based on its name.
      *
@@ -299,10 +299,10 @@ public class NowPlayingPlugin extends Plugin implements ActionListener  {
                 return source;
             }
         }
-        
+
         return null;
     }
-    
+
     /**
      * Retrieves all the sources registered with this plugin.
      *
