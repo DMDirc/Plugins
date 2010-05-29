@@ -485,5 +485,5 @@ public final class Apple implements InvocationHandler, ActionListener {
      *
      * @return 0 on success, 1 on failure.
      */
-    private synchronized final native int registerOpenURLCallback();
+    private synchronized native int registerOpenURLCallback();
 }

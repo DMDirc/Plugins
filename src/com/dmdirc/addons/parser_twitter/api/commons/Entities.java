@@ -150,9 +150,9 @@ class Entities {
     };
 
     // package scoped for testing
-    static int ISO8859_1_ARRAY_LENGTH = ISO8859_1_ARRAY.length;
+    static final int ISO8859_1_ARRAY_LENGTH = ISO8859_1_ARRAY.length;
     
-    static String getISO8859_1(int i, int j) {
+    static String getISO88591(int i, int j) {
         return ISO8859_1_ARRAY[i][j];
     }
 
@@ -355,7 +355,7 @@ class Entities {
     };
     
     // package scoped for testing
-    static int HTML40_ARRAY_LENGTH = HTML40_ARRAY.length;
+    static final int HTML40_ARRAY_LENGTH = HTML40_ARRAY.length;
     
     static String getHTML40(int i, int j) {
         return HTML40_ARRAY[i][j];
@@ -481,7 +481,7 @@ class Entities {
         }
     }
 
-    static abstract class MapIntMap implements Entities.EntityMap {
+    abstract static class MapIntMap implements Entities.EntityMap {
         protected Map<String, Integer> mapNameToValue;
 
         protected Map<Integer, String> mapValueToName;
@@ -536,7 +536,7 @@ class Entities {
     static class LookupEntityMap extends PrimitiveEntityMap {
         private String[] lookupTable;
 
-        private int LOOKUP_TABLE_SIZE = 256;
+        private static final int LOOKUP_TABLE_SIZE = 256;
 
         /**
          * {@inheritDoc}
@@ -972,14 +972,13 @@ class Entities {
                             char isHexChar = entityContent.charAt(1);
                             try {
                                 switch (isHexChar) {
-                                    case 'X' :
-                                    case 'x' : {
+                                    case 'X':
+                                    case 'x':
                                         entityValue = Integer.parseInt(entityContent.substring(2), 16);
                                         break;
-                                    }
-                                    default : {
+                                    default:
                                         entityValue = Integer.parseInt(entityContent.substring(1), 10);
-                                    }
+                                        break;
                                 }
                                 if (entityValue > 0xFFFF) {
                                     entityValue = -1;

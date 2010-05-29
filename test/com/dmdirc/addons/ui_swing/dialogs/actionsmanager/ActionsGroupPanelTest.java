@@ -47,6 +47,8 @@ public class ActionsGroupPanelTest extends UISpecTestCase {
     @Before
     @Override
     public void setUp() {
+        super.setUp();
+        
         action1 = mock(Action.class);
         when(action1.getName()).thenReturn("name 1");
         when(action1.getTriggers()).thenReturn(new ActionType[] {

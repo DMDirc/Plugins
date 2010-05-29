@@ -83,7 +83,7 @@ public abstract class StandardQuestionDialog extends StandardDialog {
     /**
      * Initialises the components.
      */
-    private final void initComponents() {
+    private void initComponents() {
         orderButtons(new JButton(), new JButton());
         getOkButton().setText("Yes");
         getCancelButton().setText("No");
@@ -93,7 +93,7 @@ public abstract class StandardQuestionDialog extends StandardDialog {
     /**
      * Adds the listeners
      */
-    private final void addListeners() {
+    private void addListeners() {
         getOkButton().addActionListener(new ActionListener() {
 
             /** {@inheritDoc} */
@@ -133,7 +133,7 @@ public abstract class StandardQuestionDialog extends StandardDialog {
     /**
      * Lays out the components.
      */
-    private final void layoutComponents() {
+    private void layoutComponents() {
         setLayout(new MigLayout("fill, wrap 1, hidemode 3"));
 
         add(blurb, "growx");

@@ -53,7 +53,6 @@ public final class DcopCommand extends Command implements CommandInfo {
     @Override
     public void execute(final FrameContainer<?> origin,
             final CommandArguments args, final CommandContext context) {
-        final Server server = ((ServerCommandContext) context).getServer();
         if (args.getArguments().length != 3) {
             showUsage(origin, args.isSilent(), "dcop", "<app> <object> <function>");
             return;

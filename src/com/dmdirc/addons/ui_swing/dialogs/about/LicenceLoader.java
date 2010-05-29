@@ -89,8 +89,7 @@ public class LicenceLoader extends LoggingSwingWorker<Void, Void> {
         final String licenceString = entry.getKey().substring(entry.getKey().
                 lastIndexOf('/') + 1);
         if (licenceString.length() > 1) {
-            final String licenceStringParts[] = licenceString.split(
-                    " - ");
+            final String[] licenceStringParts = licenceString.split(" - ");
             return new Licence(licenceStringParts[1], licenceStringParts[0],
                     "<html><h1>" + licenceStringParts[1] + "</h1><p>"
                     + readInputStream(entry.getValue()).replace("\n", "<br>")

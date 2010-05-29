@@ -43,7 +43,7 @@ public class VetoableChangeEvent extends ChangeEvent {
      * @param source Event source
      * @param newValue New value
      */
-    public VetoableChangeEvent(final Object source, final Object newValue ) {
+    public VetoableChangeEvent(final Object source, final Object newValue) {
         super(source);
         this.newValue = newValue;
     }

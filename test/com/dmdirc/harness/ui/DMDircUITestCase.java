@@ -33,7 +33,7 @@ import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.InvalidIdentityFileException;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.messages.IRCDocument;
-import org.junit.Test;
+
 import org.uispec4j.UISpecTestCase;
 import static org.mockito.Mockito.*;
 

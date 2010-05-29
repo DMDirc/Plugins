@@ -385,8 +385,8 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
             selectionStartChar = selection.getEndPos();
             selectionEndLine = selection.getStartLine();
             selectionEndChar = selection.getStartPos();
-        } else if (selection.getStartLine() == selection.getEndLine() && selection.
-                getStartPos() > selection.getEndPos()) {
+        } else if (selection.getStartLine() == selection.getEndLine()
+                && selection.getStartPos() > selection.getEndPos()) {
             // Just swap the chars
             selectionStartLine = selection.getStartLine();
             selectionStartChar = selection.getEndPos();
@@ -434,11 +434,8 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
 
                 final AttributedCharacterIterator iterator = document.
                         getStyledLine(line);
-                int lineHeight = document.getLineHeight(line);
-                lineHeight += lineHeight * 0.2;
                 final AttributedString as = new AttributedString(iterator,
-                        firstChar,
-                        lastChar);
+                        firstChar, lastChar);
 
                 as.addAttribute(TextAttribute.FOREGROUND,
                         textPane.getBackground());

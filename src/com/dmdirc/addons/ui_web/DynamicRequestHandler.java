@@ -62,10 +62,10 @@ import org.mortbay.util.ajax.JSONObjectConvertor;
 public class DynamicRequestHandler extends AbstractHandler {
     
     /** Number of milliseconds before a client is timed out. */
-    private static long TIMEOUT = 1000 * 60 * 2; // Two minutes
+    private static final long TIMEOUT = 1000 * 60 * 2; // Two minutes
 
     /** The last time each client was seen. */
-    private static final Map<String, Client> clients = new HashMap<String, Client>();
+    private static final Map<String, Client> CLIENTS = new HashMap<String, Client>();
 
     /**
      * Creates a new instance of DynamicRequestHandler. Registers object
@@ -82,11 +82,11 @@ public class DynamicRequestHandler extends AbstractHandler {
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
-                synchronized (clients) {
+                synchronized (CLIENTS) {
                     for (Map.Entry<String, Client> entry 
-                            : new HashMap<String, Client>(clients).entrySet()) {
+                            : new HashMap<String, Client>(CLIENTS).entrySet()) {
                         if (entry.getValue().getTime() > TIMEOUT) {
-                            clients.remove(entry.getKey());
+                            CLIENTS.remove(entry.getKey());
                         }
                     }
                 }
@@ -107,12 +107,12 @@ public class DynamicRequestHandler extends AbstractHandler {
         if (request.getParameter("clientID") != null) {
             final String clientID = request.getParameter("clientID");
             
-            if (!clients.containsKey(clientID)) {
-                clients.put(clientID, new Client(request.getRemoteHost()));
+            if (!CLIENTS.containsKey(clientID)) {
+                CLIENTS.put(clientID, new Client(request.getRemoteHost()));
             }
 
-            synchronized (clients) {
-                clients.get(clientID).touch();
+            synchronized (CLIENTS) {
+                CLIENTS.get(clientID).touch();
             }
         }
         
@@ -172,7 +172,7 @@ public class DynamicRequestHandler extends AbstractHandler {
         response.setStatus(HttpServletResponse.SC_OK);
         response.setContentType("application/json");
 
-        final Client client = clients.get(request.getParameter("clientID"));
+        final Client client = CLIENTS.get(request.getParameter("clientID"));
 
         synchronized (client.getMutex()) {
             List<Event> myEvents = client.retrieveEvents();
@@ -181,7 +181,7 @@ public class DynamicRequestHandler extends AbstractHandler {
                 Continuation continuation = ContinuationSupport.getContinuation(request,
                         client.getMutex());
                 client.setContinuation(continuation);
-                continuation.suspend(30000l);
+                continuation.suspend(30000L);
 
                 myEvents = client.retrieveEvents();
             }
@@ -322,7 +322,7 @@ public class DynamicRequestHandler extends AbstractHandler {
             final HttpServletResponse response) throws IOException {
         response.setStatus(HttpServletResponse.SC_OK);
         response.setContentType("application/json");
-        response.getWriter().write(JSON.toString(clients.values().toArray()));
+        response.getWriter().write(JSON.toString(CLIENTS.values().toArray()));
     }
     
     private void doJoinChannel(final HttpServletRequest request,
@@ -357,15 +357,15 @@ public class DynamicRequestHandler extends AbstractHandler {
     }
 
     public static void addEvent(final Event event) {
-        synchronized (clients) {
-            for (Client client : clients.values()) {
+        synchronized (CLIENTS) {
+            for (Client client : CLIENTS.values()) {
                 client.addEvent(event);
             }
         }
     }
 
     public static void addEvent(String clientID, Event event) {
-        clients.get(clientID).addEvent(event);
+        CLIENTS.get(clientID).addEvent(event);
     }
 
 }

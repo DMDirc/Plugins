@@ -126,7 +126,7 @@ public class ReverseFileReader {
             throw new IOException("File has been closed.");
         }
         // Used to store result to output.
-//		StringBuilder line = new StringBuilder();
+
         final ArrayList<Byte> line = new ArrayList<Byte>(seekLength);
         // Used to store position in file pre-read
         long fp = 0;

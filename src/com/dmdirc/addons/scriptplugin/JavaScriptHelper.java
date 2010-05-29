@@ -21,7 +21,8 @@
  */
 
 package com.dmdirc.addons.scriptplugin;
-import java.util.Hashtable;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Used to allow the rhino javascript to do stuff that it otherwise can't, such
@@ -31,13 +32,13 @@ import java.util.Hashtable;
  */
 public class JavaScriptHelper {
     /** Used to identify the JavaScriptHelper. */
-    private static final String myIDString = "DMDIRC-JSH";
+    private static final String ID = "DMDIRC-JSH";
     
     /** Used to allow scripts to know if a specific function they need is available. */
-    private final int myVersion = 2;
+    private static final int VERSION = 2;
 
-    /** Hashtable for storing stufff. */
-    private static Hashtable<String,Object> globalSettings = new Hashtable<String,Object>();
+    /** Hashtable for storing stuff. */
+    private static final Map<String,Object> SETTINGS = new HashMap<String,Object>();
     
     /**
      * Method to set Stuff.
@@ -48,8 +49,8 @@ public class JavaScriptHelper {
     public void setGlobal(String setting, Object value) {
         if (setting.equals("")) { return; }
         setting = setting.toLowerCase();
-        if (globalSettings.containsKey(setting)) { globalSettings.remove(setting); }
-        if (value != null) { globalSettings.put(setting,value); }
+        if (SETTINGS.containsKey(setting)) { SETTINGS.remove(setting); }
+        if (value != null) { SETTINGS.put(setting,value); }
     }
     
     /**
@@ -61,7 +62,7 @@ public class JavaScriptHelper {
     public Object getGlobal(String setting) {
         if (setting.equals("")) { return ""; }
         setting = setting.toLowerCase();
-        if (globalSettings.containsKey(setting)) { return globalSettings.get(setting); }
+        if (SETTINGS.containsKey(setting)) { return SETTINGS.get(setting); }
         return null;
     }
     
@@ -86,7 +87,7 @@ public class JavaScriptHelper {
      *
      * @return JavaScriptHelper version
      */
-    public int getVersion() { return myVersion; }
+    public int getVersion() { return VERSION; }
     
     /**
      * Get the ID of this JavaScriptHelper.
@@ -94,5 +95,5 @@ public class JavaScriptHelper {
      *
      * @return JavaScriptHelper ID
      */
-    public String getID() { return myIDString; }
+    public String getID() { return ID; }
 }

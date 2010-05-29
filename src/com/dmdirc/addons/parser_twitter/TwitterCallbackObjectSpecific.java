@@ -42,7 +42,7 @@ import java.util.Map;
 public class TwitterCallbackObjectSpecific extends CallbackObjectSpecific {
 
     /** A map of interfaces to the classes which should be instansiated for them. */
-    protected static Map<Class<?>, Class<?>> IMPL_MAP = new HashMap<Class<?>, Class<?>>();
+    protected static final Map<Class<?>, Class<?>> IMPL_MAP = new HashMap<Class<?>, Class<?>>();
 
     static {
         IMPL_MAP.put(ChannelClientInfo.class, TwitterChannelClientInfo.class);

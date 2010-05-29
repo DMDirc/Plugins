@@ -19,7 +19,6 @@ package com.dmdirc.addons.freedesktop_notifications.commons;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.util.Locale;
 
 /**
  * <p>Escapes and unescapes <code>String</code>s for
@@ -71,7 +70,7 @@ public class StringEscapeUtils {
             return null;
         }
         try {
-            StringWriter writer = new StringWriter ((int)(str.length() * 1.5));
+            StringWriter writer = new StringWriter((int)(str.length() * 1.5));
             escapeHtml(writer, str);
             return writer.toString();
         } catch (IOException ioe) {
@@ -110,8 +109,8 @@ public class StringEscapeUtils {
      * @see <a href="http://www.w3.org/TR/html401/charset.html#code-position">HTML 4.01 Code positions</a>
      */
     public static void escapeHtml(Writer writer, String string) throws IOException {
-        if (writer == null ) {
-            throw new IllegalArgumentException ("The Writer must not be null.");
+        if (writer == null) {
+            throw new IllegalArgumentException("The Writer must not be null.");
         }
         if (string == null) {
             return;
@@ -141,7 +140,7 @@ public class StringEscapeUtils {
             return null;
         }
         try {
-            StringWriter writer = new StringWriter ((int)(str.length() * 1.5));
+            StringWriter writer = new StringWriter((int)(str.length() * 1.5));
             unescapeHtml(writer, str);
             return writer.toString();
         } catch (IOException ioe) {
@@ -169,8 +168,8 @@ public class StringEscapeUtils {
      * @see #escapeHtml(String)
      */
     public static void unescapeHtml(Writer writer, String string) throws IOException {
-        if (writer == null ) {
-            throw new IllegalArgumentException ("The Writer must not be null.");
+        if (writer == null) {
+            throw new IllegalArgumentException("The Writer must not be null.");
         }
         if (string == null) {
             return;

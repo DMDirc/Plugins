@@ -56,7 +56,7 @@ public class TransferWindow extends EmptyWindow implements ActionListener,
         SocketCloseListener, DCCTransferHandler {
 
     /** A version number for this class. */
-    private static final long serialVersionUID = 1l;
+    private static final long serialVersionUID = 1L;
 
     /** Progress Bar */
     private final JProgressBar progress = new JProgressBar();

@@ -1,4 +1,3 @@
-
 /**
  * @(#)MenuScroller.java	1.3.0 05/04/09
  */
@@ -441,8 +440,9 @@ public class MenuScroller {
      * @see MenuScroller#dispose()
      */
     @Override
-    public void finalize() throws Throwable {
+    protected void finalize() throws Throwable {
         dispose();
+        super.finalize();
     }
 
     private void setMenuItems() {

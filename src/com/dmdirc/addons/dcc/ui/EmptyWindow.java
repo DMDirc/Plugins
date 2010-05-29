@@ -35,7 +35,7 @@ import javax.swing.JPopupMenu;
 public class EmptyWindow extends TextFrame {
 
     /** A version number for this class. */
-    private static final long serialVersionUID = 2l;
+    private static final long serialVersionUID = 2L;
 
     /**
      * Creates a new empty window for the specified UI controller and owner.

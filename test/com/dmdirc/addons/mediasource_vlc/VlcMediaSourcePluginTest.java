@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.mediasource_vlc;
 
-import com.dmdirc.addons.nowplaying.MediaSourceState;
 import com.dmdirc.util.TextFile;
 import java.io.IOException;
 import org.junit.Test;

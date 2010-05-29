@@ -188,7 +188,7 @@ public class TransferContainer extends FrameContainer<TransferWindow> implements
         final long time = getElapsedTime();
 
         synchronized (this) {
-            return time > 0 ? (transferCount / time) : transferCount;
+            return time > 0 ? ((double) transferCount / time) : transferCount;
         }
     }
 

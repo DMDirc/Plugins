@@ -24,7 +24,6 @@ package com.dmdirc.addons.ui_swing.components.statusbar;
 
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SwingController;
-import com.dmdirc.addons.ui_swing.dialogs.error.ErrorListDialog;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.ErrorListener;
 import com.dmdirc.logger.ErrorManager;
@@ -68,7 +67,7 @@ public class ErrorPanel extends StatusbarPopupPanel implements ErrorListener, Ac
     /** Swing status bar. */
     private SwingStatusBar statusBar;
     /** Error manager. */
-    private transient final ErrorManager errorManager = ErrorManager.getErrorManager();
+    private final transient ErrorManager errorManager = ErrorManager.getErrorManager();
     /** Dismiss menu. */
     private final JPopupMenu menu;
     /** Dismiss menu item. */

@@ -324,7 +324,7 @@ public abstract class DCC implements Runnable {
      * @return ip as a long
      */
     public static long ipToLong(final String ip) {
-        final String bits[] = ip.split("\\.");
+        final String[] bits = ip.split("\\.");
         if (bits.length > 3) {
             return (Long.parseLong(bits[0]) << 24) + (Long.parseLong(bits[1]) << 16)
                     + (Long.parseLong(bits[2]) << 8) + Long.parseLong(bits[3]);

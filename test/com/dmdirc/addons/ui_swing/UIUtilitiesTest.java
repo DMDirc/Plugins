@@ -58,8 +58,8 @@ public class UIUtilitiesTest {
         //incorrect look and feel name = system
         assertEquals(sysLAF, UIUtilities.getLookAndFeel("incorrectName"));
         //Look and feel name -> class name
-        final LookAndFeelInfo[] LAFs = UIManager.getInstalledLookAndFeels();
-        for (LookAndFeelInfo lookAndFeel : LAFs) {
+        final LookAndFeelInfo[] lafs = UIManager.getInstalledLookAndFeels();
+        for (LookAndFeelInfo lookAndFeel : lafs) {
             assertEquals(lookAndFeel.getClassName(), UIUtilities.getLookAndFeel(lookAndFeel.getName()));
         }
     }

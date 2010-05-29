@@ -57,7 +57,6 @@ public final class LoggingCommand extends Command implements IntelligentCommand,
     @Override
     public void execute(final FrameContainer<?> origin,
             final CommandArguments args, final CommandContext context) {
-        final Server server = ((ServerCommandContext) context).getServer();
         final PluginInfo pluginInfo = PluginManager.getPluginManager().getPluginInfoByName("logging");
         if (pluginInfo == null) {
             sendLine(origin, args.isSilent(), FORMAT_ERROR, "Logging Plugin is not loaded.");

@@ -465,13 +465,13 @@ public class TypedProperties extends Properties {
      */
     public void setListProperty(final String key, final List<String> value) {
         final StringBuilder val = new StringBuilder();
-        final String LF = "\n";
+        final String lf = "\n";
         boolean first = true;
         for (final String bit : value) {
             if (first) {
                 first = false;
             } else {
-                val.append(LF);
+                val.append(lf);
             }
             val.append(bit);
         }

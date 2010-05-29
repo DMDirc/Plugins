@@ -31,7 +31,6 @@ import java.awt.Frame;
 import java.awt.Window;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.concurrent.Semaphore;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
