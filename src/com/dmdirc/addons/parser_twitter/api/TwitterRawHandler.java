@@ -28,13 +28,14 @@ package com.dmdirc.addons.parser_twitter.api;
  * @author shane
  */
 public interface TwitterRawHandler {
+
     /**
      * Handle input from twitter.
      *
      * @param api the TwitterAPI that recieved this input.
      * @param data The raw data to handle.
      */
-     void handleRawTwitterInput(final TwitterAPI api, final String data);
+    void handleRawTwitterInput(final TwitterAPI api, final String data);
 
     /**
      * Handle an output to twitter.
@@ -42,5 +43,6 @@ public interface TwitterRawHandler {
      * @param api the TwitterAPI that sent this output.
      * @param data The raw data to handle.
      */
-     void handleRawTwitterOutput(final TwitterAPI api, final String data);
+    void handleRawTwitterOutput(final TwitterAPI api, final String data);
+
 }
