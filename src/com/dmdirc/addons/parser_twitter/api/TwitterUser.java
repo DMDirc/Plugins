@@ -31,12 +31,13 @@ import org.w3c.dom.NodeList;
  * @author shane
  */
 public class TwitterUser {
+
     /** What is the screen name of this user? */
     private final String screenName;
 
     /** What is the user id of this user? */
     private final long userID;
-    
+
     /** What is the real name of this user? */
     private final String realName;
 
@@ -118,14 +119,16 @@ public class TwitterUser {
      * @param status Status to use
      */
     protected TwitterUser(final TwitterAPI api, final Node node, final TwitterStatus status) {
-        if (!(node instanceof Element)) { throw new TwitterRuntimeException("Can only use Element type nodes for user creation."); }
+        if (!(node instanceof Element)) {
+            throw new TwitterRuntimeException("Can only use Element type nodes for user creation.");
+        }
 
         final Element element = (Element) node;
         this.myAPI = api;
 
         this.realName = TwitterAPI.getElementContents(element, "name", "");
         this.screenName = (api.autoAt() ? "@" : "") + TwitterAPI.getElementContents(element, "screen_name", "");
-        
+
         this.myProfilePicture = TwitterAPI.getElementContents(element, "profile_image_url", "");
         this.myURL = TwitterAPI.getElementContents(element, "url", "");
         this.myLocation = TwitterAPI.getElementContents(element, "location", "");
@@ -179,7 +182,6 @@ public class TwitterUser {
         this.lastStatus = newStatus;
     }
 
-
     /**
      * Get the screen name for this user.
      *
@@ -188,7 +190,7 @@ public class TwitterUser {
     public String getScreenName() {
         return screenName;
     }
-    
+
     /**
      * Get the id for this user.
      * 
@@ -287,6 +289,5 @@ public class TwitterUser {
     public Long getRegisteredTime() {
         return myRegisteredTime;
     }
-
 
 }

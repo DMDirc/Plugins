@@ -34,6 +34,7 @@ import org.w3c.dom.NodeList;
  * @author shane
  */
 public class TwitterStatus implements Comparable<TwitterStatus> {
+
     /** The ID this message was in reply to. */
     private long replyID;
 
@@ -116,7 +117,9 @@ public class TwitterStatus implements Comparable<TwitterStatus> {
      * @param user User who this status belongs to.
      */
     protected TwitterStatus(final TwitterAPI api, final Node node, final String user) {
-        if (!(node instanceof Element)) { throw new TwitterRuntimeException("Can only use Element type nodes for status creation."); }
+        if (!(node instanceof Element)) {
+            throw new TwitterRuntimeException("Can only use Element type nodes for status creation.");
+        }
         this.myAPI = api;
         final Element element = (Element) node;
 
@@ -135,7 +138,7 @@ public class TwitterStatus implements Comparable<TwitterStatus> {
 
         this.id = TwitterAPI.parseLong(TwitterAPI.getElementContents(element, "id", ""), -1);
         this.replyID = TwitterAPI.parseLong(TwitterAPI.getElementContents(element, "in_reply_to_status_id", ""), -1);
-        
+
         this.time = TwitterAPI.timeStringToLong(TwitterAPI.getElementContents(element, "created_at", ""), 0);
 
         final TwitterUser userUser;
@@ -155,7 +158,6 @@ public class TwitterStatus implements Comparable<TwitterStatus> {
 
         api.updateStatus(this);
     }
-
 
     /**
      * Get the ID of this message
@@ -294,4 +296,5 @@ public class TwitterStatus implements Comparable<TwitterStatus> {
             return 0;
         }
     }
+
 }

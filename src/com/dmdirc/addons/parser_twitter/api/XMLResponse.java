@@ -98,8 +98,8 @@ public class XMLResponse {
                     if (request.getResponseCode() != 200) {
                         return "(" + request.getResponseCode() + ") " + request.getResponseMessage();
                     }
-                } catch (IOException ex) {
-                    return "Error obtaining response code: "+ex;
+                } catch (final IOException ex) {
+                    return "Error obtaining response code: " + ex;
                 }
             } else {
                 return error;
@@ -137,7 +137,8 @@ public class XMLResponse {
         if (request != null) {
             try {
                 return request.getResponseCode();
-            } catch (IOException ex) { }
+            } catch (final IOException ex) {
+            }
         }
 
         return 0;
@@ -153,4 +154,5 @@ public class XMLResponse {
     public boolean isGood() {
         return getResponseCode() == 200 && getDocument() != null && !isError();
     }
+
 }
