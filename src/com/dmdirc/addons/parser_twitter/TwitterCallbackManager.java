@@ -33,6 +33,7 @@ import com.dmdirc.parser.interfaces.callbacks.CallbackInterface;
  * @author chris
  */
 public class TwitterCallbackManager extends CallbackManager<Twitter> {
+
     /**
      * Create a new TwitterCallbackManager
      * 
@@ -50,10 +51,8 @@ public class TwitterCallbackManager extends CallbackManager<Twitter> {
 
     /** {@inheritDoc} */
     @Override
-    protected CallbackObjectSpecific getSpecificCallbackObject(final Twitter parser,
-            final Class<?> type) {
-        return new TwitterCallbackObjectSpecific(parser, this,
-                type.asSubclass(CallbackInterface.class));
+    protected CallbackObjectSpecific getSpecificCallbackObject(final Twitter parser, final Class<?> type) {
+        return new TwitterCallbackObjectSpecific(parser, this, type.asSubclass(CallbackInterface.class));
     }
 
 }

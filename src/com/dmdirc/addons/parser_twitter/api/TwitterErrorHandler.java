@@ -28,6 +28,7 @@ package com.dmdirc.addons.parser_twitter.api;
  * @author shane
  */
 public interface TwitterErrorHandler {
+
     /**
      * Handle an error from the Twitter API.
      *
@@ -38,5 +39,6 @@ public interface TwitterErrorHandler {
      * @param twitterOutput The output from the API that caused this error.
      * @param message If more information should be relayed to the user, it comes here
      */
-     void handleTwitterError(final TwitterAPI api, final Throwable t, final String source, final String twitterInput, final String twitterOutput, final String message);
+    void handleTwitterError(final TwitterAPI api, final Throwable t, final String source, final String twitterInput, final String twitterOutput, final String message);
+
 }

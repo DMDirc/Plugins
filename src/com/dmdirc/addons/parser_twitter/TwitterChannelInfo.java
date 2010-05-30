@@ -39,12 +39,13 @@ import java.util.Map;
  * @author shane
  */
 public class TwitterChannelInfo implements ChannelInfo {
+
     /** Name of this channel. */
     private final String myName;
 
     /** The Parser that owns this object. */
     private final Twitter myParser;
-    
+
     /** Topic of this channel. */
     private String myTopic = "";
 
@@ -59,6 +60,9 @@ public class TwitterChannelInfo implements ChannelInfo {
 
     /** Map to store misc stuff in. */
     private Map<Object, Object> myMap = new HashMap<Object, Object>();
+
+    /** Known blocked users. */
+    private Collection<ChannelListModeItem> bannedList = new ArrayList<ChannelListModeItem>();
 
     /**
      * Create a new TwitterChannelInfo.
@@ -233,23 +237,30 @@ public class TwitterChannelInfo implements ChannelInfo {
     /** {@inheritDoc} */
     @Override
     public void requestListModes() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        new Thread() {
+
+            @Override
+            public void run() {
+                final ArrayList<ChannelListModeItem> items = new ArrayList<ChannelListModeItem>();
+
+                final long time = System.currentTimeMillis() / 1000;
+                for (final TwitterUser user : myParser.getApi().getBlocked()) {
+                    items.add(new ChannelListModeItem(user.getScreenName(), myParser.getApi().getDisplayUsername(), time));
+                }
+                bannedList = items;
+            }
+
+        }.start();
     }
 
     /** {@inheritDoc} */
     @Override
     public Collection<ChannelListModeItem> getListMode(final char mode) {
-        final ArrayList<ChannelListModeItem> items = new ArrayList<ChannelListModeItem>();
-
-        // Ideally this should be cached somewhere, but for now this will do.
         if (mode == 'b') {
-            final long time = System.currentTimeMillis() / 1000;
-            for (TwitterUser user : myParser.getApi().getBlocked()) {
-                items.add(new ChannelListModeItem(user.getScreenName(), myParser.getApi().getDisplayUsername(), time));
-            }
+            return bannedList;
+        } else {
+            return new ArrayList<ChannelListModeItem>();
         }
-
-        return items;
     }
 
     /**
@@ -284,4 +295,5 @@ public class TwitterChannelInfo implements ChannelInfo {
     public Map<Object, Object> getMap() {
         return myMap;
     }
+
 }
