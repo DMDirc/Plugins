@@ -53,9 +53,13 @@ public final class FDNotifyCommand extends Command implements CommandInfo {
 
     /** {@inheritDoc} */
     @Override
-    public void execute(final FrameContainer<?> origin,
-            final CommandArguments args, final CommandContext context) {
-        myPlugin.showNotification("", args.getArgumentsAsString());
+    public void execute(final FrameContainer<?> origin, final CommandArguments args, final CommandContext context) {
+        new Thread() {
+            @Override
+            public void run() {
+                myPlugin.showNotification("", args.getArgumentsAsString());
+            }
+        }.start();
     }
     
     

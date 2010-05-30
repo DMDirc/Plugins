@@ -41,5 +41,7 @@ enum Debug {
     /** General error info from the twitter parser. */
     twitterError,
     /** More debuggy error info from the twitter parser. */
-    twitterErrorMore;
+    twitterErrorMore,
+    /** General debuggy stuff. */
+    twitterGeneralDebug;
 }
