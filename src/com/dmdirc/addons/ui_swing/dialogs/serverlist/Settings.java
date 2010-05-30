@@ -29,6 +29,7 @@ import com.dmdirc.serverlists.ServerGroupItem;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.swing.JPanel;
 
@@ -101,5 +102,12 @@ public class Settings extends JPanel implements ServerListListener {
                     SettingsPanel.OptionType.FONT);
         }
         return panels.get(item);
+    }
+
+    /** Saves changes made to these settings. */
+    public void save() {
+        for (Entry<ServerGroupItem, SettingsPanel> entry : panels.entrySet()) {
+            entry.getValue().save();
+        }
     }
 }
