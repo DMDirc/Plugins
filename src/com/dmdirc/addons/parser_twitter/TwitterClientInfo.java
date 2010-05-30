@@ -23,11 +23,13 @@
 package com.dmdirc.addons.parser_twitter;
 
 import com.dmdirc.addons.parser_twitter.api.TwitterUser;
+import com.dmdirc.config.IdentityManager;
 import com.dmdirc.parser.interfaces.ChannelClientInfo;
 import com.dmdirc.parser.interfaces.LocalClientInfo;
 import com.dmdirc.parser.interfaces.Parser;
+import com.dmdirc.parser.interfaces.callbacks.ChannelNickChangeListener;
+import com.dmdirc.parser.interfaces.callbacks.ChannelUserModeChangeListener;
 import com.dmdirc.plugins.Plugin;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -39,8 +41,12 @@ import java.util.Map;
  * @author shane
  */
 public class TwitterClientInfo implements LocalClientInfo {
+
     /** This Clients User */
     private String myUser;
+
+    /** This Clients User Id. */
+    private long myUserId;
 
     /** My Parser */
     private Twitter myParser;
@@ -82,11 +88,21 @@ public class TwitterClientInfo implements LocalClientInfo {
 
         String[] temp = null;
         final String[] result = new String[3];
-        if (!hostname.isEmpty() && hostname.charAt(0) == ':') { hostname = hostname.substring(1); }
+        if (!hostname.isEmpty() && hostname.charAt(0) == ':') {
+            hostname = hostname.substring(1);
+        }
         temp = hostname.split("@", 2);
-        if (temp.length == 1) { result[2] = ""; } else { result[2] = temp[1]; }
+        if (temp.length == 1) {
+            result[2] = "";
+        } else {
+            result[2] = temp[1];
+        }
         temp = temp[0].split("!", 2);
-        if (temp.length == 1) { result[1] = ""; } else { result[1] = temp[1]; }
+        if (temp.length == 1) {
+            result[1] = "";
+        } else {
+            result[1] = temp[1];
+        }
         result[0] = (hadAt ? "@" : "") + temp[0];
 
         return result;
@@ -109,8 +125,30 @@ public class TwitterClientInfo implements LocalClientInfo {
      * @param parser Parser that owns this client.
      */
     public TwitterClientInfo(final String user, final Twitter parser) {
-        this.myUser = user;
         this.myParser = parser;
+        setUser(user);
+    }
+
+    /**
+     * Set the user for this TwitterClientInfo
+     *
+     * @param user Name of user.
+     */
+    public void setUser(final String user) {
+        this.myUser = user;
+        final TwitterUser tu = myParser.getApi().getCachedUser(myUser);
+        this.myUserId = tu == null ? -1 : tu.getID();
+    }
+
+    /**
+     * Set the user for this TwitterClientInfo.
+     *
+     * @param user User object
+     */
+    public void setUser(final TwitterUser user) {
+        if (user == null) { return; }
+        this.myUser = user.getScreenName();
+        this.myUserId = user.getID();
     }
 
     /** {@inheritDoc} */
@@ -133,26 +171,39 @@ public class TwitterClientInfo implements LocalClientInfo {
     }
 
     /**
-    * Check if this is a fake client.
-    *
-    * @return True if this is a fake client, else false
-    */
-    public boolean isFake() { return isFake; }
-    
+     * Get the user ID this client.
+     *
+     * @return User ID for this client.
+     */
+    public long getUserID() {
+        return myUserId;
+    }
+
     /**
-    * Check if this client is actually a server.
-    *
-    * @return True if this client is actually a server.
-    */
-    public boolean isServer() { return !(myUser.indexOf(':') == -1); }
-    
+     * Check if this is a fake client.
+     *
+     * @return True if this is a fake client, else false
+     */
+    public boolean isFake() {
+        return isFake;
+    }
+
     /**
-    * Set if this is a fake client.
-    * This returns "this" and thus can be used in the construction line.
-    *
-    * @param newValue new value for isFake - True if this is a fake client, else false
-    * @return this Object
-    */
+     * Check if this client is actually a server.
+     *
+     * @return True if this client is actually a server.
+     */
+    public boolean isServer() {
+        return !(myUser.indexOf(':') == -1);
+    }
+
+    /**
+     * Set if this is a fake client.
+     * This returns "this" and thus can be used in the construction line.
+     *
+     * @param newValue new value for isFake - True if this is a fake client, else false
+     * @return this Object
+     */
     public TwitterClientInfo setFake(final boolean newValue) {
         isFake = newValue;
         return this;

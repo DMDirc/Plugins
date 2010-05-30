@@ -25,9 +25,9 @@ package com.dmdirc.addons.parser_twitter;
 import com.dmdirc.parser.interfaces.ChannelClientInfo;
 import com.dmdirc.parser.interfaces.ChannelInfo;
 import com.dmdirc.parser.interfaces.ClientInfo;
-
-import java.util.HashMap;
+import com.dmdirc.parser.interfaces.callbacks.ChannelKickListener;
 import java.util.Map;
+import java.util.HashMap;
 
 /**
  * ChannelClientInfo class for the Twitter plugin.
@@ -132,7 +132,11 @@ public class TwitterChannelClientInfo implements ChannelClientInfo {
     /** {@inheritDoc} */
     @Override
     public void kick(final String message) {
-        ((Twitter) myClient.getParser()).getApi().delFriend(myClient.getUser().getScreenName());
+        final Twitter parser = (Twitter) myChannel.getParser();
+        final ClientInfo ci = parser.getLocalClient();
+        parser.getCallbackManager().getCallbackType(ChannelKickListener.class).call(myChannel, this, myChannel.getChannelClient(ci), message, ci.getHostname());
+
+        ((Twitter)myClient.getParser()).getApi().delFriend(myClient.getUser().getScreenName());
         myChannel.delChannelClient(this);
         myClient.delChannelClient(this);
     }

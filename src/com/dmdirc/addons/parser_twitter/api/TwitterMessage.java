@@ -190,7 +190,7 @@ public class TwitterMessage implements Comparable<TwitterMessage> {
     @Override
     public boolean equals(final Object message) {
         if (message instanceof TwitterMessage) {
-            return ((TwitterMessage) message).getID() == this.id;
+            return ((TwitterMessage)message).getID() == this.id;
         } else {
             return false;
         }
