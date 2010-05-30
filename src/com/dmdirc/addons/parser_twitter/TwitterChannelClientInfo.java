@@ -25,6 +25,7 @@ package com.dmdirc.addons.parser_twitter;
 import com.dmdirc.parser.interfaces.ChannelClientInfo;
 import com.dmdirc.parser.interfaces.ChannelInfo;
 import com.dmdirc.parser.interfaces.ClientInfo;
+import com.dmdirc.parser.interfaces.callbacks.ChannelKickListener;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,9 +36,10 @@ import java.util.Map;
  * @author shane
  */
 public class TwitterChannelClientInfo implements ChannelClientInfo {
+
     /** My ChannelInfo.  */
     private TwitterChannelInfo myChannel;
-    
+
     /** My ClientInfo. */
     private TwitterClientInfo myClient;
 
@@ -102,9 +104,11 @@ public class TwitterChannelClientInfo implements ChannelClientInfo {
      * @return Value for this clients modes.
      */
     public int getImportantModeValue() {
-        if (myClient == null || myClient.isFake()) { return 0; }
+        if (myClient == null || myClient.isFake()) {
+            return 0;
+        }
         final String ourNickname = ((Twitter) myClient.getParser()).getApi().getDisplayUsername();
-        
+
         if (ourNickname.equalsIgnoreCase(myClient.getNickname())) {
             // Show ourselves as half-op
             return 2;
@@ -132,6 +136,10 @@ public class TwitterChannelClientInfo implements ChannelClientInfo {
     /** {@inheritDoc} */
     @Override
     public void kick(final String message) {
+        final Twitter parser = (Twitter) myChannel.getParser();
+        final ClientInfo ci = parser.getLocalClient();
+        parser.getCallbackManager().getCallbackType(ChannelKickListener.class).call(myChannel, this, myChannel.getChannelClient(ci), message, ci.getHostname());
+
         ((Twitter) myClient.getParser()).getApi().delFriend(myClient.getUser().getScreenName());
         myChannel.delChannelClient(this);
         myClient.delChannelClient(this);
@@ -162,4 +170,5 @@ public class TwitterChannelClientInfo implements ChannelClientInfo {
     public String toString() {
         return getImportantModePrefix() + myClient.getNickname();
     }
+
 }

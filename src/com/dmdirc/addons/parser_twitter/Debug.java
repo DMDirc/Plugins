@@ -28,6 +28,7 @@ package com.dmdirc.addons.parser_twitter;
  * @author shane
  */
 enum Debug {
+
     /** Debug information related to api calls. */
     apiCalls,
     /** Debug information related to sleeping. */
@@ -41,5 +42,8 @@ enum Debug {
     /** General error info from the twitter parser. */
     twitterError,
     /** More debuggy error info from the twitter parser. */
-    twitterErrorMore;
+    twitterErrorMore,
+    /** General debuggy stuff. */
+    twitterGeneralDebug;
+
 }

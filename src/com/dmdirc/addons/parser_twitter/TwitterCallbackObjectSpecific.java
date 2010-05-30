@@ -59,8 +59,7 @@ public class TwitterCallbackObjectSpecific extends CallbackObjectSpecific {
      * @param manager Callback Manager that owns this object.
      * @param type Type of callback.
      */
-    public TwitterCallbackObjectSpecific(final Parser parser,
-            final CallbackManager<?> manager, final Class<? extends CallbackInterface> type) {
+    public TwitterCallbackObjectSpecific(final Parser parser, final CallbackManager<?> manager, final Class<? extends CallbackInterface> type) {
         super(parser, manager, type);
     }
 

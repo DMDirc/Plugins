@@ -150,9 +150,9 @@ class Entities {
     };
 
     // package scoped for testing
-    static final int ISO8859_1_ARRAY_LENGTH = ISO8859_1_ARRAY.length;
+    static int ISO8859_1_ARRAY_LENGTH = ISO8859_1_ARRAY.length;
     
-    static String getISO88591(int i, int j) {
+    static String getISO8859_1(int i, int j) {
         return ISO8859_1_ARRAY[i][j];
     }
 
@@ -355,7 +355,7 @@ class Entities {
     };
     
     // package scoped for testing
-    static final int HTML40_ARRAY_LENGTH = HTML40_ARRAY.length;
+    static int HTML40_ARRAY_LENGTH = HTML40_ARRAY.length;
     
     static String getHTML40(int i, int j) {
         return HTML40_ARRAY[i][j];
@@ -458,7 +458,7 @@ class Entities {
          * {@inheritDoc}
          */
         public void add(String name, int value) {
-            mapNameToValue.put(name, value);
+            mapNameToValue.put(name, new Integer(value));
             mapValueToName.put(value, name);
         }
 
@@ -481,7 +481,7 @@ class Entities {
         }
     }
 
-    abstract static class MapIntMap implements Entities.EntityMap {
+    static abstract class MapIntMap implements Entities.EntityMap {
         protected Map<String, Integer> mapNameToValue;
 
         protected Map<Integer, String> mapValueToName;
@@ -490,15 +490,15 @@ class Entities {
          * {@inheritDoc}
          */
         public void add(String name, int value) {
-            mapNameToValue.put(name, value);
-            mapValueToName.put(value, name);
+            mapNameToValue.put(name, new Integer(value));
+            mapValueToName.put(new Integer(value), name);
         }
 
         /**
          * {@inheritDoc}
          */
         public String name(int value) {
-            return mapValueToName.get(value);
+            return mapValueToName.get(new Integer(value));
         }
 
         /**
@@ -536,7 +536,7 @@ class Entities {
     static class LookupEntityMap extends PrimitiveEntityMap {
         private String[] lookupTable;
 
-        private static final int LOOKUP_TABLE_SIZE = 256;
+        private int LOOKUP_TABLE_SIZE = 256;
 
         /**
          * {@inheritDoc}
@@ -972,13 +972,14 @@ class Entities {
                             char isHexChar = entityContent.charAt(1);
                             try {
                                 switch (isHexChar) {
-                                    case 'X':
-                                    case 'x':
+                                    case 'X' :
+                                    case 'x' : {
                                         entityValue = Integer.parseInt(entityContent.substring(2), 16);
                                         break;
-                                    default:
+                                    }
+                                    default : {
                                         entityValue = Integer.parseInt(entityContent.substring(1), 10);
-                                        break;
+                                    }
                                 }
                                 if (entityValue > 0xFFFF) {
                                     entityValue = -1;

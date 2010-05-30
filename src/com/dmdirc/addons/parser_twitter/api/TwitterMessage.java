@@ -32,6 +32,7 @@ import org.w3c.dom.NodeList;
  * @author shane
  */
 public class TwitterMessage implements Comparable<TwitterMessage> {
+
     /** ID of this message. */
     final long id;
 
@@ -40,7 +41,7 @@ public class TwitterMessage implements Comparable<TwitterMessage> {
 
     /** Owner of this message. */
     final String sender;
-    
+
     /** Target of this message. */
     final String target;
 
@@ -86,7 +87,9 @@ public class TwitterMessage implements Comparable<TwitterMessage> {
      * @param node Node to use.
      */
     protected TwitterMessage(final TwitterAPI api, final Node node) {
-        if (!(node instanceof Element)) { throw new TwitterRuntimeException("Can only use Element type nodes for message creation."); }
+        if (!(node instanceof Element)) {
+            throw new TwitterRuntimeException("Can only use Element type nodes for message creation.");
+        }
         this.myAPI = api;
         final Element element = (Element) node;
 
@@ -154,7 +157,7 @@ public class TwitterMessage implements Comparable<TwitterMessage> {
     public TwitterUser getTarget() {
         return myAPI.getCachedUser(target);
     }
-    
+
     /**
      * Get the ID of this message.
      *
@@ -223,4 +226,5 @@ public class TwitterMessage implements Comparable<TwitterMessage> {
             return 0;
         }
     }
+
 }
