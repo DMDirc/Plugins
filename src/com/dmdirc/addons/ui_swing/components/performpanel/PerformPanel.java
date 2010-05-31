@@ -72,9 +72,10 @@ public class PerformPanel extends JPanel {
      *
      * By default this panel displays a blank text area.
      *
-     * @param performList Collection of PerformDescriptions to initiliase
+     * @param performs Collection of PerformDescriptions to initiliase
      */
     public PerformPanel(final Collection<PerformDescription> performs) {
+        super();
         for (PerformDescription perform : performs) {
             addPerform(perform);
         }
@@ -106,9 +107,6 @@ public class PerformPanel extends JPanel {
 
     /**
      * Saves modifications to the provided performs.
-     *
-     * @param perform PerformDescription to save
-     * @param text Text to save to this PerformDescription
      */
     public void savePerform() {
         performs.put(visiblePerform, performSpace.getText().split("\n"));
