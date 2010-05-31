@@ -22,16 +22,12 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.serverlist;
 
-import com.dmdirc.actions.wrappers.PerformWrapper;
+import com.dmdirc.addons.ui_swing.components.performpanel.PerformPanel;
+import com.dmdirc.serverlists.ServerGroup;
 import com.dmdirc.serverlists.ServerGroupItem;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import javax.swing.UIManager;
 
 import net.miginfocom.swing.MigLayout;
@@ -47,11 +43,8 @@ public class Perform extends JPanel implements ServerListListener {
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 2;
-    /** Perform list. */
-    private final Map<ServerGroupItem, JTextArea> performs =
-            new HashMap<ServerGroupItem, JTextArea>();
-    /** Perform scroll pane. */
-    private final JScrollPane scrollPane;
+    /** Perform panel. */
+    private final PerformPanel performPanel;
     /** Server list model. */
     private final ServerListModel model;
 
@@ -64,15 +57,18 @@ public class Perform extends JPanel implements ServerListListener {
         super();
 
         this.model = model;
+        performPanel = new PerformPanel();
 
-        scrollPane = new JScrollPane();
         addListeners();
+        if (model.getSelectedItemPerformDescription() != null) {
+            performPanel.switchPerform(model
+                    .getSelectedItemPerformDescription());
+        }
 
-        scrollPane.setViewportView(getPerfom(model.getSelectedItem()));
         setBorder(BorderFactory.createTitledBorder(UIManager.
                         getBorder("TitledBorder.border"), "Network perform"));
         setLayout(new MigLayout("fill"));
-        add(scrollPane, "grow");
+        add(performPanel, "grow");
     }
 
     /**
@@ -82,27 +78,28 @@ public class Perform extends JPanel implements ServerListListener {
         model.addServerListListener(this);
     }
 
-    /**
-     * Gets (and creates if required) the perform for a specified server group
-     * item.
-     *
-     * @param item Server group item to get perform for
-     *
-     * @return Perform text area for specified server group item
-     */
-    private JTextArea getPerfom(final ServerGroupItem item) {
-        if (!performs.containsKey(item)) {
-            final JTextArea text = new JTextArea();
-            text.setRows(5);
-            PerformWrapper.getPerformWrapper();
-            performs.put(item, text);
-        }
-        return performs.get(item);
+    /** {@inheritDoc} */
+    @Override
+    public void serverGroupChanged(final ServerGroupItem item) {
+        performPanel.switchPerform(model.getSelectedItemPerformDescription());
     }
 
     /** {@inheritDoc} */
     @Override
-    public void serverGroupChanged(final ServerGroupItem item) {
-        scrollPane.setViewportView(getPerfom(item));
+    public void dialogClosed(final boolean save) {
+        //TODO fix perform descriptions first
+        //performPanel.savePerform();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void serverGroupAdded(final ServerGroup group) {
+        //Ignore
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void serverGroupRemoved(final ServerGroup group) {
+        //Ignore
     }
 }

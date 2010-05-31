@@ -22,21 +22,29 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.serverlist;
 
+import com.dmdirc.addons.ui_swing.components.LockedLayer;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
+import com.dmdirc.serverlists.ServerGroup;
+import com.dmdirc.serverlists.ServerGroupItem;
 
 import java.awt.Window;
+import java.awt.color.ColorSpace;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.ColorConvertOp;
 
 import javax.swing.JButton;
 
 import net.miginfocom.swing.MigLayout;
 
+import org.jdesktop.jxlayer.JXLayer;
+import org.jdesktop.jxlayer.plaf.effect.BufferedImageOpEffect;
+
 /**
  * Dialog to show and edit server lists.
  */
 public final class ServerListDialog extends StandardDialog implements
-        ActionListener {
+        ActionListener, ServerListListener {
 
     /**
      * A version number for this class. It should be changed whenever the class
@@ -50,6 +58,22 @@ public final class ServerListDialog extends StandardDialog implements
     private final JButton connectButton;
     /** Previously created instance of dialog. */
     private static volatile ServerListDialog me = null;
+    /** Info lock. */
+    private final LockedLayer<Info> infoLock;
+    /** Info layer. */
+    private final JXLayer<Info> infoLayer;
+    /** Perform lock. */
+    private final LockedLayer<Perform> performLock;
+    /** Perform layer. */
+    private final JXLayer<Perform> performLayer;
+    /** Profile lock. */
+    private final LockedLayer<Profiles> profileLock;
+    /** Profile layer. */
+    private final JXLayer<Profiles> profileLayer;
+    /** Settings lock. */
+    private final LockedLayer<Settings> settingsLock;
+    /** Settings layer. */
+    private final JXLayer<Settings> settingsLayer;
 
     /**
      * Creates the dialog if one doesn't exist, and displays it.
@@ -96,13 +120,32 @@ public final class ServerListDialog extends StandardDialog implements
 
         connectButton = new JButton("Connect");
 
+        profileLock = new LockedLayer<Profiles>(new BufferedImageOpEffect(
+                new ColorConvertOp(ColorSpace.getInstance(ColorSpace.CS_GRAY),
+                null)));
+        performLock = new LockedLayer<Perform>(new BufferedImageOpEffect(
+                new ColorConvertOp(ColorSpace.getInstance(ColorSpace.CS_GRAY),
+                null)));
+        settingsLock = new LockedLayer<Settings>(new BufferedImageOpEffect(
+                new ColorConvertOp(ColorSpace.getInstance(ColorSpace.CS_GRAY),
+                null)));
+        infoLock = new LockedLayer<Info>(new BufferedImageOpEffect(
+                new ColorConvertOp(ColorSpace.getInstance(ColorSpace.CS_GRAY),
+                null)));
+        profileLayer = new JXLayer<Profiles>(new Profiles(model), profileLock);
+        performLayer = new JXLayer<Perform>(new Perform(model), performLock);
+        settingsLayer = new JXLayer<Settings>(new Settings(model),
+                settingsLock);
+        infoLayer = new JXLayer<Info>(new Info(model), infoLock);
+        lockLayers();
+
         setLayout(new MigLayout("fill, wrap 2, wmin 600, wmax 600"));
 
         add(new Tree(model), "grow, spany 4, wmax 150, wmin 150");
-        add(new Info(model), "spanx 2, growx, pushx");
-        add(new Settings(model), "grow, push, gaptop unrel, gapbottom unrel");
-        add(new Perform(model), "grow, push");
-        add(new Profiles(model), "growx, pushx, spanx 2");
+        add(infoLayer, "spanx 2, growx, pushx");
+        add(settingsLayer, "grow, push, gaptop unrel, gapbottom unrel");
+        add(performLayer, "grow, push");
+        add(profileLayer, "growx, pushx, spanx 2");
         add(connectButton, "skip 1, split 3, right, gapright unrel*2, "
                 + "sgx button");
         add(getLeftButton(), "right, sgx button");
@@ -128,9 +171,10 @@ public final class ServerListDialog extends StandardDialog implements
     @Override
     public void actionPerformed(final ActionEvent e) {
         if (e.getSource() == getOkButton()) {
-            model.saveChanges();
+            model.dialogClosed(true);
             dispose();
         } else if (e.getSource() == getCancelButton()) {
+            model.dialogClosed(false);
             dispose();
         } else if (e.getSource() == connectButton) {
             model.getSelectedItem().connect();
@@ -147,5 +191,41 @@ public final class ServerListDialog extends StandardDialog implements
             super.dispose();
             me = null;
         }
+    }
+
+    /**
+     * Lock or unlock layers.
+     */
+    private void lockLayers() {
+        final boolean lock = !model.hasItems();
+        performLock.setLocked(lock);
+        settingsLock.setLocked(lock);
+        infoLock.setLocked(lock);
+        profileLock.setLocked(true);
+        connectButton.setEnabled(!lock);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void serverGroupChanged(final ServerGroupItem item) {
+        //Ignore
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void dialogClosed(final boolean save) {
+        //Ignore
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void serverGroupAdded(final ServerGroup group) {
+        lockLayers();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void serverGroupRemoved(final ServerGroup group) {
+        lockLayers();
     }
 }

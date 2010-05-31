@@ -25,6 +25,7 @@ package com.dmdirc.addons.ui_swing.dialogs.serverlist;
 import com.dmdirc.addons.ui_swing.components.vetoable.VetoableComboBoxModel;
 import com.dmdirc.config.Identity;
 import com.dmdirc.config.IdentityManager;
+import com.dmdirc.serverlists.ServerGroup;
 import com.dmdirc.serverlists.ServerGroupItem;
 
 import java.util.HashMap;
@@ -116,5 +117,23 @@ public class Profiles extends JPanel implements ServerListListener {
             combos.put(item, new JComboBox(comboModel));
         }
         return combos.get(item);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void dialogClosed(final boolean save) {
+        //TODO
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void serverGroupAdded(final ServerGroup group) {
+        //Ignore
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void serverGroupRemoved(final ServerGroup group) {
+        //Ignore
     }
 }
