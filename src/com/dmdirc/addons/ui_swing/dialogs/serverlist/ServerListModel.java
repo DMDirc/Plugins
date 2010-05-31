@@ -22,6 +22,9 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.serverlist;
 
+import com.dmdirc.actions.wrappers.PerformWrapper.PerformDescription;
+import com.dmdirc.actions.wrappers.PerformWrapper.PerformType;
+import com.dmdirc.serverlists.ServerEntry;
 import com.dmdirc.serverlists.ServerGroup;
 import com.dmdirc.serverlists.ServerGroupItem;
 import com.dmdirc.serverlists.ServerList;
@@ -61,6 +64,15 @@ public class ServerListModel {
     public DefaultTreeModel getTreeModel() {
         return populateModel(new DefaultTreeModel(
                 new DefaultMutableTreeNode()));
+    }
+
+    /**
+     * Has this model got any groups?
+     *
+     * @return true iif there are server groups
+     */
+    public boolean hasItems() {
+        return list.getServerGroups().size() > 0;
     }
 
     /**
@@ -127,6 +139,26 @@ public class ServerListModel {
     }
 
     /**
+     * Gets the perform description for the selected item.
+     *
+     * @return Perform description for the active sever group item
+     */
+    public PerformDescription getSelectedItemPerformDescription() {
+        if (activeItem instanceof ServerEntry) {
+            return new PerformDescription(PerformType.SERVER,
+                    activeItem.getName());
+        } else if (activeItem == null) {
+            return null;
+        } else if (activeItem instanceof ServerGroup) {
+            return new PerformDescription(PerformType.NETWORK,
+                    ((ServerGroup) activeItem).getNetwork());
+        } else {
+            throw new IllegalArgumentException(
+                    "Unable to work out perform type");
+        }
+    }
+
+    /**
      * Gets the currently selected group.
      *
      * @return Currently selected group
@@ -146,8 +178,13 @@ public class ServerListModel {
 
     /**
      * Saves the changes.
+     *
+     * @param  save Do we need to save changes
      */
-    public void saveChanges() {
-        //TODO
+    public void dialogClosed(final boolean save) {
+        for (ServerListListener listener : listeners.get(
+                ServerListListener.class)) {
+            listener.dialogClosed(save);
+        }
     }
 }

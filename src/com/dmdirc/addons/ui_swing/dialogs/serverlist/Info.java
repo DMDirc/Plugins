@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_swing.dialogs.serverlist;
 
 import com.dmdirc.addons.ui_swing.components.text.HTMLLabel;
+import com.dmdirc.serverlists.ServerGroup;
 import com.dmdirc.serverlists.ServerGroupItem;
 import com.dmdirc.ui.core.util.URLHandler;
 
@@ -130,5 +131,23 @@ public class Info extends JPanel implements HyperlinkListener,
         infoLabel.setVisible(true);
         linkLabel.setVisible(true);
         setVisible(true);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void dialogClosed(final boolean save) {
+        //Ignore
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void serverGroupAdded(final ServerGroup group) {
+        //Ignore
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void serverGroupRemoved(final ServerGroup group) {
+        //Ignore
     }
 }
