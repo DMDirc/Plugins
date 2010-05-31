@@ -25,11 +25,13 @@ package com.dmdirc.addons.ui_swing.dialogs.serverlist;
 import com.dmdirc.addons.ui_swing.components.vetoable.VetoableComboBoxModel;
 import com.dmdirc.config.Identity;
 import com.dmdirc.config.IdentityManager;
+import com.dmdirc.serverlists.ServerGroup;
 import com.dmdirc.serverlists.ServerGroupItem;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
@@ -110,11 +112,39 @@ public class Profiles extends JPanel implements ServerListListener {
 
             final List<Identity> profiles = IdentityManager.getCustomIdentities(
                     "profile");
+            Identity selectedItem = null;
             for (Identity profile : profiles) {
                 comboModel.addElement(profile);
+                if (profile.getName().equals(item.getProfile())) {
+                    selectedItem = profile;
+                }
             }
+            comboModel.setSelectedItem(selectedItem);
             combos.put(item, new JComboBox(comboModel));
         }
         return combos.get(item);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void dialogClosed(final boolean save) {
+        if (save) {
+            for (Entry<ServerGroupItem, JComboBox> entry : combos.entrySet()) {
+                entry.getKey().setProfile(((Identity) entry.getValue()
+                        .getSelectedItem()).getName());
+            }
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void serverGroupAdded(final ServerGroup group) {
+        //Ignore
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void serverGroupRemoved(final ServerGroup group) {
+        //Ignore
     }
 }
