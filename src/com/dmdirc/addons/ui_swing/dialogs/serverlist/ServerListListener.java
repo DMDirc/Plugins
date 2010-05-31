@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.serverlist;
 
+import com.dmdirc.serverlists.ServerGroup;
 import com.dmdirc.serverlists.ServerGroupItem;
 
 /**
@@ -35,4 +36,25 @@ public interface ServerListListener {
      * @param item Currently selected item
      */
     void serverGroupChanged(ServerGroupItem item);
+
+    /**
+     * Called to indicate the dialog has been closed.
+     *
+     * @param save Do we need to save changes
+     */
+    void dialogClosed(final boolean save);
+
+    /**
+     * Called to indicate a server group has been added.
+     *
+     * @param group New group
+     */
+    void serverGroupAdded(ServerGroup group);
+
+    /**
+     * Called to indicate a server group has been removed.
+     *
+     * @param group Removed group
+     */
+    void serverGroupRemoved(ServerGroup group);
 }

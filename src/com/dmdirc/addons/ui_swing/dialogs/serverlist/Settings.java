@@ -94,6 +94,9 @@ public class Settings extends JPanel implements ServerListListener {
             if (item instanceof ServerGroup) {
                 panels.put(item, new SettingsPanel(IdentityManager.
                         getNetworkConfig(item.getName()), ""));
+            } else if (item == null) {
+                panels.put(null, new SettingsPanel(IdentityManager
+                        .getConfigIdentity(), ""));
             } else {
                 panels.put(item, new SettingsPanel(IdentityManager.
                         getServerConfig(item.getName()), ""));
@@ -104,8 +107,9 @@ public class Settings extends JPanel implements ServerListListener {
         return panels.get(item);
     }
 
-    /** Saves changes made to these settings. */
-    public void save() {
+    /** {@inheritDoc} */
+    @Override
+    public void dialogClosed(final boolean save) {
         for (Entry<ServerGroupItem, SettingsPanel> entry : panels.entrySet()) {
             entry.getValue().save();
         }

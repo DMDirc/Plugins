@@ -117,4 +117,10 @@ public class Profiles extends JPanel implements ServerListListener {
         }
         return combos.get(item);
     }
+
+    /** {@inheritDoc} */
+    @Override
+    public void dialogClosed(final boolean save) {
+        //TODO
+    }
 }

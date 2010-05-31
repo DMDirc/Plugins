@@ -24,7 +24,6 @@ package com.dmdirc.addons.ui_swing.dialogs.serverlist;
 
 import com.dmdirc.addons.ui_swing.components.TreeScroller;
 import com.dmdirc.addons.ui_swing.components.renderers.ServerGroupTreeRenderer;
-import com.dmdirc.serverlists.ServerGroup;
 import com.dmdirc.serverlists.ServerGroupItem;
 
 import java.awt.Rectangle;
@@ -36,7 +35,6 @@ import javax.swing.JTree;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeSelectionModel;
 
 import net.miginfocom.swing.MigLayout;
@@ -54,8 +52,6 @@ public class Tree extends JPanel implements TreeSelectionListener {
     private static final long serialVersionUID = 2;
     /** Tree. */
     private final JTree items;
-    /** Tree model. */
-    private final DefaultTreeModel treeModel;
     /** Server list model. */
     private final ServerListModel model;
 
@@ -104,7 +100,6 @@ public class Tree extends JPanel implements TreeSelectionListener {
         items.setShowsRootHandles(true);
         new TreeScroller(items);
         items.setCellRenderer(new ServerGroupTreeRenderer());
-        treeModel = (DefaultTreeModel) items.getModel();
         items.scrollRectToVisible(new Rectangle(0, 0, 0, 0));
         items.setSelectionRow(0);
         valueChanged(null);
@@ -124,14 +119,12 @@ public class Tree extends JPanel implements TreeSelectionListener {
 
     /** {@inheritDoc} */
     @Override
-    public void valueChanged(final TreeSelectionEvent e) {
+    public final void valueChanged(final TreeSelectionEvent e) {
+        if (items.getSelectionPath() == null) {
+            return;
+        }
         final DefaultMutableTreeNode itemNode = (DefaultMutableTreeNode) items.
                 getSelectionPath().getLastPathComponent();
-        DefaultMutableTreeNode groupNode = (DefaultMutableTreeNode) items.
-                getSelectionPath().getLastPathComponent();
-        while (!((groupNode.getUserObject()) instanceof ServerGroup)) {
-            groupNode = (DefaultMutableTreeNode) groupNode.getParent();
-        }
         model.setSelectedItem((ServerGroupItem) itemNode.getUserObject());
     }
 }

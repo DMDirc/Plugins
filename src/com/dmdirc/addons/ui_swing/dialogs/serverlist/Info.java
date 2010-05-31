@@ -131,4 +131,10 @@ public class Info extends JPanel implements HyperlinkListener,
         linkLabel.setVisible(true);
         setVisible(true);
     }
+
+    /** {@inheritDoc} */
+    @Override
+    public void dialogClosed(final boolean save) {
+        //Ignore
+    }
 }
