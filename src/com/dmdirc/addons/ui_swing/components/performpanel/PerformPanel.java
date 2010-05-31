@@ -48,6 +48,12 @@ import net.miginfocom.swing.MigLayout;
  */
 public class PerformPanel extends JPanel {
 
+    /**
+     * A version number for this class. It should be changed whenever the class
+     * structure is changed (or anything else that would prevent serialized
+     * objects being unserialized with the new class).
+     */
+    private static final long serialVersionUID = 1;
     /** Text area that the perform is displayed in. */
     private JTextArea performSpace;
     /** Map of performs this panel can display. */
@@ -72,28 +78,30 @@ public class PerformPanel extends JPanel {
      *
      * By default this panel displays a blank text area.
      *
-     * @param performs Collection of PerformDescriptions to initiliase
+     * @param newPerforms Collection of PerformDescriptions to initialise
      */
-    public PerformPanel(final Collection<PerformDescription> performs) {
+    public PerformPanel(final Collection<PerformDescription> newPerforms) {
         super();
-        for (PerformDescription perform : performs) {
+
+        for (PerformDescription perform : newPerforms) {
             addPerform(perform);
         }
+        performs.put(null, new String[]{"", });
         setLayout(new MigLayout("ins 0, fill"));
         performSpace = new TextAreaInputField("");
         add(new JScrollPane(performSpace), "grow, push");
-        visiblePerform = null;
     }
 
     /**
      * This will add a perform to the internal cache so that switching performs
-     * is more efficient. Switching performs can be acheived using
+     * is more efficient. Switching performs can be achieved using
      * {@link #switchPerform(com.dmdirc.actions.wrappers.PerformWrapper.PerformDescription) }
      *
      * @param perform PerformDescription to add
      */
     public void addPerform(final PerformDescription perform) {
-        performs.put(perform, PerformWrapper.getPerformWrapper().getPerform(perform));
+        performs.put(perform, PerformWrapper.getPerformWrapper()
+                .getPerform(perform));
     }
 
     /**
@@ -110,9 +118,12 @@ public class PerformPanel extends JPanel {
      */
     public void savePerform() {
         performs.put(visiblePerform, performSpace.getText().split("\n"));
-        for (Entry<PerformDescription, String[]> perform : performs.entrySet()) {
-            PerformWrapper.getPerformWrapper().setPerform(perform.getKey(),
-                    perform.getValue());
+        for (Entry<PerformDescription, String[]> perform
+                : performs.entrySet()) {
+                    if (perform.getKey() != null) {
+                        PerformWrapper.getPerformWrapper().setPerform(
+                                perform.getKey(), perform.getValue());
+                    }
         }
     }
 
@@ -132,6 +143,7 @@ public class PerformPanel extends JPanel {
             performs.put(visiblePerform, performSpace.getText().split("\n"));
         }
         performSpace.setText(implode(performs.get(perform)));
+        performSpace.setEnabled(perform != null);
         visiblePerform = perform;
     }
 
