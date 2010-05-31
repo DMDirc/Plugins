@@ -51,10 +51,11 @@ public class PerformRenderer extends DefaultListCellRenderer {
         String friendlyText = type + " perform (" + target + ") ";
 
         if (profile != null) {
-            friendlyText = "This profile (" + profile + ")";
+            friendlyText = friendlyText + "This profile (" + profile + ")";
         } else {
-            friendlyText = "Any profile";
+            friendlyText = friendlyText + "Any profile";
         }
+        
         return super.getListCellRendererComponent(list, friendlyText, index,
                 isSelected, cellHasFocus);
     }
