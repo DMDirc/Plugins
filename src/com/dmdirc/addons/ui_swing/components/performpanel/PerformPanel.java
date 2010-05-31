@@ -79,7 +79,7 @@ public class PerformPanel extends JPanel {
         for (PerformDescription perform : performs) {
             addPerform(perform);
         }
-        setLayout(new MigLayout("fill"));
+        setLayout(new MigLayout("ins 0, fill"));
         performSpace = new TextAreaInputField("");
         add(new JScrollPane(performSpace), "grow, push");
         visiblePerform = null;
