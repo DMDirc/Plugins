@@ -56,6 +56,8 @@ public final class ServerListDialog extends StandardDialog implements
     private final ServerListModel model;
     /** Connect button. */
     private final JButton connectButton;
+    /** Add group button. */
+    private final JButton addGroupButton;
     /** Previously created instance of dialog. */
     private static volatile ServerListDialog me = null;
     /** Info lock. */
@@ -119,6 +121,7 @@ public final class ServerListDialog extends StandardDialog implements
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
         connectButton = new JButton("Connect");
+        addGroupButton = new JButton("Add group");
 
         profileLock = new LockedLayer<Profiles>(new BufferedImageOpEffect(
                 new ColorConvertOp(ColorSpace.getInstance(ColorSpace.CS_GRAY),
@@ -159,6 +162,7 @@ public final class ServerListDialog extends StandardDialog implements
      */
     private void addListeners() {
         connectButton.addActionListener(this);
+        addGroupButton.addActionListener(this);
         getOkButton().addActionListener(this);
         getCancelButton().addActionListener(this);
     }
@@ -201,7 +205,7 @@ public final class ServerListDialog extends StandardDialog implements
         performLock.setLocked(lock);
         settingsLock.setLocked(lock);
         infoLock.setLocked(lock);
-        profileLock.setLocked(true);
+        profileLock.setLocked(lock);
         connectButton.setEnabled(!lock);
     }
 

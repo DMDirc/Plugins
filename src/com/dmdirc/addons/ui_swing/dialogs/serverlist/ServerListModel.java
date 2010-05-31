@@ -150,8 +150,12 @@ public class ServerListModel {
         } else if (activeItem == null) {
             return null;
         } else if (activeItem instanceof ServerGroup) {
-            return new PerformDescription(PerformType.NETWORK,
+            if (((ServerGroup) activeItem).getNetwork() == null) {
+                return null;
+            } else {
+                return new PerformDescription(PerformType.NETWORK,
                     ((ServerGroup) activeItem).getNetwork());
+            }
         } else {
             throw new IllegalArgumentException(
                     "Unable to work out perform type");

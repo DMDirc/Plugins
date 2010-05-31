@@ -115,7 +115,8 @@ public class Profiles extends JPanel implements ServerListListener {
             Identity selectedItem = null;
             for (Identity profile : profiles) {
                 comboModel.addElement(profile);
-                if (profile.getName().equals(item.getProfile())) {
+                if (item != null && profile.getName().equals(
+                        item.getProfile())) {
                     selectedItem = profile;
                 }
             }
@@ -130,8 +131,10 @@ public class Profiles extends JPanel implements ServerListListener {
     public void dialogClosed(final boolean save) {
         if (save) {
             for (Entry<ServerGroupItem, JComboBox> entry : combos.entrySet()) {
-                entry.getKey().setProfile(((Identity) entry.getValue()
-                        .getSelectedItem()).getName());
+                if (entry.getValue().getSelectedItem() != null) {
+                    entry.getKey().setProfile(((Identity) entry.getValue()
+                            .getSelectedItem()).getName());
+                }
             }
         }
     }
