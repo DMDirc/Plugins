@@ -134,6 +134,11 @@ public final class UIUtilities {
         UIManager.put("SplitPane.dividerSize", (int) PlatformDefaults.
                 getPanelInsets(0).getValue());
         UIManager.put("TreeUI", "javax.swing.plaf.metal.MetalTreeUI");
+        if ("com.sun.java.swing.plaf.gtk.GTKLookAndFeel".equals(UIManager
+                .getLookAndFeel().getClass().getName())) {
+            UIManager.put("TitledBorder.titleColor", UIManager.getColor(
+                    "Label.foreground"));
+        }
         PlatformDefaults.setDefaultRowAlignmentBaseline(false);
     }
 
