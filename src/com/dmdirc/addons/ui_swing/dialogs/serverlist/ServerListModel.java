@@ -24,12 +24,16 @@ package com.dmdirc.addons.ui_swing.dialogs.serverlist;
 
 import com.dmdirc.actions.wrappers.PerformWrapper.PerformDescription;
 import com.dmdirc.actions.wrappers.PerformWrapper.PerformType;
+import com.dmdirc.logger.ErrorLevel;
+import com.dmdirc.logger.Logger;
 import com.dmdirc.serverlists.ServerEntry;
 import com.dmdirc.serverlists.ServerGroup;
 import com.dmdirc.serverlists.ServerGroupItem;
 import com.dmdirc.serverlists.ServerList;
 import com.dmdirc.util.ListenerList;
 
+import java.io.IOException;
+import java.net.URI;
 import java.util.List;
 
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -144,22 +148,18 @@ public class ServerListModel {
      * @return Perform description for the active sever group item
      */
     public PerformDescription getSelectedItemPerformDescription() {
+        PerformDescription perform;
         if (activeItem instanceof ServerEntry) {
-            return new PerformDescription(PerformType.SERVER,
-                    activeItem.getName());
-        } else if (activeItem == null) {
-            return null;
-        } else if (activeItem instanceof ServerGroup) {
-            if (((ServerGroup) activeItem).getNetwork() == null) {
-                return null;
-            } else {
-                return new PerformDescription(PerformType.NETWORK,
-                    ((ServerGroup) activeItem).getNetwork());
-            }
+            perform = new PerformDescription(PerformType.SERVER, activeItem
+                    .getName());
+        } else if (activeItem instanceof ServerGroup
+                && ((ServerGroup) activeItem).getNetwork() != null) {
+                perform = new PerformDescription(PerformType.NETWORK,
+                        ((ServerGroup) activeItem).getNetwork());
         } else {
-            throw new IllegalArgumentException(
-                    "Unable to work out perform type");
+            perform = null;
         }
+        return perform;
     }
 
     /**
@@ -189,6 +189,52 @@ public class ServerListModel {
         for (ServerListListener listener : listeners.get(
                 ServerListListener.class)) {
             listener.dialogClosed(save);
+        }
+    }
+
+    /**
+     * Adds a group to this model.
+     *
+     * @param parentGroup Parent group
+     * @param groupName Group name (not null or empty)
+     * @param networkName Network name (may be null or empty)
+     */
+    public void addGroup(final ServerGroup parentGroup,
+            final String groupName, final String networkName) {
+        final ServerGroup sg = new ServerGroup(groupName);
+        if (networkName != null && !networkName.isEmpty()) {
+            sg.setNetwork(networkName);
+        }
+        try {
+            if (parentGroup == null) {
+                list.addServerGroup(sg);
+            } else {
+                list.getGroupByName(parentGroup.getName()).addItem(sg);
+            }
+            for (ServerListListener listener : listeners.get(
+                    ServerListListener.class)) {
+                listener.serverGroupAdded(parentGroup, sg);
+            }
+        } catch (final IOException ex) {
+            Logger.userError(ErrorLevel.MEDIUM, "Unable to create group", ex);
+        }
+    }
+
+    /**
+     * Adds a group to this model.
+     *
+     * @param parentGroup Parent group
+     * @param entryName  name (not null or empty)
+     * @param url Valid URI
+     */
+    public void addEntry(final ServerGroup parentGroup, final String entryName,
+            final URI url) {
+        final ServerGroupItem sg = new ServerEntry(parentGroup, entryName, url,
+                null);
+        parentGroup.addItem(sg);
+        for (ServerListListener listener : listeners.get(
+                ServerListListener.class)) {
+            listener.serverGroupAdded(parentGroup, sg);
         }
     }
 }

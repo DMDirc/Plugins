@@ -119,13 +119,15 @@ public class Settings extends JPanel implements ServerListListener {
 
     /** {@inheritDoc} */
     @Override
-    public void serverGroupAdded(final ServerGroup group) {
+    public void serverGroupAdded(final ServerGroupItem parent,
+            final ServerGroupItem group) {
         //Ignore
     }
 
     /** {@inheritDoc} */
     @Override
-    public void serverGroupRemoved(final ServerGroup group) {
+    public void serverGroupRemoved(final ServerGroupItem parent,
+            final ServerGroupItem group) {
         //Ignore
     }
 }
