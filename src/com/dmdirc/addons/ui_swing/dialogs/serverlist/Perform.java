@@ -23,7 +23,6 @@
 package com.dmdirc.addons.ui_swing.dialogs.serverlist;
 
 import com.dmdirc.addons.ui_swing.components.performpanel.PerformPanel;
-import com.dmdirc.serverlists.ServerGroup;
 import com.dmdirc.serverlists.ServerGroupItem;
 
 import javax.swing.BorderFactory;
@@ -80,13 +79,15 @@ public class Perform extends JPanel implements ServerListListener {
 
     /** {@inheritDoc} */
     @Override
-    public void serverGroupAdded(final ServerGroup group) {
+    public void serverGroupAdded(final ServerGroupItem parent,
+            final ServerGroupItem group) {
         //Ignore
     }
 
     /** {@inheritDoc} */
     @Override
-    public void serverGroupRemoved(final ServerGroup group) {
+    public void serverGroupRemoved(final ServerGroupItem parent,
+            final ServerGroupItem group) {
         //Ignore
     }
 

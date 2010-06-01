@@ -24,7 +24,6 @@ package com.dmdirc.addons.ui_swing.dialogs.serverlist;
 
 import com.dmdirc.addons.ui_swing.components.LockedLayer;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
-import com.dmdirc.serverlists.ServerGroup;
 import com.dmdirc.serverlists.ServerGroupItem;
 
 import java.awt.Window;
@@ -56,26 +55,16 @@ public final class ServerListDialog extends StandardDialog implements
     private final ServerListModel model;
     /** Connect button. */
     private final JButton connectButton;
-    /** Add group button. */
-    private final JButton addGroupButton;
     /** Previously created instance of dialog. */
-    private static volatile ServerListDialog me = null;
+    private static ServerListDialog me = null;
     /** Info lock. */
     private final LockedLayer<Info> infoLock;
-    /** Info layer. */
-    private final JXLayer<Info> infoLayer;
     /** Perform lock. */
     private final LockedLayer<Perform> performLock;
-    /** Perform layer. */
-    private final JXLayer<Perform> performLayer;
     /** Profile lock. */
     private final LockedLayer<Profiles> profileLock;
-    /** Profile layer. */
-    private final JXLayer<Profiles> profileLayer;
     /** Settings lock. */
     private final LockedLayer<Settings> settingsLock;
-    /** Settings layer. */
-    private final JXLayer<Settings> settingsLayer;
 
     /**
      * Creates the dialog if one doesn't exist, and displays it.
@@ -121,7 +110,6 @@ public final class ServerListDialog extends StandardDialog implements
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
         connectButton = new JButton("Connect");
-        addGroupButton = new JButton("Add group");
 
         profileLock = new LockedLayer<Profiles>(new BufferedImageOpEffect(
                 new ColorConvertOp(ColorSpace.getInstance(ColorSpace.CS_GRAY),
@@ -135,20 +123,18 @@ public final class ServerListDialog extends StandardDialog implements
         infoLock = new LockedLayer<Info>(new BufferedImageOpEffect(
                 new ColorConvertOp(ColorSpace.getInstance(ColorSpace.CS_GRAY),
                 null)));
-        profileLayer = new JXLayer<Profiles>(new Profiles(model), profileLock);
-        performLayer = new JXLayer<Perform>(new Perform(model), performLock);
-        settingsLayer = new JXLayer<Settings>(new Settings(model),
-                settingsLock);
-        infoLayer = new JXLayer<Info>(new Info(model), infoLock);
         lockLayers();
 
         setLayout(new MigLayout("fill, wrap 2, wmin 600, wmax 600"));
 
-        add(new Tree(model), "grow, spany 4, wmax 150, wmin 150");
-        add(infoLayer, "spanx 2, growx, pushx");
-        add(settingsLayer, "grow, push, gaptop unrel, gapbottom unrel");
-        add(performLayer, "grow, push");
-        add(profileLayer, "growx, pushx, spanx 2");
+        add(new Tree(model, this), "grow, spany 4, wmax 150, wmin 150");
+        add(new JXLayer<Info>(new Info(model), infoLock), "growx, pushx");
+        add(new JXLayer<Settings>(new Settings(model), settingsLock), "grow, "
+                + "push, gaptop unrel, gapbottom unrel");
+        add(new JXLayer<Perform>(new Perform(model), performLock), "grow, "
+                + "push");
+        add(new JXLayer<Profiles>(new Profiles(model), profileLock), "growx, "
+                + "pushx");
         add(connectButton, "skip 1, split 3, right, gapright unrel*2, "
                 + "sgx button");
         add(getLeftButton(), "right, sgx button");
@@ -162,7 +148,6 @@ public final class ServerListDialog extends StandardDialog implements
      */
     private void addListeners() {
         connectButton.addActionListener(this);
-        addGroupButton.addActionListener(this);
         getOkButton().addActionListener(this);
         getCancelButton().addActionListener(this);
     }
@@ -223,13 +208,15 @@ public final class ServerListDialog extends StandardDialog implements
 
     /** {@inheritDoc} */
     @Override
-    public void serverGroupAdded(final ServerGroup group) {
+    public void serverGroupAdded(final ServerGroupItem parent,
+            final ServerGroupItem group) {
         lockLayers();
     }
 
     /** {@inheritDoc} */
     @Override
-    public void serverGroupRemoved(final ServerGroup group) {
+    public void serverGroupRemoved(final ServerGroupItem parent,
+            final ServerGroupItem group) {
         lockLayers();
     }
 }
