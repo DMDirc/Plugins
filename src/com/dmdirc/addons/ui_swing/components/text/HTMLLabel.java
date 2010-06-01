@@ -62,9 +62,9 @@ public class HTMLLabel extends JEditorPane {
         final Font font = UIManager.getFont("Label.font");
         final Color colour = UIManager.getColor("Label.foreground");
         styleSheet.addRule("body { font-family: " + font.getFamily()
-                + "; " + "font-size: " + font.getSize() + "pt; }");
-        styleSheet.addRule("* { color: rgb(" + colour.getRed()
-                + ", " + colour.getGreen() + ", " + colour.getBlue()+"); }");
+                + "; " + "font-size: " + font.getSize() + "pt; color: rgb("
+                + colour.getRed() + ", " + colour.getGreen() + ", "
+                + colour.getBlue()+"); }");
 
         init();
     }
