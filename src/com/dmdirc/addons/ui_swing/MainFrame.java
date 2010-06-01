@@ -68,10 +68,6 @@ import net.miginfocom.swing.MigLayout;
  */
 public final class MainFrame extends JFrame implements WindowListener,
         MainWindow, ConfigChangeListener, SwingWindowListener {
-
-    /** Logger to use. */
-    private static final java.util.logging.Logger LOGGER =
-            java.util.logging.Logger.getLogger(MainFrame.class.getName());
     /**
      * A version number for this class. It should be changed whenever the class
      * structure is changed (or anything else that would prevent serialized
@@ -90,16 +86,14 @@ public final class MainFrame extends JFrame implements WindowListener,
     private FramemanagerPosition position;
     /** Show version? */
     private boolean showVersion;
-    /** Menu bar. */
-    private MenuBar menu;
     /** Exit code. */
     private int exitCode = 0;
     /** Swing Controller. */
-    private SwingController controller;
+    private final SwingController controller;
     /** Status bar. */
     private SwingStatusBar statusBar;
     /** Client Version. */
-    private String version;
+    private final String version;
     /** Main split pane. */
     private SplitPane mainSplitPane;
 
@@ -130,23 +124,24 @@ public final class MainFrame extends JFrame implements WindowListener,
                 this);
         IdentityManager.getGlobalConfig().addChangeListener("ui", "showversion",
                 this);
-        IdentityManager.getGlobalConfig().addChangeListener("ui", "framemanager",
+        IdentityManager.getGlobalConfig().addChangeListener("ui", 
+                "framemanager", this);
+        IdentityManager.getGlobalConfig().addChangeListener("icon", "icon",
                 this);
-        IdentityManager.getGlobalConfig().addChangeListener("icon", "icon", this);
 
 
         addWindowFocusListener(new WindowFocusListener() {
 
             /** {@inheritDoc} */
             @Override
-            public void windowGainedFocus(WindowEvent e) {
+            public void windowGainedFocus(final WindowEvent e) {
                 ActionManager.processEvent(CoreActionType.CLIENT_FOCUS_GAINED,
                         null);
             }
 
             /** {@inheritDoc} */
             @Override
-            public void windowLostFocus(WindowEvent e) {
+            public void windowLostFocus(final WindowEvent e) {
                 ActionManager.processEvent(CoreActionType.CLIENT_FOCUS_LOST,
                         null);
                 //TODO: Remove me when we switch to java7
@@ -236,11 +231,7 @@ public final class MainFrame extends JFrame implements WindowListener,
     /** {@inheritDoc}. */
     @Override
     public String getTitlePrefix() {
-        if (showVersion) {
-            return "DMDirc " + version;
-        } else {
-            return "DMDirc";
-        }
+        return "DMDirc " + (showVersion ? version : "");
     }
 
     /** {@inheritDoc}. */
@@ -391,7 +382,8 @@ public final class MainFrame extends JFrame implements WindowListener,
                 }
                 mainFrameManager.setController(controller);
                 mainFrameManager.setParent(frameManagerPanel);
-                controller.getWindowFactory().addWindowListener(mainFrameManager);
+                controller.getWindowFactory().addWindowListener(
+                        mainFrameManager);
                 controller.getWindowFactory().addWindowListener(MainFrame.this);
             }
         });
@@ -403,12 +395,13 @@ public final class MainFrame extends JFrame implements WindowListener,
     private void initComponents() {
         statusBar = new SwingStatusBar(controller, this);
         frameManagerPanel = new JPanel();
-        desktopPane = new DMDircDesktopPane(controller, this, controller.getDomain());
+        desktopPane = new DMDircDesktopPane(controller, this, controller
+                .getDomain());
         mainSplitPane = new SplitPane(SplitPane.Orientation.HORIZONTAL);
 
         initFrameManagers();
 
-        menu = new MenuBar(controller, this);
+        final MenuBar menu = new MenuBar(controller, this);
         Apple.getApple().setMenuBar(menu);
         setJMenuBar(menu);
 
@@ -427,6 +420,8 @@ public final class MainFrame extends JFrame implements WindowListener,
 
     /**
      * Initialises the split pane.
+     *
+     * @param mainSplitPane Split pane to initialise
      *
      * @return Returns the initialised split pane
      */
@@ -512,9 +507,10 @@ public final class MainFrame extends JFrame implements WindowListener,
                     "You are about to quit DMDirc, are you sure?") {
 
                 /**
-                 * A version number for this class. It should be changed whenever the class
-                 * structure is changed (or anything else that would prevent serialized
-                 * objects being unserialized with the new class).
+                 * A version number for this class. It should be changed
+                 * whenever the class structure is changed (or anything else
+                 * that would prevent serialized objects being unserialized
+                 * with the new class).
                  */
                 private static final long serialVersionUID = 1;
 
@@ -574,9 +570,16 @@ public final class MainFrame extends JFrame implements WindowListener,
             if ("lookandfeel".equals(key)) {
                 controller.updateLookAndFeel();
             } else if ("framemanager".equals(key)) {
-                initFrameManagers();
-                initSplitPane(mainSplitPane);
-                frameManagerPanel.repaint();
+                UIUtilities.invokeLater(new Runnable() {
+
+                    /** {@inheritDoc} */
+                    @Override
+                    public void run() {
+                        initFrameManagers();
+                        initSplitPane(mainSplitPane);
+                        frameManagerPanel.repaint();
+                    }
+                });
             } else {
                 showVersion = IdentityManager.getGlobalConfig().getOptionBool(
                         "ui", "showversion");
@@ -584,7 +587,14 @@ public final class MainFrame extends JFrame implements WindowListener,
         } else {
             imageIcon = new ImageIcon(IconManager.getIconManager().getImage(
                     "icon"));
-            setIconImage(imageIcon.getImage());
+            UIUtilities.invokeLater(new Runnable() {
+
+                    /** {@inheritDoc} */
+                    @Override
+                    public void run() {
+                        setIconImage(imageIcon.getImage());
+                    }
+            });
         }
     }
 
