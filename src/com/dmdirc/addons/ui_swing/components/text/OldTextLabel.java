@@ -25,6 +25,7 @@ package com.dmdirc.addons.ui_swing.components.text;
 import java.awt.Insets;
 
 import javax.swing.JTextPane;
+import javax.swing.UIManager;
 import javax.swing.plaf.basic.BasicTextPaneUI;
 import javax.swing.text.DefaultStyledDocument;
 import javax.swing.text.SimpleAttributeSet;
@@ -81,6 +82,7 @@ public class OldTextLabel extends JTextPane {
             StyleConstants.setAlignment(sas, StyleConstants.ALIGN_JUSTIFIED);
         }
 
+        StyleConstants.setForeground(sas, UIManager.getColor("Label.foreground"));
         StyleConstants.setFontFamily(sas, getFont().getFamily());
         StyleConstants.setFontSize(sas, getFont().getSize());
         StyleConstants.setBold(sas, getFont().isBold());
