@@ -29,7 +29,7 @@ import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.parser.interfaces.Parser;
 
 import java.awt.Insets;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeSet;
 
@@ -87,12 +87,10 @@ public final class ChannelModesPane extends JPanel {
 
         final String booleanModes = parser.getBooleanChannelModes();
         final String ourBooleanModes = channel.getChannelInfo().getModes();
-        final String paramModes =
-                parser.getParameterChannelModes() + parser.
-                getDoubleParameterChannelModes();
+        final String paramModes = parser.getParameterChannelModes()
+                + parser.getDoubleParameterChannelModes();
 
-        modeCheckBoxes =
-                new Hashtable<String, JCheckBox>();
+        modeCheckBoxes = new HashMap<String, JCheckBox>();
 
         // Lay out all the boolean mode checkboxes
         for (int i = 0; i < booleanModes.length(); i++) {
@@ -104,10 +102,10 @@ public final class ChannelModesPane extends JPanel {
             String text;
             String tooltip;
 
-            if (channel.getConfigManager().hasOptionString("server",
-                    "mode" + mode)) {
-                text = channel.getConfigManager().
-                        getOption("server", "mode" + mode) + " [+" + mode + "]";
+            if (channel.getConfigManager().hasOptionString("server", "mode"
+                    + mode)) {
+                text = channel.getConfigManager().getOption("server", "mode"
+                        + mode) + " [+" + mode + "]";
             } else {
                 text = "Mode " + mode;
             }
@@ -139,7 +137,7 @@ public final class ChannelModesPane extends JPanel {
         }
 
         // Lay out all the parameter-requiring modes
-        modeInputs = new Hashtable<String, ParamModePanel>();
+        modeInputs = new HashMap<String, ParamModePanel>();
 
         for (int i = 0; i < paramModes.length(); i++) {
             final String mode = paramModes.substring(i, i + 1);

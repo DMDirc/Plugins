@@ -46,7 +46,7 @@ import com.dmdirc.plugins.Plugin;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.util.ReturnableThread;
 
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -148,8 +148,8 @@ public final class WindowStatusPlugin extends Plugin implements ActionListener, 
         } else if (current instanceof Channel) {
             final Channel frame = (Channel) current;
             final ChannelInfo chan = frame.getChannelInfo();
-            final Map<Integer, String> names = new Hashtable<Integer, String>();
-            final Map<Integer, Integer> types = new Hashtable<Integer, Integer>();
+            final Map<Integer, String> names = new HashMap<Integer, String>();
+            final Map<Integer, Integer> types = new HashMap<Integer, Integer>();
 
             textString.append(chan.getName());
             textString.append(" - Nicks: " + chan.getChannelClientCount() + " (");

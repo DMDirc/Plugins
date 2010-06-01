@@ -28,7 +28,7 @@ import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.parser.interfaces.Parser;
 
 import java.awt.Insets;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeSet;
 
@@ -85,7 +85,7 @@ public final class UserModesPane extends JPanel {
         final String userModes = parser.getUserModes();
         final String ourUserModes = parser.getLocalClient().getModes();
 
-        modeCheckBoxes = new Hashtable<String, JCheckBox>();
+        modeCheckBoxes = new HashMap<String, JCheckBox>();
 
         // Lay out all the boolean mode checkboxes
         for (int i = 0; i < userModes.length(); i++) {
