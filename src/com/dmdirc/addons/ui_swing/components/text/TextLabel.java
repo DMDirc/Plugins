@@ -83,10 +83,10 @@ public class TextLabel extends JTextPane {
         final Color colour = UIManager.getColor("Label.foreground");
         styleSheet.addRule("body "
                 + "{ font-family: " + font.getFamily() + "; "
-                + "font-size: " + font.getSize() + "pt; }");
+                + "font-size: " + font.getSize() + "pt; "
+                + "color: rgb(" + colour.getRed() + ", " + colour.getGreen()
+                + ", " + colour.getBlue() + "); }");
         styleSheet.addRule("p { margin: 0; }");
-        styleSheet.addRule("* { color: rgb(" + colour.getRed()
-                + ", " + colour.getGreen() + ", " + colour.getBlue() + "); }");
 
         setOpaque(false);
         setEditable(false);
