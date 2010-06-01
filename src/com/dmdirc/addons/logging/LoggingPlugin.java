@@ -47,6 +47,7 @@ import com.dmdirc.parser.interfaces.ClientInfo;
 import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.plugins.Plugin;
 import com.dmdirc.ui.messages.Styliser;
+import com.dmdirc.util.StreamUtil;
 
 import java.awt.Color;
 import java.io.BufferedWriter;
@@ -59,11 +60,11 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.Date;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
-
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -108,18 +109,12 @@ public class LoggingPlugin extends Plugin implements ActionListener,
     /** Timer used to close idle files */
     protected Timer idleFileTimer;
 
-    /** Hashtable of open files. */
-    protected final Map<String, OpenFile> openFiles = new Hashtable<String, OpenFile>();
+    /** Map of open files. */
+    protected final Map<String, OpenFile> openFiles
+            = Collections.synchronizedMap(new HashMap<String, OpenFile>());
 
     /** Date format used for "File Opened At" log. */
     final DateFormat openedAtFormat = new SimpleDateFormat("EEEE MMMM dd, yyyy - HH:mm:ss");
-
-    /**
-     * Creates a new instance of the Logging Plugin.
-     */
-    public LoggingPlugin() {
-        super();
-    }
 
     /** {@inheritDoc} */
     @Override
@@ -192,15 +187,10 @@ public class LoggingPlugin extends Plugin implements ActionListener,
         final long oldestTime = System.currentTimeMillis() - 3480000;
 
         synchronized (openFiles) {
-            for (String filename : (new Hashtable<String, OpenFile>(openFiles)).keySet()) {
-                OpenFile file = openFiles.get(filename);
-                if (file.lastUsedTime < oldestTime) {
-                    try {
-                        file.writer.close();
-                        openFiles.remove(filename);
-                    } catch (IOException e) {
-                        Logger.userError(ErrorLevel.LOW, "Unable to close idle file (File: " + filename + ")");
-                    }
+            for (Map.Entry<String, OpenFile> entry : openFiles.entrySet()) {
+                if (entry.getValue().lastUsedTime < oldestTime) {
+                    StreamUtil.close(entry.getValue().writer);
+                    openFiles.remove(entry.getKey());
                 }
             }
         }
