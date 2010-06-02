@@ -95,10 +95,6 @@ public class FeedbackNag extends JLabel implements StatusBarComponent,
      */
     @Override
     public void mouseClicked(MouseEvent e) {
-        if (e.getButton() == 1) {
-            FeedbackDialog.showFeedbackDialog(controller.getMainFrame());
-            controller.getStatusBar().removeComponent(this);
-        }
         checkMouseEvent(e);
     }
 
@@ -119,6 +115,10 @@ public class FeedbackNag extends JLabel implements StatusBarComponent,
      */
     @Override
     public void mouseReleased(MouseEvent e) {
+        if (e.getButton() == 1) {
+            FeedbackDialog.showFeedbackDialog(controller.getMainFrame());
+            controller.getStatusBar().removeComponent(this);
+        }
         checkMouseEvent(e);
     }
 

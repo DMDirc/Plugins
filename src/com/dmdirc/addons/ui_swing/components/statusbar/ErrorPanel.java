@@ -186,6 +186,9 @@ public class ErrorPanel extends StatusbarPopupPanel implements ErrorListener, Ac
     @Override
     public void mouseReleased(final MouseEvent mouseEvent) {
         super.mouseReleased(mouseEvent);
+        if (mouseEvent.getButton() == MouseEvent.BUTTON1) {
+            controller.showErrorDialog();
+        }
         checkMouseEvent(mouseEvent);
     }
 
@@ -219,9 +222,6 @@ public class ErrorPanel extends StatusbarPopupPanel implements ErrorListener, Ac
     @Override
     public void mouseClicked(final MouseEvent mouseEvent) {
         super.mouseClicked(mouseEvent);
-        if (mouseEvent.getButton() == MouseEvent.BUTTON1) {
-            controller.showErrorDialog();
-        }
         checkMouseEvent(mouseEvent);
     }
 
