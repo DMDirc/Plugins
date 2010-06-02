@@ -434,6 +434,9 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
 
                 final AttributedCharacterIterator iterator = document.
                         getStyledLine(line);
+                if (iterator.getEndIndex() == iterator.getBeginIndex()) {
+                    return;
+                }
                 final AttributedString as = new AttributedString(iterator,
                         firstChar, lastChar);
 
