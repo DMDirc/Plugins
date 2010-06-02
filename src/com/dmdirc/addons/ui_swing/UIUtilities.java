@@ -134,8 +134,7 @@ public final class UIUtilities {
         UIManager.put("SplitPane.dividerSize", (int) PlatformDefaults.
                 getPanelInsets(0).getValue());
         UIManager.put("TreeUI", "javax.swing.plaf.metal.MetalTreeUI");
-        if ("com.sun.java.swing.plaf.gtk.GTKLookAndFeel".equals(UIManager
-                .getLookAndFeel().getClass().getName())) {
+        if (isGTKUI()) {
             UIManager.put("TitledBorder.titleColor", UIManager.getColor(
                     "Label.foreground"));
         }
@@ -227,7 +226,18 @@ public final class UIUtilities {
     }
 
     /**
-     * Check if we are using one of the Windows Look and Feels
+     * Check if we are using the GTK look and feel.
+     *
+     * @return true iif the LAF is GTK
+     */
+    public static boolean isGTKUI() {
+        return "com.sun.java.swing.plaf.gtk.GTKLookAndFeel".equals(UIManager
+                .getLookAndFeel().getClass().getName());
+    }
+
+
+    /**
+     * Check if we are using one of the Windows Look and Feels.
      *
      * @return True iff the current LAF is "Windows" or "Windows Classic"
      */
@@ -242,7 +252,7 @@ public final class UIUtilities {
     }
 
     /**
-     * Get the value to pass to set Opaque on items being added to a JTabbedPane
+     * Get the value to pass to set Opaque on items being added to a JTabbedPane.
      *
      * @return True iff the current LAF is not Windows or OS X.
      * @since 0.6
