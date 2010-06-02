@@ -80,6 +80,7 @@ public class TitlePanel extends JPanel {
         title = new JLabel(text);
         title.setFont(title.getFont().deriveFont((float) (title.getFont().
                 getSize() * 1.5)));
+        title.setForeground(Color.BLACK);
 
         add(title, "grow, push");
         setBorder(border);
