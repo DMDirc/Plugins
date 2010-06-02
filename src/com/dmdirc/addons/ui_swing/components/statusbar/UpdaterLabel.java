@@ -73,7 +73,7 @@ public class UpdaterLabel extends StatusbarPopupPanel implements StatusBarCompon
      * @param mouseEvent Mouse event
      */
     @Override
-    public void mouseClicked(final MouseEvent mouseEvent) {
+    public void mouseReleased(final MouseEvent mouseEvent) {
         super.mouseClicked(mouseEvent);
         
         if (mouseEvent.getButton() == MouseEvent.BUTTON1) {

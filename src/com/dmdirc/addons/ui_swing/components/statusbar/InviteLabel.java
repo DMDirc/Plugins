@@ -192,7 +192,7 @@ public class InviteLabel extends StatusbarPopupPanel implements
      * @param e Mouse event
      */
     @Override
-    public void mouseClicked(final MouseEvent e) {
+    public void mouseReleased(final MouseEvent e) {
         super.mouseClicked(e);
         popuplateMenu();
         if (menu.getComponentCount() > 0) {
