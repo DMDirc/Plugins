@@ -63,15 +63,19 @@ import org.xml.sax.SAXException;
 
 /**
  * Implementation of the twitter API for DMDirc.
- * 
+ *
  * @author shane
  */
 public class TwitterAPI {
 
-    /** OAuth Consumer */
+    /** Characters used in b64 encoding. */
+    private static final String BASE64_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcde"
+            + "fghijklmnopqrstuvwxyz0123456789+/";
+
+    /** OAuth Consumer. */
     private OAuthConsumer consumer;
 
-    /** OAuth Provider */
+    /** OAuth Provider. */
     private OAuthProvider provider;
 
     /** Have we signed anything yet? */
@@ -98,7 +102,7 @@ public class TwitterAPI {
     /** Cache of statuses. */
     final Map<Long, TwitterStatus> statusCache = new HashMap<Long, TwitterStatus>();
 
-    /** API Allowed status */
+    /** API Allowed status. */
     private APIAllowed allowed = APIAllowed.UNKNOWN;
 
     /** How many API calls have we made since the last reset? */
@@ -107,10 +111,10 @@ public class TwitterAPI {
     /** API reset time. */
     private long resetTime = 0;
 
-    /** Twitter Token */
+    /** Twitter Token. */
     private String token = "";
 
-    /** Twitter Token Secret */
+    /** Twitter Token Secret. */
     private String tokenSecret = "";
 
     /** Last input to the API. */
@@ -119,10 +123,10 @@ public class TwitterAPI {
     /** Last output from the API. */
     private String apiOutput = "";
 
-    /** List of TwitterErrorHandlers */
+    /** List of TwitterErrorHandlers. */
     private final List<TwitterErrorHandler> errorHandlers = new LinkedList<TwitterErrorHandler>();
 
-    /** List of TwitterRawHandlers */
+    /** List of TwitterRawHandlers. */
     private final List<TwitterRawHandler> rawHandlers = new LinkedList<TwitterRawHandler>();
 
     /** What address should API calls be made to? */
@@ -140,7 +144,7 @@ public class TwitterAPI {
     /** Should we use the versioned API? */
     private boolean useAPIVersion = false;
 
-    /** 
+    /**
      * What version of the API should we try to use?
      * If useAPIVersion is false this is irrelevent, otherwise method calls will
      * try to use this version of the API, otherwise falling back to any lower
@@ -194,7 +198,9 @@ public class TwitterAPI {
             return;
         }
 
-        if (!consumerKey.isEmpty() && !consumerSecret.isEmpty()) {
+        if (consumerKey.isEmpty() || consumerSecret.isEmpty()) {
+            useOAuth = false;
+        } else {
             consumer = new DefaultOAuthConsumer(consumerKey, consumerSecret, SignatureMethod.HMAC_SHA1);
             final String thisOauthAddress = ((useSSL) ? "https" : "http") + "://" + ((oauthAddress == null || oauthAddress.isEmpty()) ? apiAddress.replaceAll("/+$", "") + "/oauth" : oauthAddress.replaceAll("/+$", ""));
 
@@ -204,15 +210,13 @@ public class TwitterAPI {
             this.tokenSecret = tokenSecret;
 
             try {
-                useOAuth = !(getOAuthURL().isEmpty());
+                useOAuth = !getOAuthURL().isEmpty();
             } catch (final TwitterRuntimeException tre) {
                 useOAuth = false;
             }
-        } else {
-            useOAuth = false;
         }
 
-        this.useAPIVersion = useAPIVersion && (apiVersion != 0);
+        this.useAPIVersion = useAPIVersion && apiVersion != 0;
         if (apiVersion > 0) {
             this.apiVersion = apiVersion;
         }
@@ -422,9 +426,9 @@ public class TwitterAPI {
         this.debug = debug;
     }
 
-    /** 
+    /**
      * Are we using oauth?
-     * 
+     *
      * @return are we usin oauth?
      */
     public boolean useOAuth() {
@@ -484,15 +488,14 @@ public class TwitterAPI {
     public void setApiVersion(final int apiVersion) {
         this.apiVersion = apiVersion;
 
-        if (useAPIVersion) {
+        if (useAPIVersion && !isAllowed(true)) {
             // if we are allowed, isAllowed will automatically call getUser() to
             // update the cache with our own user object.
-            if (!isAllowed(true)) {
-                // If not, add a temporary one.
-                // It will be replaced as soon as the allowed status is changed to
-                // true by isAlowed().
-                updateUser(new TwitterUser(this, myLoginUsername));
-            }
+
+            // If not, add a temporary one.
+            // It will be replaced as soon as the allowed status is changed to
+            // true by isAlowed().
+            updateUser(new TwitterUser(this, myLoginUsername));
         }
     }
 
@@ -550,20 +553,19 @@ public class TwitterAPI {
             // sun.misc.BASE64Encoder enc = new sun.misc.BASE64Encoder();
             // String encodedAuthorization = enc.encode(userpassword.getBytes());
 
-            final String encodedAuthorization = b64encode(myLoginUsername + ":" + myPassword);
-            connection.setRequestProperty("Authorization", "Basic " + encodedAuthorization);
+            connection.setRequestProperty("Authorization", "Basic "
+                    + b64encode(myLoginUsername + ":" + myPassword));
         }
     }
 
     /**
-     * Encode a string to base64,
+     * Encode a string to base64.
      * Based on code from http://www.wikihow.com/Encode-a-String-to-Base64-With-Java
      *
      * @param string String to encode
      * @return Encoded output
      */
-    private String b64encode(final String string) {
-        final String base64code = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+    private static String b64encode(final String string) {
         final StringBuilder encoded = new StringBuilder();
         byte[] stringArray;
         try {
@@ -581,11 +583,11 @@ public class TwitterAPI {
 
         // process 3 bytes at a time, churning out 4 output bytes
         for (int i = 0; i < padded.length; i += 3) {
-            int j = (padded[i] << 16) + (padded[i + 1] << 8) + padded[i + 2];
-            encoded.append(base64code.charAt((j >> 18) & 0x3f));
-            encoded.append(base64code.charAt((j >> 12) & 0x3f));
-            encoded.append(base64code.charAt((j >> 6) & 0x3f));
-            encoded.append(base64code.charAt(j & 0x3f));
+            final int j = (padded[i] << 16) + (padded[i + 1] << 8) + padded[i + 2];
+            encoded.append(BASE64_CHARS.charAt((j >> 18) & 0x3f));
+            encoded.append(BASE64_CHARS.charAt((j >> 12) & 0x3f));
+            encoded.append(BASE64_CHARS.charAt((j >> 6) & 0x3f));
+            encoded.append(BASE64_CHARS.charAt(j & 0x3f));
         }
 
         // replace encoded padding nulls with "="
@@ -618,14 +620,14 @@ public class TwitterAPI {
      */
     public static Long timeStringToLong(final String string, final long fallback) {
         try {
-            return (new SimpleDateFormat("EEE MMM dd HH:mm:ss zzzz yyyy").parse(string)).getTime();
+            return new SimpleDateFormat("EEE MMM dd HH:mm:ss zzzz yyyy").parse(string).getTime();
         } catch (final ParseException ex) {
             return fallback;
         }
     }
 
     /**
-     * Parse the given string to a boolean, returns true for "true", "yes" or "1"
+     * Parse the given string to a boolean, returns true for "true", "yes" or "1".
      *
      * @param string String to parse.
      * @return Boolean from string
@@ -636,7 +638,7 @@ public class TwitterAPI {
 
     /**
      * Get the contents of the given node from an element.
-     * If node doesn't exist, fallbcak will be returned.
+     * If node doesn't exist, fallback will be returned.
      *
      * @param element Element to look at
      * @param string Node to get content from.
@@ -793,10 +795,10 @@ public class TwitterAPI {
             if (isDebug()) {
                 handleError(ex, "* (4) getXML: " + request.getURL(), apiInput, apiOutput);
             }
-            if (request.getErrorStream() != null) {
-                in = new BufferedReader(new InputStreamReader(request.getErrorStream()));
-            } else {
+            if (request.getErrorStream() == null) {
                 return new XMLResponse(request, null);
+            } else {
+                in = new BufferedReader(new InputStreamReader(request.getErrorStream()));
             }
         }
 
@@ -1084,7 +1086,7 @@ public class TwitterAPI {
     }
 
     /**
-     * Send a direct message to the given user
+     * Send a direct message to the given user.
      *
      * @param target Target user.
      * @param message Message to send.
@@ -1440,7 +1442,7 @@ public class TwitterAPI {
     }
 
     /**
-     * Retweet the given status
+     * Retweet the given status.
      *
      * @param status Status to retweet
      * @return True if status was retweeted ok.
@@ -1489,7 +1491,7 @@ public class TwitterAPI {
      *          - 3 is the estimated number of api calls we have made since
      *            the last reset.
      */
-    public Long[] getRemainingApiCalls() {
+    public long[] getRemainingApiCalls() {
         final XMLResponse doc = getXML(getURL("account/rate_limit_status"));
         // The call we just made doesn't count, so remove it from the count.
         usedCalls--;
@@ -1503,9 +1505,9 @@ public class TwitterAPI {
             final String resetTimeString = getElementContents(element, "reset-time-in-seconds", getElementContents(element, "reset_time_in_seconds", "0"));
             resetTime = 1000 * parseLong(resetTimeString, -1);
 
-            return new Long[]{remaining, total, resetTime, (long) usedCalls};
+            return new long[]{remaining, total, resetTime, (long) usedCalls};
         } else {
-            return new Long[]{0L, 0L, System.currentTimeMillis(), (long) usedCalls};
+            return new long[]{0L, 0L, System.currentTimeMillis(), (long) usedCalls};
         }
     }
 
@@ -1712,7 +1714,7 @@ public class TwitterAPI {
 
     /**
      * Block a user on twitter.
-     * 
+     *
      * @param name Username to block.
      * @return The user just blocked.
      */
@@ -1736,7 +1738,7 @@ public class TwitterAPI {
 
     /**
      * Unblock a user on twitter.
-     * 
+     *
      * @param name Username to unblock.
      * @return The user just unblocked.
      */

@@ -33,23 +33,19 @@ import com.dmdirc.parser.common.MyInfo;
 import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.parser.interfaces.ProtocolDescription;
 import com.dmdirc.plugins.Plugin;
+
 import java.net.URI;
 import java.util.ArrayList;
 
 /**
+ * Facilitates creation of Twitter parsers.
  *
  * @author shane
  */
 public class TwitterPlugin extends Plugin {
 
     /** Are we currently unloading? */
-    private static boolean unloading = false;
-
-    /**
-     * Create a TwitterPlugin
-     */
-    public TwitterPlugin() {
-    }
+    private volatile boolean unloading = false;
 
     /** {@inheritDoc} */
     @Override
@@ -61,7 +57,7 @@ public class TwitterPlugin extends Plugin {
     @Override
     public void onUnload() {
         unloading = true;
-        for (final Twitter parser : new ArrayList<Twitter>(Twitter.currentParsers)) {
+        for (final Twitter parser : new ArrayList<Twitter>(Twitter.PARSERS)) {
             parser.disconnect("");
         }
     }
@@ -74,7 +70,7 @@ public class TwitterPlugin extends Plugin {
      * @return An appropriately configured parser
      */
     public Parser getParser(final MyInfo myInfo, final URI address) {
-        return (unloading) ? null : new Twitter(myInfo, address, this);
+        return unloading ? null : new Twitter(address, this);
     }
 
     /**
