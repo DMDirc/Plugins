@@ -142,7 +142,7 @@ public class RelayCallbackManager extends IRCCallbackManager implements SocketCl
 
             // Clear my map of callbacks
             @SuppressWarnings("unchecked")
-            final Map<Class<? extends CallbackInterface>, CallbackObject> myCallbackHash = (Map<Class<? extends CallbackInterface>, CallbackObject>) cbField.get(this);
+            final Map<Class<? extends CallbackInterface>, CallbackObject> myCallbackHash = (Map<Class<? extends CallbackInterface>, CallbackObject>) cbField.get(cbm);
             myCallbackHash.clear();
 
             // Now add them all to the new cbm.
