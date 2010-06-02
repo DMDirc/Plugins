@@ -296,14 +296,11 @@ public class LoggingPlugin extends Plugin implements ActionListener,
                 break;
             case QUERY_CLOSED:
                 appendLine(filename, "*** Query closed at: %s", openedAtFormat.format(new Date()));
-                if (openFiles.containsKey(filename)) {
-                    final BufferedWriter file = openFiles.get(filename).writer;
-                    try {
-                        file.close();
-                    } catch (IOException e) {
-                        Logger.userError(ErrorLevel.LOW, "Unable to close file (Filename: " + filename + ")");
+                synchronized (openFiles) {
+                    if (openFiles.containsKey(filename)) {
+                        StreamUtil.close(openFiles.get(filename).writer);
+                        openFiles.remove(filename);
                     }
-                    openFiles.remove(filename);
                 }
                 break;
             case QUERY_MESSAGE:
@@ -350,14 +347,11 @@ public class LoggingPlugin extends Plugin implements ActionListener,
                 break;
             case CHANNEL_CLOSED:
                 appendLine(filename, "*** Channel closed at: %s", openedAtFormat.format(new Date()));
-                if (openFiles.containsKey(filename)) {
-                    final BufferedWriter file = openFiles.get(filename).writer;
-                    try {
-                        file.close();
-                    } catch (IOException e) {
-                        Logger.userError(ErrorLevel.LOW, "Unable to close file (Filename: " + filename + ")");
+                synchronized (openFiles) {
+                    if (openFiles.containsKey(filename)) {
+                        StreamUtil.close(openFiles.get(filename).writer);
+                        openFiles.remove(filename);
                     }
-                    openFiles.remove(filename);
                 }
                 break;
             case CHANNEL_MESSAGE:
@@ -587,13 +581,15 @@ public class LoggingPlugin extends Plugin implements ActionListener,
         //System.out.println("[Adding] "+filename+" => "+finalLine);
         BufferedWriter out = null;
         try {
-            if (openFiles.containsKey(filename)) {
-                OpenFile of = openFiles.get(filename);
-                of.lastUsedTime = System.currentTimeMillis();
-                out = of.writer;
-            } else {
-                out = new BufferedWriter(new FileWriter(filename, true));
-                openFiles.put(filename, new OpenFile(out));
+            synchronized (openFiles) {
+                if (openFiles.containsKey(filename)) {
+                    OpenFile of = openFiles.get(filename);
+                    of.lastUsedTime = System.currentTimeMillis();
+                    out = of.writer;
+                } else {
+                    out = new BufferedWriter(new FileWriter(filename, true));
+                    openFiles.put(filename, new OpenFile(out));
+                }
             }
             out.write(finalLine.toString());
             out.newLine();
