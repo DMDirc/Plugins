@@ -28,6 +28,7 @@ import com.dmdirc.serverlists.ServerGroupItem;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
+import javax.swing.border.Border;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -46,6 +47,8 @@ public class Perform extends JPanel implements ServerListListener {
     private final PerformPanel performPanel;
     /** Server list model. */
     private final ServerListModel model;
+    /** Platform border. */
+    private final Border border;
 
     /**
      * Creates a new perform panel backed by the specified model.
@@ -64,8 +67,8 @@ public class Perform extends JPanel implements ServerListListener {
                     .getSelectedItemPerformDescription());
         }
 
-        setBorder(BorderFactory.createTitledBorder(UIManager.
-                        getBorder("TitledBorder.border"), "Network perform"));
+        border = UIManager.getBorder("TitledBorder.border");
+        setBorder(BorderFactory.createTitledBorder(border, "Network perform"));
         setLayout(new MigLayout("fill"));
         add(performPanel, "grow");
     }
@@ -94,6 +97,13 @@ public class Perform extends JPanel implements ServerListListener {
     /** {@inheritDoc} */
     @Override
     public void serverGroupChanged(final ServerGroupItem item) {
+        if (item.getGroup() == item) {
+            setBorder(BorderFactory.createTitledBorder(border,
+                    "Network perform"));
+        } else {
+            setBorder(BorderFactory.createTitledBorder(border,
+                    "Server perform"));
+        }
         performPanel.switchPerform(model.getSelectedItemPerformDescription());
     }
 
