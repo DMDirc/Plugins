@@ -150,12 +150,10 @@ public class ConfigPanel extends JPanel implements PreferencesInterface,
     private void updatePreview() {
         updateTimer.cancel();
 
-        final MediaSource source;
+        MediaSource source = plugin.getBestSource();
 
-        if (plugin.getBestSource() == null) {
+        if (source == null) {
             source = new DummyMediaSource();
-        } else {
-            source = plugin.getBestSource();
         }
 
         final String text = plugin.doSubstitution(
