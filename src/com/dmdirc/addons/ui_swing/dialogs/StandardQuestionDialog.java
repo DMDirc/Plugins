@@ -125,7 +125,9 @@ public abstract class StandardQuestionDialog extends StandardDialog {
             /** {@inheritDoc} */
             @Override
             public void windowClosed(WindowEvent e) {
-                cancelled();
+                if (!result) {
+                    cancelled();
+                }
             }
         });
     }

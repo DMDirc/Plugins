@@ -256,6 +256,7 @@ public final class SwingSearchBar extends JPanel implements ActionListener,
                 getEndLine())
                 || (!up && result.getStartLine() < textPane.getSelectedRange().
                 getStartLine()))) {
+            final boolean found = foundText;
             final StandardQuestionDialog dialog = new StandardQuestionDialog(
                     parentWindow, ModalityType.MODELESS, "No more results",
                     "Do you want to continue searching from the "
@@ -271,25 +272,30 @@ public final class SwingSearchBar extends JPanel implements ActionListener,
                  /**{@inheritDoc} */
                  @Override
                  public boolean save() {
+                     textPane.setScrollBarPosition(result.getEndLine());
+                     textPane.setSelectedTexT(result);
+                     validator.setValidates(true);
+                     searchBox.checkError();
                      return true;
                  }
 
+                 /**{@inheritDoc} */
                  @Override
                  public void cancelled() {
-                     //Continue
+                     validator.setValidates(found);
+                     searchBox.checkError();
                  }
             };
-            dialog.displayBlocking();
-            foundText = dialog.getResult();
+            dialog.display();
+            return;
         } else {
             //found, select and return found
             textPane.setScrollBarPosition(result.getEndLine());
             textPane.setSelectedTexT(result);
             foundText = true;
+            validator.setValidates(foundText);
+            searchBox.checkError();
         }
-
-        validator.setValidates(foundText);
-        searchBox.checkError();
     }
 
     /**
