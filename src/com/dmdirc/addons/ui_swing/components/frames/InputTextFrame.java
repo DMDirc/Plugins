@@ -109,12 +109,15 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
         getInputField().setBackground(config.getOptionColour(
                 "ui", "inputbackgroundcolour",
                 "ui", "backgroundcolour"));
-        getInputField().setForeground(config.getOptionColour(
-                "ui", "inputforegroundcolour",
-                "ui", "foregroundcolour"));
-        getInputField().setCaretColor(config.getOptionColour(
-                "ui", "inputforegroundcolour",
-                "ui", "foregroundcolour"));
+        if (!UIUtilities.isGTKUI()) {
+            //GTK users appear to dislike choice, ignore them if they want some.
+            getInputField().setForeground(config.getOptionColour(
+                    "ui", "inputforegroundcolour",
+                    "ui", "foregroundcolour"));
+            getInputField().setCaretColor(config.getOptionColour(
+                    "ui", "inputforegroundcolour",
+                    "ui", "foregroundcolour"));
+        }
         useAwayIndicator = config.getOptionBool("ui", "awayindicator");
 
         config.addChangeListener("ui", "inputforegroundcolour", this);
