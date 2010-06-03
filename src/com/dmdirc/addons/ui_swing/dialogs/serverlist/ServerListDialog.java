@@ -147,6 +147,7 @@ public final class ServerListDialog extends StandardDialog implements
      * Adds requires listeners to objects.
      */
     private void addListeners() {
+        model.addServerListListener(this);
         connectButton.addActionListener(this);
         getOkButton().addActionListener(this);
         getCancelButton().addActionListener(this);
@@ -186,7 +187,8 @@ public final class ServerListDialog extends StandardDialog implements
      * Lock or unlock layers.
      */
     private void lockLayers() {
-        final boolean lock = !model.hasItems();
+        final boolean lock = !model.hasItems()
+                || model.getSelectedItem() == null;
         performLock.setLocked(lock);
         settingsLock.setLocked(lock);
         infoLock.setLocked(lock);
@@ -197,7 +199,7 @@ public final class ServerListDialog extends StandardDialog implements
     /** {@inheritDoc} */
     @Override
     public void serverGroupChanged(final ServerGroupItem item) {
-        //Ignore
+        lockLayers();
     }
 
     /** {@inheritDoc} */
