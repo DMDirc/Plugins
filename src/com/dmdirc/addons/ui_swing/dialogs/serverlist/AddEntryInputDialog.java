@@ -210,7 +210,7 @@ public class AddEntryInputDialog extends StandardDialog {
         setLayout(new MigLayout("fill, wrap 2"));
 
         add(blurb, "growx, spanx 2");
-        add(new JLabel("Group name: "));
+        add(new JLabel("Item name: "));
         add(entryName, "growx");
         add(new JLabel("Server URI: "));
         add(uri, "growx");
