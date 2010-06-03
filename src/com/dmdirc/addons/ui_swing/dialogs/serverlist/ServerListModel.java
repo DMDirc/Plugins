@@ -225,4 +225,11 @@ public class ServerListModel {
             listener.serverGroupAdded(parentGroup, sg);
         }
     }
+
+    /**
+     * Forces the server list to save all changes.
+     */
+    public void save() {
+        list.save();
+    }
 }
