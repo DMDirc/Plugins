@@ -60,6 +60,8 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -187,12 +189,15 @@ public class LoggingPlugin extends Plugin implements ActionListener,
         final long oldestTime = System.currentTimeMillis() - 3480000;
 
         synchronized (openFiles) {
+            final Collection<String> old = new ArrayList<String>(openFiles.size());
             for (Map.Entry<String, OpenFile> entry : openFiles.entrySet()) {
                 if (entry.getValue().lastUsedTime < oldestTime) {
                     StreamUtil.close(entry.getValue().writer);
-                    openFiles.remove(entry.getKey());
+                    old.add(entry.getKey());
                 }
             }
+
+            openFiles.keySet().removeAll(old);
         }
     }
 
@@ -210,13 +215,8 @@ public class LoggingPlugin extends Plugin implements ActionListener,
         ActionManager.removeListener(this);
 
         synchronized (openFiles) {
-            for (String filename : openFiles.keySet()) {
-                OpenFile file = openFiles.get(filename);
-                try {
-                    file.writer.close();
-                } catch (IOException e) {
-                    Logger.userError(ErrorLevel.LOW, "Unable to close file (File: " + filename + ")");
-                }
+            for (OpenFile file : openFiles.values()) {
+                StreamUtil.close(file.writer);
             }
             openFiles.clear();
         }
@@ -296,11 +296,9 @@ public class LoggingPlugin extends Plugin implements ActionListener,
                 break;
             case QUERY_CLOSED:
                 appendLine(filename, "*** Query closed at: %s", openedAtFormat.format(new Date()));
-                synchronized (openFiles) {
-                    if (openFiles.containsKey(filename)) {
-                        StreamUtil.close(openFiles.get(filename).writer);
-                        openFiles.remove(filename);
-                    }
+                if (openFiles.containsKey(filename)) {
+                    StreamUtil.close(openFiles.get(filename).writer);
+                    openFiles.remove(filename);
                 }
                 break;
             case QUERY_MESSAGE:
@@ -347,11 +345,9 @@ public class LoggingPlugin extends Plugin implements ActionListener,
                 break;
             case CHANNEL_CLOSED:
                 appendLine(filename, "*** Channel closed at: %s", openedAtFormat.format(new Date()));
-                synchronized (openFiles) {
-                    if (openFiles.containsKey(filename)) {
-                        StreamUtil.close(openFiles.get(filename).writer);
-                        openFiles.remove(filename);
-                    }
+                if (openFiles.containsKey(filename)) {
+                    StreamUtil.close(openFiles.get(filename).writer);
+                    openFiles.remove(filename);
                 }
                 break;
             case CHANNEL_MESSAGE:
@@ -460,7 +456,7 @@ public class LoggingPlugin extends Plugin implements ActionListener,
 
     /** {@inheritDoc} */
     @Override
-    public void configChanged(String domain, String key) {
+    public void configChanged(final String domain, final String key) {
         setCachedSettings();
     }
 
@@ -570,7 +566,7 @@ public class LoggingPlugin extends Plugin implements ActionListener,
                 Logger.userError(ErrorLevel.LOW, "Dateformat String '" + timestamp + "' is invalid. For more information: http://java.sun.com/javase/6/docs/api/java/text/SimpleDateFormat.html");
             }
             finalLine.append(dateString);
-            finalLine.append(" ");
+            finalLine.append(' ');
         }
 
         if (stripcodes) {
@@ -581,15 +577,13 @@ public class LoggingPlugin extends Plugin implements ActionListener,
         //System.out.println("[Adding] "+filename+" => "+finalLine);
         BufferedWriter out = null;
         try {
-            synchronized (openFiles) {
-                if (openFiles.containsKey(filename)) {
-                    OpenFile of = openFiles.get(filename);
-                    of.lastUsedTime = System.currentTimeMillis();
-                    out = of.writer;
-                } else {
-                    out = new BufferedWriter(new FileWriter(filename, true));
-                    openFiles.put(filename, new OpenFile(out));
-                }
+            if (openFiles.containsKey(filename)) {
+                OpenFile of = openFiles.get(filename);
+                of.lastUsedTime = System.currentTimeMillis();
+                out = of.writer;
+            } else {
+                out = new BufferedWriter(new FileWriter(filename, true));
+                openFiles.put(filename, new OpenFile(out));
             }
             out.write(finalLine.toString());
             out.newLine();
