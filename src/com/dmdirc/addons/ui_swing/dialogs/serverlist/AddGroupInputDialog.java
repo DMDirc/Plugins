@@ -105,8 +105,12 @@ public class AddGroupInputDialog extends StandardDialog {
     public boolean save() {
         DefaultMutableTreeNode groupNode = (DefaultMutableTreeNode) tree.
                 getSelectionPath().getLastPathComponent();
-        while (!((groupNode.getUserObject()) instanceof ServerGroup)) {
-            groupNode = (DefaultMutableTreeNode) groupNode.getParent();
+        if (groupNode != null) {
+            groupNode = (DefaultMutableTreeNode) tree.getModel().getRoot();
+        } else {
+            while (!((groupNode.getUserObject()) instanceof ServerGroup)) {
+                groupNode = (DefaultMutableTreeNode) groupNode.getParent();
+            }
         }
         if (groupNode == tree.getModel().getRoot()) {
             serverListModel.addGroup(null, getGroupName(), getNetworkName());

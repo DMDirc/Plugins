@@ -97,6 +97,10 @@ public class Perform extends JPanel implements ServerListListener {
     /** {@inheritDoc} */
     @Override
     public void serverGroupChanged(final ServerGroupItem item) {
+        if (item == null) {
+            performPanel.switchPerform(null);
+            return;
+        }
         if (item.getGroup() == item) {
             setBorder(BorderFactory.createTitledBorder(border,
                     "Network perform"));

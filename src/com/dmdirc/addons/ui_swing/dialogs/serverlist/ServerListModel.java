@@ -48,8 +48,6 @@ public class ServerListModel {
     private final ServerList list = new ServerList();
     /** Listener list. */
     private final ListenerList listeners;
-    /** Active server group. */
-    private ServerGroup activeGroup;
     /** Active server item. */
     private ServerGroupItem activeItem;
 
@@ -67,7 +65,7 @@ public class ServerListModel {
      */
     public DefaultTreeModel getTreeModel() {
         return populateModel(new DefaultTreeModel(
-                new DefaultMutableTreeNode()));
+                new DefaultMutableTreeNode("All Servers")));
     }
 
     /**
@@ -134,7 +132,6 @@ public class ServerListModel {
      * @param item Newly selected item
      */
     public void setSelectedItem(final ServerGroupItem item) {
-        activeGroup = item.getGroup();
         activeItem = item;
         for (ServerListListener listener : listeners.get(
                 ServerListListener.class)) {
@@ -160,15 +157,6 @@ public class ServerListModel {
             perform = null;
         }
         return perform;
-    }
-
-    /**
-     * Gets the currently selected group.
-     *
-     * @return Currently selected group
-     */
-    public ServerGroup getSelectedGroup() {
-        return activeGroup;
     }
 
     /**

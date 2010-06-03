@@ -110,12 +110,11 @@ public class Tree extends JPanel implements TreeSelectionListener,
         items.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).clear();
         items.getSelectionModel().setSelectionMode(
                 TreeSelectionModel.SINGLE_TREE_SELECTION);
-        items.setRootVisible(false);
-        items.setRowHeight(0);
+        items.setRootVisible(true);
+        items.setRowHeight(15);
         items.setShowsRootHandles(false);
         items.setOpaque(true);
         items.setFocusable(false);
-        items.setRootVisible(false);
         items.setShowsRootHandles(true);
         new TreeScroller(items);
         items.setCellRenderer(new ServerGroupTreeRenderer());
@@ -148,7 +147,11 @@ public class Tree extends JPanel implements TreeSelectionListener,
         }
         final DefaultMutableTreeNode itemNode = (DefaultMutableTreeNode) items.
                 getSelectionPath().getLastPathComponent();
-        model.setSelectedItem((ServerGroupItem) itemNode.getUserObject());
+        if (itemNode.getUserObject() instanceof ServerGroupItem) {
+            model.setSelectedItem((ServerGroupItem) itemNode.getUserObject());
+        } else {
+            model.setSelectedItem(null);
+        }
     }
 
     /** {@inheritDoc} */

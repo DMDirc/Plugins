@@ -57,6 +57,9 @@ public class ServerGroupTreeRenderer extends DefaultTreeCellRenderer {
                 instanceof ServerGroupItem) {
             setText(((ServerGroupItem) ((DefaultMutableTreeNode) value).
                     getUserObject()).getName());
+        } else {
+            setText(((DefaultMutableTreeNode) value).getUserObject()
+                    .toString());
         }
         return label;
     }
