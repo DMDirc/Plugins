@@ -33,7 +33,6 @@ import java.awt.event.ActionListener;
 import java.awt.image.ColorConvertOp;
 
 import javax.swing.JButton;
-import javax.swing.JPanel;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -225,7 +224,9 @@ public final class ServerListDialog extends StandardDialog implements
     /** {@inheritDoc} */
     @Override
     public void dialogClosed(final boolean save) {
-        //Ignore
+        if (save) {
+            model.save();
+        }
     }
 
     /** {@inheritDoc} */
