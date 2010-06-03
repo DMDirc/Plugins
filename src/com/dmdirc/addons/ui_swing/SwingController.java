@@ -462,11 +462,6 @@ public class SwingController extends Plugin implements Serializable,
             UIManager.put("TextPane.font", defaultFont);
         }
 
-        UIManager.put("Tree.collapsedIcon",
-                IconManager.getIconManager().getIcon("nothing"));
-        UIManager.put("Tree.expandedIcon",
-                IconManager.getIconManager().getIcon("nothing"));
-
         try {
             UIUtilities.initUISettings();
             UIManager.setLookAndFeel(UIUtilities.getLookAndFeel(IdentityManager.
