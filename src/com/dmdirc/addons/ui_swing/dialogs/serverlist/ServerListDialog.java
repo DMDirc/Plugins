@@ -33,6 +33,7 @@ import java.awt.event.ActionListener;
 import java.awt.image.ColorConvertOp;
 
 import javax.swing.JButton;
+import javax.swing.JPanel;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -65,6 +66,16 @@ public final class ServerListDialog extends StandardDialog implements
     private final LockedLayer<Profiles> profileLock;
     /** Settings lock. */
     private final LockedLayer<Settings> settingsLock;
+    /** Info layer. */
+    private final JXLayer<Info> infoLayer;
+    /** Perform layer. */
+    private final JXLayer<Perform> performLayer;
+    /** Profile layer. */
+    private final JXLayer<Profiles> profileLayer;
+    /** Settings layer. */
+    private final JXLayer<Settings> settingsLayer;
+    /** Help panel. */
+    private final Help help;
 
     /**
      * Creates the dialog if one doesn't exist, and displays it.
@@ -123,18 +134,22 @@ public final class ServerListDialog extends StandardDialog implements
         infoLock = new LockedLayer<Info>(new BufferedImageOpEffect(
                 new ColorConvertOp(ColorSpace.getInstance(ColorSpace.CS_GRAY),
                 null)));
+        profileLayer = new JXLayer<Profiles>(new Profiles(model), profileLock);
+        performLayer = new JXLayer<Perform>(new Perform(model), performLock);
+        settingsLayer = new JXLayer<Settings>(new Settings(model),
+                settingsLock);
+        infoLayer = new JXLayer<Info>(new Info(model), infoLock);
+        help = new Help();
         lockLayers();
 
         setLayout(new MigLayout("fill, wrap 2, wmin 600, wmax 600"));
 
         add(new Tree(model, this), "grow, spany 4, wmax 150, wmin 150");
-        add(new JXLayer<Info>(new Info(model), infoLock), "growx, pushx");
-        add(new JXLayer<Settings>(new Settings(model), settingsLock), "grow, "
-                + "push, gaptop unrel, gapbottom unrel");
-        add(new JXLayer<Perform>(new Perform(model), performLock), "grow, "
-                + "push");
-        add(new JXLayer<Profiles>(new Profiles(model), profileLock), "growx, "
-                + "pushx");
+        add(help, "pos 160 0.5al");
+        add(infoLayer, "growx, pushx");
+        add(settingsLayer, "grow, push, gaptop unrel, gapbottom unrel");
+        add(performLayer, "grow, push");
+        add(profileLayer, "growx, pushx");
         add(connectButton, "skip 1, split 3, right, gapright unrel*2, "
                 + "sgx button");
         add(getLeftButton(), "right, sgx button");
@@ -194,6 +209,11 @@ public final class ServerListDialog extends StandardDialog implements
         infoLock.setLocked(lock);
         profileLock.setLocked(lock);
         connectButton.setEnabled(!lock);
+        performLayer.setVisible(!lock);
+        settingsLayer.setVisible(!lock);
+        infoLayer.setVisible(!lock);
+        profileLayer.setVisible(!lock);
+        help.setVisible(lock);
     }
 
     /** {@inheritDoc} */
