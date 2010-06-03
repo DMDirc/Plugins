@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.serverlist;
 
+import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.text.HTMLLabel;
 import com.dmdirc.serverlists.ServerGroupItem;
 import com.dmdirc.ui.core.util.URLHandler;
@@ -30,6 +31,7 @@ import java.net.URI;
 import java.util.Map.Entry;
 
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkEvent.EventType;
 import javax.swing.event.HyperlinkListener;
@@ -54,6 +56,8 @@ public class Info extends JPanel implements HyperlinkListener,
     private final HTMLLabel linkLabel;
     /** Server list model. */
     private final ServerListModel model;
+    /** Info scroll panel. */
+    private final JScrollPane sp;
 
     /**
      * Creates a new info panel.
@@ -67,9 +71,10 @@ public class Info extends JPanel implements HyperlinkListener,
 
         infoLabel = new HTMLLabel();
         linkLabel = new HTMLLabel();
+        sp = new JScrollPane(infoLabel);
 
         setLayout(new MigLayout("fill, ins 0"));
-        add(infoLabel, "grow, push");
+        add(sp, "grow, push");
         add(linkLabel, "grow");
 
         addListeners();
@@ -127,6 +132,7 @@ public class Info extends JPanel implements HyperlinkListener,
             }
             linkLabel.setText(sb.toString());
         }
+        UIUtilities.resetScrollPane(sp);
         infoLabel.setVisible(true);
         linkLabel.setVisible(true);
         setVisible(true);
