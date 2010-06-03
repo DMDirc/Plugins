@@ -109,7 +109,12 @@ public class AddGroupInputDialog extends StandardDialog {
             groupNode = (DefaultMutableTreeNode) tree.getModel().getRoot();
         } else {
             while (!((groupNode.getUserObject()) instanceof ServerGroup)) {
-                groupNode = (DefaultMutableTreeNode) groupNode.getParent();
+                if (groupNode.getParent() == null) {
+                    groupNode = (DefaultMutableTreeNode) tree.getModel().getRoot();
+                    break;
+                } else {
+                    groupNode = (DefaultMutableTreeNode) groupNode.getParent();
+                }
             }
         }
         if (groupNode == tree.getModel().getRoot()) {

@@ -155,7 +155,7 @@ public class Tree extends JPanel implements TreeSelectionListener,
     /** {@inheritDoc} */
     @Override
     public void serverGroupChanged(final ServerGroupItem item) {
-        //Ignore
+        addItemButton.setEnabled(model.hasItems());
     }
 
     /** {@inheritDoc} */
