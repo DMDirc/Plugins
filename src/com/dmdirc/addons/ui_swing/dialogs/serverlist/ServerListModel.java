@@ -197,7 +197,7 @@ public class ServerListModel {
             if (parentGroup == null) {
                 list.addServerGroup(sg);
             } else {
-                list.getGroupByName(parentGroup.getName()).addItem(sg);
+                parentGroup.addItem(sg);
             }
             for (ServerListListener listener : listeners.get(
                     ServerListListener.class)) {
