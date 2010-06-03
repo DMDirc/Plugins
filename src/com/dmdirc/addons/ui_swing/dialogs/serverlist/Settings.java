@@ -31,8 +31,11 @@ import com.dmdirc.serverlists.ServerGroupItem;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import javax.swing.BorderFactory;
 
 import javax.swing.JPanel;
+import javax.swing.UIManager;
+import javax.swing.border.Border;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -52,6 +55,8 @@ public class Settings extends JPanel implements ServerListListener {
     /** Settings panel. */
     private final Map<ServerGroupItem, SettingsPanel> panels =
             new HashMap<ServerGroupItem, SettingsPanel>();
+    /** Platform border. */
+    private final Border border;
 
     /**
      * Instantiates a new settings panel.
@@ -62,6 +67,8 @@ public class Settings extends JPanel implements ServerListListener {
         super();
         this.model = model;
         addListeners();
+        border = UIManager.getBorder("TitledBorder.border");
+        setBorder(BorderFactory.createTitledBorder(border, "Network Settings"));
         setLayout(new MigLayout("fill, ins 0"));
         add(getSettingsPanel(model.getSelectedItem()), "grow, push");
     }
@@ -78,6 +85,15 @@ public class Settings extends JPanel implements ServerListListener {
     public void serverGroupChanged(final ServerGroupItem item) {
         setVisible(false);
         removeAll();
+        if (item != null) {
+            if (item.getGroup() == item) {
+                setBorder(BorderFactory.createTitledBorder(border,
+                        "Network settings"));
+            } else {
+                setBorder(BorderFactory.createTitledBorder(border,
+                        "Server settings"));
+            }
+        }
         add(getSettingsPanel(item), "grow, push");
         setVisible(true);
     }
