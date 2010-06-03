@@ -111,11 +111,9 @@ public class Tree extends JPanel implements TreeSelectionListener,
         items.getSelectionModel().setSelectionMode(
                 TreeSelectionModel.SINGLE_TREE_SELECTION);
         items.setRootVisible(true);
-        items.setRowHeight(15);
-        items.setShowsRootHandles(false);
+        items.setShowsRootHandles(true);
         items.setOpaque(true);
         items.setFocusable(false);
-        items.setShowsRootHandles(true);
         new TreeScroller(items);
         items.setCellRenderer(new ServerGroupTreeRenderer());
         items.scrollRectToVisible(new Rectangle(0, 0, 0, 0));
