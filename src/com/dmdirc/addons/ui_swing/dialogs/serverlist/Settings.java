@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_swing.dialogs.serverlist;
 
 import com.dmdirc.addons.ui_swing.components.expandingsettings.SettingsPanel;
+import com.dmdirc.addons.ui_swing.components.expandingsettings.SettingsPanel.OptionType;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.serverlists.ServerGroup;
 import com.dmdirc.serverlists.ServerGroupItem;
@@ -101,8 +102,7 @@ public class Settings extends JPanel implements ServerListListener {
                 panels.put(item, new SettingsPanel(IdentityManager.
                         getServerConfig(item.getName()), ""));
             }
-            panels.get(item).addOption("ui.textPaneFontName", "Textpane Font",
-                    SettingsPanel.OptionType.FONT);
+            addSettings(panels.get(item));
         }
         return panels.get(item);
     }
@@ -129,5 +129,81 @@ public class Settings extends JPanel implements ServerListListener {
     public void serverGroupRemoved(final ServerGroupItem parent,
             final ServerGroupItem group) {
         //Ignore
+    }
+
+    /**
+     * Adds the settings to the panel.
+     * 
+     * @param settingsPanel Settings panel to add settings to
+     */
+    private void addSettings(final SettingsPanel settingsPanel) {
+        settingsPanel.addOption("channel.splitusermodes", "Split user modes",
+                OptionType.CHECKBOX);
+        settingsPanel.addOption("channel.sendwho", "Send WHO",
+                OptionType.CHECKBOX);
+        settingsPanel.addOption("channel.showmodeprefix", "Show mode prefix",
+                OptionType.CHECKBOX);
+
+        settingsPanel.addOption("general.cyclemessage", "Cycle message",
+                OptionType.TEXTFIELD);
+        settingsPanel.addOption("general.kickmessage", "Kick message",
+                OptionType.TEXTFIELD);
+        settingsPanel.addOption("general.partmessage", "Part message",
+                OptionType.TEXTFIELD);
+
+        settingsPanel.addOption("ui.backgroundcolour", "Background colour",
+                OptionType.COLOUR);
+        settingsPanel.addOption("ui.foregroundcolour", "Foreground colour",
+                OptionType.COLOUR);
+        settingsPanel.addOption("ui.frameBufferSize", "Textpane buffer limit",
+                OptionType.SPINNER);
+
+        settingsPanel.addOption("ui.inputBufferSize", "Input buffer size",
+                OptionType.SPINNER);
+        settingsPanel.addOption("ui.textPaneFontName", "Textpane font name",
+                OptionType.TEXTFIELD);
+        settingsPanel.addOption("ui.textPaneFontSize", "Textpane font size",
+                OptionType.SPINNER);
+
+        settingsPanel.addOption("ui.inputbackgroundcolour",
+                "Input field background colour",
+                OptionType.COLOUR);
+        settingsPanel.addOption("ui.inputforegroundcolour",
+                "Input field foreground colour",
+                OptionType.COLOUR);
+        settingsPanel.addOption("ui.nicklistbackgroundcolour",
+                "Nicklist background colour",
+                OptionType.COLOUR);
+        settingsPanel.addOption("ui.nicklistforegroundcolour",
+                "Nicklist foreground colour",
+                OptionType.COLOUR);
+        settingsPanel.addOption("ui.shownickcoloursinnicklist",
+                "Show coloured nicks in nicklist",
+                OptionType.CHECKBOX);
+        settingsPanel.addOption("ui.shownickcoloursintext",
+                "Show coloured nicks in textpane",
+                OptionType.CHECKBOX);
+
+        settingsPanel.addOption("general.closechannelsonquit",
+                "Close channels on quit",
+                OptionType.CHECKBOX);
+        settingsPanel.addOption("general.closechannelsondisconnect",
+                "Close channels on disconnect",
+                OptionType.CHECKBOX);
+        settingsPanel.addOption("general.closequeriesonquit",
+                "Close queries on quit",
+                OptionType.CHECKBOX);
+        settingsPanel.addOption("general.closequeriesondisconnect",
+                "Close queries on disconnect",
+                OptionType.CHECKBOX);
+        settingsPanel.addOption("general.quitmessage", "Quit message",
+                OptionType.TEXTFIELD);
+        settingsPanel.addOption("general.reconnectmessage", "Reconnect message",
+                OptionType.TEXTFIELD);
+        settingsPanel.addOption("general.rejoinchannels",
+                "Rejoin channels on reconnect",
+                OptionType.CHECKBOX);
+        settingsPanel.addOption("general.pingtimeout", "Ping timeout",
+                OptionType.SPINNER);
     }
 }
