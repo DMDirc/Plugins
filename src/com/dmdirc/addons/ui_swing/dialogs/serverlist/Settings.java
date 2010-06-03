@@ -96,8 +96,7 @@ public class Settings extends JPanel implements ServerListListener {
                 panels.put(item, new SettingsPanel(IdentityManager.
                         getNetworkConfig(item.getName()), ""));
             } else if (item == null) {
-                panels.put(null, new SettingsPanel(IdentityManager
-                        .getConfigIdentity(), ""));
+                panels.put(null, new SettingsPanel(null, ""));
             } else {
                 panels.put(item, new SettingsPanel(IdentityManager.
                         getServerConfig(item.getName()), ""));
