@@ -33,7 +33,6 @@ import java.awt.event.ActionListener;
 import java.awt.image.ColorConvertOp;
 
 import javax.swing.JButton;
-import javax.swing.JPanel;
 
 import net.miginfocom.swing.MigLayout;
 
