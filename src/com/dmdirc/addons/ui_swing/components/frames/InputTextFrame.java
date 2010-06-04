@@ -106,11 +106,11 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
 
         final ConfigManager config = owner.getConfigManager();
 
-        getInputField().setBackground(config.getOptionColour(
-                "ui", "inputbackgroundcolour",
-                "ui", "backgroundcolour"));
         if (!UIUtilities.isGTKUI()) {
             //GTK users appear to dislike choice, ignore them if they want some.
+            getInputField().setBackground(config.getOptionColour(
+                    "ui", "inputbackgroundcolour",
+                    "ui", "backgroundcolour"));
             getInputField().setForeground(config.getOptionColour(
                     "ui", "inputforegroundcolour",
                     "ui", "foregroundcolour"));
