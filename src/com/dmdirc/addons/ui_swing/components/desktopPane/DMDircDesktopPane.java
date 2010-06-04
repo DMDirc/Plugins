@@ -131,7 +131,6 @@ public class DMDircDesktopPane extends JDesktopPane implements SwingWindowListen
         this.controller = controller;
         setBackground(new Color(238, 238, 238));
         setBorder(BorderFactory.createEtchedBorder());
-        setUI(new ProxyDesktopPaneUI(getUI(), this));
 
         nodes = new HashMap<Window, TreeViewNode>();
         model = new TreeViewModel(new TreeViewNode(null, null));
@@ -185,11 +184,6 @@ public class DMDircDesktopPane extends JDesktopPane implements SwingWindowListen
      * @param index Index for insertion
      */
     public void add(final JComponent comp, final int index) {
-        UIUtilities.invokeLater(new Runnable() {
-
-            /** {@inheritDoc} */
-            @Override
-            public void run() {
                 addImpl(comp, null, index);
 
                 // Make sure it'll fit with our offsets
@@ -206,8 +200,6 @@ public class DMDircDesktopPane extends JDesktopPane implements SwingWindowListen
                 // Increase the offsets
                 xOffset += FRAME_OPENING_OFFSET;
                 yOffset += FRAME_OPENING_OFFSET;
-            }
-        });
     }
 
     /**
