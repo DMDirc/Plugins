@@ -46,7 +46,7 @@ public class ActionsGroupPanelTest extends UISpecTestCase {
     
     @Before
     @Override
-    public void setUp() {
+    public void setUp() throws Exception {
         super.setUp();
         
         action1 = mock(Action.class);
