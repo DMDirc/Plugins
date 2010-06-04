@@ -141,7 +141,7 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
         setInputField(new SwingInputField(getController().getMainFrame()));
 
         getInputField().addMouseListener(this);
-        
+
         initPopupMenu();
         nickPopup = new JPopupMenu();
 
@@ -193,7 +193,8 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
     @Override
     @SuppressWarnings("unchecked")
     public WritableFrameContainer<? extends InputWindow> getContainer() {
-        return (WritableFrameContainer<? extends InputWindow>) super.getContainer();
+        return (WritableFrameContainer<? extends InputWindow>) super.
+                getContainer();
     }
 
     /**
@@ -214,8 +215,8 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
     public final void setInputHandler(final InputHandler newInputHandler) {
         this.inputHandler = newInputHandler;
         inputHandler.addValidationListener(inputField);
-        inputHandler.setTabCompleter(((WritableFrameContainer<?>) frameParent)
-                .getTabCompleter());
+        inputHandler.setTabCompleter(((WritableFrameContainer<?>) frameParent).
+                getTabCompleter());
     }
 
     /**
@@ -323,8 +324,8 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
             if (point != null) {
                 initPopupMenu();
                 inputFieldPopup.show(this, (int) point.getX(),
-                        (int) point.getY() + getTextPane().getHeight() + (int)
-                        PlatformDefaults.getUnitValueX("related").getValue());
+                        (int) point.getY() + getTextPane().getHeight() + (int) PlatformDefaults.
+                        getUnitValueX("related").getValue());
             }
         }
     }
@@ -366,16 +367,16 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
         final String inputFieldText = getInputField().getText();
         //Get the text that would result from the paste (inputfield
         //- selection + clipboard)
-        final String text = inputFieldText.substring(0, getInputField()
-                .getSelectionStart()) + clipboard + inputFieldText.substring(
+        final String text = inputFieldText.substring(0, getInputField().
+                getSelectionStart()) + clipboard + inputFieldText.substring(
                 getInputField().getSelectionEnd());
         final String[] clipboardLines = getSplitLine(text);
         //check theres something to paste
         if (clipboardLines.length > 1) {
             //Clear the input field
             inputField.setText("");
-            final Integer pasteTrigger = getContainer().getConfigManager()
-                    .getOptionInt("ui", "pasteProtectionLimit");
+            final Integer pasteTrigger = getContainer().getConfigManager().
+                    getOptionInt("ui", "pasteProtectionLimit");
             //check whether the number of lines is over the limit
             if (pasteTrigger != null && getContainer().getNumLines(text)
                     > pasteTrigger) {
@@ -412,27 +413,29 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
 
         if ("ui".equals(domain) && getContainer().getConfigManager() != null) {
             if (getInputField() != null) {
-                if ("inputbackgroundcolour".equals(key) || "backgroundcolour".
-                        equals(key)) {
-                    getInputField().setBackground(getContainer()
-                            .getConfigManager().getOptionColour(
-                            "ui", "inputbackgroundcolour",
-                            "ui", "backgroundcolour"));
-                } else if ("inputforegroundcolour".equals(key) || "foregroundcolour".
-                        equals(key)) {
-                    getInputField().setForeground(getContainer()
-                            .getConfigManager().getOptionColour(
-                            "ui", "inputforegroundcolour",
-                            "ui", "foregroundcolour"));
-                    getInputField().setCaretColor(getContainer()
-                            .getConfigManager().getOptionColour(
-                            "ui", "inputforegroundcolour",
-                            "ui", "foregroundcolour"));
+                if (!UIUtilities.isGTKUI()) {
+                    if ("inputbackgroundcolour".equals(key)
+                            || "backgroundcolour".equals(key)) {
+                        getInputField().setBackground(getContainer().
+                                getConfigManager().getOptionColour(
+                                "ui", "inputbackgroundcolour",
+                                "ui", "backgroundcolour"));
+                    } else if ("inputforegroundcolour".equals(key)
+                            || "foregroundcolour".equals(key)) {
+                        getInputField().setForeground(getContainer().
+                                getConfigManager().getOptionColour(
+                                "ui", "inputforegroundcolour",
+                                "ui", "foregroundcolour"));
+                        getInputField().setCaretColor(getContainer().
+                                getConfigManager().getOptionColour(
+                                "ui", "inputforegroundcolour",
+                                "ui", "foregroundcolour"));
+                    }
                 }
             }
             if ("awayindicator".equals(key)) {
-                useAwayIndicator = getContainer().getConfigManager()
-                        .getOptionBool("ui", "awayindicator");
+                useAwayIndicator = getContainer().getConfigManager().
+                        getOptionBool("ui", "awayindicator");
             }
         }
     }
