@@ -109,7 +109,7 @@ public class Info extends JPanel implements HyperlinkListener,
         } else {
             final StringBuilder sb = new StringBuilder();
             sb.append("<html><b>");
-            sb.append(item.getName());
+            sb.append(item.getPath());
             sb.append("</b><br>");
             if (item.getGroup() == null) {
                 sb.append("");
