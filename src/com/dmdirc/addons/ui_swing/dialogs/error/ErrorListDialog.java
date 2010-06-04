@@ -170,8 +170,15 @@ public final class ErrorListDialog extends StandardDialog implements
         if (!e.getValueIsAdjusting()) {
             final int localRow = table.getSelectedRow();
             if (localRow > -1) {
-                final ProgramError error = tableModel.getError(
-                        table.getRowSorter().convertRowIndexToModel(localRow));
+                final ProgramError error;
+                try {
+                    error = tableModel.getError(table.getRowSorter()
+                            .convertRowIndexToModel(localRow));
+                } catch (IndexOutOfBoundsException ex) {
+                    //In the extremely rare case the error gets deleted whilst
+                    //we're changing the value, bail out gracefully
+                    return;
+                }
                 errorDetails.setError(error);
                 deleteButton.setEnabled(true);
                 if (error.getReportStatus() == ErrorReportStatus.NOT_APPLICABLE ||
