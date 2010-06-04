@@ -81,10 +81,12 @@ public class TitlePanel extends JPanel {
         title.setFont(title.getFont().deriveFont((float) (title.getFont().
                 getSize() * 1.5)));
         title.setForeground(Color.BLACK);
+        title.setBackground(Color.WHITE);
 
         add(title, "grow, push");
         setBorder(border);
         setBackground(Color.WHITE);
+        setForeground(Color.BLACK);
     }
 
     /**

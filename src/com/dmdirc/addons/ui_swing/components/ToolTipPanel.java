@@ -81,6 +81,7 @@ public class ToolTipPanel extends JPanel implements MouseListener {
         this.icon = new JLabel(IconManager.getIconManager().getIcon("warning"));
 
         setBackground(Color.WHITE);
+        setForeground(Color.BLACK);
         setBorder(BorderFactory.createEtchedBorder());
 
         tooltip = new TextLabel();
@@ -96,6 +97,8 @@ public class ToolTipPanel extends JPanel implements MouseListener {
     protected void reset() {
         SimpleAttributeSet sas = new SimpleAttributeSet();
 
+        StyleConstants.setForeground(sas, Color.BLACK);
+        StyleConstants.setBackground(sas, Color.WHITE);
         if (warning == null || warning.isEmpty()) {
             tooltip.setText(defaultHelp);
             icon.setVisible(false);
@@ -126,6 +129,8 @@ public class ToolTipPanel extends JPanel implements MouseListener {
         icon.setVisible(false);
         SimpleAttributeSet sas = new SimpleAttributeSet();
         StyleConstants.setItalic(sas, false);
+        StyleConstants.setForeground(sas, Color.BLACK);
+        StyleConstants.setBackground(sas, Color.WHITE);
         tooltip.getDocument().setParagraphAttributes(0, text.length(), sas, true);
     }
 
