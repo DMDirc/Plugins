@@ -1,16 +1,16 @@
 /*
  * Copyright (c) 2006-2010 Chris Smith, Shane Mc Cormack, Gregory Holmes
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -47,8 +47,8 @@ import net.miginfocom.swing.MigLayout;
 /**
  * Action conditioneditor panel.
  */
-public class ActionConditionEditorPanel extends JPanel implements ActionListener,
-        DocumentListener, PropertyChangeListener {
+public class ActionConditionEditorPanel extends JPanel implements 
+        ActionListener, DocumentListener, PropertyChangeListener {
 
     /**
      * A version number for this class. It should be changed whenever the class
@@ -57,7 +57,7 @@ public class ActionConditionEditorPanel extends JPanel implements ActionListener
      */
     private static final long serialVersionUID = 1;
     /** Condition. */
-    private ActionCondition condition;
+    private final ActionCondition condition;
     /** Trigger. */
     private ActionType trigger;
     /** Argument. */
@@ -69,9 +69,9 @@ public class ActionConditionEditorPanel extends JPanel implements ActionListener
     /** Target. */
     private JTextField target;
 
-    /** 
+    /**
      * Instantiates the panel.
-     * 
+     *
      * @param condition Action condition
      * @param trigger Action trigger
      */
@@ -103,10 +103,12 @@ public class ActionConditionEditorPanel extends JPanel implements ActionListener
     /** Initialises the components. */
     private void initComponents() {
         arguments = new JComboBox(new DefaultComboBoxModel());
-        arguments.putClientProperty("JComboBox.isTableCellEditor", Boolean.TRUE);
+        arguments.putClientProperty("JComboBox.isTableCellEditor",
+                Boolean.TRUE);
         arguments.setName("argument");
         components = new JComboBox(new DefaultComboBoxModel());
-        components.putClientProperty("JComboBox.isTableCellEditor", Boolean.TRUE);
+        components.putClientProperty("JComboBox.isTableCellEditor",
+                Boolean.TRUE);
         components.setName("component");
         comparisons = new JComboBox(new DefaultComboBoxModel());
         comparisons.putClientProperty("JComboBox.isTableCellEditor",
@@ -166,7 +168,8 @@ public class ActionConditionEditorPanel extends JPanel implements ActionListener
         if (condition.getComponent() != null) {
             for (ActionComparison comp : ActionManager.getCompatibleComparisons(
                     condition.getComponent().getType())) {
-                ((DefaultComboBoxModel) comparisons.getModel()).addElement(comp);
+                ((DefaultComboBoxModel) comparisons.getModel())
+                        .addElement(comp);
             }
         }
         comparisons.setSelectedItem(condition.getComparison());
@@ -201,7 +204,8 @@ public class ActionConditionEditorPanel extends JPanel implements ActionListener
 
     /** Handles the comparison changing. */
     private void handleComparisonChange() {
-        condition.setComparison((ActionComparison) comparisons.getSelectedItem());
+        condition.setComparison((ActionComparison) comparisons
+                .getSelectedItem());
         populateTarget();
         target.setEnabled(true);
     }
@@ -220,18 +224,18 @@ public class ActionConditionEditorPanel extends JPanel implements ActionListener
         setLayout(new MigLayout("wrap 2, pack"));
 
         add(new JLabel("Argument:"), "align right");
-        add(arguments, "growx, pushx");
+        add(arguments, "growx, wmax 200");
         add(new JLabel("Component:"), "align right");
-        add(components, "growx, pushx");
+        add(components, "growx, wmax 200");
         add(new JLabel("Comparison:"), "align right");
-        add(comparisons, "growx, pushx");
+        add(comparisons, "growx, wmax 200");
         add(new JLabel("Target:"), "align right");
-        add(target, "growx, pushx");
+        add(target, "growx");
     }
 
-    /** 
-     * {@inheritDoc} 
-     * 
+    /**
+     * {@inheritDoc}
+     *
      * @param e Action event
      */
     @Override
@@ -267,7 +271,7 @@ public class ActionConditionEditorPanel extends JPanel implements ActionListener
     /** {@inheritDoc} */
     @Override
     public void changedUpdate(final DocumentEvent e) {
-    //Ignore
+        //Ignore
     }
 
     /** {@inheritDoc} */
@@ -288,7 +292,7 @@ public class ActionConditionEditorPanel extends JPanel implements ActionListener
 
     /**
      * Sets the action trigger.
-     * 
+     *
      * @param trigger new trigger
      */
     void setTrigger(final ActionType trigger) {
@@ -309,7 +313,7 @@ public class ActionConditionEditorPanel extends JPanel implements ActionListener
 
     /**
      * Checks if this editor panel has errored.
-     * 
+     *
      * @return true iif the content it valid
      */
     public boolean checkError() {
