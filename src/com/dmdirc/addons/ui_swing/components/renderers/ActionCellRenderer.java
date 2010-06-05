@@ -34,22 +34,23 @@ import javax.swing.JList;
 /**
  * Displays actions using getName not toString.
  */
-public final class ActionCellRenderer extends DefaultListCellRenderer {
-    
+public class ActionCellRenderer extends DefaultListCellRenderer {
+
     /**
      * A version number for this class. It should be changed whenever the class
      * structure is changed (or anything else that would prevent serialized
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 1;
-    
+
     /** {@inheritDoc} */
     @Override
     public Component getListCellRendererComponent(final JList list,
             final Object value, final int index, final boolean isSelected,
             final boolean cellHasFocus) {
-        super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-        
+        super.getListCellRendererComponent(list, value, index, isSelected,
+                cellHasFocus);
+
         if (value instanceof ActionComparison) {
             setText(((ActionComparison) value).getName());
         } else if (value instanceof ActionComponent) {
@@ -63,8 +64,8 @@ public final class ActionCellRenderer extends DefaultListCellRenderer {
         } else {
             setText(value.toString());
         }
-        
+
         return this;
     }
-    
+
 }
