@@ -22,8 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.components.renderers;
 
-import static com.dmdirc.addons.ui_swing.UIUtilities.SMALL_BORDER;
-
 import com.dmdirc.addons.ui_swing.components.pluginpanel.PluginInfoToggle;
 import com.dmdirc.addons.ui_swing.components.themepanel.ThemeToggle;
 
@@ -38,13 +36,14 @@ import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.ListCellRenderer;
 
+import net.miginfocom.layout.PlatformDefaults;
 import net.miginfocom.swing.MigLayout;
 
 /**
  * Handles the rendering of the JList used for plugin and theme management.
  * @author chris
  */
-public final class AddonCellRenderer extends JPanel implements ListCellRenderer {
+public class AddonCellRenderer extends JPanel implements ListCellRenderer {
 
     /**
      * A version number for this class. It should be changed whenever the class
@@ -52,11 +51,6 @@ public final class AddonCellRenderer extends JPanel implements ListCellRenderer 
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 1;
-
-    /** Creates a new instance of AddonCellRenderer. */
-    public AddonCellRenderer() {
-        super();
-    }
 
     /** {@inheritDoc} */
     @Override
@@ -72,11 +66,10 @@ public final class AddonCellRenderer extends JPanel implements ListCellRenderer 
         } else {
             setBackground(list.getBackground());
         }
-
-        Color foreground = Color.BLACK;
         final JLabel name = new JLabel(), version = new JLabel(),
                 author = new JLabel(), desc = new JLabel();
 
+        Color foreground = Color.BLACK;
         if (value instanceof PluginInfoToggle) {
             final PluginInfoToggle plugin = (PluginInfoToggle) value;
 
@@ -107,7 +100,8 @@ public final class AddonCellRenderer extends JPanel implements ListCellRenderer 
         version.setHorizontalAlignment(JLabel.CENTER);
         author.setForeground(foreground);
         desc.setForeground(foreground);
-        desc.setBorder(BorderFactory.createEmptyBorder(SMALL_BORDER, 0, 0, 0));
+        desc.setBorder(BorderFactory.createEmptyBorder((int) PlatformDefaults.
+                getPanelInsets(0).getValue(), 0, 0, 0));
 
         add(name, "gapleft 3");
         add(version, "pushx");
@@ -117,5 +111,4 @@ public final class AddonCellRenderer extends JPanel implements ListCellRenderer 
 
         return this;
     }
-
 }
