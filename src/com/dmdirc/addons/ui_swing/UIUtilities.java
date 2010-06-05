@@ -55,13 +55,6 @@ import net.miginfocom.layout.PlatformDefaults;
  */
 public final class UIUtilities {
 
-    /** Size of a large border. */
-    public static final int LARGE_BORDER = 10;
-    /** Size of a small border. */
-    public static final int SMALL_BORDER = 5;
-    /** Standard button size. */
-    public static final Dimension BUTTON_SIZE = new Dimension(100, 25);
-
     /** Not intended to be instatiated. */
     private UIUtilities() {
     }
