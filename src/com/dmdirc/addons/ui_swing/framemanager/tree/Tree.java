@@ -91,11 +91,11 @@ public class Tree extends JTree implements MouseMotionListener,
                 TreeSelectionModel.SINGLE_TREE_SELECTION);
         setRootVisible(false);
         setRowHeight(0);
-        setShowsRootHandles(false);
+        setShowsRootHandles(true);
         setOpaque(true);
         setBorder(BorderFactory.createEmptyBorder(
                 (int) PlatformDefaults.getUnitValueX("related").getValue(),
-                (int) PlatformDefaults.getUnitValueX("related").getValue(),
+                0,
                 (int) PlatformDefaults.getUnitValueX("related").getValue(),
                 (int) PlatformDefaults.getUnitValueX("related").getValue()));
         setFocusable(false);
