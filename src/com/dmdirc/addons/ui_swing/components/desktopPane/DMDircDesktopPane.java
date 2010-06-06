@@ -1,16 +1,16 @@
 /*
  * Copyright (c) 2006-2010 Chris Smith, Shane Mc Cormack, Gregory Holmes
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -42,7 +42,6 @@ import com.dmdirc.ui.interfaces.Window;
 import com.dmdirc.util.ReturnableThread;
 import com.dmdirc.util.URLBuilder;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -61,6 +60,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JDesktopPane;
 import javax.swing.JInternalFrame;
+import javax.swing.UIManager;
 import javax.swing.plaf.DesktopPaneUI;
 import javax.swing.tree.DefaultTreeSelectionModel;
 import javax.swing.tree.TreeNode;
@@ -70,12 +70,10 @@ import javax.swing.tree.TreeSelectionModel;
 /**
  * DMDirc Extentions to JDesktopPane.
  */
-public class DMDircDesktopPane extends JDesktopPane implements SwingWindowListener,
-        SelectionListener, PropertyChangeListener, ConfigChangeListener {
+public class DMDircDesktopPane extends JDesktopPane implements
+        SwingWindowListener, SelectionListener, PropertyChangeListener,
+        ConfigChangeListener {
 
-    /** Logger to use. */
-    private static final java.util.logging.Logger LOGGER =
-            java.util.logging.Logger.getLogger(DMDircDesktopPane.class.getName());
     /**
      * A version number for this class. It should be changed whenever the class
      * structure is changed (or anything else that would prevent serialized
@@ -103,17 +101,17 @@ public class DMDircDesktopPane extends JDesktopPane implements SwingWindowListen
     /** Maximised state. */
     private boolean maximised;
     /** Changing maximisation. */
-    private AtomicBoolean changing = new AtomicBoolean(false);
+    private final AtomicBoolean changing = new AtomicBoolean(false);
     /** Main Frame. */
-    private MainFrame mainFrame;
+    private final MainFrame mainFrame;
     /** Background image. */
     private Image backgroundImage;
     /** Background image option. */
     private BackgroundOption backgroundOption;
     /** Config domain. */
-    private String domain;
+    private final String domain;
     /** Swing controller. */
-    private SwingController controller;
+    private final SwingController controller;
 
     /**
      * Initialises the DMDirc desktop pane.
@@ -129,7 +127,7 @@ public class DMDircDesktopPane extends JDesktopPane implements SwingWindowListen
         this.mainFrame = mainFrame;
         this.domain = domain;
         this.controller = controller;
-        setBackground(new Color(238, 238, 238));
+        setBackground(UIManager.getColor("Desktop.background"));
         setBorder(BorderFactory.createEtchedBorder());
 
         nodes = new HashMap<Window, TreeViewNode>();
@@ -147,7 +145,7 @@ public class DMDircDesktopPane extends JDesktopPane implements SwingWindowListen
         };
 
         controller.getWindowFactory().addWindowListener(this);
-        
+
         IdentityManager.getGlobalConfig().addChangeListener(domain,
                 "desktopbackground", this);
         IdentityManager.getGlobalConfig().addChangeListener(domain,
@@ -163,7 +161,7 @@ public class DMDircDesktopPane extends JDesktopPane implements SwingWindowListen
             super.paintComponent(g);
         } else {
             UIUtilities.paintBackground((Graphics2D) g, getBounds(),
-                backgroundImage, backgroundOption);
+                    backgroundImage, backgroundOption);
         }
     }
 
@@ -179,32 +177,32 @@ public class DMDircDesktopPane extends JDesktopPane implements SwingWindowListen
 
     /**
      * Add a specified component at the specified index.
-     * 
+     *
      * @param comp Component to add
      * @param index Index for insertion
      */
     public void add(final JComponent comp, final int index) {
-                addImpl(comp, null, index);
+        addImpl(comp, null, index);
 
-                // Make sure it'll fit with our offsets
-                if (comp.getWidth() + xOffset > getWidth()) {
-                    xOffset = 0;
-                }
-                if (comp.getHeight() + yOffset > getHeight()) {
-                    yOffset = 0;
-                }
+        // Make sure it'll fit with our offsets
+        if (comp.getWidth() + xOffset > getWidth()) {
+            xOffset = 0;
+        }
+        if (comp.getHeight() + yOffset > getHeight()) {
+            yOffset = 0;
+        }
 
-                // Position the frame
-                comp.setLocation(xOffset, yOffset);
+        // Position the frame
+        comp.setLocation(xOffset, yOffset);
 
-                // Increase the offsets
-                xOffset += FRAME_OPENING_OFFSET;
-                yOffset += FRAME_OPENING_OFFSET;
+        // Increase the offsets
+        xOffset += FRAME_OPENING_OFFSET;
+        yOffset += FRAME_OPENING_OFFSET;
     }
 
     /**
      * Returns the select window.
-     * 
+     *
      * @return Selected window, or null.
      */
     public Window getSelectedWindow() {
@@ -226,8 +224,8 @@ public class DMDircDesktopPane extends JDesktopPane implements SwingWindowListen
             @Override
             public void run() {
                 synchronized (nodes) {
-                    addWindow(parent == null ? model.getRootNode() :
-                        nodes.get(parent), window);
+                    addWindow(parent == null ? model.getRootNode() : nodes.get(
+                            parent), window);
                 }
             }
         });
@@ -254,7 +252,8 @@ public class DMDircDesktopPane extends JDesktopPane implements SwingWindowListen
                     model.removeNodeFromParent(nodes.get(window));
                 }
                 nodes.remove(window);
-                window.getContainer().removeSelectionListener(DMDircDesktopPane.this);
+                window.getContainer().removeSelectionListener(
+                        DMDircDesktopPane.this);
                 ((TextFrame) window).removePropertyChangeListener(
                         DMDircDesktopPane.this);
                 if (getAllFrames().length == 0) {
@@ -276,13 +275,15 @@ public class DMDircDesktopPane extends JDesktopPane implements SwingWindowListen
             /** {@inheritDoc} */
             @Override
             public void run() {
-                final TreeViewNode node = new TreeViewNode(null, window.getContainer());
+                final TreeViewNode node = new TreeViewNode(null, window.
+                        getContainer());
                 synchronized (nodes) {
                     nodes.put(window, node);
                 }
                 node.setUserObject(window);
                 model.insertNodeInto(node, parent);
-                window.getContainer().addSelectionListener(DMDircDesktopPane.this);
+                window.getContainer().addSelectionListener(
+                        DMDircDesktopPane.this);
                 ((TextFrame) window).addPropertyChangeListener(
                         DMDircDesktopPane.this);
             }
@@ -307,8 +308,8 @@ public class DMDircDesktopPane extends JDesktopPane implements SwingWindowListen
             /** {@inheritDoc} */
             @Override
             public void run() {
-                selectedWindow = controller.getWindowFactory()
-                        .getSwingWindow(window);
+                selectedWindow = controller.getWindowFactory().getSwingWindow(
+                        window);
                 final TreeNode[] path = model.getPathToRoot(nodes.get(
                         selectedWindow));
                 if (path != null && path.length > 0) {
@@ -349,11 +350,11 @@ public class DMDircDesktopPane extends JDesktopPane implements SwingWindowListen
         }
 
         maximised = isMaximised;
-        Stack<JInternalFrame> stack = new Stack<JInternalFrame>();
+        final Stack<JInternalFrame> stack = new Stack<JInternalFrame>();
         stack.addAll(Arrays.asList(getAllFrames()));
 
         while (!stack.empty()) {
-            JInternalFrame frame = stack.pop();
+            final JInternalFrame frame = stack.pop();
             if (isMaximised) {
                 if (!frame.isMaximum()) {
                     ((Window) frame).maximise();
@@ -367,10 +368,10 @@ public class DMDircDesktopPane extends JDesktopPane implements SwingWindowListen
         if (selectedWindow != null) {
             selectedWindow.activateFrame();
         }
-        if (!isMaximised) {
-            mainFrame.setTitle(title);
-        } else {
+        if (isMaximised) {
             mainFrame.setTitle(null);
+        } else {
+            mainFrame.setTitle(title);
         }
         changing.set(false);
     }
