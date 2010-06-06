@@ -64,10 +64,10 @@ import com.dmdirc.config.prefs.validator.NumericalValidator;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.plugins.Plugin;
-import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.core.dialogs.sslcertificate.SSLCertificateDialogModel;
 import com.dmdirc.ui.interfaces.ChannelWindow;
+import com.dmdirc.ui.interfaces.FrameListener;
 import com.dmdirc.ui.interfaces.InputWindow;
 import com.dmdirc.ui.interfaces.QueryWindow;
 import com.dmdirc.ui.interfaces.ServerWindow;
@@ -877,6 +877,9 @@ public class SwingController extends Plugin implements Serializable,
                 PreferencesType.OPTIONALCOLOUR,
                 "ui", "treeviewActiveForeground", "Active node foreground",
                 "Foreground colour to use for active treeview node"));
+        treeview.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
+                getDomain(), "showtreeexpands", "Show expand/collapse handles",
+                "Do you want to show tree view collapse/expand handles"));
 
         return treeview;
     }
