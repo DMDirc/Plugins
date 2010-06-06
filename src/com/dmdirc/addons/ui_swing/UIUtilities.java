@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_swing;
 
+import com.dmdirc.addons.ui_swing.TreeUI;
 import com.dmdirc.addons.ui_swing.actions.RedoAction;
 import com.dmdirc.addons.ui_swing.actions.UndoAction;
 import com.dmdirc.addons.ui_swing.components.DMDircUndoableEditListener;
@@ -126,7 +127,7 @@ public final class UIUtilities {
         UIManager.put("SplitPane.border", BorderFactory.createEmptyBorder());
         UIManager.put("SplitPane.dividerSize", (int) PlatformDefaults.
                 getPanelInsets(0).getValue());
-        UIManager.put("TreeUI", "javax.swing.plaf.metal.MetalTreeUI");
+        UIManager.put("TreeUI", TreeUI.class.getName());
         if (isGTKUI()) {
             UIManager.put("TitledBorder.titleColor", UIManager.getColor(
                     "Label.foreground"));

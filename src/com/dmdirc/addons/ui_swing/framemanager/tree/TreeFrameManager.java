@@ -142,8 +142,7 @@ public final class TreeFrameManager implements FrameManager,
             public void run() {
                 model = new TreeViewModel(new TreeViewNode(null, null));
                 tree = new Tree(TreeFrameManager.this, model,
-                        TreeFrameManager.this.controller.getWindowFactory());
-
+                        TreeFrameManager.this.controller);
                 tree.setCellRenderer(new TreeViewTreeCellRenderer(
                         TreeFrameManager.this));
                 tree.setVisible(true);
