@@ -143,8 +143,8 @@ public class OsdWindow extends JDialog implements MouseListener,
                 public void run() {
                     osdManager.closeWindow(OsdWindow.this);
                 }
-            }, IdentityManager.getGlobalConfig().getOptionInt(plugin.getDomain(),
-                    "timeout") * 1000);
+            }, Math.max(IdentityManager.getGlobalConfig().getOptionInt(plugin
+                    .getDomain(), "timeout"), 1) * 1000);
         }
     }
 
