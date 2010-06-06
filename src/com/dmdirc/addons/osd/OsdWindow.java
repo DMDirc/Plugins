@@ -135,6 +135,9 @@ public class OsdWindow extends JDialog implements MouseListener,
             addMouseMotionListener(this);
             addMouseListener(this);
         } else {
+            int windowDelay = Math.max(IdentityManager.getGlobalConfig()
+                    .getOptionInt(plugin.getDomain(), "timeout"), 1);
+
             addMouseListener(this);
             new Timer("OSD Display Timer").schedule(new TimerTask() {
 
@@ -143,8 +146,7 @@ public class OsdWindow extends JDialog implements MouseListener,
                 public void run() {
                     osdManager.closeWindow(OsdWindow.this);
                 }
-            }, IdentityManager.getGlobalConfig().getOptionInt(plugin.getDomain(),
-                    "timeout") * 1000);
+            }, windowDelay * 1000);
         }
     }
 
