@@ -338,7 +338,7 @@ public class DMDircDesktopPane extends JDesktopPane implements
     }
 
     private void handleTitleEvent(final Window window, final String title) {
-        if (maximised && (window == selectedWindow)) {
+        if (maximised && window == selectedWindow) {
             mainFrame.setTitle(title);
         } else if (!maximised) {
             mainFrame.setTitle(null);
@@ -357,24 +357,16 @@ public class DMDircDesktopPane extends JDesktopPane implements
 
         while (!stack.empty()) {
             final JInternalFrame frame = stack.pop();
-            if (isMaximised) {
-                if (!frame.isMaximum()) {
+            if (isMaximised && !frame.isMaximum()) {
                     ((Window) frame).maximise();
-                }
-            } else {
-                if (frame.isMaximum()) {
-                    ((Window) frame).restore();
-                }
+            } else if (!isMaximised && frame.isMaximum()) {
+                ((Window) frame).restore();
             }
         }
         if (selectedWindow != null) {
             selectedWindow.activateFrame();
         }
-        if (isMaximised) {
-            mainFrame.setTitle(null);
-        } else {
-            mainFrame.setTitle(title);
-        }
+        mainFrame.setTitle(isMaximised ? null : title);
         changing.set(false);
     }
 
@@ -396,13 +388,9 @@ public class DMDircDesktopPane extends JDesktopPane implements
                 }
             }
         });
-        try {
-            backgroundOption = BackgroundOption.valueOf(IdentityManager.
-                    getGlobalConfig().getOption(domain,
-                    "desktopbackgroundoption"));
-        } catch (IllegalArgumentException ex) {
-            backgroundOption = BackgroundOption.CENTER;
-        }
+        backgroundOption = BackgroundOption.valueOf(IdentityManager
+                .getGlobalConfig().getOption(domain,
+                "desktopbackgroundoption"));
         repaint();
     }
 
