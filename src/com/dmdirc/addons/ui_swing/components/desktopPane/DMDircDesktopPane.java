@@ -239,6 +239,7 @@ public class DMDircDesktopPane extends JDesktopPane implements
             /** {@inheritDoc} */
             @Override
             public void run() {
+                remove((JInternalFrame) window);
                 if (nodes == null || nodes.get(window) == null) {
                     return;
                 }
@@ -275,6 +276,7 @@ public class DMDircDesktopPane extends JDesktopPane implements
             /** {@inheritDoc} */
             @Override
             public void run() {
+                add((JInternalFrame) window, getAllFrames().length - 1);
                 final TreeViewNode node = new TreeViewNode(null, window.
                         getContainer());
                 synchronized (nodes) {

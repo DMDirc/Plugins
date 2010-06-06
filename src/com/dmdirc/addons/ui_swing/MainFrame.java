@@ -67,7 +67,8 @@ import net.miginfocom.swing.MigLayout;
  * The main application frame.
  */
 public final class MainFrame extends JFrame implements WindowListener,
-        MainWindow, ConfigChangeListener, SwingWindowListener {
+        MainWindow, ConfigChangeListener {
+
     /**
      * A version number for this class. It should be changed whenever the class
      * structure is changed (or anything else that would prevent serialized
@@ -124,7 +125,7 @@ public final class MainFrame extends JFrame implements WindowListener,
                 this);
         IdentityManager.getGlobalConfig().addChangeListener("ui", "showversion",
                 this);
-        IdentityManager.getGlobalConfig().addChangeListener("ui", 
+        IdentityManager.getGlobalConfig().addChangeListener("ui",
                 "framemanager", this);
         IdentityManager.getGlobalConfig().addChangeListener("icon", "icon",
                 this);
@@ -384,7 +385,6 @@ public final class MainFrame extends JFrame implements WindowListener,
                 mainFrameManager.setParent(frameManagerPanel);
                 controller.getWindowFactory().addWindowListener(
                         mainFrameManager);
-                controller.getWindowFactory().addWindowListener(MainFrame.this);
             }
         });
     }
@@ -395,8 +395,8 @@ public final class MainFrame extends JFrame implements WindowListener,
     private void initComponents() {
         statusBar = new SwingStatusBar(controller, this);
         frameManagerPanel = new JPanel();
-        desktopPane = new DMDircDesktopPane(controller, this, controller
-                .getDomain());
+        desktopPane = new DMDircDesktopPane(controller, this, controller.
+                getDomain());
         mainSplitPane = new SplitPane(SplitPane.Orientation.HORIZONTAL);
 
         initFrameManagers();
@@ -426,8 +426,8 @@ public final class MainFrame extends JFrame implements WindowListener,
      * @return Returns the initialised split pane
      */
     private JSplitPane initSplitPane(final SplitPane mainSplitPane) {
-        position = FramemanagerPosition.getPosition(IdentityManager
-                .getGlobalConfig().getOption("ui", "framemanagerPosition"));
+        position = FramemanagerPosition.getPosition(IdentityManager.
+                getGlobalConfig().getOption("ui", "framemanagerPosition"));
 
         if (position == FramemanagerPosition.UNKNOWN) {
             position = FramemanagerPosition.LEFT;
@@ -589,60 +589,12 @@ public final class MainFrame extends JFrame implements WindowListener,
                     "icon"));
             UIUtilities.invokeLater(new Runnable() {
 
-                    /** {@inheritDoc} */
-                    @Override
-                    public void run() {
-                        setIconImage(imageIcon.getImage());
-                    }
+                /** {@inheritDoc} */
+                @Override
+                public void run() {
+                    setIconImage(imageIcon.getImage());
+                }
             });
         }
-    }
-
-    /** {@inheritDoc}. */
-    @Override
-    public void windowAdded(final Window parent, final Window window) {
-        UIUtilities.invokeAndWait(new Runnable() {
-
-            /** {@inheritDoc} */
-            @Override
-            public void run() {
-                addWindow(window, desktopPane.getAllFrames().length - 1);
-            }
-        });
-    }
-
-    /**
-     * Adds a window to this frame manager.
-     *
-     * @param window The server to be added
-     * @param index Index of the window to be added
-     */
-    public void addWindow(final Window window, final int index) {
-        UIUtilities.invokeAndWait(new Runnable() {
-
-            /** {@inheritDoc} */
-            @Override
-            public void run() {
-                final JInternalFrame frame = (JInternalFrame) window;
-
-                // Add the frame
-                desktopPane.add(frame, index);
-            }
-        });
-    }
-
-    /** {@inheritDoc}. */
-    @Override
-    public void windowDeleted(final Window parent, final Window window) {
-        UIUtilities.invokeAndWait(new Runnable() {
-
-            /** {@inheritDoc} */
-            @Override
-            public void run() {
-                final JInternalFrame frame = (JInternalFrame) window;
-
-                desktopPane.remove(frame);
-            }
-        });
     }
 }
