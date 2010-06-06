@@ -29,7 +29,6 @@ import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.util.ReturnableThread;
 
-import java.awt.Dimension;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -38,6 +37,7 @@ import java.awt.event.KeyEvent;
 import java.lang.reflect.InvocationTargetException;
 
 import javax.swing.BorderFactory;
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JScrollPane;
 import javax.swing.KeyStroke;
@@ -442,5 +442,15 @@ public final class UIUtilities {
                 g.drawImage(backgroundImage, x, y, width, height, null);
             }
         }
+    }
+
+    /**
+     * Adds a popup listener which will modify the width of the combo box
+     * popup menu to be sized according to the preferred size of its components.
+     *
+     * @param combo Combo box to modify
+     */
+    public static void addComboBoxWidthModifier(final JComboBox combo) {
+        combo.addPopupMenuListener(new ComboBoxWidthModifier());
     }
 }
