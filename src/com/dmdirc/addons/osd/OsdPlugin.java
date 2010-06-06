@@ -37,6 +37,7 @@ import com.dmdirc.config.prefs.validator.OptionalValidator;
 import com.dmdirc.plugins.Plugin;
 import java.util.HashMap;
 import java.util.Map;
+import org.mortbay.util.IO;
 
 /**
  * Allows the user to display on-screen-display messages.
@@ -111,6 +112,7 @@ public final class OsdPlugin extends Plugin implements CategoryChangeListener,
                 getDomain(), "width", "OSD Width", "Width of the OSD Window").
                 registerChangeListener(this);
         timeoutSetting = new PreferencesSetting(PreferencesType.INTEGER,
+                new NumericalValidator(1,Integer.MAX_VALUE),
                 getDomain(), "timeout", "Timeout", "Length of time in " +
                 "seconds before the OSD window closes");
         maxWindowsSetting = new PreferencesSetting(PreferencesType.OPTIONALINTEGER,
