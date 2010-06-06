@@ -27,6 +27,7 @@ import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.interfaces.ActionComparison;
 import com.dmdirc.actions.interfaces.ActionComponent;
 import com.dmdirc.actions.interfaces.ActionType;
+import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.renderers.ActionCellRenderer;
 
 import java.awt.event.ActionEvent;
@@ -106,14 +107,17 @@ public class ActionConditionEditorPanel extends JPanel implements
         arguments.putClientProperty("JComboBox.isTableCellEditor",
                 Boolean.TRUE);
         arguments.setName("argument");
+        UIUtilities.addComboBoxWidthModifier(arguments);
         components = new JComboBox(new DefaultComboBoxModel());
         components.putClientProperty("JComboBox.isTableCellEditor",
                 Boolean.TRUE);
         components.setName("component");
+        UIUtilities.addComboBoxWidthModifier(components);
         comparisons = new JComboBox(new DefaultComboBoxModel());
         comparisons.putClientProperty("JComboBox.isTableCellEditor",
                 Boolean.TRUE);
         comparisons.setName("comparison");
+        UIUtilities.addComboBoxWidthModifier(comparisons);
 
         target = new JTextField() {
 
