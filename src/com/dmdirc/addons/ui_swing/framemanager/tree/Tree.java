@@ -22,7 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.framemanager.tree;
 
-import com.dmdirc.addons.ui_swing.SwingWindowFactory;
+import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.actions.CloseFrameContainerAction;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
@@ -63,10 +63,12 @@ public class Tree extends JTree implements MouseMotionListener,
     private boolean dragSelect;
     /** Drag button 1? */
     private boolean dragButton;
+    /** Show handles. */
+    private boolean showHandles;
     /** Tree frame manager. */
     private TreeFrameManager manager;
     /** UI Controller. */
-    private SwingWindowFactory controller;
+    private SwingController controller;
 
     /**
      * Specialised JTree for frame manager.
@@ -76,7 +78,7 @@ public class Tree extends JTree implements MouseMotionListener,
      * @param controller Swing controller
      */
     public Tree(final TreeFrameManager manager, final TreeModel model,
-            final SwingWindowFactory controller) {
+            final SwingController controller) {
         super(model);
 
         this.manager = manager;
@@ -91,7 +93,6 @@ public class Tree extends JTree implements MouseMotionListener,
                 TreeSelectionModel.SINGLE_TREE_SELECTION);
         setRootVisible(false);
         setRowHeight(0);
-        setShowsRootHandles(false);
         setOpaque(true);
         setBorder(BorderFactory.createEmptyBorder(
                 (int) PlatformDefaults.getUnitValueX("related").getValue(),
@@ -102,7 +103,14 @@ public class Tree extends JTree implements MouseMotionListener,
 
         dragSelect = IdentityManager.getGlobalConfig().getOptionBool("treeview",
                 "dragSelection");
+        showHandles = IdentityManager.getGlobalConfig().getOptionBool(
+                controller.getDomain(), "showtreeexpands");
+        IdentityManager.getGlobalConfig().addChangeListener(
+                controller.getDomain(), "showtreeexpands", this);
         IdentityManager.getGlobalConfig().addChangeListener("treeview", this);
+
+        setShowsRootHandles(showHandles);
+        putClientProperty("showHandles", showHandles);
 
         addMouseListener(this);
         addMouseMotionListener(this);
@@ -157,6 +165,11 @@ public class Tree extends JTree implements MouseMotionListener,
             dragSelect = IdentityManager.getGlobalConfig().getOptionBool(
                     "treeview",
                     "dragSelection");
+        } else if ("showtreeexpands".equals(key)) {
+            showHandles = IdentityManager.getGlobalConfig().getOptionBool(
+                    controller.getDomain(), "showtreeexpands");
+            setShowsRootHandles(showHandles);
+            putClientProperty("showHandles", showHandles);
         }
     }
 
@@ -253,39 +266,37 @@ public class Tree extends JTree implements MouseMotionListener,
      */
     public void processMouseEvents(final MouseEvent e) {
         final TreePath localPath = getPathForLocation(e.getX(), e.getY());
-        if (localPath != null) {
-            if (e.isPopupTrigger()) {
-                TextFrame frame = null;
+        if (localPath != null && e.isPopupTrigger()) {
+            TextFrame frame = null;
 
-                frame = (TextFrame) controller.getSwingWindow(((TreeViewNode) localPath.
-                        getLastPathComponent()).getWindow());
+            frame = (TextFrame) controller.getWindowFactory().getSwingWindow(((TreeViewNode) localPath.
+                    getLastPathComponent()).getWindow());
 
-                if (frame == null) {
-                    return;
-                }
-
-                final JPopupMenu popupMenu = frame.getPopupMenu(null, "");
-                frame.addCustomPopupItems(popupMenu);
-                if (popupMenu.getComponentCount() > 0) {
-                    popupMenu.addSeparator();
-                }
-
-                final TreeViewNodeMenuItem moveUp =
-                        new TreeViewNodeMenuItem("Move Up", "Up",
-                        (TreeViewNode) localPath.getLastPathComponent());
-                final TreeViewNodeMenuItem moveDown =
-                        new TreeViewNodeMenuItem("Move Down", "Down",
-                        (TreeViewNode) localPath.getLastPathComponent());
-
-                moveUp.addActionListener(this);
-                moveDown.addActionListener(this);
-
-                popupMenu.add(moveUp);
-                popupMenu.add(moveDown);
-                popupMenu.add(new JMenuItem(new CloseFrameContainerAction(frame.
-                        getContainer())));
-                popupMenu.show(this, e.getX(), e.getY());
+            if (frame == null) {
+                return;
             }
+
+            final JPopupMenu popupMenu = frame.getPopupMenu(null, "");
+            frame.addCustomPopupItems(popupMenu);
+            if (popupMenu.getComponentCount() > 0) {
+                popupMenu.addSeparator();
+            }
+
+            final TreeViewNodeMenuItem moveUp =
+                    new TreeViewNodeMenuItem("Move Up", "Up",
+                    (TreeViewNode) localPath.getLastPathComponent());
+            final TreeViewNodeMenuItem moveDown =
+                    new TreeViewNodeMenuItem("Move Down", "Down",
+                    (TreeViewNode) localPath.getLastPathComponent());
+
+            moveUp.addActionListener(this);
+            moveDown.addActionListener(this);
+
+            popupMenu.add(moveUp);
+            popupMenu.add(moveDown);
+            popupMenu.add(new JMenuItem(new CloseFrameContainerAction(frame.
+                    getContainer())));
+            popupMenu.show(this, e.getX(), e.getY());
         }
     }
 
