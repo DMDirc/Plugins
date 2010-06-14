@@ -47,7 +47,7 @@ public class PerformRenderer extends DefaultListCellRenderer {
         final PerformDescription perform = (PerformDescription) value;
         final String target = perform.getTarget();
         final String profile = perform.getProfile();
-        final String type = perform.getType().toString();
+        final String type = perform.getType().getName();
         String friendlyText = type + " perform (" + target + ") ";
 
         if (profile != null) {
