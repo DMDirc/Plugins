@@ -38,6 +38,13 @@ import javax.swing.JList;
  */
 public class PerformRenderer extends DefaultListCellRenderer {
 
+    /**
+     * A version number for this class. It should be changed whenever the class
+     * structure is changed (or anything else that would prevent serialized
+     * objects being unserialized with the new class).
+     */
+    private static final long serialVersionUID = 1;
+
     /** {@inheritDoc} */
     @Override
     public Component getListCellRendererComponent(final JList list,
