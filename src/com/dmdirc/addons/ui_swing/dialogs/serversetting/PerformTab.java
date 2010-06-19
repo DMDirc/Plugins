@@ -25,7 +25,7 @@ package com.dmdirc.addons.ui_swing.dialogs.serversetting;
 
 import com.dmdirc.Server;
 import com.dmdirc.actions.wrappers.PerformWrapper.PerformDescription;
-import com.dmdirc.actions.wrappers.PerformWrapper.PerformType;
+import com.dmdirc.actions.wrappers.PerformType;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.performpanel.PerformPanel;
 import com.dmdirc.addons.ui_swing.components.performpanel.PerformRenderer;
