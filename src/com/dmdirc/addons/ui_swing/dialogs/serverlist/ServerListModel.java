@@ -23,7 +23,7 @@
 package com.dmdirc.addons.ui_swing.dialogs.serverlist;
 
 import com.dmdirc.actions.wrappers.PerformWrapper.PerformDescription;
-import com.dmdirc.actions.wrappers.PerformWrapper.PerformType;
+import com.dmdirc.actions.wrappers.PerformType;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.serverlists.ServerEntry;
