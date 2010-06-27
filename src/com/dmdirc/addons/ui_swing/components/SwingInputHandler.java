@@ -1,16 +1,16 @@
 /*
  * Copyright (c) 2006-2010 Chris Smith, Shane Mc Cormack, Gregory Holmes
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -25,6 +25,8 @@ package com.dmdirc.addons.ui_swing.components;
 import com.dmdirc.addons.ui_swing.Apple;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.commandparser.parsers.CommandParser;
+import com.dmdirc.logger.ErrorLevel;
+import com.dmdirc.logger.Logger;
 import com.dmdirc.ui.input.InputHandler;
 import com.dmdirc.ui.interfaces.InputField;
 import com.dmdirc.ui.interfaces.InputWindow;
@@ -233,7 +235,18 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
                     /** {@inheritDoc} */
                     @Override
                     public void run() {
-                        if (((JTextField) e.getSource()).isEditable()) {
+                        final JTextField source;
+                        if (e.getSource() instanceof SwingInputField) {
+                            source = ((SwingInputField) e.getSource()).getTextField();
+                        } else if (e.getSource() instanceof JTextField) {
+                            source = (JTextField) e.getSource();
+                        } else {
+                            Logger.appError(ErrorLevel.HIGH, "Unable to send "
+                                    + "line", new IllegalArgumentException(
+                                    "Event is not from known source."));
+                            return;
+                        }
+                        if (source.isEditable()) {
                             new LoggingSwingWorker() {
 
                                 /** {@inheritDoc} */
@@ -259,9 +272,9 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
         target.addKeyListener(this);
     }
 
-    /** 
+    /**
      * {@inheritDoc}
-     * 
+     *
      * @param e Key event
      */
     @Override
@@ -269,9 +282,9 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
         //Ignore
     }
 
-    /** 
+    /**
      * {@inheritDoc}
-     * 
+     *
      * @param e Key event
      */
     @Override
@@ -295,9 +308,9 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
         }
     }
 
-    /** 
+    /**
      * {@inheritDoc}
-     * 
+     *
      * @param e Key event
      */
     @Override

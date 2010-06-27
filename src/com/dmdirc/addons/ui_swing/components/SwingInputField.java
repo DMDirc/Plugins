@@ -455,7 +455,7 @@ public class SwingInputField extends JComponent implements InputField,
     }
 
     /**
-     * Sets the end index of the selection for this component
+     * Sets the end index of the selection for this component.
      *
      * @param selectionEnd End index
      */
