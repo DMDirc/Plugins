@@ -337,25 +337,25 @@ function input_keydown(e) {
     if (keynum == 10 && !control) {
         new Ajax.Request('/dynamic/input',
         {parameters:{input:document.getElementById('input').value,
-                clientID:clientID}, onFailure:errFunc, onException:excFunc});
+                clientID:clientID, window:activeWindow}, onFailure:errFunc, onException:excFunc});
         el.value = '';
     } else if (keynum == 9 && !control) {
         new Ajax.Request('/dynamic/tab',
         {parameters:{input:el.value, selstart:el.selectionStart,
-                selend:el.selectionEnd, clientID:clientID}, onFailure:errFunc, onException:excFunc});
+                selend:el.selectionEnd, clientID:clientID, window:activeWindow}, onFailure:errFunc, onException:excFunc});
         return false;
     } else if (keynum == 38 || keynum == 40) {
         // up/down
         new Ajax.Request('/dynamic/key' + ((keynum == 38) ? 'up' : 'down'),
         {parameters:{input:el.value, selstart:el.selectionStart,
-                selend:el.selectionEnd, clientID:clientID}, onFailure:errFunc, onException:excFunc});
+                selend:el.selectionEnd, clientID:clientID, window:activeWindow}, onFailure:errFunc, onException:excFunc});
         return false;
     } else if (control && (keynum == 10 || keynum == 66 || keynum == 70 || keynum == 73
         || keynum == 75 || keynum == 79 || keynum == 85)) {
         new Ajax.Request('/dynamic/key',
         {parameters:{input:el.value, selstart:el.selectionStart,
                 selend:el.selectionEnd, clientID:clientID, key:keynum, ctrl:control,
-                shift:shift, alt:alt}, onFailure:errFunc, onException:excFunc});
+                shift:shift, alt:alt, window:activeWindow}, onFailure:errFunc, onException:excFunc});
         return false;
     }
 
@@ -397,7 +397,7 @@ function window_create(window, parent) {
     
     new Ajax.Request('/dynamic/windowrefresh',
     {parameters:{window:window.id}, onFailure:errFunc,
-        onException:excFunc})    
+        onException:excFunc, onSuccess: handlerFunc})
 }
 
 function window_show(id) {

@@ -29,7 +29,6 @@ import com.dmdirc.Server;
 import com.dmdirc.WritableFrameContainer;
 import com.dmdirc.addons.ui_web.uicomponents.WebMainWindow;
 import com.dmdirc.addons.ui_web.uicomponents.WebStatusBar;
-import com.dmdirc.addons.ui_web.uicomponents.WebWindow;
 import com.dmdirc.config.prefs.PreferencesInterface;
 import com.dmdirc.ui.core.dialogs.sslcertificate.SSLCertificateDialogModel;
 import com.dmdirc.ui.interfaces.ChannelWindow;
@@ -53,19 +52,13 @@ import org.mortbay.jetty.security.SecurityHandler;
 
 /**
  * Creates and manages the web server and handles UI-wide events.
- * 
+ *
  * @author chris
  */
 public class WebInterfaceUI implements UIController {
     
     /** The domain used for config settings. */
     public static final String DOMAIN = "plugin-webui";
-   
-    /**
-     * The active window.
-     * @Deprecated Should be done client side
-     */
-    public static WebWindow active;
     
     /** The web server we're using. */
     private final org.mortbay.jetty.Server webServer;
@@ -240,7 +233,7 @@ public class WebInterfaceUI implements UIController {
      */
     @Override @Deprecated
     public Window getActiveWindow() {
-        return active;
+        return null;
     }
 
     /**

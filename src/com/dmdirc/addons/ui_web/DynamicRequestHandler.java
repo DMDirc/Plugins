@@ -24,7 +24,6 @@ package com.dmdirc.addons.ui_web;
 
 import com.dmdirc.Channel;
 import com.dmdirc.Server;
-import com.dmdirc.addons.ui_web.uicomponents.WebChannelWindow;
 import com.dmdirc.addons.ui_web.uicomponents.WebInputHandler;
 import com.dmdirc.addons.ui_web.uicomponents.WebInputWindow;
 import com.dmdirc.addons.ui_web.uicomponents.WebWindow;
@@ -200,8 +199,10 @@ public class DynamicRequestHandler extends AbstractHandler {
 
     private void doInput(final HttpServletRequest request,
             final HttpServletResponse response) throws IOException {
-        if (WebInterfaceUI.active instanceof WebInputWindow) {
-            final WebInputWindow wiw = (WebInputWindow) WebInterfaceUI.active;
+        final WebWindow window = WebWindow.getWindow(request.getParameter("window"));
+
+        if (window instanceof WebInputWindow) {
+            final WebInputWindow wiw = (WebInputWindow) window;
             wiw.getInputHandler(request.getParameter("clientID")).enterPressed(
                     request.getParameter("input"));
         }
@@ -209,8 +210,10 @@ public class DynamicRequestHandler extends AbstractHandler {
 
     private void doKey(final HttpServletRequest request,
             final HttpServletResponse response) throws IOException {
-        if (WebInterfaceUI.active instanceof WebInputWindow) {
-            final WebInputWindow wiw = (WebInputWindow) WebInterfaceUI.active;
+        final WebWindow window = WebWindow.getWindow(request.getParameter("window"));
+
+        if (window instanceof WebInputWindow) {
+            final WebInputWindow wiw = (WebInputWindow) window;
 
             try {
                 ((WebInputHandler) wiw.getInputHandler(
@@ -230,8 +233,10 @@ public class DynamicRequestHandler extends AbstractHandler {
 
     private void doTab(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
-        if (WebInterfaceUI.active instanceof WebInputWindow) {
-            final WebInputWindow wiw = (WebInputWindow) WebInterfaceUI.active;
+        final WebWindow window = WebWindow.getWindow(request.getParameter("window"));
+        
+        if (window instanceof WebInputWindow) {
+            final WebInputWindow wiw = (WebInputWindow) window;
             ((WebInputHandler) wiw.getInputHandler(request.getParameter("clientID"),
                     request.getParameter("input"), request.getParameter("selstart"),
                     request.getParameter("selend"))).doTabCompletion(false);
@@ -240,8 +245,10 @@ public class DynamicRequestHandler extends AbstractHandler {
 
     private void doKeyUpDown(final boolean up, HttpServletRequest request,
             HttpServletResponse response) throws IOException {
-        if (WebInterfaceUI.active instanceof WebInputWindow) {
-            final WebInputWindow wiw = (WebInputWindow) WebInterfaceUI.active;
+        final WebWindow window = WebWindow.getWindow(request.getParameter("window"));
+
+        if (window instanceof WebInputWindow) {
+            final WebInputWindow wiw = (WebInputWindow) window;
             final WebInputHandler wih = ((WebInputHandler) wiw.getInputHandler(
                     request.getParameter("clientID"),
                     request.getParameter("input"),
