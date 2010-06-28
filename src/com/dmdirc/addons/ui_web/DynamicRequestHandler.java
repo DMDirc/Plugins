@@ -67,12 +67,17 @@ public class DynamicRequestHandler extends AbstractHandler {
     /** The last time each client was seen. */
     private static final Map<String, Client> CLIENTS = new HashMap<String, Client>();
 
+    /** The controller which owns this request handler. */
+    private final WebInterfaceUI controller;
+
     /**
      * Creates a new instance of DynamicRequestHandler. Registers object
      * convertors with the JSON serialiser.
      */
-    public DynamicRequestHandler() {
+    public DynamicRequestHandler(final WebInterfaceUI controller) {
         super();
+
+        this.controller = controller;
 
         JSON.registerConvertor(Event.class, new JSONObjectConvertor());
         JSON.registerConvertor(WebWindow.class, new JSONObjectConvertor());
@@ -108,7 +113,7 @@ public class DynamicRequestHandler extends AbstractHandler {
             final String clientID = request.getParameter("clientID");
             
             if (!CLIENTS.containsKey(clientID)) {
-                CLIENTS.put(clientID, new Client(request.getRemoteHost()));
+                CLIENTS.put(clientID, new Client(controller, request.getRemoteHost()));
             }
 
             synchronized (CLIENTS) {
@@ -273,9 +278,9 @@ public class DynamicRequestHandler extends AbstractHandler {
 
         nickEvents.add(new Event("clearnicklist", false));
 
-        for (ChannelClientInfo cci : ((Channel) ((WebChannelWindow)
-                WebInterfaceUI.active).getContainer()).getChannelInfo()
-                .getChannelClients()) {
+        for (ChannelClientInfo cci : ((Channel) (WebWindow.getWindow(
+                request.getParameter("window"))).getContainer())
+                .getChannelInfo().getChannelClients()) {
             nickEvents.add(new Event("addnicklist",
                     cci.getClient().getNickname()));
         }

@@ -27,16 +27,20 @@ import com.dmdirc.FrameContainer;
 import com.dmdirc.Query;
 import com.dmdirc.Server;
 import com.dmdirc.WritableFrameContainer;
-import com.dmdirc.addons.ui_web.uicomponents.WebChannelWindow;
-import com.dmdirc.addons.ui_web.uicomponents.WebInputWindow;
 import com.dmdirc.addons.ui_web.uicomponents.WebMainWindow;
-import com.dmdirc.addons.ui_web.uicomponents.WebQueryWindow;
-import com.dmdirc.addons.ui_web.uicomponents.WebServerWindow;
 import com.dmdirc.addons.ui_web.uicomponents.WebStatusBar;
 import com.dmdirc.addons.ui_web.uicomponents.WebWindow;
 import com.dmdirc.config.prefs.PreferencesInterface;
 import com.dmdirc.ui.core.dialogs.sslcertificate.SSLCertificateDialogModel;
-import com.dmdirc.ui.interfaces.*;
+import com.dmdirc.ui.interfaces.ChannelWindow;
+import com.dmdirc.ui.interfaces.InputWindow;
+import com.dmdirc.ui.interfaces.MainWindow;
+import com.dmdirc.ui.interfaces.QueryWindow;
+import com.dmdirc.ui.interfaces.ServerWindow;
+import com.dmdirc.ui.interfaces.StatusBar;
+import com.dmdirc.ui.interfaces.UIController;
+import com.dmdirc.ui.interfaces.UpdaterDialog;
+import com.dmdirc.ui.interfaces.Window;
 import com.dmdirc.updater.Update;
 
 import java.net.URI;
@@ -66,9 +70,12 @@ public class WebInterfaceUI implements UIController {
     /** The web server we're using. */
     private final org.mortbay.jetty.Server webServer;
 
+    /** The window manager for this UI. */
+    private final WebWindowManager windowManager;
+
     /**
      * Creates a new WebInterfaceUI belonging to the specified plugin.
-     * 
+     *
      * @param plugin The plugin which owns this Web UI
      */
     public WebInterfaceUI(final WebInterfacePlugin plugin) {       
@@ -93,7 +100,7 @@ public class WebInterfaceUI implements UIController {
             new RootRequestHandler(),
             new StaticRequestHandler(),
             new DMDircRequestHandler(),
-            new DynamicRequestHandler(),
+            new DynamicRequestHandler(this),
         });
         
         try {
@@ -101,11 +108,17 @@ public class WebInterfaceUI implements UIController {
         } catch (Exception ex) {
             // Break horribly!
         }
+
+        windowManager = new WebWindowManager(this);
+    }
+
+    public WebWindowManager getWindowManager() {
+        return windowManager;
     }
     
     /**
      * Adds the specified handler to the webserver.
-     * 
+     *
      * @param newHandler The handler to add.
      */
     public void addWebHandler(final Handler newHandler) {
@@ -132,7 +145,7 @@ public class WebInterfaceUI implements UIController {
      */
     @Override @Deprecated
     public ChannelWindow getChannel(final Channel channel) {
-        return new WebChannelWindow(channel);
+        throw new UnsupportedOperationException();
     }
 
     /**
@@ -143,7 +156,7 @@ public class WebInterfaceUI implements UIController {
      */
     @Override @Deprecated
     public ServerWindow getServer(final Server server) {
-        return new WebServerWindow(server);
+        throw new UnsupportedOperationException();
     }
 
     /**
@@ -154,7 +167,7 @@ public class WebInterfaceUI implements UIController {
      */
     @Override @Deprecated
     public QueryWindow getQuery(final Query query) {
-        return new WebQueryWindow(query);
+        throw new UnsupportedOperationException();
     }
 
     /**
@@ -165,7 +178,7 @@ public class WebInterfaceUI implements UIController {
      */
     @Override @Deprecated
     public Window getWindow(final FrameContainer<?> owner) {
-        return new WebWindow(owner);
+        throw new UnsupportedOperationException();
     }
 
     /**
@@ -176,7 +189,7 @@ public class WebInterfaceUI implements UIController {
      */
     @Override @Deprecated
     public InputWindow getInputWindow(final WritableFrameContainer<?> owner) {
-        return new WebInputWindow(owner, owner.getCommandParser());
+        throw new UnsupportedOperationException();
     }
 
     /** {@inheritDoc} */

@@ -44,7 +44,7 @@ public class Client {
 
     private final List<Event> events = new LinkedList<Event>();
 
-    public Client(final String ip) {
+    public Client(final WebInterfaceUI controller, final String ip) {
         events.add(new Event("statusbar", "Welcome to the DMDirc web interface"));
 
         this.ip = ip;
@@ -54,7 +54,8 @@ public class Client {
 
         while (!queued.isEmpty()) {
             final Window window = queued.remove(0);
-            final Window parent = window.getContainer().getParent().getFrame();
+            final Window parent = controller.getWindowManager()
+                    .getWindow(window.getContainer().getParent());
 
             if (parent == null) {
                 events.add(new Event("newwindow", window));
