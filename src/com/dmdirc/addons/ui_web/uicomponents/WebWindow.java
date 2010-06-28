@@ -28,10 +28,9 @@ import com.dmdirc.addons.ui_web.Event;
 import com.dmdirc.addons.ui_web.Message;
 import com.dmdirc.addons.ui_web.WebInterfaceUI;
 import com.dmdirc.config.ConfigManager;
-import com.dmdirc.ui.core.util.Utils;
 import com.dmdirc.ui.interfaces.UIController;
 import com.dmdirc.ui.interfaces.Window;
-import com.dmdirc.ui.messages.Formatter;
+import com.dmdirc.ui.messages.IRCDocumentListener;
 import com.dmdirc.ui.messages.IRCTextAttribute;
 import com.dmdirc.util.StringTranscoder;
 
@@ -42,7 +41,6 @@ import java.nio.charset.Charset;
 import java.text.AttributedCharacterIterator;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,7 +51,7 @@ import org.apache.commons.lang.StringEscapeUtils;
  *
  * @author chris
  */
-public class WebWindow implements Window {
+public class WebWindow implements Window, IRCDocumentListener {
 
     protected static int counter = 0;
 
@@ -73,6 +71,8 @@ public class WebWindow implements Window {
         this.parent = parent;
 
         WINDOWS.put(getId(), this);
+
+        parent.getDocument().addIRCDocumentListener(this);
     }
 
     public static Collection<WebWindow> getWindows() {
@@ -84,6 +84,13 @@ public class WebWindow implements Window {
     }
 
     public List<String> getMessages() {
+        final List<String> messages = new ArrayList<String>(getContainer()
+                .getDocument().getNumLines());
+
+        for (int i = 0; i < getContainer().getDocument().getNumLines(); i++) {
+            messages.add(style(getContainer().getDocument().getStyledLine(i)));
+        }
+        
         return messages;
     }
 
@@ -91,31 +98,21 @@ public class WebWindow implements Window {
     @Override
     @Deprecated
     public void addLine(String messageType, Object... args) {
-        if (!messageType.isEmpty()) {
-            addLine(Formatter.formatMessage(parent.getConfigManager(), messageType, args), true);
-        }
+        parent.addLine(messageType, args);
     }
 
     /** {@inheritDoc} */
     @Override
     @Deprecated
     public void addLine(StringBuffer messageType, Object... args) {
-        if (messageType != null) {
-            addLine(messageType.toString(), args);
-        }
+        parent.addLine(messageType, args);
     }
 
     /** {@inheritDoc} */
     @Override
     @Deprecated
     public void addLine(String line, boolean timestamp) {
-        for (String linepart : line.split("\n")) {
-            final String message =
-                    style(Formatter.formatMessage(parent.getConfigManager(), "timestamp",
-                    new Date()), getConfigManager()) + style(linepart, getConfigManager());
-            messages.add(message);
-            DynamicRequestHandler.addEvent(new Event("lineadded", new Message(message, this)));
-        }
+        parent.addLine(line, timestamp);
     }
 
     /** {@inheritDoc} */
@@ -213,10 +210,8 @@ public class WebWindow implements Window {
         return String.valueOf(myID);
     }
 
-    protected String style(final String input, final ConfigManager config) {
+    protected String style(final AttributedCharacterIterator aci) {
         final StringBuilder builder = new StringBuilder();
-        final AttributedCharacterIterator aci = Utils.getAttributedString(parent.getStyliser(),
-                new String[]{input}, "dialog", 12).getAttributedString().getIterator();
 
         Map<AttributedCharacterIterator.Attribute, Object> map = null;
         char chr = aci.current();
@@ -341,6 +336,34 @@ public class WebWindow implements Window {
     public UIController getController() {
         //TODO FIXME
         return null;
+    }
+
+    @Override
+    public void lineAdded(int line, int size) {
+        DynamicRequestHandler.addEvent(new Event("lineadded",
+                new Message(style(parent.getDocument().getStyledLine(line)), this)));
+    }
+
+    @Override
+    public void linesAdded(int line, int length, int size) {
+        for (int i = 0; i < length; i++) {
+            lineAdded(line + i, size);
+        }
+    }
+
+    @Override
+    public void trimmed(int newSize, int numTrimmed) {
+        //TODO FIXME
+    }
+
+    @Override
+    public void cleared() {
+        //TODO FIXME
+    }
+
+    @Override
+    public void repaintNeeded() {
+        //TODO FIXME
     }
 
 }
