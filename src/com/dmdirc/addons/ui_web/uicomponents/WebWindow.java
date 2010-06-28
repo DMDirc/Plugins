@@ -26,6 +26,7 @@ import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.ui_web.DynamicRequestHandler;
 import com.dmdirc.addons.ui_web.Event;
 import com.dmdirc.addons.ui_web.Message;
+import com.dmdirc.addons.ui_web.WebInterfaceUI;
 import com.dmdirc.config.ConfigManager;
 import com.dmdirc.ui.core.util.Utils;
 import com.dmdirc.ui.interfaces.UIController;
@@ -66,7 +67,7 @@ public class WebWindow implements Window {
 
     private String title;
 
-    public WebWindow(final FrameContainer<?> parent) {
+    public WebWindow(final WebInterfaceUI controller, final FrameContainer<?> parent) {
         super();
 
         this.parent = parent;

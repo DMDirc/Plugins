@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_web.uicomponents;
 
 import com.dmdirc.Server;
+import com.dmdirc.addons.ui_web.WebInterfaceUI;
 import com.dmdirc.ui.interfaces.ServerWindow;
 
 /**
@@ -33,8 +34,8 @@ public class WebServerWindow extends WebInputWindow implements ServerWindow {
  
     private final Server server;
 
-    public WebServerWindow(Server server) {
-        super(server, server.getCommandParser());
+    public WebServerWindow(WebInterfaceUI controller, Server server) {
+        super(controller, server);
         
         this.server = server;
     }

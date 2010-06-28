@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_web.uicomponents;
 
 import com.dmdirc.Query;
+import com.dmdirc.addons.ui_web.WebInterfaceUI;
 import com.dmdirc.ui.interfaces.QueryWindow;
 
 /**
@@ -33,8 +34,8 @@ public class WebQueryWindow extends WebInputWindow implements QueryWindow {
     
     private final Query query;
 
-    public WebQueryWindow(final Query parent) {
-        super(parent, parent.getCommandParser());
+    public WebQueryWindow(final WebInterfaceUI controller, final Query parent) {
+        super(controller, parent);
         this.query = parent;
     }
 

@@ -46,7 +46,7 @@ function treeview_add(name, id, type, parent) {
     var wrapperNode = document.createElement('div');
     wrapperNode.innerHTML = name;
     wrapperNode.style.cursor = 'pointer';
-    wrapperNode.onclick = function() { treeview_click(newNode); };
+    wrapperNode.onclick = function() {treeview_click(newNode);};
     newNode.appendChild(wrapperNode);
 
     parentNode.appendChild(newNode);
@@ -92,7 +92,7 @@ function wus_show() {
     wus_open = true;
     
     new Ajax.Updater('wus', '/static/webuistatus.html', {onSuccess:function() {
-            setTimeout('wus_init()', 200); }});
+            setTimeout('wus_init()', 200);}});
     new Effect.Appear('wus');
     
     wus_query();
@@ -193,7 +193,7 @@ function nsd_show() {
     }
 
     new Ajax.Updater('nsd', '/static/newserverdialog.html', {onSuccess:function() {
-            setTimeout('draggable("nsd")', 200); }});
+            setTimeout('draggable("nsd")', 200);}});
     new Ajax.Request('/dynamic/getprofiles',
     {onFailure:errFunc, onSuccess:handlerFunc, onException:excFunc});
     new Effect.Appear('nsd');
@@ -267,7 +267,8 @@ function nicklist_show() {
         document.getElementById('content').style.right = '240px';
         nicklist.style.display = 'block';
         new Ajax.Request('/dynamic/nicklistrefresh',
-        {onFailure:errFunc})
+        {parameters: {window: activeWindow}, onFailure: errFunc,
+            onSuccess: handlerFunc})
     }
 }
 

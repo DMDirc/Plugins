@@ -24,6 +24,7 @@ package com.dmdirc.addons.ui_web;
 
 import com.dmdirc.Main;
 import com.dmdirc.plugins.Plugin;
+import com.dmdirc.ui.interfaces.UIController;
 
 import org.mortbay.jetty.Handler;
 
@@ -52,6 +53,15 @@ public class WebInterfacePlugin extends Plugin {
         }
         
         Main.setUI(ui);
+    }
+
+    /**
+     * Returns the UI Controller for the web interface.
+     *
+     * @return The web interface's UI controller
+     */
+    public UIController getController() {
+        return ui;
     }
 
     /** {@inheritDoc} */

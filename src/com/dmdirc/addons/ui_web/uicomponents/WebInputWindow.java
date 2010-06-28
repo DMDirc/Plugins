@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_web.uicomponents;
 
 import com.dmdirc.WritableFrameContainer;
+import com.dmdirc.addons.ui_web.WebInterfaceUI;
 import com.dmdirc.commandparser.parsers.CommandParser;
 import com.dmdirc.ui.input.InputHandler;
 import com.dmdirc.ui.interfaces.InputWindow;
@@ -45,10 +46,10 @@ public class WebInputWindow extends WebWindow implements InputWindow {
     private final Map<String, WebInputHandler> inputHandlers
             = new HashMap<String, WebInputHandler>();
 
-    public WebInputWindow(WritableFrameContainer<?> parent, CommandParser parser) {
-        super(parent);
+    public WebInputWindow(WebInterfaceUI controller, WritableFrameContainer<?> parent) {
+        super(controller, parent);
         this.parent = parent;
-        this.commandparser = parser;
+        this.commandparser = parent.getCommandParser();
         this.inputhandler = new WebInputHandler(new WebInputField(), commandparser, this);
     }
 
