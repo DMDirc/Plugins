@@ -22,9 +22,7 @@
 
 package com.dmdirc.addons.ui_web.uicomponents;
 
-import com.dmdirc.addons.ui_web.WebInterfaceUI;
 import com.dmdirc.ui.interfaces.MainWindow;
-import com.dmdirc.ui.interfaces.Window;
 
 import javax.swing.ImageIcon;
 
@@ -33,10 +31,6 @@ import javax.swing.ImageIcon;
  * @author chris
  */
 public class WebMainWindow implements MainWindow {
-
-    public void setActiveFrame(Window frame) {
-        WebInterfaceUI.active = (WebWindow) frame;
-    }
 
     /** {@inheritDoc} */
     @Override
