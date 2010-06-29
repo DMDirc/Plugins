@@ -13,7 +13,7 @@ function dmdirc_start() {
         clearInterval(interval);
     }
     
-    doUpdate();
+    setTimeout(doUpdate, 100);
 }
 
 function setSpeed(what, speed) {

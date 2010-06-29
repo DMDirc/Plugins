@@ -28,6 +28,7 @@ import com.dmdirc.addons.ui_web.Event;
 import com.dmdirc.addons.ui_web.Message;
 import com.dmdirc.addons.ui_web.WebInterfaceUI;
 import com.dmdirc.config.ConfigManager;
+import com.dmdirc.interfaces.FrameInfoListener;
 import com.dmdirc.ui.interfaces.UIController;
 import com.dmdirc.ui.interfaces.Window;
 import com.dmdirc.ui.messages.IRCDocumentListener;
@@ -51,7 +52,7 @@ import org.apache.commons.lang.StringEscapeUtils;
  *
  * @author chris
  */
-public class WebWindow implements Window, IRCDocumentListener {
+public class WebWindow implements Window, IRCDocumentListener, FrameInfoListener {
 
     protected static int counter = 0;
 
@@ -69,10 +70,20 @@ public class WebWindow implements Window, IRCDocumentListener {
         super();
 
         this.parent = parent;
+        this.title = parent.getTitle();
 
         WINDOWS.put(getId(), this);
 
         parent.getDocument().addIRCDocumentListener(this);
+        parent.addFrameInfoListener(this);
+
+        if (parent.getParent() == null) {
+            DynamicRequestHandler.addEvent(new Event("newwindow", this));
+        } else {
+            DynamicRequestHandler.addEvent(new Event("newchildwindow",
+                    new Object[]{controller.getWindowManager().getWindow(parent.getParent()),
+                    this}));
+        }
     }
 
     public static Collection<WebWindow> getWindows() {
@@ -191,7 +202,7 @@ public class WebWindow implements Window, IRCDocumentListener {
     /** {@inheritDoc} */
     @Override
     public void close() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        //TODO FIXME
     }
 
     public String getType() {
@@ -327,8 +338,7 @@ public class WebWindow implements Window, IRCDocumentListener {
     /** {@inheritDoc} */
     @Override
     public void activateFrame() {
-        //TODO FIXME
-        throw new UnsupportedOperationException("Not supported yet.");
+        // No.
     }
 
     /** {@inheritDoc} */
@@ -364,6 +374,21 @@ public class WebWindow implements Window, IRCDocumentListener {
     @Override
     public void repaintNeeded() {
         //TODO FIXME
+    }
+
+    @Override
+    public void iconChanged(FrameContainer<?> window, String icon) {
+        //TODO FIXME
+    }
+
+    @Override
+    public void nameChanged(FrameContainer<?> window, String name) {
+        //TODO FIXME
+    }
+
+    @Override
+    public void titleChanged(FrameContainer<?> window, String title) {
+        this.title = title;
     }
 
 }
