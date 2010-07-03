@@ -1,17 +1,16 @@
 /*
- * 
  * Copyright (c) 2006-2010 Chris Smith, Shane Mc Cormack, Gregory Holmes
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -60,7 +59,6 @@ import javax.swing.text.DefaultStyledDocument;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
-import javax.swing.text.StyledEditorKit;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -84,17 +82,17 @@ public class TopicBar extends JComponent implements ActionListener,
     /** Cancel button. */
     private final JButton topicCancel;
     /** Associated channel. */
-    private Channel channel;
+    private final Channel channel;
     /** Controller. */
-    private SwingController controller;
-    /** Empty Attrib set. */
+    private final SwingController controller;
+    /** the maximum length allowed for a topic. */
+    private final int topicLengthMax;
+    /** Empty Attribute set. */
     private SimpleAttributeSet as;
     /** Foreground Colour. */
     private Color foregroundColour;
     /** Background Colour. */
     private Color backgroundColour;
-    /** the maximum length allowed for a topic. */
-    private int topicLengthMax;
     /** Error icon. */
     private final JLabel errorIcon;
 
@@ -104,18 +102,16 @@ public class TopicBar extends JComponent implements ActionListener,
      * @param channelFrame Parent channel frame
      */
     public TopicBar(final ChannelFrame channelFrame) {
+        super();
+
         this.channel = (Channel) channelFrame.getContainer();
         controller = channelFrame.getController();
         topicText = new TextPaneInputField();
         topicLengthMax = channel.getMaxTopicLength();
         errorIcon =
                 new JLabel(IconManager.getIconManager().getIcon("input-error"));
-        if (channelFrame.getContainer().getConfigManager().getOptionBool(
-                controller.getDomain(), "showfulltopic")) {
-            topicText.setEditorKit(new StyledEditorKit());
-        } else {
-            topicText.setEditorKit(new WrapEditorKit());
-        }
+        topicText.setEditorKit(new WrapEditorKit(channel.getConfigManager()
+                .getOptionBool(controller.getDomain(), "showfulltopic")));
         ((DefaultStyledDocument) topicText.getDocument()).setDocumentFilter(
                 new NewlinesDocumentFilter());
 
@@ -137,11 +133,14 @@ public class TopicBar extends JComponent implements ActionListener,
         sp.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         sp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
 
-        setLayout(new MigLayout("fillx, ins 0, hidemode 3"));
+        setLayout(new MigLayout("fillx, ins 0, hidemode 3, pack"));
         add(sp, "growx, pushx");
         add(errorIcon, "");
         add(topicCancel, "");
         add(topicEdit, "");
+        invalidate();
+        validate();
+        invalidate();
 
         channel.addTopicChangeListener(this);
         topicText.addActionListener(this);
@@ -156,7 +155,7 @@ public class TopicBar extends JComponent implements ActionListener,
 
             /** {@inheritDoc} */
             @Override
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(final ActionEvent e) {
                 commitTopicEdit();
             }
         });
@@ -169,7 +168,7 @@ public class TopicBar extends JComponent implements ActionListener,
 
             /** {@inheritDoc} */
             @Override
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(final ActionEvent e) {
                 cancelTopicEdit();
             }
         });
@@ -198,7 +197,7 @@ public class TopicBar extends JComponent implements ActionListener,
 
     /** {@inheritDoc} */
     @Override
-    public void topicChanged(final Channel channel, final Topic topic) {
+    public final void topicChanged(final Channel channel, final Topic topic) {
         UIUtilities.invokeLater(new Runnable() {
 
             /** {@inheritDoc} */
@@ -209,12 +208,11 @@ public class TopicBar extends JComponent implements ActionListener,
                 }
                 topicText.setText("");
                 if (channel.getCurrentTopic() != null) {
-                    channel.getStyliser().addStyledString((StyledDocument) topicText.
-                            getDocument(),
-                            new String[]{Styliser.CODE_HEXCOLOUR + ColourManager.
-                                getHex(
-                                foregroundColour) + channel.getCurrentTopic().
-                                getTopic(), },
+                    channel.getStyliser().addStyledString(
+                            (StyledDocument) topicText.getDocument(),
+                            new String[]{Styliser.CODE_HEXCOLOUR
+                                    + ColourManager.getHex(foregroundColour)
+                                    + channel.getCurrentTopic().getTopic(), },
                             as);
                 }
                 if (channel.getConfigManager().getOptionBool(controller.
@@ -251,6 +249,9 @@ public class TopicBar extends JComponent implements ActionListener,
         }
     }
 
+    /**
+     * Commits a topic edit to the parent channel.
+     */
     private void commitTopicEdit() {
         if ((channel.getCurrentTopic() == null && !topicText.getText().isEmpty())
                 || (channel.getCurrentTopic() != null
@@ -265,6 +266,9 @@ public class TopicBar extends JComponent implements ActionListener,
         topicCancel.setVisible(false);
     }
 
+    /**
+     * Sets the topic ready to be edited, changing attributes and focus.
+     */
     private void setupTopicEdit() {
         topicText.setVisible(false);
         topicText.setText("");
@@ -280,6 +284,9 @@ public class TopicBar extends JComponent implements ActionListener,
         topicCancel.setVisible(true);
     }
 
+    /**
+     * Cancels a topic edit, resetting focus and button states.
+     */
     private void cancelTopicEdit() {
         topicText.setFocusable(false);
         topicText.setEditable(false);
@@ -297,7 +304,7 @@ public class TopicBar extends JComponent implements ActionListener,
             if (url == null) {
                 return;
             }
-            if (url.startsWith("#")) {
+            if (url.charAt(0) == '#') {
                 channel.getServer().join(new ChannelJoinRequest(url));
             } else if (url.contains("://")) {
                 URLHandler.getURLHander().launchApp(e.getDescription());
@@ -307,6 +314,9 @@ public class TopicBar extends JComponent implements ActionListener,
         }
     }
 
+    /**
+     * Load and set colours.
+     */
     private void setColours() {
         backgroundColour = channel.getConfigManager().getOptionColour(
                 "ui", "inputbackgroundcolour", "ui", "backgroundcolour");
@@ -319,6 +329,9 @@ public class TopicBar extends JComponent implements ActionListener,
         setAttributes();
     }
 
+    /**
+     * Sets sensible attributes.
+     */
     private void setAttributes() {
         as = new SimpleAttributeSet();
         StyleConstants.setFontFamily(as, topicText.getFont().getFamily());
@@ -330,10 +343,13 @@ public class TopicBar extends JComponent implements ActionListener,
         StyleConstants.setItalic(as, false);
     }
 
+    /**
+     * Applies predefined attributes to the topic bar.
+     */
     private void applyAttributes() {
         setAttributes();
-        ((DefaultStyledDocument) topicText.getDocument()).setCharacterAttributes(
-                0, Integer.MAX_VALUE, as, true);
+        ((DefaultStyledDocument) topicText.getDocument())
+                .setCharacterAttributes(0, Integer.MAX_VALUE, as, true);
     }
 
     /**
@@ -420,14 +436,10 @@ public class TopicBar extends JComponent implements ActionListener,
 
     /** {@inheritDoc} */
     @Override
-    public void configChanged(String domain, String key) {
+    public void configChanged(final String domain, final String key) {
         if ("showfulltopic".equals(key)) {
-            if (channel.getConfigManager().getOptionBool(controller.getDomain(),
-                    "showfulltopic")) {
-                topicText.setEditorKit(new StyledEditorKit());
-            } else {
-                topicText.setEditorKit(new WrapEditorKit());
-            }
+            topicText.setEditorKit(new WrapEditorKit(channel.getConfigManager()
+                .getOptionBool(controller.getDomain(), "showfulltopic")));
             ((DefaultStyledDocument) topicText.getDocument()).setDocumentFilter(
                     new NewlinesDocumentFilter());
             topicChanged(channel, null);
@@ -482,11 +494,9 @@ public class TopicBar extends JComponent implements ActionListener,
      * @param e Mouse event
      */
     @Override
-    public void mouseClicked(MouseEvent e) {
-        if (e.getClickCount() == 2) {
-            if (!topicText.isEditable()) {
-                topicEdit.doClick();
-            }
+    public void mouseClicked(final MouseEvent e) {
+        if (e.getClickCount() == 2 && !topicText.isEditable()) {
+            topicEdit.doClick();
         }
     }
 
@@ -557,4 +567,3 @@ public class TopicBar extends JComponent implements ActionListener,
         validateTopic();
     }
 }
-       

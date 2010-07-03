@@ -31,13 +31,31 @@ import javax.swing.text.ViewFactory;
 public class WrapEditorKit extends StyledEditorKit implements MouseListener,
         MouseMotionListener {
 
+    /**
+     * A version number for this class. It should be changed whenever the class
+     * structure is changed (or anything else that would prevent serialized
+     * objects being unserialized with the new class).
+     */
     private static final long serialVersionUID = 1;
     /** Wrap column factory. */
-    private ViewFactory defaultFactory = new WrapColumnFactory();
+    private final ViewFactory defaultFactory = new WrapColumnFactory();
     /** Hand cursor. */
     private static final Cursor HAND_CURSOR = new Cursor(Cursor.HAND_CURSOR);
+    /** Are we wrapping text? */
+    private final boolean wrap;
     /** Associated Component. */
     private JEditorPane editorPane;
+
+    /**
+     * Initialises a new wrapping editor kit.
+     *
+     * @param wrapping true iif the text needs to wrap
+     */
+    public WrapEditorKit(final boolean wrapping) {
+        super();
+
+        wrap = wrapping;
+    }
 
     /** {@inheritDoc} */
     @Override
@@ -60,7 +78,11 @@ public class WrapEditorKit extends StyledEditorKit implements MouseListener,
     /** {@inheritDoc} */
     @Override
     public ViewFactory getViewFactory() {
-        return defaultFactory;
+        if (wrap) {
+            return super.getViewFactory();
+        } else {
+            return defaultFactory;
+        }
     }
 
     /**
@@ -73,16 +95,14 @@ public class WrapEditorKit extends StyledEditorKit implements MouseListener,
         if (editorPane == null) {
             return;
         }
-        if (!editorPane.isEditable()) {
-            if (characterElementAt(e).getAttributes().getAttribute(
-                    IRCTextAttribute.HYPERLINK) != null
-                    || characterElementAt(e).getAttributes().getAttribute(
-                    IRCTextAttribute.CHANNEL) != null
-                    || characterElementAt(e).getAttributes().getAttribute(
-                    IRCTextAttribute.NICKNAME) != null) {
-                editorPane.setCursor(HAND_CURSOR);
-                return;
-            }
+        if (!editorPane.isEditable() && characterElementAt(e).getAttributes()
+                .getAttribute(IRCTextAttribute.HYPERLINK) != null
+                || characterElementAt(e).getAttributes().getAttribute(
+                IRCTextAttribute.CHANNEL) != null
+                || characterElementAt(e).getAttributes().getAttribute(
+                IRCTextAttribute.NICKNAME) != null) {
+            editorPane.setCursor(HAND_CURSOR);
+            return;
         }
         editorPane.setCursor(Cursor.getDefaultCursor());
     }
@@ -173,7 +193,7 @@ public class WrapEditorKit extends StyledEditorKit implements MouseListener,
     }
 
     /**
-     * Returns the character element for the positition of the mouse event.
+     * Returns the character element for the position of the mouse event.
      *
      * @param e Mouse event to get position from
      *
