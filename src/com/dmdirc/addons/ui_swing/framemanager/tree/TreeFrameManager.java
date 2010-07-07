@@ -267,18 +267,14 @@ public final class TreeFrameManager implements FrameManager,
     protected void checkRollover(final MouseEvent event) {
         NodeLabel node = null;
 
-        if (event == null) {
-            node = null;
-        } else if (tree.getNodeForLocation(event.getX(), event.getY())
-                != null) {
-            node =
-                    tree.getNodeForLocation(event.getX(), event.getY()).getLabel();
+        if (event != null && tree.getNodeForLocation(event.getX(), event.getY()) != null) {
+            node = tree.getNodeForLocation(event.getX(), event.getY()).getLabel();
         }
 
         synchronized (nodes) {
             for (TreeViewNode treeNode : nodes.values()) {
                 final NodeLabel label = treeNode.getLabel();
-                label.setRollover(node == null ? false : label == node);
+                label.setRollover(label == node);
             }
         }
         tree.repaint();
