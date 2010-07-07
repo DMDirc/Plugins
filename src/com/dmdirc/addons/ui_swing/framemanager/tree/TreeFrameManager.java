@@ -244,6 +244,8 @@ public final class TreeFrameManager implements FrameManager,
                 window.addSelectionListener(TreeFrameManager.this);
                 window.addFrameInfoListener(TreeFrameManager.this);
                 window.addNotificationListener(TreeFrameManager.this);
+
+                node.getLabel().notificationSet(window, window.getNotification());
             }
         });
     }
