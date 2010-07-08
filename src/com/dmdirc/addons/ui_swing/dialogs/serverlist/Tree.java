@@ -31,8 +31,8 @@ import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Enumeration;
-import javax.swing.JButton;
 
+import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -74,6 +74,7 @@ public class Tree extends JPanel implements TreeSelectionListener,
      * Instantiates a new tree of server groups.
      *
      * @param model Model backing this tree
+     * @param parentWindow Dialog's parent window
      */
     public Tree(final ServerListModel model, final Window parentWindow) {
         super();
@@ -106,7 +107,8 @@ public class Tree extends JPanel implements TreeSelectionListener,
         items.putClientProperty("JTree.lineStyle", "Angled");
         items.getInputMap().setParent(null);
         items.getInputMap(JComponent.WHEN_FOCUSED).clear();
-        items.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).clear();
+        items.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
+                .clear();
         items.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).clear();
         items.getSelectionModel().setSelectionMode(
                 TreeSelectionModel.SINGLE_TREE_SELECTION);
@@ -195,15 +197,16 @@ public class Tree extends JPanel implements TreeSelectionListener,
     }
 
     /**
-     * Find the node for a specified server group item, will return null if the
-     * group is not found.
+     * Find the node for a specified server group item, will return root node
+     * if the group isn't found.
      *
      * @param item Item to search for in the tree
      *
      * @return Node for group, or null if not found
      */
     private DefaultMutableTreeNode getNodeForGroup(final ServerGroupItem item) {
-        DefaultMutableTreeNode node = null;
+        DefaultMutableTreeNode node = (DefaultMutableTreeNode) items.getModel()
+                .getRoot();
         final Enumeration enumeration = ((DefaultMutableTreeNode) items
                 .getModel().getRoot()).breadthFirstEnumeration();
         while (enumeration.hasMoreElements()) {
