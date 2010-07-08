@@ -1,20 +1,17 @@
-
-package com.dmdirc.addons.ui_swing.components;
-
 /*
- * 
+ *
  * Copyright (c) 2006-2010 Chris Smith, Shane Mc Cormack, Gregory Holmes
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -23,6 +20,9 @@ package com.dmdirc.addons.ui_swing.components;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
+package com.dmdirc.addons.ui_swing.components;
+
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.ui.IconManager;
@@ -47,7 +47,7 @@ import org.jdesktop.jxlayer.plaf.AbstractLayerUI;
 import org.jdesktop.jxlayer.plaf.LayerUI;
 
 /**
- * Panel to display toolstips of a component.
+ * Panel to display tool tips of a component.
  */
 public class ToolTipPanel extends JPanel implements MouseListener {
 
@@ -57,26 +57,26 @@ public class ToolTipPanel extends JPanel implements MouseListener {
      * serialized objects being unserialized with the new class).
      */
     private static final long serialVersionUID = -8929794537312606692L;
-    /** Default tooltip. */
-    private String defaultHelp;
-    /** Tooltip display. */
-    private TextLabel tooltip;
+    /** Default tool tip. */
+    private final String defaultHelp;
+    /** Tool tip display. */
+    private final TextLabel tooltip;
     /** Error icon. */
-    private JLabel icon;
+    private final JLabel icon;
     /** Whether or not this is a warning. */
-    private String warning = null;
-    /** Map of registered components to their tooltips. */
+    private String warningText = null;
+    /** Map of registered components to their tool tips. */
     private final Map<JComponent, String> tooltips;
 
     /**
-     * Instantiates a new tooltip panel.
+     * Instantiates a new tool tip panel.
      *
-     * @param defaultHelp Default help message when idle
+     * @param helpText Default help message when idle
      */
-    public ToolTipPanel(final String defaultHelp) {
+    public ToolTipPanel(final String helpText) {
         super(new MigLayout("hidemode 3"));
 
-        this.defaultHelp = defaultHelp;
+        defaultHelp = helpText;
         this.tooltips = new HashMap<JComponent, String>();
         this.icon = new JLabel(IconManager.getIconManager().getIcon("warning"));
 
@@ -92,27 +92,27 @@ public class ToolTipPanel extends JPanel implements MouseListener {
     }
 
     /**
-     * Resets the content of the tooltip.
+     * Resets the content of the tool tip.
      */
-    protected void reset() {
-        SimpleAttributeSet sas = new SimpleAttributeSet();
+    protected final void reset() {
+        final SimpleAttributeSet sas = new SimpleAttributeSet();
 
         StyleConstants.setForeground(sas, Color.BLACK);
         StyleConstants.setBackground(sas, Color.WHITE);
-        if (warning == null || warning.isEmpty()) {
+        if (warningText == null || warningText.isEmpty()) {
             tooltip.setText(defaultHelp);
             icon.setVisible(false);
             StyleConstants.setItalic(sas, true);
         } else {
             icon.setVisible(true);
-            tooltip.setText(warning);
+            tooltip.setText(warningText);
         }
         tooltip.getDocument().setParagraphAttributes(0, tooltip.getDocument().
                 getLength(), sas, true);
     }
 
     /**
-     * Sets the content of the tooltip area to the specified text.
+     * Sets the content of the tool tip area to the specified text.
      *
      * @param text The text to be displayed
      */
@@ -120,33 +120,34 @@ public class ToolTipPanel extends JPanel implements MouseListener {
         if (tooltip == null) {
             return;
         }
-        
+
         tooltip.setText(text);
         if (tooltip.getDocument() == null || text == null) {
             return;
         }
 
         icon.setVisible(false);
-        SimpleAttributeSet sas = new SimpleAttributeSet();
+        final SimpleAttributeSet sas = new SimpleAttributeSet();
         StyleConstants.setItalic(sas, false);
         StyleConstants.setForeground(sas, Color.BLACK);
         StyleConstants.setBackground(sas, Color.WHITE);
-        tooltip.getDocument().setParagraphAttributes(0, text.length(), sas, true);
+        tooltip.getDocument().setParagraphAttributes(0, text.length(), sas,
+                true);
     }
 
     /**
-     * Sets whether or not this tooltip should be rendered as a warning.
+     * Sets whether or not this tool tip should be rendered as a warning.
      *
      * @param warning Warning string, null or empty to reset.
      * @since 0.6.3
      */
     public void setWarning(final String warning) {
-        this.warning = warning;
+        warningText = warning;
         reset();
     }
 
     /**
-     * Registers a component with this tooltip handler.
+     * Registers a component with this tool tip handler.
      *
      * @param component Component to register
      */
@@ -156,25 +157,29 @@ public class ToolTipPanel extends JPanel implements MouseListener {
     }
 
     /**
-     * Registers a component with this tooltip handler.
+     * Registers a component with this tool tip handler.
      *
      * @param component Component to register
-     * @param tooltipText Tooltip text for the component
+     * @param tooltipText Tool tip text for the component
      */
     @SuppressWarnings("unchecked")
     public void registerTooltipHandler(final JComponent component,
             final String tooltipText) {
+        if (component == null) {
+            return;
+        }
         tooltips.put(component, tooltipText);
         if (component instanceof JXLayer<?>) {
-            final LayerUI<JComponent> layerUI = new AbstractLayerUI<JComponent>() {
+            final LayerUI<JComponent> layerUI =
+                    new AbstractLayerUI<JComponent>() {
 
                 private static final long serialVersionUID =
                         -8698248993206174390L;
 
                 /** {@inheritDoc} */
                 @Override
-                protected void processMouseEvent(MouseEvent e,
-                        JXLayer<? extends JComponent> comp) {
+                protected void processMouseEvent(final MouseEvent e,
+                        final JXLayer<? extends JComponent> comp) {
                     if (e.getID() == MouseEvent.MOUSE_ENTERED) {
                         setText(tooltips.get(comp));
                     } else if (e.getID() == MouseEvent.MOUSE_EXITED && comp.
@@ -235,7 +240,7 @@ public class ToolTipPanel extends JPanel implements MouseListener {
     @Override
     public void mouseEntered(final MouseEvent e) {
         if (e.getSource() instanceof JComponent) {
-            setText(tooltips.get(e.getSource()));
+            setText(tooltips.get((JComponent) e.getSource()));
         }
     }
 
