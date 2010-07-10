@@ -179,16 +179,11 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
     private void updateCachedSettings() {
         final String backgroundPath = manager.getOption(domain,
                 "textpanebackground");
-        if (!backgroundPath.isEmpty()) {
-            UIUtilities.invokeAndWait(new Runnable() {
-
-                /** {@inheritDoc} */
-                @Override
-                public void run() {
-                    new BackgroundImageLoader(TextPaneCanvas.this,
+        if (backgroundPath.isEmpty()) {
+            backgroundImage = null;
+        } else {
+            new BackgroundImageLoader(TextPaneCanvas.this,
                             URLBuilder.buildURL(backgroundPath)).execute();
-                }
-            });
         }
         try {
             backgroundOption = BackgroundOption.valueOf(manager.getOption(
@@ -197,6 +192,14 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
             backgroundOption = BackgroundOption.CENTER;
         }
         quickCopy = manager.getOptionBool("ui", "quickCopy");
+        UIUtilities.invokeLater(new Runnable() {
+
+            /** {@inheritDoc} */
+            @Override
+            public void run() {
+                recalc();
+            }
+        });
     }
 
     private void paintOntoGraphics(final Graphics2D g) {
