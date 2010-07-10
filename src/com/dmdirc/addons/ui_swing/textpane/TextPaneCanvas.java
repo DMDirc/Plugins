@@ -19,6 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 package com.dmdirc.addons.ui_swing.textpane;
 
 import com.dmdirc.addons.ui_swing.BackgroundOption;
@@ -103,15 +104,15 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
     /** Background image. */
     private Image backgroundImage;
     /** Config Manager. */
-    private ConfigManager manager;
+    private final ConfigManager manager;
     /** Config domain. */
-    private String domain;
+    private final String domain;
     /** Background image option. */
     private BackgroundOption backgroundOption;
     /** Quick copy? */
     private boolean quickCopy;
-    /** Mouse click listenres. */
-    private ListenerList listeners;
+    /** Mouse click listeners. */
+    private final ListenerList listeners = new ListenerList();
 
     /**
      * Creates a new text pane canvas.
@@ -132,7 +133,6 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
         textLayouts = new HashMap<TextLayout, LineInfo>();
         positions = new HashMap<Rectangle, TextLayout>();
         selection = new LinePosition(-1, -1, -1, -1);
-        listeners = new ListenerList();
         addMouseListener(this);
         addMouseMotionListener(this);
         addComponentListener(this);
@@ -173,6 +173,9 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
         }
     }
 
+    /**
+     * Updates cached config settings.
+     */
     private void updateCachedSettings() {
         final String backgroundPath = manager.getOption(domain,
                 "textpanebackground");
@@ -182,46 +185,14 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
                 /** {@inheritDoc} */
                 @Override
                 public void run() {
-                    final URL url = URLBuilder.buildURL(backgroundPath);
-                    new LoggingSwingWorker<Image, Void>() {
-
-                        /** {@inheritDoc} */
-                        @Override
-                        protected Image doInBackground() throws Exception {
-                            Image returnValue = null;
-                            try {
-                                if (url != null) {
-                                    returnValue = ImageIO.read(url);
-                                }
-                            } catch (IOException ex) {
-                                returnValue = null;
-                            }
-                            return returnValue;
-                        }
-
-                        /** {@inheritDoc} */
-                        @Override
-                        protected void done() {
-                            if (isCancelled()) {
-                                return;
-                            }
-                            try {
-                                backgroundImage = get();
-                                recalc();
-                            } catch (InterruptedException ex) {
-                            //Ignore
-                            } catch (ExecutionException ex) {
-                                Logger.appError(ErrorLevel.MEDIUM,
-                                        ex.getMessage(), ex);
-                            }
-                        }
-                    }.execute();
+                    new BackgroundImageLoader(TextPaneCanvas.this,
+                            URLBuilder.buildURL(backgroundPath)).execute();
                 }
             });
         }
         try {
-            backgroundOption = BackgroundOption.valueOf(manager.getOption(domain,
-                    "textpanebackgroundoption"));
+            backgroundOption = BackgroundOption.valueOf(manager.getOption(
+                    domain, "textpanebackgroundoption"));
         } catch (IllegalArgumentException ex) {
             backgroundOption = BackgroundOption.CENTER;
         }
@@ -335,7 +306,7 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
     }
 
     /**
-     * Returns the number of timesa line will wrap.
+     * Returns the number of times a line will wrap.
      *
      * @param lineMeasurer LineBreakMeasurer to work out wrapping for
      * @param paragraphStart Start index of the paragraph
@@ -352,7 +323,6 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
 
         while (lineMeasurer.getPosition() < paragraphEnd) {
             lineMeasurer.nextLayout(formatWidth);
-
             wrappedLine++;
         }
 
@@ -465,7 +435,7 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
     }
 
     /**
-     * {@{@inheritDoc}
+     * {@inheritDoc}
      *
      * @param e Adjustment event
      */
@@ -543,19 +513,23 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
                     getEndIndex()) {
                 iterator.setIndex(lineInfo.getIndex());
                 Object linkattr =
-                        iterator.getAttributes().get(IRCTextAttribute.HYPERLINK);
+                        iterator.getAttributes().get(
+                        IRCTextAttribute.HYPERLINK);
                 if (linkattr instanceof String) {
-                    return new ClickTypeValue(ClickType.HYPERLINK, (String) linkattr);
+                    return new ClickTypeValue(ClickType.HYPERLINK,
+                            (String) linkattr);
                 }
                 linkattr =
                         iterator.getAttributes().get(IRCTextAttribute.CHANNEL);
                 if (linkattr instanceof String) {
-                    return new ClickTypeValue(ClickType.CHANNEL, (String) linkattr);
+                    return new ClickTypeValue(ClickType.CHANNEL,
+                            (String) linkattr);
                 }
                 linkattr = iterator.getAttributes().get(
                         IRCTextAttribute.NICKNAME);
                 if (linkattr instanceof String) {
-                    return new ClickTypeValue(ClickType.NICKNAME, (String) linkattr);
+                    return new ClickTypeValue(ClickType.NICKNAME,
+                            (String) linkattr);
                 }
             } else {
                 return new ClickTypeValue(ClickType.NORMAL, "");
@@ -599,7 +573,8 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
         int start = index;
 
         // Traverse backwards
-        while (start > 0 && start < text.length() && text.charAt(start) != ' ') {
+        while (start > 0 && start < text.length()
+                && text.charAt(start) != ' ') {
             start--;
         }
         if (start + 1 < text.length() && text.charAt(start) == ' ') {
@@ -712,7 +687,8 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
 
     /** Checks for a link under the cursor and sets appropriately. */
     private void checkForLink() {
-        final AttributedCharacterIterator iterator = getIterator(getMousePosition());
+        final AttributedCharacterIterator iterator =
+                getIterator(getMousePosition());
 
         if (iterator != null
                 && (iterator.getAttribute(IRCTextAttribute.HYPERLINK) != null
@@ -739,7 +715,8 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
     private AttributedCharacterIterator getIterator(final Point mousePosition) {
         final LineInfo lineInfo = getClickPosition(mousePosition, false);
 
-        if (lineInfo.getLine() != -1 && document.getLine(lineInfo.getLine()) != null) {
+        if (lineInfo.getLine() != -1
+                && document.getLine(lineInfo.getLine()) != null) {
             final AttributedCharacterIterator iterator
                     = document.getStyledLine(lineInfo.getLine());
 
@@ -764,7 +741,7 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
     protected void highlightEvent(final MouseEventType type,
             final MouseEvent e) {
         if (isVisible()) {
-            Point point = e.getLocationOnScreen();
+            final Point point = e.getLocationOnScreen();
             SwingUtilities.convertPointFromScreen(point, this);
             if (!contains(point)) {
                 final Rectangle bounds = getBounds();
@@ -792,7 +769,8 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
             final Rectangle first = getFirstLineRectangle();
             final Rectangle last = getLastLineRectangle();
             if (info.getLine() == -1 && info.getPart() == -1 && contains(point)
-                    && document.getNumLines() != 0 && first != null && last != null) {
+                    && document.getNumLines() != 0 && first != null
+                    && last != null) {
                 if (first.getY() >= point.getY()) {
                     info = getFirstLineInfo();
                 } else if (last.getY() <= point.getY()) {
@@ -867,10 +845,9 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
     private LineInfo getFirstLineInfo() {
         int firstLineParts = Integer.MAX_VALUE;
         for (Map.Entry<TextLayout, LineInfo> entry : textLayouts.entrySet()) {
-            if (entry.getValue().getLine() == firstVisibleLine) {
-                if (entry.getValue().getPart() < firstLineParts) {
-                    firstLineParts = entry.getValue().getPart();
-                }
+            if (entry.getValue().getLine() == firstVisibleLine
+                    && entry.getValue().getPart() < firstLineParts) {
+                firstLineParts = entry.getValue().getPart();
             }
         }
         return new LineInfo(firstVisibleLine, firstLineParts);
@@ -884,10 +861,9 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
     private LineInfo getLastLineInfo() {
         int lastLineParts = -1;
         for (Map.Entry<TextLayout, LineInfo> entry : textLayouts.entrySet()) {
-            if (entry.getValue().getLine() == lastVisibleLine) {
-                if (entry.getValue().getPart() > lastLineParts) {
-                    lastLineParts = entry.getValue().getPart();
-                }
+            if (entry.getValue().getLine() == lastVisibleLine
+                    && entry.getValue().getPart() > lastLineParts) {
+                lastLineParts = entry.getValue().getPart();
             }
         }
         return new LineInfo(lastVisibleLine + 1, lastLineParts);
@@ -902,13 +878,15 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
      *
      * @return line number, line part, position in whole line
      */
-    public LineInfo getClickPosition(final Point point, final boolean selection) {
+    public LineInfo getClickPosition(final Point point,
+            final boolean selection) {
         int lineNumber = -1;
         int linePart = -1;
         int pos = 0;
 
         if (point != null) {
-            for (Map.Entry<Rectangle, TextLayout> entry : positions.entrySet()) {
+            for (Map.Entry<Rectangle, TextLayout> entry
+                    : positions.entrySet()) {
                 if (entry.getKey().contains(point)) {
                     lineNumber = textLayouts.get(entry.getValue()).getLine();
                     linePart = textLayouts.get(entry.getValue()).getPart();
@@ -923,7 +901,8 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
     }
 
     /**
-     * Returns the character index for a specified line and part for a specific hit position.
+     * Returns the character index for a specified line and part for a
+     * specific hit position.
      *
      * @param lineNumber Line number
      * @param linePart Line part
@@ -966,8 +945,8 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
             return new LinePosition(selection.getEndLine(),
                     selection.getEndPos(), selection.getStartLine(),
                     selection.getStartPos());
-        } else if (selection.getStartLine() == selection.getEndLine() && selection.
-                getStartPos() > selection.getEndPos()) {
+        } else if (selection.getStartLine() == selection.getEndLine()
+                && selection.getStartPos() > selection.getEndPos()) {
             // Just swap the chars
             return new LinePosition(selection.getStartLine(), selection.
                     getEndPos(), selection.getEndLine(),
@@ -1073,9 +1052,11 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
     /** {@inheritDoc} */
     @Override
     public String getToolTipText(final MouseEvent event) {
-        final AttributedCharacterIterator iterator = getIterator(event.getPoint());
+        final AttributedCharacterIterator iterator = getIterator(
+                event.getPoint());
 
-        if (iterator != null && iterator.getAttribute(IRCTextAttribute.TOOLTIP) != null) {
+        if (iterator != null
+                && iterator.getAttribute(IRCTextAttribute.TOOLTIP) != null) {
             return iterator.getAttribute(IRCTextAttribute.TOOLTIP).toString();
         }
 
@@ -1087,11 +1068,12 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
      *
      * @param clickType Click type
      * @param eventType Mouse event type
-     * @param button Mouse button
+     * @param event Triggering mouse event
      */
     private void fireMouseEvents(final ClickTypeValue clickType,
             final MouseEventType eventType, final MouseEvent event) {
-        for (TextPaneListener listener : listeners.get(TextPaneListener.class)) {
+        for (TextPaneListener listener
+                : listeners.get(TextPaneListener.class)) {
             listener.mouseClicked(clickType, eventType, event);
         }
     }
@@ -1112,5 +1094,15 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
      */
     public void removeTextPaneListener(final TextPaneListener listener) {
         listeners.remove(TextPaneListener.class, listener);
+    }
+
+    /**
+     * Sets the background image for this canvas.
+     *
+     * @param image Background image
+     */
+    protected void setBackgroundImage(final Image image) {
+        backgroundImage = image;
+        recalc();
     }
 }
