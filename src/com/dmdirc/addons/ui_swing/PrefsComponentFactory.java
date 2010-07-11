@@ -212,10 +212,18 @@ public final class PrefsComponentFactory {
 
         try {
             if (setting.getValidator() instanceof NumericalValidator) {
-                option = new JSpinner(
-                        new SpinnerNumberModel(Integer.parseInt(setting.getValue()),
-                        ((NumericalValidator) setting.getValidator()).getMin(),
-                        ((NumericalValidator) setting.getValidator()).getMax(),
+                final int min = ((NumericalValidator) setting.getValidator())
+                        .getMin();
+                final int max = ((NumericalValidator) setting.getValidator())
+                        .getMax();
+                int value = Integer.parseInt(setting.getValue());
+                if (value < min) {
+                    value = min;
+                }
+                if (value > max) {
+                    value = max;
+                }
+                option = new JSpinner(new SpinnerNumberModel(value, min, max,
                         1));
             } else {
                 option = new JSpinner(new SpinnerNumberModel());
