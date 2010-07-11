@@ -20,42 +20,28 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.ui_swing.dialogs.serverlist;
+package com.dmdirc.addons.serverlists;
 
-import com.dmdirc.addons.serverlists.ServerGroupItem;
+import com.dmdirc.plugins.Plugin;
+
 
 /**
- * Server list listener.
+ * Dummy plugin for server lists.
+ *
+ * @author chris
  */
-public interface ServerListListener {
+public class ServerListPlugin extends Plugin {
 
-    /**
-     * Called to indicate the selected server group has changed.
-     *
-     * @param item Currently selected item
-     */
-    void serverGroupChanged(ServerGroupItem item);
+    /** {@inheritDoc} */
+    @Override
+    public void onLoad() {
+        // Do nothing
+    }
 
-    /**
-     * Called to indicate the dialog has been closed.
-     *
-     * @param save Do we need to save changes
-     */
-    void dialogClosed(final boolean save);
+    /** {@inheritDoc} */
+    @Override
+    public void onUnload() {
+        // Do nothing
+    }
 
-    /**
-     * Called to indicate a server group has been added.
-     *
-     * @param parent Parent group
-     * @param group New group
-     */
-    void serverGroupAdded(ServerGroupItem parent, ServerGroupItem group);
-
-    /**
-     * Called to indicate a server group has been removed.
-     *
-     * @param parent Parent group
-     * @param group Removed group
-     */
-    void serverGroupRemoved(ServerGroupItem parent, ServerGroupItem group);
 }

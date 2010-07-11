@@ -25,7 +25,7 @@ package com.dmdirc.addons.ui_swing.dialogs.serverlist;
 import com.dmdirc.addons.ui_swing.components.vetoable.VetoableComboBoxModel;
 import com.dmdirc.config.Identity;
 import com.dmdirc.config.IdentityManager;
-import com.dmdirc.serverlists.ServerGroupItem;
+import com.dmdirc.addons.serverlists.ServerGroupItem;
 
 import java.util.HashMap;
 import java.util.List;

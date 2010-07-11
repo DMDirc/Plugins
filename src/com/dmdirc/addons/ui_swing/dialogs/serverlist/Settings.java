@@ -25,8 +25,8 @@ package com.dmdirc.addons.ui_swing.dialogs.serverlist;
 import com.dmdirc.addons.ui_swing.components.expandingsettings.SettingsPanel;
 import com.dmdirc.addons.ui_swing.components.expandingsettings.SettingsPanel.OptionType;
 import com.dmdirc.config.IdentityManager;
-import com.dmdirc.serverlists.ServerGroup;
-import com.dmdirc.serverlists.ServerGroupItem;
+import com.dmdirc.addons.serverlists.ServerGroup;
+import com.dmdirc.addons.serverlists.ServerGroupItem;
 
 import java.util.HashMap;
 import java.util.Map;
