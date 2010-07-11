@@ -22,7 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.components.renderers;
 
-import com.dmdirc.serverlists.ServerGroupItem;
+import com.dmdirc.addons.serverlists.ServerGroupItem;
 
 import java.awt.Color;
 import java.awt.Component;
