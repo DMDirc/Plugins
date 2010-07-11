@@ -26,10 +26,10 @@ import com.dmdirc.actions.wrappers.PerformWrapper.PerformDescription;
 import com.dmdirc.actions.wrappers.PerformType;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
-import com.dmdirc.serverlists.ServerEntry;
-import com.dmdirc.serverlists.ServerGroup;
-import com.dmdirc.serverlists.ServerGroupItem;
-import com.dmdirc.serverlists.ServerList;
+import com.dmdirc.addons.serverlists.ServerEntry;
+import com.dmdirc.addons.serverlists.ServerGroup;
+import com.dmdirc.addons.serverlists.ServerGroupItem;
+import com.dmdirc.addons.serverlists.ServerList;
 import com.dmdirc.util.ListenerList;
 
 import java.io.IOException;

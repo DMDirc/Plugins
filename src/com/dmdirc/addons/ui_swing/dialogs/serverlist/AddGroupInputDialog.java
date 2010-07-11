@@ -28,7 +28,7 @@ import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialog;
 import com.dmdirc.config.prefs.validator.NotEmptyValidator;
 import com.dmdirc.config.prefs.validator.Validator;
-import com.dmdirc.serverlists.ServerGroup;
+import com.dmdirc.addons.serverlists.ServerGroup;
 
 import java.awt.Window;
 import java.awt.Dialog.ModalityType;

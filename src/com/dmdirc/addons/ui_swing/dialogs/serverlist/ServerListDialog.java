@@ -24,7 +24,7 @@ package com.dmdirc.addons.ui_swing.dialogs.serverlist;
 
 import com.dmdirc.addons.ui_swing.components.LockedLayer;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
-import com.dmdirc.serverlists.ServerGroupItem;
+import com.dmdirc.addons.serverlists.ServerGroupItem;
 
 import java.awt.Window;
 import java.awt.color.ColorSpace;

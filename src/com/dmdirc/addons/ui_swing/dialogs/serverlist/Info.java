@@ -24,7 +24,7 @@ package com.dmdirc.addons.ui_swing.dialogs.serverlist;
 
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.text.HTMLLabel;
-import com.dmdirc.serverlists.ServerGroupItem;
+import com.dmdirc.addons.serverlists.ServerGroupItem;
 import com.dmdirc.ui.core.util.URLHandler;
 
 import java.net.URI;
