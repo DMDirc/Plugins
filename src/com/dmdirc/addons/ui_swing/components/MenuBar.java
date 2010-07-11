@@ -40,6 +40,8 @@ import com.dmdirc.addons.ui_swing.dialogs.profiles.ProfileManagerDialog;
 import com.dmdirc.addons.ui_swing.dialogs.serverlist.ServerListDialog;
 import com.dmdirc.addons.ui_swing.framemanager.windowmenu.WindowMenuFrameManager;
 import com.dmdirc.parser.common.ChannelJoinRequest;
+import com.dmdirc.plugins.PluginInfo;
+import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.WindowManager;
 
 import java.awt.Dialog.ModalityType;
@@ -67,14 +69,10 @@ public class MenuBar extends JMenuBar implements ActionListener, MenuListener {
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 1;
-    /** CSD. */
-    private JMenuItem csd;
-    /** SSD. */
-    private JMenuItem ssd;
-    /** disconnect. */
-    private JMenuItem disconnect;
-    /** join. */
-    private JMenuItem join;
+    /** Menu items which can be enabled/disabled. */
+    private JMenuItem csd, ssd, disconnect, serverlist, join;
+    /** Server menu. */
+    private JMenu serverMenu;
     /** Swing controller. */
     private final SwingController controller;
     /** Main frame. */
@@ -113,39 +111,37 @@ public class MenuBar extends JMenuBar implements ActionListener, MenuListener {
      * Initialises the server menu.
      */
     private void initServerMenu() {
-        JMenuItem menuItem;
-        final JMenu menu = new JMenu("Server");
-        menu.setMnemonic('s');
-        menu.addMenuListener(this);
-        add(menu);
+        serverMenu = new JMenu("Server");
+        serverMenu.setMnemonic('s');
+        serverMenu.addMenuListener(this);
+        add(serverMenu);
 
-        menuItem = new JMenuItem();
-        menuItem.setText("Server list dialog");
-        menuItem.setMnemonic('l');
-        menuItem.setActionCommand("ServerList");
-        menuItem.addActionListener(this);
-        menu.add(menuItem);
+        serverlist = new JMenuItem();
+        serverlist.setText("Server list dialog");
+        serverlist.setMnemonic('l');
+        serverlist.setActionCommand("ServerList");
+        serverlist.addActionListener(this);
 
-        menuItem = new JMenuItem();
+        JMenuItem menuItem = new JMenuItem();
         menuItem.setText("New Server...");
         menuItem.setMnemonic('n');
         menuItem.setActionCommand("NewServer");
         menuItem.addActionListener(this);
-        menu.add(menuItem);
+        serverMenu.add(menuItem);
 
         disconnect = new JMenuItem();
         disconnect.setText("Disconnect");
         disconnect.setMnemonic('d');
         disconnect.setActionCommand("Disconnect");
         disconnect.addActionListener(this);
-        menu.add(disconnect);
+        serverMenu.add(disconnect);
 
         ssd = new JMenuItem();
         ssd.setMnemonic('s');
         ssd.setText("Server settings");
         ssd.setActionCommand("ServerSettings");
         ssd.addActionListener(this);
-        menu.add(ssd);
+        serverMenu.add(ssd);
 
         if (!Apple.isAppleUI()) {
             menuItem = new JMenuItem();
@@ -153,7 +149,7 @@ public class MenuBar extends JMenuBar implements ActionListener, MenuListener {
             menuItem.setMnemonic('x');
             menuItem.setActionCommand("Exit");
             menuItem.addActionListener(this);
-            menu.add(menuItem);
+            serverMenu.add(menuItem);
         }
     }
 
@@ -333,6 +329,18 @@ public class MenuBar extends JMenuBar implements ActionListener, MenuListener {
                 && activeWindow.getServer().getState() == ServerState.CONNECTED);
         join.setEnabled(activeWindow != null && activeWindow.getServer() != null
                 && activeWindow.getServer().getState() == ServerState.CONNECTED);
+
+        final PluginInfo plugin = PluginManager.getPluginManager()
+                .getPluginInfoByName("serverlists");
+        if (plugin != null) {
+            if (!plugin.isLoaded()) {
+                plugin.loadPlugin();
+            }
+
+            if (serverMenu.getMenuComponent(0) != serverlist) {
+                serverMenu.add(serverlist, 0);
+            }
+        }
     }
 
     /** {@inheritDoc} */
