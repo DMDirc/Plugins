@@ -39,6 +39,7 @@ import com.dmdirc.util.ReturnableThread;
 import java.util.concurrent.ExecutionException;
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingWorker;
 
@@ -224,7 +225,11 @@ public class PrefsCategoryLoader extends SwingWorker<JPanel, Object> {
         } else {
             panel.add(label, "align left, wmax 40%");
         }
-        panel.add(option, "growx, pushx, w 60%");
+        if (option == null) {
+            panel.add(new JLabel("Error: See error list."));
+        } else {
+            panel.add(option, "growx, pushx, w 60%");
+        }
     }
 
     /**
