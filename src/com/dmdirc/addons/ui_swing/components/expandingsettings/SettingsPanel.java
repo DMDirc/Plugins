@@ -80,6 +80,8 @@ public class SettingsPanel extends JPanel {
     private AddOptionPanel addOptionPanel;
     /** Current options scroll pane. */
     private JScrollPane scrollPane;
+    /** Use external padding. */
+    private final boolean padding;
 
     /**
      * Creates a new instance of SettingsPanel.
@@ -88,10 +90,23 @@ public class SettingsPanel extends JPanel {
      * @param infoText Info blurb.
      */
     public SettingsPanel(final Identity config, final String infoText) {
+        this(config, infoText, true);
+    }
+
+    /**
+     * Creates a new instance of SettingsPanel.
+     *
+     * @param config Config to use
+     * @param infoText Info blurb.
+     * @param padding Should we add padding to the panel?
+     */
+    public SettingsPanel(final Identity config, final String infoText,
+            final boolean padding) {
         super();
 
         this.setOpaque(UIUtilities.getTabbedPaneOpaque());
         this.config = config;
+        this.padding = padding;
 
         initComponents(infoText);
         layoutComponents();
@@ -124,11 +139,12 @@ public class SettingsPanel extends JPanel {
         scrollPane.getViewport().setOpaque(UIUtilities.getTabbedPaneOpaque());
     }
 
-    /** 
+    /**
      * Lays out the components.
      */
     private void layoutComponents() {
-        setLayout(new MigLayout("fill, wrap 1, hidemode 3, ins 0"));
+        setLayout(new MigLayout("fill, wrap 1, hidemode 3, "
+                + (padding ? "ins rel" : "ins 0")));
 
         add(infoLabel, "growx, pushx");
         add(scrollPane, "grow, push");
