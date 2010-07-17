@@ -110,12 +110,12 @@ public class Settings extends JPanel implements ServerListListener {
         if (!panels.containsKey(item)) {
             if (item instanceof ServerGroup) {
                 panels.put(item, new SettingsPanel(IdentityManager.
-                        getNetworkConfig(item.getName()), ""));
+                        getNetworkConfig(item.getName()), "", false));
             } else if (item == null) {
-                panels.put(null, new SettingsPanel(null, ""));
+                panels.put(null, new SettingsPanel(null, "", false));
             } else {
                 panels.put(item, new SettingsPanel(IdentityManager.
-                        getServerConfig(item.getName()), ""));
+                        getServerConfig(item.getName()), "", false));
             }
             addSettings(panels.get(item));
         }
