@@ -640,7 +640,7 @@ public abstract class TextFrame extends JInternalFrame implements Window,
                 frameParent.windowClosing();
                 return null;
             }
-        }.execute();
+        }.executeInExecutor();
     }
 
     /**
@@ -701,7 +701,7 @@ public abstract class TextFrame extends JInternalFrame implements Window,
                 frameParent.windowActivated();
                 return null;
             }
-        }.execute();
+        }.executeInExecutor();
     }
 
     /**

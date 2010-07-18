@@ -124,7 +124,7 @@ public final class LicencesPanel extends JPanel implements TreeSelectionListener
         list.getSelectionModel().setSelectionMode(TreeSelectionModel.
                 SINGLE_TREE_SELECTION);
         new TreeScroller(list);
-        new LicenceLoader(list, listModel).execute();
+        new LicenceLoader(list, listModel).executeInExecutor();
         licence = new JEditorPane();
         licence.setEditorKit(new HTMLEditorKit());
         final Font font = UIManager.getFont("Label.font");

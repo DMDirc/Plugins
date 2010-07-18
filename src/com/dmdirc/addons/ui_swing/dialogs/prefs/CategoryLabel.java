@@ -23,6 +23,7 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.prefs;
 
+import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
@@ -34,7 +35,6 @@ import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.JLabel;
 import javax.swing.JList;
-import javax.swing.SwingWorker;
 import javax.swing.UIManager;
 import net.miginfocom.layout.PlatformDefaults;
 
@@ -70,7 +70,7 @@ public class CategoryLabel extends JLabel {
         this.index = index;
 
         setText(category.getTitle());
-        new IconLoader(this, category.getIcon()).execute();
+        new IconLoader(this, category.getIcon()).executeInExecutor();
 
         int level = 0;
         PreferencesCategory temp = category;
@@ -123,7 +123,7 @@ public class CategoryLabel extends JLabel {
         }
     }
 
-    private static class IconLoader extends SwingWorker<Icon, Void> {
+    private static class IconLoader extends LoggingSwingWorker<Icon, Void> {
 
         private CategoryLabel label;
         private String icon;

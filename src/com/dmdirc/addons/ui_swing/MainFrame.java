@@ -560,7 +560,7 @@ public final class MainFrame extends JFrame implements WindowListener,
                 super.done();
                 dispose();
             }
-        }.execute();
+        }.executeInExecutor();
     }
 
     /** {@inheritDoc} */
