@@ -127,7 +127,7 @@ public final class SwingPreferencesDialog extends StandardDialog implements
                 }
             }
         };
-        worker.execute();
+        worker.executeInExecutor();
     }
 
     private void setPrefsManager(final PreferencesManager manager) {
@@ -281,7 +281,7 @@ public final class SwingPreferencesDialog extends StandardDialog implements
                 }
                 return null;
             }
-        }.execute();
+        }.executeInExecutor();
         dispose();
     }
 

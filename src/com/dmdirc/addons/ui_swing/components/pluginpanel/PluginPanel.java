@@ -129,7 +129,7 @@ public final class PluginPanel extends JPanel implements
                 super.done();
                 scrollPane.setViewportView(pluginList);
             }
-        }.execute();
+        }.executeInExecutor();
     }
 
     /** Lays out the dialog. */

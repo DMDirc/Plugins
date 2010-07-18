@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.components;
 
+import com.dmdirc.addons.ui_swing.SwingWorkerExecutor;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 
@@ -30,7 +31,7 @@ import java.util.concurrent.ExecutionException;
 import javax.swing.SwingWorker;
 
 /**
- * Logging swing worker
+ * Logging swing worker.
  *
  * @param <T> Return type for the doneInBackground method
  * @param <V> Return type for the progress and publish
@@ -50,5 +51,12 @@ public abstract class LoggingSwingWorker<T, V> extends SwingWorker<T, V> {
         } catch (ExecutionException ex) {
             Logger.appError(ErrorLevel.MEDIUM, ex.getMessage(), ex);
         }
+    }
+
+    /**
+     * Execute this swing worker in the swing worker executor.
+     */
+    public void executeInExecutor() {
+        SwingWorkerExecutor.queue(this);
     }
 }

@@ -116,7 +116,7 @@ public final class ThemePanel extends JPanel implements
                 super.done();
                 scrollPane.setViewportView(themeList);
             }
-        }.execute();
+        }.executeInExecutor();
     }
 
     /** Lays out the dialog. */

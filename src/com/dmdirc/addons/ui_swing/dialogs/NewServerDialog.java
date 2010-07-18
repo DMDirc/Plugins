@@ -289,7 +289,7 @@ public final class NewServerDialog extends StandardDialog implements
                         server.connect();
                         return null;
                     }
-                }.execute();
+                }.executeInExecutor();
             } else {
                 final Server server = mainFrame.getActiveFrame().getContainer().getServer();
 
@@ -306,7 +306,7 @@ public final class NewServerDialog extends StandardDialog implements
                         }
                         return null;
                     }
-                }.execute();
+                }.executeInExecutor();
             }
         } catch (URISyntaxException ex) {
             Logger.userError(ErrorLevel.MEDIUM, "Unable to create URI", ex);

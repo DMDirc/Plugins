@@ -258,9 +258,9 @@ public class FeedbackDialog extends StandardDialog implements ActionListener,
             dmdircInfo.append("OS Version: " + Info.getOSVersion()).append("\n");
             dmdircInfo.append("Look & Feel: " + SwingController.getLookAndFeel());
         }
-        new SendWorker(me, name.getText().trim(),
-                email.getText().trim(), feedback.getText().trim(), serverInfo.
-                toString().trim(), dmdircInfo.toString().trim()).execute();
+        new SendWorker(me, name.getText().trim(), email.getText().trim(),
+                feedback.getText().trim(), serverInfo. toString().trim(),
+                dmdircInfo.toString().trim()).executeInExecutor();
     }
 
     /** Validates the input. */

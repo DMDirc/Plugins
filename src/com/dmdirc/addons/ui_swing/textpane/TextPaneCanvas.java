@@ -176,7 +176,7 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
             backgroundImage = null;
         } else {
             new BackgroundImageLoader(TextPaneCanvas.this,
-                            URLBuilder.buildURL(backgroundPath)).execute();
+                    URLBuilder.buildURL(backgroundPath)).executeInExecutor();
         }
         try {
             backgroundOption = BackgroundOption.valueOf(manager.getOption(

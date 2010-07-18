@@ -24,6 +24,7 @@
 package com.dmdirc.addons.ui_swing.dialogs.prefs;
 
 import com.dmdirc.addons.ui_swing.UIUtilities;
+import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
 import com.dmdirc.addons.ui_swing.components.TitlePanel;
 import com.dmdirc.addons.ui_swing.components.ToolTipPanel;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
@@ -40,7 +41,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
-import javax.swing.SwingWorker;
 
 import net.miginfocom.layout.ComponentWrapper;
 import net.miginfocom.layout.LayoutCallback;
@@ -76,7 +76,7 @@ public class CategoryPanel extends JPanel {
     /** Category panel map. */
     private Map<PreferencesCategory, JPanel> panels;
     /** Category loading swing worker. */
-    private SwingWorker worker;
+    private LoggingSwingWorker worker;
 
     /**
      * Instantiates a new category panel.
@@ -236,7 +236,7 @@ public class CategoryPanel extends JPanel {
             });
 
             worker = new PrefsCategoryLoader(this, category);
-            worker.execute();
+            worker.executeInExecutor();
         } else {
             categoryLoaded(category);
         }
