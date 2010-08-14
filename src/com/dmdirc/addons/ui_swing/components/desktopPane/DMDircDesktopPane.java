@@ -127,7 +127,7 @@ public class DMDircDesktopPane extends JDesktopPane implements
         this.mainFrame = mainFrame;
         this.domain = domain;
         this.controller = controller;
-        setBackground(UIManager.getColor("Desktop.background"));
+        setBackground(UIManager.getColor("Panel.background"));
         setBorder(BorderFactory.createEtchedBorder());
 
         nodes = new HashMap<Window, TreeViewNode>();
