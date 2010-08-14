@@ -40,8 +40,8 @@ import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialog;
 import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
 import com.dmdirc.config.IdentityManager;
-import com.dmdirc.config.prefs.validator.FileNameValidator;
-import com.dmdirc.config.prefs.validator.ValidatorChain;
+import com.dmdirc.util.validators.FileNameValidator;
+import com.dmdirc.util.validators.ValidatorChain;
 
 import java.awt.Window;
 import java.awt.event.ActionEvent;

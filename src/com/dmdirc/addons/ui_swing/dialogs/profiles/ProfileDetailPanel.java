@@ -28,12 +28,12 @@ import com.dmdirc.addons.ui_swing.components.validating.NoDuplicatesInListValida
 import com.dmdirc.addons.ui_swing.components.validating.ValidatingJTextField;
 import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialog;
 import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
-import com.dmdirc.config.prefs.validator.FileNameValidator;
-import com.dmdirc.config.prefs.validator.IdentValidator;
-import com.dmdirc.config.prefs.validator.NicknameValidator;
-import com.dmdirc.config.prefs.validator.NotEmptyValidator;
-import com.dmdirc.config.prefs.validator.ValidationResponse;
-import com.dmdirc.config.prefs.validator.ValidatorChain;
+import com.dmdirc.util.validators.FileNameValidator;
+import com.dmdirc.util.validators.IdentValidator;
+import com.dmdirc.util.validators.NicknameValidator;
+import com.dmdirc.util.validators.NotEmptyValidator;
+import com.dmdirc.util.validators.ValidationResponse;
+import com.dmdirc.util.validators.ValidatorChain;
 
 import java.awt.Color;
 import java.awt.Window;

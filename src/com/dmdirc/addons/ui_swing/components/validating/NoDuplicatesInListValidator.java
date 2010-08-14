@@ -22,8 +22,8 @@
 
 package com.dmdirc.addons.ui_swing.components.validating;
 
-import com.dmdirc.config.prefs.validator.ValidationResponse;
-import com.dmdirc.config.prefs.validator.Validator;
+import com.dmdirc.util.validators.ValidationResponse;
+import com.dmdirc.util.validators.Validator;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JList;

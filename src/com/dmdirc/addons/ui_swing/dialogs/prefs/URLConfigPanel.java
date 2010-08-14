@@ -29,7 +29,7 @@ import com.dmdirc.addons.ui_swing.components.renderers.URISchemeCellRenderer;
 import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialog;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.prefs.PreferencesInterface;
-import com.dmdirc.config.prefs.validator.URLProtocolValidator;
+import com.dmdirc.config.validators.URLProtocolValidator;
 
 import java.awt.Window;
 import java.awt.Dialog.ModalityType;

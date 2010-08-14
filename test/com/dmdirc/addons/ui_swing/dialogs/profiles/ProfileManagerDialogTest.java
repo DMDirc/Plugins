@@ -28,9 +28,9 @@ import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.reorderablelist.ReorderableJList;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.InvalidIdentityFileException;
-import com.dmdirc.config.prefs.validator.FileNameValidator;
-import com.dmdirc.config.prefs.validator.IdentValidator;
-import com.dmdirc.config.prefs.validator.NotEmptyValidator;
+import com.dmdirc.util.validators.FileNameValidator;
+import com.dmdirc.util.validators.IdentValidator;
+import com.dmdirc.util.validators.NotEmptyValidator;
 import com.dmdirc.harness.ui.ClassFinder;
 import com.dmdirc.harness.ui.ValidatingJTextFieldFinder;
 
