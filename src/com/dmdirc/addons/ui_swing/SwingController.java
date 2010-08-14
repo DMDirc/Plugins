@@ -67,7 +67,6 @@ import com.dmdirc.plugins.Plugin;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.core.dialogs.sslcertificate.SSLCertificateDialogModel;
 import com.dmdirc.ui.interfaces.ChannelWindow;
-import com.dmdirc.ui.interfaces.FrameListener;
 import com.dmdirc.ui.interfaces.InputWindow;
 import com.dmdirc.ui.interfaces.QueryWindow;
 import com.dmdirc.ui.interfaces.ServerWindow;
@@ -121,7 +120,7 @@ public class SwingController extends Plugin implements Serializable,
     /** Top level window list. */
     private final List<java.awt.Window> windows;
     /** Waiting on mainframe creation. */
-    private AtomicBoolean mainFrameCreated = new AtomicBoolean(false);
+    private final AtomicBoolean mainFrameCreated = new AtomicBoolean(false);
     /** Error dialog. */
     private ErrorListDialog errorDialog;
     /** Window factory. */
@@ -729,7 +728,7 @@ public class SwingController extends Plugin implements Serializable,
      * @return Swing prefs dialog
      */
     public SwingPreferencesDialog getPrefsDialog() {
-        return SwingPreferencesDialog.getSwingPreferencesDialog(me);
+        return SwingPreferencesDialog.getSwingPreferencesDialog(this);
     }
 
     /** {@inheritDoc} */
