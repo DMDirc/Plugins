@@ -32,7 +32,7 @@ import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesManager;
 import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
-import com.dmdirc.config.prefs.validator.PortValidator;
+import com.dmdirc.util.validators.PortValidator;
 import com.dmdirc.interfaces.ActionListener;
 import com.dmdirc.plugins.Plugin;
 

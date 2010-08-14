@@ -27,7 +27,7 @@ import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.actions.interfaces.ActionType;
 import com.dmdirc.commandparser.CommandManager;
-import com.dmdirc.config.prefs.validator.ValidationResponse;
+import com.dmdirc.util.validators.ValidationResponse;
 import com.dmdirc.interfaces.ActionListener;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;

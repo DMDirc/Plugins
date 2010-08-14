@@ -25,7 +25,7 @@ package com.dmdirc.addons.ui_swing.components;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.validating.ValidatingJTextField;
 import com.dmdirc.config.ConfigManager;
-import com.dmdirc.config.prefs.validator.RegexStringValidator;
+import com.dmdirc.util.validators.RegexStringValidator;
 
 import java.awt.Component;
 import java.awt.event.ActionEvent;

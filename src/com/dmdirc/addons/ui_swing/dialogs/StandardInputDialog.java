@@ -24,8 +24,8 @@ package com.dmdirc.addons.ui_swing.dialogs;
 
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.addons.ui_swing.components.validating.ValidatingJTextField;
-import com.dmdirc.config.prefs.validator.ValidationResponse;
-import com.dmdirc.config.prefs.validator.Validator;
+import com.dmdirc.util.validators.ValidationResponse;
+import com.dmdirc.util.validators.Validator;
 
 import java.awt.Window;
 import java.awt.event.ActionEvent;

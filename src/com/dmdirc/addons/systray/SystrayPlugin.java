@@ -33,7 +33,7 @@ import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesManager;
 import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
-import com.dmdirc.config.prefs.validator.ValidationResponse;
+import com.dmdirc.util.validators.ValidationResponse;
 import com.dmdirc.plugins.Plugin;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.messages.Styliser;

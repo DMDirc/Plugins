@@ -32,9 +32,9 @@ import com.dmdirc.addons.ui_swing.components.durationeditor.DurationListener;
 import com.dmdirc.addons.ui_swing.components.renderers.MapEntryRenderer;
 import com.dmdirc.addons.ui_swing.components.validating.ValidatingJTextField;
 import com.dmdirc.config.prefs.PreferencesSetting;
-import com.dmdirc.config.prefs.validator.NumericalValidator;
-import com.dmdirc.config.prefs.validator.OptionalValidator;
-import com.dmdirc.config.prefs.validator.Validator;
+import com.dmdirc.util.validators.NumericalValidator;
+import com.dmdirc.util.validators.OptionalValidator;
+import com.dmdirc.util.validators.Validator;
 
 import java.awt.Dimension;
 import java.awt.Font;

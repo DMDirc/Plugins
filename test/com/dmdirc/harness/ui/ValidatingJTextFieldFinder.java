@@ -23,7 +23,7 @@
 package com.dmdirc.harness.ui;
 
 import com.dmdirc.addons.ui_swing.components.validating.ValidatingJTextField;
-import com.dmdirc.config.prefs.validator.Validator;
+import com.dmdirc.util.validators.Validator;
 import javax.swing.JTextField;
 import org.fest.swing.core.GenericTypeMatcher;
 
