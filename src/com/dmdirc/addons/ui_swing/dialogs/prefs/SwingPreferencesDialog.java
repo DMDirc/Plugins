@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_swing.dialogs.prefs;
 
 import com.dmdirc.addons.ui_swing.MainFrame;
+import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.ListScroller;
 import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
@@ -83,13 +84,13 @@ public final class SwingPreferencesDialog extends StandardDialog implements
 
     /**
      * Creates a new instance of SwingPreferencesDialog.
-     * 
-     * @param parentWindow Parent window
+     *
+     * @param controller The controller which owns this preferences window.
      */
-    private SwingPreferencesDialog(final MainFrame parentWindow) {
-        super(parentWindow, ModalityType.MODELESS);
+    private SwingPreferencesDialog(final SwingController controller) {
+        super(controller.getMainWindow(), ModalityType.MODELESS);
 
-        this.parentWindow = parentWindow;
+        this.parentWindow = controller.getMainWindow();
 
         initComponents();
 
@@ -97,11 +98,11 @@ public final class SwingPreferencesDialog extends StandardDialog implements
 
             /** {@inheritDoc} */
             @Override
-            protected PreferencesManager doInBackground() throws Exception {
+            protected PreferencesManager doInBackground() {
                 mainPanel.setWaiting(true);
                 PreferencesManager prefsManager = null;
                 try {
-                    prefsManager = new PreferencesManager();
+                    prefsManager = new PreferencesManager(controller);
                 } catch (IllegalArgumentException ex) {
                     mainPanel.setError(ex.getMessage());
                     Logger.appError(ErrorLevel.HIGH, "Unable to load the" +
@@ -142,13 +143,13 @@ public final class SwingPreferencesDialog extends StandardDialog implements
         addCategories(manager.getCategories());
     }
 
-    /** 
+    /**
      * Returns the instance of SwingPreferencesDialog.
-     * 
-     * @param parentWindow Parent window
+     *
+     * @param controller The controller that will own the preferences dialog
      */
-    public static void showSwingPreferencesDialog(final MainFrame parentWindow) {
-        me = getSwingPreferencesDialog(parentWindow);
+    public static void showSwingPreferencesDialog(final SwingController controller) {
+        me = getSwingPreferencesDialog(controller);
 
         me.display();
     }
@@ -156,15 +157,14 @@ public final class SwingPreferencesDialog extends StandardDialog implements
     /**
      * Returns the current instance of the ErrorListDialog.
      *
-     * @param parentWindow Parent window
-     * 
-     * @return The current PluginDErrorListDialogialog instance
+     * @param controller The controller that will own the preferences dialog
+     * @return The current SwingPreferencesDialog instance
      */
     public static SwingPreferencesDialog getSwingPreferencesDialog(
-            final MainFrame parentWindow) {
+            final SwingController controller) {
         synchronized (SwingPreferencesDialog.class) {
             if (me == null) {
-                me = new SwingPreferencesDialog(parentWindow);
+                me = new SwingPreferencesDialog(controller);
             }
         }
 
