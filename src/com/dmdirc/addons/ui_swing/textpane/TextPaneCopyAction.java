@@ -50,11 +50,17 @@ public class TextPaneCopyAction extends AbstractAction {
     }
 
     /**
-     * {@inheritDoc}.
+     * {@inheritDoc}
      * @param e Action event
      */
     @Override
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(final ActionEvent e) {
         textpane.copy();
+    }
+
+    /** {@inheritDoc}. */
+    @Override
+    public boolean isEnabled() {
+        return textpane.hasSelectedRange();
     }
 }
