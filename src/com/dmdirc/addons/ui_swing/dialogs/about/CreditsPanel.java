@@ -23,7 +23,7 @@
 package com.dmdirc.addons.ui_swing.dialogs.about;
 
 import com.dmdirc.addons.ui_swing.UIUtilities;
-import com.dmdirc.addons.ui_swing.components.text.HTMLLabel;
+import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.ui.core.util.URLHandler;
 
 import javax.swing.JPanel;
@@ -47,7 +47,7 @@ public final class CreditsPanel extends JPanel implements HyperlinkListener {
     private static final long serialVersionUID = 2;
 
     /** HTML label we're using. */
-    private HTMLLabel about;
+    private TextLabel about;
     
     /** Creates a new instance of CreditsPanel. */
     public CreditsPanel() {
@@ -65,7 +65,7 @@ public final class CreditsPanel extends JPanel implements HyperlinkListener {
     
     /** Initialises the components. */
     private void initComponents() {
-        about = new HTMLLabel("<html>"
+        about = new TextLabel("<html>"
                 + "<h3 style='margin: 3px; padding: 0px 0px 5px 0px;'>Main developers:</h3>"
                 + "<ul style='list-style-type: circle; margin-top: 0px;'>"
                 + "<li><a href=\"http://www.md87.co.uk\">Chris 'MD87' Smith</a></li>"

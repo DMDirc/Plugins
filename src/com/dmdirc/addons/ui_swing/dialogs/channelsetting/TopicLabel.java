@@ -25,7 +25,7 @@ package com.dmdirc.addons.ui_swing.dialogs.channelsetting;
 
 import com.dmdirc.Channel;
 import com.dmdirc.Topic;
-import com.dmdirc.addons.ui_swing.components.text.OldTextLabel;
+import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 
 import java.awt.Color;
 import java.util.Date;
@@ -122,15 +122,15 @@ public class TopicLabel extends JPanel {
             add(pane, "wmax 450, grow, push, wrap, gapleft 5, gapleft 5");
         }
 
-        OldTextLabel label;
+        TextLabel label;
         if (topic.getTopic().isEmpty()) {
-            label = new OldTextLabel("Topic unset by " + topic.getClient());
+            label = new TextLabel("Topic unset by " + topic.getClient());
         } else {
-            label = new OldTextLabel("Topic set by " + topic.getClient());
+            label = new TextLabel("Topic set by " + topic.getClient());
         }
         add(label, "wmax 450, grow, push, wrap, gapleft 5, pad 0");
 
-        label = new OldTextLabel("on " + new Date(topic.getTime() * 1000).
+        label = new TextLabel("on " + new Date(topic.getTime() * 1000).
                 toString());
         add(label, "wmax 450, grow, push, wrap, gapleft 5, pad 0");
 

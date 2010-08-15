@@ -23,8 +23,8 @@
 package com.dmdirc.addons.ui_swing.dialogs.serverlist;
 
 import com.dmdirc.addons.ui_swing.UIUtilities;
-import com.dmdirc.addons.ui_swing.components.text.HTMLLabel;
 import com.dmdirc.addons.serverlists.ServerGroupItem;
+import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.ui.core.util.URLHandler;
 
 import java.net.URI;
@@ -51,9 +51,9 @@ public class Info extends JPanel implements HyperlinkListener,
      */
     private static final long serialVersionUID = 2;
     /** Info pane. */
-    private final HTMLLabel infoLabel;
+    private final TextLabel infoLabel;
     /** Link label. */
-    private final HTMLLabel linkLabel;
+    private final TextLabel linkLabel;
     /** Server list model. */
     private final ServerListModel model;
     /** Info scroll panel. */
@@ -69,8 +69,8 @@ public class Info extends JPanel implements HyperlinkListener,
 
         this.model = model;
 
-        infoLabel = new HTMLLabel();
-        linkLabel = new HTMLLabel();
+        infoLabel = new TextLabel();
+        linkLabel = new TextLabel();
         sp = new JScrollPane(infoLabel);
 
         setLayout(new MigLayout("fill, ins 0"));

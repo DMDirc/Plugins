@@ -37,7 +37,7 @@ import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.StyleSheet;
 
 /**
- * Dyamnic text label.
+ * Dynamic text label.
  */
 public class TextLabel extends JTextPane {
 
@@ -86,7 +86,6 @@ public class TextLabel extends JTextPane {
                 + "font-size: " + font.getSize() + "pt; "
                 + "color: rgb(" + colour.getRed() + ", " + colour.getGreen()
                 + ", " + colour.getBlue() + "); }");
-        styleSheet.addRule("p { margin: 0; }");
 
         setOpaque(false);
         setEditable(false);

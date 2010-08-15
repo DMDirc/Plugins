@@ -23,7 +23,7 @@
 package com.dmdirc.addons.ui_swing.dialogs.about;
 
 import com.dmdirc.addons.ui_swing.UIUtilities;
-import com.dmdirc.addons.ui_swing.components.text.HTMLLabel;
+import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.ui.core.util.URLHandler;
 
 import javax.swing.JPanel;
@@ -55,12 +55,12 @@ public final class AboutPanel extends JPanel implements HyperlinkListener {
     
     /** Initialises the components. */
     private void initComponents() {
-        final HTMLLabel about = new HTMLLabel("<html><center>"
+        final TextLabel about = new TextLabel("<html><center>"
                 + "<h1 style=\"margin-bottom: 0px;\">DMDirc</h1>"
                 + "<span style=\"font-style: italic;\">The intelligent IRC client.</span>"
                 + "<p>Easy to use, cross-platform IRC client.</p>"
                 + "<p><a href=\"http://www.dmdirc.com\">www.dmdirc.com</a></p>"
-                + "</center></html>");
+                + "</center></html>", false);
         about.addHyperlinkListener(this);
         
         setLayout(new MigLayout("ins rel, fill"));
