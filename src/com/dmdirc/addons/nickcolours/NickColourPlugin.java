@@ -27,6 +27,7 @@ import com.dmdirc.ChannelClientProperty;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.actions.interfaces.ActionType;
+import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
@@ -40,6 +41,7 @@ import com.dmdirc.parser.interfaces.ChannelClientInfo;
 import com.dmdirc.parser.interfaces.ChannelInfo;
 import com.dmdirc.parser.interfaces.ClientInfo;
 import com.dmdirc.plugins.Plugin;
+import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.messages.ColourManager;
 import com.dmdirc.util.ReturnableThread;
 
@@ -260,7 +262,10 @@ public final class NickColourPlugin extends Plugin implements ActionListener,
                     /** {@inheritDoc} */
                     @Override
                     public void run() {
-                        setObject(new NickColourPanel(NickColourPlugin.this));
+                        setObject(new NickColourPanel(
+                                (SwingController) PluginManager.getPluginManager()
+                                .getPluginInfoByName("ui_swing").getPlugin(),
+                                NickColourPlugin.this));
                     }
                 }));
 
