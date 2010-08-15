@@ -26,7 +26,7 @@ import com.dmdirc.Main;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.actions.interfaces.ActionType;
-import com.dmdirc.addons.ui_swing.MainFrame;
+import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
@@ -35,6 +35,7 @@ import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.util.validators.ValidationResponse;
 import com.dmdirc.plugins.Plugin;
+import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.messages.Styliser;
 
@@ -109,7 +110,9 @@ public final class SystrayPlugin extends Plugin implements ActionListener,
     @Override
     public void actionPerformed(final ActionEvent e) {
         if (e.getActionCommand().equals("Show/hide")) {
-            Main.getUI().getMainWindow().setVisible(!Main.getUI().getMainWindow().isVisible());
+            final SwingController controller = (SwingController) PluginManager
+                    .getPluginManager().getPluginInfoByName("ui_swing").getPlugin();
+            controller.getMainWindow().setVisible(!controller.getMainWindow().isVisible());
         } else if (e.getActionCommand().equals("Quit")) {
             Main.quit();
         }
@@ -171,12 +174,14 @@ public final class SystrayPlugin extends Plugin implements ActionListener,
     @Override
     public void mouseClicked(final MouseEvent e) {
         if (e.getButton() == MouseEvent.BUTTON1) {
-            if (Main.getUI().getMainWindow().isVisible()) {
-                Main.getUI().getMainWindow().setVisible(false);
+            final SwingController controller = (SwingController) PluginManager
+                    .getPluginManager().getPluginInfoByName("ui_swing").getPlugin();
+            if (controller.getMainWindow().isVisible()) {
+                controller.getMainWindow().setVisible(false);
             } else {
-                Main.getUI().getMainWindow().setVisible(true);
-                ((MainFrame) Main.getUI().getMainWindow()).setState(Frame.NORMAL);
-                ((MainFrame) Main.getUI().getMainWindow()).toFront();
+                controller.getMainWindow().setVisible(true);
+                controller.getMainWindow().setState(Frame.NORMAL);
+                controller.getMainWindow().toFront();
             }
         }
     }
@@ -228,7 +233,9 @@ public final class SystrayPlugin extends Plugin implements ActionListener,
         if (type == CoreActionType.CLIENT_MINIMISED
                 && IdentityManager.getGlobalConfig().getOptionBool(getDomain(),
                 "autominimise")) {
-            Main.getUI().getMainWindow().setVisible(false);
+            final SwingController controller = (SwingController) PluginManager
+                    .getPluginManager().getPluginInfoByName("ui_swing").getPlugin();
+            controller.getMainWindow().setVisible(false);
         }
     }
 
