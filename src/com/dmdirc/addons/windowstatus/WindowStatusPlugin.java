@@ -24,12 +24,12 @@ package com.dmdirc.addons.windowstatus;
 
 import com.dmdirc.Channel;
 import com.dmdirc.FrameContainer;
-import com.dmdirc.Main;
 import com.dmdirc.Query;
 import com.dmdirc.Server;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.actions.interfaces.ActionType;
+import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
@@ -43,6 +43,7 @@ import com.dmdirc.parser.interfaces.ChannelClientInfo;
 import com.dmdirc.parser.interfaces.ChannelInfo;
 import com.dmdirc.parser.interfaces.ClientInfo;
 import com.dmdirc.plugins.Plugin;
+import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.util.ReturnableThread;
 
@@ -82,7 +83,8 @@ public final class WindowStatusPlugin extends Plugin implements ActionListener, 
      */
     @Override
     public void onLoad() {
-        Main.getUI().getStatusBar().addComponent(panel);
+        ((SwingController) PluginManager.getPluginManager()
+                .getPluginInfoByName("ui_swing").getPlugin()).getStatusBar().addComponent(panel);
         IdentityManager.getGlobalConfig().addChangeListener(getDomain(), this);
         updateCache();
 
@@ -94,7 +96,8 @@ public final class WindowStatusPlugin extends Plugin implements ActionListener, 
      */
     @Override
     public void onUnload() {
-        Main.getUI().getStatusBar().removeComponent(panel);
+        ((SwingController) PluginManager.getPluginManager()
+                .getPluginInfoByName("ui_swing").getPlugin()).getStatusBar().removeComponent(panel);
         ActionManager.removeListener(this);
     }
 
