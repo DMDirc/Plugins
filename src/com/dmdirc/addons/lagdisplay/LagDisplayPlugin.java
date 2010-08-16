@@ -23,12 +23,12 @@
 package com.dmdirc.addons.lagdisplay;
 
 import com.dmdirc.FrameContainer;
-import com.dmdirc.Main;
 import com.dmdirc.Server;
 import com.dmdirc.ServerState;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.actions.interfaces.ActionType;
+import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.config.ConfigManager;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
@@ -39,6 +39,7 @@ import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.interfaces.ActionListener;
 import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.plugins.Plugin;
+import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.util.RollingList;
 
@@ -80,7 +81,8 @@ public final class LagDisplayPlugin extends Plugin implements ActionListener, Co
     /** {@inheritDoc} */
     @Override
     public void onLoad() {
-        Main.getUI().getStatusBar().addComponent(panel);
+        ((SwingController) PluginManager.getPluginManager()
+                .getPluginInfoByName("ui_swing").getPlugin()).getStatusBar().addComponent(panel);
         IdentityManager.getGlobalConfig().addChangeListener(getDomain(), this);
 
         readConfig();
@@ -139,7 +141,8 @@ public final class LagDisplayPlugin extends Plugin implements ActionListener, Co
     /** {@inheritDoc} */
     @Override
     public void onUnload() {
-        Main.getUI().getStatusBar().removeComponent(panel);
+        ((SwingController) PluginManager.getPluginManager()
+                .getPluginInfoByName("ui_swing").getPlugin()).getStatusBar().removeComponent(panel);
         IdentityManager.getConfigIdentity().removeListener(this);
         
         ActionManager.removeListener(this);
