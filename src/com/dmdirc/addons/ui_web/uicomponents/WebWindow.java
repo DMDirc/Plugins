@@ -202,7 +202,7 @@ public class WebWindow implements Window, IRCDocumentListener, FrameInfoListener
     /** {@inheritDoc} */
     @Override
     public void close() {
-        //TODO FIXME
+        DynamicRequestHandler.addEvent(new Event("closewindow", myID));
     }
 
     public String getType() {

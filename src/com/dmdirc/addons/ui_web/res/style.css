@@ -78,7 +78,7 @@ body {
 }
 
 #treeview li {
-    list-style-image: url('/static/images/dmdirc.gif');
+    list-style-image: url('/dmdirc/icon.png');
     margin: 3px 0px;
     padding: 0px;
 }

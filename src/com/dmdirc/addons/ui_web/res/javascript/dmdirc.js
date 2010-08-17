@@ -22,6 +22,11 @@ function setSpeed(what, speed) {
     document.getElementById(what + '_' + speed).style.textDecoration = 'underline';
 }
 
+function treeview_remove(id) {
+    var el = document.getElementById(id);
+    el.parentNode.removeChild(el);
+}
+
 function treeview_add(name, id, type, parent) {
     var parentNode;
 
@@ -400,6 +405,16 @@ function window_create(window, parent) {
         onException:excFunc, onSuccess: handlerFunc})
 }
 
+function window_close(id) {
+    treeview_remove(id);
+    windows.unset(id);
+
+    if (activeWindow == id) {
+        // TODO: Focus another window, or reset textview/title/etc if there
+        //       are no more windows
+    }
+}
+
 function window_show(id) {
     treeview_setactive(id);
     title_settext(windows.get(id).title)
@@ -483,6 +498,8 @@ function handlerFunc(transport) {
             profiles_add(event.arg1);
         } else if (event.type == 'newwindow') {
             window_create(event.arg1);
+        } else if (event.type == 'closewindow') {
+            window_close(event.arg1);
         } else if (event.type == 'newchildwindow') {
             window_create(event.arg1[1], event.arg1[0]);
         } else if (event.type == 'clearwindow') {
