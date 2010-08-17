@@ -51,7 +51,7 @@ public class DMDircUITestCase extends UISpecTestCase {
 
         IdentityManager.getAddonIdentity().setOption("test", "windowMenuScrollInterval", "1");
         IdentityManager.getAddonIdentity().setOption("test", "desktopbackground", "");
-        IdentityManager.getAddonIdentity().setOption("test", "desktopbackgroundoption", "STRETCH");
+        IdentityManager.getAddonIdentity().setOption("test", "desktopbackgroundoption", "SCALE");
         IdentityManager.getAddonIdentity().setOption("test", "windowMenuItems", "1");
         IdentityManager.getAddonIdentity().setOption("test", "windowMenuScrollInterval", "1");
         Main.ensureExists(PluginManager.getPluginManager(), "tabcompletion");

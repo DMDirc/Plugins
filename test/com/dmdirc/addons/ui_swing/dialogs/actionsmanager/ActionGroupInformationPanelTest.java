@@ -22,11 +22,15 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.actionsmanager;
 
+import javax.swing.JLabel;
+import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.actions.ActionGroup;
 import com.dmdirc.updater.Version;
 import org.junit.Test;
 import org.uispec4j.Panel;
+import org.uispec4j.UIComponent;
 import org.uispec4j.UISpecTestCase;
+import org.uispec4j.finder.ComponentMatcher;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
@@ -59,13 +63,18 @@ public class ActionGroupInformationPanelTest extends UISpecTestCase {
         
         final Panel panel = new Panel(new ActionGroupInformationPanel(group));
 
-        assertEquals("<panel>"
-                + "<textBox text=\"description\"/>"
-                + "<textBox text=\"Author: \"/>"
-                + "<textBox text=\"foo &lt;bar@baz&gt;\"/>"
-                + "<textBox text=\"Version: \"/>"
-                + "<textBox text=\"17\"/>"
-                + "</panel>", panel.getDescription().replace("\n", ""));
+        final UIComponent[] components = panel.getUIComponents(
+                ComponentMatcher.ALL);
+        assertEquals("Description", "description", ((TextLabel) components[0]
+                .getAwtComponent()).getText().split("</?body.*?>")[1].trim());
+        assertEquals("Author label", "Author: ", ((JLabel) components[1]
+                .getAwtComponent()).getText());
+        assertEquals("Author", "foo <bar@baz>", ((JLabel) components[2]
+                .getAwtComponent()).getText());
+        assertEquals("Version label", "Version: ", ((JLabel) components[3]
+                .getAwtComponent()).getText());
+        assertEquals("version", "17", ((JLabel) components[4].getAwtComponent())
+                .getText());
     }
 
     @Test
@@ -76,11 +85,14 @@ public class ActionGroupInformationPanelTest extends UISpecTestCase {
 
         final Panel panel = new Panel(new ActionGroupInformationPanel(group));
 
-        assertEquals("<panel>"
-                + "<textBox text=\"description\"/>"
-                + "<textBox text=\"Version: \"/>"
-                + "<textBox text=\"17\"/>"
-                + "</panel>", panel.getDescription().replace("\n", ""));
+        final UIComponent[] components = panel.getUIComponents(
+                ComponentMatcher.ALL);
+        assertEquals("Description", "description", ((TextLabel) components[0]
+                .getAwtComponent()).getText().split("</?body.*?>")[1].trim());
+        assertEquals("Version label", "Version: ", ((JLabel) components[3]
+                .getAwtComponent()).getText());
+        assertEquals("version", "17", ((JLabel) components[4].getAwtComponent())
+                .getText());
     }
 
     @Test
@@ -92,11 +104,14 @@ public class ActionGroupInformationPanelTest extends UISpecTestCase {
 
         final Panel panel = new Panel(new ActionGroupInformationPanel(group));
 
-        assertEquals("<panel>"
-                + "<textBox text=\"description\"/>"
-                + "<textBox text=\"Author: \"/>"
-                + "<textBox text=\"foo &lt;bar@baz&gt;\"/>"
-                + "</panel>", panel.getDescription().replace("\n", ""));
+        final UIComponent[] components = panel.getUIComponents(
+                ComponentMatcher.ALL);
+        assertEquals("Description", "description", ((TextLabel) components[0]
+                .getAwtComponent()).getText().split("</?body.*?>")[1].trim());
+        assertEquals("Author label", "Author: ", ((JLabel) components[1]
+                .getAwtComponent()).getText());
+        assertEquals("Author", "foo <bar@baz>", ((JLabel) components[2]
+                .getAwtComponent()).getText());
     }
 
 }
