@@ -945,4 +945,15 @@ public class SwingController extends Plugin implements Serializable,
             return windows;
         }
     }
+
+    /**
+     * Returns an instance of SwingController. This method is exported for use
+     * in other plugins.
+     *
+     * @return A reference to this SwingController.
+     */
+    public UIController getController() {
+        return this;
+    }
+
 }
