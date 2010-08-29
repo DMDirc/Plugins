@@ -24,6 +24,7 @@ package com.dmdirc.addons.ui_swing.components.frames;
 
 import com.dmdirc.Channel;
 import com.dmdirc.ServerState;
+import com.dmdirc.Topic;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.actions.interfaces.ActionType;
@@ -38,6 +39,7 @@ import com.dmdirc.commandparser.PopupType;
 import com.dmdirc.commandparser.parsers.CommandParser;
 import com.dmdirc.config.Identity;
 import com.dmdirc.config.IdentityManager;
+import com.dmdirc.interfaces.TopicChangeListener;
 import com.dmdirc.parser.interfaces.ChannelClientInfo;
 import com.dmdirc.ui.interfaces.ChannelWindow;
 import com.dmdirc.ui.interfaces.InputWindow;
@@ -57,7 +59,7 @@ import net.miginfocom.swing.MigLayout;
  * The channel frame is the GUI component that represents a channel to the user.
  */
 public final class ChannelFrame extends InputTextFrame implements ActionListener,
-        ChannelWindow, com.dmdirc.interfaces.ActionListener {
+        ChannelWindow, com.dmdirc.interfaces.ActionListener, TopicChangeListener {
 
     /**
      * A version number for this class. It should be changed whenever the class
@@ -93,6 +95,8 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
         parentChannel = owner;
 
         initComponents();
+
+        owner.addTopicChangeListener(this);
 
         IdentityManager.getGlobalConfig().addChangeListener("ui",
                 "channelSplitPanePosition", this);
@@ -340,4 +344,17 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
     public void redrawNicklist() {
         getNickList().repaint();
     }
+
+    @Override
+    public void topicChanged(Channel channel, Topic topic) {
+        UIUtilities.invokeLater(new Runnable() {
+
+            /** {@inheritDoc} */
+            @Override
+            public void run() {
+                ChannelFrame.super.setTitle(title);
+            }
+        });
+    }
+
 }
