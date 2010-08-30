@@ -82,7 +82,8 @@ public final class LagDisplayPlugin extends Plugin implements ActionListener, Co
     @Override
     public void onLoad() {
         ((SwingController) PluginManager.getPluginManager()
-                .getPluginInfoByName("ui_swing").getPlugin()).getStatusBar().addComponent(panel);
+                .getPluginInfoByName("ui_swing").getPlugin())
+                .getSwingStatusBar().addComponent(panel);
         IdentityManager.getGlobalConfig().addChangeListener(getDomain(), this);
 
         readConfig();
@@ -142,7 +143,8 @@ public final class LagDisplayPlugin extends Plugin implements ActionListener, Co
     @Override
     public void onUnload() {
         ((SwingController) PluginManager.getPluginManager()
-                .getPluginInfoByName("ui_swing").getPlugin()).getStatusBar().removeComponent(panel);
+                .getPluginInfoByName("ui_swing").getPlugin())
+                .getSwingStatusBar().removeComponent(panel);
         IdentityManager.getConfigIdentity().removeListener(this);
         
         ActionManager.removeListener(this);

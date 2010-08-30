@@ -30,6 +30,7 @@ import com.dmdirc.WritableFrameContainer;
 import com.dmdirc.addons.ui_web.uicomponents.WebMainWindow;
 import com.dmdirc.addons.ui_web.uicomponents.WebStatusBar;
 import com.dmdirc.config.prefs.PreferencesInterface;
+import com.dmdirc.ui.core.components.StatusBarManager;
 import com.dmdirc.ui.core.dialogs.sslcertificate.SSLCertificateDialogModel;
 import com.dmdirc.ui.interfaces.ChannelWindow;
 import com.dmdirc.ui.interfaces.InputWindow;
@@ -95,7 +96,7 @@ public class WebInterfaceUI implements UIController {
             new DMDircRequestHandler(),
             new DynamicRequestHandler(this),
         });
-        
+
         try {
             webServer.start();
         } catch (Exception ex) {
@@ -103,6 +104,8 @@ public class WebInterfaceUI implements UIController {
         }
 
         windowManager = new WebWindowManager(this);
+
+        StatusBarManager.getStatusBarManager().registerStatusBar(new WebStatusBar());
     }
 
     public WebWindowManager getWindowManager() {
@@ -124,8 +127,14 @@ public class WebInterfaceUI implements UIController {
         return new WebMainWindow();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     *
+     * @deprecated Should not be used externally - use the
+     * {@link com.dmdirc.ui.core.components.StatusBarManager} instead.
+     */
     @Override
+    @Deprecated
     public StatusBar getStatusBar() {
         return new WebStatusBar();
     }

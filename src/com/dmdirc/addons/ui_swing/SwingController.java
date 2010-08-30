@@ -65,6 +65,7 @@ import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.plugins.Plugin;
 import com.dmdirc.ui.WindowManager;
+import com.dmdirc.ui.core.components.StatusBarManager;
 import com.dmdirc.ui.core.dialogs.sslcertificate.SSLCertificateDialogModel;
 import com.dmdirc.ui.interfaces.ChannelWindow;
 import com.dmdirc.ui.interfaces.InputWindow;
@@ -178,8 +179,14 @@ public class SwingController extends Plugin implements Serializable,
         return me;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     *
+     * @deprecated Should not be used externally - use the
+     * {@link com.dmdirc.ui.core.components.StatusBarManager} instead.
+     */
     @Override
+    @Deprecated
     public StatusBar getStatusBar() {
         return getSwingStatusBar();
     }
@@ -692,6 +699,7 @@ public class SwingController extends Plugin implements Serializable,
                 mainFrameCreated.set(true);
                 statusBar = me.getStatusBar();
                 errorDialog = new ErrorListDialog(me);
+                StatusBarManager.getStatusBarManager().registerStatusBar(statusBar);
             }
         });
 

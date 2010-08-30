@@ -84,7 +84,8 @@ public final class WindowStatusPlugin extends Plugin implements ActionListener, 
     @Override
     public void onLoad() {
         ((SwingController) PluginManager.getPluginManager()
-                .getPluginInfoByName("ui_swing").getPlugin()).getStatusBar().addComponent(panel);
+                .getPluginInfoByName("ui_swing").getPlugin())
+                .getSwingStatusBar().addComponent(panel);
         IdentityManager.getGlobalConfig().addChangeListener(getDomain(), this);
         updateCache();
 
@@ -97,7 +98,8 @@ public final class WindowStatusPlugin extends Plugin implements ActionListener, 
     @Override
     public void onUnload() {
         ((SwingController) PluginManager.getPluginManager()
-                .getPluginInfoByName("ui_swing").getPlugin()).getStatusBar().removeComponent(panel);
+                .getPluginInfoByName("ui_swing").getPlugin())
+                .getSwingStatusBar().removeComponent(panel);
         ActionManager.removeListener(this);
     }
 
