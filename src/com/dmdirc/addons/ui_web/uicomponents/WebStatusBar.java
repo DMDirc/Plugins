@@ -71,10 +71,6 @@ public class WebStatusBar implements StatusBar {
         // Do nothing
     }
 
-    public boolean isVisible() {
-        return true;
-    }
-
     /** {@inheritDoc} */
     @Override
     public void setMessage(String iconType, String newMessage) {

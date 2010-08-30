@@ -30,6 +30,7 @@ import com.dmdirc.Server;
 import com.dmdirc.WritableFrameContainer;
 import com.dmdirc.config.prefs.PreferencesInterface;
 import com.dmdirc.plugins.Plugin;
+import com.dmdirc.ui.core.components.StatusBarManager;
 import com.dmdirc.ui.core.dialogs.sslcertificate.SSLCertificateDialogModel;
 import com.dmdirc.ui.interfaces.ChannelWindow;
 import com.dmdirc.ui.interfaces.InputWindow;
@@ -57,7 +58,7 @@ public final class DummyController extends Plugin implements UIController {
      * Creates a new instance of DummyController.
      */
     public DummyController() {
-        // Do nothing
+        StatusBarManager.getStatusBarManager().registerStatusBar(new DummyStatusBar());
     }
     
     /** {@inheritDoc} */
@@ -66,8 +67,14 @@ public final class DummyController extends Plugin implements UIController {
         return mainWindow;
     }
     
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     *
+     * @deprecated Should not be used externally - use the
+     * {@link com.dmdirc.ui.core.components.StatusBarManager} instead.
+     */
     @Override
+    @Deprecated
     public StatusBar getStatusBar() {
         return new DummyStatusBar();
     }
