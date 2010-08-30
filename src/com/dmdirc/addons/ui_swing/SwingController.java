@@ -709,7 +709,6 @@ public class SwingController extends Plugin implements Serializable,
         }
 
         WindowManager.addFrameListener(windowFactory);
-        Main.setUI(this);
     }
 
     /** {@inheritDoc} */

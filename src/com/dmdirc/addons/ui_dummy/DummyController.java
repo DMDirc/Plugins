@@ -225,7 +225,7 @@ public final class DummyController extends Plugin implements UIController {
     /** {@inheritDoc} */
     @Override
     public void onLoad() {
-        Main.setUI(this);
+        // Do nothing?
     }
 
     /** {@inheritDoc} */
