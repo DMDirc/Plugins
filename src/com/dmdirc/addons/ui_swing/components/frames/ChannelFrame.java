@@ -59,7 +59,7 @@ import net.miginfocom.swing.MigLayout;
  * The channel frame is the GUI component that represents a channel to the user.
  */
 public final class ChannelFrame extends InputTextFrame implements ActionListener,
-        ChannelWindow, com.dmdirc.interfaces.ActionListener, TopicChangeListener {
+        ChannelWindow, com.dmdirc.interfaces.ActionListener {
 
     /**
      * A version number for this class. It should be changed whenever the class
@@ -95,8 +95,6 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
         parentChannel = owner;
 
         initComponents();
-
-        owner.addTopicChangeListener(this);
 
         IdentityManager.getGlobalConfig().addChangeListener("ui",
                 "channelSplitPanePosition", this);
@@ -343,18 +341,6 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
     @Override
     public void redrawNicklist() {
         getNickList().repaint();
-    }
-
-    @Override
-    public void topicChanged(Channel channel, Topic topic) {
-        UIUtilities.invokeLater(new Runnable() {
-
-            /** {@inheritDoc} */
-            @Override
-            public void run() {
-                ChannelFrame.super.setTitle(title);
-            }
-        });
     }
 
 }

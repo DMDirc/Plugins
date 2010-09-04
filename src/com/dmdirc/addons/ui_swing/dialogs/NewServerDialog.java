@@ -108,6 +108,16 @@ public final class NewServerDialog extends StandardDialog implements
         update();
     }
 
+    @Override
+    public void display() {
+        super.display();
+        requestFocusInWindow();
+        serverField.selectAll();
+        serverField.requestFocus();
+    }
+
+
+
     /**
      * Creates the new server dialog if one doesn't exist, and displays it.
      * 
@@ -117,7 +127,6 @@ public final class NewServerDialog extends StandardDialog implements
         me = getNewServerDialog(mainFrame);
 
         me.display();
-        me.requestFocusInWindow();
     }
 
     /**
