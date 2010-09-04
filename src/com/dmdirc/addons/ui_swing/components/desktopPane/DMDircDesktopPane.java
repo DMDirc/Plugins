@@ -366,7 +366,7 @@ public class DMDircDesktopPane extends JDesktopPane implements
         if (selectedWindow != null) {
             selectedWindow.activateFrame();
         }
-        mainFrame.setTitle(isMaximised ? null : title);
+        mainFrame.setTitle(isMaximised ? title : null);
         changing.set(false);
     }
 

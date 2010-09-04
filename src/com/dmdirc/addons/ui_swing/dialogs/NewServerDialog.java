@@ -60,7 +60,7 @@ import net.miginfocom.swing.MigLayout;
 /**
  * Dialog that allows the user to enter details of a new server to connect to.
  */
-public final class NewServerDialog extends StandardDialog implements 
+public final class NewServerDialog extends StandardDialog implements
         ActionListener, VetoableComboBoxSelectionListener {
 
     /**
@@ -86,48 +86,57 @@ public final class NewServerDialog extends StandardDialog implements
     /** button. */
     private JButton editProfileButton;
     /** Main frame. */
-    private MainFrame mainFrame;
+    private final MainFrame mainFrame;
     /**  Opening new server? */
     private boolean openingServer = false;
 
     /**
      * Creates a new instance of the dialog.
-     * 
-     * @param parentWindow Main frame
+     *
+     * @param mainFrame Main frame
      */
     private NewServerDialog(final MainFrame mainFrame) {
         super(mainFrame, ModalityType.MODELESS);
-        
+
         this.mainFrame = mainFrame;
 
         initComponents();
         layoutComponents();
         addListeners();
         setResizable(false);
-        
+
         update();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void display() {
+        super.display();
+        requestFocusInWindow();
+        serverField.selectAll();
+        serverField.requestFocus();
     }
 
     /**
      * Creates the new server dialog if one doesn't exist, and displays it.
-     * 
+     *
      * @param mainFrame Main frame
      */
     public static void showNewServerDialog(final MainFrame mainFrame) {
         me = getNewServerDialog(mainFrame);
 
         me.display();
-        me.requestFocusInWindow();
     }
 
     /**
      * Returns the current instance of the NewServerDialog.
-     * 
+     *
      * @param mainFrame Main frame
      *
      * @return The current NewServerDialog instance
      */
-    public static NewServerDialog getNewServerDialog(final MainFrame mainFrame) {
+    public static NewServerDialog getNewServerDialog(
+            final MainFrame mainFrame) {
         synchronized (NewServerDialog.class) {
             if (me == null) {
                 me = new NewServerDialog(mainFrame);
@@ -139,7 +148,7 @@ public final class NewServerDialog extends StandardDialog implements
 
     /**
      * Is the new server dialog showing?
-     * 
+     *
      * @return true iif the NSD is showing
      */
     public static synchronized boolean isNewServerDialogShowing() {
@@ -159,7 +168,7 @@ public final class NewServerDialog extends StandardDialog implements
 
         serverField.requestFocusInWindow();
 
-        if (ServerManager.getServerManager().numServers() == 0 || 
+        if (ServerManager.getServerManager().numServers() == 0 ||
                 mainFrame.getActiveFrame() == null) {
             newServerWindowCheck.setSelected(true);
             newServerWindowCheck.setEnabled(false);
@@ -313,9 +322,9 @@ public final class NewServerDialog extends StandardDialog implements
         }
     }
 
-    /** 
+    /**
      * {@inheritDoc}
-     * 
+     *
      * @param e Action event
      */
     @Override
@@ -335,7 +344,7 @@ public final class NewServerDialog extends StandardDialog implements
         executeAction(getOkButton());
         return true;
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public void dispose() {
