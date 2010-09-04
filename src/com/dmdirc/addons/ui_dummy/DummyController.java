@@ -24,7 +24,6 @@ package com.dmdirc.addons.ui_dummy;
 
 import com.dmdirc.Channel;
 import com.dmdirc.FrameContainer;
-import com.dmdirc.Main;
 import com.dmdirc.Query;
 import com.dmdirc.Server;
 import com.dmdirc.WritableFrameContainer;
@@ -256,6 +255,16 @@ public final class DummyController extends Plugin implements UIController {
     @Override
     public PreferencesInterface getThemesPrefsPanel() {
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    /**
+     * Returns an instance of DummyController. This method is exported for use
+     * in other plugins.
+     *
+     * @return A reference to this DummyController.
+     */
+    public UIController getController() {
+        return this;
     }
     
 }
