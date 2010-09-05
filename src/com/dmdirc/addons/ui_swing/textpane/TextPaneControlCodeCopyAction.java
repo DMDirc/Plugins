@@ -27,9 +27,9 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
 /**
- * Copy action.
+ * Copy with styling action.
  */
-public class TextPaneCopyAction extends AbstractAction {
+public class TextPaneControlCodeCopyAction extends AbstractAction {
 
     /**
      * A version number for this class. It should be changed whenever the class
@@ -45,8 +45,8 @@ public class TextPaneCopyAction extends AbstractAction {
      *
      * @param textpane Textpane
      */
-    public TextPaneCopyAction(final TextPane textpane) {
-        super("Copy");
+    public TextPaneControlCodeCopyAction(final TextPane textpane) {
+        super("Copy with styling");
         this.textpane = textpane;
     }
 
@@ -56,8 +56,7 @@ public class TextPaneCopyAction extends AbstractAction {
      */
     @Override
     public void actionPerformed(final ActionEvent e) {
-        textpane.copy((e.getModifiers() & ActionEvent.SHIFT_MASK)
-                == ActionEvent.SHIFT_MASK);
+        textpane.copy(true);
     }
 
     /** {@inheritDoc}. */
