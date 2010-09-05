@@ -71,7 +71,8 @@ public final class InputFieldCopyAction extends AbstractAction {
         if (inputSelected != null && !inputSelected.isEmpty()) {
             inputField.copy();
         } else if (textPane.hasSelectedRange()) {
-            textPane.copy();
+            textPane.copy((e.getModifiers() & ActionEvent.SHIFT_MASK)
+                == ActionEvent.SHIFT_MASK);
         }
     }
 }
