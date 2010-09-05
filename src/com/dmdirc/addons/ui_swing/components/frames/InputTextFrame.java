@@ -129,6 +129,9 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
 
         getInputField().getTextField().getInputMap().put(KeyStroke.getKeyStroke(
                 KeyEvent.VK_C, UIUtilities.getCtrlMask()), "textpaneCopy");
+        getInputField().getTextField().getInputMap().put(KeyStroke.getKeyStroke(
+                KeyEvent.VK_C, UIUtilities.getCtrlMask()
+                | KeyEvent.SHIFT_DOWN_MASK), "textpaneCopy");
         getInputField().getTextField().getActionMap().put("textpaneCopy",
                 new InputFieldCopyAction(getTextPane(),
                 getInputField().getTextField()));

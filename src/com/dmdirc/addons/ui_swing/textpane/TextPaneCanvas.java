@@ -477,7 +477,7 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
                 selection.setStartPos(start);
                 selection.setEndPos(end);
                 if (quickCopy) {
-                    textPane.copy();
+                    textPane.copy(e.isShiftDown());
                     clearSelection();
                 }
             } else if (e.getClickCount() == 3) {
@@ -486,7 +486,7 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
                 selection.setStartPos(0);
                 selection.setEndPos(clickedText.length());
                 if (quickCopy) {
-                    textPane.copy();
+                    textPane.copy(e.isShiftDown());
                     clearSelection();
                 }
             }
@@ -624,7 +624,8 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
         fireMouseEvents(getClickType(getClickPosition(e.getPoint(), false)),
                 MouseEventType.RELEASED, e);
         if (quickCopy) {
-            textPane.copy();
+            textPane.copy((e.getModifiers() & MouseEvent.CTRL_MASK)
+                    == MouseEvent.CTRL_MASK);
             SwingUtilities.invokeLater(new Runnable() {
 
                 /** {@inheritDoc} */

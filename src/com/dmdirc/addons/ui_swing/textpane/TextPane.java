@@ -27,6 +27,7 @@ import com.dmdirc.ui.interfaces.Window;
 import com.dmdirc.ui.messages.IRCDocument;
 import com.dmdirc.ui.messages.IRCDocumentListener;
 import com.dmdirc.ui.messages.LinePosition;
+import com.dmdirc.ui.messages.Styliser;
 
 import java.awt.Point;
 import java.awt.Toolkit;
@@ -219,11 +220,6 @@ public final class TextPane extends JComponent implements MouseWheelListener,
     /**
      * Returns the selected text.
      * 
-     *    <li>0 = start line</li>
-     *    <li>1 = start char</li>
-     *    <li>2 = end line</li>
-     *    <li>3 = end char</li>
-     *
      * @return Selected text
      */
     public String getSelectedText() {
@@ -234,9 +230,8 @@ public final class TextPane extends JComponent implements MouseWheelListener,
             return null;
         }
 
-        for (int i = selectedRange.getStartLine(); i <=
-                selectedRange.getEndLine();
-                i++) {
+        for (int i = selectedRange.getStartLine(); i 
+                <= selectedRange.getEndLine(); i++) {
             if (i != selectedRange.getStartLine()) {
                 selectedText.append('\n');
             }
@@ -245,7 +240,8 @@ public final class TextPane extends JComponent implements MouseWheelListener,
             }
             final String line = document.getLine(i).getText();
             if (!line.isEmpty()) {
-                if (selectedRange.getEndLine() == selectedRange.getStartLine()) {
+                if (selectedRange.getEndLine()
+                        == selectedRange.getStartLine()) {
                     //loop through range
                     if (selectedRange.getStartPos() != -1 && selectedRange.
                             getEndPos() != -1) {
@@ -264,6 +260,60 @@ public final class TextPane extends JComponent implements MouseWheelListener,
                     if (selectedRange.getEndPos() != -1) {
                         selectedText.append(line.substring(0, selectedRange.
                                 getEndPos()));
+                    }
+                } else {
+                    //loop the whole line
+                    selectedText.append(line);
+                }
+            }
+        }
+
+        return selectedText.toString();
+    }
+
+    /**
+     * Returns the selected text.
+     *
+     * @return Selected text
+     */
+    public String getStyledSelectedText() {
+        final StringBuffer selectedText = new StringBuffer();
+        final LinePosition selectedRange = canvas.getSelectedRange();
+
+        if (selectedRange.getStartLine() == -1) {
+            return null;
+        }
+
+        for (int i = selectedRange.getStartLine(); i
+                <= selectedRange.getEndLine(); i++) {
+            if (i != selectedRange.getStartLine()) {
+                selectedText.append('\n');
+            }
+            if (document.getNumLines() <= i) {
+                return selectedText.toString();
+            }
+            final String line = document.getLine(i).getStyledText();
+            if (!line.isEmpty()) {
+                if (selectedRange.getEndLine()
+                        == selectedRange.getStartLine()) {
+                    //loop through range
+                    if (selectedRange.getStartPos() != -1 && selectedRange.
+                            getEndPos() != -1) {
+                        selectedText.append(Styliser.getStyledText(line,
+                                selectedRange.getStartPos(),
+                                selectedRange.getEndPos()));
+                    }
+                } else if (i == selectedRange.getStartLine()) {
+                    //loop from start of range to the end
+                    if (selectedRange.getStartPos() != -1) {
+                        selectedText.append(Styliser.getStyledText(line,
+                                selectedRange.getStartPos(), line.length()));
+                    }
+                } else if (i == selectedRange.getEndLine()) {
+                    //loop from start to end of range
+                    if (selectedRange.getEndPos() != -1) {
+                        selectedText.append(Styliser.getStyledText(line, 0,
+                                selectedRange.getEndPos()));
                     }
                 } else {
                     //loop the whole line
@@ -335,9 +385,24 @@ public final class TextPane extends JComponent implements MouseWheelListener,
 
     /** Adds the selected text to the clipboard. */
     public void copy() {
+        copy(false);
+    }
+
+    /**
+     * Adds the selected text to the clipboard.
+     *
+     * @param copyControlCharacters Should we copy control codes, or strip them?
+     */
+    public void copy(final boolean copyControlCharacters) {
         if (getSelectedText() != null && !getSelectedText().isEmpty()) {
+            final String selectedText;
+            if (copyControlCharacters) {
+                selectedText = getStyledSelectedText();
+            } else {
+                selectedText = getSelectedText();
+            }
             Toolkit.getDefaultToolkit().getSystemClipboard().setContents(
-                    new StringSelection(getSelectedText()), null);
+                        new StringSelection(selectedText), null);
         }
     }
 

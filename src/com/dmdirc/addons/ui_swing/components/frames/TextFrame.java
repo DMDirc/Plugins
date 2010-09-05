@@ -38,6 +38,7 @@ import com.dmdirc.addons.ui_swing.components.SwingSearchBar;
 import com.dmdirc.addons.ui_swing.textpane.ClickTypeValue;
 import com.dmdirc.addons.ui_swing.textpane.MouseEventType;
 import com.dmdirc.addons.ui_swing.textpane.TextPane;
+import com.dmdirc.addons.ui_swing.textpane.TextPaneControlCodeCopyAction;
 import com.dmdirc.addons.ui_swing.textpane.TextPaneCopyAction;
 import com.dmdirc.addons.ui_swing.textpane.TextPaneEndAction;
 import com.dmdirc.addons.ui_swing.textpane.TextPaneHomeAction;
@@ -501,6 +502,9 @@ public abstract class TextFrame extends JInternalFrame implements Window,
 
         getSearchBar().getTextField().getInputMap().put(KeyStroke.getKeyStroke(
                 KeyEvent.VK_C, UIUtilities.getCtrlMask()), "textpaneCopy");
+        getSearchBar().getTextField().getInputMap().put(KeyStroke.getKeyStroke(
+                KeyEvent.VK_C, UIUtilities.getCtrlMask()
+                & KeyEvent.SHIFT_DOWN_MASK), "textpaneCopy");
         getSearchBar().getTextField().getActionMap().put("textpaneCopy",
                 new InputFieldCopyAction(getTextPane(),
                 getSearchBar().getTextField()));
@@ -889,6 +893,7 @@ public abstract class TextFrame extends JInternalFrame implements Window,
         }
 
         popupMenu.add(new TextPaneCopyAction(getTextPane()));
+        popupMenu.add(new TextPaneControlCodeCopyAction(textPane));
 
         addCustomPopupItems(popupMenu);
 
@@ -896,8 +901,8 @@ public abstract class TextFrame extends JInternalFrame implements Window,
     }
 
     /**
-     * Shows a popup menu at the specified point for the specified click type
-     * 
+     * Shows a popup menu at the specified point for the specified click type.
+     *
      * @param type ClickType Click type
      * @param point Point Point of the click (Must be screen coords)
      */

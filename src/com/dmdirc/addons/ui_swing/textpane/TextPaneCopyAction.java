@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_swing.textpane;
 
 import java.awt.event.ActionEvent;
+
 import javax.swing.AbstractAction;
 
 /**
@@ -55,7 +56,8 @@ public class TextPaneCopyAction extends AbstractAction {
      */
     @Override
     public void actionPerformed(final ActionEvent e) {
-        textpane.copy();
+        textpane.copy((e.getModifiers() & ActionEvent.SHIFT_MASK)
+                == ActionEvent.SHIFT_MASK);
     }
 
     /** {@inheritDoc}. */
