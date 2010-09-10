@@ -52,6 +52,7 @@ import java.awt.font.TextHitInfo;
 import java.awt.font.TextLayout;
 import java.text.AttributedCharacterIterator;
 import java.text.AttributedString;
+import java.text.BreakIterator;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -235,8 +236,8 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
             lineHeight += lineHeight * LINE_PADDING;
             paragraphStart = iterator.getBeginIndex();
             paragraphEnd = iterator.getEndIndex();
-            lineMeasurer = new LineBreakMeasurer(iterator,
-                    g.getFontRenderContext());
+            lineMeasurer = new LineBreakMeasurer(iterator, 
+                    new WhitespaceBreakIterator(), g.getFontRenderContext());
             lineMeasurer.setPosition(paragraphStart);
 
             final int wrappedLine = getNumWrappedLines(lineMeasurer,
