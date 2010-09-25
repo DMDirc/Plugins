@@ -49,6 +49,7 @@ import com.dmdirc.commandparser.PopupManager;
 import com.dmdirc.commandparser.PopupMenu;
 import com.dmdirc.commandparser.PopupMenuItem;
 import com.dmdirc.commandparser.PopupType;
+import com.dmdirc.commandparser.parsers.CommandParser;
 import com.dmdirc.commandparser.parsers.GlobalCommandParser;
 import com.dmdirc.config.ConfigManager;
 import com.dmdirc.interfaces.ConfigChangeListener;
@@ -60,6 +61,7 @@ import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.core.util.URLHandler;
 import com.dmdirc.ui.interfaces.InputWindow;
 import com.dmdirc.ui.interfaces.Window;
+import com.dmdirc.ui.messages.IRCDocument;
 import com.dmdirc.util.StringTranscoder;
 
 import java.awt.Container;
@@ -112,8 +114,8 @@ public abstract class TextFrame extends JInternalFrame implements Window,
     private StringTranscoder transcoder;
     /** Are we closing? */
     private boolean closing = false;
-    /** Input window for popup commands. */
-    private Window inputWindow;
+    /** Command parser for popup commands. */
+    private CommandParser commandParser;
     /** Swing controller. */
     private SwingController controller;
     /** Are we maximising/restoring? */
@@ -151,11 +153,10 @@ public abstract class TextFrame extends JInternalFrame implements Window,
             transcoder = new StringTranscoder(Charset.forName("UTF-8"));
         }
 
-        inputWindow = this;
-        while (!(inputWindow instanceof InputWindow) && inputWindow != null
-                && inputWindow.getContainer().getParent() != null) {
-            inputWindow = controller.getWindowFactory().getSwingWindow(
-                    inputWindow.getContainer().getParent());
+        if (this instanceof InputWindow) {
+            commandParser = ((InputWindow) this).getCommandParser();
+        } else {
+            commandParser = GlobalCommandParser.getGlobalCommandParser();
         }
 
         initComponents();
@@ -953,11 +954,8 @@ public abstract class TextFrame extends JInternalFrame implements Window,
                 menu.add(populatePopupMenu(new JMenu(menuItem.getName()),
                         menuItem.getSubMenu(), arguments));
             } else {
-                menu.add(new JMenuItem(new CommandAction(inputWindow == null ? GlobalCommandParser.
-                        getGlobalCommandParser()
-                        : ((InputWindow) inputWindow).getCommandParser(),
-                        (InputWindow) inputWindow, menuItem.getName(),
-                        menuItem.getCommand(arguments))));
+                menu.add(new JMenuItem(new CommandAction(commandParser, this,
+                        menuItem.getName(), menuItem.getCommand(arguments))));
             }
 
         }

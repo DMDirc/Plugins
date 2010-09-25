@@ -23,7 +23,7 @@
 package com.dmdirc.addons.ui_swing.actions;
 
 import com.dmdirc.commandparser.parsers.CommandParser;
-import com.dmdirc.ui.interfaces.InputWindow;
+import com.dmdirc.ui.interfaces.Window;
 
 import java.awt.event.ActionEvent;
 
@@ -44,8 +44,8 @@ public class CommandAction extends AbstractAction {
     /** Command parser. */
     private final CommandParser parser;
     
-    /** Input window. */
-    private final transient InputWindow window;
+    /** Window. */
+    private final transient Window window;
     
     /** Command. */
     private final String command;
@@ -54,11 +54,11 @@ public class CommandAction extends AbstractAction {
      * Creates a new instance of CommandAction. 
      *
      * @param parser Command parser
-     * @param window Input window
+     * @param window Window
      * @param name Command name
      * @param command Command to execute
      */
-    public CommandAction(final CommandParser parser, final InputWindow window,
+    public CommandAction(final CommandParser parser, final Window window,
             final String name, final String command) {
         super(name);
         
