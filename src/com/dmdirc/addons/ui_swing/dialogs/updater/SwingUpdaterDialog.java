@@ -125,6 +125,10 @@ public final class SwingUpdaterDialog extends StandardDialog implements
                 me = new SwingUpdaterDialog(updates, mainFrame);
             } else {
                 ((UpdateTableModel) me.table.getModel()).setUpdates(updates);
+                if (UpdateChecker.getStatus() == STATE.UPDATING) {
+                    me.getOkButton().setEnabled(false);
+                    me.getCancelButton().setVisible(false);
+                }
             }
         }
 
