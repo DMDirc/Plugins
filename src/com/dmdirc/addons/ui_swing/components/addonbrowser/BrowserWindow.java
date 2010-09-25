@@ -197,6 +197,12 @@ public class BrowserWindow extends JDialog implements ActionListener {
      * Loads addon data from the locally cached feed file.
      */
     public void loadData() {
+        final int selectedRow;
+        if (list.getRowCount() > 0 && list.getSelectedRow() > 0) {
+            selectedRow = list.getSelectedRow();
+        } else {
+            selectedRow = 0;
+        }
         ConfigFile data = new ConfigFile(Main.getConfigDir() + File.separator +
                 "addons.feed");
         try {
@@ -213,6 +219,8 @@ public class BrowserWindow extends JDialog implements ActionListener {
             final AddonInfo info = new AddonInfo(entry);
             list.getModel().addRow(new Object[]{new AddonInfoLabel(info, this), });
         }
+
+        list.getSelectionModel().setSelectionInterval(selectedRow, selectedRow);
     }
 
     /**
