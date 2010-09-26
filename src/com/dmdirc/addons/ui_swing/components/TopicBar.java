@@ -323,6 +323,12 @@ public class TopicBar extends JComponent implements ActionListener,
                 "ui", "inputbackgroundcolour", "ui", "backgroundcolour");
         foregroundColour = channel.getConfigManager().getOptionColour(
                 "ui", "inputforegroundcolour", "ui", "foregroundcolour");
+        if (backgroundColour == null) {
+            backgroundColour = Color.WHITE;
+        }
+        if (foregroundColour == null) {
+            foregroundColour = Color.BLACK;
+        }
         setBackground(backgroundColour);
         setForeground(foregroundColour);
         setDisabledTextColour(foregroundColour);
