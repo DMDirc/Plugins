@@ -357,7 +357,10 @@ public final class WindowMenuFrameManager extends JMenu implements
      * @param window parent to inform
      */
     protected void parentSelection(final FrameContainer window) {
-        menus.get(window).childSelected();
+        final FrameContainerMenu menuItem = menus.get(window);
+        if (menuItem != null) {
+            menuItem.childSelected();
+        }
     }
 
     /**
