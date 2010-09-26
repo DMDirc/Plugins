@@ -68,15 +68,15 @@ public final class TextPane extends JComponent implements MouseWheelListener,
     /** Parent Frame. */
     private final Window frame;
 
-    /** 
-     * Creates a new instance of TextPane. 
+    /**
+     * Creates a new instance of TextPane.
      *
      * @param frame Parent Frame
      */
     public TextPane(final Window frame) {
         super();
         this.frame = frame;
-        
+
         setUI(new TextPaneUI());
         document = frame.getContainer().getDocument();
 
@@ -219,56 +219,11 @@ public final class TextPane extends JComponent implements MouseWheelListener,
 
     /**
      * Returns the selected text.
-     * 
+     *
      * @return Selected text
      */
     public String getSelectedText() {
-        final StringBuffer selectedText = new StringBuffer();
-        final LinePosition selectedRange = canvas.getSelectedRange();
-
-        if (selectedRange.getStartLine() == -1) {
-            return null;
-        }
-
-        for (int i = selectedRange.getStartLine(); i 
-                <= selectedRange.getEndLine(); i++) {
-            if (i != selectedRange.getStartLine()) {
-                selectedText.append('\n');
-            }
-            if (document.getNumLines() <= i) {
-                return selectedText.toString();
-            }
-            final String line = document.getLine(i).getText();
-            if (!line.isEmpty()) {
-                if (selectedRange.getEndLine()
-                        == selectedRange.getStartLine()) {
-                    //loop through range
-                    if (selectedRange.getStartPos() != -1 && selectedRange.
-                            getEndPos() != -1) {
-                        selectedText.append(line.substring(
-                                selectedRange.getStartPos(),
-                                selectedRange.getEndPos()));
-                    }
-                } else if (i == selectedRange.getStartLine()) {
-                    //loop from start of range to the end
-                    if (selectedRange.getStartPos() != -1) {
-                        selectedText.append(line.substring(
-                                selectedRange.getStartPos(), line.length()));
-                    }
-                } else if (i == selectedRange.getEndLine()) {
-                    //loop from start to end of range
-                    if (selectedRange.getEndPos() != -1) {
-                        selectedText.append(line.substring(0, selectedRange.
-                                getEndPos()));
-                    }
-                } else {
-                    //loop the whole line
-                    selectedText.append(line);
-                }
-            }
-        }
-
-        return selectedText.toString();
+        return getSelectedText(false);
     }
 
     /**
@@ -277,6 +232,17 @@ public final class TextPane extends JComponent implements MouseWheelListener,
      * @return Selected text
      */
     public String getStyledSelectedText() {
+        return getSelectedText(true);
+    }
+
+    /**
+     * Returns the selected text.
+     *
+     * @param styled Return styled text?
+     *
+     * @return Selected text
+     */
+    public String getSelectedText(final boolean styled) {
         final StringBuffer selectedText = new StringBuffer();
         final LinePosition selectedRange = canvas.getSelectedRange();
 
@@ -292,37 +258,61 @@ public final class TextPane extends JComponent implements MouseWheelListener,
             if (document.getNumLines() <= i) {
                 return selectedText.toString();
             }
-            final String line = document.getLine(i).getStyledText();
+            final String line;
+            if (styled) {
+                line = document.getLine(i).getStyledText();
+            } else {
+                line = document.getLine(i).getText();
+            }
             if (!line.isEmpty()) {
                 if (selectedRange.getEndLine()
                         == selectedRange.getStartLine()) {
                     //loop through range
                     if (selectedRange.getStartPos() != -1 && selectedRange.
                             getEndPos() != -1) {
-                        selectedText.append(Styliser.getStyledText(line,
+                        selectedText.append(getText(line,
                                 selectedRange.getStartPos(),
-                                selectedRange.getEndPos()));
+                                selectedRange.getEndPos(), styled));
                     }
                 } else if (i == selectedRange.getStartLine()) {
                     //loop from start of range to the end
                     if (selectedRange.getStartPos() != -1) {
-                        selectedText.append(Styliser.getStyledText(line,
-                                selectedRange.getStartPos(), line.length()));
+                        selectedText.append(getText(line, selectedRange
+                                .getStartPos(), line.length(), styled));
                     }
                 } else if (i == selectedRange.getEndLine()) {
                     //loop from start to end of range
                     if (selectedRange.getEndPos() != -1) {
-                        selectedText.append(Styliser.getStyledText(line, 0,
-                                selectedRange.getEndPos()));
+                        selectedText.append(getText(line, 0, selectedRange
+                                .getEndPos(), styled));
                     }
                 } else {
                     //loop the whole line
-                    selectedText.append(line);
+                    selectedText.append(getText(line, 0, line.length(), styled));
                 }
             }
         }
 
         return selectedText.toString();
+    }
+
+    /**
+     * Gets a range of text (styled or unstyled) from the given text.
+     *
+     * @param text Text to extract text from
+     * @param start Start index
+     * @param end End index
+     * @param styled Styled text?
+     *
+     * @return Requested text range as a String
+     */
+    private String getText(final String text, final int start, final int end,
+            final boolean styled) {
+        if (styled) {
+            return Styliser.getStyledText(text, start, end);
+        } else {
+            return text.substring(start, end);
+        }
     }
 
     /**
@@ -336,7 +326,7 @@ public final class TextPane extends JComponent implements MouseWheelListener,
 
     /**
      * Returns whether there is a selected range.
-     * 
+     *
      * @return true iif there is a selected range
      */
     public boolean hasSelectedRange() {
@@ -356,9 +346,9 @@ public final class TextPane extends JComponent implements MouseWheelListener,
 
     /**
      * Returns the type of text this click represents.
-     * 
+     *
      * @param lineInfo Line info of click.
-     * 
+     *
      * @return Click type for specified position
      */
     public ClickTypeValue getClickType(final LineInfo lineInfo) {
@@ -367,10 +357,10 @@ public final class TextPane extends JComponent implements MouseWheelListener,
 
     /**
      * Returns the surrouding word at the specified position.
-     * 
+     *
      * @param lineNumber Line number to get word from
      * @param index Position to get surrounding word
-     * 
+     *
      * @return Surrounding word
      */
     public String getWordAtIndex(final int lineNumber, final int index) {
@@ -395,14 +385,9 @@ public final class TextPane extends JComponent implements MouseWheelListener,
      */
     public void copy(final boolean copyControlCharacters) {
         if (getSelectedText() != null && !getSelectedText().isEmpty()) {
-            final String selectedText;
-            if (copyControlCharacters) {
-                selectedText = getStyledSelectedText();
-            } else {
-                selectedText = getSelectedText();
-            }
             Toolkit.getDefaultToolkit().getSystemClipboard().setContents(
-                        new StringSelection(selectedText), null);
+                        new StringSelection(getSelectedText(
+                        copyControlCharacters)), null);
         }
     }
 
@@ -514,7 +499,7 @@ public final class TextPane extends JComponent implements MouseWheelListener,
 
     /**
      * Retrieves this textpane's IRCDocument.
-     * 
+     *
      * @return This textpane's IRC document
      */
     public IRCDocument getDocument() {
@@ -523,7 +508,7 @@ public final class TextPane extends JComponent implements MouseWheelListener,
 
     /**
      * Retrives the parent window for this textpane.
-     * 
+     *
      * @return Parent window
      */
     public Window getWindow() {
