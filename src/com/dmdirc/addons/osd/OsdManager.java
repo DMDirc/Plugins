@@ -176,4 +176,13 @@ public class OsdManager {
     public int getWindowCount() {
         return windowList.size();
     }
+
+    /**
+     * Return the current plugin.
+     *
+     * @return Returns current plugin instance.
+     */
+    public OsdPlugin getPlugin() {
+        return plugin;
+    }
 }
