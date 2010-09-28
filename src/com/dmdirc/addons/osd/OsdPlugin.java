@@ -66,7 +66,8 @@ public final class OsdPlugin extends Plugin implements CategoryChangeListener,
      * maxWindowSetting not used at present so comment out
      */
     private PreferencesSetting fontSizeSetting, backgroundSetting,
-            foregroundSetting, widthSetting, timeoutSetting, maxWindowsSetting;
+            foregroundSetting, widthSetting, timeoutSetting, maxWindowsSetting,
+            indefiniteSetting;
 
     /**
      * Creates a new instance of OsdPlugin.
@@ -110,8 +111,8 @@ public final class OsdPlugin extends Plugin implements CategoryChangeListener,
         widthSetting = new PreferencesSetting(PreferencesType.INTEGER,
                 getDomain(), "width", "OSD Width", "Width of the OSD Window").
                 registerChangeListener(this);
-        timeoutSetting = new PreferencesSetting(PreferencesType.INTEGER,
-                new NumericalValidator(1, Integer.MAX_VALUE),
+        timeoutSetting = new PreferencesSetting(PreferencesType.OPTIONALINTEGER,
+                new OptionalValidator(new NumericalValidator(1, Integer.MAX_VALUE)),
                 getDomain(), "timeout", "Timeout", "Length of time in " +
                 "seconds before the OSD window closes");
         maxWindowsSetting = new PreferencesSetting(PreferencesType.OPTIONALINTEGER,

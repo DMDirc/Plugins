@@ -78,6 +78,9 @@ public class OsdWindow extends JDialog implements MouseListener,
     /** Is this a config instance? */
     private final boolean config;
 
+    /** Timeout before the windows are automatically closed */
+    private final Integer timeout;
+
     /**
      * Creates a new instance of OsdWindow.
      *
@@ -96,6 +99,8 @@ public class OsdWindow extends JDialog implements MouseListener,
 
         this.config = config;
         this.osdManager = osdManager;
+        this.timeout = IdentityManager.getGlobalConfig()
+            .getOptionInt(osdManager.getPlugin().getDomain(), "timeout");
 
         setFocusableWindowState(false);
         setAlwaysOnTop(true);
@@ -136,15 +141,17 @@ public class OsdWindow extends JDialog implements MouseListener,
             addMouseListener(this);
         } else {
             addMouseListener(this);
-            new Timer("OSD Display Timer").schedule(new TimerTask() {
+            if (timeout != null) {
+                new Timer("OSD Display Timer").schedule(new TimerTask() {
 
-                /** {@inheritDoc} */
-                @Override
-                public void run() {
-                    osdManager.closeWindow(OsdWindow.this);
-                }
-            }, Math.max(IdentityManager.getGlobalConfig().getOptionInt(plugin
-                    .getDomain(), "timeout"), 1) * 1000);
+                    /** {@inheritDoc} */
+                    @Override
+                    public void run() {
+                        osdManager.closeWindow(OsdWindow.this);
+                    }
+                }, Math.max(IdentityManager.getGlobalConfig().getOptionInt(plugin
+                        .getDomain(), "timeout"), 1) * 1000);
+            }
         }
     }
 
