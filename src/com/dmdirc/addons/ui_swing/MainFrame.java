@@ -55,7 +55,6 @@ import java.lang.reflect.InvocationTargetException;
 import javax.swing.ImageIcon;
 import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
-import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.MenuSelectionManager;
@@ -127,6 +126,8 @@ public final class MainFrame extends JFrame implements WindowListener,
                 this);
         IdentityManager.getGlobalConfig().addChangeListener("ui",
                 "framemanager", this);
+        IdentityManager.getGlobalConfig().addChangeListener("ui",
+                "framemanagerPosition", this);
         IdentityManager.getGlobalConfig().addChangeListener("icon", "icon",
                 this);
 
@@ -569,7 +570,7 @@ public final class MainFrame extends JFrame implements WindowListener,
         if ("ui".equals(domain)) {
             if ("lookandfeel".equals(key)) {
                 controller.updateLookAndFeel();
-            } else if ("framemanager".equals(key)) {
+            } else if ("framemanager".equals(key) || "framemanagerPosition".equals(key)) {
                 UIUtilities.invokeLater(new Runnable() {
 
                     /** {@inheritDoc} */
