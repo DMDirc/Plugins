@@ -86,6 +86,8 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
     private final Map<Rectangle, TextLayout> positions;
     /** TextLayout -> Line numbers. */
     private final Map<TextLayout, LineInfo> textLayouts;
+    /** Saved positions. */
+    private final Map<TextLayout, Point> savedPositions;
     /** Start line. */
     private int startLine;
     /** Selection. */
@@ -106,6 +108,8 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
     private boolean quickCopy;
     /** Mouse click listeners. */
     private final ListenerList listeners = new ListenerList();
+    /** Is cache stale? */
+    private boolean staleCache = true;
 
     /**
      * Creates a new text pane canvas.
@@ -125,6 +129,7 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
         setOpaque(true);
         textLayouts = new HashMap<TextLayout, LineInfo>();
         positions = new HashMap<Rectangle, TextLayout>();
+        savedPositions = new HashMap<TextLayout, Point>();
         selection = new LinePosition(-1, -1, -1, -1);
         addMouseListener(this);
         addMouseMotionListener(this);
@@ -154,16 +159,25 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
         g.fill(g.getClipBounds());
         UIUtilities.paintBackground(g, getBounds(), backgroundImage,
                 backgroundOption);
-        paintOntoGraphics(g);
+        if (staleCache) {
+            paintOntoGraphics(g);
+            staleCache = false;
+        } else {
+            for (Map.Entry<TextLayout, Point> entry : savedPositions
+                    .entrySet()) {
+                g.setColor(textPane.getForeground());
+                entry.getKey().draw(g, (float) entry.getValue().getX(),
+                        (float) entry.getValue().getY());
+            }
+        }
     }
 
     /**
      * Re calculates positions of lines and repaints if required.
      */
     protected void recalc() {
-        if (isVisible()) {
-            repaint();
-        }
+        staleCache = true;
+        repaint();
     }
 
     /**
@@ -206,6 +220,7 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
 
         textLayouts.clear();
         positions.clear();
+        savedPositions.clear();
 
         //check theres something to draw and theres some space to draw in
         if (document.getNumLines() == 0 || formatWidth < 1) {
@@ -277,6 +292,8 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
                     g.setColor(textPane.getForeground());
 
                     layout.draw(g, drawPosX, drawPosY + layout.getDescent());
+                    savedPositions.put(layout, new Point((int) drawPosX,
+                            (int) (drawPosY + layout.getDescent())));
                     doHighlight(line, chars, layout, g, drawPosY, drawPosX);
                     firstVisibleLine = line;
                     textLayouts.put(layout, new LineInfo(line, numberOfWraps));
