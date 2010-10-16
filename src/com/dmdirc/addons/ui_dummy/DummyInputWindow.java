@@ -63,8 +63,9 @@ public class DummyInputWindow implements InputWindow {
 
     /** {@inheritDoc} */
     @Override
+    @Deprecated
     public CommandParser getCommandParser() {
-        return commandParser;
+        return getContainer().getCommandParser();
     }
 
     /** {@inheritDoc} */

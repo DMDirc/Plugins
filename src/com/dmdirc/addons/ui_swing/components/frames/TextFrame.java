@@ -79,7 +79,18 @@ import java.nio.charset.IllegalCharsetNameException;
 import java.nio.charset.UnsupportedCharsetException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.JComponent;
+import javax.swing.JInternalFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
+import javax.swing.JSeparator;
+import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.WindowConstants;
 import javax.swing.event.InternalFrameEvent;
 import javax.swing.event.InternalFrameListener;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
@@ -115,9 +126,9 @@ public abstract class TextFrame extends JInternalFrame implements Window,
     /** Are we closing? */
     private boolean closing = false;
     /** Command parser for popup commands. */
-    private CommandParser commandParser;
+    private final CommandParser commandParser;
     /** Swing controller. */
-    private SwingController controller;
+    private final SwingController controller;
     /** Are we maximising/restoring? */
     private AtomicBoolean maximiseRestoreInProgress = new AtomicBoolean(false);
     /** Content pane. */
@@ -161,8 +172,8 @@ public abstract class TextFrame extends JInternalFrame implements Window,
         setResizable(true);
         setIconifiable(true);
         setFocusable(true);
-        setPreferredSize(new Dimension(controller.getMainFrame().getWidth() / 2, controller.
-                getMainFrame().getHeight() / 3));
+        setPreferredSize(new Dimension(controller.getMainFrame().getWidth() / 2,
+                controller.getMainFrame().getHeight() / 3));
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
         addPropertyChangeListener("UI", this);
@@ -186,7 +197,7 @@ public abstract class TextFrame extends JInternalFrame implements Window,
 
     /**
      * Locate the appropriate command parser in the window heirarchy.
-     * 
+     *
      * @return Closest command parser in the tree
      */
     private CommandParser findCommandParser() {
@@ -198,7 +209,8 @@ public abstract class TextFrame extends JInternalFrame implements Window,
                     inputWindow.getContainer().getParent());
         }
         if (inputWindow instanceof InputWindow) {
-            localParser = ((InputWindow) inputWindow).getCommandParser();
+            localParser = ((InputWindow) inputWindow).getContainer()
+                    .getCommandParser();
         }
 
         if (localParser == null) {
@@ -216,7 +228,7 @@ public abstract class TextFrame extends JInternalFrame implements Window,
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @deprecated Should use {@link FrameContainer#setTitle(java.lang.String)}
      */
     @Override
@@ -234,7 +246,7 @@ public abstract class TextFrame extends JInternalFrame implements Window,
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @deprecated Use {@link FrameContainer#getTitle()} instead
      */
     @Override
@@ -353,7 +365,8 @@ public abstract class TextFrame extends JInternalFrame implements Window,
                         setIcon(true);
                     }
                 } catch (PropertyVetoException ex) {
-                    Logger.userError(ErrorLevel.LOW, "Unable to minimise frame");
+                    Logger.userError(ErrorLevel.LOW,
+                            "Unable to minimise frame");
                 }
             }
         });
@@ -385,7 +398,8 @@ public abstract class TextFrame extends JInternalFrame implements Window,
                     setMaximum(true);
                     LOGGER.finest("maximise(): Done?");
                 } catch (PropertyVetoException ex) {
-                    Logger.userError(ErrorLevel.LOW, "Unable to minimise frame");
+                    Logger.userError(ErrorLevel.LOW,
+                            "Unable to minimise frame");
                 }
                 maximiseRestoreInProgress.set(false);
 
@@ -414,7 +428,8 @@ public abstract class TextFrame extends JInternalFrame implements Window,
                     }
                     setMaximum(false);
                 } catch (PropertyVetoException ex) {
-                    Logger.userError(ErrorLevel.LOW, "Unable to minimise frame");
+                    Logger.userError(ErrorLevel.LOW,
+                            "Unable to minimise frame");
                 }
                 maximiseRestoreInProgress.set(false);
             }
@@ -440,7 +455,7 @@ public abstract class TextFrame extends JInternalFrame implements Window,
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @deprecated Use corresponding methods in {@link FrameContainer} instead
      */
     @Override
@@ -451,7 +466,7 @@ public abstract class TextFrame extends JInternalFrame implements Window,
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @deprecated Use corresponding methods in {@link FrameContainer} instead
      */
     @Override
@@ -462,19 +477,21 @@ public abstract class TextFrame extends JInternalFrame implements Window,
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @deprecated Use corresponding methods in {@link FrameContainer} instead
      */
     @Override
     @Deprecated
-    public final void addLine(final StringBuffer messageType, final Object... args) {
+    public final void addLine(final StringBuffer messageType,
+            final Object... args) {
         frameParent.addLine(messageType, args);
     }
 
     /**
      * {@inheritDoc}
-     * 
-     * @deprecated Call {@link IRCDocument#clear()} via {@link FrameContainer#getDocument()}
+     *
+     * @deprecated Call {@link IRCDocument#clear()} via
+     * {@link FrameContainer#getDocument()}
      */
     @Override
     @Deprecated
@@ -542,13 +559,14 @@ public abstract class TextFrame extends JInternalFrame implements Window,
     /**
      * Removes and reinserts the border of an internal frame on maximising.
      * {@inheritDoc}
-     * 
+     *
      * @param event Property change event
      */
     @Override
     public final void propertyChange(final PropertyChangeEvent event) {
         LOGGER.finer("Property change: name: " + event.getPropertyName()
-                + " value: " + event.getOldValue() + "->" + event.getNewValue());
+                + " value: " + event.getOldValue() + "->"
+                + event.getNewValue());
         if ("UI".equals(event.getPropertyName())) {
             if (isMaximum()) {
                 hideTitlebar();
@@ -591,7 +609,8 @@ public abstract class TextFrame extends JInternalFrame implements Window,
                 final String componentUI = (String) UIManager.get(
                         "InternalFrameUI");
 
-                if ("javax.swing.plaf.synth.SynthLookAndFeel".equals(componentUI)) {
+                if ("javax.swing.plaf.synth.SynthLookAndFeel"
+                        .equals(componentUI)) {
                     temp = SynthLookAndFeel.createUI(TextFrame.this);
                 } else {
                     try {
@@ -642,7 +661,7 @@ public abstract class TextFrame extends JInternalFrame implements Window,
 
     /**
      * Not needed for this class. {@inheritDoc}
-     * 
+     *
      * @param event Internal frame event
      */
     @Override
@@ -652,7 +671,7 @@ public abstract class TextFrame extends JInternalFrame implements Window,
 
     /**
      * Not needed for this class. {@inheritDoc}
-     * 
+     *
      * @param event Internal frame event
      */
     @Override
@@ -670,7 +689,7 @@ public abstract class TextFrame extends JInternalFrame implements Window,
 
     /**
      * Not needed for this class. {@inheritDoc}
-     * 
+     *
      * @param event Internal frame event
      */
     @Override
@@ -680,7 +699,7 @@ public abstract class TextFrame extends JInternalFrame implements Window,
 
     /**
      * Makes the internal frame invisible. {@inheritDoc}
-     * 
+     *
      * @param event Internal frame event
      */
     @Override
@@ -696,7 +715,7 @@ public abstract class TextFrame extends JInternalFrame implements Window,
 
     /**
      * Not needed for this class. {@inheritDoc}
-     * 
+     *
      * @param event Internal frame event
      */
     @Override
@@ -706,7 +725,7 @@ public abstract class TextFrame extends JInternalFrame implements Window,
 
     /**
      * Activates the input field on frame focus. {@inheritDoc}
-     * 
+     *
      * @param event Internal frame event
      */
     @Override
@@ -731,7 +750,7 @@ public abstract class TextFrame extends JInternalFrame implements Window,
 
     /**
      * Not needed for this class. {@inheritDoc}
-     * 
+     *
      * @param event Internal frame event
      */
     @Override
@@ -749,7 +768,7 @@ public abstract class TextFrame extends JInternalFrame implements Window,
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @deprecated Use {@link FrameContainer#getConfigManager()}
      */
     @Deprecated
@@ -768,7 +787,7 @@ public abstract class TextFrame extends JInternalFrame implements Window,
     }
 
     /**
-     * {@inheritDoc} 
+     * {@inheritDoc}
      *
      * @deprecated Use {@link FrameContainer#getTranscoder()} instead
      */
@@ -819,7 +838,8 @@ public abstract class TextFrame extends JInternalFrame implements Window,
                     if (ActionManager.processEvent(
                             CoreActionType.LINK_URL_CLICKED, null, this,
                             clicktype.getValue())) {
-                        URLHandler.getURLHander().launchApp(clicktype.getValue());
+                        URLHandler.getURLHander().launchApp(
+                                clicktype.getValue());
                     }
                     break;
                 case NICKNAME:
@@ -839,42 +859,42 @@ public abstract class TextFrame extends JInternalFrame implements Window,
 
     /**
      * What popup type should be used for popup menus for nicknames
-     * 
+     *
      * @return Appropriate popuptype for this frame
      */
     public abstract PopupType getNicknamePopupType();
 
     /**
      * What popup type should be used for popup menus for channels
-     * 
+     *
      * @return Appropriate popuptype for this frame
      */
     public abstract PopupType getChannelPopupType();
 
     /**
      * What popup type should be used for popup menus for hyperlinks
-     * 
+     *
      * @return Appropriate popuptype for this frame
      */
     public abstract PopupType getHyperlinkPopupType();
 
     /**
      * What popup type should be used for popup menus for normal clicks
-     * 
+     *
      * @return Appropriate popuptype for this frame
      */
     public abstract PopupType getNormalPopupType();
 
     /**
      * A method called to add custom popup items.
-     * 
+     *
      * @param popupMenu Popup menu to add popup items to
      */
     public abstract void addCustomPopupItems(final JPopupMenu popupMenu);
 
     /**
-     * Shows a popup menu at the specified point for the specified click type
-     * 
+     * Shows a popup menu at the specified point for the specified click type.
+     *
      * @param type ClickType Click type
      * @param point Point Point of the click
      * @param argument Word under the click
@@ -885,7 +905,8 @@ public abstract class TextFrame extends JInternalFrame implements Window,
 
         switch (type.getType()) {
             case CHANNEL:
-                popupMenu = getPopupMenu(getChannelPopupType(), type.getValue());
+                popupMenu = getPopupMenu(getChannelPopupType(),
+                        type.getValue());
                 popupMenu.add(new ChannelCopyAction(type.getValue()));
                 if (popupMenu.getComponentCount() > 1) {
                     popupMenu.addSeparator();
@@ -893,7 +914,8 @@ public abstract class TextFrame extends JInternalFrame implements Window,
 
                 break;
             case HYPERLINK:
-                popupMenu = getPopupMenu(getHyperlinkPopupType(), type.getValue());
+                popupMenu = getPopupMenu(getHyperlinkPopupType(),
+                        type.getValue());
                 popupMenu.add(new HyperlinkCopyAction(type.getValue()));
                 if (popupMenu.getComponentCount() > 1) {
                     popupMenu.addSeparator();
@@ -901,7 +923,8 @@ public abstract class TextFrame extends JInternalFrame implements Window,
 
                 break;
             case NICKNAME:
-                popupMenu = getPopupMenu(getNicknamePopupType(), type.getValue());
+                popupMenu = getPopupMenu(getNicknamePopupType(),
+                        type.getValue());
                 if (popupMenu.getComponentCount() > 0) {
                     popupMenu.addSeparator();
                 }
@@ -935,10 +958,10 @@ public abstract class TextFrame extends JInternalFrame implements Window,
 
     /**
      * Builds a popup menu of a specified type
-     * 
+     *
      * @param type type of menu to build
      * @param arguments Arguments for the command
-     * 
+     *
      * @return PopupMenu
      */
     public JPopupMenu getPopupMenu(
@@ -956,12 +979,12 @@ public abstract class TextFrame extends JInternalFrame implements Window,
     }
 
     /**
-     * Populates the specified popupmenu
-     * 
+     * Populates the specified popupmenu.
+     *
      * @param menu Menu component
      * @param popup Popup to get info from
      * @param arguments Arguments for the command
-     * 
+     *
      * @return Populated popup
      */
     private JComponent populatePopupMenu(final JComponent menu,
@@ -1026,13 +1049,15 @@ public abstract class TextFrame extends JInternalFrame implements Window,
 
     /** {@inheritDoc} */
     @Override
-    public void nameChanged(final FrameContainer<?> window, final String name) {
+    public void nameChanged(final FrameContainer<?> window,
+            final String name) {
         //Ignore
     }
 
     /** {@inheritDoc} */
     @Override
-    public void titleChanged(final FrameContainer<?> window, final String title) {
+    public void titleChanged(final FrameContainer<?> window,
+            final String title) {
         UIUtilities.invokeLater(new Runnable() {
 
             /** {@inheritDoc} */
