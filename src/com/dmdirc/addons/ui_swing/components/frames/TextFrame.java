@@ -153,18 +153,7 @@ public abstract class TextFrame extends JInternalFrame implements Window,
             transcoder = new StringTranscoder(Charset.forName("UTF-8"));
         }
 
-        //locate appropriate command parser in window hierarchy
-        Window inputWindow = this;
-        while (!(inputWindow instanceof InputWindow) && inputWindow != null
-                && inputWindow.getContainer().getParent() != null) {
-            inputWindow = controller.getWindowFactory().getSwingWindow(
-                    inputWindow.getContainer().getParent());
-        }
-        if (inputWindow instanceof InputWindow) {
-            commandParser = ((InputWindow) inputWindow).getCommandParser();
-        } else {
-            commandParser = GlobalCommandParser.getGlobalCommandParser();
-        }
+        updateInputCommandParser();
 
         initComponents();
         setMaximizable(true);
@@ -193,6 +182,23 @@ public abstract class TextFrame extends JInternalFrame implements Window,
 
         panel = new JPanel(new MigLayout("fill"));
         super.getContentPane().add(panel);
+    }
+
+    private void updateInputCommandParser() {
+        //locate appropriate command parser in window hierarchy
+        Window inputWindow = this;
+        while (!(inputWindow instanceof InputWindow) && inputWindow != null
+                && inputWindow.getContainer().getParent() != null) {
+            inputWindow = controller.getWindowFactory().getSwingWindow(
+                    inputWindow.getContainer().getParent());
+        }
+        if (inputWindow instanceof InputWindow) {
+            commandParser = ((InputWindow) inputWindow).getCommandParser();
+        }
+
+        if (commandParser == null) {
+            commandParser = GlobalCommandParser.getGlobalCommandParser();
+        }
     }
 
     /** {@inheritDoc} */
