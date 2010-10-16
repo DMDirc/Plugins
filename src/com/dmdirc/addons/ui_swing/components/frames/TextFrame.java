@@ -153,18 +153,7 @@ public abstract class TextFrame extends JInternalFrame implements Window,
             transcoder = new StringTranscoder(Charset.forName("UTF-8"));
         }
 
-        //locate appropriate command parser in window hierarchy
-        Window inputWindow = this;
-        while (!(inputWindow instanceof InputWindow) && inputWindow != null
-                && inputWindow.getContainer().getParent() != null) {
-            inputWindow = controller.getWindowFactory().getSwingWindow(
-                    inputWindow.getContainer().getParent());
-        }
-        if (inputWindow instanceof InputWindow) {
-            commandParser = ((InputWindow) inputWindow).getCommandParser();
-        } else {
-            commandParser = GlobalCommandParser.getGlobalCommandParser();
-        }
+        getInputCommandParser();
 
         initComponents();
         setMaximizable(true);
@@ -193,6 +182,23 @@ public abstract class TextFrame extends JInternalFrame implements Window,
 
         panel = new JPanel(new MigLayout("fill"));
         super.getContentPane().add(panel);
+    }
+
+    public void getInputCommandParser() {
+        //locate appropriate command parser in window hierarchy
+        Window inputWindow = this;
+        while (!(inputWindow instanceof InputWindow) && inputWindow != null
+                && inputWindow.getContainer().getParent() != null) {
+            inputWindow = controller.getWindowFactory().getSwingWindow(
+                    inputWindow.getContainer().getParent());
+        }
+        if (inputWindow instanceof InputWindow) {
+            commandParser = ((InputWindow) inputWindow).getCommandParser();
+        }
+
+        if (commandParser == null) {
+            commandParser = GlobalCommandParser.getGlobalCommandParser();
+        }
     }
 
     /** {@inheritDoc} */
@@ -961,6 +967,8 @@ public abstract class TextFrame extends JInternalFrame implements Window,
                 menu.add(populatePopupMenu(new JMenu(menuItem.getName()),
                         menuItem.getSubMenu(), arguments));
             } else {
+                //TODO remove this hack
+                getInputCommandParser();
                 menu.add(new JMenuItem(new CommandAction(commandParser, this,
                         menuItem.getName(), menuItem.getCommand(arguments))));
             }
