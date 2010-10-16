@@ -115,14 +115,11 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
                 .getChannelClients());
     }
 
-    /**
-     * Retrieves the command Parser for this command window.
-     *
-     * @return This window's command Parser
-     */
+    /** {@inheritDoc} */
     @Override
+    @Deprecated
     public CommandParser getCommandParser() {
-        return commandParser;
+        return getContainer().getCommandParser();
     }
 
     /** {@inheritDoc} */

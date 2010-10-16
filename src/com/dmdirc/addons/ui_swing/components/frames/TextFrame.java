@@ -193,7 +193,8 @@ public abstract class TextFrame extends JInternalFrame implements Window,
                     inputWindow.getContainer().getParent());
         }
         if (inputWindow instanceof InputWindow) {
-            commandParser = ((InputWindow) inputWindow).getCommandParser();
+            commandParser = ((InputWindow) inputWindow).getContainer()
+                    .getCommandParser();
         }
 
         if (commandParser == null) {
@@ -209,7 +210,7 @@ public abstract class TextFrame extends JInternalFrame implements Window,
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @deprecated Should use {@link FrameContainer#setTitle(java.lang.String)}
      */
     @Override
@@ -227,7 +228,7 @@ public abstract class TextFrame extends JInternalFrame implements Window,
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @deprecated Use {@link FrameContainer#getTitle()} instead
      */
     @Override
@@ -433,7 +434,7 @@ public abstract class TextFrame extends JInternalFrame implements Window,
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @deprecated Use corresponding methods in {@link FrameContainer} instead
      */
     @Override
@@ -444,7 +445,7 @@ public abstract class TextFrame extends JInternalFrame implements Window,
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @deprecated Use corresponding methods in {@link FrameContainer} instead
      */
     @Override
@@ -455,7 +456,7 @@ public abstract class TextFrame extends JInternalFrame implements Window,
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @deprecated Use corresponding methods in {@link FrameContainer} instead
      */
     @Override
@@ -466,7 +467,7 @@ public abstract class TextFrame extends JInternalFrame implements Window,
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @deprecated Call {@link IRCDocument#clear()} via {@link FrameContainer#getDocument()}
      */
     @Override
@@ -535,7 +536,7 @@ public abstract class TextFrame extends JInternalFrame implements Window,
     /**
      * Removes and reinserts the border of an internal frame on maximising.
      * {@inheritDoc}
-     * 
+     *
      * @param event Property change event
      */
     @Override
@@ -635,7 +636,7 @@ public abstract class TextFrame extends JInternalFrame implements Window,
 
     /**
      * Not needed for this class. {@inheritDoc}
-     * 
+     *
      * @param event Internal frame event
      */
     @Override
@@ -645,7 +646,7 @@ public abstract class TextFrame extends JInternalFrame implements Window,
 
     /**
      * Not needed for this class. {@inheritDoc}
-     * 
+     *
      * @param event Internal frame event
      */
     @Override
@@ -663,7 +664,7 @@ public abstract class TextFrame extends JInternalFrame implements Window,
 
     /**
      * Not needed for this class. {@inheritDoc}
-     * 
+     *
      * @param event Internal frame event
      */
     @Override
@@ -673,7 +674,7 @@ public abstract class TextFrame extends JInternalFrame implements Window,
 
     /**
      * Makes the internal frame invisible. {@inheritDoc}
-     * 
+     *
      * @param event Internal frame event
      */
     @Override
@@ -689,7 +690,7 @@ public abstract class TextFrame extends JInternalFrame implements Window,
 
     /**
      * Not needed for this class. {@inheritDoc}
-     * 
+     *
      * @param event Internal frame event
      */
     @Override
@@ -699,7 +700,7 @@ public abstract class TextFrame extends JInternalFrame implements Window,
 
     /**
      * Activates the input field on frame focus. {@inheritDoc}
-     * 
+     *
      * @param event Internal frame event
      */
     @Override
@@ -724,7 +725,7 @@ public abstract class TextFrame extends JInternalFrame implements Window,
 
     /**
      * Not needed for this class. {@inheritDoc}
-     * 
+     *
      * @param event Internal frame event
      */
     @Override
@@ -742,7 +743,7 @@ public abstract class TextFrame extends JInternalFrame implements Window,
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @deprecated Use {@link FrameContainer#getConfigManager()}
      */
     @Deprecated
@@ -761,7 +762,7 @@ public abstract class TextFrame extends JInternalFrame implements Window,
     }
 
     /**
-     * {@inheritDoc} 
+     * {@inheritDoc}
      *
      * @deprecated Use {@link FrameContainer#getTranscoder()} instead
      */
@@ -832,42 +833,42 @@ public abstract class TextFrame extends JInternalFrame implements Window,
 
     /**
      * What popup type should be used for popup menus for nicknames
-     * 
+     *
      * @return Appropriate popuptype for this frame
      */
     public abstract PopupType getNicknamePopupType();
 
     /**
      * What popup type should be used for popup menus for channels
-     * 
+     *
      * @return Appropriate popuptype for this frame
      */
     public abstract PopupType getChannelPopupType();
 
     /**
      * What popup type should be used for popup menus for hyperlinks
-     * 
+     *
      * @return Appropriate popuptype for this frame
      */
     public abstract PopupType getHyperlinkPopupType();
 
     /**
      * What popup type should be used for popup menus for normal clicks
-     * 
+     *
      * @return Appropriate popuptype for this frame
      */
     public abstract PopupType getNormalPopupType();
 
     /**
      * A method called to add custom popup items.
-     * 
+     *
      * @param popupMenu Popup menu to add popup items to
      */
     public abstract void addCustomPopupItems(final JPopupMenu popupMenu);
 
     /**
      * Shows a popup menu at the specified point for the specified click type
-     * 
+     *
      * @param type ClickType Click type
      * @param point Point Point of the click
      * @param argument Word under the click
@@ -928,10 +929,10 @@ public abstract class TextFrame extends JInternalFrame implements Window,
 
     /**
      * Builds a popup menu of a specified type
-     * 
+     *
      * @param type type of menu to build
      * @param arguments Arguments for the command
-     * 
+     *
      * @return PopupMenu
      */
     public JPopupMenu getPopupMenu(
@@ -949,12 +950,12 @@ public abstract class TextFrame extends JInternalFrame implements Window,
     }
 
     /**
-     * Populates the specified popupmenu
-     * 
+     * Populates the specified popupmenu.
+     *
      * @param menu Menu component
      * @param popup Popup to get info from
      * @param arguments Arguments for the command
-     * 
+     *
      * @return Populated popup
      */
     private JComponent populatePopupMenu(final JComponent menu,
@@ -967,8 +968,6 @@ public abstract class TextFrame extends JInternalFrame implements Window,
                 menu.add(populatePopupMenu(new JMenu(menuItem.getName()),
                         menuItem.getSubMenu(), arguments));
             } else {
-                //TODO remove this hack
-                getInputCommandParser();
                 menu.add(new JMenuItem(new CommandAction(commandParser, this,
                         menuItem.getName(), menuItem.getCommand(arguments))));
             }
