@@ -153,18 +153,7 @@ public abstract class TextFrame extends JInternalFrame implements Window,
             transcoder = new StringTranscoder(Charset.forName("UTF-8"));
         }
 
-        //locate appropriate command parser in window hierarchy
-        Window inputWindow = this;
-        while (!(inputWindow instanceof InputWindow) && inputWindow != null
-                && inputWindow.getContainer().getParent() != null) {
-            inputWindow = controller.getWindowFactory().getSwingWindow(
-                    inputWindow.getContainer().getParent());
-        }
-        if (inputWindow instanceof InputWindow) {
-            commandParser = ((InputWindow) inputWindow).getCommandParser();
-        } else {
-            commandParser = GlobalCommandParser.getGlobalCommandParser();
-        }
+        commandParser = findCommandParser();
 
         initComponents();
         setMaximizable(true);
@@ -193,6 +182,30 @@ public abstract class TextFrame extends JInternalFrame implements Window,
 
         panel = new JPanel(new MigLayout("fill"));
         super.getContentPane().add(panel);
+    }
+
+    /**
+     * Locate the appropriate command parser in the window heirarchy.
+     * 
+     * @return Closest command parser in the tree
+     */
+    private CommandParser findCommandParser() {
+        CommandParser localParser = null;
+        Window inputWindow = this;
+        while (!(inputWindow instanceof InputWindow) && inputWindow != null
+                && inputWindow.getContainer().getParent() != null) {
+            inputWindow = controller.getWindowFactory().getSwingWindow(
+                    inputWindow.getContainer().getParent());
+        }
+        if (inputWindow instanceof InputWindow) {
+            localParser = ((InputWindow) inputWindow).getCommandParser();
+        }
+
+        if (localParser == null) {
+            localParser = GlobalCommandParser.getGlobalCommandParser();
+        }
+
+        return localParser;
     }
 
     /** {@inheritDoc} */
