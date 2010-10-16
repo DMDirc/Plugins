@@ -125,7 +125,7 @@ public class TopicBar extends JComponent implements ActionListener,
                 getIcon("close-active"));
 
         final SwingInputHandler handler = new SwingInputHandler(topicText,
-                channelFrame.getCommandParser(), channelFrame);
+                channelFrame.getContainer().getCommandParser(), channelFrame);
         handler.setTypes(true, false, true, false);
         handler.setTabCompleter(channel.getTabCompleter());
 

@@ -72,13 +72,11 @@ public final class ServerFrame extends InputTextFrame implements ServerWindow,
         setInputHandler(new SwingInputHandler(getInputField(), commandParser, this));
     }
 
-    /**
-     * Retrieves the command Parser for this command window.
-     * @return This window's command Parser
-     */
+    /** {@inheritDoc} */
     @Override
+    @Deprecated
     public CommandParser getCommandParser() {
-        return commandParser;
+        return getContainer().getCommandParser();
     }
 
     /**

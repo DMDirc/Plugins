@@ -474,8 +474,9 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
             } else {
                 menu.add(
                         new JMenuItem(
-                        new CommandAction(getCommandParser(),
-                        this, menuItem.getName(), menuItem.getCommand(arguments))));
+                        new CommandAction(getContainer().getCommandParser(),
+                        this, menuItem.getName(), menuItem.getCommand(
+                        arguments))));
             }
         }
         return menu;

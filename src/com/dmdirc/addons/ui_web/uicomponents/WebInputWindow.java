@@ -55,8 +55,9 @@ public class WebInputWindow extends WebWindow implements InputWindow {
 
     /** {@inheritDoc} */
     @Override
+    @Deprecated
     public CommandParser getCommandParser() {
-        return commandparser;
+        return getContainer().getCommandParser();
     }
 
     /** {@inheritDoc} */
