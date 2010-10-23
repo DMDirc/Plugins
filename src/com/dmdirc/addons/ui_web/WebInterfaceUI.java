@@ -124,8 +124,14 @@ public class WebInterfaceUI implements UIController {
         return new WebMainWindow();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     *
+     * @deprecated Should not be used externally - use the
+     * {@link com.dmdirc.ui.core.components.StatusBarManager} instead.
+     */
     @Override
+    @Deprecated
     public StatusBar getStatusBar() {
         return new WebStatusBar();
     }

@@ -51,8 +51,6 @@ public class WebInterfacePlugin extends Plugin {
         if (ui == null) {
              ui = new WebInterfaceUI(this);
         }
-        
-        Main.setUI(ui);
     }
 
     /**

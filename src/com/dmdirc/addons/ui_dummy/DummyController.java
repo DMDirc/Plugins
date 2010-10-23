@@ -66,8 +66,13 @@ public final class DummyController extends Plugin implements UIController {
         return mainWindow;
     }
     
-    /** {@inheritDoc} */
-    @Override
+    /**
+     * {@inheritDoc}
+     *
+     * @deprecated Should not be used externally - use the
+     * {@link com.dmdirc.ui.core.components.StatusBarManager} instead.
+     */
+    @Override @Deprecated
     public StatusBar getStatusBar() {
         return new DummyStatusBar();
     }
@@ -78,7 +83,7 @@ public final class DummyController extends Plugin implements UIController {
      * @deprecated Controllers should listen for window events using a
      * {@link FrameListener} and create windows as needed.
      */
-    @Override  @Deprecated
+    @Override @Deprecated
     public ChannelWindow getChannel(final Channel channel) {
         return new DummyChannelWindow(channel);
     }
@@ -218,13 +223,13 @@ public final class DummyController extends Plugin implements UIController {
     /** {@inheritDoc} */
     @Override
     public void onLoad() {
-        Main.setUI(this);
+        // Do nothing
     }
 
     /** {@inheritDoc} */
     @Override
     public void onUnload() {
-        // Do nothing?
+        // Do nothing
     }
 
     /** {@inheritDoc} */
