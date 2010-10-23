@@ -84,7 +84,7 @@ public final class DummyController extends Plugin implements UIController {
      * @deprecated Controllers should listen for window events using a
      * {@link FrameListener} and create windows as needed.
      */
-    @Override  @Deprecated
+    @Override @Deprecated
     public ChannelWindow getChannel(final Channel channel) {
         return new DummyChannelWindow(channel);
     }
@@ -224,13 +224,13 @@ public final class DummyController extends Plugin implements UIController {
     /** {@inheritDoc} */
     @Override
     public void onLoad() {
-        // Do nothing?
+        // Do nothing
     }
 
     /** {@inheritDoc} */
     @Override
     public void onUnload() {
-        // Do nothing?
+        // Do nothing
     }
 
     /** {@inheritDoc} */
