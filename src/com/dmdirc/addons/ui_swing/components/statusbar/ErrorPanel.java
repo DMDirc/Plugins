@@ -152,7 +152,7 @@ public class ErrorPanel extends StatusbarPopupPanel implements ErrorListener, Ac
                         if (errorLevel == null ||
                                 !error.getLevel().moreImportant(errorLevel)) {
                             errorLevel = error.getLevel();
-                            label.setIcon(errorLevel.getIcon());
+                            label.setIcon(IconManager.getIconManager().getIcon(errorLevel.getIcon()));
                         }
                     }
                     setVisible(true);

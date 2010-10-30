@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_swing.components.renderers;
 
 import com.dmdirc.logger.ErrorLevel;
+import com.dmdirc.ui.IconManager;
 
 import javax.swing.JLabel;
 
@@ -47,6 +48,6 @@ public final class ErrorLevelIconCellRenderer extends DefaultTableCellRenderer {
     @Override
     public void setValue(final Object value) {
         setHorizontalAlignment(JLabel.CENTER);
-        setIcon(((ErrorLevel) value).getIcon());
+        setIcon(IconManager.getIconManager().getIcon(((ErrorLevel) value).getIcon()));
     }
 }

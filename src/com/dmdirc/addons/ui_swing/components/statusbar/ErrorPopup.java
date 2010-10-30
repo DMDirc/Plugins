@@ -26,6 +26,7 @@ import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.ErrorManager;
 import com.dmdirc.logger.ErrorReportStatus;
 import com.dmdirc.logger.ProgramError;
+import com.dmdirc.ui.IconManager;
 import com.dmdirc.util.MapList;
 
 import java.awt.Font;
@@ -86,7 +87,8 @@ public class ErrorPopup extends StatusbarPopupWindow {
             if (buckets.containsKey(level)) {
                 final int count = buckets.values(level).size();
 
-                panel.add(new JLabel(level.toString(), level.getIcon(), JLabel.LEFT));
+                panel.add(new JLabel(level.toString(),
+                        IconManager.getIconManager().getIcon(level.getIcon()), JLabel.LEFT));
                 panel.add(new JLabel(String.valueOf(count), JLabel.RIGHT), "growx, pushx, wrap");
             }
         }
