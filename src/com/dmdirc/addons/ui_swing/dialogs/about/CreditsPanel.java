@@ -38,7 +38,7 @@ import net.miginfocom.swing.MigLayout;
  * Authors Panel.
  */
 public final class CreditsPanel extends JPanel implements HyperlinkListener {
-    
+
     /**
      * A version number for this class. It should be changed whenever the class
      * structure is changed (or anything else that would prevent serialized
@@ -48,11 +48,20 @@ public final class CreditsPanel extends JPanel implements HyperlinkListener {
 
     /** HTML label we're using. */
     private TextLabel about;
-    
-    /** Creates a new instance of CreditsPanel. */
-    public CreditsPanel() {
+
+    /** URL Handler to use to open clicked links. */
+    private final URLHandler urlHandler;
+
+    /**
+     * Creates a new instance of CreditsPanel.
+     *
+     * @param urlHandler The URL handler to use to open clicked links
+     */
+    public CreditsPanel(final URLHandler urlHandler) {
         super();
-        
+
+        this.urlHandler = urlHandler;
+
         this.setOpaque(UIUtilities.getTabbedPaneOpaque());
         initComponents();
     }
@@ -62,7 +71,7 @@ public final class CreditsPanel extends JPanel implements HyperlinkListener {
         about.setText("<html><center><br><br><br>"
                 + "<img src=\"http://www.dmdirc.com/res/about.png\"></html>");
     }
-    
+
     /** Initialises the components. */
     private void initComponents() {
         about = new TextLabel("<html>"
@@ -79,20 +88,20 @@ public final class CreditsPanel extends JPanel implements HyperlinkListener {
                 + "</ul>"
                 + "</html>");
         about.addHyperlinkListener(this);
-        
+
         setLayout(new MigLayout("ins rel, fill"));
         final JScrollPane scrollPane = new JScrollPane(about);
         scrollPane.setOpaque(UIUtilities.getTabbedPaneOpaque());
         scrollPane.getViewport().setOpaque(UIUtilities.getTabbedPaneOpaque());
         add(scrollPane, "grow, push");
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public void hyperlinkUpdate(final HyperlinkEvent e) {
         if (e.getEventType() == EventType.ACTIVATED) {
-            URLHandler.getURLHander().launchApp(e.getURL());
+            urlHandler.launchApp(e.getURL());
         }
     }
-    
+
 }

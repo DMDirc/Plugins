@@ -30,6 +30,7 @@ import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialog;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.prefs.PreferencesInterface;
 import com.dmdirc.config.validators.URLProtocolValidator;
+import com.dmdirc.ui.core.util.URLHandler;
 
 import java.awt.Window;
 import java.awt.Dialog.ModalityType;
@@ -85,16 +86,20 @@ public class URLConfigPanel extends JPanel implements
     private int selectedRow;
     /** Parent window. */
     private Window parentWindow;
+    /** The URL Handler to use to handle clicked links. */
+    private final URLHandler urlHandler;
 
     /**
      * Instantiates a new URL config panel.
      * 
      * @param parentWindow Parent window
+     * @param urlHandler The URL Handler to use to handle clicked links
      */
-    public URLConfigPanel(final Window parentWindow) {
+    public URLConfigPanel(final Window parentWindow, final URLHandler urlHandler) {
         super();
         
         this.parentWindow = parentWindow;
+        this.urlHandler = urlHandler;
 
         initComponents();
         addListeners();
@@ -135,7 +140,7 @@ public class URLConfigPanel extends JPanel implements
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         table.getRowSorter().toggleSortOrder(0);
         details = new HashMap<URI, URLProtocolPanel>();
-        empty = new URLProtocolPanel(null, true);
+        empty = new URLProtocolPanel(null, true, urlHandler);
         activeComponent = empty;
         add = new JButton("Add");
         remove = new JButton("Remove");
@@ -150,7 +155,7 @@ public class URLConfigPanel extends JPanel implements
             try {
                 final URI uri = new URI(option + "://example.test.com");
                 model.addURI(uri);
-                details.put(uri, new URLProtocolPanel(uri, true));
+                details.put(uri, new URLProtocolPanel(uri, true, urlHandler));
             } catch (URISyntaxException ex) {
                 //Ignore wont happen
             }
@@ -280,7 +285,7 @@ public class URLConfigPanel extends JPanel implements
                         final URI uri = new URI(getText() +
                                 "://example.test.com");
                         model.addURI(uri);
-                        details.put(uri, new URLProtocolPanel(uri, true));
+                        details.put(uri, new URLProtocolPanel(uri, true, urlHandler));
                         return true;
                     } catch (URISyntaxException ex) {
                         return false;

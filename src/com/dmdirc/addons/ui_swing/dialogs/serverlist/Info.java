@@ -58,15 +58,19 @@ public class Info extends JPanel implements HyperlinkListener,
     private final ServerListModel model;
     /** Info scroll panel. */
     private final JScrollPane sp;
+    /** URL Handler to use to open links. */
+    private final URLHandler urlHandler;
 
     /**
      * Creates a new info panel.
      *
      * @param model Model to pull information from
+     * @param urlHandler A {@link URLHandler} to use to open links
      */
-    public Info(final ServerListModel model) {
+    public Info(final ServerListModel model, final URLHandler urlHandler) {
         super();
 
+        this.urlHandler = urlHandler;
         this.model = model;
 
         infoLabel = new TextLabel();
@@ -93,7 +97,7 @@ public class Info extends JPanel implements HyperlinkListener,
     @Override
     public void hyperlinkUpdate(final HyperlinkEvent e) {
         if (e.getEventType() == EventType.ACTIVATED) {
-            URLHandler.getURLHander().launchApp(e.getURL());
+            urlHandler.launchApp(e.getURL());
         }
     }
 

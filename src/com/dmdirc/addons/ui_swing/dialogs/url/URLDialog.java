@@ -55,18 +55,22 @@ public class URLDialog extends StandardDialog implements ActionListener {
     private TextLabel blurb;
     /** Swing controller. */
     private Window parentWindow;
+    /** The URL Handler to use to handle clicked links. */
+    private final URLHandler urlHandler;
 
     /**
      * Instantiates the URLDialog.
      *
      * @param url URL to open once added
      * @param parentWindow Parent window
+     * @param urlHandler The URL Handler to use to handle clicked links
      */
-    private URLDialog(final URI url, final Window parentWindow) {
+    private URLDialog(final URI url, final Window parentWindow, final URLHandler urlHandler) {
         super(parentWindow, ModalityType.MODELESS);
         
         this.url = url;
         this.parentWindow = parentWindow;
+        this.urlHandler = urlHandler;
         
         initComponents();
         layoutComponents();
@@ -80,9 +84,11 @@ public class URLDialog extends StandardDialog implements ActionListener {
      *
      * @param url URL to open once added
      * @param parentWindow Parent window
+     * @param urlHandler The URL Handler to use to handle clicked links
      */
-    public static void showURLDialog(final URI url, final Window parentWindow) {
-        me = getURLDialog(url, parentWindow);
+    public static void showURLDialog(final URI url,
+            final Window parentWindow, final URLHandler urlHandler) {
+        me = getURLDialog(url, parentWindow, urlHandler);
 
         me.display();
         me.requestFocusInWindow();
@@ -93,13 +99,15 @@ public class URLDialog extends StandardDialog implements ActionListener {
      *
      * @param url URL to open once added
      * @param parentWindow Parent window
+     * @param urlHandler The URL Handler to use to handle clicked links
      * 
      * @return The current URLDialog instance
      */
-    public static URLDialog getURLDialog(final URI url, final Window parentWindow) {
+    public static URLDialog getURLDialog(final URI url,
+            final Window parentWindow, final URLHandler urlHandler) {
         synchronized (URLDialog.class) {
             if (me == null) {
-                me = new URLDialog(url, parentWindow);
+                me = new URLDialog(url, parentWindow, urlHandler);
             }
         }
 
@@ -112,7 +120,7 @@ public class URLDialog extends StandardDialog implements ActionListener {
         blurb = new TextLabel("Please select the appropriate action to " +
                 "handle " + url.getScheme() + ":// URLs from the list " +
                 "below.");
-        panel = new URLProtocolPanel(url, false);
+        panel = new URLProtocolPanel(url, false, urlHandler);
     }
 
     /** Lays out the components. */
@@ -141,7 +149,7 @@ public class URLDialog extends StandardDialog implements ActionListener {
         if (e.getSource() == getOkButton()) {
             panel.save();
             dispose();
-            URLHandler.getURLHander().launchApp(url);
+            urlHandler.launchApp(url);
         } else if (e.getSource() == getCancelButton()) {
             dispose();
         }

@@ -24,7 +24,6 @@ package com.dmdirc.addons.ui_swing;
 
 import com.dmdirc.Channel;
 import com.dmdirc.FrameContainer;
-import com.dmdirc.Main;
 import com.dmdirc.Query;
 import com.dmdirc.Server;
 import com.dmdirc.WritableFrameContainer;
@@ -67,6 +66,7 @@ import com.dmdirc.plugins.Plugin;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.core.components.StatusBarManager;
 import com.dmdirc.ui.core.dialogs.sslcertificate.SSLCertificateDialogModel;
+import com.dmdirc.ui.core.util.URLHandler;
 import com.dmdirc.ui.interfaces.ChannelWindow;
 import com.dmdirc.ui.interfaces.InputWindow;
 import com.dmdirc.ui.interfaces.QueryWindow;
@@ -126,6 +126,8 @@ public class SwingController extends Plugin implements Serializable,
     private ErrorListDialog errorDialog;
     /** Window factory. */
     private final SwingWindowFactory windowFactory = new SwingWindowFactory(this);
+    /** URL Handler to use. */
+    private final URLHandler urlHandler = new URLHandler(this);
 
     /** Instantiates a new SwingController. */
     public SwingController() {
@@ -158,6 +160,16 @@ public class SwingController extends Plugin implements Serializable,
     @Override
     public MainFrame getMainWindow() {
         return getMainFrame();
+    }
+
+    /**
+     * Returns a URL Handler which may be used when working with the Swing UI.
+     *
+     * @return A URL handler for use with the swing UI
+     * @since 0.6.5
+     */
+    public URLHandler getURLHandler() {
+        return urlHandler;
     }
 
     /**
@@ -533,7 +545,7 @@ public class SwingController extends Plugin implements Serializable,
             /** {@inheritDoc} */
             @Override
             public void run() {
-                URLDialog.showURLDialog(url, me);
+                URLDialog.showURLDialog(url, me, urlHandler);
 
             }
         });
@@ -648,7 +660,7 @@ public class SwingController extends Plugin implements Serializable,
             /** {@inheritDoc} */
             @Override
             public void run() {
-                setObject(new URLConfigPanel(me));
+                setObject(new URLConfigPanel(me, urlHandler));
             }
         });
     }
@@ -661,7 +673,7 @@ public class SwingController extends Plugin implements Serializable,
             /** {@inheritDoc} */
             @Override
             public void run() {
-                setObject(new ThemePanel());
+                setObject(new ThemePanel(urlHandler));
             }
         });
     }
