@@ -58,7 +58,6 @@ import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.parser.common.ChannelJoinRequest;
 import com.dmdirc.ui.IconManager;
-import com.dmdirc.ui.core.util.URLHandler;
 import com.dmdirc.ui.interfaces.InputWindow;
 import com.dmdirc.ui.interfaces.Window;
 import com.dmdirc.ui.messages.IRCDocument;
@@ -144,13 +143,13 @@ public abstract class TextFrame extends JInternalFrame implements Window,
             final SwingController controller) {
         super();
         this.controller = controller;
-        frameParent = owner;
+        this.frameParent = owner;
 
         final ConfigManager config = owner.getConfigManager();
 
         setFrameIcon(IconManager.getIconManager().getIcon(owner.getIcon()));
-        getContainer().setTitle(frameParent.getTitle());
 
+        owner.setTitle(frameParent.getTitle());
         owner.addFrameInfoListener(this);
 
         try {
@@ -838,8 +837,7 @@ public abstract class TextFrame extends JInternalFrame implements Window,
                     if (ActionManager.processEvent(
                             CoreActionType.LINK_URL_CLICKED, null, this,
                             clicktype.getValue())) {
-                        URLHandler.getURLHander().launchApp(
-                                clicktype.getValue());
+                        controller.getURLHandler().launchApp(clicktype.getValue());
                     }
                     break;
                 case NICKNAME:

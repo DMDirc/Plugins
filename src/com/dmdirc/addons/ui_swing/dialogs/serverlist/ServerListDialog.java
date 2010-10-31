@@ -25,6 +25,7 @@ package com.dmdirc.addons.ui_swing.dialogs.serverlist;
 import com.dmdirc.addons.ui_swing.components.LockedLayer;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.addons.serverlists.ServerGroupItem;
+import com.dmdirc.ui.core.util.URLHandler;
 
 import java.awt.Window;
 import java.awt.color.ColorSpace;
@@ -75,14 +76,18 @@ public final class ServerListDialog extends StandardDialog implements
     private final JXLayer<Settings> settingsLayer;
     /** Help panel. */
     private final Help help;
+    /** The URL Handler to use to handle clicked links. */
+    private final URLHandler urlHandler;
 
     /**
      * Creates the dialog if one doesn't exist, and displays it.
      *
      * @param parentWindow Parent window
+     * @param urlHandler The URL Handler to use to handle clicked links
      */
-    public static void showServerListDialog(final Window parentWindow) {
-        me = getServerListDialog(parentWindow);
+    public static void showServerListDialog(final Window parentWindow,
+            final URLHandler urlHandler) {
+        me = getServerListDialog(parentWindow, urlHandler);
 
         me.display();
         me.requestFocusInWindow();
@@ -92,14 +97,14 @@ public final class ServerListDialog extends StandardDialog implements
      * Returns the current instance of the ServerListDialog.
      *
      * @param parentWindow Parent window
-     *
+     * @param urlHandler The URL Handler to use to handle clicked links
      * @return The current ServerListDialog instance
      */
     public static ServerListDialog getServerListDialog(
-            final Window parentWindow) {
+            final Window parentWindow, final URLHandler urlHandler) {
         synchronized (ServerListDialog.class) {
             if (me == null) {
-                me = new ServerListDialog(parentWindow, ModalityType.MODELESS);
+                me = new ServerListDialog(parentWindow, ModalityType.MODELESS, urlHandler);
             }
         }
 
@@ -111,10 +116,14 @@ public final class ServerListDialog extends StandardDialog implements
      *
      * @param window Parent window
      * @param modalityType Desired modality
+     * @param urlHandler The URL Handler to use to handle clicked links
      */
     private ServerListDialog(final Window window,
-            final ModalityType modalityType) {
+            final ModalityType modalityType, final URLHandler urlHandler) {
         super(window, modalityType);
+
+        this.urlHandler = urlHandler;
+
         setTitle("Server List");
         model = new ServerListModel();
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -137,7 +146,7 @@ public final class ServerListDialog extends StandardDialog implements
         performLayer = new JXLayer<Perform>(new Perform(model), performLock);
         settingsLayer = new JXLayer<Settings>(new Settings(model),
                 settingsLock);
-        infoLayer = new JXLayer<Info>(new Info(model), infoLock);
+        infoLayer = new JXLayer<Info>(new Info(model, urlHandler), infoLock);
         help = new Help();
         lockLayers();
 

@@ -81,18 +81,22 @@ public class URLProtocolPanel extends JPanel implements ActionListener,
     private final boolean useInsets;
     /** Substitutions panel. */
     private URLSubsitutionsPanel subsPanel;
+    /** The URL Handler to use to open links. */
+    private final URLHandler urlHandler;
 
     /**
      * Instantiates the URLDialog.
      *
      * @param url URL to open once added
      * @param useInsets Show insets?
+     * @param urlHandler The URL Handler to use to handle clicked links
      */
-    public URLProtocolPanel(final URI url, final boolean useInsets) {
+    public URLProtocolPanel(final URI url, final boolean useInsets, final URLHandler urlHandler) {
         super();
 
         this.uri = url;
         this.useInsets = useInsets;
+        this.urlHandler = urlHandler;
 
         initComponents();
         layoutComponents();
@@ -196,8 +200,8 @@ public class URLProtocolPanel extends JPanel implements ActionListener,
             setEnabled(false);
             exampleLabel.setText("Example: ");
         } else {
-            exampleLabel.setText("Example: " + URLHandler.getURLHander().
-                    substituteParams(uri, commandPath.getText()));
+            exampleLabel.setText("Example: "
+                    + URLHandler.substituteParams(uri, commandPath.getText()));
         }
     }
 

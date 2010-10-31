@@ -37,22 +37,31 @@ import net.miginfocom.swing.MigLayout;
  * About DMDirc panel.
  */
 public final class AboutPanel extends JPanel implements HyperlinkListener {
-    
+
     /**
      * A version number for this class. It should be changed whenever the class
      * structure is changed (or anything else that would prevent serialized
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 1;
-    
-    /** Creates a new instance of AboutPanel. */
-    public AboutPanel() {
+
+    /** The URL Handler to use to handle clicked links. */
+    private final URLHandler urlHandler;
+
+    /**
+     * Creates a new instance of AboutPanel.
+     *
+     * @param urlHandler The URL Handler to use to handle clicked links
+     */
+    public AboutPanel(final URLHandler urlHandler) {
         super();
-        
+
+        this.urlHandler = urlHandler;
+
         this.setOpaque(UIUtilities.getTabbedPaneOpaque());
         initComponents();
     }
-    
+
     /** Initialises the components. */
     private void initComponents() {
         final TextLabel about = new TextLabel("<html><center>"
@@ -62,18 +71,18 @@ public final class AboutPanel extends JPanel implements HyperlinkListener {
                 + "<p><a href=\"http://www.dmdirc.com\">www.dmdirc.com</a></p>"
                 + "</center></html>", false);
         about.addHyperlinkListener(this);
-        
+
         setLayout(new MigLayout("ins rel, fill"));
-        
+
         add(about, "align center");
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public void hyperlinkUpdate(final HyperlinkEvent e) {
         if (e.getEventType() == EventType.ACTIVATED) {
-            URLHandler.getURLHander().launchApp(e.getURL());
+            urlHandler.launchApp(e.getURL());
         }
     }
-    
+
 }

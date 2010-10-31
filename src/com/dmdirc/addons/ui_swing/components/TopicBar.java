@@ -34,7 +34,6 @@ import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.interfaces.TopicChangeListener;
 import com.dmdirc.parser.common.ChannelJoinRequest;
 import com.dmdirc.ui.IconManager;
-import com.dmdirc.ui.core.util.URLHandler;
 import com.dmdirc.ui.messages.ColourManager;
 import com.dmdirc.ui.messages.Styliser;
 
@@ -308,7 +307,7 @@ public class TopicBar extends JComponent implements ActionListener,
             if (url.charAt(0) == '#') {
                 channel.getServer().join(new ChannelJoinRequest(url));
             } else if (url.contains("://")) {
-                URLHandler.getURLHander().launchApp(e.getDescription());
+                controller.getURLHandler().launchApp(e.getDescription());
             } else {
                 channel.getServer().getQuery(url).activateFrame();
             }

@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.components.themepanel;
 
+import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
 import com.dmdirc.addons.ui_swing.components.renderers.AddonCellRenderer;
@@ -72,10 +73,18 @@ public final class ThemePanel extends JPanel implements
     private int selectedTheme;
     /** Blurb label. */
     private TextLabel blurbLabel;
+    /** The URL handler to use to open links. */
+    private final URLHandler urlHandler;
 
-    /** Creates a new instance of PluginDialog. */
-    public ThemePanel() {
+    /**
+     * Creates a new instance of ThemePanel.
+     *
+     * @param urlHandler A {@link URLHandler} to use to open links
+     */
+    public ThemePanel(final URLHandler urlHandler) {
         super();
+
+        this.urlHandler = urlHandler;
 
         initComponents();
         addListeners();
@@ -134,9 +143,9 @@ public final class ThemePanel extends JPanel implements
         add(button, "growx, pushx, sg button");
     }
 
-    /** 
-     * Populates the plugins list with plugins from the plugin manager. 
-     * 
+    /**
+     * Populates the plugins list with plugins from the plugin manager.
+     *
      * @return Populated list
      */
     private JList populateList() {
@@ -173,7 +182,7 @@ public final class ThemePanel extends JPanel implements
 
     /**
      * Invoked when an action occurs.
-     * 
+     *
      * @param e The event related to this action.
      */
     @Override
@@ -191,7 +200,7 @@ public final class ThemePanel extends JPanel implements
 
             themeList.repaint();
         } else if (e.getSource() != toggleButton) {
-            URLHandler.getURLHander().launchApp("http://addons.dmdirc.com/");
+            urlHandler.launchApp("http://addons.dmdirc.com/");
         }
     }
 
