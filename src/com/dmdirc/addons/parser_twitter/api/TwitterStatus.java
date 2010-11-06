@@ -95,8 +95,6 @@ public class TwitterStatus implements Comparable<TwitterStatus> {
         this.time = time;
         this.retweet = false;
         this.originalStatus = null;
-
-        api.updateStatus(this);
     }
 
     /**
@@ -155,8 +153,6 @@ public class TwitterStatus implements Comparable<TwitterStatus> {
         } else {
             this.user = user;
         }
-
-        api.updateStatus(this);
     }
 
     /**

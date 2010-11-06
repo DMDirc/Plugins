@@ -69,8 +69,8 @@ import org.xml.sax.SAXException;
 public class TwitterAPI {
 
     /** Characters used in b64 encoding. */
-    private static final String BASE64_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcde"
-            + "fghijklmnopqrstuvwxyz0123456789+/";
+    private static final String BASE64_CHARS
+            = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
     /** OAuth Consumer. */
     private OAuthConsumer consumer;
@@ -156,19 +156,20 @@ public class TwitterAPI {
     private String mySource = "web";
 
     /** Should we prepend an @ to all user names? */
-    private boolean autoAt;
+    private boolean prependAt;
 
     /**
      * Create a non-OAuth using TwitterAPI.
      *
      * @param username Username to use.
      * @param password Password to use.
-     * @param apiAddress 
-     * @param useAPIVersion
-     * @param apiVersion
+     * @param apiAddress Address to send API Requests to. (No protocol, eg "api.twitter.com")
+     * @param useAPIVersion Should we use the versioned api?
+     * @param apiVersion What version of the api should we use? (0 == Unversioned, -1 == maximum version known)
+     * @param prependAt Should '@' signs be prepended to user names?
      */
-    public TwitterAPI(final String username, final String password, final String apiAddress, final boolean useAPIVersion, final int apiVersion, final boolean autoAt) {
-        this(username, password, apiAddress, "", "", "", "", "", useAPIVersion, apiVersion, autoAt);
+    public TwitterAPI(final String username, final String password, final String apiAddress, final boolean useAPIVersion, final int apiVersion, final boolean prependAt) {
+        this(username, password, apiAddress, "", "", "", "", "", useAPIVersion, apiVersion, prependAt);
         useOAuth = false;
     }
 
@@ -185,14 +186,14 @@ public class TwitterAPI {
      * @param tokenSecret If using OAuth, the tokenSecret to use.
      * @param useAPIVersion Should we use the versioned api?
      * @param apiVersion What version of the api should we use? (0 == Unversioned, -1 == maximum version known)
-     * @param autoAt Should '@' signs be prepended to user names?
+     * @param prependAt Should '@' signs be prepended to user names?
      */
-    public TwitterAPI(final String username, final String password, final String apiAddress, final String oauthAddress, final String consumerKey, final String consumerSecret, final String token, final String tokenSecret, final boolean useAPIVersion, final int apiVersion, final boolean autoAt) {
+    public TwitterAPI(final String username, final String password, final String apiAddress, final String oauthAddress, final String consumerKey, final String consumerSecret, final String token, final String tokenSecret, final boolean useAPIVersion, final int apiVersion, final boolean prependAt) {
         this.myLoginUsername = username;
         this.apiAddress = apiAddress.replaceAll("/+$", "");
         this.myPassword = password;
-        this.autoAt = autoAt;
-        this.myDisplayUsername = (autoAt ? "@" : "") + myLoginUsername;
+        this.prependAt = prependAt;
+        this.myDisplayUsername = (prependAt ? "@" : "") + myLoginUsername;
 
         if (this.apiAddress.isEmpty() && myLoginUsername.isEmpty()) {
             return;
@@ -233,7 +234,7 @@ public class TwitterAPI {
 
     /**
      * Get the source used in status updates when not using OAuth.
-     * 
+     *
      * @return The source used in status updates when not using OAuth.
      */
     public String getSource() {
@@ -267,11 +268,10 @@ public class TwitterAPI {
      * @return URL To use!
      */
     private String getURL(final String apiCall, final int version) {
-        if (!useAPIVersion || version == 0) {
-            return (useSSL ? "https" : "http") + "://" + apiAddress + "/" + apiCall + ".xml";
-        } else {
-            return (useSSL ? "https" : "http") + "://" + apiAddress + "/" + version + "/" + apiCall + ".xml";
-        }
+        final String prefix = (useSSL ? "https" : "http") + "://" + apiAddress + "/";
+
+        return prefix + (!useAPIVersion || version == 0 ? "" : version + "/")
+                + apiCall + ".xml";
     }
 
     /**
@@ -313,7 +313,8 @@ public class TwitterAPI {
      * @param twitterInput The input to the API that caused this error.
      * @param twitterOutput The output from the API that caused this error.
      */
-    private void handleError(final Throwable t, final String source, final String twitterInput, final String twitterOutput) {
+    private void handleError(final Throwable t, final String source,
+            final String twitterInput, final String twitterOutput) {
         handleError(t, source, twitterInput, twitterOutput, "");
     }
 
@@ -326,7 +327,8 @@ public class TwitterAPI {
      * @param twitterOutput The output from the API that caused this error.
      * @param message If more information should be relayed to the user, it comes here
      */
-    private void handleError(final Throwable t, final String source, final String twitterInput, final String twitterOutput, final String message) {
+    private void handleError(final Throwable t, final String source,
+            final String twitterInput, final String twitterOutput, final String message) {
         synchronized (errorHandlers) {
             for (final TwitterErrorHandler eh : errorHandlers) {
                 eh.handleTwitterError(this, t, source, twitterInput, twitterOutput, message);
@@ -397,17 +399,9 @@ public class TwitterAPI {
      * @return are we using autoAt?
      */
     public boolean autoAt() {
-        return autoAt;
+        return prependAt;
     }
 
-    /**
-     * Set if we should use autoAt or not.
-     *
-     * @param autoAt Should we use autoAt?
-     */
-    /* public void setAutoAt(final boolean autoAt) {
-    this.autoAt = autoAt;
-    } */
     /**
      * Is debugging enabled?
      *
@@ -544,15 +538,13 @@ public class TwitterAPI {
             try {
                 consumer.sign(connection);
             } catch (final OAuthMessageSignerException ex) {
-                handleError(ex, "(1) signURL", apiInput, apiOutput, "Unable to sign URL, are we authorised to use this account?");
+                handleError(ex, "(1) signURL", apiInput, apiOutput,
+                        "Unable to sign URL, are we authorised to use this account?");
             } catch (final OAuthExpectationFailedException ex) {
-                handleError(ex, "(2) signURL", apiInput, apiOutput, "Unable to sign URL, are we authorised to use this account?");
+                handleError(ex, "(2) signURL", apiInput, apiOutput,
+                        "Unable to sign URL, are we authorised to use this account?");
             }
         } else {
-            // final String userpassword = myUsername + ":" + myPassword;
-            // sun.misc.BASE64Encoder enc = new sun.misc.BASE64Encoder();
-            // String encodedAuthorization = enc.encode(userpassword.getBytes());
-
             connection.setRequestProperty("Authorization", "Basic "
                     + b64encode(myLoginUsername + ":" + myPassword));
         }
@@ -591,7 +583,8 @@ public class TwitterAPI {
         }
 
         // replace encoded padding nulls with "="
-        return encoded.substring(0, encoded.length() - paddingCount) + "==".substring(0, paddingCount);
+        return encoded.substring(0, encoded.length() - paddingCount)
+                + "==".substring(0, paddingCount);
     }
 
     /**
@@ -633,7 +626,8 @@ public class TwitterAPI {
      * @return Boolean from string
      */
     public static boolean parseBoolean(final String string) {
-        return string.equalsIgnoreCase("true") || string.equalsIgnoreCase("yes") || string.equalsIgnoreCase("1");
+        return string.equalsIgnoreCase("true") || string.equalsIgnoreCase("yes")
+                || string.equalsIgnoreCase("1");
     }
 
     /**
@@ -645,7 +639,8 @@ public class TwitterAPI {
      * @param fallback Default on failure.
      * @return Long from string
      */
-    public static String getElementContents(final Element element, final String string, final String fallback) {
+    public static String getElementContents(final Element element,
+            final String string, final String fallback) {
         if (element != null) {
             final NodeList nl = element.getElementsByTagName(string);
             if (nl != null && nl.getLength() > 0) {
@@ -743,7 +738,7 @@ public class TwitterAPI {
      *
      * If an IOException is thrown this will be sent via handleError when
      * debugigng is enabled.
-     * 
+     *
      * @return True if connecting to the api works, else false.
      */
     public boolean checkConnection() {
@@ -839,9 +834,11 @@ public class TwitterAPI {
             responseCode = request.getResponseCode();
             if (responseCode != 200) {
                 if (isDebug()) {
-                    handleError(null, "* (6) getXML", apiInput, apiOutput, "(" + request.getResponseCode() + ") " + request.getResponseMessage());
+                    handleError(null, "* (6) getXML", apiInput, apiOutput,
+                            "(" + request.getResponseCode() + ") " + request.getResponseMessage());
                 } else if (responseCode >= 500 && responseCode < 600) {
-                    handleError(null, "(6) getXML", apiInput, apiOutput, "(" + request.getResponseCode() + ") " + request.getResponseMessage());
+                    handleError(null, "(6) getXML", apiInput, apiOutput,
+                            "(" + request.getResponseCode() + ") " + request.getResponseMessage());
                 }
             }
         } catch (final IOException ioe) {
@@ -1008,7 +1005,7 @@ public class TwitterAPI {
      *
      * @param status
      */
-    protected void updateStatus(final TwitterStatus status) {
+    protected void cacheStatus(final TwitterStatus status) {
         if (status == null) {
             return;
         }
@@ -1061,7 +1058,7 @@ public class TwitterAPI {
                 status = null;
             }
 
-            updateStatus(status);
+            cacheStatus(status);
         }
 
         return status;
@@ -1094,7 +1091,8 @@ public class TwitterAPI {
      */
     public boolean newDirectMessage(final String target, final String message) {
         try {
-            final XMLResponse doc = postXML(getURL("direct_messages/new"), "screen_name=" + target + "&text=" + URLEncoder.encode(message, "utf-8"));
+            final XMLResponse doc = postXML(getURL("direct_messages/new"),
+                    "screen_name=" + target + "&text=" + URLEncoder.encode(message, "utf-8"));
 
             if (doc.isGood()) {
                 new TwitterMessage(this, doc.getDocumentElement());
@@ -1127,12 +1125,15 @@ public class TwitterAPI {
     public List<TwitterStatus> getUserTimeline(final long lastUserTimelineId) {
         final List<TwitterStatus> result = new ArrayList<TwitterStatus>();
 
-        final XMLResponse doc = getXML(getURL("statuses/user_timeline") + "?since_id=" + lastUserTimelineId + "&count=20");
+        final XMLResponse doc = getXML(getURL("statuses/user_timeline")
+                + "?since_id=" + lastUserTimelineId + "&count=20");
 
         if (doc.isGood()) {
             final NodeList nodes = doc.getElementsByTagName("status");
             for (int i = 0; i < nodes.getLength(); i++) {
-                result.add(new TwitterStatus(this, nodes.item(i)));
+                final TwitterStatus status = new TwitterStatus(this, nodes.item(i));
+                cacheStatus(status);
+                result.add(status);
             }
         }
 
@@ -1161,19 +1162,22 @@ public class TwitterAPI {
         final List<TwitterStatus> result = new ArrayList<TwitterStatus>();
 
         try {
-            final XMLResponse doc = getXML("http://search.twitter.com/search.atom?since_id=" + lastStatusId + "&rpp=100&q=" + URLEncoder.encode(term, "utf-8"));
+            final XMLResponse doc = getXML("http://search.twitter.com/search.atom?since_id="
+                    + lastStatusId + "&rpp=100&q=" + URLEncoder.encode(term, "utf-8"));
 
             if (doc.isGood()) {
                 final NodeList nodes = doc.getElementsByTagName("entry");
                 for (int i = 0; i < nodes.getLength(); i++) {
                     final Element element = (Element) nodes.item(i);
                     final String message = TwitterAPI.getElementContents(element, "title", "");
-                    final long id = Long.parseLong(TwitterAPI.getElementContents(element, "id", "::-1").split(":")[2]);
+                    final long id =Long.parseLong(TwitterAPI.getElementContents(element,"id", "::-1").split(":")[2]);
                     final String user = TwitterAPI.getElementContents((Element) element.getElementsByTagName("author").item(0), "name", "").split(" ")[0];
 
                     final long time = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").parse(TwitterAPI.getElementContents(element, "published", "")).getTime();
 
-                    result.add(0, new TwitterStatus(this, message, -1, id, user, time));
+                    final TwitterStatus status = new TwitterStatus(this, message, -1, id, user, time);
+                    cacheStatus(status);
+                    result.add(0, status);
                 }
             }
         } catch (final UnsupportedEncodingException ex) {
@@ -1303,7 +1307,9 @@ public class TwitterAPI {
             final NodeList nodes = doc.getElementsByTagName("status");
 
             for (int i = 0; i < nodes.getLength(); i++) {
-                result.add(new TwitterStatus(this, nodes.item(i)));
+                final TwitterStatus status = new TwitterStatus(this, nodes.item(i));
+                cacheStatus(status);
+                result.add(status);
             }
         }
 
@@ -1334,7 +1340,9 @@ public class TwitterAPI {
         if (doc.isGood()) {
             final NodeList nodes = doc.getElementsByTagName("status");
             for (int i = 0; i < nodes.getLength(); i++) {
-                result.add(new TwitterStatus(this, nodes.item(i)));
+                final TwitterStatus status = new TwitterStatus(this, nodes.item(i));
+                cacheStatus(status);
+                result.add(status);
             }
         }
 
@@ -1415,16 +1423,18 @@ public class TwitterAPI {
             final StringBuilder params = new StringBuilder("status=");
             params.append(URLEncoder.encode(status, "utf-8"));
             if (id >= 0) {
-                params.append("&in_reply_to_status_id=" + Long.toString(id));
+                params.append("&in_reply_to_status_id=");
+                params.append(Long.toString(id));
             }
             if (!useOAuth) {
-                params.append("&source=" + URLEncoder.encode(mySource, "utf-8"));
+                params.append("&source=");
+                params.append(URLEncoder.encode(mySource, "utf-8"));
             }
 
             final XMLResponse doc = postXML(getURL("statuses/update"), params.toString());
             if (doc.getResponseCode() == 200) {
                 if (doc.isGood()) {
-                    new TwitterStatus(this, doc.getDocumentElement());
+                    cacheStatus(new TwitterStatus(this, doc.getDocumentElement()));
                 }
                 return true;
             }
@@ -1451,7 +1461,7 @@ public class TwitterAPI {
         final XMLResponse doc = postXML(getURL("statuses/retweet/" + status.getID()));
         if (doc.getResponseCode() == 200) {
             if (doc.isGood()) {
-                new TwitterStatus(this, doc.getDocumentElement());
+                cacheStatus(new TwitterStatus(this, doc.getDocumentElement()));
             }
             return true;
         }
@@ -1522,7 +1532,7 @@ public class TwitterAPI {
 
     /**
      * Get the URL the user must visit in order to authorize DMDirc.
-     * 
+     *
      * @return the URL the user must visit in order to authorize DMDirc.
      * @throws TwitterRuntimeException  if there is a problem with OAuth.*
      */
