@@ -87,7 +87,8 @@ import java.util.Map;
  *
  * @author shane
  */
-public class Twitter implements Parser, TwitterErrorHandler, TwitterRawHandler, ConfigChangeListener {
+public class Twitter implements Parser, TwitterErrorHandler, TwitterRawHandler,
+        ConfigChangeListener {
 
     /** Number of loops between clearing of the status cache. */
     private static final long PRUNE_COUNT = 20;
@@ -104,10 +105,12 @@ public class Twitter implements Parser, TwitterErrorHandler, TwitterRawHandler, 
     private TwitterAPI api = new TwitterAPI("", "", "", false, -1, false);
 
     /** Channels we are in. */
-    private final Map<String, TwitterChannelInfo> channels = new HashMap<String, TwitterChannelInfo>();
+    private final Map<String, TwitterChannelInfo> channels
+            = new HashMap<String, TwitterChannelInfo>();
 
     /** Clients we know. */
-    private final Map<String, TwitterClientInfo> clients = new HashMap<String, TwitterClientInfo>();
+    private final Map<String, TwitterClientInfo> clients
+            = new HashMap<String, TwitterClientInfo>();
 
     /** When did we last query the API? */
     private long lastQueryTime = 0;

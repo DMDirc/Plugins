@@ -52,9 +52,9 @@ public class TwitterMessage implements Comparable<TwitterMessage> {
     private final long time;
 
     /**
-     * Create a new TwitterMessage
+     * Create a new TwitterMessage.
      *
-     * @param api
+     * @param api API that owns this.
      * @param message Message contents
      */
     protected TwitterMessage(final TwitterAPI api, final String message) {
@@ -62,9 +62,9 @@ public class TwitterMessage implements Comparable<TwitterMessage> {
     }
 
     /**
-     * Create a new TwitterMessage
+     * Create a new TwitterMessage.
      *
-     * @param api
+     * @param api API that owns this.
      * @param message Message contents
      * @param id ID of message
      * @param sender User who send this
@@ -81,7 +81,7 @@ public class TwitterMessage implements Comparable<TwitterMessage> {
     }
 
     /**
-     * Create a twitter status from a node!
+     * Create a twitter status from a node.
      *
      * @param api API that owns this.
      * @param node Node to use.
