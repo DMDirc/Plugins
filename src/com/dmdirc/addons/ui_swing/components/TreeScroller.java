@@ -21,6 +21,7 @@
  */
 package com.dmdirc.addons.ui_swing.components;
 
+import com.dmdirc.addons.ui_swing.UIUtilities;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 
@@ -70,7 +71,8 @@ public class TreeScroller implements MouseWheelListener {
      * @param rootVisible Is the root node visible
      */
     public TreeScroller(final DefaultTreeModel model,
-            final TreeSelectionModel selectionModel, final boolean rootVisible) {
+            final TreeSelectionModel selectionModel,
+            final boolean rootVisible) {
         this.model = model;
         this.selectionModel = selectionModel;
 
@@ -84,7 +86,14 @@ public class TreeScroller implements MouseWheelListener {
      * @param tree Tree to scroll
      */
     public static void register(final JTree tree) {
-        new TreeScroller(tree);
+        UIUtilities.invokeLater(new Runnable() {
+
+            /** {@inheritDoc} */
+            @Override
+            public void run() {
+                new TreeScroller(tree);
+            }
+        });
     }
 
     /**
@@ -95,8 +104,23 @@ public class TreeScroller implements MouseWheelListener {
      * @param rootVisible Root visible
      */
     public static void register(final DefaultTreeModel model,
-            final TreeSelectionModel selectionModel, final boolean rootVisible) {
-        new TreeScroller(model, selectionModel, rootVisible);
+            final TreeSelectionModel selectionModel,
+            final boolean rootVisible) {
+        UIUtilities.invokeLater(new Runnable() {
+
+            /** {@inheritDoc} */
+            @Override
+            public void run() {
+                new TreeScroller(model, selectionModel, rootVisible);
+            }
+        });
+    }
+
+    /**
+     * Removes this tree scroller from the tree.
+     */
+    public void unregister() {
+        tree.removeMouseWheelListener(this);
     }
 
     /**
