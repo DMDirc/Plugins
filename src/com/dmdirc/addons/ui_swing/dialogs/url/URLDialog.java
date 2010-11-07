@@ -37,7 +37,7 @@ import javax.swing.JButton;
 import net.miginfocom.swing.MigLayout;
 
 /** URL Protocol dialog. */
-public class URLDialog extends StandardDialog implements ActionListener {
+public final class URLDialog extends StandardDialog implements ActionListener {
 
     /**
      * A version number for this class. It should be changed whenever the class

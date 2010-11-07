@@ -31,11 +31,13 @@ import com.dmdirc.ui.IconManager;
 
 import java.awt.Dimension;
 import java.util.concurrent.ExecutionException;
+
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.UIManager;
+
 import net.miginfocom.layout.PlatformDefaults;
 
 /**
@@ -50,11 +52,9 @@ public class CategoryLabel extends JLabel {
      */
     private static final long serialVersionUID = -1659415238166842265L;
     /** Panel gap. */
-    private final int padding = (int) (1.5 * PlatformDefaults.getUnitValueX(
-            "related").getValue());
-    private PreferencesCategory category;
+    private final int padding = (int)
+            (1.5 * PlatformDefaults.getUnitValueX("related").getValue());
     private JList parentList;
-    private int index;
 
     /**
      * 
@@ -66,8 +66,6 @@ public class CategoryLabel extends JLabel {
     public CategoryLabel(final JList parentList,
             final PreferencesCategory category, final int numCats, final int index) {
         this.parentList = parentList;
-        this.category = category;
-        this.index = index;
 
         setText(category.getTitle());
         new IconLoader(this, category.getIcon()).executeInExecutor();

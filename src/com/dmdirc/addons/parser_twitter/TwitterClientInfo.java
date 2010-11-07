@@ -27,6 +27,7 @@ import com.dmdirc.parser.interfaces.ChannelClientInfo;
 import com.dmdirc.parser.interfaces.LocalClientInfo;
 import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.plugins.Plugin;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -74,21 +75,23 @@ public class TwitterClientInfo implements LocalClientInfo {
      * @param plugin Plugin to use to get domain from.
      * @return String array of nick, ident and host.
      */
-    static String[] parseHostFull(String hostname, final Plugin plugin, final Twitter parser) {
+    static String[] parseHostFull(final String hostname, final Plugin plugin, final Twitter parser) {
         boolean hadAt = false;
-        if (plugin != null && parser != null && parser.getConfigManager().getOptionBool(plugin.getDomain(), "autoAt")) {
-            if (!hostname.isEmpty() && hostname.charAt(0) == '@') {
-                hostname = hostname.substring(1);
-                hadAt = true;
-            }
+        String sanitisedHostname = hostname;
+
+        if (plugin != null && parser != null
+                && parser.getConfigManager().getOptionBool(plugin.getDomain(), "autoAt")
+                && !sanitisedHostname.isEmpty() && sanitisedHostname.charAt(0) == '@') {
+            sanitisedHostname = sanitisedHostname.substring(1);
+            hadAt = true;
         }
 
         String[] temp = null;
         final String[] result = new String[3];
-        if (!hostname.isEmpty() && hostname.charAt(0) == ':') {
-            hostname = hostname.substring(1);
+        if (!sanitisedHostname.isEmpty() && sanitisedHostname.charAt(0) == ':') {
+            sanitisedHostname = sanitisedHostname.substring(1);
         }
-        temp = hostname.split("@", 2);
+        temp = sanitisedHostname.split("@", 2);
         if (temp.length == 1) {
             result[2] = "";
         } else {
@@ -153,11 +156,7 @@ public class TwitterClientInfo implements LocalClientInfo {
     /** {@inheritDoc} */
     @Override
     public void setNickname(final String name) {
-        if (this == myParser.getLocalClient()) {
-            // TODO: throw new UnsupportedOperationException("Not supported yet.");
-        } else {
-            // TODO: throw new UnsupportedOperationException("Can not set nickname on non-local clients");
-        }
+        // TODO: Implement?
     }
 
     /**
@@ -217,25 +216,25 @@ public class TwitterClientInfo implements LocalClientInfo {
     /** {@inheritDoc} */
     @Override
     public void setAway(final String reason) {
-        return;
+        // Do nothing
     }
 
     /** {@inheritDoc} */
     @Override
     public void setBack() {
-        return;
+        // Do nothing
     }
 
     /** {@inheritDoc} */
     @Override
     public void alterMode(final boolean add, final Character mode) {
-        return;
+        // Do nothing
     }
 
     /** {@inheritDoc} */
     @Override
     public void flushModes() {
-        return;
+        // Do nothing
     }
 
     /** {@inheritDoc} */
@@ -278,7 +277,7 @@ public class TwitterClientInfo implements LocalClientInfo {
 
     /**
      * Get a list of all the channel clients associated with this user.
-     * 
+     *
      * @return Channel Clients for this Client.
      */
     public List<ChannelClientInfo> getChannelClients() {
@@ -301,7 +300,7 @@ public class TwitterClientInfo implements LocalClientInfo {
 
     /**
      * Add a channelClient to this Client.
-     * 
+     *
      * @param channelClient channelClient to add as us.
      */
     public void addChannelClient(final TwitterChannelClientInfo channelClient) {

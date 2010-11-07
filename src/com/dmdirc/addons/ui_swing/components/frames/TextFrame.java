@@ -283,14 +283,13 @@ public abstract class TextFrame extends JInternalFrame implements Window,
                     TextFrame.super.setVisible(true);
                 }
                 try {
-                    if (pref || controller.getMainFrame().getMaximised()) {
-                        if (!isMaximum()) {
-                            setMaximum(true);
-                        }
+                    if ((pref || controller.getMainFrame().getMaximised()) && !isMaximum()) {
+                        setMaximum(true);
                     }
                 } catch (PropertyVetoException ex) {
                     //Ignore
                 }
+
                 try {
                     if (!isSelected()) {
                         setSelected(true);
@@ -679,7 +678,7 @@ public abstract class TextFrame extends JInternalFrame implements Window,
 
             /** {@inheritDoc} */
             @Override
-            protected Object doInBackground() throws Exception {
+            protected Object doInBackground() {
                 frameParent.windowClosing();
                 return null;
             }
@@ -738,7 +737,7 @@ public abstract class TextFrame extends JInternalFrame implements Window,
 
             /** {@inheritDoc} */
             @Override
-            protected Object doInBackground() throws Exception {
+            protected Object doInBackground() {
                 LOGGER.finer(getName()
                         + ": internalFrameActivated(): doInBackground");
                 frameParent.windowActivated();

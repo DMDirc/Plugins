@@ -76,11 +76,11 @@ public final class SwingPreferencesDialog extends StandardDialog implements
     /** Preferences Manager. */
     private PreferencesManager manager;
     /** Manager loading swing worker. */
-    private LoggingSwingWorker worker;
+    private LoggingSwingWorker<PreferencesManager, Void> worker;
     /** Parent window. */
     private MainFrame parentWindow;
     /** Panel size. */
-    protected int panelSize = 0;
+    private int panelSize = 0;
 
     /**
      * Creates a new instance of SwingPreferencesDialog.
@@ -272,10 +272,10 @@ public final class SwingPreferencesDialog extends StandardDialog implements
             saveOptions();
         }
 
-        new LoggingSwingWorker() {
+        new LoggingSwingWorker<Void, Void>() {
 
             @Override
-            protected Object doInBackground() throws Exception {
+            protected Void doInBackground() {
                 if (manager != null) {
                     manager.dismiss();
                 }
