@@ -84,6 +84,7 @@ public final class DcopPlugin extends Plugin {
     @Override
     public void onLoad() {
         command = new DcopCommand();
+        CommandManager.registerCommand(command);
     }
     
     /** {@inheritDoc} */

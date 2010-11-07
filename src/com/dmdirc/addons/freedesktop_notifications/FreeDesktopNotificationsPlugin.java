@@ -144,6 +144,7 @@ public final class FreeDesktopNotificationsPlugin extends Plugin implements Conf
         setCachedSettings();
 
         command = new FDNotifyCommand(this);
+        CommandManager.registerCommand(command);
 
         // Extract required Files
         final PluginInfo pi = PluginManager.getPluginManager().getPluginInfoByName("freedesktop_notifications");

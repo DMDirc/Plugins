@@ -146,6 +146,8 @@ public class LoggingPlugin extends Plugin implements ActionListener,
         IdentityManager.getGlobalConfig().addChangeListener(getDomain(), this);
 
         command = new LoggingCommand();
+        CommandManager.registerCommand(command);
+
         ActionManager.addListener(this,
                 CoreActionType.CHANNEL_OPENED,
                 CoreActionType.CHANNEL_CLOSED,

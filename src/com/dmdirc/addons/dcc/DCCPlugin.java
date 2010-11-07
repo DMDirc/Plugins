@@ -488,6 +488,8 @@ public final class DCCPlugin extends Plugin implements ActionListener {
         }
 
         command = new DCCCommand(this);
+        CommandManager.registerCommand(command);
+
         ActionManager.registerActionTypes(DCCActions.values());
         ActionManager.addListener(this, CoreActionType.SERVER_CTCP);
     }

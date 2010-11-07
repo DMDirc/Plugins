@@ -48,6 +48,7 @@ public final class DNSPlugin extends Plugin {
     @Override
     public void onLoad() {
         command = new DNSCommand();
+        CommandManager.registerCommand(command);
     }
     
     /** {@inheritDoc} */

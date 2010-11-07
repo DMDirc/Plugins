@@ -44,11 +44,13 @@ public final class RedirectPlugin extends Plugin {
     }
     
     /** {@inheritDoc} */
+    @Override
     public void onLoad() {
         CommandManager.registerCommand(command);
     }
     
     /** {@inheritDoc}. */
+    @Override
     public void onUnload() {
         CommandManager.unregisterCommand(command);
     }

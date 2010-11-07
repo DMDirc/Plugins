@@ -71,6 +71,7 @@ public final class TimePlugin  extends Plugin {
         }, 1000 * offset, 1000 * 60);
         
         command = new TimerCommand();
+        CommandManager.registerCommand(command);
     }
     
     /** Handles a timer event that occurs every minute. */

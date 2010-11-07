@@ -25,7 +25,6 @@ package com.dmdirc.addons.time;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandInfo;
-import com.dmdirc.commandparser.CommandManager;
 import com.dmdirc.commandparser.CommandType;
 import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.IntelligentCommand;
@@ -45,7 +44,7 @@ public final class TimerCommand extends Command implements IntelligentCommand,
      * Creates a new instance of TimerCommand.
      */
     public TimerCommand() {
-        CommandManager.registerCommand(this);
+        super();
     }
     
     /** {@inheritDoc} */

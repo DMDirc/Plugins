@@ -25,7 +25,6 @@ package com.dmdirc.addons.systray;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandInfo;
-import com.dmdirc.commandparser.CommandManager;
 import com.dmdirc.commandparser.CommandType;
 import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.context.CommandContext;
@@ -48,8 +47,6 @@ public final class PopupCommand extends Command implements CommandInfo {
         super();
         
         this.parent = newParent;
-        
-        CommandManager.registerCommand(this);
     }
 
     /**
@@ -94,10 +91,5 @@ public final class PopupCommand extends Command implements CommandInfo {
     public String getHelp() {
         return "popup <message> - shows the message as a system tray popup";
     }
-    
-    /** Unregisters this command from the CommandManager. */
-    public void unregister() {
-        CommandManager.unregisterCommand(this);
-    }
-    
+
 }

@@ -52,6 +52,8 @@ public final class AudioPlugin extends Plugin {
     public void onLoad() {
         audioCommand = new AudioCommand();
         beepCommand = new BeepCommand();
+        CommandManager.registerCommand(audioCommand);
+        CommandManager.registerCommand(beepCommand);
     }
 
     /**

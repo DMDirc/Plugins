@@ -86,6 +86,7 @@ public class NowPlayingPlugin extends Plugin implements ActionListener  {
         }
 
         command = new NowPlayingCommand(this);
+        CommandManager.registerCommand(command);
     }
 
     /** {@inheritDoc} */

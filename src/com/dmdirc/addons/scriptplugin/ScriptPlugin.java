@@ -88,6 +88,7 @@ public final class ScriptPlugin extends Plugin implements ActionListener {
         // after this method finishes for us to register the rest.
         ActionManager.addListener(this, CoreActionType.PLUGIN_LOADED);
         command = new ScriptCommand(this);
+        CommandManager.registerCommand(command);
 
         // Make sure our scripts dir exists
         final File newDir = new File(scriptDir);

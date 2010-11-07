@@ -26,7 +26,6 @@ import com.dmdirc.FrameContainer;
 import com.dmdirc.MessageTarget;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandInfo;
-import com.dmdirc.commandparser.CommandManager;
 import com.dmdirc.commandparser.CommandType;
 import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.IntelligentCommand;
@@ -59,8 +58,6 @@ public final class NowPlayingCommand extends Command implements
         super();
 
         this.parent = parent;
-
-        CommandManager.registerCommand(this);
     }
 
     /** {@inheritDoc} */

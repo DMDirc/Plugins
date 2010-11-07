@@ -25,7 +25,6 @@ package com.dmdirc.addons.parserdebug;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandInfo;
-import com.dmdirc.commandparser.CommandManager;
 import com.dmdirc.commandparser.CommandType;
 import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.CommandOptions;
@@ -52,7 +51,6 @@ public final class ParserDebugCommand extends Command implements CommandInfo {
     public ParserDebugCommand(final DebugPlugin plugin) {
         super();
         myPlugin = plugin;
-        CommandManager.registerCommand(this);
     }
     
     /** {@inheritDoc} */

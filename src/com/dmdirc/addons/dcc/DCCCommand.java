@@ -33,7 +33,6 @@ import com.dmdirc.addons.dcc.kde.KFileChooser;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandInfo;
-import com.dmdirc.commandparser.CommandManager;
 import com.dmdirc.commandparser.CommandType;
 import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.IntelligentCommand;
@@ -69,7 +68,6 @@ public final class DCCCommand extends Command implements IntelligentCommand,
     public DCCCommand(final DCCPlugin plugin) {
         super();
         myPlugin = plugin;
-        CommandManager.registerCommand(this);
     }
 
     /** {@inheritDoc} */
