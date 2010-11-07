@@ -23,15 +23,12 @@
 package com.dmdirc.addons.logging;
 
 import com.dmdirc.FrameContainer;
-import com.dmdirc.Server;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandInfo;
-import com.dmdirc.commandparser.CommandManager;
 import com.dmdirc.commandparser.CommandType;
 import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.IntelligentCommand;
 import com.dmdirc.commandparser.commands.context.CommandContext;
-import com.dmdirc.commandparser.commands.context.ServerCommandContext;
 import com.dmdirc.plugins.Plugin;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.PluginManager;
@@ -50,7 +47,6 @@ public final class LoggingCommand extends Command implements IntelligentCommand,
      */
     public LoggingCommand() {
         super();
-        CommandManager.registerCommand(this);
     }
 
     /** {@inheritDoc} */

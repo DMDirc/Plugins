@@ -27,6 +27,7 @@ import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.actions.interfaces.ActionType;
 import com.dmdirc.addons.ui_swing.SwingController;
+import com.dmdirc.commandparser.CommandManager;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
@@ -134,6 +135,7 @@ public final class SystrayPlugin extends Plugin implements ActionListener,
         try {
             SystemTray.getSystemTray().add(icon);
             command = new PopupCommand(this);
+            CommandManager.registerCommand(command);
         } catch (AWTException ex) {
             // Should probably unload ourself here?
         }
@@ -145,7 +147,7 @@ public final class SystrayPlugin extends Plugin implements ActionListener,
     @Override
     public void onUnload() {
         SystemTray.getSystemTray().remove(icon);
-        command.unregister();
+        CommandManager.unregisterCommand(command);
 
         ActionManager.removeListener(this);
     }

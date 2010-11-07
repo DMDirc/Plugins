@@ -23,14 +23,11 @@
 package com.dmdirc.addons.dcop;
 
 import com.dmdirc.FrameContainer;
-import com.dmdirc.Server;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandInfo;
-import com.dmdirc.commandparser.CommandManager;
 import com.dmdirc.commandparser.CommandType;
 import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.context.CommandContext;
-import com.dmdirc.commandparser.commands.context.ServerCommandContext;
 
 import java.util.List;
 
@@ -45,8 +42,6 @@ public final class DcopCommand extends Command implements CommandInfo {
      */
     public DcopCommand() {
         super();
-        
-        CommandManager.registerCommand(this);
     }
 
     /** {@inheritDoc} */

@@ -25,7 +25,6 @@ package com.dmdirc.addons.dns;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandInfo;
-import com.dmdirc.commandparser.CommandManager;
 import com.dmdirc.commandparser.CommandType;
 import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.context.CommandContext;
@@ -41,8 +40,6 @@ public final class DNSCommand extends Command implements CommandInfo {
     /** Creates a new instance of DNSCommand. */
     public DNSCommand() {
         super();
-        
-        CommandManager.registerCommand(this);
     }
     
     /** {@inheritDoc} */
