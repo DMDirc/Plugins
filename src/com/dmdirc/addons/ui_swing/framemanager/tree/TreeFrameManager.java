@@ -25,6 +25,7 @@ package com.dmdirc.addons.ui_swing.framemanager.tree;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
+import com.dmdirc.addons.ui_swing.components.TreeScroller;
 import com.dmdirc.addons.ui_swing.framemanager.FrameManager;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.interfaces.ConfigChangeListener;
@@ -78,6 +79,8 @@ public final class TreeFrameManager implements FrameManager,
     private final Map<FrameContainer<?>, TreeViewNode> nodes;
     /** UI Controller. */
     private SwingController controller;
+    /** Tree scroller. */
+    private TreeScroller scroller;
 
     /** creates a new instance of the TreeFrameManager. */
     public TreeFrameManager() {
@@ -119,10 +122,6 @@ public final class TreeFrameManager implements FrameManager,
                 setColours();
 
                 redoTreeView();
-                if (controller.getMainFrame().getActiveFrame() != null) {
-                    selectionChanged(controller.getMainFrame().getActiveFrame().
-                            getContainer());
-                }
             }
         });
     }
@@ -208,9 +207,9 @@ public final class TreeFrameManager implements FrameManager,
         });
     }
 
-    /** 
+    /**
      * Adds a window to the frame container.
-     * 
+     *
      * @param parent Parent node
      * @param window Window to add
      */
@@ -260,8 +259,8 @@ public final class TreeFrameManager implements FrameManager,
 
     /**
      * Checks for and sets a rollover node.
-     * 
-     * @param event event to check 
+     *
+     * @param event event to check
      */
     protected void checkRollover(final MouseEvent event) {
         NodeLabel node = null;
@@ -313,15 +312,23 @@ public final class TreeFrameManager implements FrameManager,
                 ((DefaultTreeModel) tree.getModel()).setRoot(null);
                 ((DefaultTreeModel) tree.getModel()).setRoot(new TreeViewNode(
                         null, null));
-                new TreeTreeScroller(tree);
+                if (scroller != null) {
+                    scroller.unregister();
+                }
+                scroller = new TreeTreeScroller(tree);
 
-                for (FrameContainer<?> window : WindowManager.getRootWindows()) {
+                for (FrameContainer<?> window
+                        : WindowManager.getRootWindows()) {
                     addWindow(null, window);
-                    final Collection<FrameContainer<?>> childWindows = window.
-                            getChildren();
+                    final Collection<FrameContainer<?>> childWindows = window
+                            .getChildren();
                     for (FrameContainer childWindow : childWindows) {
                         addWindow(nodes.get(window), childWindow);
                     }
+                }
+                if (controller.getMainFrame().getActiveFrame() != null) {
+                    selectionChanged(controller.getMainFrame().getActiveFrame()
+                            .getContainer());
                 }
             }
         });
