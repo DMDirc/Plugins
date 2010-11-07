@@ -54,7 +54,7 @@ import javax.swing.filechooser.FileSystemView;
  *   and kdialog is in either /usr/bin or /bin
  * - Selection mode FILES_AND_DIRECTORIES can not be used
  */
-public class KFileChooser extends JFileChooser {
+public final class KFileChooser extends JFileChooser {
 
     /**
      * A version number for this class.

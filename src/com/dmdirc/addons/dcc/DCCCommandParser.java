@@ -31,7 +31,7 @@ import com.dmdirc.commandparser.parsers.GlobalCommandParser;
 /**
  * DCC CommandParser
  */
-public class DCCCommandParser extends GlobalCommandParser {
+public final class DCCCommandParser extends GlobalCommandParser {
 
     /** The singleton instance of the DCC command parser. */
     private static DCCCommandParser me;
