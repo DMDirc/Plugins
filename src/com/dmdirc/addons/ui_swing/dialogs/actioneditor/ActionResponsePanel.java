@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_swing.dialogs.actioneditor;
 
 import com.dmdirc.addons.ui_swing.UIUtilities;
+import com.dmdirc.addons.ui_swing.components.inputfields.TextAreaInputField;
 import com.dmdirc.config.IdentityManager;
 
 import java.util.TreeSet;
@@ -67,9 +68,12 @@ public class ActionResponsePanel extends JPanel {
 
     /** Initialises the components. */
     private void initComponents() {
-        response = new JTextArea();
+        response = new TextAreaInputField("");
         scrollPane = new JScrollPane(response);
         response.setRows(4);
+        //new SwingInputHandler(response, GlobalCommandParser
+        //        .getGlobalCommandParser(), inputWindow)
+        //        .setTypes(false, false, true,false);
         formatter = new JComboBox(new DefaultComboBoxModel());
 
         ((DefaultComboBoxModel) formatter.getModel()).addElement("No change");

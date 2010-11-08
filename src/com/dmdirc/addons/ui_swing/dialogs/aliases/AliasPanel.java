@@ -27,8 +27,11 @@ import com.dmdirc.actions.CoreActionComparison;
 import com.dmdirc.actions.CoreActionComponent;
 import com.dmdirc.actions.wrappers.Alias;
 import com.dmdirc.addons.ui_swing.UIUtilities;
+import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputHandler;
+import com.dmdirc.addons.ui_swing.components.inputfields.ValidatingTextFieldInputField;
 import com.dmdirc.addons.ui_swing.components.renderers.ActionComparisonCellRenderer;
-import com.dmdirc.addons.ui_swing.components.validating.ValidatingJTextField;
+import com.dmdirc.commandparser.parsers.CommandParser;
+import com.dmdirc.commandparser.parsers.GlobalCommandParser;
 import com.dmdirc.commandparser.validators.CommandNameValidator;
 import com.dmdirc.util.validators.FileNameValidator;
 import com.dmdirc.util.validators.ValidatorChain;
@@ -60,7 +63,7 @@ public final class AliasPanel extends JPanel implements ActionListener {
      */
     private static final long serialVersionUID = 2;
     /** Name field. */
-    private final ValidatingJTextField command;
+    private final ValidatingTextFieldInputField command;
     /** argument component combo box. */
     private final JComboBox argumentComponent;
     /** Argument number spinner. */
@@ -75,9 +78,12 @@ public final class AliasPanel extends JPanel implements ActionListener {
     public AliasPanel() {
         super();
 
-        command = new ValidatingJTextField(new ValidatorChain<String>(
+        command = new ValidatingTextFieldInputField(new ValidatorChain<String>(
                 new CommandNameValidator(), new FileNameValidator()));
         command.setEnabled(false);
+        //new SwingInputHandler(command, GlobalCommandParser
+        //        .getGlobalCommandParser(), inputWindow)
+        //        .setTypes(false, false, true,false);
 
         argumentComponent = new JComboBox(new CoreActionComparison[]{null,
             CoreActionComparison.INT_GREATER, CoreActionComparison.INT_EQUALS,
