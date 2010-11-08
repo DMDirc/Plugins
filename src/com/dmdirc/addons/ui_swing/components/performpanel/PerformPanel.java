@@ -25,7 +25,7 @@ package com.dmdirc.addons.ui_swing.components.performpanel;
 
 import com.dmdirc.actions.wrappers.PerformWrapper;
 import com.dmdirc.actions.wrappers.PerformWrapper.PerformDescription;
-import com.dmdirc.addons.ui_swing.components.TextAreaInputField;
+import com.dmdirc.addons.ui_swing.components.inputfields.TextAreaInputField;
 
 import java.util.Collection;
 import java.util.Collections;
