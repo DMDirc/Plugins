@@ -22,7 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.actions;
 
-import com.dmdirc.addons.ui_swing.components.SwingSearchBar;
+import com.dmdirc.addons.ui_swing.components.inputfields.SwingSearchBar;
 
 import java.awt.event.ActionEvent;
 
