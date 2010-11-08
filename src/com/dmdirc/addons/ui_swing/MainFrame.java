@@ -259,7 +259,7 @@ public final class MainFrame extends JFrame implements WindowListener,
      *
      * @return JDesktopPane for the frame
      */
-    public JDesktopPane getDesktopPane() {
+    public DMDircDesktopPane getDesktopPane() {
         return desktopPane;
     }
 
