@@ -69,7 +69,8 @@ public final class WindowMenuFrameManager extends JMenu implements
     /** Non frame container menu count. */
     private final int itemCount;
     /** Menu items for toggling, closing and minimising. */
-    private final JMenuItem toggleStateMenuItem, closeMenuItem, minimiseMenuItem;
+    private final JMenuItem toggleStateMenuItem, closeMenuItem,
+            minimiseMenuItem;
     /** Seperator. */
     private final JSeparator separator;
     /** Active window. */
@@ -83,7 +84,7 @@ public final class WindowMenuFrameManager extends JMenu implements
     private final Map<FrameContainer, FrameContainerMenuItem> items;
     private final Map<FrameContainer, FrameContainerMenuItem> menuItems;
 
-    /** 
+    /**
      * Creates a new instance of WindowMenuFrameManager.
      *
      * @param controller Swing controller
@@ -128,17 +129,19 @@ public final class WindowMenuFrameManager extends JMenu implements
         closeMenuItem.addActionListener(this);
         add(closeMenuItem);
 
+        add(new ArrangeWindows(controller));
+
         separator = new JPopupMenu.Separator();
         add(separator);
 
         itemCount = getMenuComponentCount();
         checkToggleState();
 
-        new WindowMenuScroller(this, controller.getDomain(), 4);
+        new WindowMenuScroller(this, controller.getDomain(), itemCount);
     }
 
     /**
-     * Checks the number of components in the menu and enables menus items 
+     * Checks the number of components in the menu and enables menus items
      * appropriately.
      */
     private void checkMenuItems() {
@@ -306,9 +309,9 @@ public final class WindowMenuFrameManager extends JMenu implements
         items.put(item.getFrame(), item);
     }
 
-    /** 
+    /**
      * {@inheritDoc}
-     * 
+     *
      * @param e Action event
      */
     @Override

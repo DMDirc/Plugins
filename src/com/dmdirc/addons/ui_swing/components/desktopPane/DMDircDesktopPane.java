@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_swing.components.desktopPane;
 
 import com.dmdirc.FrameContainer;
+import com.dmdirc.FrameContainerComparator;
 import com.dmdirc.addons.ui_swing.BackgroundOption;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SwingController;
@@ -33,6 +34,7 @@ import com.dmdirc.addons.ui_swing.components.frames.InputTextFrame;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.addons.ui_swing.framemanager.tree.TreeViewModel;
 import com.dmdirc.addons.ui_swing.framemanager.tree.TreeViewNode;
+import com.dmdirc.addons.ui_swing.framemanager.windowmenu.JInternalFrameComparator;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.interfaces.SelectionListener;
@@ -198,6 +200,74 @@ public class DMDircDesktopPane extends JDesktopPane implements
         // Increase the offsets
         xOffset += FRAME_OPENING_OFFSET;
         yOffset += FRAME_OPENING_OFFSET;
+    }
+
+    /**
+     * Arranges the windows in the specified number of rows and columns.
+     *
+     * @param windows Windows to arranges
+     * @param columns Number of columns to use
+     * @param rows Number of rows to use
+     */
+    private void tileWindows(final JInternalFrame[] windows, final int columns,
+            final int rows) {
+        ((TextFrame) windows[0]).restore();
+        final int total = windows.length;
+        final int windowWidth = getWidth() / columns;
+        final int windowHeight = getHeight() / rows;
+
+        int column = 0;
+        int x = 0;
+        int y = 0;
+        for (int i = 0; i < total; i++) {
+            windows[i].setBounds(x, y, windowWidth, windowHeight);
+            column++;
+            x += windowWidth;
+            if (column >= columns) {
+                column = 0;
+                x = 0;
+                y += windowHeight;
+            }
+        }
+    }
+
+    /**
+     * Arranges the windows to be equal size in a grid.
+     */
+    public void tileWindows() {
+        if (getAllFrames().length == 0) {
+            return;
+        }
+        final JInternalFrame[] windows = getAllFrames();
+        Arrays.sort(windows, new JInternalFrameComparator());
+        final int total = windows.length;
+        final int columns = (int) Math.floor(Math.sqrt(total));
+        final int rows = (int) (Math.ceil(((double) total) / columns));
+        tileWindows(windows, columns, rows);
+    }
+
+    /**
+     * Arranges the windows to be equal size in a horizontal row.
+     */
+    public void tileHorizontally() {
+        if (getAllFrames().length == 0) {
+            return;
+        }
+        final JInternalFrame[] windows = getAllFrames();
+        Arrays.sort(windows, new JInternalFrameComparator());
+        tileWindows(windows, 1, windows.length);
+    }
+
+    /**
+     * Arranges the windows to be equal size in a vertical row.
+     */
+    public void tileVertically() {
+        if (getAllFrames().length == 0) {
+            return;
+        }
+        final JInternalFrame[] windows = getAllFrames();
+        Arrays.sort(windows, new JInternalFrameComparator());
+        tileWindows(windows, windows.length, 1);
     }
 
     /**
