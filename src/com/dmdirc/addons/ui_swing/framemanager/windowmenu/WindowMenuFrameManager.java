@@ -27,6 +27,7 @@ import com.dmdirc.FrameContainerComparator;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.SwingWindowListener;
 import com.dmdirc.addons.ui_swing.UIUtilities;
+import com.dmdirc.addons.ui_swing.components.desktopPane.DMDircDesktopPane;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.interfaces.SelectionListener;
 import com.dmdirc.ui.IconManager;
@@ -69,7 +70,8 @@ public final class WindowMenuFrameManager extends JMenu implements
     /** Non frame container menu count. */
     private final int itemCount;
     /** Menu items for toggling, closing and minimising. */
-    private final JMenuItem toggleStateMenuItem, closeMenuItem, minimiseMenuItem;
+    private final JMenuItem toggleStateMenuItem, closeMenuItem, 
+            minimiseMenuItem;
     /** Seperator. */
     private final JSeparator separator;
     /** Active window. */
@@ -127,6 +129,8 @@ public final class WindowMenuFrameManager extends JMenu implements
         closeMenuItem.setActionCommand("Close");
         closeMenuItem.addActionListener(this);
         add(closeMenuItem);
+        
+        add(new ArrangeWindows(controller));
 
         separator = new JPopupMenu.Separator();
         add(separator);
@@ -134,7 +138,7 @@ public final class WindowMenuFrameManager extends JMenu implements
         itemCount = getMenuComponentCount();
         checkToggleState();
 
-        new WindowMenuScroller(this, controller.getDomain(), 4);
+        new WindowMenuScroller(this, controller.getDomain(), itemCount);
     }
 
     /**
