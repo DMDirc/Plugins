@@ -19,53 +19,57 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.dmdirc.addons.ui_swing.components;
+
+package com.dmdirc.addons.ui_swing.components.inputfields;
 
 import com.dmdirc.addons.ui_swing.components.colours.ColourPickerDialog;
+import com.dmdirc.addons.ui_swing.components.validating.ValidatingJTextField;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.ui.interfaces.InputField;
+import com.dmdirc.util.validators.Validator;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.text.BadLocationException;
 
 /**
- *
- * @author chris
+ * Extended ValidatingTextField that adds Inputfield support.
  */
-public class TextAreaInputField extends JTextArea implements InputField {
-    
+public class ValidatingTextFieldInputField extends ValidatingJTextField
+        implements InputField {
+
     /**
      * A version number for this class. It should be changed whenever the class
      * structure is changed (or anything else that would prevent serialized
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 2;
-    
+
     /** Colour picker. */
-    protected ColourPickerDialog colourPicker;    
+    protected ColourPickerDialog colourPicker;
 
     /**
-     * Creates a new text area with the specified number of rows and columns.
-     * 
-     * @param rows The number of rows to use
-     * @param columns The number of columns to use
+     * Creates a new text field with the specified validator.
+     *
+     * @param validator Validator for this textfield
      */
-    public TextAreaInputField(final int rows, final int columns) {
-        super(rows, columns);
+    public ValidatingTextFieldInputField(final Validator<String> validator) {
+        super(validator);
     }
 
     /**
-     * Creates a new text area containing the specified text.
-     * 
-     * @param text The text to contain initially
+     * Creates a new text field with the specified validator.
+     *
+     * @param validator Validator for this textfield
+     * @param textField Textfield to use as a base
      */
-    public TextAreaInputField(String text) {
-        super(text);
+    public ValidatingTextFieldInputField(final JTextField textField,
+            final Validator<String> validator) {
+        super(textField, validator);
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public void addActionListener(final ActionListener listener) {
@@ -73,7 +77,7 @@ public class TextAreaInputField extends JTextArea implements InputField {
     }
 
     /** {@inheritDoc} */
-    @Override    
+    @Override
     public void removeActionListener(final ActionListener listener) {
         // Ignore request - we don't handle returns for text areas
     }
@@ -89,7 +93,7 @@ public class TextAreaInputField extends JTextArea implements InputField {
                 @Override
                 public void actionPerformed(final ActionEvent actionEvent) {
                     try {
-                        getDocument().insertString(getCaretPosition(), 
+                        getDocument().insertString(getCaretPosition(),
                                 actionEvent.getActionCommand(), null);
                     } catch (BadLocationException ex) {
                         //Ignore, wont happen
@@ -112,6 +116,18 @@ public class TextAreaInputField extends JTextArea implements InputField {
             colourPicker.dispose();
             colourPicker = null;
         }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public int getCaretPosition() {
+        return getTextField().getCaretPosition();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setCaretPosition(int position) {
+        getTextField().setCaretPosition(position);
     }
 
 }

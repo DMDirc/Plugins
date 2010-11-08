@@ -24,7 +24,7 @@ package com.dmdirc.addons.ui_swing.components.frames;
 
 import com.dmdirc.harness.ui.ClassComponentMatcher;
 import com.dmdirc.harness.ui.DMDircUITestCase;
-import com.dmdirc.addons.ui_swing.components.TextAreaInputField;
+import com.dmdirc.addons.ui_swing.components.inputfields.TextAreaInputField;
 import org.junit.Test;
 import org.uispec4j.Trigger;
 import org.uispec4j.Window;
