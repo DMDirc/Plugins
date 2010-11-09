@@ -103,6 +103,10 @@ public final class SystrayPlugin extends Plugin implements ActionListener,
         notify(title, message, TrayIcon.MessageType.NONE);
     }
 
+    public void showPopup(final String title, final String message) {
+        notify(title, message);
+    }
+
     /**
      * {@inheritDoc}
      *
