@@ -195,4 +195,15 @@ public final class OsdPlugin extends Plugin implements CategoryChangeListener,
         }
     }
 
+    /**
+     * Shows an OSD with the specified message, title is ignored, exported
+     * method used for showNotification.
+     *
+     * @param title Ignored
+     * @param message Message to show
+     */
+    public void showOSD(final String title, final String message) {
+        osdManager.showWindow(message);
+    }
+
 }
