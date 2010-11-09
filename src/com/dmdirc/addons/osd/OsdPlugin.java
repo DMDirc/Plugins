@@ -73,12 +73,12 @@ public final class OsdPlugin extends Plugin implements CategoryChangeListener,
      */
     public OsdPlugin() {
         super();
+        osdManager = new OsdManager(this);
     }
     
     /** {@inheritDoc} */
     @Override
     public void onLoad() {
-        osdManager = new OsdManager(this);
         command = new OsdCommand(this, osdManager);
         CommandManager.registerCommand(command);
     }
