@@ -104,6 +104,17 @@ public final class SystrayPlugin extends Plugin implements ActionListener,
     }
 
     /**
+     * Proxy method for notify, this method is used for the exported command to
+     * avoid ambiguity when performing reflection.
+     *
+     * @param title Title for the notification
+     * @param message Text for the notification
+     */
+    public void showPopup(final String title, final String message) {
+        notify(title, message);
+    }
+
+    /**
      * {@inheritDoc}
      *
      * @param e Action event
