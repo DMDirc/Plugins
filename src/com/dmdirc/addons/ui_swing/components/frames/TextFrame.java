@@ -77,6 +77,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.IllegalCharsetNameException;
 import java.nio.charset.UnsupportedCharsetException;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.logging.Level;
 
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
@@ -179,14 +180,10 @@ public abstract class TextFrame extends JInternalFrame implements Window,
         addInternalFrameListener(this);
         getTextPane().addTextPaneListener(this);
 
-        getTextPane().setBackground(config.getOptionColour("ui",
-                "backgroundcolour"));
-        getTextPane().setForeground(config.getOptionColour("ui",
-                "foregroundcolour"));
-
         config.addChangeListener("ui", "foregroundcolour", this);
         config.addChangeListener("ui", "backgroundcolour", this);
         config.addChangeListener("ui", "frameBufferSize", this);
+        updateColours();
 
         addPropertyChangeListener("maximum", this);
 
@@ -273,8 +270,8 @@ public abstract class TextFrame extends JInternalFrame implements Window,
     /** {@inheritDoc} */
     @Override
     public void open() {
-        final boolean pref = frameParent.getConfigManager().getOptionBool("ui",
-                "maximisewindows");
+        final boolean pref = frameParent.getConfigManager()
+                .getOptionBool("ui", "maximisewindows");
         UIUtilities.invokeLater(new Runnable() {
 
             @Override
@@ -283,7 +280,8 @@ public abstract class TextFrame extends JInternalFrame implements Window,
                     TextFrame.super.setVisible(true);
                 }
                 try {
-                    if ((pref || controller.getMainFrame().getMaximised()) && !isMaximum()) {
+                    if ((pref || controller.getMainFrame().getMaximised())
+                            && !isMaximum()) {
                         setMaximum(true);
                     }
                 } catch (PropertyVetoException ex) {
@@ -562,9 +560,9 @@ public abstract class TextFrame extends JInternalFrame implements Window,
      */
     @Override
     public final void propertyChange(final PropertyChangeEvent event) {
-        LOGGER.finer("Property change: name: " + event.getPropertyName()
-                + " value: " + event.getOldValue() + "->"
-                + event.getNewValue());
+        LOGGER.log(Level.FINER, "Property change: name: {0}  value: {1} -> {3}"
+                , new Object[]{event.getPropertyName(), event.getOldValue(),
+                event.getNewValue()});
         if ("UI".equals(event.getPropertyName())) {
             if (isMaximum()) {
                 hideTitlebar();
@@ -613,32 +611,25 @@ public abstract class TextFrame extends JInternalFrame implements Window,
                 } else {
                     try {
                         c = getClass().getClassLoader().loadClass(componentUI);
-                        constructor =
-                                c.getConstructor(new Class[]{
+                        constructor = c.getConstructor(new Class[]{
                                     javax.swing.JInternalFrame.class});
-                        temp =
-                                constructor.newInstance(new Object[]{
+                        temp = constructor.newInstance(new Object[]{
                                     TextFrame.this});
                     } catch (ClassNotFoundException ex) {
                         Logger.appError(ErrorLevel.MEDIUM,
-                                "Unable to readd titlebar",
-                                ex);
+                                "Unable to readd titlebar", ex);
                     } catch (NoSuchMethodException ex) {
                         Logger.appError(ErrorLevel.MEDIUM,
-                                "Unable to readd titlebar",
-                                ex);
+                                "Unable to readd titlebar", ex);
                     } catch (InstantiationException ex) {
                         Logger.appError(ErrorLevel.MEDIUM,
-                                "Unable to readd titlebar",
-                                ex);
+                                "Unable to readd titlebar", ex);
                     } catch (IllegalAccessException ex) {
                         Logger.appError(ErrorLevel.MEDIUM,
-                                "Unable to readd titlebar",
-                                ex);
+                                "Unable to readd titlebar", ex);
                     } catch (InvocationTargetException ex) {
                         Logger.appError(ErrorLevel.MEDIUM,
-                                "Unable to readd titlebar",
-                                ex);
+                                "Unable to readd titlebar", ex);
                     }
 
                 }
@@ -728,7 +719,8 @@ public abstract class TextFrame extends JInternalFrame implements Window,
      */
     @Override
     public void internalFrameActivated(final InternalFrameEvent event) {
-        LOGGER.finer(getName() + ": internalFrameActivated()");
+        LOGGER.log(Level.FINER, "{0} : internalFrameActivated()",
+                new Object[] {getName()});
 
         if (maximiseRestoreInProgress.get()) {
             return;
@@ -738,8 +730,9 @@ public abstract class TextFrame extends JInternalFrame implements Window,
             /** {@inheritDoc} */
             @Override
             protected Object doInBackground() {
-                LOGGER.finer(getName()
-                        + ": internalFrameActivated(): doInBackground");
+                LOGGER.log(Level.FINER,
+                        "{0} : internalFrameActivated(): doInBackground",
+                        new Object[]{getName()});
                 frameParent.windowActivated();
                 return null;
             }
@@ -816,67 +809,75 @@ public abstract class TextFrame extends JInternalFrame implements Window,
 
     /** {@inheritDoc} */
     @Override
-    public void mouseClicked(final ClickTypeValue clicktype,
+    public void mouseClicked(final ClickTypeValue clickType,
             final MouseEventType eventType, final MouseEvent event) {
         if (event.isPopupTrigger()) {
-            showPopupMenuInternal(clicktype, event.getPoint());
+            showPopupMenuInternal(clickType, event.getPoint());
         }
         if (eventType == MouseEventType.CLICK
                 && event.getButton() == MouseEvent.BUTTON1) {
-            switch (clicktype.getType()) {
-                case CHANNEL:
-                    if (frameParent.getServer() != null && ActionManager.
-                            processEvent(CoreActionType.LINK_CHANNEL_CLICKED,
-                            null, this, clicktype.getValue())) {
-                        frameParent.getServer().join(
-                                new ChannelJoinRequest(clicktype.getValue()));
-                    }
-                    break;
-                case HYPERLINK:
-                    if (ActionManager.processEvent(
-                            CoreActionType.LINK_URL_CLICKED, null, this,
-                            clicktype.getValue())) {
-                        controller.getURLHandler().launchApp(clicktype.getValue());
-                    }
-                    break;
-                case NICKNAME:
-                    if (frameParent.getServer() != null && ActionManager.
-                            processEvent(CoreActionType.LINK_NICKNAME_CLICKED,
-                            null, this, clicktype.getValue())) {
-                        getContainer().getServer().getQuery(clicktype
-                                .getValue()).activateFrame();
-                    }
-                    break;
-                default:
-                    break;
-            }
-
+            handleLinkClick(clickType);
         }
     }
 
     /**
-     * What popup type should be used for popup menus for nicknames
+     * Handles clicking of a link in a textpane.
+     *
+     * @param clickType Details of link clicked
+     */
+    private void handleLinkClick(final ClickTypeValue clickType) {
+        switch (clickType.getType()) {
+            case CHANNEL:
+                if (frameParent.getServer() != null && ActionManager.
+                        processEvent(CoreActionType.LINK_CHANNEL_CLICKED,
+                        null, this, clickType.getValue())) {
+                    frameParent.getServer().join(
+                            new ChannelJoinRequest(clickType.getValue()));
+                }
+                break;
+            case HYPERLINK:
+                if (ActionManager.processEvent(
+                        CoreActionType.LINK_URL_CLICKED, null, this,
+                        clickType.getValue())) {
+                    controller.getURLHandler().launchApp(clickType.getValue());
+                }
+                break;
+            case NICKNAME:
+                if (frameParent.getServer() != null && ActionManager
+                        .processEvent(CoreActionType.LINK_NICKNAME_CLICKED,
+                        null, this, clickType.getValue())) {
+                    getContainer().getServer().getQuery(clickType.getValue())
+                            .activateFrame();
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+    /**
+     * What popup type should be used for popup menus for nicknames.
      *
      * @return Appropriate popuptype for this frame
      */
     public abstract PopupType getNicknamePopupType();
 
     /**
-     * What popup type should be used for popup menus for channels
+     * What popup type should be used for popup menus for channels.
      *
      * @return Appropriate popuptype for this frame
      */
     public abstract PopupType getChannelPopupType();
 
     /**
-     * What popup type should be used for popup menus for hyperlinks
+     * What popup type should be used for popup menus for hyperlinks.
      *
      * @return Appropriate popuptype for this frame
      */
     public abstract PopupType getHyperlinkPopupType();
 
     /**
-     * What popup type should be used for popup menus for normal clicks
+     * What popup type should be used for popup menus for normal clicks.
      *
      * @return Appropriate popuptype for this frame
      */
@@ -894,7 +895,6 @@ public abstract class TextFrame extends JInternalFrame implements Window,
      *
      * @param type ClickType Click type
      * @param point Point Point of the click
-     * @param argument Word under the click
      */
     private void showPopupMenuInternal(final ClickTypeValue type,
             final Point point) {
@@ -954,7 +954,7 @@ public abstract class TextFrame extends JInternalFrame implements Window,
     }
 
     /**
-     * Builds a popup menu of a specified type
+     * Builds a popup menu of a specified type.
      *
      * @param type type of menu to build
      * @param arguments Arguments for the command
@@ -1013,21 +1013,14 @@ public abstract class TextFrame extends JInternalFrame implements Window,
 
     /** {@inheritDoc} */
     @Override
-    public void configChanged(final String domain,
-            final String key) {
-        if (getConfigManager() == null) {
+    public void configChanged(final String domain, final String key) {
+        if (getConfigManager() == null || getTextPane() == null) {
             return;
         }
 
-        if ("ui".equals(domain)) {
-            if ("foregroundcolour".equals(key) && getTextPane() != null) {
-                getTextPane().setForeground(getConfigManager().
-                        getOptionColour("ui", "foregroundcolour"));
-            } else if ("backgroundcolour".equals(key) && getTextPane()
-                    != null) {
-                getTextPane().setBackground(getConfigManager().
-                        getOptionColour("ui", "backgroundcolour"));
-            }
+        if ("ui".equals(domain) && ("foregroundcolour".equals(key)
+                || "backgroundcolour".equals(key))) {
+            updateColours();
         }
     }
 
@@ -1071,5 +1064,15 @@ public abstract class TextFrame extends JInternalFrame implements Window,
     @Override
     public SwingController getController() {
         return controller;
+    }
+
+    /**
+     * Updates colour settings from their config values.
+     */
+    private void updateColours() {
+        getTextPane().setForeground(getConfigManager().
+                        getOptionColour("ui", "foregroundcolour"));
+        getTextPane().setBackground(getConfigManager().
+                        getOptionColour("ui", "backgroundcolour"));
     }
 }
