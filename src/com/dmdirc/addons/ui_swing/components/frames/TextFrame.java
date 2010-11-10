@@ -510,7 +510,7 @@ public abstract class TextFrame extends JInternalFrame implements Window,
     private void initComponents() {
         setTextPane(new TextPane(this));
 
-        searchBar = new SwingSearchBar(this, controller.getMainFrame());
+        searchBar = new SwingSearchBar(this);
         searchBar.setVisible(false);
 
         getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).
