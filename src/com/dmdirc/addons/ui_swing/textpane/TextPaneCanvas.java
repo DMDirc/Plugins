@@ -88,6 +88,8 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
     private final Map<TextLayout, LineInfo> textLayouts;
     /** Saved positions. */
     private final Map<TextLayout, Point> savedPositions;
+    /** Saved highlight positions. */
+    private final Map<TextLayout, Point> savedHighlights;
     /** Start line. */
     private int startLine;
     /** Selection. */
@@ -130,6 +132,7 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
         textLayouts = new HashMap<TextLayout, LineInfo>();
         positions = new HashMap<Rectangle, TextLayout>();
         savedPositions = new HashMap<TextLayout, Point>();
+        savedHighlights = new HashMap<TextLayout, Point>();
         selection = new LinePosition(-1, -1, -1, -1);
         addMouseListener(this);
         addMouseMotionListener(this);
@@ -164,6 +167,12 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
             staleCache = false;
         } else {
             for (Map.Entry<TextLayout, Point> entry : savedPositions
+                    .entrySet()) {
+                g.setColor(textPane.getForeground());
+                entry.getKey().draw(g, (float) entry.getValue().getX(),
+                        (float) entry.getValue().getY());
+            }
+            for (Map.Entry<TextLayout, Point> entry : savedHighlights
                     .entrySet()) {
                 g.setColor(textPane.getForeground());
                 entry.getKey().draw(g, (float) entry.getValue().getX(),
@@ -439,6 +448,8 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
                 }
 
                 newLayout.draw(g, drawPosX, trans);
+                savedHighlights.put(newLayout,
+                        new Point((int) drawPosX, trans));
 
                 if (firstChar != 0) {
                     g.translate(-1 * shape.getBounds().getX(), 0);
