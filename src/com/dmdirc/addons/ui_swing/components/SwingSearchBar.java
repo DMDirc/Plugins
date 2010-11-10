@@ -24,25 +24,22 @@ package com.dmdirc.addons.ui_swing.components;
 
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.actions.SearchAction;
-import com.dmdirc.addons.ui_swing.components.ImageButton;
 import com.dmdirc.addons.ui_swing.components.frames.InputTextFrame;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.addons.ui_swing.components.validating.ValidatingJTextField;
-import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
 import com.dmdirc.addons.ui_swing.textpane.TextPane;
 import com.dmdirc.config.IdentityManager;
-import com.dmdirc.util.validators.ValidationResponse;
-import com.dmdirc.util.validators.Validator;
 import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.interfaces.SearchBar;
+import com.dmdirc.ui.interfaces.SearchBar.Direction;
 import com.dmdirc.ui.messages.IRCDocument;
 import com.dmdirc.ui.messages.IRCDocumentSearcher;
 import com.dmdirc.ui.messages.LinePosition;
 import com.dmdirc.util.ListenerList;
+import com.dmdirc.util.validators.ValidationResponse;
+import com.dmdirc.util.validators.Validator;
 
-import java.awt.Window;
-import java.awt.Dialog.ModalityType;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -51,6 +48,7 @@ import java.awt.event.KeyListener;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
@@ -88,24 +86,22 @@ public final class SwingSearchBar extends JPanel implements ActionListener,
     private int line;
     /** Listener list. */
     private final ListenerList listeners;
-    /** Parent window. */
-    private Window parentWindow;
     /** Search validate text. */
     private SearchValidator validator;
+    /** Wrap indicator. */
+    private JLabel wrapIndicator;
 
     /**
      * Creates a new instance of StatusBar.
      *
      * @param newParent parent frame for the dialog
-     * @param parentWindow Parent window
      */
-    public SwingSearchBar(final TextFrame newParent, final Window parentWindow) {
+    public SwingSearchBar(final TextFrame newParent) {
         super();
 
         listeners = new ListenerList();
 
         this.parent = newParent;
-        this.parentWindow = parentWindow;
 
         getInputMap(JComponent.WHEN_FOCUSED).
                 put(KeyStroke.getKeyStroke(KeyEvent.VK_F3, 0), "searchAction");
@@ -127,12 +123,16 @@ public final class SwingSearchBar extends JPanel implements ActionListener,
         caseCheck = new JCheckBox();
         validator = new SearchValidator();
         searchBox = new ValidatingJTextField(validator);
+        wrapIndicator = new JLabel("Search wrapped",
+                IconManager.getIconManager().getIcon("wrapindicator"),
+                JLabel.LEFT);
 
         nextButton.setText("Later");
         prevButton.setText("Earlier");
         nextButton.setEnabled(false);
         prevButton.setEnabled(false);
         caseCheck.setText("Case sensitive");
+        wrapIndicator.setVisible(false);
 
         line = -1;
 
@@ -141,13 +141,14 @@ public final class SwingSearchBar extends JPanel implements ActionListener,
 
     /** Lays out components. */
     private void layoutComponents() {
-        this.setLayout(new MigLayout("ins 0, fill"));
+        this.setLayout(new MigLayout("ins 0, fill, hidemode 3"));
 
         add(closeButton);
         add(searchBox, "growx, pushx, sgy all");
         add(prevButton, "sgx button, sgy all");
         add(nextButton, "sgx button, sgy all");
         add(caseCheck, "sgy all");
+        add(wrapIndicator, "");
     }
 
     /** Adds listeners to components. */
@@ -236,6 +237,7 @@ public final class SwingSearchBar extends JPanel implements ActionListener,
     public void search(final Direction direction, final String text,
             final boolean caseSensitive) {
         boolean foundText = false;
+        wrapIndicator.setVisible(false);
 
         final boolean up = Direction.UP == direction;
 
@@ -257,37 +259,11 @@ public final class SwingSearchBar extends JPanel implements ActionListener,
                 getEndLine())
                 || (!up && result.getStartLine() < textPane.getSelectedRange().
                 getStartLine()))) {
-            final StandardQuestionDialog dialog = new StandardQuestionDialog(
-                    parentWindow, ModalityType.MODELESS, "No more results",
-                    "Do you want to continue searching from the "
-                    + (up ? "end" : "beginning") + "?") {
-
-                /**
-                 * A version number for this class. It should be changed whenever the class
-                 * structure is changed (or anything else that would prevent serialized
-                 * objects being unserialized with the new class).
-                 */
-                 private static final long serialVersionUID = 1;
-
-                 /**{@inheritDoc} */
-                 @Override
-                 public boolean save() {
+                     wrapIndicator.setVisible(true);
                      textPane.setScrollBarPosition(result.getEndLine());
                      textPane.setSelectedTexT(result);
                      validator.setValidates(true);
                      searchBox.checkError();
-                     return true;
-                 }
-
-                 /**{@inheritDoc} */
-                 @Override
-                 public void cancelled() {
-                     validator.setValidates(true);
-                     searchBox.checkError();
-                 }
-            };
-            dialog.display();
-            return;
         } else {
             //found, select and return found
             textPane.setScrollBarPosition(result.getEndLine());
