@@ -75,7 +75,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.Charset;
 import java.nio.charset.IllegalCharsetNameException;
 import java.nio.charset.UnsupportedCharsetException;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 
 import javax.swing.BorderFactory;
@@ -129,7 +128,7 @@ public abstract class TextFrame extends JInternalFrame implements Window,
     /** Swing controller. */
     private final SwingController controller;
     /** Are we maximising/restoring? */
-    private AtomicBoolean maximiseRestoreInProgress = new AtomicBoolean(false);
+    private boolean maximiseRestoreInProgress = false;
     /** Content pane. */
     private final JPanel panel;
 
@@ -384,7 +383,7 @@ public abstract class TextFrame extends JInternalFrame implements Window,
                         return;
                     }
 
-                    maximiseRestoreInProgress.set(true);
+                    maximiseRestoreInProgress = true;
                     LOGGER.finest("maximise(): About to set icon");
                     if (isIcon()) {
                         setIcon(false);
@@ -396,7 +395,7 @@ public abstract class TextFrame extends JInternalFrame implements Window,
                     Logger.userError(ErrorLevel.LOW,
                             "Unable to minimise frame");
                 }
-                maximiseRestoreInProgress.set(false);
+                maximiseRestoreInProgress = false;
 
                 LOGGER.finest("maximise(): Done running");
             }
@@ -417,7 +416,7 @@ public abstract class TextFrame extends JInternalFrame implements Window,
                         return;
                     }
 
-                    maximiseRestoreInProgress.set(true);
+                    maximiseRestoreInProgress = true;
                     if (isIcon()) {
                         setIcon(false);
                     }
@@ -426,7 +425,7 @@ public abstract class TextFrame extends JInternalFrame implements Window,
                     Logger.userError(ErrorLevel.LOW,
                             "Unable to minimise frame");
                 }
-                maximiseRestoreInProgress.set(false);
+                maximiseRestoreInProgress = false;
             }
         });
     }
@@ -721,7 +720,7 @@ public abstract class TextFrame extends JInternalFrame implements Window,
         LOGGER.log(Level.FINER, "{0} : internalFrameActivated()",
                 new Object[] {getName()});
 
-        if (maximiseRestoreInProgress.get()) {
+        if (maximiseRestoreInProgress) {
             return;
         }
         new LoggingSwingWorker() {
@@ -745,7 +744,7 @@ public abstract class TextFrame extends JInternalFrame implements Window,
      */
     @Override
     public void internalFrameDeactivated(final InternalFrameEvent event) {
-        if (maximiseRestoreInProgress.get()) {
+        if (maximiseRestoreInProgress) {
             return;
         }
     }
