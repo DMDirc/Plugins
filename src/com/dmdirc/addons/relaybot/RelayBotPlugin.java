@@ -29,6 +29,11 @@ import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.actions.interfaces.ActionType;
 import com.dmdirc.config.IdentityManager;
+import com.dmdirc.config.prefs.PluginPreferencesCategory;
+import com.dmdirc.config.prefs.PreferencesCategory;
+import com.dmdirc.config.prefs.PreferencesManager;
+import com.dmdirc.config.prefs.PreferencesSetting;
+import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.interfaces.ActionListener;
 import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.parser.interfaces.ChannelClientInfo;
@@ -65,6 +70,7 @@ public class RelayBotPlugin extends Plugin implements ActionListener, ConfigChan
         ActionManager.addListener(this, CoreActionType.SERVER_CONNECTED);
         ActionManager.addListener(this, CoreActionType.SERVER_DISCONNECTED);
         ActionManager.addListener(this, CoreActionType.CHANNEL_QUIT);
+        IdentityManager.getGlobalConfig().addChangeListener(getDomain(), this);
 
         // Add ourself to all currently known channels that we should be
         // connected with.
@@ -160,7 +166,6 @@ public class RelayBotPlugin extends Plugin implements ActionListener, ConfigChan
     /** {@inheritDoc} */
     @Override
     public void configChanged(final String domain, final String key) {
-        if (!domain.equals(getDomain())) { return; }
         final boolean wasUnset = !(IdentityManager.getGlobalConfig().hasOptionString(domain, key));
 
         for (Server server : ServerManager.getServerManager().getServers()) {
@@ -236,4 +241,46 @@ public class RelayBotPlugin extends Plugin implements ActionListener, ConfigChan
 
         return null;
     }
+
+    /**
+     * Reads the relay bot channel data from the config.
+     *
+     * @return A multi-dimensional array of channel data.
+     */
+    public String[][] getData() {
+        final String[][] data = new String[][]{};
+        final Map<String, String> settings = IdentityManager.getGlobalConfig()
+                .getOptions(getDomain());
+        int i = 0;
+        for (Map.Entry<String, String> entry : settings.entrySet()) {
+            if (entry.getKey().charAt(0) == '#') {
+                data[i][0] = entry.getKey();
+                data[i][1] = entry.getValue();
+                i++;
+            }
+        }
+        return data;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void showConfig(final PreferencesManager manager) {
+        final PreferencesCategory general = new PluginPreferencesCategory(
+                getPluginInfo(), "Relay Bot",
+                "General configuration for the Relay bot plugin.<br><br>"
+                + "Currently you will need to manually add support for new "
+                + "channels.  Enter the command below replacing channel and "
+                + "relaybot with the channel name you want to add and "
+                + "relaybot with the nickname of the relaybot.<br><br>"
+                + "/set plugin-relaybot #channel RelayBot ");
+        general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
+                getDomain(), "joinOnDiscover", "Join on discover",
+                "Do you want fake clients to join the channel?"));
+        general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
+                getDomain(), "colourFullName", "Colour full name",
+                "Do you want to colour the full name?"));
+        manager.getCategory("Plugins").addSubCategory(general);
+    }
+
+
 }
