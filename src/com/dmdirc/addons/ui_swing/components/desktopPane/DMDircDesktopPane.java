@@ -23,7 +23,6 @@
 package com.dmdirc.addons.ui_swing.components.desktopPane;
 
 import com.dmdirc.FrameContainer;
-import com.dmdirc.FrameContainerComparator;
 import com.dmdirc.addons.ui_swing.BackgroundOption;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SwingController;

@@ -60,7 +60,6 @@ import com.dmdirc.parser.common.ChannelJoinRequest;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.interfaces.InputWindow;
 import com.dmdirc.ui.interfaces.Window;
-import com.dmdirc.ui.messages.IRCDocument;
 import com.dmdirc.util.StringTranscoder;
 
 import java.awt.Container;
@@ -150,8 +149,8 @@ public abstract class TextFrame extends JInternalFrame implements Window,
 
         setFrameIcon(IconManager.getIconManager().getIcon(owner.getIcon()));
 
-        owner.setTitle(frameParent.getTitle());
         owner.addFrameInfoListener(this);
+        owner.setTitle(frameParent.getTitle());
 
         try {
             transcoder = new StringTranscoder(Charset.forName(
