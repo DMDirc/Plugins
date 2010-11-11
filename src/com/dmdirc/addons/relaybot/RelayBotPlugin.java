@@ -28,15 +28,24 @@ import com.dmdirc.ServerManager;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.actions.interfaces.ActionType;
+import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.config.IdentityManager;
+import com.dmdirc.config.prefs.PluginPreferencesCategory;
+import com.dmdirc.config.prefs.PreferencesCategory;
+import com.dmdirc.config.prefs.PreferencesManager;
+import com.dmdirc.config.prefs.PreferencesSetting;
+import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.interfaces.ActionListener;
 import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.parser.interfaces.ChannelClientInfo;
 import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.parser.irc.IRCParser;
 import com.dmdirc.plugins.Plugin;
+import com.dmdirc.plugins.PluginManager;
+import com.dmdirc.util.ReturnableThread;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -65,6 +74,7 @@ public class RelayBotPlugin extends Plugin implements ActionListener, ConfigChan
         ActionManager.addListener(this, CoreActionType.SERVER_CONNECTED);
         ActionManager.addListener(this, CoreActionType.SERVER_DISCONNECTED);
         ActionManager.addListener(this, CoreActionType.CHANNEL_QUIT);
+        IdentityManager.getGlobalConfig().addChangeListener(getDomain(), this);
 
         // Add ourself to all currently known channels that we should be
         // connected with.
@@ -160,7 +170,6 @@ public class RelayBotPlugin extends Plugin implements ActionListener, ConfigChan
     /** {@inheritDoc} */
     @Override
     public void configChanged(final String domain, final String key) {
-        if (!domain.equals(getDomain())) { return; }
         final boolean wasUnset = !(IdentityManager.getGlobalConfig().hasOptionString(domain, key));
 
         for (Server server : ServerManager.getServerManager().getServers()) {
@@ -236,4 +245,63 @@ public class RelayBotPlugin extends Plugin implements ActionListener, ConfigChan
 
         return null;
     }
+
+    /**
+     * Reads the relay bot channel data from the config.
+     *
+     * @return A multi-dimensional array of channel data.
+     */
+    public String[][] getData() {
+        final Map<String, String> settings = IdentityManager.getGlobalConfig()
+                .getOptions(getDomain());
+        int i = 0;
+        for (Map.Entry<String, String> entry : settings.entrySet()) {
+            if (entry.getKey().charAt(0) == '#') {
+                i++;
+            }
+        }
+        final String[][] data = new String[i][2];
+        i = 0;
+        for (Map.Entry<String, String> entry : settings.entrySet()) {
+            if (entry.getKey().charAt(0) == '#') {
+                data[i] = new String[]{entry.getKey(), entry.getValue(), };
+                i++;
+            }
+        }
+        return data;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void showConfig(final PreferencesManager manager) {
+        final PreferencesCategory general = new PluginPreferencesCategory(
+                getPluginInfo(), "Relay Bot",
+                "General configuration for the Relay bot plugin.");
+
+        final PreferencesCategory colours = new PluginPreferencesCategory(
+                getPluginInfo(), "Channels",
+                "Identifies where and who the bot is in channels.",
+                UIUtilities.invokeAndWait(
+                new ReturnableThread<RelayChannelPanel>() {
+
+            /** {@inheritDoc} */
+            @Override
+            public void run() {
+                setObject(new RelayChannelPanel(PluginManager.getPluginManager()
+                        .getPluginInfoByName("ui_swing").getPlugin(),
+                        RelayBotPlugin.this));
+            }
+        }));
+        colours.setInline().setInlineAfter();
+        general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
+                getDomain(), "joinOnDiscover", "Join on discover",
+                "Do you want fake clients to join the channel?"));
+        general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
+                getDomain(), "colourFullName", "Colour full name",
+                "Do you want to colour the full name?"));
+        manager.getCategory("Plugins").addSubCategory(general);
+        general.addSubCategory(colours);
+    }
+
+
 }
