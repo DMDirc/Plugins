@@ -77,6 +77,8 @@ public class MenuBar extends JMenuBar implements ActionListener, MenuListener {
     private final SwingController controller;
     /** Main frame. */
     private final MainFrame mainFrame;
+    /** Normal menu count. */
+    private int menuItemCount = 0;
 
     /**
      * Instantiates a new menu bar.
@@ -97,14 +99,22 @@ public class MenuBar extends JMenuBar implements ActionListener, MenuListener {
         initSettingsMenu();
         add(new WindowMenuFrameManager(controller));
         initHelpMenu();
-        add(Box.createHorizontalGlue(), "growx, pushx");
-        add(new MDIBar(controller, mainFrame));
-        add(Box.createHorizontalStrut(PlatformDefaults.getPanelInsets(1)
+        menuItemCount = getComponentCount();
+        super.add(Box.createHorizontalGlue(), "growx, pushx");
+        super.add(new MDIBar(controller, mainFrame));
+        super.add(Box.createHorizontalStrut(PlatformDefaults.getPanelInsets(1)
                 .getUnit()));
+        menuItemCount = getComponentCount() - menuItemCount;
 
         getActionMap().setParent(null);
         getActionMap().clear();
         menuSelected(null);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public JMenu add(final JMenu c) {
+        return (JMenu) super.add(c, getComponentCount() - menuItemCount);
     }
 
     /**

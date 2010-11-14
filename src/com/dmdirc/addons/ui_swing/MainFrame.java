@@ -53,7 +53,6 @@ import java.awt.event.WindowListener;
 import java.lang.reflect.InvocationTargetException;
 
 import javax.swing.ImageIcon;
-import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;

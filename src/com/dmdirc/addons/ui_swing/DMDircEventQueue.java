@@ -28,8 +28,6 @@ import com.dmdirc.addons.ui_swing.actions.CopyAction;
 import com.dmdirc.addons.ui_swing.actions.CutAction;
 import com.dmdirc.addons.ui_swing.actions.PasteAction;
 
-import com.dmdirc.config.IdentityManager;
-import com.dmdirc.interfaces.ConfigChangeListener;
 import java.awt.AWTEvent;
 import java.awt.Component;
 import java.awt.EventQueue;
@@ -46,47 +44,27 @@ import javax.swing.SwingUtilities;
 import javax.swing.text.JTextComponent;
 
 /**
- * Custom event queue to add common functionality to certain components and 
- * monitor the EDT for long running tasks.  The monitoring code was taken from
- * TracingEventQueue by Kirill Grouchnikov (http://today.java.net/lpt/a/433).
+ * Custom event queue to add common functionality to certain components.
  */
-public final class DMDircEventQueue extends EventQueue implements
-        ConfigChangeListener {
+public class DMDircEventQueue extends EventQueue {
 
     /** Swing Controller. */
-    private SwingController controller;
-    /** Tracing thread. */
-    private TracingEventQueueThread tracingThread;
+    private final SwingController controller;
 
-    /** 
-     * Instantiates the DMDircEventQueue. 
-     * 
+    /**
+     * Instantiates the DMDircEventQueue.
+     *
      * @param controller Swing controller
      */
     public DMDircEventQueue(final SwingController controller) {
         super();
 
         this.controller = controller;
-        checkTracing();
-        IdentityManager.getGlobalConfig().addChangeListener(
-                controller.getDomain(), "debugEDT", this);
     }
 
     /** {@inheritDoc} */
     @Override
     protected void dispatchEvent(final AWTEvent event) {
-        if (tracingThread == null) {
-            super.dispatchEvent(event);
-        } else {
-            if (tracingThread != null) {
-                tracingThread.eventDispatched(event);
-            }
-            super.dispatchEvent(event);
-            if (tracingThread != null) {
-                tracingThread.eventProcessed(event);
-            }
-        }
-
         if (event instanceof MouseEvent) {
             handleMouseEvent((MouseEvent) event);
         } else if (event instanceof KeyEvent) {
@@ -94,112 +72,54 @@ public final class DMDircEventQueue extends EventQueue implements
         } else if (event instanceof WindowEvent) {
             handleWindowEvent((WindowEvent) event);
         }
+        preDispatchEvent(event);
+        super.dispatchEvent(event);
+        postDispatchEvent(event);
     }
 
-    private void checkTracing() {
-        final boolean tracing = IdentityManager.getGlobalConfig().
-                getOptionBool(controller.getDomain(), "debugEDT");
-        if (tracing) {
-            tracingThread = new TracingEventQueueThread(100);
-            tracingThread.start();
-        } else {
-            if (tracingThread != null) {
-                tracingThread.cancel();
-                tracingThread = null;
-            }
-        }
+    /**
+     * Triggered before the event is dispatched to AWT.
+     *
+     * @param event Event about to be dispatched
+     */
+    protected void preDispatchEvent(final AWTEvent event) {
+        //Do nothing
+    }
+
+    /**
+     * Called just after an event is dispatched to AWT.
+     *
+     * @param event Event that has been dispatched
+     */
+    protected void postDispatchEvent(final AWTEvent event) {
+        //Do nothing
     }
 
     /**
      * Handles key events.
-     * 
+     *
      * @param ke Key event
      */
     private void handleKeyEvent(final KeyEvent ke) {
-        switch (ke.getKeyChar()) {
-            case KeyEvent.VK_F1:
-            //Fallthrough
-            case KeyEvent.VK_F2:
-            //Fallthrough
-            case KeyEvent.VK_F3:
-            //Fallthrough
-            case KeyEvent.VK_F4:
-            //Fallthrough
-            case KeyEvent.VK_F5:
-            //Fallthrough
-            case KeyEvent.VK_F6:
-            //Fallthrough
-            case KeyEvent.VK_F7:
-            //Fallthrough
-            case KeyEvent.VK_F8:
-            //Fallthrough
-            case KeyEvent.VK_F9:
-            //Fallthrough
-            case KeyEvent.VK_F10:
-            //Fallthrough
-            case KeyEvent.VK_F11:
-            //Fallthrough
-            case KeyEvent.VK_F12:
-            //Fallthrough
-            case KeyEvent.VK_F13:
-            //Fallthrough
-            case KeyEvent.VK_F14:
-            //Fallthrough
-            case KeyEvent.VK_F15:
-            //Fallthrough
-            case KeyEvent.VK_F16:
-            //Fallthrough
-            case KeyEvent.VK_F17:
-            //Fallthrough
-            case KeyEvent.VK_F18:
-            //Fallthrough
-            case KeyEvent.VK_F19:
-            //Fallthrough
-            case KeyEvent.VK_F20:
-            //Fallthrough
-            case KeyEvent.VK_F21:
-            //Fallthrough
-            case KeyEvent.VK_F22:
-            //Fallthrough
-            case KeyEvent.VK_F23:
-            //Fallthrough
-            case KeyEvent.VK_F24:
-                ActionManager.processEvent(CoreActionType.CLIENT_KEY_PRESSED,
-                        null, KeyStroke.getKeyStroke(ke.getKeyChar(),
-                        ke.getModifiers()));
-                break;
-            default:
-                if (ke.getModifiers() != 0) {
-                    ActionManager.processEvent(CoreActionType.CLIENT_KEY_PRESSED,
-                            null, KeyStroke.getKeyStroke(ke.getKeyChar(),
-                            ke.getModifiers()));
-                }
-                break;
-        }
+        ActionManager.processEvent(CoreActionType.CLIENT_KEY_PRESSED, null,
+                KeyStroke.getKeyStroke(ke.getKeyChar(), ke.getModifiers()));
     }
 
     /**
      * Handles mouse events.
-     * 
+     *
      * @param me Mouse event
      */
     private void handleMouseEvent(final MouseEvent me) {
-        if (!me.isPopupTrigger()) {
-            return;
-        }
-
-        if (me.getComponent() == null) {
+        if (!me.isPopupTrigger() || me.getComponent() == null) {
             return;
         }
 
         final Component comp = SwingUtilities.getDeepestComponentAt(
                 me.getComponent(), me.getX(), me.getY());
 
-        if (!(comp instanceof JTextComponent)) {
-            return;
-        }
-
-        if (MenuSelectionManager.defaultManager().getSelectedPath().length > 0) {
+        if (!(comp instanceof JTextComponent) || MenuSelectionManager
+                .defaultManager().getSelectedPath().length > 0) {
             return;
         }
 
@@ -215,25 +135,17 @@ public final class DMDircEventQueue extends EventQueue implements
     }
 
     /**
-     * Handles window events
-     * 
-     * @param windowEvent Window event
+     * Handles window events.
+     *
+     * @param we Window event
      */
     private void handleWindowEvent(final WindowEvent we) {
-        if (we.getSource() instanceof Window) {
-            if (controller.hasMainFrame()) {
-                if (we.getID() == WindowEvent.WINDOW_OPENED) {
-                    controller.addTopLevelWindow((Window) we.getSource());
-                } else if (we.getID() == WindowEvent.WINDOW_CLOSED) {
-                    controller.delTopLevelWindow((Window) we.getSource());
-                }
+        if ((we.getSource() instanceof Window) && controller.hasMainFrame()) {
+            if (we.getID() == WindowEvent.WINDOW_OPENED) {
+                controller.addTopLevelWindow((Window) we.getSource());
+            } else if (we.getID() == WindowEvent.WINDOW_CLOSED) {
+                controller.delTopLevelWindow((Window) we.getSource());
             }
         }
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void configChanged(final String domain, final String key) {
-        checkTracing();
     }
 }
