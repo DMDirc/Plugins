@@ -69,7 +69,7 @@ public class OsdManager {
      */
     private synchronized void displayWindows() {
         final Integer maxWindows = IdentityManager.getGlobalConfig().
-                getOptionInt(plugin.getDomain(), "maxWindows");
+                getOptionInt(plugin.getDomain(), "maxWindows", false);
 
         String nextItem;
 
