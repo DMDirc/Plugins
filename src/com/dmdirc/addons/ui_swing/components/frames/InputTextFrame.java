@@ -379,7 +379,7 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
             //Clear the input field
             inputField.setText("");
             final Integer pasteTrigger = getContainer().getConfigManager().
-                    getOptionInt("ui", "pasteProtectionLimit");
+                    getOptionInt("ui", "pasteProtectionLimit", false);
             //check whether the number of lines is over the limit
             if (pasteTrigger != null && getContainer().getNumLines(text)
                     > pasteTrigger) {
