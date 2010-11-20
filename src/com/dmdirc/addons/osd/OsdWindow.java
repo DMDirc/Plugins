@@ -100,7 +100,7 @@ public class OsdWindow extends JDialog implements MouseListener,
         this.config = config;
         this.osdManager = osdManager;
         this.timeout = IdentityManager.getGlobalConfig()
-            .getOptionInt(osdManager.getPlugin().getDomain(), "timeout");
+            .getOptionInt(osdManager.getPlugin().getDomain(), "timeout", false);
 
         setFocusableWindowState(false);
         setAlwaysOnTop(true);
