@@ -77,11 +77,11 @@ public final class NowPlayingCommand extends Command implements
                 if (source == null) {
                     sendLine(origin, args.isSilent(), FORMAT_ERROR, "Source not found.");
                 } else {
-                    if (source.getState() != MediaSourceState.CLOSED) {
+                    if (source.getState() == MediaSourceState.CLOSED) {
+                        sendLine(origin, args.isSilent(), FORMAT_ERROR, "Source is not running.");
+                    } else {
                         target.getCommandParser().parseCommand(origin, context.getSource(),
                                 getInformation(source, args.getArgumentsAsString(2)));
-                    } else {
-                        sendLine(origin, args.isSilent(), FORMAT_ERROR, "Source is not running.");
                     }
                 }
             } else {
@@ -120,12 +120,12 @@ public final class NowPlayingCommand extends Command implements
             for (MediaSource source : sources) {
                 data[i][0] = source.getAppName();
 
-                if (source.getState() != MediaSourceState.CLOSED) {
-                    data[i][1] = source.getState().getNiceName().toLowerCase();
-                    data[i][2] = getInformation(source, format);
-                } else {
+                if (source.getState() == MediaSourceState.CLOSED) {
                     data[i][1] = "not running";
                     data[i][2] = "-";
+                } else {
+                    data[i][1] = source.getState().getNiceName().toLowerCase();
+                    data[i][2] = getInformation(source, format);
                 }
 
                 i++;

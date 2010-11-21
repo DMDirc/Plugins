@@ -294,14 +294,12 @@ public class RelayChannelHandler implements ChannelMessageListener {
                         coreChannelHandler.onChannelKick(parser, date, channel, newChannelClient, kickingChannelClient, reason, "");
                         removeChannelClient(channel, newBits[0]);
                         return;
-                    } else if (newBits[2].equalsIgnoreCase("now")) {
+                    } else if (newBits[2].equalsIgnoreCase("now") && newBits.length > 3) {
                         // User changed their nickname in a relayed channel.
-                        if (newBits.length > 3) {
-                            renameChannelClient(newChannelClient, newBits[3]);
+                        renameChannelClient(newChannelClient, newBits[3]);
 
-                            coreChannelHandler.onChannelNickChanged(parser, date, channel, newChannelClient, newBits[0]);
-                            return;
-                        }
+                        coreChannelHandler.onChannelNickChanged(parser, date, channel, newChannelClient, newBits[0]);
+                        return;
                     }
                 }
             } else if (initial.charAt(0) == '*') {

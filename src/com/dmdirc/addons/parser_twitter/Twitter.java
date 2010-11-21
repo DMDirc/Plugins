@@ -1215,7 +1215,7 @@ public class Twitter implements Parser, TwitterErrorHandler, TwitterRawHandler,
                 long lastId = lastSearchIds.containsKey(channel) ? lastSearchIds.get(channel) : -1;
                 final List<TwitterStatus> statuses = api.getSearchResults(channel.getName(), lastId);
 
-                foundItems = statuses.size() > 0;
+                foundItems = !statuses.isEmpty();
                 for (final TwitterStatus status : statuses) {
                     final ChannelClientInfo cci = channel.getChannelClient(status.getUserName(), true);
                     sendChannelMessage(channel, new Date(status.getTime()), status.getText(), cci, status.getUserName());

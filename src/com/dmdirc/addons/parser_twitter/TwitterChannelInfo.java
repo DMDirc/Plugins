@@ -144,7 +144,7 @@ public class TwitterChannelInfo implements ChannelInfo {
     /** {@inheritDoc} */
     @Override
     public void sendWho() {
-        return;
+        // Ignore, twitter parser doesn't support WHOs
     }
 
     /** {@inheritDoc} */
@@ -158,13 +158,12 @@ public class TwitterChannelInfo implements ChannelInfo {
                 myParser.getApi().unblockUser(bits[0]);
             }
         }
-        return;
     }
 
     /** {@inheritDoc} */
     @Override
     public void flushModes() {
-        return;
+        // Ignore, all mode changes are instantaneous
     }
 
     /** {@inheritDoc} */

@@ -57,7 +57,7 @@ public class FontPicker extends JComboBox {
 
             /** {@inheritDoc} */
             @Override
-            protected String[] doInBackground() throws Exception {
+            protected String[] doInBackground() {
                 return GraphicsEnvironment.getLocalGraphicsEnvironment().
                         getAvailableFontFamilyNames();
             }

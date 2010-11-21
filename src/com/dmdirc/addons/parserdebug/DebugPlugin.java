@@ -35,6 +35,7 @@ import com.dmdirc.plugins.Plugin;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * This causes parser debugging to be spammed to the console.
@@ -47,7 +48,7 @@ public final class DebugPlugin extends Plugin implements DebugInfoListener, Acti
     private ParserDebugCommand command = null;
 
     /** Map of parsers registered. */
-    protected final HashMap<Parser, DebugWindow> registeredParsers
+    protected final Map<Parser, DebugWindow> registeredParsers
             = new HashMap<Parser, DebugWindow>();
 
     /**

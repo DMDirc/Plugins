@@ -24,7 +24,7 @@ package com.dmdirc.addons.ui_swing.dialogs.actionsmanager;
 import com.dmdirc.actions.ActionGroup;
 
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
-import javax.swing.Box;
+
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 

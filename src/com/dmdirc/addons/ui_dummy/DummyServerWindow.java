@@ -31,9 +31,6 @@ import com.dmdirc.ui.interfaces.ServerWindow;
  */
 public final class DummyServerWindow extends DummyInputWindow implements ServerWindow {
     
-    /** Parent server. */
-    private final Server parent;
-    
     /** 
      * Instantiates this DummyServerWindow. 
      *
@@ -41,8 +38,6 @@ public final class DummyServerWindow extends DummyInputWindow implements ServerW
      */
     public DummyServerWindow(final Server parent) {
         super(parent, new ServerCommandParser());
-        
-        this.parent = parent;
     }
     
 }

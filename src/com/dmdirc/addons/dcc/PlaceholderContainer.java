@@ -58,14 +58,11 @@ public class PlaceholderContainer extends FrameContainer<PlaceholderWindow> {
     public void close() {
         int dccs = 0;
         for (FrameContainer<?> window : getChildren()) {
-            if (window instanceof TransferContainer) {
-                if (((TransferContainer) window).getDCC().isActive()) {
-                    dccs++;
-                }
-            } else if (window instanceof ChatContainer) {
-                if (((ChatContainer) window).getDCC().isActive()) {
-                    dccs++;
-                }
+            if ((window instanceof TransferContainer
+                    && ((TransferContainer) window).getDCC().isActive())
+                    || (window instanceof ChatContainer
+                    && ((ChatContainer) window).getDCC().isActive())) {
+                dccs++;
             }
         }
 
@@ -93,6 +90,7 @@ public class PlaceholderContainer extends FrameContainer<PlaceholderWindow> {
                 /** {@inheritDoc} */
                 @Override
                 public void cancelled() {
+                    // Don't close!
                 }
             }.display();
         } else {

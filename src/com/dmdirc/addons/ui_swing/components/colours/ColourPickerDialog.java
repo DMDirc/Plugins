@@ -44,8 +44,6 @@ public final class ColourPickerDialog extends StandardDialog {
     private static final long serialVersionUID = 1;
     /** Colour chooser panel. */
     private ColourPickerPanel colourChooser;
-    /** Parent window. */
-    private Window window;
 
     /**
      * Creates a new instance of ColourPickerDialog.
@@ -105,8 +103,7 @@ public final class ColourPickerDialog extends StandardDialog {
      * @return Colour picker dialog
      */
     public static ColourPickerDialog showColourPicker() {
-        final ColourPickerDialog cpd = showColourPicker(true, true);
-        return cpd;
+        return showColourPicker(true, true);
     }
 
     /** 
@@ -137,8 +134,6 @@ public final class ColourPickerDialog extends StandardDialog {
      * @param window Parent window
      */
     public void setWindow(final Window window) {
-        this.window = window;
-
         if (window != null) {
             window.addWindowListener(new WindowAdapter() {
 

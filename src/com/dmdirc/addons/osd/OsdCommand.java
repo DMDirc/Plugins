@@ -39,9 +39,6 @@ import com.dmdirc.ui.messages.Styliser;
 public final class OsdCommand extends Command implements 
         IntelligentCommand, CommandInfo {
 
-    /** The plugin that owns this command. */
-    private final OsdPlugin plugin;
-
     /** The OSDManager that this command should use. */
     private final OsdManager osdManager;
     
@@ -54,7 +51,6 @@ public final class OsdCommand extends Command implements
         super();
 
         this.osdManager = osdManager;
-        this.plugin = plugin;
     }
 
     /**

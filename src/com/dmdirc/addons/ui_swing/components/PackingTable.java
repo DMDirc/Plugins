@@ -44,8 +44,6 @@ public class PackingTable extends JTable {
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 1;
-    /** Whether the table should be editable. */
-    private final boolean editable;
     /** Scrollpane. */
     private final JScrollPane scrollPane;
     /** Should the last column fit text (true), or fit viewport (false). */
@@ -107,7 +105,6 @@ public class PackingTable extends JTable {
             final JScrollPane scrollPane, final boolean lastColumnFit) {
         super(tableModel);
 
-        this.editable = editable;
         this.scrollPane = scrollPane;
         this.lastColumnFit = lastColumnFit;
 

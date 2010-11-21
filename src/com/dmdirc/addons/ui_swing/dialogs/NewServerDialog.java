@@ -293,7 +293,7 @@ public final class NewServerDialog extends StandardDialog implements
 
                 new LoggingSwingWorker() {
                     @Override
-                    protected Object doInBackground() throws Exception {
+                    protected Object doInBackground() {
                         final Server server = new Server(address, profile);
                         server.connect();
                         return null;
@@ -306,7 +306,7 @@ public final class NewServerDialog extends StandardDialog implements
 
                     /** {@inheritDoc} */
                     @Override
-                    protected Object doInBackground() throws Exception {
+                    protected Object doInBackground() {
                         if (server == null) {
                             final Server newServer = new Server(address, profile);
                             newServer.connect();

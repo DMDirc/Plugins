@@ -524,7 +524,7 @@ public final class MainFrame extends JFrame implements WindowListener,
                 /** {@inheritDoc} */
                 @Override
                 public void cancelled() {
-                    return;
+                    // Do nothing
                 }
             }.display();
             return;
@@ -544,7 +544,7 @@ public final class MainFrame extends JFrame implements WindowListener,
 
             /** {@inheritDoc} */
             @Override
-            protected Object doInBackground() throws Exception {
+            protected Object doInBackground() {
                 ActionManager.processEvent(CoreActionType.CLIENT_CLOSING, null);
                 ServerManager.getServerManager().closeAll(IdentityManager.
                         getGlobalConfig().getOption("general", "closemessage"));
