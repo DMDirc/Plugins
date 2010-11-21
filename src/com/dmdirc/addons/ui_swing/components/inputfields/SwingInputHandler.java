@@ -157,7 +157,7 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
 
                     /** {@inheritDoc} */
                     @Override
-                    protected Object doInBackground() throws Exception {
+                    protected Object doInBackground() {
                         localTarget.setEditable(false);
                         doTabCompletion(false);
                         return null;
@@ -187,7 +187,7 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
 
                     /** {@inheritDoc} */
                     @Override
-                    protected Object doInBackground() throws Exception {
+                    protected Object doInBackground() {
                         localTarget.setEditable(false);
                         doTabCompletion(true);
                         return null;

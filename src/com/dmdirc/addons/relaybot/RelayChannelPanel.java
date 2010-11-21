@@ -22,13 +22,9 @@
 
 package com.dmdirc.addons.relaybot;
 
-import com.dmdirc.addons.ui_swing.SwingController;
-import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialog;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.prefs.PreferencesInterface;
 import com.dmdirc.plugins.Plugin;
-import com.dmdirc.plugins.PluginManager;
-import java.awt.Dialog.ModalityType;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

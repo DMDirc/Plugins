@@ -43,10 +43,12 @@ public class AmarokSource implements MediaSource {
     @Override
     public MediaSourceState getState() {
         final List<String> res = DcopMediaSourcePlugin.getDcopResult("dcop amarok player status");
-        if (res.size() > 0) {
+        if (res.isEmpty()) {
+            return MediaSourceState.CLOSED;
+        } else {
             final String result = res.get(0).trim();
             try {
-                final int status = (Integer.parseInt(result));
+                final int status = Integer.parseInt(result);
                 switch (status) {
                     case 0:
                         return MediaSourceState.STOPPED;
@@ -60,8 +62,6 @@ public class AmarokSource implements MediaSource {
             } catch (NumberFormatException nfe) {
                 return MediaSourceState.CLOSED;
             }
-        } else {
-            return MediaSourceState.CLOSED;
         }
     }
     

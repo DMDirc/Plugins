@@ -32,7 +32,6 @@ import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.plugins.ExportedService;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.ui.input.AdditionalTabTargets;
-import com.dmdirc.ui.input.TabCompleter;
 
 import java.util.List;
 

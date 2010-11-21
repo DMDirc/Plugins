@@ -55,10 +55,6 @@ public final class SwingStatusBar extends JPanel implements StatusBar {
     private final UpdaterLabel updateLabel;
     /** Invite label. */
     private final InviteLabel inviteLabel;
-    /** Swing controller. */
-    private SwingController controller;
-    /** Main frame. */
-    private MainFrame mainFrame;
 
     /**
      * Creates a new instance of SwingStatusBar.
@@ -68,9 +64,6 @@ public final class SwingStatusBar extends JPanel implements StatusBar {
      */
     public SwingStatusBar(final SwingController controller, final MainFrame mainFrame) {
         super();
-        
-        this.controller = controller;
-        this.mainFrame = mainFrame;
 
         messageLabel = new MessageLabel();
         errorPanel = new ErrorPanel(controller, mainFrame, this);

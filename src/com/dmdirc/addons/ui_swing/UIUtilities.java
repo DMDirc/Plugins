@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing;
 
-import com.dmdirc.addons.ui_swing.TreeUI;
 import com.dmdirc.addons.ui_swing.actions.RedoAction;
 import com.dmdirc.addons.ui_swing.actions.UndoAction;
 import com.dmdirc.addons.ui_swing.components.DMDircUndoableEditListener;
@@ -374,7 +373,9 @@ public final class UIUtilities {
             final Rectangle bounds,
             final Image backgroundImage,
             final BackgroundOption backgroundOption) {
-        if (backgroundImage != null) {
+        if (backgroundImage == null) {
+            paintNoBackground(g, bounds);
+        } else {
             switch (backgroundOption) {
                 case TILED:
                     paintTiledBackground(g, bounds, backgroundImage);
@@ -391,8 +392,6 @@ public final class UIUtilities {
                 default:
                     break;
             }
-        } else {
-            paintNoBackground(g, bounds);
         }
     }
 

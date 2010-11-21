@@ -43,10 +43,6 @@ public class SplitPane extends JSplitPane implements ConfigChangeListener {
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 2;
-    /** Snap distance. */
-    private final int snapDistance;
-    /** Component to snap to? */
-    private boolean leftComponentSnap = true;
     /** use one touch expandable? */
     private boolean useOneTouchExpandable;
     /** Global config manager. */
@@ -222,9 +218,6 @@ public class SplitPane extends JSplitPane implements ConfigChangeListener {
             final boolean leftComponentSnap, final int snapDistance) {
         super((orientation.equals(Orientation.HORIZONTAL)) ? HORIZONTAL_SPLIT : VERTICAL_SPLIT,
                 true, leftComponent, rightComponent);
-
-        this.leftComponentSnap = leftComponentSnap;
-        this.snapDistance = snapDistance;
 
         config = IdentityManager.getGlobalConfig();
         useOneTouchExpandable = config.getOptionBool("ui", "useOneTouchExpandable");

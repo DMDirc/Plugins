@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.components.themepanel;
 
-import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
 import com.dmdirc.addons.ui_swing.components.renderers.AddonCellRenderer;

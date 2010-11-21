@@ -332,7 +332,7 @@ public class LoggingPlugin extends Plugin implements ActionListener,
         final String filename = getLogFile(channel);
 
         final ChannelClientInfo channelClient = (arguments.length > 1 && arguments[1] instanceof ChannelClientInfo) ? (ChannelClientInfo) arguments[1] : null;
-        final ClientInfo client = (channelClient != null) ? channelClient.getClient() : null;
+        final ClientInfo client = channelClient == null ? null : channelClient.getClient();
 
         final String message = (arguments.length > 2 && arguments[2] instanceof String) ? (String) arguments[2] : null;
 

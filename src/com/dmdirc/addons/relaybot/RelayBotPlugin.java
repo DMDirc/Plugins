@@ -45,7 +45,6 @@ import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.util.ReturnableThread;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -84,9 +83,7 @@ public class RelayBotPlugin extends Plugin implements ActionListener, ConfigChan
                 new RelayCallbackManager(this, (IRCParser) parser);
             }
             for (String channel : server.getChannels()) {
-                final Channel chan = server.getChannel(channel);
-                final String channelName = chan.getServer().getParser().getStringConverter().toLowerCase(chan.getName());
-                getHandler(chan);
+                getHandler(server.getChannel(channel));
             }
         }
     }
@@ -123,13 +120,9 @@ public class RelayBotPlugin extends Plugin implements ActionListener, ConfigChan
     @Override
     public void processEvent(final ActionType type, final StringBuffer format, final Object... arguments) {
         if (type == CoreActionType.CHANNEL_OPENED) {
-            final Channel chan = (Channel) arguments[0];
-            
-            final String channelName = chan.getServer().getParser().getStringConverter().toLowerCase(chan.getName());
-            getHandler(chan);
+            getHandler((Channel) arguments[0]);
         } else if (type == CoreActionType.CHANNEL_CLOSED) {
-            final Channel chan = (Channel) arguments[0];
-            removeHandler(chan);
+            removeHandler((Channel) arguments[0]);
         } else if (type == CoreActionType.CHANNEL_QUIT) {
             final Channel chan = (Channel) arguments[0];
             final Parser parser = chan.getServer().getParser();

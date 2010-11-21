@@ -1,16 +1,16 @@
 /*
  * Copyright (c) 2006-2010 Chris Smith, Shane Mc Cormack, Gregory Holmes
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -67,9 +67,9 @@ public class ActionConditionDisplayPanel extends JPanel implements ActionListene
     /** Action trigger. */
     private ActionType trigger;
 
-    /** 
+    /**
      * Instantiates the panel.
-     * 
+     *
      * @param condition Action condition
      * @param trigger Action trigger
      */
@@ -98,7 +98,7 @@ public class ActionConditionDisplayPanel extends JPanel implements ActionListene
 
     /**
      * Sets the action trigger.
-     * 
+     *
      * @param trigger new trigger
      */
     void setTrigger(final ActionType trigger) {
@@ -157,9 +157,9 @@ public class ActionConditionDisplayPanel extends JPanel implements ActionListene
         add(editPanel, "alignx right");
     }
 
-    /** 
+    /**
      * {@inheritDoc}
-     * 
+     *
      * @param e Action event
      */
     @Override
@@ -214,42 +214,45 @@ public class ActionConditionDisplayPanel extends JPanel implements ActionListene
 
     /**
      * Updates the condition sentence.
-     * 
+     *
      * @return Updated sentence
      */
     private String updateSentence() {
         if (trigger == null) {
             return "...";
         } else {
-            final StringBuilder sb = new StringBuilder();
-            sb.append("The ");
-            if (condition.getArg() != -1) {
-                sb.append(trigger.getType().getArgNames()[condition.getArg()]);
-            } else {
+            final StringBuilder sb = new StringBuilder("The ");
+
+            if (condition.getArg() == -1) {
                 sb.append(" ...");
                 return sb.toString();
             }
+
+            sb.append(trigger.getType().getArgNames()[condition.getArg()]);
             sb.append("'s ");
-            if (condition.getComponent() != null) {
-                sb.append(condition.getComponent().getName());
-            } else {
+
+            if (condition.getComponent() == null) {
                 sb.append(" ...");
                 return sb.toString();
             }
+
+            sb.append(condition.getComponent().getName());
             sb.append(" ");
-            if (condition.getComparison() != null) {
-                sb.append(condition.getComparison().getName());
-            } else {
+
+            if (condition.getComparison() == null) {
                 sb.append(" ...");
                 return sb.toString();
             }
+
+            sb.append(condition.getComparison().getName());
             sb.append(" '");
-            if (condition.getTarget() != null) {
-                sb.append(condition.getTarget().replace("<", "&lt;"));
-            } else {
+
+            if (condition.getTarget() == null) {
                 sb.append(" ...");
                 return sb.toString();
             }
+
+            sb.append(condition.getTarget().replace("<", "&lt;"));
             sb.append("'");
             return sb.toString();
         }
@@ -257,7 +260,7 @@ public class ActionConditionDisplayPanel extends JPanel implements ActionListene
 
     /**
      * Returns the action condition represented by this panel.
-     * 
+     *
      * @return Action condition
      */
     public ActionCondition getCondition() {
@@ -274,10 +277,10 @@ public class ActionConditionDisplayPanel extends JPanel implements ActionListene
                     evt.getNewValue());
         }
     }
-    
+
     /**
      * Checks if this editor panel has errored.
-     * 
+     *
      * @return true iif the content it valid
      */
     public boolean checkError() {

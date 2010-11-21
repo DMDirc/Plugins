@@ -95,7 +95,7 @@ public class PrefsCategoryLoader extends LoggingSwingWorker<JPanel, Object> {
      * @throws Exception if unable to compute a result
      */
     @Override
-    protected JPanel doInBackground() throws Exception {
+    protected JPanel doInBackground() {
         return addCategory(category);
     }
 

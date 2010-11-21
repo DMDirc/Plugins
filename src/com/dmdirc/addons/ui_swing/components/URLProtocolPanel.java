@@ -81,8 +81,6 @@ public class URLProtocolPanel extends JPanel implements ActionListener,
     private final boolean useInsets;
     /** Substitutions panel. */
     private URLSubsitutionsPanel subsPanel;
-    /** The URL Handler to use to open links. */
-    private final URLHandler urlHandler;
 
     /**
      * Instantiates the URLDialog.
@@ -96,7 +94,6 @@ public class URLProtocolPanel extends JPanel implements ActionListener,
 
         this.uri = url;
         this.useInsets = useInsets;
-        this.urlHandler = urlHandler;
 
         initComponents();
         layoutComponents();
@@ -291,6 +288,6 @@ public class URLProtocolPanel extends JPanel implements ActionListener,
     /** {@inheritDoc} */
     @Override
     public void changedUpdate(final DocumentEvent e) {
-    //Ignore
+        //Ignore
     }
 }

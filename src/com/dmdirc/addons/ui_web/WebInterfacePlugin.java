@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_web;
 
-import com.dmdirc.Main;
 import com.dmdirc.plugins.Plugin;
 import com.dmdirc.ui.interfaces.UIController;
 
@@ -37,13 +36,6 @@ public class WebInterfacePlugin extends Plugin {
     
     /** The UI that we're using. */
     private WebInterfaceUI ui;
-
-    /**
-     * Creates a new WebInterfacePlugin, and registers the web UI as the
-     * main client UI.
-     */
-    public WebInterfacePlugin() {
-    }
 
     /** {@inheritDoc} */
     @Override
