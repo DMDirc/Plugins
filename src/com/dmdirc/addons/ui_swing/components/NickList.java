@@ -140,7 +140,7 @@ public class NickList extends JScrollPane implements ConfigChangeListener,
      * @param e Mouse event
      */
     @Override
-    public void mouseEntered(MouseEvent e) {
+    public void mouseEntered(final MouseEvent e) {
         //Ignore
     }
 

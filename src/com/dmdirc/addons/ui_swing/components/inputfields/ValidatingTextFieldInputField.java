@@ -126,7 +126,7 @@ public class ValidatingTextFieldInputField extends ValidatingJTextField
 
     /** {@inheritDoc} */
     @Override
-    public void setCaretPosition(int position) {
+    public void setCaretPosition(final int position) {
         getTextField().setCaretPosition(position);
     }
 

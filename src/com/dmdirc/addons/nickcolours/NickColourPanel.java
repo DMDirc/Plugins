@@ -237,7 +237,7 @@ public class NickColourPanel extends JPanel implements ActionListener,
 
     /** {@inheritDoc} */
     @Override
-    public void valueChanged(ListSelectionEvent e) {
+    public void valueChanged(final ListSelectionEvent e) {
         boolean enable = table.getSelectedRow() > -1 && table.getModel().getRowCount() > 0;
 
         editButton.setEnabled(enable);

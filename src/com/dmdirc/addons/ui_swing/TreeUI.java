@@ -70,9 +70,10 @@ public class TreeUI extends MetalTreeUI implements PropertyChangeListener {
 
     /** {@inheritDoc} */
     @Override
-    protected void paintExpandControl(Graphics g, Rectangle clipBounds,
-            Insets insets, Rectangle bounds, TreePath path, int row,
-            boolean isExpanded, boolean hasBeenExpanded, boolean isLeaf) {
+    protected void paintExpandControl(final Graphics g, final Rectangle clipBounds,
+            final Insets insets, final Rectangle bounds, final TreePath path,
+            final int row, final boolean isExpanded, final boolean hasBeenExpanded,
+            final boolean isLeaf) {
         if (showHandles) {
             super.paintExpandControl(g, clipBounds, insets, bounds, path, row,
                     isExpanded, hasBeenExpanded, isLeaf);

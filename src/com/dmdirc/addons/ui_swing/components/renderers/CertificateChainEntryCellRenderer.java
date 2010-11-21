@@ -49,8 +49,9 @@ public class CertificateChainEntryCellRenderer extends DefaultListCellRenderer {
 
     /** {@inheritDoc} */
     @Override
-    public Component getListCellRendererComponent(JList list, Object value,
-            int index, boolean isSelected, boolean cellHasFocus) {
+    public Component getListCellRendererComponent(final JList list,
+            final Object value, final int index, final boolean isSelected,
+            final boolean cellHasFocus) {
         super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
         if (value instanceof CertificateChainEntry) {
             final CertificateChainEntry entry = (CertificateChainEntry) value;

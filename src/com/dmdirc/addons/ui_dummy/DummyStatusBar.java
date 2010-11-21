@@ -57,19 +57,19 @@ public final class DummyStatusBar implements StatusBar {
     }
     
     @Override
-    public void setMessage(String iconType, String newMessage) {
+    public void setMessage(final String iconType, final String newMessage) {
         System.out.println("DummyStatusBar: " + newMessage);
     }
 
     @Override
-    public void setMessage(String iconType, String newMessage,
-            StatusMessageNotifier newNotifier) {
+    public void setMessage(final String iconType, final String newMessage,
+            final StatusMessageNotifier newNotifier) {
         System.out.println("DummyStatusBar: " + newMessage);
     }
 
     @Override
-    public void setMessage(String iconType, String newMessage,
-            StatusMessageNotifier newNotifier, int timeout) {
+    public void setMessage(final String iconType, final String newMessage,
+            final StatusMessageNotifier newNotifier, final int timeout) {
         System.out.println("DummyStatusBar: " + newMessage);
     }
 

@@ -188,7 +188,7 @@ public final class NicklistListModel extends AbstractListModel implements
 
     /** {@inheritDoc} */
     @Override
-    public void configChanged(String domain, String key) {
+    public void configChanged(final String domain, final String key) {
         if ("sortByMode".equals(key)) {
             sortByMode = config.getOptionBool("nicklist", "sortByMode");
         } else if ("sortByCase".equals(key)) {

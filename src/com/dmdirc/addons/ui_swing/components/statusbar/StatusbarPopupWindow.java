@@ -75,7 +75,7 @@ public abstract class StatusbarPopupWindow extends StandardDialog {
 
     /** {@inheritDoc} */
     @Override
-    public void setVisible(boolean b) {
+    public void setVisible(final boolean b) {
         if (b && parent.isVisible()) {
             final JPanel panel = new JPanel();
 

@@ -49,8 +49,9 @@ public class AddonInfoCellRenderer implements TableCellRenderer {
      * @return Returns the component for this cell
      */
     @Override
-    public Component getTableCellRendererComponent(JTable table, Object value,
-            boolean isSelected, boolean hasFocus, int row, int column) {
+    public Component getTableCellRendererComponent(final JTable table,
+            final Object value, final boolean isSelected, final boolean hasFocus,
+            final int row, final int column) {
         if (value instanceof AddonInfoLabel) {
             final AddonInfoLabel label = (AddonInfoLabel) value;
 

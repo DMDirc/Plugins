@@ -46,7 +46,7 @@ public class JavaScriptHelper {
      * @param setting Name of setting
      * @param value Value of setting
      */
-    public void setGlobal(String setting, Object value) {
+    public void setGlobal(String setting, final Object value) {
         if (setting.equals("")) { return; }
         setting = setting.toLowerCase();
         if (SETTINGS.containsKey(setting)) { SETTINGS.remove(setting); }
