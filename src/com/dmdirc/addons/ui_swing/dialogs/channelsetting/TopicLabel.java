@@ -1,17 +1,17 @@
 /*
- * 
+ *
  * Copyright (c) 2006-2010 Chris Smith, Shane Mc Cormack, Gregory Holmes
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -52,6 +52,8 @@ public class TopicLabel extends JPanel {
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 1;
+    /** How many milliseconds in a second. */
+    private static final int MILLIS_IN_SECOND = 1000;
     /** Topic this label represents. */
     private final Topic topic;
     /** The channel to which this label belongs. */
@@ -69,10 +71,12 @@ public class TopicLabel extends JPanel {
      * @since 0.6.3
      */
     public TopicLabel(final Channel channel, final Topic topic) {
+        super();
+
         if (topic == null) {
             throw new IllegalArgumentException();
         }
-        
+
         this.topic = topic;
         this.channel = channel;
 
@@ -82,6 +86,9 @@ public class TopicLabel extends JPanel {
         init();
     }
 
+    /**
+     * Initialises the topic field.
+     */
     private void initTopicField() {
         pane = new JEditorPane();
         pane.setEditorKit(new StyledEditorKit());
@@ -110,15 +117,18 @@ public class TopicLabel extends JPanel {
         StyleConstants.setItalic(as, false);
     }
 
+    /**
+     * Initialises all the components and layout.
+     */
     private void init() {
         initTopicField();
         removeAll();
         setLayout(new MigLayout("fill, ins 0, debug", "[]0[]", "[]0[]"));
 
         if (!topic.getTopic().isEmpty()) {
-            channel.getStyliser().addStyledString((StyledDocument) pane.getDocument(),
-                    new String[]{topic.getTopic(), },
-                    as);
+            channel.getStyliser().addStyledString(
+                    (StyledDocument) pane.getDocument(),
+                    new String[]{topic.getTopic(), }, as);
             add(pane, "wmax 450, grow, push, wrap, gapleft 5, gapleft 5");
         }
 
@@ -130,8 +140,8 @@ public class TopicLabel extends JPanel {
         }
         add(label, "wmax 450, grow, push, wrap, gapleft 5, pad 0");
 
-        label = new TextLabel("on " + new Date(topic.getTime() * 1000).
-                toString());
+        label = new TextLabel("on "
+                + new Date(topic.getTime() * MILLIS_IN_SECOND).toString());
         add(label, "wmax 450, grow, push, wrap, gapleft 5, pad 0");
 
         add(new JSeparator(), "newline, span, growx, pushx");
@@ -152,8 +162,9 @@ public class TopicLabel extends JPanel {
     @Override
     public void setBackground(final Color bg) {
         super.setBackground(bg);
-        if (topic != null && ((bg == null && getBackground() != null) ||
-                !bg.equals(getBackground()))) {
+        if (topic != null
+                && ((getBackground() != null && !getBackground().equals(bg))
+                || (bg != null && !bg.equals(getBackground())))) {
             init();
         }
     }
@@ -162,8 +173,9 @@ public class TopicLabel extends JPanel {
     @Override
     public void setForeground(final Color fg) {
         super.setForeground(fg);
-        if (topic != null && ((fg == null && getForeground() != null) ||
-                !fg.equals(getForeground()))) {
+        if (topic != null
+                && ((getForeground() != null && !getForeground().equals(fg))
+                || (fg != null && !fg.equals(getForeground())))) {
             init();
         }
     }
@@ -171,23 +183,27 @@ public class TopicLabel extends JPanel {
     /** {@inheritDoc} */
     @Override
     public void repaint() {
+        //Deliberate NOOP
     }
 
     /** {@inheritDoc} */
     @Override
-    public void firePropertyChange(String propertyName, Object oldValue,
-            Object newValue) {
+    public void firePropertyChange(final String propertyName,
+            final Object oldValue, final Object newValue) {
+        //Deliberate NOOP
     }
 
     /** {@inheritDoc} */
     @Override
-    public void firePropertyChange(String propertyName, boolean oldValue,
-            boolean newValue) {
+    public void firePropertyChange(final String propertyName,
+            final boolean oldValue, final boolean newValue) {
+        //Deliberate NOOP
     }
 
     /** {@inheritDoc} */
     @Override
-    public void firePropertyChange(String propertyName, int oldValue,
-            int newValue) {
+    public void firePropertyChange(final String propertyName,
+            final int oldValue, final int newValue) {
+        //Deliberate NOOP
     }
 }
