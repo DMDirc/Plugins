@@ -52,7 +52,8 @@ public class ReverseFileReader {
      * @throws SecurityException If a security manager exists and its checkRead method denies read access to the file.
      * @throws IOException If there is an error seeking to the end of the file.
      */
-    public ReverseFileReader(String filename) throws FileNotFoundException, SecurityException, IOException {
+    public ReverseFileReader(final String filename) throws FileNotFoundException,
+            SecurityException, IOException {
         file = new RandomAccessFile(filename, "r");
         reset();
     }
@@ -65,7 +66,8 @@ public class ReverseFileReader {
      * @throws SecurityException If a security manager exists and its checkRead method denies read access to the file.
      * @throws IOException If there is an error seeking to the end of the file.
      */
-    public ReverseFileReader(File myFile) throws FileNotFoundException, SecurityException, IOException {
+    public ReverseFileReader(final File myFile) throws FileNotFoundException,
+            SecurityException, IOException {
         file = new RandomAccessFile(myFile, "r");
         reset();
     }

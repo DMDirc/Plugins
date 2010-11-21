@@ -26,8 +26,10 @@ package com.dmdirc.addons.ui_swing.components.inputfields;
 import com.dmdirc.addons.ui_swing.components.colours.ColourPickerDialog;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.ui.interfaces.InputField;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 import javax.swing.JTextField;
 import javax.swing.text.BadLocationException;
 
@@ -45,8 +47,9 @@ public class TextFieldInputField extends JTextField implements InputField {
     /** Colour picker. */
     protected ColourPickerDialog colourPicker;
 
+    /** {@inheritDoc} */
     @Override
-    public void showColourPicker(boolean irc, boolean hex) {
+    public void showColourPicker(final boolean irc, final boolean hex) {
         if (IdentityManager.getGlobalConfig().getOptionBool("general",
                 "showcolourdialog")) {
             colourPicker = new ColourPickerDialog(irc, hex);
@@ -71,6 +74,7 @@ public class TextFieldInputField extends JTextField implements InputField {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void hideColourPicker() {
         if (colourPicker != null) {

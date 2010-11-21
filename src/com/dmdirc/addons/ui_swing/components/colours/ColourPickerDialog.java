@@ -139,7 +139,7 @@ public final class ColourPickerDialog extends StandardDialog {
 
                 /** {@inheritDoc} */
                 @Override
-                public void windowClosed(WindowEvent e) {
+                public void windowClosed(final WindowEvent e) {
                     dispose();
                 }
             });

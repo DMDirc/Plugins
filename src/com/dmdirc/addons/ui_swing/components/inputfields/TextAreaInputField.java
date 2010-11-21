@@ -62,7 +62,7 @@ public class TextAreaInputField extends JTextArea implements InputField {
      * 
      * @param text The text to contain initially
      */
-    public TextAreaInputField(String text) {
+    public TextAreaInputField(final String text) {
         super(text);
     }
     

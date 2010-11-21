@@ -94,13 +94,13 @@ public class DummyInputField implements InputField {
 
     /** {@inheritDoc} */
     @Override
-    public void setCaretPosition(int position) {
+    public void setCaretPosition(final int position) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     /** {@inheritDoc} */
     @Override
-    public void showColourPicker(boolean irc, boolean hex) {
+    public void showColourPicker(final boolean irc, final boolean hex) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

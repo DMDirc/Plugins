@@ -88,7 +88,7 @@ public class FileBrowser extends JPanel implements ActionListener {
      * @param e Action event
      */
     @Override
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(final ActionEvent e) {
         fileChooser.showOpenDialog(this);
 
         if (fileChooser.getSelectedFile() != null) {

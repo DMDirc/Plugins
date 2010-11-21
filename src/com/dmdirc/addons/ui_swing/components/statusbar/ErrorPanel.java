@@ -230,7 +230,7 @@ public class ErrorPanel extends StatusbarPopupPanel implements ErrorListener, Ac
      *
      * @param e Mouse event
      */
-    private void checkMouseEvent(MouseEvent e) {
+    private void checkMouseEvent(final MouseEvent e) {
         if (e.isPopupTrigger()) {
             menu.show(this, e.getX(), e.getY());
         }

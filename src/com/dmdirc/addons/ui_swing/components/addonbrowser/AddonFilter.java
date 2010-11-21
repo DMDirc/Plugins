@@ -73,7 +73,7 @@ public class AddonFilter extends RowFilter<DefaultTableModel, Integer> {
     /** {@inheritDoc} */
     @Override
     public boolean include(
-            Entry<? extends DefaultTableModel, ? extends Integer> entry) {
+        final Entry<? extends DefaultTableModel,? extends Integer> entry) {
         AddonInfo info = ((AddonInfoLabel) entry.getModel().getValueAt(entry.
                 getIdentifier(), 0)).getAddonInfo();
         return !((!verifiedBox.isSelected() && info.isVerified()) ||

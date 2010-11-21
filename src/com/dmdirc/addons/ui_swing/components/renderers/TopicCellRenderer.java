@@ -52,8 +52,9 @@ public class TopicCellRenderer implements TableCellRenderer {
      * @return Returns the component for this cell
      */
     @Override
-    public Component getTableCellRendererComponent(JTable table, Object value,
-            boolean isSelected, boolean hasFocus, int row, int column) {
+    public Component getTableCellRendererComponent(final JTable table,
+            final Object value, final boolean isSelected, final boolean hasFocus,
+            final int row, final int column) {
         final JPanel panel;
         if (value instanceof TopicLabel) {
             final TopicLabel label = (TopicLabel) value;
