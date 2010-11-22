@@ -61,6 +61,7 @@ public class ServerGroupWriter {
      */
     public void write(final ServerGroup group) {
         final Set<String> sections = identity.getDomains();
+        sections.remove("identity");
 
         identity.setOption("identity", "name", group.getName() + " servergroup");
 
