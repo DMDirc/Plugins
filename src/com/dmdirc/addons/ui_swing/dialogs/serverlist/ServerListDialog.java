@@ -76,8 +76,6 @@ public final class ServerListDialog extends StandardDialog implements
     private final JXLayer<Settings> settingsLayer;
     /** Help panel. */
     private final Help help;
-    /** The URL Handler to use to handle clicked links. */
-    private final URLHandler urlHandler;
 
     /**
      * Creates the dialog if one doesn't exist, and displays it.
@@ -104,7 +102,8 @@ public final class ServerListDialog extends StandardDialog implements
             final Window parentWindow, final URLHandler urlHandler) {
         synchronized (ServerListDialog.class) {
             if (me == null) {
-                me = new ServerListDialog(parentWindow, ModalityType.MODELESS, urlHandler);
+                me = new ServerListDialog(parentWindow, ModalityType.MODELESS,
+                        urlHandler);
             }
         }
 
@@ -121,8 +120,6 @@ public final class ServerListDialog extends StandardDialog implements
     private ServerListDialog(final Window window,
             final ModalityType modalityType, final URLHandler urlHandler) {
         super(window, modalityType);
-
-        this.urlHandler = urlHandler;
 
         setTitle("Server List");
         model = new ServerListModel();
