@@ -143,13 +143,16 @@ public class Tree extends JPanel implements TreeSelectionListener,
     @Override
     public final void valueChanged(final TreeSelectionEvent e) {
         if (items.getSelectionPath() == null) {
+            addItemButton.setEnabled(false);
             return;
         }
         final DefaultMutableTreeNode itemNode = (DefaultMutableTreeNode) items.
                 getSelectionPath().getLastPathComponent();
         if (itemNode.getUserObject() instanceof ServerGroupItem) {
+            addItemButton.setEnabled(true);
             model.setSelectedItem((ServerGroupItem) itemNode.getUserObject());
         } else {
+            addItemButton.setEnabled(false);
             model.setSelectedItem(null);
         }
     }
@@ -157,7 +160,7 @@ public class Tree extends JPanel implements TreeSelectionListener,
     /** {@inheritDoc} */
     @Override
     public void serverGroupChanged(final ServerGroupItem item) {
-        addItemButton.setEnabled(model.hasItems());
+        //Ignore
     }
 
     /** {@inheritDoc} */
