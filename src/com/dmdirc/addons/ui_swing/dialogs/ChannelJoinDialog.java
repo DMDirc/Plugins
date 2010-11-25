@@ -20,38 +20,46 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.ui_swing.components.frames;
+package com.dmdirc.addons.ui_swing.dialogs;
 
-import com.dmdirc.addons.ui_swing.Apple;
-import com.dmdirc.addons.ui_swing.MainFrame;
-import com.dmdirc.addons.ui_swing.SwingController;
-import com.dmdirc.addons.ui_swing.components.menubar.MenuBar;
+import com.dmdirc.parser.common.ChannelJoinRequest;
+import com.dmdirc.ui.WindowManager;
 
-import javax.swing.JFrame;
+import java.awt.Dialog.ModalityType;
+import java.awt.Window;
 
 /**
- * Haxy JFrame to allow Apple to show the MenuBar in otherwise parent-less
- * dialogs.
- *
- * @author shane
+ * A dialog to prompt the user for a channel and then join that channel.
  */
-public class AppleJFrame extends JFrame {
-    /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
-     */
+public class ChannelJoinDialog extends StandardInputDialog {
+
+    /** Serial version UID. */
     private static final long serialVersionUID = 1;
 
     /**
-     * Create a new Apple JFrame
+     * Creates a new dialog which prompts a user and then joins the channel
+     * they specify.
      *
-     * @param parentWindow Main Window
+     * @param owner Parent window
+     * @param modality Window modality
+     * @param title Window title
+     * @param message Window message
      */
-    public AppleJFrame(final MainFrame parentWindow, final SwingController controller) {
-        super();
-        final MenuBar menu = new MenuBar(controller, parentWindow);
-        Apple.getApple().setMenuBar(menu);
-        setJMenuBar(menu);
+    public ChannelJoinDialog(final Window owner, final ModalityType modality,
+            final String title, final String message) {
+        super(owner, modality, title, message);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public boolean save() {
+        WindowManager.getActiveServer().join(new ChannelJoinRequest(getText()));
+        return true;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void cancelled() {
+        //Ignore
     }
 }

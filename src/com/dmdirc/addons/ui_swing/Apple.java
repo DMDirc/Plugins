@@ -26,12 +26,13 @@ import com.dmdirc.ServerManager;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.actions.interfaces.ActionType;
-import com.dmdirc.addons.ui_swing.components.MenuBar;
+import com.dmdirc.addons.ui_swing.components.menubar.MenuBar;
 import com.dmdirc.commandparser.commands.global.NewServer;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.interfaces.ActionListener;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
+import java.awt.Toolkit;
 
 import java.awt.event.ActionEvent;
 import java.lang.reflect.Field;
@@ -42,6 +43,7 @@ import java.lang.reflect.Proxy;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -108,7 +110,7 @@ public final class Apple implements InvocationHandler, ActionListener {
     /** Has the CLIENT_OPENED action been called? */
     private volatile boolean clientOpened = false;
     /** Store any addresses that are opened before CLIENT_OPENED. */
-    private final ArrayList<URI> addresses = new ArrayList<URI>();
+    private final List<URI> addresses = new ArrayList<URI>();
 
     /**
      * Get the "Apple" instance.
@@ -146,7 +148,7 @@ public final class Apple implements InvocationHandler, ActionListener {
     }
 
     /**
-     * Get the "Application" object
+     * Get the "Application" object.
      *
      * @return Object that on OSX will be an "Application"
      */
@@ -157,19 +159,25 @@ public final class Apple implements InvocationHandler, ActionListener {
                 final Method method = app.getMethod("getApplication",
                         new Class[0]);
                 application = method.invoke(null, new Object[0]);
-            } catch (ClassNotFoundException ex) { // Probably not on OS X, do nothing.
-            } catch (NoSuchMethodException ex) { // Probably not on OS X, do nothing.
-            } catch (SecurityException ex) { // Probably not on OS X, do nothing.
-            } catch (IllegalAccessException ex) { // Probably not on OS X, do nothing.
-            } catch (IllegalArgumentException ex) { // Probably not on OS X, do nothing.
-            } catch (InvocationTargetException ex) { // Probably not on OS X, do nothing.
+            } catch (ClassNotFoundException ex) {
+                // Probably not on OS X, do nothing.
+            } catch (NoSuchMethodException ex) {
+                // Probably not on OS X, do nothing.
+            } catch (SecurityException ex) {
+                // Probably not on OS X, do nothing.
+            } catch (IllegalAccessException ex) {
+                // Probably not on OS X, do nothing.
+            } catch (IllegalArgumentException ex) {
+                // Probably not on OS X, do nothing.
+            } catch (InvocationTargetException ex) {
+                // Probably not on OS X, do nothing.
             }
         }
         return application;
     }
 
     /**
-     * Get the "NSApplication" object
+     * Get the "NSApplication" object.
      *
      * @return Object that on OSX will be an "NSApplication"
      */
@@ -181,10 +189,14 @@ public final class Apple implements InvocationHandler, ActionListener {
                 final Method method = app.getMethod("sharedApplication",
                         new Class[0]);
                 nsApplication = method.invoke(null, new Object[0]);
-            } catch (ClassNotFoundException ex) { // Probably not on OS X, do nothing.
-            } catch (NoSuchMethodException ex) { // Probably not on OS X, do nothing.
-            } catch (IllegalAccessException ex) { // Probably not on OS X, do nothing.
-            } catch (InvocationTargetException ex) { // Probably not on OS X, do nothing.
+            } catch (ClassNotFoundException ex) {
+                // Probably not on OS X, do nothing.
+            } catch (NoSuchMethodException ex) {
+                // Probably not on OS X, do nothing.
+            } catch (IllegalAccessException ex) {
+                // Probably not on OS X, do nothing.
+            } catch (InvocationTargetException ex) {
+                // Probably not on OS X, do nothing.
             }
         }
         return nsApplication;
@@ -227,7 +239,8 @@ public final class Apple implements InvocationHandler, ActionListener {
         System.setProperty("com.apple.mrj.application.apple.menu.about.name",
                 "DMDirc");
         System.setProperty("apple.laf.useScreenMenuBar", "true");
-        System.setProperty("com.apple.mrj.application.growbox.intrudes", "false");
+        System.setProperty("com.apple.mrj.application.growbox.intrudes",
+                "false");
         System.setProperty("com.apple.mrj.application.live-resize", "true");
     }
 
@@ -249,15 +262,19 @@ public final class Apple implements InvocationHandler, ActionListener {
             final Method method = getNSApplication().getClass().getMethod(
                     "requestUserAttention", new Class[]{Integer.TYPE});
             method.invoke(getNSApplication(), new Object[]{type.get(null)});
-        } catch (NoSuchFieldException ex) { // Probably not on OS X, do nothing.
-        } catch (NoSuchMethodException ex) { // Probably not on OS X, do nothing.
-        } catch (IllegalAccessException ex) { // Probably not on OS X, do nothing.
-        } catch (InvocationTargetException ex) { // Probably not on OS X, do nothing.
+        } catch (NoSuchFieldException ex) {
+            // Probably not on OS X, do nothing.
+        } catch (NoSuchMethodException ex) {
+            // Probably not on OS X, do nothing.
+        } catch (IllegalAccessException ex) {
+            // Probably not on OS X, do nothing.
+        } catch (InvocationTargetException ex) {
+            // Probably not on OS X, do nothing.
         }
     }
 
     /**
-     * Set this up as a listener for the Apple Events
+     * Set this up as a listener for the Apple Events.
      *
      * @return True if the listener was added, else false.
      */
@@ -287,10 +304,14 @@ public final class Apple implements InvocationHandler, ActionListener {
                     new Class[]{Boolean.TYPE});
             method.invoke(getApplication(), new Object[]{Boolean.TRUE});
             return true;
-        } catch (ClassNotFoundException ex) { // Probably not on OS X, do nothing.
-        } catch (NoSuchMethodException ex) { // Probably not on OS X, do nothing.
-        } catch (IllegalAccessException ex) { // Probably not on OS X, do nothing.
-        } catch (InvocationTargetException ex) { // Probably not on OS X, do nothing.
+        } catch (ClassNotFoundException ex) {
+            // Probably not on OS X, do nothing.
+        } catch (NoSuchMethodException ex) {
+            // Probably not on OS X, do nothing.
+        } catch (IllegalAccessException ex) {
+            // Probably not on OS X, do nothing.
+        } catch (InvocationTargetException ex) {
+            // Probably not on OS X, do nothing.
         }
         return false;
     }
@@ -320,8 +341,8 @@ public final class Apple implements InvocationHandler, ActionListener {
                             getParameterTypes()).invoke(args[0], a);
                 }
             });
-            Method thisMethod = this.getClass().getMethod(method.getName(),
-                    new Class[]{ApplicationEvent.class});
+            final Method thisMethod = this.getClass().getMethod(
+                    method.getName(), new Class[]{ApplicationEvent.class});
             return thisMethod.invoke(this, event);
         } catch (NoSuchMethodException e) {
             if (method.getName().equals("equals") && args.length == 1) {
@@ -357,7 +378,7 @@ public final class Apple implements InvocationHandler, ActionListener {
     }
 
     /**
-     * Handle an event using the menuBar
+     * Handle an event using the menuBar.
      *
      * @param name The name of the event according to the menubar
      * @param event The ApplicationEvent we are handingle
@@ -367,15 +388,16 @@ public final class Apple implements InvocationHandler, ActionListener {
         if (!isApple() || menuBar == null) {
             return;
         }
+        event.setHandled(true);
         final ActionEvent actionEvent = new ActionEvent(this,
                 ActionEvent.ACTION_PERFORMED, name);
 
-        menuBar.actionPerformed(actionEvent);
-        event.setHandled(true);
+        Toolkit.getDefaultToolkit().getSystemEventQueue()
+                .postEvent(actionEvent);
     }
 
     /**
-     * This is called when Quit is selected from the Application menu
+     * This is called when Quit is selected from the Application menu.
      *
      * @param event an ApplicationEvent object
      */
@@ -384,7 +406,7 @@ public final class Apple implements InvocationHandler, ActionListener {
     }
 
     /**
-     * This is called when About is selected from the Application menu
+     * This is called when About is selected from the Application menu.
      *
      * @param event an ApplicationEvent object
      */
@@ -393,7 +415,7 @@ public final class Apple implements InvocationHandler, ActionListener {
     }
 
     /**
-     * This is called when Preferences is selected from the Application menu
+     * This is called when Preferences is selected from the Application menu.
      *
      * @param event an ApplicationEvent object
      */
@@ -402,7 +424,7 @@ public final class Apple implements InvocationHandler, ActionListener {
     }
 
     /**
-     * This is called when the Application is opened
+     * This is called when the Application is opened.
      *
      * @param event an ApplicationEvent object
      */
@@ -410,7 +432,7 @@ public final class Apple implements InvocationHandler, ActionListener {
     }
 
     /**
-     * This is called when the application is asked to open a file
+     * This is called when the application is asked to open a file.
      *
      * @param event an ApplicationEvent object
      */
@@ -418,7 +440,7 @@ public final class Apple implements InvocationHandler, ActionListener {
     }
 
     /**
-     * This is called when asked to print
+     * This is called when asked to print.
      *
      * @param event an ApplicationEvent object
      */
@@ -426,7 +448,7 @@ public final class Apple implements InvocationHandler, ActionListener {
     }
 
     /**
-     * This is called when the application is reopened
+     * This is called when the application is reopened.
      *
      * @param event an ApplicationEvent object
      */
@@ -450,9 +472,9 @@ public final class Apple implements InvocationHandler, ActionListener {
 
     /**
      * Callback from JNI library.
-     * If called before the client has finished opening, the URL will be added to
-     * a list that will be connected to once the CLIENT_OPENED action is called.
-     * Otherwise we connect right away.
+     * If called before the client has finished opening, the URL will be added
+     * to a list that will be connected to once the CLIENT_OPENED action is
+     * called. Otherwise we connect right away.
      *
      * @param url The irc url to connect to.
      */
