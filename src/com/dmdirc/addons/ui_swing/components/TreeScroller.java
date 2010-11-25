@@ -19,9 +19,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 package com.dmdirc.addons.ui_swing.components;
 
 import com.dmdirc.addons.ui_swing.UIUtilities;
+
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 
@@ -45,7 +47,7 @@ public class TreeScroller implements MouseWheelListener {
     /** Root node. */
     private final DefaultMutableTreeNode rootNode;
     /** Tree. */
-    protected JTree tree;
+    private JTree tree;
 
     /**
      * Creates a new instance of TreeScroller.
@@ -163,7 +165,8 @@ public class TreeScroller implements MouseWheelListener {
                 thisNode = (DefaultMutableTreeNode) rootNode.getChildAt(0);
             }
         } else {
-            thisNode = (DefaultMutableTreeNode) selectionModel.getSelectionPath().getLastPathComponent();
+            thisNode = (DefaultMutableTreeNode) selectionModel
+                    .getSelectionPath().getLastPathComponent();
         }
 
         //are we going up or down?
@@ -193,7 +196,8 @@ public class TreeScroller implements MouseWheelListener {
      *
      * @return next node
      */
-    private DefaultMutableTreeNode changeFocusUp(final DefaultMutableTreeNode node) {
+    private DefaultMutableTreeNode changeFocusUp(
+            final DefaultMutableTreeNode node) {
         DefaultMutableTreeNode nextNode;
 
         nextNode = node.getPreviousNode();
@@ -212,7 +216,8 @@ public class TreeScroller implements MouseWheelListener {
      *
      * @return next node
      */
-    private DefaultMutableTreeNode changeFocusDown(final DefaultMutableTreeNode node) {
+    private DefaultMutableTreeNode changeFocusDown(
+            final DefaultMutableTreeNode node) {
         DefaultMutableTreeNode nextNode;
 
         nextNode = node.getNextNode();
