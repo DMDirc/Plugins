@@ -31,7 +31,7 @@ import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.addons.ui_swing.dialogs.updater.SwingRestartDialog;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.prefs.PreferencesCategory;
-import com.dmdirc.config.prefs.PreferencesManager;
+import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 
@@ -74,9 +74,9 @@ public final class SwingPreferencesDialog extends StandardDialog implements
     /** Previously selected category. */
     private PreferencesCategory selected;
     /** Preferences Manager. */
-    private PreferencesManager manager;
+    private PreferencesDialogModel manager;
     /** Manager loading swing worker. */
-    private LoggingSwingWorker<PreferencesManager, Void> worker;
+    private LoggingSwingWorker<PreferencesDialogModel, Void> worker;
     /** Parent window. */
     private MainFrame parentWindow;
     /** Panel size. */
@@ -94,15 +94,15 @@ public final class SwingPreferencesDialog extends StandardDialog implements
 
         initComponents();
 
-        worker = new LoggingSwingWorker<PreferencesManager, Void>() {
+        worker = new LoggingSwingWorker<PreferencesDialogModel, Void>() {
 
             /** {@inheritDoc} */
             @Override
-            protected PreferencesManager doInBackground() {
+            protected PreferencesDialogModel doInBackground() {
                 mainPanel.setWaiting(true);
-                PreferencesManager prefsManager = null;
+                PreferencesDialogModel prefsManager = null;
                 try {
-                    prefsManager = new PreferencesManager(controller);
+                    prefsManager = new PreferencesDialogModel(controller);
                 } catch (IllegalArgumentException ex) {
                     mainPanel.setError(ex.getMessage());
                     Logger.appError(ErrorLevel.HIGH, "Unable to load the" +
@@ -116,7 +116,7 @@ public final class SwingPreferencesDialog extends StandardDialog implements
             protected void done() {
                 if (!isCancelled()) {
                     try {
-                        final PreferencesManager prefsManager = get();
+                        final PreferencesDialogModel prefsManager = get();
                         if (prefsManager != null) {
                             setPrefsManager(prefsManager);
                         }
@@ -131,7 +131,7 @@ public final class SwingPreferencesDialog extends StandardDialog implements
         worker.executeInExecutor();
     }
 
-    private void setPrefsManager(final PreferencesManager manager) {
+    private void setPrefsManager(final PreferencesDialogModel manager) {
         this.manager = manager;
 
         ((DefaultListModel) tabList.getModel()).clear();

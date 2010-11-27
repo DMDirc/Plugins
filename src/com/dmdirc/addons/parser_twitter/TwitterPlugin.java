@@ -26,7 +26,7 @@ import com.dmdirc.actions.ActionManager;
 import com.dmdirc.addons.parser_twitter.actions.TwitterActionComponents;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
-import com.dmdirc.config.prefs.PreferencesManager;
+import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.parser.common.MyInfo;
@@ -85,7 +85,7 @@ public class TwitterPlugin extends Plugin {
 
     /** {@inheritDoc} */
     @Override
-    public void showConfig(final PreferencesManager manager) {
+    public void showConfig(final PreferencesDialogModel manager) {
         final PreferencesCategory category = new PluginPreferencesCategory(getPluginInfo(), "Twitter Plugin", "Settings related to the twitter plugin", "category-twitter");
         final PreferencesCategory advanced = new PluginPreferencesCategory(getPluginInfo(), "Advanced", "Advanced Settings related to the twitter plugin", "category-twitter");
 
