@@ -65,7 +65,13 @@ public final class TimerCommand extends Command implements IntelligentCommand,
                 doUsage(origin, args.isSilent());
                 return;
             }
-            
+
+            if (interval < 1) {
+                sendLine(origin, args.isSilent(), FORMAT_ERROR, "Cannot use" +
+                        " intervals below 1");
+                return;
+            }
+
             new TimedCommand(repetitions, interval, command, origin, context.getSource());
             sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Command scheduled.");
         }
