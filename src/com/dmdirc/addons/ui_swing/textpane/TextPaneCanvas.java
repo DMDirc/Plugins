@@ -90,9 +90,9 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
     private int startLine;
     /** Selection. */
     private LinePosition selection;
-    /** First visible line. */
+    /** First visible line (from the top). */
     private int firstVisibleLine;
-    /** Last visible line. */
+    /** Last visible line (from the top). */
     private int lastVisibleLine;
     /** Background image. */
     private Image backgroundImage;
