@@ -53,6 +53,7 @@ import com.dmdirc.commandparser.parsers.CommandParser;
 import com.dmdirc.commandparser.parsers.GlobalCommandParser;
 import com.dmdirc.config.ConfigManager;
 import com.dmdirc.interfaces.ConfigChangeListener;
+import com.dmdirc.interfaces.FrameCloseListener;
 import com.dmdirc.interfaces.FrameInfoListener;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
@@ -102,7 +103,7 @@ import net.miginfocom.swing.MigLayout;
  */
 public abstract class TextFrame extends JInternalFrame implements Window,
         PropertyChangeListener, InternalFrameListener, ConfigChangeListener,
-        FrameInfoListener, TextPaneListener {
+        FrameInfoListener, TextPaneListener, FrameCloseListener {
 
     /** Logger to use. */
     private static final java.util.logging.Logger LOGGER =
@@ -149,6 +150,7 @@ public abstract class TextFrame extends JInternalFrame implements Window,
         setFrameIcon(IconManager.getIconManager().getIcon(owner.getIcon()));
 
         owner.addFrameInfoListener(this);
+        owner.addCloseListener(this);
         owner.setTitle(frameParent.getTitle());
 
         try {
@@ -251,6 +253,7 @@ public abstract class TextFrame extends JInternalFrame implements Window,
 
     /** {@inheritDoc} */
     @Override
+    @Deprecated
     public void setVisible(final boolean isVisible) {
         UIUtilities.invokeLater(new Runnable() {
 
@@ -668,7 +671,7 @@ public abstract class TextFrame extends JInternalFrame implements Window,
             /** {@inheritDoc} */
             @Override
             protected Object doInBackground() {
-                frameParent.windowClosing();
+                frameParent.handleWindowClosing();
                 return null;
             }
         }.executeInExecutor();
@@ -1056,6 +1059,12 @@ public abstract class TextFrame extends JInternalFrame implements Window,
                 TextFrame.super.setTitle(title);
             }
         });
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void windowClosing(final FrameContainer<?> window) {
+        setVisible(false);
     }
 
     /** {@inheritDoc} */

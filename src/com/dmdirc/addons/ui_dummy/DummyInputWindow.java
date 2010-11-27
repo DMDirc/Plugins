@@ -127,6 +127,7 @@ public class DummyInputWindow implements InputWindow {
 
     /** {@inheritDoc} */
     @Override
+    @Deprecated
     public void setVisible(final boolean isVisible) {
         visible = isVisible;
     }
@@ -176,7 +177,7 @@ public class DummyInputWindow implements InputWindow {
     /** {@inheritDoc} */
     @Override
     public void close() {
-        container.windowClosing();
+        container.handleWindowClosing();
     }
 
     /** {@inheritDoc} */

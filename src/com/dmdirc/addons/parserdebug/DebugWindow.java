@@ -42,7 +42,7 @@ public class DebugWindow extends FrameContainer<Window> {
     protected Parser parser;
     /** The Server window we are a child of */
     protected Server server;
-    
+
     /**
      * Creates a new instance of DebugWindow.
      *
@@ -59,7 +59,7 @@ public class DebugWindow extends FrameContainer<Window> {
 
         WindowManager.addWindow(server, this);
     }
-       
+
     /**
      * Returns the server instance associated with this container.
      *
@@ -69,7 +69,7 @@ public class DebugWindow extends FrameContainer<Window> {
     public Server getServer() {
         return server;
     }
-    
+
     /**
      * Set the parser to null to stop us holding onto parsers when the server
      * connection is closed.
@@ -79,29 +79,21 @@ public class DebugWindow extends FrameContainer<Window> {
         addLine("Unset parser: "+parser, true);
         parser = null;
     }
-    
+
 
     /**
      * Closes this container (and it's associated frame).
      */
     @Override
     public void windowClosing() {
-        // 1: Make the window non-visible
-        for (Window window : getWindows()) {
-            window.setVisible(false);
-        }
-        
         // 2: Remove any callbacks or listeners
         if (parser != null) {
             parser.getCallbackManager().delCallback(DebugInfoListener.class, plugin);
         }
-        
+
         // 3: Trigger any actions neccessary
         // 4: Trigger action for the window closing
         // 5: Inform any parents that the window is closing
-        
-        // 6: Remove the window from the window manager
-        WindowManager.removeWindow(this);
     }
 
     /** {@inheritDoc} */
