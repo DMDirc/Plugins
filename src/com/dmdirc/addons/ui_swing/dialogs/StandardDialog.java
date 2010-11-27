@@ -271,10 +271,8 @@ public class StandardDialog extends JDialog {
      * @param target The button to use
      */
     public final void executeAction(final JButton target) {
-        if (target != null) {
-            if (target.isEnabled()) {
-                target.doClick();
-            }
+        if (target != null && target.isEnabled()) {
+            target.doClick();
         }
     }
 

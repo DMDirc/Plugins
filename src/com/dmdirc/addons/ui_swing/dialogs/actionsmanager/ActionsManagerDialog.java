@@ -325,17 +325,14 @@ public final class ActionsManagerDialog extends StandardDialog implements
             editGroup();
         } else if (e.getSource() == delete) {
             delGroup();
-        } else if (e.getSource() == getOkButton() || e.getSource()
-                == getCancelButton()) {
-            if (!saving.getAndSet(true)) {
-                for (ActionGroupSettingsPanel loopSettings : settings.values()) {
-                    loopSettings.save();
-                }
-                IdentityManager.getConfigIdentity().setOption("dialogstate",
-                        "actionsmanagerdialog", groups.getSelectedIndex());
-                dispose();
+        } else if ((e.getSource() == getOkButton() || e.getSource()
+                == getCancelButton()) && !saving.getAndSet(true))
+            for (ActionGroupSettingsPanel loopSettings : settings.values()) {
+                loopSettings.save();
             }
-        }
+            IdentityManager.getConfigIdentity().setOption("dialogstate",
+                    "actionsmanagerdialog", groups.getSelectedIndex());
+            dispose();
     }
 
     /**
