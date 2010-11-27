@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2006-2010 Chris Smith, Shane Mc Cormack, Gregory Holmes
+ * Copyright (c) 2006-2010 Chris Smith, Shane Mc Cormack, Gregory Holmes,
+ * Simon Mott
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -35,21 +36,24 @@ import java.util.TimerTask;
  * @author chris
  */
 public final class TimePlugin  extends Plugin {
-    
+
     /** Have we registered our types already? */
     private static boolean registered;
-    
+
     /** The timer to use for scheduling. */
     private Timer timer;
-    
+
     /** The TimerCommand we've registered. */
     private TimerCommand command;
-    
+
+    /** The Manager to use for managing timers. */
+    private TimerManager manager;
+
     /** Creates a new instance of TimePlugin. */
     public TimePlugin() {
         super();
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public void onLoad() {
@@ -59,9 +63,9 @@ public final class TimePlugin  extends Plugin {
         }
 
         final int offset = 60 - Calendar.getInstance().get(Calendar.SECOND);
-        
+
         timer = new Timer("Time plugin timer");
-        
+
         timer.schedule(new TimerTask() {
             /** {@inheritDoc} */
             @Override
@@ -69,26 +73,27 @@ public final class TimePlugin  extends Plugin {
                 runTimer();
             }
         }, 1000 * offset, 1000 * 60);
-        
-        command = new TimerCommand();
+
+        manager = new TimerManager();
+        command = new TimerCommand(this);
         CommandManager.registerCommand(command);
     }
-    
+
     /** Handles a timer event that occurs every minute. */
     public void runTimer() {
         final Calendar cal = Calendar.getInstance();
-        
+
         ActionManager.processEvent(TimeActionType.TIME_MINUTE, null, cal);
-        
+
         if (cal.get(Calendar.MINUTE) == 0) {
             ActionManager.processEvent(TimeActionType.TIME_HOUR, null, cal);
-            
+
             if (cal.get(Calendar.HOUR_OF_DAY) == 0) {
                 ActionManager.processEvent(TimeActionType.TIME_DAY, null, cal);
             }
         }
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public void onUnload() {
@@ -96,7 +101,16 @@ public final class TimePlugin  extends Plugin {
             timer.cancel();
             timer = null;
         }
-        
+        manager = null;
         CommandManager.unregisterCommand(command);
+    }
+
+    /**
+     * Returns the manager that is assigned to this Plugin.
+     *
+     * @return The Instance of TimeManager that is associated with this plugin
+     */
+    public TimerManager getTimerManager() {
+        return manager;
     }
 }

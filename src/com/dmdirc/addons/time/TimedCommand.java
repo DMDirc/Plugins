@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2006-2010 Chris Smith, Shane Mc Cormack, Gregory Holmes
+ * Copyright (c) 2006-2010 Chris Smith, Shane Mc Cormack, Gregory Holmes,
+ * Simon Mott
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -35,42 +36,71 @@ import java.util.TimerTask;
  * Timed command represents a command that has been scheduled by the user.
  */
 public final class TimedCommand extends TimerTask {
-    
+
     /** The number of repetitions remaining. */
     private int repetitions;
-    
+
     /** The command to execute. */
     private final String command;
-    
+
     /** The container to use for executing commands. */
     private final FrameContainer<?> origin;
 
     /** The window the command came from. */
     private final Window window;
-    
+
     /** The timer we're using for scheduling this command. */
     private final Timer timer;
-    
+
+    /** The key for this timer in the Timer Manager */
+    private final int timerKey;
+
+    /** The manager for this timer. */
+    private final TimerManager manager;
+
     /**
      * Creates a new instance of TimedCommand.
+     *
      * @param repetitions The number of times this command will be executed
      * @param delay The number of seconds between each execution
      * @param command The command to be executed
      * @param origin The frame container to use for the execution
      * @param window The window the command came from
      */
-    public TimedCommand(final int repetitions, final int delay,
-            final String command, final FrameContainer<?> origin,
-            final Window window) {
+    public TimedCommand(final TimerManager manager, final int timerKey,
+            final int repetitions, final int delay, final String command,
+            final FrameContainer<?> origin, final Window window) {
         super();
-        
+
+        this.timerKey = timerKey;
         this.repetitions = repetitions;
         this.command = command;
         this.origin = origin;
         this.window = window;
-        
+        this.manager = manager;
+
         timer = new Timer("Timed Command Timer");
         timer.schedule(this, delay * 1000L, delay * 1000L);
+    }
+
+    /**
+     * Returns the command this timer is due to execute.
+     *
+     * @return Command the timer will run
+     * @since 0.6.5
+     */
+    public String getCommand() {
+        return command;
+    }
+
+    /**
+     * Cancels this timer and removes it from the Timer Manager
+     *
+     * @since 0.6.5
+     */
+    public void cancelTimer() {
+        manager.removeTimer(timerKey);
+        timer.cancel();
     }
 
     /** {@inheritDoc} */
@@ -82,10 +112,11 @@ public final class TimedCommand extends TimerTask {
         } else {
             parser = ((WritableFrameContainer<?>) origin).getCommandParser();
         }
-        
+
         parser.parseCommand(origin, window, command);
-                
+
         if (--repetitions <= 0) {
+            manager.removeTimer(timerKey);
             timer.cancel();
         }
     }
