@@ -28,7 +28,7 @@ import com.dmdirc.config.prefs.CategoryChangeListener;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesInterface;
-import com.dmdirc.config.prefs.PreferencesManager;
+import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.config.prefs.SettingChangeListener;
@@ -91,7 +91,7 @@ public final class OsdPlugin extends Plugin implements CategoryChangeListener,
 
     /** {@inheritDoc} */
     @Override
-    public void showConfig(final PreferencesManager manager) {
+    public void showConfig(final PreferencesDialogModel manager) {
         x = IdentityManager.getGlobalConfig().getOptionInt(getDomain(), "locationX");
         y = IdentityManager.getGlobalConfig().getOptionInt(getDomain(), "locationY");
         

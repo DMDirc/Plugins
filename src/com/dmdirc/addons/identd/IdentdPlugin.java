@@ -29,7 +29,7 @@ import com.dmdirc.actions.interfaces.ActionType;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
-import com.dmdirc.config.prefs.PreferencesManager;
+import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.util.validators.PortValidator;
@@ -111,7 +111,7 @@ public class IdentdPlugin extends Plugin implements ActionListener {
 
     /** {@inheritDoc} */
     @Override
-    public void showConfig(final PreferencesManager manager) {
+    public void showConfig(final PreferencesDialogModel manager) {
         final PreferencesCategory general = new PluginPreferencesCategory(getPluginInfo(), "Identd",
                 "General Identd Plugin config ('Lower' options take priority " +
                 "over those above them)");

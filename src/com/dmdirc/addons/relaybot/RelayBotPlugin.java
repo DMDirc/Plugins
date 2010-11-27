@@ -32,7 +32,7 @@ import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
-import com.dmdirc.config.prefs.PreferencesManager;
+import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.interfaces.ActionListener;
@@ -266,7 +266,7 @@ public class RelayBotPlugin extends Plugin implements ActionListener, ConfigChan
 
     /** {@inheritDoc} */
     @Override
-    public void showConfig(final PreferencesManager manager) {
+    public void showConfig(final PreferencesDialogModel manager) {
         final PreferencesCategory general = new PluginPreferencesCategory(
                 getPluginInfo(), "Relay Bot",
                 "General configuration for the Relay bot plugin.");

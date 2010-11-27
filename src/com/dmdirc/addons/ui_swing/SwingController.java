@@ -55,7 +55,7 @@ import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesInterface;
-import com.dmdirc.config.prefs.PreferencesManager;
+import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.util.validators.NotEmptyValidator;
@@ -752,7 +752,7 @@ public class SwingController extends Plugin implements Serializable,
 
     /** {@inheritDoc} */
     @Override
-    public void showConfig(final PreferencesManager manager) {
+    public void showConfig(final PreferencesDialogModel manager) {
         manager.getCategory("GUI").addSubCategory(createGeneralCategory());
 
     }

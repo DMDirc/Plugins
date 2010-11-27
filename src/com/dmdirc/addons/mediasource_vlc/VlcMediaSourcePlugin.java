@@ -28,7 +28,7 @@ import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
-import com.dmdirc.config.prefs.PreferencesManager;
+import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.plugins.Plugin;
@@ -203,7 +203,7 @@ public class VlcMediaSourcePlugin extends Plugin implements MediaSource {
 
     /** {@inheritDoc} */
     @Override
-    public void showConfig(final PreferencesManager manager) {
+    public void showConfig(final PreferencesDialogModel manager) {
         final PreferencesCategory general = new PluginPreferencesCategory(
                 getPluginInfo(), "VLC Media Source",
                 "", "category-vlc");

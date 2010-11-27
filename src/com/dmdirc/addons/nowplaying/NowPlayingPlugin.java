@@ -30,7 +30,7 @@ import com.dmdirc.commandparser.CommandManager;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
-import com.dmdirc.config.prefs.PreferencesManager;
+import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.interfaces.ActionListener;
 import com.dmdirc.plugins.Plugin;
 import com.dmdirc.plugins.PluginInfo;
@@ -102,7 +102,7 @@ public class NowPlayingPlugin extends Plugin implements ActionListener  {
 
     /** {@inheritDoc} */
     @Override
-    public void showConfig(final PreferencesManager manager) {
+    public void showConfig(final PreferencesDialogModel manager) {
         final ConfigPanel configPanel = UIUtilities.invokeAndWait(
                 new ReturnableThread<ConfigPanel>() {
 
