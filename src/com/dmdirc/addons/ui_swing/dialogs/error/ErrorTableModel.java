@@ -73,8 +73,10 @@ public final class ErrorTableModel extends AbstractTableModel implements
      * @param errors List of errors
      */
     public void setErrors(final List<ProgramError> errors) {
-        this.errors.clear();
-        this.errors.addAll(errors);
+        synchronized (errors) {
+            this.errors.clear();
+            this.errors.addAll(errors);
+        }
 
         fireTableDataChanged();
     }
@@ -82,9 +84,7 @@ public final class ErrorTableModel extends AbstractTableModel implements
     /** {@inheritDoc} */
     @Override
     public int getRowCount() {
-        synchronized (errors) {
-            return errors.size();
-        }
+        return errors.size();
     }
 
     /** {@inheritDoc} */
@@ -255,9 +255,7 @@ public final class ErrorTableModel extends AbstractTableModel implements
             /** {@inheritDoc} */
             @Override
             public void run() {
-                synchronized (ErrorTableModel.this) {
-                    addRow(error);
-                }
+                addRow(error);
             }
         });
     }
@@ -270,9 +268,7 @@ public final class ErrorTableModel extends AbstractTableModel implements
             /** {@inheritDoc} */
             @Override
             public void run() {
-                synchronized (ErrorTableModel.this) {
-                    removeRow(error);
-                }
+                removeRow(error);
             }
         });
     }
@@ -285,7 +281,7 @@ public final class ErrorTableModel extends AbstractTableModel implements
             /** {@inheritDoc} */
             @Override
             public void run() {
-                synchronized (ErrorTableModel.this) {
+                synchronized (errors) {
                     final int errorRow = indexOf(error);
                     if (errorRow != -1 && errorRow < getRowCount()) {
                         fireTableRowsUpdated(errorRow, errorRow);
