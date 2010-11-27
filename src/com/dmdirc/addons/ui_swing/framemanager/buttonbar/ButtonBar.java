@@ -528,7 +528,8 @@ public final class ButtonBar implements FrameManager, ActionListener,
             if (frame == null) {
                 return;
             }
-            final JPopupMenu popupMenu = frame.getPopupMenu(null, "");
+            final JPopupMenu popupMenu = frame.getPopupMenu(null,
+                    new Object[][] { new Object[] { "" } });
             frame.addCustomPopupItems(popupMenu);
             popupMenu.add(new JMenuItem(new CloseFrameContainerAction(frame.
                         getContainer())));
