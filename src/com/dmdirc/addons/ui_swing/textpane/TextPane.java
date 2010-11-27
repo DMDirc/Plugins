@@ -28,6 +28,7 @@ import com.dmdirc.ui.messages.IRCDocument;
 import com.dmdirc.ui.messages.IRCDocumentListener;
 import com.dmdirc.ui.messages.LinePosition;
 import com.dmdirc.ui.messages.Styliser;
+import java.awt.Color;
 
 import java.awt.Point;
 import java.awt.Toolkit;
@@ -43,7 +44,9 @@ import java.awt.event.MouseWheelListener;
 import javax.swing.BoundedRangeModel;
 import javax.swing.DefaultBoundedRangeModel;
 import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JScrollBar;
+import javax.swing.SwingConstants;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -67,6 +70,10 @@ public final class TextPane extends JComponent implements MouseWheelListener,
     private final IRCDocument document;
     /** Parent Frame. */
     private final Window frame;
+    /** Indicator to show whether new lines have been added. */
+    private JLabel newLineIndicator;
+    /** Last seen line. */
+    private int lastSeenLine = 0;
 
     /**
      * Creates a new instance of TextPane.
@@ -79,10 +86,15 @@ public final class TextPane extends JComponent implements MouseWheelListener,
 
         setUI(new TextPaneUI());
         document = frame.getContainer().getDocument();
+        newLineIndicator = new JLabel("", SwingConstants.CENTER);
+        newLineIndicator.setBackground(Color.RED);
+        newLineIndicator.setForeground(Color.WHITE);
+        newLineIndicator.setOpaque(true);
 
-        setLayout(new MigLayout("fill"));
+        setLayout(new MigLayout("fill, hidemode 3"));
         canvas = new TextPaneCanvas(this, document);
         add(canvas, "dock center");
+        add(newLineIndicator, "dock south, center, grow");
         scrollModel = new DefaultBoundedRangeModel();
         scrollModel.setMaximum(document.getNumLines());
         scrollModel.setExtent(0);
@@ -141,7 +153,8 @@ public final class TextPane extends JComponent implements MouseWheelListener,
      * scrollbar's current position is set to the end of the document.
      *
      * @param lines Current number of lines
-     * @param linesAllowed The number of lines allowed below the current position
+     * @param linesAllowed The number of lines allowed below the
+     * current position
      * @since 0.6
      */
     protected void setScrollBarMax(final int lines, final int linesAllowed) {
@@ -173,6 +186,12 @@ public final class TextPane extends JComponent implements MouseWheelListener,
      */
     @Override
     public void adjustmentValueChanged(final AdjustmentEvent e) {
+        if (e.getValue() == document.getNumLines()) {
+            newLineIndicator.setVisible(false);
+            lastSeenLine = e.getValue();
+        }
+        newLineIndicator.setText("↓ " + (document.getNumLines() - lastSeenLine)
+                + " new lines ↓");
         scrollModel.setValue(e.getValue());
     }
 
@@ -429,6 +448,9 @@ public final class TextPane extends JComponent implements MouseWheelListener,
             /** {@inheritDoc}. */
             @Override
             public void run() {
+                if (scrollModel.getValue() != line) {
+                    newLineIndicator.setVisible(true);
+                }
                 setScrollBarMax(size, 1);
             }
         });
@@ -479,6 +501,9 @@ public final class TextPane extends JComponent implements MouseWheelListener,
             /** {@inheritDoc}. */
             @Override
             public void run() {
+                if (scrollModel.getValue() != line) {
+                    newLineIndicator.setVisible(true);
+                }
                 setScrollBarMax(size, length);
             }
         });
