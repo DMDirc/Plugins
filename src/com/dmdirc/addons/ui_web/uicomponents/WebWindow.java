@@ -148,12 +148,14 @@ public class WebWindow implements Window, IRCDocumentListener, FrameInfoListener
 
     /** {@inheritDoc} */
     @Override
+    @Deprecated
     public boolean isVisible() {
         return true;
     }
 
     /** {@inheritDoc} */
     @Override
+    @Deprecated
     public void setVisible(boolean isVisible) {
         // Do nothing
     }
