@@ -25,17 +25,12 @@ package com.dmdirc.addons.ui_swing.components.frames;
 import com.dmdirc.WritableFrameContainer;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
-import com.dmdirc.addons.ui_swing.actions.CommandAction;
 import com.dmdirc.addons.ui_swing.actions.CopyAction;
 import com.dmdirc.addons.ui_swing.actions.CutAction;
 import com.dmdirc.addons.ui_swing.actions.InputFieldCopyAction;
 import com.dmdirc.addons.ui_swing.actions.InputTextFramePasteAction;
 import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputField;
 import com.dmdirc.addons.ui_swing.dialogs.paste.PasteDialog;
-import com.dmdirc.commandparser.PopupManager;
-import com.dmdirc.commandparser.PopupMenu;
-import com.dmdirc.commandparser.PopupMenuItem;
-import com.dmdirc.commandparser.PopupType;
 import com.dmdirc.config.ConfigManager;
 import com.dmdirc.interfaces.AwayStateListener;
 import com.dmdirc.logger.ErrorLevel;
@@ -53,13 +48,9 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.IOException;
 
-import javax.swing.JComponent;
 import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
-import javax.swing.JSeparator;
 import javax.swing.KeyStroke;
 import javax.swing.event.InternalFrameEvent;
 
@@ -439,47 +430,6 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
                         getOptionBool("ui", "awayindicator");
             }
         }
-    }
-
-    /** 
-     * Popuplates the nicklist popup. 
-     *
-     * @param nickname Nickname for the popup
-     */
-    protected final void popuplateNicklistPopup(final String nickname) {
-        final PopupMenu popups = PopupManager.getMenu(PopupType.CHAN_NICK,
-                getContainer().getConfigManager());
-
-        nickPopup = (JPopupMenu) populatePopupMenu(new JPopupMenu(), popups,
-                nickname);
-    }
-
-    /**
-     * Populates the specified popupmenu
-     * 
-     * @param menu Menu component
-     * @param popup Popup to get info from
-     * @param arguments Arguments for the command
-     * 
-     * @return Populated popup
-     */
-    private JComponent populatePopupMenu(final JComponent menu,
-            final PopupMenu popup, final Object... arguments) {
-        for (PopupMenuItem menuItem : popup.getItems()) {
-            if (menuItem.isDivider()) {
-                menu.add(new JSeparator());
-            } else if (menuItem.isSubMenu()) {
-                menu.add(populatePopupMenu(new JMenu(menuItem.getName()),
-                        menuItem.getSubMenu(), arguments));
-            } else {
-                menu.add(
-                        new JMenuItem(
-                        new CommandAction(getContainer().getCommandParser(),
-                        this, menuItem.getName(), menuItem.getCommand(
-                        arguments))));
-            }
-        }
-        return menu;
     }
 
     /** Request input field focus. */
