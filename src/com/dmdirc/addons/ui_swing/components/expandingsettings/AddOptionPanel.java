@@ -25,8 +25,8 @@ package com.dmdirc.addons.ui_swing.components.expandingsettings;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.FontPicker;
 import com.dmdirc.addons.ui_swing.components.colours.ColourChooser;
-import com.dmdirc.addons.ui_swing.components.expandingsettings.SettingsPanel.OptionType;
 import com.dmdirc.addons.ui_swing.components.renderers.AddOptionCellRenderer;
+import com.dmdirc.config.prefs.PreferencesType;
 
 import java.awt.Component;
 import java.awt.Font;
@@ -200,16 +200,16 @@ public class AddOptionPanel extends JPanel implements ActionListener {
      *
      * @param type Option type
      */
-    private void switchInputField(final OptionType type) {
+    private void switchInputField(final PreferencesType type) {
         if (type == null) {
             addInputCurrent = addInputNone;
         } else {
             switch (type) {
-                case TEXTFIELD:
+                case TEXT:
                     addInputText.setText("");
                     addInputCurrent = addInputText;
                     break;
-                case CHECKBOX:
+                case BOOLEAN:
                     addInputCheckbox.setSelected(false);
                     addInputCurrent = addInputCheckbox;
                     break;
@@ -217,14 +217,14 @@ public class AddOptionPanel extends JPanel implements ActionListener {
                     addInputColourChooser.clearColour();
                     addInputCurrent = addInputColourChooser;
                     break;
-                case SPINNER:
+                case INTEGER:
                     addInputSpinner.setValue(0);
                     addInputCurrent = addInputSpinner;
                     break;
                 case FONT:
                     addInputCurrent = addInputFontPicker;
                     break;
-                case COMBOBOX:
+                case MULTICHOICE:
                     addInputCurrent = addInputComboBox;
                     break;
                 default:
@@ -253,17 +253,17 @@ public class AddOptionPanel extends JPanel implements ActionListener {
             switchInputField(parent.getOptionType(
                     (String) addOptionComboBox.getSelectedItem()));
         } else if (e.getSource() == addOptionButton) {
-            final OptionType type = parent.getOptionType(
+            final PreferencesType type = parent.getOptionType(
                     (String) addOptionComboBox.getSelectedItem());
 
             switch (type) {
-                case TEXTFIELD:
+                case TEXT:
                     parent.addCurrentOption(
                             (String) addOptionComboBox.getSelectedItem(),
                             type,
                             addInputText.getText());
                     break;
-                case CHECKBOX:
+                case BOOLEAN:
                     parent.addCurrentOption(
                             (String) addOptionComboBox.getSelectedItem(),
                             type,
@@ -275,7 +275,7 @@ public class AddOptionPanel extends JPanel implements ActionListener {
                             type,
                             addInputColourChooser.getColour());
                     break;
-                case SPINNER:
+                case INTEGER:
                     parent.addCurrentOption(
                             (String) addOptionComboBox.getSelectedItem(),
                             type,
@@ -287,7 +287,7 @@ public class AddOptionPanel extends JPanel implements ActionListener {
                             type,
                             ((Font) addInputFontPicker.getSelectedItem()).getFamily());
                     break;
-                case COMBOBOX:
+                case MULTICHOICE:
                     parent.addCurrentOption((String) addOptionComboBox.getSelectedItem(),
                             type,
                             (String) addInputComboBox.getSelectedItem());

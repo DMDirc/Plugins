@@ -26,7 +26,7 @@ import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.FontPicker;
 import com.dmdirc.addons.ui_swing.components.ImageButton;
 import com.dmdirc.addons.ui_swing.components.colours.ColourChooser;
-import com.dmdirc.addons.ui_swing.components.expandingsettings.SettingsPanel.OptionType;
+import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.ui.IconManager;
 
 import java.awt.Font;
@@ -120,25 +120,25 @@ public final class CurrentOptionsPanel extends JPanel implements ActionListener 
      * @param value Option value
      */
     protected void addOption(final String optionName,
-            final OptionType type, final String value) {
+            final PreferencesType type, final String value) {
         switch (type) {
-            case TEXTFIELD:
+            case TEXT:
                 textFields.put(optionName, new JTextField(value));
                 break;
-            case CHECKBOX:
+            case BOOLEAN:
                 checkBoxes.put(optionName, new JCheckBox("", Boolean.parseBoolean(value)));
                 break;
             case COLOUR:
                 colours.put(optionName, new ColourChooser(value, true, true));
                 break;
-            case SPINNER:
+            case INTEGER:
                 spinners.put(optionName, new JSpinner(new SpinnerNumberModel()));
                 spinners.get(optionName).setValue(Integer.parseInt(value));
                 break;
             case FONT:
                 fonts.put(optionName, new FontPicker(value));
                 break;
-            case COMBOBOX:
+            case MULTICHOICE:
                 if ("channel.encoding".equals(optionName)) {
                     comboboxes.put(optionName, new JComboBox(new DefaultComboBoxModel(Charset.availableCharsets().keySet().toArray())));
                     comboboxes.get(optionName).setSelectedItem(value);
@@ -160,24 +160,24 @@ public final class CurrentOptionsPanel extends JPanel implements ActionListener 
      * @param type Option type
      */
     protected void delOption(final String optionName,
-            final OptionType type) {
+            final PreferencesType type) {
         switch (type) {
-            case TEXTFIELD:
+            case TEXT:
                 textFields.remove(optionName);
                 break;
-            case CHECKBOX:
+            case BOOLEAN:
                 checkBoxes.remove(optionName);
                 break;
             case COLOUR:
                 colours.remove(optionName);
                 break;
-            case SPINNER:
+            case INTEGER:
                 spinners.remove(optionName);
                 break;
             case FONT:
                 fonts.remove(optionName);
                 break;
-            case COMBOBOX:
+            case MULTICHOICE:
                 comboboxes.remove(optionName);
                 break;
             default:
@@ -195,15 +195,15 @@ public final class CurrentOptionsPanel extends JPanel implements ActionListener 
      *
      * @return Option value or a blank string
      */
-    public String getOption(final String optionName, final OptionType type) {
+    public String getOption(final String optionName, final PreferencesType type) {
         String returnValue = null;
         switch (type) {
-            case TEXTFIELD:
+            case TEXT:
                 if (textFields.containsKey(optionName)) {
                     returnValue =  textFields.get(optionName).getText();
                 }
                 break;
-            case CHECKBOX:
+            case BOOLEAN:
                 if (checkBoxes.containsKey(optionName)) {
                     if (checkBoxes.get(optionName).isSelected()) {
                         returnValue = "true";
@@ -217,7 +217,7 @@ public final class CurrentOptionsPanel extends JPanel implements ActionListener 
                     returnValue = colours.get(optionName).getColour();
                 }
                 break;
-            case SPINNER:
+            case INTEGER:
                 if (spinners.containsKey(optionName)) {
                     returnValue = spinners.get(optionName).getValue().toString();
                 }
@@ -227,7 +227,7 @@ public final class CurrentOptionsPanel extends JPanel implements ActionListener 
                     returnValue = ((Font) fonts.get(optionName).getSelectedItem()).getFamily();
                 }
                 break;
-            case COMBOBOX:
+            case MULTICHOICE:
                 if (comboboxes.containsKey(optionName)) {
                     returnValue = (String) ((DefaultComboBoxModel) comboboxes.get(optionName).getModel()).getSelectedItem();
                 }
