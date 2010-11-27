@@ -901,10 +901,17 @@ public abstract class TextFrame extends JInternalFrame implements Window,
             final Point point) {
         final JPopupMenu popupMenu;
 
+        final String[] parts = type.getValue().split("\n");
+        final Object[][] arguments = new Object[parts.length][1];
+
+        int i = 0;
+        for (String part : parts) {
+            arguments[i++][0] = part;
+        }
+
         switch (type.getType()) {
             case CHANNEL:
-                popupMenu = getPopupMenu(getChannelPopupType(),
-                        type.getValue());
+                popupMenu = getPopupMenu(getChannelPopupType(), arguments);
                 popupMenu.add(new ChannelCopyAction(type.getValue()));
                 if (popupMenu.getComponentCount() > 1) {
                     popupMenu.addSeparator();
@@ -912,8 +919,7 @@ public abstract class TextFrame extends JInternalFrame implements Window,
 
                 break;
             case HYPERLINK:
-                popupMenu = getPopupMenu(getHyperlinkPopupType(),
-                        type.getValue());
+                popupMenu = getPopupMenu(getHyperlinkPopupType(), arguments);
                 popupMenu.add(new HyperlinkCopyAction(type.getValue()));
                 if (popupMenu.getComponentCount() > 1) {
                     popupMenu.addSeparator();
@@ -921,8 +927,7 @@ public abstract class TextFrame extends JInternalFrame implements Window,
 
                 break;
             case NICKNAME:
-                popupMenu = getPopupMenu(getNicknamePopupType(),
-                        type.getValue());
+                popupMenu = getPopupMenu(getNicknamePopupType(), arguments);
                 if (popupMenu.getComponentCount() > 0) {
                     popupMenu.addSeparator();
                 }
@@ -930,7 +935,7 @@ public abstract class TextFrame extends JInternalFrame implements Window,
                 popupMenu.add(new NicknameCopyAction(type.getValue()));
                 break;
             default:
-                popupMenu = getPopupMenu(null, type.getValue());
+                popupMenu = getPopupMenu(null, arguments);
                 break;
         }
 
@@ -962,9 +967,8 @@ public abstract class TextFrame extends JInternalFrame implements Window,
      *
      * @return PopupMenu
      */
-    public JPopupMenu getPopupMenu(
-            final PopupType type,
-            final Object... arguments) {
+    public JPopupMenu getPopupMenu(final PopupType type,
+            final Object[][] arguments) {
         JPopupMenu popupMenu = new JPopupMenu();
 
         if (type != null) {
@@ -987,7 +991,7 @@ public abstract class TextFrame extends JInternalFrame implements Window,
      */
     private JComponent populatePopupMenu(final JComponent menu,
             final PopupMenu popup,
-            final Object... arguments) {
+            final Object[][] arguments) {
         for (PopupMenuItem menuItem : popup.getItems()) {
             if (menuItem.isDivider()) {
                 menu.add(new JSeparator());
