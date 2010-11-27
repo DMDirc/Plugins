@@ -25,6 +25,7 @@ package com.dmdirc.addons.ui_swing.components.expandingsettings;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.config.Identity;
+import com.dmdirc.config.prefs.PreferencesType;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -50,28 +51,10 @@ public class SettingsPanel extends JPanel {
     private static final long serialVersionUID = 2;
     /** Config manager. */
     private final transient Identity config;
-
-    /** Valid option types. */
-    public enum OptionType {
-
-        /** Text field. */
-        TEXTFIELD,
-        /** Check box. */
-        CHECKBOX,
-        /** Colour chooser. */
-        COLOUR,
-        /** Number spinner. */
-        SPINNER,
-        /** Font picker. */
-        FONT,
-        /** Combo box. */
-        COMBOBOX,
-    }
-
     /** config option -> name. */
     private Map<String, String> names;
     /** config option -> type. */
-    private Map<String, OptionType> types;
+    private Map<String, PreferencesType> types;
     /** Info label. */
     private TextLabel infoLabel;
     /** Current options panel. */
@@ -119,7 +102,7 @@ public class SettingsPanel extends JPanel {
      */
     private void initComponents(final String infoText) {
         names = new LinkedHashMap<String, String>();
-        types = new LinkedHashMap<String, OptionType>();
+        types = new LinkedHashMap<String, PreferencesType>();
 
         infoLabel = new TextLabel(infoText);
         infoLabel.setVisible(!infoText.isEmpty());
@@ -158,9 +141,8 @@ public class SettingsPanel extends JPanel {
      * @param displayName Display name
      * @param type Option type
      */
-    public void addOption(final String optionName,
-            final String displayName,
-            final OptionType type) {
+    public void addOption(final String optionName, final String displayName,
+            final PreferencesType type) {
         if (config == null) {
             return;
         }
@@ -186,7 +168,7 @@ public class SettingsPanel extends JPanel {
         addOptionPanel.clearOptions();
         currentOptionsPanel.clearOptions();
 
-        for (Entry<String, OptionType> entry : types.entrySet()) {
+        for (Entry<String, PreferencesType> entry : types.entrySet()) {
             final String[] splitOption = entry.getKey().split("\\.");
 
             if (config.hasOptionString(splitOption[0], splitOption[1])) {
@@ -200,7 +182,7 @@ public class SettingsPanel extends JPanel {
 
     /** Saves the options to the config. */
     public void save() {
-        for (Entry<String, OptionType> entry : types.entrySet()) {
+        for (Entry<String, PreferencesType> entry : types.entrySet()) {
             final String value =
                     currentOptionsPanel.getOption(entry.getKey(),
                     entry.getValue());
@@ -221,7 +203,7 @@ public class SettingsPanel extends JPanel {
      * @param value Option value
      */
     protected void addCurrentOption(final String optionName,
-            final OptionType type, final String value) {
+            final PreferencesType type, final String value) {
         currentOptionsPanel.addOption(optionName, type, value);
     }
 
@@ -232,7 +214,7 @@ public class SettingsPanel extends JPanel {
      * @param type Option type
      */
     protected void removeCurrentOption(final String optionName,
-            final OptionType type) {
+            final PreferencesType type) {
         currentOptionsPanel.delOption(optionName, type);
     }
 
@@ -263,7 +245,7 @@ public class SettingsPanel extends JPanel {
      *
      * @return Option type for a specified option
      */
-    public OptionType getOptionType(final String optionName) {
+    public PreferencesType getOptionType(final String optionName) {
         return types.get(optionName);
     }
 }

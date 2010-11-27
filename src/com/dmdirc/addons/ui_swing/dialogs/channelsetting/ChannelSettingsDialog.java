@@ -25,10 +25,10 @@ package com.dmdirc.addons.ui_swing.dialogs.channelsetting;
 import com.dmdirc.Channel;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.expandingsettings.SettingsPanel;
-import com.dmdirc.addons.ui_swing.components.expandingsettings.SettingsPanel.OptionType;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.config.Identity;
 import com.dmdirc.config.IdentityManager;
+import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.ui.interfaces.InputWindow;
 
 import java.awt.Window;
@@ -197,45 +197,43 @@ public final class ChannelSettingsDialog extends StandardDialog implements
                 + " any settings specified here will overwrite global settings");
 
         channelSettingsPane.addOption("channel.splitusermodes",
-                "Split user modes", OptionType.CHECKBOX);
+                "Split user modes", PreferencesType.BOOLEAN);
         channelSettingsPane.addOption("channel.sendwho",
-                "Send channel WHOs", OptionType.CHECKBOX);
+                "Send channel WHOs", PreferencesType.BOOLEAN);
         channelSettingsPane.addOption("channel.showmodeprefix",
-                "Show mode prefixes", OptionType.CHECKBOX);
+                "Show mode prefixes", PreferencesType.BOOLEAN);
         channelSettingsPane.addOption("ui.shownickcoloursinnicklist",
-                "Show colours in nicklist", OptionType.CHECKBOX);
+                "Show colours in nicklist", PreferencesType.BOOLEAN);
         channelSettingsPane.addOption("ui.shownickcoloursintext",
-                "Show colours in textpane", OptionType.CHECKBOX);
+                "Show colours in textpane", PreferencesType.BOOLEAN);
         channelSettingsPane.addOption("general.cyclemessage",
-                "Cycle message", OptionType.TEXTFIELD);
+                "Cycle message", PreferencesType.TEXT);
         channelSettingsPane.addOption("general.kickmessage",
-                "Kick message", OptionType.TEXTFIELD);
+                "Kick message", PreferencesType.TEXT);
         channelSettingsPane.addOption("general.partmessage",
-                "Part message", OptionType.TEXTFIELD);
+                "Part message", PreferencesType.TEXT);
         channelSettingsPane.addOption("ui.backgroundcolour",
-                "Background colour", OptionType.COLOUR);
+                "Background colour", PreferencesType.COLOUR);
         channelSettingsPane.addOption("ui.foregroundcolour",
-                "Foreground colour", OptionType.COLOUR);
+                "Foreground colour", PreferencesType.COLOUR);
         channelSettingsPane.addOption("ui.frameBufferSize",
-                "Frame buffer size", OptionType.SPINNER);
+                "Frame buffer size", PreferencesType.INTEGER);
         channelSettingsPane.addOption("ui.textPaneFontName",
-                "Textpane font name",
-                OptionType.FONT);
+                "Textpane font name", PreferencesType.FONT);
         channelSettingsPane.addOption("ui.textPaneFontSize",
-                "Textpane font size",
-                OptionType.SPINNER);
+                "Textpane font size", PreferencesType.INTEGER);
         channelSettingsPane.addOption("ui.inputbuffersize",
-                "Input buffer size", OptionType.SPINNER);
+                "Input buffer size", PreferencesType.INTEGER);
         channelSettingsPane.addOption("ui.inputbackgroundcolour",
-                "Inputfield background colour", OptionType.COLOUR);
+                "Inputfield background colour", PreferencesType.COLOUR);
         channelSettingsPane.addOption("ui.inputforegroundcolour",
-                "Inputfield foreground colour", OptionType.COLOUR);
+                "Inputfield foreground colour", PreferencesType.COLOUR);
         channelSettingsPane.addOption("ui.nicklistbackgroundcolour",
-                "Nicklist background colour", OptionType.COLOUR);
+                "Nicklist background colour", PreferencesType.COLOUR);
         channelSettingsPane.addOption("ui.nicklistforegroundcolour",
-                "Nicklist foreground colour", OptionType.COLOUR);
+                "Nicklist foreground colour", PreferencesType.COLOUR);
         channelSettingsPane.addOption("channel.encoding", "Encoding",
-                OptionType.COMBOBOX);
+                PreferencesType.MULTICHOICE);
     }
 
     /** Initialises listeners for this dialog. */
