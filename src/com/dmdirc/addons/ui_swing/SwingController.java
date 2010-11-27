@@ -68,6 +68,7 @@ import com.dmdirc.ui.core.components.StatusBarManager;
 import com.dmdirc.ui.core.dialogs.sslcertificate.SSLCertificateDialogModel;
 import com.dmdirc.ui.core.util.URLHandler;
 import com.dmdirc.ui.interfaces.ChannelWindow;
+import com.dmdirc.ui.interfaces.FrameListener;
 import com.dmdirc.ui.interfaces.InputWindow;
 import com.dmdirc.ui.interfaces.QueryWindow;
 import com.dmdirc.ui.interfaces.ServerWindow;
@@ -90,6 +91,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicBoolean;
+import javax.swing.JMenuItem;
 
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
@@ -973,6 +975,17 @@ public class SwingController extends Plugin implements Serializable,
      */
     public UIController getController() {
         return this;
+    }
+
+    /**
+     * Adds the specified menu item to the named parent menu, creating the
+     * parent menu if required.
+     *
+     * @param parentMenu Parent menu name
+     * @param menuItem Menu item to add
+     */
+    public void addMenuItem(final String parentMenu, final JMenuItem menuItem) {
+        me.getJMenuBar().addMenuItem(parentMenu, menuItem);
     }
 
 }
