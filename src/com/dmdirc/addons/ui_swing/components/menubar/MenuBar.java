@@ -30,7 +30,9 @@ import com.dmdirc.addons.ui_swing.framemanager.windowmenu.WindowMenuFrameManager
 import java.awt.Component;
 
 import javax.swing.Box;
+import javax.swing.JMenu;
 import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 
 import net.miginfocom.layout.PlatformDefaults;
 import net.miginfocom.swing.MigLayout;
@@ -82,5 +84,28 @@ public class MenuBar extends JMenuBar {
     protected void addImpl(final Component comp, final Object constraints,
             final int index) {
         super.addImpl(comp, constraints, getComponentCount() - menuItemCount);
+    }
+
+    /**
+     * Adds a new menu item to a named parent menu, creating the parent menu
+     * if required.
+     * @param parentMenu Name of the parent menu
+     * @param menuItem Menu item to add
+     */
+    public void addMenuItem(final String parentMenu, final JMenuItem menuItem) {
+        JMenu menu = null;
+        for (int i = 0; i < getMenuCount(); i++) {
+            menu = getMenu(i);
+            if (menu instanceof JMenu && menu.getText().equals(parentMenu)) {
+                break;
+            }
+            menu = null;
+        }
+        if (menu == null) {
+            menu = new JMenu(parentMenu);
+            add(menu);
+        }
+
+        menu.add(menuItem);
     }
 }

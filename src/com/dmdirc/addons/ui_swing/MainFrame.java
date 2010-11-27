@@ -212,6 +212,12 @@ public final class MainFrame extends JFrame implements WindowListener,
         });
     }
 
+    /** {@inheritDoc */
+    @Override
+    public MenuBar getJMenuBar() {
+        return (MenuBar) super.getJMenuBar();
+    }
+
     /** {@inheritDoc}. */
     @Override
     public void setMaximised(final boolean max) {
