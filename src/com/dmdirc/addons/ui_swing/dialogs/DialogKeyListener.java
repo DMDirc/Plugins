@@ -39,27 +39,25 @@ public class DialogKeyListener implements KeyEventDispatcher {
     /** {@inheritDoc} */
     @Override
     public boolean dispatchKeyEvent(final KeyEvent e) {
-        if (e.getID() == KeyEvent.KEY_RELEASED) {
-            if (KeyboardFocusManager.getCurrentKeyboardFocusManager().
-                    getFocusedWindow() instanceof StandardDialog) {
-                final StandardDialog dialog = (StandardDialog) KeyboardFocusManager.
-                        getCurrentKeyboardFocusManager().getFocusedWindow();
-                if (e.getKeyCode() == KeyEvent.VK_ENTER && e.getModifiers() == UIUtilities.
-                        getCtrlMask()) {
-                    dialog.ctrlEnterPressed();
+        if (e.getID() == KeyEvent.KEY_RELEASED
+                && KeyboardFocusManager.getCurrentKeyboardFocusManager()
+                .getFocusedWindow() instanceof StandardDialog) {
+            final StandardDialog dialog = (StandardDialog) KeyboardFocusManager.
+                    getCurrentKeyboardFocusManager().getFocusedWindow();
+            if (e.getKeyCode() == KeyEvent.VK_ENTER && e.getModifiers()
+                    == UIUtilities.getCtrlMask()) {
+                dialog.ctrlEnterPressed();
+            }
+            if (e.getKeyCode() == KeyEvent.VK_ENTER && e.getModifiers()
+                    != UIUtilities.getCtrlMask()) {
+                if (dialog.getFocusOwner() instanceof JButton) {
+                    dialog.executeAction(((JButton) dialog.getFocusOwner()));
+                } else {
+                    return dialog.enterPressed();
                 }
-                if (e.getKeyCode() == KeyEvent.VK_ENTER && e.getModifiers() != UIUtilities.
-                        getCtrlMask()) {
-                    if (dialog.getFocusOwner() instanceof JButton) {
-                        dialog.executeAction(
-                                ((JButton) dialog.getFocusOwner()));
-                    } else {
-                        return dialog.enterPressed();
-                    }
-                }
-                if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-                    return dialog.escapePressed();
-                }
+            }
+            if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                return dialog.escapePressed();
             }
         }
         return false;
