@@ -96,7 +96,6 @@ public final class TextPane extends JComponent implements MouseWheelListener,
         add(canvas, "dock center");
         add(newLineIndicator, "dock south, center, grow");
         scrollModel = new DefaultBoundedRangeModel();
-        scrollModel.setMaximum(document.getNumLines());
         scrollModel.setExtent(0);
         final JScrollBar scrollBar = new JScrollBar(JScrollBar.VERTICAL);
         scrollBar.setModel(scrollModel);
@@ -129,7 +128,7 @@ public final class TextPane extends JComponent implements MouseWheelListener,
         };
         addMouseMotionListener(doScrollRectToVisible);
 
-        setScrollBarMax(document.getNumLines(), document.getNumLines());
+        setScrollBarMax(document.getNumLines(), document.getNumLines() - 1);
     }
 
     /** {@inheritDoc} */
@@ -159,14 +158,21 @@ public final class TextPane extends JComponent implements MouseWheelListener,
      */
     protected void setScrollBarMax(final int lines, final int linesAllowed) {
         final int currentLine = scrollModel.getValue();
-        final int allowedDeviation = lines - linesAllowed;
+        final int allowedDeviation = lines - 1 - linesAllowed;
         boolean setToMax = currentLine == allowedDeviation;
+
         if (allowedDeviation <= -1) {
             setToMax = true;
         }
-        scrollModel.setMaximum(lines);
+
+        // Ideally this would just be Math.max(0, lines - 1), but for lines = 1
+        // we need a special case of max = 1 as the content won't render
+        // properly without the scrollbar having a value (and it can't have
+        // a value with a min and max of 0).
+        final int max = lines < 2 ? lines : lines - 1;
+        scrollModel.setMaximum(max);
         if (setToMax) {
-            scrollModel.setValue(lines);
+            scrollModel.setValue(max);
         }
     }
 
@@ -186,13 +192,13 @@ public final class TextPane extends JComponent implements MouseWheelListener,
      */
     @Override
     public void adjustmentValueChanged(final AdjustmentEvent e) {
-        if (e.getValue() == document.getNumLines()) {
+        if (e.getValue() >= document.getNumLines() - 1) {
             newLineIndicator.setVisible(false);
         }
 
         lastSeenLine = Math.max(lastSeenLine, e.getValue());
 
-        final int lines = document.getNumLines() - lastSeenLine;
+        final int lines = document.getNumLines() - 1 - lastSeenLine;
         newLineIndicator.setText("↓ " + lines + " new line"
                 + (lines == 1 ? "" : "s") + " ↓");
         scrollModel.setValue(e.getValue());
@@ -277,7 +283,7 @@ public final class TextPane extends JComponent implements MouseWheelListener,
             if (i != selectedRange.getStartLine()) {
                 selectedText.append('\n');
             }
-            if (document.getNumLines() <= i) {
+            if (document.getNumLines() - 1 <= i) {
                 return selectedText.toString();
             }
             final String line;
@@ -445,18 +451,9 @@ public final class TextPane extends JComponent implements MouseWheelListener,
 
     /** {@inheritDoc}. */
     @Override
+    @Deprecated
     public void lineAdded(final int line, final int size) {
-        UIUtilities.invokeLater(new Runnable() {
-
-            /** {@inheritDoc}. */
-            @Override
-            public void run() {
-                if (scrollModel.getValue() != line) {
-                    newLineIndicator.setVisible(true);
-                }
-                setScrollBarMax(size, 1);
-            }
-        });
+        // DO NOTHING, MWAHAHAHAHAHA
     }
 
     /** {@inheritDoc}. */
@@ -492,6 +489,7 @@ public final class TextPane extends JComponent implements MouseWheelListener,
             public void run() {
                 scrollModel.setMaximum(0);
                 scrollModel.setValue(0);
+                canvas.recalc();
             }
         });
     }
@@ -507,6 +505,7 @@ public final class TextPane extends JComponent implements MouseWheelListener,
                 if (scrollModel.getValue() != line) {
                     newLineIndicator.setVisible(true);
                 }
+
                 setScrollBarMax(size, length);
             }
         });

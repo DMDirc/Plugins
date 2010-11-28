@@ -214,11 +214,11 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
         }
 
         // Check the start line is in range
-        if (startLine >= document.getNumLines()) {
+        if (startLine >= document.getNumLines() - 1) {
             startLine = document.getNumLines() - 1;
         }
 
-        if (startLine <= 0) {
+        if (startLine < 0) {
             startLine = 0;
         }
 
@@ -273,7 +273,6 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
 
                 // Check if the target is in range
                 if (drawPosY >= 0 || drawPosY <= formatHeight) {
-
                     g.setColor(textPane.getForeground());
 
                     layout.draw(g, drawPosX, drawPosY + layout.getDescent());
@@ -298,6 +297,7 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
                 break;
             }
         }
+
         checkForLink();
     }
 
