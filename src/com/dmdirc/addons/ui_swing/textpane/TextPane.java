@@ -22,14 +22,16 @@
 
 package com.dmdirc.addons.ui_swing.textpane;
 
+import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
+import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.ui.interfaces.Window;
 import com.dmdirc.ui.messages.IRCDocument;
 import com.dmdirc.ui.messages.IRCDocumentListener;
 import com.dmdirc.ui.messages.LinePosition;
 import com.dmdirc.ui.messages.Styliser;
-import java.awt.Color;
 
+import java.awt.Color;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.datatransfer.StringSelection;
@@ -54,7 +56,7 @@ import net.miginfocom.swing.MigLayout;
  * Styled, scrollable text pane.
  */
 public final class TextPane extends JComponent implements MouseWheelListener,
-        AdjustmentListener, IRCDocumentListener {
+        AdjustmentListener, IRCDocumentListener, ConfigChangeListener {
 
     /**
      * A version number for this class. It should be changed whenever the class
@@ -74,6 +76,8 @@ public final class TextPane extends JComponent implements MouseWheelListener,
     private JLabel newLineIndicator;
     /** Last seen line. */
     private int lastSeenLine = 0;
+    /** Show new line notifications. */
+    private boolean showNotification;
 
     /**
      * Creates a new instance of TextPane.
@@ -90,6 +94,7 @@ public final class TextPane extends JComponent implements MouseWheelListener,
         newLineIndicator.setBackground(Color.RED);
         newLineIndicator.setForeground(Color.WHITE);
         newLineIndicator.setOpaque(true);
+        newLineIndicator.setVisible(false);
 
         setLayout(new MigLayout("fill, hidemode 3"));
         canvas = new TextPaneCanvas(this, document);
@@ -102,6 +107,10 @@ public final class TextPane extends JComponent implements MouseWheelListener,
         add(scrollBar, "dock east");
         scrollBar.addAdjustmentListener(this);
         scrollBar.addAdjustmentListener(canvas);
+        frame.getContainer().getConfigManager().addChangeListener(
+                ((SwingController) frame.getController()).getDomain(),
+                "textpanelinenotification", this);
+        configChanged("", "textpanelinenotification");
 
         addMouseWheelListener(this);
         document.addIRCDocumentListener(this);
@@ -192,7 +201,7 @@ public final class TextPane extends JComponent implements MouseWheelListener,
      */
     @Override
     public void adjustmentValueChanged(final AdjustmentEvent e) {
-        if (e.getValue() >= document.getNumLines() - 1) {
+        if (showNotification && e.getValue() >= document.getNumLines() - 1) {
             newLineIndicator.setVisible(false);
         }
 
@@ -502,7 +511,7 @@ public final class TextPane extends JComponent implements MouseWheelListener,
             /** {@inheritDoc}. */
             @Override
             public void run() {
-                if (scrollModel.getValue() != line) {
+                if (showNotification && scrollModel.getValue() != line) {
                     newLineIndicator.setVisible(true);
                 }
 
@@ -558,5 +567,16 @@ public final class TextPane extends JComponent implements MouseWheelListener,
      */
     public void removeTextPaneListener(final TextPaneListener listener) {
         canvas.removeTextPaneListener(listener);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void configChanged(final String domain, final String key) {
+        showNotification = frame.getContainer().getConfigManager()
+                .getOptionBool(((SwingController) frame.getController())
+                .getDomain(), "textpanelinenotification");
+        if (!showNotification) {
+            newLineIndicator.setVisible(false);
+        }
     }
 }
