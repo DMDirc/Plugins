@@ -59,15 +59,15 @@ public class OsdManager {
      *
      * @param message Message to be displayed.
      */
-    public void showWindow(final String message) {
+    public void showWindow(final int timeout, final String message) {
         windowQueue.add(message);
-        displayWindows();
+        displayWindows(timeout);
     }
 
     /**
      * Displays as many windows as appropriate.
      */
-    private synchronized void displayWindows() {
+    private synchronized void displayWindows(final int timeout) {
         final Integer maxWindows = IdentityManager.getGlobalConfig().
                 getOptionInt(plugin.getDomain(), "maxWindows", false);
 
@@ -75,7 +75,7 @@ public class OsdManager {
 
         while ((maxWindows == null || getWindowCount() < maxWindows)
                 && (nextItem = windowQueue.poll()) != null) {
-            displayWindow(nextItem);
+            displayWindow(timeout, nextItem);
         }
     }
 
@@ -90,7 +90,7 @@ public class OsdManager {
      * @see OsdPolicy#getYPosition(com.dmdirc.addons.osd.OsdManager, int)
      * @param message Text to display in the OSD window.
      */
-    private synchronized void displayWindow(final String message) {
+    private synchronized void displayWindow(final int timeout, final String message) {
         final OsdPolicy policy = OsdPolicy.valueOf(IdentityManager.
                 getGlobalConfig().getOption(plugin.getDomain(), "newbehaviour").
                 toUpperCase());
@@ -103,7 +103,7 @@ public class OsdManager {
             /** {@inheritDoc} */
             @Override
             public void run() {
-                setObject(new OsdWindow(message, false,
+                setObject(new OsdWindow(timeout, message, false,
                         IdentityManager.getGlobalConfig().getOptionInt(
                         plugin.getDomain(), "locationX"), policy.getYPosition(
                         OsdManager.this, startY), plugin, OsdManager.this));
@@ -147,7 +147,7 @@ public class OsdManager {
                 oldY = currentY;
             }
         }
-        displayWindows();
+        displayWindows(-1);
     }
 
     /**
