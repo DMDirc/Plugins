@@ -43,7 +43,7 @@ public class OsdManager {
     /** List of OSD Windows. */
     private final List<OsdWindow> windowList = new ArrayList<OsdWindow>();
     /** List of messages to be queued. */
-    private final Queue<String> windowQueue = new LinkedList<String>();
+    private final Queue<QueuedMessage> windowQueue = new LinkedList<QueuedMessage>();
 
     /**
      * Create a new OSD Manager.
@@ -59,8 +59,8 @@ public class OsdManager {
      *
      * @param message Message to be displayed.
      */
-    public void showWindow(final String message) {
-        windowQueue.add(message);
+    public void showWindow(final int timeout, final String message) {
+        windowQueue.add(new QueuedMessage(timeout, message));
         displayWindows();
     }
 
@@ -71,11 +71,11 @@ public class OsdManager {
         final Integer maxWindows = IdentityManager.getGlobalConfig().
                 getOptionInt(plugin.getDomain(), "maxWindows", false);
 
-        String nextItem;
+        QueuedMessage nextItem;
 
         while ((maxWindows == null || getWindowCount() < maxWindows)
                 && (nextItem = windowQueue.poll()) != null) {
-            displayWindow(nextItem);
+            displayWindow(nextItem.getTimeout(), nextItem.getMessage());
         }
     }
 
@@ -90,7 +90,7 @@ public class OsdManager {
      * @see OsdPolicy#getYPosition(com.dmdirc.addons.osd.OsdManager, int)
      * @param message Text to display in the OSD window.
      */
-    private synchronized void displayWindow(final String message) {
+    private synchronized void displayWindow(final int timeout, final String message) {
         final OsdPolicy policy = OsdPolicy.valueOf(IdentityManager.
                 getGlobalConfig().getOption(plugin.getDomain(), "newbehaviour").
                 toUpperCase());
@@ -103,7 +103,7 @@ public class OsdManager {
             /** {@inheritDoc} */
             @Override
             public void run() {
-                setObject(new OsdWindow(message, false,
+                setObject(new OsdWindow(timeout, message, false,
                         IdentityManager.getGlobalConfig().getOptionInt(
                         plugin.getDomain(), "locationX"), policy.getYPosition(
                         OsdManager.this, startY), plugin, OsdManager.this));

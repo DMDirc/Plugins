@@ -84,6 +84,8 @@ public class OsdWindow extends JDialog implements MouseListener,
     /**
      * Creates a new instance of OsdWindow.
      *
+     * @param timeout Timeout period for the window. Set to -1 to use value from
+     * config
      * @param text The text to be displayed in the OSD window
      * @param config Is the window being configured (should it timeout and
      * allow itself to be moved)
@@ -92,15 +94,20 @@ public class OsdWindow extends JDialog implements MouseListener,
      * @param plugin Parent OSD Plugin
      * @param osdManager The manager that owns this OSD Window
      */
-    public OsdWindow(final String text, final boolean config, final int x,
+    public OsdWindow(final int timeout, final String text, final boolean config, final int x,
             final int y, final OsdPlugin plugin, final OsdManager osdManager) {
         super(((SwingController) PluginManager.getPluginManager()
                 .getPluginInfoByName("ui_swing").getPlugin()).getMainFrame(), false);
 
         this.config = config;
         this.osdManager = osdManager;
-        this.timeout = IdentityManager.getGlobalConfig()
-            .getOptionInt(osdManager.getPlugin().getDomain(), "timeout", false);
+
+        if (timeout == -1) {
+            this.timeout = IdentityManager.getGlobalConfig().getOptionInt(
+                    osdManager.getPlugin().getDomain(), "timeout", false);
+        } else {
+            this.timeout = timeout;
+        }
 
         setFocusableWindowState(false);
         setAlwaysOnTop(true);
@@ -141,7 +148,7 @@ public class OsdWindow extends JDialog implements MouseListener,
             addMouseListener(this);
         } else {
             addMouseListener(this);
-            if (timeout != null) {
+            if (this.timeout != null) {
                 new Timer("OSD Display Timer").schedule(new TimerTask() {
 
                     /** {@inheritDoc} */
@@ -149,7 +156,7 @@ public class OsdWindow extends JDialog implements MouseListener,
                     public void run() {
                         osdManager.closeWindow(OsdWindow.this);
                     }
-                }, Math.max(timeout, 1) * 1000);
+                }, Math.max(this.timeout, 1) * 1000);
             }
         }
     }
