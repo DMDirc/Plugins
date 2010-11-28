@@ -188,10 +188,13 @@ public final class TextPane extends JComponent implements MouseWheelListener,
     public void adjustmentValueChanged(final AdjustmentEvent e) {
         if (e.getValue() == document.getNumLines()) {
             newLineIndicator.setVisible(false);
-            lastSeenLine = e.getValue();
         }
-        newLineIndicator.setText("↓ " + (document.getNumLines() - lastSeenLine)
-                + " new lines ↓");
+
+        lastSeenLine = Math.max(lastSeenLine, e.getValue());
+
+        final int lines = document.getNumLines() - lastSeenLine;
+        newLineIndicator.setText("↓ " + lines + " new line"
+                + (lines == 1 ? "" : "s") + " ↓");
         scrollModel.setValue(e.getValue());
     }
 
