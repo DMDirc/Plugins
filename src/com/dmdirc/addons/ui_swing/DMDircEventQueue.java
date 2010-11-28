@@ -35,8 +35,8 @@ import java.awt.Point;
 import java.awt.Window;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
-
 import java.awt.event.WindowEvent;
+
 import javax.swing.JPopupMenu;
 import javax.swing.KeyStroke;
 import javax.swing.MenuSelectionManager;
@@ -65,6 +65,9 @@ public class DMDircEventQueue extends EventQueue {
     /** {@inheritDoc} */
     @Override
     protected void dispatchEvent(final AWTEvent event) {
+        preDispatchEvent(event);
+        super.dispatchEvent(event);
+        postDispatchEvent(event);
         if (event instanceof MouseEvent) {
             handleMouseEvent((MouseEvent) event);
         } else if (event instanceof KeyEvent) {
@@ -72,9 +75,6 @@ public class DMDircEventQueue extends EventQueue {
         } else if (event instanceof WindowEvent) {
             handleWindowEvent((WindowEvent) event);
         }
-        preDispatchEvent(event);
-        super.dispatchEvent(event);
-        postDispatchEvent(event);
     }
 
     /**
