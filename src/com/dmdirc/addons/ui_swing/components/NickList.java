@@ -23,12 +23,14 @@
 
 package com.dmdirc.addons.ui_swing.components;
 
+import com.dmdirc.Channel;
 import com.dmdirc.addons.ui_swing.components.frames.ChannelFrame;
 import com.dmdirc.addons.ui_swing.components.renderers.NicklistRenderer;
 import com.dmdirc.addons.ui_swing.textpane.ClickType;
 import com.dmdirc.addons.ui_swing.textpane.ClickTypeValue;
 import com.dmdirc.config.ConfigManager;
 import com.dmdirc.interfaces.ConfigChangeListener;
+import com.dmdirc.interfaces.NicklistListener;
 import com.dmdirc.parser.interfaces.ChannelClientInfo;
 
 import java.awt.Dimension;
@@ -46,7 +48,7 @@ import javax.swing.SwingUtilities;
  * Nicklist class.
  */
 public class NickList extends JScrollPane implements ConfigChangeListener,
-        MouseListener {
+        MouseListener, NicklistListener {
 
     /**
      * A version number for this class. It should be changed whenever the class
@@ -102,6 +104,10 @@ public class NickList extends JScrollPane implements ConfigChangeListener,
                 "channelSplitPanePosition");
         setPreferredSize(new Dimension(splitPanePosition, 0));
         setMinimumSize(new Dimension(75, 0));
+
+        ((Channel) frame.getContainer()).addNicklistListener(this);
+        clientListUpdated(((Channel) frame.getContainer()).getChannelInfo()
+                .getChannelClients());
     }
 
     /**
@@ -253,12 +259,9 @@ public class NickList extends JScrollPane implements ConfigChangeListener,
         nickList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
     }
 
-    /**
-     * Updates the names in this nicklist,
-     *
-     * @param clients Clients to show
-     */
-    public void updateNames(final Collection<ChannelClientInfo> clients) {
+    /** {@inheritDoc} */
+    @Override
+    public void clientListUpdated(final Collection<ChannelClientInfo> clients) {
         SwingUtilities.invokeLater(new Runnable() {
 
             /** {@inheritDoc} */
@@ -269,26 +272,23 @@ public class NickList extends JScrollPane implements ConfigChangeListener,
         });
     }
 
-    /**
-     * Updates the order of this nicklist.
-     */
-    public void updateNames() {
+    /** {@inheritDoc} */
+    @Override
+    public void clientListUpdated() {
         SwingUtilities.invokeLater(new Runnable() {
 
             /** {@inheritDoc} */
             @Override
             public void run() {
                 nicklistModel.sort();
+                repaint();
             }
         });
     }
 
-    /**
-     * Adds a client to this nicklist.
-     *
-     * @param client Client to add
-     */
-    public void addName(final ChannelClientInfo client) {
+    /** {@inheritDoc} */
+    @Override
+    public void clientAdded(final ChannelClientInfo client) {
         SwingUtilities.invokeLater(new Runnable() {
 
             /** {@inheritDoc} */
@@ -299,12 +299,9 @@ public class NickList extends JScrollPane implements ConfigChangeListener,
         });
     }
 
-    /**
-     * Removes a client from the nicklist.
-     *
-     * @param client Client to remove
-     */
-    public void removeName(final ChannelClientInfo client) {
+    /** {@inheritDoc} */
+    @Override
+    public void clientRemoved(final ChannelClientInfo client) {
         SwingUtilities.invokeLater(new Runnable() {
 
             /** {@inheritDoc} */
