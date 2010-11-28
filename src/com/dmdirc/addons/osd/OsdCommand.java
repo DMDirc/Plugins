@@ -56,12 +56,14 @@ public final class OsdCommand extends Command implements
     /**
      * Used to show a notification using this plugin.
      *
+     * @param timeout Timeout for the OSD window. If negative then the value
+     * from the config will be used
      * @param title Title of dialog if applicable
      * @param message Message to show
      * @return True if the notification was shown.
      */
-    public boolean showOSD(final String title, final String message) {
-        osdManager.showWindow(Styliser.stipControlCodes(message));
+    public boolean showOSD(final int timeout, final String title, final String message) {
+        osdManager.showWindow(timeout, Styliser.stipControlCodes(message));
         return true;
     }
 
@@ -72,8 +74,26 @@ public final class OsdCommand extends Command implements
         if (args.getArguments().length > 0
                 && "--close".equalsIgnoreCase(args.getArguments()[0])) {
             osdManager.closeAll();
+        } else if (args.getArguments().length > 0
+                && "--timeout".equalsIgnoreCase(args.getArguments()[0])) {
+            if (args.getArguments().length < 2) {
+                sendLine(origin, args.isSilent(), FORMAT_ERROR, "You " +
+                        "must specify a valid number for the OSD timeout.");
+                return;
+            }
+
+            int timeout = 0;
+            try {
+                timeout = Integer.parseInt(args.getArguments()[1]);
+            } catch (NumberFormatException ex) {
+                sendLine(origin, args.isSilent(), FORMAT_ERROR, "You " +
+                        "must specify a valid number for the OSD timeout.");
+                return;
+            }
+
+            showOSD(timeout, null, args.getArgumentsAsString(2));
         } else {
-            showOSD(null, args.getArgumentsAsString());
+            showOSD(-1 , null, args.getArgumentsAsString());
         }
     }
     
@@ -99,7 +119,8 @@ public final class OsdCommand extends Command implements
     @Override
     public String getHelp() {
         return "osd --close - closes all OSD windows\n" +
-                "osd <message> - show the specified message in an OSD window";
+                "osd [--timer <delay in seconds>] <message> - show the specified" +
+                " message in an OSD window";
     }
 
     /** {@inheritDoc} */
