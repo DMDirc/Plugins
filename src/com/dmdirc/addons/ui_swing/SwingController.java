@@ -83,6 +83,7 @@ import java.awt.GraphicsEnvironment;
 import java.awt.KeyboardFocusManager;
 import java.awt.Toolkit;
 import java.awt.Dialog.ModalityType;
+import java.beans.PropertyVetoException;
 import java.io.Serializable;
 import java.net.URI;
 import java.util.ArrayList;
@@ -91,6 +92,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.logging.Level;
+import javax.swing.JInternalFrame;
 import javax.swing.JMenuItem;
 
 import javax.swing.SwingUtilities;
@@ -130,6 +133,8 @@ public class SwingController extends Plugin implements Serializable,
     private final SwingWindowFactory windowFactory = new SwingWindowFactory(this);
     /** URL Handler to use. */
     private final URLHandler urlHandler = new URLHandler(this);
+    /* Is the plugin unloading? */
+    private boolean unloading;
 
     /** Instantiates a new SwingController. */
     public SwingController() {
@@ -692,6 +697,7 @@ public class SwingController extends Plugin implements Serializable,
     /** {@inheritDoc} */
     @Override
     public void onLoad() {
+        unloading = false;
         if (GraphicsEnvironment.isHeadless()) {
             throw new IllegalStateException(
                     "Swing UI can't be run in a headless environment");
@@ -725,10 +731,37 @@ public class SwingController extends Plugin implements Serializable,
         WindowManager.addFrameListener(windowFactory);
     }
 
+    public boolean isUnloading() {
+        return unloading;
+    }
+
     /** {@inheritDoc} */
     @Override
     public void onUnload() {
-        // Do nothing
+        unloading = true;
+        final JInternalFrame[] frames = getMainFrame().getDesktopPane().getAllFrames();
+
+        for (final JInternalFrame frame : frames) {
+            UIUtilities.invokeAndWait(new Runnable() {
+                /** {@inheritDoc} */
+                @Override
+                public void run() {
+                    try {
+                        frame.setClosed(true);
+                    } catch (PropertyVetoException ex) {
+                        // Do nothing?
+                    }
+                }
+            });
+        }
+
+        UIUtilities.invokeLater(new Runnable() {
+                /** {@inheritDoc} */
+                @Override
+                public void run() {
+                    getMainFrame().dispose();
+                }
+            });
     }
 
     /** {@inheritDoc} */

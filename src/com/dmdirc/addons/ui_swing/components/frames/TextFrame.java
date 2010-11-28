@@ -666,15 +666,20 @@ public abstract class TextFrame extends JInternalFrame implements Window,
      */
     @Override
     public void internalFrameClosing(final InternalFrameEvent event) {
-        new LoggingSwingWorker() {
 
-            /** {@inheritDoc} */
-            @Override
-            protected Object doInBackground() {
-                frameParent.handleWindowClosing();
-                return null;
-            }
-        }.executeInExecutor();
+        if (controller.isUnloading()) {
+            frameParent.removeCloseListener(this);
+            frameParent.removeFrameInfoListener(this);
+        } else {
+            new LoggingSwingWorker() {
+                /** {@inheritDoc} */
+                @Override
+                protected Object doInBackground() {
+                    frameParent.handleWindowClosing();
+                    return null;
+                }
+            }.executeInExecutor();
+        }
     }
 
     /**

@@ -295,14 +295,19 @@ public final class MainFrame extends JFrame implements WindowListener,
      */
     @Override
     public void windowClosed(final WindowEvent windowEvent) {
-        new Thread(new Runnable() {
+        if (controller.isUnloading()) {
+            // Remove Listeners?
+            IdentityManager.getGlobalConfig().removeListener(this);
+        } else {
+            new Thread(new Runnable() {
 
-            /** {@inheritDoc} */
-            @Override
-            public void run() {
-                Main.quit(exitCode);
-            }
-        }, "Quit thread").start();
+                /** {@inheritDoc} */
+                @Override
+                public void run() {
+                    Main.quit(exitCode);
+                }
+            }, "Quit thread").start();
+        }
     }
 
     /**
