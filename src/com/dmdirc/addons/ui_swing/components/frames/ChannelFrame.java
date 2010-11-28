@@ -111,8 +111,6 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
 
         identity = IdentityManager.getChannelConfig(getChannel().getServer().
                 getNetwork(), getChannel().getChannelInfo().getName());
-        updateNames(((Channel) getContainer()).getChannelInfo()
-                .getChannelClients());
     }
 
     /** {@inheritDoc} */
@@ -124,26 +122,30 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
 
     /** {@inheritDoc} */
     @Override
+    @Deprecated
     public void updateNames(final Collection<ChannelClientInfo> clients) {
-        nicklist.updateNames(clients);
+        // Do nothing, not used any more
     }
 
     /** {@inheritDoc} */
     @Override
+    @Deprecated
     public void updateNames() {
-        nicklist.updateNames();
+        // Do nothing, not used any more
     }
 
     /** {@inheritDoc} */
     @Override
+    @Deprecated
     public void addName(final ChannelClientInfo client) {
-        nicklist.addName(client);
+        // Do nothing, not used any more
     }
 
     /** {@inheritDoc} */
     @Override
+    @Deprecated
     public void removeName(final ChannelClientInfo client) {
-        nicklist.removeName(client);
+        // Do nothing, not used any more
     }
 
     /**
@@ -334,7 +336,9 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
 
     /** {@inheritDoc} */
     @Override
+    @Deprecated
     public void redrawNicklist() {
-        getNickList().repaint();
+        // Not used, do nothing
     }
+
 }
