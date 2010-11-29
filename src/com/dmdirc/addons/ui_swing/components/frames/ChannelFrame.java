@@ -289,7 +289,11 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
             /** {@inheritDoc} */
             @Override
             public void run() {
-                identity.setOption("ui", "channelSplitPanePosition", nicklist.getWidth());
+                if (IdentityManager.getGlobalConfig().getOptionInt("ui",
+                        "channelSplitPanePosition") != nicklist.getWidth()) {
+                    identity.setOption("ui", "channelSplitPanePosition",
+                            nicklist.getWidth());
+                }
             }
         });
     }
