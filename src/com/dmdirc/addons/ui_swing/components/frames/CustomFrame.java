@@ -31,8 +31,6 @@ import net.miginfocom.swing.MigLayout;
 
 /**
  * A very basic custom frame.
- * 
- * @author chris
  */
 public class CustomFrame extends TextFrame {
 
@@ -49,7 +47,8 @@ public class CustomFrame extends TextFrame {
      * @param owner The frame container that owns this frame
      * @param controller Swing controller
      */
-    public CustomFrame(final SwingController controller, final FrameContainer<?> owner) {
+    public CustomFrame(final SwingController controller,
+            final FrameContainer<?> owner) {
         super(owner, controller);
 
         initComponents();
@@ -59,11 +58,9 @@ public class CustomFrame extends TextFrame {
      * Initialises components in this frame.
      */
     private void initComponents() {
-        getContentPane().setLayout(new MigLayout("ins 0, fill, hidemode 3, wrap 1"));
-        getContentPane().add(getTextPane(), "grow, push");
-        getContentPane().add(getSearchBar(), "growx, pushx");
-
-        pack();
+        setLayout(new MigLayout("ins 0, fill, hidemode 3, wrap 1"));
+        add(getTextPane(), "grow, push");
+        add(getSearchBar(), "growx, pushx");
     }
 
     /** {@inheritDoc} */

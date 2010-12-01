@@ -824,19 +824,11 @@ public class SwingController extends Plugin implements Serializable,
     private PreferencesCategory createAdvancedCategory() {
         final PreferencesCategory advanced = new PluginPreferencesCategory(
                 getPluginInfo(), "Advanced", "");
-        final Map<String, String> options = new HashMap<String, String>();
-
-        options.put("alwaysShow", "Always show");
-        options.put("neverShow", "Never show");
-        options.put("showWhenMaximised", "Show only when windows maximised");
 
         advanced.addSetting(new PreferencesSetting(PreferencesType.OPTIONALINTEGER,
                 new NumericalValidator(10, -1), "ui", "frameBufferSize",
                 "Window buffer size", "The maximum number of lines in a window"
                 + " buffer"));
-        advanced.addSetting(new PreferencesSetting("ui", "mdiBarVisibility",
-                "MDI Bar Visibility", "Controls the visibility of the MDI bar",
-                options));
         advanced.addSetting(
                 new PreferencesSetting(PreferencesType.BOOLEAN, "ui",
                 "useOneTouchExpandable", "Use one touch expandable split panes?",

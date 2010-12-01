@@ -33,7 +33,6 @@ import com.dmdirc.addons.ui_swing.actions.HyperlinkCopyAction;
 import com.dmdirc.addons.ui_swing.actions.InputFieldCopyAction;
 import com.dmdirc.addons.ui_swing.actions.NicknameCopyAction;
 import com.dmdirc.addons.ui_swing.actions.SearchAction;
-import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
 import com.dmdirc.addons.ui_swing.components.SwingSearchBar;
 import com.dmdirc.addons.ui_swing.textpane.ClickTypeValue;
 import com.dmdirc.addons.ui_swing.textpane.MouseEventType;
@@ -54,33 +53,20 @@ import com.dmdirc.commandparser.parsers.GlobalCommandParser;
 import com.dmdirc.config.ConfigManager;
 import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.interfaces.FrameCloseListener;
-import com.dmdirc.interfaces.FrameInfoListener;
-import com.dmdirc.logger.ErrorLevel;
-import com.dmdirc.logger.Logger;
 import com.dmdirc.parser.common.ChannelJoinRequest;
-import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.interfaces.InputWindow;
 import com.dmdirc.ui.interfaces.Window;
+import com.dmdirc.ui.messages.IRCDocument;
 import com.dmdirc.util.StringTranscoder;
 
-import java.awt.Container;
-import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyVetoException;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.Charset;
 import java.nio.charset.IllegalCharsetNameException;
 import java.nio.charset.UnsupportedCharsetException;
-import java.util.logging.Level;
 
-import javax.swing.BorderFactory;
 import javax.swing.JComponent;
-import javax.swing.JInternalFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
@@ -88,26 +74,15 @@ import javax.swing.JPopupMenu;
 import javax.swing.JSeparator;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-import javax.swing.WindowConstants;
-import javax.swing.event.InternalFrameEvent;
-import javax.swing.event.InternalFrameListener;
-import javax.swing.plaf.basic.BasicInternalFrameUI;
-import javax.swing.plaf.synth.SynthLookAndFeel;
 
-import net.miginfocom.layout.PlatformDefaults;
 import net.miginfocom.swing.MigLayout;
 
 /**
  * Implements a generic (internal) frame.
  */
-public abstract class TextFrame extends JInternalFrame implements Window,
-        PropertyChangeListener, InternalFrameListener, ConfigChangeListener,
-        FrameInfoListener, TextPaneListener, FrameCloseListener {
-
-    /** Logger to use. */
-    private static final java.util.logging.Logger LOGGER =
-            java.util.logging.Logger.getLogger(TextFrame.class.getName());
+public abstract class TextFrame extends JPanel implements Window,
+        ConfigChangeListener, TextPaneListener, FrameCloseListener {
+    
     /**
      * A version number for this class. It should be changed whenever the class
      * structure is changed (or anything else that would prevent serialized
@@ -122,16 +97,10 @@ public abstract class TextFrame extends JInternalFrame implements Window,
     private SwingSearchBar searchBar;
     /** String transcoder. */
     private StringTranscoder transcoder;
-    /** Are we closing? */
-    private boolean closing = false;
     /** Command parser for popup commands. */
     private final CommandParser commandParser;
     /** Swing controller. */
     private final SwingController controller;
-    /** Are we maximising/restoring? */
-    private boolean maximiseRestoreInProgress = false;
-    /** Content pane. */
-    private final JPanel panel;
 
     /**
      * Creates a new instance of Frame.
@@ -147,9 +116,6 @@ public abstract class TextFrame extends JInternalFrame implements Window,
 
         final ConfigManager config = owner.getConfigManager();
 
-        setFrameIcon(IconManager.getIconManager().getIcon(owner.getIcon()));
-
-        owner.addFrameInfoListener(this);
         owner.addCloseListener(this);
         owner.setTitle(frameParent.getTitle());
 
@@ -167,17 +133,8 @@ public abstract class TextFrame extends JInternalFrame implements Window,
         commandParser = findCommandParser();
 
         initComponents();
-        setMaximizable(true);
-        setClosable(true);
-        setResizable(true);
-        setIconifiable(true);
         setFocusable(true);
-        setPreferredSize(new Dimension(controller.getMainFrame().getWidth() / 2,
-                controller.getMainFrame().getHeight() / 3));
-        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
-        addPropertyChangeListener("UI", this);
-        addInternalFrameListener(this);
         getTextPane().addTextPaneListener(this);
 
         config.addChangeListener("ui", "foregroundcolour", this);
@@ -185,10 +142,7 @@ public abstract class TextFrame extends JInternalFrame implements Window,
         config.addChangeListener("ui", "frameBufferSize", this);
         updateColours();
 
-        addPropertyChangeListener("maximum", this);
-
-        panel = new JPanel(new MigLayout("fill"));
-        super.getContentPane().add(panel);
+        setLayout(new MigLayout("fill"));
     }
 
     /**
@@ -218,109 +172,12 @@ public abstract class TextFrame extends JInternalFrame implements Window,
 
     /** {@inheritDoc} */
     @Override
-    public Container getContentPane() {
-        return panel;
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @deprecated Should use {@link FrameContainer#setTitle(java.lang.String)}
-     */
-    @Override
-    @Deprecated
-    public void setTitle(final String title) {
-        UIUtilities.invokeLater(new Runnable() {
-
-            /** {@inheritDoc} */
-            @Override
-            public void run() {
-                TextFrame.super.setTitle(title);
-            }
-        });
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @deprecated Use {@link FrameContainer#getTitle()} instead
-     */
-    @Override
-    @Deprecated
-    public String getTitle() {
-        return super.getTitle();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    @Deprecated
-    public void setVisible(final boolean isVisible) {
-        UIUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                if (isVisible() && isVisible) {
-                    open();
-                } else {
-                    TextFrame.super.setVisible(isVisible);
-                }
-            }
-        });
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void open() {
-        final boolean pref = frameParent.getConfigManager()
-                .getOptionBool("ui", "maximisewindows");
-        UIUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                if (!isVisible()) {
-                    TextFrame.super.setVisible(true);
-                }
-                try {
-                    if ((pref || controller.getMainFrame().getMaximised())
-                            && !isMaximum()) {
-                        setMaximum(true);
-                    }
-                } catch (PropertyVetoException ex) {
-                    //Ignore
-                }
-
-                try {
-                    if (!isSelected()) {
-                        setSelected(true);
-                    }
-                } catch (PropertyVetoException ex) {
-                    //Ignore
-                }
-            }
-        });
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public void activateFrame() {
         UIUtilities.invokeLater(new Runnable() {
 
             @Override
             public void run() {
-                try {
-                    if (isIcon()) {
-                        setIcon(false);
-                    }
-                    setMaximum(controller.getMainFrame().getMaximised());
-                    if (!isVisible()) {
-                        TextFrame.super.setVisible(true);
-                    }
-                    if (!isSelected()) {
-                        setSelected(true);
-                    }
-                } catch (PropertyVetoException ex) {
-                    //Ignore
-                }
+                frameParent.windowActivated();
             }
         });
     }
@@ -332,122 +189,53 @@ public abstract class TextFrame extends JInternalFrame implements Window,
 
             @Override
             public void run() {
-                if (closing) {
-                    return;
-                }
-
-                closing = true;
-
-                try {
-                    if (!isClosed()) {
-                        setClosed(true);
-                    }
-                } catch (PropertyVetoException ex) {
-                    Logger.userError(ErrorLevel.LOW, "Unable to close frame");
-                }
-
+                frameParent.handleWindowClosing();
             }
         });
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     *
+     * @deprecated MDI has been removed, these methods are useless
+     */
+    @Deprecated
     @Override
     public void minimise() {
-        UIUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                try {
-                    if (!isIcon()) {
-                        setIcon(true);
-                    }
-                } catch (PropertyVetoException ex) {
-                    Logger.userError(ErrorLevel.LOW,
-                            "Unable to minimise frame");
-                }
-            }
-        });
+        //Ignore
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     *
+     * @deprecated MDI has been removed, these methods are useless
+     */
+    @Deprecated
     @Override
     public void maximise() {
-        LOGGER.finest("maximise(): About to invokeAndWait");
-
-        UIUtilities.invokeLater(new Runnable() {
-
-            /** {@inheritDoc} */
-            @Override
-            public void run() {
-                LOGGER.finest("maximise(): Running");
-
-                try {
-                    if (isMaximum()) {
-                        return;
-                    }
-
-                    maximiseRestoreInProgress = true;
-                    LOGGER.finest("maximise(): About to set icon");
-                    if (isIcon()) {
-                        setIcon(false);
-                    }
-                    LOGGER.finest("maximise(): About to set maximum");
-                    setMaximum(true);
-                    LOGGER.finest("maximise(): Done?");
-                } catch (PropertyVetoException ex) {
-                    Logger.userError(ErrorLevel.LOW,
-                            "Unable to minimise frame");
-                }
-                maximiseRestoreInProgress = false;
-
-                LOGGER.finest("maximise(): Done running");
-            }
-        });
-        LOGGER.finest("maximise(): Done");
+        //Ignore
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     *
+     * @deprecated MDI has been removed, these methods are useless
+     */
+    @Deprecated
     @Override
     public void restore() {
-        UIUtilities.invokeLater(new Runnable() {
-
-            /** {@inheritDoc} */
-            @Override
-            public void run() {
-                try {
-                    if (!isMaximum()) {
-                        return;
-                    }
-
-                    maximiseRestoreInProgress = true;
-                    if (isIcon()) {
-                        setIcon(false);
-                    }
-                    setMaximum(false);
-                } catch (PropertyVetoException ex) {
-                    Logger.userError(ErrorLevel.LOW,
-                            "Unable to minimise frame");
-                }
-                maximiseRestoreInProgress = false;
-            }
-        });
+        //Ignore
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     *
+     * @deprecated MDI has been removed, these methods are useless
+     */
+    @Deprecated
     @Override
     public void toggleMaximise() {
-        UIUtilities.invokeLater(new Runnable() {
-
-            /** {@inheritDoc} */
-            @Override
-            public void run() {
-                if (isMaximum()) {
-                    restore();
-                } else {
-                    maximise();
-                }
-            }
-        });
+        //Ignore
     }
 
     /**
@@ -551,205 +339,6 @@ public abstract class TextFrame extends JInternalFrame implements Window,
         getActionMap().put("searchAction", new SearchAction(searchBar));
         getActionMap().put("homeAction", new TextPaneHomeAction(getTextPane()));
         getActionMap().put("endAction", new TextPaneEndAction(getTextPane()));
-    }
-
-    /**
-     * Removes and reinserts the border of an internal frame on maximising.
-     * {@inheritDoc}
-     *
-     * @param event Property change event
-     */
-    @Override
-    public final void propertyChange(final PropertyChangeEvent event) {
-        LOGGER.log(Level.FINER, "Property change: name: {0}  value: {1} -> {3}"
-                , new Object[]{event.getPropertyName(), event.getOldValue(),
-                event.getNewValue()});
-        if ("UI".equals(event.getPropertyName())) {
-            if (isMaximum()) {
-                hideTitlebar();
-            }
-        } else {
-            if ((Boolean) event.getNewValue()) {
-                hideTitlebar();
-            } else {
-                showTitlebar();
-            }
-        }
-        LOGGER.finest("Done property change");
-    }
-
-    /** Hides the titlebar for this frame. */
-    private void hideTitlebar() {
-        UIUtilities.invokeLater(new Runnable() {
-
-            /** {@inheritDoc} */
-            @Override
-            public void run() {
-                panel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
-                setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
-                ((BasicInternalFrameUI) getUI()).setNorthPane(null);
-            }
-        });
-    }
-
-    /** Shows the titlebar for this frame. */
-    private void showTitlebar() {
-        UIUtilities.invokeLater(new Runnable() {
-
-            /** {@inheritDoc} */
-            @Override
-            public void run() {
-                final Class<?> c;
-                Object temp = null;
-                Constructor<?> constructor;
-
-                final String componentUI = (String) UIManager.get(
-                        "InternalFrameUI");
-
-                if ("javax.swing.plaf.synth.SynthLookAndFeel"
-                        .equals(componentUI)) {
-                    temp = SynthLookAndFeel.createUI(TextFrame.this);
-                } else {
-                    try {
-                        c = getClass().getClassLoader().loadClass(componentUI);
-                        constructor = c.getConstructor(new Class[]{
-                                    javax.swing.JInternalFrame.class});
-                        temp = constructor.newInstance(new Object[]{
-                                    TextFrame.this});
-                    } catch (ClassNotFoundException ex) {
-                        Logger.appError(ErrorLevel.MEDIUM,
-                                "Unable to readd titlebar", ex);
-                    } catch (NoSuchMethodException ex) {
-                        Logger.appError(ErrorLevel.MEDIUM,
-                                "Unable to readd titlebar", ex);
-                    } catch (InstantiationException ex) {
-                        Logger.appError(ErrorLevel.MEDIUM,
-                                "Unable to readd titlebar", ex);
-                    } catch (IllegalAccessException ex) {
-                        Logger.appError(ErrorLevel.MEDIUM,
-                                "Unable to readd titlebar", ex);
-                    } catch (InvocationTargetException ex) {
-                        Logger.appError(ErrorLevel.MEDIUM,
-                                "Unable to readd titlebar", ex);
-                    }
-
-                }
-
-                setBorder(UIManager.getBorder("InternalFrame.border"));
-                if (temp == null) {
-                    temp = new BasicInternalFrameUI(TextFrame.this);
-                }
-
-                setUI((BasicInternalFrameUI) temp);
-                final int size = (int) PlatformDefaults.getPanelInsets(0).
-                        getValue();
-                panel.setBorder(BorderFactory.createEmptyBorder(size, size,
-                        size, size));
-            }
-        });
-    }
-
-    /**
-     * Not needed for this class. {@inheritDoc}
-     *
-     * @param event Internal frame event
-     */
-    @Override
-    public void internalFrameOpened(final InternalFrameEvent event) {
-        //Ignore
-    }
-
-    /**
-     * Not needed for this class. {@inheritDoc}
-     *
-     * @param event Internal frame event
-     */
-    @Override
-    public void internalFrameClosing(final InternalFrameEvent event) {
-        new LoggingSwingWorker() {
-
-            /** {@inheritDoc} */
-            @Override
-            protected Object doInBackground() {
-                frameParent.handleWindowClosing();
-                return null;
-            }
-        }.executeInExecutor();
-    }
-
-    /**
-     * Not needed for this class. {@inheritDoc}
-     *
-     * @param event Internal frame event
-     */
-    @Override
-    public void internalFrameClosed(final InternalFrameEvent event) {
-        //Ignore.
-    }
-
-    /**
-     * Makes the internal frame invisible. {@inheritDoc}
-     *
-     * @param event Internal frame event
-     */
-    @Override
-    public void internalFrameIconified(final InternalFrameEvent event) {
-        UIUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                event.getInternalFrame().setVisible(false);
-            }
-        });
-    }
-
-    /**
-     * Not needed for this class. {@inheritDoc}
-     *
-     * @param event Internal frame event
-     */
-    @Override
-    public void internalFrameDeiconified(final InternalFrameEvent event) {
-        //Ignore.
-    }
-
-    /**
-     * Activates the input field on frame focus. {@inheritDoc}
-     *
-     * @param event Internal frame event
-     */
-    @Override
-    public void internalFrameActivated(final InternalFrameEvent event) {
-        LOGGER.log(Level.FINER, "{0} : internalFrameActivated()",
-                new Object[] {getName()});
-
-        if (maximiseRestoreInProgress) {
-            return;
-        }
-        new LoggingSwingWorker() {
-
-            /** {@inheritDoc} */
-            @Override
-            protected Object doInBackground() {
-                LOGGER.log(Level.FINER,
-                        "{0} : internalFrameActivated(): doInBackground",
-                        new Object[]{getName()});
-                frameParent.windowActivated();
-                return null;
-            }
-        }.executeInExecutor();
-    }
-
-    /**
-     * Not needed for this class. {@inheritDoc}
-     *
-     * @param event Internal frame event
-     */
-    @Override
-    public void internalFrameDeactivated(final InternalFrameEvent event) {
-        if (maximiseRestoreInProgress) {
-            return;
-        }
     }
 
     /** {@inheritDoc} */
@@ -1019,7 +608,8 @@ public abstract class TextFrame extends JInternalFrame implements Window,
     /** {@inheritDoc} */
     @Override
     public void configChanged(final String domain, final String key) {
-        if (getConfigManager() == null || getTextPane() == null) {
+        if (getContainer().getConfigManager() == null
+                || getTextPane() == null) {
             return;
         }
 
@@ -1027,42 +617,6 @@ public abstract class TextFrame extends JInternalFrame implements Window,
                 || "backgroundcolour".equals(key))) {
             updateColours();
         }
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void iconChanged(final FrameContainer<?> window, final String icon) {
-        UIUtilities.invokeLater(new Runnable() {
-
-            /** {@inheritDoc} */
-            @Override
-            public void run() {
-                setFrameIcon(IconManager.getIconManager().getIcon(icon));
-            }
-        });
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void nameChanged(final FrameContainer<?> window,
-            final String name) {
-        //Ignore
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void titleChanged(final FrameContainer<?> window,
-            final String title) {
-        UIUtilities.invokeLater(new Runnable() {
-
-            /** {@inheritDoc} */
-            @Override
-            public void run() {
-                // TODO: Can be changed back to setTitle once the deprecated
-                // method is removed
-                TextFrame.super.setTitle(title);
-            }
-        });
     }
 
     /** {@inheritDoc} */
@@ -1085,5 +639,70 @@ public abstract class TextFrame extends JInternalFrame implements Window,
                         getOptionColour("ui", "foregroundcolour"));
         getTextPane().setBackground(getConfigManager().
                         getOptionColour("ui", "backgroundcolour"));
+    }
+
+
+
+    /**
+     * {@inheritDoc}
+     *
+     * @deprecated Use {@link FrameContainer#getTitle()} instead
+     */
+    @Deprecated
+    @Override
+    public String getTitle() {
+        return getContainer().getTitle();
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @deprecated MDI is no longer implemented, windows are always maximised.
+     */
+    @Override
+    @Deprecated
+    public boolean isMaximum() {
+        return true;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @deprecated Should use {@link FrameContainer#setTitle(java.lang.String)}
+     */
+    @Deprecated
+    @Override
+    public void setTitle(final String title) {
+        getContainer().setTitle(title);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void open() {
+        //Yay, we're open.
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @deprecated Should not be used outside the UI, can be removed when the
+     * interface method is removed
+     */
+    @Deprecated
+    @Override
+    public void setVisible(final boolean visible) {
+        super.setVisible(visible);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @deprecated Should not be used outside the UI, can be removed when the
+     * interface method is removed
+     */
+    @Deprecated
+    @Override
+    public boolean isVisible() {
+        return super.isVisible();
     }
 }

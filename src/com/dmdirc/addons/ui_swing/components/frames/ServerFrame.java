@@ -51,14 +51,12 @@ public final class ServerFrame extends InputTextFrame implements ServerWindow,
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 9;
-    /** This channel's command parser. */
-    private final CommandParser commandParser;
     /** popup menu item. */
     private JMenuItem settingsMI;
 
     /**
      * Creates a new ServerFrame.
-     * 
+     *
      * @param owner Parent Frame container
      * @param controller Swing controller
      */
@@ -66,10 +64,9 @@ public final class ServerFrame extends InputTextFrame implements ServerWindow,
         super(controller, owner);
 
         initComponents();
-        
-        commandParser = owner.getCommandParser();
 
-        setInputHandler(new SwingInputHandler(getInputField(), commandParser, this));
+        setInputHandler(new SwingInputHandler(getInputField(),
+                owner.getCommandParser(), this));
     }
 
     /** {@inheritDoc} */
@@ -86,17 +83,15 @@ public final class ServerFrame extends InputTextFrame implements ServerWindow,
         settingsMI = new JMenuItem("Settings");
         settingsMI.addActionListener(this);
 
-        getContentPane().setLayout(new MigLayout("ins 0, fill, hidemode 3, wrap 1"));
-        getContentPane().add(getTextPane(), "grow, push");
-        getContentPane().add(getSearchBar(), "growx, pushx");
-        getContentPane().add(inputPanel, "growx, pushx");
-
-        pack();
+        setLayout(new MigLayout("ins 0, fill, hidemode 3, wrap 1"));
+        add(getTextPane(), "grow, push");
+        add(getSearchBar(), "growx, pushx");
+        add(inputPanel, "growx, pushx");
     }
 
-    /** 
+    /**
      * {@inheritDoc}.
-     * 
+     *
      * @param actionEvent Action event
      */
     @Override
@@ -134,7 +129,8 @@ public final class ServerFrame extends InputTextFrame implements ServerWindow,
     /** {@inheritDoc} */
     @Override
     public void addCustomPopupItems(final JPopupMenu popupMenu) {
-        if (getContainer().getServer().getState().equals(ServerState.CONNECTED)) {
+        if (getContainer().getServer().getState()
+                .equals(ServerState.CONNECTED)) {
             settingsMI.setEnabled(true);
         } else {
             settingsMI.setEnabled(false);
@@ -143,7 +139,7 @@ public final class ServerFrame extends InputTextFrame implements ServerWindow,
         if (popupMenu.getComponentCount() > 0) {
             popupMenu.addSeparator();
         }
-        
+
         popupMenu.add(settingsMI);
     }
 
@@ -151,8 +147,8 @@ public final class ServerFrame extends InputTextFrame implements ServerWindow,
     @Override
     public void close() {
         if (ServerSettingsDialog.hasServerSettingsDialog()) {
-            ServerSettingsDialog.getServerSettingsDialog(getContainer().getServer(),
-                getController().getMainFrame()).dispose();
+            ServerSettingsDialog.getServerSettingsDialog(getContainer()
+                    .getServer(), getController().getMainFrame()).dispose();
         }
         super.close();
     }
