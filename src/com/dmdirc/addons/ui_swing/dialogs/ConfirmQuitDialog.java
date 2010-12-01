@@ -19,62 +19,48 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+package com.dmdirc.addons.ui_swing.dialogs;
 
-package com.dmdirc.addons.dcc.ui;
-
-import com.dmdirc.FrameContainer;
-import com.dmdirc.addons.ui_swing.SwingController;
-import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
-import com.dmdirc.commandparser.PopupType;
-
-import javax.swing.JPopupMenu;
+import java.awt.Window;
 
 /**
- * Empty Frame.
+ * A simple dialog to confirm and handle the quitting of the client.
  */
-public class EmptyWindow extends TextFrame {
-
-    /** A version number for this class. */
-    private static final long serialVersionUID = 2L;
+public abstract class ConfirmQuitDialog extends StandardQuestionDialog {
 
     /**
-     * Creates a new empty window for the specified UI controller and owner.
-     *
-     * @param controller The UIController that owns this window
-     * @param owner The frame container that owns this window
+     * A version number for this class. It should be changed
+     * whenever the class structure is changed (or anything else
+     * that would prevent serialized objects being unserialized
+     * with the new class).
      */
-    public EmptyWindow(final SwingController controller, final FrameContainer<?> owner) {
-        super(owner, controller);
-        setTextPane(null);
+    private static final long serialVersionUID = 1;
+
+    /**
+     * Creates a new client quit confirmation dialog.
+     *
+     * @param window Parent window
+     */
+    public ConfirmQuitDialog(final Window window) {
+        super(window, ModalityType.APPLICATION_MODAL, "Quit confirm",
+                    "You are about to quit DMDirc, are you sure?");
     }
 
     /** {@inheritDoc} */
     @Override
-    public PopupType getNicknamePopupType() {
-        return null;
+    public boolean save() {
+        handleQuit();
+        return true;
     }
 
     /** {@inheritDoc} */
     @Override
-    public PopupType getChannelPopupType() {
-        return null;
+    public void cancelled() {
+        // Do nothing
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public PopupType getHyperlinkPopupType() {
-        return null;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public PopupType getNormalPopupType() {
-        return null;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void addCustomPopupItems(final JPopupMenu popupMenu) {
-        //Add no custom popup items
-    }
+    /**
+     * Called when the user confirms they wish to quit the client.
+     */
+    protected abstract void handleQuit();
 }

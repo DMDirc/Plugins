@@ -48,6 +48,7 @@ import com.dmdirc.addons.ui_swing.dialogs.serversetting.ServerSettingsDialog;
 import com.dmdirc.addons.ui_swing.dialogs.sslcertificate.SSLCertificateDialog;
 import com.dmdirc.addons.ui_swing.dialogs.updater.SwingUpdaterDialog;
 import com.dmdirc.addons.ui_swing.dialogs.url.URLDialog;
+import com.dmdirc.addons.ui_swing.framemanager.ctrltab.CtrlTabWindowManager;
 import com.dmdirc.addons.ui_swing.wizard.WizardListener;
 import com.dmdirc.addons.ui_swing.wizard.firstrun.SwingFirstRunWizard;
 import com.dmdirc.config.Identity;
@@ -712,6 +713,7 @@ public class SwingController extends Plugin implements Serializable,
                 me.setVisible(true);
                 mainFrameCreated.set(true);
                 statusBar = me.getStatusBar();
+                new CtrlTabWindowManager(SwingController.this);
                 errorDialog = new ErrorListDialog(me);
                 StatusBarManager.getStatusBarManager().registerStatusBar(statusBar);
             }
@@ -824,19 +826,11 @@ public class SwingController extends Plugin implements Serializable,
     private PreferencesCategory createAdvancedCategory() {
         final PreferencesCategory advanced = new PluginPreferencesCategory(
                 getPluginInfo(), "Advanced", "");
-        final Map<String, String> options = new HashMap<String, String>();
-
-        options.put("alwaysShow", "Always show");
-        options.put("neverShow", "Never show");
-        options.put("showWhenMaximised", "Show only when windows maximised");
 
         advanced.addSetting(new PreferencesSetting(PreferencesType.OPTIONALINTEGER,
                 new NumericalValidator(10, -1), "ui", "frameBufferSize",
                 "Window buffer size", "The maximum number of lines in a window"
                 + " buffer"));
-        advanced.addSetting(new PreferencesSetting("ui", "mdiBarVisibility",
-                "MDI Bar Visibility", "Controls the visibility of the MDI bar",
-                options));
         advanced.addSetting(
                 new PreferencesSetting(PreferencesType.BOOLEAN, "ui",
                 "useOneTouchExpandable", "Use one touch expandable split panes?",

@@ -22,8 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.actions;
 
-import com.dmdirc.addons.ui_swing.components.desktopPane.DMDircDesktopPane;
-
+import com.dmdirc.addons.ui_swing.framemanager.ctrltab.CtrlTabWindowManager;
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
@@ -39,18 +38,17 @@ public class PreviousFrameAction extends AbstractAction {
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 1;
-    /** Desktop pane. */
-    private final DMDircDesktopPane desktopPane;
+    /** Parent window manager. */
+    private final CtrlTabWindowManager manager;
 
     /**
      * Creates a new previous frame action.
      *
-     * @param pane Desktop pane
+     * @param manager Parent window manager
      */
-    public PreviousFrameAction(final DMDircDesktopPane pane) {
+    public PreviousFrameAction(final CtrlTabWindowManager manager) {
         super();
-
-        desktopPane = pane;
+        this.manager = manager;
     }
 
     /**
@@ -60,6 +58,6 @@ public class PreviousFrameAction extends AbstractAction {
      */
     @Override
     public void actionPerformed(final ActionEvent evt) {
-        desktopPane.scrollUp();
+        manager.scrollUp();
     }
 }

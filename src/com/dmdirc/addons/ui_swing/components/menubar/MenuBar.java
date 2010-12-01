@@ -24,7 +24,6 @@ package com.dmdirc.addons.ui_swing.components.menubar;
 
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SwingController;
-import com.dmdirc.addons.ui_swing.components.MDIBar;
 import com.dmdirc.addons.ui_swing.framemanager.windowmenu.WindowMenuFrameManager;
 
 import java.awt.Component;
@@ -70,7 +69,6 @@ public class MenuBar extends JMenuBar {
         add(new HelpMenu(controller, mainFrame));
         final int tempCount = getComponentCount();
         add(Box.createHorizontalGlue(), "growx, pushx");
-        add(new MDIBar(controller, mainFrame));
         add(Box.createHorizontalStrut(PlatformDefaults.getPanelInsets(1)
                 .getUnit()));
         menuItemCount = getComponentCount() - tempCount;
