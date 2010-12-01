@@ -22,7 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.actions;
 
-import com.dmdirc.addons.ui_swing.components.desktopPane.DMDircDesktopPane;
+import com.dmdirc.addons.ui_swing.components.TreeScroller;
 
 import java.awt.event.ActionEvent;
 
@@ -39,18 +39,17 @@ public class NextFrameAction extends AbstractAction {
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 1;
-    /** Desktop pane. */
-    private final DMDircDesktopPane desktopPane;
+    /** Tree scroller used to go up and down the frame manager. */
+    private final TreeScroller manager;
 
     /**
      * Creates a new next frame action.
      *
-     * @param pane Desktop pane
+     * @param manager Tree scroller to scroll with
      */
-    public NextFrameAction(final DMDircDesktopPane pane) {
+    public NextFrameAction(final TreeScroller manager) {
         super();
-
-        desktopPane = pane;
+        this.manager = manager;
     }
 
     /**
@@ -60,6 +59,6 @@ public class NextFrameAction extends AbstractAction {
      */
     @Override
     public void actionPerformed(final ActionEvent evt) {
-        desktopPane.scrollDown();
+        manager.changeFocus(false);
     }
 }
