@@ -48,14 +48,12 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JSeparator;
-import javax.swing.event.MenuEvent;
-import javax.swing.event.MenuListener;
 
 /**
  * Manages the window menu window list.
  */
 public final class WindowMenuFrameManager extends JMenu implements
-        SwingWindowListener, ActionListener, SelectionListener, MenuListener {
+        SwingWindowListener, ActionListener, SelectionListener {
 
     /**
      * A version number for this class. It should be changed whenever the class
@@ -68,9 +66,8 @@ public final class WindowMenuFrameManager extends JMenu implements
             new FrameContainerComparator();
     /** Non frame container menu count. */
     private final int itemCount;
-    /** Menu items for toggling, closing and minimising. */
-    private final JMenuItem toggleStateMenuItem, closeMenuItem,
-            minimiseMenuItem;
+    /** Menu items closing the active window. */
+    private final JMenuItem closeMenuItem;
     /** Seperator. */
     private final JSeparator separator;
     /** Active window. */
@@ -103,23 +100,6 @@ public final class WindowMenuFrameManager extends JMenu implements
         setText("Window");
         setMnemonic('w');
         controller.getWindowFactory().addWindowListener(this);
-        addMenuListener(this);
-
-        minimiseMenuItem = new JMenuItem(IconManager.getIconManager().getIcon(
-                "minimise"));
-        minimiseMenuItem.setMnemonic('n');
-        minimiseMenuItem.setText("Minimise");
-        minimiseMenuItem.setActionCommand("Minimise");
-        minimiseMenuItem.addActionListener(this);
-        add(minimiseMenuItem);
-
-        toggleStateMenuItem = new JMenuItem(IconManager.getIconManager().getIcon(
-                "maximise"));
-        toggleStateMenuItem.setMnemonic('m');
-        toggleStateMenuItem.setText("Maximise");
-        toggleStateMenuItem.setActionCommand("ToggleState");
-        toggleStateMenuItem.addActionListener(this);
-        add(toggleStateMenuItem);
 
         closeMenuItem = new JMenuItem(IconManager.getIconManager().getIcon(
                 "close"));
@@ -129,13 +109,10 @@ public final class WindowMenuFrameManager extends JMenu implements
         closeMenuItem.addActionListener(this);
         add(closeMenuItem);
 
-        add(new ArrangeWindows(controller));
-
         separator = new JPopupMenu.Separator();
         add(separator);
 
         itemCount = getMenuComponentCount();
-        checkToggleState();
 
         new WindowMenuScroller(this, controller.getDomain(), itemCount);
     }
@@ -148,8 +125,6 @@ public final class WindowMenuFrameManager extends JMenu implements
         enabledMenuItems.set((getMenuComponentCount() > itemCount));
         separator.setVisible(enabledMenuItems.get());
         closeMenuItem.setEnabled(enabledMenuItems.get());
-        toggleStateMenuItem.setEnabled(enabledMenuItems.get());
-        minimiseMenuItem.setEnabled(enabledMenuItems.get());
     }
 
     /** {@inheritDoc} */
@@ -317,11 +292,7 @@ public final class WindowMenuFrameManager extends JMenu implements
     @Override
     public void actionPerformed(final ActionEvent e) {
         if (enabledMenuItems.get()) {
-            if (e.getActionCommand().equals("ToggleState")) {
-                activeWindow.toggleMaximise();
-            } else if (e.getActionCommand().equals("Minimise")) {
-                activeWindow.minimise();
-            } else if (e.getActionCommand().equals("Close")) {
+            if (e.getActionCommand().equals("Close")) {
                 activeWindow.close();
             }
         }
@@ -363,30 +334,6 @@ public final class WindowMenuFrameManager extends JMenu implements
         final FrameContainerMenu menuItem = menus.get(window);
         if (menuItem != null) {
             menuItem.childSelected();
-        }
-    }
-
-    /**
-     * Checks and sets the state of the toggle menu item.
-     */
-    private void checkToggleState() {
-        checkMenuItems();
-        if (activeWindow != null) {
-            toggleStateMenuItem.setEnabled(true);
-            closeMenuItem.setEnabled(true);
-            minimiseMenuItem.setEnabled(true);
-
-            if (activeWindow.isMaximum()) {
-                toggleStateMenuItem.setText("Restore");
-                toggleStateMenuItem.setIcon(IconManager.getIconManager().getIcon(
-                        "restore"));
-                toggleStateMenuItem.setMnemonic('r');
-            } else {
-                toggleStateMenuItem.setText("Maximise");
-                toggleStateMenuItem.setIcon(IconManager.getIconManager().getIcon(
-                        "maximise"));
-                toggleStateMenuItem.setMnemonic('m');
-            }
         }
     }
 
@@ -473,23 +420,5 @@ public final class WindowMenuFrameManager extends JMenu implements
             final FrameContainer child) {
 
         return comparator.compare(newChild, child) >= 1;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void menuSelected(final MenuEvent e) {
-        checkToggleState();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void menuDeselected(final MenuEvent e) {
-        //Ignore
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void menuCanceled(final MenuEvent e) {
-        //Ignore
     }
 }

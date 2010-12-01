@@ -28,13 +28,13 @@ import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import java.io.Serializable;
 import java.util.Comparator;
 
-import javax.swing.JInternalFrame;
+import javax.swing.JPanel;
 
 /**
  * A comparator that proxies JInternalFrame arrays to a Frame container
  * comparator if appropriate.
  */
-public class JInternalFrameComparator implements Comparator<JInternalFrame>,
+public class JInternalFrameComparator implements Comparator<JPanel>,
         Serializable {
 
     /**
@@ -56,7 +56,7 @@ public class JInternalFrameComparator implements Comparator<JInternalFrame>,
      * +1 if item1 is after item2.
      */
     @Override
-    public int compare(final JInternalFrame item1, final JInternalFrame item2) {
+    public int compare(final JPanel item1, final JPanel item2) {
         if (!(item1 instanceof TextFrame) || (!(item2 instanceof TextFrame))) {
             return 0;
         }
