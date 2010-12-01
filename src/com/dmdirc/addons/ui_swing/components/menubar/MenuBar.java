@@ -96,7 +96,7 @@ public class MenuBar extends JMenuBar {
         JMenu menu = null;
         for (int i = 0; i < getMenuCount(); i++) {
             menu = getMenu(i);
-            if (menu instanceof JMenu && menu.getText().equals(parentMenu)) {
+            if (menu != null && menu.getText().equals(parentMenu)) {
                 break;
             }
             menu = null;
