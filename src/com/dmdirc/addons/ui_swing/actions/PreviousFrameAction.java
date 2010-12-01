@@ -22,8 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.actions;
 
-import com.dmdirc.addons.ui_swing.components.desktopPane.DMDircDesktopPane;
-
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
@@ -39,18 +37,12 @@ public class PreviousFrameAction extends AbstractAction {
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 1;
-    /** Desktop pane. */
-    private final DMDircDesktopPane desktopPane;
 
     /**
      * Creates a new previous frame action.
-     *
-     * @param pane Desktop pane
      */
-    public PreviousFrameAction(final DMDircDesktopPane pane) {
+    public PreviousFrameAction() {
         super();
-
-        desktopPane = pane;
     }
 
     /**
@@ -60,6 +52,6 @@ public class PreviousFrameAction extends AbstractAction {
      */
     @Override
     public void actionPerformed(final ActionEvent evt) {
-        desktopPane.scrollUp();
+        //TODO
     }
 }
