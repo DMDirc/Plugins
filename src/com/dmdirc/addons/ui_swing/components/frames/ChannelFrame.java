@@ -65,16 +65,14 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 10;
-    /** This channel's command parser. */
-    private final CommandParser commandParser;
+    /** The channel object that owns this frame. */
+    private final Channel parentChannel;
+    /** Identity. */
+    private final Identity identity;
     /** split pane. */
     private SplitPane splitPane;
     /** popup menu item. */
     private JMenuItem settingsMI;
-    /** The channel object that owns this frame. */
-    private final Channel parentChannel;
-    /** Identity. */
-    private Identity identity;
     /** Nicklist. */
     private NickList nicklist;
     /** Topic bar. */
@@ -104,10 +102,8 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
                 "shownicklist", this);
         ActionManager.addListener(this, CoreActionType.CLIENT_CLOSING);
 
-        commandParser = owner.getCommandParser();
-
-        setInputHandler(new SwingInputHandler(getInputField(), commandParser,
-                this));
+        setInputHandler(new SwingInputHandler(getInputField(), 
+                owner.getCommandParser(), this));
 
         identity = IdentityManager.getChannelConfig(getChannel().getServer().
                 getNetwork(), getChannel().getChannelInfo().getName());
@@ -189,16 +185,14 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
         topicBar.setVisible(getContainer().getConfigManager().getOptionBool(
                 getController().getDomain(), "showtopicbar"));
 
-        splitPane = new SplitPane(
-                SplitPane.Orientation.HORIZONTAL, false);
+        splitPane = new SplitPane(SplitPane.Orientation.HORIZONTAL, false);
 
-        getContentPane().setLayout(new MigLayout(
-                "fill, ins 0, hidemode 3, wrap 1"));
+        setLayout(new MigLayout("fill, ins 0, hidemode 3, wrap 1"));
 
-        getContentPane().add(topicBar, "growx, pushx");
-        getContentPane().add(splitPane, "grow, push");
-        getContentPane().add(getSearchBar(), "growx, pushx");
-        getContentPane().add(inputPanel, "growx, pushx");
+        add(topicBar, "growx");
+        add(splitPane, "grow, push");
+        add(getSearchBar(), "growx");
+        add(inputPanel, "growx");
 
         splitPane.setLeftComponent(getTextPane());
         if (getContainer().getConfigManager().getOptionBool(getController()
@@ -209,8 +203,6 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
         }
         splitPane.setResizeWeight(1);
         splitPane.setDividerLocation(-1);
-
-        pack();
     }
 
     /**

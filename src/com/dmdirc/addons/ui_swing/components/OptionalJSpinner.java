@@ -90,7 +90,7 @@ public class OptionalJSpinner extends JPanel implements ActionListener,
         spinner.addChangeListener(this);
         checkbox.addActionListener(this);
 
-        setLayout(new MigLayout("fill"));
+        setLayout(new MigLayout("fill, ins 0"));
 
         add(checkbox, "");
         add(spinner, "growx, pushx");

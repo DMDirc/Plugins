@@ -22,31 +22,37 @@
 
 package com.dmdirc.addons.ui_swing;
 
+import com.dmdirc.FrameContainer;
 import com.dmdirc.Main;
 import com.dmdirc.ServerManager;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
-import com.dmdirc.addons.ui_swing.components.menubar.MenuBar;
 import com.dmdirc.addons.ui_swing.components.SplitPane;
-import com.dmdirc.addons.ui_swing.components.desktopPane.DMDircDesktopPane;
+import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
+import com.dmdirc.addons.ui_swing.components.menubar.MenuBar;
 import com.dmdirc.addons.ui_swing.components.statusbar.SwingStatusBar;
+import com.dmdirc.addons.ui_swing.dialogs.ConfirmQuitDialog;
 import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
 import com.dmdirc.addons.ui_swing.framemanager.FrameManager;
 import com.dmdirc.addons.ui_swing.framemanager.FramemanagerPosition;
+import com.dmdirc.addons.ui_swing.framemanager.ctrltab.CtrlTabWindowManager;
 import com.dmdirc.addons.ui_swing.framemanager.tree.TreeFrameManager;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.interfaces.ConfigChangeListener;
+import com.dmdirc.interfaces.FrameInfoListener;
+import com.dmdirc.interfaces.SelectionListener;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.ui.CoreUIUtils;
 import com.dmdirc.ui.IconManager;
+import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.interfaces.MainWindow;
 import com.dmdirc.ui.interfaces.Window;
+import com.dmdirc.util.QueuedLinkedHashSet;
 import com.dmdirc.util.ReturnableThread;
 
 import java.awt.Dimension;
-import java.awt.Dialog.ModalityType;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
 import java.awt.event.WindowListener;
@@ -57,6 +63,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.MenuSelectionManager;
+import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 
 import net.miginfocom.swing.MigLayout;
@@ -65,7 +72,8 @@ import net.miginfocom.swing.MigLayout;
  * The main application frame.
  */
 public final class MainFrame extends JFrame implements WindowListener,
-        MainWindow, ConfigChangeListener {
+        MainWindow, ConfigChangeListener, SelectionListener,
+        SwingWindowListener, FrameInfoListener {
 
     /**
      * A version number for this class. It should be changed whenever the class
@@ -73,12 +81,16 @@ public final class MainFrame extends JFrame implements WindowListener,
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 9;
+    /** Focus queue. */
+    private final QueuedLinkedHashSet<TextFrame> focusOrder;
     /** The main application icon. */
     private ImageIcon imageIcon;
     /** The frame manager that's being used. */
     private FrameManager mainFrameManager;
-    /** Dekstop pane. */
-    private DMDircDesktopPane desktopPane;
+    /** Active frame. */
+    private TextFrame activeFrame;
+    /** Panel holding frame. */
+    private JPanel framePanel;
     /** Main panel. */
     private JPanel frameManagerPanel;
     /** Frame manager position. */
@@ -95,6 +107,8 @@ public final class MainFrame extends JFrame implements WindowListener,
     private final String version;
     /** Main split pane. */
     private SplitPane mainSplitPane;
+    /** Frame manager used for ctrl tab frame switching. */
+    private final CtrlTabWindowManager frameManager;
 
     /**
      * Creates new form MainFrame.
@@ -106,9 +120,11 @@ public final class MainFrame extends JFrame implements WindowListener,
 
         this.controller = controller;
 
+        focusOrder = new QueuedLinkedHashSet<TextFrame>();
         initComponents();
 
-        imageIcon = new ImageIcon(IconManager.getIconManager().getImage("icon"));
+        imageIcon = new ImageIcon(IconManager.getIconManager()
+                .getImage("icon"));
         setIconImage(imageIcon.getImage());
 
         CoreUIUtils.centreWindow(this);
@@ -149,8 +165,11 @@ public final class MainFrame extends JFrame implements WindowListener,
                 MenuSelectionManager.defaultManager().clearSelectedPath();
             }
         });
+        WindowManager.addSelectionListener(this);
+        controller.getWindowFactory().addWindowListener(this);
 
         setTitle(getTitlePrefix());
+        frameManager = new CtrlTabWindowManager(controller, rootPane);
     }
 
     /**
@@ -207,12 +226,12 @@ public final class MainFrame extends JFrame implements WindowListener,
             /** {@inheritDoc} */
             @Override
             public void run() {
-                setObject(desktopPane.getSelectedWindow());
+                setObject(activeFrame);
             }
         });
     }
 
-    /** {@inheritDoc */
+    /** {@inheritDoc} */
     @Override
     public MenuBar getJMenuBar() {
         return (MenuBar) super.getJMenuBar();
@@ -227,8 +246,7 @@ public final class MainFrame extends JFrame implements WindowListener,
     /** {@inheritDoc}. */
     @Override
     public void setTitle(final String title) {
-        if (title != null && getActiveFrame() != null && getActiveFrame().
-                isMaximum()) {
+        if (title != null && getActiveFrame() != null) {
             super.setTitle(getTitlePrefix() + " - " + title);
         } else {
             super.setTitle(getTitlePrefix());
@@ -241,31 +259,15 @@ public final class MainFrame extends JFrame implements WindowListener,
         return "DMDirc" + (showVersion ? " " + version : "");
     }
 
-    /** {@inheritDoc}. */
+    /**
+     * {@inheritDoc}
+     *
+     * @deprecated MDI is no longer implemented
+     */
+    @Deprecated
     @Override
     public boolean getMaximised() {
-        return UIUtilities.invokeAndWait(new ReturnableThread<Boolean>() {
-
-            /** {@inheritDoc}. */
-            @Override
-            public void run() {
-                final Window window = getActiveFrame();
-                if (window == null) {
-                    setObject(false);
-                } else {
-                    setObject(getActiveFrame().isMaximum());
-                }
-            }
-        });
-    }
-
-    /**
-     * Returns the desktop pane for the frame.
-     *
-     * @return JDesktopPane for the frame
-     */
-    public DMDircDesktopPane getDesktopPane() {
-        return desktopPane;
+        return true;
     }
 
     /**
@@ -401,8 +403,8 @@ public final class MainFrame extends JFrame implements WindowListener,
     private void initComponents() {
         statusBar = new SwingStatusBar(controller, this);
         frameManagerPanel = new JPanel();
-        desktopPane = new DMDircDesktopPane(controller, this, controller.
-                getDomain());
+        activeFrame = null;
+        framePanel = new JPanel(new MigLayout("fill, ins 0"));
         mainSplitPane = new SplitPane(SplitPane.Orientation.HORIZONTAL);
 
         initFrameManagers();
@@ -453,7 +455,7 @@ public final class MainFrame extends JFrame implements WindowListener,
         switch (position) {
             case TOP:
                 mainSplitPane.setTopComponent(frameManagerPanel);
-                mainSplitPane.setBottomComponent(desktopPane);
+                mainSplitPane.setBottomComponent(framePanel);
                 mainSplitPane.setResizeWeight(0.0);
                 mainSplitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
                 frameManagerPanel.setPreferredSize(new Dimension(
@@ -462,7 +464,7 @@ public final class MainFrame extends JFrame implements WindowListener,
                 break;
             case LEFT:
                 mainSplitPane.setLeftComponent(frameManagerPanel);
-                mainSplitPane.setRightComponent(desktopPane);
+                mainSplitPane.setRightComponent(framePanel);
                 mainSplitPane.setResizeWeight(0.0);
                 mainSplitPane.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
                 frameManagerPanel.setPreferredSize(new Dimension(
@@ -470,7 +472,7 @@ public final class MainFrame extends JFrame implements WindowListener,
                         "frameManagerSize"), Integer.MAX_VALUE));
                 break;
             case BOTTOM:
-                mainSplitPane.setTopComponent(desktopPane);
+                mainSplitPane.setTopComponent(framePanel);
                 mainSplitPane.setBottomComponent(frameManagerPanel);
                 mainSplitPane.setResizeWeight(1.0);
                 mainSplitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
@@ -479,7 +481,7 @@ public final class MainFrame extends JFrame implements WindowListener,
                         getOptionInt("ui", "frameManagerSize")));
                 break;
             case RIGHT:
-                mainSplitPane.setLeftComponent(desktopPane);
+                mainSplitPane.setLeftComponent(framePanel);
                 mainSplitPane.setRightComponent(frameManagerPanel);
                 mainSplitPane.setResizeWeight(1.0);
                 mainSplitPane.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
@@ -508,31 +510,15 @@ public final class MainFrame extends JFrame implements WindowListener,
     public void quit(final int exitCode) {
         if (exitCode == 0 && IdentityManager.getGlobalConfig().getOptionBool(
                 "ui", "confirmQuit")) {
-            new StandardQuestionDialog(this, ModalityType.APPLICATION_MODAL,
-                    "Quit confirm",
-                    "You are about to quit DMDirc, are you sure?") {
-
-                /**
-                 * A version number for this class. It should be changed
-                 * whenever the class structure is changed (or anything else
-                 * that would prevent serialized objects being unserialized
-                 * with the new class).
-                 */
-                private static final long serialVersionUID = 1;
+            final StandardQuestionDialog dialog = new ConfirmQuitDialog(this) {
 
                 /** {@inheritDoc} */
                 @Override
-                public boolean save() {
+                protected void handleQuit() {
                     doQuit(exitCode);
-                    return true;
                 }
-
-                /** {@inheritDoc} */
-                @Override
-                public void cancelled() {
-                    // Do nothing
-                }
-            }.display();
+            };
+            dialog.display();
             return;
         }
         doQuit(exitCode);
@@ -543,7 +529,7 @@ public final class MainFrame extends JFrame implements WindowListener,
      *
      * @param exitCode Exit code
      */
-    private void doQuit(final int exitCode) {
+    public void doQuit(final int exitCode) {
         this.exitCode = exitCode;
 
         new LoggingSwingWorker() {
@@ -575,7 +561,8 @@ public final class MainFrame extends JFrame implements WindowListener,
         if ("ui".equals(domain)) {
             if ("lookandfeel".equals(key)) {
                 controller.updateLookAndFeel();
-            } else if ("framemanager".equals(key) || "framemanagerPosition".equals(key)) {
+            } else if ("framemanager".equals(key)
+                    || "framemanagerPosition".equals(key)) {
                 UIUtilities.invokeLater(new Runnable() {
 
                     /** {@inheritDoc} */
@@ -602,5 +589,69 @@ public final class MainFrame extends JFrame implements WindowListener,
                 }
             });
         }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void selectionChanged(final FrameContainer<?> window) {
+        activeFrame = (TextFrame) controller.getWindowFactory()
+                .getSwingWindow(window);
+        focusOrder.offerAndMove(activeFrame);
+        framePanel.setVisible(false);
+        framePanel.removeAll();
+        framePanel.add(activeFrame, "grow");
+        framePanel.setVisible(true);
+        setTitle(window.getTitle());
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void windowAdded(final Window parent, final Window window) {
+        if (activeFrame == null) {
+            window.getContainer().activateFrame();
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void windowDeleted(final Window parent, final Window window) {
+        focusOrder.remove((TextFrame) window);
+        if (activeFrame.equals(window)) {
+            activeFrame = null;
+            framePanel.setVisible(false);
+            framePanel.removeAll();
+            framePanel.setVisible(true);
+            final TextFrame frame = focusOrder.peek();
+            if (frame == null) {
+                SwingUtilities.invokeLater(new Runnable() {
+
+                    /** {@inheritDoc} */
+                    @Override
+                    public void run() {
+                        frameManager.scrollUp();
+                    }
+                });
+            } else {
+                focusOrder.peek().getContainer().activateFrame();
+            }
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void iconChanged(final FrameContainer<?> window, final String icon) {
+        //Ignore
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void nameChanged(final FrameContainer<?> window, final String name) {
+        //Ignore
+    }
+
+    @Override
+    public void titleChanged(final FrameContainer<?> window,
+            final String title) {
+        setTitle(title);
     }
 }
