@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.dialogs;
 
+import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.ui.CoreUIUtils;
 
 import java.awt.Component;
@@ -31,6 +32,7 @@ import java.awt.Frame;
 import java.awt.Window;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.concurrent.Semaphore;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -148,17 +150,27 @@ public class StandardDialog extends JDialog {
      * @param owner Window to center on
      */
     public void displayBlocking(final Component owner) {
+        if (SwingUtilities.isEventDispatchThread()) {
+            throw new IllegalStateException("Unable to display blocking dialog"
+                    + " in the EDT.");
+        }
+        final Semaphore semaphore = new Semaphore(0);
         SwingUtilities.invokeLater(new Runnable() {
 
             /** {@inheritDoc} */
             @Override
             public void run() {
                 display(owner);
+                addWindowListener(new WindowAdapter() {
+
+                    @Override
+                    public void windowClosed(final WindowEvent e) {
+                        semaphore.release();
+                    }
+                });
             }
         });
-        while (isVisible()) {
-            Thread.yield();
-        }
+        semaphore.acquireUninterruptibly();
     }
 
 

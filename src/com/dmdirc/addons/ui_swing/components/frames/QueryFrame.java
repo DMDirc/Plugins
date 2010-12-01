@@ -43,12 +43,10 @@ public final class QueryFrame extends InputTextFrame implements QueryWindow {
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 8;
-    /** This channel's command parser. */
-    private final CommandParser commandParser;
 
     /**
      * Creates a new QueryFrame.
-     * 
+     *
      * @param owner Parent Frame container
      * @param controller Swing controller
      */
@@ -57,9 +55,8 @@ public final class QueryFrame extends InputTextFrame implements QueryWindow {
 
         initComponents();
 
-        commandParser = owner.getCommandParser();
-
-        setInputHandler(new SwingInputHandler(getInputField(), commandParser, this));
+        setInputHandler(new SwingInputHandler(getInputField(),
+                owner.getCommandParser(), this));
     }
 
     /** {@inheritDoc} */
@@ -73,12 +70,10 @@ public final class QueryFrame extends InputTextFrame implements QueryWindow {
      * Initialises components in this frame.
      */
     private void initComponents() {
-        getContentPane().setLayout(new MigLayout("ins 0, fill, hidemode 3, wrap 1"));
-        getContentPane().add(getTextPane(), "grow, push");
-        getContentPane().add(getSearchBar(), "growx, pushx");
-        getContentPane().add(inputPanel, "growx, pushx");
-
-        pack();
+        setLayout(new MigLayout("ins 0, fill, hidemode 3, wrap 1"));
+        add(getTextPane(), "grow, push");
+        add(getSearchBar(), "growx, pushx");
+        add(inputPanel, "growx, pushx");
     }
 
     /** {@inheritDoc} */

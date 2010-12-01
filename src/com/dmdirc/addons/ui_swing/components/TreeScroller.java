@@ -122,7 +122,9 @@ public class TreeScroller implements MouseWheelListener {
      * Removes this tree scroller from the tree.
      */
     public void unregister() {
-        tree.removeMouseWheelListener(this);
+        if (tree != null) {
+            tree.removeMouseWheelListener(this);
+        }
     }
 
     /**
