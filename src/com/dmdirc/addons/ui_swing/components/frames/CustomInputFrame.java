@@ -36,8 +36,6 @@ import net.miginfocom.swing.MigLayout;
 /**
  * A custom frame that includes an input field (for use with writable
  * containers).
- * 
- * @author chris
  */
 public class CustomInputFrame extends InputTextFrame {
 
@@ -50,7 +48,7 @@ public class CustomInputFrame extends InputTextFrame {
 
     /**
      * Creates a new instance of CustomInputFrame.
-     * 
+     *
      * @param owner The frame container that owns this frame
      * @param controller Swing controller
      */
@@ -58,7 +56,8 @@ public class CustomInputFrame extends InputTextFrame {
             final WritableFrameContainer<? extends InputWindow> owner) {
         super(controller, owner);
 
-        setInputHandler(new SwingInputHandler(getInputField(), owner.getCommandParser(), this));
+        setInputHandler(new SwingInputHandler(getInputField(),
+                owner.getCommandParser(), this));
 
         initComponents();
     }
@@ -68,19 +67,18 @@ public class CustomInputFrame extends InputTextFrame {
     @Deprecated
     @SuppressWarnings("unchecked")
     public final CommandParser getCommandParser() {
-        return ((WritableFrameContainer<? extends InputWindow>) frameParent).getCommandParser();
+        return ((WritableFrameContainer<? extends InputWindow>) frameParent)
+                .getCommandParser();
     }
 
     /**
      * Initialises components in this frame.
      */
     private void initComponents() {
-        getContentPane().setLayout(new MigLayout("ins 0, fill, hidemode 3, wrap 1"));
-        getContentPane().add(getTextPane(), "grow, push");
-        getContentPane().add(getSearchBar(), "growx, pushx");
-        getContentPane().add(inputPanel, "growx, pushx");
-
-        pack();
+        setLayout(new MigLayout("ins 0, fill, hidemode 3, wrap 1"));
+        add(getTextPane(), "grow, push");
+        add(getSearchBar(), "growx, pushx");
+        add(inputPanel, "growx, pushx");
     }
 
     /** {@inheritDoc} */
