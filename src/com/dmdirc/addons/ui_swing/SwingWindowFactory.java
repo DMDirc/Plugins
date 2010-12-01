@@ -148,7 +148,7 @@ public class SwingWindowFactory implements FrameListener {
                 }
 
                 if (focus) {
-                    childWindow.open();
+                    childWindow.activateFrame();
                 }
             }
         });

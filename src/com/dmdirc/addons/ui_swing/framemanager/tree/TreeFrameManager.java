@@ -326,7 +326,8 @@ public final class TreeFrameManager implements FrameManager,
                         addWindow(nodes.get(window), childWindow);
                     }
                 }
-                if (controller.getMainFrame().getActiveFrame() != null) {
+                if (controller.getMainFrame() != null
+                        && controller.getMainFrame().getActiveFrame() != null) {
                     selectionChanged(controller.getMainFrame().getActiveFrame()
                             .getContainer());
                 }

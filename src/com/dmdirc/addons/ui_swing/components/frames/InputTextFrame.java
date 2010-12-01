@@ -52,7 +52,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.KeyStroke;
-import javax.swing.event.InternalFrameEvent;
 
 import net.miginfocom.layout.PlatformDefaults;
 
@@ -318,7 +317,8 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
             if (point != null) {
                 initPopupMenu();
                 inputFieldPopup.show(this, (int) point.getX(),
-                        (int) point.getY() + getTextPane().getHeight() + (int) PlatformDefaults.
+                        (int) point.getY() + getTextPane().getHeight()
+                        + (int) PlatformDefaults.
                         getUnitValueX("related").getValue());
             }
         }
@@ -339,13 +339,14 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
         }
 
         try {
-            //get the contents of the input field and combine it with the clipboard
+            //get the contents of the input field and combine it with the
+            //clipboard
             clipboard = (String) Toolkit.getDefaultToolkit().
                     getSystemClipboard().getData(DataFlavor.stringFlavor);
             doPaste(clipboard);
         } catch (IOException ex) {
-            Logger.userError(ErrorLevel.LOW, "Unable to get clipboard contents: " + ex.
-                    getMessage());
+            Logger.userError(ErrorLevel.LOW,
+                    "Unable to get clipboard contents: " + ex.getMessage());
         } catch (UnsupportedFlavorException ex) {
             Logger.userError(ErrorLevel.LOW, "Unsupported clipboard type", ex);
         }
@@ -479,17 +480,15 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
         }
     }
 
-    /**
-     * Activates the input field on frame focus. {@inheritDoc}
-     *
-     * @param event Internal frame event
-     */
+    /** {@inheritDoc} */
     @Override
-    public void internalFrameActivated(final InternalFrameEvent event) {
-        super.internalFrameActivated(event);
+    public void activateFrame() {
+        super.activateFrame();
         if (useAwayIndicator && getContainer().getServer() != null) {
             awayLabel.setVisible(getContainer().getServer().isAway());
         }
         inputField.requestFocusInWindow();
     }
+
+
 }
