@@ -55,9 +55,9 @@ public final class InputTextFramePasteAction extends AbstractAction {
         this.inputFrame = inputFrame;
     }
 
-    /** 
+    /**
      * {@inheritDoc}
-     * 
+     *
      * @param e Action event
      */
     @Override

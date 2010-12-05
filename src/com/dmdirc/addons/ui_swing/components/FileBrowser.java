@@ -29,8 +29,8 @@ import com.dmdirc.util.ListenerList;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import java.awt.event.KeyListener;
+
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JPanel;
@@ -52,13 +52,10 @@ public class FileBrowser extends JPanel implements ActionListener {
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 1;
-
-    /** Browse button. */
-    private JButton browseButton;
     /** Text field to show path of chosen file. */
-    private ValidatingJTextField pathField;
+    private final ValidatingJTextField pathField;
     /** File browsing window. */
-    private JFileChooser fileChooser = new JFileChooser();
+    private final JFileChooser fileChooser = new JFileChooser();
     /** Our listeners. */
     private final ListenerList listeners = new ListenerList();
 
@@ -69,9 +66,11 @@ public class FileBrowser extends JPanel implements ActionListener {
      * @param type The type of filechooser we want (Files/Directories/Both)
      */
     public FileBrowser(final PreferencesSetting setting, final int type) {
+        super();
+
         fileChooser.setFileSelectionMode(type);
-        
-        browseButton = new JButton("Browse");
+
+        final JButton browseButton = new JButton("Browse");
         browseButton.addActionListener(this);
 
         pathField = new ValidatingJTextField(new JTextField(setting.getValue()),

@@ -33,14 +33,14 @@ import javax.swing.JButton;
  * Image button.
  */
 public class ImageButton extends JButton {
-    
+
     /**
      * A version number for this class. It should be changed whenever the class
      * structure is changed (or anything else that would prevent serialized
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 2;
-    
+
     /**
      * Creates a new instance of ImageButton.
      *
@@ -50,7 +50,7 @@ public class ImageButton extends JButton {
     public ImageButton(final String actionCommand, final Icon icon) {
         this(actionCommand, icon, icon);
     }
-    
+
     /**
      * Creates a new instance of ImageButton.
      *
@@ -58,11 +58,11 @@ public class ImageButton extends JButton {
      * @param icon Normal icon for the button
      * @param rolloverIcon Rollover icon for the button
      */
-    public ImageButton(final String actionCommand, final Icon icon, 
+    public ImageButton(final String actionCommand, final Icon icon,
             final Icon rolloverIcon) {
         this(actionCommand, icon, rolloverIcon, rolloverIcon);
     }
-    
+
     /**
      * Creates a new instance of ImageButton.
      *
@@ -71,10 +71,10 @@ public class ImageButton extends JButton {
      * @param rolloverIcon Rollover icon for the button
      * @param pressedIcon Pressed icon for the button
      */
-    public ImageButton(final String actionCommand, final Icon icon, 
+    public ImageButton(final String actionCommand, final Icon icon,
             final Icon rolloverIcon, final Icon pressedIcon) {
         super();
-        
+
         setIcon(icon);
         setRolloverIcon(rolloverIcon);
         setPressedIcon(pressedIcon);
@@ -84,10 +84,10 @@ public class ImageButton extends JButton {
         setPreferredSize(new Dimension(16, 0));
         setActionCommand(actionCommand);
     }
-    
+
     /**
-     * Sets all the image buttons icons
-     * 
+     * Sets all the image buttons icons.
+     *
      * @param icon New icon
      */
     public void setIcons(final Icon icon) {

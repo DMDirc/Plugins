@@ -35,22 +35,35 @@ import javax.swing.AbstractAction;
 import javax.swing.text.JTextComponent;
 
 /**
- * Paste action that strips newlines from pastes.
+ * Paste action that replaces matching regexes.
  */
-public final class NoSpacesPasteAction extends AbstractAction {
-    
+public final class ReplacePasteAction extends AbstractAction {
+
     /**
      * A version number for this class. It should be changed whenever the class
      * structure is changed (or anything else that would prevent serialized
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 1;
-    
-    /** Creates a new instance of TopicPasteAction. */
-    public NoSpacesPasteAction() {
+    /** Regex to match for replacement. */
+    private final String replacementRegex;
+    /** Replacement string. */
+    private final String replacementString;
+
+    /**
+     * Creates a new instance of regex replacement paste action.
+     *
+     * @param replacementRegex Regex to match for replacement
+     * @param replacementString Replacement string
+     */
+    public ReplacePasteAction(final String replacementRegex,
+            final String replacementString) {
         super("NoSpacesPasteAction");
+
+        this.replacementRegex = replacementRegex;
+        this.replacementString = replacementString;
     }
-    
+
     /**
      * {@inheritDoc}
      *
@@ -58,35 +71,27 @@ public final class NoSpacesPasteAction extends AbstractAction {
      */
     @Override
     public void actionPerformed(final ActionEvent e) {
-        final JTextComponent comp;
-        
-        if (e.getSource() instanceof JTextComponent) {
-            comp = (JTextComponent) e.getSource();
-        } else {
-            return;
-        }
-        
-        String clipboard = null;
-        
-        if (!Toolkit.getDefaultToolkit().getSystemClipboard().
+        if (!(e.getSource() instanceof JTextComponent)
+                || !Toolkit.getDefaultToolkit().getSystemClipboard().
                 isDataFlavorAvailable(DataFlavor.stringFlavor)) {
             return;
         }
-        
+
         try {
-            //get the contents of the clipboard
-            clipboard = (String) Toolkit.getDefaultToolkit().
-                    getSystemClipboard().getData(DataFlavor.stringFlavor);
-            //remove spaces
-            clipboard = clipboard.replaceAll("\\s", "");
-            
-            //insert the contents at the current cursor position
-        comp.replaceSelection(clipboard);
+            //Get clipboard clipboard contents
+            //Replace spaces with nothing
+            //Replace the current selection with the contents of the clipboard
+            ((JTextComponent) e.getSource()).replaceSelection(((String)
+                    Toolkit.getDefaultToolkit()
+                    .getSystemClipboard().getData(DataFlavor.stringFlavor))
+                    .replaceAll(replacementRegex, replacementString));
         } catch (IOException ex) {
-            Logger.userError(ErrorLevel.LOW, "Unable to get clipboard contents: " + ex.getMessage());
+            Logger.userError(ErrorLevel.LOW, "Unable to get clipboard "
+                    + "contents: " + ex.getMessage());
         } catch (UnsupportedFlavorException ex) {
-            Logger.appError(ErrorLevel.LOW, "Unable to get clipboard contents", ex);
+            Logger.appError(ErrorLevel.LOW, "Unable to get clipboard "
+                    + "contents", ex);
         }
     }
-    
+
 }

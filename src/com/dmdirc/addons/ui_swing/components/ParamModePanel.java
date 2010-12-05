@@ -83,8 +83,8 @@ public final class ParamModePanel extends JPanel implements ActionListener {
         text = "Mode " + mode + ": ";
 
         if (configManager.hasOptionString("server", "mode" + mode)) {
-            text = configManager.getOption("server", "mode" + mode) +
-                    " [+"+mode+"]: ";
+            text = configManager.getOption("server", "mode" + mode)
+                    + " [+" + mode + "]: ";
         }
 
         checkBox = new JCheckBox(text, state);
@@ -154,7 +154,7 @@ public final class ParamModePanel extends JPanel implements ActionListener {
 
     /**
      * Returns the checkbox component.
-     * 
+     *
      * @return Checkbox component.
      */
     public Component getCheckboxComponent() {
@@ -163,7 +163,7 @@ public final class ParamModePanel extends JPanel implements ActionListener {
 
     /**
      * Returns the value component.
-     * 
+     *
      * @return Value component
      */
     public Component getValueComponent() {

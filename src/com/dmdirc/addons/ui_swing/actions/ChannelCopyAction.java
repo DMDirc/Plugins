@@ -42,9 +42,9 @@ public final class ChannelCopyAction extends AbstractAction {
     /** channel to be copied. */
     private final String channel;
 
-    /** 
+    /**
      * Instantiates a new channel copy action.
-     * 
+     *
      * @param channel channel to be copied
      */
     public ChannelCopyAction(final String channel) {
@@ -53,13 +53,14 @@ public final class ChannelCopyAction extends AbstractAction {
         this.channel = channel;
     }
 
-    /** 
+    /**
      * {@inheritDoc}
-     * 
+     *
      * @param e Action event
      */
+    @Override
     public void actionPerformed(final ActionEvent e) {
-        Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(channel),
-                null);
+        Toolkit.getDefaultToolkit().getSystemClipboard().setContents(
+                new StringSelection(channel), null);
     }
-} 
+}

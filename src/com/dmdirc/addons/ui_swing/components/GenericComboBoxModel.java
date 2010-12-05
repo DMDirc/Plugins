@@ -45,8 +45,8 @@ public class GenericComboBoxModel<T> extends GenericListModel<T> implements
     @Override
     @SuppressWarnings("unchecked")
     public void setSelectedItem(final Object anItem) {
-        if ((selectedObject != null && !selectedObject.equals(anItem)) || selectedObject
-                == null && anItem != null) {
+        if ((selectedObject != null && !selectedObject.equals(anItem))
+                || selectedObject == null && anItem != null) {
             selectedObject = (T) anItem;
             fireContentsChanged(this, -1, -1);
         }

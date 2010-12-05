@@ -1,5 +1,4 @@
 /*
- *
  * Copyright (c) 2006-2010 Chris Smith, Shane Mc Cormack, Gregory Holmes
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -57,7 +56,7 @@ public class NickList extends JScrollPane implements ConfigChangeListener,
      */
     private static final long serialVersionUID = 10;
     /** Nick list. */
-    private JList nickList;
+    private final JList nickList;
     /** Parent frame. */
     private final ChannelFrame frame;
     /** Config. */
@@ -91,7 +90,8 @@ public class NickList extends JScrollPane implements ConfigChangeListener,
         config.addChangeListener("ui", "nickListAltBackgroundColour", this);
 
         nickList.setCellRenderer(new NicklistRenderer(config, nickList));
-        nickList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        nickList.setSelectionMode(
+                ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 
         nickList.addMouseListener(this);
 
@@ -167,28 +167,30 @@ public class NickList extends JScrollPane implements ConfigChangeListener,
      */
     @Override
     public void processMouseEvent(final MouseEvent e) {
-        if (e.getSource() == nickList && nickList.getMousePosition() != null &&
-                getMousePosition() != null) {
-            if (checkCursorInSelectedCell() || selectNickUnderCursor()) {
-                if (e.isPopupTrigger()) {
-                    final Object[] values = nickList.getSelectedValues();
-                    final StringBuilder builder = new StringBuilder();
+        if (!e.isPopupTrigger()
+                || e.getSource() != nickList
+                || getMousePosition() == null
+                || nickList.getMousePosition() != null) {
+            return;
+        }
+        if (checkCursorInSelectedCell() || selectNickUnderCursor()) {
+            final Object[] values = nickList.getSelectedValues();
+            final StringBuilder builder = new StringBuilder();
 
-                    for (Object value : values) {
-                        if (builder.length() > 0) {
-                            builder.append("\n");
-                        }
-
-                        builder.append(((ChannelClientInfo) value).getClient().getNickname());
-                    }
-
-                    frame.showPopupMenu(new ClickTypeValue(ClickType.NICKNAME,
-                            builder.toString()), new Point(e.getXOnScreen(),
-                            e.getYOnScreen()));
+            for (Object value : values) {
+                if (builder.length() > 0) {
+                    builder.append("\n");
                 }
-            } else {
-                nickList.clearSelection();
+
+                builder.append(((ChannelClientInfo) value).getClient()
+                        .getNickname());
             }
+
+            frame.showPopupMenu(new ClickTypeValue(ClickType.NICKNAME,
+                    builder.toString()), new Point(e.getXOnScreen(),
+                    e.getYOnScreen()));
+        } else {
+            nickList.clearSelection();
         }
 
         super.processMouseEvent(e);
@@ -243,11 +245,11 @@ public class NickList extends JScrollPane implements ConfigChangeListener,
     /** {@inheritDoc} */
     @Override
     public void configChanged(final String domain, final String key) {
-        if ("nickListAltBackgroundColour".equals(key) ||
-                "nicklistbackgroundcolour".equals(key) ||
-                "backgroundcolour".equals(key) ||
-                "nicklistforegroundcolour".equals(key) ||
-                "foregroundcolour".equals(key)) {
+        if ("nickListAltBackgroundColour".equals(key)
+                || "nicklistbackgroundcolour".equals(key)
+                || "backgroundcolour".equals(key)
+                || "nicklistforegroundcolour".equals(key)
+                || "foregroundcolour".equals(key)) {
             nickList.setBackground(config.getOptionColour(
                     "ui", "nicklistbackgroundcolour",
                     "ui", "backgroundcolour"));
@@ -256,7 +258,8 @@ public class NickList extends JScrollPane implements ConfigChangeListener,
                     "ui", "foregroundcolour"));
             nickList.repaint();
         }
-        nickList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        nickList.setSelectionMode(
+                ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
     }
 
     /** {@inheritDoc} */

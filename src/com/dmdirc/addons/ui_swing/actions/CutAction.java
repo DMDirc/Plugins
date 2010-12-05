@@ -39,7 +39,6 @@ public final class CutAction extends AbstractAction {
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 1;
-
     /** Text component to be acted upon. */
     private final JTextComponent comp;
 
@@ -67,9 +66,7 @@ public final class CutAction extends AbstractAction {
     /** {@inheritDoc} */
     @Override
     public boolean isEnabled() {
-        return comp.isEditable()
-                && comp.isEnabled()
-                && comp.getSelectedText() != null
-                && !(comp instanceof JPasswordField);
+        return comp.isEditable() && comp.isEnabled() && comp.getSelectedText()
+                != null && !(comp instanceof JPasswordField);
     }
 }

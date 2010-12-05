@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_swing.components;
 
 import com.dmdirc.parser.interfaces.ChannelClientInfo;
+
 import java.io.Serializable;
 import java.util.Comparator;
 
@@ -37,17 +38,11 @@ public final class NicklistComparator implements Comparator<ChannelClientInfo>,
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 1;
-    
-    /**
-     * whether to sort the nicklist by modes.
-     */
+    /** whether to sort the nicklist by modes. */
     private final boolean sortByMode;
-    
-    /**
-     * whether to sort the nicklist by case.
-     */
+    /** whether to sort the nicklist by case. */
     private final boolean sortByCase;
-    
+
     /**
      * Creates a new instance of NicklistComparator.
      * @param newSortByMode sorts by channel mode of the user
@@ -58,7 +53,7 @@ public final class NicklistComparator implements Comparator<ChannelClientInfo>,
         this.sortByMode = newSortByMode;
         this.sortByCase = newSortByCase;
     }
-    
+
     /**
      * Compares two ChannelClient objects based on the settings the comparator
      * was initialised with.
@@ -70,9 +65,6 @@ public final class NicklistComparator implements Comparator<ChannelClientInfo>,
     @Override
     public int compare(final ChannelClientInfo client1,
             final ChannelClientInfo client2) {
-        final String nickname1 = client1.getClient().getNickname();
-        final String nickname2 = client2.getClient().getNickname();
-        
         if (sortByMode) {
             final int modeCom = client2.compareTo(client1);
 
@@ -80,7 +72,10 @@ public final class NicklistComparator implements Comparator<ChannelClientInfo>,
                 return modeCom;
             }
         }
-        
+
+        final String nickname1 = client1.getClient().getNickname();
+        final String nickname2 = client2.getClient().getNickname();
+
         if (sortByCase) {
             return nickname1.compareTo(nickname2);
         } else {

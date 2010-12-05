@@ -1,17 +1,16 @@
 /*
- * 
  * Copyright (c) 2006-2010 Chris Smith, Shane Mc Cormack, Gregory Holmes
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -44,9 +43,17 @@ import net.miginfocom.swing.MigLayout;
 public class OptionalJSpinner extends JPanel implements ActionListener,
         ChangeListener {
 
+    /**
+     * A version number for this class. It should be changed whenever the class
+     * structure is changed (or anything else that would prevent serialized
+     * objects being unserialized with the new class).
+     */
     private static final long serialVersionUID = -2867331420063503447L;
+    /** Composite spinner. */
     private final JSpinner spinner;
+    /** Composite checkbox. */
     private final JCheckBox checkbox;
+    /** Our listeners. */
     private final ListenerList listeners;
 
     /**
@@ -81,19 +88,21 @@ public class OptionalJSpinner extends JPanel implements ActionListener,
      * @param enabled Initial selected state
      */
     public OptionalJSpinner(final SpinnerModel model, final boolean enabled) {
+        super();
+
         checkbox = new JCheckBox("", enabled);
         spinner = new JSpinner(model);
         listeners = new ListenerList();
 
         spinner.setEnabled(enabled);
 
-        spinner.addChangeListener(this);
-        checkbox.addActionListener(this);
-
         setLayout(new MigLayout("fill"));
 
         add(checkbox, "");
         add(spinner, "growx, pushx");
+
+        spinner.addChangeListener(this);
+        checkbox.addActionListener(this);
     }
 
     /**
@@ -123,7 +132,7 @@ public class OptionalJSpinner extends JPanel implements ActionListener,
      * deal with this.
      *
      * This method simply delegates to the model. It is equivalent to:
-     * 
+     *
      * getModel().getValue()
      *
      * @return The current value
@@ -188,6 +197,7 @@ public class OptionalJSpinner extends JPanel implements ActionListener,
         listeners.remove(ChangeListener.class, listener);
     }
 
+    /** Fires change listeners. */
     private void fireChangeListener() {
         for (ChangeListener listener : listeners.get(ChangeListener.class)) {
             listener.stateChanged(new ChangeEvent(this));

@@ -89,7 +89,8 @@ public class URLProtocolPanel extends JPanel implements ActionListener,
      * @param useInsets Show insets?
      * @param urlHandler The URL Handler to use to handle clicked links
      */
-    public URLProtocolPanel(final URI url, final boolean useInsets, final URLHandler urlHandler) {
+    public URLProtocolPanel(final URI url, final boolean useInsets,
+            final URLHandler urlHandler) {
         super();
 
         this.uri = url;
@@ -107,7 +108,8 @@ public class URLProtocolPanel extends JPanel implements ActionListener,
         commandPath = new JTextField();
         optionType = new ButtonGroup();
         dmdirc = new JRadioButton("Use DMDirc");
-        browser = new JRadioButton("Use browser (or system registered handler)");
+        browser = new JRadioButton(
+                "Use browser (or system registered handler)");
         mail = new JRadioButton("Use mail client");
         custom = new JRadioButton("Custom command");
         subsLabel = new JLabel();
@@ -128,7 +130,7 @@ public class URLProtocolPanel extends JPanel implements ActionListener,
             "password"
         }));
         subsPanel.setVisible(custom.isSelected());
-        
+
         updateSelection();
     }
 
@@ -173,20 +175,17 @@ public class URLProtocolPanel extends JPanel implements ActionListener,
      * @return Selected value
      */
     public String getSelection() {
-        final String value;
         if (optionType.getSelection() == dmdirc.getModel()) {
-            value = "DMDIRC";
+            return "DMDIRC";
         } else if (optionType.getSelection() == browser.getModel()) {
-            value = "BROWSER";
+            return "BROWSER";
         } else if (optionType.getSelection() == mail.getModel()) {
-            value = "MAIL";
+            return "MAIL";
         } else if (optionType.getSelection() == custom.getModel()) {
-            value = commandPath.getText();
+            return commandPath.getText();
         } else {
-            value = "";
+            return "";
         }
-
-        return value;
     }
 
     /**
@@ -252,8 +251,8 @@ public class URLProtocolPanel extends JPanel implements ActionListener,
             final JFileChooser fileChooser = new JFileChooser();
             fileChooser.addChoosableFileFilter(new ExecutableFileFilter());
             fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-            if (fileChooser.showDialog(this, "Select") ==
-                    JFileChooser.APPROVE_OPTION) {
+            if (fileChooser.showDialog(this, "Select") 
+                    == JFileChooser.APPROVE_OPTION) {
                 commandPath.setText(fileChooser.getSelectedFile().toString());
             }
         } else {

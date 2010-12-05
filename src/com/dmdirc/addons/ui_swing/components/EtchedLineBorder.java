@@ -1,16 +1,16 @@
 /*
  * Copyright (c) 2006-2010 Chris Smith, Shane Mc Cormack, Gregory Holmes
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -43,20 +43,20 @@ public class EtchedLineBorder extends EtchedBorder {
     /** Border side. */
     public enum BorderSide {
         /** Creates a border at the top. */
-        TOP, 
+        TOP,
         /** Creates a border at the bottom. */
-        BOTTOM, 
+        BOTTOM,
     };
 
     /**
      * Creates a new etched line border.
-     * 
+     *
      * @param type Etch type
      * @param side Border side
      */
     public EtchedLineBorder(final int type, final BorderSide side) {
         super(type);
-        
+
         this.side = side;
     }
 
@@ -66,24 +66,19 @@ public class EtchedLineBorder extends EtchedBorder {
             final int y, final int width, final int height) {
         g.translate(x, y);
 
-        g.setColor(etchType == LOWERED ? getShadowColor(c) : getHighlightColor(c));
+        g.setColor(etchType == LOWERED
+                ? getShadowColor(c) : getHighlightColor(c));
         switch (side) {
             case TOP:
                 g.drawLine(0, 0, width - 2, 0);
-                break;
-            case BOTTOM:
-                g.drawLine(0, height - 1, width - 2, height - 1);
-                break;
-            default:
-                break;
-        }
-
-        g.setColor(etchType == LOWERED ? getHighlightColor(c) : getShadowColor(c));
-        switch (side) {
-            case TOP:
+                g.setColor(etchType == LOWERED
+                        ? getHighlightColor(c) : getShadowColor(c));
                 g.drawLine(0, 1, width - 2, 1);
                 break;
             case BOTTOM:
+                g.drawLine(0, height - 1, width - 2, height - 1);
+                g.setColor(etchType == LOWERED
+                        ? getHighlightColor(c) : getShadowColor(c));
                 g.drawLine(0, height, width - 2, height);
                 break;
             default:

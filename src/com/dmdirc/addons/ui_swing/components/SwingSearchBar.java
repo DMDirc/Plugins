@@ -294,7 +294,8 @@ public final class SwingSearchBar extends JPanel implements ActionListener,
             if (event.getKeyCode() == KeyEvent.VK_ESCAPE) {
                 close();
             } else if (event.getKeyCode() == KeyEvent.VK_ENTER) {
-                search(Direction.UP, searchBox.getText(), caseCheck.isSelected());
+                search(Direction.UP, searchBox.getText(),
+                        caseCheck.isSelected());
             } else if (event.getKeyCode() != KeyEvent.VK_F3 && event.
                     getKeyCode() != KeyEvent.VK_F) {
                 line = parent.getTextPane().getLastVisibleLine();
@@ -408,6 +409,7 @@ public final class SwingSearchBar extends JPanel implements ActionListener,
         setColours();
     }
 
+    /** Sets the colours used in this document. */
     private void setColours() {
         searchBox.setForeground(IdentityManager.getGlobalConfig().
                 getOptionColour("ui", "foregroundcolour"));
@@ -443,7 +445,8 @@ class SearchValidator implements Validator<String> {
 
     /**
      * Sets whether this validator validates.
-     * @param validates
+     *
+     * @param validates Does this search bar validate?
      */
     public void setValidates(final boolean validates) {
         this.validates = validates;

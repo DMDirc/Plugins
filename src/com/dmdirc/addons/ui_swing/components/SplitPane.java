@@ -50,11 +50,10 @@ public class SplitPane extends JSplitPane implements ConfigChangeListener {
 
     /** Orientation type . */
     public enum Orientation {
-
         /** Horizontal orientation. */
         HORIZONTAL,
         /** Vertical orientation. */
-        VERTICAL
+        VERTICAL;
     }
 
     /**
@@ -62,99 +61,22 @@ public class SplitPane extends JSplitPane implements ConfigChangeListener {
      * split, two null components and snapping to the left component.
      */
     public SplitPane() {
-        this(Orientation.HORIZONTAL);
+        this(Orientation.HORIZONTAL, null, null);
     }
 
     /**
      * Instantiates a new snapping split pane. Defaults to using a horizontal
      * split, two null components and snapping to the left component.
      *
-     * @param snapDistance Distance to around the preferred size
-     */
-    public SplitPane(final int snapDistance) {
-        this(Orientation.HORIZONTAL, snapDistance);
-    }
-
-    /**
-     * Instantiates a new snapping split pane. Defaults to using a horizontal
-     * split and two null components.
-     *
-     * @param leftComponentSnap Snap to the preferred size of the left component?
-     */
-    public SplitPane(final boolean leftComponentSnap) {
-        this(Orientation.HORIZONTAL, leftComponentSnap, 10);
-    }
-
-    /**
-     * Instantiates a new snapping split pane. Defaults to using a horizontal
-     * split and two null components.
-     *
-     * @param leftComponentSnap Snap to the preferred size of the left component?
-     * @param snapDistance Distance to around the preferred size
-     */
-    public SplitPane(final boolean leftComponentSnap,
-            final int snapDistance) {
-        this(Orientation.HORIZONTAL, leftComponentSnap, snapDistance);
-    }
-
-    /**
-     * Instantiates a new snapping split pane. Defaults to using two null
-     * components and snapping to the left component.
-     *
      * @param orientation Split pane orientation
-     * <code>JSplitPane.HORIZONTAL_SPLIT</code> or
-     * <code>JSplitPane.VERTICAL_SPLIT</code>
      */
     public SplitPane(final Orientation orientation) {
-        this(orientation, null, null, 10);
-    }
-
-    /**
-     * Instantiates a new snapping split pane. Defaults to using two null
-     * components and snapping to the left component.
-     *
-     * @param orientation Split pane orientation
-     * <code>JSplitPane.HORIZONTAL_SPLIT</code> or
-     * <code>JSplitPane.VERTICAL_SPLIT</code>
-     * @param snapDistance Distance to around the preferred size
-     */
-    public SplitPane(final Orientation orientation,
-            final int snapDistance) {
-        this(orientation, null, null, snapDistance);
+        this(orientation, null, null);
     }
 
     /**
      * Instantiates a new snapping split pane. Defaults to using two null
      * components.
-     *
-     * @param orientation Split pane orientation
-     * <code>JSplitPane.HORIZONTAL_SPLIT</code> or
-     * <code>JSplitPane.VERTICAL_SPLIT</code>
-     * @param leftComponentSnap Snap to the preferred size of the left component?
-     */
-    public SplitPane(final Orientation orientation,
-            final boolean leftComponentSnap) {
-        this(orientation, null, null, leftComponentSnap, 10);
-    }
-
-    /**
-     * Instantiates a new snapping split pane. Defaults to using two null
-     * components.
-     *
-     * @param orientation Split pane orientation
-     * <code>JSplitPane.HORIZONTAL_SPLIT</code> or
-     * <code>JSplitPane.VERTICAL_SPLIT</code>
-     * @param leftComponentSnap Snap to the preferred size of the left component?
-     * @param snapDistance Distance to around the preferred size
-     */
-    public SplitPane(final Orientation orientation,
-            final boolean leftComponentSnap, final int snapDistance) {
-        this(orientation, null, null, leftComponentSnap, snapDistance);
-    }
-
-    /**
-     * Instantiates a new snapping split pane. Defaults to using two null
-     * components and snapping to the left component.
      *
      * @param orientation Split pane orientation
      * <code>JSplitPane.HORIZONTAL_SPLIT</code> or
@@ -164,63 +86,13 @@ public class SplitPane extends JSplitPane implements ConfigChangeListener {
      */
     public SplitPane(final Orientation orientation,
             final Component leftComponent, final Component rightComponent) {
-        this(orientation, leftComponent, rightComponent, true, 10);
-    }
-
-    /**
-     * Instantiates a new snapping split pane. Defaults to using two null
-     * components and snapping to the left component.
-     *
-     * @param orientation Split pane orientation
-     * <code>JSplitPane.HORIZONTAL_SPLIT</code> or
-     * <code>JSplitPane.VERTICAL_SPLIT</code>
-     * @param leftComponent left component
-     * @param rightComponent right component
-     * @param snapDistance Distance to around the preferred size
-     */
-    public SplitPane(final Orientation orientation,
-            final Component leftComponent, final Component rightComponent,
-            final int snapDistance) {
-        this(orientation, leftComponent, rightComponent, true, snapDistance);
-    }
-
-    /**
-     * Instantiates a new snapping split pane. Defaults to using two null
-     * components.
-     *
-     * @param orientation Split pane orientation
-     * <code>JSplitPane.HORIZONTAL_SPLIT</code> or
-     * <code>JSplitPane.VERTICAL_SPLIT</code>
-     * @param leftComponent left component
-     * @param rightComponent right component
-     * @param leftComponentSnap Snap to the preferred size of the left component?
-     */
-    public SplitPane(final Orientation orientation,
-            final Component leftComponent, final Component rightComponent,
-            final boolean leftComponentSnap) {
-        this(orientation, leftComponent, rightComponent, leftComponentSnap, 10);
-    }
-
-    /**
-     * Instantiates a new snapping split pane. Defaults to using two null
-     * components.
-     *
-     * @param orientation Split pane orientation
-     * <code>JSplitPane.HORIZONTAL_SPLIT</code> or
-     * <code>JSplitPane.VERTICAL_SPLIT</code>
-     * @param leftComponent left component
-     * @param rightComponent right component
-     * @param leftComponentSnap Snap to the preferred size of the left component?
-     * @param snapDistance Distance to around the preferred size
-     */
-    public SplitPane(final Orientation orientation,
-            final Component leftComponent, final Component rightComponent,
-            final boolean leftComponentSnap, final int snapDistance) {
-        super((orientation.equals(Orientation.HORIZONTAL)) ? HORIZONTAL_SPLIT : VERTICAL_SPLIT,
+        super((orientation.equals(Orientation.HORIZONTAL))
+                ? HORIZONTAL_SPLIT : VERTICAL_SPLIT,
                 true, leftComponent, rightComponent);
 
         config = IdentityManager.getGlobalConfig();
-        useOneTouchExpandable = config.getOptionBool("ui", "useOneTouchExpandable");
+        useOneTouchExpandable = config.getOptionBool(
+                "ui", "useOneTouchExpandable");
 
         setOneTouchExpandable(useOneTouchExpandable);
         setContinuousLayout(true);
@@ -234,7 +106,8 @@ public class SplitPane extends JSplitPane implements ConfigChangeListener {
     /** {@inheritDoc} */
     @Override
     public void configChanged(final String domain, final String key) {
-        useOneTouchExpandable = config.getOptionBool("ui", "useOneTouchExpandable");
+        useOneTouchExpandable = config.getOptionBool(
+                "ui", "useOneTouchExpandable");
 
         UIUtilities.invokeLater(new Runnable() {
 
@@ -246,4 +119,3 @@ public class SplitPane extends JSplitPane implements ConfigChangeListener {
         });
     }
 }
-

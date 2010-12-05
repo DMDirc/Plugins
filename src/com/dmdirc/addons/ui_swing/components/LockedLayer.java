@@ -29,6 +29,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 package com.dmdirc.addons.ui_swing.components;
 
 import java.awt.Component;
@@ -101,7 +102,7 @@ public class LockedLayer<T extends JComponent> extends
     /** Effect to apply when locked. */
     private LayerEffect[] lockedEffects = new LayerEffect[0];
     /** Focus listener. */
-    private final FocusListener focusListener = new FocusListener() {
+    private final transient FocusListener focusListener = new FocusListener() {
 
         /** {@inheritDoc} */
         @Override
@@ -232,7 +233,7 @@ public class LockedLayer<T extends JComponent> extends
 
     /** {@inheritDoc} */
     @Override
-    protected void paintLayer(final Graphics2D g2, 
+    protected void paintLayer(final Graphics2D g2,
             final JXLayer<? extends T> l) {
         if (isLocked()) {
             // Note: this code will be called only if layer changes its size,

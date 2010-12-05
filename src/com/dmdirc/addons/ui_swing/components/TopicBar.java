@@ -28,7 +28,7 @@ import com.dmdirc.Channel;
 import com.dmdirc.Topic;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
-import com.dmdirc.addons.ui_swing.actions.NoNewlinesPasteAction;
+import com.dmdirc.addons.ui_swing.actions.ReplacePasteAction;
 import com.dmdirc.addons.ui_swing.components.frames.ChannelFrame;
 import com.dmdirc.addons.ui_swing.components.text.WrapEditorKit;
 import com.dmdirc.config.IdentityManager;
@@ -117,7 +117,7 @@ public class TopicBar extends JComponent implements ActionListener,
                 new NewlinesDocumentFilter());
 
         topicText.getActionMap().put("paste-from-clipboard",
-                new NoNewlinesPasteAction());
+                new ReplacePasteAction("(\r\n|\n|\r)", " "));
         topicEdit = new ImageButton("edit", IconManager.getIconManager().
                 getIcon("edit-inactive"), IconManager.getIconManager().
                 getIcon("edit"));
@@ -153,6 +153,11 @@ public class TopicBar extends JComponent implements ActionListener,
         topicText.getActionMap().put("enterButton", new AbstractAction(
                 "enterButton") {
 
+            /**
+             * A version number for this class. It should be changed whenever the class
+             * structure is changed (or anything else that would prevent serialized
+             * objects being unserialized with the new class).
+             */
             private static final long serialVersionUID = 1;
 
             /** {@inheritDoc} */
@@ -255,9 +260,11 @@ public class TopicBar extends JComponent implements ActionListener,
      * Commits a topic edit to the parent channel.
      */
     private void commitTopicEdit() {
-        if ((channel.getCurrentTopic() == null && !topicText.getText().isEmpty())
+        if ((channel.getCurrentTopic() == null
+                && !topicText.getText().isEmpty())
                 || (channel.getCurrentTopic() != null
-                && !channel.getCurrentTopic().getTopic().equals(topicText.getText()))) {
+                && !channel.getCurrentTopic().getTopic()
+                .equals(topicText.getText()))) {
             channel.setTopic(topicText.getText());
         }
         ((ChannelFrame) controller.getWindowFactory().getSwingWindow(channel))
