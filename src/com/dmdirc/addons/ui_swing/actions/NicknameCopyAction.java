@@ -42,9 +42,9 @@ public final class NicknameCopyAction extends AbstractAction {
     /** Nickname to be copied. */
     private final String nickname;
 
-    /** 
+    /**
      * Instantiates a new nickname copy action.
-     * 
+     *
      * @param nickname Nickname to be copied
      */
     public NicknameCopyAction(final String nickname) {
@@ -53,14 +53,14 @@ public final class NicknameCopyAction extends AbstractAction {
         this.nickname = nickname;
     }
 
-    /** 
+    /**
      * {@inheritDoc}
-     * 
+     *
      * @param e Action event
      */
     @Override
     public void actionPerformed(final ActionEvent e) {
-        Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(nickname),
-                null);
+        Toolkit.getDefaultToolkit().getSystemClipboard().setContents(
+                new StringSelection(nickname), null);
     }
-} 
+}

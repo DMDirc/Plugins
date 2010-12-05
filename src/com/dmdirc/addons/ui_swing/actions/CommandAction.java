@@ -30,28 +30,28 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
 /**
- * Executes a command. 
+ * Executes a command.
  */
 public class CommandAction extends AbstractAction {
-    
+
     /**
      * A version number for this class. It should be changed whenever the class
      * structure is changed (or anything else that would prevent serialized
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 2;
-    
+
     /** Command parser. */
     private final CommandParser parser;
-    
+
     /** Window. */
     private final transient Window window;
-    
+
     /** Command. */
     private final String command;
-    
-    /** 
-     * Creates a new instance of CommandAction. 
+
+    /**
+     * Creates a new instance of CommandAction.
      *
      * @param parser Command parser
      * @param window Window
@@ -61,15 +61,15 @@ public class CommandAction extends AbstractAction {
     public CommandAction(final CommandParser parser, final Window window,
             final String name, final String command) {
         super(name);
-        
+
         this.parser = parser;
         this.window = window;
         this.command = command;
     }
 
-    /** 
+    /**
      * {@inheritDoc}
-     * 
+     *
      * @param e Action event
      */
     @Override
@@ -78,5 +78,5 @@ public class CommandAction extends AbstractAction {
             parser.parseCommand(window.getContainer(), window, line);
         }
     }
-    
+
 }

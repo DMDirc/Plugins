@@ -55,8 +55,10 @@ public class NewlinesDocumentFilter extends DocumentFilter {
 
     /**
      * Removes new lines from the text.
-     * 
+     *
      * @param text Text to sanitise
+     *
+     * @return Sanitised string
      */
     private String sanitise(final String text) {
         if (text.contains("\n")) {

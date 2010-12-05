@@ -30,6 +30,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
+
 import net.miginfocom.layout.PlatformDefaults;
 
 /**
@@ -51,7 +52,7 @@ public class PackingTable extends JTable {
     /** Border padding. */
     private final int padding = (int) PlatformDefaults.getUnitValueX("related").
             getValue();
-    
+
     /**
      * Creates a new packing table.
      *
@@ -72,7 +73,8 @@ public class PackingTable extends JTable {
      * @param cols Column data
      * @param editable Whether the table should be editable or not
      * @param scrollPane Scrollpane parent
-     * @param lastColumnFit Should the last column fit text (true), or fit viewport (false).
+     * @param lastColumnFit Should the last column fit text (true),
+     * or fit viewport (false).
      */
     public PackingTable(final Object[][] rows, final Object[] cols,
             final boolean editable, final JScrollPane scrollPane,
@@ -80,7 +82,7 @@ public class PackingTable extends JTable {
         this(new DefaultTableModel(rows, cols), editable, scrollPane,
                 lastColumnFit);
     }
-    
+
     /**
      * Creates a new packing table.
      *
@@ -99,7 +101,8 @@ public class PackingTable extends JTable {
      * @param tableModel Table data model
      * @param editable Whether the table should be editable or not
      * @param scrollPane Scrollpane parent
-     * @param lastColumnFit Should the last column fit text (true), or fit viewport (false).
+     * @param lastColumnFit Should the last column fit text (true),
+     * or fit viewport (false).
      */
     public PackingTable(final TableModel tableModel, final boolean editable,
             final JScrollPane scrollPane, final boolean lastColumnFit) {
@@ -143,9 +146,11 @@ public class PackingTable extends JTable {
             return;
         }
 
-        final TableColumnModel myColumnModel = getTableHeader().getColumnModel();
+        final TableColumnModel myColumnModel = getTableHeader()
+                .getColumnModel();
         final int numCols = myColumnModel.getColumnCount();
-        final int totalSize = (int) (scrollPane.getViewportBorderBounds().width * 0.99);
+        final int totalSize = (int) (scrollPane.getViewportBorderBounds()
+                .width * 0.99);
         final int[] widths = new int[numCols];
         int widthsTotal = 0;
 
@@ -153,7 +158,8 @@ public class PackingTable extends JTable {
         if (!lastColumnFit) {
             checkNumCols--;
         }
-        for (int i = 0; i < checkNumCols; i++) { //NOPMD im not copying a damn array fgs
+        
+        for (int i = 0; i < checkNumCols; i++) { //NOPMD I'm not copying
             widths[i] = getWidth(i);
             widthsTotal += widths[i];
         }

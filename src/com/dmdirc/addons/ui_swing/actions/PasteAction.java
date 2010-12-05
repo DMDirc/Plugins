@@ -34,17 +34,16 @@ import javax.swing.text.JTextComponent;
  * Paste action.
  */
 public final class PasteAction extends AbstractAction {
-    
+
     /**
      * A version number for this class. It should be changed whenever the class
      * structure is changed (or anything else that would prevent serialized
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 1;
-    
     /** Text component to be acted upon. */
     private final JTextComponent comp;
-    
+
     /**
      * Instantiates a new paste action.
      *
@@ -52,10 +51,10 @@ public final class PasteAction extends AbstractAction {
      */
     public PasteAction(final JTextComponent comp) {
         super("Paste");
-        
+
         this.comp = comp;
     }
-    
+
     /**
      * {@inheritDoc}
      *
@@ -65,7 +64,7 @@ public final class PasteAction extends AbstractAction {
     public void actionPerformed(final ActionEvent e) {
         comp.paste();
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public boolean isEnabled() {

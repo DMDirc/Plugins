@@ -35,28 +35,27 @@ import javax.swing.undo.UndoManager;
  * Handles undo's on text components.
  */
 public final class UndoAction extends AbstractAction {
-    
+
     /**
      * A version number for this class. It should be changed whenever the class
      * structure is changed (or anything else that would prevent serialized
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 1;
-    
     /** Undo manager. */
     private final UndoManager undoManager;
-    
-    /** 
-     * Creates a new instance of UndoAction. 
+
+    /**
+     * Creates a new instance of UndoAction.
      *
      * @param undoManager UndoManager to use for this redo action
      */
     public UndoAction(final UndoManager undoManager) {
         super("Undo");
-        
+
         this.undoManager = undoManager;
     }
-    
+
     /**
      * {@inheritDoc}
      *
@@ -72,5 +71,5 @@ public final class UndoAction extends AbstractAction {
             Logger.userError(ErrorLevel.LOW, "Unable to undo");
         }
     }
-    
+
 }

@@ -1,17 +1,17 @@
 /*
- * 
+ *
  * Copyright (c) 2006-2010 Chris Smith, Shane Mc Cormack, Gregory Holmes
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -37,22 +37,32 @@ import javax.swing.AbstractListModel;
  */
 public class GenericListModel<T> extends AbstractListModel {
 
+    /**
+     * A version number for this class. It should be changed whenever the class
+     * structure is changed (or anything else that would prevent serialized
+     * objects being unserialized with the new class).
+     */
     private static final long serialVersionUID = -4227892376992714545L;
-    private List<T> list;
+    /** Data stored in list. */
+    private final List<T> list;
 
     /**
      * Instantiates an empty generic list model.
      */
     public GenericListModel() {
+        super();
+
         this.list = Collections.synchronizedList(new ArrayList<T>());
     }
 
     /**
      * Instantiates a list model containing the specified list items.
      *
-     * @param list
+     * @param list Data to be included in the model
      */
     public GenericListModel(final List<T> list) {
+        super();
+
         this.list = Collections.synchronizedList(new ArrayList<T>(list));
     }
 
@@ -63,7 +73,7 @@ public class GenericListModel<T> extends AbstractListModel {
     }
 
     /**
-     * Returns the specified index in the list
+     * Returns the specified index in the list.
      *
      * @param index Index of the item to return
      *
@@ -167,7 +177,7 @@ public class GenericListModel<T> extends AbstractListModel {
      */
     public boolean remove(final T obj) {
         final int index = indexOf(obj);
-        boolean succes = list.remove(obj);
+        final boolean succes = list.remove(obj);
         if (index >= 0) {
             fireIntervalRemoved(this, index, index);
         }
@@ -199,7 +209,8 @@ public class GenericListModel<T> extends AbstractListModel {
      */
     public void removeRange(final int start, final int end) {
         if (start > end) {
-            throw new IllegalArgumentException("start must be greater than or equal to end");
+            throw new IllegalArgumentException("start must be greater than "
+                    + "or equal to end");
         }
         for (int i = end; i >= start; i--) {
             list.remove(i);
@@ -208,7 +219,7 @@ public class GenericListModel<T> extends AbstractListModel {
     }
 
     /**
-     * Adds all the objects in the specified collection to this list
+     * Adds all the objects in the specified collection to this list.
      *
      * @param collection Collection to add
      */
@@ -219,7 +230,7 @@ public class GenericListModel<T> extends AbstractListModel {
     /**
      * Adds all the objects in the specified collection to this list at the
      * specified index.
-     * 
+     *
      * @param index Index to add the items
      * @param collection Collection to add
      */

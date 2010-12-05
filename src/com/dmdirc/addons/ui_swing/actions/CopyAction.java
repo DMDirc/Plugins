@@ -67,8 +67,7 @@ public final class CopyAction extends AbstractAction {
     /** {@inheritDoc} */
     @Override
     public boolean isEnabled() {
-        return comp.isEnabled()
-                && comp.getSelectedText() != null
+        return comp.isEnabled() && comp.getSelectedText() != null
                 && !(comp instanceof JPasswordField);
     }
 }

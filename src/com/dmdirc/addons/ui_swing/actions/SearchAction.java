@@ -32,41 +32,41 @@ import javax.swing.AbstractAction;
  * Opens and focuses the search bar.
  */
 public final class SearchAction extends AbstractAction {
-    
+
     /**
      * A version number for this class. It should be changed whenever the class
      * structure is changed (or anything else that would prevent serialized
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 2;
-    
     /** Parent searchbar. */
     private final SwingSearchBar searchBar;
-    
-    /** 
-     * Creates a new instance of SearchAction. 
+
+    /**
+     * Creates a new instance of SearchAction.
      *
      * @param searchBar Parent searchbar.
      */
     public SearchAction(final SwingSearchBar searchBar) {
         super("Search");
-        
+
         this.searchBar = searchBar;
     }
-    
+
     /**
      * {@inheritDoc}
      *
      * @param e Action event
      */
     @Override
-    public void actionPerformed(final ActionEvent e) { 
+    public void actionPerformed(final ActionEvent e) {
         if (searchBar.isVisible()) {
             searchBar.getFocus();
-            searchBar.search(searchBar.getSearchPhrase(), searchBar.isCaseSensitive());
+            searchBar.search(searchBar.getSearchPhrase(),
+                    searchBar.isCaseSensitive());
         } else {
             searchBar.open();
         }
-    } 
-    
+    }
+
 }

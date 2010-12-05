@@ -42,9 +42,9 @@ public final class HyperlinkCopyAction extends AbstractAction {
     /** hyperlink to be copied. */
     private final String hyperlink;
 
-    /** 
+    /**
      * Instantiates a new hyperlink copy action.
-     * 
+     *
      * @param hyperlink hyperlink to be copied
      */
     public HyperlinkCopyAction(final String hyperlink) {
@@ -53,14 +53,14 @@ public final class HyperlinkCopyAction extends AbstractAction {
         this.hyperlink = hyperlink;
     }
 
-    /** 
+    /**
      * {@inheritDoc}
-     * 
+     *
      * @param e Action event
      */
     @Override
     public void actionPerformed(final ActionEvent e) {
-        Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(hyperlink),
-                null);
+        Toolkit.getDefaultToolkit().getSystemClipboard().setContents(
+                new StringSelection(hyperlink), null);
     }
-} 
+}

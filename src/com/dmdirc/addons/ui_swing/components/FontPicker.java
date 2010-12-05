@@ -39,8 +39,14 @@ import javax.swing.SwingUtilities;
  */
 public class FontPicker extends JComboBox {
 
+    /**
+     * A version number for this class. It should be changed whenever the class
+     * structure is changed (or anything else that would prevent serialized
+     * objects being unserialized with the new class).
+     */
     private static final long serialVersionUID = -9054812588033935839L;
-    private String fontFamily;
+    /** Font family to choose from. */
+    private final String fontFamily;
 
     /**
      * Creates a new Font picker for the specified font family.
@@ -76,6 +82,12 @@ public class FontPicker extends JComboBox {
         }.executeInExecutor();
     }
 
+
+    /**
+     * Loads the fonts and adds them to the font picker.
+     *
+     * @param fonts Fonts to load
+     */
     private void loadFonts(final String[] fonts) {
         final int size = getFont().getSize();
         for (final String font : fonts) {

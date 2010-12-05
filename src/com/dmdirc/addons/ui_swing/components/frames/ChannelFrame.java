@@ -189,8 +189,7 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
         topicBar.setVisible(getContainer().getConfigManager().getOptionBool(
                 getController().getDomain(), "showtopicbar"));
 
-        splitPane = new SplitPane(
-                SplitPane.Orientation.HORIZONTAL, false);
+        splitPane = new SplitPane(SplitPane.Orientation.HORIZONTAL);
 
         getContentPane().setLayout(new MigLayout(
                 "fill, ins 0, hidemode 3, wrap 1"));

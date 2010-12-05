@@ -40,11 +40,11 @@ public final class CloseFrameContainerAction extends AbstractAction {
      */
     private static final long serialVersionUID = 1;
     /** Frame container to be closed. */
-    private FrameContainer frame;
+    private final FrameContainer frame;
 
-    /** 
+    /**
      * Instantiates a new close a frame container action.
-     * 
+     *
      * @param frame frame container to be closed
      */
     public CloseFrameContainerAction(final FrameContainer frame) {
@@ -53,9 +53,9 @@ public final class CloseFrameContainerAction extends AbstractAction {
         this.frame = frame;
     }
 
-    /** 
+    /**
      * {@inheritDoc}
-     * 
+     *
      * @param e Action event
      */
     @Override
@@ -64,4 +64,4 @@ public final class CloseFrameContainerAction extends AbstractAction {
             frame.close();
         }
     }
-} 
+}

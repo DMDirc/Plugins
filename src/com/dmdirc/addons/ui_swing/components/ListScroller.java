@@ -64,7 +64,7 @@ public class ListScroller implements MouseWheelListener {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @param e Moust wheel event
      */
     @Override

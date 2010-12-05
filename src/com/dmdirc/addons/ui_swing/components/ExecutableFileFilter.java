@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_swing.components;
 
 import java.io.File;
+
 import javax.swing.filechooser.FileFilter;
 
 /**
@@ -32,7 +33,7 @@ public class ExecutableFileFilter extends FileFilter {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @param file File to check
      */
     @Override
@@ -40,9 +41,9 @@ public class ExecutableFileFilter extends FileFilter {
         return (file.isDirectory() || file.canExecute());
     }
 
-    /** 
+    /**
      * {@inheritDoc}
-     * 
+     *
      * @return Description
      */
     @Override

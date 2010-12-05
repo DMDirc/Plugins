@@ -58,7 +58,8 @@ public final class NicklistListModel extends AbstractListModel implements
      * @param config Config manager
      */
     public NicklistListModel(final ConfigManager config) {
-        this(config, Collections.synchronizedList(new ArrayList<ChannelClientInfo>()));
+        this(config, Collections.synchronizedList(
+                new ArrayList<ChannelClientInfo>()));
     }
 
     /**
@@ -122,13 +123,11 @@ public final class NicklistListModel extends AbstractListModel implements
      * @return boolean success
      */
     public boolean replace(final Collection<ChannelClientInfo> clients) {
-        boolean returnValue = false;
-
         nicknames.clear();
-        returnValue = nicknames.addAll(clients);
+        nicknames.addAll(clients);
         sort();
 
-        return returnValue;
+        return true;
     }
 
     /**
@@ -139,12 +138,10 @@ public final class NicklistListModel extends AbstractListModel implements
      * @return boolean success
      */
     public boolean add(final ChannelClientInfo client) {
-        boolean returnValue = false;
-
-        returnValue = nicknames.add(client);
+        nicknames.add(client);
         sort();
 
-        return returnValue;
+        return true;
     }
 
     /**
