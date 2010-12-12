@@ -100,7 +100,7 @@ public final class TextPane extends JComponent implements MouseWheelListener,
         canvas = new TextPaneCanvas(this, document);
         add(canvas, "dock center");
         add(newLineIndicator, "dock south, center, grow");
-        scrollModel = new DefaultBoundedRangeModel();
+        scrollModel = new TextPaneBoundedRangeModel();
         scrollModel.setExtent(0);
         final JScrollBar scrollBar = new JScrollBar(JScrollBar.VERTICAL);
         scrollBar.setModel(scrollModel);
@@ -170,18 +170,20 @@ public final class TextPane extends JComponent implements MouseWheelListener,
         final int allowedDeviation = lines - 1 - linesAllowed;
         boolean setToMax = currentLine == allowedDeviation;
 
-        if (allowedDeviation <= -1) {
+        if (allowedDeviation <= 0) {
             setToMax = true;
         }
 
-        // Ideally this would just be Math.max(0, lines - 1), but for lines = 1
-        // we need a special case of max = 1 as the content won't render
-        // properly without the scrollbar having a value (and it can't have
-        // a value with a min and max of 0).
-        final int max = lines < 2 ? lines : lines - 1;
-        scrollModel.setMaximum(max);
-        if (setToMax) {
-            scrollModel.setValue(max);
+        if (lines <= 1) {
+            scrollModel.setRangeProperties(lines, 0, lines, lines, false);
+        } else {
+            if (setToMax) {
+                scrollModel.setRangeProperties(lines - 1, 0, 0, lines - 1,
+                        false);
+            } else {
+                scrollModel.setRangeProperties(scrollModel.getValue(), 0, 0,
+                        lines - 1, false);
+            }
         }
     }
 
@@ -210,7 +212,6 @@ public final class TextPane extends JComponent implements MouseWheelListener,
         final int lines = document.getNumLines() - 1 - lastSeenLine;
         newLineIndicator.setText("↓ " + lines + " new line"
                 + (lines == 1 ? "" : "s") + " ↓");
-        scrollModel.setValue(e.getValue());
     }
 
     /**
