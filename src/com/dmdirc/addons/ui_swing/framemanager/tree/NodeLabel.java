@@ -1,16 +1,16 @@
 /*
  * Copyright (c) 2006-2010 Chris Smith, Shane Mc Cormack, Gregory Holmes
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -47,25 +47,25 @@ public class NodeLabel extends JLabel implements SelectionListener,
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 1;
-    /** Node window. */
+    /** The window this node represents in the tree. */
     private final FrameContainer<?> window;
-    /** Rollover colours. */
+    /** Colour used to show if the mouse is over this node. */
     private boolean rollover;
-    /** notification colour */
+    /** Colour used to show if this node has an active notification. */
     private Color notificationColour;
-    /** Selected. */
+    /** Are we the selected window? */
     private boolean selected;
 
-    /** 
+    /**
      * Instantiates a new node label.
-     * 
+     *
      * @param window Window for this node
      */
     public NodeLabel(final FrameContainer<?> window) {
         super();
 
         this.window = window;
-        
+
         init();
     }
 
@@ -79,13 +79,13 @@ public class NodeLabel extends JLabel implements SelectionListener,
 
         setText(window.toString());
 
-        setOpaque(true);
+
         setToolTipText(null);
         setIcon(IconManager.getIconManager().getIcon(window.getIcon()));
         setBorder(BorderFactory.createEmptyBorder(1, 0, 2, 0));
 
-        setPreferredSize(new Dimension(100000, getFont().getSize() +
-                (int) PlatformDefaults.getUnitValueX("related").
+        setPreferredSize(new Dimension(100000, getFont().getSize()
+                + (int) PlatformDefaults.getUnitValueX("related").
                 getValue()));
         notificationColour = null;
         selected = false;
@@ -103,7 +103,8 @@ public class NodeLabel extends JLabel implements SelectionListener,
 
     /** {@inheritDoc} */
     @Override
-    public void notificationSet(final FrameContainer<?> window, final Color colour) {
+    public void notificationSet(final FrameContainer<?> window,
+            final Color colour) {
         if (equals(window)) {
             notificationColour = colour;
         }
@@ -135,53 +136,54 @@ public class NodeLabel extends JLabel implements SelectionListener,
 
     /** {@inheritDoc} */
     @Override
-    public void titleChanged(final FrameContainer<?> window, final String title) {
+    public void titleChanged(final FrameContainer<?> window,
+            final String title) {
         // Do nothing
     }
 
-    /** 
+    /**
      * Sets the rollover state for the node.
-     * 
+     *
      * @param rollover rollover state
      */
     public void setRollover(final boolean rollover) {
         this.rollover = rollover;
     }
-    
+
     /**
      * Is this node a rollover node?
-     * 
+     *
      * @return true iff this node is a rollover node
      */
     public boolean isRollover() {
         return rollover;
     }
-    
+
     /**
      * Is this node a selected node?
-     * 
+     *
      * @return true iff this node is a selected node
      */
     public boolean isSelected() {
         return selected;
     }
-    
+
     /**
      * Returns the notification colour for this node.
-     * 
+     *
      * @return notification colour or null if non set
      */
     public Color getNotificationColour() {
         return notificationColour;
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public boolean equals(final Object obj) {
         if (window == null) {
             return false;
         }
-        
+
         return window.equals(obj);
     }
 
@@ -191,7 +193,7 @@ public class NodeLabel extends JLabel implements SelectionListener,
         if (window == null) {
             return super.hashCode();
         }
-        
+
         return window.hashCode();
     }
 
