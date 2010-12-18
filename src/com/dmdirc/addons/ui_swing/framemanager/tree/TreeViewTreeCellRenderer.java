@@ -101,10 +101,12 @@ public class TreeViewTreeCellRenderer implements TreeCellRenderer,
             return new JLabel("Label == null");
         }
 
+        label.setOpaque(false);
         label.setBackground(tree.getBackground());
         label.setForeground(tree.getForeground());
 
         if (label.isRollover()) {
+            label.setOpaque(true);
             label.setBackground(rolloverColour);
         }
 
@@ -119,7 +121,10 @@ public class TreeViewTreeCellRenderer implements TreeCellRenderer,
             } else {
                 label.setFont(label.getFont().deriveFont(Font.PLAIN));
             }
-            label.setBackground(activeBackground);
+            if (!tree.getBackground().equals(activeBackground)) {
+                label.setOpaque(true);
+                label.setBackground(activeBackground);
+            }
             label.setForeground(activeForeground);
         } else {
             label.setFont(label.getFont().deriveFont(Font.PLAIN));
@@ -150,13 +155,13 @@ public class TreeViewTreeCellRenderer implements TreeCellRenderer,
     /** {@inheritDoc} */
     @Override
     public void configChanged(final String domain, final String key) {
-        if (("ui".equals(domain) || "treeview".equals(domain)) &&
-                ("treeviewRolloverColour".equals(key) ||
-                "treeviewActiveBackground".equals(key) ||
-                "treeviewActiveForeground".equals(key) ||
-                "treeviewActiveBold".equals(key) ||
-                "backgroundcolour".equals(key) ||
-                "foregroundcolour".equals(key))) {
+        if (("ui".equals(domain) || "treeview".equals(domain))
+                && ("treeviewRolloverColour".equals(key)
+                || "treeviewActiveBackground".equals(key)
+                || "treeviewActiveForeground".equals(key)
+                || "treeviewActiveBold".equals(key)
+                || "backgroundcolour".equals(key)
+                || "foregroundcolour".equals(key))) {
             setColours();
         }
     }
