@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="DMDirc Plugins" default="default" basedir=".">
+    <description>Builds, packages and tests DMDirc plugins.</description>
+
+    <property name="plugins.src" location="src"/>
+    <property name="plugins.build" location="build"/>
+    <property name="plugins.dist" location="dist"/>
+    <property name="plugins.lib" location="lib"/>
+
+    <path id="plugins.classpath">
+       <pathelement path="${plugins.dmdirc.build.dir}"/>
+       <fileset dir="${plugins.lib}" includes="*.jar"/>
+    </path>
+
+    <condition property="plugins.dmdirc.exists">
+       <available classname="com.dmdirc.Main" classpathref="plugins.classpath"/>
+    </condition>
+
+    <taskdef resource="net/sf/antcontrib/antlib.xml" classpathref="plugins.classpath"/>
+
+    <target name="-check-dmdirc-jar" unless="plugins.dmdirc.exists">
+       <fail>DMDirc class files not found. Please put DMDirc on the classpath or specify the 'plugins.dmdirc.build.dir' property.</fail>
+    </target>
+
+    <target name="-init-compile" depends="-check-dmdirc-jar">
+       <mkdir dir="${plugins.build}"/>
+    </target>
+
+    <target name="compile" depends="-init-compile">
+       <javac srcdir="${plugins.src}" destdir="${plugins.build}" classpathref="plugins.classpath" includeantruntime="false"/>
+       <copy todir="${plugins.build}">
+          <fileset dir="${plugins.src}">
+             <exclude name="**/*.java"/>
+             <exclude name="**/plugin.config"/>
+          </fileset>
+       </copy>
+    </target>
+
+    <target name="clean">
+       <delete dir="${plugins.build}"/>
+       <delete dir="${plugins.dist}"/>
+    </target>
+</project>
