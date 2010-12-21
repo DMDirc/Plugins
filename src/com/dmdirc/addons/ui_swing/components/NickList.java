@@ -167,10 +167,9 @@ public class NickList extends JScrollPane implements ConfigChangeListener,
      */
     @Override
     public void processMouseEvent(final MouseEvent e) {
-        if (!e.isPopupTrigger()
+        if (e.isPopupTrigger()
                 || e.getSource() != nickList
-                || getMousePosition() == null
-                || nickList.getMousePosition() != null) {
+                || nickList.getMousePosition() == null) {
             return;
         }
         if (checkCursorInSelectedCell() || selectNickUnderCursor()) {
