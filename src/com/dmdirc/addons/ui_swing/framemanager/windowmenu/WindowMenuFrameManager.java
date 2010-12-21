@@ -113,6 +113,7 @@ public final class WindowMenuFrameManager extends JMenu implements
         itemCount = getMenuComponentCount();
 
         new WindowMenuScroller(this, controller.getDomain(), itemCount);
+        checkMenuItems();
     }
 
     /**
