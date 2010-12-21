@@ -192,6 +192,7 @@ public final class WindowMenuFrameManager extends JMenu implements
                 }
             });
         }
+        checkMenuItems();
     }
 
     /** {@inheritDoc} */
@@ -246,6 +247,7 @@ public final class WindowMenuFrameManager extends JMenu implements
             }
             window.getContainer().removeSelectionListener(this);
         }
+        checkMenuItems();
     }
 
     private JMenu getParentMenu(final FrameContainer window) {
@@ -304,7 +306,6 @@ public final class WindowMenuFrameManager extends JMenu implements
         synchronized (menus) {
             synchronized (items) {
                 synchronized (menuItems) {
-                    checkMenuItems();
                     values.addAll(menus.values());
                     values.addAll(items.values());
                     values.addAll(menuItems.values());
