@@ -34,20 +34,19 @@ import com.dmdirc.ui.messages.Styliser;
 
 /**
  * The osd command shows an on screen message.
- * @author chris
  */
-public final class OsdCommand extends Command implements 
+public final class OsdCommand extends Command implements
         IntelligentCommand, CommandInfo {
 
     /** The OSDManager that this command should use. */
     private final OsdManager osdManager;
-    
+
     /**
      * Creates a new instance of OsdCommand.
      *
-     * @param plugin The plugin that owns this command
+     * @param osdManager OSD Manager used to control OSD windows
      */
-    public OsdCommand(final OsdPlugin plugin, final OsdManager osdManager) {
+    public OsdCommand(final OsdManager osdManager) {
         super();
 
         this.osdManager = osdManager;
@@ -60,9 +59,11 @@ public final class OsdCommand extends Command implements
      * from the config will be used
      * @param title Title of dialog if applicable
      * @param message Message to show
+     *
      * @return True if the notification was shown.
      */
-    public boolean showOSD(final int timeout, final String title, final String message) {
+    public boolean showOSD(final int timeout, final String title,
+            final String message) {
         osdManager.showWindow(timeout, Styliser.stipControlCodes(message));
         return true;
     }
@@ -77,8 +78,8 @@ public final class OsdCommand extends Command implements
         } else if (args.getArguments().length > 0
                 && "--timeout".equalsIgnoreCase(args.getArguments()[0])) {
             if (args.getArguments().length < 2) {
-                sendLine(origin, args.isSilent(), FORMAT_ERROR, "You " +
-                        "must specify a valid number for the OSD timeout.");
+                sendLine(origin, args.isSilent(), FORMAT_ERROR, "You "
+                        + "must specify a valid number for the OSD timeout.");
                 return;
             }
 
@@ -86,8 +87,8 @@ public final class OsdCommand extends Command implements
             try {
                 timeout = Integer.parseInt(args.getArguments()[1]);
             } catch (NumberFormatException ex) {
-                sendLine(origin, args.isSilent(), FORMAT_ERROR, "You " +
-                        "must specify a valid number for the OSD timeout.");
+                sendLine(origin, args.isSilent(), FORMAT_ERROR, "You " 
+                        + "must specify a valid number for the OSD timeout.");
                 return;
             }
 
@@ -96,13 +97,13 @@ public final class OsdCommand extends Command implements
             showOSD(-1 , null, args.getArgumentsAsString());
         }
     }
-    
+
     /** {@inheritDoc}. */
     @Override
     public String getName() {
         return "osd";
     }
-    
+
     /** {@inheritDoc}. */
     @Override
     public boolean showInHelp() {
@@ -114,13 +115,13 @@ public final class OsdCommand extends Command implements
     public CommandType getType() {
         return CommandType.TYPE_GLOBAL;
     }
-    
+
     /** {@inheritDoc}. */
     @Override
     public String getHelp() {
-        return "osd --close - closes all OSD windows\n" +
-                "osd [--timer <delay in seconds>] <message> - show the specified" +
-                " message in an OSD window";
+        return "osd --close - closes all OSD windows\n"
+                + "osd [--timout <delay in seconds>] <message> - show the "
+                + "specified message in an OSD window";
     }
 
     /** {@inheritDoc} */
@@ -128,14 +129,15 @@ public final class OsdCommand extends Command implements
     public AdditionalTabTargets getSuggestions(final int arg,
             final IntelligentCommandContext context) {
         final AdditionalTabTargets res = new AdditionalTabTargets();
-        
+
         if (arg == 0) {
             res.add("--close");
-        } else if (arg > 0 && context.getPreviousArgs().get(0).equals("--close")) {
+        } else if (arg > 0 && context.getPreviousArgs().get(0)
+                .equals("--close")) {
             res.excludeAll();
         }
-        
+
         return res;
-    } 
-    
+    }
+
 }
