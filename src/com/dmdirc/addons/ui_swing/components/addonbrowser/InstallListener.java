@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.components.addonbrowser;
 
+import com.dmdirc.Main;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
@@ -74,9 +75,8 @@ public class InstallListener implements ActionListener {
             }
         });
         try {
-            final File file = File.createTempFile("dmdirc-addon", ".tmp");
-            file.deleteOnExit();
-
+            final File file = new File(Main.getConfigDir(),
+                    "." + info.getDownload());
             Downloader.downloadPage("http://addons.dmdirc.com/addondownload/"
                             + info.getDownload(), file.getAbsolutePath());
 
@@ -85,8 +85,9 @@ public class InstallListener implements ActionListener {
                     ActionManager.installActionPack(file.getAbsolutePath());
                     break;
                 case TYPE_PLUGIN:
-                    final File newFile = new File(PluginManager.getPluginManager().
-                            getDirectory(), info.getTitle() + ".jar");
+                    final File newFile = new File(PluginManager
+                            .getPluginManager().getDirectory(),
+                            info.getTitle() + ".jar");
                     if (file.renameTo(newFile)) {
                         PluginManager.getPluginManager().addPlugin(
                                 newFile.getAbsolutePath());
