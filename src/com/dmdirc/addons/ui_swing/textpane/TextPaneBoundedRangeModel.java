@@ -19,7 +19,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 package com.dmdirc.addons.ui_swing.textpane;
 
 import com.dmdirc.util.ListenerList;
@@ -110,7 +109,8 @@ public class TextPaneBoundedRangeModel implements BoundedRangeModel {
         this.minimum = Math.max(0, Math.min(max, min));
         this.maximum = Math.max(min, max);
 
-        for (ChangeListener listener : listeners.get(ChangeListener.class)) {
+        for (ChangeListener listener : listeners.get(
+                ChangeListener.class)) {
             listener.stateChanged(new ChangeEvent(this));
         }
     }
@@ -126,5 +126,4 @@ public class TextPaneBoundedRangeModel implements BoundedRangeModel {
     public void removeChangeListener(final ChangeListener x) {
         listeners.remove(ChangeListener.class, x);
     }
-
 }
