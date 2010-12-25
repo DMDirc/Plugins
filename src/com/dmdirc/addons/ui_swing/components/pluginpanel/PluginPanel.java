@@ -22,6 +22,9 @@
 
 package com.dmdirc.addons.ui_swing.components.pluginpanel;
 
+import com.dmdirc.actions.ActionManager;
+import com.dmdirc.actions.CoreActionType;
+import com.dmdirc.actions.interfaces.ActionType;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
@@ -53,7 +56,8 @@ import net.miginfocom.swing.MigLayout;
  * Plugin manager dialog. Allows the user to manage their plugins.
  */
 public final class PluginPanel extends JPanel implements
-        ActionListener, ListSelectionListener, PreferencesInterface {
+        ActionListener, ListSelectionListener, PreferencesInterface,
+        com.dmdirc.interfaces.ActionListener {
 
     /**
      * A version number for this class. It should be changed whenever the class
@@ -61,6 +65,10 @@ public final class PluginPanel extends JPanel implements
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 3;
+    /** Parent Window. */
+    private final Window parentWindow;
+    /** Swing Controller. */
+    private final SwingController controller;
     /** List of plugins. */
     private JList pluginList;
     /** plugin list scroll pane. */
@@ -71,10 +79,8 @@ public final class PluginPanel extends JPanel implements
     private int selectedPlugin;
     /** Blurb label. */
     private TextLabel blurbLabel;
-    /** Parent Window. */
-    private Window parentWindow;
-    /** Swing Controller. */
-    private SwingController controller;
+    /** Do we refresh on plugin reload? */
+    private boolean pluginRefresh = true;
 
     /**
      * Creates a new instance of PluginDialog.
@@ -134,13 +140,12 @@ public final class PluginPanel extends JPanel implements
 
     /** Lays out the dialog. */
     private void layoutComponents() {
-        final int panelHeight;
         if (controller == null) {
-            panelHeight = 300;
+            setLayout(new MigLayout("ins 0, fill, hmax " + 300));
         } else {
-            panelHeight = controller.getPrefsDialog().getPanelHeight();
+            setLayout(new MigLayout("ins 0, fill, hmax "
+                    + controller.getPrefsDialog().getPanelHeight()));
         }
-        setLayout(new MigLayout("ins 0, fill, hmax " + panelHeight));
 
         add(blurbLabel, "wrap 10, growx, pushx");
 
@@ -153,14 +158,16 @@ public final class PluginPanel extends JPanel implements
         add(button, "growx, pushx, sg button");
     }
 
-    /** 
+    /**
      * Populates the plugins list with plugins from the plugin manager.
-     * 
+     *
      * @return Populated list
      */
     private JList populateList() {
+        pluginRefresh = false;
         final List<PluginInfo> list =
                 PluginManager.getPluginManager().getPossiblePluginInfos(true);
+        pluginRefresh = true;
         Collections.sort(list);
 
         UIUtilities.invokeLater(new Runnable() {
@@ -169,8 +176,8 @@ public final class PluginPanel extends JPanel implements
             public void run() {
                 ((DefaultListModel) pluginList.getModel()).clear();
                 for (PluginInfo plugin : list) {
-                    ((DefaultListModel) pluginList.getModel()).addElement(new PluginInfoToggle(
-                            plugin));
+                    ((DefaultListModel) pluginList.getModel()).addElement(
+                            new PluginInfoToggle(plugin));
                 }
                 pluginList.repaint();
             }
@@ -182,11 +189,12 @@ public final class PluginPanel extends JPanel implements
     private void addListeners() {
         toggleButton.addActionListener(this);
         pluginList.addListSelectionListener(this);
+        ActionManager.addListener(this, CoreActionType.PLUGIN_REFRESH);
     }
 
     /**
      * Invoked when an action occurs.
-     * 
+     *
      * @param e The event related to this action.
      */
     @Override
@@ -235,8 +243,18 @@ public final class PluginPanel extends JPanel implements
     /** {@inheritDoc} */
     @Override
     public void save() {
-        for (Object pit : ((DefaultListModel) pluginList.getModel()).toArray()) {
+        for (Object pit : ((DefaultListModel) pluginList.getModel())
+                .toArray()) {
             ((PluginInfoToggle) pit).apply();
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void processEvent(final ActionType type, final StringBuffer format,
+            final Object... arguments) {
+        if (pluginRefresh) {
+            populateList();
         }
     }
 }
