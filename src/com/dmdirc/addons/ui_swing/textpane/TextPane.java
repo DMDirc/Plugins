@@ -291,7 +291,7 @@ public final class TextPane extends JComponent implements MouseWheelListener,
             if (i != selectedRange.getStartLine()) {
                 selectedText.append('\n');
             }
-            if (scrollModel.getMaximum() <= i) {
+            if (scrollModel.getMaximum() < i) {
                 return selectedText.toString();
             }
             final String line;
