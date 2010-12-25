@@ -48,7 +48,6 @@ import com.dmdirc.addons.ui_swing.dialogs.serversetting.ServerSettingsDialog;
 import com.dmdirc.addons.ui_swing.dialogs.sslcertificate.SSLCertificateDialog;
 import com.dmdirc.addons.ui_swing.dialogs.updater.SwingUpdaterDialog;
 import com.dmdirc.addons.ui_swing.dialogs.url.URLDialog;
-import com.dmdirc.addons.ui_swing.framemanager.ctrltab.CtrlTabWindowManager;
 import com.dmdirc.addons.ui_swing.wizard.WizardListener;
 import com.dmdirc.addons.ui_swing.wizard.firstrun.SwingFirstRunWizard;
 import com.dmdirc.config.Identity;
@@ -92,6 +91,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.logging.Level;
 import javax.swing.JMenuItem;
 
 import javax.swing.SwingUtilities;
@@ -104,8 +104,7 @@ import net.miginfocom.layout.PlatformDefaults;
 /**
  * Controls the main swing UI.
  */
-public class SwingController extends Plugin implements Serializable,
-        UIController {
+public class SwingController extends Plugin implements UIController {
 
     /**
      * A version number for this class. It should be changed whenever the class
@@ -117,23 +116,26 @@ public class SwingController extends Plugin implements Serializable,
     /** Logger to use. */
     private static final java.util.logging.Logger LOGGER =
             java.util.logging.Logger.getLogger(SwingController.class.getName());
+    /** Window factory. */
+    private final SwingWindowFactory windowFactory =
+            new SwingWindowFactory(this);
+    /** Waiting on mainframe creation. */
+    private final AtomicBoolean mainFrameCreated = new AtomicBoolean(false);
+    /** URL Handler to use. */
+    private final URLHandler urlHandler = new URLHandler(this);
     /** Singleton instance of MainFrame. */
     private MainFrame me;
     /** Status bar. */
     private SwingStatusBar statusBar;
     /** Top level window list. */
     private final List<java.awt.Window> windows;
-    /** Waiting on mainframe creation. */
-    private final AtomicBoolean mainFrameCreated = new AtomicBoolean(false);
     /** Error dialog. */
     private ErrorListDialog errorDialog;
-    /** Window factory. */
-    private final SwingWindowFactory windowFactory = new SwingWindowFactory(this);
-    /** URL Handler to use. */
-    private final URLHandler urlHandler = new URLHandler(this);
 
     /** Instantiates a new SwingController. */
     public SwingController() {
+        super();
+
         setAntiAlias();
         windows = new ArrayList<java.awt.Window>();
     }
@@ -141,7 +143,7 @@ public class SwingController extends Plugin implements Serializable,
     /**
      * Make swing not use Anti Aliasing if the user doesn't want it.
      */
-    public void setAntiAlias() {
+    public final void setAntiAlias() {
         // For this to work it *HAS* to be before anything else UI related.
         final boolean aaSetting = IdentityManager.getGlobalConfig().
                 getOptionBool("ui", "antialias");
@@ -302,14 +304,16 @@ public class SwingController extends Plugin implements Serializable,
     public InputWindow getInputWindow(final WritableFrameContainer<?> owner) {
         LOGGER.finest("getInputWindow()");
 
-        return UIUtilities.invokeAndWait(new ReturnableThread<CustomInputFrame>() {
+        return UIUtilities.invokeAndWait(
+                new ReturnableThread<CustomInputFrame>() {
 
             /** {@inheritDoc} */
             @Override
             public void run() {
                 LOGGER.finest("getInputWindow(): run");
                 setObject(new CustomInputFrame(SwingController.this, owner));
-                LOGGER.finest("getInputWindow(): object set: " + getObject());
+                LOGGER.log(Level.FINEST, "getInputWindow(): object set: {1}",
+                        getObject());
             }
         });
     }
@@ -317,12 +321,14 @@ public class SwingController extends Plugin implements Serializable,
     /** {@inheritDoc} */
     @Override
     public SwingUpdaterDialog getUpdaterDialog(final List<Update> updates) {
-        return UIUtilities.invokeAndWait(new ReturnableThread<SwingUpdaterDialog>() {
+        return UIUtilities.invokeAndWait(
+                new ReturnableThread<SwingUpdaterDialog>() {
 
             /** {@inheritDoc} */
             @Override
             public void run() {
-                setObject(SwingUpdaterDialog.getSwingUpdaterDialog(updates, me));
+                setObject(SwingUpdaterDialog.getSwingUpdaterDialog(updates,
+                        me));
             }
         });
     }
@@ -345,7 +351,7 @@ public class SwingController extends Plugin implements Serializable,
      * @param parentWindow Parent window
      * @param firstRun First run?
      */
-    private synchronized void showFirstRunWizard(
+    private void showFirstRunWizard(
             final java.awt.Window parentWindow, final boolean firstRun) {
         final Semaphore semaphore = new Semaphore(0);
         UIUtilities.invokeLater(new Runnable() {
@@ -386,7 +392,8 @@ public class SwingController extends Plugin implements Serializable,
             @Override
             public void run() {
                 ChannelSettingsDialog.showChannelSettingsDialog(channel, me,
-                        (InputWindow) getWindowFactory().getSwingWindow(channel));
+                        (InputWindow) getWindowFactory().getSwingWindow(
+                        channel));
             }
         });
     }
@@ -407,11 +414,12 @@ public class SwingController extends Plugin implements Serializable,
     /**
      * Updates the look and feel to the current config setting.
      */
-    void updateLookAndFeel() {
+    public void updateLookAndFeel() {
         try {
             UIManager.setLookAndFeel(UIUtilities.getLookAndFeel(IdentityManager.
                     getGlobalConfig().getOption("ui", "lookandfeel")));
-            final int state = UIUtilities.invokeAndWait(new ReturnableThread<Integer>() {
+            final int state = UIUtilities.invokeAndWait(
+                    new ReturnableThread<Integer>() {
 
                 /** {@inheritDoc} */
                 @Override
@@ -474,8 +482,7 @@ public class SwingController extends Plugin implements Serializable,
             apple.setListener();
         }
 
-        final Font defaultFont = new Font(Font.DIALOG, Font.TRUETYPE_FONT,
-                12);
+        final Font defaultFont = new Font(Font.DIALOG, Font.TRUETYPE_FONT, 12);
         if (UIManager.getFont("TextField.font") == null) {
             UIManager.put("TextField.font", defaultFont);
         }
@@ -487,7 +494,6 @@ public class SwingController extends Plugin implements Serializable,
             UIUtilities.initUISettings();
             UIManager.setLookAndFeel(UIUtilities.getLookAndFeel(IdentityManager.
                     getGlobalConfig().getOption("ui", "lookandfeel")));
-
         } catch (UnsupportedOperationException ex) {
             Logger.userError(ErrorLevel.LOW, "Unable to set UI Settings");
         } catch (UnsupportedLookAndFeelException ex) {
@@ -500,11 +506,8 @@ public class SwingController extends Plugin implements Serializable,
             Logger.userError(ErrorLevel.LOW, "Unable to set UI Settings");
         }
 
-        if ("Metal".equals(UIManager.getLookAndFeel().getName())) {
-            PlatformDefaults.setPlatform(PlatformDefaults.WINDOWS_XP);
-        }
-
-        if (Apple.isAppleUI()) {
+        if ("Metal".equals(UIManager.getLookAndFeel().getName())
+                || Apple.isAppleUI()) {
             PlatformDefaults.setPlatform(PlatformDefaults.WINDOWS_XP);
         }
     }
@@ -556,7 +559,8 @@ public class SwingController extends Plugin implements Serializable,
 
     /** {@inheritDoc} */
     @Override
-    public void showSSLCertificateDialog(final SSLCertificateDialogModel model) {
+    public void showSSLCertificateDialog(
+            final SSLCertificateDialogModel model) {
         UIUtilities.invokeLater(new Runnable() {
 
             /** {@inheritDoc} */
@@ -609,9 +613,10 @@ public class SwingController extends Plugin implements Serializable,
                 new NotEmptyValidator()) {
 
             /**
-             * A version number for this class. It should be changed whenever the class
-             * structure is changed (or anything else that would prevent serialized
-             * objects being unserialized with the new class).
+             * A version number for this class. It should be changed whenever
+             * the class structure is changed (or anything else that would
+             * prevent serialized objects being unserialized with the new
+             * class).
              */
             private static final long serialVersionUID = 1;
 
@@ -623,7 +628,9 @@ public class SwingController extends Plugin implements Serializable,
 
             /** {@inheritDoc} */
             @Override
-            public void cancelled() {}
+            public void cancelled() {
+                //Do nothing.
+            }
         };
         dialog.displayBlocking();
         return dialog.getText();
@@ -645,7 +652,8 @@ public class SwingController extends Plugin implements Serializable,
     /** {@inheritDoc} */
     @Override
     public PreferencesInterface getUpdatesPrefsPanel() {
-        return UIUtilities.invokeAndWait(new ReturnableThread<PreferencesInterface>() {
+        return UIUtilities.invokeAndWait(
+                new ReturnableThread<PreferencesInterface>() {
 
             /** {@inheritDoc} */
             @Override
@@ -658,7 +666,8 @@ public class SwingController extends Plugin implements Serializable,
     /** {@inheritDoc} */
     @Override
     public PreferencesInterface getUrlHandlersPrefsPanel() {
-        return UIUtilities.invokeAndWait(new ReturnableThread<PreferencesInterface>() {
+        return UIUtilities.invokeAndWait(
+                new ReturnableThread<PreferencesInterface>() {
 
             /** {@inheritDoc} */
             @Override
@@ -671,7 +680,8 @@ public class SwingController extends Plugin implements Serializable,
     /** {@inheritDoc} */
     @Override
     public PreferencesInterface getThemesPrefsPanel() {
-        return UIUtilities.invokeAndWait(new ReturnableThread<PreferencesInterface>() {
+        return UIUtilities.invokeAndWait(
+                new ReturnableThread<PreferencesInterface>() {
 
             /** {@inheritDoc} */
             @Override
@@ -714,7 +724,8 @@ public class SwingController extends Plugin implements Serializable,
                 mainFrameCreated.set(true);
                 statusBar = me.getStatusBar();
                 errorDialog = new ErrorListDialog(me);
-                StatusBarManager.getStatusBarManager().registerStatusBar(statusBar);
+                StatusBarManager.getStatusBarManager().registerStatusBar(
+                        statusBar);
             }
         });
 
@@ -762,6 +773,8 @@ public class SwingController extends Plugin implements Serializable,
 
     /**
      * Creates the "Advanced" category.
+     *
+     * @return Newly created preferences category
      */
     private PreferencesCategory createGeneralCategory() {
         final PreferencesCategory general = new PluginPreferencesCategory(
@@ -821,29 +834,34 @@ public class SwingController extends Plugin implements Serializable,
 
     /**
      * Creates the "Advanced" category.
+     *
+     * @return Newly created preferences category
      */
     private PreferencesCategory createAdvancedCategory() {
         final PreferencesCategory advanced = new PluginPreferencesCategory(
                 getPluginInfo(), "Advanced", "");
 
-        advanced.addSetting(new PreferencesSetting(PreferencesType.OPTIONALINTEGER,
+        advanced.addSetting(new PreferencesSetting(
+                PreferencesType.OPTIONALINTEGER,
                 new NumericalValidator(10, -1), "ui", "frameBufferSize",
                 "Window buffer size", "The maximum number of lines in a window"
                 + " buffer"));
         advanced.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
-                getDomain(), "mdiBarVisibility",
-                "MDI Bar Visibility", "Controls the visibility of the MDI bar"));
+                getDomain(), "mdiBarVisibility", "MDI Bar Visibility",
+                "Controls the visibility of the MDI bar"));
         advanced.addSetting(
                 new PreferencesSetting(PreferencesType.BOOLEAN, "ui",
-                "useOneTouchExpandable", "Use one touch expandable split panes?",
-                "Use one touch expandable arrows for collapsing/expanding the split panes"));
+                "useOneTouchExpandable", "Use one touch expandable split "
+                + "panes?", "Use one touch expandable arrows for "
+                + "collapsing/expanding the split panes"));
         advanced.addSetting(new PreferencesSetting(PreferencesType.INTEGER,
                 getDomain(), "windowMenuItems", "Window menu item count",
                 "Number of items to show in the window menu"));
         advanced.addSetting(
                 new PreferencesSetting(PreferencesType.INTEGER, getDomain(),
                 "windowMenuScrollInterval", "Window menu scroll interval",
-                "Number of milliseconds to pause when autoscrolling in the window menu"));
+                "Number of milliseconds to pause when autoscrolling in the "
+                + "window menu"));
         advanced.addSetting(
                 new PreferencesSetting(PreferencesType.BOOLEAN, getDomain(),
                 "showtopicbar", "Show topic bar",
@@ -852,19 +870,25 @@ public class SwingController extends Plugin implements Serializable,
                 getDomain(),
                 "shownicklist", "Show nicklist?",
                 "Do you want the nicklist visible"));
-        advanced.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN, getDomain(),
-               "showfulltopic", "Show full topic in topic bar?",
-               "Do you want to show the full topic in the topic bar or just" +
-               "first line?"));
+        advanced.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
+                getDomain(), "showfulltopic", "Show full topic in topic bar?",
+               "Do you want to show the full topic in the topic bar or just"
+               + "first line?"));
         advanced.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
                 getDomain(), "hideEmptyTopicBar", "Hide empty topic bar?",
                 "Do you want to hide the topic bar when there is no topic"));
+        advanced.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
+                getDomain(), "textpanelinenotification",
+                "New line notification", "Do you want to be notified about new "
+                + "lines whilst scrolled up?"));
 
         return advanced;
     }
 
     /**
      * Creates the "Treeview" category.
+     *
+     * @return Newly created preferences category
      */
     private PreferencesCategory createTreeViewCategory() {
         final PreferencesCategory treeview = new PluginPreferencesCategory(
@@ -881,7 +905,8 @@ public class SwingController extends Plugin implements Serializable,
         treeview.addSetting(new PreferencesSetting(
                 PreferencesType.OPTIONALCOLOUR,
                 "ui", "treeviewRolloverColour", "Treeview rollover colour",
-                "Background colour to use when the mouse cursor is over a node"));
+                "Background colour to use when the mouse cursor is over a "
+                + "node"));
         treeview.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
                 "ui", "treeviewActiveBold", "Active node bold",
                 "Make the active node bold?"));
@@ -902,6 +927,8 @@ public class SwingController extends Plugin implements Serializable,
 
     /**
      * Creates the "Nicklist" category.
+     *
+     * @return Newly created preferences category
      */
     private PreferencesCategory createNicklistCategory() {
         final PreferencesCategory nicklist = new PluginPreferencesCategory(
