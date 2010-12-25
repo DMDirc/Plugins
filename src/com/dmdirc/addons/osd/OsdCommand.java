@@ -83,16 +83,13 @@ public final class OsdCommand extends Command implements
                 return;
             }
 
-            int timeout = 0;
             try {
-                timeout = Integer.parseInt(args.getArguments()[1]);
+                showOSD(Integer.parseInt(args.getArguments()[1]), null,
+                        args.getArgumentsAsString(2));
             } catch (NumberFormatException ex) {
-                sendLine(origin, args.isSilent(), FORMAT_ERROR, "You " 
+                sendLine(origin, args.isSilent(), FORMAT_ERROR, "You "
                         + "must specify a valid number for the OSD timeout.");
-                return;
             }
-
-            showOSD(timeout, null, args.getArgumentsAsString(2));
         } else {
             showOSD(-1 , null, args.getArgumentsAsString());
         }
@@ -132,9 +129,15 @@ public final class OsdCommand extends Command implements
 
         if (arg == 0) {
             res.add("--close");
+            res.add("--timeout");
         } else if (arg > 0 && context.getPreviousArgs().get(0)
                 .equals("--close")) {
             res.excludeAll();
+            res.add("--timeout");
+        } else if (arg > 0 && context.getPreviousArgs().get(0)
+                .equals("--timeout")) {
+            res.excludeAll();
+            res.add("--close");
         }
 
         return res;
