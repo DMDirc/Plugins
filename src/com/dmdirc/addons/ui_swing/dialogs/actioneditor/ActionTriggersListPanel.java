@@ -1,16 +1,16 @@
 /*
  * Copyright (c) 2006-2010 Chris Smith, Shane Mc Cormack, Gregory Holmes
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -62,7 +62,7 @@ public class ActionTriggersListPanel extends JPanel {
 
     /**
      * Instantiates the panel.
-     * 
+     *
      * @param triggers Trigger list
      */
     public ActionTriggersListPanel(final List<ActionType> triggers) {
@@ -71,7 +71,6 @@ public class ActionTriggersListPanel extends JPanel {
         this.triggers = new ArrayList<ActionType>(triggers);
 
         initComponents();
-        addListeners();
         layoutComponents();
     }
 
@@ -79,10 +78,6 @@ public class ActionTriggersListPanel extends JPanel {
     private void initComponents() {
         setOpaque(false);
         setLayout(new MigLayout("fillx, wrap 2"));
-    }
-
-    /** Adds the listeners. */
-    private void addListeners() {
     }
 
     /** Lays out the components. */
@@ -100,18 +95,18 @@ public class ActionTriggersListPanel extends JPanel {
 
                     /** {@inheritDoc} */
                     @Override
-                    public void actionPerformed(ActionEvent e) {
+                    public void actionPerformed(final ActionEvent e) {
                         delTrigger(trigger);
                     }
                 });
-                
+
                 button.setEnabled(isEnabled());
-                
+
                 add(new JLabel(trigger.getName()), "growx, pushx");
                 add(button, "right");
             }
 
-            if (triggers.size() == 0) {
+            if (triggers.isEmpty()) {
                 add(new TextLabel("No triggers."));
             }
             setVisible(true);
@@ -120,7 +115,7 @@ public class ActionTriggersListPanel extends JPanel {
 
     /**
      * Adds a trigger to the list.
-     * 
+     *
      * @param trigger Trigger to add
      */
     public void addTrigger(final ActionType trigger) {
@@ -142,7 +137,7 @@ public class ActionTriggersListPanel extends JPanel {
 
     /**
      * Deletes a trigger from the list.
-     * 
+     *
      * @param trigger Trigger to delete
      */
     public void delTrigger(final ActionType trigger) {
@@ -174,7 +169,7 @@ public class ActionTriggersListPanel extends JPanel {
 
     /**
      * Returns the current list of triggers.
-     * 
+     *
      * @return Trigger list
      */
     public List<ActionType> getTriggers() {
@@ -185,9 +180,9 @@ public class ActionTriggersListPanel extends JPanel {
 
     /**
      * Gets the trigger at the specified index.
-     * 
+     *
      * @param index Index to retrieve
-     * 
+     *
      * @return Requested action trigger
      */
     public ActionType getTrigger(final int index) {
@@ -196,7 +191,7 @@ public class ActionTriggersListPanel extends JPanel {
 
     /**
      * Returns the number of triggers.
-     * 
+     *
      * @return Trigger count
      */
     public int getTriggerCount() {
@@ -210,7 +205,8 @@ public class ActionTriggersListPanel extends JPanel {
      *
      * @param listener Listener to add
      */
-    public void addTriggerListener(final ActionTriggerRemovalListener listener) {
+    public void addTriggerListener(
+            final ActionTriggerRemovalListener listener) {
         if (listener == null) {
             return;
         }
@@ -223,7 +219,8 @@ public class ActionTriggersListPanel extends JPanel {
      *
      * @param listener Listener to remove
      */
-    public void removeTriggerListener(final ActionTriggerRemovalListener listener) {
+    public void removeTriggerListener(
+            final ActionTriggerRemovalListener listener) {
         listeners.remove(ActionTriggerRemovalListener.class, listener);
     }
 
@@ -233,7 +230,8 @@ public class ActionTriggersListPanel extends JPanel {
      * @param type Removed trigger
      */
     protected void fireTriggerRemoved(final ActionType type) {
-        for (ActionTriggerRemovalListener listener : listeners.get(ActionTriggerRemovalListener.class)) {
+        for (ActionTriggerRemovalListener listener : listeners.get(
+                ActionTriggerRemovalListener.class)) {
             listener.triggerRemoved(type);
         }
     }
@@ -251,7 +249,7 @@ public class ActionTriggersListPanel extends JPanel {
             }
         });
     }
-    
+
     /** Validates the triggers. */
     public void validateTriggers() {
         firePropertyChange("triggerCount", triggers.size(), triggers.size());

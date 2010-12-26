@@ -38,30 +38,26 @@ import com.dmdirc.ui.input.TabCompleter;
  * The redirect command allows the user to redirect the output from another
  * command that would normally echo results locally to a query or channel
  * window instead.
- *
- * @author Chris
  */
 public class RedirectCommand extends Command implements IntelligentCommand,
         CommandInfo {
-    
-    public RedirectCommand() {
-    }
-    
+
     /** {@inheritDoc} */
     @Override
     public void execute(final FrameContainer<?> origin,
             final CommandArguments args, final CommandContext context) {
-        final MessageTarget<?> target = ((ChatCommandContext) context).getChat();
-        target.getCommandParser().parseCommand(new FakeWriteableFrameContainer(target),
-                context.getSource(), args.getArgumentsAsString());
+        final MessageTarget<?> target = ((ChatCommandContext) context)
+                .getChat();
+        target.getCommandParser().parseCommand(new FakeWriteableFrameContainer(
+                target), context.getSource(), args.getArgumentsAsString());
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public String getName() {
         return "redirect";
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public boolean showInHelp() {
@@ -73,11 +69,12 @@ public class RedirectCommand extends Command implements IntelligentCommand,
     public CommandType getType() {
         return CommandType.TYPE_CHAT;
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public String getHelp() {
-        return "redirect <command> - sends the output of the command to a channel or query window";
+        return "redirect <command> - sends the output of the command to a "
+                + "channel or query window";
     }
 
     /** {@inheritDoc} */
@@ -86,5 +83,5 @@ public class RedirectCommand extends Command implements IntelligentCommand,
             final IntelligentCommandContext context) {
         return TabCompleter.getIntelligentResults(arg, context, 0);
     }
-    
+
 }

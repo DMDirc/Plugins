@@ -44,17 +44,11 @@ public class DBusMediaSource extends Plugin implements MediaSourceManager {
     /** The sources used by this media source. */
     private List<MediaSource> sources;
     /** A map of discovered mpris sources. */
-    private final Map<String, MediaSource> mprisSources = new HashMap<String, MediaSource>();
+    private final Map<String, MediaSource> mprisSources
+            = new HashMap<String, MediaSource>();
     /** The path to qdbus. */
     private String qdbus;
-       
-    /**
-     * Creates a new instance of DBusMediaSource.
-     */
-    public DBusMediaSource() {
-        super();
-    }
-    
+
     /** {@inheritDoc} */
     @Override
     public void onLoad() {
@@ -68,7 +62,7 @@ public class DBusMediaSource extends Plugin implements MediaSourceManager {
             qdbus = "/bin/qdbus";
         }
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public void onUnload() {
@@ -114,7 +108,7 @@ public class DBusMediaSource extends Plugin implements MediaSourceManager {
         exeArgs[3] = method;
 
         for (int i = 0; i < args.length; i++) {
-            exeArgs[4 + i] = args[i];
+            exeArgs[4 + i] = args[i]; //NOPMD
         }
 
         return getInfo(exeArgs);
@@ -170,7 +164,7 @@ public class DBusMediaSource extends Plugin implements MediaSourceManager {
             if (index == -1 || index >= line.length() - 2) {
                 continue;
             }
-            
+
             final String key = line.substring(0, index);
             final String value = line.substring(index + 2);
 

@@ -36,12 +36,19 @@ public class IgnoreListModel extends AbstractListModel {
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 1;
-
+    /** Ignore list backing this model. */
     private final IgnoreList ignoreList;
-
+    /** Are we in simple mode. */
     private boolean isSimple;
 
+    /**
+     * Creates a new ignore list based on the specified ignore list.
+     *
+     * @param ignoreList Ignorelist backing this model
+     */
     public IgnoreListModel(final IgnoreList ignoreList) {
+        super();
+
         this.ignoreList = ignoreList;
         isSimple = ignoreList.canConvert();
     }
@@ -62,12 +69,20 @@ public class IgnoreListModel extends AbstractListModel {
         }
     }
 
-    public void setIsSimple(boolean isSimple) {
+    /**
+     * Sets the is simple flag.
+     *
+     * @param isSimple Are we in simple mode or not?
+     */
+    public void setIsSimple(final boolean isSimple) {
         this.isSimple = isSimple;
 
         fireContentsChanged(this, 0, getSize());
     }
-    
+
+    /**
+     * Notifies this model that it has been updated and needs to fire listeners.
+     */
     public void notifyUpdated() {
         fireContentsChanged(this, 0, getSize());
     }

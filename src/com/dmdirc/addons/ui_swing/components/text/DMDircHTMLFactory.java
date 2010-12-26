@@ -34,7 +34,7 @@ public class DMDircHTMLFactory extends HTMLFactory {
 
     /** {@inheritDoc} */
     @Override
-    public View create(Element elem) {
+    public View create(final Element elem) {
         final View view = super.create(elem);
         if (view instanceof ImageView) {
             return new DMDircImageView(elem);

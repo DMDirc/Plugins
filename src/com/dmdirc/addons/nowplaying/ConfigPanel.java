@@ -84,7 +84,8 @@ public class ConfigPanel extends JPanel implements PreferencesInterface,
      * @param plugin The plugin that owns this panel
      * @param sources A list of sources to be used in the panel
      */
-    public ConfigPanel(final NowPlayingPlugin plugin, final List<String> sources) {
+    public ConfigPanel(final NowPlayingPlugin plugin,
+            final List<String> sources) {
         super();
 
         if (sources == null) {
@@ -157,13 +158,14 @@ public class ConfigPanel extends JPanel implements PreferencesInterface,
         }
 
         final String text = plugin.doSubstitution(
-                        UIUtilities.invokeAndWait(new ReturnableThread<String>() {
+                UIUtilities.invokeAndWait(new ReturnableThread<String>() {
 
-                    @Override
-                    public void run() {
-                        setObject(textfield.getText());
-                    }
-                }), source);
+            /** {@inheritDoc} */
+            @Override
+            public void run() {
+                setObject(textfield.getText());
+            }
+        }), source);
         SwingUtilities.invokeLater(new Runnable() {
 
             /** {@inheritDoc} */
@@ -248,7 +250,7 @@ public class ConfigPanel extends JPanel implements PreferencesInterface,
             public void run() {
                 try {
                     updatePreview();
-                } catch (Throwable ex) {
+                } catch (Exception ex) {
                     Logger.appError(ErrorLevel.MEDIUM,
                             "Error when updating nowplaying preview", ex);
                 }

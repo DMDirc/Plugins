@@ -34,8 +34,8 @@ public final class LineInfo {
     /** Character index? */
     private int index;
 
-    /** 
-     * Creates a new instance of LineInfo. 
+    /**
+     * Creates a new instance of LineInfo.
      *
      * @param line Line number
      * @param part line wrap number
@@ -44,8 +44,8 @@ public final class LineInfo {
         this(line, part, -1);
     }
 
-    /** 
-     * Creates a new instance of LineInfo. 
+    /**
+     * Creates a new instance of LineInfo.
      *
      * @param line Line number
      * @param part line wrap number
@@ -77,43 +77,44 @@ public final class LineInfo {
 
     /**
      * Returns the index for this line.
-     * 
+     *
      * @return Index for the line of -1
      */
     public int getIndex() {
         return index;
     }
-    
+
     /**
      * Sets the index for this line.
-     * 
+     *
      * @param index New index
      */
-    public void setIndex(int index) {
+    public void setIndex(final int index) {
         this.index = index;
     }
 
     /**
      * Sets the line for this line.
-     * 
+     *
      * @param line New line
      */
-    public void setLine(int line) {
+    public void setLine(final int line) {
         this.line = line;
     }
 
     /**
-     * Sets the line part for this line
-     * 
+     * Sets the line part for this line.
+     *
      * @param part New part
      */
-    public void setPart(int part) {
+    public void setPart(final int part) {
         this.part = part;
     }
-    
+
     /* {@inheritDoc} */
     @Override
     public String toString() {
-        return "LineInfo[line=" + line + ", part=" + part + ", index=" + index + "]";
+        return "LineInfo[line=" + line + ", part=" + part + ", index="
+                + index + "]";
     }
 }

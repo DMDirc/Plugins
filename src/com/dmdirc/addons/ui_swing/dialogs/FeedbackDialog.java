@@ -66,7 +66,7 @@ public class FeedbackDialog extends StandardDialog implements ActionListener,
      */
     private static final long serialVersionUID = 1;
     /** A previously created instance of FeedbackDialog. */
-    private static volatile FeedbackDialog me;
+    private static FeedbackDialog me;
     /** Information label. */
     private TextLabel info;
     /** Name field. */
@@ -82,9 +82,9 @@ public class FeedbackDialog extends StandardDialog implements ActionListener,
     /** Sent. */
     private boolean sentReport = false;
 
-    /** 
-     * Instantiates the feedback dialog. 
-     * 
+    /**
+     * Instantiates the feedback dialog.
+     *
      * @param parentWindow Parent window
      */
     private FeedbackDialog(final Window parentWindow) {
@@ -100,7 +100,7 @@ public class FeedbackDialog extends StandardDialog implements ActionListener,
 
     /**
      * Creates the new feedback dialog if one doesn't exist, and displays it.
-     * 
+     *
      * @param parentWindow Parent window
      */
     public static void showFeedbackDialog(final Window parentWindow) {
@@ -112,7 +112,7 @@ public class FeedbackDialog extends StandardDialog implements ActionListener,
 
     /**
      * Returns the current instance of the FeedbackDialog.
-     * 
+     *
      * @param parentWindow Parent window
      *
      * @return The current FeedbackDialog instance
@@ -142,15 +142,15 @@ public class FeedbackDialog extends StandardDialog implements ActionListener,
         getOkButton().setEnabled(false);
         getCancelButton().setActionCommand("Close");
 
-        info = new TextLabel("Thank you for using DMDirc. If you have any " +
-                "feedback about the client, such as bug reports or feature " +
-                "requests, please send it to us using the form below.  " +
-                "The name and e-mail address fields are optional if you " +
-                "don't want us to contact you about your feedback.\n\n" +
-                "Please note that this is for feedback such as bug reports " +
-                "and suggestions, not for technical support. For " +
-                "technical support, please join #DMDirc using the button " +
-                "in the help menu.");
+        info = new TextLabel("Thank you for using DMDirc. If you have any "
+                + "feedback about the client, such as bug reports or feature "
+                + "requests, please send it to us using the form below.  "
+                + "The name and e-mail address fields are optional if you "
+                + "don't want us to contact you about your feedback.\n\n"
+                + "Please note that this is for feedback such as bug reports "
+                + "and suggestions, not for technical support. For "
+                + "technical support, please join #DMDirc using the button "
+                + "in the help menu.");
         name = new JTextField();
         email = new JTextField();
         feedback = new JTextArea();
@@ -170,7 +170,8 @@ public class FeedbackDialog extends StandardDialog implements ActionListener,
         dmdircCheckbox.setMargin(new Insets(0, 0, 0, 0));
         dmdircCheckbox.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
 
-        setLayout(new MigLayout("fill, wmin 600, wmax 600, hmin 400, hmax 400"));
+        setLayout(new MigLayout(
+                "fill, wmin 600, wmax 600, hmin 400, hmax 400"));
 
         add(info, "span, growx, wrap, gapbottom unrel");
 
@@ -201,7 +202,8 @@ public class FeedbackDialog extends StandardDialog implements ActionListener,
         getOkButton().setText("Close");
         getOkButton().setActionCommand("Close");
 
-        setLayout(new MigLayout("fill, wmin 600, wmax 600, hmin 400, hmax 400"));
+        setLayout(new MigLayout(
+                "fill, wmin 600, wmax 600, hmin 400, hmax 400"));
 
         info.setText(error.toString());
 
@@ -226,40 +228,45 @@ public class FeedbackDialog extends StandardDialog implements ActionListener,
         final StringBuilder serverInfo = new StringBuilder();
         final StringBuilder dmdircInfo = new StringBuilder();
         if (serverCheckbox.isSelected()) {
-            for (Server server : ServerManager.getServerManager().getServers()) {
-                if (!server.getState().isDisconnected()) {
-                    serverInfo.append("Server name: ").append(server.getName())
-                            .append("\n");
-                    serverInfo.append("Actual name: ").append(server.getParser()
-                            .getServerName()).append("\n");
-                    serverInfo.append("Network: ").append(server.getNetwork())
-                            .append("\n");
-                    serverInfo.append("IRCd: ").append(server.getParser()
-                            .getServerSoftware()).append(" - ");
-                    serverInfo.append(server.getParser()
-                            .getServerSoftwareType()).append("\n");
-                    serverInfo.append("Modes: ").append(server.getParser()
-                            .getBooleanChannelModes()).append(" ");
-                    serverInfo.append(server.getParser().getListChannelModes())
-                            .append(" ");
-                    serverInfo.append(server.getParser().
-                            getParameterChannelModes()).append(" ");
-                    serverInfo.append(server.getParser().
-                            getDoubleParameterChannelModes());
+            for (Server server : ServerManager.getServerManager()
+                    .getServers()) {
+                if (server.getState().isDisconnected()) {
+                    continue;
                 }
+                serverInfo.append("Server name: ").append(server.getName())
+                        .append("\n");
+                serverInfo.append("Actual name: ").append(server.getParser()
+                        .getServerName()).append("\n");
+                serverInfo.append("Network: ").append(server.getNetwork())
+                        .append("\n");
+                serverInfo.append("IRCd: ").append(server.getParser()
+                        .getServerSoftware()).append(" - ");
+                serverInfo.append(server.getParser().getServerSoftwareType())
+                        .append("\n");
+                serverInfo.append("Modes: ").append(server.getParser()
+                        .getBooleanChannelModes()).append(" ");
+                serverInfo.append(server.getParser().getListChannelModes())
+                        .append(" ");
+                serverInfo.append(server.getParser().getParameterChannelModes())
+                        .append(" ");
+                serverInfo.append(server.getParser().
+                        getDoubleParameterChannelModes());
             }
         }
         if (dmdircCheckbox.isSelected()) {
-            dmdircInfo.append("DMDirc version: " + Info.getDMDircVersion()).
-                    append("\n");
-            dmdircInfo.append("Profile directory: " + Main.getConfigDir()).
-                    append("\n");
-            dmdircInfo.append("Java version: " + Info.getJavaVersion()).append("\n");
-            dmdircInfo.append("OS Version: " + Info.getOSVersion()).append("\n");
-            dmdircInfo.append("Look & Feel: " + SwingController.getLookAndFeel());
+            dmdircInfo.append("DMDirc version: ").append(
+                    Info.getDMDircVersion()).append("\n");
+            dmdircInfo.append("Profile directory: ").append(
+                    Main.getConfigDir()).append("\n");
+            dmdircInfo.append("Java version: ").append(
+                    Info.getJavaVersion()).append("\n");
+            dmdircInfo.append("OS Version: ").append(
+                    Info.getOSVersion()).append("\n");
+            dmdircInfo.append("Look & Feel: ").append(
+                    SwingController.getLookAndFeel());
         }
         new SendWorker(me, name.getText().trim(), email.getText().trim(),
-                feedback.getText().trim(), serverInfo. toString().trim(),
+                feedback.getText().trim(), serverInfo.toString().trim(),
                 dmdircInfo.toString().trim()).executeInExecutor();
     }
 
@@ -290,19 +297,19 @@ public class FeedbackDialog extends StandardDialog implements ActionListener,
 
     /** {@inheritDoc} */
     @Override
-    public void insertUpdate(DocumentEvent e) {
+    public void insertUpdate(final DocumentEvent e) {
         validateInput();
     }
 
     /** {@inheritDoc} */
     @Override
-    public void removeUpdate(DocumentEvent e) {
+    public void removeUpdate(final DocumentEvent e) {
         validateInput();
     }
 
     /** {@inheritDoc} */
     @Override
-    public void changedUpdate(DocumentEvent e) {
+    public void changedUpdate(final DocumentEvent e) {
     //Ignore
     }
 
@@ -347,8 +354,8 @@ class SendWorker extends LoggingSwingWorker {
      * @param email Email
      * @param feedback Feedback
      */
-    public SendWorker(FeedbackDialog dialog, String name, String email,
-            String feedback) {
+    public SendWorker(final FeedbackDialog dialog, final String name,
+            final String email, final String feedback) {
         this(dialog, name, email, feedback, "", "");
     }
 
@@ -365,6 +372,8 @@ class SendWorker extends LoggingSwingWorker {
     public SendWorker(final FeedbackDialog dialog, final String name,
             final String email, final String feedback,
             final String serverInfo, final String dmdircInfo) {
+        super();
+        
         this.dialog = dialog;
         this.name = name;
         this.email = email;
@@ -375,13 +384,9 @@ class SendWorker extends LoggingSwingWorker {
         error = new StringBuilder();
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @throws java.lang.Exception If unable to return a result
-     */
+    /** {@inheritDoc} */
     @Override
-    protected Object doInBackground() throws Exception {
+    protected Object doInBackground() {
         final Map<String, String> postData =
                 new HashMap<String, String>();
 
@@ -394,7 +399,8 @@ class SendWorker extends LoggingSwingWorker {
         if (!feedback.isEmpty()) {
             postData.put("feedback", feedback);
         }
-        postData.put("version", IdentityManager.getGlobalConfig().getOption("version", "version"));
+        postData.put("version", IdentityManager.getGlobalConfig().getOption(
+                "version", "version"));
         if (!serverInfo.isEmpty()) {
             postData.put("serverInfo", serverInfo);
         }
@@ -402,6 +408,16 @@ class SendWorker extends LoggingSwingWorker {
             postData.put("dmdircInfo", dmdircInfo);
         }
 
+        return error;
+    }
+
+    /**
+     * Sends the error data to the server appending returned information to the
+     * global error variable.
+     *
+     * @param postData Feedback data to send
+     */
+    private void sendData(final Map<String, String> postData) {
         try {
             final List<String> response =
                     Downloader.getPage("http://www.dmdirc.com/feedback.php",
@@ -416,10 +432,8 @@ class SendWorker extends LoggingSwingWorker {
         } catch (MalformedURLException ex) {
             error.append("Malformed feedback URL.");
         } catch (IOException ex) {
-            error.append("Failure: " + ex.getMessage());
+            error.append("Failure: ").append(ex.getMessage());
         }
-
-        return error;
     }
 
     /** {@inheritDoc} */

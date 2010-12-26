@@ -36,29 +36,31 @@ import java.util.Collection;
  * @author chris
  */
 public class WebChannelWindow extends WebInputWindow implements ChannelWindow {
-    
+
     private final Channel channel;
 
-    public WebChannelWindow(final WebInterfaceUI controller, Channel channel) {
+    public WebChannelWindow(final WebInterfaceUI controller,
+            final Channel channel) {
         super(controller, channel);
         this.channel = channel;
     }
 
     /** {@inheritDoc} */
     @Override
-    public void updateNames(Collection<ChannelClientInfo> clients) {
+    public void updateNames(final Collection<ChannelClientInfo> clients) {
         updateNames();
     }
 
     /** {@inheritDoc} */
     @Override
-    public void addName(ChannelClientInfo client) {
-        DynamicRequestHandler.addEvent(new Event("addnicklist", client.getClient().getNickname()));
+    public void addName(final ChannelClientInfo client) {
+        DynamicRequestHandler.addEvent(new Event("addnicklist",
+                client.getClient().getNickname()));
     }
 
     /** {@inheritDoc} */
     @Override
-    public void removeName(ChannelClientInfo client) {
+    public void removeName(final ChannelClientInfo client) {
         updateNames();
     }
 
@@ -66,8 +68,10 @@ public class WebChannelWindow extends WebInputWindow implements ChannelWindow {
     @Override
     public void updateNames() {
         DynamicRequestHandler.addEvent(new Event("clearnicklist", null));
-        for (ChannelClientInfo cci : channel.getChannelInfo().getChannelClients()) {
-            DynamicRequestHandler.addEvent(new Event("addnicklist", cci.getClient().getNickname()));
+        for (ChannelClientInfo cci : channel.getChannelInfo()
+                .getChannelClients()) {
+            DynamicRequestHandler.addEvent(new Event("addnicklist",
+                    cci.getClient().getNickname()));
         }
     }
 

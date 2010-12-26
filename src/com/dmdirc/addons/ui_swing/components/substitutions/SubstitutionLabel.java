@@ -74,7 +74,6 @@ public class SubstitutionLabel extends JButton implements MouseListener,
 
         initComponents();
         addListeners();
-        layoutComponents();
     }
 
     /** Initialises the components. */
@@ -100,10 +99,6 @@ public class SubstitutionLabel extends JButton implements MouseListener,
         addMouseListener(this);
         addFocusListener(this);
         addActionListener(this);
-    }
-
-    /** Lays out the components. */
-    private void layoutComponents() {
     }
 
     /**
@@ -159,8 +154,9 @@ public class SubstitutionLabel extends JButton implements MouseListener,
     /** {@inheritDoc} */
     @Override
     public void dragGestureRecognized(final DragGestureEvent dge) {
-        dragSource.startDrag(dge, Cursor.getPredefinedCursor(Cursor.HAND_CURSOR),
-                new StringTransferable(substitution.toString()), null);
+        dragSource.startDrag(dge, Cursor.getPredefinedCursor(
+                Cursor.HAND_CURSOR), new StringTransferable(substitution
+                .toString()), null);
     }
 
     /**
@@ -169,9 +165,10 @@ public class SubstitutionLabel extends JButton implements MouseListener,
      * @param e Action event
      */
     @Override
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(final ActionEvent e) {
         if (previousComponent instanceof JTextComponent) {
-            ((JTextComponent) previousComponent).replaceSelection(substitution.toString());
+            ((JTextComponent) previousComponent).replaceSelection(
+                    substitution.toString());
         }
     }
 
@@ -181,7 +178,7 @@ public class SubstitutionLabel extends JButton implements MouseListener,
      * @param e Focus event
      */
     @Override
-    public void focusGained(FocusEvent e) {
+    public void focusGained(final FocusEvent e) {
         previousComponent = e.getOppositeComponent();
     }
 
@@ -191,7 +188,7 @@ public class SubstitutionLabel extends JButton implements MouseListener,
      * @param e Focus event
      */
     @Override
-    public void focusLost(FocusEvent e) {
+    public void focusLost(final FocusEvent e) {
         //Ignore
     }
 }
