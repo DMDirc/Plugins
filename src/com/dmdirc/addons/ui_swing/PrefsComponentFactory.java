@@ -30,6 +30,7 @@ import com.dmdirc.addons.ui_swing.components.colours.OptionalColourChooser;
 import com.dmdirc.addons.ui_swing.components.durationeditor.DurationDisplay;
 import com.dmdirc.addons.ui_swing.components.durationeditor.DurationListener;
 import com.dmdirc.addons.ui_swing.components.renderers.MapEntryRenderer;
+import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.addons.ui_swing.components.validating.ValidatingJTextField;
 import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.util.validators.NumericalValidator;
@@ -111,10 +112,15 @@ public final class PrefsComponentFactory {
                 option = getFileBrowseOption(setting, JFileChooser.FILES_ONLY);
                 break;
             case DIRECTORY:
-                option = getFileBrowseOption(setting, JFileChooser.DIRECTORIES_ONLY);
+                option = getFileBrowseOption(setting,
+                        JFileChooser.DIRECTORIES_ONLY);
                 break;
             case FILES_AND_DIRECTORIES:
-                option = getFileBrowseOption(setting, JFileChooser.FILES_AND_DIRECTORIES);
+                option = getFileBrowseOption(setting,
+                        JFileChooser.FILES_AND_DIRECTORIES);
+                break;
+            case LABEL:
+                option = getLabelOption(setting);
                 break;
             default:
                 throw new IllegalArgumentException(setting.getType()
@@ -134,7 +140,8 @@ public final class PrefsComponentFactory {
      * @return A JComponent descendent for the specified setting
      */
     private static JComponent getTextOption(final PreferencesSetting setting) {
-        final ValidatingJTextField option = new ValidatingJTextField(setting.getValidator());
+        final ValidatingJTextField option = new ValidatingJTextField(
+                setting.getValidator());
         option.setText(setting.getValue());
 
         option.addKeyListener(new KeyAdapter() {
@@ -153,7 +160,8 @@ public final class PrefsComponentFactory {
      * @param setting The setting to create the component for
      * @return A JComponent descendent for the specified setting
      */
-    private static JComponent getBooleanOption(final PreferencesSetting setting) {
+    private static JComponent getBooleanOption(
+            final PreferencesSetting setting) {
         final JCheckBox option = new JCheckBox();
         option.setSelected(Boolean.parseBoolean(setting.getValue()));
         option.addChangeListener(new ChangeListener() {
@@ -161,7 +169,8 @@ public final class PrefsComponentFactory {
             /** {@inheritDoc} */
             @Override
             public void stateChanged(final ChangeEvent e) {
-                setting.setValue(String.valueOf(((JCheckBox) e.getSource()).isSelected()));
+                setting.setValue(String.valueOf(((JCheckBox) e.getSource())
+                        .isSelected()));
             }
         });
 
@@ -175,11 +184,13 @@ public final class PrefsComponentFactory {
      * @return A JComponent descendent for the specified setting
      */
     private static JComponent getComboOption(final PreferencesSetting setting) {
-        final JComboBox option = new JComboBox(setting.getComboOptions().entrySet().toArray());
+        final JComboBox option = new JComboBox(setting.getComboOptions()
+                .entrySet().toArray());
         option.setRenderer(new MapEntryRenderer());
         option.setEditable(false);
 
-        for (Map.Entry<String, String> entry : setting.getComboOptions().entrySet()) {
+        for (Map.Entry<String, String> entry : setting.getComboOptions()
+                .entrySet()) {
             if (entry.getKey().equals(setting.getValue())) {
                 option.setSelectedItem(entry);
                 break;
@@ -191,7 +202,8 @@ public final class PrefsComponentFactory {
             /** {@inheritDoc} */
             @Override
             public void actionPerformed(final ActionEvent e) {
-                final Object selected = ((JComboBox) e.getSource()).getSelectedItem();
+                final Object selected = ((JComboBox) e.getSource())
+                        .getSelectedItem();
                 if (selected != null) {
                     setting.setValue((String) ((Map.Entry) selected).getKey());
                 }
@@ -207,7 +219,8 @@ public final class PrefsComponentFactory {
      * @param setting The setting to create the component for
      * @return A JComponent descendent for the specified setting
      */
-    private static JComponent getIntegerOption(final PreferencesSetting setting) {
+    private static JComponent getIntegerOption(
+            final PreferencesSetting setting) {
         JSpinner option;
 
         try {
@@ -252,11 +265,12 @@ public final class PrefsComponentFactory {
      * @param setting The setting to create the component for
      * @return A JComponent descendent for the specified setting
      */
-    private static JComponent getOptionalIntegerOption(final PreferencesSetting setting) {
+    private static JComponent getOptionalIntegerOption(
+            final PreferencesSetting setting) {
         final boolean state = setting.getValue() != null
                 && !setting.getValue().startsWith("false:");
-        final String integer = setting.getValue() == null ? "0" : setting.getValue().
-                substring(1 + setting.getValue().indexOf(':'));
+        final String integer = setting.getValue() == null ? "0" : setting
+                .getValue().substring(1 + setting.getValue().indexOf(':'));
 
         OptionalJSpinner option;
         Validator optionalValidator = setting.getValidator();
@@ -270,16 +284,16 @@ public final class PrefsComponentFactory {
         }
 
         try {
-            if (numericalValidator != null) {
+            if (numericalValidator == null) {
+                option = new OptionalJSpinner(new SpinnerNumberModel());
+                option.setValue(Integer.parseInt(integer));
+                option.setSelected(state);
+            } else {
                 option = new OptionalJSpinner(
                         new SpinnerNumberModel(Integer.parseInt(integer),
                         ((NumericalValidator) numericalValidator).getMin(),
                         ((NumericalValidator) numericalValidator).getMax(),
                         1), state);
-            } else {
-                option = new OptionalJSpinner(new SpinnerNumberModel());
-                option.setValue(Integer.parseInt(integer));
-                option.setSelected(state);
             }
         } catch (NumberFormatException ex) {
             option = new OptionalJSpinner(new SpinnerNumberModel(), state);
@@ -290,8 +304,8 @@ public final class PrefsComponentFactory {
             /** {@inheritDoc} */
             @Override
             public void stateChanged(final ChangeEvent e) {
-                setting.setValue(((OptionalJSpinner) e.getSource()).isSelected() + ":" +
-                        ((OptionalJSpinner) e.getSource()).getValue().
+                setting.setValue(((OptionalJSpinner) e.getSource()).isSelected()
+                        + ":" + ((OptionalJSpinner) e.getSource()).getValue().
                         toString());
             }
         });
@@ -305,7 +319,8 @@ public final class PrefsComponentFactory {
      * @param setting The setting to create the component for
      * @return A JComponent descendent for the specified setting
      */
-    private static JComponent getDurationOption(final PreferencesSetting setting) {
+    private static JComponent getDurationOption(
+            final PreferencesSetting setting) {
         DurationDisplay option;
 
         try {
@@ -332,8 +347,10 @@ public final class PrefsComponentFactory {
      * @param setting The setting to create the component for
      * @return A JComponent descendent for the specified setting
      */
-    private static JComponent getColourOption(final PreferencesSetting setting) {
-        final ColourChooser option = new ColourChooser(setting.getValue(), true, true);
+    private static JComponent getColourOption(
+            final PreferencesSetting setting) {
+        final ColourChooser option = new ColourChooser(setting.getValue(),
+                true, true);
 
         option.addActionListener(new ActionListener() {
 
@@ -348,27 +365,30 @@ public final class PrefsComponentFactory {
     }
 
     /**
-     * Initialises and returns an OptionalColourChooser for the specified setting.
+     * Initialises and returns an OptionalColourChooser for the specified
+     * setting.
      *
      * @param setting The setting to create the component for
      * @return A JComponent descendent for the specified setting
      */
-    private static JComponent getOptionalColourOption(final PreferencesSetting setting) {
+    private static JComponent getOptionalColourOption(
+            final PreferencesSetting setting) {
         final boolean state = setting.getValue() != null
                 && !setting.getValue().startsWith("false:");
-        final String colour = setting.getValue() == null ? "0" : setting.getValue().
-                substring(1 + setting.getValue().indexOf(':'));
+        final String colour = setting.getValue() == null ? "0" : setting
+                .getValue().substring(1 + setting.getValue().indexOf(':'));
 
-        final OptionalColourChooser option = new OptionalColourChooser(colour, state, true, true);
+        final OptionalColourChooser option = new OptionalColourChooser(colour,
+                state, true, true);
 
         option.addActionListener(new ActionListener() {
 
             /** {@inheritDoc} */
             @Override
             public void actionPerformed(final ActionEvent e) {
-                setting.setValue(
-                        ((OptionalColourChooser) e.getSource()).isEnabled() + ":"
-                        + ((OptionalColourChooser) e.getSource()).getColour());
+                setting.setValue(((OptionalColourChooser) e.getSource())
+                        .isEnabled() + ":" + ((OptionalColourChooser) e
+                        .getSource()).getColour());
             }
         });
 
@@ -391,7 +411,8 @@ public final class PrefsComponentFactory {
             /** {@inheritDoc} */
             @Override
             public void actionPerformed(final ActionEvent e) {
-                Object value = ((FontPicker) e.getSource()).getSelectedItem();
+                final Object value = ((FontPicker) e.getSource())
+                        .getSelectedItem();
                 if (value instanceof Font) {
                     setting.setValue(((Font) value).getFamily());
                 } else {
@@ -411,8 +432,8 @@ public final class PrefsComponentFactory {
      *
      * @return A JComponent descendent for the specified setting
      */
-    private static JComponent getFileBrowseOption(final PreferencesSetting setting,
-            final int type) {
+    private static JComponent getFileBrowseOption(
+            final PreferencesSetting setting, final int type) {
         final FileBrowser option = new FileBrowser(setting, type);
 
         option.addActionListener(new ActionListener() {
@@ -432,6 +453,17 @@ public final class PrefsComponentFactory {
         });
 
         return option;
+    }
+
+    /**
+     * Initialises and returns a Label for the specified setting.
+     *
+     * @param setting The setting to create the component for
+     *
+     * @return A JComponent descendent for the specified setting
+     */
+    private static JComponent getLabelOption(final PreferencesSetting setting) {
+        return new TextLabel(setting.getValue());
     }
 
 }
