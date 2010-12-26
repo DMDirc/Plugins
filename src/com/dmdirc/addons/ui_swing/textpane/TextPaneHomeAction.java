@@ -39,7 +39,7 @@ public class TextPaneHomeAction extends AbstractAction {
      */
     private static final long serialVersionUID = 1;
     /** TextPane instance. */
-    private TextPane textpane;
+    private final TextPane textpane;
 
     /**
      * Instantiates a new action.
@@ -47,6 +47,8 @@ public class TextPaneHomeAction extends AbstractAction {
      * @param textpane Textpane
      */
     public TextPaneHomeAction(final TextPane textpane) {
+        super();
+
         this.textpane = textpane;
     }
 
@@ -55,7 +57,7 @@ public class TextPaneHomeAction extends AbstractAction {
      * @param e Action event
      */
     @Override
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(final ActionEvent e) {
         textpane.goToHome();
     }
 }

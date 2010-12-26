@@ -48,7 +48,7 @@ import net.miginfocom.swing.MigLayout;
 /**
  * Action conditioneditor panel.
  */
-public class ActionConditionEditorPanel extends JPanel implements 
+public class ActionConditionEditorPanel extends JPanel implements
         ActionListener, DocumentListener, PropertyChangeListener {
 
     /**
@@ -280,7 +280,7 @@ public class ActionConditionEditorPanel extends JPanel implements
 
     /** {@inheritDoc} */
     @Override
-    public void setEnabled(boolean enabled) {
+    public void setEnabled(final boolean enabled) {
         super.setEnabled(enabled);
         arguments.setEnabled(enabled);
         if (enabled) {
@@ -299,7 +299,7 @@ public class ActionConditionEditorPanel extends JPanel implements
      *
      * @param trigger new trigger
      */
-    void setTrigger(final ActionType trigger) {
+    public void setTrigger(final ActionType trigger) {
         this.trigger = trigger;
 
         setEnabled(trigger != null);
@@ -310,7 +310,7 @@ public class ActionConditionEditorPanel extends JPanel implements
 
     /** {@inheritDoc} */
     @Override
-    public void propertyChange(PropertyChangeEvent evt) {
+    public void propertyChange(final PropertyChangeEvent evt) {
         firePropertyChange("validationResult", evt.getOldValue(),
                 evt.getNewValue());
     }

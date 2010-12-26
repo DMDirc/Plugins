@@ -33,9 +33,9 @@ import com.dmdirc.ui.interfaces.InputField;
  */
 public class WebInputHandler extends InputHandler {
 
-    public WebInputHandler(InputField thisTarget,
-                           CommandParser thisCommandParser,
-                           WebInputWindow thisParentWindow) {
+    public WebInputHandler(final InputField thisTarget,
+                           final CommandParser thisCommandParser,
+                           final WebInputWindow thisParentWindow) {
         super(thisTarget, thisCommandParser, thisParentWindow);
     }
 
@@ -80,7 +80,7 @@ public class WebInputHandler extends InputHandler {
     /** {@inheritDoc} */
     @Override
     @SuppressWarnings("PMD")
-    public void doTabCompletion(boolean shiftPressed) {
+    public void doTabCompletion(final boolean shiftPressed) {
         super.doTabCompletion(shiftPressed);
     }
 

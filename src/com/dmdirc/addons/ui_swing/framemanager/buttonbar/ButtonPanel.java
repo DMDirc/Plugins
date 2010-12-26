@@ -20,12 +20,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 package com.dmdirc.addons.ui_swing.framemanager.buttonbar;
 
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Rectangle;
-
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 
@@ -37,10 +37,10 @@ import net.miginfocom.swing.MigLayout;
 /**
  * Implements scrollable onto a JPanel so we have more control over scrolling.
  *
- * @author Simon Mott
  * @since 0.6.4
  */
-public class ButtonPanel extends JPanel implements Scrollable, MouseWheelListener {
+public class ButtonPanel extends JPanel implements Scrollable,
+        MouseWheelListener {
 
     /**
      * A version number for this class. It should be changed whenever the class
@@ -49,7 +49,7 @@ public class ButtonPanel extends JPanel implements Scrollable, MouseWheelListene
      */
     private static final long serialVersionUID = 1;
     /** The ButtonBar that created this Panel. */
-    private ButtonBar buttonBar;
+    private final ButtonBar buttonBar;
 
     /**
      * Constructor for ButtonPanel.
@@ -57,7 +57,7 @@ public class ButtonPanel extends JPanel implements Scrollable, MouseWheelListene
      * @param layout Layout settings for this ButtonPanel
      * @param buttonBar the buttonBar that created this Panel
      */
-    public ButtonPanel(final MigLayout layout, ButtonBar buttonBar) {
+    public ButtonPanel(final MigLayout layout, final ButtonBar buttonBar) {
         super(layout);
         this.buttonBar = buttonBar;
     }
@@ -70,13 +70,15 @@ public class ButtonPanel extends JPanel implements Scrollable, MouseWheelListene
 
     /** {@inheritDoc} */
     @Override
-    public int getScrollableUnitIncrement(Rectangle visibleRect, int orientation, int direction) {
+    public int getScrollableUnitIncrement(final Rectangle visibleRect,
+            final int orientation, final int direction) {
         return buttonBar.getButtonHeight();
     }
 
     /** {@inheritDoc} */
     @Override
-    public int getScrollableBlockIncrement(Rectangle visibleRect, int orientation, int direction) {
+    public int getScrollableBlockIncrement(final Rectangle visibleRect,
+            final int orientation, final int direction) {
         return buttonBar.getButtonHeight();
     }
 
@@ -94,19 +96,20 @@ public class ButtonPanel extends JPanel implements Scrollable, MouseWheelListene
 
     /** {@inheritDoc} */
     @Override
-    public void mouseWheelMoved(MouseWheelEvent e) {
+    public void mouseWheelMoved(final MouseWheelEvent e) {
         e.consume();
         final int selectedIndex = getSelectedIndex();
         int newIndex = 0;
         if (e.getWheelRotation() < 0) {
             //Up
-            newIndex = selectedIndex > 0 ? selectedIndex - 1 :
-                getComponentCount() - 1;
+            newIndex = selectedIndex > 0 ? selectedIndex - 1
+                    : getComponentCount() - 1;
         } else if (e.getWheelRotation() > 0) {
             //Down
             newIndex = (selectedIndex + 1) % getComponentCount();
         }
-        ((FrameToggleButton) getComponent(newIndex)).getWindow().activateFrame();
+        ((FrameToggleButton) getComponent(newIndex)).getWindow()
+                .activateFrame();
     }
 
     /**
@@ -128,5 +131,4 @@ public class ButtonPanel extends JPanel implements Scrollable, MouseWheelListene
         }
         return selectedIndex;
     }
-
 }

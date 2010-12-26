@@ -57,12 +57,14 @@ public class URLHandlerTableModel extends AbstractTableModel {
 
     /**
      * Instantiates a new table model.
-     * 
+     *
      * @param uris URIs to show
      * @param handlers Handlers to show
      */
     public URLHandlerTableModel(final List<URI> uris,
             final List<String> handlers) {
+        super();
+
         this.uris = uris;
         this.handlers = handlers;
     }
@@ -88,8 +90,8 @@ public class URLHandlerTableModel extends AbstractTableModel {
             case 1:
                 return "Handler";
             default:
-                throw new IllegalArgumentException("Unknown column: " +
-                        columnIndex);
+                throw new IllegalArgumentException("Unknown column: "
+                        + columnIndex);
         }
     }
 
@@ -109,13 +111,14 @@ public class URLHandlerTableModel extends AbstractTableModel {
 
     /** {@inheritDoc} */
     @Override
-    public Object getValueAt(int rowIndex, int columnIndex) {
+    public Object getValueAt(final int rowIndex, final int columnIndex) {
         if (uris.size() <= rowIndex) {
-            throw new IndexOutOfBoundsException(rowIndex + " >= " +
-                    uris.size());
+            throw new IndexOutOfBoundsException(rowIndex + " >= "
+                    + uris.size());
         }
         if (rowIndex < 0) {
-            throw new IllegalArgumentException("Must specify a positive integer");
+            throw new IllegalArgumentException(
+                    "Must specify a positive integer");
         }
         switch (columnIndex) {
             case 0:
@@ -123,20 +126,22 @@ public class URLHandlerTableModel extends AbstractTableModel {
             case 1:
                 return handlers.get(rowIndex);
             default:
-                throw new IllegalArgumentException("Unknown column: " +
-                        columnIndex);
+                throw new IllegalArgumentException("Unknown column: "
+                        + columnIndex);
         }
     }
 
     /** {@inheritDoc} */
     @Override
-    public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+    public void setValueAt(final Object aValue, final int rowIndex,
+            final int columnIndex) {
         if (uris.size() <= rowIndex) {
-            throw new IndexOutOfBoundsException(rowIndex + " >= " +
-                    uris.size());
+            throw new IndexOutOfBoundsException(rowIndex + " >= "
+                    + uris.size());
         }
         if (rowIndex < 0) {
-            throw new IllegalArgumentException("Must specify a positive integer");
+            throw new IllegalArgumentException(
+                    "Must specify a positive integer");
         }
         switch (columnIndex) {
             case 0:
@@ -147,26 +152,29 @@ public class URLHandlerTableModel extends AbstractTableModel {
                 break;
             case 1:
                 if (!(aValue instanceof String)) {
-                    throw new IllegalArgumentException("Value must be a String");
+                    throw new IllegalArgumentException(
+                            "Value must be a String");
                 }
                 handlers.set(rowIndex, (String) aValue);
                 break;
             default:
-                throw new IllegalArgumentException("Unknown column: " +
-                        columnIndex);
+                throw new IllegalArgumentException("Unknown column: "
+                        + columnIndex);
         }
         fireTableCellUpdated(rowIndex, columnIndex);
     }
 
     /**
      * Adds a URI to the model.
-     * 
+     *
      * @param uri URI to add
      */
     public void addURI(final URI uri) {
         final String handler;
-        if (IdentityManager.getGlobalConfig().hasOptionString("protocol", uri.getScheme())) {
-            handler = IdentityManager.getGlobalConfig().getOption("protocol", uri.getScheme());
+        if (IdentityManager.getGlobalConfig().hasOptionString("protocol",
+                uri.getScheme())) {
+            handler = IdentityManager.getGlobalConfig().getOption("protocol",
+                    uri.getScheme());
         } else {
             handler = "";
         }
@@ -177,7 +185,7 @@ public class URLHandlerTableModel extends AbstractTableModel {
 
     /**
      * Removes a URI to the model.
-     * 
+     *
      * @param uri URI to remove
      */
     public void removeURI(final URI uri) {
@@ -186,7 +194,7 @@ public class URLHandlerTableModel extends AbstractTableModel {
 
     /**
      * Removes a URI to the model.
-     * 
+     *
      * @param index Index of the URI to remove
      */
     public void removeURI(final int index) {
@@ -196,19 +204,19 @@ public class URLHandlerTableModel extends AbstractTableModel {
             fireTableRowsDeleted(index, index);
         }
     }
-    
+
     /**
      * Returns a map of the URL handlers in this model.
-     * 
+     *
      * @return URL Handler map
      */
     public Map<URI, String> getURLHandlers() {
         final Map<URI, String> urlHandlers = new HashMap<URI, String>();
-        
+
         for (int i = 0; i < uris.size(); i++) {
             urlHandlers.put(uris.get(i), handlers.get(i));
         }
-        
+
         return urlHandlers;
     }
 }

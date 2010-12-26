@@ -29,19 +29,19 @@ import com.dmdirc.addons.ui_web.uicomponents.WebWindow;
  * @author chris
  */
 public class Message {
-    
-    private String message;
-    private WebWindow window;
 
-    public Message(String message, WebWindow aThis) {
+    private final String message;
+    private final WebWindow window;
+
+    public Message(final String message, final WebWindow aThis) {
         this.message = message;
         this.window = aThis;
     }
-    
+
     public String getMessage() {
         return message;
     }
-    
+
     public String getWindow() {
         return window.getId();
     }

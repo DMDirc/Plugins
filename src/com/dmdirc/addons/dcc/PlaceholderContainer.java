@@ -29,8 +29,6 @@ import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.plugins.PluginManager;
-import com.dmdirc.ui.WindowManager;
-import com.dmdirc.ui.interfaces.Window;
 
 import java.awt.Dialog.ModalityType;
 
@@ -48,7 +46,8 @@ public class PlaceholderContainer extends FrameContainer<PlaceholderWindow> {
      * @param plugin The plugin which owns this placeholder
      */
     public PlaceholderContainer(final DCCPlugin plugin) {
-        super("dcc", "DCCs", "DCCs", PlaceholderWindow.class, IdentityManager.getGlobalConfig());
+        super("dcc", "DCCs", "DCCs", PlaceholderWindow.class,
+                IdentityManager.getGlobalConfig());
 
         this.plugin = plugin;
     }
@@ -71,12 +70,13 @@ public class PlaceholderContainer extends FrameContainer<PlaceholderWindow> {
                     .getPluginManager().getPluginInfoByName("ui_swing")
                     .getPlugin()).getMainFrame(), ModalityType.MODELESS,
                     "Close confirmation",
-                    "Closing this window will cause all existing DCCs " +
-                    "to terminate, are you sure you want to do this?") {
+                    "Closing this window will cause all existing DCCs "
+                    + "to terminate, are you sure you want to do this?") {
                 /**
-                 * A version number for this class. It should be changed whenever the class
-                 * structure is changed (or anything else that would prevent serialized
-                 * objects being unserialized with the new class).
+                 * A version number for this class. It should be changed
+                 * whenever the class structure is changed (or anything else
+                 * that would prevent serialized objects being unserialized
+                 * with the new class).
                  */
                 private static final long serialVersionUID = 1;
 

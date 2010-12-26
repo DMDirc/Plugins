@@ -45,12 +45,14 @@ public class Client {
     private final List<Event> events = new LinkedList<Event>();
 
     public Client(final WebInterfaceUI controller, final String ip) {
-        events.add(new Event("statusbar", "Welcome to the DMDirc web interface"));
+        events.add(new Event("statusbar",
+                "Welcome to the DMDirc web interface"));
 
         this.ip = ip;
 
         final List<Window> added = new LinkedList<Window>();
-        final List<Window> queued = new LinkedList<Window>(WebWindow.getWindows());
+        final List<Window> queued = new LinkedList<Window>(
+                WebWindow.getWindows());
 
         while (!queued.isEmpty()) {
             final Window window = queued.remove(0);
@@ -81,7 +83,7 @@ public class Client {
         return events;
     }
 
-    public void setContinuation(Continuation continuation) {
+    public void setContinuation(final Continuation continuation) {
         this.continuation = continuation;
     }
 

@@ -52,21 +52,24 @@ import org.apache.commons.lang.StringEscapeUtils;
  *
  * @author chris
  */
-public class WebWindow implements Window, IRCDocumentListener, FrameInfoListener {
+public class WebWindow implements Window, IRCDocumentListener,
+        FrameInfoListener {
 
     protected static int counter = 0;
 
-    protected static final Map<String, WebWindow> WINDOWS = new HashMap<String, WebWindow>();
+    protected static final Map<String, WebWindow> WINDOWS
+            = new HashMap<String, WebWindow>();
 
     protected int myID = ++counter;
 
     private final FrameContainer<?> parent;
 
-    private List<String> messages = new ArrayList<String>();
+    private final List<String> messages = new ArrayList<String>();
 
     private String title;
 
-    public WebWindow(final WebInterfaceUI controller, final FrameContainer<?> parent) {
+    public WebWindow(final WebInterfaceUI controller,
+            final FrameContainer<?> parent) {
         super();
 
         this.parent = parent;
@@ -81,8 +84,8 @@ public class WebWindow implements Window, IRCDocumentListener, FrameInfoListener
             DynamicRequestHandler.addEvent(new Event("newwindow", this));
         } else {
             DynamicRequestHandler.addEvent(new Event("newchildwindow",
-                    new Object[]{controller.getWindowManager().getWindow(parent.getParent()),
-                    this}));
+                    new Object[]{controller.getWindowManager().getWindow(
+                            parent.getParent()), this}));
         }
     }
 
@@ -101,28 +104,28 @@ public class WebWindow implements Window, IRCDocumentListener, FrameInfoListener
         for (int i = 0; i < getContainer().getDocument().getNumLines(); i++) {
             messages.add(style(getContainer().getDocument().getStyledLine(i)));
         }
-        
+
         return messages;
     }
 
     /** {@inheritDoc} */
     @Override
     @Deprecated
-    public void addLine(String messageType, Object... args) {
+    public void addLine(final String messageType, final Object... args) {
         parent.addLine(messageType, args);
     }
 
     /** {@inheritDoc} */
     @Override
     @Deprecated
-    public void addLine(StringBuffer messageType, Object... args) {
+    public void addLine(final StringBuffer messageType, final Object... args) {
         parent.addLine(messageType, args);
     }
 
     /** {@inheritDoc} */
     @Override
     @Deprecated
-    public void addLine(String line, boolean timestamp) {
+    public void addLine(final String line, final boolean timestamp) {
         parent.addLine(line, timestamp);
     }
 
@@ -156,7 +159,7 @@ public class WebWindow implements Window, IRCDocumentListener, FrameInfoListener
     /** {@inheritDoc} */
     @Override
     @Deprecated
-    public void setVisible(boolean isVisible) {
+    public void setVisible(final boolean isVisible) {
         // Do nothing
     }
 
@@ -177,14 +180,14 @@ public class WebWindow implements Window, IRCDocumentListener, FrameInfoListener
         return true;
     }
 
-    public void setMaximum(boolean b) throws PropertyVetoException {
+    public void setMaximum(final boolean b) throws PropertyVetoException {
         // Do nothing
     }
 
     /** {@inheritDoc} */
     @Override
     @Deprecated
-    public void setTitle(String title) {
+    public void setTitle(final String title) {
         this.title = title;
     }
 
@@ -242,7 +245,8 @@ public class WebWindow implements Window, IRCDocumentListener, FrameInfoListener
         return builder.toString();
     }
 
-    protected static void style(final Map<AttributedCharacterIterator.Attribute, Object> map,
+    protected static void style(
+            final Map<AttributedCharacterIterator.Attribute, Object> map,
             final StringBuilder builder) {
         if (builder.length() > 0) {
             builder.append("</span>");
@@ -252,7 +256,8 @@ public class WebWindow implements Window, IRCDocumentListener, FrameInfoListener
 
         builder.append("<span style=\"");
 
-        for (Map.Entry<AttributedCharacterIterator.Attribute, Object> entry : map.entrySet()) {
+        for (Map.Entry<AttributedCharacterIterator.Attribute, Object> entry
+                : map.entrySet()) {
 
             if (entry.getKey().equals(TextAttribute.FOREGROUND)) {
                 builder.append("color: ");
@@ -273,20 +278,22 @@ public class WebWindow implements Window, IRCDocumentListener, FrameInfoListener
             } else if (entry.getKey().equals(IRCTextAttribute.HYPERLINK)) {
                 builder.append("cursor: pointer; ");
                 link = "link_hyperlink('"
-                        + StringEscapeUtils.escapeHtml(
-                        StringEscapeUtils.escapeJavaScript((String) entry.getValue()))
+                        + StringEscapeUtils.escapeHtml(StringEscapeUtils
+                        .escapeJavaScript((String) entry.getValue()))
                         + "');";
             } else if (entry.getKey().equals(IRCTextAttribute.CHANNEL)) {
                 builder.append("cursor: pointer; ");
                 link = "link_channel('"
                         + StringEscapeUtils.escapeHtml(
-                        StringEscapeUtils.escapeJavaScript((String) entry.getValue()))
+                        StringEscapeUtils.escapeJavaScript(
+                        (String) entry.getValue()))
                         + "');";
             } else if (entry.getKey().equals(IRCTextAttribute.NICKNAME)) {
                 builder.append("cursor: pointer; ");
                 link = "link_query('"
                         + StringEscapeUtils.escapeHtml(
-                        StringEscapeUtils.escapeJavaScript((String) entry.getValue()))
+                        StringEscapeUtils.escapeJavaScript(
+                        (String) entry.getValue()))
                         + "');";
             }
         }
@@ -351,20 +358,20 @@ public class WebWindow implements Window, IRCDocumentListener, FrameInfoListener
     }
 
     @Override
-    public void lineAdded(int line, int size) {
-        DynamicRequestHandler.addEvent(new Event("lineadded",
-                new Message(style(parent.getDocument().getStyledLine(line)), this)));
+    public void lineAdded(final int line, final int size) {
+        DynamicRequestHandler.addEvent(new Event("lineadded", new Message(
+                style(parent.getDocument().getStyledLine(line)), this)));
     }
 
     @Override
-    public void linesAdded(int line, int length, int size) {
+    public void linesAdded(final int line, final int length, final int size) {
         for (int i = 0; i < length; i++) {
             lineAdded(line + i, size);
         }
     }
 
     @Override
-    public void trimmed(int newSize, int numTrimmed) {
+    public void trimmed(final int newSize, final int numTrimmed) {
         //TODO FIXME
     }
 
@@ -379,17 +386,18 @@ public class WebWindow implements Window, IRCDocumentListener, FrameInfoListener
     }
 
     @Override
-    public void iconChanged(FrameContainer<?> window, String icon) {
+    public void iconChanged(final FrameContainer<?> window, final String icon) {
         //TODO FIXME
     }
 
     @Override
-    public void nameChanged(FrameContainer<?> window, String name) {
+    public void nameChanged(final FrameContainer<?> window, final String name) {
         //TODO FIXME
     }
 
     @Override
-    public void titleChanged(FrameContainer<?> window, String title) {
+    public void titleChanged(final FrameContainer<?> window,
+            final String title) {
         this.title = title;
     }
 

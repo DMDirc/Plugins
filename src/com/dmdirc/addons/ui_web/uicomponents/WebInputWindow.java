@@ -36,21 +36,23 @@ import java.util.Map;
  * @author chris
  */
 public class WebInputWindow extends WebWindow implements InputWindow {
-    
+
     private final WritableFrameContainer<?> parent;
-    
+
     private final CommandParser commandparser;
-    
+
     private final WebInputHandler inputhandler;
-    
+
     private final Map<String, WebInputHandler> inputHandlers
             = new HashMap<String, WebInputHandler>();
 
-    public WebInputWindow(WebInterfaceUI controller, WritableFrameContainer<?> parent) {
+    public WebInputWindow(final WebInterfaceUI controller,
+            final WritableFrameContainer<?> parent) {
         super(controller, parent);
         this.parent = parent;
         this.commandparser = parent.getCommandParser();
-        this.inputhandler = new WebInputHandler(new WebInputField(), commandparser, this);
+        this.inputhandler = new WebInputHandler(new WebInputField(),
+                commandparser, this);
     }
 
     /** {@inheritDoc} */
@@ -68,19 +70,19 @@ public class WebInputWindow extends WebWindow implements InputWindow {
 
     public InputHandler getInputHandler(final String clientID) {
         if (!inputHandlers.containsKey(clientID)) {
-            WebInputHandler ih
-                    = new WebInputHandler(new WebInputField(clientID), commandparser, this);
+            final WebInputHandler ih = new WebInputHandler(
+                    new WebInputField(clientID), commandparser, this);
             ih.setTabCompleter(inputhandler.getTabCompleter());
             inputHandlers.put(clientID, ih);
         }
-        
+
         return inputHandlers.get(clientID);
     }
-    
-    public InputHandler getInputHandler(final String clientID, final String text,
-            final String selStart, final String selEnd) {
+
+    public InputHandler getInputHandler(final String clientID,
+            final String text, final String selStart, final String selEnd) {
         int sel1, sel2;
-        
+
         try {
             sel1 = Integer.parseInt(selStart);
             sel2 = Integer.parseInt(selEnd);
@@ -88,20 +90,20 @@ public class WebInputWindow extends WebWindow implements InputWindow {
             sel1 = 0;
             sel2 = 0;
         }
-        
-        WebInputHandler ih = (WebInputHandler) getInputHandler(clientID);
-        WebInputField field = (WebInputField) ih.getTarget();
+
+        final WebInputHandler ih = (WebInputHandler) getInputHandler(clientID);
+        final WebInputField field = (WebInputField) ih.getTarget();
         field.setContent(text);
         field.setSelStart(sel1);
         field.setSelEnd(sel2);
-        
+
         return ih;
-    }    
+    }
 
     /** {@inheritDoc} */
     @Override
     @Deprecated
-    public void setAwayIndicator(boolean isAway) {
+    public void setAwayIndicator(final boolean isAway) {
         // Do nothing
     }
 

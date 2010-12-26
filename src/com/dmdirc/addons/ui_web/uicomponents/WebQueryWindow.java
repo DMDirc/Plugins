@@ -31,7 +31,7 @@ import com.dmdirc.ui.interfaces.QueryWindow;
  * @author chris
  */
 public class WebQueryWindow extends WebInputWindow implements QueryWindow {
-    
+
     private final Query query;
 
     public WebQueryWindow(final WebInterfaceUI controller, final Query parent) {

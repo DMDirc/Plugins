@@ -1,17 +1,16 @@
 /*
- * 
  * Copyright (c) 2006-2010 Chris Smith, Shane Mc Cormack, Gregory Holmes
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -50,7 +49,7 @@ public class AddonInfoLabel extends JPanel {
     /** Addon info to be represented. */
     private final AddonInfo addonInfo;
     /** Parent window. */
-    private BrowserWindow parentWindow;
+    private final BrowserWindow parentWindow;
 
     /**
      * Creates a new addon info label to describe the specified addon info.
@@ -58,14 +57,19 @@ public class AddonInfoLabel extends JPanel {
      * @param addonInfo Addon to describe
      * @param parentWindow Parent window
      */
-    public AddonInfoLabel(final AddonInfo addonInfo, 
+    public AddonInfoLabel(final AddonInfo addonInfo,
             final BrowserWindow parentWindow) {
+        super();
+
         this.addonInfo = addonInfo;
         this.parentWindow = parentWindow;
 
         init();
     }
 
+    /**
+     * Initialises the components used in this addon info label.
+     */
     private void init() {
         setLayout(new MigLayout("fillx, ins 0"));
 
@@ -75,15 +79,15 @@ public class AddonInfoLabel extends JPanel {
 
         title = new JLabel(addonInfo.getScreenshot());
         title.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        add(title, "wmin 150, wmax 150, hmin 150, hmax 150, wrap, spany 5, " +
-                "gapright 5, gaptop 5, gapbottom 5");
+        add(title, "wmin 150, wmax 150, hmin 150, hmax 150, wrap, spany 5, "
+                + "gapright 5, gaptop 5, gapbottom 5");
 
-        title = new JLabel(addonInfo.getType().toString() + ", rated " +
-                addonInfo.getRating() + "/10");
+        title = new JLabel(addonInfo.getType().toString() + ", rated "
+                + addonInfo.getRating() + "/10");
         add(title, "wrap, gapleft 5");
 
-        TextLabel label = new TextLabel(addonInfo.getDescription());
-        add(label, "wmax 100%-170, hmax 150, growy, wrap, pushy, gapleft 5");
+        add(new TextLabel(addonInfo.getDescription()),
+                "wmax 100%-170, hmax 150, growy, wrap, pushy, gapleft 5");
 
         final JButton button = new JButton("Install");
         button.addActionListener(new InstallListener(addonInfo, parentWindow));
@@ -92,8 +96,8 @@ public class AddonInfoLabel extends JPanel {
 
         if (installed || !addonInfo.isDownloadable()) {
             button.setEnabled(false);
-            title = new JLabel(
-                    installed ? "Already installed" : "No download available");
+            title = new JLabel(installed ? "Already installed"
+                    : "No download available");
             title.setForeground(Color.GRAY);
             add(title);
         }
@@ -113,23 +117,27 @@ public class AddonInfoLabel extends JPanel {
     /** {@inheritDoc} */
     @Override
     public void repaint() {
+        //NOOP for performance reasons
     }
 
     /** {@inheritDoc} */
     @Override
-    public void firePropertyChange(String propertyName, Object oldValue,
-            Object newValue) {
+    public void firePropertyChange(final String propertyName,
+            final Object oldValue, final Object newValue) {
+        //NOOP for performance reasons
     }
 
     /** {@inheritDoc} */
     @Override
-    public void firePropertyChange(String propertyName, boolean oldValue,
-            boolean newValue) {
+    public void firePropertyChange(final String propertyName,
+            final boolean oldValue, final boolean newValue) {
+        //NOOP for performance reasons
     }
 
     /** {@inheritDoc} */
     @Override
-    public void firePropertyChange(String propertyName, int oldValue,
-            int newValue) {
+    public void firePropertyChange(final String propertyName,
+            final int oldValue, final int newValue) {
+        //NOOP for performance reasons
     }
 }
