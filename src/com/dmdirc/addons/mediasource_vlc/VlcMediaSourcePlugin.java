@@ -233,10 +233,10 @@ public class VlcMediaSourcePlugin extends Plugin implements MediaSource {
                 + "<li>For Windows users this will be under the main VLC "
                 + "directory, e.g. C:\\Program Files\\VLC\\http</ul><li>Click "
                 + "'Save'<li>Restart VLC</ol></html>");
+        general.addSetting(setting);
         general.addSetting(new PreferencesSetting(PreferencesType.TEXT,
                 getDomain(), "host", "Hostname and port",
                 "The host and port that VLC listens on for web connections"));
-        general.addSetting(setting);
 
         manager.getCategory("Plugins").addSubCategory(general);
     }
