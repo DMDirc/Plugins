@@ -31,12 +31,13 @@ import com.dmdirc.ui.interfaces.ServerWindow;
  * @author chris
  */
 public class WebServerWindow extends WebInputWindow implements ServerWindow {
- 
+
     private final Server server;
 
-    public WebServerWindow(WebInterfaceUI controller, Server server) {
+    public WebServerWindow(final WebInterfaceUI controller,
+            final Server server) {
         super(controller, server);
-        
+
         this.server = server;
     }
 

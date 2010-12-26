@@ -207,7 +207,7 @@ public class Tree extends JTree implements MouseMotionListener,
      * @param e Mouse event
      */
     @Override
-    public void mouseClicked(MouseEvent e) {
+    public void mouseClicked(final MouseEvent e) {
         processMouseEvents(e);
     }
 
@@ -217,12 +217,14 @@ public class Tree extends JTree implements MouseMotionListener,
      * @param e Mouse event
      */
     @Override
-    public void mousePressed(MouseEvent e) {
+    public void mousePressed(final MouseEvent e) {
         if (e.getButton() == MouseEvent.BUTTON1) {
             dragButton = true;
-            final TreePath selectedPath = getPathForLocation(e.getX(), e.getY());
+            final TreePath selectedPath = getPathForLocation(e.getX(),
+                    e.getY());
             if (selectedPath != null) {
-                ((TreeViewNode) selectedPath.getLastPathComponent()).getWindow().
+                ((TreeViewNode) selectedPath.getLastPathComponent())
+                        .getWindow().
                         activateFrame();
             }
         }
@@ -235,7 +237,7 @@ public class Tree extends JTree implements MouseMotionListener,
      * @param e Mouse event
      */
     @Override
-    public void mouseReleased(MouseEvent e) {
+    public void mouseReleased(final MouseEvent e) {
         dragButton = false;
         processMouseEvents(e);
     }
@@ -246,7 +248,7 @@ public class Tree extends JTree implements MouseMotionListener,
      * @param e Mouse event
      */
     @Override
-    public void mouseEntered(MouseEvent e) {
+    public void mouseEntered(final MouseEvent e) {
         //Ignore
     }
 
@@ -256,7 +258,7 @@ public class Tree extends JTree implements MouseMotionListener,
      * @param e Mouse event
      */
     @Override
-    public void mouseExited(MouseEvent e) {
+    public void mouseExited(final MouseEvent e) {
         manager.checkRollover(null);
     }
 
@@ -278,7 +280,7 @@ public class Tree extends JTree implements MouseMotionListener,
             }
 
             final JPopupMenu popupMenu = frame.getPopupMenu(null,
-                    new Object[][] { new Object[] { "" } });
+                    new Object[][] {new Object[]{""}});
             frame.addCustomPopupItems(popupMenu);
             if (popupMenu.getComponentCount() > 0) {
                 popupMenu.addSeparator();

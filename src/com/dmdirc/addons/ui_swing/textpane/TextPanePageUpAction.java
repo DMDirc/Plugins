@@ -37,7 +37,7 @@ public class TextPanePageUpAction extends AbstractAction {
      */
     private static final long serialVersionUID = 1;
     /** TextPane instance. */
-    private TextPane textpane;
+    private final TextPane textpane;
 
     /**
      * Instantiates a new action.
@@ -45,6 +45,8 @@ public class TextPanePageUpAction extends AbstractAction {
      * @param textpane Textpane
      */
     public TextPanePageUpAction(final TextPane textpane) {
+        super();
+        
         this.textpane = textpane;
     }
 
@@ -53,7 +55,7 @@ public class TextPanePageUpAction extends AbstractAction {
      * @param e Action event
      */
     @Override
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(final ActionEvent e) {
         textpane.pageUp();
     }
 }

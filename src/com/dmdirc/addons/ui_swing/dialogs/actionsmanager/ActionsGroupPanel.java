@@ -65,7 +65,7 @@ public final class ActionsGroupPanel extends JPanel implements ActionListener,
      */
     private static final long serialVersionUID = 1;
     /** Parent dialog. */
-    private Window parent;
+    private final Window parent;
     /** Table scrollpane. */
     private JScrollPane scrollPane;
     /** Actions table. */
@@ -81,9 +81,9 @@ public final class ActionsGroupPanel extends JPanel implements ActionListener,
     /** Action group. */
     private ActionGroup group;
 
-    /** 
+    /**
      * Creates a new instance of ActionsManagerDialog.
-     * 
+     *
      * @param parent Parent window
      * @param group Action group to display
      */
@@ -100,7 +100,7 @@ public final class ActionsGroupPanel extends JPanel implements ActionListener,
 
     /**
      * Updates or creates the new action.
-     * 
+     *
      * @param action Action changed or created
      */
     public void actionChanged(final Action action) {
@@ -116,7 +116,7 @@ public final class ActionsGroupPanel extends JPanel implements ActionListener,
 
     /**
      * Deletes an action from the group.
-     * 
+     *
      * @param name Name of the action
      */
     public void actionDeleted(final String name) {
@@ -131,14 +131,15 @@ public final class ActionsGroupPanel extends JPanel implements ActionListener,
      */
     private void initComponents() {
         scrollPane = new JScrollPane();
-        model = new ActionTableModel(group == null ? new ArrayList<Action>() : group.
-                getActions());
+        model = new ActionTableModel(group == null ? new ArrayList<Action>()
+                : group.getActions());
         table = new PackingTable(model, false, scrollPane, false) {
 
             /**
-             * A version number for this class. It should be changed whenever the class
-             * structure is changed (or anything else that would prevent serialized
-             * objects being unserialized with the new class).
+             * A version number for this class. It should be changed whenever
+             * the class structure is changed (or anything else that would
+             * prevent serialized objects being unserialized with the new
+             * class).
              */
             private static final long serialVersionUID = 1;
             /** Action type renderer. */
@@ -150,7 +151,8 @@ public final class ActionsGroupPanel extends JPanel implements ActionListener,
 
             /** {@inheritDoc} */
             @Override
-            public TableCellRenderer getCellRenderer(int row, int column) {
+            public TableCellRenderer getCellRenderer(final int row,
+                    final int column) {
                 switch (column) {
                     case 1:
                         return typeRenderer;
@@ -222,7 +224,7 @@ public final class ActionsGroupPanel extends JPanel implements ActionListener,
 
     /**
      * Sets the action group for the panel.
-     * 
+     *
      * @param group New action group
      */
     public void setActionGroup(final ActionGroup group) {
@@ -232,9 +234,9 @@ public final class ActionsGroupPanel extends JPanel implements ActionListener,
         add.setEnabled(group != null);
     }
 
-    /** 
+    /**
      * {@inheritDoc}
-     * 
+     *
      * @param e Action event
      */
     @Override
@@ -257,9 +259,10 @@ public final class ActionsGroupPanel extends JPanel implements ActionListener,
                     getName() + "'?") {
 
                 /**
-                 * A version number for this class. It should be changed whenever the class
-                 * structure is changed (or anything else that would prevent serialized
-                 * objects being unserialized with the new class).
+                 * A version number for this class. It should be changed
+                 * whenever the class structure is changed (or anything else
+                 * that would prevent serialized objects being unserialized
+                 * with the new class).
                  */
                 private static final long serialVersionUID = 1;
 
@@ -273,7 +276,7 @@ public final class ActionsGroupPanel extends JPanel implements ActionListener,
                 /** {@inheritDoc} */
                 @Override
                 public void cancelled() {
-                    return;
+                    //Ignore
                 }
             }.display();
         }

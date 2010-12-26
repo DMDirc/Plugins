@@ -39,10 +39,10 @@ import net.miginfocom.swing.MigLayout;
  */
 public abstract class StandardQuestionDialog extends StandardDialog {
 
+    /** Message. */
+    private final String message;
     /** Blurb label. */
     private TextLabel blurb;
-    /** Message. */
-    private String message;
     /** Question result. */
     private boolean result = false;
 
@@ -54,7 +54,7 @@ public abstract class StandardQuestionDialog extends StandardDialog {
      * @param title Dialog title
      * @param message Dialog message
      */
-    public StandardQuestionDialog(Window owner, ModalityType modal,
+    public StandardQuestionDialog(final Window owner, final ModalityType modal,
             final String title, final String message) {
         super(owner, modal);
 
@@ -91,14 +91,14 @@ public abstract class StandardQuestionDialog extends StandardDialog {
     }
 
     /**
-     * Adds the listeners
+     * Adds the listeners.
      */
     private void addListeners() {
         getOkButton().addActionListener(new ActionListener() {
 
             /** {@inheritDoc} */
             @Override
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(final ActionEvent e) {
                 if (save()) {
                     result = true;
                     dispose();
@@ -109,7 +109,7 @@ public abstract class StandardQuestionDialog extends StandardDialog {
 
             /** {@inheritDoc} */
             @Override
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(final ActionEvent e) {
                 cancelled();
                 dispose();
             }
@@ -118,13 +118,13 @@ public abstract class StandardQuestionDialog extends StandardDialog {
 
             /** {@inheritDoc} */
             @Override
-            public void windowOpened(WindowEvent e) {
+            public void windowOpened(final WindowEvent e) {
                 //Ignore
             }
 
             /** {@inheritDoc} */
             @Override
-            public void windowClosed(WindowEvent e) {
+            public void windowClosed(final WindowEvent e) {
                 if (!result) {
                     cancelled();
                 }

@@ -42,14 +42,15 @@ public class WebStatusBar implements StatusBar {
 
     /** {@inheritDoc} */
     @Override
-    public void setMessage(String newMessage, StatusMessageNotifier newNotifier) {
+    public void setMessage(final String newMessage,
+            final StatusMessageNotifier newNotifier) {
         DynamicRequestHandler.addEvent(new Event("statusbar", newMessage));
     }
 
     /** {@inheritDoc} */
     @Override
-    public void setMessage(String newMessage, StatusMessageNotifier newNotifier,
-                           int timeout) {
+    public void setMessage(final String newMessage,
+            final StatusMessageNotifier newNotifier, final int timeout) {
         DynamicRequestHandler.addEvent(new Event("statusbar", newMessage));
     }
 
@@ -61,33 +62,33 @@ public class WebStatusBar implements StatusBar {
 
     /** {@inheritDoc} */
     @Override
-    public void addComponent(StatusBarComponent component) {
+    public void addComponent(final StatusBarComponent component) {
         // Do nothing
     }
 
     /** {@inheritDoc} */
     @Override
-    public void removeComponent(StatusBarComponent component) {
+    public void removeComponent(final StatusBarComponent component) {
         // Do nothing
     }
 
     /** {@inheritDoc} */
     @Override
-    public void setMessage(String iconType, String newMessage) {
+    public void setMessage(final String iconType, final String newMessage) {
         DynamicRequestHandler.addEvent(new Event("statusbar", newMessage));
     }
 
     /** {@inheritDoc} */
     @Override
-    public void setMessage(String iconType, String newMessage,
-            StatusMessageNotifier newNotifier) {
+    public void setMessage(final String iconType, final String newMessage,
+            final StatusMessageNotifier newNotifier) {
         DynamicRequestHandler.addEvent(new Event("statusbar", newMessage));
     }
 
     /** {@inheritDoc} */
     @Override
-    public void setMessage(String iconType, String newMessage,
-            StatusMessageNotifier newNotifier, int timeout) {
+    public void setMessage(final String iconType, final String newMessage,
+            final StatusMessageNotifier newNotifier, final int timeout) {
         DynamicRequestHandler.addEvent(new Event("statusbar", newMessage));
     }
 

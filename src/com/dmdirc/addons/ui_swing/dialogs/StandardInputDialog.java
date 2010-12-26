@@ -58,15 +58,14 @@ public abstract class StandardInputDialog extends StandardDialog {
 
     /**
      * Instantiates a new standard input dialog.
-     * 
+     *
      * @param owner Dialog owner
      * @param modal modality type
      * @param title Dialog title
      * @param message Dialog message
      */
-    public StandardInputDialog(Window owner, ModalityType modal,
-            final String title,
-            final String message) {
+    public StandardInputDialog(final Window owner, final ModalityType modal,
+            final String title, final String message) {
         this(owner, modal, title, message, new Validator<String>() {
 
             /** {@inheritDoc} */
@@ -79,14 +78,14 @@ public abstract class StandardInputDialog extends StandardDialog {
 
     /**
      * Instantiates a new standard input dialog.
-     * 
+     *
      * @param owner Dialog owner
      * @param modal modality type
      * @param validator Textfield validator
      * @param title Dialog title
      * @param message Dialog message
      */
-    public StandardInputDialog(Window owner, ModalityType modal,
+    public StandardInputDialog(final Window owner, final ModalityType modal,
             final String title, final String message,
             final Validator<String> validator) {
         super(owner, modal);
@@ -104,7 +103,7 @@ public abstract class StandardInputDialog extends StandardDialog {
 
     /**
      * Called when the dialog's OK button is clicked.
-     * 
+     *
      * @return whether the dialog can close
      */
     public abstract boolean save();
@@ -125,14 +124,14 @@ public abstract class StandardInputDialog extends StandardDialog {
     }
 
     /**
-     * Adds the listeners
+     * Adds the listeners.
      */
     private void addListeners() {
         getOkButton().addActionListener(new ActionListener() {
 
             /** {@inheritDoc} */
             @Override
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(final ActionEvent e) {
                 if (save()) {
                     dispose();
                 }
@@ -142,7 +141,7 @@ public abstract class StandardInputDialog extends StandardDialog {
 
             /** {@inheritDoc} */
             @Override
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(final ActionEvent e) {
                 cancelled();
                 dispose();
             }
@@ -151,13 +150,13 @@ public abstract class StandardInputDialog extends StandardDialog {
 
             /** {@inheritDoc} */
             @Override
-            public void windowOpened(WindowEvent e) {
+            public void windowOpened(final WindowEvent e) {
                 textField.requestFocusInWindow();
             }
 
             /** {@inheritDoc} */
             @Override
-            public void windowClosed(WindowEvent e) {
+            public void windowClosed(final WindowEvent e) {
                 cancelled();
             //dispose();
             }
@@ -166,19 +165,19 @@ public abstract class StandardInputDialog extends StandardDialog {
 
             /** {@inheritDoc} */
             @Override
-            public void insertUpdate(DocumentEvent e) {
+            public void insertUpdate(final DocumentEvent e) {
                 validateText();
             }
 
             /** {@inheritDoc} */
             @Override
-            public void removeUpdate(DocumentEvent e) {
+            public void removeUpdate(final DocumentEvent e) {
                 validateText();
             }
 
             /** {@inheritDoc} */
             @Override
-            public void changedUpdate(DocumentEvent e) {
+            public void changedUpdate(final DocumentEvent e) {
             //Ignore
             }
         });
@@ -212,7 +211,7 @@ public abstract class StandardInputDialog extends StandardDialog {
 
     /**
      * Returns the text in the input field.
-     * 
+     *
      * @return Input text
      */
     public final String getText() {
@@ -221,7 +220,7 @@ public abstract class StandardInputDialog extends StandardDialog {
 
     /**
      * Sets the dialogs text to the specified text.
-     * 
+     *
      * @param text New test
      */
     public final void setText(final String text) {

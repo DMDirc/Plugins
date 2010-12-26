@@ -69,20 +69,23 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
             localTarget = (JTextComponent) target;
         } else if (target instanceof SwingInputField) {
             localTarget = ((SwingInputField) target).getTextField();
+        } else {
+            throw new IllegalArgumentException("Unknown target");
         }
 
         localTarget.getActionMap().put("upArrow", new AbstractAction() {
 
             /**
-             * A version number for this class. It should be changed whenever the class
-             * structure is changed (or anything else that would prevent serialized
-             * objects being unserialized with the new class).
+             * A version number for this class. It should be changed whenever
+             * the class structure is changed (or anything else that would
+             * prevent serialized objects being unserialized with the new
+             * class).
              */
             private static final long serialVersionUID = 1;
 
             /** {@inheritDoc} */
             @Override
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(final ActionEvent e) {
                 doBufferUp();
             }
         });
@@ -104,29 +107,35 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
             localTarget = (JTextComponent) target;
         } else if (target instanceof SwingInputField) {
             localTarget = ((SwingInputField) target).getTextField();
+        } else {
+            throw new IllegalArgumentException("Unknown target");
         }
+
         localTarget.getActionMap().put("downArrow", new AbstractAction() {
 
             /**
-             * A version number for this class. It should be changed whenever the class
-             * structure is changed (or anything else that would prevent serialized
-             * objects being unserialized with the new class).
+             * A version number for this class. It should be changed whenever
+             * the class structure is changed (or anything else that would
+             * prevent serialized objects being unserialized with the new
+             * class).
              */
             private static final long serialVersionUID = 1;
 
             /** {@inheritDoc} */
             @Override
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(final ActionEvent e) {
                 doBufferDown();
             }
         });
         if (Apple.isAppleUI()) {
             localTarget.getInputMap(JComponent.WHEN_FOCUSED).
-                    put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), "downArrow");
+                    put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0),
+                    "downArrow");
         } else {
             localTarget.getInputMap(
                     JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).
-                    put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), "downArrow");
+                    put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0),
+                    "downArrow");
         }
     }
 
@@ -141,12 +150,14 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
         } else {
             throw new IllegalArgumentException("Unknown target");
         }
+
         localTarget.getActionMap().put("insert-tab", new AbstractAction() {
 
             /**
-             * A version number for this class. It should be changed whenever the class
-             * structure is changed (or anything else that would prevent serialized
-             * objects being unserialized with the new class).
+             * A version number for this class. It should be changed whenever
+             * the class structure is changed (or anything else that would
+             * prevent serialized objects being unserialized with the new
+             * class).
              */
             private static final long serialVersionUID = 1;
 
@@ -171,12 +182,14 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
                 }.executeInExecutor();
             }
         });
-        localTarget.getActionMap().put("insert-shift-tab", new AbstractAction() {
+        localTarget.getActionMap().put("insert-shift-tab",
+                new AbstractAction() {
 
             /**
-             * A version number for this class. It should be changed whenever the class
-             * structure is changed (or anything else that would prevent serialized
-             * objects being unserialized with the new class).
+             * A version number for this class. It should be changed whenever
+             * the class structure is changed (or anything else that would
+             * prevent serialized objects being unserialized with the new
+             * class).
              */
             private static final long serialVersionUID = 1;
 
@@ -216,13 +229,17 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
             localTarget = (JTextComponent) target;
         } else if (target instanceof SwingInputField) {
             localTarget = ((SwingInputField) target).getTextField();
+        } else {
+            throw new IllegalArgumentException("Unknown target");
         }
+
         localTarget.getActionMap().put("enterButton", new AbstractAction() {
 
             /**
-             * A version number for this class. It should be changed whenever the class
-             * structure is changed (or anything else that would prevent serialized
-             * objects being unserialized with the new class).
+             * A version number for this class. It should be changed whenever
+             * the class structure is changed (or anything else that would
+             * prevent serialized objects being unserialized with the new
+             * class).
              */
             private static final long serialVersionUID = 1;
 
@@ -238,7 +255,8 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
                     public void run() {
                         final JTextField source;
                         if (e.getSource() instanceof SwingInputField) {
-                            source = ((SwingInputField) e.getSource()).getTextField();
+                            source = ((SwingInputField) e.getSource())
+                                    .getTextField();
                         } else if (e.getSource() instanceof JTextField) {
                             source = (JTextField) e.getSource();
                         } else {
@@ -252,8 +270,7 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
 
                                 /** {@inheritDoc} */
                                 @Override
-                                protected Object doInBackground() throws
-                                        Exception {
+                                protected Object doInBackground() {
                                     enterPressed(line);
                                     return null;
                                 }
@@ -264,7 +281,8 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
             }
         });
         localTarget.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).
-                put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "enterButton");
+                put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0),
+                "enterButton");
     }
 
     /** {@inheritDoc} */

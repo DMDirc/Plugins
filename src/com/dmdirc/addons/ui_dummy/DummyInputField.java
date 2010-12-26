@@ -82,7 +82,7 @@ public class DummyInputField implements InputField {
 
     /** {@inheritDoc} */
     @Override
-    public void setText(String text) {
+    public void setText(final String text) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

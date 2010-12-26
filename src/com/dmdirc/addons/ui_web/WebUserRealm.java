@@ -38,13 +38,14 @@ import org.mortbay.jetty.security.UserRealm;
 
 /**
  * Describes the users allowed to access the web UI.
- * 
+ *
  * @author chris
  */
 public class WebUserRealm implements UserRealm {
-    
-    private final Map<String, Principal> principals = new HashMap<String, Principal>();
-    
+
+    private final Map<String, Principal> principals
+            = new HashMap<String, Principal>();
+
     private final ConfigManager config = IdentityManager.getGlobalConfig();
 
     /** {@inheritDoc} */
@@ -53,8 +54,9 @@ public class WebUserRealm implements UserRealm {
         if (config.hasOptionString(WebInterfaceUI.DOMAIN, "users")) {
             return "DMDirc web UI";
         } else {
-            return "DMDirc web UI first run -- " 
-                    + "enter the username and password you wish to use in the future";
+            return "DMDirc web UI first run -- "
+                    + "enter the username and password you wish to use in "
+                    + "the future";
         }
     }
 
@@ -66,16 +68,17 @@ public class WebUserRealm implements UserRealm {
 
     /** {@inheritDoc} */
     @Override
-    public Principal authenticate(final String username, final Object credentials,
-            final Request request) {
+    public Principal authenticate(final String username,
+            final Object credentials, final Request request) {
         if (!config.hasOptionString(WebInterfaceUI.DOMAIN, "users")) {
             final List<String> users = new ArrayList<String>();
             users.add(username + ":" + getHash(username, credentials));
             IdentityManager.getConfigIdentity().setOption(WebInterfaceUI.DOMAIN,
                     "users", users);
         }
-        
-        for (String userinfo : config.getOptionList(WebInterfaceUI.DOMAIN, "users")) {
+
+        for (String userinfo : config.getOptionList(WebInterfaceUI.DOMAIN,
+                "users")) {
             if (userinfo.startsWith(username + ":")) {
                 final String pass = userinfo.substring(username.length() + 1);
 
@@ -85,7 +88,7 @@ public class WebUserRealm implements UserRealm {
                 }
             }
         }
-        
+
         return null;
     }
 
@@ -127,12 +130,12 @@ public class WebUserRealm implements UserRealm {
         principals.remove(user.getName());
     }
 
-    private String getHash(String username, Object credentials) {
+    private String getHash(final String username, final Object credentials) {
         final String target = username + "--" + (String) credentials;
-        
+
         try {
             final MessageDigest md = MessageDigest.getInstance("SHA-512");
-            
+
             return new BigInteger(md.digest(target.getBytes())).toString(16);
         } catch (NoSuchAlgorithmException ex) {
             // Don't hash

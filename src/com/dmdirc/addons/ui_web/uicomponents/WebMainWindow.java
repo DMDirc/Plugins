@@ -48,7 +48,7 @@ public class WebMainWindow implements MainWindow {
 
     /** {@inheritDoc} */
     @Override
-    public void setMaximised(boolean max) {
+    public void setMaximised(final boolean max) {
         //TODO FIXME
         throw new UnsupportedOperationException("Not supported yet.");
     }
@@ -69,7 +69,7 @@ public class WebMainWindow implements MainWindow {
 
     /** {@inheritDoc} */
     @Override
-    public void setVisible(boolean visible) {
+    public void setVisible(final boolean visible) {
         //TODO FIXME
         throw new UnsupportedOperationException("Not supported yet.");
     }

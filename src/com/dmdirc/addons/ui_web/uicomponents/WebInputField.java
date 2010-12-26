@@ -34,29 +34,30 @@ import java.awt.event.KeyListener;
  * @author chris
  */
 public class WebInputField implements InputField {
-    
+
     private String clientID;
-    
+
     private String text;
-    
+
     private int selStart, selEnd;
 
     public WebInputField() {
+        super();
     }
 
-    public WebInputField(String clientID) {
+    public WebInputField(final String clientID) {
         this.clientID = clientID;
     }
 
     /** {@inheritDoc} */
     @Override
-    public void addActionListener(ActionListener listener) {
+    public void addActionListener(final ActionListener listener) {
         // Do nothing
     }
 
     /** {@inheritDoc} */
     @Override
-    public void addKeyListener(KeyListener listener) {
+    public void addKeyListener(final KeyListener listener) {
         // Do nothing
     }
 
@@ -69,13 +70,13 @@ public class WebInputField implements InputField {
 
     /** {@inheritDoc} */
     @Override
-    public void removeActionListener(ActionListener listener) {
+    public void removeActionListener(final ActionListener listener) {
         // Do nothing
     }
 
     /** {@inheritDoc} */
     @Override
-    public void removeKeyListener(KeyListener listener) {
+    public void removeKeyListener(final KeyListener listener) {
         // Do nothing
     }
 
@@ -105,7 +106,7 @@ public class WebInputField implements InputField {
 
     /** {@inheritDoc} */
     @Override
-    public void setText(String text) {
+    public void setText(final String text) {
         DynamicRequestHandler.addEvent(clientID, new Event("settext", text));
     }
 
@@ -117,13 +118,14 @@ public class WebInputField implements InputField {
 
     /** {@inheritDoc} */
     @Override
-    public void setCaretPosition(int position) {
-        DynamicRequestHandler.addEvent(clientID, new Event("setcaret", position));
+    public void setCaretPosition(final int position) {
+        DynamicRequestHandler.addEvent(clientID, new Event(
+                "setcaret", position));
     }
 
     /** {@inheritDoc} */
     @Override
-    public void showColourPicker(boolean irc, boolean hex) {
+    public void showColourPicker(final boolean irc, final boolean hex) {
         // Do nothing
     }
 
@@ -133,14 +135,14 @@ public class WebInputField implements InputField {
         // Do nothing
     }
 
-    public void setSelEnd(int selEnd) {
+    public void setSelEnd(final int selEnd) {
         this.selEnd = selEnd;
     }
 
-    public void setSelStart(int selStart) {
+    public void setSelStart(final int selStart) {
         this.selStart = selStart;
     }
-    
+
     public void setContent(final String text) {
         this.text = text;
     }

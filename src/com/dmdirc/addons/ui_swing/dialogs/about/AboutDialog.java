@@ -50,7 +50,7 @@ public final class AboutDialog extends StandardDialog implements
      */
     private static final long serialVersionUID = 5;
     /** Previously created instance of AboutDialog. */
-    private static volatile AboutDialog me = null;
+    private static AboutDialog me = null;
     /** Tabbed pane to use. */
     private JTabbedPane tabbedPane;
     /** Credits panel. */
@@ -66,7 +66,8 @@ public final class AboutDialog extends StandardDialog implements
      * @param parentWindow Parent window
      * @param urlHandler The URL Handler to use to handle clicked links
      */
-    private AboutDialog(final Window parentWindow, final URLHandler urlHandler) {
+    private AboutDialog(final Window parentWindow,
+            final URLHandler urlHandler) {
         super(parentWindow, ModalityType.MODELESS);
 
         this.urlHandler = urlHandler;
@@ -80,7 +81,8 @@ public final class AboutDialog extends StandardDialog implements
      * @param parentWindow Parent window
      * @param urlHandler The URL Handler to use to handle clicked links
      */
-    public static void showAboutDialog(final Window parentWindow, final URLHandler urlHandler) {
+    public static void showAboutDialog(final Window parentWindow,
+            final URLHandler urlHandler) {
         me = getAboutDialog(parentWindow, urlHandler);
 
         me.display();
@@ -163,10 +165,11 @@ public final class AboutDialog extends StandardDialog implements
 
     /** {@inheritDoc} */
     @Override
-    public void stateChanged(ChangeEvent e) {
+    public void stateChanged(final ChangeEvent e) {
         history = 10 * (history % 10000) + tabbedPane.getSelectedIndex();
 
-        if (history / 10 % 100 == 32 && (history & 1) == 1 && history >> 8 == 118) {
+        if (history / 10 % 100 == 32 && (history & 1) == 1
+                && history >> 8 == 118) {
             cp.showEE();
         }
     }

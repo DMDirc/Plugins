@@ -1,17 +1,16 @@
 /*
- * 
  * Copyright (c) 2006-2010 Chris Smith, Shane Mc Cormack, Gregory Holmes
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -23,14 +22,9 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.prefs;
 
-import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
 import com.dmdirc.config.prefs.PreferencesCategory;
-import com.dmdirc.logger.ErrorLevel;
-import com.dmdirc.logger.Logger;
-import com.dmdirc.ui.IconManager;
 
 import java.awt.Dimension;
-import java.util.concurrent.ExecutionException;
 
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
@@ -54,17 +48,22 @@ public class CategoryLabel extends JLabel {
     /** Panel gap. */
     private final int padding = (int)
             (1.5 * PlatformDefaults.getUnitValueX("related").getValue());
-    private JList parentList;
+    /** Parent list. */
+    private final JList parentList;
 
     /**
-     * 
-     * @param parentList
-     * @param category
-     * @param numCats
-     * @param index 
+     * Creates a new category label.
+     *
+     * @param parentList Parent list
+     * @param category Parent category
+     * @param numCats Number of categories shown
+     * @param index Index of this label
      */
     public CategoryLabel(final JList parentList,
-            final PreferencesCategory category, final int numCats, final int index) {
+            final PreferencesCategory category, final int numCats,
+            final int index) {
+        super();
+        
         this.parentList = parentList;
 
         setText(category.getTitle());
@@ -77,11 +76,10 @@ public class CategoryLabel extends JLabel {
             level++;
         }
 
-        setPreferredSize(new Dimension(100000, Math.max(16,
-                getFont().getSize()) + padding));
-        setBorder(BorderFactory.createEmptyBorder(padding / 2, padding + level *
-                18, padding / 2,
-                padding));
+        setPreferredSize(new Dimension(100000, Math.max(16, getFont().getSize())
+                + padding));
+        setBorder(BorderFactory.createEmptyBorder(padding / 2, padding + level
+                * 18, padding / 2, padding));
         setBackground(parentList.getBackground());
         setForeground(parentList.getForeground());
         setOpaque(true);
@@ -101,9 +99,9 @@ public class CategoryLabel extends JLabel {
             setBackground(UIManager.getColor("ToolTip.background"));
             setForeground(UIManager.getColor("ToolTip.foreground"));
             setBorder(BorderFactory.createCompoundBorder(
-                    BorderFactory.createMatteBorder(1, 0, hasChildren ? 1 : 0, 0,
-                    UIManager.getColor("ToolTip.background").darker().darker()),
-                    getBorder()));
+                    BorderFactory.createMatteBorder(1, 0, hasChildren ? 1 : 0,
+                    0, UIManager.getColor("ToolTip.background").darker()
+                    .darker()), getBorder()));
         }
     }
 
@@ -113,41 +111,11 @@ public class CategoryLabel extends JLabel {
      * @param icon New icon
      */
     @Override
-    public void setIcon(Icon icon) {
+    public void setIcon(final Icon icon) {
         super.setIcon(icon);
 
         if (parentList != null) {
             parentList.repaint();
-        }
-    }
-
-    private static class IconLoader extends LoggingSwingWorker<Icon, Void> {
-
-        private CategoryLabel label;
-        private String icon;
-
-        public IconLoader(final CategoryLabel label, final String icon) {
-            this.label = label;
-            this.icon = icon;
-        }
-
-        /** {@inheritDoc} */
-        @Override
-        protected Icon doInBackground() throws Exception {
-            return IconManager.getIconManager().getIcon(icon);
-        }
-
-        /** {@inheritDoc} */
-        @Override
-        protected void done() {
-            try {
-                label.setIcon(get());
-            } catch (InterruptedException ex) {
-                //Ignore
-            } catch (ExecutionException ex) {
-                Logger.appError(ErrorLevel.LOW, ex.getMessage(), ex);
-            }
-
         }
     }
 

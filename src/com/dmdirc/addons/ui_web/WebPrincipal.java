@@ -29,7 +29,7 @@ import java.security.Principal;
  * @author chris
  */
 public class WebPrincipal implements Principal {
-    
+
     private final String username;
 
     public WebPrincipal(final String username) {
@@ -44,7 +44,7 @@ public class WebPrincipal implements Principal {
 
     /** {@inheritDoc} */
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (obj == null) {
             return false;
         }
@@ -52,8 +52,9 @@ public class WebPrincipal implements Principal {
             return false;
         }
         final WebPrincipal other = (WebPrincipal) obj;
-        if (this.username != other.username &&
-            (this.username == null || !this.username.equals(other.username))) {
+        if (this.username != other.username 
+                && (this.username == null
+                || !this.username.equals(other.username))) {
             return false;
         }
         return true;

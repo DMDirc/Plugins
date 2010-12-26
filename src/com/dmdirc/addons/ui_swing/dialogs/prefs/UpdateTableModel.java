@@ -33,7 +33,7 @@ import java.util.Map;
 import javax.swing.table.AbstractTableModel;
 
 /**
- * Update component table model
+ * Update component table model.
  */
 public class UpdateTableModel extends AbstractTableModel {
 
@@ -57,10 +57,12 @@ public class UpdateTableModel extends AbstractTableModel {
 
     /**
      * Instantiates a new table model.
-     * 
+     *
      * @param updates Update components to show
      */
     public UpdateTableModel(final List<UpdateComponent> updates) {
+        super();
+
         this.updates = new ArrayList<UpdateComponent>(updates);
         this.enabled = new HashMap<UpdateComponent, Boolean>();
 
@@ -94,8 +96,8 @@ public class UpdateTableModel extends AbstractTableModel {
             case 2:
                 return "Version";
             default:
-                throw new IllegalArgumentException("Unknown column: " +
-                        columnIndex);
+                throw new IllegalArgumentException("Unknown column: "
+                        + columnIndex);
         }
     }
 
@@ -110,8 +112,8 @@ public class UpdateTableModel extends AbstractTableModel {
             case 2:
                 return Integer.class;
             default:
-                throw new IllegalArgumentException("Unknown column: " +
-                        columnIndex);
+                throw new IllegalArgumentException("Unknown column: "
+                        + columnIndex);
         }
     }
 
@@ -123,14 +125,15 @@ public class UpdateTableModel extends AbstractTableModel {
 
     /** {@inheritDoc} */
     @Override
-    public Object getValueAt(int rowIndex, int columnIndex) {
+    public Object getValueAt(final int rowIndex, final int columnIndex) {
         synchronized (updates) {
             if (updates.size() <= rowIndex) {
-                throw new IndexOutOfBoundsException(rowIndex + " >= " +
-                        updates.size());
+                throw new IndexOutOfBoundsException(rowIndex + " >= "
+                        + updates.size());
             }
             if (rowIndex < 0) {
-                throw new IllegalArgumentException("Must specify a positive integer");
+                throw new IllegalArgumentException(
+                        "Must specify a positive integer");
             }
             switch (columnIndex) {
                 case 0:
@@ -140,8 +143,8 @@ public class UpdateTableModel extends AbstractTableModel {
                 case 2:
                     return updates.get(rowIndex).getFriendlyVersion();
                 default:
-                    throw new IllegalArgumentException("Unknown column: " +
-                            columnIndex);
+                    throw new IllegalArgumentException("Unknown column: "
+                            + columnIndex);
             }
         }
     }
@@ -152,19 +155,20 @@ public class UpdateTableModel extends AbstractTableModel {
             final int columnIndex) {
         synchronized (updates) {
             if (updates.size() <= rowIndex) {
-                throw new IndexOutOfBoundsException(rowIndex + " >= " +
-                        updates.size());
+                throw new IndexOutOfBoundsException(rowIndex + " >= "
+                        + updates.size());
             }
             if (rowIndex < 0) {
-                throw new IllegalArgumentException("Must specify a positive integer");
+                throw new IllegalArgumentException(
+                        "Must specify a positive integer");
             }
             switch (columnIndex) {
                 case 1:
                     enabled.put(updates.get(rowIndex), (Boolean) aValue);
                     break;
                 default:
-                    throw new IllegalArgumentException("Unknown column: " +
-                            columnIndex);
+                    throw new IllegalArgumentException("Unknown column: "
+                            + columnIndex);
             }
             fireTableCellUpdated(rowIndex, columnIndex);
         }
@@ -172,7 +176,7 @@ public class UpdateTableModel extends AbstractTableModel {
 
     /**
      * Adds a update component to the model.
-     * 
+     *
      * @param component update component to add
      */
     public void add(final UpdateComponent component) {
@@ -184,7 +188,7 @@ public class UpdateTableModel extends AbstractTableModel {
 
     /**
      * Removes a update component to the model.
-     * 
+     *
      * @param component update component to remove
      */
     public void remove(final UpdateComponent component) {
@@ -195,7 +199,7 @@ public class UpdateTableModel extends AbstractTableModel {
 
     /**
      * Removes a update component to the model.
-     * 
+     *
      * @param index Index of the update component to remove
      */
     public void remove(final int index) {

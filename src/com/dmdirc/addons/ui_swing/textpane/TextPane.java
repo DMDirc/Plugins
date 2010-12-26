@@ -44,7 +44,6 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 
 import javax.swing.BoundedRangeModel;
-import javax.swing.DefaultBoundedRangeModel;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JScrollBar;
@@ -116,19 +115,20 @@ public final class TextPane extends JComponent implements MouseWheelListener,
         document.addIRCDocumentListener(this);
         setAutoscrolls(true);
 
-        MouseMotionListener doScrollRectToVisible = new MouseMotionAdapter() {
+        final MouseMotionListener doScrollRectToVisible
+                = new MouseMotionAdapter() {
 
             /** {@inheritDoc} */
             @Override
-            public void mouseDragged(MouseEvent e) {
-                if (e.getXOnScreen() > getLocationOnScreen().getX() && e.
-                        getXOnScreen() < (getLocationOnScreen().
-                        getX() + getWidth()) && e.getModifiersEx() ==
-                        MouseEvent.BUTTON1_DOWN_MASK) {
+            public void mouseDragged(final MouseEvent e) {
+                if (e.getXOnScreen() > getLocationOnScreen().getX()
+                        && e.getXOnScreen() < (getLocationOnScreen().getX()
+                        + getWidth()) && e.getModifiersEx()
+                        == MouseEvent.BUTTON1_DOWN_MASK) {
                     if (getLocationOnScreen().getY() > e.getYOnScreen()) {
                         scrollModel.setValue(scrollBar.getValue() - 1);
-                    } else if (getLocationOnScreen().getY() + getHeight() <
-                            e.getYOnScreen()) {
+                    } else if (getLocationOnScreen().getY() + getHeight() 
+                            < e.getYOnScreen()) {
                         scrollModel.setValue(scrollBar.getValue() + 1);
                     }
                     canvas.highlightEvent(MouseEventType.DRAG, e);

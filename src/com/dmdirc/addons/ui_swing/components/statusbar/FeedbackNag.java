@@ -41,7 +41,7 @@ import javax.swing.JPopupMenu;
 /**
  * Feedback nag icon.
  */
-public class FeedbackNag extends JLabel implements StatusBarComponent, 
+public class FeedbackNag extends JLabel implements StatusBarComponent,
         MouseListener, ActionListener {
 
     /**
@@ -50,33 +50,30 @@ public class FeedbackNag extends JLabel implements StatusBarComponent,
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 1;
-    /** Nag icon. */
-    private final ImageIcon icon;
     /** Dismiss menu. */
     private final JPopupMenu menu;
-    /** Dismiss menu item. */
-    private final JMenuItem dismiss;
     /** Show menu item. */
     private final JMenuItem show;
     /** Swing Controller. */
-    private SwingController controller;
+    private final SwingController controller;
 
     /**
      * Creates a new feedback nag.
-     * 
+     *
      * @param controller Swing controller
      */
     public FeedbackNag(final SwingController controller) {
         super();
         this.controller = controller;
-        icon = new ImageIcon(IconManager.getIconManager().getImage("feedback"));
         menu = new JPopupMenu();
-        dismiss = new JMenuItem("Dismiss");
         show = new JMenuItem("Open");
+        final JMenuItem dismiss = new JMenuItem("Dismiss");
 
-        setIcon(icon);
+        setIcon(new ImageIcon(IconManager.getIconManager().getImage(
+                "feedback")));
         setBorder(BorderFactory.createEtchedBorder());
-        setToolTipText("We would appreciate any feedback you may have about DMDirc.");
+        setToolTipText("We would appreciate any feedback you may have about "
+                + "DMDirc.");
 
         menu.add(show);
         menu.add(dismiss);
@@ -84,7 +81,6 @@ public class FeedbackNag extends JLabel implements StatusBarComponent,
         show.addActionListener(this);
         dismiss.addActionListener(this);
         addMouseListener(this);
-
         controller.getSwingStatusBar().addComponent(this);
     }
 
@@ -94,7 +90,7 @@ public class FeedbackNag extends JLabel implements StatusBarComponent,
      * @param e Mouse event
      */
     @Override
-    public void mouseClicked(MouseEvent e) {
+    public void mouseClicked(final MouseEvent e) {
         checkMouseEvent(e);
     }
 
@@ -104,7 +100,7 @@ public class FeedbackNag extends JLabel implements StatusBarComponent,
      * @param e Mouse event
      */
     @Override
-    public void mousePressed(MouseEvent e) {
+    public void mousePressed(final MouseEvent e) {
         checkMouseEvent(e);
     }
 
@@ -114,7 +110,7 @@ public class FeedbackNag extends JLabel implements StatusBarComponent,
      * @param e Mouse event
      */
     @Override
-    public void mouseReleased(MouseEvent e) {
+    public void mouseReleased(final MouseEvent e) {
         if (e.getButton() == 1) {
             FeedbackDialog.showFeedbackDialog(controller.getMainFrame());
             controller.getSwingStatusBar().removeComponent(this);
@@ -128,7 +124,7 @@ public class FeedbackNag extends JLabel implements StatusBarComponent,
      * @param e Mouse event
      */
     @Override
-    public void mouseEntered(MouseEvent e) {
+    public void mouseEntered(final MouseEvent e) {
         checkMouseEvent(e);
     }
 
@@ -138,7 +134,7 @@ public class FeedbackNag extends JLabel implements StatusBarComponent,
      * @param e Mouse event
      */
     @Override
-    public void mouseExited(MouseEvent e) {
+    public void mouseExited(final MouseEvent e) {
         checkMouseEvent(e);
     }
 
@@ -147,7 +143,7 @@ public class FeedbackNag extends JLabel implements StatusBarComponent,
      *
      * @param e Mouse event
      */
-    private void checkMouseEvent(MouseEvent e) {
+    private void checkMouseEvent(final MouseEvent e) {
         if (e.isPopupTrigger()) {
             menu.show(this, e.getX(), e.getY());
         }
@@ -159,7 +155,7 @@ public class FeedbackNag extends JLabel implements StatusBarComponent,
      * @param e Action event
      */
     @Override
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(final ActionEvent e) {
         if (e.getSource() == show) {
             FeedbackDialog.showFeedbackDialog(controller.getMainFrame());
         }

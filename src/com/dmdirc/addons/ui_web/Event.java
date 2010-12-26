@@ -24,17 +24,17 @@ package com.dmdirc.addons.ui_web;
 
 /**
  * Details an event that occured.
- * 
+ *
  * @author chris
  */
 public class Event {
-   
-    /** The type of event that occurred. */
-    private String type;
-    /** The argument(s) for the event. */
-    private Object arg1;
 
-    public Event(String type, Object arg1) {
+    /** The type of event that occurred. */
+    private final String type;
+    /** The argument(s) for the event. */
+    private final Object arg1;
+
+    public Event(final String type, final Object arg1) {
         this.type = type;
         this.arg1 = arg1;
     }

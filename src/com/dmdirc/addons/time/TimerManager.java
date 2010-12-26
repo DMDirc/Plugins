@@ -20,7 +20,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 package com.dmdirc.addons.time;
 
 import com.dmdirc.FrameContainer;
@@ -34,7 +33,6 @@ import java.util.Set;
 /**
  * Class to manage Timers.
  *
- * @author Simon Mott
  * @since 0.6.5
  */
 public class TimerManager {
@@ -56,13 +54,14 @@ public class TimerManager {
      * @param origin The frame container to use for the execution
      * @param commandContext The window the command came from
      */
-    public void addTimer(final int repetitions, final int interval, String command,
-            final FrameContainer<?> origin, final Window commandContext) {
+    public void addTimer(final int repetitions, final int interval,
+            final String command, final FrameContainer<?> origin,
+            final Window commandContext) {
 
         synchronized (this) {
             final int timerKey = findFreeKey();
-            timerList.put(timerKey, new TimedCommand(this, timerKey, repetitions,
-                interval, command, origin, commandContext));
+            timerList.put(timerKey, new TimedCommand(this, timerKey,
+                    repetitions, interval, command, origin, commandContext));
         }
     }
 
@@ -124,10 +123,9 @@ public class TimerManager {
      *
      * @param id ID that we want to check if there is a timer for
      *
-     * @return Returns True of there is a timer with the ID. False if there isn't
+     * @return Returns True iif there is a timer with the ID
      */
     public boolean hasTimerWithID(final int id) {
         return timerList.containsKey(id);
     }
-
 }

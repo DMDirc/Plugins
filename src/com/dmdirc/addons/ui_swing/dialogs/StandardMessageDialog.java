@@ -1,17 +1,16 @@
 /*
- * 
  * Copyright (c) 2006-2010 Chris Smith, Shane Mc Cormack, Gregory Holmes
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -46,10 +45,10 @@ public class StandardMessageDialog extends StandardDialog {
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 1;
+    /** Message. */
+    private final String message;
     /** Blurb label. */
     private TextLabel blurb;
-    /** Message. */
-    private String message;
 
     /**
      * Instantiates a new standard input dialog.
@@ -59,7 +58,7 @@ public class StandardMessageDialog extends StandardDialog {
      * @param title Dialog title
      * @param message Dialog message
      */
-    public StandardMessageDialog(Window owner, ModalityType modal,
+    public StandardMessageDialog(final Window owner, final ModalityType modal,
             final String title, final String message) {
         super(owner, modal);
 
@@ -86,6 +85,7 @@ public class StandardMessageDialog extends StandardDialog {
      * Called when the dialog's cancel button is clicked, or otherwise closed.
      */
     public void cancelled() {
+        //Do nothing
     }
 
     /**
@@ -98,14 +98,14 @@ public class StandardMessageDialog extends StandardDialog {
     }
 
     /**
-     * Adds the listeners
+     * Adds the listeners.
      */
     private void addListeners() {
         final ActionListener listener = new ActionListener() {
 
             /** {@inheritDoc} */
             @Override
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(final ActionEvent e) {
                 if (save()) {
                     dispose();
                 }
@@ -117,13 +117,13 @@ public class StandardMessageDialog extends StandardDialog {
 
             /** {@inheritDoc} */
             @Override
-            public void windowOpened(WindowEvent e) {
+            public void windowOpened(final WindowEvent e) {
                 //Ignore
             }
 
             /** {@inheritDoc} */
             @Override
-            public void windowClosed(WindowEvent e) {
+            public void windowClosed(final WindowEvent e) {
                 cancelled();
             }
         });

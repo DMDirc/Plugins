@@ -21,79 +21,100 @@
  */
 
 package com.dmdirc.addons.scriptplugin;
+
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 /**
  * Used to allow the rhino javascript to do stuff that it otherwise can't, such
  * as setting global variables, string triming and getting a char.
- *
- * @author Shane 'Dataforce' McCormack
  */
 public class JavaScriptHelper {
     /** Used to identify the JavaScriptHelper. */
     private static final String ID = "DMDIRC-JSH";
-    
-    /** Used to allow scripts to know if a specific function they need is available. */
+
+    /**
+     * Used to allow scripts to know if a specific function they need is
+     * available.
+     */
     private static final int VERSION = 2;
 
     /** Hashtable for storing stuff. */
-    private static final Map<String, Object> SETTINGS = new HashMap<String, Object>();
-    
+    private static final Map<String, Object> SETTINGS
+            = new HashMap<String, Object>();
+
     /**
      * Method to set Stuff.
      *
      * @param setting Name of setting
      * @param value Value of setting
      */
-    public void setGlobal(String setting, final Object value) {
-        if (setting.equals("")) { return; }
-        setting = setting.toLowerCase();
-        if (SETTINGS.containsKey(setting)) { SETTINGS.remove(setting); }
-        if (value != null) { SETTINGS.put(setting, value); }
+    public void setGlobal(final String setting, final Object value) {
+        if (setting.isEmpty()) {
+            return;
+        }
+        final String key = setting.toLowerCase(Locale.getDefault());
+        if (SETTINGS.containsKey(key)) {
+            SETTINGS.remove(key);
+        }
+        if (value != null) {
+            SETTINGS.put(key, value);
+        }
     }
-    
+
     /**
      * Method to get Stuff.
      *
      * @param setting Name of setting
+     *
      * @return Value of setting
      */
-    public Object getGlobal(String setting) {
-        if (setting.equals("")) { return ""; }
-        setting = setting.toLowerCase();
-        if (SETTINGS.containsKey(setting)) { return SETTINGS.get(setting); }
-        return null;
+    public Object getGlobal(final String setting) {
+        if (setting.isEmpty()) {
+            return "";
+        }
+        return SETTINGS.get(setting.toLowerCase(Locale.getDefault()));
     }
-    
+
     /**
      * Method to trim spaces from strings.
      *
      * @param str String to trim
+     *
      * @return String without spaces on the ends
      */
-    public String trim(String str) { return str.trim(); }
-    
+    public String trim(final String str) {
+        return str.trim();
+    }
+
     /**
      * Method to get a java Character object.
      *
      * @param str String to make object from
+     *
      * @return Character represending first char in the string
      */
-    public Character toChar(String str) { return str.charAt(0); }
-    
+    public Character toChar(final String str) {
+        return str.charAt(0);
+    }
+
     /**
      * Get the version of JavaScriptHelper in use.
      *
      * @return JavaScriptHelper version
      */
-    public int getVersion() { return VERSION; }
-    
+    public int getVersion() {
+        return VERSION;
+    }
+
     /**
      * Get the ID of this JavaScriptHelper.
      * If you extend or modify this, you should change the myIDString variable.
      *
      * @return JavaScriptHelper ID
      */
-    public String getID() { return ID; }
+    public String getID() {
+        return ID;
+    }
 }

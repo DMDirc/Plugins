@@ -1,16 +1,16 @@
 /*
  * Copyright (c) 2006-2010 Chris Smith, Shane Mc Cormack, Gregory Holmes
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -91,15 +91,15 @@ public class ActionTriggersPanel extends JPanel implements ActionListener,
         trigger.addPopupMenuListener(new PopupMenuListener() {
 
             @Override
-            public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
-                JComboBox box = (JComboBox) e.getSource();
-                Object comp = box.getUI().getAccessibleChild(box, 0);
+            public void popupMenuWillBecomeVisible(final PopupMenuEvent e) {
+                final JComboBox box = (JComboBox) e.getSource();
+                final Object comp = box.getUI().getAccessibleChild(box, 0);
                 if (!(comp instanceof JPopupMenu)) {
                     return;
                 }
-                JComponent scrollPane = (JComponent) ((JPopupMenu) comp).
+                final JComponent scrollPane = (JComponent) ((JPopupMenu) comp).
                         getComponent(0);
-                Dimension size = scrollPane.getPreferredSize();
+                final Dimension size = scrollPane.getPreferredSize();
                 if (scrollPane instanceof JScrollPane) {
                     size.width = Math.max(size.width, ((ActionTypeModel)
                             trigger.getModel()).getMaxWidth() + (int)
@@ -107,18 +107,20 @@ public class ActionTriggersPanel extends JPanel implements ActionListener,
                             getPreferredSize().getWidth());
                 } else {
                     size.width = Math.max(size.width, ((ActionTypeModel)
-                            trigger.getModel()). getMaxWidth());
+                            trigger.getModel()).getMaxWidth());
                 }
                 scrollPane.setPreferredSize(size);
                 scrollPane.setMaximumSize(size);
             }
 
             @Override
-            public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+            public void popupMenuWillBecomeInvisible(final PopupMenuEvent e) {
+                //Not required
             }
 
             @Override
-            public void popupMenuCanceled(PopupMenuEvent e) {
+            public void popupMenuCanceled(final PopupMenuEvent e) {
+                //Not required
             }
         });
 
@@ -142,9 +144,8 @@ public class ActionTriggersPanel extends JPanel implements ActionListener,
     private void layoutComponents() {
         setLayout(new MigLayout("fill, pack"));
 
-        add(new TextLabel(
-                "This action will be triggered when any of these events occurs: "),
-                "growx, pushx, wrap, spanx");
+        add(new TextLabel("This action will be triggered when any of these "
+                + "events occurs: "), "growx, pushx, wrap, spanx");
         add(triggerList, "grow, push, wrap, spanx");
         add(trigger, "growx, pushx");
         add(add, "right");
@@ -152,7 +153,7 @@ public class ActionTriggersPanel extends JPanel implements ActionListener,
 
     /**
      * Returns the primary trigger for this panel.
-     * 
+     *
      * @return Primary trigger or null
      */
     public ActionType getPrimaryTrigger() {
@@ -164,7 +165,7 @@ public class ActionTriggersPanel extends JPanel implements ActionListener,
 
     /**
      * Returns the list of triggers.
-     * 
+     *
      * @return Trigger list
      */
     public ActionType[] getTriggers() {
@@ -174,10 +175,10 @@ public class ActionTriggersPanel extends JPanel implements ActionListener,
 
     /**
      * Sets the triggers.
-     * 
+     *
      * @param triggers Sets the triggers.
      */
-    void setTriggers(final ActionType[] triggers) {
+    public void setTriggers(final ActionType[] triggers) {
         triggerList.clearTriggers();
 
         for (ActionType localTrigger : triggers) {
@@ -187,9 +188,9 @@ public class ActionTriggersPanel extends JPanel implements ActionListener,
         repopulateTriggers();
     }
 
-    /** 
+    /**
      * {@inheritDoc}
-     * 
+     *
      * @param e Action event
      */
     @Override
@@ -220,8 +221,8 @@ public class ActionTriggersPanel extends JPanel implements ActionListener,
                 ((ActionTypeModel) trigger.getModel()).removeAllElements();
 
                 if (triggerList.getTriggerCount() == 0) {
-                    ((ActionTypeModel) trigger.getModel()).setTypeGroup(ActionManager.
-                            getTypeGroups());
+                    ((ActionTypeModel) trigger.getModel()).setTypeGroup(
+                            ActionManager.getTypeGroups());
                     trigger.setEnabled((trigger.getModel().getSize() > 0));
                     return;
                 }

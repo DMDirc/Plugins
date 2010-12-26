@@ -45,10 +45,11 @@ public class AddonInfoCellEditor extends AbstractCellEditor implements
     /** Table to edit. */
     private Object value;
 
-    /** {@innheritDoc} */
+    /** {@inheritDoc} */
     @Override
-    public Component getTableCellEditorComponent(JTable table, Object value,
-            boolean isSelected, int row, int column) {
+    public Component getTableCellEditorComponent(final JTable table,
+            final Object value, final boolean isSelected, final int row,
+            final int column) {
         this.value = value;
         if (value instanceof AddonInfoLabel) {
             final AddonInfoLabel label = (AddonInfoLabel) value;
@@ -64,7 +65,7 @@ public class AddonInfoCellEditor extends AbstractCellEditor implements
         }
     }
 
-    /** {@innheritDoc} */
+    /** {@inheritDoc} */
     @Override
     public Object getCellEditorValue() {
         return value;
