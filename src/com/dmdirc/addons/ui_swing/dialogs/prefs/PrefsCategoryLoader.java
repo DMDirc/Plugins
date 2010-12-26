@@ -33,6 +33,7 @@ import com.dmdirc.addons.ui_swing.components.durationeditor.DurationDisplay;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesSetting;
+import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.util.ReturnableThread;
@@ -220,13 +221,17 @@ public class PrefsCategoryLoader extends LoggingSwingWorker<JPanel, Object> {
                     getParentWindow());
         }
 
-        if (Apple.isAppleUI()) {
-            panel.add(label, "align right, wmax 40%");
-        } else {
-            panel.add(label, "align left, wmax 40%");
+        if (setting.getType() != PreferencesType.LABEL) {
+            if (Apple.isAppleUI()) {
+                panel.add(label, "align right, wmax 40%");
+            } else {
+                panel.add(label, "align left, wmax 40%");
+            }
         }
         if (option == null) {
             panel.add(new JLabel("Error: See error list."));
+        } else if (setting.getType() == PreferencesType.LABEL) {
+            panel.add(option, "growx, pushx, w 100%, span");
         } else {
             panel.add(option, "growx, pushx, w 60%");
         }
