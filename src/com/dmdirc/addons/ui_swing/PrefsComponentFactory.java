@@ -44,16 +44,19 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.Map;
+import javax.swing.BorderFactory;
 
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
+import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import net.miginfocom.swing.MigLayout;
 
 import org.jdesktop.jxlayer.JXLayer;
 
@@ -273,7 +276,7 @@ public final class PrefsComponentFactory {
                 .getValue().substring(1 + setting.getValue().indexOf(':'));
 
         OptionalJSpinner option;
-        Validator optionalValidator = setting.getValidator();
+        final Validator optionalValidator = setting.getValidator();
         Validator numericalValidator = null;
         if (optionalValidator instanceof OptionalValidator) {
             numericalValidator = ((OptionalValidator) setting.getValidator()).
@@ -463,7 +466,10 @@ public final class PrefsComponentFactory {
      * @return A JComponent descendent for the specified setting
      */
     private static JComponent getLabelOption(final PreferencesSetting setting) {
-        return new TextLabel(setting.getValue());
+        final JPanel panel = new JPanel(new MigLayout("fill"));
+        panel.add(new TextLabel(setting.getValue()));
+        panel.setBorder(BorderFactory.createTitledBorder(panel.getBorder(), setting.getTitle()));
+        return panel;
     }
 
 }
