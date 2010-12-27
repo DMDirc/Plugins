@@ -25,10 +25,11 @@ package com.dmdirc.addons.ui_swing.framemanager.tree;
 import com.dmdirc.config.ConfigManager;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.interfaces.ConfigChangeListener;
+import com.dmdirc.ui.messages.ColourManager;
+import com.dmdirc.ui.messages.Styliser;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Font;
 
 import javax.swing.JLabel;
 import javax.swing.JTree;
@@ -50,6 +51,8 @@ public class TreeViewTreeCellRenderer implements TreeCellRenderer,
     private final TreeFrameManager manager;
     /** Config manager. */
     private final ConfigManager config;
+    /** Styliser to use. */
+    private final Styliser styliser;
     /** Rollover colours. */
     private Color rolloverColour;
     /** Active bold. */
@@ -68,6 +71,7 @@ public class TreeViewTreeCellRenderer implements TreeCellRenderer,
         this.manager = manager;
 
         config = IdentityManager.getGlobalConfig();
+        styliser = new Styliser(null, config);
 
         setColours();
 
@@ -100,35 +104,40 @@ public class TreeViewTreeCellRenderer implements TreeCellRenderer,
         if (label == null) {
             return new JLabel("Label == null");
         }
-
-        label.setOpaque(false);
-        label.setBackground(tree.getBackground());
-        label.setForeground(tree.getForeground());
+        boolean bold = false;
+        Color background = tree.getBackground();
+        Color foreground = tree.getForeground();
 
         if (label.isRollover()) {
-            label.setOpaque(true);
-            label.setBackground(rolloverColour);
+            background = rolloverColour;
         }
 
         final Color colour = label.getNotificationColour();
         if (colour != null) {
-            label.setForeground(colour);
+            foreground = colour;
         }
 
         if (label.isSelected()) {
-            if (activeBold) {
-                label.setFont(label.getFont().deriveFont(Font.BOLD));
-            } else {
-                label.setFont(label.getFont().deriveFont(Font.PLAIN));
-            }
+            bold = activeBold;
             if (!tree.getBackground().equals(activeBackground)) {
-                label.setOpaque(true);
-                label.setBackground(activeBackground);
+                background = activeBackground;
             }
-            label.setForeground(activeForeground);
+            foreground = activeForeground;
         } else {
-            label.setFont(label.getFont().deriveFont(Font.PLAIN));
+            bold = false;
         }
+
+        final StringBuilder sb = new StringBuilder();
+        if (bold) {
+            sb.append(Styliser.CODE_BOLD);
+        }
+        sb.append(Styliser.CODE_HEXCOLOUR);
+        sb.append(ColourManager.getHex(foreground));
+        sb.append(',');
+        sb.append(ColourManager.getHex(background));
+        label.setBackground(background);
+        label.setOpaque(true);
+        label.setTextStyle(styliser, sb.toString());
 
         return label;
     }
