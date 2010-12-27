@@ -38,9 +38,9 @@ public class TreeViewNode extends DefaultMutableTreeNode {
      */
     private static final long serialVersionUID = 5;
     /** Node's label. */
-    private NodeLabel label;
+    private final NodeLabel label;
     /** Node's frame container. */
-    private FrameContainer<?> window;
+    private final FrameContainer<?> window;
 
     /**
      * Instantiates a new tree view node.

@@ -23,22 +23,32 @@
 package com.dmdirc.addons.ui_swing.framemanager.tree;
 
 import com.dmdirc.FrameContainer;
+import com.dmdirc.addons.ui_swing.components.ImageButton;
 import com.dmdirc.interfaces.FrameInfoListener;
 import com.dmdirc.interfaces.NotificationListener;
 import com.dmdirc.interfaces.SelectionListener;
 import com.dmdirc.ui.IconManager;
+import com.dmdirc.ui.messages.Styliser;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
+
 import javax.swing.BorderFactory;
-import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextPane;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.text.DefaultStyledDocument;
+import javax.swing.text.StyledDocument;
 
 import net.miginfocom.layout.PlatformDefaults;
+import net.miginfocom.swing.MigLayout;
 
 /**
  * Node label.
  */
-public class NodeLabel extends JLabel implements SelectionListener,
+public class NodeLabel extends JPanel implements SelectionListener,
         NotificationListener, FrameInfoListener {
 
     /**
@@ -55,6 +65,13 @@ public class NodeLabel extends JLabel implements SelectionListener,
     private Color notificationColour;
     /** Are we the selected window? */
     private boolean selected;
+    /** Node icon. */
+    private final ImageButton icon = new ImageButton("", IconManager
+            .getIconManager().getIcon("icon"));
+    /** Text label. */
+    private final JTextPane text = new JTextPane(new DefaultStyledDocument());
+    /** Current styled text. */
+    private String currentText = "";
 
     /**
      * Instantiates a new node label.
@@ -77,11 +94,17 @@ public class NodeLabel extends JLabel implements SelectionListener,
             return;
         }
 
-        setText(window.toString());
+        icon.setIcon(IconManager.getIconManager().getIcon(window.getIcon()));
+        text.setText(window.toString());
+        text.setBorder(null);
+
+        setLayout(new MigLayout("ins 0"));
+        add(icon, "left");
+        add(text, "left, grow, pushx");
 
 
-        setToolTipText(null);
-        setIcon(IconManager.getIconManager().getIcon(window.getIcon()));
+        icon.setToolTipText(null);
+        text.setToolTipText(null);
         setBorder(BorderFactory.createEmptyBorder(1, 0, 2, 0));
 
         setPreferredSize(new Dimension(100000, getFont().getSize()
@@ -122,7 +145,7 @@ public class NodeLabel extends JLabel implements SelectionListener,
     @Override
     public void iconChanged(final FrameContainer<?> window, final String icon) {
         if (equals(window)) {
-            setIcon(IconManager.getIconManager().getIcon(icon));
+            this.icon.setIcon(IconManager.getIconManager().getIcon(icon));
         }
     }
 
@@ -130,7 +153,7 @@ public class NodeLabel extends JLabel implements SelectionListener,
     @Override
     public void nameChanged(final FrameContainer<?> window, final String name) {
         if (equals(window)) {
-            setText(name);
+            text.setText(name);
         }
     }
 
@@ -195,6 +218,93 @@ public class NodeLabel extends JLabel implements SelectionListener,
         }
 
         return window.hashCode();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Font getFont() {
+        return UIManager.getFont("TextPane.font");
+    }
+
+    /**
+     * Sets the foreground colour for this label.
+     *
+     * @param colour New foreground colour
+     */
+    @Override
+    public void setForeground(final Color colour) {
+        if (text != null) {
+            text.setForeground(colour);
+        }
+    }
+
+    /**
+     * Sets the background colour for this label.
+     *
+     * @param colour New background colour
+     */
+    @Override
+    public void setBackground(final Color colour) {
+        if (text != null) {
+            text.setBackground(colour);
+        }
+    }
+
+    /**
+     * Sets the font for this label.
+     *
+     * @param font New font
+     */
+    @Override
+    public void setFont(final Font font) {
+        if (text != null) {
+            text.setFont(font);
+        }
+    }
+
+    /**
+     * Sets the opacity of this label.
+     *
+     * @param opacity Desired opacity
+     */
+    @Override
+    public void setOpaque(final boolean opacity) {
+        if (text != null) {
+            text.setOpaque(opacity);
+        }
+    }
+
+    /**
+     * Sets the text and style in this label.
+     *
+     * @param styliser Styliser to use to style text
+     * @param styledText Styled text string to use
+     */
+    public void setStyledText(final Styliser styliser,
+            final String styledText) {
+        if (currentText.equals(styledText)) {
+            return;
+        }
+        text.setText("");
+        currentText = styledText;
+        styliser.addStyledString((StyledDocument) text.getDocument(),
+                new String[] {styledText, });
+    }
+
+    /**
+     * Sets the styles for the text in this label.
+     *
+     * @param styliser Styliser to use
+     * @param newText Style to set
+     */
+    public void setTextStyle(final Styliser styliser, final String newText) {
+        if (currentText.equals(newText + window.toString())) {
+            return;
+        }
+        text.setText("");
+        currentText = newText + window.toString();
+        styliser.addStyledString((StyledDocument) text.getDocument(),
+                new String[] {newText, window.toString(), });
     }
 
 }

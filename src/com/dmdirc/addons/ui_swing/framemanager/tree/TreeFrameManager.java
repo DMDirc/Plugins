@@ -220,9 +220,8 @@ public final class TreeFrameManager implements FrameManager,
             /** {@inheritDoc} */
             @Override
             public void run() {
-                final TreeViewNode node =
-                        new TreeViewNode(new NodeLabel(window),
-                        window);
+                final NodeLabel label = new NodeLabel(window);
+                final TreeViewNode node = new TreeViewNode(label, window);
                 synchronized (nodes) {
                     nodes.put(window, node);
                 }
