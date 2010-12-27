@@ -81,7 +81,7 @@ public class ImageButton extends JButton {
         setContentAreaFilled(false);
         setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
         setMargin(new Insets(0, 0, 0, 0));
-        setPreferredSize(new Dimension(16, 0));
+        setPreferredSize(new Dimension(16, 16));
         setActionCommand(actionCommand);
     }
 
