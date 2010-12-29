@@ -34,7 +34,6 @@ import com.dmdirc.config.IdentityManager;
 import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.parser.interfaces.callbacks.SocketCloseListener;
 import com.dmdirc.ui.WindowManager;
-import com.dmdirc.ui.interfaces.Window;
 
 import java.awt.Desktop;
 import java.io.File;
@@ -82,7 +81,8 @@ public class TransferContainer extends FrameContainer<TransferWindow> implements
             Desktop.getDesktop().isSupported(Desktop.Action.OPEN);
 
     /**
-     * Creates a new instance of DCCTransferWindow with a given DCCTransfer object.
+     * Creates a new instance of DCCTransferWindow with a given DCCTransfer
+     * object.
      *
      * @param plugin the DCC Plugin responsible for this window
      * @param dcc The DCCTransfer object this window wraps around
@@ -94,7 +94,8 @@ public class TransferContainer extends FrameContainer<TransferWindow> implements
             final String title, final String targetNick, final Server server) {
         super(dcc.getType() == DCCTransfer.TransferType.SEND
                 ? "dcc-send-inactive" : "dcc-receive-inactive",
-                title, title, TransferWindow.class, IdentityManager.getGlobalConfig());
+                title, title, TransferWindow.class,
+                IdentityManager.getGlobalConfig());
         this.plugin = plugin;
         this.dcc = dcc;
         this.server = server;
@@ -102,7 +103,8 @@ public class TransferContainer extends FrameContainer<TransferWindow> implements
         this.myPlugin = plugin;
 
         if (parser != null) {
-            parser.getCallbackManager().addNonCriticalCallback(SocketCloseListener.class, this);
+            parser.getCallbackManager().addNonCriticalCallback(
+                    SocketCloseListener.class, this);
         }
         dcc.addHandler(this);
 
@@ -152,20 +154,24 @@ public class TransferContainer extends FrameContainer<TransferWindow> implements
             percent = getPercent();
         }
 
-        boolean percentageInTitle = IdentityManager.getGlobalConfig().getOptionBool(
-                            plugin.getDomain(), "general.percentageInTitle");
+        boolean percentageInTitle = IdentityManager.getGlobalConfig()
+                .getOptionBool(plugin.getDomain(), "general.percentageInTitle");
 
         if (percentageInTitle) {
             final StringBuilder title = new StringBuilder();
             if (dcc.isListenSocket()) { title.append("*"); }
-            title.append(dcc.getType() == DCCTransfer.TransferType.SEND ? "Sending: " : "Recieving: ");
+            title.append(dcc.getType() == DCCTransfer.TransferType.SEND
+                    ? "Sending: " : "Recieving: ");
             title.append(otherNickname);
-            title.append(" ("+ String.format("%.0f", Math.floor(percent)) +"%)");
+            title.append(" (")
+                    .append(String.format("%.0f", Math.floor(percent)))
+                    .append("%)");
             setName(title.toString());
             setTitle(title.toString());
         }
 
-        ActionManager.processEvent(DCCActions.DCC_SEND_DATATRANSFERED, null, this, bytes);
+        ActionManager.processEvent(DCCActions.DCC_SEND_DATATRANSFERED,
+                null, this, bytes);
     }
 
     /**
@@ -175,7 +181,8 @@ public class TransferContainer extends FrameContainer<TransferWindow> implements
      * @return The percentage of this transfer that has been completed
      */
     public double getPercent() {
-        return (100.00 / dcc.getFileSize()) * (transferCount + dcc.getFileStart());
+        return (100.00 / dcc.getFileSize()) * (transferCount
+                + dcc.getFileStart());
     }
 
     /**
@@ -203,7 +210,8 @@ public class TransferContainer extends FrameContainer<TransferWindow> implements
         final long remaningBytes;
 
         synchronized (this) {
-            remaningBytes = dcc.getFileSize() - dcc.getFileStart() - transferCount;
+            remaningBytes = dcc.getFileSize() - dcc.getFileStart()
+                    - transferCount;
         }
 
         return bytesPerSecond > 0 ? (remaningBytes / bytesPerSecond) : 1;
@@ -213,7 +221,8 @@ public class TransferContainer extends FrameContainer<TransferWindow> implements
      * Retrieves the timestamp at which this transfer started.
      *
      * @since 0.6.4
-     * @return The timestamp (milliseconds since 01/01/1970) at which this transfer started.
+     * @return The timestamp (milliseconds since 01/01/1970) at which this
+     * transfer started.
      */
     public long getStartTime() {
         return timeStarted;
@@ -257,7 +266,8 @@ public class TransferContainer extends FrameContainer<TransferWindow> implements
      */
     @Override
     public void socketClosed(final DCCTransfer dcc) {
-        ActionManager.processEvent(DCCActions.DCC_SEND_SOCKETCLOSED, null, this);
+        ActionManager.processEvent(DCCActions.DCC_SEND_SOCKETCLOSED, null,
+                this);
         if (!windowClosing) {
             synchronized (this) {
                 if (transferCount == dcc.getFileSize() - dcc.getFileStart()) {
@@ -278,7 +288,8 @@ public class TransferContainer extends FrameContainer<TransferWindow> implements
      */
     @Override
     public void socketOpened(final DCCTransfer dcc) {
-        ActionManager.processEvent(DCCActions.DCC_SEND_SOCKETOPENED, null, this);
+        ActionManager.processEvent(DCCActions.DCC_SEND_SOCKETOPENED, null,
+                this);
         timeStarted = System.currentTimeMillis();
         setIcon(dcc.getType() == DCCTransfer.TransferType.SEND
                 ? "dcc-send-active" : "dcc-receive-active");
@@ -297,9 +308,10 @@ public class TransferContainer extends FrameContainer<TransferWindow> implements
         dcc.reset();
 
         if (server != null && server.getState() == ServerState.CONNECTED) {
-            final String myNickname = server.getParser().getLocalClient().getNickname();
-            // Check again incase we have changed nickname to the same nickname that
-            // this send is for.
+            final String myNickname = server.getParser().getLocalClient()
+                    .getNickname();
+            // Check again incase we have changed nickname to the same nickname
+            //that this send is for.
             if (server.getParser().getStringConverter().equalsIgnoreCase(
                     otherNickname, myNickname)) {
                 final Thread errorThread = new Thread(new Runnable() {
@@ -347,7 +359,7 @@ public class TransferContainer extends FrameContainer<TransferWindow> implements
         // 2: Remove any callbacks or listeners
         // 3: Trigger any actions neccessary
         dcc.removeFromTransfers();
-        
+
         // 4: Trigger action for the window closing
         // 5: Inform any parents that the window is closing
     }
@@ -361,7 +373,8 @@ public class TransferContainer extends FrameContainer<TransferWindow> implements
     public void addSocketCloseCallback(final SocketCloseListener listener) {
         if (server != null && server.getParser() != null) {
             server.getParser().getCallbackManager()
-                    .addNonCriticalCallback(SocketCloseListener.class, listener);
+                    .addNonCriticalCallback(SocketCloseListener.class,
+                    listener);
         }
     }
 

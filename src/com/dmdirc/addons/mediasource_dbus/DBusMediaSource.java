@@ -24,6 +24,8 @@ package com.dmdirc.addons.mediasource_dbus;
 
 import com.dmdirc.addons.nowplaying.MediaSource;
 import com.dmdirc.addons.nowplaying.MediaSourceManager;
+import com.dmdirc.logger.ErrorLevel;
+import com.dmdirc.logger.Logger;
 import com.dmdirc.plugins.Plugin;
 
 import java.io.BufferedReader;
@@ -107,9 +109,7 @@ public class DBusMediaSource extends Plugin implements MediaSourceManager {
         exeArgs[2] = iface;
         exeArgs[3] = method;
 
-        for (int i = 0; i < args.length; i++) {
-            exeArgs[4 + i] = args[i]; //NOPMD
-        }
+        System.arraycopy(args, 0, exeArgs, 4, args.length);
 
         return getInfo(exeArgs);
     }
@@ -143,7 +143,7 @@ public class DBusMediaSource extends Plugin implements MediaSourceManager {
             input.close();
             process.destroy();
         } catch (IOException ex) {
-            ex.printStackTrace();
+            Logger.userError(ErrorLevel.HIGH, "Unable to get dbus info", ex);
         }
 
         return result;
@@ -155,7 +155,8 @@ public class DBusMediaSource extends Plugin implements MediaSourceManager {
      * @param lines The lines to be parsed as a dictionary
      * @return A map corresponding to the specified dictionary
      */
-    protected static Map<String, String> parseDictionary(final List<String> lines) {
+    protected static Map<String, String> parseDictionary(
+            final List<String> lines) {
         final Map<String, String> res = new HashMap<String, String>();
 
         for (String line : lines) {

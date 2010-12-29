@@ -25,32 +25,30 @@ package com.dmdirc.addons.dcc;
 import com.dmdirc.addons.dcc.io.DCCChat;
 
 /**
- * This interfaces allows DCC Chat Windows to receive data from a DCCChat
- *
- * @author Shane 'Dataforce' McCormack
+ * This interfaces allows DCC Chat Windows to receive data from a DCCChat.
  */
 public interface DCCChatHandler {
 
     /**
-     * Handle a received message
+     * Handle a received message.
      *
      * @param dcc The DCCChat that this message is from
      * @param message The message
      */
-    void handleChatMessage(final DCCChat dcc, final String message);
+    void handleChatMessage(DCCChat dcc, String message);
 
     /**
-     * Called when the socket is closed
+     * Called when the socket is closed.
      *
      * @param dcc The DCCChat that this message is from
      */
-    void socketClosed(final DCCChat dcc);
+    void socketClosed(DCCChat dcc);
 
     /**
-     * Called when the socket is opened
+     * Called when the socket is opened.
      *
      * @param dcc The DCCChat that this message is from
      */
-    void socketOpened(final DCCChat dcc);
+    void socketOpened(DCCChat dcc);
 
 }
