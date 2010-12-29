@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.dialogs;
 
-import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.ui.CoreUIUtils;
 
 import java.awt.Component;

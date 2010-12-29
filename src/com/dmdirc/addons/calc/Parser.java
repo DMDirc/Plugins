@@ -43,8 +43,10 @@ public class Parser {
     protected static final List<TokenType> TOKENS_BY_PRECEDENCE;
 
     static {
-        TOKENS_BY_PRECEDENCE = new ArrayList<TokenType>(Arrays.asList(TokenType.values()));
-        Collections.sort(TOKENS_BY_PRECEDENCE, new TokenTypePrecedenceComparator());
+        TOKENS_BY_PRECEDENCE = new ArrayList<TokenType>(Arrays.asList(
+                TokenType.values()));
+        Collections.sort(TOKENS_BY_PRECEDENCE,
+                new TokenTypePrecedenceComparator());
     }
 
     /**
@@ -82,7 +84,8 @@ public class Parser {
      * @return A single tree containing all of the specified tokens
      * @throws ParseException If the tokens contain mismatched brackets
      */
-    protected TreeToken parse(final List<TreeToken> tokens) throws ParseException {
+    protected TreeToken parse(final List<TreeToken> tokens)
+            throws ParseException {
         while (tokens.size() > 1) {
             for (TokenType type : TOKENS_BY_PRECEDENCE) {
                 final int offset = findTokenType(tokens, type);
@@ -119,10 +122,13 @@ public class Parser {
      * @throws ParseException If the operator is a bracket and that bracket is
      * mismatched
      */
-    protected void parseNullaryOperator(final List<TreeToken> tokens, final int offset)
+    protected void parseNullaryOperator(final List<TreeToken> tokens,
+            final int offset)
             throws ParseException {
-        if (tokens.get(offset).getToken().getType() == TokenType.BRACKET_CLOSE
-                || tokens.get(offset).getToken().getType() == TokenType.BRACKET_OPEN) {
+        if (tokens.get(offset).getToken().getType()
+                == TokenType.BRACKET_CLOSE
+                || tokens.get(offset).getToken().getType()
+                == TokenType.BRACKET_OPEN) {
             parseBracket(tokens, offset);
         } else {
             parseNumber(tokens, offset);
@@ -155,7 +161,8 @@ public class Parser {
             }
         }
 
-        throw new ParseException("Couldn't find matching opening bracket", offset);
+        throw new ParseException("Couldn't find matching opening bracket",
+                offset);
     }
 
     /**
@@ -164,7 +171,8 @@ public class Parser {
      * @param tokens The supply of tokens from which the operator will be parsed
      * @param offset The offset at which the operator occurs
      */
-    protected void parseBinaryOperator(final List<TreeToken> tokens, final int offset) {
+    protected void parseBinaryOperator(final List<TreeToken> tokens,
+            final int offset) {
         tokens.get(offset).addChild(tokens.get(offset - 1));
         tokens.get(offset).addChild(tokens.get(offset + 1));
         tokens.get(offset).setProcessed();
@@ -179,7 +187,8 @@ public class Parser {
      * @param tokens The supply of tokens from which the operator will be parsed
      * @param offset The offset at which the operator occurs
      */
-    protected void parseUnaryOperator(final List<TreeToken> tokens, final int offset) {
+    protected void parseUnaryOperator(final List<TreeToken> tokens,
+            final int offset) {
         tokens.get(offset).addChild(tokens.get(offset + 1));
         tokens.get(offset).setProcessed();
         tokens.remove(offset + 1);
@@ -192,7 +201,8 @@ public class Parser {
      * @param tokens The supply of tokens from which the operator will be parsed
      * @param offset The offset at which the operator occurs
      */
-    protected void parseHiddenOperator(final List<TreeToken> tokens, final int offset) {
+    protected void parseHiddenOperator(final List<TreeToken> tokens,
+            final int offset) {
         tokens.remove(offset);
     }
 
@@ -214,9 +224,11 @@ public class Parser {
      * @param type The desired token type
      * @return The index of the first token with that type, or -1 if none found
      */
-    protected static int findTokenType(final List<TreeToken> tokens, final TokenType type) {
+    protected static int findTokenType(final List<TreeToken> tokens,
+            final TokenType type) {
         for (int i = 0; i < tokens.size(); i++) {
-            if (tokens.get(i).getToken().getType() == type && !tokens.get(i).isProcessed()) {
+            if (tokens.get(i).getToken().getType() == type && !tokens.get(i)
+                    .isProcessed()) {
                 return i;
             }
         }
@@ -227,7 +239,8 @@ public class Parser {
     /**
      * A class which compares token types based on their precendence.
      */
-    protected static class TokenTypePrecedenceComparator implements Comparator<TokenType> {
+    protected static class TokenTypePrecedenceComparator implements
+            Comparator<TokenType> {
 
         /** {@inheritDoc} */
         @Override

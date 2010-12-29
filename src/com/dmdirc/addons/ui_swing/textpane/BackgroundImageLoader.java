@@ -57,7 +57,7 @@ public class BackgroundImageLoader extends LoggingSwingWorker<Image, Void> {
 
     /** {@inheritDoc} */
     @Override
-    protected Image doInBackground() throws Exception {
+    protected Image doInBackground() {
         try {
             if (imageURL != null) {
                 return ImageIO.read(imageURL);

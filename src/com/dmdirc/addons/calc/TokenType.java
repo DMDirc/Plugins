@@ -41,12 +41,15 @@ public enum TokenType {
     END(TokenTypeArity.HIDDEN, "$", 0),
 
     /** An opening bracket. */
-    BRACKET_OPEN(TokenTypeArity.NULLARY, "\\(", 0, "NUMBER_*", "MOD_*", "BRACKET_OPEN"),
+    BRACKET_OPEN(TokenTypeArity.NULLARY, "\\(", 0, "NUMBER_*", "MOD_*",
+                "BRACKET_OPEN"),
     /** A closing bracket. */
-    BRACKET_CLOSE(TokenTypeArity.NULLARY, "\\)", 50, "OP_*", "BRACKET_*", "END"),
+    BRACKET_CLOSE(TokenTypeArity.NULLARY, "\\)", 50, "OP_*", "BRACKET_*",
+                "END"),
 
     /** A floating point number. */
-    NUMBER_FLOAT(TokenTypeArity.NULLARY, "[0-9]+\\.[0-9]+", 1, "OP_*", "BRACKET_*", "END") {
+    NUMBER_FLOAT(TokenTypeArity.NULLARY, "[0-9]+\\.[0-9]+", 1, "OP_*",
+                "BRACKET_*", "END") {
         /** {@inheritDoc} */
         @Override
         public Number evaluate(final TreeToken token) {
@@ -55,7 +58,8 @@ public enum TokenType {
     },
 
     /** An integer. */
-    NUMBER_INT(TokenTypeArity.NULLARY, "[0-9]+", 1, "OP_*", "BRACKET_*", "END") {
+    NUMBER_INT(TokenTypeArity.NULLARY, "[0-9]+", 1, "OP_*",
+                "BRACKET_*", "END") {
         /** {@inheritDoc} */
         @Override
         public Number evaluate(final TreeToken token) {
@@ -102,7 +106,8 @@ public enum TokenType {
     },
 
     /** The multiplication operator. */
-    OP_MULT(TokenTypeArity.BINARY, "(?=\\()|\\*", 9, "NUMBER_*", "BRACKET_OPEN") {
+    OP_MULT(TokenTypeArity.BINARY, "(?=\\()|\\*", 9, "NUMBER_*",
+            "BRACKET_OPEN") {
         /** {@inheritDoc} */
         @Override
         public Number evaluate(final TreeToken token) {
@@ -136,7 +141,8 @@ public enum TokenType {
         /** {@inheritDoc} */
         @Override
         public Number evaluate(final TreeToken token) {
-            return new Float(Math.pow(token.getChildren().get(0).evaluate().doubleValue(),
+            return new Float(Math.pow(token.getChildren().get(0).evaluate()
+                    .doubleValue(),
                     token.getChildren().get(1).evaluate().doubleValue()));
         }
     };
@@ -217,7 +223,8 @@ public enum TokenType {
         matcher.useAnchoringBounds(false);
         matcher.useTransparentBounds(true);
 
-        return matcher.find(offset) && matcher.start() == offset ? matcher.end() : -1;
+        return matcher.find(offset) && matcher.start() == offset
+                ? matcher.end() : -1;
     }
 
     /**
@@ -241,9 +248,8 @@ public enum TokenType {
         final List<TokenType> res = new ArrayList<TokenType>();
 
         for (TokenType token : values()) {
-            if ((name.endsWith("*")
-                    && token.name().startsWith(name.substring(0, name.length() - 1)))
-                    || name.equals(token.name())) {
+            if ((name.endsWith("*") && token.name().startsWith(name.substring(0,
+                    name.length() - 1))) || name.equals(token.name())) {
                 res.add(token);
             }
         }

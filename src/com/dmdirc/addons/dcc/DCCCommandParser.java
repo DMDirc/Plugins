@@ -29,7 +29,7 @@ import com.dmdirc.commandparser.CommandType;
 import com.dmdirc.commandparser.parsers.GlobalCommandParser;
 
 /**
- * DCC CommandParser
+ * DCC CommandParser.
  */
 public final class DCCCommandParser extends GlobalCommandParser {
 
@@ -74,7 +74,8 @@ public final class DCCCommandParser extends GlobalCommandParser {
      * @param line The line input by the user
      */
     @Override
-    protected void handleNonCommand(final FrameContainer<?> origin, final String line) {
+    protected void handleNonCommand(final FrameContainer<?> origin,
+            final String line) {
         ((WritableFrameContainer<?>) origin).sendLine(line);
     }
 
