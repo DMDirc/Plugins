@@ -1,0 +1,132 @@
+/*
+ * Copyright (c) 2006-2010 Chris Smith, Shane Mc Cormack, Gregory Holmes
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+package com.dmdirc.addons.debug;
+
+import com.dmdirc.addons.debug.commands.*; //NOPMD
+import com.dmdirc.commandparser.CommandManager;
+import com.dmdirc.logger.ErrorLevel;
+import com.dmdirc.logger.Logger;
+import com.dmdirc.plugins.Plugin;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * Debug plugin providing commands to aid in debugging the client.
+ */
+public class DebugPlugin extends Plugin {
+
+    /** List of build in debug commands to load. */
+    private static final Class[] CLASSES = {
+        Benchmark.class, ColourSpam.class, ConfigInfo.class, ConfigStats.class,
+        com.dmdirc.addons.debug.commands.Error.class, FirstRun.class,
+        ForceUpdate.class, GlobalConfigInfo.class, MemInfo.class,
+        Migration.class, Notify.class, RunGC.class, ServerInfo.class,
+        ServerState.class, Services.class, ShowRaw.class, Threads.class,
+        Time.class,
+    };
+    /** List of registered debug commands. */
+    private final Map<String, DebugCommand> commands;
+    /** Debug command. */
+    private final Debug debugCommand;
+
+    /**
+     * Creates a new debug plugin.
+     */
+    public DebugPlugin() {
+        super();
+        commands = new HashMap<String, DebugCommand>();
+        debugCommand = new Debug(this);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onLoad() {
+        CommandManager.registerCommand(debugCommand);
+        for (Class<DebugCommand> type : CLASSES) {
+            try {
+                addCommand(type.getConstructor(Debug.class)
+                        .newInstance(debugCommand));
+            } catch (LinkageError e) {
+                Logger.appError(ErrorLevel.HIGH,
+                        "Unable to load debug command", e);
+            } catch (Exception e) {
+                Logger.appError(ErrorLevel.HIGH,
+                        "Unable to load debug command", e);
+            }
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onUnload() {
+        commands.clear();
+        CommandManager.unregisterCommand(debugCommand);
+    }
+
+    /**
+     * Adds a command to the list of commands.
+     *
+     * @param command Command to add
+     */
+    public void addCommand(final DebugCommand command) {
+        commands.put(command.getName(), command);
+    }
+
+    /**
+     * Removes a command from the list of commands.
+     *
+     * @param command Command to remove
+     */
+    public void removeCommand(final DebugCommand command) {
+        commands.remove(command.getName());
+    }
+
+    /**
+     * Returns a list of command names.
+     *
+     * @return List of command names
+     */
+    public List<String> getCommandNames() {
+        final List<String> names = new ArrayList<String>(commands.size());
+
+        for (DebugCommand command : commands.values()) {
+            names.add(command.getName());
+        }
+
+        return names;
+    }
+
+    /**
+     * Returns the debug command with the specified name.
+     *
+     * @param name Name of command to return
+     *
+     * @return Command with specified name or null if no matches
+     */
+    public DebugCommand getCommand(final String name) {
+        return commands.get(name);
+    }
+
+}
