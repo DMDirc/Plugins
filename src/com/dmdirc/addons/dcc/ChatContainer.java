@@ -30,18 +30,14 @@ import com.dmdirc.ui.interfaces.InputWindow;
 
 /**
  * This class links DCC Chat objects to a window.
- *
- * @author Shane 'Dataforce' McCormack
  */
 public class ChatContainer extends DCCFrameContainer<InputWindow> implements DCCChatHandler {
 
-    /** The DCCChat object we are a window for */
-    private final DCCChat dcc;
-
-    /** My Nickname */
+    /** The DCCChat object we are a window for. */
+    private final DCCChat dccChat;
+    /** My Nickname. */
     private final String nickname;
-
-    /** Other Nickname */
+    /** Other Nickname. */
     private final String otherNickname;
 
     /**
@@ -55,9 +51,9 @@ public class ChatContainer extends DCCFrameContainer<InputWindow> implements DCC
      */
     public ChatContainer(final DCCPlugin plugin, final DCCChat dcc,
             final String title, final String nick, final String targetNick) {
-        super(plugin, title, "dcc-chat-inactive", InputWindow.class,
+        super(title, "dcc-chat-inactive", InputWindow.class,
                 DCCCommandParser.getDCCCommandParser());
-        this.dcc = dcc;
+        this.dccChat = dcc;
         dcc.setHandler(this);
         nickname = nick;
         otherNickname = targetNick;
@@ -66,22 +62,23 @@ public class ChatContainer extends DCCFrameContainer<InputWindow> implements DCC
     }
 
     /**
-     * Get the DCCChat Object associated with this window
+     * Get the DCCChat Object associated with this window.
      *
      * @return The DCCChat Object associated with this window
      */
     public DCCChat getDCC() {
-        return dcc;
+        return dccChat;
     }
 
     /** {@inheritDoc} */
     @Override
     public void sendLine(final String line) {
-        if (dcc.isWriteable()) {
+        if (dccChat.isWriteable()) {
             final StringBuffer buff = new StringBuffer("DCCChatSelfMessage");
-            ActionManager.processEvent(DCCActions.DCC_CHAT_SELFMESSAGE, buff, this, line);
+            ActionManager.processEvent(DCCActions.DCC_CHAT_SELFMESSAGE, buff,
+                    this, line);
             addLine(buff, nickname, getTranscoder().encode(line));
-            dcc.sendLine(line);
+            dccChat.sendLine(line);
         } else {
             final StringBuffer buff = new StringBuffer("DCCChatError");
             addLine(buff, "Socket is closed.", getTranscoder().encode(line));
@@ -121,7 +118,7 @@ public class ChatContainer extends DCCFrameContainer<InputWindow> implements DCC
     @Override
     public void windowClosing() {
         super.windowClosing();
-        dcc.close();
+        dccChat.close();
     }
 
 }

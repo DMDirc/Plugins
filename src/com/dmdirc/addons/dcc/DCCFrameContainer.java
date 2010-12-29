@@ -26,21 +26,15 @@ import com.dmdirc.Server;
 import com.dmdirc.WritableFrameContainer;
 import com.dmdirc.commandparser.parsers.CommandParser;
 import com.dmdirc.config.IdentityManager;
-import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.input.TabCompleter;
 import com.dmdirc.ui.interfaces.InputWindow;
-import com.dmdirc.ui.interfaces.Window;
 
 /**
  * This class links DCC objects to a window.
  *
  * @param <T> The type of window which corresponds to this DCC frame
- * @author Shane 'Dataforce' McCormack
  */
 public abstract class DCCFrameContainer<T extends InputWindow> extends WritableFrameContainer<T> {
-
-    /** The dcc plugin that owns this frame */
-    protected final DCCPlugin plugin;
 
     /** The Window we're using. */
     private boolean windowClosing = false;
@@ -48,45 +42,26 @@ public abstract class DCCFrameContainer<T extends InputWindow> extends WritableF
     /**
      * Creates a new instance of DCCFrame.
      *
-     * @param plugin The DCCPlugin that owns this frame
      * @param title The title of this window
      * @param icon The icon to use
      * @param windowClass The class of window to use for this container
      * @param parser Command parser to use for this window
      */
-    public DCCFrameContainer(final DCCPlugin plugin, final String title, final String icon,
+    public DCCFrameContainer(final String title, final String icon,
             final Class<T> windowClass, final CommandParser parser) {
-        super(icon, title, title, windowClass, IdentityManager.getGlobalConfig(), parser);
-        this.plugin = plugin;
+        super(icon, title, title, windowClass,
+                IdentityManager.getGlobalConfig(), parser);
     }
 
-    /**
-     * Sends a line of text to this container's source.
-     *
-     * @param line The line to be sent
-     */
-    @Override
-    public void sendLine(final String line) {
-    }
-
-    /**
-     * Returns the maximum length that a line passed to sendLine() should be,
-     * in order to prevent it being truncated or causing protocol violations.
-     *
-     * @return The maximum line length for this container
-     */
+    /** {@inheritDoc} */
     @Override
     public int getMaxLineLength() {
         return 512;
     }
 
-    /**
-     * Returns the server instance associated with this container.
-     *
-     * @return the associated server connection
-     */
+    /** {@inheritDoc} */
     @Override
-    public Server getServer() {
+    public Server getServer() { //NOPMD - server will always be null
         return null;
     }
 
