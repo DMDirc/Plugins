@@ -55,36 +55,21 @@ public final class SwingFirstRunWizard implements WizardListener,
 
     /** Wizard dialog. */
     private WizardDialog wizardDialog;
-    /** First run or update. */
-    private boolean firstRun = true;
     /** Swing controller. */
     private SwingController controller;
 
     /**
-     * Instatiate the wizard.
+     * Instantiate the wizard.
      *
      * @param parentWindow Parent window
      * @param controller Swing controller
      */
     public SwingFirstRunWizard(final Window parentWindow,
             final SwingController controller) {
-        this(parentWindow, true, controller);
-    }
-
-    /**
-     * Instantiate the wizard.
-     *
-     * @param parentWindow Parent window
-     * @param firstRun is this the first run or an update?
-     * @param controller Swing controller
-     */
-    public SwingFirstRunWizard(final Window parentWindow, 
-            final boolean firstRun, final SwingController controller) {
-        this.firstRun = firstRun;
         this.controller = controller;
-        
-        wizardDialog = new WizardDialog("DMDirc: " + (firstRun ? "Setup wizard" 
-                : "Migration wizard"), new ArrayList<Step>(), this, parentWindow,
+
+        wizardDialog = new WizardDialog("DMDirc: Setup wizard",
+                new ArrayList<Step>(), this, parentWindow,
                 ModalityType.APPLICATION_MODAL);
         wizardDialog.setIconImage(IconManager.getIconManager().getImage("icon"));
         wizardDialog.addWizardListener(this);
@@ -108,15 +93,12 @@ public final class SwingFirstRunWizard implements WizardListener,
             extractActions();
         }
 
-        if (firstRun) {
-            IdentityManager.getConfigIdentity().setOption("updater", "enable",
-                    ((CommunicationStep) wizardDialog.getStep(1)).checkUpdates());
-            IdentityManager.getConfigIdentity().setOption("general", "submitErrors",
-                    ((CommunicationStep) wizardDialog.getStep(1)).checkErrors());
-        }
+        IdentityManager.getConfigIdentity().setOption("updater", "enable",
+                ((CommunicationStep) wizardDialog.getStep(1)).checkUpdates());
+        IdentityManager.getConfigIdentity().setOption("general", "submitErrors",
+                ((CommunicationStep) wizardDialog.getStep(1)).checkErrors());
 
-        if (firstRun &&
-                ((ProfileStep) wizardDialog.getStep(2)).getProfileManagerState()) {
+        if (((ProfileStep) wizardDialog.getStep(2)).getProfileManagerState()) {
             ActionManager.addListener(new ActionListener() {
                 /** {@inheritDoc} */
                 @Override
@@ -125,7 +107,7 @@ public final class SwingFirstRunWizard implements WizardListener,
                     ProfileManagerDialog.showProfileManagerDialog(controller.getMainWindow());
                 }
             }, CoreActionType.CLIENT_OPENED);
-            
+
         }
         wizardDialog.dispose();
     }
@@ -139,42 +121,7 @@ public final class SwingFirstRunWizard implements WizardListener,
     /** {@inheritDoc} */
     @Override
     public void extractPlugins() {
-        extractCorePlugins();
-    }
-
-    /** Extracts the core plugins. */
-    public static void extractCorePlugins() {
-        //Copy actions
-        final Map<String, byte[]> resources =
-                ResourceManager.getResourceManager().
-                getResourcesStartingWithAsBytes("plugins");
-        for (Entry<String, byte[]> resource : resources.entrySet()) {
-            try {
-                final String resourceName =
-                        Main.getConfigDir() + "plugins" +
-                        resource.getKey().
-                        substring(7, resource.getKey().length());
-                final File newDir =
-                        new File(resourceName.substring(0,
-                        resourceName.lastIndexOf('/')) + "/");
-
-                if (!newDir.exists()) {
-                    newDir.mkdirs();
-                }
-
-                final File newFile =
-                        new File(newDir,
-                        resourceName.substring(resourceName.lastIndexOf('/') + 1,
-                        resourceName.length()));
-
-                if (!newFile.isDirectory()) {
-                    ResourceManager.getResourceManager().
-                            resourceToFile(resource.getValue(), newFile);
-                }
-            } catch (IOException ex) {
-                Logger.userError(ErrorLevel.LOW, "Failed to extract plugins");
-            }
-        }
+        Main.extractCorePlugins(null);
     }
 
     /** {@inheritDoc} */
@@ -221,19 +168,15 @@ public final class SwingFirstRunWizard implements WizardListener,
     /** {@inheritDoc} */
     @Override
     public void display() {
-        if (firstRun) {
-            wizardDialog.addStep(new FirstRunExtractionStep());
-            wizardDialog.addStep(new CommunicationStep());
-            wizardDialog.addStep(new ProfileStep());
-        } else {
-            wizardDialog.addStep(new MigrationExtrationStep());
-        }
+        wizardDialog.addStep(new FirstRunExtractionStep());
+        wizardDialog.addStep(new CommunicationStep());
+        wizardDialog.addStep(new ProfileStep());
         wizardDialog.display();
     }
 
     /**
      * Returns the dialog associated with this wizard.
-     * 
+     *
      * @return Associated wizard dialog
      */
     public WizardDialog getWizardDialog() {

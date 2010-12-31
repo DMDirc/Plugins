@@ -49,23 +49,23 @@ import java.util.List;
  * Implements a dummy UI controller.
  */
 public final class DummyController extends Plugin implements UIController {
-    
+
     /** Main window. */
     private final MainWindow mainWindow = new DummyMainWindow();
-    
+
     /**
      * Creates a new instance of DummyController.
      */
     public DummyController() {
         StatusBarManager.getStatusBarManager().registerStatusBar(new DummyStatusBar());
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public MainWindow getMainWindow() {
         return mainWindow;
     }
-    
+
     /**
      * {@inheritDoc}
      *
@@ -77,7 +77,7 @@ public final class DummyController extends Plugin implements UIController {
     public StatusBar getStatusBar() {
         return new DummyStatusBar();
     }
-       
+
     /**
      * {@inheritDoc}
      *
@@ -88,7 +88,7 @@ public final class DummyController extends Plugin implements UIController {
     public ChannelWindow getChannel(final Channel channel) {
         return new DummyChannelWindow(channel);
     }
-    
+
     /**
      * {@inheritDoc}
      *
@@ -99,7 +99,7 @@ public final class DummyController extends Plugin implements UIController {
     public ServerWindow getServer(final Server server) {
         return new DummyServerWindow(server);
     }
-    
+
     /**
      * {@inheritDoc}
      *
@@ -110,7 +110,7 @@ public final class DummyController extends Plugin implements UIController {
     public QueryWindow getQuery(final Query query) {
         return new DummyQueryWindow(query);
     }
-    
+
     /**
      * {@inheritDoc}
      *
@@ -121,7 +121,7 @@ public final class DummyController extends Plugin implements UIController {
     public Window getWindow(final FrameContainer<?> owner) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-    
+
     /**
      * {@inheritDoc}
      *
@@ -132,37 +132,42 @@ public final class DummyController extends Plugin implements UIController {
     public InputWindow getInputWindow(final WritableFrameContainer<?> owner) {
         return new DummyInputWindow(owner, owner.getCommandParser());
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public UpdaterDialog getUpdaterDialog(final List<Update> updates) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public void showFirstRunWizard() {
         System.out.println("DummyController.showFirstRunWizard()");
     }
-    
-    /** {@inheritDoc} */
+
+    /**
+     * {@inheritDoc}
+     *
+     * @deprecated Migration wizard is no longer used or needed
+     */
     @Override
+    @Deprecated
     public void showMigrationWizard() {
         System.out.println("DummyController.showMigrationWizard()");
-    }    
-    
+    }
+
     /** {@inheritDoc} */
     @Override
     public void showChannelSettingsDialog(final Channel channel) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public void showServerSettingsDialog(final Server server) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public void initUISettings() {
@@ -171,8 +176,8 @@ public final class DummyController extends Plugin implements UIController {
 
     /**
      * {@inheritDoc}
-     * 
-     * @deprecated 
+     *
+     * @deprecated
      */
     @Override
     @Deprecated
@@ -182,8 +187,8 @@ public final class DummyController extends Plugin implements UIController {
 
     /**
      * {@inheritDoc}
-     * 
-     * @deprecated 
+     *
+     * @deprecated
      */
     @Override
     @Deprecated
@@ -202,13 +207,13 @@ public final class DummyController extends Plugin implements UIController {
     public void showFeedbackNag() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public void showMessageDialog(final String title, final String message) {
         System.out.println(message);
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public String getUserInput(final String prompt) {
@@ -266,5 +271,5 @@ public final class DummyController extends Plugin implements UIController {
     public UIController getController() {
         return this;
     }
-    
+
 }
