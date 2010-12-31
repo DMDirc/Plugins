@@ -74,17 +74,18 @@ public final class SwingUpdaterDialog extends StandardDialog implements
     /** Update.Status renderer. */
     private UpdateStatusTableCellRenderer updateStatusRenderer;
     /** Swing controller. */
-    private MainFrame mainFrame;
+    private final MainFrame mainFrame;
 
     /**
      * Creates a new instance of the updater dialog.
-     * 
+     *
      * @param updates A list of updates that are available.
      * @param mainFrame Main frame
      */
-    private SwingUpdaterDialog(final List<Update> updates, final MainFrame mainFrame) {
+    private SwingUpdaterDialog(final List<Update> updates,
+            final MainFrame mainFrame) {
         super(mainFrame, ModalityType.MODELESS);
-        
+
         this.mainFrame = mainFrame;
 
         initComponents(updates);
@@ -101,7 +102,7 @@ public final class SwingUpdaterDialog extends StandardDialog implements
 
     /**
      * Creates the dialog if one doesn't exist, and displays it.
-     * 
+     *
      * @param updates The updates that are available
      * @param mainFrame Main frame
      */
@@ -113,7 +114,7 @@ public final class SwingUpdaterDialog extends StandardDialog implements
 
     /**
      * Gets the dialog if one doesn't exist.
-     * 
+     *
      * @param updates The updates that are available
      * @param mainFrame Main frame
      * @return SwingUpdaterDialog instance
@@ -135,9 +136,9 @@ public final class SwingUpdaterDialog extends StandardDialog implements
         return me;
     }
 
-    /** 
+    /**
      * Initialises the components.
-     * 
+     *
      * @param updates The updates that are available
      */
     private void initComponents(final List<Update> updates) {
@@ -145,8 +146,8 @@ public final class SwingUpdaterDialog extends StandardDialog implements
         updateStatusRenderer = new UpdateStatusTableCellRenderer();
         updateComponentRenderer = new UpdateComponentTableCellRenderer();
 
-        header = new TextLabel("An update is available for one or more " +
-                "components of DMDirc:");
+        header = new TextLabel("An update is available for one or more "
+                + "components of DMDirc:");
 
         scrollPane = new JScrollPane();
         table = new PackingTable(new UpdateTableModel(updates), false,
@@ -186,7 +187,8 @@ public final class SwingUpdaterDialog extends StandardDialog implements
      * Lays out the components.
      */
     private void layoutComponents() {
-        setLayout(new MigLayout("fill, wmin 450, hmin 400, wmax 450, hmax 400"));
+        setLayout(new MigLayout("fill, wmin 450, hmin 400, wmax 450, hmax 400, "
+                + "hidemode 3"));
 
         add(header, "wrap 1.5*unrel, growx, pushx");
         add(scrollPane, "grow, push, wrap");
@@ -194,9 +196,9 @@ public final class SwingUpdaterDialog extends StandardDialog implements
         add(getRightButton(), "right");
     }
 
-    /** 
+    /**
      * {@inheritDoc}
-     * 
+     *
      * @param e Action event
      */
     @Override
@@ -248,7 +250,7 @@ public final class SwingUpdaterDialog extends StandardDialog implements
             getCancelButton().setVisible(true);
         }
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public void dispose() {
