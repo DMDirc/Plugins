@@ -57,10 +57,10 @@ import org.mortbay.jetty.security.SecurityHandler;
  * @author chris
  */
 public class WebInterfaceUI implements UIController {
-    
+
     /** The domain used for config settings. */
     public static final String DOMAIN = "plugin-webui";
-    
+
     /** The web server we're using. */
     private final org.mortbay.jetty.Server webServer;
 
@@ -72,21 +72,21 @@ public class WebInterfaceUI implements UIController {
      *
      * @param plugin The plugin which owns this Web UI
      */
-    public WebInterfaceUI(final WebInterfacePlugin plugin) {       
+    public WebInterfaceUI(final WebInterfacePlugin plugin) {
         final SecurityHandler sh = new SecurityHandler();
         final Constraint constraint = new Constraint();
         final ConstraintMapping cm = new ConstraintMapping();
-        
+
         constraint.setName("DMDirc Web UI");
         constraint.setRoles(new String[]{"user"});
         constraint.setAuthenticate(true);
-        
+
         cm.setConstraint(constraint);
         cm.setPathSpec("/*");
-        
+
         sh.setUserRealm(new WebUserRealm());
         sh.setConstraintMappings(new ConstraintMapping[]{cm});
-        
+
         webServer = new org.mortbay.jetty.Server(5978);
 
         webServer.setHandlers(new Handler[]{
@@ -111,7 +111,7 @@ public class WebInterfaceUI implements UIController {
     public WebWindowManager getWindowManager() {
         return windowManager;
     }
-    
+
     /**
      * Adds the specified handler to the webserver.
      *
@@ -208,8 +208,13 @@ public class WebInterfaceUI implements UIController {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     *
+     * @deprecated Migration wizard is no longer used or needed
+     */
     @Override
+    @Deprecated
     public void showMigrationWizard() {
         //TODO FIXME
         throw new UnsupportedOperationException("Not supported yet.");
@@ -237,7 +242,7 @@ public class WebInterfaceUI implements UIController {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @deprecated Use {@link WindowManager#getActiveWindow()} instead
      */
     @Override @Deprecated
@@ -247,7 +252,7 @@ public class WebInterfaceUI implements UIController {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @deprecated Use {@link WindowManager#getActiveWindow()} instead
      */
     @Override @Deprecated

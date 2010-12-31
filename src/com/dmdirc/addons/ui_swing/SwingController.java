@@ -335,23 +335,6 @@ public class SwingController extends Plugin implements UIController {
     /** {@inheritDoc} */
     @Override
     public void showFirstRunWizard() {
-        showFirstRunWizard(me, true);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void showMigrationWizard() {
-        showFirstRunWizard(me, false);
-    }
-
-    /**
-     * Shows a first run wizard, or a migration wizard.
-     *
-     * @param parentWindow Parent window
-     * @param firstRun First run?
-     */
-    private void showFirstRunWizard(
-            final java.awt.Window parentWindow, final boolean firstRun) {
         final Semaphore semaphore = new Semaphore(0);
         UIUtilities.invokeLater(new Runnable() {
 
@@ -372,14 +355,24 @@ public class SwingController extends Plugin implements UIController {
                         semaphore.release();
                     }
                 };
-                final SwingFirstRunWizard wizard =
-                        new SwingFirstRunWizard(parentWindow, firstRun,
+                final SwingFirstRunWizard wizard = new SwingFirstRunWizard(me,
                         SwingController.this);
                 wizard.getWizardDialog().addWizardListener(listener);
                 wizard.display();
             }
         });
         semaphore.acquireUninterruptibly();
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @deprecated Migration wizard is no longer used or needed
+     */
+    @Override
+    @Deprecated
+    public void showMigrationWizard() {
+        // Do nothing
     }
 
     /** {@inheritDoc} */

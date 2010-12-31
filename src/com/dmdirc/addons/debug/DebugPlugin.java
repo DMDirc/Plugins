@@ -42,9 +42,8 @@ public class DebugPlugin extends Plugin {
         Benchmark.class, ColourSpam.class, ConfigInfo.class, ConfigStats.class,
         com.dmdirc.addons.debug.commands.Error.class, FirstRun.class,
         ForceUpdate.class, GlobalConfigInfo.class, MemInfo.class,
-        Migration.class, Notify.class, RunGC.class, ServerInfo.class,
-        ServerState.class, Services.class, ShowRaw.class, Threads.class,
-        Time.class,
+        Notify.class, RunGC.class, ServerInfo.class, ServerState.class,
+        Services.class, ShowRaw.class, Threads.class, Time.class,
     };
     /** List of registered debug commands. */
     private final Map<String, DebugCommand> commands;
