@@ -292,10 +292,8 @@ public final class WindowMenuFrameManager extends JMenu implements
      */
     @Override
     public void actionPerformed(final ActionEvent e) {
-        if (enabledMenuItems.get()) {
-            if (e.getActionCommand().equals("Close")) {
-                controller.getMainFrame().getActiveFrame().close();
-            }
+        if (enabledMenuItems.get() && e.getActionCommand().equals("Close")) {
+            controller.getMainFrame().getActiveFrame().close();
         }
     }
 

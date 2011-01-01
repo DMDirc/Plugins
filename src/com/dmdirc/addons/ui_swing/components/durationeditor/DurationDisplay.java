@@ -97,7 +97,7 @@ public class DurationDisplay extends JPanel implements ActionListener,
      */
     public DurationDisplay(final Window window, final long duration) {
         this.window = window;
-        this.duration = Long.valueOf(duration / 1000).intValue();
+        this.duration = (int) (duration / 1000);
         listeners = new ListenerList();
 
         initComponents();
@@ -106,7 +106,7 @@ public class DurationDisplay extends JPanel implements ActionListener,
     }
 
     /**
-     * Initliases and lays out the components.
+     * Initialises and lays out the components.
      */
     private void initComponents() {
         button = new JButton("Edit");
