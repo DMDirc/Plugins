@@ -204,8 +204,7 @@ public class WebInterfaceUI implements UIController {
     /** {@inheritDoc} */
     @Override
     public void showFirstRunWizard() {
-        //TODO FIXME
-        throw new UnsupportedOperationException("Not supported yet.");
+        // Do nothing
     }
 
     /**
@@ -223,15 +222,13 @@ public class WebInterfaceUI implements UIController {
     /** {@inheritDoc} */
     @Override
     public void showChannelSettingsDialog(final Channel channel) {
-        //TODO FIXME
-        throw new UnsupportedOperationException("Not supported yet.");
+        // Do nothing
     }
 
     /** {@inheritDoc} */
     @Override
     public void showServerSettingsDialog(final Server server) {
-        //TODO FIXME
-        throw new UnsupportedOperationException("Not supported yet.");
+        // Do nothing
     }
 
     /** {@inheritDoc} */
@@ -264,22 +261,19 @@ public class WebInterfaceUI implements UIController {
     /** {@inheritDoc} */
     @Override
     public void showURLDialog(final URI url) {
-        //TODO FIXME
-        throw new UnsupportedOperationException("Not supported yet.");
+        // Do nothing
     }
 
     /** {@inheritDoc} */
     @Override
     public void showFeedbackNag() {
-        //TODO FIXME
-        throw new UnsupportedOperationException("Not supported yet.");
+        // Do nothing
     }
 
     /** {@inheritDoc} */
     @Override
     public void showMessageDialog(final String title, final String message) {
-        //TODO FIXME
-        throw new UnsupportedOperationException("Not supported yet.");
+        // Do nothing
     }
 
     /** {@inheritDoc} */
@@ -292,8 +286,7 @@ public class WebInterfaceUI implements UIController {
     /** {@inheritDoc} */
     @Override
     public void showSSLCertificateDialog(final SSLCertificateDialogModel model) {
-        //TODO FIXME
-        throw new UnsupportedOperationException("Not supported yet.");
+        // Do nothing
     }
 
     @Override
