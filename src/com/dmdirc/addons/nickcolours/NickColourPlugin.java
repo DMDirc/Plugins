@@ -68,11 +68,6 @@ public final class NickColourPlugin extends Plugin implements ActionListener,
     private boolean settext;
     private boolean setnicklist;
 
-    /** Creates a new instance of NickColourPlugin. */
-    public NickColourPlugin() {
-        super();
-    }
-
     /** {@inheritDoc} */
     @Override
     public void processEvent(final ActionType type, final StringBuffer format,
@@ -217,13 +212,13 @@ public final class NickColourPlugin extends Plugin implements ActionListener,
     /**
      * Retrieves the config option with the specified key, and returns an
      * array of the colours that should be used for it.
-     * 
+     *
      * @param key The config key to look up
      * @return The colours specified by the given key
      */
     private String[] getParts(final String key) {
-        String[] parts = IdentityManager.getGlobalConfig().getOption(getDomain(),
-                key).split(":");
+        String[] parts = IdentityManager.getGlobalConfig().getOption(
+                getDomain(), key).split(":");
 
         if (parts.length == 0) {
             parts = new String[]{null, null};
@@ -270,7 +265,7 @@ public final class NickColourPlugin extends Plugin implements ActionListener,
                 }));
 
         general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
-                "ui", "shownickcoloursintext", "Show colours in text" + "area",
+                "ui", "shownickcoloursintext", "Show colours in text area",
                 "Colour nicknames in main text area?"));
         general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
                 "ui", "shownickcoloursinnicklist", "Show colours in"
@@ -288,14 +283,18 @@ public final class NickColourPlugin extends Plugin implements ActionListener,
                 getDomain(), "useowncolour", "Use colour for own nick",
                 "Always use the same colour for our own nickname?"));
         general.addSetting(
-                new PreferencesSetting(PreferencesType.COLOUR,
-                getDomain(), "owncolour", "Colour to use for own nick",
-                "Colour used for our own nickname, if above setting is enabled."));
+                new PreferencesSetting(PreferencesType.COLOUR, getDomain(),
+                "owncolour", "Colour to use for own nick",
+                "Colour used for our own nickname, if above setting is "
+                + "enabled."));
 
         general.addSubCategory(colours);
         manager.getCategory("Plugins").addSubCategory(general);
     }
 
+    /**
+     * Updates cached settings.
+     */
     private void setCachedSettings() {
         useowncolour = IdentityManager.getGlobalConfig().getOptionBool(
                 getDomain(), "useowncolour");

@@ -1,16 +1,16 @@
 /*
  * Copyright (c) 2006-2011 Chris Smith, Shane Mc Cormack, Gregory Holmes
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -49,10 +49,15 @@ public class DurationEditor extends StandardDialog implements ActionListener {
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 1;
+    /** How many seconds in a minute. */
     private static final int SECONDS_IN_MINUTE = 60;
+    /** How many hours in a day. */
     private static final int HOURS_IN_DAY = 24;
+    /** How many seconds in an hour. */
     private static final int SECONDS_IN_HOURS = 3600;
+    /** How many seconds in a day. */
     private static final int SECONDS_IN_DAY = 86400;
+    /** Maximum number of days in a month. */
     private static final int MAX_DAYS_IN_MONTH = 31;
     /** Days spinner. */
     private JSpinner daysSpinner;
@@ -76,9 +81,9 @@ public class DurationEditor extends StandardDialog implements ActionListener {
 
     /**
      * Instantiates a new duration editor.
-     * 
+     *
      * @param window Parent window.
-     * 
+     *
      * @since 0.6
      */
     public DurationEditor(final Window window) {
@@ -87,7 +92,7 @@ public class DurationEditor extends StandardDialog implements ActionListener {
 
     /**
      * Instantiates a new duration editor.
-     * 
+     *
      * @param duration Starting duration
      */
     public DurationEditor(final long duration) {
@@ -96,10 +101,10 @@ public class DurationEditor extends StandardDialog implements ActionListener {
 
     /**
      * Instantiates a new duration editor.
-     * 
+     *
      * @param window Parent window.
      * @param duration Starting duration
-     * 
+     *
      * @since 0.6
      */
     public DurationEditor(final Window window, final long duration) {
@@ -116,22 +121,27 @@ public class DurationEditor extends StandardDialog implements ActionListener {
 
     /**
      * Initialises the components.
-     * 
+     *
      * @param duration Duration to initialise to
      */
-    private void initComponents(long duration) {
+    private void initComponents(final long duration) {
         orderButtons(new JButton(), new JButton());
-        daysSpinner = new JSpinner(new SpinnerNumberModel(0, 0, MAX_DAYS_IN_MONTH, 1));
-        hoursSpinner = new JSpinner(new SpinnerNumberModel(0, 0, HOURS_IN_DAY, 1));
-        minutesSpinner = new JSpinner(new SpinnerNumberModel(0, 0, SECONDS_IN_MINUTE, 1));
-        secondsSpinner = new JSpinner(new SpinnerNumberModel(0, 0, SECONDS_IN_MINUTE, 1));
+        daysSpinner = new JSpinner(new SpinnerNumberModel(0, 0,
+                MAX_DAYS_IN_MONTH, 1));
+        hoursSpinner = new JSpinner(new SpinnerNumberModel(0, 0,
+                HOURS_IN_DAY, 1));
+        minutesSpinner = new JSpinner(new SpinnerNumberModel(0, 0,
+                SECONDS_IN_MINUTE, 1));
+        secondsSpinner = new JSpinner(new SpinnerNumberModel(0, 0,
+                SECONDS_IN_MINUTE, 1));
 
+        long updatedDuration = duration;
         daysSpinner.setValue((int) duration / SECONDS_IN_DAY);
-        duration = (duration % SECONDS_IN_DAY);
+        updatedDuration = (updatedDuration % SECONDS_IN_DAY);
         hoursSpinner.setValue((int) duration / SECONDS_IN_HOURS);
-        duration = (duration % SECONDS_IN_HOURS);
+        updatedDuration = (updatedDuration % SECONDS_IN_HOURS);
         minutesSpinner.setValue((int) duration / SECONDS_IN_MINUTE);
-        duration = (duration % SECONDS_IN_MINUTE);
+        updatedDuration = (updatedDuration % SECONDS_IN_MINUTE);
         secondsSpinner.setValue((int) duration);
     }
 
@@ -166,7 +176,7 @@ public class DurationEditor extends StandardDialog implements ActionListener {
     }
 
     /** {@inheritDoc}
-     * 
+     *
      * @param e Action event
      */
     @Override
@@ -179,16 +189,19 @@ public class DurationEditor extends StandardDialog implements ActionListener {
 
     /**
      * Returns the duration currently represented by this duration editor.
-     * 
+     *
      * @return Current duration (in seconds)
      */
     public int getDuration() {
         int duration = 0;
 
         duration += ((Number) secondsSpinner.getValue()).intValue();
-        duration += (((Number) minutesSpinner.getValue())).intValue() * SECONDS_IN_MINUTE;
-        duration += (((Number) hoursSpinner.getValue())).intValue() * SECONDS_IN_MINUTE * SECONDS_IN_MINUTE;
-        duration += (((Number) daysSpinner.getValue())).intValue() * SECONDS_IN_MINUTE * SECONDS_IN_MINUTE * SECONDS_IN_MINUTE;
+        duration += (((Number) minutesSpinner.getValue())).intValue()
+                * SECONDS_IN_MINUTE;
+        duration += (((Number) hoursSpinner.getValue())).intValue()
+                * SECONDS_IN_MINUTE * SECONDS_IN_MINUTE;
+        duration += (((Number) daysSpinner.getValue())).intValue()
+                * SECONDS_IN_MINUTE * SECONDS_IN_MINUTE * SECONDS_IN_MINUTE;
 
         return duration;
     }
@@ -217,7 +230,7 @@ public class DurationEditor extends StandardDialog implements ActionListener {
 
     /**
      * Fires the duration updated method on all listeners.
-     * 
+     *
      * @param newDuration New duration
      */
     protected void fireDurationListener(final int newDuration) {
@@ -228,7 +241,7 @@ public class DurationEditor extends StandardDialog implements ActionListener {
 
     /**
      * Sets the Parent window.
-     * 
+     *
      * @param window Parent window
      */
     public void setWindow(final Window window) {
