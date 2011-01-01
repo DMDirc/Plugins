@@ -22,6 +22,10 @@
 
 package com.dmdirc.addons.dcc.kde;
 
+import com.dmdirc.logger.ErrorLevel;
+import com.dmdirc.logger.Logger;
+import com.dmdirc.util.StreamUtil;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,9 +36,6 @@ public class StreamReader extends Thread {
 
     /** This is the Input Stream we are reading */
     private InputStream stream;
-
-    /** This is the output Prefix */
-    private String prefix = null;
 
     /** List to store output in */
     private List<String> list = null;
@@ -51,22 +52,9 @@ public class StreamReader extends Thread {
     }
 
     /**
-     * Create a new Stream Reader that outputs what it reads
-     *
-     * @param stream The stream to read
-     * @param list The list to store the output from the stream in (null for no saving)
-     * @param prefix Prefix of outputed messages
-     */
-    public StreamReader(final InputStream stream, final List<String> list, final String prefix) {
-        this.stream = stream;
-        this.prefix = prefix;
-        this.list = list;
-
-        System.out.printf("[%s] Started%n", prefix);
-    }
-
-    /**
      * Get the list that the output is being stored in.
+     *
+     * @return The output list
      */
     public List<String> getList() {
         return list;
@@ -75,26 +63,20 @@ public class StreamReader extends Thread {
     /**
      * Wait for input on stream, and output/throw away/save to list
      */
+    @Override
     public void run() {
         BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
         try {
             String line;
             while ((line = reader.readLine()) != null) {
-                if (prefix != null) {
-                    System.out.printf("[%s] %s%n", prefix, line);
-                }
                 if (list != null) {
                     list.add(line);
                 }
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException ex) {
+            Logger.userError(ErrorLevel.MEDIUM, "Error reading stream", ex);
         } finally {
-            try {
-                stream.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            StreamUtil.close(stream);
         }
     }
 
