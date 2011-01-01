@@ -121,6 +121,7 @@ public class DummyInputWindow implements InputWindow {
 
     /** {@inheritDoc} */
     @Override
+    @Deprecated
     public boolean isVisible() {
         return visible;
     }
@@ -141,17 +142,9 @@ public class DummyInputWindow implements InputWindow {
 
     /** {@inheritDoc} */
     @Override
+    @Deprecated
     public boolean isMaximum() {
         return maximised;
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @param b maximised or not
-     */
-    public void setMaximum(final boolean b) {
-        maximised = b;
     }
 
     /** {@inheritDoc} */
@@ -182,24 +175,28 @@ public class DummyInputWindow implements InputWindow {
 
     /** {@inheritDoc} */
     @Override
+    @Deprecated
     public void restore() {
         // Do nothing
     }
 
     /** {@inheritDoc} */
     @Override
+    @Deprecated
     public void maximise() {
         // Do nothing
     }
 
     /** {@inheritDoc} */
     @Override
+    @Deprecated
     public void toggleMaximise() {
         // Do nothing
     }
 
     /** {@inheritDoc} */
     @Override
+    @Deprecated
     public void minimise() {
         // Do nothing
     }
