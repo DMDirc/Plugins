@@ -6,7 +6,7 @@
 # any sections that take key/values.
 keysections:
   identity
-  icon 
+  icon
 
 identity:
   name=twitter icons
