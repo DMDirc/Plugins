@@ -46,12 +46,14 @@ public class WebChannelWindow extends WebInputWindow implements ChannelWindow {
     }
 
     /** {@inheritDoc} */
+    @Deprecated
     @Override
     public void updateNames(final Collection<ChannelClientInfo> clients) {
         updateNames();
     }
 
     /** {@inheritDoc} */
+    @Deprecated
     @Override
     public void addName(final ChannelClientInfo client) {
         DynamicRequestHandler.addEvent(new Event("addnicklist",
@@ -59,12 +61,14 @@ public class WebChannelWindow extends WebInputWindow implements ChannelWindow {
     }
 
     /** {@inheritDoc} */
+    @Deprecated
     @Override
     public void removeName(final ChannelClientInfo client) {
         updateNames();
     }
 
     /** {@inheritDoc} */
+    @Deprecated
     @Override
     public void updateNames() {
         DynamicRequestHandler.addEvent(new Event("clearnicklist", null));
@@ -88,6 +92,7 @@ public class WebChannelWindow extends WebInputWindow implements ChannelWindow {
 
     /** {@inheritDoc} */
     @Override
+    @Deprecated
     public void redrawNicklist() {
         // Do nothing
     }

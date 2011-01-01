@@ -37,7 +37,6 @@ import com.dmdirc.util.StringTranscoder;
 
 import java.awt.Color;
 import java.awt.font.TextAttribute;
-import java.beans.PropertyVetoException;
 import java.nio.charset.Charset;
 import java.text.AttributedCharacterIterator;
 import java.util.ArrayList;
@@ -170,18 +169,11 @@ public class WebWindow implements Window, IRCDocumentListener,
         return title;
     }
 
-    public String getName() {
-        return parent.toString();
-    }
-
     /** {@inheritDoc} */
     @Override
+    @Deprecated
     public boolean isMaximum() {
         return true;
-    }
-
-    public void setMaximum(final boolean b) throws PropertyVetoException {
-        // Do nothing
     }
 
     /** {@inheritDoc} */
@@ -318,29 +310,29 @@ public class WebWindow implements Window, IRCDocumentListener,
 
     /** {@inheritDoc} */
     @Override
+    @Deprecated
     public void restore() {
-        //TODO FIXME
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     /** {@inheritDoc} */
     @Override
+    @Deprecated
     public void maximise() {
-        //TODO FIXME
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     /** {@inheritDoc} */
     @Override
+    @Deprecated
     public void toggleMaximise() {
-        //TODO FIXME
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     /** {@inheritDoc} */
     @Override
+    @Deprecated
     public void minimise() {
-        //TODO FIXME
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -357,12 +349,15 @@ public class WebWindow implements Window, IRCDocumentListener,
         return null;
     }
 
+    /** {@inheritDoc} */
     @Override
+    @Deprecated
     public void lineAdded(final int line, final int size) {
         DynamicRequestHandler.addEvent(new Event("lineadded", new Message(
                 style(parent.getDocument().getStyledLine(line)), this)));
     }
 
+    /** {@inheritDoc} */
     @Override
     public void linesAdded(final int line, final int length, final int size) {
         for (int i = 0; i < length; i++) {
@@ -370,31 +365,37 @@ public class WebWindow implements Window, IRCDocumentListener,
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void trimmed(final int newSize, final int numTrimmed) {
         //TODO FIXME
     }
 
+    /** {@inheritDoc} */
     @Override
     public void cleared() {
         //TODO FIXME
     }
 
+    /** {@inheritDoc} */
     @Override
     public void repaintNeeded() {
         //TODO FIXME
     }
 
+    /** {@inheritDoc} */
     @Override
     public void iconChanged(final FrameContainer<?> window, final String icon) {
         //TODO FIXME
     }
 
+    /** {@inheritDoc} */
     @Override
     public void nameChanged(final FrameContainer<?> window, final String name) {
         //TODO FIXME
     }
 
+    /** {@inheritDoc} */
     @Override
     public void titleChanged(final FrameContainer<?> window,
             final String title) {

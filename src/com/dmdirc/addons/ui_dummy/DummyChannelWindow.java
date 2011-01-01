@@ -48,24 +48,28 @@ public final class DummyChannelWindow extends DummyInputWindow implements Channe
 
     /** {@inheritDoc} */
     @Override
+    @Deprecated
     public void updateNames(final Collection<ChannelClientInfo> clients) {
         // Do nothing
     }
 
     /** {@inheritDoc} */
     @Override
+    @Deprecated
     public void addName(final ChannelClientInfo client) {
         // Do nothing
     }
 
     /** {@inheritDoc} */
     @Override
+    @Deprecated
     public void removeName(final ChannelClientInfo client) {
         // Do nothing
     }
 
     /** {@inheritDoc} */
     @Override
+    @Deprecated
     public void updateNames() {
         // Do nothing
     }
@@ -79,6 +83,7 @@ public final class DummyChannelWindow extends DummyInputWindow implements Channe
 
     /** {@inheritDoc} */
     @Override
+    @Deprecated
     public void redrawNicklist() {
         // Do nothing
     }
