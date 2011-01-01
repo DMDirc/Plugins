@@ -37,23 +37,23 @@ import javax.swing.table.DefaultTableCellRenderer;
  * @author Chris
  */
 public class ColourRenderer extends DefaultTableCellRenderer {
-    
+
     /**
      * A version number for this class. It should be changed whenever the class
      * structure is changed (or anything else that would prevent serialized
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 1;
-    
+
     /**
      * Creates a new instance of ColourRenderer.
      */
     public ColourRenderer() {
         super();
-        
+
         setOpaque(true);
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public Component getTableCellRendererComponent(final JTable table,
@@ -63,9 +63,9 @@ public class ColourRenderer extends DefaultTableCellRenderer {
         if (value != null && !((String) value).isEmpty()) {
             colour = ColourManager.parseColour((String) value, null);
         }
-        
+
         setHorizontalAlignment(CENTER);
-        
+
         if (colour == null) {
             setBorder(new LineBorder(Color.GRAY));
             setText("Not Set");
@@ -75,8 +75,8 @@ public class ColourRenderer extends DefaultTableCellRenderer {
             setText("");
             setBackground(colour);
         }
-        
+
         return this;
     }
-    
+
 }

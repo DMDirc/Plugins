@@ -72,11 +72,12 @@ public class NickColourPanel extends JPanel implements ActionListener,
 
     /**
      * Creates a new instance of NickColourPanel.
-     * 
+     *
      * @param controller The UI controller that owns this panel
      * @param plugin The plugin that owns this panel
      */
-    public NickColourPanel(final SwingController controller, final NickColourPlugin plugin) {
+    public NickColourPanel(final SwingController controller,
+            final NickColourPlugin plugin) {
         super();
 
         this.plugin = plugin;
@@ -86,9 +87,10 @@ public class NickColourPanel extends JPanel implements ActionListener,
         table = new JTable(new DefaultTableModel(data, HEADERS)) {
 
             /**
-             * A version number for this class. It should be changed whenever the class
-             * structure is changed (or anything else that would prevent serialized
-             * objects being unserialized with the new class).
+             * A version number for this class. It should be changed whenever
+             * the class structure is changed (or anything else that would
+             * prevent serialized objects being unserialized with the new
+             * class).
              */
             private static final long serialVersionUID = 1;
             /** The colour renderer we're using for colour cells. */
@@ -138,18 +140,18 @@ public class NickColourPanel extends JPanel implements ActionListener,
         deleteButton.setEnabled(false);
     }
 
-    /** 
+    /**
      * {@inheritDoc}
-     * 
+     *
      * @param e Action event
      */
     @Override
     public void actionPerformed(final ActionEvent e) {
-        final DefaultTableModel model = ((DefaultTableModel) table.getModel());
-
         if (e.getActionCommand().equals("Add")) {
             new NickColourInputDialog(this);
         } else if (e.getActionCommand().equals("Edit")) {
+            final DefaultTableModel model
+                    = ((DefaultTableModel) table.getModel());
             final int row = table.getSelectedRow();
 
             final String network = (String) model.getValueAt(row, 0);
@@ -172,29 +174,29 @@ public class NickColourPanel extends JPanel implements ActionListener,
             final int row = table.getSelectedRow();
 
             if (row > -1) {
-                model.removeRow(row);
+                ((DefaultTableModel) table.getModel()).removeRow(row);
             }
         }
     }
 
     /**
      * Removes a row from the table.
-     * 
+     *
      * @param row The row to be removed
      */
-    void removeRow(final int row) {
+    public void removeRow(final int row) {
         ((DefaultTableModel) table.getModel()).removeRow(row);
     }
 
     /**
      * Adds a row to the table.
-     * 
+     *
      * @param network The network setting
      * @param nickname The nickname setting
      * @param textcolour The textpane colour setting
      * @param nickcolour The nick list colour setting
      */
-    void addRow(final String network, final String nickname,
+    public void addRow(final String network, final String nickname,
             final String textcolour, final String nickcolour) {
         final DefaultTableModel model = ((DefaultTableModel) table.getModel());
         model.addRow(new Object[]{network, nickname, textcolour, nickcolour});
@@ -202,10 +204,10 @@ public class NickColourPanel extends JPanel implements ActionListener,
 
     /**
      * Retrieves the current data in use by this panel.
-     * 
+     *
      * @return This panel's current data.
      */
-    List<Object[]> getData() {
+    private List<Object[]> getData() {
         final List<Object[]> res = new ArrayList<Object[]>();
         final DefaultTableModel model = ((DefaultTableModel) table.getModel());
 
@@ -238,7 +240,8 @@ public class NickColourPanel extends JPanel implements ActionListener,
     /** {@inheritDoc} */
     @Override
     public void valueChanged(final ListSelectionEvent e) {
-        boolean enable = table.getSelectedRow() > -1 && table.getModel().getRowCount() > 0;
+        final boolean enable = table.getSelectedRow() > -1
+                && table.getModel().getRowCount() > 0;
 
         editButton.setEnabled(enable);
         deleteButton.setEnabled(enable);

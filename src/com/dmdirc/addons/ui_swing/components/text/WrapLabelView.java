@@ -30,8 +30,9 @@ public class WrapLabelView extends LabelView {
     public int getBreakWeight(final int axis, final float pos, final float len) {
         if (axis == View.X_AXIS) {
             checkPainter();
-            int p0 = getStartOffset();
-            int p1 = getGlyphPainter().getBoundedPosition(this, p0, pos, len);
+            final int p0 = getStartOffset();
+            final  int p1 = getGlyphPainter().getBoundedPosition(this, p0, pos,
+                    len);
             if (p1 == p0) {
                 // can't even fit a single character
                 return View.BadBreakWeight;
@@ -54,13 +55,14 @@ public class WrapLabelView extends LabelView {
             final float len) {
         if (axis == View.X_AXIS) {
             checkPainter();
-            int p1 = getGlyphPainter().getBoundedPosition(this, p0, pos, len);
+            final int p1 = getGlyphPainter().getBoundedPosition(this, p0, pos,
+                    len);
             try {
                 //if the view contains line break char break the view
-                int index = getDocument().getText(p0, p1 - p0).indexOf("\r");
+                final int index = getDocument().getText(p0, p1 - p0)
+                        .indexOf("\r");
                 if (index >= 0) {
-                    GlyphView v = (GlyphView) createFragment(p0, p0 + index + 1);
-                    return v;
+                    return (GlyphView) createFragment(p0, p0 + index + 1);
                 }
             } catch (BadLocationException ex) {
                 //should never happen
