@@ -88,7 +88,7 @@ public class LoggingPlugin extends Plugin implements ActionListener,
     /** Cached int settings. */
     private int historyLines, backbufferLines;
 
-    /** Open File */
+    /** Open File. */
     protected static class OpenFile {
 
         /** Last used time. */
@@ -108,7 +108,7 @@ public class LoggingPlugin extends Plugin implements ActionListener,
 
     }
 
-    /** Timer used to close idle files */
+    /** Timer used to close idle files. */
     protected Timer idleFileTimer;
 
     /** Map of open files. */
@@ -257,7 +257,7 @@ public class LoggingPlugin extends Plugin implements ActionListener,
     }
 
     /**
-     * Log a query-related event
+     * Log a query-related event.
      *
      * @param type The type of the event to process
      * @param format Format of messages that are about to be sent. (May be null)
@@ -320,7 +320,7 @@ public class LoggingPlugin extends Plugin implements ActionListener,
     }
 
     /**
-     * Log a channel-related event
+     * Log a channel-related event.
      *
      * @param type The type of the event to process
      * @param format Format of messages that are about to be sent. (May be null)
@@ -642,7 +642,7 @@ public class LoggingPlugin extends Plugin implements ActionListener,
 
         if (usedate) {
             final String dateFormat = usedateformat;
-            final String dateDir = (new SimpleDateFormat(dateFormat)).format(new Date());
+            final String dateDir = new SimpleDateFormat(dateFormat).format(new Date());
             directory.append(dateDir);
             if (directory.charAt(directory.length() - 1) != File.separatorChar) {
                 directory.append(File.separatorChar);

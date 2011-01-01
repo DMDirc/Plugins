@@ -1530,7 +1530,7 @@ public class Twitter implements Parser, TwitterErrorHandler, TwitterRawHandler,
         getCallbackManager().getCallbackType(NumericListener.class).call(numeric, token);
         final StringBuffer output = new StringBuffer();
         for (final String bit : token) {
-            output.append(" ");
+            output.append(' ');
             output.append(bit);
         }
         getCallbackManager().getCallbackType(DataInListener.class).call(output.toString().trim());

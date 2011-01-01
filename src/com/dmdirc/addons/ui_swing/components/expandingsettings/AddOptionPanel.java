@@ -166,7 +166,7 @@ public class AddOptionPanel extends JPanel implements ActionListener {
                 optionName);
         if ("channel.encoding".equals(optionName)) {
             ((DefaultComboBoxModel) addInputComboBox.getModel()).removeAllElements();
-            for (Object argument: Charset.availableCharsets().keySet()) {
+            for (Object argument : Charset.availableCharsets().keySet()) {
                 ((DefaultComboBoxModel) addInputComboBox.getModel()).addElement(argument);
             }
         }

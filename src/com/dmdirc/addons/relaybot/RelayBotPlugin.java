@@ -87,7 +87,7 @@ public class RelayBotPlugin extends Plugin implements ActionListener, ConfigChan
             }
         }
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public void onUnload() {
@@ -153,9 +153,7 @@ public class RelayBotPlugin extends Plugin implements ActionListener, ConfigChan
 
             // Unset any listeners for channels of this server
             for (String channel : server.getChannels()) {
-                final Channel chan = server.getChannel(channel);
-                final String channelName = chan.getServer().getParser().getStringConverter().toLowerCase(chan.getName());
-                removeHandler(chan);
+                removeHandler(server.getChannel(channel));
             }
         }
     }
@@ -163,7 +161,7 @@ public class RelayBotPlugin extends Plugin implements ActionListener, ConfigChan
     /** {@inheritDoc} */
     @Override
     public void configChanged(final String domain, final String key) {
-        final boolean wasUnset = !(IdentityManager.getGlobalConfig().hasOptionString(domain, key));
+        final boolean wasUnset = !IdentityManager.getGlobalConfig().hasOptionString(domain, key);
 
         for (Server server : ServerManager.getServerManager().getServers()) {
             if (server.hasChannel(key)) {
@@ -182,8 +180,8 @@ public class RelayBotPlugin extends Plugin implements ActionListener, ConfigChan
      * If we have one, we will return true.
      * If we should have one (as determined by checking the config) we will add
      * one and return true.
-     * 
-     * @param channel
+     *
+     * @param channel Channel to check
      * @return true or false
      */
     public boolean isListening(final Channel channel) {

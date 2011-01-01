@@ -416,7 +416,7 @@ public final class DCCPlugin extends Plugin implements ActionListener {
             tmpFilename = tmpFilename.replace('/', File.separatorChar);
         }
         // Then get just the name of the file.
-        filename = (new File(tmpFilename)).getName();
+        filename = new File(tmpFilename).getName();
 
         final String ip = ctcpData[++i];
         final String port = ctcpData[++i];

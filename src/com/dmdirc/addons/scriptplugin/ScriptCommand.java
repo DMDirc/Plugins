@@ -47,7 +47,7 @@ import java.util.Map;
  */
 public final class ScriptCommand extends Command implements IntelligentCommand,
         CommandInfo {
-    /** My Plugin */
+    /** My Plugin. */
     final ScriptPlugin myPlugin;
 
     /**
@@ -91,7 +91,7 @@ public final class ScriptCommand extends Command implements IntelligentCommand,
                     ScriptEngineWrapper wrapper;
                     if (IdentityManager.getGlobalConfig().hasOptionString(myPlugin.getDomain(), "eval.baseFile")) {
                         final String baseFile = myPlugin.getScriptDir()+'/'+IdentityManager.getGlobalConfig().getOption(myPlugin.getDomain(), "eval.baseFile");
-                        if ((new File(baseFile)).exists()) {
+                        if (new File(baseFile).exists()) {
                             wrapper = new ScriptEngineWrapper(myPlugin, baseFile);
                         } else {
                             wrapper = new ScriptEngineWrapper(myPlugin, null);
