@@ -27,7 +27,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 /**
- * Hold a Process and stream readers for a KDialog Process
+ * Hold a Process and stream readers for a KDialog Process.
  */
 public class KDialogProcess {
 
@@ -37,17 +37,17 @@ public class KDialogProcess {
     /** Does KDialog exist? */
     private static final boolean HAS_KDIALOG = IS_BIN || new File("/usr/bin/kdialog").exists();
 
-    /** Stream for the stdout stream for this process */
+    /** Stream for the stdout stream for this process. */
     private final StreamReader stdOutputStream;
 
-    /** Stream for the stderr stream for this process */
+    /** Stream for the stderr stream for this process. */
     private final StreamReader stdErrorStream;
 
-    /** The actual process for this process */
+    /** The actual process for this process. */
     private final Process process;
 
     /**
-     * Execute kdialog with the Parameters in params
+     * Execute kdialog with the Parameters in params.
      *
      * @param params Parameters to pass to kdialog
      * @throws IOException if an I/O error occurs
@@ -73,7 +73,7 @@ public class KDialogProcess {
     }
 
     /**
-     * Get the process object for this KDialogProcess
+     * Get the process object for this KDialogProcess.
      *
      * @return The process object for this KDialogProcess
      */
@@ -82,7 +82,7 @@ public class KDialogProcess {
     }
 
     /**
-     * Get the StreamReader for this KDialogProcess's stdout stream
+     * Get the StreamReader for this KDialogProcess's stdout stream.
      *
      * @return The StreamReader for this KDialogProcess's stdout stream
      */
@@ -91,7 +91,7 @@ public class KDialogProcess {
     }
 
     /**
-     * Get the StreamReader for this KDialogProcess's stderr stream
+     * Get the StreamReader for this KDialogProcess's stderr stream.
      *
      * @return The StreamReader for this KDialogProcess's stderr stream
      */

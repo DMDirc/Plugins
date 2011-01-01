@@ -140,10 +140,10 @@ public final class CurrentOptionsPanel extends JPanel implements ActionListener 
                 break;
             case MULTICHOICE:
                 if ("channel.encoding".equals(optionName)) {
-                    comboboxes.put(optionName, new JComboBox(new DefaultComboBoxModel(Charset.availableCharsets().keySet().toArray())));
+                    comboboxes.put(optionName, new JComboBox(
+                            new DefaultComboBoxModel(Charset.availableCharsets()
+                            .keySet().toArray())));
                     comboboxes.get(optionName).setSelectedItem(value);
-                } else {
-                    //Ignore
                 }
                 break;
             default:
