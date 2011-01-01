@@ -32,10 +32,10 @@ import java.util.ArrayList;
 public class KDialogProcess {
 
     /** Is kdialog in /bin? */
-    private static final boolean IS_BIN = (new File("/bin/kdialog")).exists();
+    private static final boolean IS_BIN = new File("/bin/kdialog").exists();
 
     /** Does KDialog exist? */
-    private static final boolean HAS_KDIALOG = (new File("/usr/bin/kdialog")).exists() || IS_BIN;
+    private static final boolean HAS_KDIALOG = IS_BIN || new File("/usr/bin/kdialog").exists();
 
     /** Stream for the stdout stream for this process */
     private final StreamReader stdOutputStream;
@@ -50,11 +50,12 @@ public class KDialogProcess {
      * Execute kdialog with the Parameters in params
      *
      * @param params Parameters to pass to kdialog
+     * @throws IOException if an I/O error occurs
      */
     public KDialogProcess(final String[] params) throws IOException {
         final String[] exec = new String[params.length + 1];
         System.arraycopy(params, 0, exec, 1, params.length);
-        exec[0] = (IS_BIN) ? "/bin/kdialog" : "/usr/bin/kdialog";
+        exec[0] = IS_BIN ? "/bin/kdialog" : "/usr/bin/kdialog";
         process = Runtime.getRuntime().exec(exec);
         stdOutputStream = new StreamReader(process.getInputStream(), new ArrayList<String>());
         stdErrorStream = new StreamReader(process.getErrorStream(), new ArrayList<String>());
@@ -100,6 +101,9 @@ public class KDialogProcess {
 
     /**
      * Wait for the process to finish.
+     *
+     * @throws InterruptedException if the current thread is interrupted by
+     * another thread while it is waiting
      */
     public void waitFor() throws InterruptedException {
         process.waitFor();
