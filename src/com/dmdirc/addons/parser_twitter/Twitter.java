@@ -270,7 +270,12 @@ public class Twitter implements Parser, TwitterErrorHandler, TwitterRawHandler,
         for (final ChannelJoinRequest request : channels) {
             final String channel = request.getName().trim();
 
-            if (isValidChannelName(channel) && getChannel(channel) == null && !channel.equalsIgnoreCase(mainChannelName)) {
+            if (channel.equalsIgnoreCase(mainChannelName)) {
+                // The client is always in this channel, so ignore joins for it
+                continue;
+            }
+
+            if (isValidChannelName(channel) && getChannel(channel) == null) {
                 final TwitterChannelInfo newChannel = new TwitterChannelInfo(channel, this);
                 newChannel.addChannelClient(new TwitterChannelClientInfo(newChannel, myself));
                 if (channel.matches("^&[0-9]+$")) {
@@ -975,7 +980,7 @@ public class Twitter implements Parser, TwitterErrorHandler, TwitterRawHandler,
 
     /**
      * Send a Debug Message using the parser debug api.
-     * 
+     *
      * @param code Debug Code for the message.
      * @param message Content of the message.
      */
@@ -1522,7 +1527,7 @@ public class Twitter implements Parser, TwitterErrorHandler, TwitterRawHandler,
 
     /**
      * This method will send data to the NumericListener and the DataInListener
-     * 
+     *
      * @param numeric Numeric
      * @param token Tokenised Representation.
      */
@@ -1560,7 +1565,7 @@ public class Twitter implements Parser, TwitterErrorHandler, TwitterRawHandler,
 
     /**
      * Let the user know twitter failed in some way.
-     * 
+     *
      * @param message Message to send to the user
      */
     private void twitterFail(final String message) {
