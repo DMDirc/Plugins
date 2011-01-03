@@ -102,6 +102,11 @@ public class SystemStreamRedirectThread implements Runnable {
             } catch (IOException ex) {
                 running = false;
             }
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException ex) {
+                //Ignore
+            }
         }
     }
 
