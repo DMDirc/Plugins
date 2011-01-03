@@ -96,6 +96,12 @@ public class SystemStreamRedirectThread implements Runnable {
                     document.insertString(document.getLength(), rar.readLine(),
                             null);
                     document.insertString(document.getLength(), "\n", null);
+                } else {
+                    try {
+                        Thread.sleep(500);
+                    } catch (InterruptedException ex) {
+                        //Ignore
+                    }
                 }
             } catch (BadLocationException ex) {
                 running = false;
