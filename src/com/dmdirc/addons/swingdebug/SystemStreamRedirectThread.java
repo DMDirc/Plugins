@@ -28,6 +28,8 @@ import java.io.InputStreamReader;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.io.PrintStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
@@ -101,6 +103,11 @@ public class SystemStreamRedirectThread implements Runnable {
                 running = false;
             } catch (IOException ex) {
                 running = false;
+            }
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException ex) {
+                //Ignore
             }
         }
     }
