@@ -34,9 +34,9 @@ import com.dmdirc.addons.ui_swing.dialogs.profiles.ProfileManagerDialog;
 import com.dmdirc.config.Identity;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.util.validators.PortValidator;
-import com.dmdirc.util.validators.RegexStringValidator;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
+import com.dmdirc.util.validators.ServerNameValidator;
 
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
@@ -194,8 +194,7 @@ public final class NewServerDialog extends StandardDialog implements
      * Initialises the components in this dialog.
      */
     private void initComponents() {
-        serverField = new ValidatingJTextField(new RegexStringValidator("^[^\\s]+$+",
-                "Cannot contain spaces."));
+        serverField = new ValidatingJTextField(new ServerNameValidator());
         portField = new ValidatingJTextField(new PortValidator());
         passwordField = new JPasswordField();
         newServerWindowCheck = new JCheckBox();
