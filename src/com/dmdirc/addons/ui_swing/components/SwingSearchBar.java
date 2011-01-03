@@ -37,8 +37,6 @@ import com.dmdirc.ui.messages.IRCDocument;
 import com.dmdirc.ui.messages.IRCDocumentSearcher;
 import com.dmdirc.ui.messages.LinePosition;
 import com.dmdirc.util.ListenerList;
-import com.dmdirc.util.validators.ValidationResponse;
-import com.dmdirc.util.validators.Validator;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -417,38 +415,5 @@ public final class SwingSearchBar extends JPanel implements ActionListener,
                 getOptionColour("ui", "backgroundcolour"));
         searchBox.setCaretColor(IdentityManager.getGlobalConfig().
                 getOptionColour("ui", "foregroundcolour"));
-    }
-}
-
-/**
- * Simple search validator.
- */
-class SearchValidator implements Validator<String> {
-
-    /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
-     */
-    private static final long serialVersionUID = 1;
-    /** Validates. */
-    private boolean validates = true;
-
-    /** {@inheritDoc} */
-    @Override
-    public ValidationResponse validate(final String object) {
-        if (validates) {
-            return new ValidationResponse();
-        }
-        return new ValidationResponse("Not found.");
-    }
-
-    /**
-     * Sets whether this validator validates.
-     *
-     * @param validates Does this search bar validate?
-     */
-    public void setValidates(final boolean validates) {
-        this.validates = validates;
     }
 }
