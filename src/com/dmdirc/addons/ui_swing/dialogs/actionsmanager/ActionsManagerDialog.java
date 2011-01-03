@@ -35,7 +35,6 @@ import com.dmdirc.addons.ui_swing.components.SortedListModel;
 import com.dmdirc.addons.ui_swing.components.frames.AppleJFrame;
 import com.dmdirc.addons.ui_swing.components.renderers.ActionGroupListCellRenderer;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
-import com.dmdirc.addons.ui_swing.components.validating.NoDuplicatesInListValidator;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialog;
 import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
@@ -101,7 +100,7 @@ public final class ActionsManagerDialog extends StandardDialog implements
     /** Are we saving? */
     private final AtomicBoolean saving = new AtomicBoolean(false);
     /** Duplicate action group validator. */
-    private ValidatorChain<String> validator;
+    private final ValidatorChain<String> validator;
 
     /** 
      * Creates a new instance of ActionsManagerDialog.
@@ -342,7 +341,7 @@ public final class ActionsManagerDialog extends StandardDialog implements
     private void addGroup() {
         final int index = groups.getSelectedIndex();
         groups.getSelectionModel().clearSelection();
-        final StandardInputDialog inputDialog = new StandardInputDialog(this,
+        new StandardInputDialog(this,
                 ModalityType.DOCUMENT_MODAL, "New action group",
                 "Please enter the name of the new action group", validator) {
 
@@ -377,8 +376,7 @@ public final class ActionsManagerDialog extends StandardDialog implements
             public void cancelled() {
                 groups.setSelectedIndex(index);
             }
-        };
-        inputDialog.display(this);
+        }.display(this);
     }
 
     /**
@@ -460,11 +458,11 @@ public final class ActionsManagerDialog extends StandardDialog implements
                 groups.setSelectedIndex(location);
                 return true;
             }
-
+            
             /** {@inheritDoc} */
             @Override
             public void cancelled() {
-                return;
+                //Ignore
             }
         }.display();
     }
@@ -519,54 +517,5 @@ public final class ActionsManagerDialog extends StandardDialog implements
             super.dispose();
             me = null;
         }
-    }
-}
-
-/**
- * No duplicates list validator, overriden to work with action groups.
- */
-class ActionGroupNoDuplicatesInListValidator extends NoDuplicatesInListValidator {
-
-    /**
-     * Creates a new validator.
-     *
-     * @param list List
-     * @param model Model to validate
-     */
-    public ActionGroupNoDuplicatesInListValidator(final JList list,
-            final DefaultListModel model) {
-        super(true, list, model);
-    }
-
-    /**
-     * Creates a new validator.
-     *
-     * @param list List
-     * @param caseSensitive Case sensitive check?
-     * @param model Model to validate
-     */
-    public ActionGroupNoDuplicatesInListValidator(final boolean caseSensitive,
-            final JList list, final DefaultListModel model) {
-        super(caseSensitive, list, model);
-    }
-    
-    /** {@inheritDoc} */
-    @Override
-    public String listValueToString(final Object object) {
-        return ((ActionGroup) object).getName();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public int indexOfString(final String string) {
-        final String value = caseSensitive ? string : string.toLowerCase();
-        int index = -1;
-        for (int i = 0; i < model.getSize(); i++) {
-            if (((ActionGroup) model.get(i)).getName().equals(value)) {
-                index = i;
-                break;
-            }
-        }
-        return index;
     }
 }
