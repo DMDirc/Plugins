@@ -25,8 +25,6 @@ package com.dmdirc.addons.calc;
 /**
  * Describes a distinct piece of a mathematical formula, as tokenised by a
  * {@link Lexer}.
- *
- * @author chris
  */
 public class Token {
 

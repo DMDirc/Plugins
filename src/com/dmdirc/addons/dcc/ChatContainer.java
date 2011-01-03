@@ -31,7 +31,8 @@ import com.dmdirc.ui.interfaces.InputWindow;
 /**
  * This class links DCC Chat objects to a window.
  */
-public class ChatContainer extends DCCFrameContainer<InputWindow> implements DCCChatHandler {
+public class ChatContainer extends DCCFrameContainer<InputWindow>
+        implements DCCChatHandler {
 
     /** The DCCChat object we are a window for. */
     private final DCCChat dccChat;

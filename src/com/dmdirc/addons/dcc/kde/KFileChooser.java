@@ -58,8 +58,8 @@ public final class KFileChooser extends JFileChooser {
     /**
      * A version number for this class.
      * It should be changed whenever the class structure is changed (or anything
-     * else that would prevent serialized objects being unserialized with the new
-     * class).
+     * else that would prevent serialized objects being unserialized with the 
+     * new class).
      */
     private static final long serialVersionUID = 200806141;
 
@@ -93,13 +93,15 @@ public final class KFileChooser extends JFileChooser {
     }
 
     /**
-     * Constructs a FileChooser using the given current directory and FileSystemView.
+     * Constructs a FileChooser using the given current directory and
+     * FileSystemView.
      *
      * @param plugin The plugin that owns this KFileChooser
      * @param currentDirectory Directory to use as the base directory
      * @param fsv The FileSystemView to use
      */
-    private KFileChooser(final DCCPlugin plugin, final File currentDirectory, final FileSystemView fsv) {
+    private KFileChooser(final DCCPlugin plugin, final File currentDirectory,
+            final FileSystemView fsv) {
         super(currentDirectory, fsv);
 
         this.plugin = plugin;
@@ -123,20 +125,23 @@ public final class KFileChooser extends JFileChooser {
      * @param plugin The plugin that owns this KFileChooser
      * @param currentDirectoryPath Directory to use as the base directory
      */
-    private KFileChooser(final DCCPlugin plugin, final String currentDirectoryPath) {
+    private KFileChooser(final DCCPlugin plugin,
+            final String currentDirectoryPath) {
         super(currentDirectoryPath);
 
         this.plugin = plugin;
     }
 
     /**
-     * Constructs a FileChooser using the given current directory path and FileSystemView.
+     * Constructs a FileChooser using the given current directory path and
+     * FileSystemView.
      *
      * @param plugin The plugin that owns this KFileChooser
      * @param currentDirectoryPath Directory to use as the base directory
      * @param fsv The FileSystemView to use
      */
-    private KFileChooser(final DCCPlugin plugin, final String currentDirectoryPath, final FileSystemView fsv) {
+    private KFileChooser(final DCCPlugin plugin,
+            final String currentDirectoryPath, final FileSystemView fsv) {
         super(currentDirectoryPath, fsv);
 
         this.plugin = plugin;
@@ -150,7 +155,8 @@ public final class KFileChooser extends JFileChooser {
      *         JFileChooser
      */
     public static boolean useKFileChooser(final DCCPlugin plugin) {
-        return KDialogProcess.hasKDialog() && IdentityManager.getGlobalConfig().getOptionBool(plugin.getDomain(), "general.useKFileChooser");
+        return KDialogProcess.hasKDialog() && IdentityManager.getGlobalConfig()
+                .getOptionBool(plugin.getDomain(), "general.useKFileChooser");
     }
 
     /**
@@ -160,7 +166,8 @@ public final class KFileChooser extends JFileChooser {
      * @return The relevant FileChooser
      */
     public static JFileChooser getFileChooser(final DCCPlugin plugin) {
-        return useKFileChooser(plugin) ? new KFileChooser(plugin) : new JFileChooser();
+        return useKFileChooser(plugin) ? new KFileChooser(plugin)
+                : new JFileChooser();
     }
 
     /**
@@ -170,20 +177,27 @@ public final class KFileChooser extends JFileChooser {
      * @param currentDirectory Directory to use as the base directory
      * @return The relevant FileChooser
      */
-    public static JFileChooser getFileChooser(final DCCPlugin plugin, final File currentDirectory) {
-        return useKFileChooser(plugin) ? new KFileChooser(plugin, currentDirectory) : new JFileChooser(currentDirectory);
+    public static JFileChooser getFileChooser(final DCCPlugin plugin,
+            final File currentDirectory) {
+        return useKFileChooser(plugin) 
+                ? new KFileChooser(plugin, currentDirectory)
+                : new JFileChooser(currentDirectory);
     }
 
     /**
-     * Constructs a FileChooser using the given current directory and FileSystemView.
+     * Constructs a FileChooser using the given current directory and
+     * FileSystemView.
      *
      * @param plugin The DCC Plugin that is requesting a chooser
      * @param currentDirectory Directory to use as the base directory
      * @param fsv The FileSystemView to use
      * @return The relevant FileChooser
      */
-    public static JFileChooser getFileChooser(final DCCPlugin plugin, final File currentDirectory, final FileSystemView fsv) {
-        return useKFileChooser(plugin) ? new KFileChooser(plugin, currentDirectory, fsv) : new JFileChooser(currentDirectory, fsv);
+    public static JFileChooser getFileChooser(final DCCPlugin plugin,
+            final File currentDirectory, final FileSystemView fsv) {
+        return useKFileChooser(plugin) 
+                ? new KFileChooser(plugin, currentDirectory, fsv)
+                : new JFileChooser(currentDirectory, fsv);
     }
 
     /**
@@ -193,8 +207,11 @@ public final class KFileChooser extends JFileChooser {
      * @param fsv The FileSystemView to use
      * @return The relevant FileChooser
      */
-    public static JFileChooser getFileChooser(final DCCPlugin plugin, final FileSystemView fsv) {
-        return useKFileChooser(plugin) ? new KFileChooser(plugin, fsv) : new JFileChooser(fsv);
+    public static JFileChooser getFileChooser(final DCCPlugin plugin,
+            final FileSystemView fsv) {
+        return useKFileChooser(plugin) 
+                ? new KFileChooser(plugin, fsv)
+                : new JFileChooser(fsv);
     }
 
     /**
@@ -204,20 +221,27 @@ public final class KFileChooser extends JFileChooser {
      * @param currentDirectoryPath Directory to use as the base directory
      * @return The relevant FileChooser
      */
-    public static JFileChooser getFileChooser(final DCCPlugin plugin, final String currentDirectoryPath) {
-        return useKFileChooser(plugin) ? new KFileChooser(plugin, currentDirectoryPath) : new JFileChooser(currentDirectoryPath);
+    public static JFileChooser getFileChooser(final DCCPlugin plugin,
+            final String currentDirectoryPath) {
+        return useKFileChooser(plugin) 
+                ? new KFileChooser(plugin, currentDirectoryPath)
+                : new JFileChooser(currentDirectoryPath);
     }
 
     /**
-     * Constructs a FileChooser using the given current directory path and FileSystemView.
+     * Constructs a FileChooser using the given current directory path and
+     * FileSystemView.
      *
      * @param plugin The DCC Plugin that is requesting a chooser
      * @param currentDirectoryPath Directory to use as the base directory
      * @param fsv The FileSystemView to use
      * @return The relevant FileChooser
      */
-    public static JFileChooser getFileChooser(final DCCPlugin plugin, final String currentDirectoryPath, final FileSystemView fsv) {
-        return useKFileChooser(plugin) ? new KFileChooser(plugin, currentDirectoryPath, fsv) : new JFileChooser(currentDirectoryPath, fsv);
+    public static JFileChooser getFileChooser(final DCCPlugin plugin,
+            final String currentDirectoryPath, final FileSystemView fsv) {
+        return useKFileChooser(plugin) 
+                ? new KFileChooser(plugin, currentDirectoryPath, fsv)
+                : new JFileChooser(currentDirectoryPath, fsv);
     }
 
     /**
@@ -262,9 +286,11 @@ public final class KFileChooser extends JFileChooser {
             params.add("--getopenfilename");
         }
 
-        if (getSelectedFile() != null && getFileSelectionMode() != DIRECTORIES_ONLY && !getSelectedFile().getPath().isEmpty()) {
+        if (getSelectedFile() != null && getFileSelectionMode()
+                != DIRECTORIES_ONLY && !getSelectedFile().getPath().isEmpty()) {
             if (getSelectedFile().getPath().charAt(0) != '/') {
-                params.add(getCurrentDirectory().getPath() + File.separator + getSelectedFile().getPath());
+                params.add(getCurrentDirectory().getPath() + File.separator
+                        + getSelectedFile().getPath());
             } else {
                 params.add(getSelectedFile().getPath());
             }
@@ -272,7 +298,8 @@ public final class KFileChooser extends JFileChooser {
             params.add(getCurrentDirectory().getPath());
         }
 
-        if (getFileSelectionMode() != DIRECTORIES_ONLY && fileFilter != null && !fileFilter.isEmpty()) {
+        if (getFileSelectionMode() != DIRECTORIES_ONLY && fileFilter != null
+                && !fileFilter.isEmpty()) {
             params.add(fileFilter);
         }
 
@@ -317,7 +344,8 @@ public final class KFileChooser extends JFileChooser {
         params.add("--getsavefilename");
         if (getSelectedFile() != null && !getSelectedFile().getPath().isEmpty()) {
             if (getSelectedFile().getPath().charAt(0) != '/') {
-                params.add(getCurrentDirectory().getPath() + File.separator + getSelectedFile().getPath());
+                params.add(getCurrentDirectory().getPath() + File.separator
+                        + getSelectedFile().getPath());
             } else {
                 params.add(getSelectedFile().getPath());
             }

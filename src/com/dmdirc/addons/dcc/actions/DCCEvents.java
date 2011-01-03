@@ -32,33 +32,40 @@ import java.io.File;
 
 /**
  * Defines DCC-related events.
- *
- * @author Chris
  */
 public enum DCCEvents implements ActionMetaType {
 
     /** DCC Chat Request. */
-    DCC_CHAT_REQUEST(new String[]{"server", "client"}, Server.class, String.class),
+    DCC_CHAT_REQUEST(new String[]{"server", "client"}, Server.class,
+        String.class),
     /** DCC Chat Request Sent. */
-    DCC_CHAT_REQUEST_SENT(new String[]{"server", "client"}, Server.class, String.class),
+    DCC_CHAT_REQUEST_SENT(new String[]{"server", "client"}, Server.class,
+        String.class),
     /** DCC Message from another person. */
-    DCC_CHAT_MESSAGE(new String[]{"DCCChatWindow", "Nickname", "Message"}, ChatContainer.class, String.class, String.class),
+    DCC_CHAT_MESSAGE(new String[]{"DCCChatWindow", "Nickname", "Message"},
+        ChatContainer.class, String.class, String.class),
     /** DCC Message to another person. */
-    DCC_CHAT_SELFMESSAGE(new String[]{"DCCChatWindow", "Message"}, ChatContainer.class, String.class),
+    DCC_CHAT_SELFMESSAGE(new String[]{"DCCChatWindow", "Message"},
+        ChatContainer.class, String.class),
     /** DCC Chat Socket Closed. */
     DCC_CHAT_SOCKETCLOSED(new String[]{"DCCChatWindow"}, ChatContainer.class),
     /** DCC Chat Socket Opened. */
     DCC_CHAT_SOCKETOPENED(new String[]{"DCCChatWindow"}, ChatContainer.class),
     /** DCC Send Socket Closed. */
-    DCC_SEND_SOCKETCLOSED(new String[]{"DCCSendWindow"}, TransferContainer.class),
+    DCC_SEND_SOCKETCLOSED(new String[]{"DCCSendWindow"},
+        TransferContainer.class),
     /** DCC Send Socket Opened. */
-    DCC_SEND_SOCKETOPENED(new String[]{"DCCSendWindow"}, TransferContainer.class),
+    DCC_SEND_SOCKETOPENED(new String[]{"DCCSendWindow"},
+        TransferContainer.class),
     /** DCC Send Data Transfered */
-    DCC_SEND_DATATRANSFERED(new String[]{"DCCSendWindow", "Bytes Transfered"}, TransferContainer.class, int.class),
+    DCC_SEND_DATATRANSFERED(new String[]{"DCCSendWindow", "Bytes Transfered"},
+        TransferContainer.class, int.class),
     /** DCC Send Request. */
-    DCC_SEND_REQUEST(new String[]{"server", "client", "file"}, Server.class, String.class, String.class),
+    DCC_SEND_REQUEST(new String[]{"server", "client", "file"}, Server.class,
+        String.class, String.class),
     /** DCC Send Request Sent. */
-    DCC_SEND_REQUEST_SENT(new String[]{"server", "client", "file"}, Server.class, String.class, File.class);
+    DCC_SEND_REQUEST_SENT(new String[]{"server", "client", "file"},
+        Server.class, String.class, File.class);
 
     /** The names of the arguments for this meta type. */
     private String[] argNames;

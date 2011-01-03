@@ -34,7 +34,8 @@ import com.dmdirc.ui.interfaces.InputWindow;
  *
  * @param <T> The type of window which corresponds to this DCC frame
  */
-public abstract class DCCFrameContainer<T extends InputWindow> extends WritableFrameContainer<T> {
+public abstract class DCCFrameContainer<T extends InputWindow> extends
+        WritableFrameContainer<T> {
 
     /** The Window we're using. */
     private boolean windowClosing = false;

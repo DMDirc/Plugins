@@ -132,46 +132,45 @@ public final class DCCPlugin extends Plugin implements ActionListener {
                 if (!handleExists(send, jc, nickname, parser,reverse, token)) {
                     return;
                 }
-                boolean resume = handleResume(jc);
-                    if (reverse && !token.isEmpty()) {
-                        new TransferContainer(DCCPlugin.this, send,
-                                "*Receive: " + nickname, nickname, null);
-                        send.setToken(token);
-                        if (resume) {
-                            if (IdentityManager.getGlobalConfig().getOptionBool(
-                                    getDomain(), "receive.reverse.sendtoken")) {
-                                parser.sendCTCP(nickname, "DCC", "RESUME "
-                                        + send.getShortFileName() + " 0 "
-                                        + jc.getSelectedFile().length() + " "
-                                        + token);
-                            } else {
-                                parser.sendCTCP(nickname, "DCC", "RESUME " 
-                                        + send.getShortFileName() + " 0 "
-                                        + jc.getSelectedFile().length());
-                            }
+                final boolean resume = handleResume(jc);
+                if (reverse && !token.isEmpty()) {
+                    new TransferContainer(DCCPlugin.this, send,
+                            "*Receive: " + nickname, nickname, null);
+                    send.setToken(token);
+                    if (resume) {
+                        if (IdentityManager.getGlobalConfig().getOptionBool(
+                                getDomain(), "receive.reverse.sendtoken")) {
+                            parser.sendCTCP(nickname, "DCC", "RESUME "
+                                    + send.getShortFileName() + " 0 "
+                                    + jc.getSelectedFile().length() + " "
+                                    + token);
                         } else {
-                            if (listen(send)) {
-                                parser.sendCTCP(nickname, "DCC", "SEND " 
-                                        + send.getShortFileName() + " "
-                                        + DCC.ipToLong(getListenIP(parser))
-                                        + " " + send.getPort() + " "
-                                        + send.getFileSize() + " " + token);
-                            }
+                            parser.sendCTCP(nickname, "DCC", "RESUME "
+                                    + send.getShortFileName() + " 0 "
+                                    + jc.getSelectedFile().length());
                         }
                     } else {
-                        new TransferContainer(DCCPlugin.this, send, "Receive: "
-                                + nickname, nickname, null);
-                        if (resume) {
-                            parser.sendCTCP(nickname, "DCC", "RESUME "
-                                    + send.getShortFileName() + " " 
-                                    + send.getPort() + " "
-                                    + jc.getSelectedFile().length());
-                        } else {
-                            send.connect();
+                        if (listen(send)) {
+                            parser.sendCTCP(nickname, "DCC", "SEND "
+                                    + send.getShortFileName() + " "
+                                    + DCC.ipToLong(getListenIP(parser))
+                                    + " " + send.getPort() + " "
+                                    + send.getFileSize() + " " + token);
                         }
                     }
+                } else {
+                    new TransferContainer(DCCPlugin.this, send, "Receive: "
+                            + nickname, nickname, null);
+                    if (resume) {
+                        parser.sendCTCP(nickname, "DCC", "RESUME "
+                                + send.getShortFileName() + " "
+                                + send.getPort() + " "
+                                + jc.getSelectedFile().length());
+                    } else {
+                        send.connect();
+                    }
                 }
-
+            }
         }, "saveFileThread: " + send.getShortFileName()).start();
     }
 
@@ -309,22 +308,20 @@ public final class DCCPlugin extends Plugin implements ActionListener {
             handleProcessEvent(type, format, true, arguments);
             return;
         }
-
-        if (type == CoreActionType.SERVER_CTCP) {
-            final String[] ctcpData = ((String) arguments[3]).split(" ");
-            if ("DCC".equalsIgnoreCase((String) arguments[2])) {
-                if ("chat".equalsIgnoreCase(ctcpData[0])
-                        && ctcpData.length > 3) {
-                    handleChat(type, format, dontAsk, ctcpData, arguments);
-                } else if ("send".equalsIgnoreCase(ctcpData[0])
-                        && ctcpData.length > 3) {
-                    handleSend(type, format, dontAsk, ctcpData, arguments);
-                } else if (("resume".equalsIgnoreCase(ctcpData[0])
-                        || "accept".equalsIgnoreCase(ctcpData[0]))
-                        && ctcpData.length > 2) {
-                    handleReceive(ctcpData, arguments);
-                }
-            }
+        if (type == CoreActionType.SERVER_CTCP 
+                && "DCC".equalsIgnoreCase((String) arguments[2])) {
+            return;
+        }
+        final String[] ctcpData = ((String) arguments[3]).split(" ");
+        if ("chat".equalsIgnoreCase(ctcpData[0]) && ctcpData.length > 3) {
+            handleChat(type, format, dontAsk, ctcpData, arguments);
+        } else if ("send".equalsIgnoreCase(ctcpData[0])
+                && ctcpData.length > 3) {
+            handleSend(type, format, dontAsk, ctcpData, arguments);
+        } else if (("resume".equalsIgnoreCase(ctcpData[0])
+                || "accept".equalsIgnoreCase(ctcpData[0]))
+                && ctcpData.length > 2) {
+            handleReceive(ctcpData, arguments);
         }
     }
 
@@ -340,8 +337,8 @@ public final class DCCPlugin extends Plugin implements ActionListener {
     private void handleChat(final ActionType type, final StringBuffer format,
             final boolean dontAsk, final String[] ctcpData,
             final Object... arguments) {
-        final String nickname = ((ClientInfo) arguments[1]).getNickname();
         if (dontAsk) {
+            final String nickname = ((ClientInfo) arguments[1]).getNickname();
             final DCCChat chat = new DCCChat();
             try {
                 chat.setAddress(Long.parseLong(ctcpData[2]),
@@ -357,6 +354,7 @@ public final class DCCPlugin extends Plugin implements ActionListener {
                     chat.getPort());
             chat.connect();
         } else {
+            final String nickname = ((ClientInfo) arguments[1]).getNickname();
             ActionManager.processEvent(DCCActions.DCC_CHAT_REQUEST, null,
                     ((Server) arguments[0]), nickname);
             askQuestion("User " + nickname + " on "
@@ -381,7 +379,6 @@ public final class DCCPlugin extends Plugin implements ActionListener {
     private void handleSend(final ActionType type, final StringBuffer format,
             final boolean dontAsk, final String[] ctcpData,
             final Object... arguments) {
-        final String nickname = ((ClientInfo) arguments[1]).getNickname();
         final String filename;
         String tmpFilename;
         // Clients tend to put files with spaces in the name in ""
@@ -430,12 +427,10 @@ public final class DCCPlugin extends Plugin implements ActionListener {
         } else {
             size = -1;
         }
-        final String token = (ctcpData.length - 1 > i
-                && !ctcpData[i + 1].equals("T")) ? ctcpData[++i] : "";
 
         // Ignore incorrect ports, or non-numeric IP/Port
         try {
-            int portInt = Integer.parseInt(port);
+            final int portInt = Integer.parseInt(port);
             if (portInt > 65535 || portInt < 0) {
                 return;
             }
@@ -444,13 +439,13 @@ public final class DCCPlugin extends Plugin implements ActionListener {
             return;
         }
 
+        final String nickname = ((ClientInfo) arguments[1]).getNickname();
+        final String token = (ctcpData.length - 1 > i
+                && !ctcpData[i + 1].equals("T")) ? ctcpData[++i] : "";
         DCCTransfer send = DCCTransfer.findByToken(token);
 
         if (send == null && !dontAsk) {
-            if (!token.isEmpty() && !port.equals("0")) {
-                // This is a reverse DCC Send that we no longer care about.
-                return;
-            } else {
+            if (token.isEmpty() || "0".equals(port)) {
                 ActionManager.processEvent(DCCActions.DCC_SEND_REQUEST, null,
                         ((Server) arguments[0]), nickname, filename);
                 askQuestion("User " + nickname + " on "
@@ -459,6 +454,9 @@ public final class DCCPlugin extends Plugin implements ActionListener {
                         + filename + "\n\nDo you want to continue?",
                         "DCC Send Request", JOptionPane.YES_OPTION, type,
                         format, arguments);
+                return;
+            } else {
+                // This is a reverse DCC Send that we no longer care about.
                 return;
             }
         } else {
@@ -500,9 +498,11 @@ public final class DCCPlugin extends Plugin implements ActionListener {
         final boolean quoted = ctcpData[1].startsWith("\"");
         if (quoted) {
             for (i = 1; i < ctcpData.length; i++) {
-                String bit = ctcpData[i];
+                String bit;
                 if (i == 1) {
-                    bit = bit.substring(1);
+                    bit = ctcpData[i].substring(1);
+                } else {
+                    bit = ctcpData[i];
                 }
                 if (bit.endsWith("\"")) {
                     filenameBits.append(" ")

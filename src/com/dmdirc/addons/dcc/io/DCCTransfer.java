@@ -37,63 +37,40 @@ import java.util.List;
 
 /**
  * This class handles a DCC transfer.
- *
- * @author Shane 'Dataforce' McCormack
  */
 public class DCCTransfer extends DCC {
 
     /** List of active sends. */
-    private static final List<DCCTransfer> TRANSFERS = new ArrayList<DCCTransfer>();
-
-    /** File Transfer Types. */
-    public enum TransferType {
-
-        SEND, RECEIVE;
-
-    }
-
+    private static final List<DCCTransfer> TRANSFERS
+            = new ArrayList<DCCTransfer>();
     /** The File transfer type for this file. */
     private TransferType transferType = TransferType.RECEIVE;
-
     /** The handlers for this DCCSend. */
     private final ListenerList handlers = new ListenerList();
-
     /** Used to send data out the socket. */
     private DataOutputStream out;
-
     /** Used to read data from the socket. */
     private DataInputStream in;
-
     /** File we are using. */
     private File transferFile;
-
     /** Used to write data to the file. */
     private DataOutputStream fileOut;
-
     /** Used to read data from the file. */
     private DataInputStream fileIn;
-
     /** Where are we starting from? */
     private int startpos;
-
     /** How big is this file? */
     private long size = -1;
-
     /** How much of this file have we read so far? */
     private long readSize;
-
     /** What is the name of the file? */
     private String filename = "";
-
     /** What is the token for this send? */
     private String token = "";
-
     /** Block Size. */
     private final int blockSize;
-
     /** Is this a turbo dcc? */
     private boolean turbo = false;
-
     private boolean active = false;
 
     /** Creates a new instance of DCCTransfer with a default block size. */
@@ -249,7 +226,8 @@ public class DCCTransfer extends DCC {
     public String makeToken() {
         String myToken = "";
         do {
-            myToken = Integer.toString(Math.abs((myToken + filename).hashCode()));
+            myToken = Integer.toString(Math.abs((myToken + filename)
+                    .hashCode()));
         } while (findByToken(myToken) != null);
         setToken(myToken);
         return myToken;

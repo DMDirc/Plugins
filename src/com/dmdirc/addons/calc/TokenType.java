@@ -30,8 +30,6 @@ import java.util.regex.Pattern;
 /**
  * Describes the different types of possible token, their arities, precedence,
  * and the types of token that may follow them.
- * 
- * @author chris
  */
 public enum TokenType {
 

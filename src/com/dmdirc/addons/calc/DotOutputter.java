@@ -27,8 +27,6 @@ import java.text.ParseException;
 /**
  * Outputs a string which can be read by the unix `dot` utility to show a
  * directed graph showing the tokens parsed by a {@link Parser}.
- *
- * @author chris
  */
 public class DotOutputter {
 
@@ -68,17 +66,20 @@ public class DotOutputter {
      * specified node and its children
      */
     protected String output(final int node, final TreeToken token) {
-        String out = "node" + node + " [label=\"" + token.getToken().getType()
-                + "\\n" + token.getToken().getContent() + "\"];";
+        final StringBuilder out = new StringBuilder();
+        out.append("node").append(node).append(" [label=\"");
+        out.append(token.getToken().getType());
+        out.append("\\n").append(token.getToken().getContent()).append("\"];");
 
         for (TreeToken child : token.getChildren()) {
-            int id = ++nodes;
+            final int id = ++nodes;
 
-            out += output(id, child);
-            out += "node" + node + " -> node" + id + ";";
+            out.append(output(id, child));
+            out.append("node").append(node).append(" -> node");
+            out.append(id).append(";");
         }
 
-        return out;
+        return out.toString();
     }
 
 }

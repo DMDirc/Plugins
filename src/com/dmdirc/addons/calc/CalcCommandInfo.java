@@ -27,8 +27,6 @@ import com.dmdirc.commandparser.CommandType;
 
 /**
  * Calc command info.
- *
- * @author chris
  */
 public class CalcCommandInfo implements CommandInfo {
 

@@ -29,6 +29,7 @@ import com.dmdirc.actions.ActionManager;
 import com.dmdirc.addons.dcc.actions.DCCActions;
 import com.dmdirc.addons.dcc.io.DCC;
 import com.dmdirc.addons.dcc.io.DCCTransfer;
+import com.dmdirc.addons.dcc.io.TransferType;
 import com.dmdirc.addons.dcc.ui.TransferWindow;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.parser.interfaces.Parser;
@@ -43,42 +44,31 @@ import javax.swing.JOptionPane;
 
 /**
  * This class links DCC Send objects to a window.
- *
- * @author Shane 'Dataforce' McCormack
  */
 public class TransferContainer extends FrameContainer<TransferWindow> implements
         DCCTransferHandler, SocketCloseListener {
 
     /** The dcc plugin that owns this frame */
     protected final DCCPlugin plugin;
-
-    /** The Window we're using. */
-    private boolean windowClosing = false;
-
+    /** Server that caused this send */
+    private final Server server;
+    /** Show open button. */
+    private final boolean showOpen = Desktop.isDesktopSupported() &&
+            Desktop.getDesktop().isSupported(Desktop.Action.OPEN);
     /** The DCCSend object we are a window for */
     private final DCCTransfer dcc;
-
     /** Other Nickname */
     private final String otherNickname;
-
+    /** The Window we're using. */
+    private boolean windowClosing = false;
     /** Total data transfered */
     private volatile long transferCount = 0;
-
     /** Time Started */
     private long timeStarted = 0;
-
     /** Plugin that this send belongs to. */
     private final DCCPlugin myPlugin;
-
     /** IRC Parser that caused this send */
     private Parser parser = null;
-
-    /** Server that caused this send */
-    private Server server = null;
-
-    /** Show open button. */
-    private boolean showOpen = Desktop.isDesktopSupported() &&
-            Desktop.getDesktop().isSupported(Desktop.Action.OPEN);
 
     /**
      * Creates a new instance of DCCTransferWindow with a given DCCTransfer
@@ -92,7 +82,7 @@ public class TransferContainer extends FrameContainer<TransferWindow> implements
      */
     public TransferContainer(final DCCPlugin plugin, final DCCTransfer dcc,
             final String title, final String targetNick, final Server server) {
-        super(dcc.getType() == DCCTransfer.TransferType.SEND
+        super(dcc.getType() == TransferType.SEND
                 ? "dcc-send-inactive" : "dcc-receive-inactive",
                 title, title, TransferWindow.class,
                 IdentityManager.getGlobalConfig());
@@ -154,13 +144,13 @@ public class TransferContainer extends FrameContainer<TransferWindow> implements
             percent = getPercent();
         }
 
-        boolean percentageInTitle = IdentityManager.getGlobalConfig()
+        final boolean percentageInTitle = IdentityManager.getGlobalConfig()
                 .getOptionBool(plugin.getDomain(), "general.percentageInTitle");
 
         if (percentageInTitle) {
             final StringBuilder title = new StringBuilder();
             if (dcc.isListenSocket()) { title.append("*"); }
-            title.append(dcc.getType() == DCCTransfer.TransferType.SEND
+            title.append(dcc.getType() == TransferType.SEND
                     ? "Sending: " : "Recieving: ");
             title.append(otherNickname);
             title.append(" (")
@@ -256,7 +246,7 @@ public class TransferContainer extends FrameContainer<TransferWindow> implements
      * @return True if the open button should be displayed, false otherwise
      */
     public boolean shouldShowOpenButton() {
-        return showOpen && dcc.getType() == DCCTransfer.TransferType.RECEIVE;
+        return showOpen && dcc.getType() == TransferType.RECEIVE;
     }
 
     /**
@@ -271,10 +261,10 @@ public class TransferContainer extends FrameContainer<TransferWindow> implements
         if (!windowClosing) {
             synchronized (this) {
                 if (transferCount == dcc.getFileSize() - dcc.getFileStart()) {
-                    setIcon(dcc.getType() == DCCTransfer.TransferType.SEND
+                    setIcon(dcc.getType() == TransferType.SEND
                             ? "dcc-send-done" : "dcc-receive-done");
                 } else {
-                    setIcon(dcc.getType() == DCCTransfer.TransferType.SEND
+                    setIcon(dcc.getType() == TransferType.SEND
                             ? "dcc-send-failed" : "dcc-receive-failed");
                 }
             }
@@ -291,7 +281,7 @@ public class TransferContainer extends FrameContainer<TransferWindow> implements
         ActionManager.processEvent(DCCActions.DCC_SEND_SOCKETOPENED, null,
                 this);
         timeStarted = System.currentTimeMillis();
-        setIcon(dcc.getType() == DCCTransfer.TransferType.SEND
+        setIcon(dcc.getType() == TransferType.SEND
                 ? "dcc-send-active" : "dcc-receive-active");
     }
 

@@ -31,29 +31,21 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * This class manages the socket and low-level I/O functionality for all
  * types of DCC. Subclasses process the data received by this class.
- *
- * @author Shane 'Dataforce' McCormack
  */
 public abstract class DCC implements Runnable {
 
     /** Address. */
     protected long address = 0;
-
     /** Port. */
     protected int port = 0;
-
     /** Socket used to communicate with. */
     protected Socket socket;
-
     /** The Thread in use for this. */
     private volatile Thread myThread;
-
     /** Are we already running? */
     protected final AtomicBoolean running = new AtomicBoolean();
-
     /** Are we a listen socket? */
     protected boolean listen = false;
-
     /**
      * The current socket in use if this is a listen socket.
      * This reference may be changed if and only if exactly one permit from the
@@ -61,7 +53,6 @@ public abstract class DCC implements Runnable {
      * held by the thread doing the modification.
      */
     private ServerSocket serverSocket;
-
     /**
      * Semaphore to control write access to ServerSocket.
      * If an object acquires a permit from the {@link #serverSocketSem}, then
@@ -70,7 +61,6 @@ public abstract class DCC implements Runnable {
      * acquires a permit from the {@link #serverListeningSem}.
      */
     private final Semaphore serverSocketSem = new Semaphore(1);
-
     /**
      * Semaphore used when we're blocking waiting for connections.
      * If an object acquires a permit from the {@link #serverListeningSem},
@@ -81,13 +71,6 @@ public abstract class DCC implements Runnable {
      * the {@link #serverListeningSem} permit.
      */
     private final Semaphore serverListeningSem = new Semaphore(0);
-
-    /**
-     * Creates a new instance of DCC.
-     */
-    public DCC() {
-        super();
-    }
 
     /**
      * Connect this dcc.
@@ -143,9 +126,9 @@ public abstract class DCC implements Runnable {
                 // Found a socket we can use!
                 break;
             } catch (IOException ioe) {
-                // Try next socket.
+                continue;
             } catch (SecurityException se) {
-                // Try next socket.
+                continue;
             }
         }
 
@@ -209,7 +192,8 @@ public abstract class DCC implements Runnable {
     public void close() {
         boolean haveSLS = false;
 
-        while (!serverSocketSem.tryAcquire() && !(haveSLS = serverListeningSem.tryAcquire())) {
+        while (!serverSocketSem.tryAcquire()
+                && !(haveSLS = serverListeningSem.tryAcquire())) {
             Thread.yield();
         }
 
@@ -244,14 +228,12 @@ public abstract class DCC implements Runnable {
     /**
      * Called when the socket is first opened, before any data is handled.
      */
-    protected void socketOpened() {
-    }
+    protected abstract void socketOpened();
 
     /**
      * Called when the socket is closed, before the thread terminates.
      */
-    protected void socketClosed() {
-    }
+    protected abstract void socketClosed();
 
     /**
      * Check if this socket can be written to.

@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.calc;
 
+import java.io.Serializable;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,8 +33,6 @@ import java.util.List;
 /**
  * The parser takes the output from a {@link Lexer} and applies precdence rules
  * to build the tokens into a tree.
- *
- * @author chris
  */
 public class Parser {
 
@@ -103,6 +102,9 @@ public class Parser {
                             break;
                         case NULLARY:
                             parseNullaryOperator(tokens, offset);
+                            break;
+                        default:
+                            //Switching on an enum, this won't happen
                             break;
                     }
 
@@ -240,7 +242,10 @@ public class Parser {
      * A class which compares token types based on their precendence.
      */
     protected static class TokenTypePrecedenceComparator implements
-            Comparator<TokenType> {
+            Comparator<TokenType>, Serializable {
+
+        /** Serial version UID. */
+        private static final long serialVersionUID = 1;
 
         /** {@inheritDoc} */
         @Override

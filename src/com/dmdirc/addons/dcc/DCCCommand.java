@@ -29,6 +29,7 @@ import com.dmdirc.addons.dcc.actions.DCCActions;
 import com.dmdirc.addons.dcc.io.DCC;
 import com.dmdirc.addons.dcc.io.DCCChat;
 import com.dmdirc.addons.dcc.io.DCCTransfer;
+import com.dmdirc.addons.dcc.io.TransferType;
 import com.dmdirc.addons.dcc.kde.KFileChooser;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.commandparser.CommandArguments;
@@ -180,7 +181,7 @@ public final class DCCCommand extends Command implements IntelligentCommand,
                         "send.blocksize"));
                 send.setTurbo(IdentityManager.getGlobalConfig().getOptionBool(
                         myPlugin.getDomain(), "send.forceturbo"));
-                send.setType(DCCTransfer.TransferType.SEND);
+                send.setType(TransferType.SEND);
 
                 ActionManager.processEvent(DCCActions.DCC_SEND_REQUEST_SENT,
                         null, server, target, jc.getSelectedFile());

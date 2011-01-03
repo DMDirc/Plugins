@@ -26,6 +26,7 @@ import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.dcc.DCCTransferHandler;
 import com.dmdirc.addons.dcc.TransferContainer;
 import com.dmdirc.addons.dcc.io.DCCTransfer;
+import com.dmdirc.addons.dcc.io.TransferType;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.logger.ErrorLevel;
@@ -99,7 +100,7 @@ public class TransferWindow extends EmptyWindow implements ActionListener,
 
         setLayout(new MigLayout("hidemode 0"));
 
-        if (dcc.getType() == DCCTransfer.TransferType.SEND) {
+        if (dcc.getType() == TransferType.SEND) {
             add(new JLabel("Sending: " + dcc.getShortFileName()), "wrap");
             add(new JLabel("To: " + container.getOtherNickname()), "wrap");
         } else {
@@ -125,7 +126,7 @@ public class TransferWindow extends EmptyWindow implements ActionListener,
     @Override
     public void actionPerformed(final ActionEvent e) {
         if (e.getActionCommand().equals("Cancel")) {
-            if (dcc.getType() == DCCTransfer.TransferType.SEND) {
+            if (dcc.getType() == TransferType.SEND) {
                 button.setText("Resend");
             } else {
                 button.setText("Close Window");
@@ -195,7 +196,7 @@ public class TransferWindow extends EmptyWindow implements ActionListener,
                     button.setText("Close Window");
                 } else {
                     status.setText("Status: Transfer Failed.");
-                    if (dcc.getType() == DCCTransfer.TransferType.SEND) {
+                    if (dcc.getType() == TransferType.SEND) {
                         button.setText("Resend");
                     } else {
                         button.setText("Close Window");
@@ -229,7 +230,7 @@ public class TransferWindow extends EmptyWindow implements ActionListener,
             /** {@inheritDoc} */
             @Override
             public void run() {
-                if (dcc.getType() == DCCTransfer.TransferType.SEND) {
+                if (dcc.getType() == TransferType.SEND) {
                     status.setText("Status: Sending");
                 } else {
                     status.setText("Status: Recieving");
@@ -268,7 +269,7 @@ public class TransferWindow extends EmptyWindow implements ActionListener,
         final long seconds = (secondsInput % 60);
 
         if (hours > 0) {
-            result.append(hours + ":");
+            result.append(hours).append(":");
         }
         result.append(String.format("%0,2d:%0,2d", minutes, seconds));
 

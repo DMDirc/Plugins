@@ -27,17 +27,13 @@ import java.util.List;
 
 /**
  * Describes a tree of {@link Token}s.
- * 
- * @author chris
  */
 public class TreeToken {
 
     /** The children of this node. */
     private final List<TreeToken> children = new ArrayList<TreeToken>();
-
     /** The token at the root of the tree. */
     private final Token token;
-
     /** Whether or not this tree has been processed. */
     private boolean processed = false;
 

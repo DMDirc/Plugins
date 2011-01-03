@@ -25,8 +25,6 @@ package com.dmdirc.addons.calc;
 /**
  * A simple evaluator which just requests that the {@link TreeToken} evaluates
  * itself.
- *
- * @author chris
  */
 public class Evaluator {
 

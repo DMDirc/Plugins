@@ -34,8 +34,6 @@ import java.text.ParseException;
 /**
  * A command which allows users to evaluate various mathematical expressions,
  * and perform basic calculations.
- *
- * @author chris
  */
 public class CalcCommand extends Command implements CommandInfo {
 
