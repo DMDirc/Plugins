@@ -1119,21 +1119,23 @@ public class Twitter implements Parser, TwitterErrorHandler, TwitterRawHandler,
             final int startCalls = wantAuth ? 0 : api.getUsedCalls();
 
             // Get Updates
-            final boolean foundUpdates = getUpdates(channel);
-            if (first && !foundUpdates) {
-                sendChannelMessage(channel, "No new items found.");
-            }
-            first = false;
+            if (!wantAuth) {
+                final boolean foundUpdates = getUpdates(channel);
+                if (first && !foundUpdates) {
+                    sendChannelMessage(channel, "No new items found.");
+                }
+                first = false;
 
-            // Store last IDs
-            IdentityManager.getConfigIdentity().setOption(myPlugin.getDomain(), "lastReplyId-" + myServerName + "-" + myUsername, Long.toString(lastReplyId));
-            IdentityManager.getConfigIdentity().setOption(myPlugin.getDomain(), "lastTimelineId-" + myServerName + "-" + myUsername, Long.toString(lastTimelineId));
-            IdentityManager.getConfigIdentity().setOption(myPlugin.getDomain(), "lastDirectMessageId-" + myServerName + "-" + myUsername, Long.toString(lastDirectMessageId));
+                // Store last IDs
+                IdentityManager.getConfigIdentity().setOption(myPlugin.getDomain(), "lastReplyId-" + myServerName + "-" + myUsername, Long.toString(lastReplyId));
+                IdentityManager.getConfigIdentity().setOption(myPlugin.getDomain(), "lastTimelineId-" + myServerName + "-" + myUsername, Long.toString(lastTimelineId));
+                IdentityManager.getConfigIdentity().setOption(myPlugin.getDomain(), "lastDirectMessageId-" + myServerName + "-" + myUsername, Long.toString(lastDirectMessageId));
 
-            // Get Updates for search channels
-            for (final TwitterChannelInfo searchChannel : channels.values()) {
-                if (searchChannel.getName().startsWith("#")) {
-                    getUpdates(searchChannel);
+                // Get Updates for search channels
+                for (final TwitterChannelInfo searchChannel : channels.values()) {
+                    if (searchChannel.getName().startsWith("#")) {
+                        getUpdates(searchChannel);
+                    }
                 }
             }
 
