@@ -27,6 +27,7 @@ import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import java.util.List;
 
 import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
@@ -138,10 +139,10 @@ public abstract class SubstitutionsPanel<T> extends JPanel {
                 "editing the field, to insert it.");
         if (alignment.equals(Alignment.VERTICAL)) {
             add(textLabel, "spany, aligny top, wmin 225, wmax 225");
-            add(new JSeparator(JSeparator.VERTICAL), "growy, pushy, spany");
+            add(new JSeparator(JSeparator.VERTICAL), "growy, spany");
         } else {
             add(textLabel, "spanx, aligny top");
-            add(new JSeparator(JSeparator.HORIZONTAL), "growy, pushy, spanx");
+            add(new JSeparator(JSeparator.HORIZONTAL), "growy, spanx");
         }
 
         for (SubstitutionLabel label : substitutions) {
@@ -152,6 +153,7 @@ public abstract class SubstitutionsPanel<T> extends JPanel {
             add(new JLabel("No substitutions."),
                     "growx, pushx, aligny top, align center");
         }
+        add(Box.createVerticalGlue(), "growy, pushy");
 
         setVisible(visible);
     }
