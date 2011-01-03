@@ -208,7 +208,8 @@ public final class WindowMenuFrameManager extends JMenu implements
                 item = menus.get(window.getContainer());
                 menus.remove(window.getContainer());
             } else {
-                item = null;
+                window.getContainer().removeSelectionListener(this);
+                return;
             }
             UIUtilities.invokeLater(new Runnable() {
 
