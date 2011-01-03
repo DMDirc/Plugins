@@ -418,37 +418,37 @@ public final class SwingSearchBar extends JPanel implements ActionListener,
         searchBox.setCaretColor(IdentityManager.getGlobalConfig().
                 getOptionColour("ui", "foregroundcolour"));
     }
-}
-
-/**
- * Simple search validator.
- */
-class SearchValidator implements Validator<String> {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * Simple search validator.
      */
-    private static final long serialVersionUID = 1;
-    /** Validates. */
-    private boolean validates = true;
+    private static class SearchValidator implements Validator<String> {
 
-    /** {@inheritDoc} */
-    @Override
-    public ValidationResponse validate(final String object) {
-        if (validates) {
-            return new ValidationResponse();
+        /**
+         * A version number for this class. It should be changed whenever the
+         * class structure is changed (or anything else that would prevent
+         * serialized objects being unserialized with the new class).
+         */
+        private static final long serialVersionUID = 1;
+        /** Validates. */
+        private boolean validates = true;
+
+        /** {@inheritDoc} */
+        @Override
+        public ValidationResponse validate(final String object) {
+            if (validates) {
+                return new ValidationResponse();
+            }
+            return new ValidationResponse("Not found.");
         }
-        return new ValidationResponse("Not found.");
-    }
 
-    /**
-     * Sets whether this validator validates.
-     *
-     * @param validates Does this search bar validate?
-     */
-    public void setValidates(final boolean validates) {
-        this.validates = validates;
+        /**
+         * Sets whether this validator validates.
+         *
+         * @param validates Does this search bar validate?
+         */
+        public void setValidates(final boolean validates) {
+            this.validates = validates;
+        }
     }
 }

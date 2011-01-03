@@ -38,10 +38,8 @@ import com.dmdirc.ui.interfaces.StatusBarComponent;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
-import java.util.Arrays;
 import java.util.List;
 
-import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
@@ -70,7 +68,7 @@ public class InviteLabel extends StatusbarPopupPanel implements
     /** Accept invites menu item. */
     private final JMenuItem accept;
     /** Parent window. */
-    private MainFrame mainFrame;
+    private final MainFrame mainFrame;
     /** Active frame. */
     private FrameContainer activeFrame;
 
@@ -212,48 +210,5 @@ public class InviteLabel extends StatusbarPopupPanel implements
         } else if ("dismissAll".equals(e.getActionCommand())) {
             activeServer.removeInvites();
         }
-    }
-}
-
-/**
- * Invite action.
- */
-class InviteAction extends AbstractAction {
-
-    /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
-     */
-    private static final long serialVersionUID = 1;
-    /** Invite. */
-    private final Invite invite;
-
-    /**
-     * Instantiates a new invite action.
-     *
-     * @param invite Invite for the action
-     */
-    public InviteAction(final Invite invite) {
-        super(invite.getChannel() + " (" + invite.getSource()[0] + ")");
-
-        this.invite = invite;
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Action event
-     */
-    @Override
-    public void actionPerformed(final ActionEvent e) {
-        invite.accept();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String toString() {
-        return invite.getChannel() + "(" + Arrays.toString(invite.getSource()) +
-                ")";
     }
 }
