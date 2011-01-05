@@ -313,8 +313,9 @@ public final class TextPane extends JComponent implements MouseWheelListener,
                 } else if (i == selectedRange.getStartLine()) {
                     //loop from start of range to the end
                     if (selectedRange.getStartPos() != -1) {
-                        selectedText.append(getText(line, selectedRange
-                                .getStartPos(), line.length(), styled));
+                        selectedText.append(getText(line,
+                                selectedRange.getStartPos(),
+                                Styliser.stipControlCodes(line).length(), styled));
                     }
                 } else if (i == selectedRange.getEndLine()) {
                     //loop from start to end of range
