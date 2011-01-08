@@ -61,13 +61,11 @@ public class EvaluatorTest {
             {"2+2*3/4-1", "2.5"},
             {"1.0000(17.5+0.5)(1.000)", "18"},
             {"2^3", "8"},
+            {"+3", "3"},
+            {"20%5", "0"},
         };
 
         return Arrays.asList(data);
-    }
-
-    public static junit.framework.Test suite() {
-        return new junit.framework.JUnit4TestAdapter(EvaluatorTest.class);
     }
 
 }
