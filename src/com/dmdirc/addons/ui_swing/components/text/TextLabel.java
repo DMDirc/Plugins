@@ -48,7 +48,7 @@ public class TextLabel extends JTextPane {
      */
     private static final long serialVersionUID = 1;
     /** Simple attribute set. */
-    private SimpleAttributeSet sas;
+    private final SimpleAttributeSet sas = new SimpleAttributeSet();
 
     /**
      * Creates a new instance of TextLabel.
@@ -92,7 +92,6 @@ public class TextLabel extends JTextPane {
         setHighlighter(null);
         setMargin(new Insets(0, 0, 0, 0));
 
-        sas = new SimpleAttributeSet();
         if (justified) {
             StyleConstants.setAlignment(sas, StyleConstants.ALIGN_JUSTIFIED);
         }
@@ -102,16 +101,29 @@ public class TextLabel extends JTextPane {
 
     /** {@inheritDoc} */
     @Override
-    public StyledDocument getDocument() {
+    public final StyledDocument getDocument() {
         return (StyledDocument) super.getDocument();
     }
 
     /** {@inheritDoc} */
     @Override
-    public void setText(final String t) {
+    public final void setText(final String t) {
         super.setText(t);
         if (t != null && !t.isEmpty()) {
             getDocument().setParagraphAttributes(0, t.length(), sas, false);
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setForeground(final Color colour) {
+        if (sas == null) {
+            return;
+        }
+        if (colour != null) {
+            StyleConstants.setForeground(sas, colour);
+            getDocument().setParagraphAttributes(0, getDocument().getLength(),
+                    sas, false);
         }
     }
 }

@@ -19,74 +19,115 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.dmdirc.addons.ui_swing.components.pluginpanel;
+package com.dmdirc.addons.ui_swing.components.addonpanel;
 
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.PluginManager;
+import com.dmdirc.ui.themes.Theme;
+import com.dmdirc.ui.themes.ThemeManager;
 
 /**
- * Wraps a PluginInfo object with a boolean to indicate whether it should be
- * toggled or not.
- * 
- * @author chris
+ * Wraps a Addon object (Theme or Plugin) with a boolean to indicate whether
+ * it should be toggled or not.
  */
-public class PluginInfoToggle {
-    
+public class AddonToggle {
+
     /** The PluginInfo object we're wrapping. */
     private final PluginInfo pi;
-    
+    /** The Theme object we're wrapping. */
+    private final Theme theme;
     /** Whether or not to toggle it. */
-    private boolean toggle = false;
+    private boolean toggled = false;
 
     /**
-     * Creates a new instance of PluginInfoToggle to wrap the specified
-     * PluginInfo.
-     * 
-     * @param pi The PluginInfo to be wrapped
+     * Creates a new instance of AddonToggle to wrap the specified
+     * PluginInfo or Theme.
+     *
+     * @param pi The PluginInfo to be wrapped can be null
+     * @param theme The Theme to be wrapped can be null
      */
-    public PluginInfoToggle(final PluginInfo pi) {
+    public AddonToggle(final PluginInfo pi, final Theme theme) {
+        if ((pi == null) == (theme == null)) {
+            throw new IllegalArgumentException("You must wrap a plugin or "
+                    + "a theme.");
+        }
         this.pi = pi;
+        this.theme = theme;
     }
-    
+
     /**
      * Toggles this PluginInfoToggle.
      */
     public void toggle() {
-        toggle = !toggle;
+        toggled ^= true;
     }
-    
+
     /**
      * Gets the state of this PluginInfo, taking into account the state
      * of the toggle setting.
-     * 
+     *
      * @return True if the plugin is or should be loaded, false otherwise.
      */
     public boolean getState() {
-        return toggle ^ pi.isLoaded();
+        if (pi != null) {
+            return toggled ^ pi.isLoaded();
+        }
+        if (theme != null) {
+            return toggled ^ theme.isEnabled();
+        }
+        return false;
     }
 
     /**
      * Retrieves the PluginInfo object associated with this toggle.
-     * 
+     *
      * @return This toggle's PluginInfo object.
      */
     public PluginInfo getPluginInfo() {
         return pi;
     }
-    
+
+    /**
+     * Retrieves the Theme object associated with this toggle.
+     *
+     * @return This toggle's Theme object.
+     */
+    public Theme getTheme() {
+        return theme;
+    }
+
     /**
      * Applies the changes to the PluginInfo, if any.
      */
     public void apply() {
-        if (toggle) {
+        if (pi != null && toggled) {
             if (pi.isLoaded()) {
                 pi.unloadPlugin();
             } else {
                 pi.loadPlugin();
             }
-            
             PluginManager.getPluginManager().updateAutoLoad(pi);
         }
+        if (theme != null && toggled) {
+            if (theme.isEnabled()) {
+                theme.applyTheme();
+            } else {
+                theme.removeTheme();
+            }
+            ThemeManager.updateAutoLoad(theme);
+        }
+    }
+
+    /**
+     * Is this addon unloadable?
+     *
+     * @return true iff unloadable
+     */
+    public boolean isUnloadable() {
+        if (pi != null) {
+            return pi.isUnloadable();
+        }
+        return true;
     }
 
 }
