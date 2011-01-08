@@ -37,13 +37,12 @@ import com.dmdirc.ui.interfaces.InputWindow;
 import com.dmdirc.ui.interfaces.QueryWindow;
 import com.dmdirc.ui.interfaces.ServerWindow;
 import com.dmdirc.ui.interfaces.Window;
+
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * Manages WebUI windows.
- *
- * @author chris
  */
 public class WebWindowManager implements FrameListener {
 
@@ -66,9 +65,14 @@ public class WebWindowManager implements FrameListener {
     private final Map<FrameContainer<?>, Window> windows
             = new HashMap<FrameContainer<?>, Window>();
 
+    /**
+     * Creates a new window manager for the specified controller.
+     *
+     * @param controller The Web UI controller that owns this manager
+     */
     public WebWindowManager(final WebInterfaceUI controller) {
         this.controller = controller;
-        
+
         WindowManager.addFrameListener(this);
 
         for (FrameContainer<?> container : WindowManager.getRootWindows()) {
@@ -76,14 +80,27 @@ public class WebWindowManager implements FrameListener {
         }
     }
 
-    public Window getWindow(final FrameContainer<?> window) {
-        return windows.get(window);
+    /**
+     * Retrieves the web window corresponding to the specified container,
+     * if any.
+     *
+     * @param container The container whose window should be retrieved
+     * @return The corresponding web window, or null if there is none
+     */
+    public Window getWindow(final FrameContainer<?> container) {
+        return windows.get(container);
     }
 
-    private void recursiveAdd(final FrameContainer<?> window) {
-        addWindow(window, false);
+    /**
+     * Recursively adds a window for the specified container and all of its
+     * children.
+     *
+     * @param container The container to create windows for
+     */
+    private void recursiveAdd(final FrameContainer<?> container) {
+        addWindow(container, false);
 
-        for (FrameContainer<?> child : window.getChildren()) {
+        for (FrameContainer<?> child : container.getChildren()) {
             recursiveAdd(child);
         }
     }
@@ -91,27 +108,33 @@ public class WebWindowManager implements FrameListener {
     /** {@inheritDoc} */
     @Override
     public void addWindow(final FrameContainer<?> window, final boolean focus) {
-        windows.put(window, doAddWindow(window, focus));
+        doAddWindow(window, focus);
     }
 
     /** {@inheritDoc} */
     @Override
     public void delWindow(final FrameContainer<?> window) {
-        windows.get(window).close();
-        windows.remove(window);
+        if (windows.containsKey(window)) {
+            windows.get(window).close();
+            windows.remove(window);
+        }
     }
 
     /** {@inheritDoc} */
     @Override
     public void addWindow(final FrameContainer<?> parent, final FrameContainer<?> window,
             final boolean focus) {
-        addWindow(window, focus);
+        if (windows.containsKey(parent)) {
+            addWindow(window, focus);
+        }
     }
 
     /** {@inheritDoc} */
     @Override
     public void delWindow(final FrameContainer<?> parent, final FrameContainer<?> window) {
-        delWindow(window);
+        if (windows.containsKey(parent)) {
+            delWindow(window);
+        }
     }
 
     /**
@@ -120,10 +143,9 @@ public class WebWindowManager implements FrameListener {
      * @param <T> The type of window that should be created
      * @param window The container that owns the window
      * @param focus Whether the window should be focused initially
-     * @return The created window or null on error
      */
     @SuppressWarnings("unchecked")
-    protected <T extends Window> T doAddWindow(final FrameContainer<T> window,
+    protected <T extends Window> void doAddWindow(final FrameContainer<T> window,
             final boolean focus) {
         final Class<T> clazz;
 
@@ -137,10 +159,10 @@ public class WebWindowManager implements FrameListener {
             final T frame = (T) clazz.getConstructors()[0].newInstance(controller, window);
             window.addWindow(frame);
 
-            return frame;
+            windows.put(window, frame);
         } catch (Exception ex) {
-            Logger.appError(ErrorLevel.HIGH, "Unable to create window", ex);
-            return null;
+            Logger.appError(ErrorLevel.MEDIUM, "Unable to create window of type "
+                    + clazz.getCanonicalName() + " for web ui", ex);
         }
     }
 
