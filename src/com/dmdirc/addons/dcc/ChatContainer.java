@@ -77,11 +77,11 @@ public class ChatContainer extends DCCFrameContainer<InputWindow> implements DCC
             final StringBuffer buff = new StringBuffer("DCCChatSelfMessage");
             ActionManager.processEvent(DCCActions.DCC_CHAT_SELFMESSAGE, buff,
                     this, line);
-            addLine(buff, nickname, getTranscoder().encode(line));
+            addLine(buff, nickname, line);
             dccChat.sendLine(line);
         } else {
             final StringBuffer buff = new StringBuffer("DCCChatError");
-            addLine(buff, "Socket is closed.", getTranscoder().encode(line));
+            addLine(buff, "Socket is closed.", line);
         }
     }
 
@@ -91,7 +91,7 @@ public class ChatContainer extends DCCFrameContainer<InputWindow> implements DCC
         final StringBuffer buff = new StringBuffer("DCCChatMessage");
         ActionManager.processEvent(DCCActions.DCC_CHAT_MESSAGE, buff, this,
                 otherNickname, message);
-        addLine(buff, otherNickname, getTranscoder().encode(message));
+        addLine(buff, otherNickname, message);
     }
 
     /** {@inheritDoc} */
