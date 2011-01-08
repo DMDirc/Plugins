@@ -139,13 +139,14 @@ public abstract class DCC implements Runnable {
             try {
                 serverSocketSem.acquireUninterruptibly();
                 serverSocket = new ServerSocket(i, 1);
-                serverSocketSem.release();
                 // Found a socket we can use!
                 break;
             } catch (IOException ioe) {
                 // Try next socket.
             } catch (SecurityException se) {
                 // Try next socket.
+            } finally {
+                serverSocketSem.release();
             }
         }
 
