@@ -102,7 +102,15 @@ public class InstallListener implements ActionListener {
                     }
                     break;
                 case TYPE_THEME:
-                    file.renameTo(new File(ThemeManager.getThemeDirectory()));
+                    if (!file.renameTo(new File(ThemeManager.getThemeDirectory()
+                            + info.getTitle() + ".zip"))) {
+                        Logger.userError(ErrorLevel.MEDIUM, "Unable to "
+                                + "install addon, failed to move file: "
+                                + file.getAbsolutePath());
+                        installer.finished("Unable to "
+                                + "install addon, failed to move file: "
+                                + file.getAbsolutePath());
+                    }
                     break;
                 default:
                     Logger.appError(ErrorLevel.HIGH, "Unknown addon type",
