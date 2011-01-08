@@ -22,28 +22,19 @@
 
 package com.dmdirc.addons.ui_swing.components.renderers;
 
-import com.dmdirc.addons.ui_swing.components.pluginpanel.PluginInfoToggle;
-import com.dmdirc.addons.ui_swing.components.themepanel.ThemeToggle;
+import com.dmdirc.addons.ui_swing.components.addonpanel.AddonCell;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Font;
 
-import javax.swing.BorderFactory;
 import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JSeparator;
-import javax.swing.ListCellRenderer;
-
-import net.miginfocom.layout.PlatformDefaults;
-import net.miginfocom.swing.MigLayout;
+import javax.swing.JTable;
+import javax.swing.table.TableCellRenderer;
 
 /**
- * Handles the rendering of the JList used for plugin and theme management.
- * @author chris
+ * Handles the rendering of the JTable used for plugin and theme management.
  */
-public class AddonCellRenderer extends JPanel implements ListCellRenderer {
+public class AddonCellRenderer implements TableCellRenderer {
 
     /**
      * A version number for this class. It should be changed whenever the class
@@ -54,61 +45,37 @@ public class AddonCellRenderer extends JPanel implements ListCellRenderer {
 
     /** {@inheritDoc} */
     @Override
-    public Component getListCellRendererComponent(final JList list,
-            final Object value, final int index, final boolean isSelected,
-            final boolean cellHasFocus) {
+    public Component getTableCellRendererComponent(final JTable table,
+            final Object value, final boolean isSelected,
+            final boolean hasFocus, final int row, final int column) {
+        if (value instanceof AddonCell) {
+            final AddonCell label = (AddonCell) value;
 
-        removeAll();
-        setLayout(new MigLayout("fill, ins 3 0 0 0"));
+            if (isSelected) {
+                label.setBackground(table.getSelectionBackground());
+            } else {
+                label.setBackground(table.getBackground());
+                final Color colour = (row & 1)
+                        == 1 ? new Color(0xEE, 0xEE, 0xFF) : Color.WHITE;
+                if (!label.getBackground().equals(colour)) {
+                    label.setBackground(colour);
+                }
+            }
 
-        if (isSelected) {
-            setBackground(list.getSelectionBackground());
+            final int height = label.getPreferredSize().height;
+            if (table.getRowHeight(row) != height) {
+                table.setRowHeight(row, height);
+            }
+
+            if (label.isToggled()) {
+                label.setForeground(Color.BLACK);
+            } else {
+                label.setForeground(Color.GRAY);
+            }
+
+            return label;
         } else {
-            setBackground(list.getBackground());
+            return new JLabel(value.toString());
         }
-        final JLabel name = new JLabel(), version = new JLabel(),
-                author = new JLabel(), desc = new JLabel();
-
-        Color foreground = Color.BLACK;
-        if (value instanceof PluginInfoToggle) {
-            final PluginInfoToggle plugin = (PluginInfoToggle) value;
-
-            if (!plugin.getState()) {
-                foreground = Color.GRAY;
-            }
-
-            name.setText(plugin.getPluginInfo().getNiceName());
-            version.setText(plugin.getPluginInfo().getFriendlyVersion());
-            author.setText(plugin.getPluginInfo().getAuthor());
-            desc.setText(plugin.getPluginInfo().getDescription());
-        } else if (value instanceof ThemeToggle) {
-            final ThemeToggle theme = (ThemeToggle) value;
-
-            if (!theme.getState()) {
-                foreground = Color.GRAY;
-            }
-
-            name.setText(theme.getTheme().getName());
-            version.setText(theme.getTheme().getVersion());
-            author.setText(theme.getTheme().getAuthor());
-            desc.setText(theme.getTheme().getDescription());
-        }
-
-        name.setForeground(foreground);
-        name.setFont(name.getFont().deriveFont(Font.BOLD));
-        version.setForeground(foreground);
-        version.setHorizontalAlignment(JLabel.CENTER);
-        author.setForeground(foreground);
-        desc.setForeground(foreground);
-        desc.setBorder(BorderFactory.createEmptyBorder((int) PlatformDefaults.
-                getPanelInsets(0).getValue(), 0, 0, 0));
-
-        add(name, "gapleft 3");
-        add(version, "pushx");
-        add(author, "wrap, gapright 3");
-        add(desc, "span 3, growx, pushx, wrap, gapleft 3, gapright 3");
-        add(new JSeparator(), "span 3, growx, pushx");
-
-        return this;
     }
 }
