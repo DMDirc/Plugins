@@ -32,6 +32,7 @@ import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.PluginManager;
 
 import java.awt.Window;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -44,9 +45,6 @@ import javax.swing.table.DefaultTableModel;
  */
 public class PluginPanel extends AddonPanel implements ActionListener {
 
-    /** Do we refresh on plugin reload? */
-    private boolean pluginRefresh = true;
-
     /**
      * Creates a new instance of PluginPanel.
      *
@@ -57,16 +55,16 @@ public class PluginPanel extends AddonPanel implements ActionListener {
             final SwingController controller) {
         super(parentWindow, controller);
 
-        ActionManager.addListener(this, CoreActionType.PLUGIN_REFRESH);
+        ActionManager.getActionManager().registerListener(this,
+                CoreActionType.PLUGIN_REFRESH);
+        PluginManager.getPluginManager().getPossiblePluginInfos(true);
     }
 
     /** {@inheritDoc} */
     @Override
     protected JTable populateList(final JTable table) {
-        pluginRefresh = false;
-        final List<PluginInfo> list =
-                PluginManager.getPluginManager().getPossiblePluginInfos(true);
-        pluginRefresh = true;
+        final List<PluginInfo> list = new ArrayList<PluginInfo>();
+        list.addAll(PluginManager.getPluginManager().getPluginInfos());
         Collections.sort(list);
 
         UIUtilities.invokeLater(new Runnable() {
@@ -96,9 +94,7 @@ public class PluginPanel extends AddonPanel implements ActionListener {
     @Override
     public void processEvent(final ActionType type, final StringBuffer format,
             final Object... arguments) {
-        if (pluginRefresh) {
-            populateList(addonList);
-        }
+        populateList(addonList);
     }
 
     /** {@inheritDoc} */
