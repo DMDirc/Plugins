@@ -57,4 +57,10 @@ public class TokenTypeTest {
         assertFalse(TokenType.START.getFollowers().isEmpty());
     }
 
+    /** Checks that tokens which can't be evaluated throw an exception. */
+    @Test(expected=AbstractMethodError.class)
+    public void testNonEvaluatable() {
+        TokenType.BRACKET_CLOSE.evaluate(null);
+    }
+
 }
