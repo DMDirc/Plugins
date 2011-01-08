@@ -36,7 +36,7 @@ import javax.swing.ImageIcon;
 /**
  * Describes an addon.
  */
-public class AddonInfo {    
+public class AddonInfo {
     private final int id;
     private final String stableDownload;
     private final String unstableDownload;

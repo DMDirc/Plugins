@@ -32,10 +32,11 @@ import com.dmdirc.addons.ui_swing.components.frames.CustomFrame;
 import com.dmdirc.addons.ui_swing.components.frames.CustomInputFrame;
 import com.dmdirc.addons.ui_swing.components.frames.QueryFrame;
 import com.dmdirc.addons.ui_swing.components.frames.ServerFrame;
-import com.dmdirc.addons.ui_swing.components.pluginpanel.PluginPanel;
+import com.dmdirc.addons.ui_swing.components.addonpanel.AddonPanel;
+import com.dmdirc.addons.ui_swing.components.addonpanel.PluginPanel;
+import com.dmdirc.addons.ui_swing.components.addonpanel.ThemePanel;
 import com.dmdirc.addons.ui_swing.components.statusbar.FeedbackNag;
 import com.dmdirc.addons.ui_swing.components.statusbar.SwingStatusBar;
-import com.dmdirc.addons.ui_swing.components.themepanel.ThemePanel;
 import com.dmdirc.addons.ui_swing.dialogs.DialogKeyListener;
 import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialog;
 import com.dmdirc.addons.ui_swing.dialogs.StandardMessageDialog;
@@ -631,7 +632,7 @@ public class SwingController extends Plugin implements UIController {
     /** {@inheritDoc} */
     @Override
     public PreferencesInterface getPluginPrefsPanel() {
-        return UIUtilities.invokeAndWait(new ReturnableThread<PluginPanel>() {
+        return UIUtilities.invokeAndWait(new ReturnableThread<AddonPanel>() {
 
             /** {@inheritDoc} */
             @Override
@@ -678,7 +679,7 @@ public class SwingController extends Plugin implements UIController {
             /** {@inheritDoc} */
             @Override
             public void run() {
-                setObject(new ThemePanel(urlHandler));
+                setObject(new ThemePanel(me, SwingController.this));
             }
         });
     }

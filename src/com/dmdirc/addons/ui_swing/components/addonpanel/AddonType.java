@@ -19,58 +19,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.dmdirc.addons.ui_swing.components.themepanel;
 
-import com.dmdirc.ui.themes.Theme;
+package com.dmdirc.addons.ui_swing.components.addonpanel;
 
 /**
- * Wraps a Theme object with a boolean to indicate whether it should be
- * enabled or not.
- * 
- * @author chris
+ * The possible addon types.
  */
-public class ThemeToggle {
-    
-    /** The Theme object we're wrapping. */
-    private final Theme theme;
-    
-    /** Whether or not to enable it. */
-    private boolean enable;
+public enum AddonType {
 
-    /**
-     * Creates a new instance of ThemeToggle to wrap the specified
-     * Theme.
-     * 
-     * @param theme The theme to be wrapped
-     */
-    public ThemeToggle(final Theme theme) {
-        this.theme = theme;
-        enable = theme.isEnabled();
-    }
-    
-    /**
-     * Toggles this theme.
-     */
-    public void toggle() {
-        enable = !enable;
-    }
-    
-    /**
-     * Gets the state of this ThemeToggle.
-     * 
-     * @return True if the theme is or should be loaded, false otherwise.
-     */
-    public boolean getState() {
-        return enable;
-    }
+    /** Plugins. */
+    TYPE_PLUGIN,
+    /** Themes. */
+    TYPE_THEME,
+    /** Action packs. */
+    TYPE_ACTION_PACK;
 
-    /**
-     * Retrieves the Theme object associated with this toggle.
-     * 
-     * @return This toggle's theme object.
-     */
-    public Theme getTheme() {
-        return theme;
+    /** {@inheritDoc} */
+    @Override
+    public String toString() {
+        return super.toString().charAt(5) +
+                super.toString().substring(6).toLowerCase().replace('_', ' ');
     }
-
 }

@@ -20,45 +20,42 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.ui_swing.components.pluginpanel;
+package com.dmdirc.addons.ui_swing.components.addonpanel;
 
-import com.dmdirc.actions.ActionManager;
-import com.dmdirc.actions.CoreActionType;
-import com.dmdirc.actions.interfaces.ActionType;
 import com.dmdirc.addons.ui_swing.SwingController;
-import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
 import com.dmdirc.addons.ui_swing.components.addonbrowser.DownloaderWindow;
 import com.dmdirc.addons.ui_swing.components.renderers.AddonCellRenderer;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.config.prefs.PreferencesInterface;
-import com.dmdirc.plugins.PluginInfo;
-import com.dmdirc.plugins.PluginManager;
 
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Collections;
 import java.util.List;
 
-import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableModel;
 
 import net.miginfocom.swing.MigLayout;
 
 /**
- * Plugin manager dialog. Allows the user to manage their plugins.
+ * Addon panel, base class for displaying and managing addons.
  */
-public final class PluginPanel extends JPanel implements
-        ActionListener, ListSelectionListener, PreferencesInterface,
-        com.dmdirc.interfaces.ActionListener {
+public abstract class AddonPanel extends JPanel implements
+        ActionListener, ListSelectionListener, PreferencesInterface {
 
+    /** Button to enable/disable addon. */
+    protected JButton toggleButton;
+    /** List of addons. */
+    protected JTable addonList;
     /**
      * A version number for this class. It should be changed whenever the class
      * structure is changed (or anything else that would prevent serialized
@@ -69,26 +66,20 @@ public final class PluginPanel extends JPanel implements
     private final Window parentWindow;
     /** Swing Controller. */
     private final SwingController controller;
-    /** List of plugins. */
-    private JList pluginList;
-    /** plugin list scroll pane. */
+    /** Addon list scroll pane. */
     private JScrollPane scrollPane;
-    /** Button to enable/disable plugin. */
-    private JButton toggleButton;
-    /** Currently selected plugin. */
-    private int selectedPlugin;
+    /** Currently selected addon. */
+    private int selectedAddon;
     /** Blurb label. */
     private TextLabel blurbLabel;
-    /** Do we refresh on plugin reload? */
-    private boolean pluginRefresh = true;
 
     /**
-     * Creates a new instance of PluginDialog.
+     * Creates a new instance of AddonPanel
      *
      * @param parentWindow Parent window
      * @param controller Swing Controller
      */
-    public PluginPanel(final Window parentWindow,
+    public AddonPanel(final Window parentWindow,
             final SwingController controller) {
         super();
 
@@ -99,16 +90,32 @@ public final class PluginPanel extends JPanel implements
         addListeners();
         layoutComponents();
 
-        pluginList.setSelectedIndex(0);
-        selectedPlugin = 0;
+        addonList.getSelectionModel().setSelectionInterval(0, 0);
+        selectedAddon = 0;
     }
 
     /** Initialises the components. */
     private void initComponents() {
-        pluginList = new JList(new DefaultListModel());
-        pluginList.setCellRenderer(new AddonCellRenderer());
+        addonList = new JTable(new DefaultTableModel(
+                new Object[]{"Addon", }, 0)) {
 
-        scrollPane = new JScrollPane(new JLabel("Loading plugins..."));
+            /** {@inheritDoc} */
+            @Override
+            public boolean isCellEditable(final int row, final int column) {
+                return false;
+            }
+            
+        };
+        addonList.setDefaultRenderer(Object.class,
+                new AddonCellRenderer());
+        addonList.setTableHeader(null);
+        addonList.setShowGrid(false);
+        addonList.getSelectionModel().setSelectionMode(
+                ListSelectionModel.SINGLE_SELECTION);
+        addonList.getSelectionModel().clearSelection();
+
+        scrollPane = new JScrollPane(new JLabel("Loading " + getTypeName()
+                + "..."));
         scrollPane.setHorizontalScrollBarPolicy(
                 JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.setVerticalScrollBarPolicy(
@@ -117,8 +124,9 @@ public final class PluginPanel extends JPanel implements
         toggleButton = new JButton("Enable");
         toggleButton.setEnabled(false);
 
-        blurbLabel = new TextLabel(
-                "Plugins allow you to extend the functionality of DMDirc.");
+        blurbLabel = new TextLabel(getTypeName().substring(0, 1).toUpperCase()
+                + getTypeName().substring(1) + " allow you to extend the "
+                + "functionality of DMDirc.");
 
         /** {@inheritDoc}. */
         new LoggingSwingWorker<Object, Object>() {
@@ -126,14 +134,14 @@ public final class PluginPanel extends JPanel implements
             /** {@inheritDoc}. */
             @Override
             protected Object doInBackground() {
-                return populateList();
+                return populateList(addonList);
             }
 
             /** {@inheritDoc}. */
             @Override
             protected void done() {
                 super.done();
-                scrollPane.setViewportView(pluginList);
+                scrollPane.setViewportView(addonList);
             }
         }.executeInExecutor();
     }
@@ -153,43 +161,29 @@ public final class PluginPanel extends JPanel implements
 
         add(toggleButton, "split 2, growx, pushx, sg button");
 
-        final JButton button = new JButton("Get more plugins");
+        final JButton button = new JButton("Get more " + getTypeName());
         button.addActionListener(this);
         add(button, "growx, pushx, sg button");
     }
 
     /**
-     * Populates the plugins list with plugins from the plugin manager.
+     * Populates the addon list returning it when complete.
      *
-     * @return Populated list
+     * @return Populated table
      */
-    private JList populateList() {
-        pluginRefresh = false;
-        final List<PluginInfo> list =
-                PluginManager.getPluginManager().getPossiblePluginInfos(true);
-        pluginRefresh = true;
-        Collections.sort(list);
+    protected abstract JTable populateList(final JTable table);
 
-        UIUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                ((DefaultListModel) pluginList.getModel()).clear();
-                for (PluginInfo plugin : list) {
-                    ((DefaultListModel) pluginList.getModel()).addElement(
-                            new PluginInfoToggle(plugin));
-                }
-                pluginList.repaint();
-            }
-        });
-        return pluginList;
-    }
+    /**
+     * Returns the name of the type of addon being handled.
+     *
+     * @return Addon type name
+     */
+    protected abstract String getTypeName();
 
     /** Adds listeners to components. */
     private void addListeners() {
         toggleButton.addActionListener(this);
-        pluginList.addListSelectionListener(this);
-        ActionManager.addListener(this, CoreActionType.PLUGIN_REFRESH);
+        addonList.getSelectionModel().addListSelectionListener(this);
     }
 
     /**
@@ -199,19 +193,20 @@ public final class PluginPanel extends JPanel implements
      */
     @Override
     public void actionPerformed(final ActionEvent e) {
-        if (e.getSource() == toggleButton && selectedPlugin >= 0) {
-            final PluginInfoToggle pluginInfo = (PluginInfoToggle) pluginList.
-                    getSelectedValue();
+        if (e.getSource() == toggleButton && selectedAddon >= 0) {
+            final AddonToggle addonToggle = (AddonToggle) ((AddonCell)
+                    addonList.getModel().getValueAt(addonList
+                    .getSelectedRow(), 0)).getObject();
 
-            pluginInfo.toggle();
+            addonToggle.toggle();
 
-            if (pluginInfo.getState()) {
+            if (addonToggle.getState()) {
                 toggleButton.setText("Disable");
             } else {
                 toggleButton.setText("Enable");
             }
 
-            pluginList.repaint();
+            addonList.repaint();
         } else if (e.getSource() != toggleButton) {
             new DownloaderWindow(parentWindow, controller);
         }
@@ -221,40 +216,37 @@ public final class PluginPanel extends JPanel implements
     @Override
     public void valueChanged(final ListSelectionEvent e) {
         if (!e.getValueIsAdjusting()) {
-            final int selected = ((JList) e.getSource()).getSelectedIndex();
-            if (selected >= 0) {
-                final PluginInfoToggle pluginInfo =
-                        (PluginInfoToggle) ((JList) e.getSource()).
-                        getSelectedValue();
-                toggleButton.setEnabled(true);
-
-                if (pluginInfo.getState()) {
-                    toggleButton.setEnabled(pluginInfo.getPluginInfo().
-                            isUnloadable());
-                    toggleButton.setText("Disable");
-                } else {
-                    toggleButton.setText("Enable");
-                }
-            }
-            selectedPlugin = selected;
+            return;
         }
+        final int selected = addonList.getSelectionModel()
+                .getLeadSelectionIndex();
+        if (selected == -1) {
+            return;
+        }
+        final AddonToggle addonToggle = (AddonToggle) ((AddonCell)
+                ((List) ((DefaultTableModel) addonList.getModel())
+                .getDataVector().elementAt(selected)).get(0)).getObject();
+        toggleButton.setEnabled(true);
+
+        if (addonToggle.getState()) {
+            toggleButton.setEnabled(addonToggle.isUnloadable());
+            toggleButton.setText("Disable");
+        } else {
+            toggleButton.setText("Enable");
+        }
+        selectedAddon = selected;
     }
 
     /** {@inheritDoc} */
     @Override
     public void save() {
-        for (Object pit : ((DefaultListModel) pluginList.getModel())
-                .toArray()) {
-            ((PluginInfoToggle) pit).apply();
+        if (addonList.getRowCount() == 0) {
+            return;
         }
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void processEvent(final ActionType type, final StringBuffer format,
-            final Object... arguments) {
-        if (pluginRefresh) {
-            populateList();
+        for (int i = 1; i < addonList.getRowCount(); i++) {
+            addonList.getModel().getColumnCount();
+            ((AddonToggle) ((AddonCell) addonList.getModel()
+                    .getValueAt(i, 0)).getObject()).apply();
         }
     }
 }
