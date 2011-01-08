@@ -96,7 +96,7 @@ public final class ThemePanel extends JPanel implements
     /** Initialises the components. */
     private void initComponents() {
         themeList = new JList(new DefaultListModel());
-        themeList.setCellRenderer(new AddonCellRenderer());
+        //themeList.setCellRenderer(new AddonCellRenderer());
 
         scrollPane = new JScrollPane(new JLabel("Loading plugins..."));
         scrollPane.setHorizontalScrollBarPolicy(

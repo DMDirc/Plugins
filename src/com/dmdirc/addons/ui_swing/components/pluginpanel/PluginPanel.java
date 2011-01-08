@@ -41,14 +41,15 @@ import java.awt.event.ActionListener;
 import java.util.Collections;
 import java.util.List;
 
-import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableModel;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -70,7 +71,7 @@ public final class PluginPanel extends JPanel implements
     /** Swing Controller. */
     private final SwingController controller;
     /** List of plugins. */
-    private JList pluginList;
+    private JTable pluginList;
     /** plugin list scroll pane. */
     private JScrollPane scrollPane;
     /** Button to enable/disable plugin. */
@@ -99,14 +100,29 @@ public final class PluginPanel extends JPanel implements
         addListeners();
         layoutComponents();
 
-        pluginList.setSelectedIndex(0);
+        pluginList.getSelectionModel().setSelectionInterval(0, 0);
         selectedPlugin = 0;
     }
 
     /** Initialises the components. */
     private void initComponents() {
-        pluginList = new JList(new DefaultListModel());
-        pluginList.setCellRenderer(new AddonCellRenderer());
+        pluginList = new JTable(new DefaultTableModel(
+                new Object[]{"Plugin", }, 0)) {
+
+            /** {@inheritDoc} */
+            @Override
+            public boolean isCellEditable(final int row, final int column) {
+                return false;
+            }
+            
+        };
+        pluginList.setDefaultRenderer(Object.class,
+                new AddonCellRenderer());
+        pluginList.setTableHeader(null);
+        pluginList.setShowGrid(false);
+        pluginList.getSelectionModel().setSelectionMode(
+                ListSelectionModel.SINGLE_SELECTION);
+        pluginList.getSelectionModel().clearSelection();
 
         scrollPane = new JScrollPane(new JLabel("Loading plugins..."));
         scrollPane.setHorizontalScrollBarPolicy(
@@ -163,7 +179,7 @@ public final class PluginPanel extends JPanel implements
      *
      * @return Populated list
      */
-    private JList populateList() {
+    private JTable populateList() {
         pluginRefresh = false;
         final List<PluginInfo> list =
                 PluginManager.getPluginManager().getPossiblePluginInfos(true);
@@ -174,10 +190,11 @@ public final class PluginPanel extends JPanel implements
 
             @Override
             public void run() {
-                ((DefaultListModel) pluginList.getModel()).clear();
+                ((DefaultTableModel) pluginList.getModel()).setNumRows(0);
                 for (PluginInfo plugin : list) {
-                    ((DefaultListModel) pluginList.getModel()).addElement(
-                            new PluginInfoToggle(plugin));
+                    ((DefaultTableModel) pluginList.getModel()).addRow(
+                            new AddonCell[]{
+                        new AddonCell(new PluginInfoToggle(plugin)), });
                 }
                 pluginList.repaint();
             }
@@ -188,7 +205,7 @@ public final class PluginPanel extends JPanel implements
     /** Adds listeners to components. */
     private void addListeners() {
         toggleButton.addActionListener(this);
-        pluginList.addListSelectionListener(this);
+        pluginList.getSelectionModel().addListSelectionListener(this);
         ActionManager.addListener(this, CoreActionType.PLUGIN_REFRESH);
     }
 
@@ -200,8 +217,9 @@ public final class PluginPanel extends JPanel implements
     @Override
     public void actionPerformed(final ActionEvent e) {
         if (e.getSource() == toggleButton && selectedPlugin >= 0) {
-            final PluginInfoToggle pluginInfo = (PluginInfoToggle) pluginList.
-                    getSelectedValue();
+            final PluginInfoToggle pluginInfo = (PluginInfoToggle) ((AddonCell) 
+                    pluginList.getModel().getValueAt(pluginList
+                    .getSelectedRow(), 0)).getObject();
 
             pluginInfo.toggle();
 
@@ -221,31 +239,37 @@ public final class PluginPanel extends JPanel implements
     @Override
     public void valueChanged(final ListSelectionEvent e) {
         if (!e.getValueIsAdjusting()) {
-            final int selected = ((JList) e.getSource()).getSelectedIndex();
-            if (selected >= 0) {
-                final PluginInfoToggle pluginInfo =
-                        (PluginInfoToggle) ((JList) e.getSource()).
-                        getSelectedValue();
-                toggleButton.setEnabled(true);
-
-                if (pluginInfo.getState()) {
-                    toggleButton.setEnabled(pluginInfo.getPluginInfo().
-                            isUnloadable());
-                    toggleButton.setText("Disable");
-                } else {
-                    toggleButton.setText("Enable");
-                }
-            }
-            selectedPlugin = selected;
+            return;
         }
+        final int selected = pluginList.getSelectionModel()
+                .getLeadSelectionIndex();
+        if (selected == -1) {
+            return;
+        }
+        final PluginInfoToggle pluginInfo = (PluginInfoToggle) ((AddonCell)
+                ((List) ((DefaultTableModel) pluginList.getModel())
+                .getDataVector().elementAt(selected)).get(0)).getObject();
+        toggleButton.setEnabled(true);
+
+        if (pluginInfo.getState()) {
+            toggleButton.setEnabled(pluginInfo.getPluginInfo().isUnloadable());
+            toggleButton.setText("Disable");
+        } else {
+            toggleButton.setText("Enable");
+        }
+        selectedPlugin = selected;
     }
 
     /** {@inheritDoc} */
     @Override
     public void save() {
-        for (Object pit : ((DefaultListModel) pluginList.getModel())
-                .toArray()) {
-            ((PluginInfoToggle) pit).apply();
+        if (pluginList.getRowCount() == 0) {
+            return;
+        }
+        for (int i = 1; i < pluginList.getRowCount(); i++) {
+            pluginList.getModel().getColumnCount();
+            ((PluginInfoToggle) ((AddonCell) pluginList.getModel()
+                    .getValueAt(i, 0)).getObject()).apply();
         }
     }
 
