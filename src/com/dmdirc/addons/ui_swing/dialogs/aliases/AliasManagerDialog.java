@@ -341,12 +341,20 @@ public final class AliasManagerDialog extends StandardDialog implements
             dispose();
         } else if (e.getSource() == showSubs) {
             if (subsPanel.isVisible()) {
+                final Dimension minSize = getMinimumSize();
+                minSize.setSize(minSize.getWidth(), minSize.getHeight()
+                        - subsPanel.getSize().getHeight());
+                setMinimumSize(minSize);
                 subsPanel.setVisible(false);
                 pack();
                 showSubs.setText("Show Substitutions");
             } else {
                 subsPanel.setVisible(true);
                 pack();
+                final Dimension minSize = getMinimumSize();
+                minSize.setSize(minSize.getWidth(), minSize.getHeight()
+                        + subsPanel.getSize().getHeight());
+                setMinimumSize(minSize);
                 showSubs.setText("Hide Substitutions");
             }
         }
