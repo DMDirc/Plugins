@@ -151,9 +151,7 @@ public class NodeLabel extends JPanel implements SelectionListener,
     /** {@inheritDoc} */
     @Override
     public void nameChanged(final FrameContainer<?> window, final String name) {
-        if (equals(window)) {
-            text.setText(name);
-        }
+        // Do nothing
     }
 
     /** {@inheritDoc} */
