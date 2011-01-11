@@ -82,10 +82,10 @@ public class AddonCell extends JPanel {
                 foreground = foreground.brighter().brighter().brighter();
             }
 
-            name.setText(plugin.getPluginInfo().getNiceName());
-            version.setText(plugin.getPluginInfo().getFriendlyVersion());
-            author.setText(plugin.getPluginInfo().getAuthor());
-            desc.setText(plugin.getPluginInfo().getDescription());
+            name.setText(plugin.getName());
+            version.setText(plugin.getVersion());
+            author.setText(plugin.getAuthor());
+            desc.setText(plugin.getDescription());
         }
 
         name.setForeground(foreground);
