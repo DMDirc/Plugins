@@ -60,6 +60,15 @@ public class TextLabel extends JTextPane {
     /**
      * Creates a new instance of TextLabel.
      *
+     * @param justified Justify the text?
+     */
+    public TextLabel(final boolean justified) {
+        this(null, justified);
+    }
+
+    /**
+     * Creates a new instance of TextLabel.
+     *
      * @param text Text to display
      */
     public TextLabel(final String text) {
@@ -125,5 +134,39 @@ public class TextLabel extends JTextPane {
             getDocument().setParagraphAttributes(0, getDocument().getLength(),
                     sas, false);
         }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setFont(final Font font) {
+        super.setFont(font);
+        if (sas == null) {
+            return;
+        }
+        if (font != null) {
+            StyleConstants.setFontFamily(sas, font.getFamily());
+            StyleConstants.setFontSize(sas, font.getSize());
+            StyleConstants.setBold(sas, font.isBold());
+            StyleConstants.setItalic(sas, font.isItalic());
+            getDocument().setParagraphAttributes(0, getDocument().getLength(),
+                    sas, false);
+        }
+    }
+
+    /**
+     * Sets the alignment of the text in this label.
+     *
+     * @param alignment One of the following values
+     *                  <ul>
+     *                     <li>StyleConstants.ALIGN_CENTER
+     *                     <li>StyleConstants.ALIGN_JUSTIFIED
+     *                     <li>StyleConstants.ALIGN_LEFT
+     *                     <li>StyleConstants.ALIGN_RIGHT
+     *                  </ul>
+     */
+    public void setAlignment(final int alignment) {
+        StyleConstants.setAlignment(sas, alignment);
+        getDocument().setParagraphAttributes(0, getDocument().getLength(),
+                    sas, false);
     }
 }

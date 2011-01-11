@@ -59,10 +59,10 @@ public class AddonCell extends JPanel {
     public AddonCell(final Object info) {
         super();
 
-        name = new TextLabel();
-        version = new TextLabel();
-        author = new TextLabel();
-        desc = new TextLabel();
+        name = new TextLabel(false);
+        version = new TextLabel(false);
+        author = new TextLabel(false);
+        desc = new TextLabel(false);
 
         this.info = info;
         init();
