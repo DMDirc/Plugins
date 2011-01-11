@@ -429,6 +429,9 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
             if ("awayindicator".equals(key)) {
                 useAwayIndicator = getContainer().getConfigManager().
                         getOptionBool("ui", "awayindicator");
+                if (!useAwayIndicator) {
+                    awayLabel.setVisible(false);
+                }
             }
         }
     }
