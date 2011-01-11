@@ -30,7 +30,9 @@ import java.awt.Font;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
+import javax.swing.SwingConstants;
 import javax.swing.UIManager;
+import javax.swing.text.StyleConstants;
 
 import net.miginfocom.layout.PlatformDefaults;
 import net.miginfocom.swing.MigLayout;
@@ -59,10 +61,10 @@ public class AddonCell extends JPanel {
     public AddonCell(final Object info) {
         super();
 
-        name = new TextLabel();
-        version = new TextLabel();
-        author = new TextLabel();
-        desc = new TextLabel();
+        name = new TextLabel("", false);
+        version = new TextLabel("", false);
+        author = new TextLabel("", false);
+        desc = new TextLabel("", false);
 
         this.info = info;
         init();
