@@ -130,4 +130,71 @@ public class AddonToggle {
         return true;
     }
 
+    /**
+     * Returns the name of this addon.
+     *
+     * @return Addon name
+     */
+    public String getName() {
+        if (pi != null) {
+            return pi.getNiceName();
+        }
+        if (theme != null) {
+            return theme.getName();
+        }
+
+        return "Unknown addon name";
+    }
+
+    /**
+     * Returns the friendly version of this addon.
+     *
+     * @return Addon version
+     */
+    public String getVersion() {
+        if (pi != null) {
+            return pi.getFriendlyVersion();
+        }
+
+        if (theme != null) {
+            return theme.getVersion();
+        }
+
+        return "Unknown";
+    }
+
+    /**
+     * Returns the author of this addon.
+     *
+     * @return Addon author
+     */
+    public String getAuthor() {
+        if (pi != null) {
+            return pi.getAuthor();
+        }
+
+        if (theme != null) {
+            return theme.getAuthor();
+        }
+
+        return "Unknown";
+    }
+
+    /**
+     * Returns the description of this addon.
+     *
+     * @return Addon description
+     */
+    public String getDescription() {
+        if (pi != null) {
+            return pi.getDescription();
+        }
+
+        if (theme != null) {
+            return theme.getDescription();
+        }
+
+        return "There is an error with this addon.";
+    }
+
 }
