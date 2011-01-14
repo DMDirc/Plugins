@@ -117,7 +117,7 @@ public final class OsdCommand extends Command implements
     @Override
     public String getHelp() {
         return "osd --close - closes all OSD windows\n"
-                + "osd [--timout <delay in seconds>] <message> - show the "
+                + "osd [--timeout <delay in seconds>] <message> - show the "
                 + "specified message in an OSD window";
     }
 
