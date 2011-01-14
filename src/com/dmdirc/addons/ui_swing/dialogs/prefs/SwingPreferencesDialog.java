@@ -78,9 +78,9 @@ public final class SwingPreferencesDialog extends StandardDialog implements
     /** Manager loading swing worker. */
     private LoggingSwingWorker<PreferencesDialogModel, Void> worker;
     /** Parent window. */
-    private MainFrame parentWindow;
+    private final MainFrame parentWindow;
     /** Panel size. */
-    private int panelSize = 0;
+    private int panelSize = 300;
 
     /**
      * Creates a new instance of SwingPreferencesDialog.
