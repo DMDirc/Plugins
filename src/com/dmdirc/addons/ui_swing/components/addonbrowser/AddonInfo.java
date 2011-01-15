@@ -226,19 +226,24 @@ public class AddonInfo {
      */
     @SuppressWarnings("fallthrough")
     public String getDownload() {
-        switch (channel) {
+        switch (channel) { //NOPMD
+            case NONE:
+                //fallthrough
             case NIGHTLY:
                 if (!nightlyDownload.isEmpty()) {
                     return nightlyDownload;
                 }
+                //fallthrough
             case UNSTABLE:
                 if (!unstableDownload.isEmpty()) {
                     return unstableDownload;
                 }
+                //fallthrough
             case STABLE:
                 if (!stableDownload.isEmpty()) {
                     return stableDownload;
                 }
+                return "";
             default:
                 return "";
         }
