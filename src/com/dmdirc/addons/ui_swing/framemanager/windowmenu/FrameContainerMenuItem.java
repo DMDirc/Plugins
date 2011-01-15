@@ -26,6 +26,7 @@ import com.dmdirc.FrameContainer;
 import com.dmdirc.interfaces.FrameInfoListener;
 import com.dmdirc.interfaces.SelectionListener;
 import com.dmdirc.ui.IconManager;
+import com.dmdirc.ui.messages.Styliser;
 
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -47,7 +48,7 @@ public class FrameContainerMenuItem extends JMenuItem implements FrameInfoListen
      */
     private static final long serialVersionUID = 1;
     /** Wrapped frame. */
-    private FrameContainer frame;
+    private final FrameContainer frame;
     /** Parent window menu frame manager. */
     private final WindowMenuFrameManager manager;
 
@@ -93,7 +94,7 @@ public class FrameContainerMenuItem extends JMenuItem implements FrameInfoListen
             @Override
             public void run() {
                 if ((frame != null && window != null) && frame.equals(window)) {
-                    setText(name);
+                    setText(Styliser.stipControlCodes(name));
                 }
             }
         });
