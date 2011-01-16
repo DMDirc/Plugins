@@ -180,7 +180,7 @@ public final class SwingPreferencesDialog extends StandardDialog implements
         tabList = new JList(new DefaultListModel());
         tabList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         tabList.addListSelectionListener(this);
-        new ListScroller(tabList);
+        ListScroller.register(tabList);
         final JScrollPane tabListScrollPane = new JScrollPane(tabList);
         tabListScrollPane.setHorizontalScrollBarPolicy(
                 JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);

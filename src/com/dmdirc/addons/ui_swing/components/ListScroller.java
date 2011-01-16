@@ -63,6 +63,28 @@ public class ListScroller implements MouseWheelListener {
     }
 
     /**
+     * Creates a new instance of ListScroller and attaches it to the specified
+     * list.
+     *
+     * @param list List to scroll over
+     */
+    public static void register(final JList list) {
+        new ListScroller(list);
+    }
+
+    /**
+     * Creates a new instance of ListScroller and attaches it to the specified
+     * model and selection model.
+     *
+     * @param model List model to scroll over
+     * @param selectionModel List selection model to scroll over
+     */
+    public static void register(final ListModel model,
+            final ListSelectionModel selectionModel) {
+        new ListScroller(model, selectionModel); //NOPMD
+    }
+
+    /**
      * {@inheritDoc}
      *
      * @param e Moust wheel event
