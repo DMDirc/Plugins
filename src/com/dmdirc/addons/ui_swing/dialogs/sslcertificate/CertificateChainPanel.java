@@ -72,7 +72,7 @@ public class CertificateChainPanel extends JPanel {
         list = new JList(model);
         list.setCellRenderer(new CertificateChainEntryCellRenderer());
         list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        new ListScroller(list);
+        ListScroller.register(list);
     }
 
     private void layoutComponents() {
