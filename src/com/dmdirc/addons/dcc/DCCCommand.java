@@ -98,7 +98,7 @@ public final class DCCCommand extends Command implements IntelligentCommand,
                         }
                     }
 
-                }).start();
+                }, "DCC-Error-Message").start();
                 return;
             }
             final String type = args.getArguments()[0];
