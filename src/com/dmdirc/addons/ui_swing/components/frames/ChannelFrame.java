@@ -71,6 +71,8 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
     private NickList nicklist;
     /** Topic bar. */
     private TopicBar topicBar;
+    /** UI controller. */
+    private SwingController controller;
 
     /**
      * Creates a new instance of ChannelFrame. Sets up callbacks and handlers,
@@ -81,6 +83,7 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
      */
     public ChannelFrame(final SwingController controller, final Channel owner) {
         super(controller, owner);
+        this.controller = controller;
 
         initComponents();
 
@@ -122,7 +125,7 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
      * Initialises the compoents in this frame.
      */
     private void initComponents() {
-        topicBar = new TopicBar(this);
+        topicBar = new TopicBar(controller.getMainFrame(), this);
 
         nicklist = new NickList(this, getContainer().getConfigManager());
         settingsMI = new JMenuItem("Settings");

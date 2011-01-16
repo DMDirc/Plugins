@@ -25,8 +25,9 @@ package com.dmdirc.addons.ui_swing.components.inputfields;
 import com.dmdirc.addons.ui_swing.components.colours.ColourPickerDialog;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.ui.interfaces.InputField;
-import java.awt.KeyboardFocusManager;
 
+import java.awt.KeyboardFocusManager;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
@@ -50,17 +51,21 @@ public class TextPaneInputField extends JEditorPane implements InputField,
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 1;
+    /** Parent window. */
+    private final Window parentWindow;
     /** Colour picker. */
     protected ColourPickerDialog colourPicker;
 
     /**
      * Creates a new text pane input field.
+     *
+     * @param parentWindow Parent window, can be null
      */
-    public TextPaneInputField() {
+    public TextPaneInputField(final Window parentWindow) {
         super();
-
         KeyboardFocusManager.getCurrentKeyboardFocusManager()
                 .addPropertyChangeListener(this);
+        this.parentWindow = parentWindow;
     }
 
     /** {@inheritDoc} */
@@ -68,7 +73,7 @@ public class TextPaneInputField extends JEditorPane implements InputField,
     public void showColourPicker(final boolean irc, final boolean hex) {
         if (IdentityManager.getGlobalConfig().getOptionBool("general",
                 "showcolourdialog")) {
-            colourPicker = new ColourPickerDialog(irc, hex);
+            colourPicker = new ColourPickerDialog(irc, hex, parentWindow);
             colourPicker.addActionListener(new ActionListener() {
 
                 @Override

@@ -40,6 +40,7 @@ import com.dmdirc.ui.messages.ColourManager;
 import com.dmdirc.ui.messages.Styliser;
 
 import java.awt.Color;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -100,14 +101,16 @@ public class TopicBar extends JComponent implements ActionListener,
     /**
      * Instantiates a new topic bar.
      *
+     * @param window Parent window
      * @param channelFrame Parent channel frame
      */
-    public TopicBar(final ChannelFrame channelFrame) {
+    public TopicBar(final Window parentWindow,
+            final ChannelFrame channelFrame) {
         super();
 
         this.channel = (Channel) channelFrame.getContainer();
         controller = channelFrame.getController();
-        topicText = new TextPaneInputField();
+        topicText = new TextPaneInputField(parentWindow);
         topicLengthMax = channel.getMaxTopicLength();
         errorIcon =
                 new JLabel(IconManager.getIconManager().getIcon("input-error"));
