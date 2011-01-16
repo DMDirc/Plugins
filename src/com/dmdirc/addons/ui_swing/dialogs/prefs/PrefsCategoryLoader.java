@@ -65,8 +65,8 @@ public class PrefsCategoryLoader extends LoggingSwingWorker<JPanel, Object> {
             getValue();
     /** Error panel. */
     private JPanel errorCategory;
-    private CategoryPanel categoryPanel;
-    private PreferencesCategory category;
+    private final CategoryPanel categoryPanel;
+    private final PreferencesCategory category;
 
     /**
      * Instantiates a new preferences category loader.
@@ -76,6 +76,8 @@ public class PrefsCategoryLoader extends LoggingSwingWorker<JPanel, Object> {
      */
     public PrefsCategoryLoader(final CategoryPanel categoryPanel,
             final PreferencesCategory category) {
+        super();
+
         this.categoryPanel = categoryPanel;
         this.category = category;
 

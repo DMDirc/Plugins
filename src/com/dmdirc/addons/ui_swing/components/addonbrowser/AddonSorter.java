@@ -1,5 +1,4 @@
 /*
- * 
  * Copyright (c) 2006-2011 Chris Smith, Shane Mc Cormack, Gregory Holmes
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -35,10 +34,10 @@ import javax.swing.table.TableRowSorter;
 public class AddonSorter extends TableRowSorter<DefaultTableModel> implements
         Comparator<AddonInfoLabel> {
 
-    private ButtonModel sortByDate;
-    private ButtonModel sortByName;
-    private ButtonModel sortByRating;
-    private ButtonModel sortByStatus;
+    private final ButtonModel sortByDate;
+    private final ButtonModel sortByName;
+    private final ButtonModel sortByRating;
+    private final ButtonModel sortByStatus;
 
     /**
      * Creates a new addon sorter.

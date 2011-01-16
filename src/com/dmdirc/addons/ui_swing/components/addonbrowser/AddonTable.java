@@ -72,7 +72,8 @@ public class AddonTable extends JTable {
     @Override
     public void setModel(final TableModel dataModel) {
         if (!(dataModel instanceof DefaultTableModel)) {
-            throw new IllegalArgumentException("Row sorter must be of type DefaultTableModel");
+            throw new IllegalArgumentException(
+                    "Row sorter must be of type DefaultTableModel");
         }
         super.setModel(dataModel);
     }
@@ -87,7 +88,8 @@ public class AddonTable extends JTable {
     @Override
     public void setRowSorter(final RowSorter<? extends TableModel> sorter) {
         if (!(sorter instanceof AddonSorter)) {
-            throw new IllegalArgumentException("Row sorter must be of type AddonSorter");
+            throw new IllegalArgumentException(
+                    "Row sorter must be of type AddonSorter");
         }
         super.setRowSorter(sorter);
     }

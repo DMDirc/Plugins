@@ -36,7 +36,7 @@ public class DownloaderWindow extends JDialog implements Runnable, DownloadListe
     /** Downloader progress bar. */
     private final JProgressBar jpb = new JProgressBar(0, 100);
     /** Parent window. */
-    private Window parentWindow;
+    private final Window parentWindow;
 
     /**
      * Instantiates a new downloader window.

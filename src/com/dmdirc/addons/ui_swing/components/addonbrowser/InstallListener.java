@@ -22,20 +22,8 @@
 
 package com.dmdirc.addons.ui_swing.components.addonbrowser;
 
-import com.dmdirc.Main;
-import com.dmdirc.actions.ActionManager;
-import com.dmdirc.logger.ErrorLevel;
-import com.dmdirc.logger.Logger;
-import com.dmdirc.plugins.PluginManager;
-import com.dmdirc.ui.themes.ThemeManager;
-import com.dmdirc.util.Downloader;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
-import java.io.File;
-import java.io.IOException;
-import javax.swing.SwingUtilities;
 
 /**
  * Addon info install listener.
@@ -55,6 +43,8 @@ public class InstallListener implements ActionListener {
      */
     public InstallListener(final AddonInfo info,
             final BrowserWindow parentWindow) {
+        super();
+
         this.info = info;
         this.parentWindow = parentWindow;
     }
@@ -68,59 +58,7 @@ public class InstallListener implements ActionListener {
     public void actionPerformed(final ActionEvent e) {
         final InstallerWindow installer = new InstallerWindow(parentWindow,
                 info);
-        SwingUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                installer.display(parentWindow);
-            }
-        });
-        try {
-            final File file = new File(Main.getConfigDir(),
-                    "." + info.getDownload());
-            Downloader.downloadPage("http://addons.dmdirc.com/addondownload/"
-                            + info.getDownload(), file.getAbsolutePath());
-
-            switch (info.getType()) {
-                case TYPE_ACTION_PACK:
-                    ActionManager.installActionPack(file.getAbsolutePath());
-                    break;
-                case TYPE_PLUGIN:
-                    final File newFile = new File(PluginManager
-                            .getPluginManager().getDirectory(),
-                            info.getTitle() + ".jar");
-                    if (file.renameTo(newFile)) {
-                        PluginManager.getPluginManager().addPlugin(
-                                newFile.getName());
-                    } else {
-                        Logger.userError(ErrorLevel.MEDIUM, "Unable to "
-                                + "install addon, failed to move file: "
-                                + file.getAbsolutePath());
-                        installer.finished("Unable to "
-                                + "install addon, failed to move file: "
-                                + file.getAbsolutePath());
-                    }
-                    break;
-                case TYPE_THEME:
-                    if (!file.renameTo(new File(ThemeManager.getThemeDirectory()
-                            + info.getTitle() + ".zip"))) {
-                        Logger.userError(ErrorLevel.MEDIUM, "Unable to "
-                                + "install addon, failed to move file: "
-                                + file.getAbsolutePath());
-                        installer.finished("Unable to "
-                                + "install addon, failed to move file: "
-                                + file.getAbsolutePath());
-                    }
-                    break;
-                default:
-                    Logger.appError(ErrorLevel.HIGH, "Unknown addon type",
-                            new IllegalArgumentException("Unknown addon type"));
-            }
-        } catch (IOException ex) {
-            Logger.userError(ErrorLevel.MEDIUM, "Unable to download addon: "
-                    + ex.getMessage(), ex);
-            installer.finished("Unable to download addon: " + ex.getMessage());
-        }
-        installer.finished("");
+        installer.display(parentWindow);
+        new InstallWorker(info, installer).executeInExecutor();
     }
 }
