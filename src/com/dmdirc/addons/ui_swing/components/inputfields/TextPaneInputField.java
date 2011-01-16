@@ -1,17 +1,16 @@
 /*
- * 
  * Copyright (c) 2006-2011 Chris Smith, Shane Mc Cormack, Gregory Holmes
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -26,9 +25,12 @@ package com.dmdirc.addons.ui_swing.components.inputfields;
 import com.dmdirc.addons.ui_swing.components.colours.ColourPickerDialog;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.ui.interfaces.InputField;
+import java.awt.KeyboardFocusManager;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.JEditorPane;
@@ -39,7 +41,8 @@ import javax.swing.text.BadLocationException;
 /**
  * JTextPane implementing InputField.
  */
-public class TextPaneInputField extends JEditorPane implements InputField {
+public class TextPaneInputField extends JEditorPane implements InputField,
+        PropertyChangeListener {
 
     /**
      * A version number for this class. It should be changed whenever the class
@@ -49,6 +52,16 @@ public class TextPaneInputField extends JEditorPane implements InputField {
     private static final long serialVersionUID = 1;
     /** Colour picker. */
     protected ColourPickerDialog colourPicker;
+
+    /**
+     * Creates a new text pane input field.
+     */
+    public TextPaneInputField() {
+        super();
+
+        KeyboardFocusManager.getCurrentKeyboardFocusManager()
+                .addPropertyChangeListener(this);
+    }
 
     /** {@inheritDoc} */
     @Override
@@ -110,5 +123,13 @@ public class TextPaneInputField extends JEditorPane implements InputField {
     public void updateUI() {
         super.setUI(new BasicEditorPaneUI());
         super.setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void propertyChange(final PropertyChangeEvent evt) {
+        if (!isFocusOwner()) {
+            hideColourPicker();
+        }
     }
 }
