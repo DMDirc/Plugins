@@ -355,6 +355,10 @@ public final class MainFrame extends JFrame implements WindowListener,
             @Override
             public void run() {
                 frameManagerPanel.removeAll();
+                if (mainFrameManager != null) {
+                    controller.getWindowFactory().removeWindowListener(
+                            mainFrameManager);
+                }
                 final String manager = IdentityManager.getGlobalConfig().
                         getOption("ui", "framemanager");
                 try {
@@ -405,9 +409,8 @@ public final class MainFrame extends JFrame implements WindowListener,
         frameManagerPanel = new JPanel();
         activeFrame = null;
         framePanel = new JPanel(new MigLayout("fill, ins 0"));
-        mainSplitPane = new SplitPane(SplitPane.Orientation.HORIZONTAL);
-
         initFrameManagers();
+        mainSplitPane = initSplitPane();
 
         final MenuBar menu = new MenuBar(controller, this);
         Apple.getApple().setMenuBar(menu);
@@ -417,13 +420,20 @@ public final class MainFrame extends JFrame implements WindowListener,
 
         getContentPane().setLayout(new MigLayout(
                 "fill, ins rel, wrap 1, hidemode 2"));
-        getContentPane().add(initSplitPane(mainSplitPane), "grow, push");
-        getContentPane().add(statusBar,
-                "hmax 20, wmax 100%-2*rel, wmin 100%-2*rel");
+        layoutComponents();
 
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
         pack();
+    }
+
+    /**
+     * Lays out the this component.
+     */
+    private void layoutComponents() {
+        getContentPane().add(mainSplitPane, "grow, push");
+        getContentPane().add(statusBar, "hmax 20, wmax 100%-2*rel, "
+                + "wmin 100%-2*rel, south, gap rel rel 0 rel");
     }
 
     /**
@@ -433,7 +443,9 @@ public final class MainFrame extends JFrame implements WindowListener,
      *
      * @return Returns the initialised split pane
      */
-    private JSplitPane initSplitPane(final SplitPane mainSplitPane) {
+    private SplitPane initSplitPane() {
+        final SplitPane splitPane = new SplitPane(SplitPane
+                .Orientation.HORIZONTAL);
         position = FramemanagerPosition.getPosition(IdentityManager.
                 getGlobalConfig().getOption("ui", "framemanagerPosition"));
 
@@ -454,37 +466,37 @@ public final class MainFrame extends JFrame implements WindowListener,
 
         switch (position) {
             case TOP:
-                mainSplitPane.setTopComponent(frameManagerPanel);
-                mainSplitPane.setBottomComponent(framePanel);
-                mainSplitPane.setResizeWeight(0.0);
-                mainSplitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
+                splitPane.setTopComponent(frameManagerPanel);
+                splitPane.setBottomComponent(framePanel);
+                splitPane.setResizeWeight(0.0);
+                splitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
                 frameManagerPanel.setPreferredSize(new Dimension(
                         Integer.MAX_VALUE, IdentityManager.getGlobalConfig().
                         getOptionInt("ui", "frameManagerSize")));
                 break;
             case LEFT:
-                mainSplitPane.setLeftComponent(frameManagerPanel);
-                mainSplitPane.setRightComponent(framePanel);
-                mainSplitPane.setResizeWeight(0.0);
-                mainSplitPane.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
+                splitPane.setLeftComponent(frameManagerPanel);
+                splitPane.setRightComponent(framePanel);
+                splitPane.setResizeWeight(0.0);
+                splitPane.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
                 frameManagerPanel.setPreferredSize(new Dimension(
                         IdentityManager.getGlobalConfig().getOptionInt("ui",
                         "frameManagerSize"), Integer.MAX_VALUE));
                 break;
             case BOTTOM:
-                mainSplitPane.setTopComponent(framePanel);
-                mainSplitPane.setBottomComponent(frameManagerPanel);
-                mainSplitPane.setResizeWeight(1.0);
-                mainSplitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
+                splitPane.setTopComponent(framePanel);
+                splitPane.setBottomComponent(frameManagerPanel);
+                splitPane.setResizeWeight(1.0);
+                splitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
                 frameManagerPanel.setPreferredSize(new Dimension(
                         Integer.MAX_VALUE, IdentityManager.getGlobalConfig().
                         getOptionInt("ui", "frameManagerSize")));
                 break;
             case RIGHT:
-                mainSplitPane.setLeftComponent(framePanel);
-                mainSplitPane.setRightComponent(frameManagerPanel);
-                mainSplitPane.setResizeWeight(1.0);
-                mainSplitPane.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
+                splitPane.setLeftComponent(framePanel);
+                splitPane.setRightComponent(frameManagerPanel);
+                splitPane.setResizeWeight(1.0);
+                splitPane.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
                 frameManagerPanel.setPreferredSize(new Dimension(
                         IdentityManager.getGlobalConfig().getOptionInt("ui",
                         "frameManagerSize"), Integer.MAX_VALUE));
@@ -493,7 +505,7 @@ public final class MainFrame extends JFrame implements WindowListener,
                 break;
         }
 
-        return mainSplitPane;
+        return splitPane;
     }
 
     /** {@inheritDoc}. */
@@ -511,7 +523,7 @@ public final class MainFrame extends JFrame implements WindowListener,
         if (exitCode == 0 && IdentityManager.getGlobalConfig().getOptionBool(
                 "ui", "confirmQuit")) {
             final StandardQuestionDialog dialog = new ConfirmQuitDialog(this) {
-                
+
                 /**
                  * A version number for this class. It should be changed
                  * whenever the class structure is changed (or anything else
@@ -576,9 +588,12 @@ public final class MainFrame extends JFrame implements WindowListener,
                     /** {@inheritDoc} */
                     @Override
                     public void run() {
+                        setVisible(false);
+                        getContentPane().remove(mainSplitPane);
                         initFrameManagers();
-                        initSplitPane(mainSplitPane);
-                        frameManagerPanel.repaint();
+                        getContentPane().removeAll();
+                        layoutComponents();
+                        setVisible(true);
                     }
                 });
             } else {
