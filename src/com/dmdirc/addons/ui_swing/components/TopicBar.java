@@ -35,6 +35,7 @@ import com.dmdirc.config.IdentityManager;
 import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.interfaces.TopicChangeListener;
 import com.dmdirc.parser.common.ChannelJoinRequest;
+import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.messages.ColourManager;
 import com.dmdirc.ui.messages.Styliser;
@@ -107,7 +108,9 @@ public class TopicBar extends JComponent implements ActionListener,
 
         this.channel = (Channel) channelFrame.getContainer();
         controller = channelFrame.getController();
-        topicText = new TextPaneInputField();
+        topicText = new TextPaneInputField(
+                ((SwingController) PluginManager.getPluginManager()
+                .getPluginInfoByName("ui_swing").getPlugin()).getMainFrame());
         topicLengthMax = channel.getMaxTopicLength();
         errorIcon =
                 new JLabel(IconManager.getIconManager().getIcon("input-error"));
