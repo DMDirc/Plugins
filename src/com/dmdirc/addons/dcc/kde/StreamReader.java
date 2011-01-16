@@ -47,6 +47,8 @@ public class StreamReader extends Thread {
      * @param list The list to store the output from the stream in (null for no saving)
      */
     public StreamReader(final InputStream stream, final List<String> list) {
+        super("DCC-StreamReader");
+
         this.stream = stream;
         this.list = list;
     }

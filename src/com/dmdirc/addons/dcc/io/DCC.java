@@ -106,7 +106,7 @@ public abstract class DCC implements Runnable {
             return;
         }
 
-        myThread = new Thread(this);
+        myThread = new Thread(this, "DCC-Thread-" + getHost());
         myThread.start();
     }
 

@@ -324,7 +324,7 @@ public class TransferContainer extends FrameContainer<TransferWindow> implements
                                 JOptionPane.ERROR_MESSAGE);
                     }
 
-                });
+                }, "DCC-Error-Message");
                 errorThread.start();
             } else {
                 if (IdentityManager.getGlobalConfig().getOptionBool(
