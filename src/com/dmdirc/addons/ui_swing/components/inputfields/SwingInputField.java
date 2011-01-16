@@ -33,11 +33,14 @@ import com.dmdirc.util.ReturnableThread;
 
 import java.awt.Color;
 import java.awt.FontMetrics;
+import java.awt.KeyboardFocusManager;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -49,7 +52,7 @@ import net.miginfocom.swing.MigLayout;
 
 /** Swing input field. */
 public class SwingInputField extends JComponent implements InputField,
-        KeyListener, InputValidationListener {
+        KeyListener, InputValidationListener, PropertyChangeListener {
 
     /**
      * A version number for this class. It should be changed whenever the class
@@ -108,6 +111,8 @@ public class SwingInputField extends JComponent implements InputField,
                 textField.getInputMap(SwingInputField.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT));
         setInputMap(SwingInputField.WHEN_IN_FOCUSED_WINDOW,
                 textField.getInputMap(SwingInputField.WHEN_IN_FOCUSED_WINDOW));
+        KeyboardFocusManager.getCurrentKeyboardFocusManager()
+                .addPropertyChangeListener(this);
     }
 
     /** {@inheritDoc} */
@@ -547,5 +552,13 @@ public class SwingInputField extends JComponent implements InputField,
                 errorIndicator.setVisible(false);
             }
         });
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void propertyChange(final PropertyChangeEvent evt) {
+        if (!isFocusOwner()) {
+            hideColourPicker();
+        }
     }
 }

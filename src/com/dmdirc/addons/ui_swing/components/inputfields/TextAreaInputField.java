@@ -19,23 +19,27 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 package com.dmdirc.addons.ui_swing.components.inputfields;
 
 import com.dmdirc.addons.ui_swing.components.colours.ColourPickerDialog;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.ui.interfaces.InputField;
+import java.awt.KeyboardFocusManager;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 import javax.swing.JTextArea;
 import javax.swing.text.BadLocationException;
 
 /**
- *
- * @author chris
+ * JTextArea implementing InputField
  */
-public class TextAreaInputField extends JTextArea implements InputField {
+public class TextAreaInputField extends JTextArea implements InputField,
+        PropertyChangeListener {
     
     /**
      * A version number for this class. It should be changed whenever the class
@@ -55,6 +59,8 @@ public class TextAreaInputField extends JTextArea implements InputField {
      */
     public TextAreaInputField(final int rows, final int columns) {
         super(rows, columns);
+        KeyboardFocusManager.getCurrentKeyboardFocusManager()
+                .addPropertyChangeListener(this);
     }
 
     /**
@@ -64,6 +70,8 @@ public class TextAreaInputField extends JTextArea implements InputField {
      */
     public TextAreaInputField(final String text) {
         super(text);
+        KeyboardFocusManager.getCurrentKeyboardFocusManager()
+                .addPropertyChangeListener(this);
     }
     
     /** {@inheritDoc} */
@@ -111,6 +119,14 @@ public class TextAreaInputField extends JTextArea implements InputField {
         if (colourPicker != null) {
             colourPicker.dispose();
             colourPicker = null;
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void propertyChange(final PropertyChangeEvent evt) {
+        if (!isFocusOwner()) {
+            hideColourPicker();
         }
     }
 
