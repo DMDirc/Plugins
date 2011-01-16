@@ -86,6 +86,16 @@ public class SwingWindowFactory implements FrameListener {
         listeners.add(SwingWindowListener.class, listener);
     }
 
+    /**
+     * Un-registers the specified listener from being notificed about the
+     * addiction and deletion of all Swing UI windows.
+     *
+     * @param listener The listener to be removed
+     */
+    public void removeWindowListener(final SwingWindowListener listener) {
+        listeners.remove(SwingWindowListener.class, listener);
+    }
+
     /** {@inheritDoc} */
     @Override
     public void addWindow(final FrameContainer<?> window, final boolean focus) {
