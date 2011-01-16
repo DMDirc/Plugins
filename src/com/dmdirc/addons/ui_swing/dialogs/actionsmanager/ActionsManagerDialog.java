@@ -209,7 +209,7 @@ public final class ActionsManagerDialog extends StandardDialog implements
         info.setVisible(false);
         activeSettings.setVisible(false);
 
-        new ListScroller(groups);
+        ListScroller.register(groups);
 
         reloadGroups();
     }

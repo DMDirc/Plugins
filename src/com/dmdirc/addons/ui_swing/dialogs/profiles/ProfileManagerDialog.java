@@ -153,7 +153,7 @@ public final class ProfileManagerDialog extends StandardDialog implements
 
         profileList.setCellRenderer(new ProfileListCellRenderer());
         profileList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        new ListScroller(profileList);
+        ListScroller.register(profileList);
 
         populateList();
     }
