@@ -22,16 +22,11 @@
 
 package com.dmdirc.addons.ui_swing.components.addonbrowser;
 
-import com.dmdirc.Main;
-import com.dmdirc.util.ConfigFile;
-import com.dmdirc.util.InvalidConfigFileException;
+import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.IOException;
-import java.util.Map;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
@@ -48,8 +43,6 @@ import net.miginfocom.swing.MigLayout;
 
 /**
  * The main window that allows users to browse addons.
- *
- * @author chris
  */
 public class BrowserWindow extends JDialog implements ActionListener {
 
@@ -92,8 +85,6 @@ public class BrowserWindow extends JDialog implements ActionListener {
     private final JRadioButton statusButton = new JRadioButton("Status", false);
     /** Row sorter. */
     private final AddonSorter sorter;
-    /** Addon filter. */
-    private final AddonFilter filter;
 
     /**
      * Creates and displays a new browser window.
@@ -106,18 +97,21 @@ public class BrowserWindow extends JDialog implements ActionListener {
         setResizable(false);
         setLayout(new MigLayout("fill, wmin 650, hmin 600"));
         scrollPane.getVerticalScrollBar().setUnitIncrement(15);
+        final JPanel loadingPanel = new JPanel(
+                new MigLayout("filly, alignx 50%"));
+        loadingPanel.add(new TextLabel("Loading addons, please wait."));
 
         JPanel panel = new JPanel(new MigLayout("fill"));
         panel.setBorder(BorderFactory.createTitledBorder(UIManager.getBorder(
                 "TitledBorder.border"), "Search"));
         panel.add(searchBox, "growx");
-        add(panel, "width 150!");
+        add(panel, "width 150!, grow");
 
         panel = new JPanel(new MigLayout("fill"));
         panel.setBorder(BorderFactory.createTitledBorder(UIManager.getBorder(
                 "TitledBorder.border"), "Results"));
-        panel.add(scrollPane, "grow");
-        add(panel, "wrap, spany 4, grow");
+        panel.add(scrollPane, "grow, push");
+        add(panel, "wrap, spany 4, grow, push");
 
         panel = new JPanel(new MigLayout("fill, wrap"));
         panel.setBorder(BorderFactory.createTitledBorder(UIManager.getBorder(
@@ -147,17 +141,17 @@ public class BrowserWindow extends JDialog implements ActionListener {
 
         initListeners();
 
-        filter = new AddonFilter(verifiedBox.getModel(),
+        final AddonFilter filter = new AddonFilter(verifiedBox.getModel(),
                 unverifiedBox.getModel(), installedBox.getModel(),
-                notinstalledBox.getModel(), pluginsBox.getModel(), themesBox.
-                getModel(), actionsBox.getModel(),
-                searchBox);
+                notinstalledBox.getModel(), pluginsBox.getModel(),
+                themesBox.getModel(), actionsBox.getModel(), searchBox);
         sorter = new AddonSorter(list.getModel(), dateButton.getModel(),
                 nameButton.getModel(), ratingButton.getModel(),
                 statusButton.getModel(), filter);
         list.setRowSorter(sorter);
         list.setShowGrid(false);
 
+        scrollPane.setViewportView(loadingPanel);
         loadData();
 
         pack();
@@ -196,31 +190,8 @@ public class BrowserWindow extends JDialog implements ActionListener {
     /**
      * Loads addon data from the locally cached feed file.
      */
-    public void loadData() {
-        final int selectedRow;
-        if (list.getRowCount() > 0 && list.getSelectedRow() > 0) {
-            selectedRow = list.getSelectedRow();
-        } else {
-            selectedRow = 0;
-        }
-        ConfigFile data = new ConfigFile(Main.getConfigDir() + File.separator +
-                "addons.feed");
-        try {
-            data.read();
-        } catch (IOException ex) {
-            //Ignore this
-        } catch (InvalidConfigFileException ex) {
-            //Ignore this
-        }
-
-        list.getModel().setRowCount(0);
-
-        for (Map<String, String> entry : data.getKeyDomains().values()) {
-            final AddonInfo info = new AddonInfo(entry);
-            list.getModel().addRow(new Object[]{new AddonInfoLabel(info, this), });
-        }
-
-        list.getSelectionModel().setSelectionInterval(selectedRow, selectedRow);
+    public final void loadData() {
+        new DataLoaderWorker(list, this, scrollPane).executeInExecutor();
     }
 
     /**

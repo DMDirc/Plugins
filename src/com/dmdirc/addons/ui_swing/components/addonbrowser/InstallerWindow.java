@@ -48,11 +48,11 @@ public class InstallerWindow extends StandardDialog implements ActionListener {
     /** Downloader progress bar. */
     private final JProgressBar jpb = new JProgressBar(0, 100);
     /** Parent window. */
-    private BrowserWindow parentWindow;
+    private final BrowserWindow parentWindow;
     /** Message label. */
-    private TextLabel label;
+    private final TextLabel label;
     /** Addon info. */
-    private AddonInfo info;
+    private final AddonInfo info;
 
     /**
      * Instantiates a new installer window.
@@ -60,8 +60,9 @@ public class InstallerWindow extends StandardDialog implements ActionListener {
      * @param parentWindow Parent window
      * @param info Assocaited addon info
      */
-    public InstallerWindow(final BrowserWindow parentWindow, final AddonInfo info) {
-        super(parentWindow, ModalityType.DOCUMENT_MODAL);
+    public InstallerWindow(final BrowserWindow parentWindow,
+            final AddonInfo info) {
+        super(parentWindow, ModalityType.MODELESS);
         this.info = info;
         this.parentWindow = parentWindow;
         setTitle("Installing addon...");
