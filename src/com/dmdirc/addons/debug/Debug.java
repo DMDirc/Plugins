@@ -25,6 +25,7 @@ package com.dmdirc.addons.debug;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandInfo;
+import com.dmdirc.commandparser.CommandManager;
 import com.dmdirc.commandparser.CommandType;
 import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.IntelligentCommand;
@@ -67,7 +68,8 @@ public class Debug extends Command implements IntelligentCommand, CommandInfo {
                         "Unknown debug action.");
             } else {
                 final CommandArguments newArgs = new CommandArguments(
-                        Arrays.asList(("/" + command.getName() + " "
+                        Arrays.asList((CommandManager.getCommandChar()
+                        + command.getName() + " "
                         + args.getArgumentsAsString(1)).split(" ")));
                 command.execute(origin, newArgs, context);
             }
