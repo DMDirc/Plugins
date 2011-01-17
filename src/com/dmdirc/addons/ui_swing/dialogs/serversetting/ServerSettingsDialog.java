@@ -29,7 +29,7 @@ import com.dmdirc.addons.ui_swing.components.expandingsettings.SettingsPanel;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
 import com.dmdirc.config.Identity;
-import com.dmdirc.config.prefs.PreferencesType;
+import com.dmdirc.config.prefs.PreferencesManager;
 
 import java.awt.Window;
 import java.awt.event.ActionEvent;
@@ -67,7 +67,7 @@ public final class ServerSettingsDialog extends StandardDialog implements Action
     /** The tabbed pane. */
     private JTabbedPane tabbedPane;
     /** Parent window. */
-    private Window parentWindow;
+    private final Window parentWindow;
 
     /**
      * Creates a new instance of ServerSettingsDialog.
@@ -181,74 +181,8 @@ public final class ServerSettingsDialog extends StandardDialog implements Action
 
     /** Adds the settings to the panel. */
     private void addSettings() {
-        settingsPanel.addOption("channel.splitusermodes", "Split user modes",
-                PreferencesType.BOOLEAN);
-        settingsPanel.addOption("channel.sendwho", "Send WHO",
-                PreferencesType.BOOLEAN);
-        settingsPanel.addOption("channel.showmodeprefix", "Show mode prefix",
-                PreferencesType.BOOLEAN);
-
-        settingsPanel.addOption("general.cyclemessage", "Cycle message",
-                PreferencesType.TEXT);
-        settingsPanel.addOption("general.kickmessage", "Kick message",
-                PreferencesType.TEXT);
-        settingsPanel.addOption("general.partmessage", "Part message",
-                PreferencesType.TEXT);
-
-        settingsPanel.addOption("ui.backgroundcolour", "Background colour",
-                PreferencesType.COLOUR);
-        settingsPanel.addOption("ui.foregroundcolour", "Foreground colour",
-                PreferencesType.COLOUR);
-        settingsPanel.addOption("ui.frameBufferSize", "Textpane buffer limit",
-                PreferencesType.INTEGER);
-        
-        settingsPanel.addOption("ui.inputBufferSize", "Input buffer size",
-                PreferencesType.INTEGER);
-        settingsPanel.addOption("ui.textPaneFontName", "Textpane font name",
-                PreferencesType.TEXT);
-        settingsPanel.addOption("ui.textPaneFontSize", "Textpane font size",
-                PreferencesType.INTEGER);
-        
-        settingsPanel.addOption("ui.inputbackgroundcolour",
-                "Input field background colour",
-                PreferencesType.COLOUR);
-        settingsPanel.addOption("ui.inputforegroundcolour",
-                "Input field foreground colour",
-                PreferencesType.COLOUR);
-        settingsPanel.addOption("ui.nicklistbackgroundcolour",
-                "Nicklist background colour",
-                PreferencesType.COLOUR);
-        settingsPanel.addOption("ui.nicklistforegroundcolour",
-                "Nicklist foreground colour",
-                PreferencesType.COLOUR);
-        settingsPanel.addOption("ui.shownickcoloursinnicklist",
-                "Show coloured nicks in nicklist",
-                PreferencesType.BOOLEAN);
-        settingsPanel.addOption("ui.shownickcoloursintext",
-                "Show coloured nicks in textpane",
-                PreferencesType.BOOLEAN);
-
-        settingsPanel.addOption("general.closechannelsonquit",
-                "Close channels on quit",
-                PreferencesType.BOOLEAN);
-        settingsPanel.addOption("general.closechannelsondisconnect",
-                "Close channels on disconnect",
-                PreferencesType.BOOLEAN);
-        settingsPanel.addOption("general.closequeriesonquit",
-                "Close queries on quit",
-                PreferencesType.BOOLEAN);
-        settingsPanel.addOption("general.closequeriesondisconnect",
-                "Close queries on disconnect",
-                PreferencesType.BOOLEAN);
-        settingsPanel.addOption("general.quitmessage", "Quit message",
-                PreferencesType.TEXT);
-        settingsPanel.addOption("general.reconnectmessage", "Reconnect message",
-                PreferencesType.TEXT);
-        settingsPanel.addOption("general.rejoinchannels",
-                "Rejoin channels on reconnect",
-                PreferencesType.BOOLEAN);
-        settingsPanel.addOption("general.pingtimeout", "Ping timeout",
-                PreferencesType.INTEGER);
+        settingsPanel.addOption(PreferencesManager.getPreferencesManager()
+                .getServerSettings(server.getConfigManager(), server.getServerIdentity()));
     }
 
     /** Initialises listeners for this dialog. */

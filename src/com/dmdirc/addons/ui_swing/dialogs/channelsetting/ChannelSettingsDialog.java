@@ -28,7 +28,7 @@ import com.dmdirc.addons.ui_swing.components.expandingsettings.SettingsPanel;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.config.Identity;
 import com.dmdirc.config.IdentityManager;
-import com.dmdirc.config.prefs.PreferencesType;
+import com.dmdirc.config.prefs.PreferencesManager;
 import com.dmdirc.ui.interfaces.InputWindow;
 
 import java.awt.Window;
@@ -71,7 +71,7 @@ public final class ChannelSettingsDialog extends StandardDialog implements
     /** Channel identity file. */
     private final Identity identity;
     /** Channel window. */
-    private InputWindow channelWindow;
+    private final InputWindow channelWindow;
 
     /**
      * Creates a new instance of ChannelSettingsDialog.
@@ -195,45 +195,9 @@ public final class ChannelSettingsDialog extends StandardDialog implements
         channelSettingsPane = new SettingsPanel(identity,
                 "These settings are specific to this channel on this network,"
                 + " any settings specified here will overwrite global settings");
-
-        channelSettingsPane.addOption("channel.splitusermodes",
-                "Split user modes", PreferencesType.BOOLEAN);
-        channelSettingsPane.addOption("channel.sendwho",
-                "Send channel WHOs", PreferencesType.BOOLEAN);
-        channelSettingsPane.addOption("channel.showmodeprefix",
-                "Show mode prefixes", PreferencesType.BOOLEAN);
-        channelSettingsPane.addOption("ui.shownickcoloursinnicklist",
-                "Show colours in nicklist", PreferencesType.BOOLEAN);
-        channelSettingsPane.addOption("ui.shownickcoloursintext",
-                "Show colours in textpane", PreferencesType.BOOLEAN);
-        channelSettingsPane.addOption("general.cyclemessage",
-                "Cycle message", PreferencesType.TEXT);
-        channelSettingsPane.addOption("general.kickmessage",
-                "Kick message", PreferencesType.TEXT);
-        channelSettingsPane.addOption("general.partmessage",
-                "Part message", PreferencesType.TEXT);
-        channelSettingsPane.addOption("ui.backgroundcolour",
-                "Background colour", PreferencesType.COLOUR);
-        channelSettingsPane.addOption("ui.foregroundcolour",
-                "Foreground colour", PreferencesType.COLOUR);
-        channelSettingsPane.addOption("ui.frameBufferSize",
-                "Frame buffer size", PreferencesType.INTEGER);
-        channelSettingsPane.addOption("ui.textPaneFontName",
-                "Textpane font name", PreferencesType.FONT);
-        channelSettingsPane.addOption("ui.textPaneFontSize",
-                "Textpane font size", PreferencesType.INTEGER);
-        channelSettingsPane.addOption("ui.inputbuffersize",
-                "Input buffer size", PreferencesType.INTEGER);
-        channelSettingsPane.addOption("ui.inputbackgroundcolour",
-                "Inputfield background colour", PreferencesType.COLOUR);
-        channelSettingsPane.addOption("ui.inputforegroundcolour",
-                "Inputfield foreground colour", PreferencesType.COLOUR);
-        channelSettingsPane.addOption("ui.nicklistbackgroundcolour",
-                "Nicklist background colour", PreferencesType.COLOUR);
-        channelSettingsPane.addOption("ui.nicklistforegroundcolour",
-                "Nicklist foreground colour", PreferencesType.COLOUR);
-        channelSettingsPane.addOption("channel.encoding", "Encoding",
-                PreferencesType.MULTICHOICE);
+        channelSettingsPane.addOption(PreferencesManager
+                .getPreferencesManager().getChannelSettings(
+                channel.getConfigManager(), identity));
     }
 
     /** Initialises listeners for this dialog. */
