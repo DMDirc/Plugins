@@ -22,16 +22,17 @@
 
 package com.dmdirc.addons.ui_swing.components.expandingsettings;
 
+import com.dmdirc.addons.ui_swing.PrefsComponentFactory;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.config.Identity;
-import com.dmdirc.config.prefs.PreferencesType;
+import com.dmdirc.config.prefs.PreferencesCategory;
+import com.dmdirc.config.prefs.PreferencesSetting;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Map.Entry;
+import com.dmdirc.util.DoubleMap;
 
 import javax.swing.BorderFactory;
+import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.UIManager;
@@ -48,13 +49,11 @@ public class SettingsPanel extends JPanel {
      * structure is changed (or anything else that would prevent serialized
      * objects being unserialized with the new class).
      */
-    private static final long serialVersionUID = 2;
+    private static final long serialVersionUID = 3;
     /** Config manager. */
     private final transient Identity config;
-    /** config option -> name. */
-    private Map<String, String> names;
-    /** config option -> type. */
-    private Map<String, PreferencesType> types;
+    /** Current Settings. */
+    private final DoubleMap<PreferencesSetting, JComponent> settings;
     /** Info label. */
     private TextLabel infoLabel;
     /** Current options panel. */
@@ -65,6 +64,8 @@ public class SettingsPanel extends JPanel {
     private JScrollPane scrollPane;
     /** Use external padding. */
     private final boolean padding;
+    /** Preferences Category. */
+    private PreferencesCategory category;
 
     /**
      * Creates a new instance of SettingsPanel.
@@ -87,6 +88,8 @@ public class SettingsPanel extends JPanel {
             final boolean padding) {
         super();
 
+        settings = new DoubleMap<PreferencesSetting, JComponent>();
+
         this.setOpaque(UIUtilities.getTabbedPaneOpaque());
         this.config = config;
         this.padding = padding;
@@ -101,16 +104,11 @@ public class SettingsPanel extends JPanel {
      * @param infoText Info blurb.
      */
     private void initComponents(final String infoText) {
-        names = new LinkedHashMap<String, String>();
-        types = new LinkedHashMap<String, PreferencesType>();
-
         infoLabel = new TextLabel(infoText);
         infoLabel.setVisible(!infoText.isEmpty());
 
-        addOptionPanel =
-                new AddOptionPanel(this);
-        currentOptionsPanel =
-                new CurrentOptionsPanel(this);
+        addOptionPanel = new AddOptionPanel(this);
+        currentOptionsPanel = new CurrentOptionsPanel(this);
         scrollPane = new JScrollPane(currentOptionsPanel);
 
         scrollPane.setBorder(BorderFactory.createTitledBorder(UIManager.
@@ -129,9 +127,9 @@ public class SettingsPanel extends JPanel {
         setLayout(new MigLayout("fill, wrap 1, hidemode 3, "
                 + (padding ? "ins rel" : "ins 0")));
 
-        add(infoLabel, "growx, pushx");
-        add(scrollPane, "grow, push");
-        add(addOptionPanel, "growx, pushx");
+        add(infoLabel, "growx");
+        add(scrollPane, "grow, pushy");
+        add(addOptionPanel, "growx");
     }
 
     /**
@@ -141,25 +139,25 @@ public class SettingsPanel extends JPanel {
      * @param displayName Display name
      * @param type Option type
      */
-    public void addOption(final String optionName, final String displayName,
-            final PreferencesType type) {
+    public void addOption(final PreferencesCategory category) {
         if (config == null) {
             return;
         }
 
-        if (optionName.indexOf('.') == -1) {
-            return;
-        }
-        final String[] splitOption = optionName.split("\\.");
+        this.category = category;
 
-        names.put(optionName, displayName);
-        types.put(optionName, type);
-
-        if (config.hasOptionString(splitOption[0], splitOption[1])) {
-            addCurrentOption(optionName, type,
-                    config.getOption(splitOption[0], splitOption[1]));
-        } else {
-            addAddableOption(optionName);
+        for (PreferencesSetting setting : category.getSettings()) {
+            if (settings.get(setting) == null) {
+                final JComponent component = PrefsComponentFactory
+                        .getComponent(setting);
+                component.setName(setting.getTitle());
+                settings.put(setting, component);
+            }
+            if (setting.isSet()) {
+                addCurrentOption(settings.get(setting));
+            } else {
+                addAddableOption(settings.get(setting));
+            }
         }
     }
 
@@ -168,31 +166,23 @@ public class SettingsPanel extends JPanel {
         addOptionPanel.clearOptions();
         currentOptionsPanel.clearOptions();
 
-        for (Entry<String, PreferencesType> entry : types.entrySet()) {
-            final String[] splitOption = entry.getKey().split("\\.");
-
-            if (config.hasOptionString(splitOption[0], splitOption[1])) {
-                addCurrentOption(entry.getKey(), entry.getValue(),
-                        config.getOption(splitOption[0], splitOption[1]));
+        for (PreferencesSetting setting : category.getSettings()) {
+            if (setting.isSet()) {
+                addCurrentOption(settings.get(setting));
             } else {
-                addAddableOption(entry.getKey());
+                addAddableOption(settings.get(setting));
             }
         }
     }
 
     /** Saves the options to the config. */
     public void save() {
-        for (Entry<String, PreferencesType> entry : types.entrySet()) {
-            final String value =
-                    currentOptionsPanel.getOption(entry.getKey(),
-                    entry.getValue());
-            final String[] splitOption = entry.getKey().split("\\.");
-            if (value == null) {
-                config.unsetOption(splitOption[0], splitOption[1]);
-            } else {
-                config.setOption(splitOption[0], splitOption[1], value);
-            }
-        }
+        category.save();
+    }
+
+    /** Dismisses the options changed. */
+    public void dismiss() {
+        category.dismiss();
     }
 
     /**
@@ -202,9 +192,8 @@ public class SettingsPanel extends JPanel {
      * @param type Option type
      * @param value Option value
      */
-    protected void addCurrentOption(final String optionName,
-            final PreferencesType type, final String value) {
-        currentOptionsPanel.addOption(optionName, type, value);
+    protected void addCurrentOption(final JComponent setting) {
+        currentOptionsPanel.addOption(setting);
     }
 
     /**
@@ -213,9 +202,8 @@ public class SettingsPanel extends JPanel {
      * @param optionName Option to delete
      * @param type Option type
      */
-    protected void removeCurrentOption(final String optionName,
-            final PreferencesType type) {
-        currentOptionsPanel.delOption(optionName, type);
+    protected void removeCurrentOption(final JComponent setting) {
+        currentOptionsPanel.delOption(setting);
     }
 
     /**
@@ -223,29 +211,19 @@ public class SettingsPanel extends JPanel {
      *
      * @param optionName Option name
      */
-    protected void addAddableOption(final String optionName) {
-        addOptionPanel.addOption(optionName);
+    protected void addAddableOption(final JComponent setting) {
+        settings.getKey(setting).setValue(null);
+        addOptionPanel.addOption(setting);
     }
 
     /**
-     * Returns the display name for a config option.
+     * Returns the component associated with a setting.
      *
-     * @param optionName Option name to return the name for
+     * @param component The component to get the setting for
      *
-     * @return Display name for a specified option
+     * @return Setting or null if not found
      */
-    public String getOptionName(final String optionName) {
-        return names.get(optionName);
-    }
-
-    /**
-     * Returns the option type for a config option.
-     *
-     * @param optionName Option name to return the type of
-     *
-     * @return Option type for a specified option
-     */
-    public PreferencesType getOptionType(final String optionName) {
-        return types.get(optionName);
+    public PreferencesSetting getSettingForComponent(final JComponent comp) {
+        return settings.getKey(comp);
     }
 }
