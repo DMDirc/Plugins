@@ -23,28 +23,18 @@
 package com.dmdirc.addons.ui_swing.components.expandingsettings;
 
 import com.dmdirc.addons.ui_swing.UIUtilities;
-import com.dmdirc.addons.ui_swing.components.FontPicker;
-import com.dmdirc.addons.ui_swing.components.colours.ColourChooser;
 import com.dmdirc.addons.ui_swing.components.renderers.AddOptionCellRenderer;
-import com.dmdirc.config.prefs.PreferencesType;
 
 import java.awt.Component;
-import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.nio.charset.Charset;
 
-import javax.swing.AbstractAction;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JSpinner;
-import javax.swing.JTextField;
-import javax.swing.KeyStroke;
-import javax.swing.SpinnerNumberModel;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -69,18 +59,6 @@ public class AddOptionPanel extends JPanel implements ActionListener {
     private JButton addOptionButton;
     /** Current add option input. */
     private Component addInputCurrent;
-    /** Add option colour chooser. */
-    private ColourChooser addInputColourChooser;
-    /** Add option textfield. */
-    private JTextField addInputText;
-    /** Add option checkbox. */
-    private JCheckBox addInputCheckbox;
-    /** Add option checkbox. */
-    private JSpinner addInputSpinner;
-    /** Add option font picker. */
-    private FontPicker addInputFontPicker;
-    /** Add option combobox. */
-    private JComboBox addInputComboBox;
     /** Add option checkbox. */
     private JLabel addInputNone;
 
@@ -108,15 +86,7 @@ public class AddOptionPanel extends JPanel implements ActionListener {
 
         addOptionComboBox.setRenderer(new AddOptionCellRenderer(parent));
 
-        addInputColourChooser = new ColourChooser();
-        addInputText = new JTextField();
-        addInputCheckbox = new JCheckBox();
-        addInputCheckbox.setOpaque(UIUtilities.getTabbedPaneOpaque());
-        addInputSpinner = new JSpinner(new SpinnerNumberModel());
         addInputNone = new JLabel("");
-        addInputFontPicker = new FontPicker("Dialog");
-        addInputComboBox = new JComboBox(new DefaultComboBoxModel());
-        addInputComboBox.setPrototypeDisplayValue("test");
         addInputCurrent = addInputNone;
 
         addOptionComboBox.setEnabled(false);
@@ -126,21 +96,10 @@ public class AddOptionPanel extends JPanel implements ActionListener {
     /** Initialises listeners. */
     private void initListeners() {
         //Only fire events on selection not on highlight
-        addOptionComboBox.putClientProperty("JComboBox.isTableCellEditor", Boolean.TRUE);
+        addOptionComboBox.putClientProperty("JComboBox.isTableCellEditor",
+                Boolean.TRUE);
         addOptionComboBox.addActionListener(this);
         addOptionButton.addActionListener(this);
-
-        addInputText.getActionMap().put("enter", new AbstractAction() {
-
-            private static final long serialVersionUID = 2;
-
-            /** {@inheritDoc} */
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                addOptionButton.doClick();
-            }
-        });
-        addInputText.getInputMap().put(KeyStroke.getKeyStroke("ENTER"), "enter");
     }
 
     /** Lays out the components. */
@@ -161,15 +120,9 @@ public class AddOptionPanel extends JPanel implements ActionListener {
      *
      * @param optionName Option name
      */
-    protected void addOption(final String optionName) {
-        ((DefaultComboBoxModel) addOptionComboBox.getModel()).addElement(
-                optionName);
-        if ("channel.encoding".equals(optionName)) {
-            ((DefaultComboBoxModel) addInputComboBox.getModel()).removeAllElements();
-            for (Object argument : Charset.availableCharsets().keySet()) {
-                ((DefaultComboBoxModel) addInputComboBox.getModel()).addElement(argument);
-            }
-        }
+    protected void addOption(final JComponent setting) {
+        ((DefaultComboBoxModel) addOptionComboBox.getModel())
+                .addElement(setting);
         addOptionButton.setEnabled(true);
         addOptionComboBox.setEnabled(true);
     }
@@ -179,9 +132,9 @@ public class AddOptionPanel extends JPanel implements ActionListener {
      *
      * @param optionName Option name
      */
-    protected void delOption(final String optionName) {
-        ((DefaultComboBoxModel) addOptionComboBox.getModel()).removeElement(
-                optionName);
+    protected void delOption(final JComponent setting) {
+        ((DefaultComboBoxModel) addOptionComboBox.getModel())
+                .removeElement(setting);
         if (addOptionComboBox.getModel().getSize() == 0) {
             addOptionComboBox.setEnabled(false);
             addOptionButton.setEnabled(false);
@@ -200,37 +153,11 @@ public class AddOptionPanel extends JPanel implements ActionListener {
      *
      * @param type Option type
      */
-    private void switchInputField(final PreferencesType type) {
-        if (type == null) {
+    private void switchInputField(final JComponent setting) {
+        if (setting == null) {
             addInputCurrent = addInputNone;
         } else {
-            switch (type) {
-                case TEXT:
-                    addInputText.setText("");
-                    addInputCurrent = addInputText;
-                    break;
-                case BOOLEAN:
-                    addInputCheckbox.setSelected(false);
-                    addInputCurrent = addInputCheckbox;
-                    break;
-                case COLOUR:
-                    addInputColourChooser.clearColour();
-                    addInputCurrent = addInputColourChooser;
-                    break;
-                case INTEGER:
-                    addInputSpinner.setValue(0);
-                    addInputCurrent = addInputSpinner;
-                    break;
-                case FONT:
-                    addInputCurrent = addInputFontPicker;
-                    break;
-                case MULTICHOICE:
-                    addInputCurrent = addInputComboBox;
-                    break;
-                default:
-                    addInputCurrent = addInputNone;
-                    break;
-            }
+            addInputCurrent = setting;
         }
 
         layoutComponents();
@@ -250,53 +177,10 @@ public class AddOptionPanel extends JPanel implements ActionListener {
                 addOptionComboBox.setEnabled(false);
                 addOptionButton.setEnabled(false);
             }
-            switchInputField(parent.getOptionType(
-                    (String) addOptionComboBox.getSelectedItem()));
+            switchInputField(((JComponent) addOptionComboBox.getSelectedItem()));
         } else if (e.getSource() == addOptionButton) {
-            final PreferencesType type = parent.getOptionType(
-                    (String) addOptionComboBox.getSelectedItem());
-
-            switch (type) {
-                case TEXT:
-                    parent.addCurrentOption(
-                            (String) addOptionComboBox.getSelectedItem(),
-                            type,
-                            addInputText.getText());
-                    break;
-                case BOOLEAN:
-                    parent.addCurrentOption(
-                            (String) addOptionComboBox.getSelectedItem(),
-                            type,
-                            String.valueOf(addInputCheckbox.isSelected()));
-                    break;
-                case COLOUR:
-                    parent.addCurrentOption(
-                            (String) addOptionComboBox.getSelectedItem(),
-                            type,
-                            addInputColourChooser.getColour());
-                    break;
-                case INTEGER:
-                    parent.addCurrentOption(
-                            (String) addOptionComboBox.getSelectedItem(),
-                            type,
-                            addInputSpinner.getValue().toString());
-                    break;
-                case FONT:
-                    parent.addCurrentOption(
-                            (String) addOptionComboBox.getSelectedItem(),
-                            type,
-                            ((Font) addInputFontPicker.getSelectedItem()).getFamily());
-                    break;
-                case MULTICHOICE:
-                    parent.addCurrentOption((String) addOptionComboBox.getSelectedItem(),
-                            type,
-                            (String) addInputComboBox.getSelectedItem());
-                    break;
-                default:
-                    break;
-            }
-
-            delOption((String) addOptionComboBox.getSelectedItem());
+            parent.addCurrentOption((JComponent) addOptionComboBox.getSelectedItem());
+            delOption((JComponent) addOptionComboBox.getSelectedItem());
         }
     }
 
