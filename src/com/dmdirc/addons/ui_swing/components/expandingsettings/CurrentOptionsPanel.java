@@ -23,36 +23,25 @@
 package com.dmdirc.addons.ui_swing.components.expandingsettings;
 
 import com.dmdirc.addons.ui_swing.UIUtilities;
-import com.dmdirc.addons.ui_swing.components.FontPicker;
 import com.dmdirc.addons.ui_swing.components.ImageButton;
-import com.dmdirc.addons.ui_swing.components.colours.ColourChooser;
-import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.ui.IconManager;
 
-import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.nio.charset.Charset;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
+import java.util.ArrayList;
+import java.util.List;
 
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JSpinner;
-import javax.swing.JTextField;
-import javax.swing.SpinnerNumberModel;
 
 import net.miginfocom.swing.MigLayout;
 
 /**
  * Current options panel.
  */
-public final class CurrentOptionsPanel extends JPanel implements ActionListener {
+public final class CurrentOptionsPanel extends JPanel implements
+        ActionListener {
 
     /**
      * A version number for this class. It should be changed whenever the class
@@ -60,22 +49,10 @@ public final class CurrentOptionsPanel extends JPanel implements ActionListener 
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 2;
-
     /** Parent settings panel. */
     private final SettingsPanel parent;
-
-    /** config option -> text fields. */
-    private Map<String, JTextField> textFields;
-    /** config option -> checkboxes. */
-    private Map<String, JCheckBox> checkBoxes;
-    /** config option -> colours. */
-    private Map<String, ColourChooser> colours;
-    /** config option -> spinners. */
-    private Map<String, JSpinner> spinners;
-    /** config option -> spinners. */
-    private Map<String, FontPicker> fonts;
-    /** config option -> comboboxes. */
-    private Map<String, JComboBox> comboboxes;
+    /** Curent options to display. */
+    private final List<JComponent> settings;
 
     /**
      * Creates a new instance of CurrentOptionsPanel.
@@ -88,27 +65,12 @@ public final class CurrentOptionsPanel extends JPanel implements ActionListener 
         this.parent = parent;
 
         this.setOpaque(UIUtilities.getTabbedPaneOpaque());
-        initComponents();
-    }
-
-    /** Initialises the components. */
-    private void initComponents() {
-        textFields = new HashMap<String, JTextField>();
-        checkBoxes = new HashMap<String, JCheckBox>();
-        colours = new HashMap<String, ColourChooser>();
-        spinners = new HashMap<String, JSpinner>();
-        fonts = new HashMap<String, FontPicker>();
-        comboboxes = new HashMap<String, JComboBox>();
+        settings = new ArrayList<JComponent>();
     }
 
     /** Clears all the current options. */
     protected void clearOptions() {
-        textFields.clear();
-        checkBoxes.clear();
-        colours.clear();
-        spinners.clear();
-        fonts.clear();
-        comboboxes.clear();
+        settings.clear();
         populateCurrentSettings();
     }
 
@@ -119,36 +81,8 @@ public final class CurrentOptionsPanel extends JPanel implements ActionListener 
      * @param type Option type
      * @param value Option value
      */
-    protected void addOption(final String optionName,
-            final PreferencesType type, final String value) {
-        switch (type) {
-            case TEXT:
-                textFields.put(optionName, new JTextField(value));
-                break;
-            case BOOLEAN:
-                checkBoxes.put(optionName, new JCheckBox("", Boolean.parseBoolean(value)));
-                break;
-            case COLOUR:
-                colours.put(optionName, new ColourChooser(value, true, true));
-                break;
-            case INTEGER:
-                spinners.put(optionName, new JSpinner(new SpinnerNumberModel()));
-                spinners.get(optionName).setValue(Integer.parseInt(value));
-                break;
-            case FONT:
-                fonts.put(optionName, new FontPicker(value));
-                break;
-            case MULTICHOICE:
-                if ("channel.encoding".equals(optionName)) {
-                    comboboxes.put(optionName, new JComboBox(
-                            new DefaultComboBoxModel(Charset.availableCharsets()
-                            .keySet().toArray())));
-                    comboboxes.get(optionName).setSelectedItem(value);
-                }
-                break;
-            default:
-                throw new IllegalArgumentException("Illegal Type: " + type);
-        }
+    protected void addOption(final JComponent setting) {
+        settings.add(setting);
 
         populateCurrentSettings();
     }
@@ -159,83 +93,9 @@ public final class CurrentOptionsPanel extends JPanel implements ActionListener 
      * @param optionName Option to delete
      * @param type Option type
      */
-    protected void delOption(final String optionName,
-            final PreferencesType type) {
-        switch (type) {
-            case TEXT:
-                textFields.remove(optionName);
-                break;
-            case BOOLEAN:
-                checkBoxes.remove(optionName);
-                break;
-            case COLOUR:
-                colours.remove(optionName);
-                break;
-            case INTEGER:
-                spinners.remove(optionName);
-                break;
-            case FONT:
-                fonts.remove(optionName);
-                break;
-            case MULTICHOICE:
-                comboboxes.remove(optionName);
-                break;
-            default:
-                throw new IllegalArgumentException("Illegal Type: " + type);
-        }
-
+    protected void delOption(final JComponent setting) {
+        settings.remove(setting);
         populateCurrentSettings();
-    }
-
-    /**
-     * Retrives an options value.
-     *
-     * @param optionName Option to delete
-     * @param type Option type
-     *
-     * @return Option value or a blank string
-     */
-    public String getOption(final String optionName, final PreferencesType type) {
-        String returnValue = null;
-        switch (type) {
-            case TEXT:
-                if (textFields.containsKey(optionName)) {
-                    returnValue =  textFields.get(optionName).getText();
-                }
-                break;
-            case BOOLEAN:
-                if (checkBoxes.containsKey(optionName)) {
-                    if (checkBoxes.get(optionName).isSelected()) {
-                        returnValue = "true";
-                    } else {
-                        returnValue = "false";
-                    }
-                }
-                break;
-            case COLOUR:
-                if (colours.containsKey(optionName)) {
-                    returnValue = colours.get(optionName).getColour();
-                }
-                break;
-            case INTEGER:
-                if (spinners.containsKey(optionName)) {
-                    returnValue = spinners.get(optionName).getValue().toString();
-                }
-                break;
-            case FONT:
-                if (fonts.containsKey(optionName)) {
-                    returnValue = ((Font) fonts.get(optionName).getSelectedItem()).getFamily();
-                }
-                break;
-            case MULTICHOICE:
-                if (comboboxes.containsKey(optionName)) {
-                    returnValue = (String) ((DefaultComboBoxModel) comboboxes.get(optionName).getModel()).getSelectedItem();
-                }
-                break;
-            default:
-                throw new IllegalArgumentException("Illegal Type: " + type);
-        }
-        return returnValue;
     }
 
     /**
@@ -245,21 +105,22 @@ public final class CurrentOptionsPanel extends JPanel implements ActionListener 
      * @param panel parent panel
      * @param component Option component to add
      */
-    private void addCurrentOption(final String configName, final String displayName,
-            final JPanel panel, final JComponent component) {
+    private void addCurrentOption(final JComponent component) {
         final JLabel label = new JLabel();
-        final ImageButton button = new ImageButton(configName,
+        final ImageButton<JComponent> button = new ImageButton(
+                component.getName(),
                 IconManager.getIconManager().getIcon("close-inactive"),
                 IconManager.getIconManager().getIcon("close-active"));
+        button.setObject(component);
 
-        label.setText(displayName + ": ");
+        label.setText(component.getName() + ": ");
         label.setLabelFor(component);
 
         button.addActionListener(this);
 
-        panel.add(label);
-        panel.add(component, "growx, pushx");
-        panel.add(button, "wrap");
+        add(label);
+        add(component, "");
+        add(button, "wrap");
     }
 
 
@@ -267,44 +128,12 @@ public final class CurrentOptionsPanel extends JPanel implements ActionListener 
     protected void populateCurrentSettings() {
         setVisible(false);
 
-        setLayout(new MigLayout("fillx, aligny top"));
+        setLayout(new MigLayout("fillx, aligny top, wmax 100%"));
 
         removeAll();
 
-        for (Entry<String, JTextField> entry : textFields.entrySet()) {
-            addCurrentOption(entry.getKey(),
-                    parent.getOptionName(entry.getKey()),
-                    this, entry.getValue());
-        }
-
-        for (Entry<String, JCheckBox> entry : checkBoxes.entrySet()) {
-            addCurrentOption(entry.getKey(),
-                    parent.getOptionName(entry.getKey()),
-                    this, entry.getValue());
-        }
-
-        for (Entry<String, ColourChooser> entry : colours.entrySet()) {
-            addCurrentOption(entry.getKey(),
-                    parent.getOptionName(entry.getKey()),
-                    this, entry.getValue());
-        }
-
-        for (Entry<String, JSpinner> entry : spinners.entrySet()) {
-            addCurrentOption(entry.getKey(),
-                    parent.getOptionName(entry.getKey()),
-                    this, entry.getValue());
-        }
-
-        for (Entry<String, FontPicker> entry : fonts.entrySet()) {
-            addCurrentOption(entry.getKey(),
-                    parent.getOptionName(entry.getKey()),
-                    this, entry.getValue());
-        }
-
-        for (Entry<String, JComboBox> entry : comboboxes.entrySet()) {
-            addCurrentOption(entry.getKey(),
-                    parent.getOptionName(entry.getKey()),
-                    this, entry.getValue());
+        for (JComponent setting : settings) {
+            addCurrentOption(setting);
         }
 
         setVisible(true);
@@ -317,8 +146,10 @@ public final class CurrentOptionsPanel extends JPanel implements ActionListener 
      */
     @Override
     public void actionPerformed(final ActionEvent e) {
-        delOption(e.getActionCommand(), parent.getOptionType(e.getActionCommand()));
-        parent.addAddableOption(e.getActionCommand());
+        final JComponent setting = ((ImageButton<JComponent>)
+                e.getSource()).getObject();
+        delOption(setting);
+        parent.addAddableOption(setting);
     }
 
 }
