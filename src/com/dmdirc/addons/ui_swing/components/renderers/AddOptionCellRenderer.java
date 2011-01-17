@@ -23,10 +23,12 @@
 package com.dmdirc.addons.ui_swing.components.renderers;
 
 import com.dmdirc.addons.ui_swing.components.expandingsettings.SettingsPanel;
+import com.dmdirc.config.prefs.PreferencesSetting;
 
 import java.awt.Component;
 
 import javax.swing.DefaultListCellRenderer;
+import javax.swing.JComponent;
 import javax.swing.JList;
 
 /**
@@ -40,19 +42,18 @@ public final class AddOptionCellRenderer extends DefaultListCellRenderer {
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 1;
-    
-    /** Settings panel parent. */
-    private final SettingsPanel parent;
-    
+    /** Parent settings panel. */
+    private final SettingsPanel settingsPanel;
+
     /**
-     * Instantiates the renderer.
+     * Creates a new add option cell renderer.
      *
-     * @param parent Parent settings panel
+     * @param settingsPanel Parent settings panel
      */
-    public AddOptionCellRenderer(final SettingsPanel parent) {
+    public AddOptionCellRenderer(final SettingsPanel settingsPanel) {
         super();
         
-        this.parent = parent;
+        this.settingsPanel = settingsPanel;
     }
     
     /** {@inheritDoc} */
@@ -62,13 +63,21 @@ public final class AddOptionCellRenderer extends DefaultListCellRenderer {
             final Object value,
             final int index,
             final boolean isSelected,
-            final boolean cellHasFocus) {
-        final String selected = (String) value;
-        
+            final boolean cellHasFocus) {       
         super.getListCellRendererComponent(list, value, index, isSelected,
                 cellHasFocus);
-        
-        setText(parent.getOptionName(selected));
+
+        final PreferencesSetting setting;
+        if (value instanceof JComponent) {
+            setting = settingsPanel.getSettingForComponent((JComponent) value);
+        } else {
+            setting = null;
+        }
+        if (setting == null) {
+           setText(value.toString());
+        } else {
+            setText(setting.getTitle());
+        }
         
         return this;
     }

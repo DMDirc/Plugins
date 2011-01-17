@@ -30,9 +30,11 @@ import javax.swing.Icon;
 import javax.swing.JButton;
 
 /**
- * Image button.
+ * Image button, also has the ability to hold an object.
+ *
+ * <T> Type of object the button holds.
  */
-public class ImageButton extends JButton {
+public class ImageButton<T> extends JButton {
 
     /**
      * A version number for this class. It should be changed whenever the class
@@ -40,6 +42,8 @@ public class ImageButton extends JButton {
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 2;
+    /** Button object. */
+    private T object;
 
     /**
      * Creates a new instance of ImageButton.
@@ -94,5 +98,23 @@ public class ImageButton extends JButton {
         setIcon(icon);
         setRolloverIcon(icon);
         setPressedIcon(icon);
+    }
+
+    /**
+     * Sets the object for this button.
+     *
+     * @param object Object to hold
+     */
+    public void setObject(final T object) {
+        this.object = object;
+    }
+
+    /**
+     * Get's this buttons object.
+     *
+     * @return This button's object
+     */
+    public T getObject() {
+        return object;
     }
 }
