@@ -28,6 +28,7 @@ import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.parser.interfaces.Parser;
 
 import java.awt.Insets;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeSet;
@@ -123,7 +124,23 @@ public final class UserModesPane extends JPanel {
     /** Lays out the components. */
     private void layoutComponents() {
         final JPanel userModes = new JPanel(new MigLayout("wrap 2, fillx"));
-        final TreeSet<String> modes = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
+        final TreeSet<String> modes = new TreeSet<String>(new Comparator<String>(){
+
+            /** {@inheritDoc} */
+            @Override
+            public int compare(final String o1, final String o2) {
+                final int insensitiveResult = String.CASE_INSENSITIVE_ORDER.compare(o1, o2);
+
+                if (insensitiveResult == 0) {
+                    // If they only differ by case we still need to make them
+                    // differ, otherwise we only end up with one of them...
+                    return o1.compareTo(o2);
+                }
+
+                return insensitiveResult;
+            }
+
+        });
 
         modes.addAll(modeCheckBoxes.keySet());
         for(String mode : modes) {
