@@ -29,10 +29,10 @@ import com.dmdirc.addons.ui_swing.actions.CopyAction;
 import com.dmdirc.addons.ui_swing.actions.CutAction;
 import com.dmdirc.addons.ui_swing.actions.InputFieldCopyAction;
 import com.dmdirc.addons.ui_swing.actions.InputTextFramePasteAction;
+import com.dmdirc.addons.ui_swing.components.AwayLabel;
 import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputField;
 import com.dmdirc.addons.ui_swing.dialogs.paste.PasteDialog;
 import com.dmdirc.config.ConfigManager;
-import com.dmdirc.interfaces.AwayStateListener;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.ui.input.InputHandler;
@@ -48,7 +48,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.IOException;
 
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.KeyStroke;
@@ -59,18 +58,16 @@ import net.miginfocom.layout.PlatformDefaults;
  * Frame with an input field.
  */
 public abstract class InputTextFrame extends TextFrame implements InputWindow,
-        AwayStateListener, MouseListener {
+        MouseListener {
 
     /**
      * A version number for this class. It should be changed whenever the class
      * structure is changed (or anything else that would prevent serialized
      * objects being unserialized with the new class).
      */
-    private static final long serialVersionUID = 2;
+    private static final long serialVersionUID = 3;
     /** Input field panel. */
     protected JPanel inputPanel;
-    /** Away label. */
-    protected JLabel awayLabel;
     /** The InputHandler for our input field. */
     private InputHandler inputHandler;
     /** Frame input field. */
@@ -79,8 +76,8 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
     private JPopupMenu inputFieldPopup;
     /** Nick popup menu. */
     protected JPopupMenu nickPopup;
-    /** Away indicator. */
-    private boolean useAwayIndicator;
+    /** Away label. */
+    private AwayLabel awayLabel;
 
     /**
      * Creates a new instance of InputFrame.
@@ -108,14 +105,9 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
                     "ui", "inputforegroundcolour",
                     "ui", "foregroundcolour"));
         }
-        useAwayIndicator = config.getOptionBool("ui", "awayindicator");
 
         config.addChangeListener("ui", "inputforegroundcolour", this);
         config.addChangeListener("ui", "inputbackgroundcolour", this);
-        config.addChangeListener("ui", "awayindicator", this);
-        if (getContainer().getServer() != null) {
-            getContainer().getServer().addAwayStateListener(this);
-        }
 
         getInputField().getTextField().getInputMap().put(KeyStroke.getKeyStroke(
                 KeyEvent.VK_C, UIUtilities.getCtrlMask()), "textpaneCopy");
@@ -138,10 +130,6 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
         initPopupMenu();
         nickPopup = new JPopupMenu();
 
-        awayLabel = new JLabel();
-        awayLabel.setText("(away)");
-        awayLabel.setVisible(false);
-
         inputPanel = new JPanel(new BorderLayout(
                 (int) PlatformDefaults.getUnitValueX("related").getValue(),
                 (int) PlatformDefaults.getUnitValueX("related").getValue()));
@@ -160,6 +148,8 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
         inputFieldPopup.add(new InputTextFramePasteAction(this));
         inputFieldPopup.setOpaque(true);
         inputFieldPopup.setLightWeightPopupEnabled(true);
+
+        awayLabel = new AwayLabel(getContainer());
     }
 
     /**
@@ -171,11 +161,9 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
         getInputField().getActionMap().put("paste",
                 new InputTextFramePasteAction(this));
         getInputField().getInputMap(WHEN_FOCUSED).put(KeyStroke.getKeyStroke(
-                "shift INSERT"),
-                "paste");
+                "shift INSERT"), "paste");
         getInputField().getInputMap(WHEN_FOCUSED).put(KeyStroke.getKeyStroke(
-                "ctrl V"),
-                "paste");
+                "ctrl V"), "paste");
     }
 
     /**
@@ -228,15 +216,6 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
      */
     protected final void setInputField(final SwingInputField newInputField) {
         this.inputField = newInputField;
-    }
-
-    /**
-     * Returns the away label for this server connection.
-     *
-     * @return JLabel away label
-     */
-    public JLabel getAwayLabel() {
-        return awayLabel;
     }
 
     /**
@@ -393,32 +372,21 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
     public void configChanged(final String domain, final String key) {
         super.configChanged(domain, key);
 
-        if ("ui".equals(domain) && getContainer().getConfigManager() != null) {
-            if (getInputField() != null && !UIUtilities.isGTKUI()) {
-                if ("inputbackgroundcolour".equals(key)
-                        || "backgroundcolour".equals(key)) {
-                    getInputField().setBackground(getContainer().
-                            getConfigManager().getOptionColour(
-                            "ui", "inputbackgroundcolour",
-                            "ui", "backgroundcolour"));
-                } else if ("inputforegroundcolour".equals(key)
-                        || "foregroundcolour".equals(key)) {
-                    getInputField().setForeground(getContainer().
-                            getConfigManager().getOptionColour(
-                            "ui", "inputforegroundcolour",
-                            "ui", "foregroundcolour"));
-                    getInputField().setCaretColor(getContainer().
-                            getConfigManager().getOptionColour(
-                            "ui", "inputforegroundcolour",
-                            "ui", "foregroundcolour"));
-                }
-            }
-            if ("awayindicator".equals(key)) {
-                useAwayIndicator = getContainer().getConfigManager().
-                        getOptionBool("ui", "awayindicator");
-                if (!useAwayIndicator) {
-                    awayLabel.setVisible(false);
-                }
+        if ("ui".equals(domain) && getContainer().getConfigManager() != null 
+                && getInputField() != null && !UIUtilities.isGTKUI()) {
+            if ("inputbackgroundcolour".equals(key)
+                    || "backgroundcolour".equals(key)) {
+                getInputField().setBackground(getContainer().getConfigManager().
+                        getOptionColour("ui", "inputbackgroundcolour",
+                        "ui", "backgroundcolour"));
+            } else if ("inputforegroundcolour".equals(key)
+                    || "foregroundcolour".equals(key)) {
+                getInputField().setForeground(getContainer().getConfigManager()
+                        .getOptionColour("ui", "inputforegroundcolour",
+                        "ui", "foregroundcolour"));
+                getInputField().setCaretColor(getContainer().getConfigManager()
+                        .getOptionColour("ui", "inputforegroundcolour",
+                        "ui", "foregroundcolour"));
             }
         }
     }
@@ -432,51 +400,16 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
 
     /** {@inheritDoc} */
     @Override
-    public void onAway(final String reason) {
-        UIUtilities.invokeLater(new Runnable() {
-
-            /** {@inheritDoc} */
-            @Override
-            public void run() {
-                if (useAwayIndicator) {
-                    awayLabel.setVisible(true);
-                }
-            }
-        });
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onBack() {
-        UIUtilities.invokeLater(new Runnable() {
-
-            /** {@inheritDoc} */
-            @Override
-            public void run() {
-                if (useAwayIndicator) {
-                    awayLabel.setVisible(false);
-                }
-            }
-        });
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public void close() {
         super.close();
-
-        if (getContainer() != null && getContainer().getServer() != null) {
-            getContainer().getServer().removeAwayStateListener(this);
-        }
+         //TODO Remove when close listeners are added
+        awayLabel.processEvent(null, null, (Object) null);
     }
 
     /** {@inheritDoc} */
     @Override
     public void activateFrame() {
         super.activateFrame();
-        if (useAwayIndicator && getContainer().getServer() != null) {
-            awayLabel.setVisible(getContainer().getServer().isAway());
-        }
         inputField.requestFocusInWindow();
     }
 }
