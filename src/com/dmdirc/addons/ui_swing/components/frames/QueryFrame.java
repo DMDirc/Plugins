@@ -25,7 +25,6 @@ import com.dmdirc.Query;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputHandler;
 import com.dmdirc.commandparser.PopupType;
-import com.dmdirc.commandparser.parsers.CommandParser;
 import com.dmdirc.ui.interfaces.QueryWindow;
 
 import javax.swing.JPopupMenu;
@@ -57,13 +56,6 @@ public final class QueryFrame extends InputTextFrame implements QueryWindow {
 
         setInputHandler(new SwingInputHandler(getInputField(),
                 owner.getCommandParser(), this));
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    @Deprecated
-    public CommandParser getCommandParser() {
-        return getContainer().getCommandParser();
     }
 
     /**
