@@ -62,15 +62,6 @@ public class CustomInputFrame extends InputTextFrame {
         initComponents();
     }
 
-    /** {@inheritDoc} */
-    @Override
-    @Deprecated
-    @SuppressWarnings("unchecked")
-    public final CommandParser getCommandParser() {
-        return ((WritableFrameContainer<? extends InputWindow>) frameParent)
-                .getCommandParser();
-    }
-
     /**
      * Initialises components in this frame.
      */

@@ -28,7 +28,6 @@ import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputHandler;
 import com.dmdirc.addons.ui_swing.dialogs.serversetting.ServerSettingsDialog;
 import com.dmdirc.commandparser.PopupType;
-import com.dmdirc.commandparser.parsers.CommandParser;
 import com.dmdirc.ui.interfaces.ServerWindow;
 
 import java.awt.event.ActionEvent;
@@ -67,13 +66,6 @@ public final class ServerFrame extends InputTextFrame implements ServerWindow,
 
         setInputHandler(new SwingInputHandler(getInputField(),
                 owner.getCommandParser(), this));
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    @Deprecated
-    public CommandParser getCommandParser() {
-        return getContainer().getCommandParser();
     }
 
     /**
