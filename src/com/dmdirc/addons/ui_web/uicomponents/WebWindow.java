@@ -27,17 +27,14 @@ import com.dmdirc.addons.ui_web.DynamicRequestHandler;
 import com.dmdirc.addons.ui_web.Event;
 import com.dmdirc.addons.ui_web.Message;
 import com.dmdirc.addons.ui_web.WebInterfaceUI;
-import com.dmdirc.config.ConfigManager;
 import com.dmdirc.interfaces.FrameInfoListener;
 import com.dmdirc.ui.interfaces.UIController;
 import com.dmdirc.ui.interfaces.Window;
 import com.dmdirc.ui.messages.IRCDocumentListener;
 import com.dmdirc.ui.messages.IRCTextAttribute;
-import com.dmdirc.util.StringTranscoder;
 
 import java.awt.Color;
 import java.awt.font.TextAttribute;
-import java.nio.charset.Charset;
 import java.text.AttributedCharacterIterator;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -109,91 +106,14 @@ public class WebWindow implements Window, IRCDocumentListener,
 
     /** {@inheritDoc} */
     @Override
-    @Deprecated
-    public void addLine(final String messageType, final Object... args) {
-        parent.addLine(messageType, args);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    @Deprecated
-    public void addLine(final StringBuffer messageType, final Object... args) {
-        parent.addLine(messageType, args);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    @Deprecated
-    public void addLine(final String line, final boolean timestamp) {
-        parent.addLine(line, timestamp);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    @Deprecated
-    public void clear() {
-        // Do nothing
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    @Deprecated
-    public ConfigManager getConfigManager() {
-        return parent.getConfigManager();
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public FrameContainer<?> getContainer() {
         return parent;
     }
 
     /** {@inheritDoc} */
     @Override
-    @Deprecated
-    public boolean isVisible() {
-        return true;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    @Deprecated
-    public void setVisible(final boolean isVisible) {
-        // Do nothing
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    @Deprecated
-    public String getTitle() {
-        return title;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    @Deprecated
-    public boolean isMaximum() {
-        return true;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    @Deprecated
-    public void setTitle(final String title) {
-        this.title = title;
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public void open() {
         // Do nothing
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    @Deprecated
-    public StringTranscoder getTranscoder() {
-        return new StringTranscoder(Charset.defaultCharset());
     }
 
     /** {@inheritDoc} */
@@ -310,34 +230,6 @@ public class WebWindow implements Window, IRCDocumentListener,
 
     /** {@inheritDoc} */
     @Override
-    @Deprecated
-    public void restore() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    @Deprecated
-    public void maximise() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    @Deprecated
-    public void toggleMaximise() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    @Deprecated
-    public void minimise() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public void activateFrame() {
         // No.
     }
@@ -351,17 +243,10 @@ public class WebWindow implements Window, IRCDocumentListener,
 
     /** {@inheritDoc} */
     @Override
-    @Deprecated
-    public void lineAdded(final int line, final int size) {
-        DynamicRequestHandler.addEvent(new Event("lineadded", new Message(
-                style(parent.getDocument().getStyledLine(line)), this)));
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public void linesAdded(final int line, final int length, final int size) {
         for (int i = 0; i < length; i++) {
-            lineAdded(line + i, size);
+            DynamicRequestHandler.addEvent(new Event("lineadded", new Message(
+                style(parent.getDocument().getStyledLine(line)), this)));
         }
     }
 

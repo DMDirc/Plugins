@@ -59,13 +59,6 @@ public final class QueryFrame extends InputTextFrame implements QueryWindow {
                 owner.getCommandParser(), this));
     }
 
-    /** {@inheritDoc} */
-    @Override
-    @Deprecated
-    public CommandParser getCommandParser() {
-        return getContainer().getCommandParser();
-    }
-
     /**
      * Initialises components in this frame.
      */

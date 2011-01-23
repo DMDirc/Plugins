@@ -76,8 +76,8 @@ public class NowPlayingPlugin extends Plugin implements ActionListener  {
 
         loadSettings();
 
-        ActionManager.addListener(this, CoreActionType.PLUGIN_LOADED,
-                CoreActionType.PLUGIN_UNLOADED);
+        ActionManager.getActionManager().registerListener(this,
+                CoreActionType.PLUGIN_LOADED, CoreActionType.PLUGIN_UNLOADED);
 
         for (PluginInfo target : PluginManager.getPluginManager().getPluginInfos()) {
             if (target.isLoaded()) {
@@ -95,7 +95,7 @@ public class NowPlayingPlugin extends Plugin implements ActionListener  {
         sources.clear();
         managers.clear();
 
-        ActionManager.removeListener(this);
+        ActionManager.getActionManager().unregisterListener(this);
 
         CommandManager.unregisterCommand(command);
     }

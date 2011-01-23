@@ -57,13 +57,6 @@ public class WebInputWindow extends WebWindow implements InputWindow {
 
     /** {@inheritDoc} */
     @Override
-    @Deprecated
-    public CommandParser getCommandParser() {
-        return getContainer().getCommandParser();
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public InputHandler getInputHandler() {
         return inputhandler;
     }
@@ -98,13 +91,6 @@ public class WebInputWindow extends WebWindow implements InputWindow {
         field.setSelEnd(sel2);
 
         return ih;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    @Deprecated
-    public void setAwayIndicator(final boolean isAway) {
-        // Do nothing
     }
 
     /** {@inheritDoc} */

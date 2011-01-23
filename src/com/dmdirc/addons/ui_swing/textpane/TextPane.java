@@ -468,13 +468,6 @@ public final class TextPane extends JComponent implements MouseWheelListener,
 
     /** {@inheritDoc}. */
     @Override
-    @Deprecated
-    public void lineAdded(final int line, final int size) {
-        // DO NOTHING, MWAHAHAHAHAHA
-    }
-
-    /** {@inheritDoc}. */
-    @Override
     public void trimmed(final int newSize, final int numTrimmed) {
         UIUtilities.invokeLater(new Runnable() {
 

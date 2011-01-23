@@ -157,8 +157,9 @@ public class ActionConditionEditorPanel extends JPanel implements
         ((DefaultComboBoxModel) components.getModel()).removeAllElements();
 
         if (condition.getArg() != -1) {
-            for (ActionComponent comp : ActionManager.getCompatibleComponents(
-                    trigger.getType().getArgTypes()[condition.getArg()])) {
+            for (ActionComponent comp : ActionManager.getActionManager()
+                    .findCompatibleComponents(trigger.getType()
+                    .getArgTypes()[condition.getArg()])) {
                 ((DefaultComboBoxModel) components.getModel()).addElement(comp);
             }
         }
@@ -170,8 +171,8 @@ public class ActionConditionEditorPanel extends JPanel implements
         ((DefaultComboBoxModel) comparisons.getModel()).removeAllElements();
 
         if (condition.getComponent() != null) {
-            for (ActionComparison comp : ActionManager.getCompatibleComparisons(
-                    condition.getComponent().getType())) {
+            for (ActionComparison comp : ActionManager.getActionManager()
+                    .findCompatibleComparisons(condition.getComponent().getType())) {
                 ((DefaultComboBoxModel) comparisons.getModel())
                         .addElement(comp);
             }

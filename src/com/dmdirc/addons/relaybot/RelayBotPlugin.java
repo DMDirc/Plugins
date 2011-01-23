@@ -68,11 +68,16 @@ public class RelayBotPlugin extends Plugin implements ActionListener, ConfigChan
     /** {@inheritDoc} */
     @Override
     public void onLoad() {
-        ActionManager.addListener(this, CoreActionType.CHANNEL_OPENED);
-        ActionManager.addListener(this, CoreActionType.CHANNEL_CLOSED);
-        ActionManager.addListener(this, CoreActionType.SERVER_CONNECTED);
-        ActionManager.addListener(this, CoreActionType.SERVER_DISCONNECTED);
-        ActionManager.addListener(this, CoreActionType.CHANNEL_QUIT);
+        ActionManager.getActionManager().registerListener(this,
+                CoreActionType.CHANNEL_OPENED);
+        ActionManager.getActionManager().registerListener(this,
+                CoreActionType.CHANNEL_CLOSED);
+        ActionManager.getActionManager().registerListener(this,
+                CoreActionType.SERVER_CONNECTED);
+        ActionManager.getActionManager().registerListener(this,
+                CoreActionType.SERVER_DISCONNECTED);
+        ActionManager.getActionManager().registerListener(this,
+                CoreActionType.CHANNEL_QUIT);
         IdentityManager.getGlobalConfig().addChangeListener(getDomain(), this);
 
         // Add ourself to all currently known channels that we should be
@@ -91,7 +96,7 @@ public class RelayBotPlugin extends Plugin implements ActionListener, ConfigChan
     /** {@inheritDoc} */
     @Override
     public void onUnload() {
-        ActionManager.removeListener(this);
+        ActionManager.getActionManager().unregisterListener(this);
 
         // Remove RelayCallbackManagers
         for (Server server : ServerManager.getServerManager().getServers()) {

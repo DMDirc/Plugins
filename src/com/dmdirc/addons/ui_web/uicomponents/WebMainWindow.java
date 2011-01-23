@@ -45,21 +45,7 @@ public class WebMainWindow implements MainWindow {
         //TODO FIXME
         throw new UnsupportedOperationException("Not supported yet.");
     }
-
-    /** {@inheritDoc} */
-    @Override
-    public void setMaximised(final boolean max) {
-        //TODO FIXME
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public boolean getMaximised() {
-        //TODO FIXME
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
+    
     /** {@inheritDoc} */
     @Override
     public String getTitlePrefix() {

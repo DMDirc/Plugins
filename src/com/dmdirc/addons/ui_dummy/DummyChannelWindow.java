@@ -23,18 +23,11 @@
 package com.dmdirc.addons.ui_dummy;
 
 import com.dmdirc.Channel;
-import com.dmdirc.parser.interfaces.ChannelClientInfo;
-import com.dmdirc.ui.interfaces.ChannelWindow;
-
-import java.util.Collection;
 
 /**
  * Dummy channel window, used for testing.
  */
-public final class DummyChannelWindow extends DummyInputWindow implements ChannelWindow {
-
-    /** Parent channel. */
-    private final Channel parent;
+public final class DummyChannelWindow extends DummyInputWindow {
 
     /** 
      * Instantiates a new DummyChannelWindow. 
@@ -43,49 +36,5 @@ public final class DummyChannelWindow extends DummyInputWindow implements Channe
      */
     public DummyChannelWindow(final Channel parent) {
         super(parent, parent.getCommandParser());
-        this.parent = parent;
     }
-
-    /** {@inheritDoc} */
-    @Override
-    @Deprecated
-    public void updateNames(final Collection<ChannelClientInfo> clients) {
-        // Do nothing
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    @Deprecated
-    public void addName(final ChannelClientInfo client) {
-        // Do nothing
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    @Deprecated
-    public void removeName(final ChannelClientInfo client) {
-        // Do nothing
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    @Deprecated
-    public void updateNames() {
-        // Do nothing
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    @Deprecated
-    public Channel getChannel() {
-        return parent;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    @Deprecated
-    public void redrawNicklist() {
-        // Do nothing
-    }
-
 }

@@ -148,7 +148,7 @@ public class LoggingPlugin extends Plugin implements ActionListener,
         command = new LoggingCommand();
         CommandManager.registerCommand(command);
 
-        ActionManager.addListener(this,
+        ActionManager.getActionManager().registerListener(this,
                 CoreActionType.CHANNEL_OPENED,
                 CoreActionType.CHANNEL_CLOSED,
                 CoreActionType.CHANNEL_MESSAGE,
@@ -214,7 +214,7 @@ public class LoggingPlugin extends Plugin implements ActionListener,
         }
 
         CommandManager.unregisterCommand(command);
-        ActionManager.removeListener(this);
+        ActionManager.getActionManager().unregisterListener(this);
 
         synchronized (openFiles) {
             for (OpenFile file : openFiles.values()) {

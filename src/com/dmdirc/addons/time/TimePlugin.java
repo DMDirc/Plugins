@@ -58,7 +58,8 @@ public final class TimePlugin  extends Plugin {
     @Override
     public void onLoad() {
         if (!registered) {
-            ActionManager.registerActionTypes(TimeActionType.values());
+            ActionManager.getActionManager().registerTypes(
+                    TimeActionType.values());
             registered = true;
         }
 
@@ -83,13 +84,16 @@ public final class TimePlugin  extends Plugin {
     public void runTimer() {
         final Calendar cal = Calendar.getInstance();
 
-        ActionManager.processEvent(TimeActionType.TIME_MINUTE, null, cal);
+        ActionManager.getActionManager().triggerEvent(
+                TimeActionType.TIME_MINUTE, null, cal);
 
         if (cal.get(Calendar.MINUTE) == 0) {
-            ActionManager.processEvent(TimeActionType.TIME_HOUR, null, cal);
+            ActionManager.getActionManager().triggerEvent(
+                    TimeActionType.TIME_HOUR, null, cal);
 
             if (cal.get(Calendar.HOUR_OF_DAY) == 0) {
-                ActionManager.processEvent(TimeActionType.TIME_DAY, null, cal);
+                ActionManager.getActionManager().triggerEvent(
+                        TimeActionType.TIME_DAY, null, cal);
             }
         }
     }

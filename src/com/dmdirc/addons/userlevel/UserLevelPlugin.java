@@ -54,8 +54,9 @@ public class UserLevelPlugin extends Plugin implements ActionListener,
     /** {@inheritDoc} */
     @Override
     public void onLoad() {
-        ActionManager.addListener(this, CoreActionType.CHANNEL_JOIN);
-        ActionManager.registerActionComponents(
+        ActionManager.getActionManager().registerListener(this,
+                CoreActionType.CHANNEL_JOIN);
+        ActionManager.getActionManager().registerComponents(
                 new ActionComponent[]{
                     new AccessLevelComponent(),
                     new ChannelAccessLevelComponent()
@@ -67,7 +68,7 @@ public class UserLevelPlugin extends Plugin implements ActionListener,
     /** {@inheritDoc} */
     @Override
     public void onUnload() {
-        ActionManager.removeListener(this);
+        ActionManager.getActionManager().unregisterListener(this);
         IdentityManager.getGlobalConfig().removeListener(this);
     }
 

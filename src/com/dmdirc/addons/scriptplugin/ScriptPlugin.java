@@ -86,7 +86,8 @@ public final class ScriptPlugin extends Plugin implements ActionListener {
     public void onLoad() {
         // Register the plugin_loaded action initially, this will be called
         // after this method finishes for us to register the rest.
-        ActionManager.addListener(this, CoreActionType.PLUGIN_LOADED);
+        ActionManager.getActionManager().registerListener(this,
+                CoreActionType.PLUGIN_LOADED);
         command = new ScriptCommand(this);
         CommandManager.registerCommand(command);
 
@@ -113,7 +114,7 @@ public final class ScriptPlugin extends Plugin implements ActionListener {
      */
     @Override
     public void onUnload() {
-        ActionManager.removeListener(this);
+        ActionManager.getActionManager().unregisterListener(this);
         CommandManager.unregisterCommand(command);
 
         final File savedVariables = new File(scriptDir+"storedVariables");
@@ -133,10 +134,12 @@ public final class ScriptPlugin extends Plugin implements ActionListener {
      * This will unregister all the actions first.
      */
     private void registerAll() {
-        ActionManager.removeListener(this);
-        for (Map.Entry<String, List<ActionType>> entry : ActionManager.getTypeGroups().entrySet()) {
+        ActionManager.getActionManager().registerListener(this);
+        for (Map.Entry<String, List<ActionType>> entry : ActionManager
+                .getActionManager().getGroupedTypes().entrySet()) {
             final List<ActionType> types = entry.getValue();
-            ActionManager.addListener(this, types.toArray(new ActionType[0]));
+            ActionManager.getActionManager().registerListener(this,
+                    types.toArray(new ActionType[0]));
         }
     }
 

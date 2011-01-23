@@ -69,13 +69,6 @@ public final class ServerFrame extends InputTextFrame implements ServerWindow,
                 owner.getCommandParser(), this));
     }
 
-    /** {@inheritDoc} */
-    @Override
-    @Deprecated
-    public CommandParser getCommandParser() {
-        return getContainer().getCommandParser();
-    }
-
     /**
      * Initialises components in this frame.
      */

@@ -64,8 +64,8 @@ public class NotificationsPlugin extends Plugin implements ActionListener {
     public void onLoad() {
         methods.clear();
         loadSettings();
-        ActionManager.addListener(this, CoreActionType.PLUGIN_LOADED,
-                CoreActionType.PLUGIN_UNLOADED);
+        ActionManager.getActionManager().registerListener(this, 
+                CoreActionType.PLUGIN_LOADED, CoreActionType.PLUGIN_UNLOADED);
         for (PluginInfo target : PluginManager.getPluginManager()
                 .getPluginInfos()) {
             if (target.isLoaded()) {
@@ -80,7 +80,7 @@ public class NotificationsPlugin extends Plugin implements ActionListener {
     @Override
     public void onUnload() {
         methods.clear();
-        ActionManager.removeListener(this);
+        ActionManager.getActionManager().unregisterListener(this);
         CommandManager.unregisterCommand(command);
     }
 
