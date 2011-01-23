@@ -31,7 +31,6 @@ import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.parser.interfaces.callbacks.CallbackInterface;
 import com.dmdirc.parser.interfaces.callbacks.ChannelMessageListener;
 import com.dmdirc.parser.interfaces.callbacks.SocketCloseListener;
-import com.dmdirc.parser.irc.IRCCallbackManager;
 import com.dmdirc.parser.irc.IRCParser;
 
 import java.lang.reflect.Field;
@@ -49,13 +48,13 @@ import java.util.Map;
  *
  * @author shane
  */
-public class RelayCallbackManager extends IRCCallbackManager implements SocketCloseListener {
+public class RelayCallbackManager extends CallbackManager implements SocketCloseListener {
 
     /** Pluign that created this callback manager. */
     private final RelayBotPlugin myPlugin;
 
     /** Original CallbackManager */
-    private final IRCCallbackManager originalCBM;
+    private final CallbackManager originalCBM;
 
     /**
      * Create a new RelayCallbackManager and replace
@@ -64,17 +63,17 @@ public class RelayCallbackManager extends IRCCallbackManager implements SocketCl
      * @param parser
      */
     public RelayCallbackManager(final RelayBotPlugin myPlugin, final IRCParser parser) {
-        super(parser);
+        super(parser, IRCParser.IMPL_MAP);
 
         this.myPlugin = myPlugin;
-        this.originalCBM = (IRCCallbackManager) parser.getCallbackManager();
+        this.originalCBM = parser.getCallbackManager();
         setCallbackManager(parser, this);
         addCallback(SocketCloseListener.class, this);
     }
 
     /** {@inheritDoc} */
     @Override
-    public <T extends CallbackInterface> void addCallback(final Class<T> callback, final T o, final String target) throws CallbackNotFoundException {
+    public <S extends CallbackInterface> void addCallback(final Class<S> callback, final S o, final String target) throws CallbackNotFoundException {
         // Don't allow the core to give itself a ChannelMessageListener if we
         // already have a listener for this channel.
         if (o instanceof ChannelEventHandler && callback == ChannelMessageListener.class) {
@@ -125,13 +124,13 @@ public class RelayCallbackManager extends IRCCallbackManager implements SocketCl
      * @param parser
      * @param cbm
      */
-    private void setCallbackManager(final IRCParser parser, final CallbackManager<IRCParser> cbm) {
+    private void setCallbackManager(final IRCParser parser, final CallbackManager cbm) {
         try {
             // Get the old callback manager
             final Field field = parser.getClass().getDeclaredField("myCallbackManager");
             field.setAccessible(true);
             @SuppressWarnings("unchecked")
-            final CallbackManager<IRCParser> oldCBM = (CallbackManager<IRCParser>) field.get(parser);
+            final CallbackManager oldCBM = (CallbackManager) field.get(parser);
 
             // Clone the known CallbackObjects list (horrible code ahoy!)
             // First get the old map of callbacks
