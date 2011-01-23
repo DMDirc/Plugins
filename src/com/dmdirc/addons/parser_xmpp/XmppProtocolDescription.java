@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2009 Chris Smith, Shane Mc Cormack, Gregory Holmes
+ * Copyright (c) 2006-2011 Chris Smith, Shane Mc Cormack, Gregory Holmes
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,39 +20,26 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.parser_twitter;
+package com.dmdirc.addons.parser_xmpp;
 
-import com.dmdirc.parser.common.CallbackManager;
-import com.dmdirc.parser.common.CallbackObject;
-import com.dmdirc.parser.common.CallbackObjectSpecific;
-import com.dmdirc.parser.interfaces.callbacks.CallbackInterface;
+import com.dmdirc.parser.interfaces.ProtocolDescription;
 
 /**
- * Handles callbacks for the Twitter Parser.
- * 
- * @author chris
+ * A description of the XMPP protocol.
  */
-public class TwitterCallbackManager extends CallbackManager<Twitter> {
+public class XmppProtocolDescription implements ProtocolDescription {
 
-    /**
-     * Create a new TwitterCallbackManager
-     * 
-     * @param parser Parser that owns this callback manager.
-     */
-    public TwitterCallbackManager(final Twitter parser) {
-        super(parser);
+    /** {@inheritDoc} */
+    @Override
+    public int getDefaultPort() {
+        return 5222;
     }
 
     /** {@inheritDoc} */
     @Override
-    protected CallbackObject getCallbackObject(final Twitter parser, final Class<?> type) {
-        return new TwitterCallbackObject(parser, this, type.asSubclass(CallbackInterface.class));
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    protected CallbackObjectSpecific getSpecificCallbackObject(final Twitter parser, final Class<?> type) {
-        return new TwitterCallbackObjectSpecific(parser, this, type.asSubclass(CallbackInterface.class));
+    public String[] parseHostmask(final String hostmask) {
+        final String[] parts = hostmask.split("/");
+        return new String[] { parts[0], parts.length > 1 ? parts[1] : "unknown", "" };
     }
 
 }
