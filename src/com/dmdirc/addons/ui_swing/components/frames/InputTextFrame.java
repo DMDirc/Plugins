@@ -413,16 +413,4 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
         super.activateFrame();
         inputField.requestFocusInWindow();
     }
-
-    /** {@inheritDoc} */
-    @Override
-    public CommandParser getCommandParser() {
-        return getContainer().getCommandParser();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void setAwayIndicator(final boolean isAway) {
-        //Ignore
-    }
 }

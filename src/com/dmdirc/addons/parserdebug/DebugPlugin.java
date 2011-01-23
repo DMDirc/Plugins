@@ -59,7 +59,8 @@ public final class DebugPlugin extends Plugin implements DebugInfoListener, Acti
     /** {@inheritDoc} */
     @Override
     public void onLoad() {
-        ActionManager.addListener(this, CoreActionType.SERVER_DISCONNECTED);
+        ActionManager.getActionManager().unregisterListener(this,
+                CoreActionType.SERVER_DISCONNECTED);
         command = new ParserDebugCommand(this);
         CommandManager.registerCommand(command);
     }

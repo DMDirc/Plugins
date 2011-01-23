@@ -23,15 +23,7 @@
 package com.dmdirc.addons.ui_swing;
 
 import com.dmdirc.Channel;
-import com.dmdirc.FrameContainer;
-import com.dmdirc.Query;
 import com.dmdirc.Server;
-import com.dmdirc.WritableFrameContainer;
-import com.dmdirc.addons.ui_swing.components.frames.ChannelFrame;
-import com.dmdirc.addons.ui_swing.components.frames.CustomFrame;
-import com.dmdirc.addons.ui_swing.components.frames.CustomInputFrame;
-import com.dmdirc.addons.ui_swing.components.frames.QueryFrame;
-import com.dmdirc.addons.ui_swing.components.frames.ServerFrame;
 import com.dmdirc.addons.ui_swing.components.addonpanel.AddonPanel;
 import com.dmdirc.addons.ui_swing.components.addonpanel.PluginPanel;
 import com.dmdirc.addons.ui_swing.components.addonpanel.ThemePanel;
@@ -68,14 +60,8 @@ import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.core.components.StatusBarManager;
 import com.dmdirc.ui.core.dialogs.sslcertificate.SSLCertificateDialogModel;
 import com.dmdirc.ui.core.util.URLHandler;
-import com.dmdirc.ui.interfaces.ChannelWindow;
-import com.dmdirc.ui.interfaces.FrameListener;
 import com.dmdirc.ui.interfaces.InputWindow;
-import com.dmdirc.ui.interfaces.QueryWindow;
-import com.dmdirc.ui.interfaces.ServerWindow;
-import com.dmdirc.ui.interfaces.StatusBar;
 import com.dmdirc.ui.interfaces.UIController;
-import com.dmdirc.ui.interfaces.Window;
 import com.dmdirc.updater.Update;
 import com.dmdirc.util.ReturnableThread;
 
@@ -91,7 +77,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.logging.Level;
 import javax.swing.JMenuItem;
 
 import javax.swing.SwingUtilities;
@@ -197,125 +182,12 @@ public class SwingController extends Plugin implements UIController {
     }
 
     /**
-     * {@inheritDoc}
-     *
-     * @deprecated Should not be used externally - use the
-     * {@link com.dmdirc.ui.core.components.StatusBarManager} instead.
-     */
-    @Override
-    @Deprecated
-    public StatusBar getStatusBar() {
-        return getSwingStatusBar();
-    }
-
-    /**
      * Retrieves the Swing Status Bar used by this UI.
      *
      * @return This UI's status bar
      */
     public SwingStatusBar getSwingStatusBar() {
         return statusBar;
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @deprecated Controllers should listen for window events using a
-     * {@link FrameListener} and create windows as needed.
-     */
-    @Override
-    @Deprecated
-    public ChannelWindow getChannel(final Channel channel) {
-        return UIUtilities.invokeAndWait(new ReturnableThread<ChannelFrame>() {
-
-            /** {@inheritDoc} */
-            @Override
-            public void run() {
-                setObject(new ChannelFrame(SwingController.this, channel));
-            }
-        });
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @deprecated Controllers should listen for window events using a
-     * {@link FrameListener} and create windows as needed.
-     */
-    @Override
-    @Deprecated
-    public ServerWindow getServer(final Server server) {
-        return UIUtilities.invokeAndWait(new ReturnableThread<ServerFrame>() {
-
-            /** {@inheritDoc} */
-            @Override
-            public void run() {
-                setObject(new ServerFrame(SwingController.this, server));
-            }
-        });
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @deprecated Controllers should listen for window events using a
-     * {@link FrameListener} and create windows as needed.
-     */
-    @Override
-    @Deprecated
-    public QueryWindow getQuery(final Query query) {
-        return UIUtilities.invokeAndWait(new ReturnableThread<QueryFrame>() {
-
-            /** {@inheritDoc} */
-            @Override
-            public void run() {
-                setObject(new QueryFrame(SwingController.this, query));
-            }
-        });
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @deprecated Controllers should listen for window events using a
-     * {@link FrameListener} and create windows as needed.
-     */
-    @Override
-    @Deprecated
-    public Window getWindow(final FrameContainer<?> owner) {
-        return UIUtilities.invokeAndWait(new ReturnableThread<CustomFrame>() {
-
-            /** {@inheritDoc} */
-            @Override
-            public void run() {
-                setObject(new CustomFrame(SwingController.this, owner));
-            }
-        });
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @deprecated Controllers should listen for window events using a
-     * {@link FrameListener} and create windows as needed.
-     */
-    @Override
-    @Deprecated
-    public InputWindow getInputWindow(final WritableFrameContainer<?> owner) {
-        LOGGER.finest("getInputWindow()");
-
-        return UIUtilities.invokeAndWait(
-                new ReturnableThread<CustomInputFrame>() {
-
-            /** {@inheritDoc} */
-            @Override
-            public void run() {
-                LOGGER.finest("getInputWindow(): run");
-                setObject(new CustomInputFrame(SwingController.this, owner));
-                LOGGER.log(Level.FINEST, "getInputWindow(): object set: {1}",
-                        getObject());
-            }
-        });
     }
 
     /** {@inheritDoc} */
@@ -363,17 +235,6 @@ public class SwingController extends Plugin implements UIController {
             }
         });
         semaphore.acquireUninterruptibly();
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @deprecated Migration wizard is no longer used or needed
-     */
-    @Override
-    @Deprecated
-    public void showMigrationWizard() {
-        // Do nothing
     }
 
     /** {@inheritDoc} */
@@ -503,37 +364,6 @@ public class SwingController extends Plugin implements UIController {
                 || Apple.isAppleUI()) {
             PlatformDefaults.setPlatform(PlatformDefaults.WINDOWS_XP);
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @deprecated
-     */
-    @Override
-    @Deprecated
-    public Window getActiveWindow() {
-        return me.getActiveFrame();
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @deprecated
-     */
-    @Override
-    @Deprecated
-    public Server getActiveServer() {
-        if (!mainFrameCreated.get()) {
-            return null;
-        }
-
-        if (getActiveWindow() == null) {
-            return null;
-        } else {
-            return getActiveWindow().getContainer().getServer();
-        }
-
     }
 
     /** {@inheritDoc} */

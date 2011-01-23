@@ -23,78 +23,16 @@
 package com.dmdirc.addons.ui_web.uicomponents;
 
 import com.dmdirc.Channel;
-import com.dmdirc.addons.ui_web.DynamicRequestHandler;
-import com.dmdirc.addons.ui_web.Event;
 import com.dmdirc.addons.ui_web.WebInterfaceUI;
-import com.dmdirc.parser.interfaces.ChannelClientInfo;
-import com.dmdirc.ui.interfaces.ChannelWindow;
-
-import java.util.Collection;
 
 /**
  *
  * @author chris
  */
-public class WebChannelWindow extends WebInputWindow implements ChannelWindow {
-
-    private final Channel channel;
+public class WebChannelWindow extends WebInputWindow {
 
     public WebChannelWindow(final WebInterfaceUI controller,
             final Channel channel) {
         super(controller, channel);
-        this.channel = channel;
     }
-
-    /** {@inheritDoc} */
-    @Deprecated
-    @Override
-    public void updateNames(final Collection<ChannelClientInfo> clients) {
-        updateNames();
-    }
-
-    /** {@inheritDoc} */
-    @Deprecated
-    @Override
-    public void addName(final ChannelClientInfo client) {
-        DynamicRequestHandler.addEvent(new Event("addnicklist",
-                client.getClient().getNickname()));
-    }
-
-    /** {@inheritDoc} */
-    @Deprecated
-    @Override
-    public void removeName(final ChannelClientInfo client) {
-        updateNames();
-    }
-
-    /** {@inheritDoc} */
-    @Deprecated
-    @Override
-    public void updateNames() {
-        DynamicRequestHandler.addEvent(new Event("clearnicklist", null));
-        for (ChannelClientInfo cci : channel.getChannelInfo()
-                .getChannelClients()) {
-            DynamicRequestHandler.addEvent(new Event("addnicklist",
-                    cci.getClient().getNickname()));
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @deprecated Use {@link #getContainer()}
-     */
-    @Override
-    @Deprecated
-    public Channel getChannel() {
-        return channel;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    @Deprecated
-    public void redrawNicklist() {
-        // Do nothing
-    }
-
 }

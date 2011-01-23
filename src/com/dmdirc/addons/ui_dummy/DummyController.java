@@ -66,73 +66,6 @@ public final class DummyController extends Plugin implements UIController {
         return mainWindow;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @deprecated Should not be used externally - use the
-     * {@link com.dmdirc.ui.core.components.StatusBarManager} instead.
-     */
-    @Override
-    @Deprecated
-    public StatusBar getStatusBar() {
-        return new DummyStatusBar();
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @deprecated Controllers should listen for window events using a
-     * {@link FrameListener} and create windows as needed.
-     */
-    @Override @Deprecated
-    public ChannelWindow getChannel(final Channel channel) {
-        return new DummyChannelWindow(channel);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @deprecated Controllers should listen for window events using a
-     * {@link FrameListener} and create windows as needed.
-     */
-    @Override  @Deprecated
-    public ServerWindow getServer(final Server server) {
-        return new DummyServerWindow(server);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @deprecated Controllers should listen for window events using a
-     * {@link FrameListener} and create windows as needed.
-     */
-    @Override  @Deprecated
-    public QueryWindow getQuery(final Query query) {
-        return new DummyQueryWindow(query);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @deprecated Controllers should listen for window events using a
-     * {@link FrameListener} and create windows as needed.
-     */
-    @Override  @Deprecated
-    public Window getWindow(final FrameContainer<?> owner) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @deprecated Controllers should listen for window events using a
-     * {@link FrameListener} and create windows as needed.
-     */
-    @Override  @Deprecated
-    public InputWindow getInputWindow(final WritableFrameContainer<?> owner) {
-        return new DummyInputWindow(owner, owner.getCommandParser());
-    }
-
     /** {@inheritDoc} */
     @Override
     public UpdaterDialog getUpdaterDialog(final List<Update> updates) {
@@ -143,17 +76,6 @@ public final class DummyController extends Plugin implements UIController {
     @Override
     public void showFirstRunWizard() {
         System.out.println("DummyController.showFirstRunWizard()");
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @deprecated Migration wizard is no longer used or needed
-     */
-    @Override
-    @Deprecated
-    public void showMigrationWizard() {
-        System.out.println("DummyController.showMigrationWizard()");
     }
 
     /** {@inheritDoc} */
@@ -172,28 +94,6 @@ public final class DummyController extends Plugin implements UIController {
     @Override
     public void initUISettings() {
         // Do nothing
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @deprecated
-     */
-    @Override
-    @Deprecated
-    public Window getActiveWindow() {
-        return null;
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @deprecated
-     */
-    @Override
-    @Deprecated
-    public Server getActiveServer() {
-        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     /** {@inheritDoc} */

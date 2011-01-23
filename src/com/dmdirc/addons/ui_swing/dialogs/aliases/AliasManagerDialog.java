@@ -411,7 +411,7 @@ public final class AliasManagerDialog extends StandardDialog implements
 
         saveModifiedAliases(modifiedAliases);
 
-        ActionManager.loadActions();
+        ActionManager.getActionManager().loadUserActions();
     }
 
     /**

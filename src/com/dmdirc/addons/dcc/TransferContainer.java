@@ -170,8 +170,8 @@ public class TransferContainer extends FrameContainer<TransferWindow> implements
             setTitle(title.toString());
         }
 
-        ActionManager.processEvent(DCCActions.DCC_SEND_DATATRANSFERED,
-                null, this, bytes);
+        ActionManager.getActionManager().triggerEvent(
+                DCCActions.DCC_SEND_DATATRANSFERED, null, this, bytes);
     }
 
     /**
@@ -266,8 +266,8 @@ public class TransferContainer extends FrameContainer<TransferWindow> implements
      */
     @Override
     public void socketClosed(final DCCTransfer dcc) {
-        ActionManager.processEvent(DCCActions.DCC_SEND_SOCKETCLOSED, null,
-                this);
+        ActionManager.getActionManager().triggerEvent(
+                DCCActions.DCC_SEND_SOCKETCLOSED, null, this);
         if (!windowClosing) {
             synchronized (this) {
                 if (transferCount == dcc.getFileSize() - dcc.getFileStart()) {
@@ -288,8 +288,8 @@ public class TransferContainer extends FrameContainer<TransferWindow> implements
      */
     @Override
     public void socketOpened(final DCCTransfer dcc) {
-        ActionManager.processEvent(DCCActions.DCC_SEND_SOCKETOPENED, null,
-                this);
+        ActionManager.getActionManager().triggerEvent(
+                DCCActions.DCC_SEND_SOCKETOPENED, null, this);
         timeStarted = System.currentTimeMillis();
         setIcon(dcc.getType() == DCCTransfer.TransferType.SEND
                 ? "dcc-send-active" : "dcc-receive-active");
