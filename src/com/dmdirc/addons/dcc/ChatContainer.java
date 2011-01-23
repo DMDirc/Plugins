@@ -75,8 +75,8 @@ public class ChatContainer extends DCCFrameContainer<InputWindow> implements DCC
     public void sendLine(final String line) {
         if (dccChat.isWriteable()) {
             final StringBuffer buff = new StringBuffer("DCCChatSelfMessage");
-            ActionManager.processEvent(DCCActions.DCC_CHAT_SELFMESSAGE, buff,
-                    this, line);
+            ActionManager.getActionManager().triggerEvent(
+                    DCCActions.DCC_CHAT_SELFMESSAGE, buff, this, line);
             addLine(buff, nickname, line);
             dccChat.sendLine(line);
         } else {
@@ -89,8 +89,8 @@ public class ChatContainer extends DCCFrameContainer<InputWindow> implements DCC
     @Override
     public void handleChatMessage(final DCCChat dcc, final String message) {
         final StringBuffer buff = new StringBuffer("DCCChatMessage");
-        ActionManager.processEvent(DCCActions.DCC_CHAT_MESSAGE, buff, this,
-                otherNickname, message);
+        ActionManager.getActionManager().triggerEvent(
+                DCCActions.DCC_CHAT_MESSAGE, buff, this, otherNickname, message);
         addLine(buff, otherNickname, message);
     }
 
@@ -98,7 +98,8 @@ public class ChatContainer extends DCCFrameContainer<InputWindow> implements DCC
     @Override
     public void socketClosed(final DCCChat dcc) {
         final StringBuffer buff = new StringBuffer("DCCChatInfo");
-        ActionManager.processEvent(DCCActions.DCC_CHAT_SOCKETCLOSED, buff, this);
+        ActionManager.getActionManager().triggerEvent(
+                DCCActions.DCC_CHAT_SOCKETCLOSED, buff, this);
         addLine(buff, "Socket closed");
         if (!isWindowClosing()) {
             setIcon("dcc-chat-inactive");
@@ -109,7 +110,8 @@ public class ChatContainer extends DCCFrameContainer<InputWindow> implements DCC
     @Override
     public void socketOpened(final DCCChat dcc) {
         final StringBuffer buff = new StringBuffer("DCCChatInfo");
-        ActionManager.processEvent(DCCActions.DCC_CHAT_SOCKETOPENED, buff, this);
+        ActionManager.getActionManager().triggerEvent(
+                DCCActions.DCC_CHAT_SOCKETOPENED, buff, this);
         addLine(buff, "Socket opened");
         setIcon("dcc-chat-active");
     }

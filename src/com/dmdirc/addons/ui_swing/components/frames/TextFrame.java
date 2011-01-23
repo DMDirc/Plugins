@@ -56,15 +56,10 @@ import com.dmdirc.interfaces.FrameCloseListener;
 import com.dmdirc.parser.common.ChannelJoinRequest;
 import com.dmdirc.ui.interfaces.InputWindow;
 import com.dmdirc.ui.interfaces.Window;
-import com.dmdirc.ui.messages.IRCDocument;
-import com.dmdirc.util.StringTranscoder;
 
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
-import java.nio.charset.Charset;
-import java.nio.charset.IllegalCharsetNameException;
-import java.nio.charset.UnsupportedCharsetException;
 
 import javax.swing.JComponent;
 import javax.swing.JMenu;
@@ -95,8 +90,6 @@ public abstract class TextFrame extends JPanel implements Window,
     private TextPane textPane;
     /** search bar. */
     private SwingSearchBar searchBar;
-    /** String transcoder. */
-    private StringTranscoder transcoder;
     /** Command parser for popup commands. */
     private final CommandParser commandParser;
     /** Swing controller. */
@@ -118,17 +111,6 @@ public abstract class TextFrame extends JPanel implements Window,
 
         owner.addCloseListener(this);
         owner.setTitle(frameParent.getTitle());
-
-        try {
-            transcoder = new StringTranscoder(Charset.forName(
-                    config.getOption("channel", "encoding")));
-        } catch (UnsupportedCharsetException ex) {
-            transcoder = new StringTranscoder(Charset.forName("UTF-8"));
-        } catch (IllegalCharsetNameException ex) {
-            transcoder = new StringTranscoder(Charset.forName("UTF-8"));
-        } catch (IllegalArgumentException ex) {
-            transcoder = new StringTranscoder(Charset.forName("UTF-8"));
-        }
 
         commandParser = findCommandParser();
 
@@ -195,103 +177,6 @@ public abstract class TextFrame extends JPanel implements Window,
     }
 
     /**
-     * {@inheritDoc}
-     *
-     * @deprecated MDI has been removed, these methods are useless
-     */
-    @Deprecated
-    @Override
-    public void minimise() {
-        //Ignore
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @deprecated MDI has been removed, these methods are useless
-     */
-    @Deprecated
-    @Override
-    public void maximise() {
-        //Ignore
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @deprecated MDI has been removed, these methods are useless
-     */
-    @Deprecated
-    @Override
-    public void restore() {
-        //Ignore
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @deprecated MDI has been removed, these methods are useless
-     */
-    @Deprecated
-    @Override
-    public void toggleMaximise() {
-        //Ignore
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @deprecated Use corresponding methods in {@link FrameContainer} instead
-     */
-    @Override
-    @Deprecated
-    public final void addLine(final String line, final boolean timestamp) {
-        frameParent.addLine(line, timestamp);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @deprecated Use corresponding methods in {@link FrameContainer} instead
-     */
-    @Override
-    @Deprecated
-    public final void addLine(final String messageType, final Object... args) {
-        frameParent.addLine(messageType, args);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @deprecated Use corresponding methods in {@link FrameContainer} instead
-     */
-    @Override
-    @Deprecated
-    public final void addLine(final StringBuffer messageType,
-            final Object... args) {
-        frameParent.addLine(messageType, args);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @deprecated Call {@link IRCDocument#clear()} via
-     * {@link FrameContainer#getDocument()}
-     */
-    @Override
-    @Deprecated
-    public final void clear() {
-        UIUtilities.invokeLater(new Runnable() {
-
-            /** {@inheritDoc} */
-            @Override
-            public void run() {
-                getTextPane().clear();
-            }
-        });
-    }
-
-    /**
      * Initialises the components for this frame.
      */
     private void initComponents() {
@@ -348,34 +233,12 @@ public abstract class TextFrame extends JPanel implements Window,
     }
 
     /**
-     * {@inheritDoc}
-     *
-     * @deprecated Use {@link FrameContainer#getConfigManager()}
-     */
-    @Deprecated
-    @Override
-    public ConfigManager getConfigManager() {
-        return getContainer().getConfigManager();
-    }
-
-    /**
      * Returns the text pane for this frame.
      *
      * @return Text pane for this frame
      */
     public final TextPane getTextPane() {
         return textPane;
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @deprecated Use {@link FrameContainer#getTranscoder()} instead
-     */
-    @Override
-    @Deprecated
-    public StringTranscoder getTranscoder() {
-        return transcoder;
     }
 
     /** {@inheritDoc} */
@@ -418,15 +281,16 @@ public abstract class TextFrame extends JPanel implements Window,
     private void handleLinkClick(final ClickTypeValue clickType) {
         switch (clickType.getType()) {
             case CHANNEL:
-                if (frameParent.getServer() != null && ActionManager.
-                        processEvent(CoreActionType.LINK_CHANNEL_CLICKED,
-                        null, this, clickType.getValue())) {
+                if (frameParent.getServer() != null && ActionManager
+                        .getActionManager().triggerEvent(
+                        CoreActionType.LINK_CHANNEL_CLICKED, null, this,
+                        clickType.getValue())) {
                     frameParent.getServer().join(
                             new ChannelJoinRequest(clickType.getValue()));
                 }
                 break;
             case HYPERLINK:
-                if (ActionManager.processEvent(
+                if (ActionManager.getActionManager().triggerEvent(
                         CoreActionType.LINK_URL_CLICKED, null, this,
                         clickType.getValue())) {
                     controller.getURLHandler().launchApp(clickType.getValue());
@@ -434,8 +298,9 @@ public abstract class TextFrame extends JPanel implements Window,
                 break;
             case NICKNAME:
                 if (frameParent.getServer() != null && ActionManager
-                        .processEvent(CoreActionType.LINK_NICKNAME_CLICKED,
-                        null, this, clickType.getValue())) {
+                        .getActionManager().triggerEvent(
+                        CoreActionType.LINK_NICKNAME_CLICKED, null, this,
+                        clickType.getValue())) {
                     getContainer().getServer().getQuery(clickType.getValue())
                             .activateFrame();
                 }
@@ -562,8 +427,8 @@ public abstract class TextFrame extends JPanel implements Window,
 
         if (type != null) {
             popupMenu = (JPopupMenu) populatePopupMenu(popupMenu,
-                    PopupManager.getMenu(type, getConfigManager()),
-                    arguments);
+                    PopupManager.getMenu(type, getContainer()
+                    .getConfigManager()), arguments);
         }
 
         return popupMenu;
@@ -618,7 +483,7 @@ public abstract class TextFrame extends JPanel implements Window,
             updateColours();
         }
     }
-
+    
     /** {@inheritDoc} */
     @Override
     public void windowClosing(final FrameContainer<?> window) {
@@ -635,74 +500,15 @@ public abstract class TextFrame extends JPanel implements Window,
      * Updates colour settings from their config values.
      */
     private void updateColours() {
-        getTextPane().setForeground(getConfigManager().
-                        getOptionColour("ui", "foregroundcolour"));
-        getTextPane().setBackground(getConfigManager().
-                        getOptionColour("ui", "backgroundcolour"));
-    }
-
-
-
-    /**
-     * {@inheritDoc}
-     *
-     * @deprecated Use {@link FrameContainer#getTitle()} instead
-     */
-    @Deprecated
-    @Override
-    public String getTitle() {
-        return getContainer().getTitle();
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @deprecated MDI is no longer implemented, windows are always maximised.
-     */
-    @Override
-    @Deprecated
-    public boolean isMaximum() {
-        return true;
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @deprecated Should use {@link FrameContainer#setTitle(java.lang.String)}
-     */
-    @Deprecated
-    @Override
-    public void setTitle(final String title) {
-        getContainer().setTitle(title);
+        getTextPane().setForeground(getContainer().getConfigManager()
+                .getOptionColour("ui", "foregroundcolour"));
+        getTextPane().setBackground(getContainer().getConfigManager()
+                .getOptionColour("ui", "backgroundcolour"));
     }
 
     /** {@inheritDoc} */
     @Override
     public void open() {
         //Yay, we're open.
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @deprecated Should not be used outside the UI, can be removed when the
-     * interface method is removed
-     */
-    @Deprecated
-    @Override
-    public void setVisible(final boolean visible) {
-        super.setVisible(visible);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @deprecated Should not be used outside the UI, can be removed when the
-     * interface method is removed
-     */
-    @Deprecated
-    @Override
-    public boolean isVisible() {
-        return super.isVisible();
     }
 }

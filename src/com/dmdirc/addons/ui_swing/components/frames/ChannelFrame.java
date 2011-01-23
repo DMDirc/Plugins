@@ -35,17 +35,13 @@ import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputHandler;
 import com.dmdirc.addons.ui_swing.components.TopicBar;
 import com.dmdirc.addons.ui_swing.dialogs.channelsetting.ChannelSettingsDialog;
 import com.dmdirc.commandparser.PopupType;
-import com.dmdirc.commandparser.parsers.CommandParser;
 import com.dmdirc.config.Identity;
 import com.dmdirc.config.IdentityManager;
-import com.dmdirc.parser.interfaces.ChannelClientInfo;
-import com.dmdirc.ui.interfaces.ChannelWindow;
 import com.dmdirc.ui.interfaces.InputWindow;
 
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Collection;
 
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
@@ -57,7 +53,7 @@ import net.miginfocom.swing.MigLayout;
  * The channel frame is the GUI component that represents a channel to the user.
  */
 public final class ChannelFrame extends InputTextFrame implements ActionListener,
-        ChannelWindow, com.dmdirc.interfaces.ActionListener {
+        com.dmdirc.interfaces.ActionListener {
 
     /**
      * A version number for this class. It should be changed whenever the class
@@ -65,8 +61,6 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 10;
-    /** The channel object that owns this frame. */
-    private final Channel parentChannel;
     /** Identity. */
     private final Identity identity;
     /** split pane. */
@@ -88,60 +82,22 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
     public ChannelFrame(final SwingController controller, final Channel owner) {
         super(controller, owner);
 
-        parentChannel = owner;
-
         initComponents();
 
         IdentityManager.getGlobalConfig().addChangeListener("ui",
                 "channelSplitPanePosition", this);
         IdentityManager.getGlobalConfig().addChangeListener(
-                controller.getDomain(),
-                "showtopicbar", this);
+                controller.getDomain(), "showtopicbar", this);
         IdentityManager.getGlobalConfig().addChangeListener(
-                controller.getDomain(),
-                "shownicklist", this);
-        ActionManager.addListener(this, CoreActionType.CLIENT_CLOSING);
+                controller.getDomain(), "shownicklist", this);
+        ActionManager.getActionManager().registerListener(this,
+                CoreActionType.CLIENT_CLOSING);
 
         setInputHandler(new SwingInputHandler(getInputField(), 
                 owner.getCommandParser(), this));
 
-        identity = IdentityManager.getChannelConfig(getChannel().getServer().
-                getNetwork(), getChannel().getChannelInfo().getName());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    @Deprecated
-    public CommandParser getCommandParser() {
-        return getContainer().getCommandParser();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    @Deprecated
-    public void updateNames(final Collection<ChannelClientInfo> clients) {
-        // Do nothing, not used any more
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    @Deprecated
-    public void updateNames() {
-        // Do nothing, not used any more
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    @Deprecated
-    public void addName(final ChannelClientInfo client) {
-        // Do nothing, not used any more
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    @Deprecated
-    public void removeName(final ChannelClientInfo client) {
-        // Do nothing, not used any more
+        identity = IdentityManager.getChannelConfig(owner.getServer().
+                getNetwork(), owner.getChannelInfo().getName());
     }
 
     /**
@@ -151,17 +107,6 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
      */
     public NickList getNickList() {
         return nicklist;
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @deprecated @deprecated Use {@link #getContainer()}
-     */
-    @Override
-    @Deprecated
-    public Channel getChannel() {
-        return parentChannel;
     }
 
     /**
@@ -329,12 +274,4 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
         }
         popupMenu.add(settingsMI);
     }
-
-    /** {@inheritDoc} */
-    @Override
-    @Deprecated
-    public void redrawNicklist() {
-        // Not used, do nothing
-    }
-
 }

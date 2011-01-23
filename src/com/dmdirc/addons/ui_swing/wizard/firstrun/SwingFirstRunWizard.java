@@ -99,7 +99,7 @@ public final class SwingFirstRunWizard implements WizardListener,
                 ((CommunicationStep) wizardDialog.getStep(1)).checkErrors());
 
         if (((ProfileStep) wizardDialog.getStep(2)).getProfileManagerState()) {
-            ActionManager.addListener(new ActionListener() {
+            ActionManager.getActionManager().registerListener(new ActionListener() {
                 /** {@inheritDoc} */
                 @Override
                 public void processEvent(final ActionType type,

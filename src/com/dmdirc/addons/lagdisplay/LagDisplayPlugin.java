@@ -88,10 +88,11 @@ public final class LagDisplayPlugin extends Plugin implements ActionListener, Co
 
         readConfig();
         
-        ActionManager.addListener(this, CoreActionType.SERVER_GOTPING,
-                CoreActionType.SERVER_NOPING, CoreActionType.CLIENT_FRAME_CHANGED,
-                CoreActionType.SERVER_DISCONNECTED, CoreActionType.SERVER_PINGSENT,
-                CoreActionType.SERVER_NUMERIC);
+        ActionManager.getActionManager().registerListener(this,
+                CoreActionType.SERVER_GOTPING, CoreActionType.SERVER_NOPING,
+                CoreActionType.CLIENT_FRAME_CHANGED,
+                CoreActionType.SERVER_DISCONNECTED, 
+                CoreActionType.SERVER_PINGSENT, CoreActionType.SERVER_NUMERIC);
     }
 
     /**
@@ -147,7 +148,7 @@ public final class LagDisplayPlugin extends Plugin implements ActionListener, Co
                 .getSwingStatusBar().removeComponent(panel);
         IdentityManager.getConfigIdentity().removeListener(this);
         
-        ActionManager.removeListener(this);
+        ActionManager.getActionManager().unregisterListener(this);
     }
     
     /** {@inheritDoc} */

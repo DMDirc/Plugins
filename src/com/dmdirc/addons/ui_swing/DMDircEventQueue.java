@@ -101,7 +101,8 @@ public class DMDircEventQueue extends EventQueue {
      * @param ke Key event
      */
     private void handleKeyEvent(final KeyEvent ke) {
-        ActionManager.processEvent(CoreActionType.CLIENT_KEY_PRESSED, null,
+        ActionManager.getActionManager().triggerEvent(
+                CoreActionType.CLIENT_KEY_PRESSED, null,
                 KeyStroke.getKeyStroke(ke.getKeyChar(), ke.getModifiers()));
     }
 

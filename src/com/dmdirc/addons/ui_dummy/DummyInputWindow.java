@@ -24,26 +24,15 @@ package com.dmdirc.addons.ui_dummy;
 
 import com.dmdirc.WritableFrameContainer;
 import com.dmdirc.commandparser.parsers.CommandParser;
-import com.dmdirc.config.ConfigManager;
-import com.dmdirc.config.IdentityManager;
 import com.dmdirc.ui.input.InputHandler;
 import com.dmdirc.ui.interfaces.InputWindow;
 import com.dmdirc.ui.interfaces.UIController;
-import com.dmdirc.util.StringTranscoder;
-
-import java.nio.charset.Charset;
 
 /**
  * Dummy input window, used for testing.
  */
 public class DummyInputWindow implements InputWindow {
 
-    /** Window title. */
-    private String title;
-    /** Are we visible? */
-    private boolean visible;
-    /** are we maximised? */
-    private boolean maximised;
     /** Our container. */
     private final WritableFrameContainer<? extends InputWindow> container;
 
@@ -60,57 +49,8 @@ public class DummyInputWindow implements InputWindow {
 
     /** {@inheritDoc} */
     @Override
-    @Deprecated
-    public CommandParser getCommandParser() {
-        return getContainer().getCommandParser();
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public InputHandler getInputHandler() {
         return new DummyInputHandler(new DummyInputField(), null, this);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    @Deprecated
-    public void setAwayIndicator(final boolean isAway) {
-        // Do nothing
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    @Deprecated
-    public void addLine(final String messageType, final Object... args) {
-        getContainer().addLine(messageType, args);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    @Deprecated
-    public void addLine(final StringBuffer messageType, final Object... args) {
-        getContainer().addLine(messageType, args);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    @Deprecated
-    public void addLine(final String line, final boolean timestamp) {
-        getContainer().addLine(line, timestamp);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    @Deprecated
-    public void clear() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    @Deprecated
-    public ConfigManager getConfigManager() {
-        return IdentityManager.getGlobalConfig();
     }
 
     /** {@inheritDoc} */
@@ -121,84 +61,14 @@ public class DummyInputWindow implements InputWindow {
 
     /** {@inheritDoc} */
     @Override
-    @Deprecated
-    public boolean isVisible() {
-        return visible;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    @Deprecated
-    public void setVisible(final boolean isVisible) {
-        visible = isVisible;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    @Deprecated
-    public String getTitle() {
-        return title;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    @Deprecated
-    public boolean isMaximum() {
-        return maximised;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    @Deprecated
-    public void setTitle(final String title) {
-        this.title = title;
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public void open() {
         // Do nothing
     }
 
     /** {@inheritDoc} */
     @Override
-    @Deprecated
-    public StringTranscoder getTranscoder() {
-        return new StringTranscoder(Charset.defaultCharset());
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public void close() {
         container.handleWindowClosing();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    @Deprecated
-    public void restore() {
-        // Do nothing
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    @Deprecated
-    public void maximise() {
-        // Do nothing
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    @Deprecated
-    public void toggleMaximise() {
-        // Do nothing
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    @Deprecated
-    public void minimise() {
-        // Do nothing
     }
 
     /** {@inheritDoc} */

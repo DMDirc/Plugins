@@ -357,8 +357,9 @@ public final class DCCPlugin extends Plugin implements ActionListener {
                     chat.getPort());
             chat.connect();
         } else {
-            ActionManager.processEvent(DCCActions.DCC_CHAT_REQUEST, null,
-                    ((Server) arguments[0]), nickname);
+            ActionManager.getActionManager().triggerEvent(
+                    DCCActions.DCC_CHAT_REQUEST, null, ((Server) arguments[0]),
+                    nickname);
             askQuestion("User " + nickname + " on "
                     + ((Server) arguments[0]).toString()
                     + " would like to start a DCC Chat with you.\n\n"
@@ -451,7 +452,8 @@ public final class DCCPlugin extends Plugin implements ActionListener {
                 // This is a reverse DCC Send that we no longer care about.
                 return;
             } else {
-                ActionManager.processEvent(DCCActions.DCC_SEND_REQUEST, null,
+                ActionManager.getActionManager().triggerEvent(
+                        DCCActions.DCC_SEND_REQUEST, null,
                         ((Server) arguments[0]), nickname, filename);
                 askQuestion("User " + nickname + " on "
                         + ((Server) arguments[0]).toString()
@@ -641,8 +643,9 @@ public final class DCCPlugin extends Plugin implements ActionListener {
         command = new DCCCommand(this);
         CommandManager.registerCommand(command);
 
-        ActionManager.registerActionTypes(DCCActions.values());
-        ActionManager.addListener(this, CoreActionType.SERVER_CTCP);
+        ActionManager.getActionManager().registerTypes(DCCActions.values());
+        ActionManager.getActionManager().registerListener(this,
+                CoreActionType.SERVER_CTCP);
     }
 
     /**
@@ -651,7 +654,7 @@ public final class DCCPlugin extends Plugin implements ActionListener {
     @Override
     public synchronized void onUnload() {
         CommandManager.unregisterCommand(command);
-        ActionManager.removeListener(this);
+        ActionManager.getActionManager().unregisterListener(this);
         if (container != null) {
             container.close();
         }

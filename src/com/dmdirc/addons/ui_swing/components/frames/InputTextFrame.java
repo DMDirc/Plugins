@@ -240,19 +240,6 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
     }
 
     /**
-     * Sets the away indicator on or off.
-     *
-     * @param awayState away state
-     *
-     * @deprecated Use {@link AwayStateListener}s to listen for changes instead
-     */
-    @Override
-    @Deprecated
-    public void setAwayIndicator(final boolean awayState) {
-        //Ignore
-    }
-
-    /**
      * {@inheritDoc}
      *
      * @param mouseEvent Mouse event
@@ -492,6 +479,4 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
         }
         inputField.requestFocusInWindow();
     }
-
-
 }

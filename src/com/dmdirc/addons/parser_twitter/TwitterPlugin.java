@@ -50,7 +50,8 @@ public class TwitterPlugin extends Plugin {
     /** {@inheritDoc} */
     @Override
     public void onLoad() {
-        ActionManager.registerActionComponents(TwitterActionComponents.values());
+        ActionManager.getActionManager().registerComponents(
+                TwitterActionComponents.values());
     }
 
     /** {@inheritDoc} */

@@ -151,7 +151,8 @@ public final class SystrayPlugin extends Plugin implements ActionListener,
             // Should probably unload ourself here?
         }
 
-        ActionManager.addListener(this, CoreActionType.CLIENT_MINIMISED);
+        ActionManager.getActionManager().registerListener(this,
+                CoreActionType.CLIENT_MINIMISED);
     }
 
     /** {@inheritDoc} */
@@ -160,7 +161,7 @@ public final class SystrayPlugin extends Plugin implements ActionListener,
         SystemTray.getSystemTray().remove(icon);
         CommandManager.unregisterCommand(command);
 
-        ActionManager.removeListener(this);
+        ActionManager.getActionManager().unregisterListener(this);
     }
 
     /** {@inheritDoc} */
