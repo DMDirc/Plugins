@@ -25,11 +25,11 @@ package com.dmdirc.addons.relaybot;
 import com.dmdirc.Channel;
 import com.dmdirc.ChannelEventHandler;
 import com.dmdirc.config.IdentityManager;
+import com.dmdirc.parser.common.CallbackManager;
 import com.dmdirc.parser.interfaces.ChannelClientInfo;
 import com.dmdirc.parser.interfaces.ChannelInfo;
 import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.parser.interfaces.callbacks.ChannelMessageListener;
-import com.dmdirc.parser.irc.IRCCallbackManager;
 import com.dmdirc.parser.irc.IRCChannelClientInfo;
 import com.dmdirc.parser.irc.IRCParser;
 import com.dmdirc.plugins.PluginInfo;
@@ -94,8 +94,8 @@ public class RelayChannelHandler implements ChannelMessageListener {
         coreChannelHandler = ceh;
 
         if (coreChannelHandler != null) {
-            final IRCCallbackManager cbm = (IRCCallbackManager) myChannel
-                    .getServer().getParser().getCallbackManager();
+            final CallbackManager cbm = myChannel.getServer().getParser()
+                    .getCallbackManager();
             cbm.delCallback(ChannelMessageListener.class, coreChannelHandler);
             cbm.addCallback(ChannelMessageListener.class, this,
                     myChannel.getName());
@@ -181,8 +181,8 @@ public class RelayChannelHandler implements ChannelMessageListener {
      */
     public void restoreCoreChannelHandler() {
         if (coreChannelHandler != null) {
-            final IRCCallbackManager cbm = (IRCCallbackManager) myChannel
-                    .getServer().getParser().getCallbackManager();
+            final CallbackManager cbm = myChannel.getServer().getParser()
+                    .getCallbackManager();
 
             // Force adding this callback to the CBM.
             if (cbm instanceof RelayCallbackManager) {
