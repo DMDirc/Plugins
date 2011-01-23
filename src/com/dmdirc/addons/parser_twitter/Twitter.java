@@ -62,7 +62,6 @@ import com.dmdirc.parser.interfaces.callbacks.MotdStartListener;
 import com.dmdirc.parser.interfaces.callbacks.NetworkDetectedListener;
 import com.dmdirc.parser.interfaces.callbacks.NickChangeListener;
 import com.dmdirc.parser.interfaces.callbacks.NumericListener;
-import com.dmdirc.parser.interfaces.callbacks.Post005Listener;
 import com.dmdirc.parser.interfaces.callbacks.PrivateMessageListener;
 import com.dmdirc.parser.interfaces.callbacks.PrivateNoticeListener;
 import com.dmdirc.parser.interfaces.callbacks.ServerReadyListener;
@@ -94,6 +93,16 @@ public class Twitter implements Parser, TwitterErrorHandler, TwitterRawHandler,
     private static final long PRUNE_COUNT = 20;
     /** Maximum age of items to leave in the status cache when pruning. */
     private static final long PRUNE_TIME = 3600 * 1000;
+    
+    /** A map of this parser's implementations of common interfaces. */
+    protected static final Map<Class<?>, Class<?>> IMPL_MAP = new HashMap<Class<?>, Class<?>>();
+
+    static {
+        IMPL_MAP.put(ChannelClientInfo.class, TwitterChannelClientInfo.class);
+        IMPL_MAP.put(ChannelInfo.class, TwitterChannelInfo.class);
+        IMPL_MAP.put(ClientInfo.class, TwitterClientInfo.class);
+        IMPL_MAP.put(LocalClientInfo.class, TwitterClientInfo.class);
+    }
 
     /** Are we connected? */
     private boolean connected = false;
@@ -122,7 +131,7 @@ public class Twitter implements Parser, TwitterErrorHandler, TwitterRawHandler,
     private final String myPassword;
 
     /** Callback Manager for Twitter. */
-    private final CallbackManager<Twitter> myCallbackManager = new TwitterCallbackManager(this);
+    private final CallbackManager myCallbackManager = new CallbackManager(this, IMPL_MAP);
 
     /** String Convertor. */
     private final DefaultStringConverter myStringConverter = new DefaultStringConverter();
@@ -601,7 +610,7 @@ public class Twitter implements Parser, TwitterErrorHandler, TwitterRawHandler,
 
     /** {@inheritDoc} */
     @Override
-    public CallbackManager<? extends Parser> getCallbackManager() {
+    public CallbackManager getCallbackManager() {
         return myCallbackManager;
     }
 
@@ -1058,7 +1067,6 @@ public class Twitter implements Parser, TwitterErrorHandler, TwitterRawHandler,
         getCallbackManager().getCallbackType(ServerReadyListener.class).call();
         // Fake 005
         getCallbackManager().getCallbackType(NetworkDetectedListener.class).call(getNetworkName(), getServerSoftware(), getServerSoftwareType());
-        getCallbackManager().getCallbackType(Post005Listener.class).call();
         // Fake MOTD
         getCallbackManager().getCallbackType(AuthNoticeListener.class).call("Welcome to " + myServerName + ".");
         getCallbackManager().getCallbackType(MotdStartListener.class).call("- " + myServerName + " Message of the Day -");
