@@ -97,10 +97,14 @@ public class InviteLabel extends StatusbarPopupPanel implements
             server.addInviteListener(this);
         }
 
-        ActionManager.addListener(this, CoreActionType.CLIENT_FRAME_CHANGED);
-        ActionManager.addListener(this, CoreActionType.SERVER_CONNECTED);
-        ActionManager.addListener(this, CoreActionType.SERVER_DISCONNECTED);
-        ActionManager.addListener(this, CoreActionType.SERVER_CONNECTERROR);
+        ActionManager.getActionManager().registerListener(this,
+                CoreActionType.CLIENT_FRAME_CHANGED);
+        ActionManager.getActionManager().registerListener(this,
+                CoreActionType.SERVER_CONNECTED);
+        ActionManager.getActionManager().registerListener(this,
+                CoreActionType.SERVER_DISCONNECTED);
+        ActionManager.getActionManager().registerListener(this,
+                CoreActionType.SERVER_CONNECTERROR);
 
         update();
     }

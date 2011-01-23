@@ -56,7 +56,8 @@ public class UrlCatcherPlugin extends Plugin implements ActionListener,
     /** {@inheritDoc} */
     @Override
     public void onLoad() {
-        ActionManager.addListener(this, CoreActionType.CLIENT_LINE_ADDED);
+        ActionManager.getActionManager().registerListener(this,
+                CoreActionType.CLIENT_LINE_ADDED);
         CommandManager.registerCommand(command);
         IdentityManager.getGlobalConfig().addChangeListener(getDomain(), this);
         updateConfig();
@@ -65,7 +66,7 @@ public class UrlCatcherPlugin extends Plugin implements ActionListener,
     /** {@inheritDoc} */
     @Override    
     public void onUnload() {
-        ActionManager.removeListener(this);
+        ActionManager.getActionManager().unregisterListener(this);
         CommandManager.unregisterCommand(command);
         IdentityManager.getGlobalConfig().removeListener(this);
     }

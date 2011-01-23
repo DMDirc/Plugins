@@ -142,7 +142,8 @@ public final class Apple implements InvocationHandler, ActionListener {
             try {
                 System.loadLibrary("DMDirc-Apple"); //NOPMD
                 registerOpenURLCallback();
-                ActionManager.addListener(this, CoreActionType.CLIENT_OPENED);
+                ActionManager.getActionManager().registerListener(this,
+                        CoreActionType.CLIENT_OPENED);
             } catch (UnsatisfiedLinkError ule) {
                 Logger.userError(ErrorLevel.MEDIUM,
                         "Unable to load JNI library.", ule);

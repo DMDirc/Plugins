@@ -54,7 +54,7 @@ public class RedirectCommandTest {
         final InputWindow window = mock(InputWindow.class);
         when(target.getWindows()).thenReturn(new ArrayList<InputWindow>(Arrays.asList(window)));
         final CommandParser parser = new ServerCommandParser();
-        when(window.getCommandParser()).thenReturn(parser);
+        //when(window.getCommandParser()).thenReturn(parser);
         when(window.getContainer().getConfigManager()).thenReturn(IdentityManager.getGlobalConfig());
 
         command.execute(target, new CommandArguments("/redirect /echo test"),

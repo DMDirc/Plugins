@@ -152,15 +152,15 @@ public final class MainFrame extends JFrame implements WindowListener,
             /** {@inheritDoc} */
             @Override
             public void windowGainedFocus(final WindowEvent e) {
-                ActionManager.processEvent(CoreActionType.CLIENT_FOCUS_GAINED,
-                        null);
+                ActionManager.getActionManager().triggerEvent(
+                        CoreActionType.CLIENT_FOCUS_GAINED, null);
             }
 
             /** {@inheritDoc} */
             @Override
             public void windowLostFocus(final WindowEvent e) {
-                ActionManager.processEvent(CoreActionType.CLIENT_FOCUS_LOST,
-                        null);
+                ActionManager.getActionManager().triggerEvent(
+                        CoreActionType.CLIENT_FOCUS_LOST, null);
                 //TODO: Remove me when we switch to java7
                 MenuSelectionManager.defaultManager().clearSelectedPath();
             }
@@ -239,12 +239,6 @@ public final class MainFrame extends JFrame implements WindowListener,
 
     /** {@inheritDoc}. */
     @Override
-    public void setMaximised(final boolean max) {
-        //Ignore
-    }
-
-    /** {@inheritDoc}. */
-    @Override
     public void setTitle(final String title) {
         if (title != null && getActiveFrame() != null) {
             super.setTitle(getTitlePrefix() + " - " + title);
@@ -257,17 +251,6 @@ public final class MainFrame extends JFrame implements WindowListener,
     @Override
     public String getTitlePrefix() {
         return "DMDirc" + (showVersion ? " " + version : "");
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @deprecated MDI is no longer implemented
-     */
-    @Deprecated
-    @Override
-    public boolean getMaximised() {
-        return true;
     }
 
     /**
@@ -314,7 +297,8 @@ public final class MainFrame extends JFrame implements WindowListener,
      */
     @Override
     public void windowIconified(final WindowEvent windowEvent) {
-        ActionManager.processEvent(CoreActionType.CLIENT_MINIMISED, null);
+        ActionManager.getActionManager().triggerEvent(
+                CoreActionType.CLIENT_MINIMISED, null);
     }
 
     /**
@@ -324,7 +308,8 @@ public final class MainFrame extends JFrame implements WindowListener,
      */
     @Override
     public void windowDeiconified(final WindowEvent windowEvent) {
-        ActionManager.processEvent(CoreActionType.CLIENT_UNMINIMISED, null);
+        ActionManager.getActionManager().triggerEvent(
+                CoreActionType.CLIENT_UNMINIMISED, null);
     }
 
     /**
@@ -557,7 +542,8 @@ public final class MainFrame extends JFrame implements WindowListener,
             /** {@inheritDoc} */
             @Override
             protected Object doInBackground() {
-                ActionManager.processEvent(CoreActionType.CLIENT_CLOSING, null);
+                ActionManager.getActionManager().triggerEvent(
+                        CoreActionType.CLIENT_CLOSING, null);
                 ServerManager.getServerManager().closeAll(IdentityManager.
                         getGlobalConfig().getOption("general", "closemessage"));
                 IdentityManager.getConfigIdentity().setOption("ui",

@@ -83,7 +83,7 @@ public class ActionTriggersPanel extends JPanel implements ActionListener,
 
         trigger =
                 new JComboBox(new ActionTypeModel(getFontMetrics(getFont()),
-                ActionManager.getTypeGroups()));
+                ActionManager.getActionManager().getGroupedTypes()));
         //Only fire events on selection not on highlight
         trigger.putClientProperty("JComboBox.isTableCellEditor", Boolean.TRUE);
         trigger.setRenderer(new ActionTypeRenderer());
@@ -222,12 +222,12 @@ public class ActionTriggersPanel extends JPanel implements ActionListener,
 
                 if (triggerList.getTriggerCount() == 0) {
                     ((ActionTypeModel) trigger.getModel()).setTypeGroup(
-                            ActionManager.getTypeGroups());
+                            ActionManager.getActionManager().getGroupedTypes());
                     trigger.setEnabled((trigger.getModel().getSize() > 0));
                     return;
                 }
-                for (ActionType thisType : ActionManager.getCompatibleTypes(
-                        triggerList.getTrigger(0))) {
+                for (ActionType thisType : ActionManager.getActionManager()
+                        .findCompatibleTypes(triggerList.getTrigger(0))) {
                     final List<ActionType> types = triggerList.getTriggers();
                     if (!types.contains(thisType)) {
                         ((ActionTypeModel) trigger.getModel()).addElement(

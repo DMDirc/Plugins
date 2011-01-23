@@ -56,7 +56,8 @@ public class IdentdPlugin extends Plugin implements ActionListener {
     @Override
     public void onLoad() {
         // Add action hooks
-        ActionManager.addListener(this, CoreActionType.SERVER_CONNECTED, 
+        ActionManager.getActionManager().registerListener(this,
+                CoreActionType.SERVER_CONNECTED,
                 CoreActionType.SERVER_CONNECTING,
                 CoreActionType.SERVER_CONNECTERROR);
 
@@ -74,7 +75,7 @@ public class IdentdPlugin extends Plugin implements ActionListener {
     public void onUnload() {
         myServer.stopServer();
         servers.clear();
-        ActionManager.removeListener(this);
+        ActionManager.getActionManager().unregisterListener(this);
     }
 
     /**
