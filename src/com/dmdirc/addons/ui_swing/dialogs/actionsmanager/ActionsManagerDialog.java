@@ -224,9 +224,12 @@ public final class ActionsManagerDialog extends StandardDialog implements
         edit.addActionListener(this);
         delete.addActionListener(this);
         groups.getSelectionModel().addListSelectionListener(this);
-        ActionManager.addListener(this, CoreActionType.ACTION_CREATED);
-        ActionManager.addListener(this, CoreActionType.ACTION_UPDATED);
-        ActionManager.addListener(this, CoreActionType.ACTION_DELETED);
+        ActionManager.getActionManager().registerListener(this,
+                CoreActionType.ACTION_CREATED);
+        ActionManager.getActionManager().registerListener(this,
+                CoreActionType.ACTION_UPDATED);
+        ActionManager.getActionManager().registerListener(this,
+                CoreActionType.ACTION_DELETED);
     }
 
     /**
@@ -277,7 +280,7 @@ public final class ActionsManagerDialog extends StandardDialog implements
      */
     private void reloadGroups(final ActionGroup selectedGroup) {
         ((DefaultListModel) groups.getModel()).clear();
-        for (ActionGroup group : ActionManager.getGroups().values()) {
+        for (ActionGroup group : ActionManager.getActionManager().getGroupsMap().values()) {
             ((DefaultListModel) groups.getModel()).addElement(group);
         }
         groups.setSelectedValue(selectedGroup, true);
@@ -357,13 +360,13 @@ public final class ActionsManagerDialog extends StandardDialog implements
             public boolean save() {
                 if (!saving.getAndSet(true)) {
                     groups.setSelectedIndex(index);
-                    if (getText() == null || getText().isEmpty() && !ActionManager.
-                            getGroups().
-                            containsKey(getText())) {
+                    if (getText() == null || getText().isEmpty() 
+                            && !ActionManager.getActionManager().getGroupsMap()
+                            .containsKey(getText())) {
                         return false;
                     } else {
-                        final ActionGroup group =
-                                ActionManager.makeGroup(getText());
+                        final ActionGroup group = ActionManager
+                                .getActionManager().createGroup(getText());
                         reloadGroups(group);
                         return true;
                     }
@@ -403,7 +406,8 @@ public final class ActionsManagerDialog extends StandardDialog implements
                     if (getText() == null || getText().isEmpty()) {
                         return false;
                     } else {
-                        ActionManager.renameGroup(oldName, getText());
+                        ActionManager.getActionManager().changeGroupName(
+                                oldName, getText());
                         reloadGroups();
                         return true;
                     }
@@ -445,8 +449,8 @@ public final class ActionsManagerDialog extends StandardDialog implements
             public boolean save() {
                 int location =
                         ((DefaultListModel) groups.getModel()).indexOf(
-                        ActionManager.getGroup(group));
-                ActionManager.removeGroup(group);
+                        ActionManager.getActionManager().getOrCreateGroup(group));
+                ActionManager.getActionManager().deleteGroup(group);
                 reloadGroups();
                 if (groups.getModel().getSize() == 0) {
                     location = -1;

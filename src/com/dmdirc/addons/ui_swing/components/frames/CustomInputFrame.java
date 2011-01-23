@@ -26,7 +26,6 @@ import com.dmdirc.WritableFrameContainer;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputHandler;
 import com.dmdirc.commandparser.PopupType;
-import com.dmdirc.commandparser.parsers.CommandParser;
 import com.dmdirc.ui.interfaces.InputWindow;
 
 import javax.swing.JPopupMenu;
@@ -60,15 +59,6 @@ public class CustomInputFrame extends InputTextFrame {
                 owner.getCommandParser(), this));
 
         initComponents();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    @Deprecated
-    @SuppressWarnings("unchecked")
-    public final CommandParser getCommandParser() {
-        return ((WritableFrameContainer<? extends InputWindow>) frameParent)
-                .getCommandParser();
     }
 
     /**

@@ -89,7 +89,8 @@ public final class WindowStatusPlugin extends Plugin implements ActionListener, 
         IdentityManager.getGlobalConfig().addChangeListener(getDomain(), this);
         updateCache();
 
-        ActionManager.addListener(this, CoreActionType.CLIENT_FRAME_CHANGED);
+        ActionManager.getActionManager().registerListener(this,
+                CoreActionType.CLIENT_FRAME_CHANGED);
     }
 
     /**
@@ -100,7 +101,7 @@ public final class WindowStatusPlugin extends Plugin implements ActionListener, 
         ((SwingController) PluginManager.getPluginManager()
                 .getPluginInfoByName("ui_swing").getPlugin())
                 .getSwingStatusBar().removeComponent(panel);
-        ActionManager.removeListener(this);
+        ActionManager.getActionManager().unregisterListener(this);
     }
 
     /**

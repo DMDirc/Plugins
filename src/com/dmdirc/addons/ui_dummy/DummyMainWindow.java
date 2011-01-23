@@ -31,17 +31,8 @@ import javax.swing.ImageIcon;
  */
 public final class DummyMainWindow implements MainWindow {
 
-    /** Are the windows maximised? */
-    private boolean maximised;
     /** Are we visible? */
     private boolean visible = true;
-
-    /**
-     * Creates a new instance of DummyMainWindow.
-     */
-    public DummyMainWindow() {
-        //Do nothing.
-    }
 
     /** {@inheritDoc} */
     @Override
@@ -53,18 +44,6 @@ public final class DummyMainWindow implements MainWindow {
     @Override
     public void quit() {
         // Do nothing
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void setMaximised(final boolean max) {
-        maximised = max;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public boolean getMaximised() {
-        return maximised;
     }
 
     /** {@inheritDoc} */

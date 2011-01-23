@@ -52,7 +52,6 @@ public class LoggingPluginTest {
 
     @BeforeClass
     public static void setUp() throws Exception {
-        Main.setUI(new DummyController());
         IdentityManager.load();
 
 

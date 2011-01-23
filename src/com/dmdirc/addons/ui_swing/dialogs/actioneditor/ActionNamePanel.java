@@ -81,7 +81,7 @@ public class ActionNamePanel extends JPanel implements PropertyChangeListener {
         } else {
             this.existingName = name;
         }
-        this.group = ActionManager.getGroup(group);
+        this.group = ActionManager.getActionManager().getOrCreateGroup(group);
 
         initComponents();
         addListeners();

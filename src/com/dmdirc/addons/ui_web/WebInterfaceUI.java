@@ -23,24 +23,15 @@
 package com.dmdirc.addons.ui_web;
 
 import com.dmdirc.Channel;
-import com.dmdirc.FrameContainer;
-import com.dmdirc.Query;
 import com.dmdirc.Server;
-import com.dmdirc.WritableFrameContainer;
 import com.dmdirc.addons.ui_web.uicomponents.WebMainWindow;
 import com.dmdirc.addons.ui_web.uicomponents.WebStatusBar;
 import com.dmdirc.config.prefs.PreferencesInterface;
 import com.dmdirc.ui.core.components.StatusBarManager;
 import com.dmdirc.ui.core.dialogs.sslcertificate.SSLCertificateDialogModel;
-import com.dmdirc.ui.interfaces.ChannelWindow;
-import com.dmdirc.ui.interfaces.InputWindow;
 import com.dmdirc.ui.interfaces.MainWindow;
-import com.dmdirc.ui.interfaces.QueryWindow;
-import com.dmdirc.ui.interfaces.ServerWindow;
-import com.dmdirc.ui.interfaces.StatusBar;
 import com.dmdirc.ui.interfaces.UIController;
 import com.dmdirc.ui.interfaces.UpdaterDialog;
-import com.dmdirc.ui.interfaces.Window;
 import com.dmdirc.updater.Update;
 
 import java.net.URI;
@@ -127,73 +118,6 @@ public class WebInterfaceUI implements UIController {
         return new WebMainWindow();
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @deprecated Should not be used externally - use the
-     * {@link com.dmdirc.ui.core.components.StatusBarManager} instead.
-     */
-    @Override
-    @Deprecated
-    public StatusBar getStatusBar() {
-        return new WebStatusBar();
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @deprecated Controllers should listen for window events using a
-     * {@link FrameListener} and create windows as needed.
-     */
-    @Override @Deprecated
-    public ChannelWindow getChannel(final Channel channel) {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @deprecated Controllers should listen for window events using a
-     * {@link FrameListener} and create windows as needed.
-     */
-    @Override @Deprecated
-    public ServerWindow getServer(final Server server) {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @deprecated Controllers should listen for window events using a
-     * {@link FrameListener} and create windows as needed.
-     */
-    @Override @Deprecated
-    public QueryWindow getQuery(final Query query) {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @deprecated Controllers should listen for window events using a
-     * {@link FrameListener} and create windows as needed.
-     */
-    @Override @Deprecated
-    public Window getWindow(final FrameContainer<?> owner) {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @deprecated Controllers should listen for window events using a
-     * {@link FrameListener} and create windows as needed.
-     */
-    @Override @Deprecated
-    public InputWindow getInputWindow(final WritableFrameContainer<?> owner) {
-        throw new UnsupportedOperationException();
-    }
-
     /** {@inheritDoc} */
     @Override
     public UpdaterDialog getUpdaterDialog(final List<Update> updates) {
@@ -205,18 +129,6 @@ public class WebInterfaceUI implements UIController {
     @Override
     public void showFirstRunWizard() {
         // Do nothing
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @deprecated Migration wizard is no longer used or needed
-     */
-    @Override
-    @Deprecated
-    public void showMigrationWizard() {
-        //TODO FIXME
-        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     /** {@inheritDoc} */
@@ -235,27 +147,6 @@ public class WebInterfaceUI implements UIController {
     @Override
     public void initUISettings() {
         // Do nothing
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @deprecated Use {@link WindowManager#getActiveWindow()} instead
-     */
-    @Override @Deprecated
-    public Window getActiveWindow() {
-        return null;
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @deprecated Use {@link WindowManager#getActiveWindow()} instead
-     */
-    @Override @Deprecated
-    public Server getActiveServer() {
-        //TODO FIXME
-        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     /** {@inheritDoc} */

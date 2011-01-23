@@ -233,14 +233,14 @@ public final class NickColourPlugin extends Plugin implements ActionListener,
     @Override
     public void onLoad() {
         setCachedSettings();
-        ActionManager.addListener(this, CoreActionType.CHANNEL_GOTNAMES,
-                CoreActionType.CHANNEL_JOIN);
+        ActionManager.getActionManager().registerListener(this,
+                CoreActionType.CHANNEL_GOTNAMES, CoreActionType.CHANNEL_JOIN);
     }
 
     /** {@inheritDoc} */
     @Override
     public void onUnload() {
-        ActionManager.removeListener(this);
+        ActionManager.getActionManager().unregisterListener(this);
     }
 
     /** {@inheritDoc} */

@@ -135,8 +135,8 @@ public final class DCCCommand extends Command implements IntelligentCommand,
                     "*Chat: " + target, myNickname, target);
             parser.sendCTCP(target, "DCC", "CHAT chat " + DCC.ipToLong(
                     myPlugin.getListenIP(parser)) + " " + chat.getPort());
-            ActionManager.processEvent(DCCActions.DCC_CHAT_REQUEST_SENT, null,
-                    server, target);
+            ActionManager.getActionManager().triggerEvent(
+                    DCCActions.DCC_CHAT_REQUEST_SENT, null, server, target);
             sendLine(origin, isSilent, "DCCChatStarting", target,
                     chat.getHost(), chat.getPort());
             window.addLine("DCCChatStarting", target, chat.getHost(),
@@ -182,7 +182,8 @@ public final class DCCCommand extends Command implements IntelligentCommand,
                         myPlugin.getDomain(), "send.forceturbo"));
                 send.setType(DCCTransfer.TransferType.SEND);
 
-                ActionManager.processEvent(DCCActions.DCC_SEND_REQUEST_SENT,
+                ActionManager.getActionManager().triggerEvent(
+                        DCCActions.DCC_SEND_REQUEST_SENT,
                         null, server, target, jc.getSelectedFile());
 
                 sendLine(origin, isSilent, FORMAT_OUTPUT,
