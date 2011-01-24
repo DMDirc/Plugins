@@ -77,7 +77,7 @@ public final class IgnoreListPanel extends JPanel implements ActionListener,
     /** Ignore list model . */
     private IgnoreListModel listModel;
     /** Parent window. */
-    private Window parentWindow;
+    private final Window parentWindow;
 
     /**
      * Creates a new instance of IgnoreList.

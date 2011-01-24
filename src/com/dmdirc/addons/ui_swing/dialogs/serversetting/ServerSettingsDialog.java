@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.serversetting;
 
+import com.dmdirc.addons.ui_swing.components.modes.UserModesPane;
 import com.dmdirc.Server;
 import com.dmdirc.ServerState;
 import com.dmdirc.addons.ui_swing.UIUtilities;
