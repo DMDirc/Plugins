@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.channelsetting;
 
+import com.dmdirc.addons.ui_swing.components.modes.ChannelModesPane;
 import com.dmdirc.Channel;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.expandingsettings.SettingsPanel;
@@ -222,7 +223,7 @@ public final class ChannelSettingsDialog extends StandardDialog implements
 
     /** Saves the settings. */
     public void save() {
-        channelModesPane.setChangedBooleanModes();
+        channelModesPane.save();
         topicModesPane.setChangedTopic();
         channelSettingsPane.save();
         channelListModesPane.save();
