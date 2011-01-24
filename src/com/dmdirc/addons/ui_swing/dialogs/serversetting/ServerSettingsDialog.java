@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.serversetting;
 
+import com.dmdirc.addons.ui_swing.components.modes.UserModesPane;
 import com.dmdirc.Server;
 import com.dmdirc.ServerState;
 import com.dmdirc.addons.ui_swing.UIUtilities;
@@ -67,7 +68,7 @@ public final class ServerSettingsDialog extends StandardDialog implements Action
     /** The tabbed pane. */
     private JTabbedPane tabbedPane;
     /** Parent window. */
-    private Window parentWindow;
+    private final Window parentWindow;
 
     /**
      * Creates a new instance of ServerSettingsDialog.
