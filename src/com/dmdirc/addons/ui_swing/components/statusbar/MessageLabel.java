@@ -26,6 +26,7 @@ import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.ui.IconManager;
+import com.dmdirc.ui.StatusMessage;
 import com.dmdirc.ui.interfaces.StatusBarComponent;
 import com.dmdirc.ui.interfaces.StatusMessageNotifier;
 
@@ -34,9 +35,9 @@ import java.awt.event.MouseListener;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.Semaphore;
 
 import javax.swing.BorderFactory;
-import javax.swing.Icon;
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 
@@ -60,12 +61,15 @@ public class MessageLabel extends JLabel implements StatusBarComponent,
     private transient TimerTask messageTimer;
     /** Message timeout. */
     private int timeout;
+    /** Set message synchronisation. */
+    private final Semaphore semaphore;
 
     /**
      * Instantiates a new message label.
      */
     public MessageLabel() {
         super();
+        semaphore = new Semaphore(1);
         setText(DEFAULT_MESSAGE);
         setBorder(BorderFactory.createEtchedBorder());
         addMouseListener(this);
@@ -78,9 +82,12 @@ public class MessageLabel extends JLabel implements StatusBarComponent,
      * Sets the message for this message label.
      *
      * @param newMessage New message
+     *
+     * @deprecated Should use {@link setMessage(StatusMessage)} instead
      */
+    @Deprecated
     public void setMessage(final String newMessage) {
-        setMessage(newMessage, (StatusMessageNotifier) null);
+        setMessage(new StatusMessage(null, newMessage, null, timeout));
     }
 
     /**
@@ -88,10 +95,13 @@ public class MessageLabel extends JLabel implements StatusBarComponent,
      *
      * @param newMessage New message
      * @param newNotifier New notifier
+     *
+     * @deprecated Should use {@link setMessage(StatusMessage)} instead
      */
+    @Deprecated
     public void setMessage(final String newMessage,
             final StatusMessageNotifier newNotifier) {
-        setMessage(null, newMessage, newNotifier);
+        setMessage(new StatusMessage(null, newMessage, newNotifier, timeout));
     }
 
     /**
@@ -99,9 +109,12 @@ public class MessageLabel extends JLabel implements StatusBarComponent,
      *
      * @param iconType Icon type
      * @param newMessage New message
+     *
+     * @deprecated Should use {@link setMessage(StatusMessage)} instead
      */
+    @Deprecated
     public void setMessage(final String iconType, final String newMessage) {
-        setMessage(iconType, newMessage, null);
+        setMessage(new StatusMessage(iconType, newMessage, null, timeout));
     }
 
     /**
@@ -110,10 +123,14 @@ public class MessageLabel extends JLabel implements StatusBarComponent,
      * @param iconType Icon type
      * @param newMessage New message
      * @param newNotifier New notifier
+     *
+     * @deprecated Should use {@link setMessage(StatusMessage)} instead
      */
+    @Deprecated
     public void setMessage(final String iconType, final String newMessage,
             final StatusMessageNotifier newNotifier) {
-        setMessage(iconType, newMessage, newNotifier, timeout);
+        setMessage(new StatusMessage(iconType, newMessage, newNotifier,
+                timeout));
     }
 
     /**
@@ -122,10 +139,13 @@ public class MessageLabel extends JLabel implements StatusBarComponent,
      * @param newMessage New message
      * @param newNotifier New notifier
      * @param timeout New timeout
+     *
+     * @deprecated Should use {@link setMessage(StatusMessage)} instead
      */
+    @Deprecated
     public void setMessage(final String newMessage,
             final StatusMessageNotifier newNotifier, final int timeout) {
-        setMessage(null, newMessage, newNotifier, timeout);
+        setMessage(new StatusMessage(null, newMessage, newNotifier, timeout));
     }
 
     /**
@@ -135,24 +155,37 @@ public class MessageLabel extends JLabel implements StatusBarComponent,
      * @param newMessage New message
      * @param newNotifier New notifier
      * @param timeout New timeout
+     *
+     * @deprecated Should use {@link setMessage(StatusMessage)} instead
      */
-    public synchronized void setMessage(final String iconType, final String newMessage,
+    @Deprecated
+    public void setMessage(final String iconType, final String newMessage, 
             final StatusMessageNotifier newNotifier, final int timeout) {
-        final Icon icon;
-        if (iconType == null) {
-            icon = null;
-        } else {
-            icon = IconManager.getIconManager().getIcon(iconType);
-        }
+        setMessage(new StatusMessage(iconType, newMessage, newNotifier,
+                timeout));
+    }
+
+    /**
+     * Sets the message for this message label.
+     *
+     * @param message Message object to show
+     */
+    public void setMessage(final StatusMessage message) {
+        semaphore.acquireUninterruptibly();
         SwingUtilities.invokeLater(new Runnable() {
 
             /** {@inheritDoc} */
             @Override
             public void run() {
-                setIcon(icon);
-                    setText(UIUtilities.clipStringifNeeded(MessageLabel.this,
-                            newMessage, getWidth()));
-                messageNotifier = newNotifier;
+                if (message.getIconType() == null) {
+                    setIcon(null);
+                } else {
+                    setIcon(IconManager.getIconManager().getIcon(
+                            message.getIconType()));
+                }
+                setText(UIUtilities.clipStringifNeeded(MessageLabel.this,
+                            message.getMessage(), getWidth()));
+                messageNotifier = message.getMessageNotifier();
 
                 if (messageTimer != null &&
                         (System.currentTimeMillis() -
@@ -160,7 +193,7 @@ public class MessageLabel extends JLabel implements StatusBarComponent,
                     messageTimer.cancel();
                 }
 
-                if (!DEFAULT_MESSAGE.equals(newMessage)) {
+                if (!DEFAULT_MESSAGE.equals(message.getMessage())) {
                     messageTimer = new TimerTask() {
 
                         /** {@inheritDoc} */
@@ -169,13 +202,13 @@ public class MessageLabel extends JLabel implements StatusBarComponent,
                             clearMessage();
                         }
                     };
-                    new Timer("SwingStatusBar messageTimer").schedule(messageTimer,
-                            new Date(System.currentTimeMillis() + 250 +
-                            timeout * 1000L));
+                    new Timer("SwingStatusBar messageTimer").schedule(
+                            messageTimer, new Date(System.currentTimeMillis()
+                            + 250 + timeout * 1000L));
                 }
+                semaphore.release();
             }
         });
-
     }
 
     /**
