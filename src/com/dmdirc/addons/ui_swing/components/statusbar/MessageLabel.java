@@ -54,7 +54,7 @@ public class MessageLabel extends JLabel implements StatusBarComponent,
      */
     private static final long serialVersionUID = 1;
     /** Default status bar message. */
-    private static final String DEFAULT_MESSAGE = "Ready.";
+    private final StatusMessage defaultMessage;
     /** current status bar message notifier. */
     private transient StatusMessageNotifier messageNotifier;
     /** Timer to clear the message. */
@@ -69,8 +69,9 @@ public class MessageLabel extends JLabel implements StatusBarComponent,
      */
     public MessageLabel() {
         super();
+        defaultMessage = new StatusMessage(null, "Ready.", null, -1);
         semaphore = new Semaphore(1);
-        setText(DEFAULT_MESSAGE);
+        setText("Ready.");
         setBorder(BorderFactory.createEtchedBorder());
         addMouseListener(this);
         setCachedSettings();
@@ -172,6 +173,7 @@ public class MessageLabel extends JLabel implements StatusBarComponent,
      */
     public void setMessage(final StatusMessage message) {
         semaphore.acquireUninterruptibly();
+        this.messageNotifier = message.getMessageNotifier();
         SwingUtilities.invokeLater(new Runnable() {
 
             /** {@inheritDoc} */
@@ -188,13 +190,12 @@ public class MessageLabel extends JLabel implements StatusBarComponent,
                             message.getMessage(), getWidth()));
                     messageNotifier = message.getMessageNotifier();
 
-                    if (messageTimer != null &&
-                            (System.currentTimeMillis() -
+                    if (messageTimer != null && (System.currentTimeMillis() -
                             messageTimer.scheduledExecutionTime()) <= 0) {
                         messageTimer.cancel();
                     }
 
-                    if (!DEFAULT_MESSAGE.equals(message.getMessage())) {
+                    if (!defaultMessage.equals(message)) {
                         messageTimer = new TimerTask() {
 
                             /** {@inheritDoc} */
@@ -218,8 +219,7 @@ public class MessageLabel extends JLabel implements StatusBarComponent,
      * Removes the message from the status bar.
      */
     public void clearMessage() {
-        setMessage(DEFAULT_MESSAGE);
-        messageNotifier = null;
+        setMessage(defaultMessage);
     }
 
     /**

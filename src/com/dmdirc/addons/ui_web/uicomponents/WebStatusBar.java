@@ -24,6 +24,7 @@ package com.dmdirc.addons.ui_web.uicomponents;
 
 import com.dmdirc.addons.ui_web.DynamicRequestHandler;
 import com.dmdirc.addons.ui_web.Event;
+import com.dmdirc.ui.StatusMessage;
 import com.dmdirc.ui.interfaces.StatusBar;
 import com.dmdirc.ui.interfaces.StatusBarComponent;
 import com.dmdirc.ui.interfaces.StatusMessageNotifier;
@@ -34,20 +35,32 @@ import com.dmdirc.ui.interfaces.StatusMessageNotifier;
  */
 public class WebStatusBar implements StatusBar {
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     *
+     * @deprecated Should use {@link setMessage(StatusMessage)} instead
+     */
+    @Deprecated
     @Override
     public void setMessage(final String newMessage) {
         DynamicRequestHandler.addEvent(new Event("statusbar", newMessage));
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     *
+     * @deprecated Should use {@link setMessage(StatusMessage)} instead
+     */
+    @Deprecated
     @Override
     public void setMessage(final String newMessage,
             final StatusMessageNotifier newNotifier) {
         DynamicRequestHandler.addEvent(new Event("statusbar", newMessage));
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     *
+     * @deprecated Should use {@link setMessage(StatusMessage)} instead
+     */
+    @Deprecated
     @Override
     public void setMessage(final String newMessage,
             final StatusMessageNotifier newNotifier, final int timeout) {
@@ -72,24 +85,42 @@ public class WebStatusBar implements StatusBar {
         // Do nothing
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     *
+     * @deprecated Should use {@link setMessage(StatusMessage)} instead
+     */
+    @Deprecated
     @Override
     public void setMessage(final String iconType, final String newMessage) {
         DynamicRequestHandler.addEvent(new Event("statusbar", newMessage));
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     *
+     * @deprecated Should use {@link setMessage(StatusMessage)} instead
+     */
+    @Deprecated
     @Override
     public void setMessage(final String iconType, final String newMessage,
             final StatusMessageNotifier newNotifier) {
         DynamicRequestHandler.addEvent(new Event("statusbar", newMessage));
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     *
+     * @deprecated Should use {@link setMessage(StatusMessage)} instead
+     */
+    @Deprecated
     @Override
     public void setMessage(final String iconType, final String newMessage,
             final StatusMessageNotifier newNotifier, final int timeout) {
         DynamicRequestHandler.addEvent(new Event("statusbar", newMessage));
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setMessage(final StatusMessage message) {
+        DynamicRequestHandler.addEvent(new Event("statusbar", message));
     }
 
 }

@@ -26,6 +26,7 @@ import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
+import com.dmdirc.ui.StatusMessage;
 import com.dmdirc.ui.interfaces.StatusBar;
 import com.dmdirc.ui.interfaces.StatusBarComponent;
 import com.dmdirc.ui.interfaces.StatusMessageNotifier;
@@ -78,45 +79,75 @@ public final class SwingStatusBar extends JPanel implements StatusBar {
         add(inviteLabel, "sgy components, hmax 20, hmin 20, wmin 20, shrink 0");
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     *
+     * @deprecated Should use {@link setMessage(StatusMessage)} instead
+     */
+    @Deprecated
     @Override
     public void setMessage(final String newMessage) {
         messageLabel.setMessage(newMessage);
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     *
+     * @deprecated Should use {@link setMessage(StatusMessage)} instead
+     */
+    @Deprecated
     @Override
     public void setMessage(final String newMessage,
             final StatusMessageNotifier newNotifier) {
         messageLabel.setMessage(newMessage, newNotifier);
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     *
+     * @deprecated Should use {@link setMessage(StatusMessage)} instead
+     */
+    @Deprecated
     @Override
     public void setMessage(final String iconType, final String newMessage) {
         messageLabel.setMessage(iconType, newMessage);
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     *
+     * @deprecated Should use {@link setMessage(StatusMessage)} instead
+     */
+    @Deprecated
     @Override
     public void setMessage(final String iconType, final String newMessage,
             final StatusMessageNotifier newNotifier) {
         messageLabel.setMessage(iconType, newMessage, newNotifier);
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     *
+     * @deprecated Should use {@link setMessage(StatusMessage)} instead
+     */
+    @Deprecated
     @Override
     public void setMessage(final String newMessage,
             final StatusMessageNotifier newNotifier, final int timeout) {
         messageLabel.setMessage(newMessage, newNotifier, timeout);
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     *
+     * @deprecated Should use {@link setMessage(StatusMessage)} instead
+     */
+    @Deprecated
     @Override
-    public synchronized void setMessage(final String iconType, 
+    public void setMessage(final String iconType, 
             final String newMessage,
             final StatusMessageNotifier newNotifier, final int timeout) {
         messageLabel.setMessage(iconType, newMessage, newNotifier, timeout);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setMessage(final StatusMessage message) {
+        messageLabel.setMessage(message);
     }
 
     /** {@inheritDoc} */
