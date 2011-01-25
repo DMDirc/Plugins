@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_dummy;
 
+import com.dmdirc.ui.StatusMessage;
 import com.dmdirc.ui.interfaces.StatusBar;
 import com.dmdirc.ui.interfaces.StatusBarComponent;
 import com.dmdirc.ui.interfaces.StatusMessageNotifier;
@@ -31,46 +32,74 @@ import com.dmdirc.ui.interfaces.StatusMessageNotifier;
  */
 public final class DummyStatusBar implements StatusBar {
 
-    /** Instantiates DummyStatusBar. */
-    public DummyStatusBar() {
-        //Do nothing.
-    }
-
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     *
+     * @deprecated Should use {@link setMessage(StatusMessage)} instead
+     */
+    @Deprecated
     @Override
     public void setMessage(final String newMessage) {
         System.out.println("DummyStatusBar: " + newMessage);
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     *
+     * @deprecated Should use {@link setMessage(StatusMessage)} instead
+     */
+    @Deprecated
     @Override
     public void setMessage(final String newMessage, 
             final StatusMessageNotifier newNotifier) {
         System.out.println("DummyStatusBar: " + newMessage);
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     *
+     * @deprecated Should use {@link setMessage(StatusMessage)} instead
+     */
+    @Deprecated
     @Override
     public void setMessage(final String newMessage, 
             final StatusMessageNotifier newNotifier, final int timeout) {
         System.out.println("DummyStatusBar: " + newMessage);
     }
-    
+
+    /** {@inheritDoc}
+     *
+     * @deprecated Should use {@link setMessage(StatusMessage)} instead
+     */
+    @Deprecated
     @Override
     public void setMessage(final String iconType, final String newMessage) {
         System.out.println("DummyStatusBar: " + newMessage);
     }
 
+    /** {@inheritDoc}
+     *
+     * @deprecated Should use {@link setMessage(StatusMessage)} instead
+     */
+    @Deprecated
     @Override
     public void setMessage(final String iconType, final String newMessage,
             final StatusMessageNotifier newNotifier) {
         System.out.println("DummyStatusBar: " + newMessage);
     }
 
+    /** {@inheritDoc}
+     *
+     * @deprecated Should use {@link setMessage(StatusMessage)} instead
+     */
+    @Deprecated
     @Override
     public void setMessage(final String iconType, final String newMessage,
             final StatusMessageNotifier newNotifier, final int timeout) {
         System.out.println("DummyStatusBar: " + newMessage);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setMessage(final StatusMessage message) {
+        System.out.println("DummyStatusBar: " + message);
     }
 
     /** {@inheritDoc} */
