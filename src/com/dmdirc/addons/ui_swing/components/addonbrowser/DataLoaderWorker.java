@@ -31,7 +31,6 @@ import com.dmdirc.util.InvalidConfigFileException;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
@@ -75,9 +74,9 @@ public class DataLoaderWorker
         try {
             data.read();
         } catch (IOException ex) {
-            return Arrays.asList(Collections.<String, String>emptyMap());
+            return Collections.<Map<String, String>>emptyList();
         } catch (InvalidConfigFileException ex) {
-            return Arrays.asList(Collections.<String, String>emptyMap());
+            return Collections.<Map<String, String>>emptyList();
         }
         return data.getKeyDomains().values();
     }
@@ -92,10 +91,10 @@ public class DataLoaderWorker
         try {
             data = get();
         } catch (InterruptedException ex) {
-            data = Arrays.asList(Collections.<String, String>emptyMap());
+            data = Collections.<Map<String, String>>emptyList();
         } catch (ExecutionException ex) {
             Logger.appError(ErrorLevel.MEDIUM, ex.getMessage(), ex);
-            data = Arrays.asList(Collections.<String, String>emptyMap());
+            data = Collections.<Map<String, String>>emptyList();
         }
         final int selectedRow;
         if (table.getRowCount() > 0 && table.getSelectedRow() > 0) {
