@@ -32,16 +32,18 @@ import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputHandler;
 import com.dmdirc.addons.ui_swing.components.inputfields.TextAreaInputField;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.ui.interfaces.InputWindow;
+
 import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.util.Date;
-import javax.swing.JLabel;
 
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.KeyStroke;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+
 import net.miginfocom.swing.MigLayout;
 
 /**
@@ -57,13 +59,13 @@ public class TopicDisplayPane extends JPanel implements DocumentListener {
      */
     private static final long serialVersionUID = 1;
     /** Parent topic pane. */
-    private ChannelSettingsDialog parent;
+    private final ChannelSettingsDialog parent;
     /** Associated channel. */
-    private Channel channel;
+    private final Channel channel;
     /** Channel window. */
-    private InputWindow channelWindow;
+    private final InputWindow channelWindow;
     /** the maximum length allowed for a topic. */
-    private int topicLengthMax;
+    private final int topicLengthMax;
     /** label showing the number of characters left in a topic.*/
     private JLabel topicLengthLabel;
     /** Topic text entry text area. */
@@ -82,6 +84,8 @@ public class TopicDisplayPane extends JPanel implements DocumentListener {
      */
     public TopicDisplayPane(final Channel channel,
             final ChannelSettingsDialog parent, final InputWindow channelWindow) {
+        super();
+
         this.channel = channel;
         this.parent = parent;
         this.topicLengthMax = channel.getServer().getParser().getMaxTopicLength();
@@ -99,6 +103,7 @@ public class TopicDisplayPane extends JPanel implements DocumentListener {
         topicLengthLabel = new JLabel();
         topicText = new TextAreaInputField(100, 4);
         topicWho = new TextLabel();
+        topicWho.setOpaque(false);
 
         topicText.setLineWrap(true);
         topicText.setWrapStyleWord(true);
