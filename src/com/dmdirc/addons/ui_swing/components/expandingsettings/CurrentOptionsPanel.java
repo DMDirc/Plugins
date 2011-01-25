@@ -100,6 +100,7 @@ public final class CurrentOptionsPanel extends JPanel implements
 
     /**
      * Adds an option to the current options pane.
+     * 
      * @param configName config option name
      * @param displayName config option display name
      * @param panel parent panel
@@ -107,7 +108,7 @@ public final class CurrentOptionsPanel extends JPanel implements
      */
     private void addCurrentOption(final JComponent component) {
         final JLabel label = new JLabel();
-        final ImageButton<JComponent> button = new ImageButton(
+        final ImageButton<JComponent> button = new ImageButton<JComponent>(
                 component.getName(),
                 IconManager.getIconManager().getIcon("close-inactive"),
                 IconManager.getIconManager().getIcon("close-active"));
@@ -145,6 +146,7 @@ public final class CurrentOptionsPanel extends JPanel implements
      * @param e Action performed
      */
     @Override
+    @SuppressWarnings("unchecked")
     public void actionPerformed(final ActionEvent e) {
         final JComponent setting = ((ImageButton<JComponent>)
                 e.getSource()).getObject();
