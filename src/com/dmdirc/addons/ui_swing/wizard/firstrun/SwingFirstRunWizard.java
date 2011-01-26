@@ -104,7 +104,7 @@ public final class SwingFirstRunWizard implements WizardListener,
                 @Override
                 public void processEvent(final ActionType type,
                         final StringBuffer format, final Object... arguments) {
-                    ProfileManagerDialog.showProfileManagerDialog(controller.getMainWindow());
+                    ProfileManagerDialog.showProfileManagerDialog(controller.getMainFrame());
                 }
             }, CoreActionType.CLIENT_OPENED);
 

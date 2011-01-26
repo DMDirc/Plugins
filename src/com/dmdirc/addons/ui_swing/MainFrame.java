@@ -47,7 +47,6 @@ import com.dmdirc.logger.Logger;
 import com.dmdirc.ui.CoreUIUtils;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.WindowManager;
-import com.dmdirc.ui.interfaces.MainWindow;
 import com.dmdirc.ui.interfaces.Window;
 import com.dmdirc.util.QueuedLinkedHashSet;
 import com.dmdirc.util.ReturnableThread;
@@ -72,8 +71,8 @@ import net.miginfocom.swing.MigLayout;
  * The main application frame.
  */
 public final class MainFrame extends JFrame implements WindowListener,
-        MainWindow, ConfigChangeListener, SelectionListener,
-        SwingWindowListener, FrameInfoListener {
+        ConfigChangeListener, SelectionListener, SwingWindowListener,
+        FrameInfoListener {
 
     /**
      * A version number for this class. It should be changed whenever the class
@@ -202,19 +201,6 @@ public final class MainFrame extends JFrame implements WindowListener,
         });
     }
 
-    /** {@inheritDoc}. */
-    @Override
-    public ImageIcon getIcon() {
-        return UIUtilities.invokeAndWait(new ReturnableThread<ImageIcon>() {
-
-            /** {@inheritDoc} */
-            @Override
-            public void run() {
-                setObject(imageIcon);
-            }
-        });
-    }
-
     /**
      * Returns the window that is currently active.
      *
@@ -247,9 +233,12 @@ public final class MainFrame extends JFrame implements WindowListener,
         }
     }
 
-    /** {@inheritDoc}. */
-    @Override
-    public String getTitlePrefix() {
+    /**
+     * Gets the string which should be prefixed to this frame's title.
+     * 
+     * @return This frame's title prefix
+     */
+    private String getTitlePrefix() {
         return "DMDirc" + (showVersion ? " " + version : "");
     }
 
@@ -493,8 +482,9 @@ public final class MainFrame extends JFrame implements WindowListener,
         return splitPane;
     }
 
-    /** {@inheritDoc}. */
-    @Override
+    /**
+     * Exits with an "OK" status code.
+     */
     public void quit() {
         quit(0);
     }
@@ -537,11 +527,11 @@ public final class MainFrame extends JFrame implements WindowListener,
     public void doQuit(final int exitCode) {
         this.exitCode = exitCode;
 
-        new LoggingSwingWorker() {
+        new LoggingSwingWorker<Void, Void>() {
 
             /** {@inheritDoc} */
             @Override
-            protected Object doInBackground() {
+            protected Void doInBackground() {
                 ActionManager.getActionManager().triggerEvent(
                         CoreActionType.CLIENT_CLOSING, null);
                 ServerManager.getServerManager().closeAll(IdentityManager.

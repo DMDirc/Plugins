@@ -9,6 +9,7 @@ import com.dmdirc.Main;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.ui.CoreUIUtils;
+import com.dmdirc.ui.IconManager;
 import com.dmdirc.util.DownloadListener;
 import com.dmdirc.util.Downloader;
 
@@ -54,7 +55,7 @@ public class DownloaderWindow extends JDialog implements Runnable, DownloadListe
         pack();
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         CoreUIUtils.centreWindow(this);
-        setIconImage(controller.getMainFrame().getIcon().getImage());
+        setIconImage(IconManager.getIconManager().getImage("icon"));
         setVisible(true);
         
         new Thread(this, "Addon downloader thread").start();
