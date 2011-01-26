@@ -24,18 +24,13 @@ package com.dmdirc.addons.ui_web;
 
 import com.dmdirc.Channel;
 import com.dmdirc.Server;
-import com.dmdirc.addons.ui_web.uicomponents.WebMainWindow;
 import com.dmdirc.addons.ui_web.uicomponents.WebStatusBar;
 import com.dmdirc.config.prefs.PreferencesInterface;
 import com.dmdirc.ui.core.components.StatusBarManager;
 import com.dmdirc.ui.core.dialogs.sslcertificate.SSLCertificateDialogModel;
-import com.dmdirc.ui.interfaces.MainWindow;
 import com.dmdirc.ui.interfaces.UIController;
-import com.dmdirc.ui.interfaces.UpdaterDialog;
-import com.dmdirc.updater.Update;
 
 import java.net.URI;
-import java.util.List;
 
 import org.mortbay.jetty.Handler;
 import org.mortbay.jetty.security.Constraint;
@@ -114,19 +109,6 @@ public class WebInterfaceUI implements UIController {
 
     /** {@inheritDoc} */
     @Override
-    public MainWindow getMainWindow() {
-        return new WebMainWindow();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public UpdaterDialog getUpdaterDialog(final List<Update> updates) {
-        //TODO FIXME
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public void showFirstRunWizard() {
         // Do nothing
     }
@@ -140,12 +122,6 @@ public class WebInterfaceUI implements UIController {
     /** {@inheritDoc} */
     @Override
     public void showServerSettingsDialog(final Server server) {
-        // Do nothing
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void initUISettings() {
         // Do nothing
     }
 
@@ -165,13 +141,6 @@ public class WebInterfaceUI implements UIController {
     @Override
     public void showMessageDialog(final String title, final String message) {
         // Do nothing
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String getUserInput(final String prompt) {
-        //TODO FIXME
-        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     /** {@inheritDoc} */

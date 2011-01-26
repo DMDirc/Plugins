@@ -28,7 +28,6 @@ import com.dmdirc.addons.ui_swing.components.renderers.UpdateComponentTableCellR
 import com.dmdirc.addons.ui_swing.components.renderers.UpdateStatusTableCellRenderer;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
-import com.dmdirc.ui.interfaces.UpdaterDialog;
 import com.dmdirc.updater.Update;
 import com.dmdirc.updater.UpdateChecker;
 import com.dmdirc.updater.UpdateCheckerListener;
@@ -53,7 +52,7 @@ import net.miginfocom.swing.MigLayout;
  * and walks them through the process of downloading the update.
  */
 public final class SwingUpdaterDialog extends StandardDialog implements
-        ActionListener, UpdaterDialog, UpdateCheckerListener {
+        ActionListener, UpdateCheckerListener {
 
     /**
      * A version number for this class. It should be changed whenever the class

@@ -30,7 +30,6 @@ import com.dmdirc.addons.ui_swing.components.addonpanel.ThemePanel;
 import com.dmdirc.addons.ui_swing.components.statusbar.FeedbackNag;
 import com.dmdirc.addons.ui_swing.components.statusbar.SwingStatusBar;
 import com.dmdirc.addons.ui_swing.dialogs.DialogKeyListener;
-import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialog;
 import com.dmdirc.addons.ui_swing.dialogs.StandardMessageDialog;
 import com.dmdirc.addons.ui_swing.dialogs.channelsetting.ChannelSettingsDialog;
 import com.dmdirc.addons.ui_swing.dialogs.error.ErrorListDialog;
@@ -39,7 +38,6 @@ import com.dmdirc.addons.ui_swing.dialogs.prefs.URLConfigPanel;
 import com.dmdirc.addons.ui_swing.dialogs.prefs.UpdateConfigPanel;
 import com.dmdirc.addons.ui_swing.dialogs.serversetting.ServerSettingsDialog;
 import com.dmdirc.addons.ui_swing.dialogs.sslcertificate.SSLCertificateDialog;
-import com.dmdirc.addons.ui_swing.dialogs.updater.SwingUpdaterDialog;
 import com.dmdirc.addons.ui_swing.dialogs.url.URLDialog;
 import com.dmdirc.addons.ui_swing.wizard.WizardListener;
 import com.dmdirc.addons.ui_swing.wizard.firstrun.SwingFirstRunWizard;
@@ -51,7 +49,6 @@ import com.dmdirc.config.prefs.PreferencesInterface;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
-import com.dmdirc.util.validators.NotEmptyValidator;
 import com.dmdirc.util.validators.NumericalValidator;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
@@ -62,7 +59,6 @@ import com.dmdirc.ui.core.dialogs.sslcertificate.SSLCertificateDialogModel;
 import com.dmdirc.ui.core.util.URLHandler;
 import com.dmdirc.ui.interfaces.InputWindow;
 import com.dmdirc.ui.interfaces.UIController;
-import com.dmdirc.updater.Update;
 import com.dmdirc.util.ReturnableThread;
 
 import java.awt.Font;
@@ -146,12 +142,6 @@ public class SwingController extends Plugin implements UIController {
         return mainFrameCreated.get();
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public MainFrame getMainWindow() {
-        return getMainFrame();
-    }
-
     /**
      * Returns a URL Handler which may be used when working with the Swing UI.
      *
@@ -188,21 +178,6 @@ public class SwingController extends Plugin implements UIController {
      */
     public SwingStatusBar getSwingStatusBar() {
         return statusBar;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public SwingUpdaterDialog getUpdaterDialog(final List<Update> updates) {
-        return UIUtilities.invokeAndWait(
-                new ReturnableThread<SwingUpdaterDialog>() {
-
-            /** {@inheritDoc} */
-            @Override
-            public void run() {
-                setObject(SwingUpdaterDialog.getSwingUpdaterDialog(updates,
-                        me));
-            }
-        });
     }
 
     /** {@inheritDoc} */
@@ -325,9 +300,10 @@ public class SwingController extends Plugin implements UIController {
         }
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void initUISettings() {
+    /**
+     * Initialises the global UI settings for the Swing UI.
+     */
+    private void initUISettings() {
         // This will do nothing on non OS X Systems
         if (Apple.isApple()) {
             final Apple apple = Apple.getApple();
@@ -426,37 +402,6 @@ public class SwingController extends Plugin implements UIController {
      */
     public void showErrorDialog() {
         errorDialog.display();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String getUserInput(final String prompt) {
-        final StandardInputDialog dialog = new StandardInputDialog(me,
-                ModalityType.MODELESS, "Input required", prompt,
-                new NotEmptyValidator()) {
-
-            /**
-             * A version number for this class. It should be changed whenever
-             * the class structure is changed (or anything else that would
-             * prevent serialized objects being unserialized with the new
-             * class).
-             */
-            private static final long serialVersionUID = 1;
-
-            /** {@inheritDoc} */
-            @Override
-            public boolean save() {
-                return true;
-            }
-
-            /** {@inheritDoc} */
-            @Override
-            public void cancelled() {
-                //Do nothing.
-            }
-        };
-        dialog.displayBlocking();
-        return dialog.getText();
     }
 
     /** {@inheritDoc} */
