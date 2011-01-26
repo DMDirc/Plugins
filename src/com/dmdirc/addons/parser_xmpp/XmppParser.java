@@ -66,6 +66,7 @@ import org.jivesoftware.smack.filter.PacketFilter;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Packet;
 import org.jivesoftware.smack.packet.Presence;
+import org.jivesoftware.smackx.ServiceDiscoveryManager;
 import org.jivesoftware.smackx.muc.MultiUserChat;
 
 /**
@@ -107,6 +108,12 @@ public class XmppParser extends BaseSocketAwareParser {
         super(address, IMPL_MAP);
 
         useFakeChannel = getURI().getQuery() != null && getURI().getQuery().matches("(?i)(^|,)showchannel($|,)");
+
+        // Make sure the ServiceDiscoveryManager adds its connection listener.
+        // Otherwise, connections can fail if the MultiUserChat instance
+        // tries to invoke its connection listener first.
+        // See http://issues.igniterealtime.org/browse/SMACK-315
+        ServiceDiscoveryManager.getIdentityName();
     }
 
     /** {@inheritDoc} */
@@ -453,6 +460,8 @@ public class XmppParser extends BaseSocketAwareParser {
                 fakeChannel.updateContacts(contacts.values());
             }
         } catch (XMPPException ex) {
+            connection = null;
+
             final ParserError error = new ParserError(ParserError.ERROR_ERROR, "Unable to connect", "");
 
             if (ex.getCause() instanceof IOException) {
