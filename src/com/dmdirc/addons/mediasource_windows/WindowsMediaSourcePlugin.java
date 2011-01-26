@@ -24,7 +24,7 @@ package com.dmdirc.addons.mediasource_windows;
 
 import com.dmdirc.addons.nowplaying.MediaSource;
 import com.dmdirc.addons.nowplaying.MediaSourceManager;
-import com.dmdirc.installer.StreamReader;
+import com.dmdirc.util.StreamReader;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.plugins.Plugin;
