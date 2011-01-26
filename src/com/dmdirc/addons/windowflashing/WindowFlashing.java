@@ -65,7 +65,9 @@ public class WindowFlashing extends Plugin {
      * Flashes an inactive window under windows.
      */
     public void flashWindow() {
-        user32.FlashWindowEx(flashInfo);
+        if (!mainFrame.isFocused()) {
+            user32.FlashWindowEx(flashInfo);
+        }
     }
 
     /**
