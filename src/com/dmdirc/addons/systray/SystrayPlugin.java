@@ -124,7 +124,7 @@ public final class SystrayPlugin extends Plugin implements ActionListener,
         if (e.getActionCommand().equals("Show/hide")) {
             final SwingController controller = (SwingController) PluginManager
                     .getPluginManager().getPluginInfoByName("ui_swing").getPlugin();
-            controller.getMainWindow().setVisible(!controller.getMainWindow().isVisible());
+            controller.getMainFrame().setVisible(!controller.getMainFrame().isVisible());
         } else if (e.getActionCommand().equals("Quit")) {
             Main.quit();
         }
@@ -190,12 +190,12 @@ public final class SystrayPlugin extends Plugin implements ActionListener,
         if (e.getButton() == MouseEvent.BUTTON1) {
             final SwingController controller = (SwingController) PluginManager
                     .getPluginManager().getPluginInfoByName("ui_swing").getPlugin();
-            if (controller.getMainWindow().isVisible()) {
-                controller.getMainWindow().setVisible(false);
+            if (controller.getMainFrame().isVisible()) {
+                controller.getMainFrame().setVisible(false);
             } else {
-                controller.getMainWindow().setVisible(true);
-                controller.getMainWindow().setState(Frame.NORMAL);
-                controller.getMainWindow().toFront();
+                controller.getMainFrame().setVisible(true);
+                controller.getMainFrame().setState(Frame.NORMAL);
+                controller.getMainFrame().toFront();
             }
         }
     }
@@ -249,7 +249,7 @@ public final class SystrayPlugin extends Plugin implements ActionListener,
                 "autominimise")) {
             final SwingController controller = (SwingController) PluginManager
                     .getPluginManager().getPluginInfoByName("ui_swing").getPlugin();
-            controller.getMainWindow().setVisible(false);
+            controller.getMainFrame().setVisible(false);
         }
     }
 

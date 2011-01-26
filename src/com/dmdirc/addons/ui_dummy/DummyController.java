@@ -28,39 +28,20 @@ import com.dmdirc.config.prefs.PreferencesInterface;
 import com.dmdirc.plugins.Plugin;
 import com.dmdirc.ui.core.components.StatusBarManager;
 import com.dmdirc.ui.core.dialogs.sslcertificate.SSLCertificateDialogModel;
-import com.dmdirc.ui.interfaces.MainWindow;
 import com.dmdirc.ui.interfaces.UIController;
-import com.dmdirc.ui.interfaces.UpdaterDialog;
-import com.dmdirc.updater.Update;
 
 import java.net.URI;
-import java.util.List;
 
 /**
  * Implements a dummy UI controller.
  */
 public final class DummyController extends Plugin implements UIController {
 
-    /** Main window. */
-    private final MainWindow mainWindow = new DummyMainWindow();
-
     /**
      * Creates a new instance of DummyController.
      */
     public DummyController() {
         StatusBarManager.getStatusBarManager().registerStatusBar(new DummyStatusBar());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public MainWindow getMainWindow() {
-        return mainWindow;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public UpdaterDialog getUpdaterDialog(final List<Update> updates) {
-        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     /** {@inheritDoc} */
@@ -83,12 +64,6 @@ public final class DummyController extends Plugin implements UIController {
 
     /** {@inheritDoc} */
     @Override
-    public void initUISettings() {
-        // Do nothing
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public void showURLDialog(final URI url) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
@@ -103,12 +78,6 @@ public final class DummyController extends Plugin implements UIController {
     @Override
     public void showMessageDialog(final String title, final String message) {
         System.out.println(message);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String getUserInput(final String prompt) {
-        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     /** {@inheritDoc} */
