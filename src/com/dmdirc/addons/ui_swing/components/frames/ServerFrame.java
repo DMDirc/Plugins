@@ -27,11 +27,18 @@ import com.dmdirc.ServerState;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputHandler;
 import com.dmdirc.addons.ui_swing.dialogs.serversetting.ServerSettingsDialog;
+import com.dmdirc.addons.ui_swing.dialogs.sslcertificate.SSLCertificateDialog;
 import com.dmdirc.commandparser.PopupType;
+import com.dmdirc.tls.CertificateManager;
+import com.dmdirc.tls.CertificateProblemListener;
+import com.dmdirc.ui.core.dialogs.sslcertificate.SSLCertificateDialogModel;
 import com.dmdirc.ui.interfaces.ServerWindow;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+import java.util.Collection;
 
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
@@ -42,7 +49,7 @@ import net.miginfocom.swing.MigLayout;
  * The ServerFrame is the MDI window that shows server messages to the user.
  */
 public final class ServerFrame extends InputTextFrame implements ServerWindow,
-        ActionListener {
+        ActionListener, CertificateProblemListener {
 
     /**
      * A version number for this class. It should be changed whenever the class
@@ -50,8 +57,12 @@ public final class ServerFrame extends InputTextFrame implements ServerWindow,
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 9;
+
     /** popup menu item. */
     private JMenuItem settingsMI;
+
+    /** The SSL certificate dialog we're displaying for this server, if any. */
+    private SSLCertificateDialog sslDialog = null;
 
     /**
      * Creates a new ServerFrame.
@@ -66,6 +77,8 @@ public final class ServerFrame extends InputTextFrame implements ServerWindow,
 
         setInputHandler(new SwingInputHandler(getInputField(),
                 owner.getCommandParser(), this));
+
+        owner.addCertificateProblemListener(this);
     }
 
     /**
@@ -143,5 +156,23 @@ public final class ServerFrame extends InputTextFrame implements ServerWindow,
                     .getServer(), getController().getMainFrame()).dispose();
         }
         super.close();
+    }
+
+    /** {@inhertiDoc} */
+    @Override
+    public void certificateProblemEncountered(final X509Certificate[] chain,
+            final Collection<CertificateException> problems,
+            final CertificateManager certificateManager) {
+        sslDialog = new SSLCertificateDialog(getController().getMainFrame(),
+                new SSLCertificateDialogModel(chain, problems, certificateManager));
+        sslDialog.display();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void certificateProblemResolved(final CertificateManager manager) {
+        if (sslDialog != null) {
+            sslDialog.dispose();
+        }
     }
 }
