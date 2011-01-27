@@ -22,7 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.sslcertificate;
 
-import com.dmdirc.ui.core.dialogs.sslcertificate.CertificateAction;
+import com.dmdirc.tls.CertificateAction;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
