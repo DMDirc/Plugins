@@ -25,6 +25,13 @@ package com.dmdirc.addons.windowflashing;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.commandparser.CommandManager;
+import com.dmdirc.config.IdentityManager;
+import com.dmdirc.config.prefs.PluginPreferencesCategory;
+import com.dmdirc.config.prefs.PreferencesCategory;
+import com.dmdirc.config.prefs.PreferencesDialogModel;
+import com.dmdirc.config.prefs.PreferencesSetting;
+import com.dmdirc.config.prefs.PreferencesType;
+import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.plugins.Plugin;
 import com.dmdirc.plugins.PluginManager;
 
@@ -33,25 +40,14 @@ import com.sun.jna.NativeLibrary;
 import com.sun.jna.Pointer;
 import com.sun.jna.platform.win32.User32;
 import com.sun.jna.platform.win32.WinDef.HWND;
+import com.sun.jna.platform.win32.WinUser;
 import com.sun.jna.platform.win32.WinUser.FLASHWINFO;
 
 /**
  * Native notification plugin to make DMDirc support windows task bar flashing.
  */
-public class WindowFlashing extends Plugin {
+public class WindowFlashing extends Plugin implements ConfigChangeListener {
 
-    /** Stops the window flashing. */
-    private static final int FLASHW_STOP = 0; //NOPMD
-    /** Flashes the window caption. */
-    private static final int FLASHW_CAPTION = 1; //NOPMD
-    /** Flashes the window's taskbar entry. */
-    private static final int FLASHW_TRAY = 2; //NOPMD
-    /** Flash both the window's caption and taskbar entry. */
-    private static final int FLASHW_ALL = 3;
-    /** Flash until FLASHW_STOP is set. */
-    private static final int FLASHW_TIMER = 4; //NOPMD
-    /** Flash until the window gains focus. */
-    private static final int FLASHW_TIMERNOFG = 12;
     /** Library instance. */
     private User32 user32;
     /** Flash info object. */
@@ -60,12 +56,19 @@ public class WindowFlashing extends Plugin {
     private MainFrame mainFrame;
     /** Flash window command. */
     private FlashWindow flashCommand;
+    /** Cached blink rate setting. */
+    private int blinkrate = 0;
+    /** Cached count setting. */
+    private int flashcount = Integer.MAX_VALUE;
+    /** Cached flags setting. */
+    private int flags = 0;
 
     /**
      * Flashes an inactive window under windows.
      */
     public void flashWindow() {
         if (!mainFrame.isFocused()) {
+            setupFlashObject();
             user32.FlashWindowEx(flashInfo);
         }
     }
@@ -90,15 +93,8 @@ public class WindowFlashing extends Plugin {
                 .getPluginManager().getPluginInfoByName("ui_swing")
                 .getPlugin()).getMainFrame();
         user32 = (User32) Native.loadLibrary("user32", User32.class);
-        final HWND hwnd = new HWND();
-        final Pointer pointer = Native.getWindowPointer(mainFrame);
-        hwnd.setPointer(pointer);
-        flashInfo = new FLASHWINFO();
-        flashInfo.dwFlags = FLASHW_ALL | FLASHW_TIMERNOFG;
-        flashInfo.dwTimeout = 0;
-        flashInfo.uCount = Integer.MAX_VALUE;
-        flashInfo.hWnd = hwnd;
-        flashInfo.cbSize = flashInfo.size();
+        setupFlashObject();
+        IdentityManager.getGlobalConfig().addChangeListener(getDomain(), this);
     }
 
     /** {@inheritDoc} */
@@ -110,5 +106,116 @@ public class WindowFlashing extends Plugin {
         user32 = null;
         flashInfo = null;
         NativeLibrary.getInstance("user32").dispose();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void showConfig(final PreferencesDialogModel manager) {
+        final PreferencesCategory category = new PluginPreferencesCategory(
+                getPluginInfo(), "Window Flashing",
+                "General configuration for window flashing plugin.");
+
+        category.addSetting(new PreferencesSetting(
+                PreferencesType.OPTIONALINTEGER, getDomain(), "blinkrate",
+                "Blink rate", "Specifies the rate at which the taskbar and or "
+                + "caption will blink, if unspecified this will be your cursor "
+                + "blink rate."));
+        category.addSetting(new PreferencesSetting(
+                PreferencesType.OPTIONALINTEGER, getDomain(), "flashcount",
+                "Flash count", "Specifies the number of times to blink, if "
+                + "unspecified this will blink indefinitely"));
+        category.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
+                getDomain(), "flashtaskbar", "Flash taskbar",
+                "Shoudl the taskbar entry flash?"));
+        category.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
+                getDomain(), "flashcaption", "Flash caption",
+                "Should the window caption flash?"));
+
+        manager.addCategory(category);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void configChanged(final String domain, final String key) {
+        blinkrate = getTimeout();
+        flashcount = getCount();
+        flags = getFlags();
+    }
+
+    /**
+     * Creates a new flash info object with the cached settings.
+     */
+    private void setupFlashObject() {
+        flashInfo = new FLASHWINFO();
+        flashInfo.dwFlags = flags;
+        flashInfo.dwTimeout = blinkrate;
+        flashInfo.uCount = flashcount;
+        flashInfo.hWnd = getHWND();
+        flashInfo.cbSize = flashInfo.size();
+    }
+
+    /**
+     * Returns the native handle object for the main frame.
+     * @return
+     */
+    private HWND getHWND() {
+        final HWND hwnd = new HWND();
+        final Pointer pointer = Native.getWindowPointer(mainFrame);
+        hwnd.setPointer(pointer);
+        return hwnd;
+    }
+
+    /**
+     * Calculates the flags for the flash object based on config settings.
+     *
+     * @return Flash info flags
+     */
+    private int getFlags() {
+        int returnValue = 0;
+        if (IdentityManager.getGlobalConfig().getOptionBool(getDomain(),
+                "flashtaskbar")) {
+            returnValue |= WinUser.FLASHW_TRAY;
+        }
+        if (IdentityManager.getGlobalConfig().getOptionBool(getDomain(),
+                "flashcaption")) {
+            returnValue |= WinUser.FLASHW_CAPTION;
+        }
+        if (IdentityManager.getGlobalConfig().getOptionBool(getDomain(),
+                "flashcount")) {
+            returnValue |= WinUser.FLASHW_TIMER;
+        } else {
+            returnValue |= WinUser.FLASHW_TIMERNOFG;
+        }
+        return returnValue;
+    }
+
+    /**
+     * Returns the blink rate value from the config.
+     *
+     * @return Blink rate
+     */
+    private int getTimeout() {
+        if (IdentityManager.getGlobalConfig().hasOptionInt(getDomain(),
+                "blinkrate")) {
+            return IdentityManager.getGlobalConfig().getOptionInt(
+                    getDomain(), "blinkrate");
+        } else {
+            return 0;
+        }
+    }
+
+    /**
+     * Returns the flash count value from the config.
+     *
+     * @return Number of flashes before stopping
+     */
+    private int getCount() {
+        if (IdentityManager.getGlobalConfig().hasOptionInt(getDomain(),
+                "flashcount")) {
+            return IdentityManager.getGlobalConfig().getOptionInt(
+                    getDomain(), "flashcount");
+        } else {
+            return Integer.MAX_VALUE;
+        }
     }
 }
