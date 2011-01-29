@@ -57,7 +57,7 @@ public class ConfigInfo extends DebugCommand {
 
     /** {@inheritDoc} */
     @Override
-    public void execute(final FrameContainer<?> origin,
+    public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
         for (Identity source : origin.getConfigManager().getSources()) {
             sendLine(origin, args.isSilent(), FORMAT_OUTPUT, source.getTarget()

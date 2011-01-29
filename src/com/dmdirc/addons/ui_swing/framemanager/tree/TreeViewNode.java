@@ -40,7 +40,7 @@ public class TreeViewNode extends DefaultMutableTreeNode {
     /** Node's label. */
     private final NodeLabel label;
     /** Node's frame container. */
-    private final FrameContainer<?> window;
+    private final FrameContainer window;
 
     /**
      * Instantiates a new tree view node.
@@ -48,7 +48,7 @@ public class TreeViewNode extends DefaultMutableTreeNode {
      * @param label Node label
      * @param window Node window
      */
-    public TreeViewNode(final NodeLabel label, final FrameContainer<?> window) {
+    public TreeViewNode(final NodeLabel label, final FrameContainer window) {
         super();
 
         this.label = label;
@@ -69,7 +69,7 @@ public class TreeViewNode extends DefaultMutableTreeNode {
      *
      * @return Node window
      */
-    public FrameContainer<?> getWindow() {
+    public FrameContainer getWindow() {
         return window;
     }
 }

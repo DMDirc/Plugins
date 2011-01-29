@@ -368,14 +368,14 @@ public final class WindowMenuFrameManager extends JMenu implements
             if (!(component instanceof FrameContainerMenuInterface)) {
                 continue;
             }
-            final FrameContainer child = ((FrameContainerMenuInterface) component).
-                    getFrame();
+            final FrameContainer child
+                    = ((FrameContainerMenuInterface) component).getFrame();
             if (sortBefore(newChild, child)) {
                 return i;
             } else if (!sortAfter(newChild, child) && IdentityManager.
                     getGlobalConfig().getOptionBool("treeview",
-                    "sortwindows") && newChild.toString().compareToIgnoreCase(
-                    child.toString()) < 0) {
+                    "sortwindows") && newChild.getName().compareToIgnoreCase(
+                    child.getName()) < 0) {
                 return i;
             }
         }

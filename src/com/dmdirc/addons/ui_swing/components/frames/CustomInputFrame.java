@@ -26,7 +26,6 @@ import com.dmdirc.WritableFrameContainer;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputHandler;
 import com.dmdirc.commandparser.PopupType;
-import com.dmdirc.ui.interfaces.InputWindow;
 
 import javax.swing.JPopupMenu;
 
@@ -52,7 +51,7 @@ public class CustomInputFrame extends InputTextFrame {
      * @param controller Swing controller
      */
     public CustomInputFrame(final SwingController controller,
-            final WritableFrameContainer<? extends InputWindow> owner) {
+            final WritableFrameContainer owner) {
         super(controller, owner);
 
         setInputHandler(new SwingInputHandler(getInputField(),

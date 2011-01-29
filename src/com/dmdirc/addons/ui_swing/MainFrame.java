@@ -592,7 +592,7 @@ public final class MainFrame extends JFrame implements WindowListener,
 
     /** {@inheritDoc} */
     @Override
-    public void selectionChanged(final FrameContainer<?> window) {
+    public void selectionChanged(final FrameContainer window) {
         activeFrame = (TextFrame) controller.getWindowFactory()
                 .getSwingWindow(window);
         focusOrder.offerAndMove(activeFrame);
@@ -642,18 +642,18 @@ public final class MainFrame extends JFrame implements WindowListener,
 
     /** {@inheritDoc} */
     @Override
-    public void iconChanged(final FrameContainer<?> window, final String icon) {
+    public void iconChanged(final FrameContainer window, final String icon) {
         //Ignore
     }
 
     /** {@inheritDoc} */
     @Override
-    public void nameChanged(final FrameContainer<?> window, final String name) {
+    public void nameChanged(final FrameContainer window, final String name) {
         //Ignore
     }
 
     @Override
-    public void titleChanged(final FrameContainer<?> window,
+    public void titleChanged(final FrameContainer window,
             final String title) {
         setTitle(title);
     }

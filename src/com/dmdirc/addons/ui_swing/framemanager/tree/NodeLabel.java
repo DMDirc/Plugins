@@ -57,7 +57,7 @@ public class NodeLabel extends JPanel implements SelectionListener,
      */
     private static final long serialVersionUID = 1;
     /** The window this node represents in the tree. */
-    private final FrameContainer<?> window;
+    private final FrameContainer window;
     /** Colour used to show if the mouse is over this node. */
     private boolean rollover;
     /** Colour used to show if this node has an active notification. */
@@ -77,7 +77,7 @@ public class NodeLabel extends JPanel implements SelectionListener,
      *
      * @param window Window for this node
      */
-    public NodeLabel(final FrameContainer<?> window) {
+    public NodeLabel(final FrameContainer window) {
         super();
 
         this.window = window;
@@ -94,7 +94,7 @@ public class NodeLabel extends JPanel implements SelectionListener,
         }
 
         icon.setIcon(IconManager.getIconManager().getIcon(window.getIcon()));
-        text.setText(window.toString());
+        text.setText(window.getName());
         text.setBorder(null);
 
         setLayout(new MigLayout("ins 0"));
@@ -115,7 +115,7 @@ public class NodeLabel extends JPanel implements SelectionListener,
 
     /** {@inheritDoc} */
     @Override
-    public void selectionChanged(final FrameContainer<?> window) {
+    public void selectionChanged(final FrameContainer window) {
         if (equals(window)) {
             selected = true;
         } else {
@@ -125,7 +125,7 @@ public class NodeLabel extends JPanel implements SelectionListener,
 
     /** {@inheritDoc} */
     @Override
-    public void notificationSet(final FrameContainer<?> window,
+    public void notificationSet(final FrameContainer window,
             final Color colour) {
         if (equals(window)) {
             notificationColour = colour;
@@ -134,7 +134,7 @@ public class NodeLabel extends JPanel implements SelectionListener,
 
     /** {@inheritDoc} */
     @Override
-    public void notificationCleared(final FrameContainer<?> window) {
+    public void notificationCleared(final FrameContainer window) {
         if (equals(window)) {
             notificationColour = null;
         }
@@ -142,7 +142,7 @@ public class NodeLabel extends JPanel implements SelectionListener,
 
     /** {@inheritDoc} */
     @Override
-    public void iconChanged(final FrameContainer<?> window, final String icon) {
+    public void iconChanged(final FrameContainer window, final String icon) {
         if (equals(window)) {
             this.icon.setIcon(IconManager.getIconManager().getIcon(icon));
         }
@@ -150,13 +150,13 @@ public class NodeLabel extends JPanel implements SelectionListener,
 
     /** {@inheritDoc} */
     @Override
-    public void nameChanged(final FrameContainer<?> window, final String name) {
+    public void nameChanged(final FrameContainer window, final String name) {
         // Do nothing
     }
 
     /** {@inheritDoc} */
     @Override
-    public void titleChanged(final FrameContainer<?> window,
+    public void titleChanged(final FrameContainer window,
             final String title) {
         // Do nothing
     }
@@ -295,13 +295,13 @@ public class NodeLabel extends JPanel implements SelectionListener,
      * @param newText Style to set
      */
     public void setTextStyle(final Styliser styliser, final String newText) {
-        if (currentText.equals(newText + window.toString())) {
+        if (currentText.equals(newText + window.getName())) {
             return;
         }
         text.setText("");
-        currentText = newText + window.toString();
+        currentText = newText + window.getName();
         styliser.addStyledString((StyledDocument) text.getDocument(),
-                new String[] {newText, window.toString(), });
+                new String[] {newText, window.getName(), });
     }
 
 }

@@ -32,7 +32,6 @@ import com.dmdirc.commandparser.PopupType;
 import com.dmdirc.tls.CertificateManager;
 import com.dmdirc.tls.CertificateProblemListener;
 import com.dmdirc.ui.core.dialogs.sslcertificate.SSLCertificateDialogModel;
-import com.dmdirc.ui.interfaces.ServerWindow;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -48,7 +47,7 @@ import net.miginfocom.swing.MigLayout;
 /**
  * The ServerFrame is the MDI window that shows server messages to the user.
  */
-public final class ServerFrame extends InputTextFrame implements ServerWindow,
+public final class ServerFrame extends InputTextFrame implements
         ActionListener, CertificateProblemListener {
 
     /**

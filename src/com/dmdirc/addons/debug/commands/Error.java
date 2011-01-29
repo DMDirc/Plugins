@@ -64,7 +64,7 @@ public class Error extends DebugCommand implements IntelligentCommand {
 
     /** {@inheritDoc} */
     @Override
-    public void execute(final FrameContainer<?> origin,
+    public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
         if ((args.getArguments().length == 1
                 || args.getArguments().length == 2)

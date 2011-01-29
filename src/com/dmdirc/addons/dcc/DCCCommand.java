@@ -70,7 +70,7 @@ public final class DCCCommand extends Command implements IntelligentCommand,
 
     /** {@inheritDoc} */
     @Override
-    public void execute(final FrameContainer<?> origin,
+    public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
         if (args.getArguments().length > 1) {
             final String target = args.getArguments()[1];
@@ -127,7 +127,7 @@ public final class DCCCommand extends Command implements IntelligentCommand,
      * @param isSilent Is this a silent command
      */
     private void startChat(final Parser parser, final Server server,
-            final FrameContainer<?> origin, final String myNickname,
+            final FrameContainer origin, final String myNickname,
             final String target, final boolean isSilent) {
         final DCCChat chat = new DCCChat();
         if (myPlugin.listen(chat)) {
@@ -158,7 +158,7 @@ public final class DCCCommand extends Command implements IntelligentCommand,
      * @param filename The file to send
      * @since 0.6.3m1
      */
-    public void sendFile(final String target, final FrameContainer<?> origin,
+    public void sendFile(final String target, final FrameContainer origin,
             final Server server, final boolean isSilent, final String filename) {
         // New thread to ask the user what file to send
         final File givenFile = new File(filename);

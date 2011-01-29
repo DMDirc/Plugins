@@ -102,7 +102,7 @@ public final class ButtonBar implements FrameManager, ActionListener,
     /** The parent for the manager. */
     private JComponent parent;
     /** The currently selected frame. */
-    private transient FrameContainer<?> selected;
+    private transient FrameContainer selected;
     /** Selected window. */
     private Window activeWindow;
     /** Sort root windows prefs setting. */
@@ -207,10 +207,10 @@ public final class ButtonBar implements FrameManager, ActionListener,
      * @since 0.6.4
      */
     private void initButtons(
-            final Collection<FrameContainer<?>> windowCollection) {
+            final Collection<FrameContainer> windowCollection) {
         Window window;
         Window parentWindow;
-        for (FrameContainer<?> frame : windowCollection) {
+        for (FrameContainer frame : windowCollection) {
             window = windowFactory.getSwingWindow(frame);
             parentWindow = windowFactory.getSwingWindow(frame.getParent());
             if (window != null) {
@@ -218,8 +218,8 @@ public final class ButtonBar implements FrameManager, ActionListener,
             }
 
             if (!frame.getChildren().isEmpty()) {
-                final ArrayList<FrameContainer<?>> childList = new ArrayList
-                        <FrameContainer<?>>(frame.getChildren());
+                final ArrayList<FrameContainer> childList = new ArrayList
+                        <FrameContainer>(frame.getChildren());
                 initButtons(childList);
             }
         }
@@ -232,7 +232,7 @@ public final class ButtonBar implements FrameManager, ActionListener,
      * @return {@link FrameToggleButton} object asociated with this
      * FrameContainer. Returns null if none exist
      */
-    public FrameToggleButton getButton(final FrameContainer<?> frame) {
+    public FrameToggleButton getButton(final FrameContainer frame) {
         final Window window = windowFactory.getSwingWindow(frame);
         if (buttons.containsKey(window)) {
             return buttons.get(window);
@@ -265,17 +265,17 @@ public final class ButtonBar implements FrameManager, ActionListener,
      * @since 0.6.4
      */
     private void displayButtons(
-            final Collection<FrameContainer<?>> windowCollection) {
+            final Collection<FrameContainer> windowCollection) {
         FrameToggleButton button;
-        for (FrameContainer<?> window : windowCollection) {
+        for (FrameContainer window : windowCollection) {
             button = getButton(window);
             if (button != null) {
                 button.setPreferredSize(
                         new Dimension(buttonWidth, BUTTON_HEIGHT));
                 buttonPanel.add(button);
                 if (!window.getChildren().isEmpty()) {
-                    final ArrayList<FrameContainer<?>> childList = new ArrayList
-                            <FrameContainer<?>>(window.getChildren());
+                    final ArrayList<FrameContainer> childList = new ArrayList
+                            <FrameContainer>(window.getChildren());
                     if (sortChildWindows) {
                          Collections.sort(childList,
                                  new FrameContainerComparator());
@@ -293,8 +293,8 @@ public final class ButtonBar implements FrameManager, ActionListener,
         buttonPanel.setVisible(false);
         buttonPanel.removeAll();
 
-        final ArrayList<FrameContainer<?>> windowList = new
-                ArrayList<FrameContainer<?>>(WindowManager.getRootWindows());
+        final ArrayList<FrameContainer> windowList = new
+                ArrayList<FrameContainer>(WindowManager.getRootWindows());
         if (sortRootWindows) {
             Collections.sort(windowList, new FrameContainerComparator());
         }
@@ -311,7 +311,7 @@ public final class ButtonBar implements FrameManager, ActionListener,
      */
     private void addButton(final Window source) {
         final FrameToggleButton button = new FrameToggleButton(
-                source.getContainer().toString(), IconManager.getIconManager()
+                source.getContainer().getName(), IconManager.getIconManager()
                 .getIcon(source.getContainer().getIcon()), source);
         button.addActionListener(this);
         button.addMouseListener(this);
@@ -380,7 +380,7 @@ public final class ButtonBar implements FrameManager, ActionListener,
     @Override
     public void actionPerformed(final ActionEvent e) {
         final FrameToggleButton button = (FrameToggleButton) e.getSource();
-        final FrameContainer<?> window =  button.getFrameContainer();
+        final FrameContainer window =  button.getFrameContainer();
         final TextFrame frame = (TextFrame) button.getWindow();
         if (frame != null && window.equals(activeWindow.getContainer())) {
             button.setSelected(true);
@@ -432,7 +432,7 @@ public final class ButtonBar implements FrameManager, ActionListener,
 
     /** {@inheritDoc} */
     @Override
-    public void notificationSet(final FrameContainer<?> window,
+    public void notificationSet(final FrameContainer window,
             final Color colour) {
         UIUtilities.invokeLater(new Runnable() {
 
@@ -449,7 +449,7 @@ public final class ButtonBar implements FrameManager, ActionListener,
 
     /** {@inheritDoc} */
     @Override
-    public void notificationCleared(final FrameContainer<?> window) {
+    public void notificationCleared(final FrameContainer window) {
         UIUtilities.invokeLater(new Runnable() {
 
             /** {@inheritDoc} */
@@ -462,7 +462,7 @@ public final class ButtonBar implements FrameManager, ActionListener,
 
     /** {@inheritDoc} */
     @Override
-    public void selectionChanged(final FrameContainer<?> window) {
+    public void selectionChanged(final FrameContainer window) {
         UIUtilities.invokeLater(new Runnable() {
 
             /** {@inheritDoc} */
@@ -488,7 +488,7 @@ public final class ButtonBar implements FrameManager, ActionListener,
 
     /** {@inheritDoc} */
     @Override
-    public void iconChanged(final FrameContainer<?> window, final String icon) {
+    public void iconChanged(final FrameContainer window, final String icon) {
         UIUtilities.invokeLater(new Runnable() {
 
             /** {@inheritDoc} */
@@ -504,7 +504,7 @@ public final class ButtonBar implements FrameManager, ActionListener,
 
     /** {@inheritDoc} */
     @Override
-    public void nameChanged(final FrameContainer<?> window, final String name) {
+    public void nameChanged(final FrameContainer window, final String name) {
         UIUtilities.invokeLater(new Runnable() {
 
             /** {@inheritDoc} */
@@ -520,7 +520,7 @@ public final class ButtonBar implements FrameManager, ActionListener,
 
     /** {@inheritDoc} */
     @Override
-    public void titleChanged(final FrameContainer<?> window,
+    public void titleChanged(final FrameContainer window,
             final String title) {
         // Do nothing
     }

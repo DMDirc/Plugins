@@ -89,10 +89,10 @@ public class DMDircUITestCase extends UISpecTestCase {
      *
      * @return FrameContainer mock
      */
-    public static WritableFrameContainer<CustomInputFrame> getMockedContainer() {
+    public static WritableFrameContainer getMockedContainer() {
         final IRCDocument document = mock(IRCDocument.class);
         @SuppressWarnings("unchecked")
-        final WritableFrameContainer<CustomInputFrame> container = mock(
+        final WritableFrameContainer container = mock(
                 WritableFrameContainer.class);
         final ConfigManager config = mock(ConfigManager.class);
         when(container.getDocument()).thenReturn(document);

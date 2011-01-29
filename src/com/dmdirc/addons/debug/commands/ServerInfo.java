@@ -57,7 +57,7 @@ public class ServerInfo extends DebugCommand {
 
     /** {@inheritDoc} */
     @Override
-    public void execute(final FrameContainer<?> origin,
+    public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
         if (origin.getServer() == null) {
             sendLine(origin, args.isSilent(), FORMAT_ERROR,

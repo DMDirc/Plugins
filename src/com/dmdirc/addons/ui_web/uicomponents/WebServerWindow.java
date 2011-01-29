@@ -24,13 +24,12 @@ package com.dmdirc.addons.ui_web.uicomponents;
 
 import com.dmdirc.Server;
 import com.dmdirc.addons.ui_web.WebInterfaceUI;
-import com.dmdirc.ui.interfaces.ServerWindow;
 
 /**
  *
  * @author chris
  */
-public class WebServerWindow extends WebInputWindow implements ServerWindow {
+public class WebServerWindow extends WebInputWindow {
 
     private final Server server;
 

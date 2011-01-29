@@ -43,7 +43,7 @@ public class EmptyWindow extends TextFrame {
      * @param controller The UIController that owns this window
      * @param owner The frame container that owns this window
      */
-    public EmptyWindow(final SwingController controller, final FrameContainer<?> owner) {
+    public EmptyWindow(final SwingController controller, final FrameContainer owner) {
         super(owner, controller);
         setTextPane(null);
     }

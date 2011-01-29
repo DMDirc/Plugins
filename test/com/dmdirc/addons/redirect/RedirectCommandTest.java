@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.redirect;
 
+import com.dmdirc.ui.interfaces.Window;
 import com.dmdirc.MessageTarget;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandManager;
@@ -50,10 +51,8 @@ public class RedirectCommandTest {
     @Test
     public void testExecute() {
         final RedirectCommand command = new RedirectCommand();
-        final MessageTarget<InputWindow> target = mock(MessageTarget.class);
+        final MessageTarget target = mock(MessageTarget.class);
         final InputWindow window = mock(InputWindow.class);
-        when(target.getWindows()).thenReturn(new ArrayList<InputWindow>(Arrays.asList(window)));
-        final CommandParser parser = new ServerCommandParser();
         //when(window.getCommandParser()).thenReturn(parser);
         when(window.getContainer().getConfigManager()).thenReturn(IdentityManager.getGlobalConfig());
 

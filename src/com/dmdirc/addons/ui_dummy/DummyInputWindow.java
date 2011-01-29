@@ -34,7 +34,7 @@ import com.dmdirc.ui.interfaces.UIController;
 public class DummyInputWindow implements InputWindow {
 
     /** Our container. */
-    private final WritableFrameContainer<? extends InputWindow> container;
+    private final WritableFrameContainer container;
 
     /**
      * Instantiates a new DummyInputWindow.
@@ -42,7 +42,7 @@ public class DummyInputWindow implements InputWindow {
      * @param owner Parent window
      * @param commandParser Parent command parser
      */
-    public DummyInputWindow(final WritableFrameContainer<? extends InputWindow> owner,
+    public DummyInputWindow(final WritableFrameContainer owner,
             final CommandParser commandParser) {
         this.container = owner;
     }
@@ -55,7 +55,7 @@ public class DummyInputWindow implements InputWindow {
 
     /** {@inheritDoc} */
     @Override
-    public WritableFrameContainer<? extends InputWindow> getContainer() {
+    public WritableFrameContainer getContainer() {
         return container;
     }
 

@@ -56,7 +56,7 @@ public class Notify extends DebugCommand {
 
     /** {@inheritDoc} */
     @Override
-    public void execute(final FrameContainer<?> origin,
+    public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
         sendLine(origin, args.isSilent(), FORMAT_OUTPUT,
                 "Current notification colour is: " + origin.getNotification());

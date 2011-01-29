@@ -60,7 +60,7 @@ public class FrameContainerMenuItem extends JMenuItem implements FrameInfoListen
      */
     public FrameContainerMenuItem(final FrameContainer frame,
             final WindowMenuFrameManager manager) {
-        super(frame.toString(), IconManager.getIconManager().getIcon(frame.
+        super(frame.getName(), IconManager.getIconManager().getIcon(frame.
                 getIcon()));
 
         this.frame = frame;
