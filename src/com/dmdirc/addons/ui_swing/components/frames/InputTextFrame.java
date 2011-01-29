@@ -86,7 +86,7 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
      * @param controller Swing controller
      */
     public InputTextFrame(final SwingController controller,
-            final WritableFrameContainer<? extends InputWindow> owner) {
+            final WritableFrameContainer owner) {
         super(owner, controller);
 
         initComponents();
@@ -173,8 +173,8 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
      */
     @Override
     @SuppressWarnings("unchecked")
-    public WritableFrameContainer<? extends InputWindow> getContainer() {
-        return (WritableFrameContainer<? extends InputWindow>) super.
+    public WritableFrameContainer getContainer() {
+        return (WritableFrameContainer) super.
                 getContainer();
     }
 
@@ -196,7 +196,7 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
     public final void setInputHandler(final InputHandler newInputHandler) {
         this.inputHandler = newInputHandler;
         inputHandler.addValidationListener(inputField);
-        inputHandler.setTabCompleter(((WritableFrameContainer<?>) frameParent).
+        inputHandler.setTabCompleter(((WritableFrameContainer) frameParent).
                 getTabCompleter());
     }
 

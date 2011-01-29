@@ -74,14 +74,14 @@ public final class DCCCommandParser extends GlobalCommandParser {
      * @param line The line input by the user
      */
     @Override
-    protected void handleNonCommand(final FrameContainer<?> origin,
+    protected void handleNonCommand(final FrameContainer origin,
             final String line) {
-        ((WritableFrameContainer<?>) origin).sendLine(line);
+        ((WritableFrameContainer) origin).sendLine(line);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void setOwner(final FrameContainer<?> owner) {
+    public void setOwner(final FrameContainer owner) {
         // Don't care
     }
 

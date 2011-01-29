@@ -62,9 +62,9 @@ public final class NowPlayingCommand extends Command implements
 
     /** {@inheritDoc} */
     @Override
-    public void execute(final FrameContainer<?> origin,
+    public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
-        final MessageTarget<?> target = ((ChatCommandContext) context).getChat();
+        final MessageTarget target = ((ChatCommandContext) context).getChat();
         if (args.getArguments().length > 0 && args.getArguments()[0]
                 .equalsIgnoreCase("--sources")) {
             doSourceList(origin, args.isSilent(), args.getArgumentsAsString(1));
@@ -106,7 +106,7 @@ public final class NowPlayingCommand extends Command implements
      * @param isSilent Whether this command is being silenced
      * @param format Format to be passed to getInformation
      */
-    private void doSourceList(final FrameContainer<?> origin, final boolean isSilent,
+    private void doSourceList(final FrameContainer origin, final boolean isSilent,
             final String format) {
         final List<MediaSource> sources = parent.getSources();
 

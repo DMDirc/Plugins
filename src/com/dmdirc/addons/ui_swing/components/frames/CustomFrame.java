@@ -48,7 +48,7 @@ public class CustomFrame extends TextFrame {
      * @param controller Swing controller
      */
     public CustomFrame(final SwingController controller,
-            final FrameContainer<?> owner) {
+            final FrameContainer owner) {
         super(owner, controller);
 
         initComponents();

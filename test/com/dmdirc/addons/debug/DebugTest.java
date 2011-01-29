@@ -48,7 +48,7 @@ public class DebugTest {
     @Test
     public void testNoArgs() {
         final CommandArguments arguments = mock(CommandArguments.class);
-        final FrameContainer<?> container = mock(FrameContainer.class);
+        final FrameContainer container = mock(FrameContainer.class);
         
         when(arguments.isCommand()).thenReturn(true);
         when(arguments.getArguments()).thenReturn(new String[0]);
@@ -65,7 +65,7 @@ public class DebugTest {
     public void testInvalidArg() {
         final DebugPlugin plugin = mock(DebugPlugin.class);
         final CommandArguments arguments = mock(CommandArguments.class);
-        final FrameContainer<?> container = mock(FrameContainer.class);
+        final FrameContainer container = mock(FrameContainer.class);
         
         when(plugin.getCommand("test")).thenReturn(null);
         when(arguments.isCommand()).thenReturn(true);
@@ -82,7 +82,7 @@ public class DebugTest {
     public void testCommandNoArgs() {
         final DebugPlugin plugin = mock(DebugPlugin.class);
         final CommandArguments arguments = mock(CommandArguments.class);
-        final FrameContainer<?> container = mock(FrameContainer.class);
+        final FrameContainer container = mock(FrameContainer.class);
         final DebugCommand command = mock(DebugCommand.class);
         final CommandContext context = mock(CommandContext.class);
         
@@ -105,7 +105,7 @@ public class DebugTest {
     public void testCommandWithArgs() {
         final DebugPlugin plugin = mock(DebugPlugin.class);
         final CommandArguments arguments = mock(CommandArguments.class);
-        final FrameContainer<?> container = mock(FrameContainer.class);
+        final FrameContainer container = mock(FrameContainer.class);
         final DebugCommand command = mock(DebugCommand.class);
         final CommandContext context = mock(CommandContext.class);
         

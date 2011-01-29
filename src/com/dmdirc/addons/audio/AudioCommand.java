@@ -47,7 +47,7 @@ public final class AudioCommand extends Command implements CommandInfo {
 
     /** {@inheritDoc} */
     @Override
-    public void execute(final FrameContainer<?> origin,
+    public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
         final String filename = args.getArgumentsAsString();
         final File file = new File(filename);

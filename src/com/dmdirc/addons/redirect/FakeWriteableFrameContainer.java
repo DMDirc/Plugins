@@ -28,28 +28,28 @@ import com.dmdirc.WritableFrameContainer;
 import com.dmdirc.ui.input.TabCompleter;
 import com.dmdirc.ui.interfaces.InputWindow;
 import com.dmdirc.ui.messages.Formatter;
+import java.util.Collections;
 
 import java.util.Date;
 
 /**
  * Implements a fake input window, which sends echoed text to the specified
  * chat window instead.
- * 
- * @author Chris
  */
-public class FakeWriteableFrameContainer extends WritableFrameContainer<InputWindow> {
+public class FakeWriteableFrameContainer extends WritableFrameContainer {
     
     /** The target for this window. */
-    private final MessageTarget<? extends InputWindow> target;
+    private final MessageTarget target;
 
     /**
      * Creates a new instance of FakeInputWindow.
      * 
      * @param target The message target that output gets sent to
      */
-    public FakeWriteableFrameContainer(final MessageTarget<?> target) {
+    public FakeWriteableFrameContainer(final MessageTarget target) {
         super(target.getIcon(), target.getName(), target.getTitle(),
-                InputWindow.class, target.getConfigManager(), target.getCommandParser());
+                InputWindow.class, target.getConfigManager(),
+                target.getCommandParser(), Collections.<String>emptyList());
         this.target = target;
     }
 

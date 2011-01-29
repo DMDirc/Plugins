@@ -27,7 +27,6 @@ import com.dmdirc.Server;
 import com.dmdirc.config.prefs.PreferencesInterface;
 import com.dmdirc.plugins.Plugin;
 import com.dmdirc.ui.core.components.StatusBarManager;
-import com.dmdirc.ui.core.dialogs.sslcertificate.SSLCertificateDialogModel;
 import com.dmdirc.ui.interfaces.UIController;
 
 import java.net.URI;
@@ -78,12 +77,6 @@ public final class DummyController extends Plugin implements UIController {
     @Override
     public void showMessageDialog(final String title, final String message) {
         System.out.println(message);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void showSSLCertificateDialog(final SSLCertificateDialogModel model) {
-        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     /** {@inheritDoc} */

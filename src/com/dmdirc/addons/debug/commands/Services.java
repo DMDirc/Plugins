@@ -62,7 +62,7 @@ public class Services extends DebugCommand implements IntelligentCommand {
 
     /** {@inheritDoc} */
     @Override
-    public void execute(final FrameContainer<?> origin,
+    public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
         sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Available Services:");
         for (Service service : PluginManager.getPluginManager()

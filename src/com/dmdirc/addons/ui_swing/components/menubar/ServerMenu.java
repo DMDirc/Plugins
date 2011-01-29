@@ -139,7 +139,7 @@ public class ServerMenu extends JMenu implements ActionListener,
     /** {@inheritDoc} */
     @Override
     public final void menuSelected(final MenuEvent e) {
-        final FrameContainer<?> activeWindow = WindowManager.getActiveWindow();
+        final FrameContainer activeWindow = WindowManager.getActiveWindow();
 
         ssd.setEnabled(activeWindow != null && activeWindow
                 .getServer() != null && activeWindow.getServer().getState()

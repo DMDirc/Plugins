@@ -44,7 +44,7 @@ public final class TimedCommand extends TimerTask {
     private final String command;
 
     /** The container to use for executing commands. */
-    private final FrameContainer<?> origin;
+    private final FrameContainer origin;
 
     /** The window the command came from. */
     private final Window window;
@@ -69,7 +69,7 @@ public final class TimedCommand extends TimerTask {
      */
     public TimedCommand(final TimerManager manager, final int timerKey,
             final int repetitions, final int delay, final String command,
-            final FrameContainer<?> origin, final Window window) {
+            final FrameContainer origin, final Window window) {
         super();
 
         this.timerKey = timerKey;
@@ -110,7 +110,7 @@ public final class TimedCommand extends TimerTask {
         if (origin == null) {
             parser = GlobalCommandParser.getGlobalCommandParser();
         } else {
-            parser = ((WritableFrameContainer<?>) origin).getCommandParser();
+            parser = ((WritableFrameContainer) origin).getCommandParser();
         }
 
         parser.parseCommand(origin, window, command);

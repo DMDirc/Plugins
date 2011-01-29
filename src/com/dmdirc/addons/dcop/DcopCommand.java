@@ -46,7 +46,7 @@ public final class DcopCommand extends Command implements CommandInfo {
 
     /** {@inheritDoc} */
     @Override
-    public void execute(final FrameContainer<?> origin,
+    public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
         if (args.getArguments().length != 3) {
             showUsage(origin, args.isSilent(), "dcop", "<app> <object> <function>");

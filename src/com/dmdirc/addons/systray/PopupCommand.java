@@ -63,7 +63,7 @@ public final class PopupCommand extends Command implements CommandInfo {
 
     /** {@inheritDoc} */
     @Override
-    public void execute(final FrameContainer<?> origin,
+    public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
         showPopup("DMDirc", args.getArgumentsAsString());
     }

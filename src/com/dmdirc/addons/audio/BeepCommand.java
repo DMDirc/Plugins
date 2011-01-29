@@ -47,7 +47,7 @@ public final class BeepCommand extends Command implements CommandInfo {
 
     /** {@inheritDoc} */
     @Override
-    public void execute(final FrameContainer<?> origin,
+    public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
         Toolkit.getDefaultToolkit().beep();
     }

@@ -61,7 +61,7 @@ public class Time extends DebugCommand implements IntelligentCommand {
 
     /** {@inheritDoc} */
     @Override
-    public void execute(final FrameContainer<?> origin,
+    public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
         doTime(origin, context.getSource(), args);
     }
@@ -73,16 +73,16 @@ public class Time extends DebugCommand implements IntelligentCommand {
      * @param window The window to be passed on to the timed command, if any
      * @param args The arguments that were passed to the command
      */
-    private void doTime(final FrameContainer<?> origin, final Window window,
+    private void doTime(final FrameContainer origin, final Window window,
             final CommandArguments args) {
         if (args.getArguments().length == 0) {
             showUsage(origin, args.isSilent(), getName(), getUsage());
             return;
         }
 
-        if (origin instanceof WritableFrameContainer<?>) {
-            final WritableFrameContainer<?> container
-                    = (WritableFrameContainer<?>) origin;
+        if (origin instanceof WritableFrameContainer) {
+            final WritableFrameContainer container
+                    = (WritableFrameContainer) origin;
             final long start = System.currentTimeMillis();
             container.getCommandParser().parseCommand(origin, window,
                     args.getArgumentsAsString(0));

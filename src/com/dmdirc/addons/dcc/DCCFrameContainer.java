@@ -29,12 +29,12 @@ import com.dmdirc.config.IdentityManager;
 import com.dmdirc.ui.input.TabCompleter;
 import com.dmdirc.ui.interfaces.InputWindow;
 
+import java.util.Collection;
+
 /**
  * This class links DCC objects to a window.
- *
- * @param <T> The type of window which corresponds to this DCC frame
  */
-public abstract class DCCFrameContainer<T extends InputWindow> extends WritableFrameContainer<T> {
+public abstract class DCCFrameContainer extends WritableFrameContainer {
 
     /** The Window we're using. */
     private boolean windowClosing = false;
@@ -46,11 +46,13 @@ public abstract class DCCFrameContainer<T extends InputWindow> extends WritableF
      * @param icon The icon to use
      * @param windowClass The class of window to use for this container
      * @param parser Command parser to use for this window
+     * @param components The UI components that this frame requires
      */
     public DCCFrameContainer(final String title, final String icon,
-            final Class<T> windowClass, final CommandParser parser) {
+            final Class<? extends InputWindow> windowClass, final CommandParser parser,
+            final Collection<String> components) {
         super(icon, title, title, windowClass,
-                IdentityManager.getGlobalConfig(), parser);
+                IdentityManager.getGlobalConfig(), parser, components);
     }
 
     /** {@inheritDoc} */

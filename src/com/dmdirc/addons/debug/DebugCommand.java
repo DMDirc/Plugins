@@ -72,7 +72,7 @@ public abstract class DebugCommand {
      * @param args Arguments passed to this command
      * @param context The context the command was executed in
      */
-    public abstract void execute(final FrameContainer<?> origin,
+    public abstract void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context);
 
     /**
@@ -93,7 +93,7 @@ public abstract class DebugCommand {
      * @param type The type of message to send
      * @param args The arguments of the message
      */
-    public void sendLine(final FrameContainer<?> target,
+    public void sendLine(final FrameContainer target,
             final boolean isSilent, final String type, final Object ... args) {
         if (command != null) {
             command.proxySendLine(target, isSilent, type, args);
@@ -108,7 +108,7 @@ public abstract class DebugCommand {
      * @param name The name of the command that's raising the error
      * @param args The arguments that the command accepts or expects
      */
-    public void showUsage(final FrameContainer<?> target,
+    public void showUsage(final FrameContainer target,
             final boolean isSilent, final String name, final String args) {
         if (command != null) {
             command.proxyShowUsage(target, isSilent, name, args);

@@ -27,14 +27,15 @@ import com.dmdirc.Server;
 import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.parser.interfaces.callbacks.DebugInfoListener;
 import com.dmdirc.ui.WindowManager;
+import com.dmdirc.ui.core.components.WindowComponent;
 import com.dmdirc.ui.interfaces.Window;
+
+import java.util.Arrays;
 
 /**
  * This class is used to show the parser debug in a window
- *
- * @author Shane 'Dataforce' McCormack
  */
-public class DebugWindow extends FrameContainer<Window> {
+public class DebugWindow extends FrameContainer {
 
     /** The plugin that owns this window */
     protected DebugPlugin plugin;
@@ -52,7 +53,9 @@ public class DebugWindow extends FrameContainer<Window> {
      * @param server The Server window this is a child of
      */
     public DebugWindow(final DebugPlugin plugin, final String title, final Parser parser, final Server server) {
-        super("raw", "Parser Debug", title, Window.class, server.getConfigManager());
+        super("raw", "Parser Debug", title, Window.class,
+                server.getConfigManager(),
+                Arrays.asList(WindowComponent.TEXTAREA.getIdentifier()));
         this.plugin = plugin;
         this.parser = parser;
         this.server = server;

@@ -31,11 +31,12 @@ import com.dmdirc.config.IdentityManager;
 import com.dmdirc.plugins.PluginManager;
 
 import java.awt.Dialog.ModalityType;
+import java.util.Collections;
 
 /**
  * Creates a placeholder DCC Frame.
  */
-public class PlaceholderContainer extends FrameContainer<PlaceholderWindow> {
+public class PlaceholderContainer extends FrameContainer {
 
     /** The plugin which owns this placeholder. */
     private final DCCPlugin plugin;
@@ -47,7 +48,7 @@ public class PlaceholderContainer extends FrameContainer<PlaceholderWindow> {
      */
     public PlaceholderContainer(final DCCPlugin plugin) {
         super("dcc", "DCCs", "DCCs", PlaceholderWindow.class,
-                IdentityManager.getGlobalConfig());
+                IdentityManager.getGlobalConfig(), Collections.<String>emptyList());
 
         this.plugin = plugin;
     }
@@ -56,7 +57,7 @@ public class PlaceholderContainer extends FrameContainer<PlaceholderWindow> {
     @Override
     public void close() {
         int dccs = 0;
-        for (FrameContainer<?> window : getChildren()) {
+        for (FrameContainer window : getChildren()) {
             if ((window instanceof TransferContainer
                     && ((TransferContainer) window).getDCC().isActive())
                     || (window instanceof ChatContainer
@@ -122,7 +123,7 @@ public class PlaceholderContainer extends FrameContainer<PlaceholderWindow> {
 
     /** {@inheritDoc} */
     @Override
-    public void removeChild(final FrameContainer<?> child) {
+    public void removeChild(final FrameContainer child) {
         super.removeChild(child);
 
         if (getChildren().isEmpty()) {

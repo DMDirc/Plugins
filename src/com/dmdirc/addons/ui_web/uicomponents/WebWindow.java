@@ -58,14 +58,14 @@ public class WebWindow implements Window, IRCDocumentListener,
 
     protected int myID = ++counter;
 
-    private final FrameContainer<?> parent;
+    private final FrameContainer parent;
 
     private final List<String> messages = new ArrayList<String>();
 
     private String title;
 
     public WebWindow(final WebInterfaceUI controller,
-            final FrameContainer<?> parent) {
+            final FrameContainer parent) {
         super();
 
         this.parent = parent;
@@ -106,7 +106,7 @@ public class WebWindow implements Window, IRCDocumentListener,
 
     /** {@inheritDoc} */
     @Override
-    public FrameContainer<?> getContainer() {
+    public FrameContainer getContainer() {
         return parent;
     }
 
@@ -120,18 +120,6 @@ public class WebWindow implements Window, IRCDocumentListener,
     @Override
     public void close() {
         DynamicRequestHandler.addEvent(new Event("closewindow", myID));
-    }
-
-    public String getType() {
-        if (this instanceof WebServerWindow) {
-            return "server";
-        } else if (this instanceof WebChannelWindow) {
-            return "channel";
-        } else if (this instanceof WebQueryWindow) {
-            return "query";
-        } else {
-            return "window";
-        }
     }
 
     public String getId() {
@@ -270,19 +258,19 @@ public class WebWindow implements Window, IRCDocumentListener,
 
     /** {@inheritDoc} */
     @Override
-    public void iconChanged(final FrameContainer<?> window, final String icon) {
+    public void iconChanged(final FrameContainer window, final String icon) {
         //TODO FIXME
     }
 
     /** {@inheritDoc} */
     @Override
-    public void nameChanged(final FrameContainer<?> window, final String name) {
+    public void nameChanged(final FrameContainer window, final String name) {
         //TODO FIXME
     }
 
     /** {@inheritDoc} */
     @Override
-    public void titleChanged(final FrameContainer<?> window,
+    public void titleChanged(final FrameContainer window,
             final String title) {
         this.title = title;
     }

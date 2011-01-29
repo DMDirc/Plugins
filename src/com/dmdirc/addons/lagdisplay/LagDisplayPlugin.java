@@ -158,16 +158,16 @@ public final class LagDisplayPlugin extends Plugin implements ActionListener, Co
         boolean useAlternate = false;
 
         for (Object obj : arguments) {
-            if (obj instanceof FrameContainer<?>
-                    && ((FrameContainer<?>) obj).getConfigManager() != null) {
-                useAlternate = ((FrameContainer<?>) obj).getConfigManager()
+            if (obj instanceof FrameContainer
+                    && ((FrameContainer) obj).getConfigManager() != null) {
+                useAlternate = ((FrameContainer) obj).getConfigManager()
                         .getOptionBool(getDomain(), "usealternate");
                 break;
             }
         }
 
         if (!useAlternate && type.equals(CoreActionType.SERVER_GOTPING)) {
-            final FrameContainer<?> active = WindowManager.getActiveWindow();
+            final FrameContainer active = WindowManager.getActiveWindow();
             final String value = formatTime(arguments[1]);
 
             getHistory(((Server) arguments[0])).add((Long) arguments[1]);
@@ -179,7 +179,7 @@ public final class LagDisplayPlugin extends Plugin implements ActionListener, Co
 
             panel.refreshDialog();
         } else if (!useAlternate && type.equals(CoreActionType.SERVER_NOPING)) {
-            final FrameContainer<?> active = WindowManager.getActiveWindow();
+            final FrameContainer active = WindowManager.getActiveWindow();
             final String value = formatTime(arguments[1]) + "+";
 
             pings.put(((Server) arguments[0]), value);
@@ -190,7 +190,7 @@ public final class LagDisplayPlugin extends Plugin implements ActionListener, Co
 
             panel.refreshDialog();
         } else if (type.equals(CoreActionType.SERVER_DISCONNECTED)) {
-            final FrameContainer<?> active = WindowManager.getActiveWindow();
+            final FrameContainer active = WindowManager.getActiveWindow();
 
             if (((Server) arguments[0]).isChild(active) || arguments[0] == active) {
                 panel.setText("Not connected");
@@ -199,7 +199,7 @@ public final class LagDisplayPlugin extends Plugin implements ActionListener, Co
 
             panel.refreshDialog();
         } else if (type.equals(CoreActionType.CLIENT_FRAME_CHANGED)) {
-            final FrameContainer<?> source = (FrameContainer<?>) arguments[0];
+            final FrameContainer source = (FrameContainer) arguments[0];
             if (source == null || source.getServer() == null) {
                 panel.setText("Unknown");
             } else if (source.getServer().getState() != ServerState.CONNECTED) {
@@ -218,7 +218,7 @@ public final class LagDisplayPlugin extends Plugin implements ActionListener, Co
                 final long sent = Long.parseLong(((String[]) arguments[2])[3].substring(9));
                 final Long duration = Long.valueOf(new Date().getTime() - sent);
                 final String value = formatTime(duration);
-                final FrameContainer<?> active = WindowManager.getActiveWindow();
+                final FrameContainer active = WindowManager.getActiveWindow();
 
                 pings.put((Server) arguments[0], value);
                 getHistory(((Server) arguments[0])).add(duration);

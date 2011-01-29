@@ -85,7 +85,7 @@ public abstract class TextFrame extends JPanel implements Window,
      */
     private static final long serialVersionUID = 5;
     /** The channel object that owns this frame. */
-    protected final FrameContainer<?> frameParent;
+    protected final FrameContainer frameParent;
     /** Frame output pane. */
     private TextPane textPane;
     /** search bar. */
@@ -101,7 +101,7 @@ public abstract class TextFrame extends JPanel implements Window,
      * @param owner FrameContainer owning this frame.
      * @param controller Swing controller
      */
-    public TextFrame(final FrameContainer<?> owner,
+    public TextFrame(final FrameContainer owner,
             final SwingController controller) {
         super();
         this.controller = controller;
@@ -228,7 +228,7 @@ public abstract class TextFrame extends JPanel implements Window,
 
     /** {@inheritDoc} */
     @Override
-    public FrameContainer<?> getContainer() {
+    public FrameContainer getContainer() {
         return frameParent;
     }
 
@@ -248,7 +248,7 @@ public abstract class TextFrame extends JPanel implements Window,
             return "";
         }
 
-        return frameParent.toString();
+        return frameParent.getName();
     }
 
     /**
@@ -486,7 +486,7 @@ public abstract class TextFrame extends JPanel implements Window,
     
     /** {@inheritDoc} */
     @Override
-    public void windowClosing(final FrameContainer<?> window) {
+    public void windowClosing(final FrameContainer window) {
         setVisible(false);
     }
 

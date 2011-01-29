@@ -51,7 +51,7 @@ public final class LoggingCommand extends Command implements IntelligentCommand,
 
     /** {@inheritDoc} */
     @Override
-    public void execute(final FrameContainer<?> origin,
+    public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
         final PluginInfo pluginInfo = PluginManager.getPluginManager().getPluginInfoByName("logging");
         if (pluginInfo == null) {

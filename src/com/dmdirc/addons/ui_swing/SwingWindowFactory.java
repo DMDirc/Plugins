@@ -26,39 +26,50 @@ import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.ui_swing.components.frames.ChannelFrame;
 import com.dmdirc.addons.ui_swing.components.frames.CustomFrame;
 import com.dmdirc.addons.ui_swing.components.frames.CustomInputFrame;
-import com.dmdirc.addons.ui_swing.components.frames.QueryFrame;
 import com.dmdirc.addons.ui_swing.components.frames.ServerFrame;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
-import com.dmdirc.ui.interfaces.ChannelWindow;
+import com.dmdirc.ui.core.components.WindowComponent;
 import com.dmdirc.ui.interfaces.FrameListener;
-import com.dmdirc.ui.interfaces.InputWindow;
-import com.dmdirc.ui.interfaces.QueryWindow;
-import com.dmdirc.ui.interfaces.ServerWindow;
 import com.dmdirc.ui.interfaces.Window;
 import com.dmdirc.util.ListenerList;
+import java.util.Arrays;
+import java.util.Collection;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 /**
  * Handles creation of windows in the Swing UI.
  * 
  * @since 0.6.4
- * @author chris
  */
 public class SwingWindowFactory implements FrameListener {
 
     /** A map of known implementations of window interfaces. */
-    private static final Map<Class<? extends Window>, Class<? extends Window>> IMPLEMENTATIONS
-            = new HashMap<Class<? extends Window>, Class<? extends Window>>();
+    private static final Map<Collection<String>, Class<? extends Window>> IMPLEMENTATIONS
+            = new HashMap<Collection<String>, Class<? extends Window>>();
 
     static {
-        IMPLEMENTATIONS.put(Window.class, CustomFrame.class);
-        IMPLEMENTATIONS.put(InputWindow.class, CustomInputFrame.class);
-        IMPLEMENTATIONS.put(ServerWindow.class, ServerFrame.class);
-        IMPLEMENTATIONS.put(QueryWindow.class, QueryFrame.class);
-        IMPLEMENTATIONS.put(ChannelWindow.class, ChannelFrame.class);
+        IMPLEMENTATIONS.put(new HashSet<String>(
+                Arrays.asList(WindowComponent.TEXTAREA.getIdentifier())),
+                CustomFrame.class);
+        IMPLEMENTATIONS.put(new HashSet<String>(
+                Arrays.asList(WindowComponent.TEXTAREA.getIdentifier(),
+                WindowComponent.INPUTFIELD.getIdentifier())),
+                CustomInputFrame.class);
+        IMPLEMENTATIONS.put(new HashSet<String>(
+                Arrays.asList(WindowComponent.TEXTAREA.getIdentifier(),
+                WindowComponent.INPUTFIELD.getIdentifier(),
+                WindowComponent.CERTIFICATE_VIEWER.getIdentifier())),
+                ServerFrame.class);
+        IMPLEMENTATIONS.put(new HashSet<String>(
+                Arrays.asList(WindowComponent.TEXTAREA.getIdentifier(),
+                WindowComponent.INPUTFIELD.getIdentifier(),
+                WindowComponent.TOPICBAR.getIdentifier(),
+                WindowComponent.USERLIST.getIdentifier())),
+                ChannelFrame.class);
     }
 
     /** The controller that owns this window factory. */
@@ -98,31 +109,29 @@ public class SwingWindowFactory implements FrameListener {
 
     /** {@inheritDoc} */
     @Override
-    public void addWindow(final FrameContainer<?> window, final boolean focus) {
+    public void addWindow(final FrameContainer window, final boolean focus) {
         addWindow(null, window, focus);
     }
 
     /**
      * Creates a new window for the specified container.
      *
-     * @param <T> The type of window that should be created
      * @param window The container that owns the window
      * @param focus Whether the window should be focused initially
      * @return The created window or null on error
      */
-    @SuppressWarnings("unchecked")
-    protected <T extends Window> T doAddWindow(final FrameContainer<T> window,
+    protected Window doAddWindow(final FrameContainer window,
             final boolean focus) {
-        final Class<T> clazz;
+        final Class<? extends Window> clazz;
 
-        if (IMPLEMENTATIONS.containsKey(window.getWindowClass())) {
-            clazz = (Class<T>) IMPLEMENTATIONS.get(window.getWindowClass());
+        if (IMPLEMENTATIONS.containsKey(window.getComponents())) {
+            clazz = IMPLEMENTATIONS.get(window.getComponents());
         } else {
             clazz = window.getWindowClass();
         }
 
         try {
-            final T frame = (T) clazz.getConstructors()[0].newInstance(controller, window);
+            final Window frame = (Window) clazz.getConstructors()[0].newInstance(controller, window);
             window.addWindow(frame);
 
             return frame;
@@ -139,7 +148,7 @@ public class SwingWindowFactory implements FrameListener {
      * @param window The container whose windows should be searched
      * @return A relevant window or null
      */
-    public Window getSwingWindow(final FrameContainer<?> window) {
+    public Window getSwingWindow(final FrameContainer window) {
         if (window == null) {
             return null;
         }
@@ -155,14 +164,14 @@ public class SwingWindowFactory implements FrameListener {
 
     /** {@inheritDoc} */
     @Override
-    public void delWindow(final FrameContainer<?> window) {
+    public void delWindow(final FrameContainer window) {
         delWindow(null, window);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void addWindow(final FrameContainer<?> parent,
-            final FrameContainer<?> window, final boolean focus) {
+    public void addWindow(final FrameContainer parent,
+            final FrameContainer window, final boolean focus) {
         UIUtilities.invokeLater(new Runnable() {
 
             @Override
@@ -187,7 +196,7 @@ public class SwingWindowFactory implements FrameListener {
 
     /** {@inheritDoc} */
     @Override
-    public void delWindow(final FrameContainer<?> parent, final FrameContainer<?> window) {
+    public void delWindow(final FrameContainer parent, final FrameContainer window) {
         UIUtilities.invokeLater(new Runnable() {
 
             @Override

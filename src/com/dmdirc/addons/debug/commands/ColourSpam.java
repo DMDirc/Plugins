@@ -56,7 +56,7 @@ public class ColourSpam extends DebugCommand {
 
     /** {@inheritDoc} */
     @Override
-    public void execute(final FrameContainer<?> origin,
+    public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
         for (int i = 0; i < 100; i++) {
             sendLine(origin, args.isSilent(), FORMAT_OUTPUT,

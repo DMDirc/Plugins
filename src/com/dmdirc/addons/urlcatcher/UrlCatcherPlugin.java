@@ -86,7 +86,7 @@ public class UrlCatcherPlugin extends Plugin implements ActionListener,
             return;
         }
 
-        final String message = ((FrameContainer<?>) arguments[0]).getStyliser()
+        final String message = ((FrameContainer) arguments[0]).getStyliser()
                 .doLinks((String) arguments[1]);
         
         if (message.indexOf(Styliser.CODE_HYPERLINK) > -1) {

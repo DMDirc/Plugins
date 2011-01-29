@@ -66,7 +66,7 @@ public class ConfigStats extends DebugCommand {
 
     /** {@inheritDoc} */
     @Override
-    public void execute(final FrameContainer<?> origin,
+    public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
         if (args.getArguments().length == 2) {
             if (args.getArguments()[1].startsWith("+")) {
@@ -104,7 +104,7 @@ public class ConfigStats extends DebugCommand {
      * @param isSilent Whether this command has been silenced or not
      * @param regex Regex to match options against
      */
-    private void doConfigStatsOption(final FrameContainer<?> origin,
+    private void doConfigStatsOption(final FrameContainer origin,
             final boolean isSilent, final String regex) {
         final SortedSet<Entry<String, Integer>> sortedStats = getSortedStats();
         boolean found = false;
@@ -129,7 +129,7 @@ public class ConfigStats extends DebugCommand {
      * @param isSilent Whether this command has been silenced or not
      * @param top Top number of entries to show
      */
-    private void doConfigStatsTop(final FrameContainer<?> origin,
+    private void doConfigStatsTop(final FrameContainer origin,
             final boolean isSilent, final int top) {
         final SortedSet<Entry<String, Integer>> sortedStats = getSortedStats();
         int i = 0;
@@ -151,7 +151,7 @@ public class ConfigStats extends DebugCommand {
      * @param isSilent Whether this command has been silenced or not
      * @param cutoff Cut off value for stats
      */
-    private void doConfigStatsCutOff(final FrameContainer<?> origin,
+    private void doConfigStatsCutOff(final FrameContainer origin,
             final boolean isSilent, final int cutoff) {
         final SortedSet<Entry<String, Integer>> sortedStats = getSortedStats();
         for (Map.Entry<String, Integer> entry : sortedStats) {

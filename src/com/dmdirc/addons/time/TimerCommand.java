@@ -59,7 +59,7 @@ public final class TimerCommand extends Command implements IntelligentCommand,
 
     /** {@inheritDoc} */
     @Override
-    public void execute(final FrameContainer<?> origin,
+    public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
 
         if (args.getArguments().length > 0) {
@@ -134,7 +134,7 @@ public final class TimerCommand extends Command implements IntelligentCommand,
      * @param origin The window that the command was entered in
      * @param isSilent Whether this command is being silenced or not
      */
-    private void doUsage(final FrameContainer<?> origin, final boolean isSilent) {
+    private void doUsage(final FrameContainer origin, final boolean isSilent) {
         showUsage(origin, isSilent, "timer", "[--list|--cancel <timer id> | " +
                 "<repetitions> <interval> <command>]");
     }

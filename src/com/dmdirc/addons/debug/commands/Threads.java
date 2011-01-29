@@ -58,7 +58,7 @@ public class Threads extends DebugCommand {
 
     /** {@inheritDoc} */
     @Override
-    public void execute(final FrameContainer<?> origin,
+    public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
         for (Entry<Thread, StackTraceElement[]> thread
                 : Thread.getAllStackTraces().entrySet()) {

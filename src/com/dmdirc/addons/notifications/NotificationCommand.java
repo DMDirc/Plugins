@@ -58,7 +58,7 @@ public class NotificationCommand extends Command implements
 
     /** {@inheritDoc} */
     @Override
-    public void execute(final FrameContainer<?> origin,
+    public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
         if (args.getArguments().length > 0 && args.getArguments()[0]
                 .equalsIgnoreCase("--methods")) {
@@ -95,7 +95,7 @@ public class NotificationCommand extends Command implements
      * @param origin The input window where the command was entered
      * @param isSilent Whether this command is being silenced
      */
-    private void doMethodList(final FrameContainer<?> origin,
+    private void doMethodList(final FrameContainer origin,
             final boolean isSilent) {
         final List<PluginInfo> methods = parent.getMethods();
 
