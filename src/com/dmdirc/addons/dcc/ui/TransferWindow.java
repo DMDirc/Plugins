@@ -88,7 +88,7 @@ public class TransferWindow extends EmptyWindow implements ActionListener,
      * @param controller The UIController that owns this window
      * @param owner The frame container that owns this window
      */
-    public TransferWindow(final SwingController controller, final FrameContainer<?> owner) {
+    public TransferWindow(final SwingController controller, final FrameContainer owner) {
         super(controller, owner);
         
         final TransferContainer container = (TransferContainer) owner;

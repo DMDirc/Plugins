@@ -37,16 +37,15 @@ import com.dmdirc.ui.WindowManager;
 
 import java.awt.Desktop;
 import java.io.File;
+import java.util.Collections;
 import java.util.Date;
 
 import javax.swing.JOptionPane;
 
 /**
  * This class links DCC Send objects to a window.
- *
- * @author Shane 'Dataforce' McCormack
  */
-public class TransferContainer extends FrameContainer<TransferWindow> implements
+public class TransferContainer extends FrameContainer implements
         DCCTransferHandler, SocketCloseListener {
 
     /** The dcc plugin that owns this frame */
@@ -95,7 +94,8 @@ public class TransferContainer extends FrameContainer<TransferWindow> implements
         super(dcc.getType() == DCCTransfer.TransferType.SEND
                 ? "dcc-send-inactive" : "dcc-receive-inactive",
                 title, title, TransferWindow.class,
-                IdentityManager.getGlobalConfig());
+                IdentityManager.getGlobalConfig(),
+                Collections.<String>emptyList());
         this.plugin = plugin;
         this.dcc = dcc;
         this.server = server;

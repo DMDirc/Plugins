@@ -468,7 +468,7 @@ public class LoggingPlugin extends Plugin implements ActionListener,
      * @param frame The frame to add the backbuffer lines to
      * @param filename File to get backbuffer from
      */
-    protected void showBackBuffer(final FrameContainer<?> frame, final String filename) {
+    protected void showBackBuffer(final FrameContainer frame, final String filename) {
         if (frame == null) {
             Logger.userError(ErrorLevel.LOW, "Given a null frame");
             return;
@@ -785,7 +785,7 @@ public class LoggingPlugin extends Plugin implements ActionListener,
      * @param target The window whose history we're trying to open
      * @return True if the history is available, false otherwise
      */
-    protected boolean showHistory(final FrameContainer<?> target) {
+    protected boolean showHistory(final FrameContainer target) {
         Object component;
 
         if (target instanceof Channel) {

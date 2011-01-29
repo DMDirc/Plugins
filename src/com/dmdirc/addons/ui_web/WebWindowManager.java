@@ -25,20 +25,19 @@ package com.dmdirc.addons.ui_web;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.ui_web.uicomponents.WebChannelWindow;
 import com.dmdirc.addons.ui_web.uicomponents.WebInputWindow;
-import com.dmdirc.addons.ui_web.uicomponents.WebQueryWindow;
 import com.dmdirc.addons.ui_web.uicomponents.WebServerWindow;
 import com.dmdirc.addons.ui_web.uicomponents.WebWindow;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.ui.WindowManager;
-import com.dmdirc.ui.interfaces.ChannelWindow;
+import com.dmdirc.ui.core.components.WindowComponent;
 import com.dmdirc.ui.interfaces.FrameListener;
-import com.dmdirc.ui.interfaces.InputWindow;
-import com.dmdirc.ui.interfaces.QueryWindow;
-import com.dmdirc.ui.interfaces.ServerWindow;
 import com.dmdirc.ui.interfaces.Window;
 
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 /**
@@ -47,23 +46,36 @@ import java.util.Map;
 public class WebWindowManager implements FrameListener {
 
     /** A map of known implementations of window interfaces. */
-    private static final Map<Class<? extends Window>, Class<? extends Window>> IMPLEMENTATIONS
-            = new HashMap<Class<? extends Window>, Class<? extends Window>>();
+    private static final Map<Collection<String>, Class<? extends Window>> IMPLEMENTATIONS
+            = new HashMap<Collection<String>, Class<? extends Window>>();
 
     static {
-        IMPLEMENTATIONS.put(Window.class, WebWindow.class);
-        IMPLEMENTATIONS.put(InputWindow.class, WebInputWindow.class);
-        IMPLEMENTATIONS.put(ServerWindow.class, WebServerWindow.class);
-        IMPLEMENTATIONS.put(QueryWindow.class, WebQueryWindow.class);
-        IMPLEMENTATIONS.put(ChannelWindow.class, WebChannelWindow.class);
+        IMPLEMENTATIONS.put(new HashSet<String>(
+                Arrays.asList(WindowComponent.TEXTAREA.getIdentifier())),
+                WebWindow.class);
+        IMPLEMENTATIONS.put(new HashSet<String>(
+                Arrays.asList(WindowComponent.TEXTAREA.getIdentifier(),
+                WindowComponent.INPUTFIELD.getIdentifier())),
+                WebInputWindow.class);
+        IMPLEMENTATIONS.put(new HashSet<String>(
+                Arrays.asList(WindowComponent.TEXTAREA.getIdentifier(),
+                WindowComponent.INPUTFIELD.getIdentifier(),
+                WindowComponent.CERTIFICATE_VIEWER.getIdentifier())),
+                WebServerWindow.class);
+        IMPLEMENTATIONS.put(new HashSet<String>(
+                Arrays.asList(WindowComponent.TEXTAREA.getIdentifier(),
+                WindowComponent.INPUTFIELD.getIdentifier(),
+                WindowComponent.TOPICBAR.getIdentifier(),
+                WindowComponent.USERLIST.getIdentifier())),
+                WebChannelWindow.class);
     }
 
     /** The controller that owns this manager. */
     private final WebInterfaceUI controller;
 
     /** Map of known windows. */
-    private final Map<FrameContainer<?>, Window> windows
-            = new HashMap<FrameContainer<?>, Window>();
+    private final Map<FrameContainer, Window> windows
+            = new HashMap<FrameContainer, Window>();
 
     /**
      * Creates a new window manager for the specified controller.
@@ -75,7 +87,7 @@ public class WebWindowManager implements FrameListener {
 
         WindowManager.addFrameListener(this);
 
-        for (FrameContainer<?> container : WindowManager.getRootWindows()) {
+        for (FrameContainer container : WindowManager.getRootWindows()) {
             recursiveAdd(container);
         }
     }
@@ -87,7 +99,7 @@ public class WebWindowManager implements FrameListener {
      * @param container The container whose window should be retrieved
      * @return The corresponding web window, or null if there is none
      */
-    public Window getWindow(final FrameContainer<?> container) {
+    public Window getWindow(final FrameContainer container) {
         return windows.get(container);
     }
 
@@ -97,23 +109,23 @@ public class WebWindowManager implements FrameListener {
      *
      * @param container The container to create windows for
      */
-    private void recursiveAdd(final FrameContainer<?> container) {
+    private void recursiveAdd(final FrameContainer container) {
         addWindow(container, false);
 
-        for (FrameContainer<?> child : container.getChildren()) {
+        for (FrameContainer child : container.getChildren()) {
             recursiveAdd(child);
         }
     }
 
     /** {@inheritDoc} */
     @Override
-    public void addWindow(final FrameContainer<?> window, final boolean focus) {
+    public void addWindow(final FrameContainer window, final boolean focus) {
         doAddWindow(window, focus);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void delWindow(final FrameContainer<?> window) {
+    public void delWindow(final FrameContainer window) {
         if (windows.containsKey(window)) {
             windows.get(window).close();
             windows.remove(window);
@@ -122,7 +134,7 @@ public class WebWindowManager implements FrameListener {
 
     /** {@inheritDoc} */
     @Override
-    public void addWindow(final FrameContainer<?> parent, final FrameContainer<?> window,
+    public void addWindow(final FrameContainer parent, final FrameContainer window,
             final boolean focus) {
         if (windows.containsKey(parent)) {
             addWindow(window, focus);
@@ -131,7 +143,7 @@ public class WebWindowManager implements FrameListener {
 
     /** {@inheritDoc} */
     @Override
-    public void delWindow(final FrameContainer<?> parent, final FrameContainer<?> window) {
+    public void delWindow(final FrameContainer parent, final FrameContainer window) {
         if (windows.containsKey(parent)) {
             delWindow(window);
         }
@@ -140,23 +152,21 @@ public class WebWindowManager implements FrameListener {
     /**
      * Creates a new window for the specified container.
      *
-     * @param <T> The type of window that should be created
      * @param window The container that owns the window
      * @param focus Whether the window should be focused initially
      */
-    @SuppressWarnings("unchecked")
-    protected <T extends Window> void doAddWindow(final FrameContainer<T> window,
+    protected void doAddWindow(final FrameContainer window,
             final boolean focus) {
-        final Class<T> clazz;
+        final Class<? extends Window> clazz;
 
-        if (IMPLEMENTATIONS.containsKey(window.getWindowClass())) {
-            clazz = (Class<T>) IMPLEMENTATIONS.get(window.getWindowClass());
+        if (IMPLEMENTATIONS.containsKey(window.getComponents())) {
+            clazz = IMPLEMENTATIONS.get(window.getComponents());
         } else {
             clazz = window.getWindowClass();
         }
 
         try {
-            final T frame = (T) clazz.getConstructors()[0].newInstance(controller, window);
+            final Window frame = (Window) clazz.getConstructors()[0].newInstance(controller, window);
             window.addWindow(frame);
 
             windows.put(window, frame);

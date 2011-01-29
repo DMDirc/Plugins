@@ -154,7 +154,7 @@ public class MDIBar extends JPanel implements SwingWindowListener,
 
     /** {@inheritDoc} */
     @Override
-    public void selectionChanged(final FrameContainer<?> window) {
+    public void selectionChanged(final FrameContainer window) {
         check();
     }
 }

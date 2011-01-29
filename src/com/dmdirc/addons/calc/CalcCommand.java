@@ -34,14 +34,12 @@ import java.text.ParseException;
 /**
  * A command which allows users to evaluate various mathematical expressions,
  * and perform basic calculations.
- *
- * @author chris
  */
 public class CalcCommand extends Command implements CommandInfo {
 
     /** {@inheritDoc} */
     @Override
-    public void execute(final FrameContainer<?> origin,
+    public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
         try {
             int offset = 0;

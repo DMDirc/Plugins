@@ -55,7 +55,7 @@ public class Debug extends Command implements IntelligentCommand, CommandInfo {
 
     /** {@inheritDoc} */
     @Override
-    public void execute(final FrameContainer<?> origin,
+    public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
         if (args.getArguments().length == 0) {
             showUsage(origin, args.isSilent(), "debug",
@@ -84,7 +84,7 @@ public class Debug extends Command implements IntelligentCommand, CommandInfo {
      * @param type The type of message to send
      * @param args The arguments of the message
      */
-    public void proxySendLine(final FrameContainer<?> target,
+    public void proxySendLine(final FrameContainer target,
             final boolean isSilent, final String type, final Object ... args) {
         sendLine(target, isSilent, type, args);
     }
@@ -97,7 +97,7 @@ public class Debug extends Command implements IntelligentCommand, CommandInfo {
      * @param name The name of the command that's raising the error
      * @param args The arguments that the command accepts or expects
      */
-    public void proxyShowUsage(final FrameContainer<?> target,
+    public void proxyShowUsage(final FrameContainer target,
             final boolean isSilent, final String name, final String args) {
         showUsage(target, isSilent, getName(), name + " " + args);
     }

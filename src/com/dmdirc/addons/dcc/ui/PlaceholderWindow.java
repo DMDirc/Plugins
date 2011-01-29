@@ -45,7 +45,7 @@ public class PlaceholderWindow extends EmptyWindow {
      * @param owner The frame container that owns this window
      */
     public PlaceholderWindow(final SwingController controller,
-            final FrameContainer<?> owner) {
+            final FrameContainer owner) {
         super(controller, owner);
 
         add(new TextLabel(

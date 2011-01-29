@@ -44,9 +44,9 @@ public class RedirectCommand extends Command implements IntelligentCommand,
 
     /** {@inheritDoc} */
     @Override
-    public void execute(final FrameContainer<?> origin,
+    public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
-        final MessageTarget<?> target = ((ChatCommandContext) context)
+        final MessageTarget target = ((ChatCommandContext) context)
                 .getChat();
         target.getCommandParser().parseCommand(new FakeWriteableFrameContainer(
                 target), context.getSource(), args.getArgumentsAsString());

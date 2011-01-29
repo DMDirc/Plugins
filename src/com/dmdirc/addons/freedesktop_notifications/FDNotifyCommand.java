@@ -51,7 +51,7 @@ public final class FDNotifyCommand extends Command implements CommandInfo {
 
     /** {@inheritDoc} */
     @Override
-    public void execute(final FrameContainer<?> origin, final CommandArguments args, final CommandContext context) {
+    public void execute(final FrameContainer origin, final CommandArguments args, final CommandContext context) {
         new Thread() {
             /** {@inheritDoc} */
             @Override

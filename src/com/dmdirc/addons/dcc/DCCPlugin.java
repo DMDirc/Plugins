@@ -351,7 +351,7 @@ public final class DCCPlugin extends Plugin implements ActionListener {
             }
             final String myNickname = ((Server) arguments[0]).getParser()
                     .getLocalClient().getNickname();
-            final DCCFrameContainer<?> f = new ChatContainer(this, chat,
+            final DCCFrameContainer f = new ChatContainer(this, chat,
                     "Chat: " + nickname, myNickname, nickname);
             f.addLine("DCCChatStarting", nickname, chat.getHost(),
                     chat.getPort());
@@ -361,7 +361,7 @@ public final class DCCPlugin extends Plugin implements ActionListener {
                     DCCActions.DCC_CHAT_REQUEST, null, ((Server) arguments[0]),
                     nickname);
             askQuestion("User " + nickname + " on "
-                    + ((Server) arguments[0]).toString()
+                    + ((Server) arguments[0]).getName()
                     + " would like to start a DCC Chat with you.\n\n"
                     + "Do you want to continue?",
                     "DCC Chat Request", JOptionPane.YES_OPTION,
@@ -456,7 +456,7 @@ public final class DCCPlugin extends Plugin implements ActionListener {
                         DCCActions.DCC_SEND_REQUEST, null,
                         ((Server) arguments[0]), nickname, filename);
                 askQuestion("User " + nickname + " on "
-                        + ((Server) arguments[0]).toString()
+                        + ((Server) arguments[0]).getName()
                         + " would like to send you a file over DCC.\n\nFile: "
                         + filename + "\n\nDo you want to continue?",
                         "DCC Send Request", JOptionPane.YES_OPTION, type,

@@ -54,7 +54,7 @@ public class UrlListCommand extends Command implements IntelligentCommand,
 
     /** {@inheritDoc} */
     @Override
-    public void execute(final FrameContainer<?> origin,
+    public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
         final String[] headers = {"URL", "Count"};
         final Map<String, Integer> map = plugin.getURLS();

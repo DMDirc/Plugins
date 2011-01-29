@@ -26,14 +26,15 @@ import com.dmdirc.FrameContainer;
 import com.dmdirc.Server;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.ui.WindowManager;
+import com.dmdirc.ui.core.components.WindowComponent;
 import com.dmdirc.ui.interfaces.Window;
+
+import java.util.Arrays;
 
 /**
  * Displays an extended history of a window.
- *
- * @author Chris
  */
-public class HistoryWindow extends FrameContainer<Window> {
+public class HistoryWindow extends FrameContainer {
 
     /**
      * Creates a new HistoryWindow.
@@ -44,8 +45,9 @@ public class HistoryWindow extends FrameContainer<Window> {
      * @param numLines The number of lines to show
      */
     public HistoryWindow(final String title, final ReverseFileReader reader,
-                         final FrameContainer<?> parent, final int numLines) {
-        super("raw", title, title, Window.class, parent.getConfigManager());
+                         final FrameContainer parent, final int numLines) {
+        super("raw", title, title, Window.class, parent.getConfigManager(),
+                Arrays.asList(WindowComponent.TEXTAREA.getIdentifier()));
 
         WindowManager.addWindow(parent, this);
 

@@ -55,7 +55,7 @@ public class TimerManager {
      * @param commandContext The window the command came from
      */
     public void addTimer(final int repetitions, final int interval,
-            final String command, final FrameContainer<?> origin,
+            final String command, final FrameContainer origin,
             final Window commandContext) {
 
         synchronized (this) {

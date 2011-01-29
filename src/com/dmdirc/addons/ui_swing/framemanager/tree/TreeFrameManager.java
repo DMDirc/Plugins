@@ -76,7 +76,7 @@ public final class TreeFrameManager implements FrameManager,
     /** data model. */
     private TreeViewModel model;
     /** node storage, used for adding and deleting nodes correctly. */
-    private final Map<FrameContainer<?>, TreeViewNode> nodes;
+    private final Map<FrameContainer, TreeViewNode> nodes;
     /** UI Controller. */
     private SwingController controller;
     /** Tree scroller. */
@@ -84,7 +84,7 @@ public final class TreeFrameManager implements FrameManager,
 
     /** creates a new instance of the TreeFrameManager. */
     public TreeFrameManager() {
-        nodes = new HashMap<FrameContainer<?>, TreeViewNode>();
+        nodes = new HashMap<FrameContainer, TreeViewNode>();
     }
 
     /** {@inheritDoc} */
@@ -214,7 +214,7 @@ public final class TreeFrameManager implements FrameManager,
      * @param window Window to add
      */
     public void addWindow(final TreeViewNode parent,
-            final FrameContainer<?> window) {
+            final FrameContainer window) {
         UIUtilities.invokeAndWait(new Runnable() {
 
             /** {@inheritDoc} */
@@ -316,10 +316,10 @@ public final class TreeFrameManager implements FrameManager,
                 }
                 scroller = new TreeTreeScroller(tree);
 
-                for (FrameContainer<?> window
+                for (FrameContainer window
                         : WindowManager.getRootWindows()) {
                     addWindow(null, window);
-                    final Collection<FrameContainer<?>> childWindows = window
+                    final Collection<FrameContainer> childWindows = window
                             .getChildren();
                     for (FrameContainer childWindow : childWindows) {
                         addWindow(nodes.get(window), childWindow);

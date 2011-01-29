@@ -52,7 +52,7 @@ public class CustomInputFrame extends InputTextFrame {
      * @param controller Swing controller
      */
     public CustomInputFrame(final SwingController controller,
-            final WritableFrameContainer<? extends InputWindow> owner) {
+            final WritableFrameContainer owner) {
         super(controller, owner);
 
         setInputHandler(new SwingInputHandler(getInputField(),

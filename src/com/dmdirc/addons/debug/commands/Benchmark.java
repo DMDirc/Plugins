@@ -57,7 +57,7 @@ public class Benchmark extends DebugCommand {
 
     /** {@inheritDoc} */
     @Override
-    public void execute(final FrameContainer<?> origin,
+    public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
         long[] results = new long[10];
 

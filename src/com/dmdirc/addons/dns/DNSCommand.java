@@ -44,7 +44,7 @@ public final class DNSCommand extends Command implements CommandInfo {
     
     /** {@inheritDoc} */
     @Override
-    public void execute(final FrameContainer<?> origin,
+    public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
         if (args.getArguments().length == 0) {
             showUsage(origin, args.isSilent(), "dns", "<IP|hostname>");

@@ -67,7 +67,7 @@ public final class ParserDebugCommand extends Command implements CommandInfo {
      * @param context The Context of this command execution
      */
     @Override
-    public void execute(final FrameContainer<?> origin, final CommandArguments commandArgs, final CommandContext context) {
+    public void execute(final FrameContainer origin, final CommandArguments commandArgs, final CommandContext context) {
         final boolean isSilent = commandArgs.isSilent();
   
         Parser parser = ((ServerCommandContext) context).getServer().getParser();

@@ -64,7 +64,7 @@ public class FrameToggleButton extends JToggleButton {
      *
      * @return FrameContainer associated with this button
      */
-    public FrameContainer<?> getFrameContainer() {
+    public FrameContainer getFrameContainer() {
         return window.getContainer();
     }
 

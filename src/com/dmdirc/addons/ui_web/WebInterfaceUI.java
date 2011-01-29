@@ -27,7 +27,6 @@ import com.dmdirc.Server;
 import com.dmdirc.addons.ui_web.uicomponents.WebStatusBar;
 import com.dmdirc.config.prefs.PreferencesInterface;
 import com.dmdirc.ui.core.components.StatusBarManager;
-import com.dmdirc.ui.core.dialogs.sslcertificate.SSLCertificateDialogModel;
 import com.dmdirc.ui.interfaces.UIController;
 
 import java.net.URI;
@@ -140,12 +139,6 @@ public class WebInterfaceUI implements UIController {
     /** {@inheritDoc} */
     @Override
     public void showMessageDialog(final String title, final String message) {
-        // Do nothing
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void showSSLCertificateDialog(final SSLCertificateDialogModel model) {
         // Do nothing
     }
 
