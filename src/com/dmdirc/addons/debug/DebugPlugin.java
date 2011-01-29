@@ -45,7 +45,7 @@ public class DebugPlugin extends Plugin {
         ForceUpdate.class, GlobalConfigInfo.class, Identities.class,
         MemInfo.class, Notify.class, RunGC.class, ServerInfo.class,
         ServerState.class, Services.class, ShowRaw.class, Threads.class,
-        Time.class,
+        Time.class, StatusbarMessage.class,
     };
     /** List of registered debug commands. */
     private final Map<String, DebugCommand> commands;
