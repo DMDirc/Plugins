@@ -31,11 +31,11 @@ import com.dmdirc.ui.interfaces.StatusMessageNotifier;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
+import java.util.Queue;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Semaphore;
 
 import javax.swing.BorderFactory;
@@ -57,12 +57,12 @@ public class MessageLabel extends JLabel implements StatusBarComponent,
     /** Default status bar message. */
     private final StatusMessage defaultMessage;
     /** Message queue. */
-    private final List<StatusMessage> messages;
+    private final Queue<StatusMessage> queue;
     /** Current status messsage. */
-    private int currentMessage;
+    private StatusMessage currentMessage;
     /** Timer to clear the message. */
     private transient TimerTask messageTimer;
-    /** Set message synchronisation. */
+    /** Queue semaphore. */
     private final Semaphore semaphore;
 
     /**
@@ -70,11 +70,11 @@ public class MessageLabel extends JLabel implements StatusBarComponent,
      */
     public MessageLabel() {
         super();
-        currentMessage = -1;
-        messages = new ArrayList<StatusMessage>();
+        semaphore = new Semaphore(1);
+        queue = new ConcurrentLinkedQueue<StatusMessage>();
         defaultMessage = new StatusMessage(null, "Ready.", null, -1,
                 IdentityManager.getGlobalConfig());
-        semaphore = new Semaphore(1);
+        currentMessage = defaultMessage;
         setText("Ready.");
         setBorder(BorderFactory.createEtchedBorder());
         addMouseListener(this);
@@ -178,37 +178,40 @@ public class MessageLabel extends JLabel implements StatusBarComponent,
      */
     public void setMessage(final StatusMessage message) {
         semaphore.acquireUninterruptibly();
+        queue.add(message);
+        if (queue.size() == 1) {
+            currentMessage = message;
+            updateCurrentMethod();
+        }
+        semaphore.release();
+    }
+
+    /**
+     * Updates the message label to show the current message info.
+     */
+    private void updateCurrentMethod() {
         SwingUtilities.invokeLater(new Runnable() {
 
             /** {@inheritDoc} */
             @Override
             public void run() {
-                try {
-                    messages.add(message);
-                    currentMessage = messages.indexOf(message);
-                    if (message.getIconType() == null) {
-                        setIcon(null);
-                    } else {
-                        setIcon(IconManager.getIconManager().getIcon(
-                                message.getIconType()));
-                    }
-                    setText(UIUtilities.clipStringifNeeded(MessageLabel.this,
-                            message.getMessage(), getWidth()));
-
-                    if (messageTimer != null && (System.currentTimeMillis()
-                            - messageTimer.scheduledExecutionTime()) <= 0) {
-                        messageTimer.cancel();
-                    }
-
-                    if (!defaultMessage.equals(message)) {
-                        messageTimer = new MessageTimerTask(MessageLabel.this);
-                        new Timer("SwingStatusBar messageTimer").schedule(
-                                messageTimer, new Date(
-                                System.currentTimeMillis() + 250
-                                + message.getTimeout() * 1000L));
-                    }
-                } finally {
-                    semaphore.release();
+                if (currentMessage.getIconType() == null) {
+                    setIcon(null);
+                } else {
+                    setIcon(IconManager.getIconManager().getIcon(
+                            currentMessage.getIconType()));
+                }
+                setText(UIUtilities.clipStringifNeeded(MessageLabel.this,
+                        currentMessage.getMessage(), getWidth()));
+                if (messageTimer != null && (System.currentTimeMillis()
+                        - messageTimer.scheduledExecutionTime()) <= 0) {
+                    messageTimer.cancel();
+                }
+                if (!defaultMessage.equals(currentMessage)) {
+                    messageTimer = new MessageTimerTask(MessageLabel.this);
+                    new Timer("SwingStatusBar messageTimer").schedule(
+                            messageTimer, new Date(System.currentTimeMillis()
+                            + 250 + currentMessage.getTimeout() * 1000L));
                 }
             }
         });
@@ -218,7 +221,14 @@ public class MessageLabel extends JLabel implements StatusBarComponent,
      * Removes the message from the status bar.
      */
     public void clearMessage() {
-        setMessage(defaultMessage);
+        semaphore.acquireUninterruptibly();
+        if (queue.peek() == null) {
+            currentMessage = defaultMessage;
+        } else {
+            currentMessage = queue.poll();
+        }
+        updateCurrentMethod();
+        semaphore.release();
     }
 
     /**
@@ -228,9 +238,9 @@ public class MessageLabel extends JLabel implements StatusBarComponent,
      */
     @Override
     public void mouseClicked(final MouseEvent e) {
-        if (currentMessage != -1 && messages.size() > currentMessage
-                && messages.get(currentMessage).getMessageNotifier() != null) {
-            messages.get(currentMessage).getMessageNotifier().clickReceived(
+        if (currentMessage != null
+                && currentMessage.getMessageNotifier() != null) {
+            currentMessage.getMessageNotifier().clickReceived(
                     e.getButton(), e.getClickCount());
         }
     }
