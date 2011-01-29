@@ -24,15 +24,12 @@ package com.dmdirc.addons.ui_swing.components.statusbar;
 
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 
-import java.awt.Component;
-import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Window;
 
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
-import javax.swing.border.EtchedBorder;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -42,7 +39,6 @@ import net.miginfocom.swing.MigLayout;
  * detailed information.
  *
  * @since 0.6.3m1
- * @author chris
  */
 public abstract class StatusbarPopupWindow extends StandardDialog {
 
@@ -52,11 +48,10 @@ public abstract class StatusbarPopupWindow extends StandardDialog {
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 1;
-
     /** The parent JPanel. */
     private final JPanel parent;
     /** Parent window. */
-    private Window parentWindow;
+    private final Window parentWindow;
 
     /**
      * Creates a new status bar popup window.
@@ -96,14 +91,17 @@ public abstract class StatusbarPopupWindow extends StandardDialog {
             pack();
 
             final Point point = parent.getLocationOnScreen();
-            point.translate(parent.getWidth() / 2 - this.getWidth() / 2, - this.getHeight());
+            point.translate(parent.getWidth() / 2 - this.getWidth() / 2,
+                    - this.getHeight());
             final int maxX = Math.max(parentWindow.getLocationOnScreen().x
                     + parentWindow.getWidth() - 10 - getWidth(),
-                    parent.getLocationOnScreen().x + parent.getWidth() - 1 - getWidth());
+                    parent.getLocationOnScreen().x + parent.getWidth() - 1
+                    - getWidth());
             point.x = Math.min(maxX, point.x);
             setLocation(point);
 
-            panel.setBorder(new GappedEtchedBorder());
+            panel.setBorder(new SidelessEtchedBorder(
+                    SidelessEtchedBorder.Side.BOTTOM));
         }
 
         super.setVisible(b);
@@ -115,41 +113,4 @@ public abstract class StatusbarPopupWindow extends StandardDialog {
      * @param panel The {@link JPanel} to which content should be added
      */
     protected abstract void initContent(final JPanel panel);
-
-    /**
-     * An {@link EtchedBorder} that leaves a gap in the bottom where the
-     * lag display panel is.
-     */
-    private class GappedEtchedBorder extends EtchedBorder {
-
-        /**
-         * A version number for this class. It should be changed whenever the class
-         * structure is changed (or anything else that would prevent serialized
-         * objects being unserialized with the new class).
-         */
-        private static final long serialVersionUID = 1;
-
-        /** {@inheritDoc} */
-        @Override
-        public void paintBorder(final Component c, final Graphics g,
-                final int x, final int y, final int width, final int height) {
-            int w = width;
-            int h = height;
-
-            g.translate(x, y);
-
-            g.setColor(etchType == LOWERED? getShadowColor(c) : getHighlightColor(c));
-            g.drawLine(0, 0, w-1, 0);
-            g.drawLine(0, h-1, parent.getLocationOnScreen().x
-                    - getLocationOnScreen().x, h-1);
-            g.drawLine(parent.getWidth() + parent.getLocationOnScreen().x
-                    - getLocationOnScreen().x - 2, h-1, w-1, h-1);
-            g.drawLine(0, 0, 0, h-1);
-            g.drawLine(w-1, 0, w-1, h-1);
-
-            g.translate(-x, -y);
-        }
-
-    }
-
 }
