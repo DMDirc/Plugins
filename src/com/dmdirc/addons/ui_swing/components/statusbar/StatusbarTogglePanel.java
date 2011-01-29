@@ -22,6 +22,8 @@
 
 package com.dmdirc.addons.ui_swing.components.statusbar;
 
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.event.MouseEvent;
 
 import javax.swing.JLabel;
@@ -30,11 +32,12 @@ import javax.swing.border.EtchedBorder;
 
 /**
  * A panel shown in the status bar which displays a {@link StatusbarPopupWindow}
- * when the user mouses over it.
+ * when the clicks it.
  *
- * @since 0.6.3m1
+ * @since 0.6.6
  */
-public abstract class StatusbarPopupPanel extends StatusbarPanel {
+public abstract class StatusbarTogglePanel extends StatusbarPanel
+        implements ComponentListener {
 
     /**
      * A version number for this class. It should be changed whenever the class
@@ -44,19 +47,21 @@ public abstract class StatusbarPopupPanel extends StatusbarPanel {
     private static final long serialVersionUID = 2;
 
     /**
-     * Creates a new {@link StatusbarPopupPanel}, using a default text label.
+     * Creates a new {@link StatusbarTogglePanel}, using a default text label.
      */
-    public StatusbarPopupPanel() {
+    public StatusbarTogglePanel() {
         this(new JLabel("Unknown"));
     }
 
     /**
-     * Creates a new {@link StatusbarPopupPanel}, using the specified label.
+     * Creates a new {@link StatusbarTogglePanel}, using the specified label.
      *
      * @param label The label to be displayed in the status bar
      */
-    public StatusbarPopupPanel(final JLabel label) {
+    public StatusbarTogglePanel(final JLabel label) {
         super(label);
+
+        addComponentListener(this);
     }
 
     /**
@@ -66,7 +71,17 @@ public abstract class StatusbarPopupPanel extends StatusbarPanel {
      */
     @Override
     public void mouseClicked(final MouseEvent e) {
-        // Don't care
+        if (isDialogOpen()) {
+            setBackground(null);
+            setForeground(null);
+            setBorder(new EtchedBorder());
+            closeDialog();
+        } else {
+            setBackground(UIManager.getColor("ToolTip.background"));
+            setForeground(UIManager.getColor("ToolTip.foreground"));
+            setBorder(new ToplessEtchedBorder());
+            openDialog();
+        }
     }
 
     /**
@@ -96,10 +111,7 @@ public abstract class StatusbarPopupPanel extends StatusbarPanel {
      */
     @Override
     public void mouseEntered(final MouseEvent e) {
-        setBackground(UIManager.getColor("ToolTip.background"));
-        setForeground(UIManager.getColor("ToolTip.foreground"));
-        setBorder(new ToplessEtchedBorder());
-        openDialog();
+        // Don't care
     }
 
     /**
@@ -109,9 +121,30 @@ public abstract class StatusbarPopupPanel extends StatusbarPanel {
      */
     @Override
     public void mouseExited(final MouseEvent e) {
-        setBackground(null);
-        setForeground(null);
-        setBorder(new EtchedBorder());
-        closeDialog();
+        // Don't care
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void componentResized(final ComponentEvent e) {
+        refreshDialog();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void componentMoved(final ComponentEvent e) {
+        refreshDialog();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void componentShown(final ComponentEvent e) {
+        // Don't care
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void componentHidden(final ComponentEvent e) {
+        // Don't care
     }
 }

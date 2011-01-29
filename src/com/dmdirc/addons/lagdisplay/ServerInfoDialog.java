@@ -26,7 +26,7 @@ import com.dmdirc.Server;
 import com.dmdirc.ServerManager;
 import com.dmdirc.ServerState;
 import com.dmdirc.addons.ui_swing.SwingController;
-import com.dmdirc.addons.ui_swing.components.statusbar.StatusbarPopupPanel;
+import com.dmdirc.addons.ui_swing.components.statusbar.StatusbarPanel;
 import com.dmdirc.addons.ui_swing.components.statusbar.StatusbarPopupWindow;
 import com.dmdirc.plugins.PluginManager;
 
@@ -60,7 +60,7 @@ public class ServerInfoDialog extends StatusbarPopupWindow {
      * @param ldp The {@link LagDisplayPlugin} we're using for info
      * @param parent The {@link JPanel} to use for positioning
      */
-    public ServerInfoDialog(final LagDisplayPlugin ldp, final StatusbarPopupPanel parent) {
+    public ServerInfoDialog(final LagDisplayPlugin ldp, final StatusbarPanel parent) {
         super(parent, ((SwingController) PluginManager.getPluginManager()
                 .getPluginInfoByName("ui_swing").getPlugin()).getMainFrame());
 
