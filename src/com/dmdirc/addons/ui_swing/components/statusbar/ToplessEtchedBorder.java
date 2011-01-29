@@ -19,40 +19,39 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.dmdirc.addons.lagdisplay;
 
-import com.dmdirc.addons.ui_swing.components.statusbar.StatusbarPopupPanel;
-import com.dmdirc.addons.ui_swing.components.statusbar.StatusbarPopupWindow;
+package com.dmdirc.addons.ui_swing.components.statusbar;
+
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Graphics;
+
+import javax.swing.border.EtchedBorder;
 
 /**
- * Shows the user's lag in the status bar, and reveals details of all servers
- * when the user hovers over it.
+ * An {@link EtchedBorder} with no top.
  */
-public class LagDisplayPanel extends StatusbarPopupPanel {
+class ToplessEtchedBorder extends EtchedBorder {
 
     /**
      * A version number for this class. It should be changed whenever the class
      * structure is changed (or anything else that would prevent serialized
      * objects being unserialized with the new class).
      */
-    private static final long serialVersionUID = 2;
-    /** Lag display plugin. */
-    private final LagDisplayPlugin plugin;
-
-    /**
-     * Creates a new {@link LagDisplayPanel} for the specified plugin.
-     *
-     * @param plugin The plugin that owns this panel
-     */
-    public LagDisplayPanel(final LagDisplayPlugin plugin) {
-        super();
-        
-        this.plugin = plugin;
-    }
+    private static final long serialVersionUID = 1;
 
     /** {@inheritDoc} */
     @Override
-    protected StatusbarPopupWindow getWindow() {
-        return new ServerInfoDialog(plugin, this);
+    public void paintBorder(final Component c, final Graphics g, final int x,
+            final int y, final int width, final int height) {
+        g.translate(x, y);
+        g.setColor(etchType == LOWERED ? getShadowColor(c) : getHighlightColor(c));
+        g.drawLine(0, height - 2, width, height - 2);
+        g.drawLine(0, 0, 0, height - 1);
+        g.drawLine(width - 2, 0, width - 2, height - 1);
+        g.setColor(Color.WHITE);
+        g.drawLine(0, height - 1, width, height - 1);
+        g.drawLine(width - 1, 0, width - 1, height - 1);
+        g.translate(-x, -y);
     }
 }
