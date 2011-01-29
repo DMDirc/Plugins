@@ -23,9 +23,9 @@
 package com.dmdirc.addons.ui_swing.components.statusbar;
 
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
-
 import java.awt.Component;
 import java.awt.Graphics;
+
 import java.awt.Point;
 import java.awt.Window;
 
@@ -42,7 +42,6 @@ import net.miginfocom.swing.MigLayout;
  * detailed information.
  *
  * @since 0.6.3m1
- * @author chris
  */
 public abstract class StatusbarPopupWindow extends StandardDialog {
 
@@ -52,11 +51,10 @@ public abstract class StatusbarPopupWindow extends StandardDialog {
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 1;
-
     /** The parent JPanel. */
     private final JPanel parent;
     /** Parent window. */
-    private Window parentWindow;
+    private final Window parentWindow;
 
     /**
      * Creates a new status bar popup window.
@@ -96,10 +94,12 @@ public abstract class StatusbarPopupWindow extends StandardDialog {
             pack();
 
             final Point point = parent.getLocationOnScreen();
-            point.translate(parent.getWidth() / 2 - this.getWidth() / 2, - this.getHeight());
+            point.translate(parent.getWidth() / 2 - this.getWidth() / 2,
+                    - this.getHeight());
             final int maxX = Math.max(parentWindow.getLocationOnScreen().x
                     + parentWindow.getWidth() - 10 - getWidth(),
-                    parent.getLocationOnScreen().x + parent.getWidth() - 1 - getWidth());
+                    parent.getLocationOnScreen().x + parent.getWidth() - 1
+                    - getWidth());
             point.x = Math.min(maxX, point.x);
             setLocation(point);
 
@@ -151,5 +151,4 @@ public abstract class StatusbarPopupWindow extends StandardDialog {
         }
 
     }
-
 }

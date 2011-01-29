@@ -79,7 +79,7 @@ public abstract class StatusbarTogglePanel extends StatusbarPanel
         } else {
             setBackground(UIManager.getColor("ToolTip.background"));
             setForeground(UIManager.getColor("ToolTip.foreground"));
-            setBorder(new ToplessEtchedBorder());
+            setBorder(new SidelessEtchedBorder(SidelessEtchedBorder.Side.TOP));
             openDialog();
         }
     }
