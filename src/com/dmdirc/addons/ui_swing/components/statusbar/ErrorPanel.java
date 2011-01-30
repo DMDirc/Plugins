@@ -56,7 +56,6 @@ public class ErrorPanel extends StatusbarPopupPanel<JLabel> implements
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 2;
-
     /** non error state image icon. */
     private static final Icon DEFAULT_ICON = IconManager.getIconManager().
             getIcon("normal");
