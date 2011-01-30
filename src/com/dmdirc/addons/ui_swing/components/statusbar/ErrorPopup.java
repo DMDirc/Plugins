@@ -41,7 +41,6 @@ import javax.swing.JSeparator;
  * Shows a breakdown of errors that have occured.
  *
  * @since 0.6.3m1
- * @author chris
  */
 public class ErrorPopup extends StatusbarPopupWindow {
 
@@ -65,8 +64,10 @@ public class ErrorPopup extends StatusbarPopupWindow {
     /** {@inheritDoc} */
     @Override
     protected void initContent(final JPanel panel) {
-        final List<ProgramError> errors = ErrorManager.getErrorManager().getErrors();
-        final MapList<ErrorLevel, ProgramError> buckets = new MapList<ErrorLevel, ProgramError>();
+        final List<ProgramError> errors = ErrorManager.getErrorManager()
+                .getErrors();
+        final MapList<ErrorLevel, ProgramError> buckets
+                = new MapList<ErrorLevel, ProgramError>();
         final MapList<ErrorReportStatus, ProgramError> statuses
                 = new MapList<ErrorReportStatus, ProgramError>();
 
@@ -88,8 +89,10 @@ public class ErrorPopup extends StatusbarPopupWindow {
                 final int count = buckets.values(level).size();
 
                 panel.add(new JLabel(level.toString(),
-                        IconManager.getIconManager().getIcon(level.getIcon()), JLabel.LEFT));
-                panel.add(new JLabel(String.valueOf(count), JLabel.RIGHT), "growx, pushx, wrap");
+                        IconManager.getIconManager().getIcon(level.getIcon()),
+                        JLabel.LEFT));
+                panel.add(new JLabel(String.valueOf(count), JLabel.RIGHT),
+                        "growx, pushx, wrap");
             }
         }
 
@@ -108,9 +111,9 @@ public class ErrorPopup extends StatusbarPopupWindow {
                 final int count = statuses.values(status).size();
 
                 panel.add(new JLabel(status.toString(), JLabel.LEFT));
-                panel.add(new JLabel(String.valueOf(count), JLabel.RIGHT), "growx, pushx, wrap");
+                panel.add(new JLabel(String.valueOf(count), JLabel.RIGHT),
+                        "growx, pushx, wrap");
             }
         }
     }
-
 }

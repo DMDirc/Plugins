@@ -46,9 +46,9 @@ import javax.swing.SwingUtilities;
  * Shows error status in the status bar.
  *
  * @since 0.6.3m1
- * @author chris
  */
-public class ErrorPanel extends StatusbarPopupPanel implements ErrorListener, ActionListener {
+public class ErrorPanel extends StatusbarPopupPanel<JLabel> implements
+        ErrorListener, ActionListener {
 
     /**
      * A version number for this class. It should be changed whenever the class
@@ -60,12 +60,10 @@ public class ErrorPanel extends StatusbarPopupPanel implements ErrorListener, Ac
     /** non error state image icon. */
     private static final Icon DEFAULT_ICON = IconManager.getIconManager().
             getIcon("normal");
-    /** Currently showing error level. */
-    private ErrorLevel errorLevel;
     /** Status controller. */
     private final MainFrame mainFrame;
     /** Swing status bar. */
-    private SwingStatusBar statusBar;
+    private final SwingStatusBar statusBar;
     /** Error manager. */
     private final transient ErrorManager errorManager = ErrorManager.getErrorManager();
     /** Dismiss menu. */
@@ -75,14 +73,16 @@ public class ErrorPanel extends StatusbarPopupPanel implements ErrorListener, Ac
     /** Show menu item. */
     private final JMenuItem show;
     /** Swing controller. */
-    private SwingController controller;
+    private final SwingController controller;
+    /** Currently showing error level. */
+    private ErrorLevel errorLevel;
 
     /**
      * Creates a new ErrorPanel for the speicified status bar.
      *
      * @param controller Swing controller
      * @param mainFrame Main frame
-     * @param statusBar Status bar  
+     * @param statusBar Status bar
      */
     public ErrorPanel(final SwingController controller,
             final MainFrame mainFrame, final SwingStatusBar statusBar) {
@@ -91,7 +91,7 @@ public class ErrorPanel extends StatusbarPopupPanel implements ErrorListener, Ac
         this.controller = controller;
         this.mainFrame = mainFrame;
         this.statusBar = statusBar;
-        
+
         menu = new JPopupMenu();
         dismiss = new JMenuItem("Clear All");
         show = new JMenuItem("Open");
@@ -152,7 +152,8 @@ public class ErrorPanel extends StatusbarPopupPanel implements ErrorListener, Ac
                         if (errorLevel == null ||
                                 !error.getLevel().moreImportant(errorLevel)) {
                             errorLevel = error.getLevel();
-                            label.setIcon(IconManager.getIconManager().getIcon(errorLevel.getIcon()));
+                            label.setIcon(IconManager.getIconManager()
+                                    .getIcon(errorLevel.getIcon()));
                         }
                     }
                     setVisible(true);

@@ -33,7 +33,6 @@ import javax.swing.JPanel;
  * Shows information about received invites.
  *
  * @since 0.6.3m1
- * @author chris
  */
 public class InvitePopup extends StatusbarPopupWindow {
 
@@ -43,7 +42,6 @@ public class InvitePopup extends StatusbarPopupWindow {
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 1;
-
     /** The server to show invites for. */
     private final Server server;
 
@@ -54,7 +52,8 @@ public class InvitePopup extends StatusbarPopupWindow {
      * @param server The server to show invites for
      * @param parentWindow Parent window
      */
-    public InvitePopup(final JPanel parent, final Server server, final Window parentWindow) {
+    public InvitePopup(final JPanel parent, final Server server,
+            final Window parentWindow) {
         super(parent, parentWindow);
         this.server = server;
     }
@@ -64,11 +63,12 @@ public class InvitePopup extends StatusbarPopupWindow {
     protected void initContent(final JPanel panel) {
         for (Invite invite : server.getInvites()) {
             panel.add(new JLabel(invite.getChannel()), "growx, pushx");
-            panel.add(new JLabel(invite.getSource()[0], JLabel.CENTER), "growx, pushx, al center");
+            panel.add(new JLabel(invite.getSource()[0], JLabel.CENTER),
+                    "growx, pushx, al center");
             panel.add(new JLabel(Formatter.formatDuration((int)
-                    (System.currentTimeMillis() - invite.getTimestamp()) / 1000) + " ago",
-                    JLabel.RIGHT), "growx, pushx, al right, wrap");
+                    (System.currentTimeMillis() - invite.getTimestamp())
+                    / 1000) + " ago", JLabel.RIGHT),
+                    "growx, pushx, al right, wrap");
         }
     }
-
 }

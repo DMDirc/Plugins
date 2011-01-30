@@ -174,7 +174,7 @@ public final class LagDisplayPlugin extends Plugin implements ActionListener, Co
             pings.put(((Server) arguments[0]), value);
 
             if (((Server) arguments[0]).isChild(active) || arguments[0] == active) {
-                panel.setText(value);
+                panel.getComponent().setText(value);
             }
 
             panel.refreshDialog();
@@ -185,7 +185,7 @@ public final class LagDisplayPlugin extends Plugin implements ActionListener, Co
             pings.put(((Server) arguments[0]), value);
 
             if (((Server) arguments[0]).isChild(active) || arguments[0] == active) {
-                panel.setText(value);
+                panel.getComponent().setText(value);
             }
 
             panel.refreshDialog();
@@ -193,7 +193,7 @@ public final class LagDisplayPlugin extends Plugin implements ActionListener, Co
             final FrameContainer active = WindowManager.getActiveWindow();
 
             if (((Server) arguments[0]).isChild(active) || arguments[0] == active) {
-                panel.setText("Not connected");
+                panel.getComponent().setText("Not connected");
                 pings.remove((Server) arguments[0]);
             }
 
@@ -201,11 +201,11 @@ public final class LagDisplayPlugin extends Plugin implements ActionListener, Co
         } else if (type.equals(CoreActionType.CLIENT_FRAME_CHANGED)) {
             final FrameContainer source = (FrameContainer) arguments[0];
             if (source == null || source.getServer() == null) {
-                panel.setText("Unknown");
+                panel.getComponent().setText("Unknown");
             } else if (source.getServer().getState() != ServerState.CONNECTED) {
-                panel.setText("Not connected");
+                panel.getComponent().setText("Not connected");
             } else {
-                panel.setText(getTime(source.getServer()));
+                panel.getComponent().setText(getTime(source.getServer()));
             }
 
             panel.refreshDialog();
@@ -224,7 +224,7 @@ public final class LagDisplayPlugin extends Plugin implements ActionListener, Co
                 getHistory(((Server) arguments[0])).add(duration);
 
                 if (((Server) arguments[0]).isChild(active) || arguments[0] == active) {
-                    panel.setText(value);
+                    panel.getComponent().setText(value);
                 }
             } catch (NumberFormatException ex) {
                 pings.remove((Server) arguments[0]);

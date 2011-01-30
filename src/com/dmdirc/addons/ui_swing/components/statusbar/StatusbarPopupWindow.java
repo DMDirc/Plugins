@@ -133,20 +133,16 @@ public abstract class StatusbarPopupWindow extends StandardDialog {
         @Override
         public void paintBorder(final Component c, final Graphics g,
                 final int x, final int y, final int width, final int height) {
-            int w = width;
-            int h = height;
-
             g.translate(x, y);
-
-            g.setColor(etchType == LOWERED? getShadowColor(c) : getHighlightColor(c));
-            g.drawLine(0, 0, w-1, 0);
-            g.drawLine(0, h-1, parent.getLocationOnScreen().x
-                    - getLocationOnScreen().x, h-1);
+            g.setColor(etchType == LOWERED? getShadowColor(c)
+                    : getHighlightColor(c));
+            g.drawLine(0, 0, width-1, 0);
+            g.drawLine(0, height-1, parent.getLocationOnScreen().x
+                    - getLocationOnScreen().x, height-1);
             g.drawLine(parent.getWidth() + parent.getLocationOnScreen().x
-                    - getLocationOnScreen().x - 2, h-1, w-1, h-1);
-            g.drawLine(0, 0, 0, h-1);
-            g.drawLine(w-1, 0, w-1, h-1);
-
+                    - getLocationOnScreen().x - 2, height-1, width-1, height-1);
+            g.drawLine(0, 0, 0, height-1);
+            g.drawLine(width-1, 0, width-1, height-1);
             g.translate(-x, -y);
         }
 
