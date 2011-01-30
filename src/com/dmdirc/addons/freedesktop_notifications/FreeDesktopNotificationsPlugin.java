@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.freedesktop_notifications;
 
-import com.dmdirc.addons.freedesktop_notifications.commons.StringEscapeUtils;
 import com.dmdirc.commandparser.CommandManager;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
@@ -43,10 +42,10 @@ import com.dmdirc.util.resourcemanager.ResourceManager;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import org.apache.commons.lang.StringEscapeUtils;
+
 /**
  * This plugin adds freedesktop Style Notifications to dmdirc.
- *
- * @author Shane 'Dataforce' McCormack
  */
 public final class FreeDesktopNotificationsPlugin extends Plugin implements ConfigChangeListener {
     /** The DcopCommand we created */

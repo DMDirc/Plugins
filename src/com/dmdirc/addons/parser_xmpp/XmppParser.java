@@ -355,7 +355,7 @@ public class XmppParser extends BaseSocketAwareParser {
     /** {@inheritDoc} */
     @Override
     public long getServerLatency() {
-        return 1000l; // TODO
+        return 1000L; // TODO
     }
 
     /** {@inheritDoc} */
