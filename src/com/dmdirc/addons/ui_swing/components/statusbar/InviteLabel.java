@@ -49,7 +49,7 @@ import javax.swing.JSeparator;
 /**
  * Invite label.
  */
-public class InviteLabel extends StatusbarPopupPanel implements 
+public class InviteLabel extends StatusbarPopupPanel<JLabel> implements
         StatusBarComponent, InviteListener, ActionListener,
         java.awt.event.ActionListener {
 
