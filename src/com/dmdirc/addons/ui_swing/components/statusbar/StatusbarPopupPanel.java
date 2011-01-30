@@ -25,8 +25,6 @@ package com.dmdirc.addons.ui_swing.components.statusbar;
 import java.awt.event.MouseEvent;
 
 import javax.swing.JComponent;
-import javax.swing.UIManager;
-import javax.swing.border.EtchedBorder;
 
 /**
  * A panel shown in the status bar which displays a {@link StatusbarPopupWindow}
@@ -90,9 +88,6 @@ public abstract class StatusbarPopupPanel<T extends JComponent> extends
      */
     @Override
     public void mouseEntered(final MouseEvent e) {
-        setBackground(UIManager.getColor("ToolTip.background"));
-        setForeground(UIManager.getColor("ToolTip.foreground"));
-        setBorder(new SidelessEtchedBorder(SidelessEtchedBorder.Side.TOP));
         openDialog();
     }
 
@@ -103,9 +98,6 @@ public abstract class StatusbarPopupPanel<T extends JComponent> extends
      */
     @Override
     public void mouseExited(final MouseEvent e) {
-        setBackground(null);
-        setForeground(null);
-        setBorder(new EtchedBorder());
         closeDialog();
     }
 }

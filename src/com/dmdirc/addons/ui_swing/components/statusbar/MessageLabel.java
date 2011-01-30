@@ -29,6 +29,7 @@ import com.dmdirc.ui.StatusMessage;
 import com.dmdirc.ui.interfaces.StatusBarComponent;
 import com.dmdirc.ui.interfaces.StatusMessageNotifier;
 
+import java.awt.Window;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.Date;
@@ -37,14 +38,16 @@ import java.util.Queue;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import javax.swing.BorderFactory;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+
+import net.miginfocom.swing.MigLayout;
 
 /**
  * Message label handles showing messages in the status bar.
  */
-public class MessageLabel extends JLabel implements StatusBarComponent,
+public class MessageLabel extends JPanel implements StatusBarComponent,
         MouseListener {
 
     /**
@@ -57,6 +60,10 @@ public class MessageLabel extends JLabel implements StatusBarComponent,
     private final StatusMessage defaultMessage;
     /** Message queue. */
     private final Queue<StatusMessage> queue;
+    /** Messsage label. */
+    private final JLabel label;
+    /** History label. */
+    private final MessagePopup historyLabel;
     /** Current status messsage. */
     private StatusMessage currentMessage;
     /** Timer to clear the message. */
@@ -65,15 +72,20 @@ public class MessageLabel extends JLabel implements StatusBarComponent,
     /**
      * Instantiates a new message label.
      */
-    public MessageLabel() {
-        super();
+    public MessageLabel(final Window parentWindow) {
+        super(new MigLayout("fill, ins 0, gap 0  0"));
         queue = new LinkedList<StatusMessage>();
         defaultMessage = new StatusMessage(null, "Ready.", null, -1,
                 IdentityManager.getGlobalConfig());
         currentMessage = defaultMessage;
-        setText("Ready.");
-        setBorder(BorderFactory.createEtchedBorder());
-        addMouseListener(this);
+        label = new JLabel();
+        historyLabel = new MessagePopup(parentWindow);
+        label.setText("Ready.");
+        label.setBorder(new SidelessEtchedBorder(
+                SidelessEtchedBorder.Side.RIGHT));
+        label.addMouseListener(this);
+        add(label, "growx, pushx");
+        add(historyLabel, "gapleft 0");
     }
 
     /**
@@ -192,12 +204,12 @@ public class MessageLabel extends JLabel implements StatusBarComponent,
             @Override
             public void run() {
                 if (currentMessage.getIconType() == null) {
-                    setIcon(null);
+                    label.setIcon(null);
                 } else {
-                    setIcon(IconManager.getIconManager().getIcon(
+                    label.setIcon(IconManager.getIconManager().getIcon(
                             currentMessage.getIconType()));
                 }
-                setText(UIUtilities.clipStringifNeeded(MessageLabel.this,
+                label.setText(UIUtilities.clipStringifNeeded(MessageLabel.this,
                         currentMessage.getMessage(), getWidth()));
                 if (messageTimer != null && (System.currentTimeMillis()
                         - messageTimer.scheduledExecutionTime()) <= 0) {
@@ -218,6 +230,7 @@ public class MessageLabel extends JLabel implements StatusBarComponent,
      */
     public void clearMessage() {
         synchronized(queue) {
+            historyLabel.addMessage(currentMessage);
             if (queue.peek() == null) {
                 currentMessage = defaultMessage;
             } else {
