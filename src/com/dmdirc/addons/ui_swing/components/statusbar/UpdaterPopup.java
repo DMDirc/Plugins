@@ -24,8 +24,10 @@ package com.dmdirc.addons.ui_swing.components.statusbar;
 
 import com.dmdirc.updater.Update;
 import com.dmdirc.updater.UpdateChecker;
+
 import java.awt.Window;
 import java.util.List;
+
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
@@ -34,7 +36,6 @@ import javax.swing.JSeparator;
  * Information popup for the updater label.
  *
  * @since 0.6.3
- * @author chris
  */
 public class UpdaterPopup extends StatusbarPopupWindow {
 
@@ -66,12 +67,14 @@ public class UpdaterPopup extends StatusbarPopupWindow {
             final List<Update> updates = UpdateChecker.getAvailableUpdates();
 
             if (state.equals(UpdateChecker.STATE.RESTART_REQUIRED)) {
-                panel.add(new JLabel("A restart is required to install updates."), "span,wrap");
+                panel.add(new JLabel("A restart is required to install updates."),
+                        "span,wrap");
             } else if (state.equals(UpdateChecker.STATE.UPDATING)) {
                 panel.add(new JLabel("Update in progress..."), "span,wrap");
             } else {
-                panel.add(new JLabel(updates.size() == 1 ? "There is one update available"
-                        : "There are " + updates.size() + " updates available"), "span,wrap");
+                panel.add(new JLabel(updates.size() == 1
+                        ? "There is one update available" : "There are "
+                        + updates.size() + " updates available"), "span,wrap");
             }
 
             panel.add(new JSeparator(), "span, growx, pushx, wrap");
