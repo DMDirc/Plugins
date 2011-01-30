@@ -27,9 +27,11 @@ import com.dmdirc.ui.interfaces.StatusBarComponent;
 
 import java.awt.event.MouseListener;
 
-import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
+import javax.swing.UIManager;
+import javax.swing.border.Border;
+import javax.swing.border.EtchedBorder;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -52,18 +54,37 @@ public abstract class StatusbarPanel<T extends JComponent> extends JPanel
     private static final long serialVersionUID = 2;
     /** The popup window we're using to show extra info. */
     private StatusbarPopupWindow dialog;
+    /** Non selected border. */
+    protected final Border nonSelectedBorder;
+    /** Selected border. */
+    protected final Border selectedBorder;
 
     /**
      * Creates a new {@link StatusbarPanel}, using the specified label.
      *
-     * @param label The label to be displayed in the status bar
+     * @param label The component to be displayed in the status bar
      */
     public StatusbarPanel(final T label) {
+        this(label, new EtchedBorder(), new SidelessEtchedBorder(
+                SidelessEtchedBorder.Side.TOP));
+    }
+
+    /**
+     * Creates a new {@link StatusbarPanel}.
+     *
+     * @param label The component to be displayed in the status bar
+     * @param nonSelectedBorder The border for when the panel is unselected
+     * @param selectedBorder The border for when for the panel is selected
+     */
+    public StatusbarPanel(final T label, final Border nonSelectedBorder,
+            final Border selectedBorder) {
         super();
 
         this.label = label;
+        this.nonSelectedBorder = nonSelectedBorder;
+        this.selectedBorder = selectedBorder;
 
-        setBorder(BorderFactory.createEtchedBorder());
+        setBorder(nonSelectedBorder);
         setLayout(new MigLayout("ins 0 rel 0 rel, aligny center"));
         add(label);
 
@@ -101,6 +122,9 @@ public abstract class StatusbarPanel<T extends JComponent> extends JPanel
      */
     protected final void openDialog() {
         synchronized (StatusbarPanel.this) {
+            setBackground(UIManager.getColor("ToolTip.background"));
+            setForeground(UIManager.getColor("ToolTip.foreground"));
+            setBorder(selectedBorder);
             dialog = getWindow();
             dialog.setVisible(true);
         }
@@ -111,6 +135,9 @@ public abstract class StatusbarPanel<T extends JComponent> extends JPanel
      */
     protected final void closeDialog() {
         synchronized (StatusbarPanel.this) {
+            setBackground(null);
+            setForeground(null);
+            setBorder(nonSelectedBorder);
             if (dialog != null) {
                 dialog.setVisible(false);
                 dialog.dispose();
