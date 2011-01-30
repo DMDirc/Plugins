@@ -24,11 +24,13 @@ package com.dmdirc.addons.lagdisplay;
 import com.dmdirc.addons.ui_swing.components.statusbar.StatusbarPopupPanel;
 import com.dmdirc.addons.ui_swing.components.statusbar.StatusbarPopupWindow;
 
+import javax.swing.JLabel;
+
 /**
  * Shows the user's lag in the status bar, and reveals details of all servers
  * when the user hovers over it.
  */
-public class LagDisplayPanel extends StatusbarPopupPanel {
+public class LagDisplayPanel extends StatusbarPopupPanel<JLabel> {
 
     /**
      * A version number for this class. It should be changed whenever the class

@@ -24,7 +24,7 @@ package com.dmdirc.addons.ui_swing.components.statusbar;
 
 import java.awt.event.MouseEvent;
 
-import javax.swing.JLabel;
+import javax.swing.JComponent;
 import javax.swing.UIManager;
 import javax.swing.border.EtchedBorder;
 
@@ -34,7 +34,8 @@ import javax.swing.border.EtchedBorder;
  *
  * @since 0.6.3m1
  */
-public abstract class StatusbarPopupPanel extends StatusbarPanel {
+public abstract class StatusbarPopupPanel<T extends JComponent> extends
+        StatusbarPanel<T> {
 
     /**
      * A version number for this class. It should be changed whenever the class
@@ -44,18 +45,11 @@ public abstract class StatusbarPopupPanel extends StatusbarPanel {
     private static final long serialVersionUID = 2;
 
     /**
-     * Creates a new {@link StatusbarPopupPanel}, using a default text label.
-     */
-    public StatusbarPopupPanel() {
-        this(new JLabel("Unknown"));
-    }
-
-    /**
      * Creates a new {@link StatusbarPopupPanel}, using the specified label.
      *
      * @param label The label to be displayed in the status bar
      */
-    public StatusbarPopupPanel(final JLabel label) {
+    public StatusbarPopupPanel(final T label) {
         super(label);
     }
 

@@ -32,10 +32,10 @@ import com.dmdirc.ui.interfaces.StatusMessageNotifier;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
@@ -67,7 +67,7 @@ public class MessageLabel extends JLabel implements StatusBarComponent,
      */
     public MessageLabel() {
         super();
-        queue = new ConcurrentLinkedQueue<StatusMessage>();
+        queue = new LinkedList<StatusMessage>();
         defaultMessage = new StatusMessage(null, "Ready.", null, -1,
                 IdentityManager.getGlobalConfig());
         currentMessage = defaultMessage;
@@ -92,6 +92,16 @@ public class MessageLabel extends JLabel implements StatusBarComponent,
     /**
      * Sets the message for this message label.
      *
+                }
+                if (!defaultMessage.equals(currentMessage)) {
+                    messageTimer = new MessageTimerTask(MessageLabel.this);
+                    new Timer("SwingStatusBar messageTimer").schedule(
+                            messageTimer, new Date(System.currentTimeMillis()
+                            + 250 + currentMessage.getTimeout() * 1000L));
+                }
+            }
+        });
+    }
      * @param newMessage New message
      * @param newNotifier New notifier
      *
