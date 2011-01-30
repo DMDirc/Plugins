@@ -31,7 +31,7 @@ import javax.swing.text.html.HTMLEditorKit;
 public class DMDircHTMLEditorKit extends HTMLEditorKit {
 
     private static final long serialVersionUID = 1;
-    private ViewFactory defaultFactory = new DMDircHTMLFactory();
+    private final ViewFactory defaultFactory = new DMDircHTMLFactory();
 
     /** {@inheritDoc} */
     @Override
