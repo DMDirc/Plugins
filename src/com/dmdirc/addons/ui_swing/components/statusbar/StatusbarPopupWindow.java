@@ -36,7 +36,6 @@ import javax.swing.border.EtchedBorder;
 
 import net.miginfocom.swing.MigLayout;
 
-
  /**
  * A popup window which is shown above a status bar component to provide more
  * detailed information.
@@ -92,21 +91,29 @@ public abstract class StatusbarPopupWindow extends StandardDialog {
             setResizable(false);
 
             pack();
-
-            final Point point = parent.getLocationOnScreen();
-            point.translate(parent.getWidth() / 2 - this.getWidth() / 2,
-                    - this.getHeight());
-            final int maxX = Math.max(parentWindow.getLocationOnScreen().x
-                    + parentWindow.getWidth() - 10 - getWidth(),
-                    parent.getLocationOnScreen().x + parent.getWidth() - 1
-                    - getWidth());
-            point.x = Math.min(maxX, point.x);
-            setLocation(point);
+            setLocation(getPopupLocation());
 
             panel.setBorder(new GappedEtchedBorder());
         }
 
         super.setVisible(b);
+    }
+
+    /**
+     * Returns the location the popup window should appear at.
+     *
+     * @return Point for popup to appear
+     */
+    protected Point getPopupLocation() {
+        final Point point = parent.getLocationOnScreen();
+        point.translate(parent.getWidth() / 2 - this.getWidth() / 2,
+                - this.getHeight());
+        final int maxX = Math.max(parentWindow.getLocationOnScreen().x
+                + parentWindow.getWidth() - 10 - getWidth(),
+                parent.getLocationOnScreen().x + parent.getWidth() - 1
+                - getWidth());
+        point.x = Math.min(maxX, point.x);
+        return point;
     }
 
     /**

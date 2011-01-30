@@ -79,7 +79,7 @@ public class MessageLabel extends JPanel implements StatusBarComponent,
                 IdentityManager.getGlobalConfig());
         currentMessage = defaultMessage;
         label = new JLabel();
-        historyLabel = new MessagePopup(parentWindow);
+        historyLabel = new MessagePopup(this, parentWindow);
         label.setText("Ready.");
         label.setBorder(new SidelessEtchedBorder(
                 SidelessEtchedBorder.Side.RIGHT));
