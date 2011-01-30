@@ -28,7 +28,7 @@ import com.dmdirc.ui.interfaces.StatusBarComponent;
 import java.awt.event.MouseListener;
 
 import javax.swing.BorderFactory;
-import javax.swing.JLabel;
+import javax.swing.JComponent;
 import javax.swing.JPanel;
 
 import net.miginfocom.swing.MigLayout;
@@ -39,11 +39,11 @@ import net.miginfocom.swing.MigLayout;
  *
  * @since 0.6.3m1
  */
-public abstract class StatusbarPanel extends JPanel
+public abstract class StatusbarPanel<T extends JComponent> extends JPanel
         implements StatusBarComponent, MouseListener {
 
     /** The label we use to show information. */
-    protected final JLabel label;
+    protected final T label;
     /**
      * A version number for this class. It should be changed whenever the class
      * structure is changed (or anything else that would prevent serialized
@@ -54,18 +54,11 @@ public abstract class StatusbarPanel extends JPanel
     private StatusbarPopupWindow dialog;
 
     /**
-     * Creates a new {@link StatusbarPanel}, using a default text label.
-     */
-    public StatusbarPanel() {
-        this(new JLabel("Unknown"));
-    }
-
-    /**
      * Creates a new {@link StatusbarPanel}, using the specified label.
      *
      * @param label The label to be displayed in the status bar
      */
-    public StatusbarPanel(final JLabel label) {
+    public StatusbarPanel(final T label) {
         super();
 
         this.label = label;
@@ -75,6 +68,10 @@ public abstract class StatusbarPanel extends JPanel
         add(label);
 
         addMouseListener(this);
+    }
+
+    public T getComponent() {
+        return label;
     }
 
     /**
@@ -129,22 +126,6 @@ public abstract class StatusbarPanel extends JPanel
             }
             return false;
         }
-    }
-
-    /**
-     * Sets the text for this label.
-     *
-     * @param text New text
-     */
-    public void setText(final String text) {
-        UIUtilities.invokeLater(new Runnable() {
-
-            /** {@inheritDoc} */
-            @Override
-            public void run() {
-                label.setText(text);
-            }
-        });
     }
 
     /**
