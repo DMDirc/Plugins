@@ -26,9 +26,8 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.MouseEvent;
 
-import javax.swing.JLabel;
-import javax.swing.UIManager;
-import javax.swing.border.EtchedBorder;
+import javax.swing.JComponent;
+import javax.swing.border.Border;
 
 /**
  * A panel shown in the status bar which displays a {@link StatusbarPopupWindow}
@@ -36,8 +35,8 @@ import javax.swing.border.EtchedBorder;
  *
  * @since 0.6.6
  */
-public abstract class StatusbarTogglePanel extends StatusbarPanel
-        implements ComponentListener {
+public abstract class StatusbarTogglePanel<T extends JComponent> extends
+        StatusbarPanel<T> implements ComponentListener {
 
     /**
      * A version number for this class. It should be changed whenever the class
@@ -47,21 +46,22 @@ public abstract class StatusbarTogglePanel extends StatusbarPanel
     private static final long serialVersionUID = 2;
 
     /**
-     * Creates a new {@link StatusbarTogglePanel}, using a default text label.
-     */
-    public StatusbarTogglePanel() {
-        this(new JLabel("Unknown"));
-    }
-
-    /**
      * Creates a new {@link StatusbarTogglePanel}, using the specified label.
      *
      * @param label The label to be displayed in the status bar
      */
-    public StatusbarTogglePanel(final JLabel label) {
+    public StatusbarTogglePanel(final T label) {
         super(label);
 
         addComponentListener(this);
+    }
+
+    public StatusbarTogglePanel(final T label, final Border nonSelectedBorder,
+            final Border selectedBorder) {
+        super(label, nonSelectedBorder, selectedBorder);
+
+        addComponentListener(this);
+
     }
 
     /**
@@ -72,14 +72,8 @@ public abstract class StatusbarTogglePanel extends StatusbarPanel
     @Override
     public void mouseClicked(final MouseEvent e) {
         if (isDialogOpen()) {
-            setBackground(null);
-            setForeground(null);
-            setBorder(new EtchedBorder());
             closeDialog();
         } else {
-            setBackground(UIManager.getColor("ToolTip.background"));
-            setForeground(UIManager.getColor("ToolTip.foreground"));
-            setBorder(new SidelessEtchedBorder(SidelessEtchedBorder.Side.TOP));
             openDialog();
         }
     }
