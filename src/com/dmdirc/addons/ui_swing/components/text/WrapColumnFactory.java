@@ -24,7 +24,7 @@ public class WrapColumnFactory implements ViewFactory {
     /** {@inheritDoc} */
     @Override
     public View create(final Element elem) {
-        String kind = elem.getName();
+        final String kind = elem.getName();
         if (kind != null) {
             if (kind.equals(AbstractDocument.ContentElementName)) {
                 return new WrapLabelView(elem);
