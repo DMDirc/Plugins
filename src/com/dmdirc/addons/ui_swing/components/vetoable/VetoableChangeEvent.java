@@ -35,7 +35,7 @@ public class VetoableChangeEvent extends ChangeEvent {
      */
     private static final long serialVersionUID = 1;
     /** New value. */
-    private Object newValue;
+    private final Object newValue;
 
     /**
      * Creates a new vetoable change event.
