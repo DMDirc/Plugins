@@ -24,6 +24,7 @@ package com.dmdirc.addons.ui_swing.components.statusbar;
 
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.ui.interfaces.StatusBarComponent;
+import java.awt.Color;
 
 import java.awt.event.MouseListener;
 
@@ -122,8 +123,8 @@ public abstract class StatusbarPanel<T extends JComponent> extends JPanel
      */
     protected final void openDialog() {
         synchronized (StatusbarPanel.this) {
-            setBackground(UIManager.getColor("ToolTip.background"));
-            setForeground(UIManager.getColor("ToolTip.foreground"));
+            setBackground(getPopupBackground());
+            setForeground(getPopupForeground());
             setBorder(selectedBorder);
             dialog = getWindow();
             dialog.setVisible(true);
@@ -158,6 +159,25 @@ public abstract class StatusbarPanel<T extends JComponent> extends JPanel
             }
             return false;
         }
+    }
+
+    /**
+     * Returns the colour to be used for the panel's foreground.
+     *
+     * @return Foreground colour
+     */
+    protected Color getPopupForeground() {
+        return UIManager.getColor("ToolTip.foreground");
+    }
+
+    /**
+     * Returns the colour to be used for the panel's background.
+     *
+     * @return Background colour
+     */
+    protected Color getPopupBackground() {
+        return UIManager.getColor("ToolTip.background");
+
     }
 
     /**

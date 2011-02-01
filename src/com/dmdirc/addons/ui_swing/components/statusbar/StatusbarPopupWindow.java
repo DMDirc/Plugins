@@ -32,6 +32,7 @@ import java.awt.Window;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
+import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
 
 import net.miginfocom.swing.MigLayout;
@@ -76,11 +77,7 @@ public abstract class StatusbarPopupWindow extends StandardDialog {
         if (b && parent.isVisible()) {
             final JPanel panel = new JPanel();
 
-            panel.setLayout(new MigLayout("ins 3 5 6 10, gap 10 5"));
-
-            panel.setBackground(UIManager.getColor("ToolTip.background"));
-            panel.setForeground(UIManager.getColor("ToolTip.foreground"));
-
+            initPanel(panel);
             initContent(panel);
 
             add(panel);
@@ -92,8 +89,6 @@ public abstract class StatusbarPopupWindow extends StandardDialog {
 
             pack();
             setLocation(getPopupLocation());
-
-            panel.setBorder(new GappedEtchedBorder());
         }
 
         super.setVisible(b);
@@ -117,6 +112,18 @@ public abstract class StatusbarPopupWindow extends StandardDialog {
     }
 
     /**
+     * Initialises the panel used in the popup window.
+     *
+     * @param panel The {@link JPanel} to be initialised
+     */
+    protected void initPanel(final JPanel panel) {
+            panel.setLayout(new MigLayout("ins 3 5 6 10, gap 10 5"));
+            panel.setBackground(UIManager.getColor("ToolTip.background"));
+            panel.setForeground(UIManager.getColor("ToolTip.foreground"));
+            panel.setBorder(new GappedEtchedBorder());
+    }
+
+    /**
      * Initialises the content of the popup window.
      *
      * @param panel The {@link JPanel} to which content should be added
@@ -127,7 +134,7 @@ public abstract class StatusbarPopupWindow extends StandardDialog {
      * An {@link EtchedBorder} that leaves a gap in the bottom where the
      * lag display panel is.
      */
-    private class GappedEtchedBorder extends EtchedBorder {
+    protected class GappedEtchedBorder extends EtchedBorder {
 
         /**
          * A version number for this class. It should be changed whenever the class
