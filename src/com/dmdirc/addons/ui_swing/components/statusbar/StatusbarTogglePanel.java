@@ -22,8 +22,8 @@
 
 package com.dmdirc.addons.ui_swing.components.statusbar;
 
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
+import java.awt.event.HierarchyBoundsListener;
+import java.awt.event.HierarchyEvent;
 import java.awt.event.MouseEvent;
 
 import javax.swing.JComponent;
@@ -36,7 +36,7 @@ import javax.swing.border.Border;
  * @since 0.6.6
  */
 public abstract class StatusbarTogglePanel<T extends JComponent> extends
-        StatusbarPanel<T> implements ComponentListener {
+        StatusbarPanel<T> implements HierarchyBoundsListener {
 
     /**
      * A version number for this class. It should be changed whenever the class
@@ -53,7 +53,7 @@ public abstract class StatusbarTogglePanel<T extends JComponent> extends
     public StatusbarTogglePanel(final T label) {
         super(label);
 
-        addComponentListener(this);
+        addHierarchyBoundsListener(this);
     }
 
     /**
@@ -67,8 +67,7 @@ public abstract class StatusbarTogglePanel<T extends JComponent> extends
             final Border selectedBorder) {
         super(label, nonSelectedBorder, selectedBorder);
 
-        addComponentListener(this);
-
+        addHierarchyBoundsListener(this);
     }
 
     /**
@@ -127,25 +126,13 @@ public abstract class StatusbarTogglePanel<T extends JComponent> extends
 
     /** {@inheritDoc} */
     @Override
-    public void componentResized(final ComponentEvent e) {
+    public void ancestorMoved(HierarchyEvent e) {
         refreshDialog();
     }
 
     /** {@inheritDoc} */
     @Override
-    public void componentMoved(final ComponentEvent e) {
+    public void ancestorResized(HierarchyEvent e) {
         refreshDialog();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void componentShown(final ComponentEvent e) {
-        // Don't care
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void componentHidden(final ComponentEvent e) {
-        // Don't care
     }
 }
