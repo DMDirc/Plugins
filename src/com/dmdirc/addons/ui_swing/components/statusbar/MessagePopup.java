@@ -24,8 +24,8 @@ package com.dmdirc.addons.ui_swing.components.statusbar;
 
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.StatusMessage;
+import java.awt.Color;
 
-import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Window;
 import java.awt.event.MouseEvent;
@@ -36,6 +36,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
+import javax.swing.text.GapContent;
+
+import net.miginfocom.swing.MigLayout;
 
 /**
  * Previous status bar messages popup.
@@ -109,6 +112,18 @@ class MessagePopup extends StatusbarTogglePanel<JLabel> {
         }
     }
 
+    /* {@inheritDoc} */
+    @Override
+    protected Color getPopupBackground() {
+        return parent.getBackground();
+    }
+
+    /* {@inheritDoc} */
+    @Override
+    protected Color getPopupForeground() {
+        return super.getForeground();
+    }
+
     /** Message history status bar popup window. */
     private class MessageHistoryPanel extends StatusbarPopupWindow {
 
@@ -130,9 +145,19 @@ class MessagePopup extends StatusbarTogglePanel<JLabel> {
 
         /* {@inheritDoc} */
         @Override
+        protected void initPanel(final JPanel panel) {
+            panel.setLayout(new MigLayout("ins 0 0 0 rel, fill, wmin "
+                    + (parent.getWidth() - 5) + ", wmax "
+                    + (parent.getWidth() - 5)));
+            panel.setBackground(parent.getBackground());
+            panel.setForeground(parent.getForeground());
+            panel.setBorder(new GappedEtchedBorder());
+        }
+
+        /* {@inheritDoc} */
+        @Override
         protected void initContent(final JPanel panel) {
-            panel.removeAll();
-            panel.setPreferredSize(new Dimension(parent.getSize()));
+            
             if (messages.isEmpty()) {
                 panel.add(new JLabel("No previous messages."), "grow, push");
                 return;
@@ -150,13 +175,7 @@ class MessagePopup extends StatusbarTogglePanel<JLabel> {
         @Override
         protected Point getPopupLocation() {
             final Point point = parent.getLocationOnScreen();
-            point.translate(parent.getWidth() / 2 - this.getWidth() / 2 - 2,
-                    - this.getHeight() + 1);
-            final int maxX = Math.max(parentWindow.getLocationOnScreen().x
-                    + parentWindow.getWidth() - 10 - getWidth(),
-                    parent.getLocationOnScreen().x + parent.getWidth() - 1
-                    - getWidth());
-            point.x = Math.min(maxX, point.x + 1);
+            point.y = point.y - getHeight() + 2;
             return point;
         }
     }
