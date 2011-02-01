@@ -32,6 +32,7 @@ import java.awt.Window;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
+import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
 
 import net.miginfocom.swing.MigLayout;
@@ -93,7 +94,7 @@ public abstract class StatusbarPopupWindow extends StandardDialog {
             pack();
             setLocation(getPopupLocation());
 
-            panel.setBorder(new GappedEtchedBorder());
+            panel.setBorder(getVisibleBorder());
         }
 
         super.setVisible(b);
@@ -114,6 +115,15 @@ public abstract class StatusbarPopupWindow extends StandardDialog {
                 - getWidth());
         point.x = Math.min(maxX, point.x);
         return point;
+    }
+
+    /**
+     * What border should be applied when this popupwindow is visible.
+     *
+     * @return Popup border
+     */
+    protected Border getVisibleBorder() {
+        return new GappedEtchedBorder();
     }
 
     /**
