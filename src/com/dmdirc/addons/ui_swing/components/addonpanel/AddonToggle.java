@@ -100,22 +100,28 @@ public class AddonToggle {
      * Applies the changes to the PluginInfo, if any.
      */
     public void apply() {
-        if (pi != null && toggled) {
-            if (pi.isLoaded()) {
-                pi.unloadPlugin();
-            } else {
-                pi.loadPlugin();
+        new Thread() {
+
+            @Override
+            public void run() {
+                if (pi != null && toggled) {
+                    if (pi.isLoaded()) {
+                        pi.unloadPlugin();
+                    } else {
+                        pi.loadPlugin();
+                    }
+                    PluginManager.getPluginManager().updateAutoLoad(pi);
+                }
+                if (theme != null && toggled) {
+                    if (theme.isEnabled()) {
+                        theme.applyTheme();
+                    } else {
+                        theme.removeTheme();
+                    }
+                    ThemeManager.updateAutoLoad(theme);
+                }
             }
-            PluginManager.getPluginManager().updateAutoLoad(pi);
-        }
-        if (theme != null && toggled) {
-            if (theme.isEnabled()) {
-                theme.applyTheme();
-            } else {
-                theme.removeTheme();
-            }
-            ThemeManager.updateAutoLoad(theme);
-        }
+        }.start();
     }
 
     /**
