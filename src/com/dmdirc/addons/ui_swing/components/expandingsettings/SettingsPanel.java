@@ -177,12 +177,16 @@ public class SettingsPanel extends JPanel {
 
     /** Saves the options to the config. */
     public void save() {
-        category.save();
+        if (category != null) {
+            category.save();
+        }
     }
 
     /** Dismisses the options changed. */
     public void dismiss() {
-        category.dismiss();
+        if (category != null) {
+            category.dismiss();
+        }
     }
 
     /**
