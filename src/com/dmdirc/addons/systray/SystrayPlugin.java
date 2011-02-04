@@ -22,10 +22,10 @@
 
 package com.dmdirc.addons.systray;
 
-import com.dmdirc.Main;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.actions.interfaces.ActionType;
+import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.commandparser.CommandManager;
 import com.dmdirc.config.IdentityManager;
@@ -54,16 +54,16 @@ import java.awt.event.MouseListener;
 /**
  * The Systray plugin shows DMDirc in the user's system tray, and allows
  * notifications to be disabled.
- * @author chris
  */
 public final class SystrayPlugin extends Plugin implements ActionListener,
         MouseListener, com.dmdirc.interfaces.ActionListener {
 
-    /** The command we registered. */
-    private PopupCommand command;
-
     /** The tray icon we're currently using. */
     private final TrayIcon icon;
+    /** The command we registered. */
+    private PopupCommand command;
+    /** Main frame instance. */
+    private MainFrame mainFrame;
 
     /** Creates a new system tray plugin. */
     public SystrayPlugin() {
@@ -90,7 +90,8 @@ public final class SystrayPlugin extends Plugin implements ActionListener,
      * @param message The contents of the notification
      * @param type The type of notification
      */
-    public void notify(final String title, final String message, final TrayIcon.MessageType type) {
+    public void notify(final String title, final String message,
+            final TrayIcon.MessageType type) {
         icon.displayMessage(title, Styliser.stipControlCodes(message), type);
     }
 
@@ -122,11 +123,9 @@ public final class SystrayPlugin extends Plugin implements ActionListener,
     @Override
     public void actionPerformed(final ActionEvent e) {
         if (e.getActionCommand().equals("Show/hide")) {
-            final SwingController controller = (SwingController) PluginManager
-                    .getPluginManager().getPluginInfoByName("ui_swing").getPlugin();
-            controller.getMainFrame().setVisible(!controller.getMainFrame().isVisible());
+            mainFrame.setVisible(!mainFrame.isVisible());
         } else if (e.getActionCommand().equals("Quit")) {
-            Main.quit();
+            mainFrame.quit();
         }
     }
 
@@ -136,23 +135,30 @@ public final class SystrayPlugin extends Plugin implements ActionListener,
         if (SystemTray.isSupported()) {
             return new ValidationResponse();
         } else {
-            return new ValidationResponse("System tray is not supported on this platform.");
+            return new ValidationResponse("System tray is not supported on "
+                    + "this platform.");
         }
     }
 
     /** {@inheritDoc} */
     @Override
     public void onLoad() {
+        boolean continueLoading = true;
         try {
             SystemTray.getSystemTray().add(icon);
             command = new PopupCommand(this);
             CommandManager.registerCommand(command);
-        } catch (AWTException ex) {
-            // Should probably unload ourself here?
-        }
-
-        ActionManager.getActionManager().registerListener(this,
+            mainFrame = ((SwingController) PluginManager.getPluginManager()
+                    .getPluginInfoByName("ui_swing").getPlugin())
+                    .getMainFrame();
+            ActionManager.getActionManager().registerListener(this,
                 CoreActionType.CLIENT_MINIMISED);
+        } catch (AWTException ex) {
+            continueLoading = false;
+        }
+        if (!continueLoading || mainFrame == null) {
+            getPluginInfo().unloadPlugin();
+        }
     }
 
     /** {@inheritDoc} */
@@ -172,10 +178,9 @@ public final class SystrayPlugin extends Plugin implements ActionListener,
                 "General configuration settings");
 
         category.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
-                getDomain(), "autominimise", "Auto-hide DMDirc " +
-                "when minimised", "If this option is enabled, the systray " +
-                "plugin will hide DMDirc to the system tray whenever DMDirc is" +
-                " minimised"));
+                getDomain(), "autominimise", "Auto-hide DMDirc when minimised",
+                "If this option is enabled, the systray plugin will hide DMDirc"
+                + " to the system tray whenever DMDirc is minimised"));
 
         manager.getCategory("Plugins").addSubCategory(category);
     }
@@ -188,14 +193,12 @@ public final class SystrayPlugin extends Plugin implements ActionListener,
     @Override
     public void mouseClicked(final MouseEvent e) {
         if (e.getButton() == MouseEvent.BUTTON1) {
-            final SwingController controller = (SwingController) PluginManager
-                    .getPluginManager().getPluginInfoByName("ui_swing").getPlugin();
-            if (controller.getMainFrame().isVisible()) {
-                controller.getMainFrame().setVisible(false);
+            if (mainFrame.isVisible()) {
+                mainFrame.setVisible(false);
             } else {
-                controller.getMainFrame().setVisible(true);
-                controller.getMainFrame().setState(Frame.NORMAL);
-                controller.getMainFrame().toFront();
+                mainFrame.setVisible(true);
+                mainFrame.setState(Frame.NORMAL);
+                mainFrame.toFront();
             }
         }
     }
@@ -244,12 +247,9 @@ public final class SystrayPlugin extends Plugin implements ActionListener,
     @Override
     public void processEvent(final ActionType type, final StringBuffer format,
             final Object... arguments) {
-        if (type == CoreActionType.CLIENT_MINIMISED
-                && IdentityManager.getGlobalConfig().getOptionBool(getDomain(),
-                "autominimise")) {
-            final SwingController controller = (SwingController) PluginManager
-                    .getPluginManager().getPluginInfoByName("ui_swing").getPlugin();
-            controller.getMainFrame().setVisible(false);
+        if (type == CoreActionType.CLIENT_MINIMISED && IdentityManager
+                .getGlobalConfig().getOptionBool(getDomain(), "autominimise")) {
+            mainFrame.setVisible(false);
         }
     }
 
