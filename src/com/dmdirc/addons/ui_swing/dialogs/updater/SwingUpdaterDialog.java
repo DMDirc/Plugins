@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_swing.dialogs.updater;
 
 import com.dmdirc.addons.ui_swing.MainFrame;
+import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
 import com.dmdirc.addons.ui_swing.components.PackingTable;
 import com.dmdirc.addons.ui_swing.components.renderers.UpdateComponentTableCellRenderer;
 import com.dmdirc.addons.ui_swing.components.renderers.UpdateStatusTableCellRenderer;
@@ -152,8 +153,10 @@ public final class SwingUpdaterDialog extends StandardDialog implements
         table = new PackingTable(new UpdateTableModel(updates), false,
                 scrollPane) {
 
+            /** Serialisation version ID. */
             private static final long serialVersionUID = 1;
 
+            /** {@inheritDoc} */
             @Override
             public TableCellRenderer getCellRenderer(final int row,
                     final int column) {
@@ -214,7 +217,15 @@ public final class SwingUpdaterDialog extends StandardDialog implements
                 }
             }
 
-            UpdateChecker.applyUpdates();
+            new LoggingSwingWorker<Void, Void>() {
+
+                /** {@inheritDoc} */
+                @Override
+                protected Void doInBackground() {
+                    UpdateChecker.applyUpdates();
+                    return null;
+                }
+            }.executeInExecutor();
 
             if (UpdateChecker.getStatus() != STATE.UPDATING) {
                 dispose();
