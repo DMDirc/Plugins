@@ -32,7 +32,7 @@ import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.parser.common.MyInfo;
 import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.parser.interfaces.ProtocolDescription;
-import com.dmdirc.plugins.Plugin;
+import com.dmdirc.plugins.BasePlugin;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -42,7 +42,7 @@ import java.util.ArrayList;
  *
  * @author shane
  */
-public class TwitterPlugin extends Plugin {
+public class TwitterPlugin extends BasePlugin {
 
     /** Are we currently unloading? */
     private volatile boolean unloading = false;

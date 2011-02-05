@@ -51,7 +51,7 @@ import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.util.validators.NumericalValidator;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
-import com.dmdirc.plugins.Plugin;
+import com.dmdirc.plugins.BasePlugin;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.core.components.StatusBarManager;
 import com.dmdirc.ui.core.util.URLHandler;
@@ -83,7 +83,7 @@ import net.miginfocom.layout.PlatformDefaults;
 /**
  * Controls the main swing UI.
  */
-public class SwingController extends Plugin implements UIController {
+public class SwingController extends BasePlugin implements UIController {
 
     /**
      * A version number for this class. It should be changed whenever the class

@@ -25,7 +25,7 @@ package com.dmdirc.addons.ui_dummy;
 import com.dmdirc.Channel;
 import com.dmdirc.Server;
 import com.dmdirc.config.prefs.PreferencesInterface;
-import com.dmdirc.plugins.Plugin;
+import com.dmdirc.plugins.BasePlugin;
 import com.dmdirc.ui.core.components.StatusBarManager;
 import com.dmdirc.ui.interfaces.UIController;
 
@@ -34,7 +34,7 @@ import java.net.URI;
 /**
  * Implements a dummy UI controller.
  */
-public final class DummyController extends Plugin implements UIController {
+public final class DummyController extends BasePlugin implements UIController {
 
     /**
      * Creates a new instance of DummyController.

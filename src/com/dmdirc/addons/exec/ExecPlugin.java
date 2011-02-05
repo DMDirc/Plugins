@@ -24,12 +24,12 @@
 package com.dmdirc.addons.exec;
 
 import com.dmdirc.commandparser.CommandManager;
-import com.dmdirc.plugins.Plugin;
+import com.dmdirc.plugins.BasePlugin;
 
 /**
  * A plugin which provides an execute command.
  */
-public class ExecPlugin extends Plugin {
+public class ExecPlugin extends BasePlugin {
 
     /** The command we register when loaded. */
     private final ExecCommand command = new ExecCommand();

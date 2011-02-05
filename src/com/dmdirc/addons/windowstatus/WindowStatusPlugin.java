@@ -42,7 +42,7 @@ import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.parser.interfaces.ChannelClientInfo;
 import com.dmdirc.parser.interfaces.ChannelInfo;
 import com.dmdirc.parser.interfaces.ClientInfo;
-import com.dmdirc.plugins.Plugin;
+import com.dmdirc.plugins.BasePlugin;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.util.ReturnableThread;
@@ -56,7 +56,7 @@ import java.util.Map.Entry;
  *
  * @author Shane 'Dataforce' McCormack
  */
-public final class WindowStatusPlugin extends Plugin implements ActionListener, ConfigChangeListener {
+public final class WindowStatusPlugin extends BasePlugin implements ActionListener, ConfigChangeListener {
 
     /** The panel we use in the status bar. */
     private final WindowStatusPanel panel;

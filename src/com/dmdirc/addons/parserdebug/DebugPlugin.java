@@ -30,7 +30,7 @@ import com.dmdirc.commandparser.CommandManager;
 import com.dmdirc.interfaces.ActionListener;
 import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.parser.interfaces.callbacks.DebugInfoListener;
-import com.dmdirc.plugins.Plugin;
+import com.dmdirc.plugins.BasePlugin;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -42,7 +42,7 @@ import java.util.Map;
  *
  * @author Shane 'Dataforce' McCormack
  */
-public final class DebugPlugin extends Plugin implements DebugInfoListener, ActionListener {
+public final class DebugPlugin extends BasePlugin implements DebugInfoListener, ActionListener {
 
     /** The ParserDebugCommand we created. */
     private ParserDebugCommand command = null;

@@ -23,7 +23,7 @@
 package com.dmdirc.addons.dns;
 
 import com.dmdirc.commandparser.CommandManager;
-import com.dmdirc.plugins.Plugin;
+import com.dmdirc.plugins.BasePlugin;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -34,7 +34,7 @@ import java.util.List;
 /**
  * DNS plugin.
  */
-public final class DNSPlugin extends Plugin {
+public final class DNSPlugin extends BasePlugin {
 
     /** The DNSCommand we've registered. */
     private DNSCommand command;

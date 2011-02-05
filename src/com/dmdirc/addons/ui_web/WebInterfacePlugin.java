@@ -22,7 +22,7 @@
 
 package com.dmdirc.addons.ui_web;
 
-import com.dmdirc.plugins.Plugin;
+import com.dmdirc.plugins.BasePlugin;
 import com.dmdirc.ui.interfaces.UIController;
 
 import org.mortbay.jetty.Handler;
@@ -32,7 +32,7 @@ import org.mortbay.jetty.Handler;
  *
  * @author chris
  */
-public class WebInterfacePlugin extends Plugin {
+public class WebInterfacePlugin extends BasePlugin {
 
     /** The UI that we're using. */
     private WebInterfaceUI ui;

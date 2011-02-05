@@ -32,6 +32,7 @@ import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.interfaces.ActionListener;
+import com.dmdirc.plugins.BasePlugin;
 import com.dmdirc.plugins.Plugin;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.PluginManager;
@@ -44,29 +45,17 @@ import java.util.List;
 /**
  * Plugin that allows users to advertise what they're currently playing or
  * listening to.
- *
- * @author chris
  */
-public class NowPlayingPlugin extends Plugin implements ActionListener  {
+public class NowPlayingPlugin extends BasePlugin implements ActionListener  {
 
     /** The sources that we know of. */
     private final List<MediaSource> sources = new ArrayList<MediaSource>();
-
     /** The managers that we know of. */
     private final List<MediaSourceManager> managers = new ArrayList<MediaSourceManager>();
-
     /** The now playing command we're registering. */
     private NowPlayingCommand command;
-
     /** The user's preferred order for source usage. */
     private List<String> order;
-
-    /**
-     * Creates a new instance of NowPlayingPlugin.
-     */
-    public NowPlayingPlugin() {
-        super();
-    }
 
     /** {@inheritDoc} */
     @Override

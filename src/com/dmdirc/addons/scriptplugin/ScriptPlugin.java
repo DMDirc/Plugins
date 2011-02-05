@@ -31,7 +31,7 @@ import com.dmdirc.util.validators.ValidationResponse;
 import com.dmdirc.interfaces.ActionListener;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
-import com.dmdirc.plugins.Plugin;
+import com.dmdirc.plugins.BasePlugin;
 import com.dmdirc.util.StreamUtil;
 
 import java.io.File;
@@ -49,7 +49,7 @@ import javax.script.ScriptEngineManager;
  *
  * @author Shane 'Dataforce' McCormack
  */
-public final class ScriptPlugin extends Plugin implements ActionListener {
+public final class ScriptPlugin extends BasePlugin implements ActionListener {
     /** The ScriptCommand we created */
     private ScriptCommand command = null;
 

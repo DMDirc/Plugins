@@ -35,7 +35,7 @@ import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.util.validators.ValidationResponse;
-import com.dmdirc.plugins.Plugin;
+import com.dmdirc.plugins.BasePlugin;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.messages.Styliser;
@@ -55,7 +55,7 @@ import java.awt.event.MouseListener;
  * The Systray plugin shows DMDirc in the user's system tray, and allows
  * notifications to be disabled.
  */
-public final class SystrayPlugin extends Plugin implements ActionListener,
+public final class SystrayPlugin extends BasePlugin implements ActionListener,
         MouseListener, com.dmdirc.interfaces.ActionListener {
 
     /** The tray icon we're currently using. */

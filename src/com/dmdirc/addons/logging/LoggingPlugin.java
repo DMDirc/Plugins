@@ -45,7 +45,7 @@ import com.dmdirc.parser.interfaces.ChannelClientInfo;
 import com.dmdirc.parser.interfaces.ChannelInfo;
 import com.dmdirc.parser.interfaces.ClientInfo;
 import com.dmdirc.parser.interfaces.Parser;
-import com.dmdirc.plugins.Plugin;
+import com.dmdirc.plugins.BasePlugin;
 import com.dmdirc.ui.messages.Styliser;
 import com.dmdirc.util.StreamUtil;
 
@@ -75,7 +75,7 @@ import java.util.TimerTask;
  *
  * @author Shane 'Dataforce' McCormack
  */
-public class LoggingPlugin extends Plugin implements ActionListener,
+public class LoggingPlugin extends BasePlugin implements ActionListener,
         ConfigChangeListener {
 
     /** The command we registered. */

@@ -30,7 +30,7 @@ import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
-import com.dmdirc.plugins.Plugin;
+import com.dmdirc.plugins.BasePlugin;
 import com.dmdirc.util.Downloader;
 
 import java.io.File;
@@ -45,7 +45,7 @@ import java.util.Map;
  *
  * @author chris
  */
-public class VlcMediaSourcePlugin extends Plugin implements MediaSource {
+public class VlcMediaSourcePlugin extends BasePlugin implements MediaSource {
 
     /** The information obtained from VLC. */
     private final Map<String, String> information
