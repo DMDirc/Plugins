@@ -130,7 +130,7 @@ public class XMLResponse {
 
     /**
      * Get the response code from the request.
-     * 
+     *
      * @return The response code, or 0 on error.
      */
     public int getResponseCode() {
@@ -147,7 +147,7 @@ public class XMLResponse {
     /**
      * Checks to see if the response code was 200, the document is not null
      * and no error element is in the document.
-     * 
+     *
      * @return true if the response code was 200, the document is not null
      * and no error element is in the document.
      */

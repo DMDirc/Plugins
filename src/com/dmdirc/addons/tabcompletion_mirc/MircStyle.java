@@ -34,13 +34,13 @@ import java.awt.Toolkit;
 import java.util.Collections;
 
 public class MircStyle implements TabCompletionStyle {
-    
+
     /** The last word that was tab completed. */
     private String lastWord;
 
     /** The last string we tried to tab complete. */
     private String tabString;
-    
+
     /** The tab completer that we use. */
     protected final TabCompleter tabCompleter;
 
@@ -57,13 +57,13 @@ public class MircStyle implements TabCompletionStyle {
         this.tabCompleter = completer;
         this.window = window;
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public TabCompletionResult getResult(final String original, final int start,
             final int end, final boolean shiftPressed,
             final AdditionalTabTargets additional) {
-        
+
         final String word = original.substring(start, end);
         String target = "";
         if (word.equals(lastWord)) {
@@ -76,7 +76,7 @@ public class MircStyle implements TabCompletionStyle {
         } else {
             // New tab target
             final TabCompleterResult res = tabCompleter.complete(word, additional);
-            
+
             if (res.getResultCount() == 0) {
                 Toolkit.getDefaultToolkit().beep();
                 return null;
@@ -93,9 +93,9 @@ public class MircStyle implements TabCompletionStyle {
                 tabString = word;
             }
         }
-        
+
         lastWord = target;
-        
+
         return new TabCompletionResult(original.substring(0, start) + target
                 + original.substring(end), start + target.length());
     }

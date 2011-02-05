@@ -42,7 +42,7 @@ import java.util.Map;
 
 /**
  * Handles creation of windows in the Swing UI.
- * 
+ *
  * @since 0.6.4
  */
 public class SwingWindowFactory implements FrameListener {

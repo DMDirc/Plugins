@@ -49,7 +49,7 @@ public class SortedListModel<T> extends DefaultListModel {
      */
     public SortedListModel(final Comparator<T> comparator) {
         super();
-        
+
         this.comparator = comparator;
     }
 

@@ -55,7 +55,7 @@ public final class DebugPlugin extends Plugin implements DebugInfoListener, Acti
      * Creates a new instance of the Debug Plugin.
      */
     public DebugPlugin() { super(); }
-    
+
     /** {@inheritDoc} */
     @Override
     public void onLoad() {
@@ -64,7 +64,7 @@ public final class DebugPlugin extends Plugin implements DebugInfoListener, Acti
         command = new ParserDebugCommand(this);
         CommandManager.registerCommand(command);
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public void onUnload() {
@@ -82,7 +82,7 @@ public final class DebugPlugin extends Plugin implements DebugInfoListener, Acti
         }
         registeredParsers.clear();
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public void onDebugInfo(final Parser parser, final Date date, final int level, final String data) {
@@ -91,7 +91,7 @@ public final class DebugPlugin extends Plugin implements DebugInfoListener, Acti
             window.addLine(String.format("[%d] %s%n", level, data), true);
         }
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public void processEvent(final ActionType type, final StringBuffer format, final Object... arguments) {

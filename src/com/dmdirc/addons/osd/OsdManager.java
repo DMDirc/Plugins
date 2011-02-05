@@ -84,7 +84,7 @@ public class OsdManager {
      * <p>
      * This method needs to be synchronised to ensure that the window list is
      * not modified in between the invocation of
-     * {@link OsdPolicy#getYPosition(com.dmdirc.addons.osd.OsdManager, int)} 
+     * {@link OsdPolicy#getYPosition(com.dmdirc.addons.osd.OsdManager, int)}
      * and the point at which the {@link OsdWindow} is added to the windowList.
      *
      * @see OsdPolicy#getYPosition(com.dmdirc.addons.osd.OsdManager, int)

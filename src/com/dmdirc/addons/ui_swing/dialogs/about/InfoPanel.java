@@ -69,7 +69,7 @@ public final class InfoPanel extends JPanel {
         ((HTMLDocument) infoPane.getDocument()).getStyleSheet().addRule("body " +
                 "{ font-family: " + font.getFamily() + "; " + "font-size: " +
                 font.getSize() + "pt; }");
-        
+
          infoPane.setText("<html>" +
                 "<b>DMDirc version: </b>" + Info.getDMDircVersion() + "<br>" +
                 "<b>Mode Alises version: </b>" + IdentityManager.

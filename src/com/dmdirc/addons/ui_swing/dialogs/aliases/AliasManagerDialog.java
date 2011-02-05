@@ -89,10 +89,10 @@ public final class AliasManagerDialog extends StandardDialog implements
     /** Show/Hide subsitution button. */
     private JButton showSubs;
 
-    /** 
-     * Creates a new instance of ErrorListDialog. 
-     * 
-     * @param parentWindow Parent window     
+    /**
+     * Creates a new instance of ErrorListDialog.
+     *
+     * @param parentWindow Parent window
      */
     private AliasManagerDialog(final Window parentWindow) {
         super(parentWindow, ModalityType.MODELESS);
@@ -106,10 +106,10 @@ public final class AliasManagerDialog extends StandardDialog implements
         initListeners();
     }
 
-    /** 
-     * Creates the dialog if one doesn't exist, and displays it. 
-     * 
-     * @param parentWindow Parent window     
+    /**
+     * Creates the dialog if one doesn't exist, and displays it.
+     *
+     * @param parentWindow Parent window
      */
     public static void showAliasManagerDialog(final Window parentWindow) {
         me = getAliasManagerDialog(parentWindow);
@@ -120,8 +120,8 @@ public final class AliasManagerDialog extends StandardDialog implements
 
     /**
      * Returns the instance of AliasManagerDialog.
-     * 
-     * @param parentWindow Parent window     
+     *
+     * @param parentWindow Parent window
      *
      * @return Instance of AliasManagerDialog
      */
@@ -289,9 +289,9 @@ public final class AliasManagerDialog extends StandardDialog implements
                 tableModel.indexOf(alias));
     }
 
-    /** 
+    /**
      * {@inheritDoc}
-     * 
+     *
      * @param e Action event
      */
     @Override

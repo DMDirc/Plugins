@@ -82,7 +82,7 @@ public class TitleMediaSource implements MediaSource {
     @Override
     public String getTitle() {
         final String[] info = getInfo().split("–", 2);
-        
+
         if (info.length >= 2) {
             return info[1].trim();
         } else {
@@ -119,24 +119,24 @@ public class TitleMediaSource implements MediaSource {
     public String getBitrate() {
         return "";
     }
-    
+
     private String getInfo() {
         InputStreamReader reader = null;
         BufferedReader input = null;
         Process process;
-        
+
         try {
             final String[] args = new String[]{
                 "/bin/bash", "-c", "xwininfo -root -tree | " + command
             };
 
             process = Runtime.getRuntime().exec(args);
-            
+
             reader = new InputStreamReader(process.getInputStream());
             input = new BufferedReader(reader);
-            
+
             String line = "";
-            
+
             while ((line = input.readLine()) != null) {
                 return line;
             }
@@ -147,7 +147,7 @@ public class TitleMediaSource implements MediaSource {
             StreamUtil.close(reader);
             StreamUtil.close(input);
         }
-        
+
         return "";
     }
 

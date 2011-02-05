@@ -21,6 +21,6 @@
  */
 
 /**
- * Adds logging functionality to the client. 
+ * Adds logging functionality to the client.
  */
 package com.dmdirc.addons.logging;

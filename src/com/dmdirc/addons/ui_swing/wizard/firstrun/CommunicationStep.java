@@ -89,7 +89,7 @@ public final class CommunicationStep extends Step {
 
     /**
      * Checks if updates are enabled.
-     * 
+     *
      * @return true iif updates are enabled
      */
     public boolean checkUpdates() {
@@ -98,7 +98,7 @@ public final class CommunicationStep extends Step {
 
     /**
      * Checks if error reports are enabled.
-     * 
+     *
      * @return true iif error reports  are enabled
      */
     public boolean checkErrors() {

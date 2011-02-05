@@ -30,25 +30,25 @@ import javax.swing.table.DefaultTableCellRenderer;
  * List cell renderer for dates.
  */
 public final class DateCellRenderer extends DefaultTableCellRenderer {
-    
+
     /**
      * A version number for this class. It should be changed whenever the class
      * structure is changed (or anything else that would prevent serialized
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 1;
-    
+
     /** Creates a new instance of DateCellRenderer. */
     public DateCellRenderer() {
         super();
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public void setValue(final Object value) {
         setText("" + duration((new Date().getTime() - ((Date) value).getTime()) / 1000));
     }
-    
+
     /**
      * Get the duration in seconds as a string.
      *
@@ -61,13 +61,13 @@ public final class DateCellRenderer extends DefaultTableCellRenderer {
         final long hours = secondsInput / 3600;
         final long minutes = secondsInput / 60 % 60;
         //final long seconds = secondsInput % 60;
-        
-        if (hours > 0) { 
+
+        if (hours > 0) {
             result.append(hours).append("h ");
         }
-        
+
         result.append(minutes).append("m");
-        
+
         return result.toString();
     }
 }

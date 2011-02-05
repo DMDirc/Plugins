@@ -100,7 +100,7 @@ public final class CurrentOptionsPanel extends JPanel implements
 
     /**
      * Adds an option to the current options pane.
-     * 
+     *
      * @param configName config option name
      * @param displayName config option display name
      * @param panel parent panel

@@ -74,7 +74,7 @@ public final class PasteDialog extends StandardDialog implements ActionListener,
 
     /**
      * Creates a new instance of PreferencesDialog.
-     * 
+     *
      * @param newParent The frame that owns this dialog
      * @param text text to show in the paste dialog
      * @param parentWindow Parent window
@@ -99,7 +99,7 @@ public final class PasteDialog extends StandardDialog implements ActionListener,
 
     /**
      * Initialises GUI components.
-     * 
+     *
      * @param text text to show in the dialog
      */
     private void initComponents(final String text) {
@@ -198,7 +198,7 @@ public final class PasteDialog extends StandardDialog implements ActionListener,
                 for (String line : lines) {
                     if (!line.isEmpty()) {
                         parent.getContainer().sendLine(line);
-                        parent.getInputHandler().addToBuffer(line);   
+                        parent.getInputHandler().addToBuffer(line);
                     }
                 }
             }
@@ -223,10 +223,10 @@ public final class PasteDialog extends StandardDialog implements ActionListener,
             dispose();
         }
     }
-    
-    /** 
+
+    /**
      * {@inheritDoc}
-     * 
+     *
      * @param e Key event
      */
     @Override
@@ -236,9 +236,9 @@ public final class PasteDialog extends StandardDialog implements ActionListener,
                 + " lines.");
     }
 
-    /** 
+    /**
      * {@inheritDoc}
-     * 
+     *
      * @param e Key event
      */
     @Override
@@ -246,9 +246,9 @@ public final class PasteDialog extends StandardDialog implements ActionListener,
         //Ignore.
     }
 
-    /** 
+    /**
      * {@inheritDoc}
-     * 
+     *
      * @param e Key event
      */
     @Override

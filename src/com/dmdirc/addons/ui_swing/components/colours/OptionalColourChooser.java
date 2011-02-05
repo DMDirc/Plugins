@@ -74,21 +74,21 @@ public final class OptionalColourChooser extends JPanel implements ActionListene
     public OptionalColourChooser() {
         this("", false, true, true);
     }
-    
-    /** 
+
+    /**
      * Creates a new instance of ColourChooser.
-     * 
+     *
      * @param window Parent window
-     * 
+     *
      * @since 0.6
      */
     public OptionalColourChooser(final Window window) {
         this("", false, true, true, window);
     }
-    
+
     /**
      * Creates a new instance of ColourChooser.
-     * 
+     *
      * @param initialColour Snitial colour
      * @param initialState Initial state
      * @param ircColours Show irc colours
@@ -102,13 +102,13 @@ public final class OptionalColourChooser extends JPanel implements ActionListene
 
     /**
      * Creates a new instance of ColourChooser.
-     * 
+     *
      * @param initialColour Snitial colour
      * @param initialState Initial state
      * @param ircColours Show irc colours
      * @param hexColours Show hex colours
      * @param window Parent window
-     * 
+     *
      * @since 0.6
      */
     public OptionalColourChooser(final String initialColour,
@@ -188,9 +188,9 @@ public final class OptionalColourChooser extends JPanel implements ActionListene
         }
     }
 
-    /** 
+    /**
      * {@inheritDoc}.
-     * 
+     *
      * @param e Action event
      */
     @Override
@@ -213,7 +213,7 @@ public final class OptionalColourChooser extends JPanel implements ActionListene
     /**
      * Adds an action listener to this optional colour chooser. Action
      * listeners are notified whenever the state changes in some way.
-     * 
+     *
      * @param l The listener to be added
      */
     public void addActionListener(final ActionListener l) {
@@ -228,10 +228,10 @@ public final class OptionalColourChooser extends JPanel implements ActionListene
             listener.actionPerformed(new ActionEvent(this, 1, "stuffChanged"));
         }
     }
-    
+
     /**
      * Sets the Parent window.
-     * 
+     *
      * @param window Parent window
      */
     public void setWindow(final Window window) {

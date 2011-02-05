@@ -59,13 +59,13 @@ public final class ScriptCommand extends Command implements IntelligentCommand,
         super();
         myPlugin = plugin;
     }
-        
+
     /** {@inheritDoc} */
     @Override
     public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
         final String[] sargs = args.getArguments();
-    
+
         if (sargs.length > 0 && (sargs[0].equalsIgnoreCase("rehash") || sargs[0].equalsIgnoreCase("reload"))) {
             sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Reloading scripts");
             myPlugin.rehash();
@@ -105,14 +105,14 @@ public final class ScriptCommand extends Command implements IntelligentCommand,
                     sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Result: "+wrapper.getScriptEngine().eval(script));
                 } catch (Exception e) {
                     sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Exception: "+e+" -> "+e.getMessage());
-                    
+
                     if (IdentityManager.getGlobalConfig().getOptionBool(myPlugin.getDomain(), "eval.showStackTrace")) {
                         try {
                             final Class<?> logger = Class.forName("com.dmdirc.logger.Logger");
                             if (logger != null) {
                                 final Method exceptionToStringArray = logger.getDeclaredMethod("exceptionToStringArray", new Class[]{Throwable.class});
                                 exceptionToStringArray.setAccessible(true);
-                                
+
                                 final String[] stacktrace = (String[]) exceptionToStringArray.invoke(null, e);
                                 for (String line : stacktrace) {
                                     sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Stack trace: "+line);
@@ -122,7 +122,7 @@ public final class ScriptCommand extends Command implements IntelligentCommand,
                             sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Stack trace: Exception showing stack trace: "+ex+" -> "+ex.getMessage());
                         }
                     }
-                    
+
                 }
             } else {
                 sendLine(origin, args.isSilent(), FORMAT_ERROR, "You must specify some script to eval.");
@@ -181,7 +181,7 @@ public final class ScriptCommand extends Command implements IntelligentCommand,
     public AdditionalTabTargets getSuggestions(final int arg,
             final IntelligentCommandContext context) {
         final AdditionalTabTargets res = new AdditionalTabTargets();
-        
+
         res.excludeAll();
         if (arg == 0) {
             res.add("help");
@@ -203,10 +203,10 @@ public final class ScriptCommand extends Command implements IntelligentCommand,
                 }
             }
         }
-        
+
         return res;
     }
-    
+
     /**
      * Retrieves a list of all installed scripts.
      * Any file under the main plugin directory (~/.DMDirc/scripts or similar)
@@ -216,10 +216,10 @@ public final class ScriptCommand extends Command implements IntelligentCommand,
      */
     private List<String> getPossibleScripts() {
         final List<String> res = new LinkedList<String>();
-        
+
         final LinkedList<File> dirs = new LinkedList<File>();
         dirs.add(new File(myPlugin.getScriptDir()));
-        
+
         while (!dirs.isEmpty()) {
             final File dir = dirs.pop();
             if (dir.isDirectory()) {
@@ -236,13 +236,13 @@ public final class ScriptCommand extends Command implements IntelligentCommand,
 
     /** {@inheritDoc} */
     @Override
-    public String getName() { 
+    public String getName() {
         return "script";
     }
-    
+
     /** {@inheritDoc} */
     @Override
-    public boolean showInHelp() { 
+    public boolean showInHelp() {
         return true;
     }
 
@@ -251,10 +251,10 @@ public final class ScriptCommand extends Command implements IntelligentCommand,
     public CommandType getType() {
         return CommandType.TYPE_GLOBAL;
     }
-    
+
     /** {@inheritDoc} */
     @Override
-    public String getHelp() { 
+    public String getHelp() {
         return "script - Allows controlling the script plugin";
     }
 }

@@ -31,19 +31,19 @@ import javax.swing.table.DefaultTableCellRenderer;
  * Renders an action condition in plain english.
  */
 public final class ActionConditionCellRenderer extends DefaultTableCellRenderer {
-    
+
     /**
      * A version number for this class. It should be changed whenever the class
      * structure is changed (or anything else that would prevent serialized
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 2;
-    
+
     /** Creates a new instance of ActionConditionCellRenderer. */
     public ActionConditionCellRenderer() {
         super();
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public void setValue(final Object value) {
@@ -51,16 +51,16 @@ public final class ActionConditionCellRenderer extends DefaultTableCellRenderer 
             setText("Any");
             return;
         }
-        
+
         final ActionCondition condition = (ActionCondition) value;
-        
-        if (condition.getComparison() == CoreActionComparison.INT_EQUALS 
-                || condition.getComparison() == CoreActionComparison.INT_GREATER 
+
+        if (condition.getComparison() == CoreActionComparison.INT_EQUALS
+                || condition.getComparison() == CoreActionComparison.INT_GREATER
                 || condition.getComparison() == CoreActionComparison.INT_LESS) {
             setText(condition.getComparison().getName() + " " + condition.getTarget());
         } else {
             setText(value.toString());
         }
     }
-    
+
 }

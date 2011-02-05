@@ -148,7 +148,7 @@ public class Profile {
             setModified(true);
         }
     }
-    
+
     /**
      * Gets the nicknames list for this profile.
      *
@@ -210,7 +210,7 @@ public class Profile {
      * Gets the specified nickname for this profile
      *
      * @param index Index of the nickname to retrieve
-     * 
+     *
      * @return Profile's nickname
      */
     public String getNickname(final int index) {
@@ -383,7 +383,7 @@ public class Profile {
     @Override
     public String toString() {
         return "[Profile: name='" + name + "', nickname='" + nicknames +
-                "', realname='" + realname + "', ident='" + ident + 
+                "', realname='" + realname + "', ident='" + ident +
                 "', modified='" + modified + "']";
     }
 }

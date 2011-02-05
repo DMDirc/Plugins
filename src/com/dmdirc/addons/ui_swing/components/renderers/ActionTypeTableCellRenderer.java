@@ -33,24 +33,24 @@ import javax.swing.table.DefaultTableCellRenderer;
  * Displays actions types and headers in a pretty fashion.
  */
 public final class ActionTypeTableCellRenderer extends DefaultTableCellRenderer {
-    
+
     /**
      * A version number for this class. It should be changed whenever the class
      * structure is changed (or anything else that would prevent serialized
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 1;
-    
+
     /**
      * Creates a new instance of ActionTypeRenderer.
      */
     public ActionTypeTableCellRenderer() {
         super();
     }
-    
+
     /** {@inheritDoc} */
     @Override
-    public void setValue(final Object value) {        
+    public void setValue(final Object value) {
         if (value == null) {
             setText("");
         } else if (value instanceof String && !((String) value).isEmpty()) {
@@ -63,5 +63,5 @@ public final class ActionTypeTableCellRenderer extends DefaultTableCellRenderer 
             setText(value.toString());
         }
     }
-    
+
 }

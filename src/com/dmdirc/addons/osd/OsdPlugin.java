@@ -44,22 +44,22 @@ import java.util.Map;
  */
 public final class OsdPlugin extends Plugin implements CategoryChangeListener,
         PreferencesInterface, SettingChangeListener {
-    
+
     /** Config OSD Window. */
     private OsdWindow osdWindow;
-    
+
     /** OSD Command. */
     private OsdCommand command;
 
     /** The OSD Manager that this plugin is using. */
     private OsdManager osdManager;
-    
+
     /** X-axis position of OSD. */
     private int x;
-    
+
     /** Y-axis potion of OSD. */
     private int y;
-    
+
     /** Setting objects with registered change listeners.*/
     /**
      * Setting objects with registered change listeners.
@@ -75,14 +75,14 @@ public final class OsdPlugin extends Plugin implements CategoryChangeListener,
         super();
         osdManager = new OsdManager(this);
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public void onLoad() {
         command = new OsdCommand(osdManager);
         CommandManager.registerCommand(command);
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public void onUnload() {
@@ -94,11 +94,11 @@ public final class OsdPlugin extends Plugin implements CategoryChangeListener,
     public void showConfig(final PreferencesDialogModel manager) {
         x = IdentityManager.getGlobalConfig().getOptionInt(getDomain(), "locationX");
         y = IdentityManager.getGlobalConfig().getOptionInt(getDomain(), "locationY");
-        
+
         final PreferencesCategory category = new PluginPreferencesCategory(
                 getPluginInfo(), "OSD",
                 "General configuration for OSD plugin.", "category-osd");
-        
+
         fontSizeSetting = new PreferencesSetting(PreferencesType.INTEGER,
                 getDomain(), "fontSize", "Font size", "Changes the font " +
                 "size of the OSD").registerChangeListener(this);
@@ -119,21 +119,21 @@ public final class OsdPlugin extends Plugin implements CategoryChangeListener,
                 new OptionalValidator(new NumericalValidator(1, Integer.MAX_VALUE)),
                 getDomain(), "maxWindows", "Maximum open windows", "Maximum number of OSD " +
                 "windows that will be displayed at any given time");
-                
+
         category.addSetting(fontSizeSetting);
         category.addSetting(backgroundSetting);
         category.addSetting(foregroundSetting);
         category.addSetting(widthSetting);
         category.addSetting(timeoutSetting);
         category.addSetting(maxWindowsSetting);
-        
+
         final Map<String, String> posOptions = new HashMap<String, String>();
 
         //Populate policy MULTICHOICE
         for (OsdPolicy policy : OsdPolicy.values()) {
             posOptions.put(policy.name(), policy.getDescription());
         }
-        
+
         category.addSetting(new PreferencesSetting(getDomain(), "newbehaviour",
                 "New window policy", "What to do when an OSD Window "
                 + "is opened when there are other, existing windows open", posOptions));
@@ -157,7 +157,7 @@ public final class OsdPlugin extends Plugin implements CategoryChangeListener,
     public void categoryDeselected(final PreferencesCategory category) {
         x = osdWindow.getLocationOnScreen().x;
         y = osdWindow.getLocationOnScreen().y;
-        
+
         osdWindow.dispose();
         osdWindow = null;
     }
@@ -177,7 +177,7 @@ public final class OsdPlugin extends Plugin implements CategoryChangeListener,
             // Ignore the request.
             return;
         }
-        
+
         if (setting.equals(fontSizeSetting)) {
             osdWindow.setFontSize(Integer.parseInt(setting.getValue()));
         } else if (setting.equals(backgroundSetting)) {

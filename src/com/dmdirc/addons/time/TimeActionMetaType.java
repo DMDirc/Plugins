@@ -28,11 +28,11 @@ import java.util.Calendar;
 
 /**
  * Encapsulates the meta types used by the various time actions.
- * 
+ *
  * @author chris
  */
 public enum TimeActionMetaType implements ActionMetaType {
-    
+
     /** Time type. */
     TIME_TIME {
         /** {@inheritDoc} */
@@ -45,11 +45,11 @@ public enum TimeActionMetaType implements ActionMetaType {
         @Override
         public String[] getArgNames() { return new String[]{"Date"}; }
     };
-        
+
     /** {@inheritDoc} */
     @Override
     public String getGroup() {
         return "Time Events";
-    }    
-    
+    }
+
 }

@@ -40,8 +40,8 @@ public final class PasteDialogFocusTraversalPolicy extends FocusTraversalPolicy 
     /** Send button. */
     private final JButton sendButton;
 
-    /** 
-     * Creates a new instance of PasteDialogFocusTraversalPolicy. 
+    /**
+     * Creates a new instance of PasteDialogFocusTraversalPolicy.
      *
      * @param cancelButton Cancel button
      * @param editButton Edit button

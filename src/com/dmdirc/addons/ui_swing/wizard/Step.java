@@ -28,7 +28,7 @@ import javax.swing.JPanel;
  * Wizard step.
  */
 public abstract class Step extends JPanel {
-    
+
     /** Instantiates a new step. */
     public Step() {
         super();

@@ -158,7 +158,7 @@ public class PackingTable extends JTable {
         if (!lastColumnFit) {
             checkNumCols--;
         }
-        
+
         for (int i = 0; i < checkNumCols; i++) { //NOPMD I'm not copying
             widths[i] = getWidth(i);
             widthsTotal += widths[i];

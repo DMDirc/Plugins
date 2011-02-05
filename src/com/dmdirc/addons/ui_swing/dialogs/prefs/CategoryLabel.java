@@ -63,7 +63,7 @@ public class CategoryLabel extends JLabel {
             final PreferencesCategory category, final int numCats,
             final int index) {
         super();
-        
+
         this.parentList = parentList;
 
         setText(category.getTitle());

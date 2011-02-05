@@ -325,9 +325,9 @@ public final class ChannelListModesPane extends JPanel implements ActionListener
         updateModeCount();
     }
 
-    /** 
+    /**
      * {@inheritDoc}
-     * 
+     *
      * @param event Action event
      */
     @Override
@@ -354,9 +354,9 @@ public final class ChannelListModesPane extends JPanel implements ActionListener
         }
     }
 
-    /** 
+    /**
      * {@inheritDoc}
-     * 
+     *
      * @param event List selection event
      */
     @Override

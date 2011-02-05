@@ -48,8 +48,8 @@ public final class ColourPickerDialog extends StandardDialog {
 
     /**
      * Creates a new instance of ColourPickerDialog.
-     * 
-     * @since 0.6   
+     *
+     * @since 0.6
      */
     public ColourPickerDialog() {
         this(true, true);
@@ -57,9 +57,9 @@ public final class ColourPickerDialog extends StandardDialog {
 
     /**
      * Creates a new instance of ColourPickerDialog.
-     * 
+     *
      * @param window Parent window
-     * 
+     *
      * @since 0.6
      */
     public ColourPickerDialog(final Window window) {
@@ -68,7 +68,7 @@ public final class ColourPickerDialog extends StandardDialog {
 
     /**
      * Creates a new instance of ColourPickerDialog.
-     * 
+     *
      * @param showIRC show irc colours
      * @param showHex show hex colours
      */
@@ -79,11 +79,11 @@ public final class ColourPickerDialog extends StandardDialog {
 
     /**
      * Creates a new instance of ColourPickerDialog.
-     * 
+     *
      * @param showIRC show irc colours
      * @param showHex show hex colours
      * @param window Parent window
-     * 
+     *
      * @since 0.6
      */
     public ColourPickerDialog(final boolean showIRC, final boolean showHex,
@@ -100,16 +100,16 @@ public final class ColourPickerDialog extends StandardDialog {
         setWindow(window);
     }
 
-    /** 
-     * Creates and shows a new Colour picker dialog. 
+    /**
+     * Creates and shows a new Colour picker dialog.
      * @return Colour picker dialog
      */
     public static ColourPickerDialog showColourPicker() {
         return showColourPicker(true, true);
     }
 
-    /** 
-     * Creates and shows a new Colour picker dialog. 
+    /**
+     * Creates and shows a new Colour picker dialog.
      * @return Colour picker dialog
      * @param showIRC show irc colours
      * @param showHex show hex colours
@@ -121,7 +121,7 @@ public final class ColourPickerDialog extends StandardDialog {
         return cpd;
     }
 
-    /** 
+    /**
      * Adds an actions listener to this dialog.
      *
      * @param listener the listener to add
@@ -132,7 +132,7 @@ public final class ColourPickerDialog extends StandardDialog {
 
     /**
      * Sets the Parent window.
-     * 
+     *
      * @param window Parent window
      */
     public void setWindow(final Window window) {

@@ -1,16 +1,16 @@
 /*
  * Copyright (c) 2006-2011 Chris Smith, Shane Mc Cormack, Gregory Holmes
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -60,16 +60,16 @@ public class ActionNamePanel extends JPanel implements PropertyChangeListener {
 
     /**
      * Instantiates the panel.
-     * 
+     *
      * @param group Associated group for this action
      */
     public ActionNamePanel(final String group) {
         this("", group);
     }
 
-    /** 
+    /**
      * Instantiates the panel.
-     * 
+     *
      * @param name Initial name of the action
      * @param group Associated group for this action
      */
@@ -91,7 +91,7 @@ public class ActionNamePanel extends JPanel implements PropertyChangeListener {
 
     /**
      * Sets the action name.
-     * 
+     *
      * @param newName new name
      */
     @SuppressWarnings("unchecked")
@@ -137,7 +137,7 @@ public class ActionNamePanel extends JPanel implements PropertyChangeListener {
 
     /**
      * Has the action's name changed.
-     * 
+     *
      * @return true if the action name has changed.
 
      */
@@ -147,7 +147,7 @@ public class ActionNamePanel extends JPanel implements PropertyChangeListener {
 
     /**
      * Returns the name represented by this component.
-     * 
+     *
      * @return Current name of this action
      */
     public String getActionName() {

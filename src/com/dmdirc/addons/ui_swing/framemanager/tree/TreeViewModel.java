@@ -160,7 +160,7 @@ public class TreeViewModel extends DefaultTreeModel {
 
     /**
      * Returns the root node for this model.
-     * 
+     *
      * @return Root node
      */
     public TreeViewNode getRootNode() {

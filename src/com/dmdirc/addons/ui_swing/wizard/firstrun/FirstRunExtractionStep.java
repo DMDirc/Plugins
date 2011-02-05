@@ -30,28 +30,28 @@ import net.miginfocom.swing.MigLayout;
  * Queries the user for which core actions they wish to extract.
  */
 public final class FirstRunExtractionStep extends ExtractionStep {
-    
+
     /**
      * A version number for this class. It should be changed whenever the class
      * structure is changed (or anything else that would prevent serialized
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 2;
-    
+
     /**
      * Creates a new instance of SetupStep.
      */
     public FirstRunExtractionStep() {
         super();
     }
-    
+
     /** {@inheritDoc} */
     @Override
     protected void initComponents() {
         setLayout(new MigLayout("fillx, wrap 1"));
-        
+
         TextLabel infoLabel;
-        
+
         infoLabel = new TextLabel("It appears that this is the first time "
                 + "that you have run DMDirc. "
                 + "This short wizard will help you setup DMDirc.\n\n"

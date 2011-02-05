@@ -39,20 +39,20 @@ import java.util.List;
  * @author chris
  */
 public class MplayerMediaSourcePlugin extends Plugin implements MediaSource {
-       
+
     /**
      * Creates a new instance of MplayerMediaSourcePlugin.
      */
     public MplayerMediaSourcePlugin() {
         super();
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public void onLoad() {
         // Nothing to do
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public void onUnload() {
@@ -128,7 +128,7 @@ public class MplayerMediaSourcePlugin extends Plugin implements MediaSource {
         InputStreamReader reader;
         BufferedReader input;
         Process process;
-        
+
         try {
             final String[] command = new String[]{"/bin/bash", "-c",
                     "/usr/bin/lsof -c gmplayer |" +
@@ -136,23 +136,23 @@ public class MplayerMediaSourcePlugin extends Plugin implements MediaSource {
                     "\\.xession|fontconfig' | tail -n 1 | sed -r 's/ +/ /g' |" +
                     " cut -d ' ' -f 9- | sed -r 's/^.*\\/(.*?)$/\\1/'"};
             process = Runtime.getRuntime().exec(command);
-            
+
             reader = new InputStreamReader(process.getInputStream());
             input = new BufferedReader(reader);
-            
+
             String line = "";
-            
+
             while ((line = input.readLine()) != null) {
                 result.add(line);
             }
-            
+
             reader.close();
             input.close();
             process.destroy();
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-        
+
         return result;
     }
 

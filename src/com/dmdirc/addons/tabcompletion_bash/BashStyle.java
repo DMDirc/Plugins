@@ -32,13 +32,13 @@ import com.dmdirc.ui.interfaces.InputWindow;
 import java.awt.Toolkit;
 
 public class BashStyle implements TabCompletionStyle {
-    
+
     /** The last position the user tab-completed at. */
     private int lastPosition = -1;
-    
+
     /** The number of times the user has tab-completed the same position. */
     private int tabCount = 0;
-    
+
     /** The last word that was tab completed. */
     private String lastWord = "";
 
@@ -58,7 +58,7 @@ public class BashStyle implements TabCompletionStyle {
         this.tabCompleter = completer;
         this.window = window;
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public TabCompletionResult getResult(final String original, final int start,
@@ -66,7 +66,7 @@ public class BashStyle implements TabCompletionStyle {
             final AdditionalTabTargets additional) {
         final String word = original.substring(start, end);
         final TabCompleterResult res = tabCompleter.complete(word, additional);
-        
+
         if (start == lastPosition && word.equals(lastWord)) {
             tabCount++;
         } else {
@@ -74,26 +74,26 @@ public class BashStyle implements TabCompletionStyle {
             lastWord = word;
             tabCount = 1;
         }
-        
+
         if (res.getResultCount() == 0) {
             Toolkit.getDefaultToolkit().beep();
-            
+
             return null;
         } else if (res.getResultCount() == 1) {
             // One result, just replace it
-            
+
             final String result = res.getResults().get(0);
-            
+
             return new TabCompletionResult(
                     original.substring(0, start) + result + original.substring(end),
                     start + result.length());
         } else {
             // Multiple results
-            
+
             final String sub = res.getBestSubstring();
             if (sub.equalsIgnoreCase(word) && tabCount >= 2) {
                 window.getContainer().addLine("tabCompletion", res.toString());
-                
+
                 return null;
             } else {
                 return new TabCompletionResult(
@@ -102,5 +102,5 @@ public class BashStyle implements TabCompletionStyle {
             }
         }
     }
-    
+
 }

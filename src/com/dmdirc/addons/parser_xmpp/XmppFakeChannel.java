@@ -129,14 +129,14 @@ public class XmppFakeChannel extends BaseChannelInfo {
     @Override
     public ChannelClientInfo getChannelClient(final String client, final boolean create) {
         final String[] parts = getParser().parseHostmask(client);
-        
+
         if (create && getClient(parts[0]) == null) {
             return new XmppChannelClientInfo(this, getParser().getClient(client));
         }
-        
+
         return getClient(parts[0]);
     }
-    
+
     /**
      * Updates this channel with the specified contacts.
      *
@@ -146,9 +146,9 @@ public class XmppFakeChannel extends BaseChannelInfo {
         for (XmppClientInfo client : clients) {
             addClient(client.getNickname(), new XmppChannelClientInfo(this, client));
         }
-        
+
         // TODO: Delete old contacts, don't needlessly create new objects
-        
+
         getParser().getCallbackManager().getCallbackType(ChannelNamesListener.class).call(this);
     }
 

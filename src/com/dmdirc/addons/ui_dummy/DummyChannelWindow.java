@@ -29,8 +29,8 @@ import com.dmdirc.Channel;
  */
 public final class DummyChannelWindow extends DummyInputWindow {
 
-    /** 
-     * Instantiates a new DummyChannelWindow. 
+    /**
+     * Instantiates a new DummyChannelWindow.
      *
      * @param parent Parent channel
      */

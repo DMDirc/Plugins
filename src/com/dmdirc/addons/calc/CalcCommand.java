@@ -59,10 +59,10 @@ public class CalcCommand extends Command implements CommandInfo {
             sendLine(origin, args.isSilent(), FORMAT_OUTPUT,
                     (showexpr ? input + " = " : "") + result);
         } catch (ParseException ex) {
-            sendLine(origin, args.isSilent(), FORMAT_ERROR, 
+            sendLine(origin, args.isSilent(), FORMAT_ERROR,
                     "Unable to parse expression: " + ex.getMessage());
         } catch (ArithmeticException ex) {
-            sendLine(origin, args.isSilent(), FORMAT_ERROR, 
+            sendLine(origin, args.isSilent(), FORMAT_ERROR,
                     "Unable to calculate expression: " + ex.getMessage());
         }
     }

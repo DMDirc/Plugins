@@ -54,8 +54,8 @@ public final class ErrorTableModel extends AbstractTableModel implements
         this(ErrorManager.getErrorManager().getErrors());
     }
 
-    /** 
-     * Creates a new instance of ErrorTableModel. 
+    /**
+     * Creates a new instance of ErrorTableModel.
      *
      * @param errors List of errors.
      */

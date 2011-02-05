@@ -69,7 +69,7 @@ public class PingHistoryPanel extends JPanel {
         setMinimumSize(new Dimension(50, 100));
         setMaximumSize(new Dimension(Integer.MAX_VALUE, 100));
         setOpaque(false);
-        
+
         this.plugin = plugin;
         this.history = plugin.getHistory(WindowManager.getActiveServer());
 
@@ -82,7 +82,7 @@ public class PingHistoryPanel extends JPanel {
     @Override
     public void paint(final Graphics g) {
         super.paint(g);
-        
+
         g.setColor(Color.DARK_GRAY);
         g.drawLine(2, 1, 2, getHeight() - 1);
         g.drawLine(1, getHeight() - 2, getWidth() - 1, getHeight() - 2);
@@ -103,7 +103,7 @@ public class PingHistoryPanel extends JPanel {
 
         for (int i = 0; i < list.size(); i++) {
             final Long value = list.get(i);
-           
+
             float x = lastX == -1 ? 2 : lastX + pixelsperpointX;
             float y = getHeight() - 5 - value * pixelsperpointY;
 

@@ -33,18 +33,18 @@ import java.util.List;
 
 /**
  * Allows the user to execute dcop commands (and read the results).
- * 
+ *
  * @author chris
  */
 public final class DcopPlugin extends Plugin {
     /** The DcopCommand we created */
     private DcopCommand command = null;
-    
+
     /** Creates a new instance of DcopPlugin. */
     public DcopPlugin() {
         super();
     }
-    
+
     /**
      * Retrieves the result from executing the specified command.
      *
@@ -57,36 +57,36 @@ public final class DcopPlugin extends Plugin {
         InputStreamReader reader;
         BufferedReader input;
         Process process;
-        
+
         try {
             process = Runtime.getRuntime().exec(command);
-            
+
             reader = new InputStreamReader(process.getInputStream());
             input = new BufferedReader(reader);
-            
+
             String line = "";
-            
+
             while ((line = input.readLine()) != null) {
                 result.add(line);
             }
-            
+
             reader.close();
             input.close();
             process.destroy();
         } catch (IOException ex) {
             // Do nothing
         }
-        
+
         return result;
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public void onLoad() {
         command = new DcopCommand();
         CommandManager.registerCommand(command);
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public void onUnload() {

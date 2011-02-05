@@ -36,12 +36,12 @@ import java.util.TimerTask;
  * Performs DNS lookups for nicknames, hostnames or IPs.
  */
 public final class DNSCommand extends Command implements CommandInfo {
-    
+
     /** Creates a new instance of DNSCommand. */
     public DNSCommand() {
         super();
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public void execute(final FrameContainer origin,
@@ -50,7 +50,7 @@ public final class DNSCommand extends Command implements CommandInfo {
             showUsage(origin, args.isSilent(), "dns", "<IP|hostname>");
             return;
         }
-        
+
         sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Resolving: " + args.getArguments()[0]);
         new Timer("DNS Command Timer").schedule(new TimerTask() {
             /** {@inheritDoc} */
@@ -68,13 +68,13 @@ public final class DNSCommand extends Command implements CommandInfo {
             }
         }, 0);
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public String getName() {
         return "dns";
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public boolean showInHelp() {
@@ -86,11 +86,11 @@ public final class DNSCommand extends Command implements CommandInfo {
     public CommandType getType() {
         return CommandType.TYPE_GLOBAL;
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public String getHelp() {
         return "dns <IP|hostname> - Performs DNS lookup of the specified ip/hostname/nickname";
     }
-    
+
 }

@@ -27,7 +27,7 @@ import com.dmdirc.parser.interfaces.ChannelClientInfo;
 
 /**
  * Action component to retrieve a channel client's access level.
- * 
+ *
  * @author chris
  */
 public class ChannelAccessLevelComponent implements ActionComponent {
@@ -36,9 +36,9 @@ public class ChannelAccessLevelComponent implements ActionComponent {
     @Override
     public Object get(final Object argument) {
         final ChannelClientInfo ci = (ChannelClientInfo) argument;
-        
+
         UserLevelPlugin.doChannelLevel(ci);
-        
+
         if (ci.getMap().containsKey("level")) {
             return ci.getMap().get("level");
         } else {
@@ -47,19 +47,19 @@ public class ChannelAccessLevelComponent implements ActionComponent {
     }
 
     /** {@inheritDoc} */
-    @Override    
+    @Override
     public Class<?> appliesTo() {
         return ChannelClientInfo.class;
     }
 
     /** {@inheritDoc} */
-    @Override    
+    @Override
     public Class<?> getType() {
         return Integer.class;
     }
 
     /** {@inheritDoc} */
-    @Override    
+    @Override
     public String getName() {
         return "channel access level";
     }

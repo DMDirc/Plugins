@@ -235,7 +235,7 @@ public final class MainFrame extends JFrame implements WindowListener,
 
     /**
      * Gets the string which should be prefixed to this frame's title.
-     * 
+     *
      * @return This frame's title prefix
      */
     private String getTitlePrefix() {

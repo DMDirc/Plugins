@@ -251,7 +251,7 @@ public class URLProtocolPanel extends JPanel implements ActionListener,
             final JFileChooser fileChooser = new JFileChooser();
             fileChooser.addChoosableFileFilter(new ExecutableFileFilter());
             fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-            if (fileChooser.showDialog(this, "Select") 
+            if (fileChooser.showDialog(this, "Select")
                     == JFileChooser.APPROVE_OPTION) {
                 commandPath.setText(fileChooser.getSelectedFile().toString());
             }

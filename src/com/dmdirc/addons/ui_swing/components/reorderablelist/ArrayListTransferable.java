@@ -34,24 +34,24 @@ import java.util.ArrayList;
  * Arraylist transferable.
  */
 public final class ArrayListTransferable implements Transferable {
-    
+
     /** Local tranfer flavour. */
     private DataFlavor localArrayListFlavor;
     /** Serial transfer flavour. */
     private final DataFlavor serialArrayListFlavor;
     /** Transferred ArrayList. */
     private final ArrayList<?> data; //NOPMD
-    
-    /** 
-     * Initialises the ArrayListTransferable. 
+
+    /**
+     * Initialises the ArrayListTransferable.
      *
      * @param alist ArrayList to transfer
      */
     public ArrayListTransferable(final ArrayList<?> alist) { //NOPMD
         super();
-        
+
         data = alist;
-        
+
         try {
             localArrayListFlavor = new DataFlavor(
                     DataFlavor.javaJVMLocalObjectMimeType
@@ -61,26 +61,26 @@ public final class ArrayListTransferable implements Transferable {
                     + e.getMessage());
         }
         serialArrayListFlavor = new DataFlavor(ArrayList.class, "ArrayList"); //NOPMD
-        
+
     }
-    
+
     /** {@inheritDoc} */
     @Override
-    public Object getTransferData(final DataFlavor flavor) throws 
+    public Object getTransferData(final DataFlavor flavor) throws
             UnsupportedFlavorException {
         if (!isDataFlavorSupported(flavor)) {
             throw new UnsupportedFlavorException(flavor);
         }
-        
+
         return data;
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public DataFlavor[] getTransferDataFlavors() {
         return new DataFlavor[]{localArrayListFlavor, serialArrayListFlavor, };
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public boolean isDataFlavorSupported(final DataFlavor flavor) {

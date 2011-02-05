@@ -52,7 +52,7 @@ public final class ParserDebugCommand extends Command implements CommandInfo {
         super();
         myPlugin = plugin;
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public CommandType getType() {
@@ -69,9 +69,9 @@ public final class ParserDebugCommand extends Command implements CommandInfo {
     @Override
     public void execute(final FrameContainer origin, final CommandArguments commandArgs, final CommandContext context) {
         final boolean isSilent = commandArgs.isSilent();
-  
+
         Parser parser = ((ServerCommandContext) context).getServer().getParser();
-        
+
         if (parser == null) {
             sendLine(origin, isSilent, FORMAT_ERROR, "Unable to get a parser for this window.");
             return;
@@ -110,7 +110,7 @@ public final class ParserDebugCommand extends Command implements CommandInfo {
      */
     @Override
     public String getName() { return "parserdebug"; }
-    
+
     /**
      * Returns whether or not this command should be shown in help messages.
      *
@@ -118,7 +118,7 @@ public final class ParserDebugCommand extends Command implements CommandInfo {
      */
     @Override
     public boolean showInHelp() { return true; }
-    
+
     /**
      * Returns a string representing the help message for this command.
      *

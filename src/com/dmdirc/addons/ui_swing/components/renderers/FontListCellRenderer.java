@@ -23,7 +23,7 @@ package com.dmdirc.addons.ui_swing.components.renderers;
 
 import java.awt.Component;
 import java.awt.Font;
-    
+
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
 

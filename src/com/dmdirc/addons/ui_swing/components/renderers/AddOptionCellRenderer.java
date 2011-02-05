@@ -35,7 +35,7 @@ import javax.swing.JList;
  * Add option combo box cell renderer.
  */
 public final class AddOptionCellRenderer extends DefaultListCellRenderer {
-    
+
     /**
      * A version number for this class. It should be changed whenever the class
      * structure is changed (or anything else that would prevent serialized
@@ -52,10 +52,10 @@ public final class AddOptionCellRenderer extends DefaultListCellRenderer {
      */
     public AddOptionCellRenderer(final SettingsPanel settingsPanel) {
         super();
-        
+
         this.settingsPanel = settingsPanel;
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public Component getListCellRendererComponent(
@@ -63,7 +63,7 @@ public final class AddOptionCellRenderer extends DefaultListCellRenderer {
             final Object value,
             final int index,
             final boolean isSelected,
-            final boolean cellHasFocus) {       
+            final boolean cellHasFocus) {
         super.getListCellRendererComponent(list, value, index, isSelected,
                 cellHasFocus);
 
@@ -78,7 +78,7 @@ public final class AddOptionCellRenderer extends DefaultListCellRenderer {
         } else {
             setText(setting.getTitle());
         }
-        
+
         return this;
     }
 }

@@ -1,16 +1,16 @@
 /*
  * Copyright (c) 2006-2011 Chris Smith, Shane Mc Cormack, Gregory Holmes
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -73,7 +73,7 @@ public class ActionConditionsTreePanel extends JPanel implements ActionListener,
     /** validates. */
     private boolean validates = true;
 
-    /** 
+    /**
      * Instantiates the panel.
      */
     public ActionConditionsTreePanel() {
@@ -168,12 +168,12 @@ public class ActionConditionsTreePanel extends JPanel implements ActionListener,
                     new ConditionTreeFactory.CustomFactory(ConditionTree.parseString(rule.getText()));
             rule.checkError();
         }
-        
+
     }
 
-    /** 
+    /**
      * {@inheritDoc}
-     * 
+     *
      * @param e Action event
      */
     @Override
@@ -192,9 +192,9 @@ public class ActionConditionsTreePanel extends JPanel implements ActionListener,
 
     /**
      * Returns the selected rule type.
-     * 
+     *
      * @param conditionCount Condition count
-     * 
+     *
      * @return Selected rule type
      */
     public ConditionTreeFactoryType getRuleType(final int conditionCount) {
@@ -203,9 +203,9 @@ public class ActionConditionsTreePanel extends JPanel implements ActionListener,
 
     /**
      * Returns the current custom rule.
-     * 
+     *
      * @param conditionCount number of conditions
-     * 
+     *
      * @return Custom rule
      */
     public ConditionTree getRule(final int conditionCount) {
@@ -215,7 +215,7 @@ public class ActionConditionsTreePanel extends JPanel implements ActionListener,
 
     /**
      * Sets the tree rule.
-     * 
+     *
      * @param conditionCount condition count
      * @param tree new condition tree
      */
@@ -226,10 +226,10 @@ public class ActionConditionsTreePanel extends JPanel implements ActionListener,
             selectTreeButton();
         }
     }
-    
+
     /**
      * Sets the new condition count.
-     * 
+     *
      * @param conditionCount new condition count.
      */
     public void setConditionCount(final int conditionCount) {

@@ -38,7 +38,7 @@ public enum FramemanagerPosition {
     RIGHT,
     /** Unknown position. */
     UNKNOWN;
-    
+
     /**
      * Returns the frame position for s specified string.
      *
@@ -56,10 +56,10 @@ public enum FramemanagerPosition {
             return valueOf("UNKNOWN");
         }
     }
-    
+
     /**
      * Determines if this position is one of the two horizontal positions.
-     * 
+     *
      * @return True if this is a horizontal position, false otherwise
      */
     public boolean isHorizontal() {

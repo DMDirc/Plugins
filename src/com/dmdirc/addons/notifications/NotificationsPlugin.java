@@ -64,7 +64,7 @@ public class NotificationsPlugin extends Plugin implements ActionListener {
     public void onLoad() {
         methods.clear();
         loadSettings();
-        ActionManager.getActionManager().registerListener(this, 
+        ActionManager.getActionManager().registerListener(this,
                 CoreActionType.PLUGIN_LOADED, CoreActionType.PLUGIN_UNLOADED);
         for (PluginInfo target : PluginManager.getPluginManager()
                 .getPluginInfos()) {
