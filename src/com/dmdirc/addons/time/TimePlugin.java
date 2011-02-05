@@ -25,7 +25,7 @@ package com.dmdirc.addons.time;
 
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.commandparser.CommandManager;
-import com.dmdirc.plugins.Plugin;
+import com.dmdirc.plugins.BasePlugin;
 
 import java.util.Calendar;
 import java.util.Timer;
@@ -35,7 +35,7 @@ import java.util.TimerTask;
  * Provides various time-related features.
  * @author chris
  */
-public final class TimePlugin  extends Plugin {
+public final class TimePlugin  extends BasePlugin {
 
     /** Have we registered our types already? */
     private static boolean registered;

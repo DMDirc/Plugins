@@ -23,14 +23,14 @@
 package com.dmdirc.addons.calc;
 
 import com.dmdirc.commandparser.CommandManager;
-import com.dmdirc.plugins.Plugin;
+import com.dmdirc.plugins.BasePlugin;
 
 /**
  * A plugin which parses and evaluates various mathematical expressions.
  *
  * @author chris
  */
-public class CalcPlugin extends Plugin {
+public class CalcPlugin extends BasePlugin {
 
     /** The command we register when loaded. */
     private final CalcCommand command = new CalcCommand();

@@ -23,7 +23,7 @@
 package com.dmdirc.addons.redirect;
 
 import com.dmdirc.commandparser.CommandManager;
-import com.dmdirc.plugins.Plugin;
+import com.dmdirc.plugins.BasePlugin;
 
 
 /**
@@ -32,7 +32,7 @@ import com.dmdirc.plugins.Plugin;
  *
  * @author chris
  */
-public final class RedirectPlugin extends Plugin {
+public final class RedirectPlugin extends BasePlugin {
 
     private final RedirectCommand command;
 

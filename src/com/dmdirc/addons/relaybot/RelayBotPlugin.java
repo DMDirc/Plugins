@@ -40,7 +40,7 @@ import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.parser.interfaces.ChannelClientInfo;
 import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.parser.irc.IRCParser;
-import com.dmdirc.plugins.Plugin;
+import com.dmdirc.plugins.BasePlugin;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.util.ReturnableThread;
 
@@ -54,7 +54,7 @@ import java.util.Map;
  *
  * @author shane
  */
-public class RelayBotPlugin extends Plugin implements ActionListener, ConfigChangeListener {
+public class RelayBotPlugin extends BasePlugin implements ActionListener, ConfigChangeListener {
     /** Known RelayChannelHandlers. */
     private final Map<Channel, RelayChannelHandler> handlers = new HashMap<Channel, RelayChannelHandler>();
 

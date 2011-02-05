@@ -33,7 +33,7 @@ import com.dmdirc.util.StreamReader;
 import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
-import com.dmdirc.plugins.Plugin;
+import com.dmdirc.plugins.BasePlugin;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.messages.Styliser;
@@ -47,7 +47,7 @@ import org.apache.commons.lang.StringEscapeUtils;
 /**
  * This plugin adds freedesktop Style Notifications to dmdirc.
  */
-public final class FreeDesktopNotificationsPlugin extends Plugin implements ConfigChangeListener {
+public final class FreeDesktopNotificationsPlugin extends BasePlugin implements ConfigChangeListener {
     /** The DcopCommand we created */
     private FDNotifyCommand command = null;
     /** notification timeout. */

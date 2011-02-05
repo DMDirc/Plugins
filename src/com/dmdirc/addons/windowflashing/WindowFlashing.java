@@ -32,7 +32,7 @@ import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.interfaces.ConfigChangeListener;
-import com.dmdirc.plugins.Plugin;
+import com.dmdirc.plugins.BasePlugin;
 import com.dmdirc.plugins.PluginManager;
 
 import com.sun.jna.Native;
@@ -46,7 +46,7 @@ import com.sun.jna.platform.win32.WinUser.FLASHWINFO;
 /**
  * Native notification plugin to make DMDirc support windows task bar flashing.
  */
-public class WindowFlashing extends Plugin implements ConfigChangeListener {
+public class WindowFlashing extends BasePlugin implements ConfigChangeListener {
 
     /** Library instance. */
     private User32 user32;

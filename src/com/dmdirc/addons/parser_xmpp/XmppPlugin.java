@@ -25,13 +25,13 @@ package com.dmdirc.addons.parser_xmpp;
 import com.dmdirc.parser.common.MyInfo;
 import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.parser.interfaces.ProtocolDescription;
-import com.dmdirc.plugins.Plugin;
+import com.dmdirc.plugins.BasePlugin;
 import java.net.URI;
 
 /**
  * Plugin that provides a parser to connect to XMPP services.
  */
-public class XmppPlugin extends Plugin {
+public class XmppPlugin extends BasePlugin {
 
     /** {@inheritDoc} */
     @Override

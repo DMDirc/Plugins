@@ -26,7 +26,7 @@ import com.dmdirc.addons.parser_twitter.api.TwitterUser;
 import com.dmdirc.parser.interfaces.ChannelClientInfo;
 import com.dmdirc.parser.interfaces.LocalClientInfo;
 import com.dmdirc.parser.interfaces.Parser;
-import com.dmdirc.plugins.Plugin;
+import com.dmdirc.plugins.BasePlugin;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -75,7 +75,7 @@ public class TwitterClientInfo implements LocalClientInfo {
      * @param plugin Plugin to use to get domain from.
      * @return String array of nick, ident and host.
      */
-    static String[] parseHostFull(final String hostname, final Plugin plugin, final Twitter parser) {
+    static String[] parseHostFull(final String hostname, final BasePlugin plugin, final Twitter parser) {
         boolean hadAt = false;
         String sanitisedHostname = hostname;
 

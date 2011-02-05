@@ -30,7 +30,7 @@ import com.dmdirc.addons.ui_swing.DMDircEventQueue;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.interfaces.ConfigChangeListener;
-import com.dmdirc.plugins.Plugin;
+import com.dmdirc.plugins.BasePlugin;
 
 import java.awt.AWTEvent;
 import java.lang.management.ManagementFactory;
@@ -61,7 +61,7 @@ public class TracingEventQueue extends DMDircEventQueue implements
     /** boolean to end thread. */
     private boolean running = false;
     /** Parent plugin. */
-    private final Plugin parentPlugin;
+    private final BasePlugin parentPlugin;
     /** Tracing thread. */
     private Thread tracingThread;
 
@@ -71,7 +71,7 @@ public class TracingEventQueue extends DMDircEventQueue implements
      * @param parentPlugin Parent plugin
      * @param controller Swing controller
      */
-    public TracingEventQueue(final Plugin parentPlugin,
+    public TracingEventQueue(final BasePlugin parentPlugin,
             final SwingController controller) {
         super(controller);
         this.parentPlugin = parentPlugin;

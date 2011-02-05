@@ -62,7 +62,6 @@ public class RelayChannelPanel extends JPanel implements ActionListener,
     private final transient RelayBotPlugin plugin;
     /** The table headings. */
     private static final String[] HEADERS = {"Channel", "Nickname", };
-
     /** Delete button. */
     private final JButton deleteButton;
 

@@ -22,12 +22,12 @@
 
 package com.dmdirc.addons.tabcompletion_mirc;
 
-import com.dmdirc.plugins.Plugin;
+import com.dmdirc.plugins.BasePlugin;
 import com.dmdirc.ui.input.TabCompleter;
 import com.dmdirc.ui.input.tabstyles.TabCompletionStyle;
 import com.dmdirc.ui.interfaces.InputWindow;
 
-public class MircStylePlugin extends Plugin {
+public class MircStylePlugin extends BasePlugin {
 
     /** {@inheritDoc} */
     @Override

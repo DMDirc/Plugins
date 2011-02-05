@@ -38,7 +38,7 @@ import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.interfaces.ActionListener;
 import com.dmdirc.interfaces.ConfigChangeListener;
-import com.dmdirc.plugins.Plugin;
+import com.dmdirc.plugins.BasePlugin;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.util.RollingList;
@@ -50,33 +50,23 @@ import java.util.WeakHashMap;
 
 /**
  * Displays the current server's lag in the status bar.
- * @author chris
  */
-public final class LagDisplayPlugin extends Plugin implements ActionListener, ConfigChangeListener {
+public final class LagDisplayPlugin extends BasePlugin implements
+        ActionListener, ConfigChangeListener {
 
     /** The panel we use in the status bar. */
     private final LagDisplayPanel panel = new LagDisplayPanel(this);
-
     /** A cache of ping times. */
     private final Map<Server, String> pings = new WeakHashMap<Server, String>();
-
     /** Ping history. */
     private final Map<Server, RollingList<Long>> history
             = new HashMap<Server, RollingList<Long>>();
-
     /** Whether or not to show a graph in the info popup. */
     private boolean showGraph = true;
-
     /** Whether or not to show labels on that graph. */
     private boolean showLabels = true;
-
     /** The length of history to keep per-server. */
     private int historySize = 100;
-
-    /** Creates a new instance of LagDisplayPlugin. */
-    public LagDisplayPlugin() {
-        super();
-    }
 
     /** {@inheritDoc} */
     @Override

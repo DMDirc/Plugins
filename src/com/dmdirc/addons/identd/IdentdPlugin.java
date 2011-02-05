@@ -34,7 +34,7 @@ import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.util.validators.PortValidator;
 import com.dmdirc.interfaces.ActionListener;
-import com.dmdirc.plugins.Plugin;
+import com.dmdirc.plugins.BasePlugin;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +42,7 @@ import java.util.List;
 /**
  * The Identd plugin answers ident requests from IRC servers.
  */
-public class IdentdPlugin extends Plugin implements ActionListener {
+public class IdentdPlugin extends BasePlugin implements ActionListener {
 
     /** Array list to store all the servers in that need ident replies. */
     private final List<Server> servers = new ArrayList<Server>();

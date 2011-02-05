@@ -31,7 +31,7 @@ import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.interfaces.ActionListener;
-import com.dmdirc.plugins.Plugin;
+import com.dmdirc.plugins.BasePlugin;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.util.ReturnableThread;
@@ -43,7 +43,7 @@ import java.util.List;
  * Notification Manager plugin, aggregates notification sources exposing them
  * via a single command.
  */
-public class NotificationsPlugin extends Plugin implements ActionListener {
+public class NotificationsPlugin extends BasePlugin implements ActionListener {
 
     /** The notification methods that we know of. */
     private final List<String> methods = new ArrayList<String>();

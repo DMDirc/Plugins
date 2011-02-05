@@ -36,18 +36,9 @@ import com.dmdirc.ui.input.AdditionalTabTargets;
 
 /**
  * The dcop command retrieves information from a dcop application.
- *
- * @author Shane "Dataforce" Mc Cormack
  */
 public final class LoggingCommand extends Command implements IntelligentCommand,
         CommandInfo {
-
-    /**
-     * Creates a new instance of LoggingCommand.
-     */
-    public LoggingCommand() {
-        super();
-    }
 
     /** {@inheritDoc} */
     @Override

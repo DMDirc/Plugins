@@ -22,7 +22,7 @@
 
 package com.dmdirc.addons.serverlists;
 
-import com.dmdirc.plugins.Plugin;
+import com.dmdirc.plugins.BasePlugin;
 
 
 /**
@@ -30,7 +30,7 @@ import com.dmdirc.plugins.Plugin;
  *
  * @author chris
  */
-public class ServerListPlugin extends Plugin {
+public class ServerListPlugin extends BasePlugin {
 
     /** {@inheritDoc} */
     @Override

@@ -24,7 +24,7 @@ package com.dmdirc.addons.mediasource_mplayer;
 
 import com.dmdirc.addons.nowplaying.MediaSource;
 import com.dmdirc.addons.nowplaying.MediaSourceState;
-import com.dmdirc.plugins.Plugin;
+import com.dmdirc.plugins.BasePlugin;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -38,7 +38,7 @@ import java.util.List;
  *
  * @author chris
  */
-public class MplayerMediaSourcePlugin extends Plugin implements MediaSource {
+public class MplayerMediaSourcePlugin extends BasePlugin implements MediaSource {
 
     /**
      * Creates a new instance of MplayerMediaSourcePlugin.
