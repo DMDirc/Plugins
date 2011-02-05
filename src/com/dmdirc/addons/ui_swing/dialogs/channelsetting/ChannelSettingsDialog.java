@@ -82,7 +82,7 @@ public final class ChannelSettingsDialog extends StandardDialog implements
     private ChannelSettingsDialog(final Channel newChannel,
             final Window parentWindow, final InputWindow channelWindow) {
         super(parentWindow, ModalityType.MODELESS);
-        
+
         channel = newChannel;
         identity = IdentityManager.getChannelConfig(channel.getServer().
                 getNetwork(), channel.getChannelInfo().getName());
@@ -100,7 +100,7 @@ public final class ChannelSettingsDialog extends StandardDialog implements
      * @param channelWindow Channel window
      */
     public static void showChannelSettingsDialog(
-            final Channel channel, final Window parentWindow, 
+            final Channel channel, final Window parentWindow,
             final InputWindow channelWindow) {
         me = getChannelSettingsDialog(channel, parentWindow, channelWindow);
 

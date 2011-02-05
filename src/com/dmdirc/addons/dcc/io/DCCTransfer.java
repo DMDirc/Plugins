@@ -372,7 +372,7 @@ public class DCCTransfer extends DCC {
         }
         out = null;
         in = null;
-        
+
         for (DCCTransferHandler handler : handlers.get(DCCTransferHandler.class)) {
             handler.socketClosed(this);
         }

@@ -40,20 +40,20 @@ import javax.swing.text.BadLocationException;
  */
 public class TextAreaInputField extends JTextArea implements InputField,
         PropertyChangeListener {
-    
+
     /**
      * A version number for this class. It should be changed whenever the class
      * structure is changed (or anything else that would prevent serialized
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 2;
-    
+
     /** Colour picker. */
-    protected ColourPickerDialog colourPicker;    
+    protected ColourPickerDialog colourPicker;
 
     /**
      * Creates a new text area with the specified number of rows and columns.
-     * 
+     *
      * @param rows The number of rows to use
      * @param columns The number of columns to use
      */
@@ -65,7 +65,7 @@ public class TextAreaInputField extends JTextArea implements InputField,
 
     /**
      * Creates a new text area containing the specified text.
-     * 
+     *
      * @param text The text to contain initially
      */
     public TextAreaInputField(final String text) {
@@ -73,7 +73,7 @@ public class TextAreaInputField extends JTextArea implements InputField,
         KeyboardFocusManager.getCurrentKeyboardFocusManager()
                 .addPropertyChangeListener(this);
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public void addActionListener(final ActionListener listener) {
@@ -81,7 +81,7 @@ public class TextAreaInputField extends JTextArea implements InputField,
     }
 
     /** {@inheritDoc} */
-    @Override    
+    @Override
     public void removeActionListener(final ActionListener listener) {
         // Ignore request - we don't handle returns for text areas
     }
@@ -97,7 +97,7 @@ public class TextAreaInputField extends JTextArea implements InputField,
                 @Override
                 public void actionPerformed(final ActionEvent actionEvent) {
                     try {
-                        getDocument().insertString(getCaretPosition(), 
+                        getDocument().insertString(getCaretPosition(),
                                 actionEvent.getActionCommand(), null);
                     } catch (BadLocationException ex) {
                         //Ignore, wont happen

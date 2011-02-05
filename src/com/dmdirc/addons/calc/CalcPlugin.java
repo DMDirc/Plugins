@@ -27,7 +27,7 @@ import com.dmdirc.plugins.Plugin;
 
 /**
  * A plugin which parses and evaluates various mathematical expressions.
- * 
+ *
  * @author chris
  */
 public class CalcPlugin extends Plugin {

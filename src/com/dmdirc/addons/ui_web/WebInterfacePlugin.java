@@ -29,17 +29,17 @@ import org.mortbay.jetty.Handler;
 
 /**
  * The main web interface plugin.
- * 
+ *
  * @author chris
  */
 public class WebInterfacePlugin extends Plugin {
-    
+
     /** The UI that we're using. */
     private WebInterfaceUI ui;
 
     /** {@inheritDoc} */
     @Override
-    public void onLoad() {   
+    public void onLoad() {
         if (ui == null) {
              ui = new WebInterfaceUI(this);
         }
@@ -59,17 +59,17 @@ public class WebInterfacePlugin extends Plugin {
     public void onUnload() {
         // Do nothing
     }
-    
+
     /**
      * Adds the specified handler to the WebInterface's web server.
-     * 
+     *
      * @param newHandler The handler to be added
      */
     public void addWebHandler(final Handler newHandler) {
         if (ui == null) {
              ui = new WebInterfaceUI(this);
         }
-        
+
         ui.addWebHandler(newHandler);
     }
 }

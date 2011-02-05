@@ -50,7 +50,7 @@ public class ListModeCellRenderer extends DefaultListCellRenderer {
             final Object value, final int index, final boolean isSelected,
             final boolean cellHasFocus) {
         super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-        
+
         if (value == null) {
             setText("");
         } else if (value instanceof ChannelListModeItem) {
@@ -58,7 +58,7 @@ public class ListModeCellRenderer extends DefaultListCellRenderer {
         } else {
             setText(value.toString());
         }
-        
+
         return this;
     }
 }

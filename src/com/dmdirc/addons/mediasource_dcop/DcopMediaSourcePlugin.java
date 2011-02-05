@@ -36,10 +36,10 @@ import java.util.List;
  */
 public class DcopMediaSourcePlugin extends Plugin
         implements MediaSourceManager {
-    
+
     /** Media sources. */
     private final List<MediaSource> sources;
-    
+
     /**
      * Creates a new instance of DcopMediaSourcePlugin.
      */
@@ -50,7 +50,7 @@ public class DcopMediaSourcePlugin extends Plugin
         sources.add(new KaffeineSource());
         sources.add(new NoatunSource());
     }
-    
+
     /**
      * Get DCOP Result
      *
@@ -66,19 +66,19 @@ public class DcopMediaSourcePlugin extends Plugin
             return new ArrayList<String>();
         }
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public List<MediaSource> getSources() {
         return sources;
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public void onLoad() {
         // Nothing to do
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public void onUnload() {

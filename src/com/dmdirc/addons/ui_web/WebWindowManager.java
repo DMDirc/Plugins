@@ -127,7 +127,6 @@ public class WebWindowManager implements FrameListener {
     @Override
     public void delWindow(final FrameContainer window) {
         if (windows.containsKey(window)) {
-            windows.get(window).close();
             windows.remove(window);
         }
     }

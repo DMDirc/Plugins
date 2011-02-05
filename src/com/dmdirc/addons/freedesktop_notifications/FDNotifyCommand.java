@@ -38,7 +38,7 @@ import com.dmdirc.commandparser.commands.context.CommandContext;
 public final class FDNotifyCommand extends Command implements CommandInfo {
     /** Plugin that owns this command. */
     final FreeDesktopNotificationsPlugin myPlugin;
-    
+
     /**
      * Creates a new instance of FDNotifyCommand.
      *
@@ -60,14 +60,14 @@ public final class FDNotifyCommand extends Command implements CommandInfo {
             }
         }.start();
     }
-    
-    
+
+
     /** {@inheritDoc} */
     @Override
     public String getName() {
         return "fdnotify";
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public boolean showInHelp() {
@@ -79,7 +79,7 @@ public final class FDNotifyCommand extends Command implements CommandInfo {
     public CommandType getType() {
         return CommandType.TYPE_GLOBAL;
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public String getHelp() {

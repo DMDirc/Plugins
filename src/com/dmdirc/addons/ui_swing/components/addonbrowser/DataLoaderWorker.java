@@ -40,7 +40,7 @@ import javax.swing.JScrollPane;
 /**
  * Loads the addon data feed into the addon browser.
  */
-public class DataLoaderWorker 
+public class DataLoaderWorker
         extends LoggingSwingWorker<Collection<Map<String, String>>, Object> {
 
     /** List to load data into. */
@@ -60,7 +60,7 @@ public class DataLoaderWorker
     public DataLoaderWorker(final AddonTable table,
             final BrowserWindow browserWindow, final JScrollPane scrollPane) {
         super();
-        
+
         this.table = table;
         this.browserWindow = browserWindow;
         this.scrollPane = scrollPane;

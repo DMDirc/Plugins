@@ -116,8 +116,13 @@ public class WebWindow implements Window, IRCDocumentListener,
         // Do nothing
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     *
+     * @deprecated Per {@link Window#close()}
+     */
     @Override
+    @Deprecated
     public void close() {
         DynamicRequestHandler.addEvent(new Event("closewindow", myID));
     }

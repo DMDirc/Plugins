@@ -62,7 +62,7 @@ public final class SwingStatusBar extends JPanel implements StatusBar {
 
     /**
      * Creates a new instance of SwingStatusBar.
-     * 
+     *
      * @param controller Swing controller
      * @param mainFrame Main frame
      */
@@ -142,7 +142,7 @@ public final class SwingStatusBar extends JPanel implements StatusBar {
      */
     @Deprecated
     @Override
-    public void setMessage(final String iconType, 
+    public void setMessage(final String iconType,
             final String newMessage,
             final StatusMessageNotifier newNotifier, final int timeout) {
         messageLabel.setMessage(iconType, newMessage, newNotifier, timeout);
@@ -164,7 +164,7 @@ public final class SwingStatusBar extends JPanel implements StatusBar {
     @Override
     public void addComponent(final StatusBarComponent component) {
         if (!(component instanceof Component)) {
-            Logger.appError(ErrorLevel.HIGH, "Error adding status bar component", 
+            Logger.appError(ErrorLevel.HIGH, "Error adding status bar component",
                     new IllegalArgumentException("Component must be an " +
                     "instance of java.awt.component"));
             return;
@@ -209,7 +209,7 @@ public final class SwingStatusBar extends JPanel implements StatusBar {
     }
 
     /**
-     * Returns the message label for this status bar. This is intended to be 
+     * Returns the message label for this status bar. This is intended to be
      * used for advanced plugins that wish to do compliated things with
      * messages.
      *

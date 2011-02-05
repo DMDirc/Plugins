@@ -39,15 +39,15 @@ import java.util.Map;
 /**
  * Allows the client to assign user levels to users (based on hostname matches),
  * and for actions/plugins to check those levels.
- * 
+ *
  * @author chris
  */
-public class UserLevelPlugin extends Plugin implements ActionListener, 
+public class UserLevelPlugin extends Plugin implements ActionListener,
         ConfigChangeListener {
-    
+
     /** The domain used for userlevels. */
     private static final String DOMAIN = "userlevels";
-    
+
     /** A map of hostmasks to associated level numbers. */
     private static final Map<String, Integer> LEVELS = new HashMap<String, Integer>();
 
@@ -82,28 +82,28 @@ public class UserLevelPlugin extends Plugin implements ActionListener,
                 break;
         }
     }
-    
+
     /**
      * Updates the specified channel client's channel user level.
-     * 
+     *
      * @param client The client whose user level is to be updated
      */
     protected static void doChannelLevel(final ChannelClientInfo client) {
         doGlobalLevel(client.getClient());
     }
-    
+
     /**
      * Updates the specified client's global user level.
-     * 
+     *
      * @param client The client whose user level is to be updated
      */
     @SuppressWarnings("unchecked")
     protected static void doGlobalLevel(final ClientInfo client) {
         final String host = client.getNickname() + "!" + client.getUsername()
                 + "@" + client.getHostname();
-        
+
         int level = 0;
-        
+
         synchronized (LEVELS) {
             for (Map.Entry<String, Integer> entry : LEVELS.entrySet()) {
                 if (host.matches(entry.getKey())) {
@@ -111,7 +111,7 @@ public class UserLevelPlugin extends Plugin implements ActionListener,
                 }
             }
         }
-        
+
         client.getMap().put("level", level);
     }
 
@@ -122,14 +122,14 @@ public class UserLevelPlugin extends Plugin implements ActionListener,
             loadLevels();
         }
     }
-    
+
     /**
      * Loads all levels from the config file into our map.
      */
     private void loadLevels() {
         LEVELS.clear();
-        
-        for (Map.Entry<String, String> item 
+
+        for (Map.Entry<String, String> item
                 : IdentityManager.getGlobalConfig().getOptions(DOMAIN).entrySet()) {
             try {
                 LEVELS.put(item.getKey(), Integer.parseInt(item.getValue()));

@@ -26,12 +26,12 @@ package com.dmdirc.addons.ui_swing.wizard;
  * Wizard interface, notifications on change of step and closing.
  */
 public interface WizardListener {
-    
-    /** 
-     * Called when the wizard finishes. 
+
+    /**
+     * Called when the wizard finishes.
      */
     void wizardFinished();
-    
+
     /**
      * Called when the wizard is cancelled.
      */

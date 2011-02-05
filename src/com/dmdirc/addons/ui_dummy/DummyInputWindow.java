@@ -65,10 +65,15 @@ public class DummyInputWindow implements InputWindow {
         // Do nothing
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     *
+     * @deprecated Per {@link Window#close()}
+     */
     @Override
+    @Deprecated
     public void close() {
-        container.handleWindowClosing();
+        container.close();
     }
 
     /** {@inheritDoc} */

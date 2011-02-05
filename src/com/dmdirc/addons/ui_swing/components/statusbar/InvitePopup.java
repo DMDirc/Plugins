@@ -47,7 +47,7 @@ public class InvitePopup extends StatusbarPopupWindow {
 
     /**
      * Creates a new InvitePopup for the specified panel and server.
-     * 
+     *
      * @param parent The parent of this popup
      * @param server The server to show invites for
      * @param parentWindow Parent window

@@ -152,7 +152,7 @@ public class Settings extends JPanel implements ServerListListener {
 
     /**
      * Adds the settings to the panel.
-     * 
+     *
      * @param settingsPanel Settings panel to add settings to
      */
     private void addSettings(final SettingsPanel settingsPanel,

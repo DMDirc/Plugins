@@ -54,7 +54,7 @@ public class ActionTableModel extends AbstractTableModel {
 
     /**
      * Instantiates a new table model.
-     * 
+     *
      * @param actions Actions to show
      */
     public ActionTableModel(final List<Action> actions) {
@@ -133,9 +133,9 @@ public class ActionTableModel extends AbstractTableModel {
 
     /**
      * Returns the action at the specified row.
-     * 
+     *
      * @param rowIndex Row index
-     * 
+     *
      * @return Action
      */
     public Action getAction(final int rowIndex) {
@@ -146,9 +146,9 @@ public class ActionTableModel extends AbstractTableModel {
 
     /**
      * Returns the row index of the specified index.
-     * 
+     *
      * @param action Action to get
-     * 
+     *
      * @return Action row index or -1 if not found.
      */
     public int getAction(final Action action) {
@@ -159,7 +159,7 @@ public class ActionTableModel extends AbstractTableModel {
 
     /**
      * Replaces the model data with the specified action group.
-     * 
+     *
      * @param group New Action group
      */
     public void setActionGroup(final ActionGroup group) {
@@ -175,7 +175,7 @@ public class ActionTableModel extends AbstractTableModel {
 
     /**
      * Adds an action to the model.
-     * 
+     *
      * @param action Action to add
      */
     public void add(final Action action) {
@@ -190,7 +190,7 @@ public class ActionTableModel extends AbstractTableModel {
 
     /**
      * Removes an action from the model.
-     * 
+     *
      * @param action Action to remove
      */
     public void remove(final Action action) {
@@ -202,7 +202,7 @@ public class ActionTableModel extends AbstractTableModel {
 
     /**
      * Removes an action from the model.
-     * 
+     *
      * @param index Index of the action to remove
      */
     public void remove(final int index) {
@@ -216,9 +216,9 @@ public class ActionTableModel extends AbstractTableModel {
 
     /**
      * Checks if this model contains the specified action.
-     * 
+     *
      * @param action Action to check for
-     * 
+     *
      * @return true if the action exists
      */
     public boolean contains(final Action action) {
@@ -226,7 +226,7 @@ public class ActionTableModel extends AbstractTableModel {
             return actions.contains(action);
         }
     }
-    
+
     public int findAction(final String name) {
         int location = -1;
         synchronized (actions) {

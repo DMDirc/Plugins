@@ -74,7 +74,7 @@ public class InviteLabel extends StatusbarPopupPanel<JLabel> implements
 
     /**
      * Instantiates a new invite label.
-     * 
+     *
      * @param mainFrame Parent window
      */
     public InviteLabel(final MainFrame mainFrame) {

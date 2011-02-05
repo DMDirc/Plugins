@@ -56,7 +56,7 @@ public class AddonInfoCellEditor extends AbstractCellEditor implements
 
             label.setBackground((row & 1) == 1 ? new Color(0xEE, 0xEE, 0xFF)
                     : Color.WHITE);
-            
+
             table.setRowHeight(row, label.getPreferredSize().height);
 
             return label;

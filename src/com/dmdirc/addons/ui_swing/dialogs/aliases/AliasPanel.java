@@ -180,9 +180,9 @@ public final class AliasPanel extends JPanel implements ActionListener {
         }
     }
 
-    /** 
+    /**
      * {@inheritDoc}.
-     * 
+     *
      * @param e Action event
      */
     @Override

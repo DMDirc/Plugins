@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_swing.components.frames;
 
 import com.dmdirc.Channel;
+import com.dmdirc.FrameContainer;
 import com.dmdirc.ServerState;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionType;
@@ -96,7 +97,7 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
         ActionManager.getActionManager().registerListener(this,
                 CoreActionType.CLIENT_CLOSING);
 
-        setInputHandler(new SwingInputHandler(getInputField(), 
+        setInputHandler(new SwingInputHandler(getInputField(),
                 owner.getCommandParser(), this));
 
         identity = IdentityManager.getChannelConfig(owner.getServer().
@@ -219,10 +220,11 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
 
     /** {@inheritDoc} */
     @Override
-    public void close() {
+    public void windowClosing(FrameContainer window) {
         saveSplitPanePosition();
         topicBar.close();
-        super.close();
+
+        super.windowClosing(window);
     }
 
     private void saveSplitPanePosition() {

@@ -70,7 +70,7 @@ public class URIHandlerCellRenderer extends DefaultTableCellRenderer {
         } else {
             handler = "Custom command: " + handler;
         }
-        
+
         setValue(handler);
 
         return this;

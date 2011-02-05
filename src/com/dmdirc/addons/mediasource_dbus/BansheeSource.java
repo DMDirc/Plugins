@@ -59,7 +59,7 @@ public class BansheeSource implements MediaSource {
     @Override
     public MediaSourceState getState() {
         final List<String> res = source.doDBusCall(SERVICE, IFACE, STATE);
-        
+
         if (res.isEmpty()) {
             trackInfo = null;
             return MediaSourceState.CLOSED;

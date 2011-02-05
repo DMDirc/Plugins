@@ -27,7 +27,7 @@ import com.dmdirc.parser.interfaces.ClientInfo;
 
 /**
  * Action component to retrieve a client's global access level.
- * 
+ *
  * @author chris
  */
 public class AccessLevelComponent implements ActionComponent {
@@ -40,19 +40,19 @@ public class AccessLevelComponent implements ActionComponent {
     }
 
     /** {@inheritDoc} */
-    @Override    
+    @Override
     public Class<?> appliesTo() {
         return ClientInfo.class;
     }
 
     /** {@inheritDoc} */
-    @Override    
+    @Override
     public Class<?> getType() {
         return Integer.class;
     }
 
     /** {@inheritDoc} */
-    @Override    
+    @Override
     public String getName() {
         return "access level";
     }

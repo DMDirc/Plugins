@@ -90,7 +90,7 @@ public class TransferWindow extends EmptyWindow implements ActionListener,
      */
     public TransferWindow(final SwingController controller, final FrameContainer owner) {
         super(controller, owner);
-        
+
         final TransferContainer container = (TransferContainer) owner;
         dcc = container.getDCC();
 
@@ -141,7 +141,7 @@ public class TransferWindow extends EmptyWindow implements ActionListener,
                 button.setText("Close Window");
             }
         } else if (e.getActionCommand().equals("Close Window")) {
-            close();
+            getContainer().close();
         } else if (e.getSource() == openButton) {
             final File file = new File(dcc.getFileName());
             try {
@@ -190,7 +190,7 @@ public class TransferWindow extends EmptyWindow implements ActionListener,
                     if (container.shouldShowOpenButton()) {
                         openButton.setVisible(true);
                     }
-                    
+
                     progress.setValue(100);
                     button.setText("Close Window");
                 } else {

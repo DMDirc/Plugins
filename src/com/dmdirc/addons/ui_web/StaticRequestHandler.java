@@ -36,9 +36,9 @@ import org.mortbay.jetty.Request;
 import org.mortbay.jetty.handler.AbstractHandler;
 
 public class StaticRequestHandler extends AbstractHandler {
-    
+
     private ResourceManager rm;
-    
+
     public StaticRequestHandler() {
         super();
     }
@@ -46,41 +46,41 @@ public class StaticRequestHandler extends AbstractHandler {
     /** {@inheritDoc} */
     @Override
     public void handle(final String target, final HttpServletRequest request,
-            final HttpServletResponse response, final int dispatch) 
+            final HttpServletResponse response, final int dispatch)
             throws IOException, ServletException {
-        
+
         if (rm == null) {
             try {
                 rm = PluginManager.getPluginManager()
                     .getPluginInfoByName("ui_web").getResourceManager();
             } catch (IOException ex) {
                 // Die horribly
-            }            
+            }
         }
-        
+
         if (((request instanceof Request) ? (Request) request
                 : HttpConnection.getCurrentConnection().getRequest()).isHandled()) {
             return;
         }
-        
+
         if (target.startsWith("/static/")) {
             final String path = "com/dmdirc/addons/ui_web/res/" + target.substring(8);
-            
+
             if (rm.resourceExists(path)) {
                 if (target.endsWith(".html")) {
                     response.setContentType("text/html");
                 }
-                
+
                 response.setStatus(HttpServletResponse.SC_OK);
                 response.getOutputStream().write(rm.getResourceBytes(path));
                 ((request instanceof Request) ? (Request) request
                         : HttpConnection.getCurrentConnection().getRequest())
-                        .setHandled(true);                
+                        .setHandled(true);
             }
-            
+
             /*response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
             response.setHeader("location", "/static/default");
-            
+
             */
         }
     }

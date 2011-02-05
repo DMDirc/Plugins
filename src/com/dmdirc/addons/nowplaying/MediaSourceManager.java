@@ -27,16 +27,16 @@ import java.util.List;
 /**
  * The media source manager is a standard interface for an object that controls
  * one or more media sources.
- * 
+ *
  * @author chris
  */
 public interface MediaSourceManager {
-    
+
     /**
      * Retrieves the sources that this manager manages.
-     * 
+     *
      * @return A list of sources that this manager manages
      */
     List<MediaSource> getSources();
-    
+
 }

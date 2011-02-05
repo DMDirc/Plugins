@@ -33,26 +33,26 @@ import net.miginfocom.swing.MigLayout;
  * Queries the user for which core actions they wish to extract.
  */
 public final class ProfileStep extends Step {
-    
+
     /**
      * A version number for this class. It should be changed whenever the class
      * structure is changed (or anything else that would prevent serialized
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 2;
-    
+
     /** Profile manager checkbox. */
     private final JCheckBox profile;
-    
+
     /**
      * Creates a new instance of StepOne.
      */
     public ProfileStep() {
         super();
         setLayout(new MigLayout("fillx, wrap 1"));
-        
+
         profile = new JCheckBox("Launch profile manager?");
-        
+
         final TextLabel infoLabel = new TextLabel("DMDirc uses a set of 'profiles' to determine"
                 + " your nickname, realname, etc when connecting to a server. "
                 + "If you would like the wizard to open the profile manager "
@@ -60,7 +60,7 @@ public final class ProfileStep extends Step {
         add(infoLabel, "growx, pushx");
         add(profile, "");
     }
-    
+
     /**
      * Returns the state of the profile manager checkbox.
      *
@@ -75,5 +75,5 @@ public final class ProfileStep extends Step {
     public String getTitle() {
         return "Profile setup";
     }
-    
+
 }

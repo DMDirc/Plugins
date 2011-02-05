@@ -49,7 +49,7 @@ import javax.swing.event.DocumentListener;
 import net.miginfocom.swing.MigLayout;
 
 /** Feedback form. */
-public final class FeedbackDialog extends StandardDialog implements 
+public final class FeedbackDialog extends StandardDialog implements
         ActionListener, DocumentListener {
 
     /**

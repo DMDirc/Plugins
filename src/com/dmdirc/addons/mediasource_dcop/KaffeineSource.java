@@ -33,12 +33,12 @@ import java.util.List;
  * @author chris
  */
 public class KaffeineSource implements MediaSource {
-    
+
     /** Instantiates the media source. */
     public KaffeineSource() {
         //Do nothing
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public MediaSourceState getState() {
@@ -54,13 +54,13 @@ public class KaffeineSource implements MediaSource {
             return MediaSourceState.CLOSED;
         }
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public String getAppName() {
         return "Kaffeine";
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public String getArtist() {
@@ -107,7 +107,7 @@ public class KaffeineSource implements MediaSource {
     public String getBitrate() {
         return null;
     }
-    
+
     /**
      * Get the duration in seconds as a string.
      *
@@ -120,7 +120,7 @@ public class KaffeineSource implements MediaSource {
         final long hours = secondsInput / 3600;
         final long minutes = secondsInput / 60 % 60;
         final long seconds = secondsInput % 60;
-        
+
         if (hours > 0) {
             if (hours < 10) {
                 result.append('0');
@@ -132,7 +132,7 @@ public class KaffeineSource implements MediaSource {
         if (minutes < 10) {
             result.append('0');
         }
-        
+
         result.append(minutes).append(":");
 
         if (seconds < 10) {
@@ -140,8 +140,8 @@ public class KaffeineSource implements MediaSource {
         }
 
         result.append(seconds);
-        
+
         return result.toString();
     }
-    
+
 }

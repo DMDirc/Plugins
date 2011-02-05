@@ -53,7 +53,7 @@ public class ErrorPopup extends StatusbarPopupWindow {
 
     /**
      * Creates a new error popup.
-     * 
+     *
      * @param parent Parent panel
      * @param parentWindow Parent window
      */

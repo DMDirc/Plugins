@@ -35,28 +35,28 @@ import javax.swing.JList;
  * Displays actions types and headers in a pretty fashion.
  */
 public final class ActionTypeRenderer extends DefaultListCellRenderer {
-    
+
     /**
      * A version number for this class. It should be changed whenever the class
      * structure is changed (or anything else that would prevent serialized
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 1;
-    
+
     /**
      * Creates a new instance of ActionTypeRenderer.
      */
     public ActionTypeRenderer() {
         super();
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public Component getListCellRendererComponent(final JList list,
             final Object value, final int index, final boolean isSelected,
             final boolean cellHasFocus) {
         super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-        
+
         if (value == null) {
             setText("");
         } else if (value instanceof String && !((String) value).isEmpty()) {
@@ -68,8 +68,8 @@ public final class ActionTypeRenderer extends DefaultListCellRenderer {
         } else {
             setText(value.toString());
         }
-        
+
         return this;
     }
-    
+
 }

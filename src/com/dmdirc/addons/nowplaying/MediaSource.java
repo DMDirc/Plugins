@@ -25,7 +25,7 @@ package com.dmdirc.addons.nowplaying;
 /**
  * The media source describes one source of "now playing" information
  * (i.e., one method of getting information from one media player).
- * 
+ *
  * @author chris
  */
 public interface MediaSource {
@@ -36,56 +36,56 @@ public interface MediaSource {
      * @since 0.6.3m1
      */
     MediaSourceState getState();
-    
+
     /**
      * Retrieves the name of the application that this source is for.
-     * 
+     *
      * @return This source's application name
      */
     String getAppName();
-    
+
     /**
      * Retrieves the artist of the curently loaded track.
      *
      * @return Current track artist
      */
     String getArtist();
-    
+
     /**
      * Retrieves the title of the currently loaded track.
      *
      * @return Current track title
      */
     String getTitle();
-    
+
     /**
      * Retrieves the album of the currently loaded track.
      *
      * @return Current track album
      */
     String getAlbum();
-    
+
     /**
      * Retrieves the length of the currently loaded track ([h:]mm:ss).
      *
      * @return Current track length
      */
     String getLength();
-    
+
     /**
      * Retrieves the time of the currently loaded track ([h:]mm:ss).
      *
      * @return Current track time
      */
     String getTime();
-    
+
     /**
      * Retrives the format of the currently loaded track.
      *
      * @return Current track format
      */
     String getFormat();
-    
+
     /**
      * Retrieves the bitrate of the currently loaded track.
      *

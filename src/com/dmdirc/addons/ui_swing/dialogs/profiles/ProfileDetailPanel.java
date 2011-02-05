@@ -100,7 +100,7 @@ public final class ProfileDetailPanel extends JPanel implements ActionListener,
 
     /**
      * Creates a new profile detail panel.
-     * 
+     *
      * @param model The list model to use to validate names
      * @param mainFrame Main frame
      * @param parentWindow Parent window
@@ -256,9 +256,9 @@ public final class ProfileDetailPanel extends JPanel implements ActionListener,
         return true;
     }
 
-    /** 
+    /**
      * {@inheritDoc}
-     * 
+     *
      * @param e Action event
      */
     @Override

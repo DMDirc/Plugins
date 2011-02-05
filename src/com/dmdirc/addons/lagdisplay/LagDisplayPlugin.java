@@ -53,10 +53,10 @@ import java.util.WeakHashMap;
  * @author chris
  */
 public final class LagDisplayPlugin extends Plugin implements ActionListener, ConfigChangeListener {
-    
+
     /** The panel we use in the status bar. */
     private final LagDisplayPanel panel = new LagDisplayPanel(this);
-    
+
     /** A cache of ping times. */
     private final Map<Server, String> pings = new WeakHashMap<Server, String>();
 
@@ -72,12 +72,12 @@ public final class LagDisplayPlugin extends Plugin implements ActionListener, Co
 
     /** The length of history to keep per-server. */
     private int historySize = 100;
-    
+
     /** Creates a new instance of LagDisplayPlugin. */
     public LagDisplayPlugin() {
         super();
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public void onLoad() {
@@ -87,11 +87,11 @@ public final class LagDisplayPlugin extends Plugin implements ActionListener, Co
         IdentityManager.getGlobalConfig().addChangeListener(getDomain(), this);
 
         readConfig();
-        
+
         ActionManager.getActionManager().registerListener(this,
                 CoreActionType.SERVER_GOTPING, CoreActionType.SERVER_NOPING,
                 CoreActionType.CLIENT_FRAME_CHANGED,
-                CoreActionType.SERVER_DISCONNECTED, 
+                CoreActionType.SERVER_DISCONNECTED,
                 CoreActionType.SERVER_PINGSENT, CoreActionType.SERVER_NUMERIC);
     }
 
@@ -108,7 +108,7 @@ public final class LagDisplayPlugin extends Plugin implements ActionListener, Co
     /**
      * Retrieves the history of the specified server. If there is no history,
      * a new list is added to the history map and returned.
-     * 
+     *
      * @param server The server whose history is being requested
      * @return The history for the specified server
      */
@@ -123,7 +123,7 @@ public final class LagDisplayPlugin extends Plugin implements ActionListener, Co
     /**
      * Determines if the {@link ServerInfoDialog} should show a graph of the
      * ping time for the current server.
-     * 
+     *
      * @return True if a graph should be shown, false otherwise
      */
     public boolean shouldShowGraph() {
@@ -139,7 +139,7 @@ public final class LagDisplayPlugin extends Plugin implements ActionListener, Co
     public boolean shouldShowLabels() {
         return showLabels;
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public void onUnload() {
@@ -147,10 +147,10 @@ public final class LagDisplayPlugin extends Plugin implements ActionListener, Co
                 .getPluginInfoByName("ui_swing").getPlugin())
                 .getSwingStatusBar().removeComponent(panel);
         IdentityManager.getConfigIdentity().removeListener(this);
-        
+
         ActionManager.getActionManager().unregisterListener(this);
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public void processEvent(final ActionType type, final StringBuffer format,
@@ -247,7 +247,7 @@ public final class LagDisplayPlugin extends Plugin implements ActionListener, Co
     public String getTime(final Server server) {
         return pings.get(server) == null ? "Unknown" : pings.get(server);
     }
-    
+
     /**
      * Formats the specified time so it's a nice size to display in the label.
      * @param object An uncast Long representing the time to be formatted
@@ -255,7 +255,7 @@ public final class LagDisplayPlugin extends Plugin implements ActionListener, Co
      */
     protected String formatTime(final Object object) {
         final Long time = (Long) object;
-        
+
         if (time >= 10000) {
             return Math.round(time / 1000.0) + "s";
         } else {

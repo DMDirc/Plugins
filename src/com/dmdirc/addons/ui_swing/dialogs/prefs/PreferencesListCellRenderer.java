@@ -51,7 +51,7 @@ public class PreferencesListCellRenderer extends JLabel implements ListCellRende
     private final int numCats;
     /** Label map. */
     private Map<PreferencesCategory, JLabel> labelMap;
-    
+
     /**
      * Instantiates a new prefs list cell renderer.
      *

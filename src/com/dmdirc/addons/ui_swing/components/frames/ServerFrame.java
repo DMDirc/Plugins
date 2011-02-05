@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.components.frames;
 
+import com.dmdirc.FrameContainer;
 import com.dmdirc.Server;
 import com.dmdirc.ServerState;
 import com.dmdirc.addons.ui_swing.SwingController;
@@ -149,13 +150,15 @@ public final class ServerFrame extends InputTextFrame implements
 
     /** {@inheritDoc} */
     @Override
-    public void close() {
+    public void windowClosing(final FrameContainer window) {
         if (ServerSettingsDialog.hasServerSettingsDialog()) {
             ServerSettingsDialog.getServerSettingsDialog(getContainer()
                     .getServer(), getController().getMainFrame()).dispose();
         }
-        super.close();
+
+        super.windowClosing(window);
     }
+
 
     /** {@inhertiDoc} */
     @Override

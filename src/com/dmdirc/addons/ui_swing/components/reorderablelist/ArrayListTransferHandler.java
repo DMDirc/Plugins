@@ -100,10 +100,10 @@ public final class ArrayListTransferHandler extends TransferHandler {
 
     /**
      * Imports the tranferrable data into the list.
-     * 
+     *
      * @param target target list
      * @param transferList transferable list
-     * 
+     *
      * @return Whether the data was imported
      */
     private boolean doImport(final JList target, final List<?> transferList) {
@@ -159,9 +159,9 @@ public final class ArrayListTransferHandler extends TransferHandler {
         addCount = 0;
     }
 
-    /** 
+    /**
      * Do any of the specified flavours match the local flavour.
-     * 
+     *
      * @param transferFlavors Flavours to check
      *
      * @return whether the transferFlavors is supported
@@ -180,9 +180,9 @@ public final class ArrayListTransferHandler extends TransferHandler {
         return false;
     }
 
-    /** 
+    /**
      * Do any of the specified flavours match the serial flavour.
-     * 
+     *
      * @param transferFlavors Flavours to check
      *
      * @return whether the flavour is supported

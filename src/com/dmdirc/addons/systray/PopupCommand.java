@@ -35,17 +35,17 @@ import com.dmdirc.commandparser.commands.context.CommandContext;
  * @author chris
  */
 public final class PopupCommand extends Command implements CommandInfo {
-    
+
     /** The SystrayPlugin that we belong to. */
     private final SystrayPlugin parent;
-    
+
     /**
      * Creates a new instance of PopupCommand.
      * @param newParent The plugin that this command belongs to
      */
     public PopupCommand(final SystrayPlugin newParent) {
         super();
-        
+
         this.parent = newParent;
     }
 

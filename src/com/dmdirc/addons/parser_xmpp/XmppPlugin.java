@@ -44,7 +44,7 @@ public class XmppPlugin extends Plugin {
     public void onUnload() {
         // Do nothing
     }
-    
+
     /**
      * Creates a new XMPP parser for the specified client info and address.
      *
@@ -55,7 +55,7 @@ public class XmppPlugin extends Plugin {
     public Parser getParser(final MyInfo myInfo, final URI address) {
         return new XmppParser(address);
     }
-    
+
     /**
      * Retrieves an object describing the properties of the XMPP protocol.
      *

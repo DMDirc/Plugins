@@ -72,7 +72,7 @@ public final class WizardFrame extends JFrame {
         setResizable(false);
         setVisible(true);
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public void validate() {

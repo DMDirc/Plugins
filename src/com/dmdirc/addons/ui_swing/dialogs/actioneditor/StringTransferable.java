@@ -43,7 +43,7 @@ public class StringTransferable implements Transferable {
 
     /**
      * Creates a new string transferable object.
-     * 
+     *
      * @param data String to transger
      */
     public StringTransferable(final String data) {
@@ -74,9 +74,9 @@ public class StringTransferable implements Transferable {
         return localStringFlavor.equals(flavor) || serialStringFlavor.equals(flavor);
     }
 
-    /** 
+    /**
      * {@inheritDoc}
-     * 
+     *
      * @return String to transfer
      */
     @Override

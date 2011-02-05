@@ -48,7 +48,7 @@ public final class DummyStatusBar implements StatusBar {
      */
     @Deprecated
     @Override
-    public void setMessage(final String newMessage, 
+    public void setMessage(final String newMessage,
             final StatusMessageNotifier newNotifier) {
         System.out.println("DummyStatusBar: " + newMessage);
     }
@@ -59,7 +59,7 @@ public final class DummyStatusBar implements StatusBar {
      */
     @Deprecated
     @Override
-    public void setMessage(final String newMessage, 
+    public void setMessage(final String newMessage,
             final StatusMessageNotifier newNotifier, final int timeout) {
         System.out.println("DummyStatusBar: " + newMessage);
     }

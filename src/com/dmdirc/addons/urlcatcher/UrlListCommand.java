@@ -39,7 +39,7 @@ import java.util.Map;
  */
 public class UrlListCommand extends Command implements IntelligentCommand,
         CommandInfo {
-    
+
     private final UrlCatcherPlugin plugin;
 
     /**
@@ -59,12 +59,12 @@ public class UrlListCommand extends Command implements IntelligentCommand,
         final String[] headers = {"URL", "Count"};
         final Map<String, Integer> map = plugin.getURLS();
         final String[][] data = new String[map.size()][];
-        
+
         int i = 0;
         for (Map.Entry<String, Integer> entry : map.entrySet()) {
             data[i++] = new String[]{entry.getKey(), entry.getValue().toString()};
         }
-        
+
         sendLine(origin, args.isSilent(), FORMAT_OUTPUT, doTable(headers, data));
     }
 
@@ -97,6 +97,6 @@ public class UrlListCommand extends Command implements IntelligentCommand,
     public AdditionalTabTargets getSuggestions(final int arg,
             final IntelligentCommandContext context) {
         return new AdditionalTabTargets().excludeAll();
-    } 
+    }
 
 }

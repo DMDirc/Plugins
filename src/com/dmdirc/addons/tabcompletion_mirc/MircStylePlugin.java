@@ -28,7 +28,7 @@ import com.dmdirc.ui.input.tabstyles.TabCompletionStyle;
 import com.dmdirc.ui.interfaces.InputWindow;
 
 public class MircStylePlugin extends Plugin {
-    
+
     /** {@inheritDoc} */
     @Override
     public void onLoad() {
@@ -52,5 +52,5 @@ public class MircStylePlugin extends Plugin {
             final InputWindow window) {
         return new MircStyle(completer, window);
     }
-    
+
 }

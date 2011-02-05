@@ -27,7 +27,7 @@ import net.miginfocom.swing.MigLayout;
  * Simple window to show download progress on addon feed.
  */
 public class DownloaderWindow extends JDialog implements Runnable, DownloadListener {
-   
+
     /**
      * A version number for this class. It should be changed whenever the class
      * structure is changed (or anything else that would prevent serialized
@@ -57,7 +57,7 @@ public class DownloaderWindow extends JDialog implements Runnable, DownloadListe
         CoreUIUtils.centreWindow(this);
         setIconImage(IconManager.getIconManager().getImage("icon"));
         setVisible(true);
-        
+
         new Thread(this, "Addon downloader thread").start();
     }
 
@@ -65,7 +65,7 @@ public class DownloaderWindow extends JDialog implements Runnable, DownloadListe
     @Override
     public void run() {
         try {
-            Downloader.downloadPage("http://addons.dmdirc.com/feed", 
+            Downloader.downloadPage("http://addons.dmdirc.com/feed",
                     Main.getConfigDir() + File.separator + "addons.feed", this);
             UIUtilities.invokeLater(new Runnable() {
 
@@ -79,10 +79,10 @@ public class DownloaderWindow extends JDialog implements Runnable, DownloadListe
             removeAll();
             add(new JLabel("Unable to download feed."));
         }
-        
+
         dispose();
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public void downloadProgress(final float percent) {

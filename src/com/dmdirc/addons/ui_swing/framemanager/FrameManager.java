@@ -30,15 +30,15 @@ import javax.swing.JComponent;
 /**
  * A frame manager is a widget that allows the user to navigate between the
  * various frames that will be open at any one time.
- * 
+ *
  * @author chris
  */
 public interface FrameManager extends SwingWindowListener {
-    
+
     /**
      * Sets the parent component of this frame manager. The frame manager
      * should render itself within the parent.
-     * 
+     *
      * @param parent The parent control
      */
     void setParent(JComponent parent);
@@ -50,19 +50,19 @@ public interface FrameManager extends SwingWindowListener {
      * @param controller UIController
      */
     void setController(UIController controller);
-    
+
     /**
      * Indicates whether this frame manager can be positioned vertically
      * (i.e., at the side of the screen).
-     * 
+     *
      * @return True iff the frame manager can be positioned vertically
      */
     boolean canPositionVertically();
-    
+
     /**
      * Indicates whether this frame manager can be positioned horizontally
      * (i.e., at the top or bottom of the screen).
-     * 
+     *
      * @return True iff the frame manager can be positioned horizontally
      */
     boolean canPositionHorizontally();

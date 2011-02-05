@@ -30,24 +30,24 @@ import javax.swing.table.DefaultTableCellRenderer;
  * Renders an array as an inline string.
  */
 public final class ArrayCellRenderer extends DefaultTableCellRenderer {
-    
+
     /**
      * A version number for this class. It should be changed whenever the class
      * structure is changed (or anything else that would prevent serialized
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 1;
-    
+
     /** Creates a new instance of ArrayCellRenderer. */
     public ArrayCellRenderer() {
         super();
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public void setValue(final Object value) {
         final String response = Arrays.toString((String[]) value);
         setText(response.substring(1, response.length() - 1));
     }
-    
+
 }

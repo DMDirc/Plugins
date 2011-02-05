@@ -30,30 +30,30 @@ import javax.swing.JCheckBox;
  * Queries the user for which core actions they wish to extract.
  */
 public abstract class ExtractionStep extends Step {
-    
+
     /** Plugins checkbox. */
     protected final JCheckBox plugins;
     /** Actions checkbox. */
     protected final JCheckBox actions;
-    
+
     /** Creates a new instance of StepOne. */
     public ExtractionStep() {
         super();
-        
+
         plugins = new JCheckBox("Install core plugins?");
         actions = new JCheckBox("Install core actions?");
-        
+
         plugins.setSelected(true);
         actions.setSelected(true);
-        
+
         initComponents();
     }
-    
+
     /**
      * Initialises the components.
      */
     protected abstract void initComponents();
-    
+
     /**
      * Returns the state of the plugins checkbox.
      *
@@ -77,5 +77,5 @@ public abstract class ExtractionStep extends Step {
     public String getTitle() {
         return "Core addon extraction";
     }
-    
+
 }

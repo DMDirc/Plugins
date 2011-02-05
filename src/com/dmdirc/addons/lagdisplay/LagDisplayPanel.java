@@ -48,7 +48,7 @@ public class LagDisplayPanel extends StatusbarPopupPanel<JLabel> {
      */
     public LagDisplayPanel(final LagDisplayPlugin plugin) {
         super(new JLabel());
-        
+
         this.plugin = plugin;
     }
 

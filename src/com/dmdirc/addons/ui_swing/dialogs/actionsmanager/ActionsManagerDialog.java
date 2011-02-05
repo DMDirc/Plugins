@@ -102,7 +102,7 @@ public final class ActionsManagerDialog extends StandardDialog implements
     /** Duplicate action group validator. */
     private final ValidatorChain<String> validator;
 
-    /** 
+    /**
      * Creates a new instance of ActionsManagerDialog.
      */
     @SuppressWarnings("unchecked")
@@ -124,9 +124,9 @@ public final class ActionsManagerDialog extends StandardDialog implements
         setResizable(false);
     }
 
-    /** 
-     * Creates the dialog if one doesn't exist, and displays it. 
-     * 
+    /**
+     * Creates the dialog if one doesn't exist, and displays it.
+     *
      * @param parentWindow Parent window
      * @param controller Swing controller
      */
@@ -275,7 +275,7 @@ public final class ActionsManagerDialog extends StandardDialog implements
 
     /**
      * Reloads the action groups.
-     * 
+     *
      * @param selectedGroup Newly selected group
      */
     private void reloadGroups(final ActionGroup selectedGroup) {
@@ -360,7 +360,7 @@ public final class ActionsManagerDialog extends StandardDialog implements
             public boolean save() {
                 if (!saving.getAndSet(true)) {
                     groups.setSelectedIndex(index);
-                    if (getText() == null || getText().isEmpty() 
+                    if (getText() == null || getText().isEmpty()
                             && !ActionManager.getActionManager().getGroupsMap()
                             .containsKey(getText())) {
                         return false;
@@ -462,7 +462,7 @@ public final class ActionsManagerDialog extends StandardDialog implements
                 groups.setSelectedIndex(location);
                 return true;
             }
-            
+
             /** {@inheritDoc} */
             @Override
             public void cancelled() {

@@ -56,7 +56,7 @@ public final class ActionGroupInformationPanel extends JPanel {
 
     /**
      * Initialises a new action group information panel.
-     * 
+     *
      * @param group Action group
      */
     public ActionGroupInformationPanel(final ActionGroup group) {
@@ -104,7 +104,7 @@ public final class ActionGroupInformationPanel extends JPanel {
 
     /**
      * Sets the action group for the panel.
-     * 
+     *
      * @param group New action group
      */
     public void setActionGroup(final ActionGroup group) {
@@ -131,7 +131,7 @@ public final class ActionGroupInformationPanel extends JPanel {
 
     /**
      * Should the info panel be shown?
-     * 
+     *
      * @return true iif the panel should be shown
      */
     public boolean shouldDisplay() {

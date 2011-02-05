@@ -1,16 +1,16 @@
 /*
  * Copyright (c) 2006-2011 Chris Smith, Shane Mc Cormack, Gregory Holmes
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -72,9 +72,9 @@ public class ActionConditionsPanel extends JPanel implements ActionListener,
         this(null);
     }
 
-    /** 
+    /**
      * Instantiates the panel.
-     * 
+     *
      * @param trigger Action trigger
      */
     public ActionConditionsPanel(final ActionType trigger) {
@@ -130,7 +130,7 @@ public class ActionConditionsPanel extends JPanel implements ActionListener,
 
     /**
      * Sets the trigger for this conditions panel.
-     * 
+     *
      * @param trigger Action trigger.
      */
     public void setActionTrigger(final ActionType trigger) {
@@ -148,9 +148,9 @@ public class ActionConditionsPanel extends JPanel implements ActionListener,
         list.setEnabled(enabled);
     }
 
-    /** 
+    /**
      * {@inheritDoc}
-     * 
+     *
      * @param e Action event
      */
     @Override
@@ -160,7 +160,7 @@ public class ActionConditionsPanel extends JPanel implements ActionListener,
 
     /**
      * Sets the conditions.
-     * 
+     *
      * @param conditions conditions list
      */
     public void setConditions(final List<ActionCondition> conditions) {
@@ -173,7 +173,7 @@ public class ActionConditionsPanel extends JPanel implements ActionListener,
 
     /**
      * Sets the condition tree.
-     * 
+     *
      * @param conditionTree new condition tree
      */
     public void setConditionTree(final ConditionTree conditionTree) {
@@ -182,7 +182,7 @@ public class ActionConditionsPanel extends JPanel implements ActionListener,
 
     /**
      * Gets the condition type.
-     * 
+     *
      * @return condition type
      */
     public ConditionTreeFactoryType getConditionTreeType() {
@@ -191,7 +191,7 @@ public class ActionConditionsPanel extends JPanel implements ActionListener,
 
     /**
      * Gets the condition tree.
-     * 
+     *
      * @return condition tree
      */
     public ConditionTree getConditionTree() {
@@ -200,7 +200,7 @@ public class ActionConditionsPanel extends JPanel implements ActionListener,
 
     /**
      * Returns the condition list.
-     * 
+     *
      * @return condition list
      */
     public List<ActionCondition> getConditions() {

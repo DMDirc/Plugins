@@ -79,7 +79,7 @@ public final class TopicPane extends JPanel implements ActionListener {
         removeAll();
         initTopicsPanel();
         layoutComponents();
-        
+
         topicHistoryPane.addActionListener(this);
 
         setVisible(true);
@@ -107,9 +107,9 @@ public final class TopicPane extends JPanel implements ActionListener {
         }
     }
 
-    /** 
-     * {@inheritDoc}. 
-     * 
+    /**
+     * {@inheritDoc}.
+     *
      * @param e Action event
      */
     @Override

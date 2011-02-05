@@ -71,7 +71,7 @@ public class TwitterUser {
     /**
      * Create a unknown TwitterUser
      *
-     * @param api 
+     * @param api
      * @param screenName Screen name for the user.
      */
     protected TwitterUser(final TwitterAPI api, final String screenName) {
@@ -193,7 +193,7 @@ public class TwitterUser {
 
     /**
      * Get the id for this user.
-     * 
+     *
      * @return this users id.
      */
     public long getID() {
@@ -202,7 +202,7 @@ public class TwitterUser {
 
     /**
      * Get the real name for this user.
-     * 
+     *
      * @return this users real name.
      */
     public String getRealName() {
@@ -211,7 +211,7 @@ public class TwitterUser {
 
     /**
      * Are we following this user?
-     * 
+     *
      * @return True if we are following this user, else false.
      */
     public boolean isFollowing() {

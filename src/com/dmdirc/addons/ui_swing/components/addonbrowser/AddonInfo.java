@@ -206,7 +206,7 @@ public class AddonInfo {
                 return true;
             }
         }
-        
+
         return false;
     }
 
@@ -221,7 +221,7 @@ public class AddonInfo {
 
     /**
      * Returns the download location for this addoninfo, or an empty string.
-     * 
+     *
      * @return Download location or empty string
      */
     @SuppressWarnings("fallthrough")

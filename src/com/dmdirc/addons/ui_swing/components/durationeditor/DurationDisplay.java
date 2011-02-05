@@ -97,7 +97,7 @@ public class DurationDisplay extends JPanel implements ActionListener,
      */
     public DurationDisplay(final Window window, final long duration) {
         super();
-        
+
         this.window = window;
         this.duration = (int) (duration / 1000);
         listeners = new ListenerList();

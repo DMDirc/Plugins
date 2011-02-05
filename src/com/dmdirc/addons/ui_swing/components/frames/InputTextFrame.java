@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.components.frames;
 
+import com.dmdirc.FrameContainer;
 import com.dmdirc.WritableFrameContainer;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
@@ -372,7 +373,7 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
     public void configChanged(final String domain, final String key) {
         super.configChanged(domain, key);
 
-        if ("ui".equals(domain) && getContainer().getConfigManager() != null 
+        if ("ui".equals(domain) && getContainer().getConfigManager() != null
                 && getInputField() != null && !UIUtilities.isGTKUI()) {
             if ("inputbackgroundcolour".equals(key)
                     || "backgroundcolour".equals(key)) {
@@ -400,10 +401,10 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
 
     /** {@inheritDoc} */
     @Override
-    public void close() {
-        super.close();
-         //TODO Remove when close listeners are added
+    public void windowClosing(final FrameContainer window) {
         awayLabel.processEvent(null, null, (Object) null);
+
+        super.windowClosing(window);
     }
 
     /** {@inheritDoc} */

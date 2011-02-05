@@ -33,7 +33,7 @@ import com.dmdirc.commandparser.commands.context.CommandContext;
  * Command to flash an inactive window under Windows.
  */
 public class FlashWindow extends Command implements CommandInfo {
-    
+
     private final WindowFlashing plugin;
 
     /**

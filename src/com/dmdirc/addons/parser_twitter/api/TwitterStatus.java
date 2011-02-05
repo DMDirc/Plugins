@@ -253,7 +253,7 @@ public class TwitterStatus implements Comparable<TwitterStatus> {
     /**
      * Is this equal to the given Status?
      * @param status
-     * @return 
+     * @return
      */
     @Override
     public boolean equals(final Object status) {

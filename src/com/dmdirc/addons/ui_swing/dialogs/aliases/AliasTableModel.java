@@ -34,22 +34,22 @@ import javax.swing.table.AbstractTableModel;
  * Table model for displaying aliases.
  */
 public final class AliasTableModel extends AbstractTableModel {
-    
+
     /**
      * A version number for this class. It should be changed whenever the class
      * structure is changed (or anything else that would prevent serialized
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 3;
-    
+
     /** Data list. */
     private List<Alias> aliases;
-    
+
     /** Creates a new instance of AliasTableModel. */
     public AliasTableModel() {
         this(new ArrayList<Alias>());
     }
-    
+
     /**
      * Creates a new instance of AliasTableModel.
      *
@@ -57,10 +57,10 @@ public final class AliasTableModel extends AbstractTableModel {
      */
     public AliasTableModel(final List<Alias> aliases) {
         super();
-        
+
         this.aliases = new ArrayList<Alias>(aliases);
     }
-    
+
     /**
      * Sets the alias list.
      *
@@ -68,20 +68,20 @@ public final class AliasTableModel extends AbstractTableModel {
      */
     public void setAliases(final List<Alias> aliases) {
         this.aliases = new ArrayList<Alias>(aliases);
-        
+
         fireTableDataChanged();
     }
-    
+
     /** {@inheritDoc} */
     public int getRowCount() {
         return aliases.size();
     }
-    
+
     /** {@inheritDoc} */
     public int getColumnCount() {
         return 3;
     }
-    
+
     /** {@inheritDoc} */
     public String getColumnName(final int columnIndex) {
         switch(columnIndex) {
@@ -96,7 +96,7 @@ public final class AliasTableModel extends AbstractTableModel {
                         + columnIndex);
         }
     }
-    
+
     /** {@inheritDoc} */
     public Class<?> getColumnClass(final int columnIndex) {
         switch(columnIndex) {
@@ -111,12 +111,12 @@ public final class AliasTableModel extends AbstractTableModel {
                         + columnIndex);
         }
     }
-    
+
     /** {@inheritDoc} */
     public boolean isCellEditable(final int rowIndex, final int columnIndex) {
         return false;
     }
-    
+
     /** {@inheritDoc} */
     public Object getValueAt(final int rowIndex, final int columnIndex) {
         if (aliases.size() <= rowIndex) {
@@ -137,7 +137,7 @@ public final class AliasTableModel extends AbstractTableModel {
                         + columnIndex);
         }
     }
-    
+
     /** {@inheritDoc} */
     public void setValueAt(final Object aValue, final int rowIndex,
             final int columnIndex) {
@@ -163,7 +163,7 @@ public final class AliasTableModel extends AbstractTableModel {
         }
         fireTableCellUpdated(rowIndex, columnIndex);
     }
-    
+
     /**
      * Gets the alias at the specified row.
      *
@@ -174,7 +174,7 @@ public final class AliasTableModel extends AbstractTableModel {
     public Alias getAlias(final int rowIndex) {
         return aliases.get(rowIndex);
     }
-    
+
     /**
      * Gets a list of all aliases (including deleted ones).
      *
@@ -183,7 +183,7 @@ public final class AliasTableModel extends AbstractTableModel {
     public List<Alias> getAliases() {
         return new ArrayList<Alias>(aliases);
     }
-    
+
     /**
      * Adds an alias to the list.
      *
@@ -193,7 +193,7 @@ public final class AliasTableModel extends AbstractTableModel {
         aliases.add(alias);
         fireTableRowsInserted(aliases.indexOf(alias), aliases.indexOf(alias));
     }
-    
+
     /**
      * Removes a specified row from the list.
      *
@@ -203,7 +203,7 @@ public final class AliasTableModel extends AbstractTableModel {
         aliases.remove(row);
         fireTableRowsDeleted(row, row);
     }
-    
+
     /**
      * Returns the index of the specified alias.
      *

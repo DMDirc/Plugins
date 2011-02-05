@@ -37,7 +37,7 @@ public enum AddonType {
     /** {@inheritDoc} */
     @Override
     public String toString() {
-        return super.toString().charAt(5) 
+        return super.toString().charAt(5)
                 + super.toString().substring(6).toLowerCase().replace('_', ' ');
     }
 }
