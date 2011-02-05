@@ -61,10 +61,10 @@ public final class ActionGroupSettingsPanel extends JPanel implements ActionList
     private Map<JButton, PreferencesSetting> settingMap;
     /** Parent dialog. */
     private Window window;
-    
+
     /**
      * Initialises a new action group information panel.
-     * 
+     *
      * @param group Action group
      */
     public ActionGroupSettingsPanel(final ActionGroup group) {
@@ -73,15 +73,15 @@ public final class ActionGroupSettingsPanel extends JPanel implements ActionList
 
     /**
      * Initialises a new action group information panel.
-     * 
+     *
      * @param group Action group
      * @param window Parent window
-     * 
+     *
      * @since 0.6
      */
     public ActionGroupSettingsPanel(final ActionGroup group, final Window window) {
         super();
-        
+
         this.window = window;
 
         initComponents();
@@ -136,7 +136,7 @@ public final class ActionGroupSettingsPanel extends JPanel implements ActionList
 
     /**
      * Sets the action group for the panel.
-     * 
+     *
      * @param group New action group
      */
     public void setActionGroup(final ActionGroup group) {
@@ -151,7 +151,7 @@ public final class ActionGroupSettingsPanel extends JPanel implements ActionList
 
     /**
      * Should the settings panel be shown?
-     * 
+     *
      * @return true iif the panel should be shown
      */
     public boolean shouldDisplay() {
@@ -167,9 +167,9 @@ public final class ActionGroupSettingsPanel extends JPanel implements ActionList
         }
     }
 
-    /** 
+    /**
      * {@inheritDoc}
-     * 
+     *
      * @param e Action event
      */
     @Override

@@ -29,7 +29,7 @@ import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 /**
  * A virtually empty window which serves as a top-level placeholder for other
  * DCC windows.
- * 
+ *
  * @author chris
  * @since 0.6.4
  */

@@ -158,9 +158,9 @@ public class UpdateConfigPanel extends JPanel implements ActionListener,
         add(checkNow, "right");
     }
 
-    /** 
+    /**
      * {@inheritDoc}
-     * 
+     *
      * @param e Action event
      */
     @Override

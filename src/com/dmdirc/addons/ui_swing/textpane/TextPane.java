@@ -127,7 +127,7 @@ public final class TextPane extends JComponent implements MouseWheelListener,
                         == MouseEvent.BUTTON1_DOWN_MASK) {
                     if (getLocationOnScreen().getY() > e.getYOnScreen()) {
                         scrollModel.setValue(scrollBar.getValue() - 1);
-                    } else if (getLocationOnScreen().getY() + getHeight() 
+                    } else if (getLocationOnScreen().getY() + getHeight()
                             < e.getYOnScreen()) {
                         scrollModel.setValue(scrollBar.getValue() + 1);
                     }

@@ -1,16 +1,16 @@
 /*
  * Copyright (c) 2006-2011 Chris Smith, Shane Mc Cormack, Gregory Holmes
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -61,18 +61,18 @@ public class ActionConditionsListPanel extends JPanel implements ActionCondition
     /** validates. */
     private boolean validates = true;
 
-    /** 
+    /**
      * Instantiates the panel.
-     * 
-     * @param treePanel Condition tree panel. 
+     *
+     * @param treePanel Condition tree panel.
      */
     public ActionConditionsListPanel(final ActionConditionsTreePanel treePanel) {
         this(null, new ArrayList<ActionConditionDisplayPanel>(), treePanel);
     }
 
-    /** 
+    /**
      * Instantiates the panel.
-     * 
+     *
      * @param trigger Action trigger
      * @param treePanel Condition tree panel.
      */
@@ -81,9 +81,9 @@ public class ActionConditionsListPanel extends JPanel implements ActionCondition
         this(trigger, new ArrayList<ActionConditionDisplayPanel>(), treePanel);
     }
 
-    /** 
+    /**
      * Instantiates the panel.
-     * 
+     *
      * @param trigger Action trigger
      * @param conditions List of existing conditions;
      * @param treePanel Condition tree panel.
@@ -150,7 +150,7 @@ public class ActionConditionsListPanel extends JPanel implements ActionCondition
 
     /**
      * Adds an action condition to the list.
-     * 
+     *
      * @param condition Action condition
      */
     public void addCondition(final ActionCondition condition) {
@@ -169,7 +169,7 @@ public class ActionConditionsListPanel extends JPanel implements ActionCondition
 
     /**
      * Deletes an action condition from the list.
-     * 
+     *
      * @param condition Action condition
      */
     public void delCondition(final ActionCondition condition) {
@@ -202,7 +202,7 @@ public class ActionConditionsListPanel extends JPanel implements ActionCondition
 
     /**
      * Returns the condition list.
-     * 
+     *
      * @return condition list
      */
     public List<ActionCondition> getConditions() {
@@ -220,7 +220,7 @@ public class ActionConditionsListPanel extends JPanel implements ActionCondition
 
     /**
      * Sets the action trigger for the panel.
-     * 
+     *
      * @param trigger Action trigger
      */
     public void setTrigger(final ActionType trigger) {
@@ -270,7 +270,7 @@ public class ActionConditionsListPanel extends JPanel implements ActionCondition
                 break;
             }
         }
-        
+
         firePropertyChange("validationResult", validates, pass);
         validates = pass;
     }

@@ -77,7 +77,7 @@ import net.miginfocom.swing.MigLayout;
  */
 public abstract class TextFrame extends JPanel implements Window,
         ConfigChangeListener, TextPaneListener, FrameCloseListener {
-    
+
     /**
      * A version number for this class. It should be changed whenever the class
      * structure is changed (or anything else that would prevent serialized
@@ -483,7 +483,7 @@ public abstract class TextFrame extends JPanel implements Window,
             updateColours();
         }
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public void windowClosing(final FrameContainer window) {

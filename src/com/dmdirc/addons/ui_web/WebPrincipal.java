@@ -52,7 +52,7 @@ public class WebPrincipal implements Principal {
             return false;
         }
         final WebPrincipal other = (WebPrincipal) obj;
-        if (this.username != other.username 
+        if (this.username != other.username
                 && (this.username == null
                 || !this.username.equals(other.username))) {
             return false;

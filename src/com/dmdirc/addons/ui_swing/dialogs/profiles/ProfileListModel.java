@@ -130,10 +130,10 @@ public class ProfileListModel extends DefaultListModel implements Iterable<Profi
     public Profile get(final int index) {
         return profiles.get(index);
     }
-    
+
     /**
      * Returns a list of all profiles
-     * 
+     *
      * @return Profile list
      */
     public List<Profile> getProfiles() {
@@ -232,7 +232,7 @@ public class ProfileListModel extends DefaultListModel implements Iterable<Profi
     public int hashCode() {
         return profiles.hashCode();
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public String toString() {

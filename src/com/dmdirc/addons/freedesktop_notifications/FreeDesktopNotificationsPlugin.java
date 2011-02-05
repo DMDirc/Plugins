@@ -60,7 +60,7 @@ public final class FreeDesktopNotificationsPlugin extends Plugin implements Conf
     private boolean strictescape;
     /** Strip codes. */
     private boolean stripcodes;
-    
+
     /**
      * Creates a new instance of the FreeDesktopNotifications Plugin.
      */
@@ -77,9 +77,9 @@ public final class FreeDesktopNotificationsPlugin extends Plugin implements Conf
      */
     public boolean showNotification(final String title, final String message) {
         if (getFilesDir() == null) { return false; }
-        
+
         final ArrayList<String> args = new ArrayList<String>();
-        
+
         args.add("/usr/bin/env");
         args.add("python");
         args.add(getFilesDirString() + "notify.py");
@@ -97,7 +97,7 @@ public final class FreeDesktopNotificationsPlugin extends Plugin implements Conf
             args.add("Notification from DMDirc");
         }
         args.add(prepareString(message));
-        
+
         try {
             final Process myProcess = Runtime.getRuntime().exec(args.toArray(new String[]{}));
             final StringBuffer data = new StringBuffer();
@@ -108,10 +108,10 @@ public final class FreeDesktopNotificationsPlugin extends Plugin implements Conf
         } catch (SecurityException e) {
         } catch (IOException e) {
         }
-        
+
         return false;
     }
-    
+
     /**
      * Prepare the string for sending to dbus.
      *
@@ -130,7 +130,7 @@ public final class FreeDesktopNotificationsPlugin extends Plugin implements Conf
                 output = output.replace(">", "&gt;");
             }
         }
-        
+
         return output;
     }
 
@@ -147,13 +147,13 @@ public final class FreeDesktopNotificationsPlugin extends Plugin implements Conf
 
         // Extract required Files
         final PluginInfo pi = PluginManager.getPluginManager().getPluginInfoByName("freedesktop_notifications");
-        
+
         // This shouldn't actually happen, but check to make sure.
         if (pi != null) {
             // Now get the RM
             try {
                 final ResourceManager res = pi.getResourceManager();
-                
+
                 // Extract the files needed
                 try {
                     res.extractResoucesEndingWith(getFilesDir(), ".py");
@@ -175,24 +175,24 @@ public final class FreeDesktopNotificationsPlugin extends Plugin implements Conf
         CommandManager.unregisterCommand(command);
         IdentityManager.getGlobalConfig().removeListener(this);
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public void domainUpdated() {
         IdentityManager.getAddonIdentity().setOption(getDomain(), "general.icon", getFilesDirString() + "icon.png");
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public void showConfig(final PreferencesDialogModel manager) {
         final PreferencesCategory general = new PluginPreferencesCategory(getPluginInfo(), "FreeDesktop Notifications", "General configuration for FreeDesktop Notifications plugin.");
-        
+
         general.addSetting(new PreferencesSetting(PreferencesType.INTEGER, getDomain(), "general.timeout", "Timeout", "Length of time in seconds before the notification popup closes."));
         general.addSetting(new PreferencesSetting(PreferencesType.FILE, getDomain(), "general.icon", "icon", "Path to icon to use on the notification."));
         general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN, getDomain(), "advanced.escapehtml", "Escape HTML", "Some Implementations randomly parse HTML, escape it before showing?"));
         general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN, getDomain(), "advanced.strictescape", "Strict Escape HTML", "Strictly escape HTML or just the basic characters? (&, < and >)"));
         general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN, getDomain(), "advanced.stripcodes", "Strip Control Codes", "Strip IRC Control codes from messages?"));
-        
+
         manager.getCategory("Plugins").addSubCategory(general);
     }
 

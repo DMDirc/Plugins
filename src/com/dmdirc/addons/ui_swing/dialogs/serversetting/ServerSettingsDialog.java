@@ -64,7 +64,7 @@ public final class ServerSettingsDialog extends StandardDialog implements Action
     /** Perform panel. */
     private PerformTab performPanel;
     /** Settings panel. */
-    private SettingsPanel settingsPanel;    
+    private SettingsPanel settingsPanel;
     /** The tabbed pane. */
     private JTabbedPane tabbedPane;
     /** Parent window. */
@@ -95,10 +95,10 @@ public final class ServerSettingsDialog extends StandardDialog implements Action
      * @param server The server object that we're editing settings for
      * @param parentWindow Parent window
      */
-    public static void showServerSettingsDialog(final Server server, 
+    public static void showServerSettingsDialog(final Server server,
             final Window parentWindow) {
         me = getServerSettingsDialog(server, parentWindow);
-        
+
         me.display();
         me.requestFocusInWindow();
     }
@@ -108,7 +108,7 @@ public final class ServerSettingsDialog extends StandardDialog implements Action
      *
      * @param server The server object that we're editing settings for
      * @param parentWindow Parent window
-     * 
+     *
      * @return The current ServerSettingsDialog instance
      */
     public static ServerSettingsDialog getServerSettingsDialog(
@@ -201,7 +201,7 @@ public final class ServerSettingsDialog extends StandardDialog implements Action
                     "dialog?") {
 
                 private static final long serialVersionUID = 1;
-                
+
                 /** {@inheritDoc} */
                 @Override
                 public boolean save() {
@@ -230,13 +230,13 @@ public final class ServerSettingsDialog extends StandardDialog implements Action
         final Identity identity = server.getNetworkIdentity();
         identity.setOption("dialogstate", "serversettingsdialog",
                 String.valueOf(tabbedPane.getSelectedIndex()));
-        
+
         dispose();
     }
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @param e Action event
      */
     @Override
@@ -247,7 +247,7 @@ public final class ServerSettingsDialog extends StandardDialog implements Action
             dispose();
         }
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public void dispose() {

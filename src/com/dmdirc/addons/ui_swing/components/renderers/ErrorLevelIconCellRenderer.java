@@ -31,19 +31,19 @@ import javax.swing.table.DefaultTableCellRenderer;
 
 /** List cell renderer for dates. */
 public final class ErrorLevelIconCellRenderer extends DefaultTableCellRenderer {
-    
+
     /**
      * A version number for this class. It should be changed whenever the class
      * structure is changed (or anything else that would prevent serialized
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 1;
-    
+
     /** Creates a new instance of ErrorLevelIconCellRenderer. */
     public ErrorLevelIconCellRenderer() {
         super();
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public void setValue(final Object value) {

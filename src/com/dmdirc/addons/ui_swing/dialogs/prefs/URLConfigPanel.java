@@ -54,7 +54,7 @@ import javax.swing.table.TableCellRenderer;
 import net.miginfocom.swing.MigLayout;
 
 /**
- * URL Config panel. List all known url protocols and allows them to be 
+ * URL Config panel. List all known url protocols and allows them to be
  * configured.
  */
 public class URLConfigPanel extends JPanel implements
@@ -91,13 +91,13 @@ public class URLConfigPanel extends JPanel implements
 
     /**
      * Instantiates a new URL config panel.
-     * 
+     *
      * @param parentWindow Parent window
      * @param urlHandler The URL Handler to use to handle clicked links
      */
     public URLConfigPanel(final Window parentWindow, final URLHandler urlHandler) {
         super();
-        
+
         this.parentWindow = parentWindow;
         this.urlHandler = urlHandler;
 
@@ -212,7 +212,7 @@ public class URLConfigPanel extends JPanel implements
 
     /**
      * Saves or updates a handler to the config.
-     * 
+     *
      * @param protocol Protocol for the handler
      * @param handler Handler for the protocol
      */
@@ -258,16 +258,16 @@ public class URLConfigPanel extends JPanel implements
         }
     }
 
-    /** 
+    /**
      * {@inheritDoc}
-     * 
+     *
      * @param e Action event
      */
     @Override
     public void actionPerformed(final ActionEvent e) {
         if (e.getSource() == add) {
-            new StandardInputDialog(parentWindow, ModalityType.MODELESS, 
-                    "DMDIRC: New URL handler", 
+            new StandardInputDialog(parentWindow, ModalityType.MODELESS,
+                    "DMDIRC: New URL handler",
                     "Please enter the name of the new protocol.",
                     new URLProtocolValidator()) {
 

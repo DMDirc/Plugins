@@ -33,12 +33,12 @@ import java.util.List;
  * @author chris
  */
 public class NoatunSource implements MediaSource {
-    
+
     /** Instantiates the media source. */
     public NoatunSource() {
         //Do nothing
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public MediaSourceState getState() {
@@ -64,13 +64,13 @@ public class NoatunSource implements MediaSource {
             }
         }
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public String getAppName() {
         return "Noatun";
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public String getArtist() {
@@ -124,7 +124,7 @@ public class NoatunSource implements MediaSource {
     public String getBitrate() {
         return null;
     }
-    
+
     /**
      * Get the duration in seconds as a string.
      *
@@ -137,15 +137,15 @@ public class NoatunSource implements MediaSource {
         final long hours = secondsInput / 3600;
         final long minutes = secondsInput / 60 % 60;
         final long seconds = secondsInput % 60;
-        
-        if (hours > 0) { 
+
+        if (hours > 0) {
             result.append(hours).append(":");
         }
-        
+
         result.append(minutes).append(":");
         result.append(seconds).append(":");
-        
+
         return result.toString();
     }
-    
+
 }

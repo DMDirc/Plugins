@@ -37,13 +37,13 @@ import java.util.Date;
  * chat window instead.
  */
 public class FakeWriteableFrameContainer extends WritableFrameContainer {
-    
+
     /** The target for this window. */
     private final MessageTarget target;
 
     /**
      * Creates a new instance of FakeInputWindow.
-     * 
+     *
      * @param target The message target that output gets sent to
      */
     public FakeWriteableFrameContainer(final MessageTarget target) {

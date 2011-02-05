@@ -73,21 +73,21 @@ public final class ColourChooser extends JPanel implements ActionListener {
     public ColourChooser() {
         this("ffffff", true, true);
     }
-    
-    /** 
+
+    /**
      * Creates a new instance of ColourChooser.
-     * 
+     *
      * @param window Parent window
-     * 
+     *
      * @since 0.6
      */
     public ColourChooser(final Window window) {
         this("ffffff", true, true, window);
     }
-    
+
     /**
      * Creates a new instance of ColourChooser.
-     * 
+     *
      * @param initialColour Snitial colour
      * @param ircColours Show irc colours
      * @param hexColours Show hex colours
@@ -99,12 +99,12 @@ public final class ColourChooser extends JPanel implements ActionListener {
 
     /**
      * Creates a new instance of ColourChooser.
-     * 
+     *
      * @param initialColour initial colour
      * @param ircColours show irc colours
      * @param hexColours show hex colours
      * @param window Parent window
-     * 
+     *
      * @since 0.6
      */
     public ColourChooser(final String initialColour, final boolean ircColours,
@@ -178,9 +178,9 @@ public final class ColourChooser extends JPanel implements ActionListener {
         }
     }
 
-    /** 
+    /**
      * {@inheritDoc}.
-     * 
+     *
      * @param e Action event
      */
     @Override
@@ -242,10 +242,10 @@ public final class ColourChooser extends JPanel implements ActionListener {
             }
         }
     }
-    
+
     /**
      * Sets the Parent window.
-     * 
+     *
      * @param window Parent window
      */
     public void setWindow(final Window window) {

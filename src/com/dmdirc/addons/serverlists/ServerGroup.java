@@ -49,7 +49,7 @@ public class ServerGroup extends ServerGroupItemBase {
 
     /** A set of links relevant to this group (e.g. homepages). */
     private final Map<String, URI> links = new HashMap<String, URI>();
-    
+
     /** The items contained within the group. */
     private final List<ServerGroupItem> entries = new ArrayList<ServerGroupItem>();
 
@@ -134,7 +134,7 @@ public class ServerGroup extends ServerGroupItemBase {
 
     /**
      * Retrieves the description of this group.
-     * 
+     *
      * @return This group's description
      */
     public String getDescription() {
@@ -165,7 +165,7 @@ public class ServerGroup extends ServerGroupItemBase {
      * Retrieves a map of link titles to {@link URI}s which are associated
      * with this server group. Links will typically include network homepages,
      * forums, or support channels.
-     * 
+     *
      * @return An immutable map of links
      */
     public Map<String, URI> getLinks() {

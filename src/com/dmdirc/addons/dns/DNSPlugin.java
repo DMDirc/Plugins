@@ -35,28 +35,28 @@ import java.util.List;
  * DNS plugin.
  */
 public final class DNSPlugin extends Plugin {
-    
+
     /** The DNSCommand we've registered. */
     private DNSCommand command;
-    
+
     /** Creates a new instance of DNSPlugin. */
     public DNSPlugin() {
         super();
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public void onLoad() {
         command = new DNSCommand();
         CommandManager.registerCommand(command);
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public void onUnload() {
         CommandManager.unregisterCommand(command);
     }
-    
+
     /**
      * Returns the IP(s) for a hostname.
      *
@@ -66,21 +66,21 @@ public final class DNSPlugin extends Plugin {
      */
     public static String getIPs(final String hostname) {
         List<String> results = new ArrayList<String>();
-        
+
         try {
             final InetAddress[] ips = InetAddress.getAllByName(hostname);
-            
+
             for (InetAddress ip : ips) {
                 results.add(ip.getHostAddress());
             }
-            
+
         } catch (UnknownHostException ex) {
             results = new ArrayList<String>();
         }
-        
+
         return results.toString();
     }
-    
+
     /**
      * Returns the hostname for an ip.
      *
@@ -95,5 +95,5 @@ public final class DNSPlugin extends Plugin {
             return "";
         }
     }
-    
+
 }

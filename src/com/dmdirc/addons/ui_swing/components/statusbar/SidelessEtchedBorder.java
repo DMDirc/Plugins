@@ -94,7 +94,7 @@ class SidelessEtchedBorder extends EtchedBorder {
 
     /**
      * Creates a new sideless etched border.
-     * 
+     *
      * @param etchType What etch type to use
      * @param highlight Highlight colour to use
      * @param shadow Shadow colour to use

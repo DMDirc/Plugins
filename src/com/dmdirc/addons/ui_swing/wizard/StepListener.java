@@ -29,14 +29,14 @@ public interface StepListener {
 
     /**
      * Called just before a step is displayed
-     * 
+     *
      * @param step Step to be displayed
      */
     void stepAboutToDisplay(final Step step);
 
     /**
      * Called when a step is hidden.
-     * 
+     *
      * @param step Step thats been hidden
      */
     void stepHidden(final Step step);

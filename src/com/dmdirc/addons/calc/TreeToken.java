@@ -27,7 +27,7 @@ import java.util.List;
 
 /**
  * Describes a tree of {@link Token}s.
- * 
+ *
  * @author chris
  */
 public class TreeToken {

@@ -46,7 +46,7 @@ public class TextPanePageUpAction extends AbstractAction {
      */
     public TextPanePageUpAction(final TextPane textpane) {
         super();
-        
+
         this.textpane = textpane;
     }
 

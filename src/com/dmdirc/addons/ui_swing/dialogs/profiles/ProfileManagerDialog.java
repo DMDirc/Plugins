@@ -80,9 +80,9 @@ public final class ProfileManagerDialog extends StandardDialog implements
     /** main frame. */
     private MainFrame mainFrame;
 
-    /** 
-     * Creates a new instance of ProfileEditorDialog. 
-     * 
+    /**
+     * Creates a new instance of ProfileEditorDialog.
+     *
      * @param parentWindow main frame
      */
     private ProfileManagerDialog(final MainFrame mainFrame) {
@@ -103,9 +103,9 @@ public final class ProfileManagerDialog extends StandardDialog implements
         }
     }
 
-    /** 
-     * Creates the dialog if one doesn't exist, and displays it. 
-     * 
+    /**
+     * Creates the dialog if one doesn't exist, and displays it.
+     *
      * @param mainFrame Main frame
      */
     public static void showProfileManagerDialog(final MainFrame mainFrame) {
@@ -117,7 +117,7 @@ public final class ProfileManagerDialog extends StandardDialog implements
 
     /**
      * Returns the current instance of the ProfileManagerDialog.
-     * 
+     *
      * @param mainFrame Main frame
      *
      * @return The current ProfileManagerDialog instance
@@ -219,9 +219,9 @@ public final class ProfileManagerDialog extends StandardDialog implements
         }
     }
 
-    /** 
+    /**
      * {@inheritDoc}
-     * 
+     *
      * @param e Action event
      */
     @Override

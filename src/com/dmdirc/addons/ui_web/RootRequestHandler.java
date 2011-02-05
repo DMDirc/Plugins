@@ -41,21 +41,21 @@ public class RootRequestHandler extends AbstractHandler {
     /** {@inheritDoc} */
     @Override
     public void handle(final String target, final HttpServletRequest request,
-            final HttpServletResponse response, final int dispatch) 
+            final HttpServletResponse response, final int dispatch)
             throws IOException, ServletException {
-        
+
         if (((request instanceof Request) ? (Request) request
                 : HttpConnection.getCurrentConnection().getRequest()).isHandled()) {
             return;
         }
-        
+
         if (target.equals("/")) {
             response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
             response.setHeader("location", "/static/default.html");
-            
+
             ((request instanceof Request) ? (Request) request
                     : HttpConnection.getCurrentConnection().getRequest())
-                    .setHandled(true);            
+                    .setHandled(true);
         }
     }
 }

@@ -30,17 +30,17 @@ import com.dmdirc.actions.interfaces.ActionType;
  * @author chris
  */
 public enum TimeActionType implements ActionType {
-    
+
     /** Minute type. */
     TIME_MINUTE("Every minute"),
     /** Hour type. */
     TIME_HOUR("Every hour"),
     /** Day type. */
     TIME_DAY("Every day");
-    
+
     /** Action type name. */
     private final String name;
-    
+
     /**
      * Creates a new instance of a TimeActionType.
      * @param name The name of the action type
@@ -48,17 +48,17 @@ public enum TimeActionType implements ActionType {
     TimeActionType(final String name) {
         this.name = name;
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public ActionMetaType getType() {
         return TimeActionMetaType.TIME_TIME;
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public String getName() {
         return name;
     }
-    
+
 }

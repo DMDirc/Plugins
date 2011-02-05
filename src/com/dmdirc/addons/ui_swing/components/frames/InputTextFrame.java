@@ -372,7 +372,7 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
     public void configChanged(final String domain, final String key) {
         super.configChanged(domain, key);
 
-        if ("ui".equals(domain) && getContainer().getConfigManager() != null 
+        if ("ui".equals(domain) && getContainer().getConfigManager() != null
                 && getInputField() != null && !UIUtilities.isGTKUI()) {
             if ("inputbackgroundcolour".equals(key)
                     || "backgroundcolour".equals(key)) {

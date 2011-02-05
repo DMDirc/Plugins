@@ -28,7 +28,7 @@ import com.dmdirc.ui.input.tabstyles.TabCompletionStyle;
 import com.dmdirc.ui.interfaces.InputWindow;
 
 public class BashStylePlugin extends Plugin {
-    
+
     /** {@inheritDoc} */
     @Override
     public void onLoad() {
@@ -43,7 +43,7 @@ public class BashStylePlugin extends Plugin {
 
     /**
      * Retrieves a new instance of the Bash tab completion style.
-     * 
+     *
      * @param completer The tab completer the instance is for
      * @param window The window the instance is for
      * @return A relevant TabCompletionStyle
@@ -52,5 +52,5 @@ public class BashStylePlugin extends Plugin {
             final InputWindow window) {
         return new BashStyle(completer, window);
     }
-    
+
 }

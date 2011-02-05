@@ -107,7 +107,7 @@ public final class DCCPlugin extends Plugin implements ActionListener {
      * @param reverse Is this a reverse dcc?
      * @param token Token used in reverse dcc.
      */
-    public void saveFile(final String nickname, final DCCTransfer send, 
+    public void saveFile(final String nickname, final DCCTransfer send,
             final Parser parser, final boolean reverse, final String token) {
         // New thread to ask the user where to save in to stop us locking the UI
         new Thread(new Runnable() {
@@ -145,13 +145,13 @@ public final class DCCPlugin extends Plugin implements ActionListener {
                                         + jc.getSelectedFile().length() + " "
                                         + token);
                             } else {
-                                parser.sendCTCP(nickname, "DCC", "RESUME " 
+                                parser.sendCTCP(nickname, "DCC", "RESUME "
                                         + send.getShortFileName() + " 0 "
                                         + jc.getSelectedFile().length());
                             }
                         } else {
                             if (listen(send)) {
-                                parser.sendCTCP(nickname, "DCC", "SEND " 
+                                parser.sendCTCP(nickname, "DCC", "SEND "
                                         + send.getShortFileName() + " "
                                         + DCC.ipToLong(getListenIP(parser))
                                         + " " + send.getPort() + " "
@@ -163,7 +163,7 @@ public final class DCCPlugin extends Plugin implements ActionListener {
                                 + nickname, nickname, null);
                         if (resume) {
                             parser.sendCTCP(nickname, "DCC", "RESUME "
-                                    + send.getShortFileName() + " " 
+                                    + send.getShortFileName() + " "
                                     + send.getPort() + " "
                                     + jc.getSelectedFile().length());
                         } else {
@@ -190,7 +190,7 @@ public final class DCCPlugin extends Plugin implements ActionListener {
     private boolean handleExists(final DCCTransfer send, final JFileChooser jc,
             final String nickname, final Parser parser, final boolean reverse,
             final String token) {
-        if (jc.getSelectedFile().exists() && send.getFileSize() > -1 
+        if (jc.getSelectedFile().exists() && send.getFileSize() > -1
                 && send.getFileSize() <= jc.getSelectedFile().length()) {
             if (IdentityManager.getGlobalConfig().getOptionBool(getDomain(),
                     "receive.autoaccept")) {
@@ -301,7 +301,7 @@ public final class DCCPlugin extends Plugin implements ActionListener {
      * @param dontAsk Don't ask any questions, assume yes.
      * @param arguments The arguments for the event
      */
-    public void handleProcessEvent(final ActionType type, 
+    public void handleProcessEvent(final ActionType type,
             final StringBuffer format, final boolean dontAsk,
             final Object... arguments) {
         if (IdentityManager.getGlobalConfig().getOptionBool(getDomain(),
@@ -542,7 +542,7 @@ public final class DCCPlugin extends Plugin implements ActionListener {
                 final Parser parser = ((Server) arguments[0]).getParser();
                 final String nick = ((ClientInfo) arguments[1]).getNickname();
                 if (ctcpData[0].equalsIgnoreCase("resume")) {
-                    parser.sendCTCP(nick, "DCC", "ACCEPT "+ ((quoted) ? "\"" 
+                    parser.sendCTCP(nick, "DCC", "ACCEPT "+ ((quoted) ? "\""
                             + filename + "\"" : filename) + " " + port + " "
                             + send.setFileStart(position) + token);
                 } else {
@@ -551,16 +551,16 @@ public final class DCCPlugin extends Plugin implements ActionListener {
                         // Reverse dcc
                         if (listen(send)) {
                             if (send.getToken().isEmpty()) {
-                                parser.sendCTCP(nick, "DCC", "SEND " 
+                                parser.sendCTCP(nick, "DCC", "SEND "
                                         + ((quoted) ? "\"" + filename
-                                        + "\"" : filename) + " " 
+                                        + "\"" : filename) + " "
                                         + DCC.ipToLong(send.getHost())
                                         + " " + send.getPort()
                                         + " " + send.getFileSize());
                             } else {
                                 parser.sendCTCP(nick, "DCC", "SEND "
                                         + ((quoted) ? "\"" + filename
-                                        + "\"" : filename) 
+                                        + "\"" : filename)
                                         + " " + DCC.ipToLong(send.getHost())
                                         + " " + send.getPort()
                                         + " " + send.getFileSize() + " "

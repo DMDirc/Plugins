@@ -36,7 +36,7 @@ import java.util.List;
  * @author chris
  */
 public final class DcopCommand extends Command implements CommandInfo {
-    
+
     /**
      * Creates a new instance of DcopCommand.
      */
@@ -52,20 +52,20 @@ public final class DcopCommand extends Command implements CommandInfo {
             showUsage(origin, args.isSilent(), "dcop", "<app> <object> <function>");
             return;
         }
-        
+
         final List<String> res = DcopPlugin.getDcopResult("dcop " + args.getArgumentsAsString());
         for (String line : res) {
             sendLine(origin, args.isSilent(), FORMAT_OUTPUT, line);
         }
     }
-    
-    
+
+
     /** {@inheritDoc} */
     @Override
     public String getName() {
         return "dcop";
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public boolean showInHelp() {
@@ -77,11 +77,11 @@ public final class DcopCommand extends Command implements CommandInfo {
     public CommandType getType() {
         return CommandType.TYPE_SERVER;
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public String getHelp() {
         return "dcop <app> <object> <function> - retrieves information from a DCOP aplication";
     }
-    
+
 }

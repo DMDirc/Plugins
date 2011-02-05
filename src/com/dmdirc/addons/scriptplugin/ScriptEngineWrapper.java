@@ -45,7 +45,7 @@ public class ScriptEngineWrapper {
 
     /** The File this script is from */
     private final File file;
-    
+
     /** Script-Local JS Helper */
     private JavaScriptHelper localHelper = new JavaScriptHelper();
 
@@ -61,33 +61,33 @@ public class ScriptEngineWrapper {
     protected ScriptEngineWrapper(final ScriptPlugin plugin, final String filename) throws FileNotFoundException, ScriptException {
         this.plugin = plugin;
         file = (filename != null) ? new File(filename) : null;
-        
+
         engine = createEngine();
-        
+
         callFunction("onLoad");
     }
-    
+
     /**
      * Get a reference to the ScriptEngine.
      *
      * @return a reference to the ScriptEngine
      */
     protected ScriptEngine getScriptEngine() { return engine; }
-    
+
     /**
      * Get a reference to the JavaScriptHelper
      *
      * @return a reference to the JavaScriptHelper
      */
     protected JavaScriptHelper getJavaScriptHelper() { return localHelper; }
-    
+
     /**
      * Get the file for this script
      *
      * @return The file for this script
      */
     protected File getFile() { return file; }
-    
+
     /**
      * Create a new engine for this script
      */
@@ -102,13 +102,13 @@ public class ScriptEngineWrapper {
                 StreamUtil.close(fr);
             }
         }
-        
+
         result.put("localHelper", localHelper);
         result.put("thisEngine", this);
-        
+
         return result;
     }
-    
+
     /**
      * Call a function in this script.
      *
@@ -128,14 +128,14 @@ public class ScriptEngineWrapper {
             Logger.userError(ErrorLevel.LOW, "Error calling '"+functionName+"' in '"+file.getPath()+"': "+e.getMessage(), e);
         }
     }
-    
+
     /**
      * Try to reload this script.
      */
     protected boolean reload() {
         // Tell the current engine that its about to be obliterated.
         callFunction("onPreRehash");
-        
+
         try {
             // Try making a new engine
             engine = createEngine();
@@ -147,7 +147,7 @@ public class ScriptEngineWrapper {
             callFunction("onRehashFailed", e);
             return false;
         }
-        
+
         return true;
     }
 }

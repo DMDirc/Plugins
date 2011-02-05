@@ -32,8 +32,8 @@ public final class Substitution {
     /** Subsitution value. */
     private final String value;
 
-    /** 
-     * Creates a new instance of Substitution. 
+    /**
+     * Creates a new instance of Substitution.
      *
      * @param name Name of the substitution
      * @param value Value of the substitution
@@ -46,7 +46,7 @@ public final class Substitution {
     /**
      * Returns the name of this substitution.
      *
-     * @return Substitution name   
+     * @return Substitution name
      */
     public String getName() {
         return name;
@@ -54,7 +54,7 @@ public final class Substitution {
 
     /**
      * Returns the value of this substitution.
-     * 
+     *
      * @return Substitution value
      */
     public String getValue() {

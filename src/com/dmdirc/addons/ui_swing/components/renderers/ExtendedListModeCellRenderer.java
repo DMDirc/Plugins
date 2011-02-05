@@ -1,16 +1,16 @@
 /*
  * Copyright (c) 2006-2011 Chris Smith, Shane Mc Cormack, Gregory Holmes
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -53,22 +53,22 @@ public class ExtendedListModeCellRenderer extends JPanel implements ListCellRend
             final Object value, final int index, final boolean isSelected,
             final boolean cellHasFocus) {
         final ChannelListModeItem listMode = (ChannelListModeItem) value;
-        
+
         removeAll();
         setLayout(new MigLayout("fill, ins 0"));
-        
+
         if (isSelected) {
             setBackground(list.getSelectionBackground());
         } else {
             setBackground(list.getBackground());
         }
-        
+
         add(new JLabel(listMode.getItem()), "split 2, growx, pushx, gapleft 3");
         add(new JLabel(new Date(listMode.getTime() * 1000).toString()),
                 "right, wrap, gapright 3");
         add(new JLabel(listMode.getOwner()), "growx, pushx, wrap, gapleft 3");
         add(new JSeparator(), "growx, pushx");
-        
+
         return this;
     }
 }

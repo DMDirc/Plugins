@@ -93,7 +93,7 @@ public class Twitter implements Parser, TwitterErrorHandler, TwitterRawHandler,
     private static final long PRUNE_COUNT = 20;
     /** Maximum age of items to leave in the status cache when pruning. */
     private static final long PRUNE_TIME = 3600 * 1000;
-    
+
     /** A map of this parser's implementations of common interfaces. */
     protected static final Map<Class<?>, Class<?>> IMPL_MAP = new HashMap<Class<?>, Class<?>>();
 

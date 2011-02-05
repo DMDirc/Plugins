@@ -63,7 +63,7 @@ public class DMDircRequestHandler extends AbstractHandler {
         if (rm == null) {
             rm = ResourceManager.getResourceManager();
         }
-        
+
         if (((request instanceof Request) ? (Request) request
                 : HttpConnection.getCurrentConnection().getRequest()).isHandled()) {
             return;

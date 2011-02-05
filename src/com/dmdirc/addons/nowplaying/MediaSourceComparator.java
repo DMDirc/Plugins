@@ -32,17 +32,17 @@ import java.util.List;
  * @author chris
  */
 public class MediaSourceComparator implements Comparator<MediaSource>, Serializable {
-    
+
     /**
      * A version number for this class. It should be changed whenever the class
      * structure is changed (or anything else that would prevent serialized
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 1;
-    
+
     /** The order that the sources should be checked. */
     private final List<String> order;
-    
+
     /**
      * Creates a new instance of MediaSourceComparator.
      * NB: The order list may be altered during comparisons.
@@ -58,7 +58,7 @@ public class MediaSourceComparator implements Comparator<MediaSource>, Serializa
     public int compare(final MediaSource o1, final MediaSource o2) {
         return getPosition(o1) - getPosition(o2);
     }
-    
+
     /**
      * Retrieves the position of the source within the order list.
      * If the source is not present it is appended to the list.
@@ -69,8 +69,8 @@ public class MediaSourceComparator implements Comparator<MediaSource>, Serializa
         if (!order.contains(source.getAppName())) {
             order.add(source.getAppName());
         }
-        
+
         return order.indexOf(source.getAppName());
     }
-    
+
 }

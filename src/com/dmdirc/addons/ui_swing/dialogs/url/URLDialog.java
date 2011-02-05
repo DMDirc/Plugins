@@ -67,11 +67,11 @@ public final class URLDialog extends StandardDialog implements ActionListener {
      */
     private URLDialog(final URI url, final Window parentWindow, final URLHandler urlHandler) {
         super(parentWindow, ModalityType.MODELESS);
-        
+
         this.url = url;
         this.parentWindow = parentWindow;
         this.urlHandler = urlHandler;
-        
+
         initComponents();
         layoutComponents();
         addListeners();
@@ -100,7 +100,7 @@ public final class URLDialog extends StandardDialog implements ActionListener {
      * @param url URL to open once added
      * @param parentWindow Parent window
      * @param urlHandler The URL Handler to use to handle clicked links
-     * 
+     *
      * @return The current URLDialog instance
      */
     public static URLDialog getURLDialog(final URI url,

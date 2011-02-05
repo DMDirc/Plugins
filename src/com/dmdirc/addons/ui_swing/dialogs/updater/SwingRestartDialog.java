@@ -38,7 +38,7 @@ import net.miginfocom.swing.MigLayout;
  * Prompts the user to restart the client, and restarts the client.
  */
 public class SwingRestartDialog extends StandardDialog implements ActionListener {
-    
+
     /**
      * A version number for this class. It should be changed whenever the class
      * structure is changed (or anything else that would prevent serialized
@@ -53,7 +53,7 @@ public class SwingRestartDialog extends StandardDialog implements ActionListener
     private MainFrame mainFrame;
     /** Info text. */
     private String cause;
-    
+
     /**
      * Dialog to restart the client.
      *
@@ -79,7 +79,7 @@ public class SwingRestartDialog extends StandardDialog implements ActionListener
 
         setTitle("Restart needed");
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        
+
         initComponents();
         layoutComponents();
     }
@@ -149,7 +149,7 @@ public class SwingRestartDialog extends StandardDialog implements ActionListener
 
         return me;
     }
-    
+
     /** Initialise components. */
     private void initComponents() {
         orderButtons(new JButton(), new JButton());
@@ -164,18 +164,18 @@ public class SwingRestartDialog extends StandardDialog implements ActionListener
         }
         getOkButton().setText("Now");
         getCancelButton().setText("Later");
-        
-        getOkButton().addActionListener(this);  
+
+        getOkButton().addActionListener(this);
         getCancelButton().addActionListener(this);
 
         setResizable(false);
     }
-    
+
     /** Layout Components. */
     public void layoutComponents() {
         setLayout(new MigLayout("fill, wrap 2, wmax " +
                 mainFrame.getSize().getWidth() + ", pack"));
-        
+
         add(info, "grow, pushx, span 2");
         add(getLeftButton(), "split, right");
         add(getRightButton(), "right");
@@ -188,9 +188,9 @@ public class SwingRestartDialog extends StandardDialog implements ActionListener
         setLocationRelativeTo(mainFrame);
     }
 
-    /** 
+    /**
      * {@inheritDoc}
-     * 
+     *
      * @param e Action event
      */
     @Override
@@ -211,5 +211,5 @@ public class SwingRestartDialog extends StandardDialog implements ActionListener
             super.dispose();
             me = null;
         }
-    }    
+    }
 }

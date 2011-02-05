@@ -98,18 +98,18 @@ public final class WizardDialog extends StandardDialog implements ActionListener
         setResizable(false);
         setVisible(true);
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public void validate() {
         super.validate();
-        
+
         setLocationRelativeTo(parentWindow);
     }
 
-    /** 
+    /**
      * {@inheritDoc}
-     * 
+     *
      * @param e Action event
      */
     @Override
@@ -120,7 +120,7 @@ public final class WizardDialog extends StandardDialog implements ActionListener
             wizard.fireWizardCancelled();
         }
     }
-    
+
     /**
      * Adds a step to the wizard.
      *
@@ -129,7 +129,7 @@ public final class WizardDialog extends StandardDialog implements ActionListener
     public void addStep(final Step step) {
         wizard.addStep(step);
     }
-    
+
     /**
      * Returns the step at the specified index.
      *
@@ -140,7 +140,7 @@ public final class WizardDialog extends StandardDialog implements ActionListener
     public Step getStep(final int stepNumber) {
         return wizard.getStep(stepNumber);
     }
-    
+
     /**
      * Returns the current step.
      *
@@ -149,7 +149,7 @@ public final class WizardDialog extends StandardDialog implements ActionListener
     public int getCurrentStep() {
         return wizard.getCurrentStep();
     }
-    
+
     /**
      * Enables or disables the "next step" button.
      *

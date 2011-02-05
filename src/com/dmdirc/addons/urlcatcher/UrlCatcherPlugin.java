@@ -45,12 +45,12 @@ import java.util.Map;
  */
 public class UrlCatcherPlugin extends Plugin implements ActionListener,
         ConfigChangeListener {
-    
+
     private final Map<String, Integer> urls = new HashMap<String, Integer>();
 
     /** Whether to capture URLs from the raw window. */
     private boolean captureRaw = false;
-    
+
     private final UrlListCommand command = new UrlListCommand(this);
 
     /** {@inheritDoc} */
@@ -64,7 +64,7 @@ public class UrlCatcherPlugin extends Plugin implements ActionListener,
     }
 
     /** {@inheritDoc} */
-    @Override    
+    @Override
     public void onUnload() {
         ActionManager.getActionManager().unregisterListener(this);
         CommandManager.unregisterCommand(command);
@@ -79,7 +79,7 @@ public class UrlCatcherPlugin extends Plugin implements ActionListener,
     }
 
     /** {@inheritDoc} */
-    @Override    
+    @Override
     public void processEvent(final ActionType type, final StringBuffer format,
             final Object... arguments) {
         if (arguments[0] instanceof Raw && !captureRaw) {
@@ -88,19 +88,19 @@ public class UrlCatcherPlugin extends Plugin implements ActionListener,
 
         final String message = ((FrameContainer) arguments[0]).getStyliser()
                 .doLinks((String) arguments[1]);
-        
+
         if (message.indexOf(Styliser.CODE_HYPERLINK) > -1) {
             final String[] parts = message.split("" + Styliser.CODE_HYPERLINK);
-            
+
             for (int i = 1; i < parts.length; i += 2) {
                 addURL(parts[i]);
             }
         }
     }
-    
+
     /**
      * Adds an URL to the list of tracked URLs, or increases its counter by one.
-     * 
+     *
      * @param url The URL to be added
      */
     private void addURL(final String url) {
@@ -110,10 +110,10 @@ public class UrlCatcherPlugin extends Plugin implements ActionListener,
             urls.put(url, 1);
         }
     }
-    
+
     /**
      * Retrieves the URLs that have been recorded.
-     * 
+     *
      * @return A map of URLs to the number of times they've been seen.
      */
     public Map<String, Integer> getURLS() {

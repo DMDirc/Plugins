@@ -33,34 +33,34 @@ import javax.swing.JList;
  * Renders an action comparison in plain english.
  */
 public final class ActionComparisonCellRenderer extends DefaultListCellRenderer {
-    
+
     /**
      * A version number for this class. It should be changed whenever the class
      * structure is changed (or anything else that would prevent serialized
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 1;
-    
+
     /** Creates a new instance of ActionComparisonCellRenderer. */
     public ActionComparisonCellRenderer() {
         super();
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public Component getListCellRendererComponent(final JList list,
             final Object value, final int index, final boolean isSelected,
             final boolean cellHasFocus) {
-        
+
         super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-        
+
         if (value == null) {
             setText("Any");
         } else {
             setText(((ActionComparison) value).getName());
         }
-        
+
         return this;
     }
-    
+
 }
