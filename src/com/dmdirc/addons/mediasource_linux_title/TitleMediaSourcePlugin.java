@@ -24,7 +24,7 @@ package com.dmdirc.addons.mediasource_linux_title;
 
 import com.dmdirc.addons.nowplaying.MediaSource;
 import com.dmdirc.addons.nowplaying.MediaSourceManager;
-import com.dmdirc.plugins.Plugin;
+import com.dmdirc.plugins.BasePlugin;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +35,7 @@ import java.util.List;
  *
  * @author chris
  */
-public class TitleMediaSourcePlugin extends Plugin implements MediaSourceManager {
+public class TitleMediaSourcePlugin extends BasePlugin implements MediaSourceManager {
 
     /** The sources to be returned. */
     private List<MediaSource> sources = null;

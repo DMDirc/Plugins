@@ -34,7 +34,7 @@ import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.config.prefs.SettingChangeListener;
 import com.dmdirc.util.validators.NumericalValidator;
 import com.dmdirc.util.validators.OptionalValidator;
-import com.dmdirc.plugins.Plugin;
+import com.dmdirc.plugins.BasePlugin;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,7 +42,7 @@ import java.util.Map;
  * Allows the user to display on-screen-display messages.
  * @author chris
  */
-public final class OsdPlugin extends Plugin implements CategoryChangeListener,
+public final class OsdPlugin extends BasePlugin implements CategoryChangeListener,
         PreferencesInterface, SettingChangeListener {
 
     /** Config OSD Window. */

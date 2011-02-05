@@ -26,7 +26,7 @@ import com.dmdirc.addons.debug.commands.*; //NOPMD
 import com.dmdirc.commandparser.CommandManager;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
-import com.dmdirc.plugins.Plugin;
+import com.dmdirc.plugins.BasePlugin;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,7 +36,7 @@ import java.util.Map;
 /**
  * Debug plugin providing commands to aid in debugging the client.
  */
-public class DebugPlugin extends Plugin {
+public class DebugPlugin extends BasePlugin {
 
     /** List of build in debug commands to load. */
     private static final Class[] CLASSES = {

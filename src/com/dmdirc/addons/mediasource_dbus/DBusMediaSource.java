@@ -26,7 +26,7 @@ import com.dmdirc.addons.nowplaying.MediaSource;
 import com.dmdirc.addons.nowplaying.MediaSourceManager;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
-import com.dmdirc.plugins.Plugin;
+import com.dmdirc.plugins.BasePlugin;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -41,7 +41,7 @@ import java.util.Map;
 /**
  * Provides a media source for dbus players.
  */
-public class DBusMediaSource extends Plugin implements MediaSourceManager {
+public class DBusMediaSource extends BasePlugin implements MediaSourceManager {
 
     /** The sources used by this media source. */
     private List<MediaSource> sources;

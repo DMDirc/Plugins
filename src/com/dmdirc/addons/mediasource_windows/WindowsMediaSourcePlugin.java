@@ -27,7 +27,7 @@ import com.dmdirc.addons.nowplaying.MediaSourceManager;
 import com.dmdirc.util.StreamReader;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
-import com.dmdirc.plugins.Plugin;
+import com.dmdirc.plugins.BasePlugin;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.util.resourcemanager.ResourceManager;
@@ -39,7 +39,7 @@ import java.util.List;
 /**
  * Manages all Windows based media sources.
  */
-public class WindowsMediaSourcePlugin extends Plugin implements MediaSourceManager {
+public class WindowsMediaSourcePlugin extends BasePlugin implements MediaSourceManager {
 
     /** Media sources. */
     private final List<MediaSource> sources;

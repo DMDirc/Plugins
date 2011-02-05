@@ -23,27 +23,17 @@
 package com.dmdirc.addons.audio;
 
 import com.dmdirc.commandparser.CommandManager;
-import com.dmdirc.plugins.Plugin;
+import com.dmdirc.plugins.BasePlugin;
 
 /**
  * Adds Audio playing facility to client.
- *
- * @author Shane 'Dataforce' McCormack
  */
-public final class AudioPlugin extends Plugin {
+public final class AudioPlugin extends BasePlugin {
 
     /** The AudioCommand we created */
     private AudioCommand audioCommand = null;
-
     /** The BeepCommand we created */
     private BeepCommand beepCommand = null;
-
-    /**
-     * Creates a new instance of the Audio Plugin.
-     */
-    public AudioPlugin() {
-        super();
-    }
 
     /**
      * Called when the plugin is loaded.

@@ -31,7 +31,7 @@ import com.dmdirc.commandparser.CommandManager;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.interfaces.ActionListener;
 import com.dmdirc.interfaces.ConfigChangeListener;
-import com.dmdirc.plugins.Plugin;
+import com.dmdirc.plugins.BasePlugin;
 import com.dmdirc.ui.messages.Styliser;
 
 import java.util.HashMap;
@@ -43,7 +43,7 @@ import java.util.Map;
  *
  * @author chris
  */
-public class UrlCatcherPlugin extends Plugin implements ActionListener,
+public class UrlCatcherPlugin extends BasePlugin implements ActionListener,
         ConfigChangeListener {
 
     private final Map<String, Integer> urls = new HashMap<String, Integer>();

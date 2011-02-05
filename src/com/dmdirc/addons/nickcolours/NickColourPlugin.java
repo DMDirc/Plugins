@@ -40,7 +40,7 @@ import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.parser.interfaces.ChannelClientInfo;
 import com.dmdirc.parser.interfaces.ChannelInfo;
 import com.dmdirc.parser.interfaces.ClientInfo;
-import com.dmdirc.plugins.Plugin;
+import com.dmdirc.plugins.BasePlugin;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.messages.ColourManager;
 import com.dmdirc.util.ReturnableThread;
@@ -55,7 +55,7 @@ import java.util.Map;
  *
  * @author chris
  */
-public final class NickColourPlugin extends Plugin implements ActionListener,
+public final class NickColourPlugin extends BasePlugin implements ActionListener,
         ConfigChangeListener {
 
     /** "Random" colours to use to colour nicknames. */

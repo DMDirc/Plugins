@@ -22,12 +22,12 @@
 
 package com.dmdirc.addons.tabcompletion_bash;
 
-import com.dmdirc.plugins.Plugin;
+import com.dmdirc.plugins.BasePlugin;
 import com.dmdirc.ui.input.TabCompleter;
 import com.dmdirc.ui.input.tabstyles.TabCompletionStyle;
 import com.dmdirc.ui.interfaces.InputWindow;
 
-public class BashStylePlugin extends Plugin {
+public class BashStylePlugin extends BasePlugin {
 
     /** {@inheritDoc} */
     @Override

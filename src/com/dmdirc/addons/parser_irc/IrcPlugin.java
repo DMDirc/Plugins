@@ -27,7 +27,7 @@ import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.parser.interfaces.ProtocolDescription;
 import com.dmdirc.parser.irc.IRCParser;
 import com.dmdirc.parser.irc.IRCProtocolDescription;
-import com.dmdirc.plugins.Plugin;
+import com.dmdirc.plugins.BasePlugin;
 
 import java.net.URI;
 
@@ -37,7 +37,7 @@ import java.net.URI;
  * @since 0.6.4
  * @author chris
  */
-public class IrcPlugin extends Plugin {
+public class IrcPlugin extends BasePlugin {
 
     /** {@inheritDoc} */
     @Override

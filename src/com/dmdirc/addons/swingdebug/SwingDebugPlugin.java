@@ -26,7 +26,7 @@ import com.dmdirc.addons.ui_swing.DMDircEventQueue;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.CheckBoxMenuItem;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
-import com.dmdirc.plugins.Plugin;
+import com.dmdirc.plugins.BasePlugin;
 import com.dmdirc.plugins.PluginManager;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -45,7 +45,7 @@ import net.miginfocom.swing.MigLayout;
  * Swing debug plugin. Provides long running EDT task violation detection and
  * a console for System.out and System.err.
  */
-public class SwingDebugPlugin extends Plugin implements ActionListener {
+public class SwingDebugPlugin extends BasePlugin implements ActionListener {
 
     /** Swing controller. */
     private SwingController controller;

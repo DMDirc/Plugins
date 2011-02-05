@@ -23,7 +23,7 @@
 package com.dmdirc.addons.dcop;
 
 import com.dmdirc.commandparser.CommandManager;
-import com.dmdirc.plugins.Plugin;
+import com.dmdirc.plugins.BasePlugin;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -36,7 +36,7 @@ import java.util.List;
  *
  * @author chris
  */
-public final class DcopPlugin extends Plugin {
+public final class DcopPlugin extends BasePlugin {
     /** The DcopCommand we created */
     private DcopCommand command = null;
 

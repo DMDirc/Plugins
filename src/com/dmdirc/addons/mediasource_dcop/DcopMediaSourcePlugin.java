@@ -25,7 +25,7 @@ package com.dmdirc.addons.mediasource_dcop;
 import com.dmdirc.addons.nowplaying.MediaSource;
 import com.dmdirc.addons.nowplaying.MediaSourceManager;
 import com.dmdirc.plugins.NoSuchProviderException;
-import com.dmdirc.plugins.Plugin;
+import com.dmdirc.plugins.BasePlugin;
 import com.dmdirc.plugins.PluginManager;
 
 import java.util.ArrayList;
@@ -34,7 +34,7 @@ import java.util.List;
 /**
  * Manages all DCOP based media sources.
  */
-public class DcopMediaSourcePlugin extends Plugin
+public class DcopMediaSourcePlugin extends BasePlugin
         implements MediaSourceManager {
 
     /** Media sources. */

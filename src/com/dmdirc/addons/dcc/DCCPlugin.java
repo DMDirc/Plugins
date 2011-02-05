@@ -46,7 +46,7 @@ import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.parser.interfaces.ClientInfo;
 import com.dmdirc.parser.interfaces.Parser;
-import com.dmdirc.plugins.Plugin;
+import com.dmdirc.plugins.BasePlugin;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.WindowManager;
 
@@ -61,7 +61,7 @@ import javax.swing.JOptionPane;
 /**
  * This plugin adds DCC to dmdirc.
  */
-public final class DCCPlugin extends Plugin implements ActionListener {
+public final class DCCPlugin extends BasePlugin implements ActionListener {
 
     /** The DCCCommand we created. */
     private DCCCommand command;

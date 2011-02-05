@@ -75,7 +75,8 @@ public class TwitterClientInfo implements LocalClientInfo {
      * @param plugin Plugin to use to get domain from.
      * @return String array of nick, ident and host.
      */
-    static String[] parseHostFull(final String hostname, final Plugin plugin, final Twitter parser) {
+    static String[] parseHostFull(final String hostname, final Plugin plugin,
+            final Twitter parser) {
         boolean hadAt = false;
         String sanitisedHostname = hostname;
 
