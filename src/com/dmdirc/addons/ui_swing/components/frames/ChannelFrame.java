@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_swing.components.frames;
 
 import com.dmdirc.Channel;
+import com.dmdirc.FrameContainer;
 import com.dmdirc.ServerState;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionType;
@@ -217,14 +218,6 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
         saveSplitPanePosition();
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void close() {
-        saveSplitPanePosition();
-        topicBar.close();
-        super.close();
-    }
-
     private void saveSplitPanePosition() {
         UIUtilities.invokeAndWait(new Runnable() {
 
@@ -276,5 +269,14 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
             popupMenu.addSeparator();
         }
         popupMenu.add(settingsMI);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void windowClosing(final FrameContainer window) {
+        saveSplitPanePosition();
+        topicBar.close();
+
+        super.windowClosing(window);
     }
 }

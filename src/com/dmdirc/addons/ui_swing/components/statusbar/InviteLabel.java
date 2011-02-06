@@ -38,7 +38,7 @@ import com.dmdirc.ui.interfaces.StatusBarComponent;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
-import java.util.List;
+import java.util.Collection;
 
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
@@ -59,16 +59,22 @@ public class InviteLabel extends StatusbarPopupPanel<JLabel> implements
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 1;
+
     /** Active server. */
     private Server activeServer;
+
     /** Invite popup menu. */
     private final JPopupMenu menu;
+
     /** Dismiss invites menu item. */
     private final JMenuItem dismiss;
+
     /** Accept invites menu item. */
     private final JMenuItem accept;
+
     /** Parent window. */
     private final MainFrame mainFrame;
+
     /** Active frame. */
     private FrameContainer activeFrame;
 
@@ -121,7 +127,7 @@ public class InviteLabel extends StatusbarPopupPanel<JLabel> implements
     private void popuplateMenu() {
         menu.removeAll();
 
-        final List<Invite> invites = activeServer.getInvites();
+        final Collection<Invite> invites = activeServer.getInvites();
         for (Invite invite : invites) {
             menu.add(new JMenuItem(new InviteAction(invite)));
         }

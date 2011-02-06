@@ -164,18 +164,6 @@ public abstract class TextFrame extends JPanel implements Window,
         });
     }
 
-    /** Closes this frame. */
-    @Override
-    public void close() {
-        UIUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                frameParent.handleWindowClosing();
-            }
-        });
-    }
-
     /**
      * Initialises the components for this frame.
      */
@@ -504,11 +492,5 @@ public abstract class TextFrame extends JPanel implements Window,
                 .getOptionColour("ui", "foregroundcolour"));
         getTextPane().setBackground(getContainer().getConfigManager()
                 .getOptionColour("ui", "backgroundcolour"));
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void open() {
-        //Yay, we're open.
     }
 }

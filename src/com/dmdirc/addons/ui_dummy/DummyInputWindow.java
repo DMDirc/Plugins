@@ -61,18 +61,6 @@ public class DummyInputWindow implements InputWindow {
 
     /** {@inheritDoc} */
     @Override
-    public void open() {
-        // Do nothing
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void close() {
-        container.handleWindowClosing();
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public void activateFrame() {
         // Do nothing
     }

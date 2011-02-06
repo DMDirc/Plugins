@@ -400,14 +400,6 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
 
     /** {@inheritDoc} */
     @Override
-    public void close() {
-        super.close();
-         //TODO Remove when close listeners are added
-        awayLabel.processEvent(null, null, (Object) null);
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public void activateFrame() {
         super.activateFrame();
         inputField.requestFocusInWindow();

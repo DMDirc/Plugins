@@ -141,7 +141,7 @@ public class MDIBar extends JPanel implements SwingWindowListener,
             return;
         }
         if (closeButton.equals(e.getSource())) {
-            mainFrame.getActiveFrame().close();
+            mainFrame.getActiveFrame().getContainer().close();
         }
     }
 

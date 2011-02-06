@@ -27,6 +27,7 @@ import com.dmdirc.addons.ui_web.DynamicRequestHandler;
 import com.dmdirc.addons.ui_web.Event;
 import com.dmdirc.addons.ui_web.Message;
 import com.dmdirc.addons.ui_web.WebInterfaceUI;
+import com.dmdirc.interfaces.FrameCloseListener;
 import com.dmdirc.interfaces.FrameInfoListener;
 import com.dmdirc.ui.interfaces.UIController;
 import com.dmdirc.ui.interfaces.Window;
@@ -45,11 +46,10 @@ import java.util.Map;
 import org.apache.commons.lang.StringEscapeUtils;
 
 /**
- *
- * @author chris
+ * A server-side representation of a "window" in the Web UI.
  */
 public class WebWindow implements Window, IRCDocumentListener,
-        FrameInfoListener {
+        FrameInfoListener, FrameCloseListener {
 
     protected static int counter = 0;
 
@@ -108,18 +108,6 @@ public class WebWindow implements Window, IRCDocumentListener,
     @Override
     public FrameContainer getContainer() {
         return parent;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void open() {
-        // Do nothing
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void close() {
-        DynamicRequestHandler.addEvent(new Event("closewindow", myID));
     }
 
     public String getId() {
@@ -270,9 +258,14 @@ public class WebWindow implements Window, IRCDocumentListener,
 
     /** {@inheritDoc} */
     @Override
-    public void titleChanged(final FrameContainer window,
-            final String title) {
+    public void titleChanged(final FrameContainer window, final String title) {
         this.title = title;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void windowClosing(final FrameContainer window) {
+        DynamicRequestHandler.addEvent(new Event("closewindow", myID));
     }
 
 }
