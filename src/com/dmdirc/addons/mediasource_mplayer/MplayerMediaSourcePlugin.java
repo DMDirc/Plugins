@@ -35,17 +35,8 @@ import java.util.List;
 /**
  * Provides a media source for mplayer which uses lsof to hackily see what
  * mplayer is currently accessing.
- *
- * @author chris
  */
 public class MplayerMediaSourcePlugin extends BasePlugin implements MediaSource {
-
-    /**
-     * Creates a new instance of MplayerMediaSourcePlugin.
-     */
-    public MplayerMediaSourcePlugin() {
-        super();
-    }
 
     /** {@inheritDoc} */
     @Override

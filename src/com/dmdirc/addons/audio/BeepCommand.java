@@ -33,17 +33,8 @@ import java.awt.Toolkit;
 
 /**
  * The Beep Command emits a beep
- *
- * @author Shane "Dataforce" Mc Cormack
  */
 public final class BeepCommand extends Command implements CommandInfo {
-
-    /**
-     * Creates a new instance of BeepCommand.
-     */
-    public BeepCommand() {
-        super();
-    }
 
     /** {@inheritDoc} */
     @Override
@@ -77,4 +68,3 @@ public final class BeepCommand extends Command implements CommandInfo {
     }
 
 }
-

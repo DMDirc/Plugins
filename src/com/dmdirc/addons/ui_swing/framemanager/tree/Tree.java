@@ -59,16 +59,16 @@ public class Tree extends JTree implements MouseMotionListener,
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 1;
+    /** Tree frame manager. */
+    private final TreeFrameManager manager;
+    /** UI Controller. */
+    private final SwingController controller;
     /** Drag selection enabled? */
     private boolean dragSelect;
     /** Drag button 1? */
     private boolean dragButton;
     /** Show handles. */
     private boolean showHandles;
-    /** Tree frame manager. */
-    private TreeFrameManager manager;
-    /** UI Controller. */
-    private SwingController controller;
 
     /**
      * Specialised JTree for frame manager.

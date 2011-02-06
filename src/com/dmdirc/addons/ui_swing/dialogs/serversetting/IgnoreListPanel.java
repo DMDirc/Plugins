@@ -62,6 +62,8 @@ public final class IgnoreListPanel extends JPanel implements ActionListener,
     private static final long serialVersionUID = 2;
     /** Parent server. */
     private final Server server;
+    /** Parent window. */
+    private final Window parentWindow;
     /** Add button. */
     private JButton addButton;
     /** Remove button. */
@@ -76,8 +78,6 @@ public final class IgnoreListPanel extends JPanel implements ActionListener,
     private IgnoreList cachedIgnoreList;
     /** Ignore list model . */
     private IgnoreListModel listModel;
-    /** Parent window. */
-    private final Window parentWindow;
 
     /**
      * Creates a new instance of IgnoreList.
@@ -235,7 +235,7 @@ public final class IgnoreListPanel extends JPanel implements ActionListener,
                 /** {@inheritDoc} */
                 @Override
                 public void cancelled() {
-                    return;
+                    //Ignore
                 }
             }.display();
         } else if (e.getSource() == viewToggle) {

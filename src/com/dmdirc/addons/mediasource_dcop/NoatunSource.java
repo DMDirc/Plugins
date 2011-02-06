@@ -29,15 +29,8 @@ import java.util.List;
 
 /**
  * Uses DCOP to retrieve now playing info from Noatun.
- *
- * @author chris
  */
 public class NoatunSource implements MediaSource {
-
-    /** Instantiates the media source. */
-    public NoatunSource() {
-        //Do nothing
-    }
 
     /** {@inheritDoc} */
     @Override

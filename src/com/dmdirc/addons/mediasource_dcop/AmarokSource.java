@@ -29,15 +29,8 @@ import java.util.List;
 
 /**
  * Uses DCOP to retrieve now playing info from Amarok.
- *
- * @author chris
  */
 public class AmarokSource implements MediaSource {
-
-    /** Instantiates the media source. */
-    public AmarokSource() {
-        //Do nothing
-    }
 
     /** {@inheritDoc} */
     @Override

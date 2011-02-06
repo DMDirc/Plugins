@@ -142,8 +142,8 @@ public final class ActionsManagerDialog extends StandardDialog implements
                 getOptionInt("dialogstate", "actionsmanagerdialog");
         if (selected >= 0 && selected < me.groups.getModel().getSize()) {
             me.groups.setSelectedIndex(selected);
-            me.changeActiveGroup((ActionGroup) me.groups.getModel().getElementAt(
-                    selected));
+            me.changeActiveGroup((ActionGroup) me.groups.getModel()
+                    .getElementAt(selected));
         }
     }
 
@@ -175,9 +175,9 @@ public final class ActionsManagerDialog extends StandardDialog implements
     private void initComponents() {
         orderButtons(new JButton(), new JButton());
         infoLabel = new TextLabel("Actions allow you to make DMDirc"
-                + " intelligently respond to various events.  Action groups are "
-                + "there for you to organise groups, add or remove them "
-                + "to suit your needs.");
+                + " intelligently respond to various events.  Action groups are"
+                + " there for you to organise groups, add or remove them"
+                + " to suit your needs.");
         groups = new JList(new SortedListModel<ActionGroup>(
                 new ActionGroupNameComparator()));
         actions = new ActionsGroupPanel(this, null);
@@ -192,14 +192,11 @@ public final class ActionsManagerDialog extends StandardDialog implements
         groupPanel.setName("Groups");
 
         groupPanel.setBorder(BorderFactory.createTitledBorder(UIManager.
-                getBorder("TitledBorder.border"),
-                "Groups"));
+                getBorder("TitledBorder.border"), "Groups"));
         info.setBorder(BorderFactory.createTitledBorder(UIManager.getBorder(
-                "TitledBorder.border"),
-                "Information"));
+                "TitledBorder.border"), "Information"));
         actions.setBorder(BorderFactory.createTitledBorder(UIManager.getBorder(
-                "TitledBorder.border"),
-                "Actions"));
+                "TitledBorder.border"), "Actions"));
 
         groups.setCellRenderer(new ActionGroupListCellRenderer());
         groups.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -280,7 +277,8 @@ public final class ActionsManagerDialog extends StandardDialog implements
      */
     private void reloadGroups(final ActionGroup selectedGroup) {
         ((DefaultListModel) groups.getModel()).clear();
-        for (ActionGroup group : ActionManager.getActionManager().getGroupsMap().values()) {
+        for (ActionGroup group : ActionManager.getActionManager()
+                .getGroupsMap().values()) {
             ((DefaultListModel) groups.getModel()).addElement(group);
         }
         groups.setSelectedValue(selectedGroup, true);
@@ -348,11 +346,7 @@ public final class ActionsManagerDialog extends StandardDialog implements
                 ModalityType.DOCUMENT_MODAL, "New action group",
                 "Please enter the name of the new action group", validator) {
 
-            /**
-             * A version number for this class. It should be changed whenever the class
-             * structure is changed (or anything else that would prevent serialized
-             * objects being unserialized with the new class).
-             */
+            /** Java Serialisation verion ID. */
             private static final long serialVersionUID = 1;
 
             /** {@inheritDoc} */
@@ -392,11 +386,7 @@ public final class ActionsManagerDialog extends StandardDialog implements
                 ModalityType.DOCUMENT_MODAL, "Edit action group",
                 "Please enter the new name of the action group", validator) {
 
-            /**
-             * A version number for this class. It should be changed whenever the class
-             * structure is changed (or anything eloh blese that would prevent serialized
-             * objects being unserialized with the new class).
-             */
+            /** Java Serialisation verion ID. */
             private static final long serialVersionUID = 1;
 
             /** {@inheritDoc} */
@@ -437,11 +427,7 @@ public final class ActionsManagerDialog extends StandardDialog implements
                 "Are you sure you wish to delete the '" + group
                 + "' group and all actions within it?") {
 
-            /**
-             * A version number for this class. It should be changed whenever the class
-             * structure is changed (or anything else that would prevent serialized
-             * objects being unserialized with the new class).
-             */
+            /** Java Serialisation verion ID. */
             private static final long serialVersionUID = 1;
 
             /** {@inheritDoc} */

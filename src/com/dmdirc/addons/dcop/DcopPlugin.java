@@ -33,17 +33,11 @@ import java.util.List;
 
 /**
  * Allows the user to execute dcop commands (and read the results).
- *
- * @author chris
  */
 public final class DcopPlugin extends BasePlugin {
+
     /** The DcopCommand we created */
     private DcopCommand command = null;
-
-    /** Creates a new instance of DcopPlugin. */
-    public DcopPlugin() {
-        super();
-    }
 
     /**
      * Retrieves the result from executing the specified command.

@@ -37,11 +37,6 @@ import java.util.TimerTask;
  */
 public final class DNSCommand extends Command implements CommandInfo {
 
-    /** Creates a new instance of DNSCommand. */
-    public DNSCommand() {
-        super();
-    }
-
     /** {@inheritDoc} */
     @Override
     public void execute(final FrameContainer origin,

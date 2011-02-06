@@ -47,7 +47,9 @@ import org.apache.commons.lang.StringEscapeUtils;
 /**
  * This plugin adds freedesktop Style Notifications to dmdirc.
  */
-public final class FreeDesktopNotificationsPlugin extends BasePlugin implements ConfigChangeListener {
+public final class FreeDesktopNotificationsPlugin extends BasePlugin
+        implements ConfigChangeListener {
+
     /** The DcopCommand we created */
     private FDNotifyCommand command = null;
     /** notification timeout. */
@@ -60,13 +62,6 @@ public final class FreeDesktopNotificationsPlugin extends BasePlugin implements 
     private boolean strictescape;
     /** Strip codes. */
     private boolean stripcodes;
-
-    /**
-     * Creates a new instance of the FreeDesktopNotifications Plugin.
-     */
-    public FreeDesktopNotificationsPlugin() {
-        super();
-    }
 
     /**
      * Used to show a notification using this plugin.
