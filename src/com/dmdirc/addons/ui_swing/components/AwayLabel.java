@@ -30,6 +30,7 @@ import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.interfaces.ActionListener;
 import com.dmdirc.interfaces.AwayStateListener;
 import com.dmdirc.interfaces.ConfigChangeListener;
+import com.dmdirc.interfaces.FrameCloseListener;
 
 import javax.swing.JLabel;
 
@@ -37,7 +38,7 @@ import javax.swing.JLabel;
  * Simple panel to show when a user is away or not.
  */
 public class AwayLabel extends JLabel implements ConfigChangeListener,
-        AwayStateListener, ActionListener {
+        AwayStateListener, ActionListener, FrameCloseListener {
 
     /**
      * A version number for this class. It should be changed whenever the class
@@ -62,10 +63,14 @@ public class AwayLabel extends JLabel implements ConfigChangeListener,
         setVisible(false);
         useAwayIndicator = container.getConfigManager().getOptionBool("ui",
                 AWAY_INDICATOR);
+
         if (container.getServer() != null) {
             setVisible(container.getServer().isAway());
             container.getServer().addAwayStateListener(this);
         }
+
+        container.addCloseListener(this);
+
         ActionManager.getActionManager().registerListener(this,
                 CoreActionType.CLIENT_FRAME_CHANGED);
     }
@@ -121,14 +126,17 @@ public class AwayLabel extends JLabel implements ConfigChangeListener,
     @Override
     public void processEvent(final ActionType type, final StringBuffer format,
             final Object... arguments) {
-        if (type == CoreActionType.CLIENT_FRAME_CHANGED) {
-            if (useAwayIndicator && container.getServer() != null) {
-                setVisible(container.getServer().isAway());
-            }
-        } else { //TODO Change to listener when written
-            if (container != null && container.getServer() != null) {
-                container.getServer().removeAwayStateListener(this);
-            }
+        if (type == CoreActionType.CLIENT_FRAME_CHANGED && useAwayIndicator
+                && container.getServer() != null) {
+            setVisible(container.getServer().isAway());
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void windowClosing(final FrameContainer window) {
+        if (container != null && container.getServer() != null) {
+            container.getServer().removeAwayStateListener(this);
         }
     }
 }

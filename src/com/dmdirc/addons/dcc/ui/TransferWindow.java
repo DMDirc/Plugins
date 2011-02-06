@@ -141,7 +141,7 @@ public class TransferWindow extends EmptyWindow implements ActionListener,
                 button.setText("Close Window");
             }
         } else if (e.getActionCommand().equals("Close Window")) {
-            close();
+            getContainer().close();
         } else if (e.getSource() == openButton) {
             final File file = new File(dcc.getFileName());
             try {

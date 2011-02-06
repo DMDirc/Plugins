@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.components.frames;
 
+import com.dmdirc.FrameContainer;
 import com.dmdirc.Server;
 import com.dmdirc.ServerState;
 import com.dmdirc.addons.ui_swing.SwingController;
@@ -146,18 +147,7 @@ public final class ServerFrame extends InputTextFrame implements
 
         popupMenu.add(settingsMI);
     }
-
     /** {@inheritDoc} */
-    @Override
-    public void close() {
-        if (ServerSettingsDialog.hasServerSettingsDialog()) {
-            ServerSettingsDialog.getServerSettingsDialog(getContainer()
-                    .getServer(), getController().getMainFrame()).dispose();
-        }
-        super.close();
-    }
-
-    /** {@inhertiDoc} */
     @Override
     public void certificateProblemEncountered(final X509Certificate[] chain,
             final Collection<CertificateException> problems,
@@ -173,5 +163,16 @@ public final class ServerFrame extends InputTextFrame implements
         if (sslDialog != null) {
             sslDialog.dispose();
         }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void windowClosing(final FrameContainer window) {
+        if (ServerSettingsDialog.hasServerSettingsDialog()) {
+            ServerSettingsDialog.getServerSettingsDialog(getContainer()
+                    .getServer(), getController().getMainFrame()).dispose();
+        }
+
+        super.windowClosing(window);
     }
 }
