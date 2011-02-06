@@ -24,7 +24,7 @@ package com.dmdirc.addons.ui_swing.components.statusbar;
 
 import com.dmdirc.Invite;
 import com.dmdirc.Server;
-import com.dmdirc.ui.messages.Formatter;
+import com.dmdirc.util.DateUtils;
 import java.awt.Window;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -65,7 +65,7 @@ public class InvitePopup extends StatusbarPopupWindow {
             panel.add(new JLabel(invite.getChannel()), "growx, pushx");
             panel.add(new JLabel(invite.getSource()[0], JLabel.CENTER),
                     "growx, pushx, al center");
-            panel.add(new JLabel(Formatter.formatDuration((int)
+            panel.add(new JLabel(DateUtils.formatDuration((int)
                     (System.currentTimeMillis() - invite.getTimestamp())
                     / 1000) + " ago", JLabel.RIGHT),
                     "growx, pushx, al right, wrap");
