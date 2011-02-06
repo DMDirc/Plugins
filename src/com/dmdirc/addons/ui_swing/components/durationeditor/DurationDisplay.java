@@ -23,7 +23,7 @@
 package com.dmdirc.addons.ui_swing.components.durationeditor;
 
 import com.dmdirc.addons.ui_swing.UIUtilities;
-import com.dmdirc.ui.messages.Formatter;
+import com.dmdirc.util.DateUtils;
 import com.dmdirc.util.ListenerList;
 
 import java.awt.Insets;
@@ -116,7 +116,7 @@ public class DurationDisplay extends JPanel implements ActionListener,
         if (duration == 0) {
             durationLabel.setText("0 Seconds");
         } else {
-            durationLabel.setText(Formatter.formatDuration(duration));
+            durationLabel.setText(DateUtils.formatDuration(duration));
         }
 
         if (UIUtilities.isWindowsUI()) {
@@ -164,7 +164,7 @@ public class DurationDisplay extends JPanel implements ActionListener,
         if (duration == 0) {
             durationLabel.setText("0 Seconds");
         } else {
-            durationLabel.setText(Formatter.formatDuration(duration));
+            durationLabel.setText(DateUtils.formatDuration(duration));
         }
         fireDurationListener(newDuration * 1000);
     }

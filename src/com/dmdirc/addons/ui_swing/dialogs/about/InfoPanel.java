@@ -27,7 +27,7 @@ import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.ui.core.util.Info;
-import com.dmdirc.ui.messages.Formatter;
+import com.dmdirc.util.DateUtils;
 
 import java.awt.Font;
 import java.nio.charset.Charset;
@@ -80,7 +80,7 @@ public final class InfoPanel extends JPanel {
                 "<b>Look and Feel: </b>" + SwingController.getLookAndFeel() + "<br>" +
                 "<b>MiG Layout version: </b>" + LayoutUtil.getVersion() + "<br>" +
                 "<b>Java Default charset: </b>" + Charset.defaultCharset().displayName() + "<br>" +
-                "<b>Client Uptime: </b>" + Formatter.formatDuration((int) Info.getUptime()/1000) + "<br>" +
+                "<b>Client Uptime: </b>" + DateUtils.formatDuration((int) Info.getUptime()/1000) + "<br>" +
                 "</html>");
         infoPane.setEditable(false);
         scrollPane.setViewportView(infoPane);
