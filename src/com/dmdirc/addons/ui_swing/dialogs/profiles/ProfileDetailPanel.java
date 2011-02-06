@@ -67,6 +67,10 @@ public final class ProfileDetailPanel extends JPanel implements ActionListener,
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 2;
+    /** Main frame. */
+    private final MainFrame mainFrame;
+    /** Parent window. */
+    private final Window parentWindow;
     /** Displayed profile. */
     private Profile profile;
     /** The profile list model. */
@@ -89,14 +93,10 @@ public final class ProfileDetailPanel extends JPanel implements ActionListener,
     private JButton delButton;
     /** Edit button. */
     private JButton editButton;
-    /** Main frame. */
-    private MainFrame mainFrame;
     /** List border. */
     private Border passBorder;
     /** Validation failed border. */
     private Border failBorder;
-    /** Parent window. */
-    private Window parentWindow;
 
     /**
      * Creates a new profile detail panel.
@@ -315,7 +315,7 @@ public final class ProfileDetailPanel extends JPanel implements ActionListener,
                 /** {@inheritDoc} */
                 @Override
                 public void cancelled() {
-                //Ignore
+                    //Ignore
                 }
             };
             dialog.setText((String) nicknames.getSelectedValue());
@@ -344,7 +344,7 @@ public final class ProfileDetailPanel extends JPanel implements ActionListener,
                 /** {@inheritDoc} */
                 @Override
                 public void cancelled() {
-                    return;
+                    //Ignore
                 }
             }.display();
         }

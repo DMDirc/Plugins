@@ -51,19 +51,11 @@ import java.util.Map;
 
 /**
  * This plugin makes certain relay bots less obnoxious looking.
- *
- * @author shane
  */
 public class RelayBotPlugin extends BasePlugin implements ActionListener, ConfigChangeListener {
+
     /** Known RelayChannelHandlers. */
     private final Map<Channel, RelayChannelHandler> handlers = new HashMap<Channel, RelayChannelHandler>();
-
-    /**
-     * Creates a new instance of the RelayBotPlugin.
-     */
-    public RelayBotPlugin() {
-        super();
-    }
 
     /** {@inheritDoc} */
     @Override

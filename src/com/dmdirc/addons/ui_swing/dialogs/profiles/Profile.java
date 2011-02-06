@@ -375,12 +375,6 @@ public class Profile {
 
     /** {@inheritDoc} */
     @Override
-    protected Object clone() throws CloneNotSupportedException {
-        throw new CloneNotSupportedException();
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public String toString() {
         return "[Profile: name='" + name + "', nickname='" + nicknames +
                 "', realname='" + realname + "', ident='" + ident +

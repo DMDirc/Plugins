@@ -39,8 +39,6 @@ import java.util.Map;
 
 /**
  * This causes parser debugging to be spammed to the console.
- *
- * @author Shane 'Dataforce' McCormack
  */
 public final class DebugPlugin extends BasePlugin implements DebugInfoListener, ActionListener {
 
@@ -50,11 +48,6 @@ public final class DebugPlugin extends BasePlugin implements DebugInfoListener, 
     /** Map of parsers registered. */
     protected final Map<Parser, DebugWindow> registeredParsers
             = new HashMap<Parser, DebugWindow>();
-
-    /**
-     * Creates a new instance of the Debug Plugin.
-     */
-    public DebugPlugin() { super(); }
 
     /** {@inheritDoc} */
     @Override
@@ -73,7 +66,7 @@ public final class DebugPlugin extends BasePlugin implements DebugInfoListener, 
         for (Parser parser : registeredParsers.keySet()) {
             try {
                 parser.getCallbackManager().delCallback(DebugInfoListener.class, this);
-                DebugWindow window = registeredParsers.get(parser);
+                final DebugWindow window = registeredParsers.get(parser);
                 windowList.add(window);
             } catch (Exception e) { }
         }
@@ -86,7 +79,7 @@ public final class DebugPlugin extends BasePlugin implements DebugInfoListener, 
     /** {@inheritDoc} */
     @Override
     public void onDebugInfo(final Parser parser, final Date date, final int level, final String data) {
-        DebugWindow window = registeredParsers.get(parser);
+        final DebugWindow window = registeredParsers.get(parser);
         if (window != null) {
             window.addLine(String.format("[%d] %s%n", level, data), true);
         }
@@ -100,7 +93,7 @@ public final class DebugPlugin extends BasePlugin implements DebugInfoListener, 
             final Parser parser = thisServer.getParser();
             if (registeredParsers.containsKey(parser)) {
                 try {
-                    DebugWindow window = registeredParsers.get(parser);
+                    final DebugWindow window = registeredParsers.get(parser);
                     registeredParsers.remove(parser);
                     window.unsetParser();
                     parser.getCallbackManager().delCallback(DebugInfoListener.class, this);

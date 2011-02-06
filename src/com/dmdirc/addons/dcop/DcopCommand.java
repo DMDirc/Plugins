@@ -33,16 +33,8 @@ import java.util.List;
 
 /**
  * The dcop command retrieves information from a dcop application.
- * @author chris
  */
 public final class DcopCommand extends Command implements CommandInfo {
-
-    /**
-     * Creates a new instance of DcopCommand.
-     */
-    public DcopCommand() {
-        super();
-    }
 
     /** {@inheritDoc} */
     @Override

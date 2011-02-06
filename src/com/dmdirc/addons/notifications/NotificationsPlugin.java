@@ -52,13 +52,6 @@ public class NotificationsPlugin extends BasePlugin implements ActionListener {
     /** The user's preferred order for method usage. */
     private List<String> order;
 
-    /**
-     * Creates a new notifications plugin.
-     */
-    public NotificationsPlugin() {
-        super();
-    }
-
     /** {@inheritDoc} */
     @Override
     public void onLoad() {

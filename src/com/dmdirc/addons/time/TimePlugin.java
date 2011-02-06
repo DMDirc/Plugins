@@ -33,26 +33,17 @@ import java.util.TimerTask;
 
 /**
  * Provides various time-related features.
- * @author chris
  */
 public final class TimePlugin  extends BasePlugin {
 
     /** Have we registered our types already? */
     private static boolean registered;
-
     /** The timer to use for scheduling. */
     private Timer timer;
-
     /** The TimerCommand we've registered. */
     private TimerCommand command;
-
     /** The Manager to use for managing timers. */
     private TimerManager manager;
-
-    /** Creates a new instance of TimePlugin. */
-    public TimePlugin() {
-        super();
-    }
 
     /** {@inheritDoc} */
     @Override

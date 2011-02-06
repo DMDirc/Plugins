@@ -29,15 +29,8 @@ import java.util.List;
 
 /**
  * Uses DCOP to retrieve now playing info from Kaffeine.
- *
- * @author chris
  */
 public class KaffeineSource implements MediaSource {
-
-    /** Instantiates the media source. */
-    public KaffeineSource() {
-        //Do nothing
-    }
 
     /** {@inheritDoc} */
     @Override

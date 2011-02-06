@@ -50,8 +50,7 @@ import net.miginfocom.swing.MigLayout;
 
 /** Profile editing dialog. */
 public final class ProfileManagerDialog extends StandardDialog implements
-        ActionListener,
-        ListSelectionListener {
+        ActionListener, ListSelectionListener {
 
     /**
      * A version number for this class. It should be changed whenever the class
@@ -61,6 +60,8 @@ public final class ProfileManagerDialog extends StandardDialog implements
     private static final long serialVersionUID = 2;
     /** Previously created instance of ProfileEditorDialog. */
     private static volatile ProfileManagerDialog me;
+    /** main frame. */
+    private final MainFrame mainFrame;
     /** Profile list. */
     private JList profileList;
     /** Profile list mode. */
@@ -77,8 +78,6 @@ public final class ProfileManagerDialog extends StandardDialog implements
     private int selectedIndex;
     /** Deleted profiles. */
     private final List<Profile> deletedProfiles;
-    /** main frame. */
-    private MainFrame mainFrame;
 
     /**
      * Creates a new instance of ProfileEditorDialog.
@@ -267,7 +266,7 @@ public final class ProfileManagerDialog extends StandardDialog implements
                 /** {@inheritDoc} */
                 @Override
                 public void cancelled() {
-                    return;
+                    //Ignore
                 }
             }.display();
         }

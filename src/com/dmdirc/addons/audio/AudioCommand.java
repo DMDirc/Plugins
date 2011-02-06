@@ -33,17 +33,8 @@ import java.io.File;
 
 /**
  * The Audio Command allows playing of audio files.
- *
- * @author Shane "Dataforce" Mc Cormack
  */
 public final class AudioCommand extends Command implements CommandInfo {
-
-    /**
-     * Creates a new instance of LoggingCommand.
-     */
-    public AudioCommand() {
-        super();
-    }
 
     /** {@inheritDoc} */
     @Override

@@ -310,7 +310,7 @@ public final class ChannelListModesPane extends JPanel implements ActionListener
             /** {@inheritDoc} */
             @Override
             public void cancelled() {
-                return;
+                //Ignore
             }
         }.display();
     }

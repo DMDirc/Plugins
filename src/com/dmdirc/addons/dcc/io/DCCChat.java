@@ -23,6 +23,7 @@
 package com.dmdirc.addons.dcc.io;
 
 import com.dmdirc.addons.dcc.DCCChatHandler;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -30,29 +31,17 @@ import java.io.PrintWriter;
 
 /**
  * This class handles a DCC Chat
- *
- * @author Shane 'Dataforce' McCormack
  */
 public class DCCChat extends DCC {
 
     /** The handler for this DCCChat. */
     private DCCChatHandler handler = null;
-
     /** Used to send data out the socket. */
     private PrintWriter out;
-
     /** Used to read data from the socket. */
     private BufferedReader in;
-
     /** Are we active? */
     private boolean active = false;
-
-    /**
-     * Creates a new instance of DCCChat.
-     */
-    public DCCChat() {
-        super();
-    }
 
     /**
      * Change the handler for this DCC Chat.

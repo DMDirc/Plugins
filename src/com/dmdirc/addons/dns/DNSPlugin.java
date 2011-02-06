@@ -39,11 +39,6 @@ public final class DNSPlugin extends BasePlugin {
     /** The DNSCommand we've registered. */
     private DNSCommand command;
 
-    /** Creates a new instance of DNSPlugin. */
-    public DNSPlugin() {
-        super();
-    }
-
     /** {@inheritDoc} */
     @Override
     public void onLoad() {

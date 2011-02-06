@@ -153,8 +153,10 @@ public final class AliasManagerDialog extends StandardDialog implements
         tableModel = new AliasTableModel(getTableData());
         table = new PackingTable(tableModel, false, scrollPane, false) {
 
+            /** Java Serialisation verion ID. */
             private static final long serialVersionUID = 1;
 
+            /** {@inheritDoc} */
             @Override
             public TableCellRenderer getCellRenderer(final int row,
                     final int column) {
@@ -309,15 +311,10 @@ public final class AliasManagerDialog extends StandardDialog implements
             if (checkForDuplicates()) {
                 final StandardQuestionDialog dialog = new StandardQuestionDialog(
                         this, ModalityType.APPLICATION_MODAL,
-                        "Duplicate Aliases",
-                        "There are duplicate aliases in the table, these need "
-                        + "to be removed before saving") {
+                        "Duplicate Aliases", "There are duplicate aliases in "
+                        + "the table, these need to be removed before saving") {
 
-                    /**
-                     * A version number for this class. It should be changed whenever the class
-                     * structure is changed (or anything else that would prevent serialized
-                     * objects being unserialized with the new class).
-                     */
+                    /** Java Serialisation verion ID. */
                     private static final long serialVersionUID = 1;
 
                     /** {@inheritDoc} */
@@ -329,7 +326,7 @@ public final class AliasManagerDialog extends StandardDialog implements
                     /** {@inheritDoc} */
                     @Override
                     public void cancelled() {
-                        return;
+                        //Ignore
                     }
                 };
                 dialog.getOkButton().setVisible(false);
