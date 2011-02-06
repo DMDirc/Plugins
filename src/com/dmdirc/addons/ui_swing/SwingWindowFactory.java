@@ -27,6 +27,7 @@ import com.dmdirc.addons.ui_swing.components.frames.ChannelFrame;
 import com.dmdirc.addons.ui_swing.components.frames.CustomFrame;
 import com.dmdirc.addons.ui_swing.components.frames.CustomInputFrame;
 import com.dmdirc.addons.ui_swing.components.frames.ServerFrame;
+import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.ui.core.components.WindowComponent;
@@ -50,6 +51,9 @@ public class SwingWindowFactory implements FrameListener {
     /** A map of known implementations of window interfaces. */
     private static final Map<Collection<String>, Class<? extends Window>> IMPLEMENTATIONS
             = new HashMap<Collection<String>, Class<? extends Window>>();
+
+    /** A map of frame containers to their Swing windows. */
+    private final Map<FrameContainer, TextFrame> windows = new HashMap<FrameContainer, TextFrame>();
 
     static {
         IMPLEMENTATIONS.put(new HashSet<String>(
@@ -98,7 +102,7 @@ public class SwingWindowFactory implements FrameListener {
     }
 
     /**
-     * Un-registers the specified listener from being notificed about the
+     * Un-registers the specified listener from being notified about the
      * addiction and deletion of all Swing UI windows.
      *
      * @param listener The listener to be removed
@@ -120,7 +124,7 @@ public class SwingWindowFactory implements FrameListener {
      * @param focus Whether the window should be focused initially
      * @return The created window or null on error
      */
-    protected Window doAddWindow(final FrameContainer window,
+    protected TextFrame doAddWindow(final FrameContainer window,
             final boolean focus) {
         final Class<? extends Window> clazz;
 
@@ -131,8 +135,8 @@ public class SwingWindowFactory implements FrameListener {
         }
 
         try {
-            final Window frame = (Window) clazz.getConstructors()[0].newInstance(controller, window);
-            window.addWindow(frame);
+            final TextFrame frame = (TextFrame) clazz.getConstructors()[0].newInstance(controller, window);
+            windows.put(window, frame);
 
             return frame;
         } catch (Exception ex) {
@@ -148,18 +152,8 @@ public class SwingWindowFactory implements FrameListener {
      * @param window The container whose windows should be searched
      * @return A relevant window or null
      */
-    public Window getSwingWindow(final FrameContainer window) {
-        if (window == null) {
-            return null;
-        }
-
-        for (Window child : window.getWindows()) {
-            if (child.getController() == controller) {
-                return child;
-            }
-        }
-
-        return null;
+    public TextFrame getSwingWindow(final FrameContainer window) {
+        return windows.get(window);
     }
 
     /** {@inheritDoc} */
@@ -176,8 +170,8 @@ public class SwingWindowFactory implements FrameListener {
 
             @Override
             public void run() {
-                final Window parentWindow = getSwingWindow(parent);
-                final Window childWindow = doAddWindow(window, focus);
+                final TextFrame parentWindow = getSwingWindow(parent);
+                final TextFrame childWindow = doAddWindow(window, focus);
 
                 if (childWindow == null) {
                     return;
@@ -188,7 +182,7 @@ public class SwingWindowFactory implements FrameListener {
                 }
 
                 if (focus) {
-                    childWindow.activateFrame();
+                    controller.requestWindowFocus(childWindow);
                 }
             }
         });
@@ -201,12 +195,14 @@ public class SwingWindowFactory implements FrameListener {
 
             @Override
             public void run() {
-                final Window parentWindow = getSwingWindow(parent);
-                final Window childWindow = getSwingWindow(window);
+                final TextFrame parentWindow = getSwingWindow(parent);
+                final TextFrame childWindow = getSwingWindow(window);
 
                 for (SwingWindowListener listener : listeners.get(SwingWindowListener.class)) {
                     listener.windowDeleted(parentWindow, childWindow);
                 }
+
+                windows.remove(window);
             }
         });
     }

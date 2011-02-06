@@ -27,8 +27,8 @@ import com.dmdirc.FrameContainer;
 import com.dmdirc.ServerState;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SwingController;
+import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.addons.ui_swing.dialogs.ChannelJoinDialog;
-import com.dmdirc.ui.WindowManager;
 
 import java.awt.Dialog.ModalityType;
 import java.awt.event.ActionEvent;
@@ -102,8 +102,8 @@ public class ChannelMenu extends JMenu implements ActionListener,
                     "Join channel", "Enter the name of the channel to join.")
                     .display();
         } else if (e.getActionCommand().equals("ChannelSettings")) {
-            final FrameContainer activeWindow = WindowManager
-                    .getActiveWindow();
+            final FrameContainer activeWindow = controller.getMainFrame()
+                    .getActiveFrame().getContainer();
             if (activeWindow instanceof Channel) {
                 controller.showChannelSettingsDialog(((Channel) activeWindow));
             }
@@ -113,7 +113,9 @@ public class ChannelMenu extends JMenu implements ActionListener,
     /** {@inheritDoc} */
     @Override
     public final void menuSelected(final MenuEvent e) {
-        final FrameContainer activeWindow = WindowManager.getActiveWindow();
+        final TextFrame activeFrame = mainFrame.getActiveFrame();
+        final FrameContainer activeWindow = activeFrame == null ? null
+                : activeFrame.getContainer();
 
         join.setEnabled(activeWindow != null && activeWindow.getServer()
                 != null && activeWindow.getServer().getState()

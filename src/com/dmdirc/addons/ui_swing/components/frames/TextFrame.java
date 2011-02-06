@@ -152,14 +152,15 @@ public abstract class TextFrame extends JPanel implements Window,
         return localParser;
     }
 
-    /** {@inheritDoc} */
-    @Override
+    /**
+     * Called when the frame has been selected in the UI.
+     */
     public void activateFrame() {
         UIUtilities.invokeLater(new Runnable() {
 
             @Override
             public void run() {
-                frameParent.windowActivated();
+                frameParent.clearNotification();
             }
         });
     }
@@ -289,8 +290,9 @@ public abstract class TextFrame extends JPanel implements Window,
                         .getActionManager().triggerEvent(
                         CoreActionType.LINK_NICKNAME_CLICKED, null, this,
                         clickType.getValue())) {
-                    getContainer().getServer().getQuery(clickType.getValue())
-                            .activateFrame();
+                    getController().requestWindowFocus(getController()
+                            .getWindowFactory().getSwingWindow(getContainer()
+                            .getServer().getQuery(clickType.getValue())));
                 }
                 break;
             default:

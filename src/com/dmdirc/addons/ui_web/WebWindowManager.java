@@ -166,7 +166,6 @@ public class WebWindowManager implements FrameListener {
 
         try {
             final Window frame = (Window) clazz.getConstructors()[0].newInstance(controller, window);
-            window.addWindow(frame);
 
             windows.put(window, frame);
         } catch (Exception ex) {

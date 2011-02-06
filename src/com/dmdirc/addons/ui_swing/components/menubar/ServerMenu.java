@@ -27,11 +27,11 @@ import com.dmdirc.ServerState;
 import com.dmdirc.addons.ui_swing.Apple;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SwingController;
+import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.addons.ui_swing.dialogs.NewServerDialog;
 import com.dmdirc.addons.ui_swing.dialogs.serverlist.ServerListDialog;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.PluginManager;
-import com.dmdirc.ui.WindowManager;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -129,17 +129,20 @@ public class ServerMenu extends JMenu implements ActionListener,
         } else if (e.getActionCommand().equals("Exit")) {
             mainFrame.quit();
         } else if (e.getActionCommand().equals("ServerSettings")) {
-            controller.showServerSettingsDialog(WindowManager
-                    .getActiveServer());
+            controller.showServerSettingsDialog(controller.getMainFrame()
+                    .getActiveFrame().getContainer().getServer());
         } else if (e.getActionCommand().equals("Disconnect")) {
-            WindowManager.getActiveServer().disconnect();
+            controller.getMainFrame().getActiveFrame().getContainer()
+                    .getServer().disconnect();
         }
     }
 
     /** {@inheritDoc} */
     @Override
     public final void menuSelected(final MenuEvent e) {
-        final FrameContainer activeWindow = WindowManager.getActiveWindow();
+        final TextFrame activeFrame = mainFrame.getActiveFrame();
+        final FrameContainer activeWindow = activeFrame == null ? null
+                : activeFrame.getContainer();
 
         ssd.setEnabled(activeWindow != null && activeWindow
                 .getServer() != null && activeWindow.getServer().getState()

@@ -41,13 +41,11 @@ import com.dmdirc.addons.ui_swing.framemanager.tree.TreeFrameManager;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.interfaces.FrameInfoListener;
-import com.dmdirc.interfaces.SelectionListener;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.ui.CoreUIUtils;
 import com.dmdirc.ui.IconManager;
-import com.dmdirc.ui.WindowManager;
-import com.dmdirc.ui.interfaces.Window;
+import com.dmdirc.util.ListenerList;
 import com.dmdirc.util.QueuedLinkedHashSet;
 import com.dmdirc.util.ReturnableThread;
 
@@ -71,8 +69,7 @@ import net.miginfocom.swing.MigLayout;
  * The main application frame.
  */
 public final class MainFrame extends JFrame implements WindowListener,
-        ConfigChangeListener, SelectionListener, SwingWindowListener,
-        FrameInfoListener {
+        ConfigChangeListener, SwingWindowListener, FrameInfoListener {
 
     /**
      * A version number for this class. It should be changed whenever the class
@@ -108,6 +105,8 @@ public final class MainFrame extends JFrame implements WindowListener,
     private SplitPane mainSplitPane;
     /** Frame manager used for ctrl tab frame switching. */
     private final CtrlTabWindowManager frameManager;
+    /** The listeners registered with this class. */
+    private final ListenerList listeners = new ListenerList();
 
     /**
      * Creates new form MainFrame.
@@ -164,11 +163,11 @@ public final class MainFrame extends JFrame implements WindowListener,
                 MenuSelectionManager.defaultManager().clearSelectedPath();
             }
         });
-        WindowManager.addSelectionListener(this);
+
         controller.getWindowFactory().addWindowListener(this);
 
         setTitle(getTitlePrefix());
-        frameManager = new CtrlTabWindowManager(controller, rootPane);
+        frameManager = new CtrlTabWindowManager(controller, this, rootPane);
     }
 
     /**
@@ -206,8 +205,8 @@ public final class MainFrame extends JFrame implements WindowListener,
      *
      * @return The active window
      */
-    public Window getActiveFrame() {
-        return UIUtilities.invokeAndWait(new ReturnableThread<Window>() {
+    public TextFrame getActiveFrame() {
+        return UIUtilities.invokeAndWait(new ReturnableThread<TextFrame>() {
 
             /** {@inheritDoc} */
             @Override
@@ -226,10 +225,10 @@ public final class MainFrame extends JFrame implements WindowListener,
     /** {@inheritDoc}. */
     @Override
     public void setTitle(final String title) {
-        if (title != null && getActiveFrame() != null) {
-            super.setTitle(getTitlePrefix() + " - " + title);
-        } else {
+        if (title == null || getActiveFrame() == null) {
             super.setTitle(getTitlePrefix());
+        } else {
+            super.setTitle(getTitlePrefix() + " - " + title);
         }
     }
 
@@ -369,6 +368,7 @@ public final class MainFrame extends JFrame implements WindowListener,
                 }
                 mainFrameManager.setController(controller);
                 mainFrameManager.setParent(frameManagerPanel);
+                addSelectionListener(mainFrameManager);
                 controller.getWindowFactory().addWindowListener(
                         mainFrameManager);
             }
@@ -412,8 +412,6 @@ public final class MainFrame extends JFrame implements WindowListener,
 
     /**
      * Initialises the split pane.
-     *
-     * @param mainSplitPane Split pane to initialise
      *
      * @return Returns the initialised split pane
      */
@@ -590,36 +588,75 @@ public final class MainFrame extends JFrame implements WindowListener,
         }
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void selectionChanged(final FrameContainer window) {
-        activeFrame = (TextFrame) controller.getWindowFactory()
-                .getSwingWindow(window);
+    /**
+     * Changes the visible frame.
+     *
+     * @param activeFrame The frame to be activated, or null to show none
+     */
+    public void setActiveFrame(final TextFrame activeFrame) {
         focusOrder.offerAndMove(activeFrame);
         framePanel.setVisible(false);
         framePanel.removeAll();
+
+        this.activeFrame = activeFrame;
+
         if (activeFrame == null) {
             framePanel.add(new JPanel(), "grow");
             setTitle(null);
         } else {
             framePanel.add(activeFrame, "grow");
-            setTitle(window.getTitle());
+            setTitle(activeFrame.getContainer().getTitle());
         }
+
         framePanel.setVisible(true);
+
+        if (activeFrame != null) {
+            activeFrame.activateFrame();
+        }
+
+        for (SelectionListener listener : listeners.get(SelectionListener.class)) {
+            listener.selectionChanged(activeFrame);
+        }
+
+        ActionManager.getActionManager().triggerEvent(
+                CoreActionType.CLIENT_FRAME_CHANGED, null,
+                activeFrame == null ? null : activeFrame.getContainer());
+    }
+
+    /**
+     * Registers a new selection listener with this frame. The listener will
+     * be notified whenever the currently selected frame is changed.
+     *
+     * @param listener The listener to be added
+     * @see #setActiveFrame(com.dmdirc.addons.ui_swing.components.frames.TextFrame)
+     * @see #getActiveFrame()
+     */
+    public void addSelectionListener(final SelectionListener listener) {
+        listeners.add(SelectionListener.class, listener);
+    }
+
+    /**
+     * Removes a previously registered selection listener.
+     *
+     * @param listener The listener to be removed
+     * @see #addSelectionListener(com.dmdirc.addons.ui_swing.SelectionListener)
+     */
+    public void removeSelectionListener(final SelectionListener listener) {
+        listeners.remove(SelectionListener.class, listener);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void windowAdded(final Window parent, final Window window) {
+    public void windowAdded(final TextFrame parent, final TextFrame window) {
         if (activeFrame == null) {
-            window.getContainer().activateFrame();
+            setActiveFrame(window);
         }
     }
 
     /** {@inheritDoc} */
     @Override
-    public void windowDeleted(final Window parent, final Window window) {
-        focusOrder.remove((TextFrame) window);
+    public void windowDeleted(final TextFrame parent, final TextFrame window) {
+        focusOrder.remove(window);
         if (activeFrame.equals(window)) {
             activeFrame = null;
             framePanel.setVisible(false);
@@ -635,7 +672,7 @@ public final class MainFrame extends JFrame implements WindowListener,
                     }
                 });
             } else {
-                focusOrder.peek().getContainer().activateFrame();
+                setActiveFrame(focusOrder.peek());
             }
         }
     }

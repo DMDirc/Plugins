@@ -321,7 +321,8 @@ public class TopicBar extends JComponent implements ActionListener,
             } else if (url.contains("://")) {
                 controller.getURLHandler().launchApp(e.getDescription());
             } else {
-                channel.getServer().getQuery(url).activateFrame();
+                controller.requestWindowFocus(controller.getWindowFactory()
+                        .getSwingWindow(channel.getServer().getQuery(url)));
             }
         }
     }

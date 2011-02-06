@@ -22,7 +22,8 @@
 
 package com.dmdirc.addons.ui_swing.framemanager.ctrltab;
 
-import com.dmdirc.FrameContainer;
+import com.dmdirc.addons.ui_swing.MainFrame;
+import com.dmdirc.addons.ui_swing.SelectionListener;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.SwingWindowFactory;
 import com.dmdirc.addons.ui_swing.SwingWindowListener;
@@ -30,9 +31,9 @@ import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.actions.NextFrameAction;
 import com.dmdirc.addons.ui_swing.actions.PreviousFrameAction;
 import com.dmdirc.addons.ui_swing.components.TreeScroller;
+import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.addons.ui_swing.framemanager.tree.TreeViewModel;
 import com.dmdirc.addons.ui_swing.framemanager.tree.TreeViewNode;
-import com.dmdirc.interfaces.SelectionListener;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.ui.interfaces.Window;
@@ -69,9 +70,11 @@ public class CtrlTabWindowManager implements SwingWindowListener,
      * Creates a new ctrl tab window manager.
      *
      * @param controller Parent controller
+     * @param mainFrame The main frame that owns this window manager
      * @param component Component to add listen to events on
      */
     public CtrlTabWindowManager(final SwingController controller,
+            final MainFrame mainFrame,
             final JComponent component) {
         nodes = new HashMap<Window, TreeViewNode>();
         model = new TreeViewModel(new TreeViewNode(null, null));
@@ -82,12 +85,17 @@ public class CtrlTabWindowManager implements SwingWindowListener,
             @Override
             protected void setPath(final TreePath path) {
                 super.setPath(path);
-                ((TreeViewNode) path.getLastPathComponent()).getWindow().
-                        activateFrame();
+                controller.getMainFrame().setActiveFrame(
+                        controller.getWindowFactory().getSwingWindow(
+                        ((TreeViewNode) path.getLastPathComponent()).getWindow()));
             }
         };
+
         windowFactory = controller.getWindowFactory();
         windowFactory.addWindowListener(this);
+
+        mainFrame.addSelectionListener(this);
+
         component.getActionMap().put("prevFrameAction",
                 new PreviousFrameAction(treeScroller));
         component.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
@@ -103,14 +111,14 @@ public class CtrlTabWindowManager implements SwingWindowListener,
 
     /* {@inheritDoc} */
     @Override
-    public void windowAdded(final Window parent, final Window window) {
+    public void windowAdded(final TextFrame parent, final TextFrame window) {
         final TreeViewNode parentNode;
         if (parent == null) {
             parentNode = model.getRootNode();
         } else {
             parentNode = nodes.get(parent);
         }
-        window.getContainer().addSelectionListener(this);
+
         UIUtilities.invokeAndWait(new Runnable() {
 
             /** {@inheritDoc} */
@@ -129,8 +137,7 @@ public class CtrlTabWindowManager implements SwingWindowListener,
 
     /* {@inheritDoc} */
     @Override
-    public void windowDeleted(final Window parent, final Window window) {
-         window.getContainer().removeSelectionListener(this);
+    public void windowDeleted(final TextFrame parent, final TextFrame window) {
          UIUtilities.invokeAndWait(new Runnable() {
 
             /** {@inheritDoc} */
@@ -165,16 +172,14 @@ public class CtrlTabWindowManager implements SwingWindowListener,
 
     /* {@inheritDoc} */
     @Override
-    public void selectionChanged(final FrameContainer window) {
+    public void selectionChanged(final TextFrame window) {
         UIUtilities.invokeLater(new Runnable() {
 
             /** {@inheritDoc} */
             @Override
             public void run() {
-                final Window selectedWindow = windowFactory.getSwingWindow(
-                        window);
                 final TreeNode[] path = model.getPathToRoot(nodes.get(
-                        selectedWindow));
+                        window));
                 if (path != null && path.length > 0) {
                     selectionModel.setSelectionPath(new TreePath(path));
                 }

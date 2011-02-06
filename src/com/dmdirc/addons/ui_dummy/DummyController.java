@@ -28,6 +28,7 @@ import com.dmdirc.config.prefs.PreferencesInterface;
 import com.dmdirc.plugins.BasePlugin;
 import com.dmdirc.ui.core.components.StatusBarManager;
 import com.dmdirc.ui.interfaces.UIController;
+import com.dmdirc.ui.interfaces.Window;
 
 import java.net.URI;
 
@@ -40,6 +41,7 @@ public final class DummyController extends BasePlugin implements UIController {
      * Creates a new instance of DummyController.
      */
     public DummyController() {
+        super();
         StatusBarManager.getStatusBarManager().registerStatusBar(new DummyStatusBar());
     }
 
@@ -125,4 +127,9 @@ public final class DummyController extends BasePlugin implements UIController {
         return this;
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public void requestWindowFocus(final Window window) {
+        // Ignore
+    }
 }

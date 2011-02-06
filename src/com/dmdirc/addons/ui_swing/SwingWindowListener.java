@@ -22,7 +22,7 @@
 
 package com.dmdirc.addons.ui_swing;
 
-import com.dmdirc.ui.interfaces.Window;
+import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 
 /**
  * An interface for objects interested in Swing UI window events.
@@ -35,7 +35,7 @@ public interface SwingWindowListener {
      * @param parent The parent of the added window (may be null)
      * @param window The window that was added
      */
-    void windowAdded(final Window parent, final Window window);
+    void windowAdded(final TextFrame parent, final TextFrame window);
 
     /**
      * Called when a new window was deleted.
@@ -43,5 +43,5 @@ public interface SwingWindowListener {
      * @param parent The parent of the added window (may be null)
      * @param window The window that was deleted
      */
-    void windowDeleted(final Window parent, final Window window);
+    void windowDeleted(final TextFrame parent, final TextFrame window);
 }

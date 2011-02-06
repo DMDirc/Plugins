@@ -24,13 +24,14 @@ package com.dmdirc.addons.ui_swing.framemanager.windowmenu;
 
 import com.dmdirc.FrameContainer;
 import com.dmdirc.FrameContainerComparator;
+import com.dmdirc.addons.ui_swing.MainFrame;
+import com.dmdirc.addons.ui_swing.SelectionListener;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.SwingWindowListener;
 import com.dmdirc.addons.ui_swing.UIUtilities;
+import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.config.IdentityManager;
-import com.dmdirc.interfaces.SelectionListener;
 import com.dmdirc.ui.IconManager;
-import com.dmdirc.ui.interfaces.Window;
 import com.dmdirc.util.ReturnableThread;
 
 import java.awt.Component;
@@ -83,8 +84,10 @@ public final class WindowMenuFrameManager extends JMenu implements
      * Creates a new instance of WindowMenuFrameManager.
      *
      * @param controller Swing controller
+     * @param mainFrame The frame that owns this manager
      */
-    public WindowMenuFrameManager(final SwingController controller) {
+    public WindowMenuFrameManager(final SwingController controller,
+            final MainFrame mainFrame) {
         super();
         this.controller = controller;
 
@@ -112,6 +115,8 @@ public final class WindowMenuFrameManager extends JMenu implements
 
         itemCount = getMenuComponentCount();
 
+        mainFrame.addSelectionListener(this);
+
         new WindowMenuScroller(this, controller.getDomain(), itemCount);
         checkMenuItems();
     }
@@ -128,7 +133,7 @@ public final class WindowMenuFrameManager extends JMenu implements
 
     /** {@inheritDoc} */
     @Override
-    public void windowAdded(final Window parent, final Window window) {
+    public void windowAdded(final TextFrame parent, final TextFrame window) {
         if (parent == null) {
             final FrameContainerMenuItem item = UIUtilities.invokeAndWait(
                     new ReturnableThread<FrameContainerMenuItem>() {
@@ -136,13 +141,13 @@ public final class WindowMenuFrameManager extends JMenu implements
                         /** {@inheritDoc} */
                         @Override
                         public void run() {
-                            setObject(new FrameContainerMenuItem(window.
-                                    getContainer(), WindowMenuFrameManager.this));
+                            setObject(new FrameContainerMenuItem(controller,
+                                    window.getContainer(),
+                                    WindowMenuFrameManager.this));
                         }
                     });
             items.put(window.getContainer(), item);
             final int index = getIndex(window.getContainer(), this);
-            window.getContainer().addSelectionListener(this);
             UIUtilities.invokeLater(new Runnable() {
 
                 /** {@inheritDoc} */
@@ -158,8 +163,8 @@ public final class WindowMenuFrameManager extends JMenu implements
                         /** {@inheritDoc} */
                         @Override
                         public void run() {
-                            setObject(new FrameContainerMenuItem(window.
-                                    getContainer(),
+                            setObject(new FrameContainerMenuItem(controller,
+                                    window.getContainer(),
                                     WindowMenuFrameManager.this));
                         }
                     });
@@ -182,7 +187,6 @@ public final class WindowMenuFrameManager extends JMenu implements
                 parentMenu = menus.get(parent.getContainer());
             }
             items.put(window.getContainer(), item);
-            window.getContainer().addSelectionListener(this);
             UIUtilities.invokeLater(new Runnable() {
 
                 /** {@inheritDoc} */
@@ -198,7 +202,7 @@ public final class WindowMenuFrameManager extends JMenu implements
 
     /** {@inheritDoc} */
     @Override
-    public void windowDeleted(final Window parent, final Window window) {
+    public void windowDeleted(final TextFrame parent, final TextFrame window) {
         if (parent == null) {
             final AbstractButton item;
             if (items.containsKey(window.getContainer())) {
@@ -208,7 +212,6 @@ public final class WindowMenuFrameManager extends JMenu implements
                 item = menus.get(window.getContainer());
                 menus.remove(window.getContainer());
             } else {
-                window.getContainer().removeSelectionListener(this);
                 return;
             }
             UIUtilities.invokeLater(new Runnable() {
@@ -219,7 +222,6 @@ public final class WindowMenuFrameManager extends JMenu implements
                     remove(item);
                 }
             });
-            window.getContainer().removeSelectionListener(this);
         } else {
             if (items.containsKey(window.getContainer())) {
                 final JMenu menu = getParentMenu(window.getContainer());
@@ -236,8 +238,8 @@ public final class WindowMenuFrameManager extends JMenu implements
                             replaceMenuWithItem(getParentMenu(parent.
                                     getContainer()),
                                     menus.get(parent.getContainer()),
-                                    new FrameContainerMenuItem(parent.
-                                    getContainer(),
+                                    new FrameContainerMenuItem(controller,
+                                    parent.getContainer(),
                                     WindowMenuFrameManager.this));
                         }
                     }
@@ -247,7 +249,6 @@ public final class WindowMenuFrameManager extends JMenu implements
                         getContainer()));
                 menus.remove(window.getContainer());
             }
-            window.getContainer().removeSelectionListener(this);
         }
         checkMenuItems();
     }
@@ -300,7 +301,7 @@ public final class WindowMenuFrameManager extends JMenu implements
 
     /** {@inheritDoc} */
     @Override
-    public void selectionChanged(final FrameContainer window) {
+    public void selectionChanged(final TextFrame window) {
         final Collection<SelectionListener> values =
                 new ArrayList<SelectionListener>();
         synchronized (menus) {

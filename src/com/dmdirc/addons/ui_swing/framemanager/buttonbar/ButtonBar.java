@@ -20,6 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 package com.dmdirc.addons.ui_swing.framemanager.buttonbar;
 
 import com.dmdirc.FrameContainer;
@@ -35,10 +36,8 @@ import com.dmdirc.config.IdentityManager;
 import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.interfaces.FrameInfoListener;
 import com.dmdirc.interfaces.NotificationListener;
-import com.dmdirc.interfaces.SelectionListener;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.WindowManager;
-import com.dmdirc.ui.interfaces.UIController;
 import com.dmdirc.ui.interfaces.Window;
 
 import java.awt.Color;
@@ -74,8 +73,7 @@ import net.miginfocom.swing.MigLayout;
  */
 public final class ButtonBar implements FrameManager, ActionListener,
         ComponentListener, Serializable, NotificationListener,
-        SelectionListener, FrameInfoListener, MouseListener,
-        ConfigChangeListener {
+        FrameInfoListener, MouseListener, ConfigChangeListener {
 
     /**
      * A version number for this class. It should be changed whenever the class
@@ -94,7 +92,7 @@ public final class ButtonBar implements FrameManager, ActionListener,
     /** The scrolling panel for our ButtonBar. */
      private final JScrollPane scrollPane;
     /** The panel used for our buttons. */
-    private final ButtonPanel buttonPanel;
+    private ButtonPanel buttonPanel;
     /** The position of this frame manager. */
     private FramemanagerPosition position;
     /** The default width of buttons. */
@@ -116,7 +114,7 @@ public final class ButtonBar implements FrameManager, ActionListener,
     /** UI Controller. */
     private SwingController controller;
 
-    /** Creates a new instance of DummyFrameManager. */
+    /** Creates a new instance of ButtonBar. */
     public ButtonBar() {
         scrollPane = new JScrollPane();
         scrollPane.setBorder(null);
@@ -138,19 +136,10 @@ public final class ButtonBar implements FrameManager, ActionListener,
                         "sortrootwindows", this);
         IdentityManager.getGlobalConfig().addChangeListener("ui",
                         "sortchildwindows", this);
-        if (position.isHorizontal()) {
-            buttonPanel = new ButtonPanel(new MigLayout("ins rel, fill, flowx"),
-                    this);
-        } else {
-            buttonPanel = new ButtonPanel(new MigLayout("ins rel, fill, flowy"),
-                    this);
-        }
-        scrollPane.getViewport().addMouseWheelListener(buttonPanel);
-        scrollPane.getViewport().add(buttonPanel);
     }
 
     /**
-     * Retreives button height.
+     * Retrieves button height.
      *
      * @return Button height
      *
@@ -189,7 +178,7 @@ public final class ButtonBar implements FrameManager, ActionListener,
                 initButtons(WindowManager.getRootWindows());
                 if (controller.getMainFrame().getActiveFrame() != null) {
                     selectionChanged(controller.getMainFrame()
-                            .getActiveFrame().getContainer());
+                            .getActiveFrame());
                 }
                 parent.setVisible(true);
             }
@@ -208,8 +197,8 @@ public final class ButtonBar implements FrameManager, ActionListener,
      */
     private void initButtons(
             final Collection<FrameContainer> windowCollection) {
-        Window window;
-        Window parentWindow;
+        TextFrame window;
+        TextFrame parentWindow;
         for (FrameContainer frame : windowCollection) {
             window = windowFactory.getSwingWindow(frame);
             parentWindow = windowFactory.getSwingWindow(frame.getParent());
@@ -242,13 +231,19 @@ public final class ButtonBar implements FrameManager, ActionListener,
 
     /** {@inheritDoc} */
     @Override
-    public void setController(final UIController controller) {
-        if (!(controller instanceof SwingController)) {
-            throw new IllegalArgumentException(
-                    "Controller must be an instance of SwingController");
+    public void setController(final SwingController controller) {
+        this.windowFactory = controller.getWindowFactory();
+        this.controller = controller;
+
+        if (position.isHorizontal()) {
+            buttonPanel = new ButtonPanel(controller,
+                    new MigLayout("ins rel, fill, flowx"), this);
+        } else {
+            buttonPanel = new ButtonPanel(controller,
+                    new MigLayout("ins rel, fill, flowy"), this);
         }
-        this.windowFactory = ((SwingController) controller).getWindowFactory();
-        this.controller = ((SwingController) controller);
+        scrollPane.getViewport().addMouseWheelListener(buttonPanel);
+        scrollPane.getViewport().add(buttonPanel);
     }
 
     /**
@@ -335,7 +330,7 @@ public final class ButtonBar implements FrameManager, ActionListener,
 
     /** {@inheritDoc} */
     @Override
-    public void windowAdded(final Window parent, final Window window) {
+    public void windowAdded(final TextFrame parent, final TextFrame window) {
         UIUtilities.invokeLater(new Runnable() {
 
             /** {@inheritDoc} */
@@ -344,7 +339,6 @@ public final class ButtonBar implements FrameManager, ActionListener,
                 addButton(window);
                 relayout();
                 window.getContainer().addNotificationListener(ButtonBar.this);
-                window.getContainer().addSelectionListener(ButtonBar.this);
                 window.getContainer().addFrameInfoListener(ButtonBar.this);
             }
         });
@@ -352,7 +346,7 @@ public final class ButtonBar implements FrameManager, ActionListener,
 
     /** {@inheritDoc} */
     @Override
-    public void windowDeleted(final Window parent, final Window window) {
+    public void windowDeleted(final TextFrame parent, final TextFrame window) {
         UIUtilities.invokeLater(new Runnable() {
 
             /** {@inheritDoc} */
@@ -361,7 +355,6 @@ public final class ButtonBar implements FrameManager, ActionListener,
                 window.getContainer().removeNotificationListener(
                         ButtonBar.this);
                 window.getContainer().removeFrameInfoListener(ButtonBar.this);
-                window.getContainer().removeSelectionListener(ButtonBar.this);
                 if (buttons.containsKey(window)) {
                     buttonPanel.setVisible(false);
                     buttonPanel.remove(buttons.get(window));
@@ -380,12 +373,11 @@ public final class ButtonBar implements FrameManager, ActionListener,
     @Override
     public void actionPerformed(final ActionEvent e) {
         final FrameToggleButton button = (FrameToggleButton) e.getSource();
-        final FrameContainer window =  button.getFrameContainer();
         final TextFrame frame = (TextFrame) button.getWindow();
-        if (frame != null && window.equals(activeWindow.getContainer())) {
+        if (frame != null && frame.equals(activeWindow)) {
             button.setSelected(true);
         }
-        window.activateFrame();
+        controller.getMainFrame().setActiveFrame(frame);
     }
 
     /**
@@ -462,21 +454,21 @@ public final class ButtonBar implements FrameManager, ActionListener,
 
     /** {@inheritDoc} */
     @Override
-    public void selectionChanged(final FrameContainer window) {
+    public void selectionChanged(final TextFrame window) {
         UIUtilities.invokeLater(new Runnable() {
 
             /** {@inheritDoc} */
             @Override
             public void run() {
-                activeWindow = (TextFrame) (getButton(window)).getWindow();
+                activeWindow = window;
                 FrameToggleButton button;
                 button = getButton(selected);
                 if (selected != null && button != null) {
                     button.setSelected(false);
                 }
 
-                selected = window;
-                button = getButton(window);
+                selected = window.getContainer();
+                button = getButton(window.getContainer());
                 if (button != null) {
                     scrollPane.getViewport().scrollRectToVisible(
                             button.getBounds());

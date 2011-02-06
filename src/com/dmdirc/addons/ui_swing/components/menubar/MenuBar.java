@@ -66,7 +66,7 @@ public class MenuBar extends JMenuBar {
         add(new ServerMenu(controller, mainFrame));
         add(new ChannelMenu(controller, mainFrame));
         add(new SettingsMenu(controller, mainFrame));
-        add(new WindowMenuFrameManager(controller));
+        add(new WindowMenuFrameManager(controller, mainFrame));
         add(new HelpMenu(controller, mainFrame));
         final int tempCount = getComponentCount();
         add(Box.createHorizontalGlue(), "growx, pushx");

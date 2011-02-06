@@ -23,10 +23,11 @@
 package com.dmdirc.addons.ui_swing.framemanager.tree;
 
 import com.dmdirc.FrameContainer;
+import com.dmdirc.addons.ui_swing.SelectionListener;
 import com.dmdirc.addons.ui_swing.components.ImageButton;
+import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.interfaces.FrameInfoListener;
 import com.dmdirc.interfaces.NotificationListener;
-import com.dmdirc.interfaces.SelectionListener;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.messages.Styliser;
 
@@ -115,8 +116,8 @@ public class NodeLabel extends JPanel implements SelectionListener,
 
     /** {@inheritDoc} */
     @Override
-    public void selectionChanged(final FrameContainer window) {
-        if (equals(window)) {
+    public void selectionChanged(final TextFrame window) {
+        if (equals(window.getContainer())) {
             selected = true;
         } else {
             selected = false;

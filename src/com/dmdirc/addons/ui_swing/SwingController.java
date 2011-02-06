@@ -27,6 +27,7 @@ import com.dmdirc.Server;
 import com.dmdirc.addons.ui_swing.components.addonpanel.AddonPanel;
 import com.dmdirc.addons.ui_swing.components.addonpanel.PluginPanel;
 import com.dmdirc.addons.ui_swing.components.addonpanel.ThemePanel;
+import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.addons.ui_swing.components.statusbar.FeedbackNag;
 import com.dmdirc.addons.ui_swing.components.statusbar.SwingStatusBar;
 import com.dmdirc.addons.ui_swing.dialogs.DialogKeyListener;
@@ -48,6 +49,7 @@ import com.dmdirc.config.prefs.PreferencesInterface;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
+import com.dmdirc.ui.interfaces.Window;
 import com.dmdirc.util.validators.NumericalValidator;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
@@ -92,9 +94,6 @@ public class SwingController extends BasePlugin implements UIController {
      */
     private static final long serialVersionUID = 1;
 
-    /** Logger to use. */
-    private static final java.util.logging.Logger LOGGER =
-            java.util.logging.Logger.getLogger(SwingController.class.getName());
     /** Window factory. */
     private final SwingWindowFactory windowFactory =
             new SwingWindowFactory(this);
@@ -761,6 +760,14 @@ public class SwingController extends BasePlugin implements UIController {
      */
     public void addMenuItem(final String parentMenu, final JMenuItem menuItem) {
         me.getJMenuBar().addMenuItem(parentMenu, menuItem);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void requestWindowFocus(final Window window) {
+        if (window instanceof TextFrame) {
+            getMainFrame().setActiveFrame((TextFrame) window);
+        }
     }
 
 }
