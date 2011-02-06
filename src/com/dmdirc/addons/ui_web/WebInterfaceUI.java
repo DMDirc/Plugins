@@ -28,6 +28,7 @@ import com.dmdirc.addons.ui_web.uicomponents.WebStatusBar;
 import com.dmdirc.config.prefs.PreferencesInterface;
 import com.dmdirc.ui.core.components.StatusBarManager;
 import com.dmdirc.ui.interfaces.UIController;
+import com.dmdirc.ui.interfaces.Window;
 
 import java.net.URI;
 
@@ -38,8 +39,6 @@ import org.mortbay.jetty.security.SecurityHandler;
 
 /**
  * Creates and manages the web server and handles UI-wide events.
- *
- * @author chris
  */
 public class WebInterfaceUI implements UIController {
 
@@ -58,6 +57,8 @@ public class WebInterfaceUI implements UIController {
      * @param plugin The plugin which owns this Web UI
      */
     public WebInterfaceUI(final WebInterfacePlugin plugin) {
+        super();
+
         final SecurityHandler sh = new SecurityHandler();
         final Constraint constraint = new Constraint();
         final ConstraintMapping cm = new ConstraintMapping();
@@ -142,28 +143,38 @@ public class WebInterfaceUI implements UIController {
         // Do nothing
     }
 
+    /** {@inheritDoc} */
     @Override
     public PreferencesInterface getPluginPrefsPanel() {
         //TODO FIXME
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    /** {@inheritDoc} */
     @Override
     public PreferencesInterface getUpdatesPrefsPanel() {
         //TODO FIXME
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    /** {@inheritDoc} */
     @Override
     public PreferencesInterface getUrlHandlersPrefsPanel() {
         //TODO FIXME
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    /** {@inheritDoc} */
     @Override
     public PreferencesInterface getThemesPrefsPanel() {
         //TODO FIXME
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void requestWindowFocus(final Window window) {
+        // TODO: Tell clients to focus
     }
 
 }

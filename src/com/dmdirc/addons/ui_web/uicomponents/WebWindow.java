@@ -206,12 +206,6 @@ public class WebWindow implements Window, IRCDocumentListener,
 
     /** {@inheritDoc} */
     @Override
-    public void activateFrame() {
-        // No.
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public UIController getController() {
         //TODO FIXME
         return null;

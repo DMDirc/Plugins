@@ -22,9 +22,11 @@
 
 package com.dmdirc.addons.ui_swing.framemanager.tree;
 
+import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.TreeScroller;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
+
 import javax.swing.tree.TreePath;
 
 /**
@@ -32,13 +34,19 @@ import javax.swing.tree.TreePath;
  */
 public class TreeTreeScroller extends TreeScroller {
 
+    /** The Swing Controller that owns this scroller. */
+    private final SwingController controller;
+
     /**
      * Creates a new Tree scroller for the tree view.
      *
+     * @param controller The Swing Controller that owns this item
      * @param tree Tree view tree
      */
-    public TreeTreeScroller(final Tree tree) {
+    public TreeTreeScroller(final SwingController controller, final Tree tree) {
         super(tree);
+
+        this.controller = controller;
     }
 
     /** {@inheritDoc} */
@@ -65,7 +73,9 @@ public class TreeTreeScroller extends TreeScroller {
             return;
         }
         super.setPath(path);
-        ((TreeViewNode) path.getLastPathComponent()).getWindow().
-                activateFrame();
+
+        controller.requestWindowFocus(controller.getWindowFactory()
+                .getSwingWindow(((TreeViewNode) path.getLastPathComponent())
+                .getWindow()));
     }
 }

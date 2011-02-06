@@ -183,9 +183,9 @@ public class Tree extends JTree implements MouseMotionListener,
         if (dragSelect && dragButton) {
             final TreeViewNode node = getNodeForLocation(e.getX(), e.getY());
             if (node != null) {
-                ((TreeViewNode) new TreePath(node.getPath()).
-                        getLastPathComponent()).getWindow().
-                        activateFrame();
+                controller.requestWindowFocus(controller.getWindowFactory()
+                        .getSwingWindow(((TreeViewNode) new TreePath(node.getPath()).
+                        getLastPathComponent()).getWindow()));
             }
         }
         manager.checkRollover(e);
@@ -223,9 +223,9 @@ public class Tree extends JTree implements MouseMotionListener,
             final TreePath selectedPath = getPathForLocation(e.getX(),
                     e.getY());
             if (selectedPath != null) {
-                ((TreeViewNode) selectedPath.getLastPathComponent())
-                        .getWindow().
-                        activateFrame();
+                controller.requestWindowFocus(controller.getWindowFactory()
+                        .getSwingWindow(((TreeViewNode) selectedPath
+                        .getLastPathComponent()).getWindow()));
             }
         }
         processMouseEvents(e);
@@ -269,10 +269,8 @@ public class Tree extends JTree implements MouseMotionListener,
     public void processMouseEvents(final MouseEvent e) {
         final TreePath localPath = getPathForLocation(e.getX(), e.getY());
         if (localPath != null && e.isPopupTrigger()) {
-            TextFrame frame = null;
-
-            frame = (TextFrame) controller.getWindowFactory().getSwingWindow(
-                    ((TreeViewNode) localPath.getLastPathComponent())
+            final TextFrame frame = controller.getWindowFactory()
+                    .getSwingWindow(((TreeViewNode) localPath.getLastPathComponent())
                     .getWindow());
 
             if (frame == null) {

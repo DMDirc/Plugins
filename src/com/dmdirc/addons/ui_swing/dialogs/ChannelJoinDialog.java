@@ -22,11 +22,10 @@
 
 package com.dmdirc.addons.ui_swing.dialogs;
 
+import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.parser.common.ChannelJoinRequest;
-import com.dmdirc.ui.WindowManager;
 
 import java.awt.Dialog.ModalityType;
-import java.awt.Window;
 
 /**
  * A dialog to prompt the user for a channel and then join that channel.
@@ -35,6 +34,9 @@ public class ChannelJoinDialog extends StandardInputDialog {
 
     /** Serial version UID. */
     private static final long serialVersionUID = 1;
+
+    /** The main frame that owns this dialog. */
+    private final MainFrame mainFrame;
 
     /**
      * Creates a new dialog which prompts a user and then joins the channel
@@ -45,15 +47,18 @@ public class ChannelJoinDialog extends StandardInputDialog {
      * @param title Window title
      * @param message Window message
      */
-    public ChannelJoinDialog(final Window owner, final ModalityType modality,
+    public ChannelJoinDialog(final MainFrame owner, final ModalityType modality,
             final String title, final String message) {
         super(owner, modality, title, message);
+
+        this.mainFrame = owner;
     }
 
     /** {@inheritDoc} */
     @Override
     public boolean save() {
-        WindowManager.getActiveServer().join(new ChannelJoinRequest(getText()));
+        mainFrame.getActiveFrame().getContainer().getServer()
+                .join(new ChannelJoinRequest(getText()));
         return true;
     }
 
