@@ -24,9 +24,10 @@
 package com.dmdirc.addons.ui_swing.framemanager.windowmenu;
 
 import com.dmdirc.FrameContainer;
+import com.dmdirc.addons.ui_swing.SelectionListener;
 import com.dmdirc.addons.ui_swing.SwingController;
+import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.interfaces.FrameInfoListener;
-import com.dmdirc.interfaces.SelectionListener;
 import com.dmdirc.ui.IconManager;
 
 import java.awt.Font;
@@ -48,8 +49,12 @@ public class FrameContainerMenu extends JMenu implements FrameInfoListener,
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 1;
+
+    /** The swing controller that owns this item. */
+    private final SwingController controller;
+
     /** Wrapped frame. */
-    private FrameContainer frame;
+    private final FrameContainer frame;
 
     /**
      * Instantiates a new FrameContainer menu item wrapping the specified frame.
@@ -63,6 +68,7 @@ public class FrameContainerMenu extends JMenu implements FrameInfoListener,
         setIcon(IconManager.getIconManager().getIcon(frame.getIcon()));
         new WindowMenuScroller(this, controller.getDomain(), 0);
 
+        this.controller = controller;
         this.frame = frame;
 
         addActionListener(this);
@@ -112,13 +118,14 @@ public class FrameContainerMenu extends JMenu implements FrameInfoListener,
      */
     @Override
     public void actionPerformed(final ActionEvent e) {
-        frame.activateFrame();
+        controller.requestWindowFocus(controller.getWindowFactory()
+                .getSwingWindow(frame));
     }
 
     /** {@inheritDoc} */
     @Override
-    public void selectionChanged(final FrameContainer window) {
-        if (frame.equals(window)) {
+    public void selectionChanged(final TextFrame window) {
+        if (frame.equals(window.getContainer())) {
             setFont(getFont().deriveFont(Font.BOLD));
         } else {
             setFont(getFont().deriveFont(Font.PLAIN));

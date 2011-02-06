@@ -31,6 +31,7 @@ import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.actions.interfaces.ActionType;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
+import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
@@ -44,7 +45,6 @@ import com.dmdirc.parser.interfaces.ChannelInfo;
 import com.dmdirc.parser.interfaces.ClientInfo;
 import com.dmdirc.plugins.BasePlugin;
 import com.dmdirc.plugins.PluginManager;
-import com.dmdirc.ui.WindowManager;
 import com.dmdirc.util.ReturnableThread;
 
 import java.util.HashMap;
@@ -129,10 +129,12 @@ public final class WindowStatusPlugin extends BasePlugin implements ActionListen
      * Update the window status using the current active window.
      */
     public void updateStatus() {
-        final FrameContainer active = WindowManager.getActiveWindow();
+        final TextFrame active = ((SwingController) PluginManager
+                .getPluginManager().getPluginInfoByName("ui_swing").getPlugin())
+                .getMainFrame().getActiveFrame();
 
         if (active != null) {
-            updateStatus(active);
+            updateStatus(active == null ? null : active.getContainer());
         }
     }
 

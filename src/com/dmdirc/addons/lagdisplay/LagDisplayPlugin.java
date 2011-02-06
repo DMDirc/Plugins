@@ -29,6 +29,7 @@ import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.actions.interfaces.ActionType;
 import com.dmdirc.addons.ui_swing.SwingController;
+import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.config.ConfigManager;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
@@ -40,7 +41,6 @@ import com.dmdirc.interfaces.ActionListener;
 import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.plugins.BasePlugin;
 import com.dmdirc.plugins.PluginManager;
-import com.dmdirc.ui.WindowManager;
 import com.dmdirc.util.RollingList;
 
 import java.util.Date;
@@ -156,8 +156,13 @@ public final class LagDisplayPlugin extends BasePlugin implements
             }
         }
 
+        final TextFrame activeFrame = ((SwingController) PluginManager
+                .getPluginManager().getPluginInfoByName("ui_swing").getPlugin())
+                .getMainFrame().getActiveFrame();
+        final FrameContainer active = activeFrame == null ? null
+                : activeFrame.getContainer();
+
         if (!useAlternate && type.equals(CoreActionType.SERVER_GOTPING)) {
-            final FrameContainer active = WindowManager.getActiveWindow();
             final String value = formatTime(arguments[1]);
 
             getHistory(((Server) arguments[0])).add((Long) arguments[1]);
@@ -169,7 +174,6 @@ public final class LagDisplayPlugin extends BasePlugin implements
 
             panel.refreshDialog();
         } else if (!useAlternate && type.equals(CoreActionType.SERVER_NOPING)) {
-            final FrameContainer active = WindowManager.getActiveWindow();
             final String value = formatTime(arguments[1]) + "+";
 
             pings.put(((Server) arguments[0]), value);
@@ -180,8 +184,6 @@ public final class LagDisplayPlugin extends BasePlugin implements
 
             panel.refreshDialog();
         } else if (type.equals(CoreActionType.SERVER_DISCONNECTED)) {
-            final FrameContainer active = WindowManager.getActiveWindow();
-
             if (((Server) arguments[0]).isChild(active) || arguments[0] == active) {
                 panel.getComponent().setText("Not connected");
                 pings.remove((Server) arguments[0]);
@@ -208,7 +210,6 @@ public final class LagDisplayPlugin extends BasePlugin implements
                 final long sent = Long.parseLong(((String[]) arguments[2])[3].substring(9));
                 final Long duration = Long.valueOf(new Date().getTime() - sent);
                 final String value = formatTime(duration);
-                final FrameContainer active = WindowManager.getActiveWindow();
 
                 pings.put((Server) arguments[0], value);
                 getHistory(((Server) arguments[0])).add(duration);

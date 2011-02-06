@@ -20,49 +20,23 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.ui_dummy;
+package com.dmdirc.addons.ui_swing;
 
-import com.dmdirc.WritableFrameContainer;
-import com.dmdirc.commandparser.parsers.CommandParser;
-import com.dmdirc.ui.input.InputHandler;
-import com.dmdirc.ui.interfaces.InputWindow;
-import com.dmdirc.ui.interfaces.UIController;
+import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
+
+import java.util.EventListener;
 
 /**
- * Dummy input window, used for testing.
+ * Defines the methods that should be implemented by classes which wish to
+ * receive information about Swing frame selection changes.
  */
-public class DummyInputWindow implements InputWindow {
-
-    /** Our container. */
-    private final WritableFrameContainer container;
+public interface SelectionListener extends EventListener {
 
     /**
-     * Instantiates a new DummyInputWindow.
+     * Called when a new window is selected.
      *
-     * @param owner Parent window
-     * @param commandParser Parent command parser
+     * @param window The window that's now selected
      */
-    public DummyInputWindow(final WritableFrameContainer owner,
-            final CommandParser commandParser) {
-        this.container = owner;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public InputHandler getInputHandler() {
-        return new DummyInputHandler(new DummyInputField(), null, this);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public WritableFrameContainer getContainer() {
-        return container;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public UIController getController() {
-        return new DummyController();
-    }
+    void selectionChanged(final TextFrame window);
 
 }

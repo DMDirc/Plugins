@@ -22,17 +22,15 @@
 
 package com.dmdirc.addons.ui_swing.components;
 
-import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.ui_swing.MainFrame;
+import com.dmdirc.addons.ui_swing.SelectionListener;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.SwingWindowListener;
+import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.config.ConfigManager;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.interfaces.ConfigChangeListener;
-import com.dmdirc.interfaces.SelectionListener;
 import com.dmdirc.ui.IconManager;
-import com.dmdirc.ui.WindowManager;
-import com.dmdirc.ui.interfaces.Window;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -90,7 +88,7 @@ public class MDIBar extends JPanel implements SwingWindowListener,
 
         controller.getWindowFactory().addWindowListener(this);
 
-        WindowManager.addSelectionListener(this);
+        mainFrame.addSelectionListener(this);
         closeButton.addActionListener(this);
         config.addChangeListener(configDomain, "mdiBarVisibility", this);
 
@@ -120,13 +118,13 @@ public class MDIBar extends JPanel implements SwingWindowListener,
 
     /** {@inheritDoc} */
     @Override
-    public void windowAdded(final Window parent, final Window window) {
+    public void windowAdded(final TextFrame parent, final TextFrame window) {
         check();
     }
 
     /** {@inheritDoc} */
     @Override
-    public void windowDeleted(final Window parent, final Window window) {
+    public void windowDeleted(final TextFrame parent, final TextFrame window) {
         check();
     }
 
@@ -154,7 +152,7 @@ public class MDIBar extends JPanel implements SwingWindowListener,
 
     /** {@inheritDoc} */
     @Override
-    public void selectionChanged(final FrameContainer window) {
+    public void selectionChanged(final TextFrame window) {
         check();
     }
 }

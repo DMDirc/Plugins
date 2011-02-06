@@ -26,17 +26,15 @@ import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.TreeScroller;
+import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.addons.ui_swing.framemanager.FrameManager;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.interfaces.FrameInfoListener;
 import com.dmdirc.interfaces.NotificationListener;
-import com.dmdirc.interfaces.SelectionListener;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.ui.WindowManager;
-import com.dmdirc.ui.interfaces.UIController;
-import com.dmdirc.ui.interfaces.Window;
 
 import java.awt.Color;
 import java.awt.Rectangle;
@@ -62,8 +60,8 @@ import net.miginfocom.swing.MigLayout;
  * Manages open windows in the application in a tree style view.
  */
 public final class TreeFrameManager implements FrameManager,
-        Serializable, ConfigChangeListener, SelectionListener,
-        NotificationListener, FrameInfoListener {
+        Serializable, ConfigChangeListener, NotificationListener,
+        FrameInfoListener {
 
     /**
      * A version number for this class. It should be changed whenever the class
@@ -128,12 +126,8 @@ public final class TreeFrameManager implements FrameManager,
 
     /** {@inheritDoc} */
     @Override
-    public void setController(final UIController controller) {
-        if (!(controller instanceof SwingController)) {
-            throw new IllegalArgumentException("Controller must be an instance "
-                    + "of SwingController");
-        }
-        this.controller = (SwingController) controller;
+    public void setController(final SwingController controller) {
+        this.controller = controller;
 
         UIUtilities.invokeLater(new Runnable() {
 
@@ -162,7 +156,7 @@ public final class TreeFrameManager implements FrameManager,
 
     /** {@inheritDoc} */
     @Override
-    public void windowAdded(final Window parent, final Window window) {
+    public void windowAdded(final TextFrame parent, final TextFrame window) {
         if (nodes.containsKey(window.getContainer())) {
             return;
         }
@@ -175,7 +169,7 @@ public final class TreeFrameManager implements FrameManager,
 
     /** {@inheritDoc} */
     @Override
-    public void windowDeleted(final Window parent, final Window window) {
+    public void windowDeleted(final TextFrame parent, final TextFrame window) {
         UIUtilities.invokeAndWait(new Runnable() {
 
             /** {@inheritDoc} */
@@ -197,8 +191,6 @@ public final class TreeFrameManager implements FrameManager,
                 synchronized (nodes) {
                     nodes.remove(window.getContainer());
                 }
-                window.getContainer().removeSelectionListener(
-                        TreeFrameManager.this);
                 window.getContainer().removeFrameInfoListener(
                         TreeFrameManager.this);
                 window.getContainer().removeNotificationListener(
@@ -238,7 +230,6 @@ public final class TreeFrameManager implements FrameManager,
                     tree.scrollRectToVisible(new Rectangle(0, (int) view.getY(),
                             0, 0));
                 }
-                window.addSelectionListener(TreeFrameManager.this);
                 window.addFrameInfoListener(TreeFrameManager.this);
                 window.addNotificationListener(TreeFrameManager.this);
 
@@ -314,7 +305,7 @@ public final class TreeFrameManager implements FrameManager,
                 if (scroller != null) {
                     scroller.unregister();
                 }
-                scroller = new TreeTreeScroller(tree);
+                scroller = new TreeTreeScroller(controller, tree);
 
                 for (FrameContainer window
                         : WindowManager.getRootWindows()) {
@@ -327,8 +318,7 @@ public final class TreeFrameManager implements FrameManager,
                 }
                 if (controller.getMainFrame() != null
                         && controller.getMainFrame().getActiveFrame() != null) {
-                    selectionChanged(controller.getMainFrame().getActiveFrame()
-                            .getContainer());
+                    selectionChanged(controller.getMainFrame().getActiveFrame());
                 }
             }
         });
@@ -336,7 +326,7 @@ public final class TreeFrameManager implements FrameManager,
 
     /** {@inheritDoc} */
     @Override
-    public void selectionChanged(final FrameContainer window) {
+    public void selectionChanged(final TextFrame window) {
         synchronized (nodes) {
             final Collection<TreeViewNode> collection =
                     new ArrayList<TreeViewNode>(nodes.values());
@@ -354,7 +344,7 @@ public final class TreeFrameManager implements FrameManager,
                 public void run() {
                     final TreeNode[] treePath =
                             ((DefaultTreeModel) tree.getModel()).getPathToRoot(
-                            nodes.get(window));
+                            nodes.get(window.getContainer()));
                     if (treePath != null && treePath.length > 0) {
                         final TreePath path = new TreePath(treePath);
                         if (path != null) {

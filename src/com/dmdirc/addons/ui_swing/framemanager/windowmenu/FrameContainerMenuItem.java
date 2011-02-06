@@ -23,8 +23,10 @@
 package com.dmdirc.addons.ui_swing.framemanager.windowmenu;
 
 import com.dmdirc.FrameContainer;
+import com.dmdirc.addons.ui_swing.SelectionListener;
+import com.dmdirc.addons.ui_swing.SwingController;
+import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.interfaces.FrameInfoListener;
-import com.dmdirc.interfaces.SelectionListener;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.messages.Styliser;
 
@@ -47,6 +49,8 @@ public class FrameContainerMenuItem extends JMenuItem implements FrameInfoListen
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 1;
+    /** The swing controller that owns this item. */
+    private final SwingController controller;
     /** Wrapped frame. */
     private final FrameContainer frame;
     /** Parent window menu frame manager. */
@@ -55,14 +59,17 @@ public class FrameContainerMenuItem extends JMenuItem implements FrameInfoListen
     /**
      * Instantiates a new FrameContainer menu item wrapping the specified frame.
      *
+     * @param controller The Swing Controller that owns this item
      * @param frame Wrapped frame
      * @param manager Parent window menu frame manager.
      */
-    public FrameContainerMenuItem(final FrameContainer frame,
+    public FrameContainerMenuItem(final SwingController controller,
+            final FrameContainer frame,
             final WindowMenuFrameManager manager) {
         super(frame.getName(), IconManager.getIconManager().getIcon(frame.
                 getIcon()));
 
+        this.controller = controller;
         this.frame = frame;
         this.manager = manager;
 
@@ -78,7 +85,7 @@ public class FrameContainerMenuItem extends JMenuItem implements FrameInfoListen
             /** {@inheritDoc} */
             @Override
             public void run() {
-                if ((frame != null && window != null) && frame.equals(window)) {
+                if (frame != null && window != null && frame.equals(window)) {
                     setIcon(IconManager.getIconManager().getIcon(icon));
                 }
             }
@@ -93,7 +100,7 @@ public class FrameContainerMenuItem extends JMenuItem implements FrameInfoListen
             /** {@inheritDoc} */
             @Override
             public void run() {
-                if ((frame != null && window != null) && frame.equals(window)) {
+                if (frame != null && window != null && frame.equals(window)) {
                     setText(Styliser.stipControlCodes(name));
                 }
             }
@@ -113,15 +120,16 @@ public class FrameContainerMenuItem extends JMenuItem implements FrameInfoListen
      */
     @Override
     public void actionPerformed(final ActionEvent e) {
-        frame.activateFrame();
+        controller.requestWindowFocus(controller.getWindowFactory()
+                .getSwingWindow(frame));
     }
 
     /** {@inheritDoc} */
     @Override
-    public void selectionChanged(final FrameContainer window) {
-        if (frame.equals(window)) {
+    public void selectionChanged(final TextFrame window) {
+        if (frame.equals(window.getContainer())) {
             setFont(getFont().deriveFont(Font.BOLD));
-            final FrameContainer parentWindow = window.getParent();
+            final FrameContainer parentWindow = window.getContainer().getParent();
             if (parentWindow != null) {
                 manager.parentSelection(parentWindow);
             }
