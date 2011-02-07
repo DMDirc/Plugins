@@ -86,18 +86,17 @@ public class XmppClientInfo extends BaseClientInfo {
 
         if (packet.getType() == Type.unavailable) {
             endpoints.remove(parts[1]);
-            return;
-        }
+        } else  {
+            if (!endpoints.containsKey(parts[1])) {
+                endpoints.put(parts[1], new XmppEndpoint());
+            }
 
-        if (!endpoints.containsKey(parts[1])) {
-            endpoints.put(parts[1], new XmppEndpoint());
+            final XmppEndpoint endpoint = endpoints.get(parts[1]);
+            endpoint.setPriority(packet.getPriority());
+            endpoint.setMode(packet.getMode());
+            endpoint.setType(packet.getType());
+            endpoint.setStatus(packet.getStatus());
         }
-
-        final XmppEndpoint endpoint = endpoints.get(parts[1]);
-        endpoint.setPriority(packet.getPriority());
-        endpoint.setMode(packet.getMode());
-        endpoint.setType(packet.getType());
-        endpoint.setStatus(packet.getStatus());
 
         final boolean isAway = isAway();
 
