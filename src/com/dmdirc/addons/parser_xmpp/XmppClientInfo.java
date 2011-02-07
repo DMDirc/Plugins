@@ -23,9 +23,8 @@
 package com.dmdirc.addons.parser_xmpp;
 
 import com.dmdirc.parser.common.BaseClientInfo;
-import com.dmdirc.parser.interfaces.Parser;
-import java.util.ArrayList;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -55,7 +54,7 @@ public class XmppClientInfo extends BaseClientInfo {
      * @param user The username of the user this object represents
      * @param host The hostname of the user this object represents
      */
-    public XmppClientInfo(final Parser parser, final String nick,
+    public XmppClientInfo(final XmppParser parser, final String nick,
             final String user, final String host) {
         super(parser, nick, user, host);
     }
@@ -102,7 +101,7 @@ public class XmppClientInfo extends BaseClientInfo {
 
         if (wasAway != isAway) {
             // Their away status has changed
-            ((XmppParser) getParser()).handleAwayStateChange(this, wasAway);
+            getParser().handleAwayStateChange(this, wasAway);
         }
     }
 
@@ -165,6 +164,12 @@ public class XmppClientInfo extends BaseClientInfo {
      */
     public void setRosterEntry(final RosterEntry entry) {
         setRealname(entry.getName());
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public XmppParser getParser() {
+        return (XmppParser) super.getParser();
     }
 
 }

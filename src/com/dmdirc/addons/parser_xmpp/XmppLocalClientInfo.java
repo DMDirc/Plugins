@@ -23,7 +23,6 @@
 package com.dmdirc.addons.parser_xmpp;
 
 import com.dmdirc.parser.interfaces.LocalClientInfo;
-import com.dmdirc.parser.interfaces.Parser;
 
 /**
  * A representation of the local XMPP client.
@@ -38,7 +37,7 @@ public class XmppLocalClientInfo extends XmppClientInfo implements LocalClientIn
      * @param user The username of the user this object represents
      * @param host The hostname of the user this object represents
      */
-    public XmppLocalClientInfo(final Parser parser, final String nick,
+    public XmppLocalClientInfo(final XmppParser parser, final String nick,
             final String user, final String host) {
         super(parser, nick, user, host);
     }
@@ -58,13 +57,13 @@ public class XmppLocalClientInfo extends XmppClientInfo implements LocalClientIn
     /** {@inheritDoc} */
     @Override
     public void setAway(final String reason) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        getParser().setAway(reason);
     }
 
     /** {@inheritDoc} */
     @Override
     public void setBack() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        getParser().setBack();
     }
 
     /** {@inheritDoc} */

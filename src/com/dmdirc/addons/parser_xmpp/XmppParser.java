@@ -33,6 +33,7 @@ import com.dmdirc.parser.interfaces.ChannelInfo;
 import com.dmdirc.parser.interfaces.ClientInfo;
 import com.dmdirc.parser.interfaces.LocalClientInfo;
 import com.dmdirc.parser.interfaces.StringConverter;
+import com.dmdirc.parser.interfaces.callbacks.AwayStateListener;
 import com.dmdirc.parser.interfaces.callbacks.CallbackInterface;
 import com.dmdirc.parser.interfaces.callbacks.ChannelSelfJoinListener;
 import com.dmdirc.parser.interfaces.callbacks.ConnectErrorListener;
@@ -51,6 +52,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.ChatManagerListener;
@@ -66,7 +69,6 @@ import org.jivesoftware.smack.filter.PacketFilter;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Packet;
 import org.jivesoftware.smack.packet.Presence;
-import org.jivesoftware.smackx.ServiceDiscoveryManager;
 import org.jivesoftware.smackx.muc.MultiUserChat;
 
 /**
@@ -84,6 +86,10 @@ public class XmppParser extends BaseSocketAwareParser {
         IMPL_MAP.put(ChannelClientInfo.class, XmppChannelClientInfo.class);
     }
 
+    /** Pattern to use to extract priority. */
+    private static final Pattern PRIORITY_PATTERN
+            = Pattern.compile("(?i)(?:^|&)priority=([0-9]+)(?:$|&)");
+
     /** The connection to use. */
     private XMPPConnection connection;
 
@@ -96,6 +102,9 @@ public class XmppParser extends BaseSocketAwareParser {
     /** Whether or not to use a fake local channel for a buddy list replacement. */
     private final boolean useFakeChannel;
 
+    /** The priority of this endpoint. */
+    private final int priority;
+
     /** The fake channel to use is useFakeChannel is enabled. */
     private XmppFakeChannel fakeChannel;
 
@@ -107,13 +116,15 @@ public class XmppParser extends BaseSocketAwareParser {
     public XmppParser(final URI address) {
         super(address, IMPL_MAP);
 
-        useFakeChannel = getURI().getQuery() != null && getURI().getQuery().matches("(?i)(^|,)showchannel($|,)");
+         if (address.getQuery() == null) {
+            useFakeChannel = false;
+            priority = 0;
+        } else {
+            final Matcher matcher = PRIORITY_PATTERN.matcher(address.getQuery());
 
-        // Make sure the ServiceDiscoveryManager adds its connection listener.
-        // Otherwise, connections can fail if the MultiUserChat instance
-        // tries to invoke its connection listener first.
-        // See http://issues.igniterealtime.org/browse/SMACK-315
-        ServiceDiscoveryManager.getIdentityName();
+            useFakeChannel = address.getQuery().matches("(?i).*(^|&)showchannel($|&).*");
+            priority = matcher.find() ? Integer.parseInt(matcher.group(1)) : 0;
+        }
     }
 
     /** {@inheritDoc} */
@@ -434,7 +445,7 @@ public class XmppParser extends BaseSocketAwareParser {
         config.setReconnectionAllowed(false);
         config.setRosterLoadedAtLogin(true);
         config.setSocketFactory(getSocketFactory());
-        connection = new XMPPConnection(config);
+        connection = new FixedXmppConnection(config);
 
         try {
             connection.connect();
@@ -446,6 +457,7 @@ public class XmppParser extends BaseSocketAwareParser {
 
             connection.login(userInfoParts[0], userInfoParts[1], "DMDirc.");
 
+            connection.sendPacket(new Presence(Presence.Type.available, null, priority, Presence.Mode.available));
             connection.getRoster().addRosterListener(new RosterListenerImpl());
 
             getCallbackManager().getCallbackType(ServerReadyListener.class).call();
@@ -490,6 +502,30 @@ public class XmppParser extends BaseSocketAwareParser {
         }
     }
 
+    /**
+     * Marks the local user as away with the specified reason.
+     *
+     * @param reason The away reason
+     */
+    public void setAway(final String reason) {
+        connection.sendPacket(new Presence(Presence.Type.available, reason,
+                priority, Presence.Mode.away));
+
+        getCallbackManager().getCallbackType(AwayStateListener.class)
+                .call(AwayState.HERE, AwayState.AWAY, reason);
+    }
+
+    /**
+     * Marks the local user as back.
+     */
+    public void setBack() {
+        connection.sendPacket(new Presence(Presence.Type.available, null,
+                priority, Presence.Mode.available));
+
+        getCallbackManager().getCallbackType(AwayStateListener.class)
+                .call(AwayState.AWAY, AwayState.HERE, null);
+    }
+
     private class ConnectionListenerImpl implements ConnectionListener {
 
         /** {@inheritDoc} */
@@ -530,19 +566,19 @@ public class XmppParser extends BaseSocketAwareParser {
         /** {@inheritDoc} */
         @Override
         public void entriesAdded(final Collection<String> clctn) {
-            System.out.println("Added: " + clctn);
+            // Do nothing, yet
         }
 
         /** {@inheritDoc} */
         @Override
         public void entriesUpdated(final Collection<String> clctn) {
-            System.out.println("Updated: " + clctn);
+            // Do nothing, yet
         }
 
         /** {@inheritDoc} */
         @Override
         public void entriesDeleted(final Collection<String> clctn) {
-            System.out.println("Deleted: " + clctn);
+            // Do nothing, yet
         }
 
         /** {@inheritDoc} */
