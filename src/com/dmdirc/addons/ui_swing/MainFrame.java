@@ -41,6 +41,7 @@ import com.dmdirc.addons.ui_swing.framemanager.tree.TreeFrameManager;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.interfaces.FrameInfoListener;
+import com.dmdirc.interfaces.NotificationListener;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.ui.CoreUIUtils;
@@ -49,6 +50,7 @@ import com.dmdirc.util.ListenerList;
 import com.dmdirc.util.QueuedLinkedHashSet;
 import com.dmdirc.util.ReturnableThread;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
@@ -69,7 +71,8 @@ import net.miginfocom.swing.MigLayout;
  * The main application frame.
  */
 public final class MainFrame extends JFrame implements WindowListener,
-        ConfigChangeListener, SwingWindowListener, FrameInfoListener {
+        ConfigChangeListener, SwingWindowListener, FrameInfoListener,
+        NotificationListener {
 
     /**
      * A version number for this class. It should be changed whenever the class
@@ -598,6 +601,9 @@ public final class MainFrame extends JFrame implements WindowListener,
         framePanel.setVisible(false);
         framePanel.removeAll();
 
+        if (this.activeFrame != null) {
+            this.activeFrame.getContainer().removeNotificationListener(this);
+        }
         this.activeFrame = activeFrame;
 
         if (activeFrame == null) {
@@ -606,6 +612,7 @@ public final class MainFrame extends JFrame implements WindowListener,
         } else {
             framePanel.add(activeFrame, "grow");
             setTitle(activeFrame.getContainer().getTitle());
+            activeFrame.getContainer().addNotificationListener(this);
         }
 
         framePanel.setVisible(true);
@@ -693,5 +700,20 @@ public final class MainFrame extends JFrame implements WindowListener,
     public void titleChanged(final FrameContainer window,
             final String title) {
         setTitle(title);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void notificationSet(final FrameContainer window,
+            final Color colour) {
+        if (activeFrame.getContainer().equals(window)) {
+            window.clearNotification();
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void notificationCleared(final FrameContainer window) {
+        //Ignore
     }
 }
