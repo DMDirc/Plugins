@@ -658,6 +658,7 @@ public final class MainFrame extends JFrame implements WindowListener,
         if (activeFrame == null) {
             setActiveFrame(window);
         }
+        window.getContainer().addFrameInfoListener(this);
     }
 
     /** {@inheritDoc} */
@@ -682,6 +683,7 @@ public final class MainFrame extends JFrame implements WindowListener,
                 setActiveFrame(focusOrder.peek());
             }
         }
+        window.getContainer().removeFrameInfoListener(this);
     }
 
     /** {@inheritDoc} */
@@ -696,6 +698,7 @@ public final class MainFrame extends JFrame implements WindowListener,
         //Ignore
     }
 
+    /** {@inheritDoc} */
     @Override
     public void titleChanged(final FrameContainer window,
             final String title) {
