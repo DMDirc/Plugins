@@ -597,37 +597,48 @@ public final class MainFrame extends JFrame implements WindowListener,
      * @param activeFrame The frame to be activated, or null to show none
      */
     public void setActiveFrame(final TextFrame activeFrame) {
-        focusOrder.offerAndMove(activeFrame);
-        framePanel.setVisible(false);
-        framePanel.removeAll();
+        UIUtilities.invokeLater(new Runnable() {
 
-        if (this.activeFrame != null) {
-            this.activeFrame.getContainer().removeNotificationListener(this);
-        }
-        this.activeFrame = activeFrame;
+            /** {@inheritDoc} */
+            @Override
+            public void run() {
+                focusOrder.offerAndMove(activeFrame);
+                framePanel.setVisible(false);
+                framePanel.removeAll();
 
-        if (activeFrame == null) {
-            framePanel.add(new JPanel(), "grow");
-            setTitle(null);
-        } else {
-            framePanel.add(activeFrame, "grow");
-            setTitle(activeFrame.getContainer().getTitle());
-            activeFrame.getContainer().addNotificationListener(this);
-        }
+                if (MainFrame.this.activeFrame != null) {
+                    MainFrame.this.activeFrame.getContainer()
+                            .removeNotificationListener(MainFrame.this);
+                }
+                MainFrame.this.activeFrame = activeFrame;
 
-        framePanel.setVisible(true);
+                if (activeFrame == null) {
+                    framePanel.add(new JPanel(), "grow");
+                    setTitle(null);
+                } else {
+                    framePanel.add(activeFrame, "grow");
+                    setTitle(activeFrame.getContainer().getTitle());
+                    activeFrame.getContainer().addNotificationListener(
+                            MainFrame.this);
+                }
 
-        if (activeFrame != null) {
-            activeFrame.activateFrame();
-        }
+                framePanel.setVisible(true);
 
-        for (SelectionListener listener : listeners.get(SelectionListener.class)) {
-            listener.selectionChanged(activeFrame);
-        }
+                if (activeFrame != null) {
+                    activeFrame.activateFrame();
+                }
 
-        ActionManager.getActionManager().triggerEvent(
-                CoreActionType.CLIENT_FRAME_CHANGED, null,
-                activeFrame == null ? null : activeFrame.getContainer());
+                for (SelectionListener listener : listeners.get(
+                        SelectionListener.class)) {
+                    listener.selectionChanged(activeFrame);
+                }
+
+                ActionManager.getActionManager().triggerEvent(
+                        CoreActionType.CLIENT_FRAME_CHANGED, null,
+                        activeFrame == null ? null : activeFrame
+                        .getContainer());
+            }
+        });
     }
 
     /**
