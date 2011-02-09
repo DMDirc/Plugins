@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_dummy;
 
 import com.dmdirc.Channel;
+import com.dmdirc.FrameContainer;
 import com.dmdirc.Server;
 import com.dmdirc.config.prefs.PreferencesInterface;
 import com.dmdirc.plugins.BasePlugin;
@@ -130,6 +131,12 @@ public final class DummyController extends BasePlugin implements UIController {
     /** {@inheritDoc} */
     @Override
     public void requestWindowFocus(final Window window) {
+        // Ignore
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void requestWindowFocus(final FrameContainer container) {
         // Ignore
     }
 }
