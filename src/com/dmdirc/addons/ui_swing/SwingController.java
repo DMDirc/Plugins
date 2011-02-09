@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_swing;
 
 import com.dmdirc.Channel;
+import com.dmdirc.FrameContainer;
 import com.dmdirc.Server;
 import com.dmdirc.addons.ui_swing.components.addonpanel.AddonPanel;
 import com.dmdirc.addons.ui_swing.components.addonpanel.PluginPanel;
@@ -768,6 +769,12 @@ public class SwingController extends BasePlugin implements UIController {
         if (window instanceof TextFrame) {
             getMainFrame().setActiveFrame((TextFrame) window);
         }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void requestWindowFocus(final FrameContainer container) {
+        requestWindowFocus(getWindowFactory().getSwingWindow(container));
     }
 
 }
