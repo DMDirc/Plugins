@@ -228,7 +228,7 @@ public final class MainFrame extends JFrame implements WindowListener,
     /** {@inheritDoc}. */
     @Override
     public void setTitle(final String title) {
-        if (title == null || getActiveFrame() == null) {
+        if (title == null || activeFrame == null) {
             super.setTitle(getTitlePrefix());
         } else {
             super.setTitle(getTitlePrefix() + " - " + title);
