@@ -103,7 +103,7 @@ public class ServerListServiceProvider implements ServiceProvider {
         if ("getParser".equals(name)) {
             return new ExportedService(ServerListServiceProvider.class, "getParser", this);
         } else {
-            return new ExportedService(null, null);
+            return null;
         }
     }
 
