@@ -730,4 +730,12 @@ public final class MainFrame extends JFrame implements WindowListener,
     public void notificationCleared(final FrameContainer window) {
         //Ignore
     }
+
+    /** {@inheritDoc} */
+    @Override
+    public void dispose() {
+        removeWindowListener(this);
+        IdentityManager.getGlobalConfig().removeListener(this);
+        super.dispose();
+    }
 }
