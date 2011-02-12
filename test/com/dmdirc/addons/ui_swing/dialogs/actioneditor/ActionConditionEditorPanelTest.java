@@ -38,7 +38,7 @@ import org.uispec4j.TextBox;
 public class ActionConditionEditorPanelTest extends DMDircUITestCase {
 
     static {
-        ActionManager.init();
+        ActionManager.getActionManager().initialise();
     }
 
     @Test

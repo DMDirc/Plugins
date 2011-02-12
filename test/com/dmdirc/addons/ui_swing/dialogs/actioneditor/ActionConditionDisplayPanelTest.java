@@ -46,7 +46,7 @@ public class ActionConditionDisplayPanelTest extends DMDircUITestCase {
     Pattern pattern = Pattern.compile(".+<body>(.+)</body>.+", Pattern.DOTALL);
 
     static {
-        ActionManager.init();
+        ActionManager.getActionManager().initialise();
     }
 
     @Test
