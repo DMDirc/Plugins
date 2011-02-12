@@ -48,6 +48,8 @@ public final class ErrorTableModel extends AbstractTableModel implements
     private static final long serialVersionUID = 2;
     /** Data list. */
     private final List<ProgramError> errors;
+    /** Are we ready? */
+    private boolean ready = false;
 
     /** Creates a new instance of ErrorTableModel. */
     public ErrorTableModel() {
@@ -65,6 +67,7 @@ public final class ErrorTableModel extends AbstractTableModel implements
         this.errors = Collections.synchronizedList(errors);
 
         ErrorManager.getErrorManager().addErrorListener(this);
+        ready = true;
     }
 
     /**
@@ -294,6 +297,14 @@ public final class ErrorTableModel extends AbstractTableModel implements
     /** {@inheritDoc} */
     @Override
     public boolean isReady() {
-        return true;
+        return ready;
+    }
+
+    /**
+     * Disposes of this model, removing any added listeners.
+     */
+    public void dispose() {
+        ErrorManager.getErrorManager().removeErrorListener(this);
+        ready = false;
     }
 }

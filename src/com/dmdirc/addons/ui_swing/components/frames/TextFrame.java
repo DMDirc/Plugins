@@ -495,4 +495,10 @@ public abstract class TextFrame extends JPanel implements Window,
         getTextPane().setBackground(getContainer().getConfigManager()
                 .getOptionColour("ui", "backgroundcolour"));
     }
+
+    /** Disposes of this window, removing any listeners. */
+    public void dispose() {
+        frameParent.getConfigManager().removeListener(this);
+        frameParent.removeCloseListener(this);
+    }
 }

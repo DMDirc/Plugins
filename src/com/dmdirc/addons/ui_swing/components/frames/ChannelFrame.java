@@ -73,7 +73,7 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
     /** Topic bar. */
     private TopicBar topicBar;
     /** UI controller. */
-    private SwingController controller;
+    private final SwingController controller;
 
     /**
      * Creates a new instance of ChannelFrame. Sets up callbacks and handlers,
@@ -278,5 +278,13 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
         topicBar.close();
 
         super.windowClosing(window);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void dispose() {
+        ActionManager.getActionManager().unregisterListener(this);
+        IdentityManager.getGlobalConfig().removeListener(this);
+        super.dispose();
     }
 }
