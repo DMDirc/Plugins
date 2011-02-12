@@ -404,4 +404,11 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
         super.activateFrame();
         inputField.requestFocusInWindow();
     }
+
+    /** {@inheritDoc} */
+    @Override
+    public void dispose() {
+        frameParent.getConfigManager().removeListener(this);
+        super.dispose();
+    }
 }

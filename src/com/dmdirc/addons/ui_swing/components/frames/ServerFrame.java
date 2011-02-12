@@ -57,10 +57,8 @@ public final class ServerFrame extends InputTextFrame implements
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 9;
-
     /** popup menu item. */
     private JMenuItem settingsMI;
-
     /** The SSL certificate dialog we're displaying for this server, if any. */
     private SSLCertificateDialog sslDialog = null;
 
@@ -174,5 +172,12 @@ public final class ServerFrame extends InputTextFrame implements
         }
 
         super.windowClosing(window);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void dispose() {
+        ((Server) frameParent).removeCertificateProblemListener(this);
+        super.dispose();
     }
 }

@@ -149,4 +149,10 @@ public class DMDircEventQueue extends EventQueue {
             }
         }
     }
+
+    /** {@inheritDoc} */
+    @Override
+    public void pop() { //NOPMD
+        super.pop();
+    }
 }

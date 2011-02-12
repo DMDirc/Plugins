@@ -110,6 +110,10 @@ public class SwingController extends BasePlugin implements UIController {
     private final List<java.awt.Window> windows;
     /** Error dialog. */
     private ErrorListDialog errorDialog;
+    /** DMDirc event queue. */
+    private DMDircEventQueue eventQueue;
+    /** Key listener to handle dialog key events. */
+    private DialogKeyListener keyListener;
 
     /** Instantiates a new SwingController. */
     public SwingController() {
@@ -460,10 +464,11 @@ public class SwingController extends BasePlugin implements UIController {
                     "Swing UI can't be run in a headless environment");
         }
 
-        Toolkit.getDefaultToolkit().getSystemEventQueue().
-                push(new DMDircEventQueue(this));
+        eventQueue = new DMDircEventQueue(this);
+        keyListener = new DialogKeyListener();
+        Toolkit.getDefaultToolkit().getSystemEventQueue().push(eventQueue);
         KeyboardFocusManager.getCurrentKeyboardFocusManager().
-                addKeyEventDispatcher(new DialogKeyListener());
+                addKeyEventDispatcher(keyListener);
 
         UIUtilities.invokeAndWait(new Runnable() {
 
@@ -492,7 +497,18 @@ public class SwingController extends BasePlugin implements UIController {
     /** {@inheritDoc} */
     @Override
     public void onUnload() {
-        // Do nothing
+        errorDialog.dispose();
+        WindowManager.removeFrameListener(windowFactory);
+        mainFrameCreated.set(false);
+        me.dispose();
+        windowFactory.dispose();
+        StatusBarManager.getStatusBarManager().registerStatusBar(statusBar);
+        eventQueue.pop();
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().
+                removeKeyEventDispatcher(keyListener);
+        for (java.awt.Window window : getTopLevelWindows()) {
+            window.dispose();
+        }
     }
 
     /** {@inheritDoc} */

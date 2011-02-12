@@ -206,4 +206,15 @@ public class SwingWindowFactory implements FrameListener {
             }
         });
     }
+
+    /** Disposes of this window factory, removing all listeners. */
+    public void dispose() {
+        for (SwingWindowListener listener : listeners.get(
+                SwingWindowListener.class)) {
+            listeners.remove(SwingWindowListener.class, listener);
+        }
+        for (TextFrame frame : windows.values()) {
+            frame.dispose();
+        }
+    }
 }
