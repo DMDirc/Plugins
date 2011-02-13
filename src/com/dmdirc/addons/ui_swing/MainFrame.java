@@ -82,6 +82,14 @@ public final class MainFrame extends JFrame implements WindowListener,
     private static final long serialVersionUID = 9;
     /** Focus queue. */
     private final QueuedLinkedHashSet<TextFrame> focusOrder;
+    /** Swing Controller. */
+    private final SwingController controller;
+    /** Client Version. */
+    private final String version;
+    /** Frame manager used for ctrl tab frame switching. */
+    private final CtrlTabWindowManager frameManager;
+    /** The listeners registered with this class. */
+    private final ListenerList listeners = new ListenerList();
     /** The main application icon. */
     private ImageIcon imageIcon;
     /** The frame manager that's being used. */
@@ -98,18 +106,12 @@ public final class MainFrame extends JFrame implements WindowListener,
     private boolean showVersion;
     /** Exit code. */
     private int exitCode = 0;
-    /** Swing Controller. */
-    private final SwingController controller;
     /** Status bar. */
     private SwingStatusBar statusBar;
-    /** Client Version. */
-    private final String version;
     /** Main split pane. */
     private SplitPane mainSplitPane;
-    /** Frame manager used for ctrl tab frame switching. */
-    private final CtrlTabWindowManager frameManager;
-    /** The listeners registered with this class. */
-    private final ListenerList listeners = new ListenerList();
+    /** Are we quitting or closing? */
+    private boolean quitting = false;
 
     /**
      * Creates new form MainFrame.
@@ -527,6 +529,7 @@ public final class MainFrame extends JFrame implements WindowListener,
      */
     public void doQuit(final int exitCode) {
         this.exitCode = exitCode;
+        quitting = true;
 
         new LoggingSwingWorker<Void, Void>() {
 
@@ -734,7 +737,9 @@ public final class MainFrame extends JFrame implements WindowListener,
     /** {@inheritDoc} */
     @Override
     public void dispose() {
-        removeWindowListener(this);
+        if (!quitting) {
+            removeWindowListener(this);
+        }
         IdentityManager.getGlobalConfig().removeListener(this);
         super.dispose();
     }
