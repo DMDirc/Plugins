@@ -106,6 +106,6 @@ public class InstallerWindow extends StandardDialog implements ActionListener {
         jpb.setValue(100);
         getOkButton().setEnabled(true);
         pack();
-        parentWindow.loadData();
+        parentWindow.loadData(false);
     }
 }
