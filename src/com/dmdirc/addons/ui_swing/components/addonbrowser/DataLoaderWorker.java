@@ -23,39 +23,25 @@
 package com.dmdirc.addons.ui_swing.components.addonbrowser;
 
 import com.dmdirc.Main;
-import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
-import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.util.ConfigFile;
-import com.dmdirc.util.DownloadListener;
-import com.dmdirc.util.Downloader;
 import com.dmdirc.util.InvalidConfigFileException;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
-import javax.swing.Box;
-
-import javax.swing.JPanel;
-import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
-import javax.swing.text.StyleConstants;
-
-import net.miginfocom.swing.MigLayout;
 
 /**
  * Loads the addon data feed into the addon browser.
  */
 public class DataLoaderWorker
-        extends LoggingSwingWorker<Collection<AddonInfo>, Object>
-        implements DownloadListener {
+        extends LoggingSwingWorker<Collection<Map<String, String>>, Object> {
 
     /** List to load data into. */
     private final AddonTable table;
@@ -63,24 +49,18 @@ public class DataLoaderWorker
     private final BrowserWindow browserWindow;
     /** Table's parent scrollpane. */
     private final JScrollPane scrollPane;
-    /** Downloader progress bar. */
-    private final JProgressBar jpb = new JProgressBar(0, 100);
-    /** Refresh addons feed? */
-    private final boolean download;
 
     /**
      * Creates a new data loader worker.
      *
      * @param table Table to load data into
-     * @param download Download new addons feed?
      * @param browserWindow Browser window to pass to table objects
      * @param scrollPane Table's parent scrollpane
      */
-    public DataLoaderWorker(final AddonTable table, final boolean download,
+    public DataLoaderWorker(final AddonTable table,
             final BrowserWindow browserWindow, final JScrollPane scrollPane) {
         super();
 
-        this.download = download;
         this.table = table;
         this.browserWindow = browserWindow;
         this.scrollPane = scrollPane;
@@ -88,46 +68,17 @@ public class DataLoaderWorker
 
     /** {@inheritDoc} */
     @Override
-    protected Collection<AddonInfo> doInBackground() {
-        final JPanel loadingPanel = new JPanel(
-                new MigLayout("fill, alignx 50%, aligny 50%"));
-        scrollPane.setViewportView(loadingPanel);
-        if (download) {
-            final TextLabel label = new TextLabel(
-                    "Downloading addon info, please wait...");
-            label.setAlignment(StyleConstants.ALIGN_CENTER);
-            loadingPanel.add(Box.createVerticalGlue(), "growy, pushy, wrap");
-            loadingPanel.add(label, "growx, wrap");
-            loadingPanel.add(jpb, "growx, wrap");
-            loadingPanel.add(Box.createVerticalGlue(), "growy, pushy");
-            try {
-                Downloader.downloadPage("http://addons.dmdirc.com/feed",
-                        Main.getConfigDir() + File.separator + "addons.feed",
-                        this);
-            } catch (IOException ex) {
-                loadingPanel.removeAll();
-                loadingPanel.add(new TextLabel("Unable to download feeds."));
-                return Collections.<AddonInfo>emptyList();
-            }
-        }
-
-        loadingPanel.removeAll();
-        loadingPanel.add(new TextLabel("Loading addon info, please wait."));
+    protected Collection<Map<String, String>> doInBackground() {
         final ConfigFile data = new ConfigFile(Main.getConfigDir()
                 + File.separator + "addons.feed");
         try {
             data.read();
         } catch (IOException ex) {
-            return Collections.<AddonInfo>emptyList();
+            return Collections.<Map<String, String>>emptyList();
         } catch (InvalidConfigFileException ex) {
-            return Collections.<AddonInfo>emptyList();
+            return Collections.<Map<String, String>>emptyList();
         }
-
-        final List<AddonInfo> list = new ArrayList<AddonInfo>();
-        for (Map<String, String> entry : data.getKeyDomains().values()) {
-            list.add(new AddonInfo(entry));
-        }
-        return list;
+        return data.getKeyDomains().values();
     }
 
     /** {@inheritDoc} */
@@ -136,15 +87,14 @@ public class DataLoaderWorker
         if (isCancelled()) {
             return;
         }
-
-        Collection<AddonInfo> data;
+        Collection<Map<String, String>> data;
         try {
             data = get();
         } catch (InterruptedException ex) {
-            data = Collections.<AddonInfo>emptyList();
+            data = Collections.<Map<String, String>>emptyList();
         } catch (ExecutionException ex) {
             Logger.appError(ErrorLevel.MEDIUM, ex.getMessage(), ex);
-            data = Collections.<AddonInfo>emptyList();
+            data = Collections.<Map<String, String>>emptyList();
         }
         final int selectedRow;
         if (table.getRowCount() > 0 && table.getSelectedRow() > 0) {
@@ -153,7 +103,8 @@ public class DataLoaderWorker
             selectedRow = 0;
         }
         table.getModel().setRowCount(0);
-        for (AddonInfo info : data) {
+        for (Map<String, String> entry : data) {
+            final AddonInfo info = new AddonInfo(entry);
             table.getModel().addRow(new Object[]{
                 new AddonInfoLabel(info, browserWindow),
             });
@@ -161,31 +112,4 @@ public class DataLoaderWorker
         table.getSelectionModel().setSelectionInterval(selectedRow, selectedRow);
         scrollPane.setViewportView(table);
     }
-
-    /** {@inheritDoc} */
-    @Override
-    public void downloadProgress(final float percent) {
-        UIUtilities.invokeLater(new Runnable() {
-
-            /** {@inheritDoc} */
-            @Override
-            public void run() {
-                jpb.setValue((int) percent);
-            }
-        });
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void setIndeterminate(final boolean indeterminate) {
-        UIUtilities.invokeLater(new Runnable() {
-
-            /** {@inheritDoc} */
-            @Override
-            public void run() {
-                jpb.setIndeterminate(indeterminate);
-            }
-        });
-   }
-
 }

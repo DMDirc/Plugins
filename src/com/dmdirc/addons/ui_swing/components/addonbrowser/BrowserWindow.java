@@ -22,6 +22,8 @@
 
 package com.dmdirc.addons.ui_swing.components.addonbrowser;
 
+import com.dmdirc.addons.ui_swing.components.text.TextLabel;
+
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -95,6 +97,9 @@ public class BrowserWindow extends JDialog implements ActionListener {
         setResizable(false);
         setLayout(new MigLayout("fill, wmin 650, hmin 600"));
         scrollPane.getVerticalScrollBar().setUnitIncrement(15);
+        final JPanel loadingPanel = new JPanel(
+                new MigLayout("filly, alignx 50%"));
+        loadingPanel.add(new TextLabel("Loading addons, please wait."));
 
         JPanel panel = new JPanel(new MigLayout("fill"));
         panel.setBorder(BorderFactory.createTitledBorder(UIManager.getBorder(
@@ -146,7 +151,8 @@ public class BrowserWindow extends JDialog implements ActionListener {
         list.setRowSorter(sorter);
         list.setShowGrid(false);
 
-        loadData(true);
+        scrollPane.setViewportView(loadingPanel);
+        loadData();
 
         pack();
         setLocationRelativeTo(parentWindow);
@@ -183,12 +189,9 @@ public class BrowserWindow extends JDialog implements ActionListener {
 
     /**
      * Loads addon data from the locally cached feed file.
-     *
-     * @param download Download new addon feed?
      */
-    public final void loadData(final boolean download) {
-        new DataLoaderWorker(list, download, this, scrollPane)
-                .executeInExecutor();
+    public final void loadData() {
+        new DataLoaderWorker(list, this, scrollPane).executeInExecutor();
     }
 
     /**

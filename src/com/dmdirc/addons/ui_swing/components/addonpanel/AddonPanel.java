@@ -24,7 +24,7 @@ package com.dmdirc.addons.ui_swing.components.addonpanel;
 
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
-import com.dmdirc.addons.ui_swing.components.addonbrowser.BrowserWindow;
+import com.dmdirc.addons.ui_swing.components.addonbrowser.DownloaderWindow;
 import com.dmdirc.addons.ui_swing.components.renderers.AddonCellRenderer;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.config.prefs.PreferencesInterface;
@@ -211,7 +211,7 @@ public abstract class AddonPanel extends JPanel implements
 
             addonList.repaint();
         } else if (e.getSource() != toggleButton) {
-            new BrowserWindow(parentWindow);
+            new DownloaderWindow(parentWindow, controller);
         }
     }
 

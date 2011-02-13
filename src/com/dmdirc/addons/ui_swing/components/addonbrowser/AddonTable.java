@@ -87,7 +87,7 @@ public class AddonTable extends JTable {
     /** {@inheritDoc} */
     @Override
     public void setRowSorter(final RowSorter<? extends TableModel> sorter) {
-        if (sorter != null && !(sorter instanceof AddonSorter)) {
+        if (!(sorter instanceof AddonSorter)) {
             throw new IllegalArgumentException(
                     "Row sorter must be of type AddonSorter");
         }
