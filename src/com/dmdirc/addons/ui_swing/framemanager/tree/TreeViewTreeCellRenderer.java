@@ -30,10 +30,13 @@ import com.dmdirc.ui.messages.Styliser;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 
 import javax.swing.JLabel;
 import javax.swing.JTree;
 import javax.swing.tree.TreeCellRenderer;
+
+import net.miginfocom.layout.PlatformDefaults;
 
 /**
  * Displays a node in a tree according to its type.
@@ -138,6 +141,9 @@ public class TreeViewTreeCellRenderer implements TreeCellRenderer,
         label.setBackground(background);
         label.setOpaque(true);
         label.setTextStyle(styliser, sb.toString());
+        label.setPreferredSize(new Dimension(100000, label.getFont().getSize()
+                + (int) (PlatformDefaults.getUnitValueX("related").
+                getValue())));
 
         return label;
     }
