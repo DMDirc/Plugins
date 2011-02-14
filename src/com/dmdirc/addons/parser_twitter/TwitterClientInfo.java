@@ -23,6 +23,7 @@
 package com.dmdirc.addons.parser_twitter;
 
 import com.dmdirc.addons.parser_twitter.api.TwitterUser;
+import com.dmdirc.parser.common.AwayState;
 import com.dmdirc.parser.interfaces.ChannelClientInfo;
 import com.dmdirc.parser.interfaces.LocalClientInfo;
 import com.dmdirc.parser.interfaces.Parser;
@@ -323,6 +324,12 @@ public class TwitterClientInfo implements LocalClientInfo {
                 channelClients.remove(channelClient);
             }
         }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public AwayState getAwayState() {
+        return AwayState.HERE;
     }
 
 }

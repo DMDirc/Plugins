@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.parser_xmpp;
 
+import com.dmdirc.parser.common.AwayState;
 import com.dmdirc.parser.common.BaseClientInfo;
 
 import java.util.ArrayList;
@@ -115,6 +116,12 @@ public class XmppClientInfo extends BaseClientInfo {
         final Mode presence = getAggregatePresence();
 
         return presence == null || presence.compareTo(Mode.away) >= 0;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public AwayState getAwayState() {
+        return isAway() ? AwayState.AWAY : AwayState.HERE;
     }
 
     /**
