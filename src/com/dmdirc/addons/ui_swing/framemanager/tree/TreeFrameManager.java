@@ -308,7 +308,7 @@ public final class TreeFrameManager implements FrameManager,
                 scroller = new TreeTreeScroller(controller, tree);
 
                 for (FrameContainer window
-                        : WindowManager.getRootWindows()) {
+                        : WindowManager.getWindowManager().getRootWindows()) {
                     addWindow(null, window);
                     final Collection<FrameContainer> childWindows = window
                             .getChildren();

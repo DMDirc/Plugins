@@ -491,14 +491,14 @@ public class SwingController extends BasePlugin implements UIController {
                     "Main frame not created. Unable to continue.");
         }
 
-        WindowManager.addAndExecuteFrameListener(windowFactory);
+        WindowManager.getWindowManager().addListenerAndSync(windowFactory);
     }
 
     /** {@inheritDoc} */
     @Override
     public void onUnload() {
         errorDialog.dispose();
-        WindowManager.removeFrameListener(windowFactory);
+        WindowManager.getWindowManager().removeListener(windowFactory);
         mainFrameCreated.set(false);
         me.dispose();
         windowFactory.dispose();

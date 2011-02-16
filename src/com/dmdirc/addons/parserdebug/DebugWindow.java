@@ -60,7 +60,7 @@ public class DebugWindow extends FrameContainer {
         this.parser = parser;
         this.server = server;
 
-        WindowManager.addWindow(server, this);
+        WindowManager.getWindowManager().addWindow(server, this);
     }
 
     /**

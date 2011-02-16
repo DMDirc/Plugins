@@ -175,7 +175,7 @@ public final class ButtonBar implements FrameManager, ActionListener,
                 parent.addComponentListener(ButtonBar.this);
                 ButtonBar.this.buttonWidth = position.isHorizontal()
                         ? 150 : (parent.getWidth() / NUM_CELLS);
-                initButtons(WindowManager.getRootWindows());
+                initButtons(WindowManager.getWindowManager().getRootWindows());
                 if (controller.getMainFrame().getActiveFrame() != null) {
                     selectionChanged(controller.getMainFrame()
                             .getActiveFrame());
@@ -289,7 +289,7 @@ public final class ButtonBar implements FrameManager, ActionListener,
         buttonPanel.removeAll();
 
         final ArrayList<FrameContainer> windowList = new
-                ArrayList<FrameContainer>(WindowManager.getRootWindows());
+                ArrayList<FrameContainer>(WindowManager.getWindowManager().getRootWindows());
         if (sortRootWindows) {
             Collections.sort(windowList, new FrameContainerComparator());
         }
