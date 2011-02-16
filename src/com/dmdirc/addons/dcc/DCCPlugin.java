@@ -605,7 +605,7 @@ public final class DCCPlugin extends BasePlugin implements ActionListener {
      */
     protected void createContainer() {
         container = new PlaceholderContainer(this);
-        WindowManager.addWindow(container);
+        WindowManager.getWindowManager().addWindow(container);
     }
 
     /** {@inheritDoc} */

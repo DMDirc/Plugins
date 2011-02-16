@@ -85,11 +85,7 @@ public class WebWindowManager implements FrameListener {
     public WebWindowManager(final WebInterfaceUI controller) {
         this.controller = controller;
 
-        WindowManager.addFrameListener(this);
-
-        for (FrameContainer container : WindowManager.getRootWindows()) {
-            recursiveAdd(container);
-        }
+        WindowManager.getWindowManager().addListenerAndSync(this);
     }
 
     /**

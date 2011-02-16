@@ -110,7 +110,7 @@ public class TransferContainer extends FrameContainer implements
 
         otherNickname = targetNick;
 
-        WindowManager.addWindow(plugin.getContainer(), this);
+        WindowManager.getWindowManager().addWindow(plugin.getContainer(), this);
     }
 
     /** {@inheritDoc} */
