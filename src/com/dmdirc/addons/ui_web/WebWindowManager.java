@@ -85,11 +85,7 @@ public class WebWindowManager implements FrameListener {
     public WebWindowManager(final WebInterfaceUI controller) {
         this.controller = controller;
 
-        WindowManager.addFrameListener(this);
-
-        for (FrameContainer container : WindowManager.getRootWindows()) {
-            recursiveAdd(container);
-        }
+        WindowManager.getWindowManager().addListenerAndSync(this);
     }
 
     /**
@@ -101,20 +97,6 @@ public class WebWindowManager implements FrameListener {
      */
     public Window getWindow(final FrameContainer container) {
         return windows.get(container);
-    }
-
-    /**
-     * Recursively adds a window for the specified container and all of its
-     * children.
-     *
-     * @param container The container to create windows for
-     */
-    private void recursiveAdd(final FrameContainer container) {
-        addWindow(container, false);
-
-        for (FrameContainer child : container.getChildren()) {
-            recursiveAdd(child);
-        }
     }
 
     /** {@inheritDoc} */

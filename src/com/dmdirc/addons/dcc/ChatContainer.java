@@ -62,7 +62,7 @@ public class ChatContainer extends DCCFrameContainer implements DCCChatHandler {
         nickname = nick;
         otherNickname = targetNick;
 
-        WindowManager.addWindow(plugin.getContainer(), this);
+        WindowManager.getWindowManager().addWindow(plugin.getContainer(), this);
     }
 
     /**
