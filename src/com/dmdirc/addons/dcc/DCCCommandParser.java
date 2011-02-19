@@ -62,7 +62,7 @@ public final class DCCCommandParser extends GlobalCommandParser {
     /** Loads the relevant commands into the parser. */
     @Override
     protected void loadCommands() {
-        CommandManager.loadCommands(this, CommandType.TYPE_GLOBAL);
+        CommandManager.getCommandManager().loadCommands(this, CommandType.TYPE_GLOBAL);
     }
 
     /**

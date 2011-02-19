@@ -80,13 +80,13 @@ public final class OsdPlugin extends BasePlugin implements CategoryChangeListene
     @Override
     public void onLoad() {
         command = new OsdCommand(osdManager);
-        CommandManager.registerCommand(command);
+        CommandManager.getCommandManager().registerCommand(command);
     }
 
     /** {@inheritDoc} */
     @Override
     public void onUnload() {
-        CommandManager.unregisterCommand(command);
+        CommandManager.getCommandManager().unregisterCommand(command);
     }
 
     /** {@inheritDoc} */

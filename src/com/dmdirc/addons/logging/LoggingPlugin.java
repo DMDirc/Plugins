@@ -146,7 +146,7 @@ public class LoggingPlugin extends BasePlugin implements ActionListener,
         IdentityManager.getGlobalConfig().addChangeListener(getDomain(), this);
 
         command = new LoggingCommand();
-        CommandManager.registerCommand(command);
+        CommandManager.getCommandManager().registerCommand(command);
 
         ActionManager.getActionManager().registerListener(this,
                 CoreActionType.CHANNEL_OPENED,
@@ -213,7 +213,7 @@ public class LoggingPlugin extends BasePlugin implements ActionListener,
             idleFileTimer.purge();
         }
 
-        CommandManager.unregisterCommand(command);
+        CommandManager.getCommandManager().unregisterCommand(command);
         ActionManager.getActionManager().unregisterListener(this);
 
         synchronized (openFiles) {

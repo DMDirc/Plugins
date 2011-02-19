@@ -65,7 +65,7 @@ public class DebugPlugin extends BasePlugin {
     @Override
     @SuppressWarnings("unchecked")
     public void onLoad() {
-        CommandManager.registerCommand(debugCommand);
+        CommandManager.getCommandManager().registerCommand(debugCommand);
         for (Class<DebugCommand> type : CLASSES) {
             try {
                 addCommand(type.getConstructor(Debug.class)
@@ -84,7 +84,7 @@ public class DebugPlugin extends BasePlugin {
     @Override
     public void onUnload() {
         commands.clear();
-        CommandManager.unregisterCommand(debugCommand);
+        CommandManager.getCommandManager().unregisterCommand(debugCommand);
     }
 
     /**

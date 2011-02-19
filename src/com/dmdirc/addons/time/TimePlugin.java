@@ -68,7 +68,7 @@ public final class TimePlugin  extends BasePlugin {
 
         manager = new TimerManager();
         command = new TimerCommand(manager);
-        CommandManager.registerCommand(command);
+        CommandManager.getCommandManager().registerCommand(command);
     }
 
     /** Handles a timer event that occurs every minute. */
@@ -97,7 +97,7 @@ public final class TimePlugin  extends BasePlugin {
             timer = null;
         }
         manager = null;
-        CommandManager.unregisterCommand(command);
+        CommandManager.getCommandManager().unregisterCommand(command);
     }
 
     /**
