@@ -26,9 +26,12 @@ import com.dmdirc.parser.common.AwayState;
 import com.dmdirc.parser.common.ParserError;
 import com.dmdirc.parser.interfaces.ChannelInfo;
 import com.dmdirc.parser.interfaces.ClientInfo;
+import com.dmdirc.parser.interfaces.callbacks.AwayStateListener;
 import com.dmdirc.parser.interfaces.callbacks.ChannelSelfJoinListener;
 import com.dmdirc.parser.interfaces.callbacks.ConnectErrorListener;
+import com.dmdirc.parser.interfaces.callbacks.ErrorInfoListener;
 import com.dmdirc.parser.interfaces.callbacks.OtherAwayStateListener;
+import com.dmdirc.parser.interfaces.callbacks.PasswordRequiredListener;
 import com.dmdirc.parser.interfaces.callbacks.PrivateMessageListener;
 import com.dmdirc.parser.interfaces.callbacks.ServerNoticeListener;
 import com.dmdirc.parser.interfaces.callbacks.ServerReadyListener;
@@ -45,6 +48,8 @@ import net.sf.jml.MsnMessenger;
 import net.sf.jml.MsnSwitchboard;
 import net.sf.jml.MsnUserStatus;
 import net.sf.jml.event.MsnAdapter;
+import net.sf.jml.exception.IncorrectPasswordException;
+import net.sf.jml.exception.LoginException;
 import net.sf.jml.message.MsnInstantMessage;
 import net.sf.jml.message.MsnSystemMessage;
 import net.sf.jml.message.MsnUnknownMessage;
@@ -113,8 +118,16 @@ public class MSNListener extends MsnAdapter {
         final ParserError error = new ParserError(ParserError.ERROR_ERROR,
                 thrwbl.getMessage(), "");
         error.setException(new Exception(thrwbl)); //NOPMD
-        parser.getCallbackManager().getCallbackType(ConnectErrorListener.class)
-                .call(error);
+        if (thrwbl instanceof LoginException) {
+            parser.getCallbackManager().getCallbackType(
+                    ConnectErrorListener.class).call(error);
+        } else if (thrwbl instanceof IncorrectPasswordException) {
+            parser.getCallbackManager().getCallbackType(
+                    PasswordRequiredListener.class).call(error);
+        } else {
+            parser.getCallbackManager().getCallbackType(
+                    ErrorInfoListener.class).call(error);
+        }
     }
 
     /** {@inheritDoc} */
@@ -160,10 +173,13 @@ public class MSNListener extends MsnAdapter {
     @Override
     public void ownerStatusChanged(final MsnMessenger mm) {
         if (mm.getOwner().getStatus() == MsnUserStatus.ONLINE) {
-            parser.getLocalClient().setBack();
+            parser.getCallbackManager().getCallbackType(AwayStateListener.class)
+                    .call(AwayState.AWAY, AwayState.HERE, null);
+        } else {
+            parser.getCallbackManager().getCallbackType(AwayStateListener.class)
+                    .call(AwayState.HERE, AwayState.AWAY, mm.getOwner()
+                    .getStatus().getDisplayStatus());
         }
-        parser.getLocalClient().setAway(mm.getOwner().getStatus()
-                .getDisplayStatus());
     }
 
     /** {@inheritDoc} */
