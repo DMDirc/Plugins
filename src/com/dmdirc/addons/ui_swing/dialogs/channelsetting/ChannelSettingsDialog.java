@@ -135,7 +135,7 @@ public final class ChannelSettingsDialog extends StandardDialog implements
         tabbedPane = new JTabbedPane();
 
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Channel settings for " + channel);
+        setTitle("Channel settings for " + channel.getName());
         setResizable(false);
 
         orderButtons(new JButton(), new JButton());
