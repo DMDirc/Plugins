@@ -25,12 +25,11 @@ package com.dmdirc.addons.parser_xmpp;
 import com.dmdirc.parser.common.AwayState;
 import com.dmdirc.parser.common.BaseSocketAwareParser;
 import com.dmdirc.parser.common.ChannelJoinRequest;
+import com.dmdirc.parser.common.ChildImplementations;
 import com.dmdirc.parser.common.DefaultStringConverter;
 import com.dmdirc.parser.common.ParserError;
 import com.dmdirc.parser.common.QueuePriority;
-import com.dmdirc.parser.interfaces.ChannelClientInfo;
 import com.dmdirc.parser.interfaces.ChannelInfo;
-import com.dmdirc.parser.interfaces.ClientInfo;
 import com.dmdirc.parser.interfaces.LocalClientInfo;
 import com.dmdirc.parser.interfaces.StringConverter;
 import com.dmdirc.parser.interfaces.callbacks.AwayStateListener;
@@ -74,17 +73,11 @@ import org.jivesoftware.smackx.muc.MultiUserChat;
 /**
  * A parser which can understand the XMPP protocol.
  */
+@ChildImplementations({
+    XmppClientInfo.class, XmppLocalClientInfo.class, XmppFakeChannel.class,
+    XmppChannelClientInfo.class
+})
 public class XmppParser extends BaseSocketAwareParser {
-
-    /** A map of this parser's implementations of common interfaces. */
-    private static final Map<Class<?>, Class<?>> IMPL_MAP = new HashMap<Class<?>, Class<?>>();
-
-    static {
-        IMPL_MAP.put(ClientInfo.class, XmppClientInfo.class);
-        IMPL_MAP.put(LocalClientInfo.class, XmppLocalClientInfo.class);
-        IMPL_MAP.put(ChannelInfo.class, XmppFakeChannel.class);
-        IMPL_MAP.put(ChannelClientInfo.class, XmppChannelClientInfo.class);
-    }
 
     /** Pattern to use to extract priority. */
     private static final Pattern PRIORITY_PATTERN
@@ -114,7 +107,7 @@ public class XmppParser extends BaseSocketAwareParser {
      * @param address The address to connect to
      */
     public XmppParser(final URI address) {
-        super(address, IMPL_MAP);
+        super(address);
 
          if (address.getQuery() == null) {
             useFakeChannel = false;

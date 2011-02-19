@@ -24,9 +24,9 @@ package com.dmdirc.addons.parser_msn;
 
 import com.dmdirc.parser.common.BaseParser;
 import com.dmdirc.parser.common.ChannelJoinRequest;
+import com.dmdirc.parser.common.ChildImplementations;
 import com.dmdirc.parser.common.DefaultStringConverter;
 import com.dmdirc.parser.common.QueuePriority;
-import com.dmdirc.parser.interfaces.ChannelClientInfo;
 import com.dmdirc.parser.interfaces.ChannelInfo;
 import com.dmdirc.parser.interfaces.ClientInfo;
 import com.dmdirc.parser.interfaces.LocalClientInfo;
@@ -46,11 +46,12 @@ import net.sf.jml.impl.MsnMessengerFactory;
 /**
  * A parser which can understand the MSN protocol.
  */
+@ChildImplementations({
+    MSNClientInfo.class, MSNLocalClientInfo.class, MSNFakeChannel.class,
+    MSNChannelClientInfo.class
+})
 public class MSNParser extends BaseParser {
 
-    /** A map of this parser's implementations of common interfaces. */
-    private static final Map<Class<?>, Class<?>> IMPL_MAP
-            = new HashMap<Class<?>, Class<?>>();
     /** MSN Connection. */
     private MsnMessenger msn;
     /** A cache of known clients. */
@@ -61,21 +62,13 @@ public class MSNParser extends BaseParser {
     /** The fake channel to use is useFakeChannel is enabled. */
     private MSNFakeChannel fakeChannel;
 
-    /** Creates map of this parser's implementations of common interfaces. */
-    static {
-        IMPL_MAP.put(ClientInfo.class, MSNClientInfo.class);
-        IMPL_MAP.put(LocalClientInfo.class, MSNLocalClientInfo.class);
-        IMPL_MAP.put(ChannelInfo.class, MSNFakeChannel.class);
-        IMPL_MAP.put(ChannelClientInfo.class, MSNChannelClientInfo.class);
-    }
-
     /**
      * Creates a new parser for the specified address.
      *
      * @param address The address to connect to
      */
     public MSNParser(final URI address) {
-        super(address, IMPL_MAP);
+        super(address);
 
         useFakeChannel = address.getQuery().matches(
                 "(?i).*(^|&)showchannel($|&).*");
