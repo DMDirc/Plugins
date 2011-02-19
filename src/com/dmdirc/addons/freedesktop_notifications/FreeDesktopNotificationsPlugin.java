@@ -138,7 +138,7 @@ public final class FreeDesktopNotificationsPlugin extends BasePlugin
         setCachedSettings();
 
         command = new FDNotifyCommand(this);
-        CommandManager.registerCommand(command);
+        CommandManager.getCommandManager().registerCommand(command);
 
         // Extract required Files
         final PluginInfo pi = PluginManager.getPluginManager().getPluginInfoByName("freedesktop_notifications");
@@ -167,7 +167,7 @@ public final class FreeDesktopNotificationsPlugin extends BasePlugin
      */
     @Override
     public synchronized void onUnload() {
-        CommandManager.unregisterCommand(command);
+        CommandManager.getCommandManager().unregisterCommand(command);
         IdentityManager.getGlobalConfig().removeListener(this);
     }
 

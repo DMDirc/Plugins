@@ -88,7 +88,7 @@ public class WindowFlashing extends BasePlugin implements ConfigChangeListener {
     @Override
     public void onLoad() {
         flashCommand = new FlashWindow(this);
-        CommandManager.registerCommand(flashCommand);
+        CommandManager.getCommandManager().registerCommand(flashCommand);
         mainFrame = ((SwingController) PluginManager
                 .getPluginManager().getPluginInfoByName("ui_swing")
                 .getPlugin()).getMainFrame();
@@ -100,7 +100,7 @@ public class WindowFlashing extends BasePlugin implements ConfigChangeListener {
     /** {@inheritDoc} */
     @Override
     public void onUnload() {
-        CommandManager.unregisterCommand(flashCommand);
+        CommandManager.getCommandManager().unregisterCommand(flashCommand);
         flashCommand = null;
         mainFrame = null;
         user32 = null;

@@ -68,7 +68,7 @@ public class Debug extends Command implements IntelligentCommand, CommandInfo {
                         "Unknown debug action.");
             } else {
                 final CommandArguments newArgs = new CommandArguments(
-                        Arrays.asList((CommandManager.getCommandChar()
+                        Arrays.asList((CommandManager.getCommandManager().getCommandChar()
                         + command.getName() + " "
                         + args.getArgumentsAsString(1)).split(" ")));
                 command.execute(origin, newArgs, context);
