@@ -66,7 +66,7 @@ public class NotificationsPlugin extends BasePlugin implements ActionListener {
             }
         }
         command = new NotificationCommand(this);
-        CommandManager.registerCommand(command);
+        CommandManager.getCommandManager().registerCommand(command);
     }
 
     /** {@inheritDoc} */
@@ -74,7 +74,7 @@ public class NotificationsPlugin extends BasePlugin implements ActionListener {
     public void onUnload() {
         methods.clear();
         ActionManager.getActionManager().unregisterListener(this);
-        CommandManager.unregisterCommand(command);
+        CommandManager.getCommandManager().unregisterCommand(command);
     }
 
     /** {@inheritDoc} */

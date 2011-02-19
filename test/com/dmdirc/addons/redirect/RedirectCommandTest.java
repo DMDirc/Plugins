@@ -22,18 +22,13 @@
 
 package com.dmdirc.addons.redirect;
 
-import com.dmdirc.ui.interfaces.Window;
 import com.dmdirc.MessageTarget;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandManager;
 import com.dmdirc.commandparser.commands.context.ChatCommandContext;
-import com.dmdirc.commandparser.parsers.CommandParser;
-import com.dmdirc.commandparser.parsers.ServerCommandParser;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.InvalidIdentityFileException;
 import com.dmdirc.ui.interfaces.InputWindow;
-import java.util.ArrayList;
-import java.util.Arrays;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -44,7 +39,7 @@ public class RedirectCommandTest {
     @BeforeClass
     public static void setupClass() throws InvalidIdentityFileException {
         IdentityManager.load();
-        CommandManager.initCommands();
+        CommandManager.getCommandManager().initCommands();
     }
 
     @Ignore

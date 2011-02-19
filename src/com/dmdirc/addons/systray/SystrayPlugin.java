@@ -147,7 +147,7 @@ public final class SystrayPlugin extends BasePlugin implements ActionListener,
         try {
             SystemTray.getSystemTray().add(icon);
             command = new PopupCommand(this);
-            CommandManager.registerCommand(command);
+            CommandManager.getCommandManager().registerCommand(command);
             mainFrame = ((SwingController) PluginManager.getPluginManager()
                     .getPluginInfoByName("ui_swing").getPlugin())
                     .getMainFrame();
@@ -165,7 +165,7 @@ public final class SystrayPlugin extends BasePlugin implements ActionListener,
     @Override
     public void onUnload() {
         SystemTray.getSystemTray().remove(icon);
-        CommandManager.unregisterCommand(command);
+        CommandManager.getCommandManager().unregisterCommand(command);
 
         ActionManager.getActionManager().unregisterListener(this);
     }

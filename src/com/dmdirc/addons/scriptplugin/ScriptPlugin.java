@@ -89,7 +89,7 @@ public final class ScriptPlugin extends BasePlugin implements ActionListener {
         ActionManager.getActionManager().registerListener(this,
                 CoreActionType.PLUGIN_LOADED);
         command = new ScriptCommand(this);
-        CommandManager.registerCommand(command);
+        CommandManager.getCommandManager().registerCommand(command);
 
         // Make sure our scripts dir exists
         final File newDir = new File(scriptDir);
@@ -115,7 +115,7 @@ public final class ScriptPlugin extends BasePlugin implements ActionListener {
     @Override
     public void onUnload() {
         ActionManager.getActionManager().unregisterListener(this);
-        CommandManager.unregisterCommand(command);
+        CommandManager.getCommandManager().unregisterCommand(command);
 
         final File savedVariables = new File(scriptDir+"storedVariables");
         FileOutputStream fos = null;

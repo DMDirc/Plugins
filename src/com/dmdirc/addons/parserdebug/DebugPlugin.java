@@ -55,13 +55,13 @@ public final class DebugPlugin extends BasePlugin implements DebugInfoListener, 
         ActionManager.getActionManager().unregisterListener(this,
                 CoreActionType.SERVER_DISCONNECTED);
         command = new ParserDebugCommand(this);
-        CommandManager.registerCommand(command);
+        CommandManager.getCommandManager().registerCommand(command);
     }
 
     /** {@inheritDoc} */
     @Override
     public void onUnload() {
-        CommandManager.unregisterCommand(command);
+        CommandManager.getCommandManager().unregisterCommand(command);
         final ArrayList<DebugWindow> windowList = new ArrayList<DebugWindow>();
         for (Parser parser : registeredParsers.keySet()) {
             try {

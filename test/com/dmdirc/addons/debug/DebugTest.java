@@ -41,7 +41,7 @@ public class DebugTest {
         // Command has a dependency on CommandManager (to get the command char)
         // And CommandManager has a dependency on IdentityManager for the same
         IdentityManager.load();
-        CommandManager.initCommands();
+        CommandManager.getCommandManager().initCommands();
     }
 
     /** Checks the debug command with no arguments shows usage. */

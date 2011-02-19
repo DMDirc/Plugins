@@ -29,8 +29,6 @@ import com.dmdirc.plugins.BasePlugin;
 /**
  * The redirect plugin allows the suer to redirect the output of commands that
  * would normally echo their results locally to a channel or chat window instead.
- *
- * @author chris
  */
 public final class RedirectPlugin extends BasePlugin {
 
@@ -46,13 +44,13 @@ public final class RedirectPlugin extends BasePlugin {
     /** {@inheritDoc} */
     @Override
     public void onLoad() {
-        CommandManager.registerCommand(command);
+        CommandManager.getCommandManager().registerCommand(command);
     }
 
     /** {@inheritDoc}. */
     @Override
     public void onUnload() {
-        CommandManager.unregisterCommand(command);
+        CommandManager.getCommandManager().unregisterCommand(command);
     }
 
 }

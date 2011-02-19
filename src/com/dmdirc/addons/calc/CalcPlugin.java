@@ -40,13 +40,13 @@ public class CalcPlugin extends BasePlugin {
     /** {@inheritDoc} */
     @Override
     public void onLoad() {
-        CommandManager.registerCommand(command, commandInfo);
+        CommandManager.getCommandManager().registerCommand(command, commandInfo);
     }
 
     /** {@inheritDoc} */
     @Override
     public void onUnload() {
-        CommandManager.unregisterCommand(commandInfo);
+        CommandManager.getCommandManager().unregisterCommand(commandInfo);
     }
 
 }
