@@ -22,9 +22,7 @@
 
 package com.dmdirc.addons.parser_msn;
 
-import com.dmdirc.parser.common.AwayState;
 import com.dmdirc.parser.interfaces.LocalClientInfo;
-import com.dmdirc.parser.interfaces.callbacks.AwayStateListener;
 
 import net.sf.jml.MsnOwner;
 import net.sf.jml.MsnUserStatus;
@@ -68,21 +66,35 @@ public class MSNLocalClientInfo extends MSNClientInfo implements LocalClientInfo
     /** {@inheritDoc} */
     @Override
     public void setAway(final String reason) {
-        owner.setStatus(MsnUserStatus.AWAY);
-
-        getParser().getCallbackManager().getCallbackType(
-                AwayStateListener.class).call(AwayState.HERE, AwayState.AWAY,
-                reason);
+        if ("Busy".equalsIgnoreCase(reason)) {
+            owner.setStatus(MsnUserStatus.BUSY);
+        } else if ("Idle".equalsIgnoreCase(reason)) {
+            owner.setStatus(MsnUserStatus.IDLE);
+        } else if ("BRB".equalsIgnoreCase(reason)) {
+            owner.setStatus(MsnUserStatus.BE_RIGHT_BACK);
+        } else if ("Be Right Back".equalsIgnoreCase(reason)) {
+            owner.setStatus(MsnUserStatus.BE_RIGHT_BACK);
+        } else if ("phone".equalsIgnoreCase(reason)) {
+            owner.setStatus(MsnUserStatus.ON_THE_PHONE);
+        } else if ("on the phone".equalsIgnoreCase(reason)) {
+            owner.setStatus(MsnUserStatus.ON_THE_PHONE);
+        } else if ("on phone".equalsIgnoreCase(reason)) {
+            owner.setStatus(MsnUserStatus.ON_THE_PHONE);
+        } else if ("Out to lunch".equalsIgnoreCase(reason)) {
+            owner.setStatus(MsnUserStatus.OUT_TO_LUNCH);
+        } else if ("Lunch".equalsIgnoreCase(reason)) {
+            owner.setStatus(MsnUserStatus.OUT_TO_LUNCH);
+        } else if ("Hide".equalsIgnoreCase(reason)) {
+            owner.setStatus(MsnUserStatus.HIDE);
+        } else {
+            owner.setStatus(MsnUserStatus.AWAY);
+        }
     }
 
     /** {@inheritDoc} */
     @Override
     public void setBack() {
         owner.setStatus(MsnUserStatus.ONLINE);
-
-        getParser().getCallbackManager().getCallbackType(
-                AwayStateListener.class).call(AwayState.AWAY, AwayState.HERE,
-                null);
     }
 
     /** {@inheritDoc} */

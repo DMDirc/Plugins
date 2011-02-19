@@ -70,8 +70,12 @@ public class MSNParser extends BaseParser {
     public MSNParser(final URI address) {
         super(address);
 
-        useFakeChannel = address.getQuery().matches(
-                "(?i).*(^|&)showchannel($|&).*");
+        if (address.getQuery() == null) {
+            useFakeChannel = false;
+        } else {
+            useFakeChannel = address.getQuery().matches(
+                    "(?i).*(^|&)showchannel($|&).*");
+        }
     }
 
     /** {@inheritDoc} */
