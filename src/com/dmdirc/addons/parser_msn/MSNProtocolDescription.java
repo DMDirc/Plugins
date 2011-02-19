@@ -24,6 +24,8 @@ package com.dmdirc.addons.parser_msn;
 
 import com.dmdirc.parser.interfaces.ProtocolDescription;
 
+import java.net.URI;
+
 /**
  * A description of the MSN protocol.
  */
@@ -39,6 +41,12 @@ class MSNProtocolDescription implements ProtocolDescription {
     @Override
     public String[] parseHostmask(final String hostmask) {
         return new String[] { hostmask, hostmask, hostmask, };
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public boolean isSecure(final URI uri) {
+        return true;
     }
 
 }

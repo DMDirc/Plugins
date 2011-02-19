@@ -24,6 +24,8 @@ package com.dmdirc.addons.parser_twitter;
 
 import com.dmdirc.parser.interfaces.ProtocolDescription;
 
+import java.net.URI;
+
 /**
  * Describes the twitter protocol.
  *
@@ -42,6 +44,12 @@ public class TwitterProtocolDescription implements ProtocolDescription {
     @Override
     public String[] parseHostmask(final String hostmask) {
         return TwitterClientInfo.parseHostFull(hostmask, null, null);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public boolean isSecure(final URI uri) {
+        return true;
     }
 
 }
