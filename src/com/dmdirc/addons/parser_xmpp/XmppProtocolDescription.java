@@ -24,6 +24,8 @@ package com.dmdirc.addons.parser_xmpp;
 
 import com.dmdirc.parser.interfaces.ProtocolDescription;
 
+import java.net.URI;
+
 /**
  * A description of the XMPP protocol.
  */
@@ -40,6 +42,12 @@ public class XmppProtocolDescription implements ProtocolDescription {
     public String[] parseHostmask(final String hostmask) {
         final String[] parts = hostmask.split("/");
         return new String[] { parts[0], parts.length > 1 ? parts[1] : "unknown", "" };
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public boolean isSecure(final URI uri) {
+        return uri.getScheme().endsWith("s");
     }
 
 }
