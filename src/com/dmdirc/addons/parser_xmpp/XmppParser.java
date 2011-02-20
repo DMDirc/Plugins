@@ -233,7 +233,7 @@ public class XmppParser extends BaseSocketAwareParser {
         newArgs[2] = getLocalClient().getNickname();
         System.arraycopy(args, 0, newArgs, 3, args.length);
 
-        getCallbackManager().getCallbackType(NumericListener.class).call(numeric, newArgs);
+        getCallback(NumericListener.class).onNumeric(null, null, numeric, args);
     }
 
     /** {@inheritDoc} */
@@ -264,12 +264,6 @@ public class XmppParser extends BaseSocketAwareParser {
     @Override
     public Collection<? extends ChannelJoinRequest> extractChannels(final URI uri) {
         return Collections.<ChannelJoinRequest>emptyList();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String getServerName() {
-        return connection.getServiceName();
     }
 
     /** {@inheritDoc} */
@@ -453,7 +447,9 @@ public class XmppParser extends BaseSocketAwareParser {
             connection.sendPacket(new Presence(Presence.Type.available, null, priority, Presence.Mode.available));
             connection.getRoster().addRosterListener(new RosterListenerImpl());
 
-            getCallbackManager().getCallbackType(ServerReadyListener.class).call();
+            setServerName(connection.getServiceName());
+
+            getCallback(ServerReadyListener.class).onServerReady(null, null);
 
             for (RosterEntry contact : connection.getRoster().getEntries()) {
                 getClient(contact.getUser()).setRosterEntry(contact);
@@ -461,7 +457,7 @@ public class XmppParser extends BaseSocketAwareParser {
 
             if (useFakeChannel) {
                 fakeChannel = new XmppFakeChannel(this, "&contacts");
-                getCallbackManager().getCallbackType(ChannelSelfJoinListener.class).call(fakeChannel);
+                getCallback(ChannelSelfJoinListener.class).onChannelSelfJoin(null, null, fakeChannel);
                 fakeChannel.updateContacts(contacts.values());
             }
         } catch (XMPPException ex) {
@@ -477,7 +473,7 @@ public class XmppParser extends BaseSocketAwareParser {
                 error.setException(ex);
             }
 
-            getCallbackManager().getCallbackType(ConnectErrorListener.class).call(error);
+            getCallback(ConnectErrorListener.class).onConnectError(null, null, error);
         }
     }
 
@@ -489,8 +485,9 @@ public class XmppParser extends BaseSocketAwareParser {
      */
     public void handleAwayStateChange(final XmppClientInfo client, final boolean isBack) {
         if (useFakeChannel) {
-            getCallbackManager().getCallbackType(OtherAwayStateListener.class)
-                    .call(client, isBack ? AwayState.AWAY : AwayState.HERE,
+            getCallback(OtherAwayStateListener.class)
+                    .onAwayStateOther(null, null, client,
+                    isBack ? AwayState.AWAY : AwayState.HERE,
                     isBack ? AwayState.HERE : AwayState.AWAY);
         }
     }
@@ -504,8 +501,8 @@ public class XmppParser extends BaseSocketAwareParser {
         connection.sendPacket(new Presence(Presence.Type.available, reason,
                 priority, Presence.Mode.away));
 
-        getCallbackManager().getCallbackType(AwayStateListener.class)
-                .call(AwayState.HERE, AwayState.AWAY, reason);
+        getCallback(AwayStateListener.class).onAwayState(null, null,
+                AwayState.HERE, AwayState.AWAY, reason);
     }
 
     /**
@@ -515,8 +512,8 @@ public class XmppParser extends BaseSocketAwareParser {
         connection.sendPacket(new Presence(Presence.Type.available, null,
                 priority, Presence.Mode.available));
 
-        getCallbackManager().getCallbackType(AwayStateListener.class)
-                .call(AwayState.AWAY, AwayState.HERE, null);
+        getCallback(AwayStateListener.class).onAwayState(null, null,
+                AwayState.AWAY, AwayState.HERE, null);
     }
 
     private class ConnectionListenerImpl implements ConnectionListener {
@@ -524,14 +521,14 @@ public class XmppParser extends BaseSocketAwareParser {
         /** {@inheritDoc} */
         @Override
         public void connectionClosed() {
-            getCallbackManager().getCallbackType(SocketCloseListener.class).call();
+            getCallback(SocketCloseListener.class).onSocketClosed(null, null);
         }
 
         /** {@inheritDoc} */
         @Override
         public void connectionClosedOnError(final Exception excptn) {
             // TODO: Handle exception
-            getCallbackManager().getCallbackType(SocketCloseListener.class).call();
+            getCallback(SocketCloseListener.class).onSocketClosed(null, null);
         }
 
         /** {@inheritDoc} */
@@ -603,7 +600,8 @@ public class XmppParser extends BaseSocketAwareParser {
         public void processMessage(final Chat chat, final Message msg) {
             if (msg.getBody() != null) {
                 // TOOD: Handle error messages
-                getCallbackManager().getCallbackType(PrivateMessageListener.class).call(msg.getBody(), msg.getFrom());
+                getCallback(PrivateMessageListener.class).onPrivateMessage(null,
+                        null, msg.getBody(), msg.getFrom());
             }
         }
 
@@ -621,9 +619,9 @@ public class XmppParser extends BaseSocketAwareParser {
         @Override
         public void processPacket(final Packet packet) {
             if (callback.equals(DataOutListener.class)) {
-                getCallbackManager().getCallbackType(callback).call(packet.toXML(), true);
+                getCallback(DataOutListener.class).onDataOut(null, null, packet.toXML(), true);
             } else {
-                getCallbackManager().getCallbackType(callback).call(packet.toXML());
+                getCallback(DataInListener.class).onDataIn(null, null, packet.toXML());
             }
         }
 
