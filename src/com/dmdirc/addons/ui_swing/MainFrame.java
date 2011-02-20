@@ -29,6 +29,8 @@ import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
 import com.dmdirc.addons.ui_swing.components.SplitPane;
+import com.dmdirc.addons.ui_swing.components.frames.DesktopPlaceHolderFrame;
+import com.dmdirc.addons.ui_swing.components.frames.DesktopWindowFrame;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.addons.ui_swing.components.menubar.MenuBar;
 import com.dmdirc.addons.ui_swing.components.statusbar.SwingStatusBar;
@@ -55,6 +57,7 @@ import java.awt.Dimension;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
 import java.awt.event.WindowListener;
+import java.awt.image.ImageProducer;
 import java.lang.reflect.InvocationTargetException;
 
 import javax.swing.ImageIcon;
@@ -619,10 +622,36 @@ public final class MainFrame extends JFrame implements WindowListener,
                     framePanel.add(new JPanel(), "grow");
                     setTitle(null);
                 } else {
-                    framePanel.add(activeFrame, "grow");
-                    setTitle(activeFrame.getContainer().getTitle());
-                    activeFrame.getContainer().addNotificationListener(
-                            MainFrame.this);
+                    if (activeFrame.getPopout() == true) {
+                        if (activeFrame.getPopoutFrame() == null) {
+                            final DesktopWindowFrame popoutFrame;
+                            final DesktopPlaceHolderFrame placeHolder = new
+                                    DesktopPlaceHolderFrame();
+
+                            popoutFrame = new DesktopWindowFrame(activeFrame,
+                                    placeHolder);
+                            activeFrame.setPopoutFrame(popoutFrame);
+
+                            popoutFrame.setLayout(new MigLayout(
+                                    "fill, ins panel, wmin 30sp,  hmin 60sp"));
+                            popoutFrame.setTitle(activeFrame.getContainer()
+                                    .getTitle());
+                            popoutFrame.setIconImage(IconManager.getIconManager()
+                                    .getImage(activeFrame.getContainer()
+                                    .getIcon()));
+                            popoutFrame.add(activeFrame, "grow");
+                            popoutFrame.pack();
+                            popoutFrame.setVisible(true);
+
+                        }
+                        framePanel.add(((DesktopWindowFrame)activeFrame
+                                .getPopoutFrame()).getPlaceHolder(), "grow");
+                    } else {
+                        framePanel.add(activeFrame, "grow");
+                        setTitle(activeFrame.getContainer().getTitle());
+                        activeFrame.getContainer().addNotificationListener(
+                                MainFrame.this);
+                    }
                 }
 
                 framePanel.setVisible(true);

@@ -94,6 +94,10 @@ public abstract class TextFrame extends JPanel implements Window,
     private final CommandParser commandParser;
     /** Swing controller. */
     private final SwingController controller;
+    /** Popout boolean. */
+    private boolean popout;
+    /** Popout frame. */
+    private DesktopWindowFrame popoutFrame;
 
     /**
      * Creates a new instance of Frame.
@@ -106,6 +110,7 @@ public abstract class TextFrame extends JPanel implements Window,
         super();
         this.controller = controller;
         this.frameParent = owner;
+        this.popout = false;
 
         final ConfigManager config = owner.getConfigManager();
 
@@ -153,6 +158,45 @@ public abstract class TextFrame extends JPanel implements Window,
     }
 
     /**
+<<<<<<< HEAD:src/com/dmdirc/addons/ui_swing/components/frames/TextFrame.java
+=======
+     * Returns if this frame should be popped out or not.
+     *
+     * @return boolean Should frame be popped out
+     */
+    public boolean getPopout() {
+        return this.popout;
+    }
+
+    /**
+     * Set if this frame should be popped out or not.
+     *
+     * @param boolean Should frame be popped out
+     */
+    public void setPopout(final boolean popout) {
+        this.popout = popout;
+    }
+
+    /**
+     * Returns the frame to use for popout.
+     *
+     * @return DesktopWindowFrame Frame to use if this should be popped out
+     */
+    public DesktopWindowFrame getPopoutFrame() {
+        return popoutFrame;
+    }
+
+    /**
+     * Set the frame to use for popout.
+     *
+     * @param DesktopWindowFrame Frame to use for popout
+     */
+    public void setPopoutFrame(final DesktopWindowFrame popoutFrame) {
+        this.popoutFrame = popoutFrame;
+    }
+
+    /**
+>>>>>>> 0f4786e... /popout and /popin command added to swing ui:src/com/dmdirc/addons/ui_swing/components/frames/TextFrame.java
      * Called when the frame has been selected in the UI.
      */
     public void activateFrame() {
