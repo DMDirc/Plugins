@@ -613,16 +613,24 @@ public final class MainFrame extends JFrame implements WindowListener,
                     MainFrame.this.activeFrame.getContainer()
                             .removeNotificationListener(MainFrame.this);
                 }
+
+
+
                 MainFrame.this.activeFrame = activeFrame;
 
                 if (activeFrame == null) {
                     framePanel.add(new JPanel(), "grow");
                     setTitle(null);
                 } else {
-                    framePanel.add(activeFrame, "grow");
-                    setTitle(activeFrame.getContainer().getTitle());
-                    activeFrame.getContainer().addNotificationListener(
-                            MainFrame.this);
+                    if (activeFrame.getPopout() == true && activeFrame.getPopoutFrame() == null) {
+                        final JFrame popoutFrame;
+                        popoutFrame = new JFrame();
+                        activeFrame.setPopoutFrame(popoutFrame);
+                        popoutFrame.add(activeFrame);
+                        popoutFrame.setLayout(new MigLayout("fill, ins panel, wmin 30sp,  hmin 60sp"));
+                        popoutFrame.pack();
+                        popoutFrame.setVisible(true);
+                    }
                 }
 
                 framePanel.setVisible(true);

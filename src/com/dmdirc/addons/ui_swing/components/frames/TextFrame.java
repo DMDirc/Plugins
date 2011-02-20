@@ -62,6 +62,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
 import javax.swing.JComponent;
+import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
@@ -94,6 +95,10 @@ public abstract class TextFrame extends JPanel implements Window,
     private final CommandParser commandParser;
     /** Swing controller. */
     private final SwingController controller;
+    /** Popout boolean. */
+    private boolean popout;
+    /** Popout frame. */
+    private JFrame popoutFrame;
 
     /**
      * Creates a new instance of Frame.
@@ -106,6 +111,7 @@ public abstract class TextFrame extends JPanel implements Window,
         super();
         this.controller = controller;
         this.frameParent = owner;
+        this.popout = true;
 
         final ConfigManager config = owner.getConfigManager();
 
@@ -150,6 +156,42 @@ public abstract class TextFrame extends JPanel implements Window,
         }
 
         return localParser;
+    }
+
+    /**
+     * Returns if this frame should be popped out or not.
+     *
+     * @return boolean Should frame be popped out
+     */
+    public boolean getPopout() {
+        return this.popout;
+    }
+
+    /**
+     * Set if this frame should be popped out or not.
+     *
+     * @param boolean Should frame be popped out
+     */
+    public void setPopout(final boolean popout) {
+        this.popout = popout;
+    }
+
+    /**
+     * Returns the frame to use for popout.
+     *
+     * @return JFrame Frame to use if this should be popped out
+     */
+    public JFrame getPopoutFrame() {
+        return popoutFrame;
+    }
+
+    /**
+     * Set the frame to use for popout.
+     *
+     * @param JFrame Frame to use for popout
+     */
+    public void setPopoutFrame(final JFrame popoutFrame) {
+        this.popoutFrame = popoutFrame;
     }
 
     /**
