@@ -25,6 +25,10 @@ package com.dmdirc.addons.ui_swing;
 import com.dmdirc.Channel;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.Server;
+import com.dmdirc.addons.ui_swing.commands.PopInCommand;
+import com.dmdirc.addons.ui_swing.commands.PopInCommandInfo;
+import com.dmdirc.addons.ui_swing.commands.PopOutCommand;
+import com.dmdirc.addons.ui_swing.commands.PopOutCommandInfo;
 import com.dmdirc.addons.ui_swing.components.addonpanel.AddonPanel;
 import com.dmdirc.addons.ui_swing.components.addonpanel.PluginPanel;
 import com.dmdirc.addons.ui_swing.components.addonpanel.ThemePanel;
@@ -42,6 +46,7 @@ import com.dmdirc.addons.ui_swing.dialogs.serversetting.ServerSettingsDialog;
 import com.dmdirc.addons.ui_swing.dialogs.url.URLDialog;
 import com.dmdirc.addons.ui_swing.wizard.WizardListener;
 import com.dmdirc.addons.ui_swing.wizard.firstrun.SwingFirstRunWizard;
+import com.dmdirc.commandparser.CommandManager;
 import com.dmdirc.config.Identity;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
@@ -114,6 +119,14 @@ public class SwingController extends BasePlugin implements UIController {
     private DMDircEventQueue eventQueue;
     /** Key listener to handle dialog key events. */
     private DialogKeyListener keyListener;
+    /** The Command object for our PopOut command. */
+    private final PopOutCommand popOutCommand = new PopOutCommand(this);
+    /** The CommandInfo object for our PopOut Command. */
+    private final PopOutCommandInfo popOutCommandInfo = new PopOutCommandInfo();
+    /** The Command object for our PopIn command. */
+    private final PopInCommand popInCommand = new PopInCommand(this);
+    /** The CommandInfo object for our PopIn Command. */
+    private final PopInCommandInfo popInCommandInfo = new PopInCommandInfo();
 
     /** Instantiates a new SwingController. */
     public SwingController() {
@@ -464,6 +477,11 @@ public class SwingController extends BasePlugin implements UIController {
                     "Swing UI can't be run in a headless environment");
         }
 
+        CommandManager.getCommandManager().registerCommand(popOutCommand,
+                popOutCommandInfo);
+        CommandManager.getCommandManager().registerCommand(popInCommand,
+                popInCommandInfo);
+
         eventQueue = new DMDircEventQueue(this);
         keyListener = new DialogKeyListener();
         Toolkit.getDefaultToolkit().getSystemEventQueue().push(eventQueue);
@@ -497,6 +515,8 @@ public class SwingController extends BasePlugin implements UIController {
     /** {@inheritDoc} */
     @Override
     public void onUnload() {
+        CommandManager.getCommandManager().unregisterCommand(popOutCommandInfo);
+        CommandManager.getCommandManager().unregisterCommand(popInCommandInfo);
         errorDialog.dispose();
         WindowManager.getWindowManager().removeListener(windowFactory);
         mainFrameCreated.set(false);

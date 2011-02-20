@@ -94,6 +94,12 @@ public abstract class TextFrame extends JPanel implements Window,
     private final CommandParser commandParser;
     /** Swing controller. */
     private final SwingController controller;
+    /** Boolean to determine if this frame should be popped out of main client. */
+    private boolean popout;
+    /** DesktopWindowFrame to use for this TextFrame if it is to be popped out of
+     * the client.
+     */
+    private DesktopWindowFrame popoutFrame;
 
     /**
      * Creates a new instance of Frame.
@@ -150,6 +156,89 @@ public abstract class TextFrame extends JPanel implements Window,
         }
 
         return localParser;
+    }
+
+    /**
+     * Determines if this frame should be popped out of the client or not. Once
+     * this is set to true, the next time the frame is made active it will pop
+     * out of the client as a free floating Desktop window.
+     *
+     * If this is set to false then the desktop window for this frame is
+     * disposed of and this frame is returned to the client.
+     *
+     * @param popout Should this frame pop out?
+     */
+    public void setPopout(final boolean popout) {
+        this.popout = popout;
+        if (popout) {
+            createPopoutFrame();
+        } else {
+            if (popoutFrame != null) {
+                popoutFrame.setVisible(false);
+                popoutFrame.dispose();
+                popoutFrame = null;
+            }
+        }
+    }
+
+    /**
+     * Returns the frame for the free floating desktop window associated with this
+     * TextFrame. If one does not exist then null is returned.
+     *
+     * @return Desktop window frame or null if does not exist
+     */
+    public DesktopWindowFrame getPopoutFrame() {
+        return popoutFrame;
+    }
+
+    /**
+     * Sets the frame that has is to be used as our free floating window.
+     *
+     * @param popoutFrame frame that is to be used for free floating window
+     */
+    public void setPopoutFrame(final DesktopWindowFrame popoutFrame) {
+        this.popoutFrame = popoutFrame;
+    }
+
+    /**
+     * Creates a free floating window frame for us to use. This method will create
+     * a place holder frame to be used in the client in place of the original frame.
+     */
+    private void createPopoutFrame() {
+        if (popoutFrame == null) {
+            UIUtilities.invokeLater(new Runnable() {
+
+                /** {@inheritDoc} */
+                @Override
+                public void run() {
+                    popoutFrame = new DesktopWindowFrame(TextFrame.this, new DesktopPlaceHolderFrame());
+                    popoutFrame.add(TextFrame.this, "grow");
+                    popoutFrame.pack();
+                    popoutFrame.setVisible(true);
+                    setPopoutFrame(popoutFrame);
+                }
+            });
+        }
+    }
+
+    /**
+     * Checks if this frame should be popped out of the client or not. Returns
+     * our place holder frame if it is to be used or this TextFrame if it is
+     * not to be popped out.
+     *
+     * @return JPanel to use by the client in the window pane
+     */
+    public JPanel getDisplayFrame() {
+        if (popout) {
+            if (popoutFrame == null) {
+                createPopoutFrame();
+                return popoutFrame.getPlaceHolder();
+            } else {
+                return popoutFrame.getPlaceHolder();
+            }
+        } else {
+            return this;
+        }
     }
 
     /**
