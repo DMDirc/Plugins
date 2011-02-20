@@ -619,7 +619,7 @@ public final class MainFrame extends JFrame implements WindowListener,
                     framePanel.add(new JPanel(), "grow");
                     setTitle(null);
                 } else {
-                    framePanel.add(activeFrame, "grow");
+                    framePanel.add(activeFrame.getDisplayFrame(), "grow");
                     setTitle(activeFrame.getContainer().getTitle());
                     activeFrame.getContainer().addNotificationListener(
                             MainFrame.this);
