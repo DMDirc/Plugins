@@ -77,8 +77,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicBoolean;
-import javax.swing.JMenuItem;
 
+import javax.swing.JMenuItem;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -468,7 +468,6 @@ public class SwingController extends BasePlugin implements UIController {
             throw new IllegalStateException(
                     "Swing UI can't be run in a headless environment");
         }
-
         eventQueue = new DMDircEventQueue(this);
         keyListener = new DialogKeyListener();
         Toolkit.getDefaultToolkit().getSystemEventQueue().push(eventQueue);
@@ -505,10 +504,16 @@ public class SwingController extends BasePlugin implements UIController {
     private void loadCommands() {
         commands.add(ServerSettings.INFO);
         commands.add(ChannelSettings.INFO);
+        commands.add(new PopOutCommandInfo());
+        commands.add(new PopInCommandInfo());
         CommandManager.getCommandManager().registerCommand(
                 new ServerSettings(), ServerSettings.INFO);
         CommandManager.getCommandManager().registerCommand(
                 new ChannelSettings(), ChannelSettings.INFO);
+        CommandManager.getCommandManager().registerCommand(
+                new PopOutCommand(this), new PopOutCommandInfo());
+        CommandManager.getCommandManager().registerCommand(
+                new PopInCommand(this), new PopInCommandInfo());
     }
 
     /** {@inheritDoc} */
