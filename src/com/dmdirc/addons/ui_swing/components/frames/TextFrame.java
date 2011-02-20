@@ -62,7 +62,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
 import javax.swing.JComponent;
-import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
@@ -98,7 +97,7 @@ public abstract class TextFrame extends JPanel implements Window,
     /** Popout boolean. */
     private boolean popout;
     /** Popout frame. */
-    private JFrame popoutFrame;
+    private DesktopWindowFrame popoutFrame;
 
     /**
      * Creates a new instance of Frame.
@@ -111,7 +110,7 @@ public abstract class TextFrame extends JPanel implements Window,
         super();
         this.controller = controller;
         this.frameParent = owner;
-        this.popout = true;
+        this.popout = false;
 
         final ConfigManager config = owner.getConfigManager();
 
@@ -179,18 +178,18 @@ public abstract class TextFrame extends JPanel implements Window,
     /**
      * Returns the frame to use for popout.
      *
-     * @return JFrame Frame to use if this should be popped out
+     * @return DesktopWindowFrame Frame to use if this should be popped out
      */
-    public JFrame getPopoutFrame() {
+    public DesktopWindowFrame getPopoutFrame() {
         return popoutFrame;
     }
 
     /**
      * Set the frame to use for popout.
      *
-     * @param JFrame Frame to use for popout
+     * @param DesktopWindowFrame Frame to use for popout
      */
-    public void setPopoutFrame(final JFrame popoutFrame) {
+    public void setPopoutFrame(final DesktopWindowFrame popoutFrame) {
         this.popoutFrame = popoutFrame;
     }
 

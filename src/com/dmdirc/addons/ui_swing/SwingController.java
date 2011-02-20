@@ -25,6 +25,10 @@ package com.dmdirc.addons.ui_swing;
 import com.dmdirc.Channel;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.Server;
+import com.dmdirc.addons.ui_swing.commands.PopInCommand;
+import com.dmdirc.addons.ui_swing.commands.PopInCommandInfo;
+import com.dmdirc.addons.ui_swing.commands.PopOutCommand;
+import com.dmdirc.addons.ui_swing.commands.PopOutCommandInfo;
 import com.dmdirc.addons.ui_swing.components.addonpanel.AddonPanel;
 import com.dmdirc.addons.ui_swing.components.addonpanel.PluginPanel;
 import com.dmdirc.addons.ui_swing.components.addonpanel.ThemePanel;
@@ -42,6 +46,7 @@ import com.dmdirc.addons.ui_swing.dialogs.serversetting.ServerSettingsDialog;
 import com.dmdirc.addons.ui_swing.dialogs.url.URLDialog;
 import com.dmdirc.addons.ui_swing.wizard.WizardListener;
 import com.dmdirc.addons.ui_swing.wizard.firstrun.SwingFirstRunWizard;
+import com.dmdirc.commandparser.CommandManager;
 import com.dmdirc.config.Identity;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
@@ -138,7 +143,7 @@ public class SwingController extends BasePlugin implements UIController {
     /**
      * Does the main frame exist?
      *
-     * @return true iif mainframe exists
+     * @return true if mainframe exists
      */
     protected boolean hasMainFrame() {
         return mainFrameCreated.get();
@@ -464,6 +469,10 @@ public class SwingController extends BasePlugin implements UIController {
                     "Swing UI can't be run in a headless environment");
         }
 
+        CommandManager.getCommandManager().registerCommand(new PopOutCommand(this),
+                new PopOutCommandInfo());
+        CommandManager.getCommandManager().registerCommand(new PopInCommand(this),
+                new PopInCommandInfo());
         eventQueue = new DMDircEventQueue(this);
         keyListener = new DialogKeyListener();
         Toolkit.getDefaultToolkit().getSystemEventQueue().push(eventQueue);
