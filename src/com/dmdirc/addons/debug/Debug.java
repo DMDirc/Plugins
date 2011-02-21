@@ -23,6 +23,7 @@
 package com.dmdirc.addons.debug;
 
 import com.dmdirc.FrameContainer;
+import com.dmdirc.commandparser.BaseCommandInfo;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandInfo;
 import com.dmdirc.commandparser.CommandManager;
@@ -37,7 +38,12 @@ import java.util.Arrays;
 /**
  * Provides various handy ways to test or debug the client.
  */
-public class Debug extends Command implements IntelligentCommand, CommandInfo {
+public class Debug extends Command implements IntelligentCommand {
+
+    /** A command info object for this command. */
+    public static final CommandInfo INFO = new BaseCommandInfo("debug",
+            "debug <command> [args] - facilitates debugging of DMDirc",
+            CommandType.TYPE_GLOBAL);
 
     /** Parent debug plugin. */
     private final DebugPlugin plugin;
@@ -99,7 +105,7 @@ public class Debug extends Command implements IntelligentCommand, CommandInfo {
      */
     public void proxyShowUsage(final FrameContainer target,
             final boolean isSilent, final String name, final String args) {
-        showUsage(target, isSilent, getName(), name + " " + args);
+        showUsage(target, isSilent, INFO.getName(), name + " " + args);
     }
 
     /**
@@ -113,30 +119,6 @@ public class Debug extends Command implements IntelligentCommand, CommandInfo {
      */
     public String proxyDoTable(final String[] headers, final String[][] data) {
         return doTable(headers, data);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String getName() {
-        return "debug";
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public boolean showInHelp() {
-        return false;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public CommandType getType() {
-        return CommandType.TYPE_GLOBAL;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String getHelp() {
-        return null;
     }
 
     /** {@inheritDoc} */

@@ -42,8 +42,8 @@ public final class AudioPlugin extends BasePlugin {
     public void onLoad() {
         audioCommand = new AudioCommand();
         beepCommand = new BeepCommand();
-        CommandManager.getCommandManager().registerCommand(audioCommand);
-        CommandManager.getCommandManager().registerCommand(beepCommand);
+        CommandManager.getCommandManager().registerCommand(audioCommand, AudioCommand.INFO);
+        CommandManager.getCommandManager().registerCommand(beepCommand, BeepCommand.INFO);
     }
 
     /**
@@ -51,8 +51,8 @@ public final class AudioPlugin extends BasePlugin {
      */
     @Override
     public void onUnload() {
-        CommandManager.getCommandManager().unregisterCommand(beepCommand);
-        CommandManager.getCommandManager().unregisterCommand(audioCommand);
+        CommandManager.getCommandManager().unregisterCommand(BeepCommand.INFO);
+        CommandManager.getCommandManager().unregisterCommand(AudioCommand.INFO);
     }
 
 }

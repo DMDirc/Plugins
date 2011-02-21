@@ -23,6 +23,7 @@
 package com.dmdirc.addons.dcop;
 
 import com.dmdirc.FrameContainer;
+import com.dmdirc.commandparser.BaseCommandInfo;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandInfo;
 import com.dmdirc.commandparser.CommandType;
@@ -34,7 +35,12 @@ import java.util.List;
 /**
  * The dcop command retrieves information from a dcop application.
  */
-public final class DcopCommand extends Command implements CommandInfo {
+public final class DcopCommand extends Command {
+
+    /** A command info object for this command. */
+    public static final CommandInfo INFO = new BaseCommandInfo("dcop",
+            "dcop <app> <object> <function> - retrieves information from a DCOP aplication",
+            CommandType.TYPE_SERVER);
 
     /** {@inheritDoc} */
     @Override
@@ -49,31 +55,6 @@ public final class DcopCommand extends Command implements CommandInfo {
         for (String line : res) {
             sendLine(origin, args.isSilent(), FORMAT_OUTPUT, line);
         }
-    }
-
-
-    /** {@inheritDoc} */
-    @Override
-    public String getName() {
-        return "dcop";
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public boolean showInHelp() {
-        return true;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public CommandType getType() {
-        return CommandType.TYPE_SERVER;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String getHelp() {
-        return "dcop <app> <object> <function> - retrieves information from a DCOP aplication";
     }
 
 }

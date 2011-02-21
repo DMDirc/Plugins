@@ -27,26 +27,22 @@ import com.dmdirc.plugins.BasePlugin;
 
 /**
  * A plugin which parses and evaluates various mathematical expressions.
- *
- * @author chris
  */
 public class CalcPlugin extends BasePlugin {
 
     /** The command we register when loaded. */
     private final CalcCommand command = new CalcCommand();
-    /** The CommandInfo object describing the calc command. */
-    private final CalcCommandInfo commandInfo = new CalcCommandInfo();
 
     /** {@inheritDoc} */
     @Override
     public void onLoad() {
-        CommandManager.getCommandManager().registerCommand(command, commandInfo);
+        CommandManager.getCommandManager().registerCommand(command, CalcCommand.INFO);
     }
 
     /** {@inheritDoc} */
     @Override
     public void onUnload() {
-        CommandManager.getCommandManager().unregisterCommand(commandInfo);
+        CommandManager.getCommandManager().unregisterCommand(CalcCommand.INFO);
     }
 
 }

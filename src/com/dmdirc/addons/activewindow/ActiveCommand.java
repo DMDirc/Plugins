@@ -25,6 +25,7 @@ import com.dmdirc.FrameContainer;
 import com.dmdirc.WritableFrameContainer;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
+import com.dmdirc.commandparser.BaseCommandInfo;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandInfo;
 import com.dmdirc.commandparser.CommandType;
@@ -38,8 +39,12 @@ import com.dmdirc.ui.input.TabCompleter;
 /**
  * Executes another command as if it were executed in the active window.
  */
-public final class ActiveCommand extends Command implements CommandInfo,
-        IntelligentCommand {
+public class ActiveCommand extends Command implements IntelligentCommand {
+
+    /** A command info object for this command. */
+    public static final CommandInfo INFO = new BaseCommandInfo("active",
+            "active <command> - executes the command as though it had been "
+            + "executed in the active window", CommandType.TYPE_GLOBAL);
 
     /** Parent MainFrame. */
     private final MainFrame mainFrame;
@@ -64,31 +69,6 @@ public final class ActiveCommand extends Command implements CommandInfo,
                     .parseCommand(frame.getContainer(), context.getSource(),
                     args.getArgumentsAsString());
         }
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String getName() {
-        return "active";
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public boolean showInHelp() {
-        return true;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public CommandType getType() {
-        return CommandType.TYPE_GLOBAL;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String getHelp() {
-        return "active <command> - Executes the command as though it had been "
-                + "executed in the active window";
     }
 
     /** {@inheritDoc} */

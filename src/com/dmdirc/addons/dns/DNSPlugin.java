@@ -43,13 +43,13 @@ public final class DNSPlugin extends BasePlugin {
     @Override
     public void onLoad() {
         command = new DNSCommand();
-        CommandManager.getCommandManager().registerCommand(command);
+        CommandManager.getCommandManager().registerCommand(command, DNSCommand.INFO);
     }
 
     /** {@inheritDoc} */
     @Override
     public void onUnload() {
-        CommandManager.getCommandManager().unregisterCommand(command);
+        CommandManager.getCommandManager().unregisterCommand(DNSCommand.INFO);
     }
 
     /**

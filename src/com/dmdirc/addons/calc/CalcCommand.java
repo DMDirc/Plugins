@@ -23,6 +23,7 @@
 package com.dmdirc.addons.calc;
 
 import com.dmdirc.FrameContainer;
+import com.dmdirc.commandparser.BaseCommandInfo;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandInfo;
 import com.dmdirc.commandparser.CommandType;
@@ -35,7 +36,12 @@ import java.text.ParseException;
  * A command which allows users to evaluate various mathematical expressions,
  * and perform basic calculations.
  */
-public class CalcCommand extends Command implements CommandInfo {
+public class CalcCommand extends Command {
+
+    /** A command info object for this command. */
+    public static final CommandInfo INFO = new BaseCommandInfo("calc",
+            "calc [--showexpr] <expr> - evaluate mathematical expression",
+            CommandType.TYPE_GLOBAL) ;
 
     /** {@inheritDoc} */
     @Override
@@ -67,27 +73,4 @@ public class CalcCommand extends Command implements CommandInfo {
         }
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public String getName() {
-        return "calc";
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public boolean showInHelp() {
-        return true;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public CommandType getType() {
-        return CommandType.TYPE_GLOBAL;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String getHelp() {
-        return "calc [--showexpr] <expr> - evaluate mathematical expression";
-    }
 }

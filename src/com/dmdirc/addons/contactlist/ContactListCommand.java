@@ -23,6 +23,7 @@
 package com.dmdirc.addons.contactlist;
 
 import com.dmdirc.FrameContainer;
+import com.dmdirc.commandparser.BaseCommandInfo;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandInfo;
 import com.dmdirc.commandparser.CommandType;
@@ -36,8 +37,12 @@ import com.dmdirc.ui.input.AdditionalTabTargets;
 /**
  * Generates a contact list for the channel the command is used in.
  */
-public class ContactListCommand extends Command implements CommandInfo,
-        IntelligentCommand {
+public class ContactListCommand extends Command implements IntelligentCommand {
+
+    /** A command info object for this command. */
+    public static final CommandInfo INFO = new BaseCommandInfo("contactlist",
+            "contactlist - show a contact list for the current channel",
+            CommandType.TYPE_CHANNEL) ;
 
     /** {@inheritDoc} */
     @Override
@@ -48,30 +53,6 @@ public class ContactListCommand extends Command implements CommandInfo,
         final ContactListListener listener = new ContactListListener(chanContext.getChannel());
         listener.addListeners();
         listener.clientListUpdated(chanContext.getChannel().getChannelInfo().getChannelClients());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String getName() {
-        return "contactlist";
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public boolean showInHelp() {
-        return true;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public CommandType getType() {
-        return CommandType.TYPE_CHANNEL;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String getHelp() {
-        return "contactlist - Show a contact list for the current channel";
     }
 
     /** {@inheritDoc} */
