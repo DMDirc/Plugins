@@ -49,7 +49,7 @@ public class RedirectCommand extends Command implements IntelligentCommand,
         final MessageTarget target = ((ChatCommandContext) context)
                 .getChat();
         target.getCommandParser().parseCommand(new FakeWriteableFrameContainer(
-                target), context.getSource(), args.getArgumentsAsString());
+                target), args.getArgumentsAsString());
     }
 
     /** {@inheritDoc} */

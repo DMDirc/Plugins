@@ -52,7 +52,7 @@ public class WebInputWindow extends WebWindow implements InputWindow {
         this.parent = parent;
         this.commandparser = parent.getCommandParser();
         this.inputhandler = new WebInputHandler(new WebInputField(),
-                commandparser, this);
+                commandparser, getContainer());
     }
 
     /** {@inheritDoc} */
@@ -64,7 +64,7 @@ public class WebInputWindow extends WebWindow implements InputWindow {
     public InputHandler getInputHandler(final String clientID) {
         if (!inputHandlers.containsKey(clientID)) {
             final WebInputHandler ih = new WebInputHandler(
-                    new WebInputField(clientID), commandparser, this);
+                    new WebInputField(clientID), commandparser, getContainer());
             ih.setTabCompleter(inputhandler.getTabCompleter());
             inputHandlers.put(clientID, ih);
         }

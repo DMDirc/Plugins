@@ -110,7 +110,7 @@ public class TopicDisplayPane extends JPanel implements DocumentListener {
         topicText.setRows(5);
         topicText.setColumns(30);
         final SwingInputHandler handler = new SwingInputHandler(topicText,
-                channel.getCommandParser(), channelWindow);
+                channel.getCommandParser(), channelWindow.getContainer());
         handler.setTypes(true, false, true, false);
         handler.setTabCompleter(channel.getTabCompleter());
 

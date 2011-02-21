@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_web.uicomponents;
 
+import com.dmdirc.WritableFrameContainer;
 import com.dmdirc.commandparser.parsers.CommandParser;
 import com.dmdirc.ui.input.InputHandler;
 import com.dmdirc.ui.input.TabCompleter;
@@ -35,7 +36,7 @@ public class WebInputHandler extends InputHandler {
 
     public WebInputHandler(final InputField thisTarget,
                            final CommandParser thisCommandParser,
-                           final WebInputWindow thisParentWindow) {
+                           final WritableFrameContainer thisParentWindow) {
         super(thisTarget, thisCommandParser, thisParentWindow);
     }
 

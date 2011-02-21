@@ -22,8 +22,11 @@
 
 package com.dmdirc.addons.ui_swing.textpane;
 
+import com.dmdirc.addons.ui_swing.DMDComponent;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
+import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
+import com.dmdirc.addons.ui_swing.framemanager.FramemanagerPosition;
 import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.ui.interfaces.Window;
 import com.dmdirc.ui.messages.IRCDocument;
@@ -55,7 +58,8 @@ import net.miginfocom.swing.MigLayout;
  * Styled, scrollable text pane.
  */
 public final class TextPane extends JComponent implements MouseWheelListener,
-        AdjustmentListener, IRCDocumentListener, ConfigChangeListener {
+        AdjustmentListener, IRCDocumentListener, ConfigChangeListener,
+        DMDComponent {
 
     /**
      * A version number for this class. It should be changed whenever the class
@@ -81,9 +85,10 @@ public final class TextPane extends JComponent implements MouseWheelListener,
     /**
      * Creates a new instance of TextPane.
      *
+     * @param controller Parent swing controller
      * @param frame Parent Frame
      */
-    public TextPane(final Window frame) {
+    public TextPane(final SwingController controller, final TextFrame frame) {
         super();
         this.frame = frame;
 
@@ -106,9 +111,8 @@ public final class TextPane extends JComponent implements MouseWheelListener,
         add(scrollBar, "dock east");
         scrollBar.addAdjustmentListener(this);
         scrollBar.addAdjustmentListener(canvas);
-        frame.getContainer().getConfigManager().addChangeListener(
-                ((SwingController) frame.getController()).getDomain(),
-                "textpanelinenotification", this);
+        frame.getContainer().getConfigManager().addChangeListener(frame
+                .getController().getDomain(), "textpanelinenotification", this);
         configChanged("", "textpanelinenotification");
 
         addMouseWheelListener(this);
@@ -588,5 +592,11 @@ public final class TextPane extends JComponent implements MouseWheelListener,
                 }
             });
         }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public FramemanagerPosition getPosition() {
+        return FramemanagerPosition.CENTER;
     }
 }

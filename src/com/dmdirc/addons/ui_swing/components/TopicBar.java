@@ -101,7 +101,7 @@ public class TopicBar extends JComponent implements ActionListener,
     /**
      * Instantiates a new topic bar.
      *
-     * @param window Parent window
+     * @param parentWindow Parent window
      * @param channelFrame Parent channel frame
      */
     public TopicBar(final Window parentWindow,
@@ -129,7 +129,8 @@ public class TopicBar extends JComponent implements ActionListener,
                 getIcon("close-active"));
 
         final SwingInputHandler handler = new SwingInputHandler(topicText,
-                channelFrame.getContainer().getCommandParser(), channelFrame);
+                channelFrame.getContainer().getCommandParser(),
+                channelFrame.getContainer());
         handler.setTypes(true, false, true, false);
         handler.setTabCompleter(channel.getTabCompleter());
 

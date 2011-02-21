@@ -98,7 +98,7 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
                 CoreActionType.CLIENT_CLOSING);
 
         setInputHandler(new SwingInputHandler(getInputField(),
-                owner.getCommandParser(), this));
+                owner.getCommandParser(), getContainer()));
 
         identity = IdentityManager.getChannelConfig(owner.getServer().
                 getNetwork(), owner.getChannelInfo().getName());

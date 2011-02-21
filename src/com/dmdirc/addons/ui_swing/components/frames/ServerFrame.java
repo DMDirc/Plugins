@@ -74,7 +74,7 @@ public final class ServerFrame extends InputTextFrame implements
         initComponents();
 
         setInputHandler(new SwingInputHandler(getInputField(),
-                owner.getCommandParser(), this));
+                owner.getCommandParser(), getContainer()));
 
         owner.addCertificateProblemListener(this);
     }

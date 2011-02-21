@@ -22,12 +22,12 @@
 
 package com.dmdirc.addons.tabcompletion_bash;
 
+import com.dmdirc.WritableFrameContainer;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 import com.dmdirc.ui.input.TabCompleter;
 import com.dmdirc.ui.input.TabCompleterResult;
 import com.dmdirc.ui.input.tabstyles.TabCompletionResult;
 import com.dmdirc.ui.input.tabstyles.TabCompletionStyle;
-import com.dmdirc.ui.interfaces.InputWindow;
 
 import java.awt.Toolkit;
 
@@ -46,7 +46,7 @@ public class BashStyle implements TabCompletionStyle {
     protected final TabCompleter tabCompleter;
 
     /** The input window that we use. */
-    protected final InputWindow window;
+    protected final WritableFrameContainer window;
 
     /**
      * Creates a new Bash-style tab completer.
@@ -54,7 +54,7 @@ public class BashStyle implements TabCompletionStyle {
      * @param completer The tab completer this style is for
      * @param window The window this tab style is for
      */
-    public BashStyle(final TabCompleter completer, final InputWindow window) {
+    public BashStyle(final TabCompleter completer, final WritableFrameContainer window) {
         this.tabCompleter = completer;
         this.window = window;
     }
@@ -92,7 +92,7 @@ public class BashStyle implements TabCompletionStyle {
 
             final String sub = res.getBestSubstring();
             if (sub.equalsIgnoreCase(word) && tabCount >= 2) {
-                window.getContainer().addLine("tabCompletion", res.toString());
+                window.addLine("tabCompletion", res.toString());
 
                 return null;
             } else {
