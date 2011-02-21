@@ -22,8 +22,11 @@
 package com.dmdirc.addons.ui_swing.components.frames;
 
 import com.dmdirc.FrameContainer;
+import com.dmdirc.addons.ui_swing.DMDComponent;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.commandparser.PopupType;
+import java.util.Collection;
+import javax.swing.JComponent;
 
 import javax.swing.JPopupMenu;
 
@@ -50,17 +53,37 @@ public class CustomFrame extends TextFrame {
     public CustomFrame(final SwingController controller,
             final FrameContainer owner) {
         super(owner, controller);
-
-        initComponents();
     }
 
     /**
      * Initialises components in this frame.
+     *
+     * @param components List of components to use in this frame
      */
-    private void initComponents() {
+    public void initComponents(final Collection<JComponent> components) {
         setLayout(new MigLayout("ins 0, fill, hidemode 3, wrap 1"));
-        add(getTextPane(), "grow, push");
-        add(getSearchBar(), "growx, pushx");
+        for (JComponent component : components) {
+            switch(((DMDComponent) component).getPosition()) {
+                case BOTTOM:
+                    add(component, "grow, push, south");
+                    break;
+                case CENTER:
+                    add(component, "grow, push, center");
+                    break;
+                case LEFT:
+                    add(component, "grow, push, west");
+                    break;
+                case RIGHT:
+                    add(component, "grow, push, east");
+                    break;
+                case TOP:
+                    add(component, "grow, push, north");
+                    break;
+                default:
+                    add(component, "grow, push");
+                    break;
+            }
+        }
     }
 
     /** {@inheritDoc} */

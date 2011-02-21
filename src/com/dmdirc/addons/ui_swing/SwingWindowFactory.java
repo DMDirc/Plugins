@@ -23,23 +23,27 @@
 package com.dmdirc.addons.ui_swing;
 
 import com.dmdirc.FrameContainer;
+import com.dmdirc.WritableFrameContainer;
 import com.dmdirc.addons.ui_swing.components.frames.ChannelFrame;
 import com.dmdirc.addons.ui_swing.components.frames.CustomFrame;
-import com.dmdirc.addons.ui_swing.components.frames.CustomInputFrame;
 import com.dmdirc.addons.ui_swing.components.frames.ServerFrame;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
+import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputHandler;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.ui.core.components.WindowComponent;
 import com.dmdirc.ui.interfaces.FrameListener;
+import com.dmdirc.ui.interfaces.InputField;
 import com.dmdirc.ui.interfaces.Window;
 import com.dmdirc.util.ListenerList;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.Collection;
 
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import javax.swing.JComponent;
 
 /**
  * Handles creation of windows in the Swing UI.
@@ -56,13 +60,13 @@ public class SwingWindowFactory implements FrameListener {
     private final Map<FrameContainer, TextFrame> windows = new HashMap<FrameContainer, TextFrame>();
 
     static {
-        IMPLEMENTATIONS.put(new HashSet<String>(
-                Arrays.asList(WindowComponent.TEXTAREA.getIdentifier())),
-                CustomFrame.class);
-        IMPLEMENTATIONS.put(new HashSet<String>(
-                Arrays.asList(WindowComponent.TEXTAREA.getIdentifier(),
-                WindowComponent.INPUTFIELD.getIdentifier())),
-                CustomInputFrame.class);
+        //IMPLEMENTATIONS.put(new HashSet<String>(
+        //        Arrays.asList(WindowComponent.TEXTAREA.getIdentifier())),
+        //        CustomFrame.class);
+        //IMPLEMENTATIONS.put(new HashSet<String>(
+        //        Arrays.asList(WindowComponent.TEXTAREA.getIdentifier(),
+        //        WindowComponent.INPUTFIELD.getIdentifier())),
+        //        CustomInputFrame.class);
         IMPLEMENTATIONS.put(new HashSet<String>(
                 Arrays.asList(WindowComponent.TEXTAREA.getIdentifier(),
                 WindowComponent.INPUTFIELD.getIdentifier(),
@@ -128,21 +132,68 @@ public class SwingWindowFactory implements FrameListener {
             final boolean focus) {
         final Class<? extends Window> clazz;
 
+        final TextFrame frame;
         if (IMPLEMENTATIONS.containsKey(window.getComponents())) {
-            clazz = IMPLEMENTATIONS.get(window.getComponents());
+            frame = getExistingFrame(window);
         } else {
-            clazz = window.getWindowClass();
+            frame = getCustomFrame(window);
         }
+        windows.put(window, frame);
+        return frame;
+    }
 
+    private TextFrame getExistingFrame(final FrameContainer window) {
         try {
-            final TextFrame frame = (TextFrame) clazz.getConstructors()[0].newInstance(controller, window);
-            windows.put(window, frame);
-
+            final TextFrame frame = (TextFrame) IMPLEMENTATIONS.get(
+                    window.getComponents()).getConstructors()[0]
+                    .newInstance(controller, window);
             return frame;
         } catch (Exception ex) {
             Logger.appError(ErrorLevel.HIGH, "Unable to create window", ex);
             return null;
         }
+    }
+
+    private TextFrame getCustomFrame(final FrameContainer window) {
+        try {
+            final CustomFrame frame = (CustomFrame) CustomFrame.class.getConstructors()[0]
+                    .newInstance(controller, window);
+            final Map<String, JComponent> components = initComponents(frame);
+            if (window instanceof WritableFrameContainer) {;
+            }
+            frame.initComponents(components.values());
+            return frame;
+        } catch (Exception ex) {
+            Logger.appError(ErrorLevel.HIGH, "Unable to create window", ex);
+            return null;
+        }
+    }
+
+    private Map<String, JComponent> initComponents(final CustomFrame frame) {
+        final Map<String, JComponent> components
+                = new HashMap<String, JComponent>();
+        for (String componentName : frame.getContainer().getComponents()) {
+            try {
+                if ("com.dmdirc.ui.components.inputfield".equals(componentName)) {
+                    components.put(componentName, (JComponent) Class.forName("com.dmdirc.addons.ui_swing.components.inputfields.SwingInputField").getConstructors()[0].newInstance(controller, frame));
+                } else if ("com.dmdirc.ui.components.textarea".equals(componentName)) {
+                    components.put(componentName, (JComponent) Class.forName("com.dmdirc.addons.ui_swing.textpane.TextPane").getConstructors()[0].newInstance(controller, frame));
+                } else {
+                    components.put(componentName, (JComponent) Class.forName(componentName).getConstructors()[0].newInstance(controller, frame));
+                }
+            } catch (InstantiationException ex) {
+                ex.printStackTrace();
+            } catch (IllegalAccessException ex) {
+                ex.printStackTrace();
+            } catch (IllegalArgumentException ex) {
+                ex.printStackTrace();
+            } catch (InvocationTargetException ex) {
+                ex.printStackTrace();
+            } catch (ClassNotFoundException ex) {
+                ex.printStackTrace();
+            }
+        }
+        return components;
     }
 
     /**

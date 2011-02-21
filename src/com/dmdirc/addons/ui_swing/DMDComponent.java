@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Chris Smith, Shane Mc Cormack, Gregory Holmes
+ * Copyright (c) 2006-2010 Chris Smith, Shane Mc Cormack, Gregory Holmes
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,45 +20,19 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.debug.commands;
+package com.dmdirc.addons.ui_swing;
 
-import com.dmdirc.FrameContainer;
-import com.dmdirc.addons.debug.Debug;
-import com.dmdirc.addons.debug.DebugCommand;
-import com.dmdirc.commandparser.CommandArguments;
-import com.dmdirc.commandparser.commands.context.CommandContext;
+import com.dmdirc.addons.ui_swing.framemanager.FramemanagerPosition;
 
 /**
- * Opens the DMDirc first run wizard.
+ * Basic interface for components in the swing UI.
  */
-public class FirstRun extends DebugCommand {
+public interface DMDComponent {
 
     /**
-     * Creates a new instance of the command.
+     * Returns the desired location for this component in the frame.
      *
-     * @param command Parent command
+     * @return Desired location
      */
-    public FirstRun(final Debug command) {
-        super(command);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String getName() {
-        return "firstrun";
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String getUsage() {
-        return " - shows the first run wizard";
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void execute(final FrameContainer origin,
-            final CommandArguments args, final CommandContext context) {
-        //context.getSource().getController().showFirstRunWizard();
-    }
-
+    FramemanagerPosition getPosition();
 }
