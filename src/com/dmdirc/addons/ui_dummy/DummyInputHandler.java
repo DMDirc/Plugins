@@ -22,10 +22,10 @@
 
 package com.dmdirc.addons.ui_dummy;
 
+import com.dmdirc.WritableFrameContainer;
 import com.dmdirc.commandparser.parsers.CommandParser;
 import com.dmdirc.ui.input.InputHandler;
 import com.dmdirc.ui.interfaces.InputField;
-import com.dmdirc.ui.interfaces.InputWindow;
 
 /**
  * Dummy input handler.
@@ -40,7 +40,9 @@ public class DummyInputHandler extends InputHandler {
      * @param commandParser The command parser to use for this text field.
      * @param parentWindow The window that owns this input handler
      */
-    public DummyInputHandler(final InputField target, final CommandParser commandParser, final InputWindow parentWindow) {
+    public DummyInputHandler(final InputField target,
+            final CommandParser commandParser,
+            final WritableFrameContainer parentWindow) {
         super(target, commandParser, parentWindow);
     }
 

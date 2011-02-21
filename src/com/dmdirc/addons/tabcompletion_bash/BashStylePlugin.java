@@ -22,10 +22,10 @@
 
 package com.dmdirc.addons.tabcompletion_bash;
 
+import com.dmdirc.WritableFrameContainer;
 import com.dmdirc.plugins.BasePlugin;
 import com.dmdirc.ui.input.TabCompleter;
 import com.dmdirc.ui.input.tabstyles.TabCompletionStyle;
-import com.dmdirc.ui.interfaces.InputWindow;
 
 public class BashStylePlugin extends BasePlugin {
 
@@ -49,7 +49,7 @@ public class BashStylePlugin extends BasePlugin {
      * @return A relevant TabCompletionStyle
      */
     public TabCompletionStyle getCompletionStyle(final TabCompleter completer,
-            final InputWindow window) {
+            final WritableFrameContainer window) {
         return new BashStyle(completer, window);
     }
 

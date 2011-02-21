@@ -25,8 +25,10 @@ package com.dmdirc.addons.debug.commands;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.debug.Debug;
 import com.dmdirc.addons.debug.DebugCommand;
+import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.commands.context.CommandContext;
+import com.dmdirc.plugins.PluginManager;
 
 /**
  * Opens the DMDirc first run wizard.
@@ -58,7 +60,9 @@ public class FirstRun extends DebugCommand {
     @Override
     public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
-        context.getSource().getController().showFirstRunWizard();
+        ((SwingController) PluginManager.getPluginManager()
+                .getPluginInfoByName("ui_swing").getPlugin())
+                .showFirstRunWizard();
     }
 
 }

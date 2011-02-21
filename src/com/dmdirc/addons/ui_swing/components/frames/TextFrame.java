@@ -169,7 +169,7 @@ public abstract class TextFrame extends JPanel implements Window,
      * Initialises the components for this frame.
      */
     private void initComponents() {
-        setTextPane(new TextPane(this));
+        setTextPane(new TextPane(getController(), this));
 
         searchBar = new SwingSearchBar(this);
         searchBar.setVisible(false);
@@ -251,14 +251,14 @@ public abstract class TextFrame extends JPanel implements Window,
 
     /** {@inheritDoc} */
     @Override
-    public void mouseClicked(final ClickTypeValue clickType,
+    public void mouseClicked(final ClickTypeValue clicktype,
             final MouseEventType eventType, final MouseEvent event) {
         if (event.isPopupTrigger()) {
-            showPopupMenuInternal(clickType, event.getPoint());
+            showPopupMenuInternal(clicktype, event.getPoint());
         }
         if (eventType == MouseEventType.CLICK
                 && event.getButton() == MouseEvent.BUTTON1) {
-            handleLinkClick(clickType);
+            handleLinkClick(clicktype);
         }
     }
 
