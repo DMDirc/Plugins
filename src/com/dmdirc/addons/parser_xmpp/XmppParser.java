@@ -233,7 +233,7 @@ public class XmppParser extends BaseSocketAwareParser {
         newArgs[2] = getLocalClient().getNickname();
         System.arraycopy(args, 0, newArgs, 3, args.length);
 
-        getCallback(NumericListener.class).onNumeric(null, null, numeric, args);
+        getCallback(NumericListener.class).onNumeric(null, null, numeric, newArgs);
     }
 
     /** {@inheritDoc} */
