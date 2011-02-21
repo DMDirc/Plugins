@@ -75,7 +75,7 @@ public class CommandAction extends AbstractAction {
     @Override
     public void actionPerformed(final ActionEvent e) {
         for (String line : command.split("\n")) {
-            parser.parseCommand(window.getContainer(), window, line);
+            parser.parseCommand(window.getContainer(), line);
         }
     }
 

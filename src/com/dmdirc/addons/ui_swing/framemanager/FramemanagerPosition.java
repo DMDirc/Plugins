@@ -36,6 +36,8 @@ public enum FramemanagerPosition {
     BOTTOM,
     /** Right side of the window. */
     RIGHT,
+    /** Center of the window. */
+    CENTER,
     /** Unknown position. */
     UNKNOWN;
 

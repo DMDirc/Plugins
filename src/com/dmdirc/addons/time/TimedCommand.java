@@ -27,7 +27,6 @@ import com.dmdirc.FrameContainer;
 import com.dmdirc.WritableFrameContainer;
 import com.dmdirc.commandparser.parsers.CommandParser;
 import com.dmdirc.commandparser.parsers.GlobalCommandParser;
-import com.dmdirc.ui.interfaces.Window;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -45,9 +44,6 @@ public final class TimedCommand extends TimerTask {
 
     /** The container to use for executing commands. */
     private final FrameContainer origin;
-
-    /** The window the command came from. */
-    private final Window window;
 
     /** The timer we're using for scheduling this command. */
     private final Timer timer;
@@ -69,14 +65,13 @@ public final class TimedCommand extends TimerTask {
      */
     public TimedCommand(final TimerManager manager, final int timerKey,
             final int repetitions, final int delay, final String command,
-            final FrameContainer origin, final Window window) {
+            final FrameContainer origin) {
         super();
 
         this.timerKey = timerKey;
         this.repetitions = repetitions;
         this.command = command;
         this.origin = origin;
-        this.window = window;
         this.manager = manager;
 
         timer = new Timer("Timed Command Timer");
@@ -113,7 +108,7 @@ public final class TimedCommand extends TimerTask {
             parser = ((WritableFrameContainer) origin).getCommandParser();
         }
 
-        parser.parseCommand(origin, window, command);
+        parser.parseCommand(origin, command);
 
         if (--repetitions <= 0) {
             manager.removeTimer(timerKey);

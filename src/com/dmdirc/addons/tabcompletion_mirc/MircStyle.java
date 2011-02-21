@@ -23,12 +23,12 @@
 package com.dmdirc.addons.tabcompletion_mirc;
 
 import com.dmdirc.Channel;
+import com.dmdirc.WritableFrameContainer;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 import com.dmdirc.ui.input.TabCompleter;
 import com.dmdirc.ui.input.TabCompleterResult;
 import com.dmdirc.ui.input.tabstyles.TabCompletionResult;
 import com.dmdirc.ui.input.tabstyles.TabCompletionStyle;
-import com.dmdirc.ui.interfaces.InputWindow;
 
 import java.awt.Toolkit;
 import java.util.Collections;
@@ -45,7 +45,7 @@ public class MircStyle implements TabCompletionStyle {
     protected final TabCompleter tabCompleter;
 
     /** The input window that we use. */
-    protected final InputWindow window;
+    protected final WritableFrameContainer window;
 
     /**
      * Creates a new mIRC-style tab completer.
@@ -53,7 +53,7 @@ public class MircStyle implements TabCompletionStyle {
      * @param completer The tab completer this style is for
      * @param window The window this tab style is for
      */
-    public MircStyle(final TabCompleter completer, final InputWindow window) {
+    public MircStyle(final TabCompleter completer, final WritableFrameContainer window) {
         this.tabCompleter = completer;
         this.window = window;
     }
@@ -83,10 +83,10 @@ public class MircStyle implements TabCompletionStyle {
             } else {
                 Collections.sort(res.getResults(), String.CASE_INSENSITIVE_ORDER);
 
-                if (word.length() > 0 && window.getContainer() instanceof Channel
-                        && ((Channel) window.getContainer())
+                if (word.length() > 0 && window instanceof Channel
+                        && ((Channel) window)
                         .getChannelInfo().getName().startsWith(word)) {
-                    target = ((Channel) window.getContainer()).getChannelInfo().getName();
+                    target = ((Channel) window).getChannelInfo().getName();
                 } else {
                     target = res.getResults().get(0);
                 }

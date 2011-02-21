@@ -22,10 +22,17 @@
 
 package com.dmdirc.addons.ui_swing.components.inputfields;
 
+import com.dmdirc.WritableFrameContainer;
+import com.dmdirc.addons.ui_swing.DMDComponent;
+import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.colours.ColourPickerDialog;
+import com.dmdirc.addons.ui_swing.components.frames.InputTextFrame;
+import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
+import com.dmdirc.addons.ui_swing.framemanager.FramemanagerPosition;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.ui.IconManager;
+import com.dmdirc.ui.interfaces.InputField;
 import com.dmdirc.ui.interfaces.InputField;
 import com.dmdirc.ui.interfaces.InputValidationListener;
 import com.dmdirc.util.ListenerList;
@@ -52,7 +59,8 @@ import net.miginfocom.swing.MigLayout;
 
 /** Swing input field. */
 public class SwingInputField extends JComponent implements InputField,
-        KeyListener, InputValidationListener, PropertyChangeListener {
+        KeyListener, InputValidationListener, PropertyChangeListener,
+        DMDComponent {
 
     /**
      * A version number for this class. It should be changed whenever the class
@@ -76,12 +84,14 @@ public class SwingInputField extends JComponent implements InputField,
     /**
      * Instantiates a new swing input field.
      *
-     * @param parentWindow Parent window
+     * @param controller Parent controller
+     * @param frame Parent frame
      */
-    public SwingInputField(final Window parentWindow) {
+    public SwingInputField(final SwingController controller,
+            final TextFrame frame) {
         super();
 
-        this.parentWindow = parentWindow;
+        this.parentWindow = controller.getMainFrame();
 
         listeners = new ListenerList();
 
@@ -560,5 +570,11 @@ public class SwingInputField extends JComponent implements InputField,
         if (!isFocusOwner()) {
             hideColourPicker();
         }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public FramemanagerPosition getPosition() {
+        return FramemanagerPosition.BOTTOM;
     }
 }

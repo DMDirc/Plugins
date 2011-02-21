@@ -31,7 +31,6 @@ import com.dmdirc.commandparser.commands.IntelligentCommand;
 import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 import com.dmdirc.ui.input.TabCompletionType;
-import com.dmdirc.ui.interfaces.Window;
 
 /**
  * Times how long it takes to execute commands.
@@ -63,7 +62,7 @@ public class Time extends DebugCommand implements IntelligentCommand {
     @Override
     public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
-        doTime(origin, context.getSource(), args);
+        doTime(origin, args);
     }
 
     /**
@@ -73,7 +72,7 @@ public class Time extends DebugCommand implements IntelligentCommand {
      * @param window The window to be passed on to the timed command, if any
      * @param args The arguments that were passed to the command
      */
-    private void doTime(final FrameContainer origin, final Window window,
+    private void doTime(final FrameContainer origin,
             final CommandArguments args) {
         if (args.getArguments().length == 0) {
             showUsage(origin, args.isSilent(), getName(), getUsage());
@@ -84,7 +83,7 @@ public class Time extends DebugCommand implements IntelligentCommand {
             final WritableFrameContainer container
                     = (WritableFrameContainer) origin;
             final long start = System.currentTimeMillis();
-            container.getCommandParser().parseCommand(origin, window,
+            container.getCommandParser().parseCommand(origin,
                     args.getArgumentsAsString(0));
             final long end = System.currentTimeMillis();
             sendLine(origin, args.isSilent(), FORMAT_OUTPUT,

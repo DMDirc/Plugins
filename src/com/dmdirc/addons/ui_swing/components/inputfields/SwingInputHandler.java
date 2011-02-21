@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.components.inputfields;
 
+import com.dmdirc.WritableFrameContainer;
 import com.dmdirc.addons.ui_swing.Apple;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
@@ -30,7 +31,6 @@ import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.ui.input.InputHandler;
 import com.dmdirc.ui.interfaces.InputField;
-import com.dmdirc.ui.interfaces.InputWindow;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
@@ -57,7 +57,8 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
      * @param parentWindow The window that owns this input handler
      */
     public SwingInputHandler(final InputField target,
-            final CommandParser commandParser, final InputWindow parentWindow) {
+            final CommandParser commandParser,
+            final WritableFrameContainer parentWindow) {
         super(target, commandParser, parentWindow);
     }
 

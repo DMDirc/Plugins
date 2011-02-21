@@ -80,7 +80,7 @@ public final class NowPlayingCommand extends Command implements
                     if (source.getState() == MediaSourceState.CLOSED) {
                         sendLine(origin, args.isSilent(), FORMAT_ERROR, "Source is not running.");
                     } else {
-                        target.getCommandParser().parseCommand(origin, context.getSource(),
+                        target.getCommandParser().parseCommand(origin,
                                 getInformation(source, args.getArgumentsAsString(2)));
                     }
                 }
@@ -90,7 +90,7 @@ public final class NowPlayingCommand extends Command implements
             }
         } else {
             if (parent.hasRunningSource()) {
-                target.getCommandParser().parseCommand(origin, context.getSource(),
+                target.getCommandParser().parseCommand(origin,
                         getInformation(parent.getBestSource(), args.
                         getArgumentsAsString(0)));
             } else {
