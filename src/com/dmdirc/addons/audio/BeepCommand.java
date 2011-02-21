@@ -23,6 +23,7 @@
 package com.dmdirc.addons.audio;
 
 import com.dmdirc.FrameContainer;
+import com.dmdirc.commandparser.BaseCommandInfo;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandInfo;
 import com.dmdirc.commandparser.CommandType;
@@ -34,37 +35,17 @@ import java.awt.Toolkit;
 /**
  * The Beep Command emits a beep
  */
-public final class BeepCommand extends Command implements CommandInfo {
+public class BeepCommand extends Command {
+
+    /** A command info object for this command. */
+    public static final CommandInfo INFO = new BaseCommandInfo("beep",
+            "beep - emits a beep", CommandType.TYPE_GLOBAL);
 
     /** {@inheritDoc} */
     @Override
     public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
         Toolkit.getDefaultToolkit().beep();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String getName() {
-        return "beep";
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public boolean showInHelp() {
-        return true;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public CommandType getType() {
-        return CommandType.TYPE_GLOBAL;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String getHelp() {
-        return this.getName();
     }
 
 }

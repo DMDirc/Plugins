@@ -641,7 +641,7 @@ public final class DCCPlugin extends BasePlugin implements ActionListener {
         }
 
         command = new DCCCommand(this);
-        CommandManager.getCommandManager().registerCommand(command);
+        CommandManager.getCommandManager().registerCommand(command, DCCCommand.INFO);
 
         ActionManager.getActionManager().registerTypes(DCCActions.values());
         ActionManager.getActionManager().registerListener(this,
@@ -653,7 +653,7 @@ public final class DCCPlugin extends BasePlugin implements ActionListener {
      */
     @Override
     public synchronized void onUnload() {
-        CommandManager.getCommandManager().unregisterCommand(command);
+        CommandManager.getCommandManager().unregisterCommand(DCCCommand.INFO);
         ActionManager.getActionManager().unregisterListener(this);
         if (container != null) {
             container.close();

@@ -23,6 +23,7 @@
 package com.dmdirc.addons.dns;
 
 import com.dmdirc.FrameContainer;
+import com.dmdirc.commandparser.BaseCommandInfo;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandInfo;
 import com.dmdirc.commandparser.CommandType;
@@ -35,7 +36,12 @@ import java.util.TimerTask;
 /**
  * Performs DNS lookups for nicknames, hostnames or IPs.
  */
-public final class DNSCommand extends Command implements CommandInfo {
+public class DNSCommand extends Command {
+
+    /** A command info object for this command. */
+    public static final CommandInfo INFO = new BaseCommandInfo("dns",
+            "dns <IP|hostname> - Performs DNS lookup of the specified ip/hostname/nickname",
+            CommandType.TYPE_GLOBAL);
 
     /** {@inheritDoc} */
     @Override
@@ -62,30 +68,6 @@ public final class DNSCommand extends Command implements CommandInfo {
                 }
             }
         }, 0);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String getName() {
-        return "dns";
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public boolean showInHelp() {
-        return true;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public CommandType getType() {
-        return CommandType.TYPE_GLOBAL;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String getHelp() {
-        return "dns <IP|hostname> - Performs DNS lookup of the specified ip/hostname/nickname";
     }
 
 }

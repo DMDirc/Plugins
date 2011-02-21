@@ -23,6 +23,7 @@
 package com.dmdirc.addons.audio;
 
 import com.dmdirc.FrameContainer;
+import com.dmdirc.commandparser.BaseCommandInfo;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandInfo;
 import com.dmdirc.commandparser.CommandType;
@@ -34,7 +35,11 @@ import java.io.File;
 /**
  * The Audio Command allows playing of audio files.
  */
-public final class AudioCommand extends Command implements CommandInfo {
+public class AudioCommand extends Command {
+
+    /** A command info object for this command. */
+    public static final CommandInfo INFO = new BaseCommandInfo("audio",
+            "audio <file> - plays the specified file", CommandType.TYPE_GLOBAL);
 
     /** {@inheritDoc} */
     @Override
@@ -53,29 +58,4 @@ public final class AudioCommand extends Command implements CommandInfo {
         }
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public String getName() {
-        return "audio";
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public boolean showInHelp() {
-        return true;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public CommandType getType() {
-        return CommandType.TYPE_GLOBAL;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String getHelp() {
-        return this.getName() + " <file>";
-    }
-
 }
-

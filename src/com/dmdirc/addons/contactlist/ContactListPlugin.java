@@ -37,12 +37,12 @@ public final class ContactListPlugin extends BasePlugin {
     @Override
     public void onLoad() {
         command = new ContactListCommand();
-        CommandManager.getCommandManager().registerCommand(command);
+        CommandManager.getCommandManager().registerCommand(command, ContactListCommand.INFO);
     }
 
     /** {@inheritDoc} */
     @Override
     public void onUnload() {
-        CommandManager.getCommandManager().unregisterCommand(command);
+        CommandManager.getCommandManager().unregisterCommand(ContactListCommand.INFO);
     }
 }

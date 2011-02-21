@@ -31,6 +31,7 @@ import com.dmdirc.addons.dcc.io.DCCChat;
 import com.dmdirc.addons.dcc.io.DCCTransfer;
 import com.dmdirc.addons.dcc.kde.KFileChooser;
 import com.dmdirc.addons.ui_swing.SwingController;
+import com.dmdirc.commandparser.BaseCommandInfo;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandInfo;
 import com.dmdirc.commandparser.CommandType;
@@ -52,8 +53,12 @@ import javax.swing.JOptionPane;
 /**
  * This command allows starting dcc chats/file transfers.
  */
-public final class DCCCommand extends Command implements IntelligentCommand,
-        CommandInfo {
+public class DCCCommand extends Command implements IntelligentCommand {
+
+    /** A command info object for this command. */
+    public static final CommandInfo INFO = new BaseCommandInfo("dcc",
+            "dcc <SEND|CHAT> <target> [params] - starts a DCC",
+            CommandType.TYPE_SERVER);
 
     /** My Plugin. */
     private final DCCPlugin myPlugin;
@@ -112,7 +117,7 @@ public final class DCCCommand extends Command implements IntelligentCommand,
                         "Unknown DCC Type: '" + type + "'");
             }
         } else {
-            showUsage(origin, true, getName(), getHelp());
+            showUsage(origin, true, INFO.getName(), INFO.getHelp());
         }
     }
 
@@ -273,30 +278,6 @@ public final class DCCCommand extends Command implements IntelligentCommand,
                 .getPluginManager().getPluginInfoByName("ui_swing")
                 .getPlugin()).getMainFrame());
         }
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String getName() {
-        return "dcc";
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public boolean showInHelp() {
-        return true;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public CommandType getType() {
-        return CommandType.TYPE_SERVER;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String getHelp() {
-        return "dcc <SEND|CHAT> <target> [params] - Allows DCC";
     }
 
     /** {@inheritDoc} */

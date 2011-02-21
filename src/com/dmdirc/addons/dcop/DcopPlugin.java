@@ -78,13 +78,13 @@ public final class DcopPlugin extends BasePlugin {
     @Override
     public void onLoad() {
         command = new DcopCommand();
-        CommandManager.getCommandManager().registerCommand(command);
+        CommandManager.getCommandManager().registerCommand(command, DcopCommand.INFO);
     }
 
     /** {@inheritDoc} */
     @Override
     public void onUnload() {
-        CommandManager.getCommandManager().unregisterCommand(command);
+        CommandManager.getCommandManager().unregisterCommand(DcopCommand.INFO);
     }
 
 }

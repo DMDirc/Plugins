@@ -41,12 +41,12 @@ public final class ActiveWindowPlugin extends BasePlugin {
         command = new ActiveCommand(((SwingController) PluginManager
                 .getPluginManager().getPluginInfoByName("ui_swing")
                 .getPlugin()).getMainFrame());
-        CommandManager.getCommandManager().registerCommand(command);
+        CommandManager.getCommandManager().registerCommand(command, ActiveCommand.INFO);
     }
 
     /** {@inheritDoc} */
     @Override
     public void onUnload() {
-        CommandManager.getCommandManager().unregisterCommand(command);
+        CommandManager.getCommandManager().unregisterCommand(ActiveCommand.INFO);
     }
 }
