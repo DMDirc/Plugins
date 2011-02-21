@@ -66,7 +66,7 @@ public class ActiveCommand extends Command implements IntelligentCommand {
         final TextFrame frame = mainFrame.getActiveFrame();
         if (frame.getContainer() instanceof WritableFrameContainer) {
             ((WritableFrameContainer) frame.getContainer()).getCommandParser()
-                    .parseCommand(frame.getContainer(), context.getSource(),
+                    .parseCommand(frame.getContainer(),
                     args.getArgumentsAsString());
         }
     }

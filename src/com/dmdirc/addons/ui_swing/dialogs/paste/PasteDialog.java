@@ -125,7 +125,7 @@ public final class PasteDialog extends StandardDialog implements ActionListener,
         textField.setRows(10);
 
         new SwingInputHandler(textField, parent.getContainer()
-                .getCommandParser(), parent)
+                .getCommandParser(), parent.getContainer())
                 .setTypes(false, false, true,false);
 
         scrollPane.setViewportView(textField);

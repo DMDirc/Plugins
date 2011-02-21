@@ -119,7 +119,7 @@ public final class TimerCommand extends Command implements IntelligentCommand,
                     }
 
                     manager.addTimer(repetitions, interval, command,
-                            origin, context.getSource());
+                            origin);
 
                     sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Command scheduled.");
                 }
