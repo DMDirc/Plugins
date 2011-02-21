@@ -23,7 +23,6 @@
 package com.dmdirc.addons.time;
 
 import com.dmdirc.FrameContainer;
-import com.dmdirc.ui.interfaces.Window;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -52,16 +51,14 @@ public class TimerManager {
      * @param interval Interval between repetitions
      * @param command Command to be run when the timer fires
      * @param origin The frame container to use for the execution
-     * @param commandContext The window the command came from
      */
     public void addTimer(final int repetitions, final int interval,
-            final String command, final FrameContainer origin,
-            final Window commandContext) {
+            final String command, final FrameContainer origin) {
 
         synchronized (this) {
             final int timerKey = findFreeKey();
             timerList.put(timerKey, new TimedCommand(this, timerKey,
-                    repetitions, interval, command, origin, commandContext));
+                    repetitions, interval, command, origin));
         }
     }
 

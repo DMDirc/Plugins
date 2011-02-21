@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2006-2011 Chris Smith, Shane Mc Cormack, Gregory Holmes
+ * Copyright (c) 2006-2011 Chris Smith, Shane Mc Cormack, Gregory Holmes,
+ * Simon Mott
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,68 +21,47 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.redirect;
+package com.dmdirc.addons.ui_swing.commands;
 
 import com.dmdirc.FrameContainer;
-import com.dmdirc.MessageTarget;
+import com.dmdirc.addons.ui_swing.SwingController;
+import com.dmdirc.commandparser.BaseCommandInfo;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandInfo;
 import com.dmdirc.commandparser.CommandType;
 import com.dmdirc.commandparser.commands.Command;
+import com.dmdirc.commandparser.commands.CommandOptions;
 import com.dmdirc.commandparser.commands.IntelligentCommand;
-import com.dmdirc.commandparser.commands.context.ChatCommandContext;
 import com.dmdirc.commandparser.commands.context.CommandContext;
+import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.input.AdditionalTabTargets;
-import com.dmdirc.ui.input.TabCompleter;
 
 /**
- * The redirect command allows the user to redirect the output from another
- * command that would normally echo results locally to a query or channel
- * window instead.
+ * Opens the server settings window for the server.
+ *
+ * @since 0.6.4
  */
-public class RedirectCommand extends Command implements IntelligentCommand,
-        CommandInfo {
+@CommandOptions(allowOffline=false)
+public class ServerSettings extends Command implements IntelligentCommand {
+
+    /** A command info object for this command. */
+    public static final CommandInfo INFO = new BaseCommandInfo("serversettings",
+            "serversettings - opens the server settings window",
+            CommandType.TYPE_SERVER);
 
     /** {@inheritDoc} */
     @Override
     public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
-        final MessageTarget target = ((ChatCommandContext) context)
-                .getChat();
-        target.getCommandParser().parseCommand(new FakeWriteableFrameContainer(
-                target), args.getArgumentsAsString());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String getName() {
-        return "redirect";
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public boolean showInHelp() {
-        return true;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public CommandType getType() {
-        return CommandType.TYPE_CHAT;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String getHelp() {
-        return "redirect <command> - sends the output of the command to a "
-                + "channel or query window";
+        ((SwingController) PluginManager.getPluginManager()
+                .getPluginInfoByName("ui_swing").getPlugin())
+                .showServerSettingsDialog(context.getSource().getServer());
     }
 
     /** {@inheritDoc} */
     @Override
     public AdditionalTabTargets getSuggestions(final int arg,
             final IntelligentCommandContext context) {
-        return TabCompleter.getIntelligentResults(arg, context, 0);
+        return new AdditionalTabTargets().excludeAll();
     }
-
 }

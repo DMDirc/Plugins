@@ -50,7 +50,8 @@ public class DummyInputWindow implements InputWindow {
     /** {@inheritDoc} */
     @Override
     public InputHandler getInputHandler() {
-        return new DummyInputHandler(new DummyInputField(), null, this);
+        return new DummyInputHandler(new DummyInputField(), null,
+                getContainer());
     }
 
     /** {@inheritDoc} */

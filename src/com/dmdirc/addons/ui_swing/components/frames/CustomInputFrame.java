@@ -55,7 +55,7 @@ public class CustomInputFrame extends InputTextFrame {
         super(controller, owner);
 
         setInputHandler(new SwingInputHandler(getInputField(),
-                owner.getCommandParser(), this));
+                owner.getCommandParser(), getContainer()));
 
         initComponents();
     }
