@@ -782,7 +782,7 @@ public class SwingController extends BasePlugin implements UIController {
      */
     public List<java.awt.Window> getTopLevelWindows() {
         synchronized (windows) {
-            return windows;
+            return new ArrayList<java.awt.Window>(windows);
         }
     }
 
