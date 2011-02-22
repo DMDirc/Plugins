@@ -26,9 +26,7 @@ import com.dmdirc.Channel;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.Query;
 import com.dmdirc.Server;
-import com.dmdirc.actions.ActionManager;
-import com.dmdirc.actions.CoreActionType;
-import com.dmdirc.actions.interfaces.ActionType;
+import com.dmdirc.addons.ui_swing.SelectionListener;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
@@ -38,7 +36,6 @@ import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
-import com.dmdirc.interfaces.ActionListener;
 import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.parser.interfaces.ChannelClientInfo;
 import com.dmdirc.parser.interfaces.ChannelInfo;
@@ -53,14 +50,19 @@ import java.util.Map.Entry;
 
 /**
  * Displays information related to the current window in the status bar.
- *
- * @author Shane 'Dataforce' McCormack
  */
-public final class WindowStatusPlugin extends BasePlugin implements ActionListener, ConfigChangeListener {
+public final class WindowStatusPlugin extends BasePlugin
+        implements ConfigChangeListener, SelectionListener {
 
     /** The panel we use in the status bar. */
     private final WindowStatusPanel panel;
-    private boolean showname, shownone;
+    /** Parent Swing UI. */
+    private SwingController controller;
+    /** Should we show the real name in queries? */
+    private boolean showname;
+    /** Should we show users without modes? */
+    private boolean shownone;
+    /** Prefix for users without modes. */
     private String nonePrefix;
 
     /** Creates a new instance of WindowStatusPlugin. */
@@ -78,60 +80,45 @@ public final class WindowStatusPlugin extends BasePlugin implements ActionListen
         });
     }
 
-    /**
-     * Called when the plugin is loaded.
-     */
+    /** {@inheritDoc} */
     @Override
     public void onLoad() {
-        ((SwingController) PluginManager.getPluginManager()
-                .getPluginInfoByName("ui_swing").getPlugin())
-                .getSwingStatusBar().addComponent(panel);
+        controller = (SwingController) PluginManager.getPluginManager()
+                .getPluginInfoByName("ui_swing").getPlugin();
+        controller.getSwingStatusBar().addComponent(panel);
+        controller.getMainFrame().addSelectionListener(this);
         IdentityManager.getGlobalConfig().addChangeListener(getDomain(), this);
         updateCache();
-
-        ActionManager.getActionManager().registerListener(this,
-                CoreActionType.CLIENT_FRAME_CHANGED);
     }
 
-    /**
-     * Called when this plugin is unloaded.
-     */
+    /** {@inheritDoc} */
     @Override
     public void onUnload() {
-        ((SwingController) PluginManager.getPluginManager()
-                .getPluginInfoByName("ui_swing").getPlugin())
-                .getSwingStatusBar().removeComponent(panel);
-        ActionManager.getActionManager().unregisterListener(this);
+        controller.getMainFrame().removeSelectionListener(this);
+        controller.getSwingStatusBar().removeComponent(panel);
+        controller = null;
     }
 
-    /**
-     * Process an event of the specified type.
-     *
-     * @param type The type of the event to process
-     * @param format Format of messages that are about to be sent. (May be null)
-     * @param arguments The arguments for the event
-     */
+    /** {@inheritDoc} */
     @Override
-    public void processEvent(final ActionType type, final StringBuffer format, final Object... arguments) {
-        if (type.equals(CoreActionType.CLIENT_FRAME_CHANGED)) {
-            updateStatus((FrameContainer) arguments[0]);
-        }
+    public void selectionChanged(final TextFrame window) {
+        updateStatus(window == null ? null : window.getContainer());
     }
 
+    /** Updates the cached config settings. */
     private void updateCache() {
-        showname = IdentityManager.getGlobalConfig().getOptionBool(getDomain(), "client.showname");
-        shownone = IdentityManager.getGlobalConfig().getOptionBool(getDomain(), "channel.shownone");
-        nonePrefix = IdentityManager.getGlobalConfig().getOption(getDomain(), "channel.noneprefix");
+        showname = IdentityManager.getGlobalConfig().getOptionBool(getDomain(),
+                "client.showname");
+        shownone = IdentityManager.getGlobalConfig().getOptionBool(getDomain(),
+                "channel.shownone");
+        nonePrefix = IdentityManager.getGlobalConfig().getOption(getDomain(),
+                "channel.noneprefix");
         updateStatus();
     }
 
-    /**
-     * Update the window status using the current active window.
-     */
+    /** Update the window status using the current active window. */
     public void updateStatus() {
-        final TextFrame active = ((SwingController) PluginManager
-                .getPluginManager().getPluginInfoByName("ui_swing").getPlugin())
-                .getMainFrame().getActiveFrame();
+        final TextFrame active = controller.getMainFrame().getActiveFrame();
 
         if (active != null) {
             updateStatus(active == null ? null : active.getContainer());
@@ -139,7 +126,8 @@ public final class WindowStatusPlugin extends BasePlugin implements ActionListen
     }
 
     /**
-     * Update the window status using a given FrameContainer as the active frame.
+     * Update the window status using a given FrameContainer as the
+     * active frame.
      *
      * @param current Window to use when adding status.
      */
@@ -150,21 +138,21 @@ public final class WindowStatusPlugin extends BasePlugin implements ActionListen
         final StringBuffer textString = new StringBuffer();
 
         if (current instanceof Server) {
-            final Server frame = (Server) current;
-
-            textString.append(frame.getName());
+            textString.append(((Server) current).getName());
         } else if (current instanceof Channel) {
-            final Channel frame = (Channel) current;
-            final ChannelInfo chan = frame.getChannelInfo();
+            final ChannelInfo chan = ((Channel) current).getChannelInfo();
             final Map<Integer, String> names = new HashMap<Integer, String>();
             final Map<Integer, Integer> types = new HashMap<Integer, Integer>();
 
             textString.append(chan.getName());
-            textString.append(" - Nicks: " + chan.getChannelClientCount() + " (");
+            textString.append(" - Nicks: ");
+            textString.append(chan.getChannelClientCount());
+            textString.append(" (");
 
             for (ChannelClientInfo client : chan.getChannelClients()) {
                 String mode = client.getImportantModePrefix();
-                final Integer im = client.getClient().getParser().getChannelUserModes().indexOf(mode);
+                final Integer im = client.getClient().getParser()
+                        .getChannelUserModes().indexOf(mode);
 
                 if (!names.containsKey(im)) {
                     if (mode.isEmpty()) {
@@ -205,7 +193,8 @@ public final class WindowStatusPlugin extends BasePlugin implements ActionListen
 
             textString.append(frame.getHost());
             if (showname && frame.getServer().getParser() != null) {
-                final ClientInfo client = frame.getServer().getParser().getClient(frame.getHost());
+                final ClientInfo client = frame.getServer().getParser()
+                        .getClient(frame.getHost());
                 final String realname = client.getRealname();
                 if (!realname.isEmpty()) {
                     textString.append(" - ");
@@ -242,5 +231,4 @@ public final class WindowStatusPlugin extends BasePlugin implements ActionListen
     public void configChanged(final String domain, final String key) {
         updateCache();
     }
-
 }

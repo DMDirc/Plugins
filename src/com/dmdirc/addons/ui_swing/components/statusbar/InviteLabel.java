@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.components.statusbar;
 
-import com.dmdirc.FrameContainer;
 import com.dmdirc.Invite;
 import com.dmdirc.Server;
 import com.dmdirc.ServerManager;
@@ -30,7 +29,9 @@ import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.actions.interfaces.ActionType;
 import com.dmdirc.addons.ui_swing.MainFrame;
+import com.dmdirc.addons.ui_swing.SelectionListener;
 import com.dmdirc.addons.ui_swing.UIUtilities;
+import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.interfaces.ActionListener;
 import com.dmdirc.interfaces.InviteListener;
 import com.dmdirc.ui.IconManager;
@@ -47,11 +48,12 @@ import javax.swing.JPopupMenu;
 import javax.swing.JSeparator;
 
 /**
- * Invite label.
+ * A status bar component to show invites to the user and enable them to accept
+ * or dismiss them.
  */
 public class InviteLabel extends StatusbarPopupPanel<JLabel> implements
         StatusBarComponent, InviteListener, ActionListener,
-        java.awt.event.ActionListener {
+        java.awt.event.ActionListener, SelectionListener {
 
     /**
      * A version number for this class. It should be changed whenever the class
@@ -59,24 +61,16 @@ public class InviteLabel extends StatusbarPopupPanel<JLabel> implements
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 1;
-
-    /** Active server. */
-    private Server activeServer;
-
     /** Invite popup menu. */
     private final JPopupMenu menu;
-
     /** Dismiss invites menu item. */
     private final JMenuItem dismiss;
-
     /** Accept invites menu item. */
     private final JMenuItem accept;
-
     /** Parent window. */
     private final MainFrame mainFrame;
-
-    /** Active frame. */
-    private FrameContainer activeFrame;
+    /** Active server. */
+    private Server activeServer;
 
     /**
      * Instantiates a new invite label.
@@ -103,8 +97,7 @@ public class InviteLabel extends StatusbarPopupPanel<JLabel> implements
             server.addInviteListener(this);
         }
 
-        ActionManager.getActionManager().registerListener(this,
-                CoreActionType.CLIENT_FRAME_CHANGED);
+        mainFrame.addSelectionListener(this);
         ActionManager.getActionManager().registerListener(this,
                 CoreActionType.SERVER_CONNECTED);
         ActionManager.getActionManager().registerListener(this,
@@ -140,12 +133,6 @@ public class InviteLabel extends StatusbarPopupPanel<JLabel> implements
      * Updates the invite label for the currently active server.
      */
     private void update() {
-        if (activeFrame == null) {
-            activeServer = null;
-        } else {
-            activeServer = activeFrame.getServer();
-        }
-
         UIUtilities.invokeLater(new Runnable() {
 
             /** {@inheritDoc} */
@@ -178,12 +165,7 @@ public class InviteLabel extends StatusbarPopupPanel<JLabel> implements
     @Override
     public void processEvent(final ActionType type, final StringBuffer format,
             final Object... arguments) {
-        if (type == CoreActionType.CLIENT_FRAME_CHANGED) {
-            if (arguments[0] instanceof FrameContainer) {
-                activeFrame = (FrameContainer) arguments[0];
-                update();
-            }
-        } else if (type == CoreActionType.SERVER_CONNECTED) {
+        if (type == CoreActionType.SERVER_CONNECTED) {
             if (arguments[0] instanceof Server) {
                 ((Server) arguments[0]).addInviteListener(this);
             }
@@ -220,5 +202,12 @@ public class InviteLabel extends StatusbarPopupPanel<JLabel> implements
         } else if ("dismissAll".equals(e.getActionCommand())) {
             activeServer.removeInvites();
         }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void selectionChanged(final TextFrame window) {
+        activeServer = window == null ? null : window.getContainer().getServer();
+        update();
     }
 }

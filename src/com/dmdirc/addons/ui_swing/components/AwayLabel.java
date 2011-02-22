@@ -23,11 +23,10 @@
 package com.dmdirc.addons.ui_swing.components;
 
 import com.dmdirc.FrameContainer;
-import com.dmdirc.actions.ActionManager;
-import com.dmdirc.actions.CoreActionType;
-import com.dmdirc.actions.interfaces.ActionType;
+import com.dmdirc.addons.ui_swing.MainFrame;
+import com.dmdirc.addons.ui_swing.SelectionListener;
 import com.dmdirc.addons.ui_swing.UIUtilities;
-import com.dmdirc.interfaces.ActionListener;
+import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.interfaces.AwayStateListener;
 import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.interfaces.FrameCloseListener;
@@ -38,7 +37,7 @@ import javax.swing.JLabel;
  * Simple panel to show when a user is away or not.
  */
 public class AwayLabel extends JLabel implements ConfigChangeListener,
-        AwayStateListener, ActionListener, FrameCloseListener {
+        AwayStateListener, FrameCloseListener {
 
     /**
      * A version number for this class. It should be changed whenever the class
@@ -53,7 +52,14 @@ public class AwayLabel extends JLabel implements ConfigChangeListener,
     /** Parent frame container. */
     private final FrameContainer container;
 
-    public AwayLabel(final FrameContainer container) {
+    /**
+     * Creates a new away label for the specified container.
+     *
+     * @param mainFrame Parent main frame
+     * @param container Parent frame container
+     */
+    public AwayLabel(final MainFrame mainFrame,
+            final FrameContainer container) {
         super("(away)");
 
         this.container = container;
@@ -70,9 +76,6 @@ public class AwayLabel extends JLabel implements ConfigChangeListener,
         }
 
         container.addCloseListener(this);
-
-        ActionManager.getActionManager().registerListener(this,
-                CoreActionType.CLIENT_FRAME_CHANGED);
     }
 
     /** {@inheritDoc} */
@@ -120,16 +123,6 @@ public class AwayLabel extends JLabel implements ConfigChangeListener,
                 }
             }
         });
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void processEvent(final ActionType type, final StringBuffer format,
-            final Object... arguments) {
-        if (type == CoreActionType.CLIENT_FRAME_CHANGED && useAwayIndicator
-                && container.getServer() != null) {
-            setVisible(container.getServer().isAway());
-        }
     }
 
     /** {@inheritDoc} */

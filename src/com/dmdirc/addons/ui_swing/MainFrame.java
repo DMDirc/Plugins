@@ -635,11 +635,6 @@ public final class MainFrame extends JFrame implements WindowListener,
                         SelectionListener.class)) {
                     listener.selectionChanged(activeFrame);
                 }
-
-                ActionManager.getActionManager().triggerEvent(
-                        CoreActionType.CLIENT_FRAME_CHANGED, null,
-                        activeFrame == null ? null : activeFrame
-                        .getContainer());
             }
         });
     }
