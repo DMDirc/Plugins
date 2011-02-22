@@ -149,7 +149,8 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
         inputFieldPopup.setOpaque(true);
         inputFieldPopup.setLightWeightPopupEnabled(true);
 
-        awayLabel = new AwayLabel(getContainer());
+        awayLabel = new AwayLabel(getController().getMainFrame(),
+                getContainer());
     }
 
     /**
