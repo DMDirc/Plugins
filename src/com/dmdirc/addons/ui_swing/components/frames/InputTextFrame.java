@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_swing.components.frames;
 
 import com.dmdirc.WritableFrameContainer;
+import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.actions.CopyAction;
@@ -149,7 +150,8 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
         inputFieldPopup.setOpaque(true);
         inputFieldPopup.setLightWeightPopupEnabled(true);
 
-        awayLabel = new AwayLabel(getContainer());
+        awayLabel = new AwayLabel(getController().getMainFrame(),
+                getContainer());
     }
 
     /**
