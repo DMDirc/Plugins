@@ -505,10 +505,13 @@ public class SwingController extends BasePlugin implements UIController {
     private void loadCommands() {
         commands.add(ServerSettings.INFO);
         commands.add(ChannelSettings.INFO);
+        commands.add(Input.INFO);
         CommandManager.getCommandManager().registerCommand(
                 new ServerSettings(), ServerSettings.INFO);
         CommandManager.getCommandManager().registerCommand(
                 new ChannelSettings(), ChannelSettings.INFO);
+        CommandManager.getCommandManager().registerCommand(
+                new Input(windowFactory), Input.INFO);
     }
 
     /** {@inheritDoc} */
