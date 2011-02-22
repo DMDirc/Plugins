@@ -103,6 +103,7 @@ public class UpdaterLabel extends StatusbarPopupPanel<JLabel> implements
             label.setIcon(IconManager.getIconManager().getIcon("update"));
         } else if (newStatus.equals(STATE.RESTART_REQUIRED)) {
             label.setIcon(IconManager.getIconManager().getIcon("restart-needed"));
+            SwingRestartDialog.showSwingRestartDialog(mainFrame, ModalityType.MODELESS);
         }
     }
 
