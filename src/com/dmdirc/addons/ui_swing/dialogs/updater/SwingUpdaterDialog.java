@@ -227,12 +227,10 @@ public final class SwingUpdaterDialog extends StandardDialog implements
                 }
             }.executeInExecutor();
 
-            if (UpdateChecker.getStatus() != STATE.UPDATING) {
-                dispose();
-                if (UpdateChecker.getStatus() == STATE.RESTART_REQUIRED) {
-                    SwingRestartDialog.showSwingRestartDialog(mainFrame,
-                            ModalityType.MODELESS);
-                }
+            if (UpdateChecker.getStatus() != STATE.UPDATING
+                    && UpdateChecker.getStatus() == STATE.RESTART_REQUIRED) {
+                SwingRestartDialog.showSwingRestartDialog(mainFrame,
+                        ModalityType.MODELESS);
             }
         } else if (e.getSource().equals(getCancelButton())) {
             dispose();
