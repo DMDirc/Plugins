@@ -2,6 +2,8 @@
 <project name="DMDirc Plugins" default="default" basedir=".">
     <description>Builds, packages and tests DMDirc plugins.</description>
 
+    <import file="build-gitversion.xml"/>
+
     <property name="plugins.src" location="src"/>
     <property name="plugins.build" location="build"/>
     <property name="plugins.build.classes" location="${plugins.build}/classes"/>
@@ -18,7 +20,15 @@
        <available classname="com.dmdirc.Main" classpathref="plugins.classpath"/>
     </condition>
 
-    <taskdef resource="net/sf/antcontrib/antlib.xml" classpathref="plugins.classpath"/>
+    <condition property="plugins.need.antlib">
+       <not>
+           <typefound name="foreach"/>
+       </not>
+    </condition>
+
+    <target name="-init-taskdefs" if="plugins.need.antlib">
+        <taskdef resource="net/sf/antcontrib/antlib.xml" classpathref="plugins.classpath"/>
+    </target>
 
     <target name="-check-dmdirc-jar" unless="plugins.dmdirc.exists">
        <fail>DMDirc class files not found. Please put DMDirc on the classpath or specify the 'plugins.dmdirc.build.dir' property.</fail>
@@ -42,7 +52,7 @@
 
     <target name="jar" depends="-package,-add-libs"/>
 
-    <target name="-package" depends="compile">
+    <target name="-package" depends="-init-taskdefs, compile">
         <for param="configfile">
             <fileset dir="${plugins.src}" includes="**/plugin.config"/>
             <sequential>
@@ -50,7 +60,6 @@
                 <local name="plugin.build.dir"/>
                 <local name="plugin.name"/>
                 <local name="plugin.jar"/>
-                <local name="plugin.lastcommit"/>
                 <local name="plugin.version"/>
 
                 <mkdir dir="${plugins.build.metadata}/${plugin.name}/META-INF"/>
@@ -65,20 +74,7 @@
                     <fileset dir="${plugin.src.dir}" includes="identities/** licences/**"/>
                 </copy>
 
-                <exec executable="git" outputproperty="plugin.lastcommit">
-                    <arg value="rev-list"/>
-                    <arg value="--max-count=1"/>
-                    <arg value="HEAD"/>
-                    <arg value="--"/>
-                    <arg value="${plugin.src.dir}"/>
-                </exec>
-
-                <exec executable="git" outputproperty="plugin.version">
-                    <arg value="describe"/>
-                    <arg value="--tags"/>
-                    <arg value="--always"/>
-                    <arg value="${plugin.lastcommit}"/>
-                </exec>
+                <gitversion target="${plugin.src.dir}" outputproperty="plugin.version"/>
 
                 <echo file="${plugins.build.metadata}/${plugin.name}/META-INF/plugin.config" append="true">
 version:
