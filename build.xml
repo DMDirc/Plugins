@@ -62,7 +62,7 @@
 
                 <copy todir="${plugins.build.metadata}/${plugin.name}/META-INF">
                     <fileset file="@{configfile}"/>
-                    <fileset dir="${plugin.src.dir}" includes="identities/**"/>
+                    <fileset dir="${plugin.src.dir}" includes="identities/** licences/**"/>
                 </copy>
 
                 <exec executable="git" outputproperty="plugin.lastcommit">
