@@ -67,7 +67,7 @@
                 <dirname file="@{configfile}" property="plugin.src.dir"/>
                 <basename file="${plugin.src.dir}" property="plugin.name"/>
                 <property name="plugin.jar" value="${plugins.dist}/${plugin.name}.jar"/>
-                <propertyregex property="plugin.build.dir" input="${plugin.src.dir}" regexp="${plugins.src}/?(.*)" replace="\1"/>
+                <propertyregex property="plugin.build.dir" input="${plugin.src.dir}" regexp="\Q${plugins.src}/?(.*)\E" replace="\1"/>
 
                 <copy todir="${plugins.build.metadata}/${plugin.name}/META-INF">
                     <fileset file="@{configfile}"/>
