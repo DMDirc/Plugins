@@ -60,16 +60,11 @@ public class WebWindow implements Window, IRCDocumentListener,
 
     private final FrameContainer parent;
 
-    private final List<String> messages = new ArrayList<String>();
-
-    private String title;
-
     public WebWindow(final WebInterfaceUI controller,
             final FrameContainer parent) {
         super();
 
         this.parent = parent;
-        this.title = parent.getTitle();
 
         WINDOWS.put(getId(), this);
 
@@ -253,13 +248,41 @@ public class WebWindow implements Window, IRCDocumentListener,
     /** {@inheritDoc} */
     @Override
     public void titleChanged(final FrameContainer window, final String title) {
-        this.title = title;
+        //TODO FIXME
     }
 
     /** {@inheritDoc} */
     @Override
     public void windowClosing(final FrameContainer window) {
         DynamicRequestHandler.addEvent(new Event("closewindow", myID));
+    }
+
+    /**
+     * Retrieves the title of this window.
+     *
+     * @return This window's title
+     */
+    public String getTitle() {
+        return parent.getTitle();
+    }
+
+    /**
+     * Retrieves the name of this window.
+     *
+     * @return This window's name
+     */
+    public String getName() {
+        return parent.getName();
+    }
+
+    /**
+     * Retrieves the type of this window.
+     *
+     * @return This window's type
+     */
+    public String getType() {
+        // TODO: Pass icon properly instead of relying on type
+        return parent.getClass().getSimpleName().toLowerCase();
     }
 
 }
