@@ -53,11 +53,9 @@ public class AwayLabel extends JLabel implements ConfigChangeListener,
     /**
      * Creates a new away label for the specified container.
      *
-     * @param mainFrame Parent main frame
      * @param container Parent frame container
      */
-    public AwayLabel(final MainFrame mainFrame,
-            final FrameContainer container) {
+    public AwayLabel(final FrameContainer container) {
         super("(away)");
 
         this.container = container;

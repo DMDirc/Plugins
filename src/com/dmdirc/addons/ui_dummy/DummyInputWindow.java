@@ -40,10 +40,8 @@ public class DummyInputWindow implements InputWindow {
      * Instantiates a new DummyInputWindow.
      *
      * @param owner Parent window
-     * @param commandParser Parent command parser
      */
-    public DummyInputWindow(final WritableFrameContainer owner,
-            final CommandParser commandParser) {
+    public DummyInputWindow(final WritableFrameContainer owner) {
         this.container = owner;
     }
 

@@ -35,6 +35,6 @@ public final class DummyChannelWindow extends DummyInputWindow {
      * @param parent Parent channel
      */
     public DummyChannelWindow(final Channel parent) {
-        super(parent, parent.getCommandParser());
+        super(parent);
     }
 }
