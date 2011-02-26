@@ -22,10 +22,9 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.about;
 
+import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
-import com.dmdirc.ui.core.util.URLHandler;
 
-import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -57,20 +56,18 @@ public final class AboutDialog extends StandardDialog implements
     private CreditsPanel cp;
     /** Tab history. */
     private int history = 0;
-    /** The URL Handler to use to handle clicked links. */
-    private final URLHandler urlHandler;
+    /** Parent swing controller. */
+    private SwingController controller;
 
     /**
      * Creates a new instance of AboutDialog.
      *
-     * @param parentWindow Parent window
-     * @param urlHandler The URL Handler to use to handle clicked links
+     * @param controller Parent controller
      */
-    private AboutDialog(final Window parentWindow,
-            final URLHandler urlHandler) {
-        super(parentWindow, ModalityType.MODELESS);
+    private AboutDialog(final SwingController controller) {
+        super(controller.getMainFrame(), ModalityType.MODELESS);
 
-        this.urlHandler = urlHandler;
+        this.controller = controller;
 
         initComponents();
     }
@@ -78,12 +75,10 @@ public final class AboutDialog extends StandardDialog implements
     /**
      * Creates the dialog if one doesn't exist, and displays it.
      *
-     * @param parentWindow Parent window
-     * @param urlHandler The URL Handler to use to handle clicked links
+     * @param controller Parent controller
      */
-    public static void showAboutDialog(final Window parentWindow,
-            final URLHandler urlHandler) {
-        me = getAboutDialog(parentWindow, urlHandler);
+    public static void showAboutDialog(final SwingController controller) {
+        me = getAboutDialog(controller);
 
         me.display();
         me.requestFocusInWindow();
@@ -92,15 +87,14 @@ public final class AboutDialog extends StandardDialog implements
     /**
      * Returns the current instance of the AboutDialog.
      *
-     * @param parentWindow Parent window
-     * @param urlHandler The URL Handler to use to handle clicked links
+     * @param controller Parent controller
+     *
      * @return The current AboutDialog instance
      */
-    public static AboutDialog getAboutDialog(final Window parentWindow,
-            final URLHandler urlHandler) {
+    public static AboutDialog getAboutDialog(final SwingController controller) {
         synchronized (AboutDialog.class) {
             if (me == null) {
-                me = new AboutDialog(parentWindow, urlHandler);
+                me = new AboutDialog(controller);
             }
         }
 
@@ -120,12 +114,12 @@ public final class AboutDialog extends StandardDialog implements
         getOkButton().addActionListener(this);
         getCancelButton().addActionListener(this);
 
-        cp = new CreditsPanel(urlHandler);
+        cp = new CreditsPanel(controller.getURLHandler());
 
-        tabbedPane.add("About", new AboutPanel(urlHandler));
+        tabbedPane.add("About", new AboutPanel(controller.getURLHandler()));
         tabbedPane.add("Credits", cp);
         tabbedPane.add("Licences", new LicencesPanel());
-        tabbedPane.add("Information", new InfoPanel());
+        tabbedPane.add("Information", new InfoPanel(controller));
         tabbedPane.addChangeListener(this);
 
         getContentPane().setLayout(new MigLayout("ins rel, wrap 1, fill, " +

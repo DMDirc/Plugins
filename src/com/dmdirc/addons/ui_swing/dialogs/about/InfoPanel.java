@@ -51,11 +51,18 @@ public final class InfoPanel extends JPanel {
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 1;
+    /** Parent controller. */
+    private SwingController controller;
 
-    /** Creates a new instance of InfoPanel. */
-    public InfoPanel() {
+    /**
+     * Creates a new instance of InfoPanel.
+     *
+     * @param controller Parent swing controller
+     */
+    public InfoPanel(final SwingController controller) {
         super();
 
+        this.controller = controller;
         this.setOpaque(UIUtilities.getTabbedPaneOpaque());
         initComponents();
     }
@@ -66,22 +73,29 @@ public final class InfoPanel extends JPanel {
         final JEditorPane infoPane = new JEditorPane();
         infoPane.setEditorKit(new HTMLEditorKit());
         final Font font = UIManager.getFont("Label.font");
-        ((HTMLDocument) infoPane.getDocument()).getStyleSheet().addRule("body " +
-                "{ font-family: " + font.getFamily() + "; " + "font-size: " +
-                font.getSize() + "pt; }");
+        ((HTMLDocument) infoPane.getDocument()).getStyleSheet().addRule("body "
+                + "{ font-family: " + font.getFamily() + "; " + "font-size: "
+                + font.getSize() + "pt; }");
 
-         infoPane.setText("<html>" +
-                "<b>DMDirc version: </b>" + Info.getDMDircVersion() + "<br>" +
-                "<b>Mode Alises version: </b>" + IdentityManager.
-                getGlobalConfig().getOption("identity", "modealiasversion") + "<br>" +
-                "<b>OS Version: </b>" + Info.getOSVersion() + "<br>" +
-                "<b>Profile directory: </b>" + Main.getConfigDir() + "<br>" +
-                "<b>Java version: </b>" + Info.getJavaVersion() + "<br>" +
-                "<b>Look and Feel: </b>" + SwingController.getLookAndFeel() + "<br>" +
-                "<b>MiG Layout version: </b>" + LayoutUtil.getVersion() + "<br>" +
-                "<b>Java Default charset: </b>" + Charset.defaultCharset().displayName() + "<br>" +
-                "<b>Client Uptime: </b>" + DateUtils.formatDuration((int) Info.getUptime()/1000) + "<br>" +
-                "</html>");
+         infoPane.setText("<html>"
+                 + "<b>DMDirc version: </b>" + Info.getDMDircVersion() + "<br>"
+                 + "<b>Mode Alises version: </b>" + IdentityManager
+                 .getGlobalConfig().getOption("identity", "modealiasversion")
+                 + "<br>"
+                 + "<b>Swing UI version: </b>" + controller.getPluginInfo()
+                 .getVersion().toString() + "<br>"
+                 + "<b>OS Version: </b>" + Info.getOSVersion() + "<br>"
+                 + "<b>Profile directory: </b>" + Main.getConfigDir() + "<br>"
+                 + "<b>Java version: </b>" + Info.getJavaVersion() + "<br>"
+                 + "<b>Look and Feel: </b>" + SwingController.getLookAndFeel()
+                 + "<br>"
+                 + "<b>MiG Layout version: </b>" + LayoutUtil.getVersion()
+                 + "<br>"
+                 + "<b>Java Default charset: </b>" + Charset.defaultCharset()
+                 .displayName() + "<br>"
+                 + "<b>Client Uptime: </b>" + DateUtils.formatDuration(
+                 (int) Info.getUptime()/1000) + "<br>"
+                 + "</html>");
         infoPane.setEditable(false);
         scrollPane.setViewportView(infoPane);
 
