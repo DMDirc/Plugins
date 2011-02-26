@@ -54,8 +54,6 @@ public class ActionConditionsPanel extends JPanel implements ActionListener,
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 1;
-    /** Action trigger. */
-    private ActionType trigger;
     /** Tree panel. */
     private ActionConditionsTreePanel tree;
     /** List Panel. */
@@ -79,8 +77,6 @@ public class ActionConditionsPanel extends JPanel implements ActionListener,
      */
     public ActionConditionsPanel(final ActionType trigger) {
         super();
-
-        this.trigger = trigger;
 
         initComponents();
         addListeners();
@@ -134,7 +130,6 @@ public class ActionConditionsPanel extends JPanel implements ActionListener,
      * @param trigger Action trigger.
      */
     public void setActionTrigger(final ActionType trigger) {
-        this.trigger = trigger;
         list.setTrigger(trigger);
         add.setEnabled(trigger != null);
         add.setEnabled(trigger != null &&

@@ -23,9 +23,7 @@
 package com.dmdirc.addons.ui_web;
 
 import com.dmdirc.FrameContainer;
-import com.dmdirc.addons.ui_web.uicomponents.WebChannelWindow;
 import com.dmdirc.addons.ui_web.uicomponents.WebInputWindow;
-import com.dmdirc.addons.ui_web.uicomponents.WebServerWindow;
 import com.dmdirc.addons.ui_web.uicomponents.WebWindow;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
@@ -61,13 +59,13 @@ public class WebWindowManager implements FrameListener {
                 Arrays.asList(WindowComponent.TEXTAREA.getIdentifier(),
                 WindowComponent.INPUTFIELD.getIdentifier(),
                 WindowComponent.CERTIFICATE_VIEWER.getIdentifier())),
-                WebServerWindow.class);
+                WebInputWindow.class);
         IMPLEMENTATIONS.put(new HashSet<String>(
                 Arrays.asList(WindowComponent.TEXTAREA.getIdentifier(),
                 WindowComponent.INPUTFIELD.getIdentifier(),
                 WindowComponent.TOPICBAR.getIdentifier(),
                 WindowComponent.USERLIST.getIdentifier())),
-                WebChannelWindow.class);
+                WebInputWindow.class);
     }
 
     /** The controller that owns this manager. */

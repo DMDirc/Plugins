@@ -42,8 +42,6 @@ public class StepLayout implements LayoutManager2, Serializable {
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 2;
-    /** Parent container. */
-    private Container parent;
     /** Cards vector. */
     private final List<Step> steps;
     /** Current step. */
@@ -61,15 +59,6 @@ public class StepLayout implements LayoutManager2, Serializable {
     }
 
     /**
-     * Instantiates a new step layout.
-     *
-     * @param parent Parent component
-     */
-    public StepLayout(final Container parent) {
-        this(0, 0, parent);
-    }
-
-    /**
      * Instantiates a new step layout with the specified gaps.
      *
      * @param hGap Horizontal gap
@@ -80,21 +69,6 @@ public class StepLayout implements LayoutManager2, Serializable {
         currentStep = -1;
         this.hGap = hGap;
         this.vGap = vGap;
-    }
-
-    /**
-     * Instantiates a new step layout with the specified gaps.
-     *
-     * @param hGap Horizontal gap
-     * @param vGap Vertical gap
-     * @param parent Parent component
-     */
-    public StepLayout(final int hGap, final int vGap, final Container parent) {
-        steps = new ArrayList<Step>();
-        currentStep = -1;
-        this.hGap = hGap;
-        this.vGap = vGap;
-        this.parent = parent;
     }
 
     /**

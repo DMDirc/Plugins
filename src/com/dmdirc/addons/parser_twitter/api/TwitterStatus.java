@@ -146,7 +146,7 @@ public class TwitterStatus implements Comparable<TwitterStatus> {
                 this.user = userUser.getScreenName();
                 myAPI.updateUser(userUser);
             } else {
-                userUser = new TwitterUser(api, "name", -1, "realname", false);
+                userUser = new TwitterUser("name", -1, "realname", false);
                 this.user = userUser.getScreenName();
             }
         } else {

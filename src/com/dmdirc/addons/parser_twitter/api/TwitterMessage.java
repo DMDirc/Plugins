@@ -103,7 +103,7 @@ public class TwitterMessage implements Comparable<TwitterMessage> {
             this.sender = senderUser.getScreenName();
             myAPI.updateUser(senderUser);
         } else {
-            senderUser = new TwitterUser(api, "unknown", -1, "realname", false);
+            senderUser = new TwitterUser("unknown", -1, "realname", false);
             this.sender = senderUser.getScreenName();
         }
 
@@ -114,7 +114,7 @@ public class TwitterMessage implements Comparable<TwitterMessage> {
             this.target = targetUser.getScreenName();
             myAPI.updateUser(targetUser);
         } else {
-            targetUser = new TwitterUser(api, "unknown", -1, "realname", false);
+            targetUser = new TwitterUser("unknown", -1, "realname", false);
             this.target = targetUser.getScreenName();
         }
 

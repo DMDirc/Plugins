@@ -50,9 +50,6 @@ public class TwitterUser {
     /** What was the last status of this user? */
     private final TwitterStatus lastStatus;
 
-    /** API Object that owns this. */
-    private final TwitterAPI myAPI;
-
     /** URL to users profile picture. */
     private String myProfilePicture;
 
@@ -71,24 +68,21 @@ public class TwitterUser {
     /**
      * Create a unknown TwitterUser
      *
-     * @param api
      * @param screenName Screen name for the user.
      */
-    protected TwitterUser(final TwitterAPI api, final String screenName) {
-        this(api, screenName, -1, "", false);
+    protected TwitterUser(final String screenName) {
+        this(screenName, -1, "", false);
     }
 
     /**
      * Create a new TwitterUser
      *
-     * @param api
      * @param screenName Screen name for the user.
      * @param userID User ID for the user.
      * @param realName Realname for the user.
      * @param following Are we following the user?
      */
-    protected TwitterUser(final TwitterAPI api, final String screenName, final long userID, final String realName, final boolean following) {
-        this.myAPI = api;
+    protected TwitterUser(final String screenName, final long userID, final String realName, final boolean following) {
         this.screenName = screenName;
         this.userID = userID;
         this.realName = realName;
@@ -124,7 +118,6 @@ public class TwitterUser {
         }
 
         final Element element = (Element) node;
-        this.myAPI = api;
 
         this.realName = TwitterAPI.getElementContents(element, "name", "");
         this.screenName = (api.autoAt() ? "@" : "") + TwitterAPI.getElementContents(element, "screen_name", "");

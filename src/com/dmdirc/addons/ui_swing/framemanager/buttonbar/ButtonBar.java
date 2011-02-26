@@ -83,8 +83,6 @@ public final class ButtonBar implements FrameManager, ActionListener,
     private static final long serialVersionUID = 3;
     /** The default number of buttons per row or column. */
     private static final int NUM_CELLS = 1;
-    /** The default number of buttons to render per {cell,row}. */
-    private static final int MAX_BUTTONS = Integer.MAX_VALUE;
     /** The default height of buttons. */
     private static final int BUTTON_HEIGHT = 25;
     /** A map of windows to the buttons we're using for them. */
