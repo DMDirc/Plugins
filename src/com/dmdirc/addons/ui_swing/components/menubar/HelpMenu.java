@@ -19,6 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 package com.dmdirc.addons.ui_swing.components.menubar;
 
 import com.dmdirc.ServerManager;
@@ -95,11 +96,15 @@ public class HelpMenu extends JMenu implements ActionListener {
         }
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     *
+     * @param e Action event
+     */
     @Override
     public void actionPerformed(final ActionEvent e) {
         if (e.getActionCommand().equals("About")) {
-            AboutDialog.showAboutDialog(mainFrame, controller.getURLHandler());
+            AboutDialog.showAboutDialog(controller);
         } else if (e.getActionCommand().equals("JoinDevChat")) {
             ServerManager.getServerManager().joinDevChat();
         } else if (e.getActionCommand().equals("feedback")) {
