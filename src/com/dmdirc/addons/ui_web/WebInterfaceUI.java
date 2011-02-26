@@ -54,10 +54,8 @@ public class WebInterfaceUI implements UIController {
 
     /**
      * Creates a new WebInterfaceUI belonging to the specified plugin.
-     *
-     * @param plugin The plugin which owns this Web UI
      */
-    public WebInterfaceUI(final WebInterfacePlugin plugin) {
+    public WebInterfaceUI() {
         super();
 
         final SecurityHandler sh = new SecurityHandler();

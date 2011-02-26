@@ -150,8 +150,7 @@ public final class SwingUpdaterDialog extends StandardDialog implements
                 + "components of DMDirc:");
 
         scrollPane = new JScrollPane();
-        table = new PackingTable(new UpdateTableModel(updates), false,
-                scrollPane) {
+        table = new PackingTable(new UpdateTableModel(updates), scrollPane) {
 
             /** Serialisation version ID. */
             private static final long serialVersionUID = 1;
