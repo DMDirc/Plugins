@@ -134,35 +134,35 @@ public class DynamicRequestHandler extends AbstractHandler {
             doProfiles(response);
             handled(request);
         } else if (target.equals("/dynamic/newserver")) {
-            doNewServer(request, response);
+            doNewServer(request);
             handled(request);
         } else if (target.equals("/dynamic/windowrefresh")) {
             doWindowRefresh(request, response);
             handled(request);
         } else if (target.equals("/dynamic/input")) {
-            doInput(request, response);
+            doInput(request);
             handled(request);
         } else if (target.equals("/dynamic/nicklistrefresh")) {
             doNicklist(request, response);
             handled(request);
         } else if (target.equals("/dynamic/tab")) {
-            doTab(request, response);
+            doTab(request);
             handled(request);
         } else if (target.equals("/dynamic/keyup")
                 || target.equals("/dynamic/keydown")) {
-            doKeyUpDown(target.equals("/dynamic/keyup"), request, response);
+            doKeyUpDown(target.equals("/dynamic/keyup"), request);
             handled(request);
         } else if (target.equals("/dynamic/key")) {
-            doKey(request, response);
+            doKey(request);
             handled(request);
         } else if (target.equals("/dynamic/clients")) {
-            doClients(request, response);
+            doClients(response);
             handled(request);
         } else if (target.equals("/dynamic/joinchannel")) {
-            doJoinChannel(request, response);
+            doJoinChannel(request);
             handled(request);
         } else if (target.equals("/dynamic/openquery")) {
-            doOpenQuery(request, response);
+            doOpenQuery(request);
             handled(request);
         }
     }
@@ -200,8 +200,7 @@ public class DynamicRequestHandler extends AbstractHandler {
         }
     }
 
-    private void doInput(final HttpServletRequest request,
-            final HttpServletResponse response) throws IOException {
+    private void doInput(final HttpServletRequest request) throws IOException {
         final WebWindow window = WebWindow.getWindow(
                 request.getParameter("window"));
 
@@ -212,8 +211,7 @@ public class DynamicRequestHandler extends AbstractHandler {
         }
     }
 
-    private void doKey(final HttpServletRequest request,
-            final HttpServletResponse response) throws IOException {
+    private void doKey(final HttpServletRequest request) throws IOException {
         final WebWindow window = WebWindow.getWindow(
                 request.getParameter("window"));
 
@@ -236,8 +234,7 @@ public class DynamicRequestHandler extends AbstractHandler {
         }
     }
 
-    private void doTab(final HttpServletRequest request,
-            final HttpServletResponse response) throws IOException {
+    private void doTab(final HttpServletRequest request) throws IOException {
         final WebWindow window = WebWindow.getWindow(request.getParameter(
                 "window"));
 
@@ -251,8 +248,8 @@ public class DynamicRequestHandler extends AbstractHandler {
         }
     }
 
-    private void doKeyUpDown(final boolean up, final HttpServletRequest request,
-            final HttpServletResponse response) throws IOException {
+    private void doKeyUpDown(final boolean up, final HttpServletRequest request)
+            throws IOException {
         final WebWindow window = WebWindow.getWindow(request.getParameter(
                 "window"));
 
@@ -272,9 +269,8 @@ public class DynamicRequestHandler extends AbstractHandler {
         }
     }
 
-    private void doNewServer(final HttpServletRequest request,
-            final HttpServletResponse response) throws
-            IOException {
+    private void doNewServer(final HttpServletRequest request)
+            throws IOException {
         try {
             new Server(new URI("irc://" + request.getParameter("password") + "@"
                     + request.getParameter("server") + ":"
@@ -340,23 +336,23 @@ public class DynamicRequestHandler extends AbstractHandler {
         response.getWriter().write(JSON.toString(windowEvents.toArray()));
     }
 
-    private void doClients(final HttpServletRequest request,
-            final HttpServletResponse response) throws IOException {
+    private void doClients(final HttpServletResponse response)
+            throws IOException {
         response.setStatus(HttpServletResponse.SC_OK);
         response.setContentType("application/json");
         response.getWriter().write(JSON.toString(CLIENTS.values().toArray()));
     }
 
-    private void doJoinChannel(final HttpServletRequest request,
-            final HttpServletResponse response) throws IOException {
+    private void doJoinChannel(final HttpServletRequest request)
+            throws IOException {
         final String windowID = request.getParameter("source");
         final WebWindow window = WebWindow.getWindow(windowID);
         window.getContainer().getServer().join(new ChannelJoinRequest(request.
                 getParameter("channel")));
     }
 
-    private void doOpenQuery(final HttpServletRequest request,
-            final HttpServletResponse response) throws IOException {
+    private void doOpenQuery(final HttpServletRequest request)
+            throws IOException {
         final String windowID = request.getParameter("source");
         final WebWindow window = WebWindow.getWindow(windowID);
         window.getContainer().getServer().getQuery(request.getParameter(

@@ -23,7 +23,6 @@
 package com.dmdirc.addons.ui_dummy;
 
 import com.dmdirc.WritableFrameContainer;
-import com.dmdirc.commandparser.parsers.CommandParser;
 import com.dmdirc.ui.input.InputHandler;
 import com.dmdirc.ui.interfaces.InputWindow;
 import com.dmdirc.ui.interfaces.UIController;
@@ -40,10 +39,8 @@ public class DummyInputWindow implements InputWindow {
      * Instantiates a new DummyInputWindow.
      *
      * @param owner Parent window
-     * @param commandParser Parent command parser
      */
-    public DummyInputWindow(final WritableFrameContainer owner,
-            final CommandParser commandParser) {
+    public DummyInputWindow(final WritableFrameContainer owner) {
         this.container = owner;
     }
 

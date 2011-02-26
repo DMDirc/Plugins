@@ -132,10 +132,9 @@ public class PrefsCategoryLoader extends LoggingSwingWorker<JPanel, Object> {
      * @since 0.6.3m1
      * @param category The category that is being initialised
      * @param panel The panel to which we're adding its contents
-     * @param path The textual path of this category
      */
     private void initCategory(final PreferencesCategory category,
-            final JPanel panel, final String path) {
+            final JPanel panel) {
 
         if (!category.getDescription().isEmpty()) {
             UIUtilities.invokeAndWait(new Runnable() {
@@ -170,7 +169,7 @@ public class PrefsCategoryLoader extends LoggingSwingWorker<JPanel, Object> {
         }
 
         for (PreferencesSetting setting : category.getSettings()) {
-            addComponent(category, setting, panel);
+            addComponent(setting, panel);
         }
 
         if (!category.isInlineBefore()) {
@@ -185,12 +184,10 @@ public class PrefsCategoryLoader extends LoggingSwingWorker<JPanel, Object> {
     /**
      * Initialises and adds a component to a panel.
      *
-     * @param category The category the setting is being added to
      * @param setting The setting to be used
      * @param panel The panel to add the component to
      */
-    private void addComponent(final PreferencesCategory category,
-            final PreferencesSetting setting,
+    private void addComponent(final PreferencesSetting setting,
             final JPanel panel) {
 
         final TextLabel label = new TextLabel(setting.getTitle() + ": ", false);
@@ -286,7 +283,7 @@ public class PrefsCategoryLoader extends LoggingSwingWorker<JPanel, Object> {
 
         parent.add(panel, "span, growx, pushx, wrap");
 
-        initCategory(category, panel, "");
+        initCategory(category, panel);
     }
 
     /**
@@ -311,7 +308,7 @@ public class PrefsCategoryLoader extends LoggingSwingWorker<JPanel, Object> {
             }
         });
 
-        initCategory(category, panel, category.getPath());
+        initCategory(category, panel);
 
         return panel;
     }

@@ -87,10 +87,8 @@ public class URLProtocolPanel extends JPanel implements ActionListener,
      *
      * @param url URL to open once added
      * @param useInsets Show insets?
-     * @param urlHandler The URL Handler to use to handle clicked links
      */
-    public URLProtocolPanel(final URI url, final boolean useInsets,
-            final URLHandler urlHandler) {
+    public URLProtocolPanel(final URI url, final boolean useInsets) {
         super();
 
         this.uri = url;
