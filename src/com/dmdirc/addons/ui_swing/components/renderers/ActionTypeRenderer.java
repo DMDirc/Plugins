@@ -43,13 +43,6 @@ public final class ActionTypeRenderer extends DefaultListCellRenderer {
      */
     private static final long serialVersionUID = 1;
 
-    /**
-     * Creates a new instance of ActionTypeRenderer.
-     */
-    public ActionTypeRenderer() {
-        super();
-    }
-
     /** {@inheritDoc} */
     @Override
     public Component getListCellRendererComponent(final JList list,

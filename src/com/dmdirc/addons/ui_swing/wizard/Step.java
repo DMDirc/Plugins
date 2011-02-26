@@ -29,12 +29,6 @@ import javax.swing.JPanel;
  */
 public abstract class Step extends JPanel {
 
-    /** Instantiates a new step. */
-    public Step() {
-        super();
-        //Do nothing
-    }
-
     /**
      * Returns the title for this step.
      *

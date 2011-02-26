@@ -39,11 +39,6 @@ public final class ActionConditionCellRenderer extends DefaultTableCellRenderer 
      */
     private static final long serialVersionUID = 2;
 
-    /** Creates a new instance of ActionConditionCellRenderer. */
-    public ActionConditionCellRenderer() {
-        super();
-    }
-
     /** {@inheritDoc} */
     @Override
     public void setValue(final Object value) {

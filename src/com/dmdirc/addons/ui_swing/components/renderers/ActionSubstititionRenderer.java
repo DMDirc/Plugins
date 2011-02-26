@@ -42,13 +42,6 @@ public final class ActionSubstititionRenderer extends DefaultListCellRenderer {
      */
     private static final long serialVersionUID = 1;
 
-    /**
-     * Creates a new instance of ActionSubstititionRenderer.
-     */
-    public ActionSubstititionRenderer() {
-        super();
-    }
-
     /** {@inheritDoc} */
     @Override
     public Component getListCellRendererComponent(final JList list,

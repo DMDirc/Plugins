@@ -38,11 +38,6 @@ public final class ArrayCellRenderer extends DefaultTableCellRenderer {
      */
     private static final long serialVersionUID = 1;
 
-    /** Creates a new instance of ArrayCellRenderer. */
-    public ArrayCellRenderer() {
-        super();
-    }
-
     /** {@inheritDoc} */
     @Override
     public void setValue(final Object value) {

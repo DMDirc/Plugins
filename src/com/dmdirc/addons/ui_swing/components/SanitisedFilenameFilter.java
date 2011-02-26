@@ -34,11 +34,6 @@ public class SanitisedFilenameFilter extends DocumentFilter {
     /** Invalid filename characters. */
     private static final String INVALID_CHARS = "^[^\\w\\.\\s\\-\\#\\&\\_]";
 
-    /** Creates a new instance of SanitisedFilenameFilter. */
-    public SanitisedFilenameFilter() {
-        super();
-    }
-
     /** {@inheritDoc} */
     @Override
     public void insertString(final DocumentFilter.FilterBypass fb,

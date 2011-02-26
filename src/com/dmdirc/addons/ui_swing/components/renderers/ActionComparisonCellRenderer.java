@@ -41,11 +41,6 @@ public final class ActionComparisonCellRenderer extends DefaultListCellRenderer 
      */
     private static final long serialVersionUID = 1;
 
-    /** Creates a new instance of ActionComparisonCellRenderer. */
-    public ActionComparisonCellRenderer() {
-        super();
-    }
-
     /** {@inheritDoc} */
     @Override
     public Component getListCellRendererComponent(final JList list,

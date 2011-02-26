@@ -40,13 +40,6 @@ public class URISchemeCellRenderer extends DefaultTableCellRenderer {
      */
     private static final long serialVersionUID = 1;
 
-    /**
-     * Instantiates a new URICellRenderer.
-     */
-    public URISchemeCellRenderer() {
-        super();
-    }
-
     @Override
     public Component getTableCellRendererComponent(final JTable table,
             final Object value, final boolean isSelected,
