@@ -433,7 +433,7 @@ public class SwingController extends BasePlugin implements UIController {
             /** {@inheritDoc} */
             @Override
             public void run() {
-                setObject(new URLConfigPanel(me, urlHandler));
+                setObject(new URLConfigPanel(me));
             }
         });
     }

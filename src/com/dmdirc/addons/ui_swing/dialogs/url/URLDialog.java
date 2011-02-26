@@ -120,7 +120,7 @@ public final class URLDialog extends StandardDialog implements ActionListener {
         blurb = new TextLabel("Please select the appropriate action to " +
                 "handle " + url.getScheme() + ":// URLs from the list " +
                 "below.");
-        panel = new URLProtocolPanel(url, false, urlHandler);
+        panel = new URLProtocolPanel(url, false);
     }
 
     /** Lays out the components. */
