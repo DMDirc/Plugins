@@ -39,10 +39,6 @@ public class StaticRequestHandler extends AbstractHandler {
 
     private ResourceManager rm;
 
-    public StaticRequestHandler() {
-        super();
-    }
-
     /** {@inheritDoc} */
     @Override
     public void handle(final String target, final HttpServletRequest request,

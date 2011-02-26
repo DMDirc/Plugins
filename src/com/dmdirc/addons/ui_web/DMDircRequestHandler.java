@@ -44,13 +44,6 @@ public class DMDircRequestHandler extends AbstractHandler {
     private ResourceManager rm;
 
     /**
-     * Creates a new instance of DMDircRequestHandler.
-     */
-    public DMDircRequestHandler() {
-        super();
-    }
-
-    /**
      * {@inheritDoc}
      *
      * @throws IOException If unable to write the response

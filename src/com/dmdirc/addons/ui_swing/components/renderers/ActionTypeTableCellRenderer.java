@@ -41,13 +41,6 @@ public final class ActionTypeTableCellRenderer extends DefaultTableCellRenderer 
      */
     private static final long serialVersionUID = 1;
 
-    /**
-     * Creates a new instance of ActionTypeRenderer.
-     */
-    public ActionTypeTableCellRenderer() {
-        super();
-    }
-
     /** {@inheritDoc} */
     @Override
     public void setValue(final Object value) {

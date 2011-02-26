@@ -39,11 +39,6 @@ public class ListModeCellRenderer extends DefaultListCellRenderer {
      */
     private static final long serialVersionUID = 1;
 
-    /** Instantiates a new list mode cell renderer. */
-    public ListModeCellRenderer() {
-        super();
-    }
-
     /** {@inheritDoc} */
     @Override
     public Component getListCellRendererComponent(final JList list,

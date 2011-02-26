@@ -31,11 +31,6 @@ import javax.swing.text.DocumentFilter;
  */
 public class NewlinesDocumentFilter extends DocumentFilter {
 
-    /** Creates a new instance of Newlines Documment filter. */
-    public NewlinesDocumentFilter() {
-        super();
-    }
-
     /** {@inheritDoc} */
     @Override
     public void insertString(final DocumentFilter.FilterBypass fb,

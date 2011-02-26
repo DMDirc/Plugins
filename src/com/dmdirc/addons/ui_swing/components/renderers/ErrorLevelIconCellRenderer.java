@@ -39,11 +39,6 @@ public final class ErrorLevelIconCellRenderer extends DefaultTableCellRenderer {
      */
     private static final long serialVersionUID = 1;
 
-    /** Creates a new instance of ErrorLevelIconCellRenderer. */
-    public ErrorLevelIconCellRenderer() {
-        super();
-    }
-
     /** {@inheritDoc} */
     @Override
     public void setValue(final Object value) {

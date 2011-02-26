@@ -38,13 +38,6 @@ public final class FirstRunExtractionStep extends ExtractionStep {
      */
     private static final long serialVersionUID = 2;
 
-    /**
-     * Creates a new instance of SetupStep.
-     */
-    public FirstRunExtractionStep() {
-        super();
-    }
-
     /** {@inheritDoc} */
     @Override
     protected void initComponents() {

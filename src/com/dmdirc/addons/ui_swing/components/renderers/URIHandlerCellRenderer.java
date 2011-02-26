@@ -39,13 +39,6 @@ public class URIHandlerCellRenderer extends DefaultTableCellRenderer {
      */
     private static final long serialVersionUID = 1;
 
-    /**
-     * Instantiates a new URICellRenderer.
-     */
-    public URIHandlerCellRenderer() {
-        super();
-    }
-
     @Override
     public Component getTableCellRendererComponent(final JTable table,
             final Object value, final boolean isSelected,
