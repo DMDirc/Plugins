@@ -45,7 +45,7 @@ public class ErrorTable extends PackingTable {
      */
     public ErrorTable(final ErrorTableModel tableModel,
             final JScrollPane scrollPane) {
-        super(tableModel, false, scrollPane, true);
+        super(tableModel, scrollPane, true);
 
         setAutoCreateRowSorter(true);
         setAutoCreateColumnsFromModel(true);

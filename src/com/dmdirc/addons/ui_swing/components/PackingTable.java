@@ -58,12 +58,11 @@ public class PackingTable extends JTable {
      *
      * @param rows Row data
      * @param cols Column data
-     * @param editable Whether the table should be editable or not
      * @param scrollPane Scrollpane parent
      */
     public PackingTable(final Object[][] rows, final Object[] cols,
-            final boolean editable, final JScrollPane scrollPane) {
-        this(new DefaultTableModel(rows, cols), editable, scrollPane, true);
+            final JScrollPane scrollPane) {
+        this(new DefaultTableModel(rows, cols), scrollPane, true);
     }
 
     /**
@@ -71,15 +70,13 @@ public class PackingTable extends JTable {
      *
      * @param rows Row data
      * @param cols Column data
-     * @param editable Whether the table should be editable or not
      * @param scrollPane Scrollpane parent
      * @param lastColumnFit Should the last column fit text (true),
      * or fit viewport (false).
      */
     public PackingTable(final Object[][] rows, final Object[] cols,
-            final boolean editable, final JScrollPane scrollPane,
-            final boolean lastColumnFit) {
-        this(new DefaultTableModel(rows, cols), editable, scrollPane,
+            final JScrollPane scrollPane, final boolean lastColumnFit) {
+        this(new DefaultTableModel(rows, cols), scrollPane,
                 lastColumnFit);
     }
 
@@ -87,24 +84,22 @@ public class PackingTable extends JTable {
      * Creates a new packing table.
      *
      * @param tableModel Table data model
-     * @param editable Whether the table should be editable or not
      * @param scrollPane Scrollpane parent
      */
-    public PackingTable(final TableModel tableModel, final boolean editable,
+    public PackingTable(final TableModel tableModel,
             final JScrollPane scrollPane) {
-        this(tableModel, editable, scrollPane, true);
+        this(tableModel, scrollPane, true);
     }
 
     /**
      * Creates a new packing table.
      *
      * @param tableModel Table data model
-     * @param editable Whether the table should be editable or not
      * @param scrollPane Scrollpane parent
      * @param lastColumnFit Should the last column fit text (true),
      * or fit viewport (false).
      */
-    public PackingTable(final TableModel tableModel, final boolean editable,
+    public PackingTable(final TableModel tableModel,
             final JScrollPane scrollPane, final boolean lastColumnFit) {
         super(tableModel);
 

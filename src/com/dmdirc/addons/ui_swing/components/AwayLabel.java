@@ -23,7 +23,6 @@
 package com.dmdirc.addons.ui_swing.components;
 
 import com.dmdirc.FrameContainer;
-import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.interfaces.AwayStateListener;
 import com.dmdirc.interfaces.ConfigChangeListener;
@@ -53,11 +52,9 @@ public class AwayLabel extends JLabel implements ConfigChangeListener,
     /**
      * Creates a new away label for the specified container.
      *
-     * @param mainFrame Parent main frame
      * @param container Parent frame container
      */
-    public AwayLabel(final MainFrame mainFrame,
-            final FrameContainer container) {
+    public AwayLabel(final FrameContainer container) {
         super("(away)");
 
         this.container = container;
