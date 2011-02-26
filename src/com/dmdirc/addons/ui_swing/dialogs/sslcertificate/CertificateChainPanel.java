@@ -52,8 +52,6 @@ public class CertificateChainPanel extends JPanel {
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 1;
-    /** Certificate chain list. */
-    private List<CertificateChainEntry> certificateChain;
     /** Chain list. */
     private JList list;
     /** List model. */
@@ -93,8 +91,6 @@ public class CertificateChainPanel extends JPanel {
      * @param certificateChain Certificate chain list
      */
     public void setChain(final List<CertificateChainEntry> certificateChain) {
-        this.certificateChain = certificateChain;
-
         if (certificateChain == null) {
             model.clear();
         } else {

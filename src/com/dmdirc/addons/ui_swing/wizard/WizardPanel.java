@@ -55,8 +55,6 @@ public class WizardPanel extends JPanel implements ActionListener {
     private final StepLayout steps;
     /** Wizard title. */
     private final String title;
-    /** Wizard. */
-    private final transient WizardListener wizard;
     /** Step panel. */
     private JPanel stepsPanel;
     /** Title panel. */
@@ -77,17 +75,14 @@ public class WizardPanel extends JPanel implements ActionListener {
      *
      * @param title Title for the wizard
      * @param steps Steps for the wizard
-     * @param wizard Wizard to inform of changes
      */
-    public WizardPanel(final String title, final List<Step> steps,
-            final WizardListener wizard) {
+    public WizardPanel(final String title, final List<Step> steps) {
         super();
 
         stepListeners = new ListenerList();
 
         this.title = title;
         this.steps = new StepLayout();
-        this.wizard = wizard;
 
         initComponents();
         layoutComponents();

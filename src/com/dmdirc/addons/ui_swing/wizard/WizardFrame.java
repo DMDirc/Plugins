@@ -48,15 +48,13 @@ public final class WizardFrame extends JFrame {
      *
      * @param title Title for the wizard
      * @param steps Steps for the wizard
-     * @param wizard Wizard to inform of changes
      */
-    public WizardFrame(final String title, final List<Step> steps,
-            final WizardListener wizard) {
+    public WizardFrame(final String title, final List<Step> steps) {
         super();
 
         setTitle(title);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        this.wizard = new WizardPanel(title, steps, wizard);
+        this.wizard = new WizardPanel(title, steps);
         layoutComponents();
     }
 

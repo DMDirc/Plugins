@@ -228,7 +228,7 @@ public class TwitterAPI {
             // If not, add a temporary one.
             // It will be replaced as soon as the allowed status is changed to
             // true by isAlowed().
-            updateUser(new TwitterUser(this, myLoginUsername));
+            updateUser(new TwitterUser(myLoginUsername));
         }
     }
 
@@ -489,7 +489,7 @@ public class TwitterAPI {
             // If not, add a temporary one.
             // It will be replaced as soon as the allowed status is changed to
             // true by isAlowed().
-            updateUser(new TwitterUser(this, myLoginUsername));
+            updateUser(new TwitterUser(myLoginUsername));
         }
     }
 
@@ -980,7 +980,7 @@ public class TwitterAPI {
         TwitterUser user = getCachedUser(username);
         if (user == null || force) {
             if (username.equalsIgnoreCase(myDisplayUsername) && !isAllowed()) {
-                user = new TwitterUser(this, myLoginUsername, -1, "", true);
+                user = new TwitterUser(myLoginUsername, -1, "", true);
             } else {
                 final XMLResponse doc = getXML(getURL("users/show") + "?screen_name=" + username);
 

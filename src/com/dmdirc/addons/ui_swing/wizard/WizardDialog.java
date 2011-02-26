@@ -55,19 +55,17 @@ public final class WizardDialog extends StandardDialog implements ActionListener
      *
      * @param title Title for the wizard
      * @param steps Steps for the wizard
-     * @param wizard Wizard to inform of changes
      * @param parentWindow Parent component
      * @param modality Modality
      */
     public WizardDialog(final String title, final List<Step> steps,
-            final WizardListener wizard, final Window parentWindow,
-            final ModalityType modality) {
+            final Window parentWindow, final ModalityType modality) {
         super(parentWindow, modality);
 
         setTitle(title);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         orderButtons(new JButton(), new JButton());
-        this.wizard = new WizardPanel(title, steps, wizard);
+        this.wizard = new WizardPanel(title, steps);
         this.parentWindow = parentWindow;
         layoutComponents();
     }
