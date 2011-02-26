@@ -37,6 +37,7 @@ import com.dmdirc.parser.interfaces.callbacks.ServerNoticeListener;
 import com.dmdirc.parser.interfaces.callbacks.ServerReadyListener;
 import com.dmdirc.parser.interfaces.callbacks.SocketCloseListener;
 
+import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -124,6 +125,10 @@ public class MSNListener extends MsnAdapter {
         } else if (thrwbl instanceof IncorrectPasswordException) {
             parser.getCallbackManager().getCallbackType(
                     PasswordRequiredListener.class).call(error);
+        } else if (thrwbl instanceof ConnectException) {
+            parser.getCallbackManager().getCallbackType(
+                    SocketCloseListener.class).call(error);
+            parser.removeMSNParser();
         } else {
             parser.getCallbackManager().getCallbackType(
                     ErrorInfoListener.class).call(error);

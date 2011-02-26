@@ -61,6 +61,8 @@ public class MSNParser extends BaseParser {
     private final boolean useFakeChannel;
     /** The fake channel to use is useFakeChannel is enabled. */
     private MSNFakeChannel fakeChannel;
+    /** MSN Listener. */
+    private MSNListener listener;
 
     /**
      * Creates a new parser for the specified address.
@@ -81,7 +83,13 @@ public class MSNParser extends BaseParser {
     /** {@inheritDoc} */
     @Override
     public void disconnect(final String message) {
-        msn.logout();
+        try {
+            msn.logout();
+        } catch (Exception ex) {
+            //Fallthrough to finally block
+        } finally {
+            removeMSNParser();
+        }
     }
 
     /** {@inheritDoc} */
@@ -336,13 +344,31 @@ public class MSNParser extends BaseParser {
         return 0;
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void run() {
+    /** Destroys the existing MSN object. */
+    protected void removeMSNParser() {
+        if (msn != null && listener != null) {
+            msn.removeListener(listener);
+        }
+        msn = null;
+        listener = null;
+    }
+
+    /** Creates a new MSN object. */
+    protected void setupMSNParser() {
+        if (msn != null) {
+            removeMSNParser();
+        }
         final String[] userInfoParts = getURI().getUserInfo().split(":", 2);
         msn = MsnMessengerFactory.createMsnMessenger(
                 userInfoParts[0], userInfoParts[1]);
-        msn.addListener(new MSNListener(this));
+        listener = new MSNListener(this);
+        msn.addListener(listener);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void run() {
+        setupMSNParser();
         msn.login();
         if (useFakeChannel) {
             fakeChannel = new MSNFakeChannel(this, "&contacts");
