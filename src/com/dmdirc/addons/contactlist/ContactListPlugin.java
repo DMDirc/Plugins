@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.contactlist;
 
-import com.dmdirc.commandparser.CommandManager;
 import com.dmdirc.plugins.BasePlugin;
 
 /**
@@ -30,19 +29,9 @@ import com.dmdirc.plugins.BasePlugin;
  */
 public final class ContactListPlugin extends BasePlugin {
 
-    /** The command we've registered. */
-    private ContactListCommand command;
-
-    /** {@inheritDoc} */
-    @Override
-    public void onLoad() {
-        command = new ContactListCommand();
-        CommandManager.getCommandManager().registerCommand(command, ContactListCommand.INFO);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onUnload() {
-        CommandManager.getCommandManager().unregisterCommand(ContactListCommand.INFO);
+    /** Creates a new instance of this plugin. */
+    public ContactListPlugin() {
+        super();
+        registerCommand(new ContactListCommand(), ContactListCommand.INFO);
     }
 }

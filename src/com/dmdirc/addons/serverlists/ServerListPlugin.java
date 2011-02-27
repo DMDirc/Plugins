@@ -24,24 +24,5 @@ package com.dmdirc.addons.serverlists;
 
 import com.dmdirc.plugins.BasePlugin;
 
-
-/**
- * Dummy plugin for server lists.
- *
- * @author chris
- */
-public class ServerListPlugin extends BasePlugin {
-
-    /** {@inheritDoc} */
-    @Override
-    public void onLoad() {
-        // Do nothing
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onUnload() {
-        // Do nothing
-    }
-
-}
+/** Dummy plugin for server lists. */
+public class ServerListPlugin extends BasePlugin {}

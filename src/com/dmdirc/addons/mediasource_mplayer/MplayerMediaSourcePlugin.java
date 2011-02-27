@@ -40,18 +40,6 @@ public class MplayerMediaSourcePlugin extends BasePlugin implements MediaSource 
 
     /** {@inheritDoc} */
     @Override
-    public void onLoad() {
-        // Nothing to do
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onUnload() {
-        // Nothing to do
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public MediaSourceState getState() {
         if (getInfo().isEmpty()) {
             return MediaSourceState.CLOSED;

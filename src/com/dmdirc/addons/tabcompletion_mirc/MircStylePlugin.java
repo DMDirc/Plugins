@@ -27,19 +27,10 @@ import com.dmdirc.plugins.BasePlugin;
 import com.dmdirc.ui.input.TabCompleter;
 import com.dmdirc.ui.input.tabstyles.TabCompletionStyle;
 
+/**
+ * Adds mIRC style tab completion.
+ */
 public class MircStylePlugin extends BasePlugin {
-
-    /** {@inheritDoc} */
-    @Override
-    public void onLoad() {
-        // Do nothing
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onUnload() {
-        // Do nothing
-    }
 
     /**
      * Retrieves a new instance of the mIRC tab completion style.

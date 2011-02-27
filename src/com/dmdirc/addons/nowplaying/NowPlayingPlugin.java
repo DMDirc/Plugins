@@ -26,7 +26,6 @@ import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.actions.interfaces.ActionType;
 import com.dmdirc.addons.ui_swing.UIUtilities;
-import com.dmdirc.commandparser.CommandManager;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
@@ -52,10 +51,14 @@ public class NowPlayingPlugin extends BasePlugin implements ActionListener  {
     private final List<MediaSource> sources = new ArrayList<MediaSource>();
     /** The managers that we know of. */
     private final List<MediaSourceManager> managers = new ArrayList<MediaSourceManager>();
-    /** The now playing command we're registering. */
-    private NowPlayingCommand command;
     /** The user's preferred order for source usage. */
     private List<String> order;
+
+    /** Creates a new instance of this plugin. */
+    public NowPlayingPlugin() {
+        super();
+        registerCommand(new NowPlayingCommand(this), NowPlayingCommand.INFO);
+    }
 
     /** {@inheritDoc} */
     @Override
@@ -73,9 +76,7 @@ public class NowPlayingPlugin extends BasePlugin implements ActionListener  {
                 addPlugin(target);
             }
         }
-
-        command = new NowPlayingCommand(this);
-        CommandManager.getCommandManager().registerCommand(command);
+        super.onLoad();
     }
 
     /** {@inheritDoc} */
@@ -83,10 +84,8 @@ public class NowPlayingPlugin extends BasePlugin implements ActionListener  {
     public void onUnload() {
         sources.clear();
         managers.clear();
-
         ActionManager.getActionManager().unregisterListener(this);
-
-        CommandManager.getCommandManager().unregisterCommand(command);
+        super.onUnload();
     }
 
     /** {@inheritDoc} */

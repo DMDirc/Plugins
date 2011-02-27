@@ -29,8 +29,6 @@ import org.mortbay.jetty.Handler;
 
 /**
  * The main web interface plugin.
- *
- * @author chris
  */
 public class WebInterfacePlugin extends BasePlugin {
 
@@ -52,12 +50,6 @@ public class WebInterfacePlugin extends BasePlugin {
      */
     public UIController getController() {
         return ui;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onUnload() {
-        // Do nothing
     }
 
     /**

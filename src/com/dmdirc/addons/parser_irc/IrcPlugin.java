@@ -35,21 +35,8 @@ import java.net.URI;
  * A plugin which provides access to the IRC Parser.
  *
  * @since 0.6.4
- * @author chris
  */
 public class IrcPlugin extends BasePlugin {
-
-    /** {@inheritDoc} */
-    @Override
-    public void onLoad() {
-        // Do nothing
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onUnload() {
-        // Do nothing
-    }
 
     /**
      * Get an IRC parser instance.

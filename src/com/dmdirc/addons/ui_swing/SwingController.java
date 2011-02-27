@@ -43,8 +43,6 @@ import com.dmdirc.addons.ui_swing.dialogs.serversetting.ServerSettingsDialog;
 import com.dmdirc.addons.ui_swing.dialogs.url.URLDialog;
 import com.dmdirc.addons.ui_swing.wizard.WizardListener;
 import com.dmdirc.addons.ui_swing.wizard.firstrun.SwingFirstRunWizard;
-import com.dmdirc.commandparser.CommandInfo;
-import com.dmdirc.commandparser.CommandManager;
 import com.dmdirc.config.Identity;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
@@ -117,15 +115,17 @@ public class SwingController extends BasePlugin implements UIController {
     private DMDircEventQueue eventQueue;
     /** Key listener to handle dialog key events. */
     private DialogKeyListener keyListener;
-    /** List of commands to load and unload. */
-    private final List<CommandInfo> commands = new ArrayList<CommandInfo>();
 
     /** Instantiates a new SwingController. */
     public SwingController() {
         super();
-
         setAntiAlias();
         windows = new ArrayList<java.awt.Window>();
+        registerCommand(new ServerSettings(), ServerSettings.INFO);
+        registerCommand(new ChannelSettings(), ChannelSettings.INFO);
+        registerCommand(new Input(windowFactory), Input.INFO);
+        registerCommand(new PopOutCommand(this), new PopOutCommandInfo());
+        registerCommand(new PopInCommand(this), new PopInCommandInfo());
     }
 
     /**
@@ -494,29 +494,8 @@ public class SwingController extends BasePlugin implements UIController {
             throw new IllegalStateException(
                     "Main frame not created. Unable to continue.");
         }
-
-        loadCommands();
-
         WindowManager.getWindowManager().addListenerAndSync(windowFactory);
-    }
-
-    /** Loads the commands provided by this plugin. */
-    private void loadCommands() {
-        commands.add(ServerSettings.INFO);
-        commands.add(ChannelSettings.INFO);
-        commands.add(Input.INFO);
-        commands.add(new PopOutCommandInfo());
-        commands.add(new PopInCommandInfo());
-        CommandManager.getCommandManager().registerCommand(
-                new ServerSettings(), ServerSettings.INFO);
-        CommandManager.getCommandManager().registerCommand(
-                new ChannelSettings(), ChannelSettings.INFO);
-        CommandManager.getCommandManager().registerCommand(
-                new Input(windowFactory), Input.INFO);
-        CommandManager.getCommandManager().registerCommand(
-                new PopOutCommand(this), new PopOutCommandInfo());
-        CommandManager.getCommandManager().registerCommand(
-                new PopInCommand(this), new PopInCommandInfo());
+        super.onLoad();
     }
 
     /** {@inheritDoc} */
@@ -534,22 +513,13 @@ public class SwingController extends BasePlugin implements UIController {
         for (java.awt.Window window : getTopLevelWindows()) {
             window.dispose();
         }
-        unloadCommands();
-    }
-
-    /** Unloads the commands loaded by this plugin. */
-    private void unloadCommands() {
-        for (CommandInfo command : commands) {
-            CommandManager.getCommandManager().unregisterCommand(command);
-        }
+        super.onUnload();
     }
 
     /** {@inheritDoc} */
     @Override
     public void domainUpdated() {
         final Identity defaults = IdentityManager.getAddonIdentity();
-
-
         defaults.setOption("ui", "textPaneFontName",
                 UIManager.getFont("TextPane.font").getFamily());
         defaults.setOption("ui", "textPaneFontSize",
