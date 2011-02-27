@@ -33,10 +33,10 @@ import java.awt.Window;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -71,10 +71,12 @@ public class MessageLabel extends JPanel implements StatusBarComponent,
 
     /**
      * Instantiates a new message label.
+     *
+     * @param parentWindow Parent window
      */
     public MessageLabel(final Window parentWindow) {
         super(new MigLayout("fill, ins 0, gap 0  0"));
-        queue = new LinkedList<StatusMessage>();
+        queue = new ConcurrentLinkedQueue<StatusMessage>();
         defaultMessage = new StatusMessage(null, "Ready.", null, -1,
                 IdentityManager.getGlobalConfig());
         currentMessage = defaultMessage;
@@ -185,12 +187,10 @@ public class MessageLabel extends JPanel implements StatusBarComponent,
      * @param message Message object to show
      */
     public void setMessage(final StatusMessage message) {
-        synchronized(queue) {
-            queue.add(message);
-            if (queue.size() == 1) {
-                currentMessage = message;
-                updateCurrentMessage();
-            }
+        queue.add(message);
+        if (queue.size() == 1) {
+            currentMessage = message;
+            updateCurrentMessage();
         }
     }
 
@@ -229,15 +229,13 @@ public class MessageLabel extends JPanel implements StatusBarComponent,
      * Removes the message from the status bar.
      */
     public void clearMessage() {
-        synchronized(queue) {
-            historyLabel.addMessage(currentMessage);
-            if (queue.peek() == null) {
-                currentMessage = defaultMessage;
-            } else {
-                currentMessage = queue.poll();
-            }
-            updateCurrentMessage();
+        historyLabel.addMessage(currentMessage);
+        if (queue.size() <= 1) {
+            currentMessage = defaultMessage;
+        } else {
+            currentMessage = queue.poll();
         }
+        updateCurrentMessage();
     }
 
     /**
