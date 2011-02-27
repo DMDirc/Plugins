@@ -223,10 +223,19 @@ public class Tree extends JTree implements MouseMotionListener,
             final TreePath selectedPath = getPathForLocation(e.getX(),
                     e.getY());
             if (selectedPath != null) {
-                controller.requestWindowFocus(controller.getWindowFactory()
+                final TextFrame frame = controller.getWindowFactory()
                         .getSwingWindow(((TreeViewNode) selectedPath
-                        .getLastPathComponent()).getWindow()));
+                        .getLastPathComponent()).getWindow());
+                controller.requestWindowFocus(frame);
+                if (e.getClickCount() == 2) {
+                    if (frame.getPopoutFrame() == null) {
+                        frame.setPopout(true);
+                    } else {
+                        frame.setPopout(false);
+                    }
+                }
             }
+
         }
         processMouseEvents(e);
     }
@@ -283,6 +292,17 @@ public class Tree extends JTree implements MouseMotionListener,
             if (popupMenu.getComponentCount() > 0) {
                 popupMenu.addSeparator();
             }
+            final TreeViewNodeMenuItem popoutMenu;
+            if (frame.getPopoutFrame() == null) {
+                popoutMenu = new TreeViewNodeMenuItem("Pop Out", "popout",
+                        (TreeViewNode) localPath.getLastPathComponent());
+            } else {
+                popoutMenu = new TreeViewNodeMenuItem("Pop In", "popin",
+                        (TreeViewNode) localPath.getLastPathComponent());
+            }
+            popupMenu.add(popoutMenu);
+            popoutMenu.addActionListener(this);
+            popupMenu.addSeparator();
 
             final TreeViewNodeMenuItem moveUp =
                     new TreeViewNodeMenuItem("Move Up", "Up",
@@ -324,6 +344,12 @@ public class Tree extends JTree implements MouseMotionListener,
             } else {
                 index++;
             }
+        } else if ("popout".equals(e.getActionCommand())) {
+            controller.getWindowFactory().getSwingWindow(node.getWindow())
+                    .setPopout(true);
+        } else if ("popin".equals(e.getActionCommand())) {
+            controller.getWindowFactory().getSwingWindow(node.getWindow())
+                    .setPopout(false);
         }
         final TreeViewNode parentNode = (TreeViewNode) node.getParent();
         final TreePath nodePath = new TreePath(node.getPath());
