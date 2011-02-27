@@ -64,12 +64,6 @@ public class PopInCommand extends Command {
                             + " currently no window to pop in.");
                 } else {
                     swingWindow.setPopout(false);
-                    // Call setActiveFrame again so the active frame replaces the
-                    // placeHolderFrame.
-                    if (swingWindow.equals(controller.getMainFrame()
-                            .getActiveFrame())) {
-                        controller.getMainFrame() .setActiveFrame(swingWindow);
-                    }
                 }
             }
         });

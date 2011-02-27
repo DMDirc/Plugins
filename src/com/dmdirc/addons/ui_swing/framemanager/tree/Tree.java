@@ -283,6 +283,17 @@ public class Tree extends JTree implements MouseMotionListener,
             if (popupMenu.getComponentCount() > 0) {
                 popupMenu.addSeparator();
             }
+            final TreeViewNodeMenuItem popoutMenuItem;
+            if (frame.getPopoutFrame() == null) {
+                popoutMenuItem = new TreeViewNodeMenuItem("Pop Out", "popout",
+                        (TreeViewNode) localPath.getLastPathComponent());
+            } else {
+                popoutMenuItem = new TreeViewNodeMenuItem("Pop In", "popin",
+                        (TreeViewNode) localPath.getLastPathComponent());
+            }
+            popupMenu.add(popoutMenuItem);
+            popupMenu.addSeparator();
+            popoutMenuItem.addActionListener(this);
 
             final TreeViewNodeMenuItem moveUp =
                     new TreeViewNodeMenuItem("Move Up", "Up",
@@ -324,6 +335,12 @@ public class Tree extends JTree implements MouseMotionListener,
             } else {
                 index++;
             }
+        } else if ("popout".equals(e.getActionCommand())) {
+            controller.getWindowFactory().getSwingWindow(node.getWindow())
+                    .setPopout(true);
+        } else if ("popin".equals(e.getActionCommand())) {
+            controller.getWindowFactory().getSwingWindow(node.getWindow())
+                    .setPopout(false);
         }
         final TreeViewNode parentNode = (TreeViewNode) node.getParent();
         final TreePath nodePath = new TreePath(node.getPath());
