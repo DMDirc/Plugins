@@ -178,6 +178,12 @@ public abstract class TextFrame extends JPanel implements Window,
             popoutFrame.dispose();
             popoutFrame = null;
         }
+        // Call setActiveFrame again so the contents of the frame manager
+        // are updated.
+        if (equals(controller.getMainFrame()
+                .getActiveFrame())) {
+            controller.getMainFrame().setActiveFrame(this);
+        }
     }
 
     /**

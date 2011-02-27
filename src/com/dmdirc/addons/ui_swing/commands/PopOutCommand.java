@@ -64,12 +64,6 @@ public class PopOutCommand extends Command {
                             + " currently no window to pop out.");
                 } else {
                     swingWindow.setPopout(true);
-                    // Call setActiveFrame again so the placeHolder frame
-                    // replaces the active frame.
-                    if (swingWindow.equals(controller.getMainFrame()
-                            .getActiveFrame())) {
-                        controller.getMainFrame() .setActiveFrame(swingWindow);
-                    }
                 }
             }
         });
