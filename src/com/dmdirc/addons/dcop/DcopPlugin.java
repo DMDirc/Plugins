@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.dcop;
 
-import com.dmdirc.commandparser.CommandManager;
 import com.dmdirc.plugins.BasePlugin;
 
 import java.io.BufferedReader;
@@ -35,9 +34,6 @@ import java.util.List;
  * Allows the user to execute dcop commands (and read the results).
  */
 public final class DcopPlugin extends BasePlugin {
-
-    /** The DcopCommand we created */
-    private DcopCommand command = null;
 
     /**
      * Retrieves the result from executing the specified command.
@@ -77,14 +73,7 @@ public final class DcopPlugin extends BasePlugin {
     /** {@inheritDoc} */
     @Override
     public void onLoad() {
-        command = new DcopCommand();
-        CommandManager.getCommandManager().registerCommand(command, DcopCommand.INFO);
+        registerCommand(new DcopCommand(), DcopCommand.INFO);
+        super.onLoad();
     }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onUnload() {
-        CommandManager.getCommandManager().unregisterCommand(DcopCommand.INFO);
-    }
-
 }

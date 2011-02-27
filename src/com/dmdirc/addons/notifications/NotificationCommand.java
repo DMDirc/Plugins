@@ -23,8 +23,8 @@
 package com.dmdirc.addons.notifications;
 
 import com.dmdirc.FrameContainer;
+import com.dmdirc.commandparser.BaseCommandInfo;
 import com.dmdirc.commandparser.CommandArguments;
-import com.dmdirc.commandparser.CommandInfo;
 import com.dmdirc.commandparser.CommandType;
 import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.IntelligentCommand;
@@ -40,15 +40,21 @@ import java.util.List;
  * notification commands as preferred by the end user.
  */
 public class NotificationCommand extends Command implements
-        IntelligentCommand, CommandInfo {
+        IntelligentCommand {
 
+    /** A command info object for this command. */
+    public static final BaseCommandInfo INFO = new BaseCommandInfo(
+            "notification",
+            "notification [--methods|--method <method>] text - "
+                + "Notifies you of the text",
+            CommandType.TYPE_GLOBAL);
     /** The plugin that's using this command. */
     private final NotificationsPlugin parent;
 
     /**
      * Creates a new instance of this notification command.
      *
-     * @param parent The plugin that's instansiating this command
+     * @param parent The plugin that's instantiating this command
      */
     public NotificationCommand(final NotificationsPlugin parent) {
         super();
@@ -133,30 +139,5 @@ public class NotificationCommand extends Command implements
             return res;
         }
         return res;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String getName() {
-        return "notification";
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public boolean showInHelp() {
-        return true;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String getHelp() {
-        return "notification [--methods|--method <method>] text - "
-                + "Notifies you of the text";
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public CommandType getType() {
-        return CommandType.TYPE_GLOBAL;
     }
 }

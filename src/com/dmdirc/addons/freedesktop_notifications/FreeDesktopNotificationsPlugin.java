@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.freedesktop_notifications;
 
-import com.dmdirc.commandparser.CommandManager;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
@@ -50,8 +49,6 @@ import org.apache.commons.lang.StringEscapeUtils;
 public final class FreeDesktopNotificationsPlugin extends BasePlugin
         implements ConfigChangeListener {
 
-    /** The DcopCommand we created */
-    private FDNotifyCommand command = null;
     /** notification timeout. */
     private int timeout;
     /** notification icon. */
@@ -137,8 +134,7 @@ public final class FreeDesktopNotificationsPlugin extends BasePlugin
         IdentityManager.getGlobalConfig().addChangeListener(getDomain(), this);
         setCachedSettings();
 
-        command = new FDNotifyCommand(this);
-        CommandManager.getCommandManager().registerCommand(command);
+        registerCommand(new FDNotifyCommand(this), FDNotifyCommand.INFO);
 
         // Extract required Files
         final PluginInfo pi = PluginManager.getPluginManager().getPluginInfoByName("freedesktop_notifications");
@@ -160,6 +156,7 @@ public final class FreeDesktopNotificationsPlugin extends BasePlugin
                 Logger.userError(ErrorLevel.LOW, "Unable to open ResourceManager for freedesktop_notifications: "+ioe.getMessage(), ioe);
             }
         }
+        super.onLoad();
     }
 
     /**
@@ -167,8 +164,8 @@ public final class FreeDesktopNotificationsPlugin extends BasePlugin
      */
     @Override
     public synchronized void onUnload() {
-        CommandManager.getCommandManager().unregisterCommand(command);
         IdentityManager.getGlobalConfig().removeListener(this);
+        super.onUnload();
     }
 
     /** {@inheritDoc} */

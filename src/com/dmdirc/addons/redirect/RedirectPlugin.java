@@ -22,9 +22,7 @@
 
 package com.dmdirc.addons.redirect;
 
-import com.dmdirc.commandparser.CommandManager;
 import com.dmdirc.plugins.BasePlugin;
-
 
 /**
  * The redirect plugin allows the suer to redirect the output of commands that
@@ -32,25 +30,9 @@ import com.dmdirc.plugins.BasePlugin;
  */
 public final class RedirectPlugin extends BasePlugin {
 
-    private final RedirectCommand command;
-
     /** Creates a new system tray plugin. */
     public RedirectPlugin() {
         super();
-
-        command = new RedirectCommand();
+        registerCommand(new RedirectCommand(), RedirectCommand.INFO);
     }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onLoad() {
-        CommandManager.getCommandManager().registerCommand(command);
-    }
-
-    /** {@inheritDoc}. */
-    @Override
-    public void onUnload() {
-        CommandManager.getCommandManager().unregisterCommand(command);
-    }
-
 }

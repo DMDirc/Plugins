@@ -24,8 +24,8 @@ package com.dmdirc.addons.nowplaying;
 
 import com.dmdirc.FrameContainer;
 import com.dmdirc.MessageTarget;
+import com.dmdirc.commandparser.BaseCommandInfo;
 import com.dmdirc.commandparser.CommandArguments;
-import com.dmdirc.commandparser.CommandInfo;
 import com.dmdirc.commandparser.CommandType;
 import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.IntelligentCommand;
@@ -41,18 +41,22 @@ import java.util.List;
 /**
  * The now playing command retrieves the currently playing song from a
  * variety of media players.
- * @author chris
  */
 public final class NowPlayingCommand extends Command implements
-        IntelligentCommand, CommandInfo {
+        IntelligentCommand {
 
+    /** A command info object for this command. */
+    public static final BaseCommandInfo INFO = new BaseCommandInfo("nowplaying",
+            "nowplaying [--sources|--source <source>] [format] - " +
+                "tells the channel the song you're currently playing",
+            CommandType.TYPE_GLOBAL);
     /** The plugin that's using this command. */
     final NowPlayingPlugin parent;
 
     /**
      * Creates a new instance of NowPlayingCommand.
      *
-     * @param parent The plugin that's instansiating this command
+     * @param parent The plugin that's instantiating this command
      */
     public NowPlayingCommand(final NowPlayingPlugin parent) {
         super();
@@ -151,31 +155,6 @@ public final class NowPlayingCommand extends Command implements
         } else {
             return parent.doSubstitution(format, source);
         }
-    }
-
-    /** {@inheritDoc}. */
-    @Override
-    public String getName() {
-        return "nowplaying";
-    }
-
-    /** {@inheritDoc}. */
-    @Override
-    public boolean showInHelp() {
-        return true;
-    }
-
-    /** {@inheritDoc}. */
-    @Override
-    public String getHelp() {
-        return "nowplaying [--sources|--source <source>] [format] - " +
-                "tells the channel the song you're currently playing";
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public CommandType getType() {
-        return CommandType.TYPE_CHAT;
     }
 
     /** {@inheritDoc} */

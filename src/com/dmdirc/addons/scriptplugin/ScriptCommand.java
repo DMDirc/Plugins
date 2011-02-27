@@ -23,6 +23,7 @@
 package com.dmdirc.addons.scriptplugin;
 
 import com.dmdirc.FrameContainer;
+import com.dmdirc.commandparser.BaseCommandInfo;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandInfo;
 import com.dmdirc.commandparser.CommandType;
@@ -36,17 +37,20 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 /**
- * The Script Command allows controlling of the scriptplugin.
- *
- * @author Shane 'Dataforce' McCormack
+ * The Script Command allows controlling of the script plugin.
  */
-public final class ScriptCommand extends Command implements IntelligentCommand,
-        CommandInfo {
+public final class ScriptCommand extends Command implements IntelligentCommand {
+
+    /** A command info object for this command. */
+    public static final CommandInfo INFO = new BaseCommandInfo("script",
+            "script - Allows controlling the script plugin",
+            CommandType.TYPE_GLOBAL);
     /** My Plugin. */
     final ScriptPlugin myPlugin;
 
@@ -223,39 +227,13 @@ public final class ScriptCommand extends Command implements IntelligentCommand,
         while (!dirs.isEmpty()) {
             final File dir = dirs.pop();
             if (dir.isDirectory()) {
-                for (File file : dir.listFiles()) {
-                    dirs.add(file);
-                }
+                dirs.addAll(Arrays.asList(dir.listFiles()));
             } else if (dir.isFile() && dir.getName().endsWith(".js")) {
                 final String target = dir.getPath();
                 res.add(target.substring(myPlugin.getScriptDir().length(), target.length()));
             }
         }
         return res;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String getName() {
-        return "script";
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public boolean showInHelp() {
-        return true;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public CommandType getType() {
-        return CommandType.TYPE_GLOBAL;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String getHelp() {
-        return "script - Allows controlling the script plugin";
     }
 }
 

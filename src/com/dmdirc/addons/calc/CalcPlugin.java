@@ -30,19 +30,11 @@ import com.dmdirc.plugins.BasePlugin;
  */
 public class CalcPlugin extends BasePlugin {
 
-    /** The command we register when loaded. */
-    private final CalcCommand command = new CalcCommand();
-
     /** {@inheritDoc} */
     @Override
     public void onLoad() {
-        CommandManager.getCommandManager().registerCommand(command, CalcCommand.INFO);
+        CommandManager.getCommandManager().registerCommand(new CalcCommand(),
+                CalcCommand.INFO);
+        super.onLoad();
     }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onUnload() {
-        CommandManager.getCommandManager().unregisterCommand(CalcCommand.INFO);
-    }
-
 }

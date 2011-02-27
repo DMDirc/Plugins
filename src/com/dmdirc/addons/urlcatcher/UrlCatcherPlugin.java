@@ -27,7 +27,6 @@ import com.dmdirc.Raw;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.actions.interfaces.ActionType;
-import com.dmdirc.commandparser.CommandManager;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.interfaces.ActionListener;
 import com.dmdirc.interfaces.ConfigChangeListener;
@@ -40,35 +39,32 @@ import java.util.Map;
 /**
  * A plugin which logs all observed URLs and allows the user to list them
  * later.
- *
- * @author chris
  */
 public class UrlCatcherPlugin extends BasePlugin implements ActionListener,
         ConfigChangeListener {
 
+    /* URLs and the number of times they were mentioned. */
     private final Map<String, Integer> urls = new HashMap<String, Integer>();
-
     /** Whether to capture URLs from the raw window. */
     private boolean captureRaw = false;
-
-    private final UrlListCommand command = new UrlListCommand(this);
 
     /** {@inheritDoc} */
     @Override
     public void onLoad() {
         ActionManager.getActionManager().registerListener(this,
                 CoreActionType.CLIENT_LINE_ADDED);
-        CommandManager.getCommandManager().registerCommand(command);
+        registerCommand(new UrlListCommand(this), UrlListCommand.INFO);
         IdentityManager.getGlobalConfig().addChangeListener(getDomain(), this);
         updateConfig();
+        super.onLoad();
     }
 
     /** {@inheritDoc} */
     @Override
     public void onUnload() {
         ActionManager.getActionManager().unregisterListener(this);
-        CommandManager.getCommandManager().unregisterCommand(command);
         IdentityManager.getGlobalConfig().removeListener(this);
+        super.onUnload();
     }
 
     /**

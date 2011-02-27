@@ -30,7 +30,6 @@ import com.dmdirc.Server;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.actions.interfaces.ActionType;
-import com.dmdirc.commandparser.CommandManager;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
@@ -72,14 +71,10 @@ import java.util.TimerTask;
 
 /**
  * Adds logging facility to client.
- *
- * @author Shane 'Dataforce' McCormack
  */
 public class LoggingPlugin extends BasePlugin implements ActionListener,
         ConfigChangeListener {
 
-    /** The command we registered. */
-    private LoggingCommand command;
     /** Cached boolean settings. */
     private boolean networkfolders, filenamehash, addtime, stripcodes,
             channelmodeprefix, autobackbuffer, backbufferTimestamp, usedate;
@@ -145,8 +140,7 @@ public class LoggingPlugin extends BasePlugin implements ActionListener,
 
         IdentityManager.getGlobalConfig().addChangeListener(getDomain(), this);
 
-        command = new LoggingCommand();
-        CommandManager.getCommandManager().registerCommand(command);
+        registerCommand(new LoggingCommand(), LoggingCommand.INFO);
 
         ActionManager.getActionManager().registerListener(this,
                 CoreActionType.CHANNEL_OPENED,
@@ -181,6 +175,7 @@ public class LoggingPlugin extends BasePlugin implements ActionListener,
             }
 
         }, 3600000);
+        super.onLoad();
     }
 
     /**
@@ -213,7 +208,6 @@ public class LoggingPlugin extends BasePlugin implements ActionListener,
             idleFileTimer.purge();
         }
 
-        CommandManager.getCommandManager().unregisterCommand(command);
         ActionManager.getActionManager().unregisterListener(this);
 
         synchronized (openFiles) {
@@ -222,6 +216,7 @@ public class LoggingPlugin extends BasePlugin implements ActionListener,
             }
             openFiles.clear();
         }
+        super.onUnload();
     }
 
     /** {@inheritDoc} */
