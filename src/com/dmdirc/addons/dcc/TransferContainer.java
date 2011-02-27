@@ -37,7 +37,7 @@ import com.dmdirc.ui.WindowManager;
 
 import java.awt.Desktop;
 import java.io.File;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.Date;
 
 import javax.swing.JOptionPane;
@@ -95,7 +95,7 @@ public class TransferContainer extends FrameContainer implements
                 ? "dcc-send-inactive" : "dcc-receive-inactive",
                 title, title, TransferWindow.class,
                 IdentityManager.getGlobalConfig(),
-                Collections.<String>emptyList());
+                Arrays.asList("com.dmdirc.addons.dcc.ui.TransferPanel"));
         this.plugin = plugin;
         this.dcc = dcc;
         this.server = server;

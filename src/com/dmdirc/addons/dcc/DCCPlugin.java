@@ -32,7 +32,10 @@ import com.dmdirc.addons.dcc.io.DCC;
 import com.dmdirc.addons.dcc.io.DCCChat;
 import com.dmdirc.addons.dcc.io.DCCTransfer;
 import com.dmdirc.addons.dcc.kde.KFileChooser;
+import com.dmdirc.addons.dcc.ui.PlaceholderWindow;
+import com.dmdirc.addons.dcc.ui.TransferWindow;
 import com.dmdirc.addons.ui_swing.SwingController;
+import com.dmdirc.addons.ui_swing.SwingWindowFactory;
 import com.dmdirc.config.Identity;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
@@ -53,12 +56,14 @@ import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Arrays;
+import java.util.HashSet;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
 /**
- * This plugin adds DCC to dmdirc.
+ * This plugin adds DCC to DMDirc.
  */
 public final class DCCPlugin extends BasePlugin implements ActionListener {
 
@@ -69,6 +74,15 @@ public final class DCCPlugin extends BasePlugin implements ActionListener {
     public DCCPlugin() {
         super();
         registerCommand(new DCCCommand(this), DCCCommand.INFO);
+        final SwingWindowFactory factory = ((SwingController) PluginManager
+                .getPluginManager().getPluginInfoByName("ui_swing").getPlugin())
+                .getWindowFactory();
+        factory.registerImplementation(new HashSet<String>(Arrays.asList(
+                "com.dmdirc.addons.dcc.ui.PlaceholderPanel")),
+                PlaceholderWindow.class);
+        factory.registerImplementation(new HashSet<String>(Arrays.asList(
+                "com.dmdirc.addons.dcc.ui.TransferPanel")),
+                TransferWindow.class);
     }
 
     /**

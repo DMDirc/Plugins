@@ -31,7 +31,7 @@ import com.dmdirc.config.IdentityManager;
 import com.dmdirc.plugins.PluginManager;
 
 import java.awt.Dialog.ModalityType;
-import java.util.Collections;
+import java.util.Arrays;
 
 /**
  * Creates a placeholder DCC Frame.
@@ -42,13 +42,14 @@ public class PlaceholderContainer extends FrameContainer {
     private final DCCPlugin plugin;
 
     /**
-     * Creates a placeholder dcc frame.
+     * Creates a placeholder DCC frame.
      *
      * @param plugin The plugin which owns this placeholder
      */
     public PlaceholderContainer(final DCCPlugin plugin) {
         super("dcc", "DCCs", "DCCs", PlaceholderWindow.class,
-                IdentityManager.getGlobalConfig(), Collections.<String>emptyList());
+                IdentityManager.getGlobalConfig(),
+                Arrays.asList("com.dmdirc.addons.dcc.ui.PlaceholderPanel"));
 
         this.plugin = plugin;
     }
