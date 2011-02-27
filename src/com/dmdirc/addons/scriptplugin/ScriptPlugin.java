@@ -46,25 +46,17 @@ import javax.script.ScriptEngineManager;
 
 /**
  * This allows javascript scripts to be used in DMDirc.
- *
- * @author Shane 'Dataforce' McCormack
  */
 public final class ScriptPlugin extends BasePlugin implements ActionListener {
-    /** The ScriptCommand we created */
-    private ScriptCommand command = null;
 
     /** Script Directory */
     private final String scriptDir = Main.getConfigDir() + "scripts/";
-
     /** Script Engine Manager */
     private ScriptEngineManager scriptFactory = new ScriptEngineManager();
-
     /** Instance of the javaScriptHelper class */
     private JavaScriptHelper jsHelper = new JavaScriptHelper();
-
     /** Store Script State Name,Engine */
     private Map<String, ScriptEngineWrapper> scripts = new HashMap<String, ScriptEngineWrapper>();
-
     /** Used to store permanent variables */
     protected TypedProperties globalVariables = new TypedProperties();
 
@@ -79,17 +71,14 @@ public final class ScriptPlugin extends BasePlugin implements ActionListener {
         getScriptFactory().put("globalVariables", getGlobalVariables());
     }
 
-    /**
-     * Called when the plugin is loaded.
-     */
+    /** {@inheritDoc} */
     @Override
     public void onLoad() {
         // Register the plugin_loaded action initially, this will be called
         // after this method finishes for us to register the rest.
         ActionManager.getActionManager().registerListener(this,
                 CoreActionType.PLUGIN_LOADED);
-        command = new ScriptCommand(this);
-        CommandManager.getCommandManager().registerCommand(command);
+        CommandManager.getCommandManager().registerCommand(new ScriptCommand(this), ScriptCommand.INFO);
 
         // Make sure our scripts dir exists
         final File newDir = new File(scriptDir);
@@ -107,15 +96,13 @@ public final class ScriptPlugin extends BasePlugin implements ActionListener {
                 StreamUtil.close(fis);
             }
         }
+        super.onLoad();
     }
 
-    /**
-     * Called when this plugin is Unloaded
-     */
+    /** {@inheritDoc} */
     @Override
     public void onUnload() {
         ActionManager.getActionManager().unregisterListener(this);
-        CommandManager.getCommandManager().unregisterCommand(command);
 
         final File savedVariables = new File(scriptDir+"storedVariables");
         FileOutputStream fos = null;
@@ -127,6 +114,7 @@ public final class ScriptPlugin extends BasePlugin implements ActionListener {
         } finally {
             StreamUtil.close(fos);
         }
+        super.onUnload();
     }
 
     /**
@@ -143,13 +131,7 @@ public final class ScriptPlugin extends BasePlugin implements ActionListener {
         }
     }
 
-    /**
-     * Process an event of the specified type.
-     *
-     * @param type The type of the event to process
-     * @param format Format of messages that are about to be sent. (May be null)
-     * @param arguments The arguments for the event
-     */
+    /** {@inheritDoc} */
     @Override
     public void processEvent(final ActionType type, final StringBuffer format, final Object... arguments) {
         // Plugins may to register/unregister action types, so lets reregister all
@@ -251,13 +233,8 @@ public final class ScriptPlugin extends BasePlugin implements ActionListener {
         return true;
     }
 
-    /**
-     * Check any further Prerequisites for this plugin to load that can not be
-     * checked using metainfo.
-     *
-     * @return ValidationResponse detailign if the plugin passes any extra checks
-     *         that plugin.info can't handle
-     */
+    /** {@inheritDoc} */
+    @Override
     public ValidationResponse checkPrerequisites() {
         if (getScriptFactory().getEngineByName("JavaScript") == null) {
             return new ValidationResponse("JavaScript Scripting Engine not found.");

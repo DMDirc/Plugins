@@ -46,7 +46,6 @@ public class IdentdPlugin extends BasePlugin implements ActionListener {
 
     /** Array list to store all the servers in that need ident replies. */
     private final List<Server> servers = new ArrayList<Server>();
-
     /** The IdentdServer that we use. */
     private IdentdServer myServer;
 

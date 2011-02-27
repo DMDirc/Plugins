@@ -23,8 +23,8 @@
 package com.dmdirc.addons.osd;
 
 import com.dmdirc.FrameContainer;
+import com.dmdirc.commandparser.BaseCommandInfo;
 import com.dmdirc.commandparser.CommandArguments;
-import com.dmdirc.commandparser.CommandInfo;
 import com.dmdirc.commandparser.CommandType;
 import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.IntelligentCommand;
@@ -35,9 +35,14 @@ import com.dmdirc.ui.messages.Styliser;
 /**
  * The osd command shows an on screen message.
  */
-public final class OsdCommand extends Command implements
-        IntelligentCommand, CommandInfo {
+public final class OsdCommand extends Command implements IntelligentCommand {
 
+    /** A command info object for this command. */
+    public static final BaseCommandInfo INFO = new BaseCommandInfo("osd",
+            "osd --close - closes all OSD windows\n"
+                + "osd [--timeout <delay in seconds>] <message> - show the "
+                + "specified message in an OSD window",
+            CommandType.TYPE_GLOBAL);
     /** The OSDManager that this command should use. */
     private final OsdManager osdManager;
 
@@ -93,32 +98,6 @@ public final class OsdCommand extends Command implements
         } else {
             showOSD(-1 , null, args.getArgumentsAsString());
         }
-    }
-
-    /** {@inheritDoc}. */
-    @Override
-    public String getName() {
-        return "osd";
-    }
-
-    /** {@inheritDoc}. */
-    @Override
-    public boolean showInHelp() {
-        return true;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public CommandType getType() {
-        return CommandType.TYPE_GLOBAL;
-    }
-
-    /** {@inheritDoc}. */
-    @Override
-    public String getHelp() {
-        return "osd --close - closes all OSD windows\n"
-                + "osd [--timeout <delay in seconds>] <message> - show the "
-                + "specified message in an OSD window";
     }
 
     /** {@inheritDoc} */

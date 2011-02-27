@@ -112,9 +112,4 @@ public class WindowsMediaSourcePlugin extends BasePlugin implements MediaSourceM
             Logger.userError(ErrorLevel.LOW, "Unable to open ResourceManager for windowsmediasource: " + ioe.getMessage(), ioe);
         }
     }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onUnload() { /* Do Nothing */ }
-
 }

@@ -23,8 +23,8 @@
 package com.dmdirc.addons.windowflashing;
 
 import com.dmdirc.FrameContainer;
+import com.dmdirc.commandparser.BaseCommandInfo;
 import com.dmdirc.commandparser.CommandArguments;
-import com.dmdirc.commandparser.CommandInfo;
 import com.dmdirc.commandparser.CommandType;
 import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.context.CommandContext;
@@ -32,8 +32,13 @@ import com.dmdirc.commandparser.commands.context.CommandContext;
 /**
  * Command to flash an inactive window under Windows.
  */
-public class FlashWindow extends Command implements CommandInfo {
+public class FlashWindow extends Command {
 
+    /** A command info object for this command. */
+    public static final BaseCommandInfo INFO = new BaseCommandInfo(
+            "flashwindow", "flashwindow - Flashes the window until activated",
+            CommandType.TYPE_GLOBAL);
+    /** Parent plugin. */
     private final WindowFlashing plugin;
 
     /**
@@ -52,29 +57,4 @@ public class FlashWindow extends Command implements CommandInfo {
             final CommandArguments args, final CommandContext context) {
         plugin.flashWindow();
     }
-
-    /** {@inheritDoc} */
-    @Override
-    public String getName() {
-        return "flashwindow";
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public boolean showInHelp() {
-        return true;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String getHelp() {
-        return "flashwindow - Flashes the window until activated";
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public CommandType getType() {
-        return CommandType.TYPE_GLOBAL;
-    }
-
 }

@@ -27,7 +27,6 @@ import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.actions.interfaces.ActionType;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SwingController;
-import com.dmdirc.commandparser.CommandManager;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
@@ -60,8 +59,6 @@ public final class SystrayPlugin extends BasePlugin implements ActionListener,
 
     /** The tray icon we're currently using. */
     private final TrayIcon icon;
-    /** The command we registered. */
-    private PopupCommand command;
     /** Main frame instance. */
     private MainFrame mainFrame;
 
@@ -82,6 +79,7 @@ public final class SystrayPlugin extends BasePlugin implements ActionListener,
                 "DMDirc", menu);
         icon.setImageAutoSize(true);
         icon.addMouseListener(this);
+        registerCommand(new PopupCommand(this), PopupCommand.INFO);
     }
 
     /**
@@ -146,8 +144,6 @@ public final class SystrayPlugin extends BasePlugin implements ActionListener,
         boolean continueLoading = true;
         try {
             SystemTray.getSystemTray().add(icon);
-            command = new PopupCommand(this);
-            CommandManager.getCommandManager().registerCommand(command);
             mainFrame = ((SwingController) PluginManager.getPluginManager()
                     .getPluginInfoByName("ui_swing").getPlugin())
                     .getMainFrame();
@@ -159,15 +155,15 @@ public final class SystrayPlugin extends BasePlugin implements ActionListener,
         if (!continueLoading || mainFrame == null) {
             getPluginInfo().unloadPlugin();
         }
+        super.onLoad();
     }
 
     /** {@inheritDoc} */
     @Override
     public void onUnload() {
         SystemTray.getSystemTray().remove(icon);
-        CommandManager.getCommandManager().unregisterCommand(command);
-
         ActionManager.getActionManager().unregisterListener(this);
+        super.onUnload();
     }
 
     /** {@inheritDoc} */

@@ -24,8 +24,8 @@
 package com.dmdirc.addons.time;
 
 import com.dmdirc.FrameContainer;
+import com.dmdirc.commandparser.BaseCommandInfo;
 import com.dmdirc.commandparser.CommandArguments;
-import com.dmdirc.commandparser.CommandInfo;
 import com.dmdirc.commandparser.CommandType;
 import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.IntelligentCommand;
@@ -38,11 +38,16 @@ import java.util.Set;
 /**
  * The timer command allows users to schedule commands to occur after a certain
  * interval, or to repeatedly occur with a specified delay.
- * @author chris
  */
-public final class TimerCommand extends Command implements IntelligentCommand,
-        CommandInfo {
+public final class TimerCommand extends Command implements IntelligentCommand {
 
+    /** A command info object for this command. */
+    public static final BaseCommandInfo INFO = new BaseCommandInfo("timer",
+            "timer [--list|--cancel <timer id> | <repetitions> <interval> "
+            + "<command>] - lists all active timers / cancells an active timer "
+            + "of given ID / schedules a command to be executed after a certain "
+            + "time",
+            CommandType.TYPE_GLOBAL);
     /** The TimerManager for this TimerCommand. */
     private final TimerManager manager;
 
@@ -137,32 +142,6 @@ public final class TimerCommand extends Command implements IntelligentCommand,
     private void doUsage(final FrameContainer origin, final boolean isSilent) {
         showUsage(origin, isSilent, "timer", "[--list|--cancel <timer id> | " +
                 "<repetitions> <interval> <command>]");
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String getName() {
-        return "timer";
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public boolean showInHelp() {
-        return true;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public CommandType getType() {
-        return CommandType.TYPE_GLOBAL;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String getHelp() {
-        return "timer [--list|--cancel <timer id> | <repetitions> <interval> <command>] " +
-                "- lists all active timers / cancells an active timer of given ID" +
-                " / schedules a command to be executed after a certain time";
     }
 
     /** {@inheritDoc} */

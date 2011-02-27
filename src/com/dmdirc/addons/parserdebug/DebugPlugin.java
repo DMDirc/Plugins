@@ -26,7 +26,6 @@ import com.dmdirc.Server;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.actions.interfaces.ActionType;
-import com.dmdirc.commandparser.CommandManager;
 import com.dmdirc.interfaces.ActionListener;
 import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.parser.interfaces.callbacks.DebugInfoListener;
@@ -42,26 +41,27 @@ import java.util.Map;
  */
 public final class DebugPlugin extends BasePlugin implements DebugInfoListener, ActionListener {
 
-    /** The ParserDebugCommand we created. */
-    private ParserDebugCommand command = null;
-
     /** Map of parsers registered. */
     protected final Map<Parser, DebugWindow> registeredParsers
             = new HashMap<Parser, DebugWindow>();
+
+    /** Creates a new instance of this plugin. */
+    public DebugPlugin() {
+        super();
+        registerCommand(new ParserDebugCommand(this), ParserDebugCommand.INFO);
+    }
 
     /** {@inheritDoc} */
     @Override
     public void onLoad() {
         ActionManager.getActionManager().unregisterListener(this,
                 CoreActionType.SERVER_DISCONNECTED);
-        command = new ParserDebugCommand(this);
-        CommandManager.getCommandManager().registerCommand(command);
+        super.onLoad();
     }
 
     /** {@inheritDoc} */
     @Override
     public void onUnload() {
-        CommandManager.getCommandManager().unregisterCommand(command);
         final ArrayList<DebugWindow> windowList = new ArrayList<DebugWindow>();
         for (Parser parser : registeredParsers.keySet()) {
             try {
@@ -74,6 +74,7 @@ public final class DebugPlugin extends BasePlugin implements DebugInfoListener, 
             window.close();
         }
         registeredParsers.clear();
+        super.onUnload();
     }
 
     /** {@inheritDoc} */

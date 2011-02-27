@@ -191,18 +191,6 @@ public class VlcMediaSourcePlugin extends BasePlugin implements MediaSource {
 
     /** {@inheritDoc} */
     @Override
-    public void onLoad() {
-        // Do nothing
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onUnload() {
-        // Do nothing
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public void showConfig(final PreferencesDialogModel manager) {
         final PreferencesCategory general = new PluginPreferencesCategory(
                 getPluginInfo(), "VLC Media Source",

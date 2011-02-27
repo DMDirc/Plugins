@@ -52,8 +52,6 @@ public class NowPlayingPlugin extends BasePlugin implements ActionListener  {
     private final List<MediaSource> sources = new ArrayList<MediaSource>();
     /** The managers that we know of. */
     private final List<MediaSourceManager> managers = new ArrayList<MediaSourceManager>();
-    /** The now playing command we're registering. */
-    private NowPlayingCommand command;
     /** The user's preferred order for source usage. */
     private List<String> order;
 
@@ -73,9 +71,9 @@ public class NowPlayingPlugin extends BasePlugin implements ActionListener  {
                 addPlugin(target);
             }
         }
-
-        command = new NowPlayingCommand(this);
-        CommandManager.getCommandManager().registerCommand(command);
+        CommandManager.getCommandManager().registerCommand(
+                new NowPlayingCommand(this), NowPlayingCommand.INFO);
+        super.onLoad();
     }
 
     /** {@inheritDoc} */
@@ -83,10 +81,8 @@ public class NowPlayingPlugin extends BasePlugin implements ActionListener  {
     public void onUnload() {
         sources.clear();
         managers.clear();
-
         ActionManager.getActionManager().unregisterListener(this);
-
-        CommandManager.getCommandManager().unregisterCommand(command);
+        super.onUnload();
     }
 
     /** {@inheritDoc} */

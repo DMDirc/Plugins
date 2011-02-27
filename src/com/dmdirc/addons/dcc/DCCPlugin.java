@@ -33,7 +33,6 @@ import com.dmdirc.addons.dcc.io.DCCChat;
 import com.dmdirc.addons.dcc.io.DCCTransfer;
 import com.dmdirc.addons.dcc.kde.KFileChooser;
 import com.dmdirc.addons.ui_swing.SwingController;
-import com.dmdirc.commandparser.CommandManager;
 import com.dmdirc.config.Identity;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
@@ -63,10 +62,14 @@ import javax.swing.JOptionPane;
  */
 public final class DCCPlugin extends BasePlugin implements ActionListener {
 
-    /** The DCCCommand we created. */
-    private DCCCommand command;
     /** Our DCC Container window. */
     private PlaceholderContainer container;
+
+    /** Creates a new instance of this plugin. */
+    public DCCPlugin() {
+        super();
+        registerCommand(new DCCCommand(this), DCCCommand.INFO);
+    }
 
     /**
      * Ask a question, if the answer is the answer required, then recall
@@ -640,12 +643,10 @@ public final class DCCPlugin extends BasePlugin implements ActionListener {
             }
         }
 
-        command = new DCCCommand(this);
-        CommandManager.getCommandManager().registerCommand(command, DCCCommand.INFO);
-
         ActionManager.getActionManager().registerTypes(DCCActions.values());
         ActionManager.getActionManager().registerListener(this,
                 CoreActionType.SERVER_CTCP);
+        super.onLoad();
     }
 
     /**
@@ -653,11 +654,11 @@ public final class DCCPlugin extends BasePlugin implements ActionListener {
      */
     @Override
     public synchronized void onUnload() {
-        CommandManager.getCommandManager().unregisterCommand(DCCCommand.INFO);
         ActionManager.getActionManager().unregisterListener(this);
         if (container != null) {
             container.close();
         }
+        super.onUnload();
     }
 
     /**

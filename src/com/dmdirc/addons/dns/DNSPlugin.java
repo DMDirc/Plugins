@@ -36,20 +36,11 @@ import java.util.List;
  */
 public final class DNSPlugin extends BasePlugin {
 
-    /** The DNSCommand we've registered. */
-    private DNSCommand command;
-
     /** {@inheritDoc} */
     @Override
     public void onLoad() {
-        command = new DNSCommand();
-        CommandManager.getCommandManager().registerCommand(command, DNSCommand.INFO);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onUnload() {
-        CommandManager.getCommandManager().unregisterCommand(DNSCommand.INFO);
+        CommandManager.getCommandManager().registerCommand(new DNSCommand(), DNSCommand.INFO);
+        super.onLoad();
     }
 
     /**
