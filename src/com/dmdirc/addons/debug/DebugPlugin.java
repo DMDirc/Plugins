@@ -23,7 +23,6 @@
 package com.dmdirc.addons.debug;
 
 import com.dmdirc.addons.debug.commands.*; //NOPMD
-import com.dmdirc.commandparser.CommandManager;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.plugins.BasePlugin;
@@ -65,7 +64,7 @@ public class DebugPlugin extends BasePlugin {
     @Override
     @SuppressWarnings("unchecked")
     public void onLoad() {
-        CommandManager.getCommandManager().registerCommand(debugCommand, Debug.INFO);
+        registerCommand(debugCommand, Debug.INFO);
         for (Class<DebugCommand> type : CLASSES) {
             try {
                 addCommand(type.getConstructor(Debug.class)
@@ -78,13 +77,14 @@ public class DebugPlugin extends BasePlugin {
                         "Unable to load debug command", e);
             }
         }
+        super.onLoad();
     }
 
     /** {@inheritDoc} */
     @Override
     public void onUnload() {
         commands.clear();
-        CommandManager.getCommandManager().unregisterCommand(Debug.INFO);
+        super.onUnload();
     }
 
     /**

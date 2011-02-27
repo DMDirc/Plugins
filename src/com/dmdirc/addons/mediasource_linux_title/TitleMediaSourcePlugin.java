@@ -32,8 +32,6 @@ import java.util.List;
 /**
  * A media source plugin which provides two {@link TitleMediaSource}s, one for
  * the Last.fm linux client and one for Spotify (running under Wine).
- *
- * @author chris
  */
 public class TitleMediaSourcePlugin extends BasePlugin implements MediaSourceManager {
 

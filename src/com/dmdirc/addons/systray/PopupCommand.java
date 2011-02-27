@@ -23,8 +23,8 @@
 package com.dmdirc.addons.systray;
 
 import com.dmdirc.FrameContainer;
+import com.dmdirc.commandparser.BaseCommandInfo;
 import com.dmdirc.commandparser.CommandArguments;
-import com.dmdirc.commandparser.CommandInfo;
 import com.dmdirc.commandparser.CommandType;
 import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.context.CommandContext;
@@ -32,10 +32,13 @@ import com.dmdirc.commandparser.commands.context.CommandContext;
 /**
  * The /popup command allows the user to show a popup message from the system
  * tray icon.
- * @author chris
  */
-public final class PopupCommand extends Command implements CommandInfo {
+public final class PopupCommand extends Command {
 
+    /** A command info object for this command. */
+    public static final BaseCommandInfo INFO = new BaseCommandInfo("popup",
+            "popup <message> - shows the message as a system tray popup",
+            CommandType.TYPE_GLOBAL);
     /** The SystrayPlugin that we belong to. */
     private final SystrayPlugin parent;
 
@@ -67,29 +70,4 @@ public final class PopupCommand extends Command implements CommandInfo {
             final CommandArguments args, final CommandContext context) {
         showPopup("DMDirc", args.getArgumentsAsString());
     }
-
-    /** {@inheritDoc} */
-    @Override
-    public String getName() {
-        return "popup";
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public boolean showInHelp() {
-        return true;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public CommandType getType() {
-        return CommandType.TYPE_SERVER;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String getHelp() {
-        return "popup <message> - shows the message as a system tray popup";
-    }
-
 }

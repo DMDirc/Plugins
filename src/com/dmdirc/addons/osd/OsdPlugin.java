@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.osd;
 
-import com.dmdirc.commandparser.CommandManager;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.prefs.CategoryChangeListener;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
@@ -35,36 +34,25 @@ import com.dmdirc.config.prefs.SettingChangeListener;
 import com.dmdirc.util.validators.NumericalValidator;
 import com.dmdirc.util.validators.OptionalValidator;
 import com.dmdirc.plugins.BasePlugin;
+
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * Allows the user to display on-screen-display messages.
- * @author chris
  */
-public final class OsdPlugin extends BasePlugin implements CategoryChangeListener,
-        PreferencesInterface, SettingChangeListener {
+public final class OsdPlugin extends BasePlugin implements
+        CategoryChangeListener, PreferencesInterface, SettingChangeListener {
 
     /** Config OSD Window. */
     private OsdWindow osdWindow;
-
-    /** OSD Command. */
-    private OsdCommand command;
-
     /** The OSD Manager that this plugin is using. */
     private OsdManager osdManager;
-
     /** X-axis position of OSD. */
     private int x;
-
     /** Y-axis potion of OSD. */
     private int y;
-
     /** Setting objects with registered change listeners.*/
-    /**
-     * Setting objects with registered change listeners.
-     * maxWindowSetting not used at present so comment out
-     */
     private PreferencesSetting fontSizeSetting, backgroundSetting,
             foregroundSetting, widthSetting, timeoutSetting, maxWindowsSetting;
 
@@ -79,14 +67,8 @@ public final class OsdPlugin extends BasePlugin implements CategoryChangeListene
     /** {@inheritDoc} */
     @Override
     public void onLoad() {
-        command = new OsdCommand(osdManager);
-        CommandManager.getCommandManager().registerCommand(command);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onUnload() {
-        CommandManager.getCommandManager().unregisterCommand(command);
+        registerCommand(new OsdCommand(osdManager), OsdCommand.INFO);
+        super.onUnload();
     }
 
     /** {@inheritDoc} */

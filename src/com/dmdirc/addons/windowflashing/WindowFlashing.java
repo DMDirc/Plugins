@@ -24,7 +24,6 @@ package com.dmdirc.addons.windowflashing;
 
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SwingController;
-import com.dmdirc.commandparser.CommandManager;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
@@ -54,8 +53,6 @@ public class WindowFlashing extends BasePlugin implements ConfigChangeListener {
     private FLASHWINFO flashInfo;
     /** Swing main frame. */
     private MainFrame mainFrame;
-    /** Flash window command. */
-    private FlashWindow flashCommand;
     /** Cached blink rate setting. */
     private int blinkrate = 0;
     /** Cached count setting. */
@@ -87,8 +84,7 @@ public class WindowFlashing extends BasePlugin implements ConfigChangeListener {
     /** {@inheritDoc} */
     @Override
     public void onLoad() {
-        flashCommand = new FlashWindow(this);
-        CommandManager.getCommandManager().registerCommand(flashCommand);
+        registerCommand(new FlashWindow(this), FlashWindow.INFO);
         mainFrame = ((SwingController) PluginManager
                 .getPluginManager().getPluginInfoByName("ui_swing")
                 .getPlugin()).getMainFrame();
@@ -100,12 +96,11 @@ public class WindowFlashing extends BasePlugin implements ConfigChangeListener {
     /** {@inheritDoc} */
     @Override
     public void onUnload() {
-        CommandManager.getCommandManager().unregisterCommand(flashCommand);
-        flashCommand = null;
         mainFrame = null;
         user32 = null;
         flashInfo = null;
         NativeLibrary.getInstance("user32").dispose();
+        super.onUnload();
     }
 
     /** {@inheritDoc} */

@@ -23,8 +23,8 @@
 package com.dmdirc.addons.freedesktop_notifications;
 
 import com.dmdirc.FrameContainer;
+import com.dmdirc.commandparser.BaseCommandInfo;
 import com.dmdirc.commandparser.CommandArguments;
-import com.dmdirc.commandparser.CommandInfo;
 import com.dmdirc.commandparser.CommandType;
 import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.context.CommandContext;
@@ -32,10 +32,13 @@ import com.dmdirc.commandparser.commands.context.CommandContext;
 /**
  * The FDNotify Command shows a nice popup on using the FreeDesktop
  * VisualNotifications.
- *
- * @author Shane 'Dataforce' McCormack
  */
-public final class FDNotifyCommand extends Command implements CommandInfo {
+public final class FDNotifyCommand extends Command {
+
+    /** A command info object for this command. */
+    public static final BaseCommandInfo INFO = new BaseCommandInfo("fdnotify",
+            "fdnotify <message> - Show a nice popup where available",
+            CommandType.TYPE_GLOBAL);
     /** Plugin that owns this command. */
     final FreeDesktopNotificationsPlugin myPlugin;
 
@@ -59,30 +62,5 @@ public final class FDNotifyCommand extends Command implements CommandInfo {
                 myPlugin.showNotification("", args.getArgumentsAsString());
             }
         }.start();
-    }
-
-
-    /** {@inheritDoc} */
-    @Override
-    public String getName() {
-        return "fdnotify";
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public boolean showInHelp() {
-        return true;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public CommandType getType() {
-        return CommandType.TYPE_GLOBAL;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String getHelp() {
-        return "fdnotify <message> - Show a nice popup where available";
     }
 }

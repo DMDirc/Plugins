@@ -23,8 +23,8 @@
 package com.dmdirc.addons.logging;
 
 import com.dmdirc.FrameContainer;
+import com.dmdirc.commandparser.BaseCommandInfo;
 import com.dmdirc.commandparser.CommandArguments;
-import com.dmdirc.commandparser.CommandInfo;
 import com.dmdirc.commandparser.CommandType;
 import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.IntelligentCommand;
@@ -37,8 +37,15 @@ import com.dmdirc.ui.input.AdditionalTabTargets;
 /**
  * The dcop command retrieves information from a dcop application.
  */
-public final class LoggingCommand extends Command implements IntelligentCommand,
-        CommandInfo {
+public final class LoggingCommand extends Command implements
+        IntelligentCommand {
+
+    /** Command name. */
+    private static final String LOGGING = "logging";
+    /** A command info object for this command. */
+    public static final BaseCommandInfo INFO = new BaseCommandInfo(LOGGING,
+            "logging - <set|help> [parameters]",
+            CommandType.TYPE_SERVER);
 
     /** {@inheritDoc} */
     @Override
@@ -70,14 +77,14 @@ public final class LoggingCommand extends Command implements IntelligentCommand,
                     sendLine(origin, args.isSilent(), FORMAT_ERROR, "Unable to open history for this window.");
                 }
             } else if (args.getArguments()[0].equalsIgnoreCase("help")) {
-                sendLine(origin, args.isSilent(), FORMAT_OUTPUT, getName() + " reload           - Reload the logging plugin.");
-                sendLine(origin, args.isSilent(), FORMAT_OUTPUT, getName() + " history          - Open the history of this window, if available.");
-                sendLine(origin, args.isSilent(), FORMAT_OUTPUT, getName() + " help             - Show this help.");
+                sendLine(origin, args.isSilent(), FORMAT_OUTPUT, LOGGING + " reload           - Reload the logging plugin.");
+                sendLine(origin, args.isSilent(), FORMAT_OUTPUT, LOGGING + " history          - Open the history of this window, if available.");
+                sendLine(origin, args.isSilent(), FORMAT_OUTPUT, LOGGING + " help             - Show this help.");
             } else {
-                sendLine(origin, args.isSilent(), FORMAT_ERROR, "Unknown command '" + args.getArguments()[0] + "'. Use " + getName() + " help for a list of commands.");
+                sendLine(origin, args.isSilent(), FORMAT_ERROR, "Unknown command '" + args.getArguments()[0] + "'. Use " + LOGGING + " help for a list of commands.");
             }
         } else {
-            sendLine(origin, args.isSilent(), FORMAT_ERROR, "Use " + getName() + " help for a list of commands.");
+            sendLine(origin, args.isSilent(), FORMAT_ERROR, "Use " + LOGGING + " help for a list of commands.");
         }
     }
 
@@ -94,30 +101,5 @@ public final class LoggingCommand extends Command implements IntelligentCommand,
         }
         return res;
     }
-
-    /** {@inheritDoc} */
-    @Override
-    public String getName() {
-        return "logging";
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public boolean showInHelp() {
-        return true;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public CommandType getType() {
-        return CommandType.TYPE_SERVER;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String getHelp() {
-        return this.getName() + " <set|help> [parameters]";
-    }
-
 }
 

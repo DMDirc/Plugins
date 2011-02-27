@@ -24,7 +24,6 @@
 package com.dmdirc.addons.time;
 
 import com.dmdirc.actions.ActionManager;
-import com.dmdirc.commandparser.CommandManager;
 import com.dmdirc.plugins.BasePlugin;
 
 import java.util.Calendar;
@@ -40,8 +39,6 @@ public final class TimePlugin  extends BasePlugin {
     private static boolean registered;
     /** The timer to use for scheduling. */
     private Timer timer;
-    /** The TimerCommand we've registered. */
-    private TimerCommand command;
     /** The Manager to use for managing timers. */
     private TimerManager manager;
 
@@ -67,8 +64,8 @@ public final class TimePlugin  extends BasePlugin {
         }, 1000 * offset, 1000 * 60);
 
         manager = new TimerManager();
-        command = new TimerCommand(manager);
-        CommandManager.getCommandManager().registerCommand(command);
+        registerCommand(new TimerCommand(manager), TimerCommand.INFO);
+        super.onLoad();
     }
 
     /** Handles a timer event that occurs every minute. */
@@ -97,7 +94,7 @@ public final class TimePlugin  extends BasePlugin {
             timer = null;
         }
         manager = null;
-        CommandManager.getCommandManager().unregisterCommand(command);
+        super.onUnload();
     }
 
     /**

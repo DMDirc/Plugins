@@ -73,9 +73,9 @@ public class NowPlayingPlugin extends BasePlugin implements ActionListener  {
                 addPlugin(target);
             }
         }
-
-        command = new NowPlayingCommand(this);
-        CommandManager.getCommandManager().registerCommand(command);
+        CommandManager.getCommandManager().registerCommand(
+                new NowPlayingCommand(this), NowPlayingCommand.INFO);
+        super.onLoad();
     }
 
     /** {@inheritDoc} */
@@ -83,10 +83,8 @@ public class NowPlayingPlugin extends BasePlugin implements ActionListener  {
     public void onUnload() {
         sources.clear();
         managers.clear();
-
         ActionManager.getActionManager().unregisterListener(this);
-
-        CommandManager.getCommandManager().unregisterCommand(command);
+        super.onUnload();
     }
 
     /** {@inheritDoc} */

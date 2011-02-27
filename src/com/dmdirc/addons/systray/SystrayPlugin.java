@@ -146,8 +146,7 @@ public final class SystrayPlugin extends BasePlugin implements ActionListener,
         boolean continueLoading = true;
         try {
             SystemTray.getSystemTray().add(icon);
-            command = new PopupCommand(this);
-            CommandManager.getCommandManager().registerCommand(command);
+            registerCommand(new PopupCommand(this), PopupCommand.INFO);
             mainFrame = ((SwingController) PluginManager.getPluginManager()
                     .getPluginInfoByName("ui_swing").getPlugin())
                     .getMainFrame();
@@ -159,15 +158,15 @@ public final class SystrayPlugin extends BasePlugin implements ActionListener,
         if (!continueLoading || mainFrame == null) {
             getPluginInfo().unloadPlugin();
         }
+        super.onLoad();
     }
 
     /** {@inheritDoc} */
     @Override
     public void onUnload() {
         SystemTray.getSystemTray().remove(icon);
-        CommandManager.getCommandManager().unregisterCommand(command);
-
         ActionManager.getActionManager().unregisterListener(this);
+        super.onUnload();
     }
 
     /** {@inheritDoc} */

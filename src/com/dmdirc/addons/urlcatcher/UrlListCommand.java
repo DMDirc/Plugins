@@ -23,8 +23,8 @@
 package com.dmdirc.addons.urlcatcher;
 
 import com.dmdirc.FrameContainer;
+import com.dmdirc.commandparser.BaseCommandInfo;
 import com.dmdirc.commandparser.CommandArguments;
-import com.dmdirc.commandparser.CommandInfo;
 import com.dmdirc.commandparser.CommandType;
 import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.IntelligentCommand;
@@ -34,12 +34,15 @@ import com.dmdirc.ui.input.AdditionalTabTargets;
 import java.util.Map;
 
 /**
- *
- * @author chris
+ * Command to list the URLs mentioned in the client.
  */
-public class UrlListCommand extends Command implements IntelligentCommand,
-        CommandInfo {
+public class UrlListCommand extends Command implements IntelligentCommand {
 
+    /** A command info object for this command. */
+    public static final BaseCommandInfo INFO = new BaseCommandInfo("urllist",
+            "urllist - shows a list of URLs that have been seen",
+            CommandType.TYPE_GLOBAL);
+    /** Parent plugin. */
     private final UrlCatcherPlugin plugin;
 
     /**
@@ -66,30 +69,6 @@ public class UrlListCommand extends Command implements IntelligentCommand,
         }
 
         sendLine(origin, args.isSilent(), FORMAT_OUTPUT, doTable(headers, data));
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String getName() {
-        return "urllist";
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public boolean showInHelp() {
-        return true;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public CommandType getType() {
-        return CommandType.TYPE_GLOBAL;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String getHelp() {
-        return "urllist - shows a list of URLs that have been seen";
     }
 
     /** {@inheritDoc} */
