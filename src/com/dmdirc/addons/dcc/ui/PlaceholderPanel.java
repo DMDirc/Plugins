@@ -24,25 +24,33 @@ package com.dmdirc.addons.dcc.ui;
 
 import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.ui_swing.SwingController;
+import com.dmdirc.addons.ui_swing.components.text.TextLabel;
+
+import javax.swing.JPanel;
+
+import net.miginfocom.swing.MigLayout;
 
 /**
- * A window for displaying the progress of DCC transfers.
+ * A panel which serves as a top-level placeholder for other DCC windows.
  *
- * @since 0.6.4
+ * @since 0.6.6
  */
-public class TransferWindow extends EmptyWindow {
+public class PlaceholderPanel extends JPanel {
 
     /** A version number for this class. */
     private static final long serialVersionUID = 1L;
 
     /**
-     * Creates a new transfer window for the specified UI controller and owner.
+     * Creates a new placeholder window for the specified UI controller and owner.
      *
      * @param controller The UIController that owns this window
      * @param owner The frame container that owns this window
      */
-    public TransferWindow(final SwingController controller, final FrameContainer owner) {
-        super(controller, owner);
-        add(new TransferPanel(controller, owner));
+    public PlaceholderPanel(final SwingController controller,
+            final FrameContainer owner) {
+        super(new MigLayout("fill, alignx center, aligny center"));
+        add(new TextLabel(
+                "This is a placeholder window to group DCCs together."
+                + "\n\nClosing this window will close all the active DCCs"));
     }
 }

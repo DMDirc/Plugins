@@ -24,13 +24,11 @@ package com.dmdirc.addons.dcc.ui;
 
 import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.ui_swing.SwingController;
-import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 
 /**
  * A virtually empty window which serves as a top-level placeholder for other
  * DCC windows.
  *
- * @author chris
  * @since 0.6.4
  */
 public class PlaceholderWindow extends EmptyWindow {
@@ -47,10 +45,7 @@ public class PlaceholderWindow extends EmptyWindow {
     public PlaceholderWindow(final SwingController controller,
             final FrameContainer owner) {
         super(controller, owner);
-
-        add(new TextLabel(
-                "This is a placeholder window to group DCCs together."
-                + "\n\nClosing this window will close all the active DCCs"));
+        add(new PlaceholderPanel(controller, owner));
     }
 
 }
