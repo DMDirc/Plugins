@@ -72,17 +72,4 @@ public class DcopMediaSourcePlugin extends BasePlugin
     public List<MediaSource> getSources() {
         return sources;
     }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onLoad() {
-        // Nothing to do
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onUnload() {
-        // Nothing to do
-    }
-
 }

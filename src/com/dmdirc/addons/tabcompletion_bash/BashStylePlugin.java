@@ -27,19 +27,10 @@ import com.dmdirc.plugins.BasePlugin;
 import com.dmdirc.ui.input.TabCompleter;
 import com.dmdirc.ui.input.tabstyles.TabCompletionStyle;
 
+/**
+ * Provides bash style tab completion.
+ */
 public class BashStylePlugin extends BasePlugin {
-
-    /** {@inheritDoc} */
-    @Override
-    public void onLoad() {
-        // Do nothing
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onUnload() {
-        // Do nothing
-    }
 
     /**
      * Retrieves a new instance of the Bash tab completion style.

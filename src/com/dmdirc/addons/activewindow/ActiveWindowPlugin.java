@@ -23,30 +23,17 @@
 package com.dmdirc.addons.activewindow;
 
 import com.dmdirc.addons.ui_swing.SwingController;
-import com.dmdirc.commandparser.CommandManager;
 import com.dmdirc.plugins.BasePlugin;
 import com.dmdirc.plugins.PluginManager;
 
-/**
- * Plugin to provide an active window command to the Swing UI.
- */
+/** Plugin to provide an active window command to the Swing UI. */
 public final class ActiveWindowPlugin extends BasePlugin {
 
-    /** The command we've registered. */
-    private ActiveCommand command;
-
-    /** {@inheritDoc} */
-    @Override
-    public void onLoad() {
-        command = new ActiveCommand(((SwingController) PluginManager
+    /** Creates a new instance of this plugin. */
+    public ActiveWindowPlugin() {
+        super();
+        registerCommand(new ActiveCommand(((SwingController) PluginManager
                 .getPluginManager().getPluginInfoByName("ui_swing")
-                .getPlugin()).getMainFrame());
-        CommandManager.getCommandManager().registerCommand(command, ActiveCommand.INFO);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onUnload() {
-        CommandManager.getCommandManager().unregisterCommand(ActiveCommand.INFO);
+                .getPlugin()).getMainFrame()), ActiveCommand.INFO);
     }
 }

@@ -290,6 +290,4 @@ public class RelayBotPlugin extends BasePlugin implements ActionListener, Config
         manager.getCategory("Plugins").addSubCategory(general);
         general.addSubCategory(colours);
     }
-
-
 }

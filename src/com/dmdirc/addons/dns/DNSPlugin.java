@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.dns;
 
-import com.dmdirc.commandparser.CommandManager;
 import com.dmdirc.plugins.BasePlugin;
 
 import java.net.InetAddress;
@@ -36,20 +35,10 @@ import java.util.List;
  */
 public final class DNSPlugin extends BasePlugin {
 
-    /** The DNSCommand we've registered. */
-    private DNSCommand command;
-
-    /** {@inheritDoc} */
-    @Override
-    public void onLoad() {
-        command = new DNSCommand();
-        CommandManager.getCommandManager().registerCommand(command, DNSCommand.INFO);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onUnload() {
-        CommandManager.getCommandManager().unregisterCommand(DNSCommand.INFO);
+    /** Creates a new instance of this plugin. */
+    public DNSPlugin() {
+        super();
+        registerCommand(new DNSCommand(), DNSCommand.INFO);
     }
 
     /**

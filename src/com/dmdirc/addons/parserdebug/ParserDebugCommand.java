@@ -23,8 +23,8 @@
 package com.dmdirc.addons.parserdebug;
 
 import com.dmdirc.FrameContainer;
+import com.dmdirc.commandparser.BaseCommandInfo;
 import com.dmdirc.commandparser.CommandArguments;
-import com.dmdirc.commandparser.CommandInfo;
 import com.dmdirc.commandparser.CommandType;
 import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.CommandOptions;
@@ -35,11 +35,15 @@ import com.dmdirc.parser.interfaces.callbacks.DebugInfoListener;
 
 /**
  * The ParserDebug Command allows controlling of which parsers spam debug info.
- *
- * @author Shane "Dataforce" Mc Cormack
  */
 @CommandOptions(allowOffline=false)
-public final class ParserDebugCommand extends Command implements CommandInfo {
+public final class ParserDebugCommand extends Command {
+
+    /** A command info object for this command. */
+    public static final BaseCommandInfo INFO = new BaseCommandInfo(
+            "parserdebug", "parserdebug - Enables/Disables hooks for "
+            + "onDebugInfo for the parser that owns this window",
+            CommandType.TYPE_SERVER);
     /** My Plugin */
     final DebugPlugin myPlugin;
 
@@ -51,12 +55,6 @@ public final class ParserDebugCommand extends Command implements CommandInfo {
     public ParserDebugCommand(final DebugPlugin plugin) {
         super();
         myPlugin = plugin;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public CommandType getType() {
-        return CommandType.TYPE_SERVER;
     }
 
     /**
@@ -102,29 +100,5 @@ public final class ParserDebugCommand extends Command implements CommandInfo {
             }
         }
     }
-
-    /**
-     * Returns this command's name.
-     *
-     * @return The name of this command
-     */
-    @Override
-    public String getName() { return "parserdebug"; }
-
-    /**
-     * Returns whether or not this command should be shown in help messages.
-     *
-     * @return True iff the command should be shown, false otherwise
-     */
-    @Override
-    public boolean showInHelp() { return true; }
-
-    /**
-     * Returns a string representing the help message for this command.
-     *
-     * @return the help message for this command
-     */
-    @Override
-    public String getHelp() { return "parserdebug - Enables/Disables hooks for onDebugInfo for the parser that owns this window"; }
 }
 

@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.calc;
 
-import com.dmdirc.commandparser.CommandManager;
 import com.dmdirc.plugins.BasePlugin;
 
 /**
@@ -30,19 +29,9 @@ import com.dmdirc.plugins.BasePlugin;
  */
 public class CalcPlugin extends BasePlugin {
 
-    /** The command we register when loaded. */
-    private final CalcCommand command = new CalcCommand();
-
-    /** {@inheritDoc} */
-    @Override
-    public void onLoad() {
-        CommandManager.getCommandManager().registerCommand(command, CalcCommand.INFO);
+    /** Creates a new instance of this plugin. */
+    public CalcPlugin() {
+        super();
+        registerCommand(new CalcCommand(), CalcCommand.INFO);
     }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onUnload() {
-        CommandManager.getCommandManager().unregisterCommand(CalcCommand.INFO);
-    }
-
 }

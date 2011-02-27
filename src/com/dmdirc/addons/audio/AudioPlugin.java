@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.audio;
 
-import com.dmdirc.commandparser.CommandManager;
 import com.dmdirc.plugins.BasePlugin;
 
 /**
@@ -30,30 +29,10 @@ import com.dmdirc.plugins.BasePlugin;
  */
 public final class AudioPlugin extends BasePlugin {
 
-    /** The AudioCommand we created */
-    private AudioCommand audioCommand = null;
-    /** The BeepCommand we created */
-    private BeepCommand beepCommand = null;
-
-    /**
-     * Called when the plugin is loaded.
-     */
-    @Override
-    public void onLoad() {
-        audioCommand = new AudioCommand();
-        beepCommand = new BeepCommand();
-        CommandManager.getCommandManager().registerCommand(audioCommand, AudioCommand.INFO);
-        CommandManager.getCommandManager().registerCommand(beepCommand, BeepCommand.INFO);
+    /** Creates a new instance of this plugin. */
+    public AudioPlugin() {
+        super();
+        registerCommand(new AudioCommand(), AudioCommand.INFO);
+        registerCommand(new BeepCommand(), BeepCommand.INFO);
     }
-
-    /**
-     * Called when this plugin is Unloaded
-     */
-    @Override
-    public void onUnload() {
-        CommandManager.getCommandManager().unregisterCommand(BeepCommand.INFO);
-        CommandManager.getCommandManager().unregisterCommand(AudioCommand.INFO);
-    }
-
 }
-

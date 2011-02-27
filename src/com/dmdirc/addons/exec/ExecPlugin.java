@@ -23,10 +23,6 @@
 
 package com.dmdirc.addons.exec;
 
-import com.dmdirc.commandparser.BaseCommandInfo;
-import com.dmdirc.commandparser.CommandInfo;
-import com.dmdirc.commandparser.CommandManager;
-import com.dmdirc.commandparser.CommandType;
 import com.dmdirc.plugins.BasePlugin;
 
 /**
@@ -34,23 +30,9 @@ import com.dmdirc.plugins.BasePlugin;
  */
 public class ExecPlugin extends BasePlugin {
 
-    /** The command we register when loaded. */
-    private final ExecCommand command = new ExecCommand();
-    /** The CommandInfo object describing the exec command. */
-    private final CommandInfo commandInfo = new BaseCommandInfo("exec",
-            "exec <command> [<parameters>] - executes an external program "
-            + "and displays the output", CommandType.TYPE_GLOBAL);
-
-    /** {@inheritDoc} */
-    @Override
-    public void onLoad() {
-        CommandManager.getCommandManager().registerCommand(command, commandInfo);
+    /** Creates a new instance of this plugin. */
+    public ExecPlugin() {
+        super();
+        registerCommand(new ExecCommand(), ExecCommand.INFO);
     }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onUnload() {
-        CommandManager.getCommandManager().unregisterCommand(commandInfo);
-    }
-
 }

@@ -24,8 +24,8 @@ package com.dmdirc.addons.redirect;
 
 import com.dmdirc.FrameContainer;
 import com.dmdirc.MessageTarget;
+import com.dmdirc.commandparser.BaseCommandInfo;
 import com.dmdirc.commandparser.CommandArguments;
-import com.dmdirc.commandparser.CommandInfo;
 import com.dmdirc.commandparser.CommandType;
 import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.IntelligentCommand;
@@ -39,8 +39,13 @@ import com.dmdirc.ui.input.TabCompleter;
  * command that would normally echo results locally to a query or channel
  * window instead.
  */
-public class RedirectCommand extends Command implements IntelligentCommand,
-        CommandInfo {
+public class RedirectCommand extends Command implements IntelligentCommand {
+
+    /** A command info object for this command. */
+    public static final BaseCommandInfo INFO = new BaseCommandInfo("redirect",
+            "redirect <command> - sends the output of the command to a "
+                + "channel or query window",
+            CommandType.TYPE_CHAT);
 
     /** {@inheritDoc} */
     @Override
@@ -50,31 +55,6 @@ public class RedirectCommand extends Command implements IntelligentCommand,
                 .getChat();
         target.getCommandParser().parseCommand(new FakeWriteableFrameContainer(
                 target), args.getArgumentsAsString());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String getName() {
-        return "redirect";
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public boolean showInHelp() {
-        return true;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public CommandType getType() {
-        return CommandType.TYPE_CHAT;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String getHelp() {
-        return "redirect <command> - sends the output of the command to a "
-                + "channel or query window";
     }
 
     /** {@inheritDoc} */

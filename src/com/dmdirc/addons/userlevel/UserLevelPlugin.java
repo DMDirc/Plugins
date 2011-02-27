@@ -39,15 +39,12 @@ import java.util.Map;
 /**
  * Allows the client to assign user levels to users (based on hostname matches),
  * and for actions/plugins to check those levels.
- *
- * @author chris
  */
 public class UserLevelPlugin extends BasePlugin implements ActionListener,
         ConfigChangeListener {
 
     /** The domain used for userlevels. */
     private static final String DOMAIN = "userlevels";
-
     /** A map of hostmasks to associated level numbers. */
     private static final Map<String, Integer> LEVELS = new HashMap<String, Integer>();
 

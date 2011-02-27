@@ -24,7 +24,9 @@
 package com.dmdirc.addons.exec;
 
 import com.dmdirc.FrameContainer;
+import com.dmdirc.commandparser.BaseCommandInfo;
 import com.dmdirc.commandparser.CommandArguments;
+import com.dmdirc.commandparser.CommandType;
 import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.logger.ErrorLevel;
@@ -41,6 +43,11 @@ import java.util.List;
  * A command which allows users execute scripts.
  */
 public class ExecCommand extends Command {
+
+    /** A command info object for this command. */
+    public static final BaseCommandInfo INFO = new BaseCommandInfo("exec",
+            "exec <command> [<parameters>] - executes an external program "
+            + "and displays the output", CommandType.TYPE_GLOBAL);
 
     /** {@inheritDoc} */
     @Override

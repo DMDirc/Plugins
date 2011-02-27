@@ -84,18 +84,6 @@ public final class DummyController extends BasePlugin implements UIController {
 
     /** {@inheritDoc} */
     @Override
-    public void onLoad() {
-        // Do nothing
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onUnload() {
-        // Do nothing
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public PreferencesInterface getPluginPrefsPanel() {
         throw new UnsupportedOperationException("Not supported yet.");
     }

@@ -28,9 +28,9 @@ import com.dmdirc.addons.ui_swing.components.CheckBoxMenuItem;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.plugins.BasePlugin;
 import com.dmdirc.plugins.PluginManager;
+
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
-
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -39,6 +39,7 @@ import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JDialog;
 import javax.swing.JMenu;
 import javax.swing.JScrollPane;
+
 import net.miginfocom.swing.MigLayout;
 
 /**
@@ -129,7 +130,11 @@ public class SwingDebugPlugin extends BasePlugin implements ActionListener {
         controller = null;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     *
+     * @param e Action event
+     */
     @Override
     public void actionPerformed(final ActionEvent e) {
         if (e.getSource() == debugEDT) {
