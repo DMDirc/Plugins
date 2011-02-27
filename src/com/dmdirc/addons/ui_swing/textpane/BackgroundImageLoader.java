@@ -36,7 +36,7 @@ import javax.imageio.ImageIO;
 /**
  * Loads a background image in the background.
  */
-public class BackgroundImageLoader extends LoggingSwingWorker<Image, Void> {
+class BackgroundImageLoader extends LoggingSwingWorker<Image, Void> {
 
     /** URL of image file to load. */
     private final URL imageURL;
@@ -49,7 +49,8 @@ public class BackgroundImageLoader extends LoggingSwingWorker<Image, Void> {
      * @param canvas Canvas we're loading image for
      * @param url URL of image to load
      */
-    public BackgroundImageLoader(final TextPaneCanvas canvas, final URL url) {
+    protected BackgroundImageLoader(final TextPaneCanvas canvas,
+            final URL url) {
         super();
         imageURL = url;
         this.canvas = canvas;

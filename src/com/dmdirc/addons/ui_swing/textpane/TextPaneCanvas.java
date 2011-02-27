@@ -145,7 +145,7 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
     @Override
     public void paintComponent(final Graphics graphics) {
         final Graphics2D g = (Graphics2D) graphics;
-        final Map desktopHints = (Map) Toolkit.getDefaultToolkit().
+        final Map<?, ?> desktopHints = (Map<?, ?>) Toolkit.getDefaultToolkit().
                 getDesktopProperty("awt.font.desktophints");
         if (desktopHints != null) {
             g.addRenderingHints(desktopHints);
