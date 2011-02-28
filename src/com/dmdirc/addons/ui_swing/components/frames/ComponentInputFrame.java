@@ -22,11 +22,18 @@
 
 package com.dmdirc.addons.ui_swing.components.frames;
 
+import com.dmdirc.FrameContainer;
 import com.dmdirc.WritableFrameContainer;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputHandler;
 import com.dmdirc.commandparser.PopupType;
+import com.dmdirc.ui.core.components.WindowComponent;
+import com.dmdirc.util.SimpleInjector;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.swing.JComponent;
 import javax.swing.JPopupMenu;
 
 import net.miginfocom.swing.MigLayout;
@@ -43,6 +50,10 @@ public class ComponentInputFrame extends InputTextFrame {
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 2;
+    /** Parent frame container. */
+    private final FrameContainer owner;
+    /** Parent controller. */
+    private final SwingController controller;
 
     /**
      * Creates a new instance of CustomInputFrame.
@@ -57,6 +68,8 @@ public class ComponentInputFrame extends InputTextFrame {
         setInputHandler(new SwingInputHandler(getInputField(),
                 owner.getCommandParser(), getContainer()));
 
+        this.controller = controller;
+        this.owner = owner;
         initComponents();
     }
 
@@ -64,10 +77,39 @@ public class ComponentInputFrame extends InputTextFrame {
      * Initialises components in this frame.
      */
     private void initComponents() {
-        setLayout(new MigLayout("ins 0, fill, hidemode 3, wrap 1"));
-        add(getTextPane(), "grow, push");
-        add(getSearchBar(), "growx, pushx");
-        add(inputPanel, "growx, pushx");
+        setLayout(new MigLayout("fill"));
+        for (JComponent comp : initFrameComponents()) {
+            add(comp, "wrap, grow");
+        }
+    }
+
+    private Set<JComponent> initFrameComponents() {
+        final SimpleInjector injector = new SimpleInjector();
+        final Set<String> names = owner.getComponents();
+        final Set<JComponent> components = new HashSet<JComponent>();
+
+        injector.addParameter(this);
+        injector.addParameter(controller);
+        injector.addParameter(controller.getMainFrame());
+
+        for (String string : names) {
+            if (string.equals(WindowComponent.INPUTFIELD.getIdentifier())) {
+                string = "com.dmdirc.addons.ui_swing.components.inputfields.SwingInputField";
+            } else if (string.equals(WindowComponent.TEXTAREA.getIdentifier())) {
+                string = "com.dmdirc.addons.ui_swing.textpane.TextPane";
+            }
+            Object object;
+            try {
+                object = injector.createInstance(Class.forName(string));
+            } catch (ClassNotFoundException ex) {
+                object = null;
+            }
+            if (object instanceof JComponent) {
+                components.add((JComponent) object);
+            }
+        }
+
+        return components;
     }
 
     /** {@inheritDoc} */
