@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.dcc.ui;
 
+import com.dmdirc.addons.ui_swing.components.frames.SwingFrameComponent;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 
 import javax.swing.JPanel;
@@ -33,7 +34,7 @@ import net.miginfocom.swing.MigLayout;
  *
  * @since 0.6.6
  */
-public class PlaceholderPanel extends JPanel {
+public class PlaceholderPanel extends JPanel implements SwingFrameComponent {
 
     /** A version number for this class. */
     private static final long serialVersionUID = 1L;

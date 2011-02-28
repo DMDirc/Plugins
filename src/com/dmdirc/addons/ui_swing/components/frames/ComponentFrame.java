@@ -25,6 +25,7 @@ import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.commandparser.PopupType;
 
+import javax.swing.JComponent;
 import javax.swing.JPopupMenu;
 
 import net.miginfocom.swing.MigLayout;
@@ -40,6 +41,10 @@ public class ComponentFrame extends TextFrame {
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 2;
+    /** Parent frame container. */
+    private final FrameContainer owner;
+    /** Parent controller. */
+    private final SwingController controller;
 
     /**
      * Creates a new instance of CustomFrame.
@@ -50,7 +55,8 @@ public class ComponentFrame extends TextFrame {
     public ComponentFrame(final SwingController controller,
             final FrameContainer owner) {
         super(owner, controller);
-
+        this.controller = controller;
+        this.owner = owner;
         initComponents();
     }
 
@@ -58,9 +64,11 @@ public class ComponentFrame extends TextFrame {
      * Initialises components in this frame.
      */
     private void initComponents() {
-        setLayout(new MigLayout("ins 0, fill, hidemode 3, wrap 1"));
-        add(getTextPane(), "grow, push");
-        add(getSearchBar(), "growx, pushx");
+        setLayout(new MigLayout("fill"));
+        for (JComponent comp : new ComponentCreator().initFrameComponents(this,
+                controller, owner)) {
+            add(comp, "wrap, grow");
+        }
     }
 
     /** {@inheritDoc} */
