@@ -22,11 +22,13 @@
 
 package com.dmdirc.addons.ui_swing.components.frames;
 
+import com.dmdirc.FrameContainer;
 import com.dmdirc.WritableFrameContainer;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputHandler;
 import com.dmdirc.commandparser.PopupType;
 
+import javax.swing.JComponent;
 import javax.swing.JPopupMenu;
 
 import net.miginfocom.swing.MigLayout;
@@ -43,6 +45,10 @@ public class ComponentInputFrame extends InputTextFrame {
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 2;
+    /** Parent frame container. */
+    private final FrameContainer owner;
+    /** Parent controller. */
+    private final SwingController controller;
 
     /**
      * Creates a new instance of CustomInputFrame.
@@ -55,8 +61,10 @@ public class ComponentInputFrame extends InputTextFrame {
         super(controller, owner);
 
         setInputHandler(new SwingInputHandler(getInputField(),
-                owner.getCommandParser(), getContainer()));
+                owner.getCommandParser(), owner));
 
+        this.controller = controller;
+        this.owner = owner;
         initComponents();
     }
 
@@ -64,10 +72,11 @@ public class ComponentInputFrame extends InputTextFrame {
      * Initialises components in this frame.
      */
     private void initComponents() {
-        setLayout(new MigLayout("ins 0, fill, hidemode 3, wrap 1"));
-        add(getTextPane(), "grow, push");
-        add(getSearchBar(), "growx, pushx");
-        add(inputPanel, "growx, pushx");
+        setLayout(new MigLayout("fill"));
+        for (JComponent comp : ComponentCreator.initFrameComponents(this,
+                controller, getContainer())) {
+            add(comp, "wrap, grow");
+        }
     }
 
     /** {@inheritDoc} */
