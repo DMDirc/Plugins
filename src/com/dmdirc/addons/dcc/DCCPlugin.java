@@ -70,13 +70,15 @@ public final class DCCPlugin extends BasePlugin implements ActionListener {
     /** Our DCC Container window. */
     private PlaceholderContainer container;
 
-    /** Creates a new instance of this plugin. */
-    public DCCPlugin() {
+    /**
+     * Creates a new instance of this plugin.
+     *
+     * @param controller The controller to register UI implementations with
+     */
+    public DCCPlugin(final SwingController controller) {
         super();
         registerCommand(new DCCCommand(this), DCCCommand.INFO);
-        final SwingWindowFactory factory = ((SwingController) PluginManager
-                .getPluginManager().getPluginInfoByName("ui_swing").getPlugin())
-                .getWindowFactory();
+        final SwingWindowFactory factory = controller.getWindowFactory();
         factory.registerImplementation(new HashSet<String>(Arrays.asList(
                 "com.dmdirc.addons.dcc.ui.PlaceholderPanel")),
                 PlaceholderWindow.class);

@@ -27,7 +27,6 @@ import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.CheckBoxMenuItem;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.plugins.BasePlugin;
-import com.dmdirc.plugins.PluginManager;
 
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -49,7 +48,7 @@ import net.miginfocom.swing.MigLayout;
 public class SwingDebugPlugin extends BasePlugin implements ActionListener {
 
     /** Swing controller. */
-    private SwingController controller;
+    private final SwingController controller;
     /** Debug menu. */
     private JMenu debugMenu;
     /** Debug EDT menu item. */
@@ -71,11 +70,18 @@ public class SwingDebugPlugin extends BasePlugin implements ActionListener {
     /** System error frame. */
     private JDialog errorFrame;
 
+    /**
+     * Creates a new SwingDebugPlugin.
+     *
+     * @param controller The controller to add debug entries to
+     */
+    public SwingDebugPlugin(final SwingController controller) {
+        this.controller = controller;
+    }
+
     /** {@inheritDoc} */
     @Override
     public void onLoad() {
-        controller = (SwingController) PluginManager.getPluginManager()
-                .getPluginInfoByName("ui_swing").getPlugin();
         try {
             sysout = System.out;
             syserr = System.err;
@@ -127,7 +133,6 @@ public class SwingDebugPlugin extends BasePlugin implements ActionListener {
         outFrame = null;
         errorFrame = null;
         controller.getMainFrame().getJMenuBar().remove(debugMenu);
-        controller = null;
     }
 
     /**

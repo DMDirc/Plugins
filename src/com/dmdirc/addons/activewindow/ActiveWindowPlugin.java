@@ -24,16 +24,18 @@ package com.dmdirc.addons.activewindow;
 
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.plugins.BasePlugin;
-import com.dmdirc.plugins.PluginManager;
 
 /** Plugin to provide an active window command to the Swing UI. */
 public final class ActiveWindowPlugin extends BasePlugin {
 
-    /** Creates a new instance of this plugin. */
-    public ActiveWindowPlugin() {
+    /**
+     * Creates a new instance of this plugin.
+     *
+     * @param controller The controller to use to find active windows
+     */
+    public ActiveWindowPlugin(final SwingController controller) {
         super();
-        registerCommand(new ActiveCommand(((SwingController) PluginManager
-                .getPluginManager().getPluginInfoByName("ui_swing")
-                .getPlugin()).getMainFrame()), ActiveCommand.INFO);
+        registerCommand(new ActiveCommand(controller.getMainFrame()),
+                ActiveCommand.INFO);
     }
 }
