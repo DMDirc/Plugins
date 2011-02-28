@@ -22,6 +22,9 @@
 
 package com.dmdirc.addons.dcc.ui;
 
+import com.dmdirc.FrameContainer;
+import com.dmdirc.addons.ui_swing.SwingController;
+import com.dmdirc.addons.ui_swing.components.frames.SwingFrameComponent;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 
 import javax.swing.JPanel;
@@ -33,7 +36,7 @@ import net.miginfocom.swing.MigLayout;
  *
  * @since 0.6.6
  */
-public class PlaceholderPanel extends JPanel {
+public class PlaceholderPanel extends JPanel implements SwingFrameComponent {
 
     /** A version number for this class. */
     private static final long serialVersionUID = 1L;
@@ -41,8 +44,12 @@ public class PlaceholderPanel extends JPanel {
     /**
      * Creates a new placeholder window for the specified UI controller and
      * owner.
+     *
+     * @param owner The frame container that owns this frame
+     * @param controller Swing controller
      */
-    public PlaceholderPanel() {
+    public PlaceholderPanel(final SwingController controller,
+            final FrameContainer owner) { //NOPMD
         super(new MigLayout("fill, alignx center, aligny center"));
         add(new TextLabel(
                 "This is a placeholder window to group DCCs together."
