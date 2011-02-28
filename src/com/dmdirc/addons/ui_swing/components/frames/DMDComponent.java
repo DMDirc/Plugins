@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Chris Smith, Shane Mc Cormack, Gregory Holmes
+ * Copyright (c) 2006-2010 Chris Smith, Shane Mc Cormack, Gregory Holmes
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,32 +20,9 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.dcc.ui;
-
-import com.dmdirc.FrameContainer;
-import com.dmdirc.addons.ui_swing.SwingController;
+package com.dmdirc.addons.ui_swing.components.frames;
 
 /**
- * A virtually empty window which serves as a top-level placeholder for other
- * DCC windows.
- *
- * @since 0.6.4
+ * Interface to express how components should be added to the UI.
  */
-public class PlaceholderWindow extends EmptyWindow {
-
-    /** A version number for this class. */
-    private static final long serialVersionUID = 1L;
-
-    /**
-     * Creates a new placeholder window for the specified UI controller and owner.
-     *
-     * @param controller The UIController that owns this window
-     * @param owner The frame container that owns this window
-     */
-    public PlaceholderWindow(final SwingController controller,
-            final FrameContainer owner) {
-        super(controller, owner);
-        add(new PlaceholderPanel());
-    }
-
-}
+public interface DMDComponent {}
