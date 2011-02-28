@@ -26,7 +26,9 @@ import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.dcc.DCCTransferHandler;
 import com.dmdirc.addons.dcc.TransferContainer;
 import com.dmdirc.addons.dcc.io.DCCTransfer;
+import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
+import com.dmdirc.addons.ui_swing.components.frames.SwingFrameComponent;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.parser.interfaces.Parser;
@@ -52,7 +54,7 @@ import net.miginfocom.swing.MigLayout;
  * @since 0.6.6
  */
 public class TransferPanel extends JPanel implements ActionListener,
-        SocketCloseListener, DCCTransferHandler {
+        SocketCloseListener, DCCTransferHandler, SwingFrameComponent {
 
     /** A version number for this class. */
     private static final long serialVersionUID = 1L;
@@ -78,7 +80,7 @@ public class TransferPanel extends JPanel implements ActionListener,
     /**
      * Creates a new transfer window for the specified UI controller and owner.
      *
-     * @param owner The frame container that owns this window
+     * @param owner The frame container that owns this frame
      */
     public TransferPanel(final FrameContainer owner) {
         super();
