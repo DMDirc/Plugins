@@ -63,7 +63,7 @@ public final class LagDisplayPlugin extends BasePlugin implements
     private final Map<Server, RollingList<Long>> history
             = new HashMap<Server, RollingList<Long>>();
     /** Parent Swing UI. */
-    private SwingController controller;
+    private final SwingController controller;
     /** Whether or not to show a graph in the info popup. */
     private boolean showGraph = true;
     /** Whether or not to show labels on that graph. */
@@ -71,11 +71,18 @@ public final class LagDisplayPlugin extends BasePlugin implements
     /** The length of history to keep per-server. */
     private int historySize = 100;
 
+    /**
+     * Creates a new LagDisplayPlugin.
+     *
+     * @param controller The controller to add components to
+     */
+    public LagDisplayPlugin(final SwingController controller) {
+        this.controller = controller;
+    }
+
     /** {@inheritDoc} */
     @Override
     public void onLoad() {
-        controller = ((SwingController) PluginManager.getPluginManager()
-                .getPluginInfoByName("ui_swing").getPlugin());
         controller.getSwingStatusBar().addComponent(panel);
         controller.getMainFrame().addSelectionListener(this);
         IdentityManager.getGlobalConfig().addChangeListener(getDomain(), this);
@@ -93,7 +100,6 @@ public final class LagDisplayPlugin extends BasePlugin implements
         controller.getSwingStatusBar().removeComponent(panel);
         IdentityManager.getConfigIdentity().removeListener(this);
         ActionManager.getActionManager().unregisterListener(this);
-        controller = null;
     }
 
     /** Reads the plugin's global configuration settings. */
