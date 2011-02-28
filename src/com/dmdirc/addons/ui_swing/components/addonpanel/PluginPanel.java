@@ -64,7 +64,7 @@ public class PluginPanel extends AddonPanel implements ActionListener {
 
         ActionManager.getActionManager().registerListener(this,
                 CoreActionType.PLUGIN_REFRESH);
-        PluginManager.getPluginManager().getPossiblePluginInfos(true);
+        PluginManager.getPluginManager().refreshPlugins();
     }
 
     /** {@inheritDoc} */
