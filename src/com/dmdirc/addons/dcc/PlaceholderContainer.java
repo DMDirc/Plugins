@@ -24,8 +24,8 @@ package com.dmdirc.addons.dcc;
 
 import com.dmdirc.FrameContainer;
 import com.dmdirc.Server;
-import com.dmdirc.addons.dcc.ui.PlaceholderWindow;
 import com.dmdirc.addons.ui_swing.SwingController;
+import com.dmdirc.addons.ui_swing.components.frames.ComponentFrame;
 import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.plugins.PluginManager;
@@ -47,7 +47,7 @@ public class PlaceholderContainer extends FrameContainer {
      * @param plugin The plugin which owns this placeholder
      */
     public PlaceholderContainer(final DCCPlugin plugin) {
-        super("dcc", "DCCs", "DCCs", PlaceholderWindow.class,
+        super("dcc", "DCCs", "DCCs", ComponentFrame.class,
                 IdentityManager.getGlobalConfig(),
                 Arrays.asList("com.dmdirc.addons.dcc.ui.PlaceholderPanel"));
 

@@ -22,11 +22,19 @@
 
 package com.dmdirc.addons.ui_swing.components.frames;
 
+import com.dmdirc.FrameContainer;
 import com.dmdirc.WritableFrameContainer;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputHandler;
 import com.dmdirc.commandparser.PopupType;
+import com.dmdirc.logger.ErrorLevel;
+import com.dmdirc.logger.Logger;
 
+import java.lang.reflect.Constructor;
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.swing.JComponent;
 import javax.swing.JPopupMenu;
 
 import net.miginfocom.swing.MigLayout;
@@ -43,6 +51,10 @@ public class ComponentInputFrame extends InputTextFrame {
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 2;
+    /** Parent frame container. */
+    private final FrameContainer owner;
+    /** Parent controller. */
+    private final SwingController controller;
 
     /**
      * Creates a new instance of CustomInputFrame.
@@ -57,6 +69,8 @@ public class ComponentInputFrame extends InputTextFrame {
         setInputHandler(new SwingInputHandler(getInputField(),
                 owner.getCommandParser(), getContainer()));
 
+        this.controller = controller;
+        this.owner = owner;
         initComponents();
     }
 
@@ -64,10 +78,39 @@ public class ComponentInputFrame extends InputTextFrame {
      * Initialises components in this frame.
      */
     private void initComponents() {
-        setLayout(new MigLayout("ins 0, fill, hidemode 3, wrap 1"));
-        add(getTextPane(), "grow, push");
-        add(getSearchBar(), "growx, pushx");
-        add(inputPanel, "growx, pushx");
+        setLayout(new MigLayout("fill"));
+        for (JComponent comp : initFrameComponents()) {
+            add(comp, "wrap");
+        }
+    }
+
+    private Set<JComponent> initFrameComponents() {
+        final Set<String> names = owner.getComponents();
+        final Set<JComponent> components = new HashSet<JComponent>();
+
+        for (String string : names) {
+            Object object = null;
+            try {
+                final Constructor<?> constructor = Class.forName(string)
+                        .getConstructor(SwingController.class,
+                        ComponentFrame.class);
+                object = constructor.newInstance(controller, this);
+            } catch (Exception ex) {
+                object = null;
+            } catch (LinkageError ex) {
+                object = null;
+            } finally {
+                if (object instanceof JComponent
+                        && object instanceof SwingFrameComponent) {
+                    components.add((JComponent) object);
+                } else {
+                    Logger.userError(ErrorLevel.HIGH,
+                            "Unable to create component: " + string);
+                }
+            }
+        }
+
+        return components;
     }
 
     /** {@inheritDoc} */
