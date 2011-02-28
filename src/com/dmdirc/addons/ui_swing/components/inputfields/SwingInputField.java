@@ -24,6 +24,7 @@ package com.dmdirc.addons.ui_swing.components.inputfields;
 
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.colours.ColourPickerDialog;
+import com.dmdirc.addons.ui_swing.components.frames.InputTextFrame;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.interfaces.InputField;
@@ -76,9 +77,11 @@ public class SwingInputField extends JComponent implements InputField,
     /**
      * Instantiates a new swing input field.
      *
+     * @param textFrame Parent textFrame
      * @param parentWindow Parent window
      */
-    public SwingInputField(final Window parentWindow) {
+    public SwingInputField(final InputTextFrame textFrame,
+            final Window parentWindow) {
         super();
 
         this.parentWindow = parentWindow;
@@ -113,6 +116,9 @@ public class SwingInputField extends JComponent implements InputField,
                 textField.getInputMap(SwingInputField.WHEN_IN_FOCUSED_WINDOW));
         KeyboardFocusManager.getCurrentKeyboardFocusManager()
                 .addPropertyChangeListener(this);
+
+        textFrame.setInputHandler(new SwingInputHandler(this, textFrame
+                .getContainer().getCommandParser(), textFrame.getContainer()));
     }
 
     /** {@inheritDoc} */
