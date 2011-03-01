@@ -41,7 +41,7 @@ public final class DateCellRenderer extends DefaultTableCellRenderer {
     /** {@inheritDoc} */
     @Override
     public void setValue(final Object value) {
-        setText("" + duration((new Date().getTime() - ((Date) value).getTime()) / 1000));
+        setText(duration((new Date().getTime() - ((Date) value).getTime()) / 1000));
     }
 
     /**
