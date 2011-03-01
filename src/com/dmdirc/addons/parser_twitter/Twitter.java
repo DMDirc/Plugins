@@ -83,8 +83,6 @@ import java.util.Map;
 
 /**
  * Twitter Parser for DMDirc.
- *
- * @author shane
  */
 public class Twitter implements Parser, TwitterErrorHandler, TwitterRawHandler,
         ConfigChangeListener {
@@ -936,16 +934,71 @@ public class Twitter implements Parser, TwitterErrorHandler, TwitterRawHandler,
      * Show the user an ascii failwhale!
      */
     public void showFailWhale() {
-        sendPrivateNotice("" + Styliser.CODE_FIXED + Styliser.CODE_HEXCOLOUR + "EB5405,71C5C5                        ");
-        sendPrivateNotice("" + Styliser.CODE_FIXED + Styliser.CODE_HEXCOLOUR + "EB5405,71C5C5  W     W      W        ");
-        sendPrivateNotice("" + Styliser.CODE_FIXED + Styliser.CODE_HEXCOLOUR + "EB5405,71C5C5  W        W  W     W   ");
-        sendPrivateNotice("" + Styliser.CODE_FIXED + Styliser.CODE_HEXCOLOUR + "FFFFFF,71C5C5                '." + Styliser.CODE_HEXCOLOUR + "EB5405,71C5C5  W   ");
-        sendPrivateNotice("" + Styliser.CODE_FIXED + Styliser.CODE_HEXCOLOUR + "FFFFFF,71C5C5    .-\"\"-._     \\ \\.--| ");
-        sendPrivateNotice("" + Styliser.CODE_FIXED + Styliser.CODE_HEXCOLOUR + "FFFFFF,71C5C5   /       \"-..__) .-'  ");
-        sendPrivateNotice("" + Styliser.CODE_FIXED + Styliser.CODE_HEXCOLOUR + "FFFFFF,71C5C5  |     _         /     ");
-        sendPrivateNotice("" + Styliser.CODE_FIXED + Styliser.CODE_HEXCOLOUR + "FFFFFF,71C5C5  \\'-.__,   .__.,'      ");
-        sendPrivateNotice("" + Styliser.CODE_FIXED + Styliser.CODE_HEXCOLOUR + "FFFFFF,71C5C5   `'----'._\\--'        ");
-        sendPrivateNotice("" + Styliser.CODE_FIXED + Styliser.CODE_HEXCOLOUR + "FFFFFF,71C5C5V" + Styliser.CODE_HEXCOLOUR + "EB5405,71C5C5V" + Styliser.CODE_HEXCOLOUR + "FFFFFF,71C5C5V" + Styliser.CODE_HEXCOLOUR + "EB5405,71C5C5V" + Styliser.CODE_HEXCOLOUR + "FFFFFF,71C5C5V" + Styliser.CODE_HEXCOLOUR + "EB5405,71C5C5V" + Styliser.CODE_HEXCOLOUR + "FFFFFF,71C5C5V" + Styliser.CODE_HEXCOLOUR + "EB5405,71C5C5V" + Styliser.CODE_HEXCOLOUR + "FFFFFF,71C5C5V" + Styliser.CODE_HEXCOLOUR + "EB5405,71C5C5V" + Styliser.CODE_HEXCOLOUR + "FFFFFF,71C5C5V" + Styliser.CODE_HEXCOLOUR + "EB5405,71C5C5V" + Styliser.CODE_HEXCOLOUR + "FFFFFF,71C5C5V" + Styliser.CODE_HEXCOLOUR + "EB5405,71C5C5V" + Styliser.CODE_HEXCOLOUR + "FFFFFF,71C5C5V" + Styliser.CODE_HEXCOLOUR + "EB5405,71C5C5V" + Styliser.CODE_HEXCOLOUR + "FFFFFF,71C5C5V" + Styliser.CODE_HEXCOLOUR + "EB5405,71C5C5V" + Styliser.CODE_HEXCOLOUR + "FFFFFF,71C5C5V" + Styliser.CODE_HEXCOLOUR + "EB5405,71C5C5V" + Styliser.CODE_HEXCOLOUR + "FFFFFF,71C5C5V" + Styliser.CODE_HEXCOLOUR + "EB5405,71C5C5V" + Styliser.CODE_HEXCOLOUR + "FFFFFF,71C5C5V" + Styliser.CODE_HEXCOLOUR + "EB5405,71C5C5V");
+        final StringBuilder sb = new StringBuilder();
+        sb.append(Styliser.CODE_FIXED).append(Styliser.CODE_HEXCOLOUR)
+                .append("EB5405,71C5C5                        ");
+        sendPrivateNotice(sb.toString());
+        sb.setLength(0);
+        sb.append(Styliser.CODE_FIXED).append(Styliser.CODE_HEXCOLOUR)
+                .append("EB5405,71C5C5  W     W      W        ");
+        sendPrivateNotice(sb.toString());
+        sb.setLength(0);
+        sb.append(Styliser.CODE_FIXED).append(Styliser.CODE_HEXCOLOUR)
+                .append("EB5405,71C5C5  W        W  W     W   ");
+        sendPrivateNotice(sb.toString());
+        sb.setLength(0);
+        sb.append(Styliser.CODE_FIXED).append(Styliser.CODE_HEXCOLOUR)
+                .append("FFFFFF,71C5C5                '.")
+                .append(Styliser.CODE_HEXCOLOUR).append("EB5405,71C5C5  W   ");
+        sendPrivateNotice(sb.toString());
+        sb.setLength(0);
+        sb.append(Styliser.CODE_FIXED).append(Styliser.CODE_HEXCOLOUR)
+                .append("FFFFFF,71C5C5    .-\"\"-._     \\ \\.--| ");
+        sendPrivateNotice(sb.toString());
+        sb.setLength(0);
+        sb.append(Styliser.CODE_FIXED).append(Styliser.CODE_HEXCOLOUR)
+                .append("FFFFFF,71C5C5   /       \"-..__) .-'  ");
+        sendPrivateNotice(sb.toString());
+        sb.setLength(0);
+        sb.append(Styliser.CODE_FIXED).append(Styliser.CODE_HEXCOLOUR)
+                .append("FFFFFF,71C5C5  |     _         /     ");
+        sendPrivateNotice(sb.toString());
+        sb.setLength(0);
+        sb.append(Styliser.CODE_FIXED).append(Styliser.CODE_HEXCOLOUR)
+                .append("FFFFFF,71C5C5  \\'-.__,   .__.,'      ");
+        sendPrivateNotice(sb.toString());
+        sb.setLength(0);
+        sb.append(Styliser.CODE_FIXED).append(Styliser.CODE_HEXCOLOUR)
+                .append("FFFFFF,71C5C5   `'----'._\\--'        ");
+        sendPrivateNotice(sb.toString());
+        sb.setLength(0);
+        sb.append(Styliser.CODE_FIXED).append(Styliser.CODE_HEXCOLOUR)
+                .append(Styliser.CODE_FIXED).append(Styliser.CODE_HEXCOLOUR)
+                .append("FFFFFF,71C5C5V").append(Styliser.CODE_HEXCOLOUR)
+                .append("EB5405,71C5C5V").append(Styliser.CODE_HEXCOLOUR)
+                .append("FFFFFF,71C5C5V").append(Styliser.CODE_HEXCOLOUR)
+                .append("EB5405,71C5C5V").append(Styliser.CODE_HEXCOLOUR)
+                .append("FFFFFF,71C5C5V").append(Styliser.CODE_HEXCOLOUR)
+                .append("EB5405,71C5C5V").append(Styliser.CODE_HEXCOLOUR)
+                .append("FFFFFF,71C5C5V").append(Styliser.CODE_HEXCOLOUR)
+                .append("EB5405,71C5C5V").append(Styliser.CODE_HEXCOLOUR)
+                .append("FFFFFF,71C5C5V").append(Styliser.CODE_HEXCOLOUR)
+                .append("EB5405,71C5C5V").append(Styliser.CODE_HEXCOLOUR)
+                .append("FFFFFF,71C5C5V").append(Styliser.CODE_HEXCOLOUR)
+                .append("EB5405,71C5C5V").append(Styliser.CODE_HEXCOLOUR)
+                .append("FFFFFF,71C5C5V").append(Styliser.CODE_HEXCOLOUR)
+                .append("EB5405,71C5C5V").append(Styliser.CODE_HEXCOLOUR)
+                .append("FFFFFF,71C5C5V").append(Styliser.CODE_HEXCOLOUR)
+                .append("EB5405,71C5C5V").append(Styliser.CODE_HEXCOLOUR)
+                .append("FFFFFF,71C5C5V").append(Styliser.CODE_HEXCOLOUR)
+                .append("EB5405,71C5C5V").append(Styliser.CODE_HEXCOLOUR)
+                .append("FFFFFF,71C5C5V").append(Styliser.CODE_HEXCOLOUR)
+                .append("EB5405,71C5C5V").append(Styliser.CODE_HEXCOLOUR)
+                .append("FFFFFF,71C5C5V").append(Styliser.CODE_HEXCOLOUR)
+                .append("EB5405,71C5C5V").append(Styliser.CODE_HEXCOLOUR)
+                .append("FFFFFF,71C5C5V").append(Styliser.CODE_HEXCOLOUR)
+                .append("EB5405,71C5C5V");
+        sendPrivateNotice(sb.toString());
     }
 
     /**

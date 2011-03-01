@@ -91,7 +91,7 @@ public class UrlCatcherPlugin extends BasePlugin implements ActionListener,
                 .doLinks((String) arguments[1]);
 
         if (message.indexOf(Styliser.CODE_HYPERLINK) > -1) {
-            final String[] parts = message.split("" + Styliser.CODE_HYPERLINK);
+            final String[] parts = message.split(Character.toString(Styliser.CODE_HYPERLINK));
 
             for (int i = 1; i < parts.length; i += 2) {
                 addURL(parts[i]);
