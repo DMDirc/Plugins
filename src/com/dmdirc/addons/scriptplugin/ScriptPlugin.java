@@ -126,7 +126,7 @@ public final class ScriptPlugin extends BasePlugin implements ActionListener {
                 .getActionManager().getGroupedTypes().entrySet()) {
             final List<ActionType> types = entry.getValue();
             ActionManager.getActionManager().registerListener(this,
-                    types.toArray(new ActionType[0]));
+                    types.toArray(new ActionType[types.size()]));
         }
     }
 
