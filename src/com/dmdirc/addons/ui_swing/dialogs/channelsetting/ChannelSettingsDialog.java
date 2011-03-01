@@ -141,8 +141,8 @@ public final class ChannelSettingsDialog extends StandardDialog implements
         orderButtons(new JButton(), new JButton());
 
         getContentPane().setLayout(new MigLayout(
-                "fill, wrap 1, ins panel, hmax 80sp"));
-        getContentPane().add(tabbedPane, "growy, pushy, wmin 460, wmax 460");
+                "fill, wrap 1, ins panel, hmax 80sp, wmin 460, wmax 460"));
+        getContentPane().add(tabbedPane, "growy, pushy");
         getContentPane().add(getLeftButton(), "split 3, right");
         getContentPane().add(getRightButton(), "right");
 

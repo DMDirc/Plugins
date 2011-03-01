@@ -58,9 +58,9 @@ public abstract class ModesPane extends JPanel {
     public ModesPane() {
         super();
 
-        setLayout(new MigLayout("flowy, fillx", "fill", ""));
-        booleanModesPanel = new JPanel(new MigLayout("wrap 2, fillx"));
-        paramModesPanel = new JPanel(new MigLayout("wrap 2, fillx"));
+        setLayout(new MigLayout("fill, wmax 100%, wrap 1"));
+        booleanModesPanel = new JPanel(new MigLayout("wrap 2"));
+        paramModesPanel = new JPanel(new MigLayout("wrap 2"));
         modes = new TreeSet<String>(new ModesComparator());
         modeCheckBoxes = new HashMap<String, JCheckBox>();
         modeInputs = new HashMap<String, ParamModePanel>();
@@ -78,7 +78,7 @@ public abstract class ModesPane extends JPanel {
     /** Initialises the modes panel. */
     protected void initModesPanel() {
         getBooleanModes().clear();
-        final String booleanModes = getOurBooleanModes();
+        final String booleanModes = getAvailableBooleanModes();
         final String ourBooleanModes = getOurBooleanModes();
         // Lay out all the boolean mode checkboxes
         for (int i = 0; i < booleanModes.length(); i++) {
@@ -129,7 +129,7 @@ public abstract class ModesPane extends JPanel {
             booleanModesPanel.add(new TextLabel("No boolean modes."));
         }
         for (String mode : modes) {
-            booleanModesPanel.add(getBooleanModes().get(mode));
+            booleanModesPanel.add(getBooleanModes().get(mode), "growx, wmax 49%-rel*4");
         }
         modes.clear();
 
@@ -151,8 +151,8 @@ public abstract class ModesPane extends JPanel {
         booleanModesPanel.setOpaque(UIUtilities.getTabbedPaneOpaque());
         paramModesPanel.setOpaque(UIUtilities.getTabbedPaneOpaque());
 
-        add(booleanModesPanel);
-        add(paramModesPanel);
+        add(booleanModesPanel, "grow, wmax 100%");
+        add(paramModesPanel, "grow, wmax 100%");
     }
 
     /** Updates the panel. */
