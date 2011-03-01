@@ -278,7 +278,7 @@ public final class KFileChooser extends JFileChooser {
 
         KDialogProcess kdp;
         try {
-            kdp = new KDialogProcess(params.toArray(new String[0]));
+            kdp = new KDialogProcess(params.toArray(new String[params.size()]));
             kdp.waitFor();
         } catch (Exception e) {
             return JFileChooser.ERROR_OPTION;
@@ -327,7 +327,7 @@ public final class KFileChooser extends JFileChooser {
 
         KDialogProcess kdp;
         try {
-            kdp = new KDialogProcess(params.toArray(new String[0]));
+            kdp = new KDialogProcess(params.toArray(new String[params.size()]));
             kdp.waitFor();
         } catch (Exception e) {
             return JFileChooser.ERROR_OPTION;
