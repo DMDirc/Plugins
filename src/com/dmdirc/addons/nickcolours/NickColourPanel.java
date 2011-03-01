@@ -30,8 +30,8 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Vector;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -207,15 +207,15 @@ public class NickColourPanel extends JPanel implements ActionListener,
      *
      * @return This panel's current data.
      */
+    @SuppressWarnings("unchecked")
     private List<Object[]> getData() {
         final List<Object[]> res = new ArrayList<Object[]>();
         final DefaultTableModel model = ((DefaultTableModel) table.getModel());
 
-        for (Object row : model.getDataVector()) {
-            final Vector<?> vrow = (Vector<?>) row;
-
-            res.add(new Object[]{vrow.elementAt(0), vrow.elementAt(1), vrow.
-                        elementAt(2), vrow.elementAt(3)});
+        final List<List<?>> rows = (List<List<?>>) model.getDataVector();
+        for (List<?> row : rows) {
+            res.add(new Object[]{row.get(0), row.get(1), row.get(2),
+                row.get(3)});
         }
 
         return res;
