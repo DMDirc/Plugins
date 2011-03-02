@@ -41,7 +41,10 @@
     </target>
 
     <target name="compile" depends="-init-compile">
-       <javac srcdir="${plugins.src}" destdir="${plugins.build.classes}" classpathref="plugins.classpath" includeantruntime="false"/>
+       <javac srcdir="${plugins.src}" destdir="${plugins.build.classes}"
+              classpathref="plugins.classpath" includeantruntime="false"
+              debug="true"/>
+
        <copy todir="${plugins.build.classes}">
           <fileset dir="${plugins.src}">
              <exclude name="**/*.java"/>
