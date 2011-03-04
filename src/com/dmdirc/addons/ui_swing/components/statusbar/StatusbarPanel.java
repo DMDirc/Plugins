@@ -40,6 +40,7 @@ import net.miginfocom.swing.MigLayout;
  * A panel shown in the status bar which displays a {@link StatusbarPopupWindow}
  * when the user mouses over it.
  *
+ * @param <T> Type of component used to trigger this panel
  * @since 0.6.3m1
  */
 public abstract class StatusbarPanel<T extends JComponent> extends JPanel
@@ -121,25 +122,27 @@ public abstract class StatusbarPanel<T extends JComponent> extends JPanel
     /**
      * Opens the information dialog.
      */
-    protected final void openDialog() {
+    protected void openDialog() {
         synchronized (StatusbarPanel.this) {
-            setBackground(getPopupBackground());
-            setForeground(getPopupForeground());
-            setBorder(selectedBorder);
-            dialog = getWindow();
-            dialog.setVisible(true);
+            if (dialog == null) {
+                setBackground(getPopupBackground());
+                setForeground(getPopupForeground());
+                setBorder(selectedBorder);
+                dialog = getWindow();
+                dialog.setVisible(true);
+            }
         }
     }
 
     /**
      * Closes the information dialog.
      */
-    protected final void closeDialog() {
+    protected void closeDialog() {
         synchronized (StatusbarPanel.this) {
-            setBackground(null);
-            setForeground(null);
-            setBorder(nonSelectedBorder);
             if (dialog != null) {
+                setBackground(null);
+                setForeground(null);
+                setBorder(nonSelectedBorder);
                 dialog.setVisible(false);
                 dialog.dispose();
                 dialog = null;
@@ -159,6 +162,15 @@ public abstract class StatusbarPanel<T extends JComponent> extends JPanel
             }
             return false;
         }
+    }
+
+    /**
+     * Returns the dialog being shown by this panel.
+     *
+     * @return Visible dialog, or null if not visible
+     */
+    protected final StatusbarPopupWindow getDialog() {
+        return dialog;
     }
 
     /**
