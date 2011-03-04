@@ -121,25 +121,27 @@ public abstract class StatusbarPanel<T extends JComponent> extends JPanel
     /**
      * Opens the information dialog.
      */
-    protected final void openDialog() {
+    protected void openDialog() {
         synchronized (StatusbarPanel.this) {
-            setBackground(getPopupBackground());
-            setForeground(getPopupForeground());
-            setBorder(selectedBorder);
-            dialog = getWindow();
-            dialog.setVisible(true);
+            if (dialog == null) {
+                setBackground(getPopupBackground());
+                setForeground(getPopupForeground());
+                setBorder(selectedBorder);
+                dialog = getWindow();
+                dialog.setVisible(true);
+            }
         }
     }
 
     /**
      * Closes the information dialog.
      */
-    protected final void closeDialog() {
+    protected void closeDialog() {
         synchronized (StatusbarPanel.this) {
-            setBackground(null);
-            setForeground(null);
-            setBorder(nonSelectedBorder);
             if (dialog != null) {
+                setBackground(null);
+                setForeground(null);
+                setBorder(nonSelectedBorder);
                 dialog.setVisible(false);
                 dialog.dispose();
                 dialog = null;
@@ -159,6 +161,10 @@ public abstract class StatusbarPanel<T extends JComponent> extends JPanel
             }
             return false;
         }
+    }
+
+    protected final StatusbarPopupWindow getDialog() {
+        return dialog;
     }
 
     /**
