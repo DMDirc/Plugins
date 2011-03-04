@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.components.statusbar;
 
+import java.awt.Point;
 import java.awt.event.MouseEvent;
 
 import javax.swing.JComponent;
@@ -30,6 +31,7 @@ import javax.swing.JComponent;
  * A panel shown in the status bar which displays a {@link StatusbarPopupWindow}
  * when the user mouses over it.
  *
+ * @param <T> Type of component used to trigger this panel
  * @since 0.6.3m1
  */
 public abstract class StatusbarPopupPanel<T extends JComponent> extends
@@ -49,6 +51,7 @@ public abstract class StatusbarPopupPanel<T extends JComponent> extends
      */
     public StatusbarPopupPanel(final T label) {
         super(label);
+        addMouseListener(this);
     }
 
     /**
@@ -98,6 +101,29 @@ public abstract class StatusbarPopupPanel<T extends JComponent> extends
      */
     @Override
     public void mouseExited(final MouseEvent e) {
-        closeDialog();
+        Point point = getMousePosition();
+        if (point == null && getDialog() != null) {
+            point = getDialog().getMousePosition();
+        }
+        if (point == null || (!contains(point)
+                && (getDialog() == null || !getDialog().contains(point)))) {
+            closeDialog();
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    protected void openDialog() {
+        super.openDialog();
+        getDialog().addMouseListener(this);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    protected void closeDialog() {
+        if (getDialog() != null) {
+            getDialog().removeMouseListener(this);
+        }
+        super.closeDialog();
     }
 }
