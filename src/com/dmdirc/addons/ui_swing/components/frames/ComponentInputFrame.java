@@ -25,7 +25,6 @@ package com.dmdirc.addons.ui_swing.components.frames;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.WritableFrameContainer;
 import com.dmdirc.addons.ui_swing.SwingController;
-import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputHandler;
 import com.dmdirc.commandparser.PopupType;
 
 import javax.swing.JComponent;
@@ -59,10 +58,6 @@ public class ComponentInputFrame extends InputTextFrame {
     public ComponentInputFrame(final SwingController controller,
             final WritableFrameContainer owner) {
         super(controller, owner);
-
-        setInputHandler(new SwingInputHandler(getInputField(),
-                owner.getCommandParser(), owner));
-
         this.controller = controller;
         this.owner = owner;
         initComponents();
