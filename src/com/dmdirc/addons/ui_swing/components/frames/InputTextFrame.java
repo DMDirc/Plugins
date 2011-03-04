@@ -31,6 +31,7 @@ import com.dmdirc.addons.ui_swing.actions.InputFieldCopyAction;
 import com.dmdirc.addons.ui_swing.actions.InputTextFramePasteAction;
 import com.dmdirc.addons.ui_swing.components.AwayLabel;
 import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputField;
+import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputHandler;
 import com.dmdirc.addons.ui_swing.dialogs.paste.PasteDialog;
 import com.dmdirc.config.ConfigManager;
 import com.dmdirc.logger.ErrorLevel;
@@ -123,7 +124,7 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
      * Initialises the components for this frame.
      */
     private void initComponents() {
-        setInputField(new SwingInputField(this, getController().getMainFrame()));
+        new SwingInputField(this, getController().getMainFrame());
 
         getInputField().addMouseListener(this);
 
@@ -214,8 +215,10 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
      *
      * @param newInputField new input field to use
      */
-    protected final void setInputField(final SwingInputField newInputField) {
+    public final void setInputField(final SwingInputField newInputField) {
         this.inputField = newInputField;
+        setInputHandler(new SwingInputHandler(newInputField,
+                getContainer().getCommandParser(), getContainer()));
     }
 
     /**
