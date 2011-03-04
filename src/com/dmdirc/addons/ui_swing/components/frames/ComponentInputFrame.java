@@ -59,10 +59,6 @@ public class ComponentInputFrame extends InputTextFrame {
     public ComponentInputFrame(final SwingController controller,
             final WritableFrameContainer owner) {
         super(controller, owner);
-
-        setInputHandler(new SwingInputHandler(getInputField(),
-                owner.getCommandParser(), owner));
-
         this.controller = controller;
         this.owner = owner;
         initComponents();
