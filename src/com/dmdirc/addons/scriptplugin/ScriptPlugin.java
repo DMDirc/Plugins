@@ -26,12 +26,12 @@ import com.dmdirc.Main;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.actions.interfaces.ActionType;
-import com.dmdirc.util.validators.ValidationResponse;
 import com.dmdirc.interfaces.ActionListener;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.plugins.BasePlugin;
 import com.dmdirc.util.StreamUtil;
+import com.dmdirc.util.validators.ValidationResponse;
 
 import java.io.File;
 import java.io.FileInputStream;

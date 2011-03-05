@@ -23,12 +23,12 @@
 package com.dmdirc.addons.serverlists;
 
 import com.dmdirc.Precondition;
-import com.dmdirc.config.Identity;
-import com.dmdirc.config.IdentityListener;
-import com.dmdirc.config.IdentityManager;
 import com.dmdirc.addons.serverlists.io.ServerGroupReader;
 import com.dmdirc.addons.serverlists.io.ServerGroupWriter;
 import com.dmdirc.addons.serverlists.service.ServerListServiceProvider;
+import com.dmdirc.config.Identity;
+import com.dmdirc.config.IdentityListener;
+import com.dmdirc.config.IdentityManager;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -41,7 +41,6 @@ import java.util.Map;
  * writing of the lists to disk.
  *
  * @since 0.6.4
- * @author chris
  */
 public class ServerList implements IdentityListener {
 

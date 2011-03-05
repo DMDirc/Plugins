@@ -22,9 +22,9 @@
 
 package com.dmdirc.addons.serverlists.io;
 
-import com.dmdirc.config.Identity;
 import com.dmdirc.addons.serverlists.ServerEntry;
 import com.dmdirc.addons.serverlists.ServerGroup;
+import com.dmdirc.config.Identity;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -33,7 +33,6 @@ import java.net.URISyntaxException;
  * Facilitates loading of a {@link ServerEntry} from a DMDirc {@link Identity}.
  *
  * @since 0.6.4
- * @author chris
  */
 public class ServerEntryReader {
 

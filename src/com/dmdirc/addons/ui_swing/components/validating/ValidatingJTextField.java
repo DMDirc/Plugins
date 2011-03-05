@@ -23,9 +23,9 @@
 package com.dmdirc.addons.ui_swing.components.validating;
 
 import com.dmdirc.addons.ui_swing.UIUtilities;
+import com.dmdirc.ui.IconManager;
 import com.dmdirc.util.validators.ValidationResponse;
 import com.dmdirc.util.validators.Validator;
-import com.dmdirc.ui.IconManager;
 
 import java.awt.Color;
 import java.awt.Font;

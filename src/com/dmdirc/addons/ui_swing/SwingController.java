@@ -51,8 +51,6 @@ import com.dmdirc.config.prefs.PreferencesInterface;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
-import com.dmdirc.ui.interfaces.Window;
-import com.dmdirc.util.validators.NumericalValidator;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.plugins.BasePlugin;
@@ -61,7 +59,9 @@ import com.dmdirc.ui.core.components.StatusBarManager;
 import com.dmdirc.ui.core.util.URLHandler;
 import com.dmdirc.ui.interfaces.InputWindow;
 import com.dmdirc.ui.interfaces.UIController;
+import com.dmdirc.ui.interfaces.Window;
 import com.dmdirc.util.ReturnableThread;
+import com.dmdirc.util.validators.NumericalValidator;
 
 import java.awt.Font;
 import java.awt.GraphicsEnvironment;

@@ -31,8 +31,8 @@ import javax.swing.Box;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
-
 import javax.swing.UIManager;
+
 import net.miginfocom.swing.MigLayout;
 
 /**

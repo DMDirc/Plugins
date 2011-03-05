@@ -34,12 +34,11 @@ import java.awt.Rectangle;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.swing.JPanel;
 
 /**
  * Shows a ping history graph for the current server.
- *
- * @author chris
  */
 public class PingHistoryPanel extends JPanel {
 

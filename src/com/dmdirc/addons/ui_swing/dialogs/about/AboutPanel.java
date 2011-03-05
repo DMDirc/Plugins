@@ -28,8 +28,8 @@ import com.dmdirc.ui.core.util.URLHandler;
 
 import javax.swing.JPanel;
 import javax.swing.event.HyperlinkEvent;
-import javax.swing.event.HyperlinkListener;
 import javax.swing.event.HyperlinkEvent.EventType;
+import javax.swing.event.HyperlinkListener;
 
 import net.miginfocom.swing.MigLayout;
 

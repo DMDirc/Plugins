@@ -28,8 +28,8 @@ import com.dmdirc.WritableFrameContainer;
 import com.dmdirc.ui.input.TabCompleter;
 import com.dmdirc.ui.interfaces.InputWindow;
 import com.dmdirc.ui.messages.Formatter;
-import java.util.Collections;
 
+import java.util.Collections;
 import java.util.Date;
 
 /**

@@ -25,7 +25,9 @@ package com.dmdirc.addons.ui_swing.components.statusbar;
 import com.dmdirc.Invite;
 import com.dmdirc.Server;
 import com.dmdirc.util.DateUtils;
+
 import java.awt.Window;
+
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 

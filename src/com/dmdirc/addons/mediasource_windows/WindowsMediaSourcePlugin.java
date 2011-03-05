@@ -24,12 +24,12 @@ package com.dmdirc.addons.mediasource_windows;
 
 import com.dmdirc.addons.nowplaying.MediaSource;
 import com.dmdirc.addons.nowplaying.MediaSourceManager;
-import com.dmdirc.util.StreamReader;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.plugins.BasePlugin;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.PluginManager;
+import com.dmdirc.util.StreamReader;
 import com.dmdirc.util.resourcemanager.ResourceManager;
 
 import java.io.IOException;

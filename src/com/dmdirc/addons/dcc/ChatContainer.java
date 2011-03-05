@@ -28,6 +28,7 @@ import com.dmdirc.addons.dcc.io.DCCChat;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.core.components.WindowComponent;
 import com.dmdirc.ui.interfaces.InputWindow;
+
 import java.util.Arrays;
 
 /**

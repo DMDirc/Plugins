@@ -25,6 +25,7 @@ package com.dmdirc.addons.osd;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.util.ReturnableThread;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -33,7 +34,6 @@ import java.util.Queue;
 /**
  * Class to manage OSD Windows.
  *
- * @author Simon
  * @since 0.6.3
  */
 public class OsdManager {

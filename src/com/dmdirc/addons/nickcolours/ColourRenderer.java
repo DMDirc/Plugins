@@ -25,16 +25,14 @@ package com.dmdirc.addons.nickcolours;
 import com.dmdirc.ui.messages.ColourManager;
 
 import java.awt.Color;
-
 import java.awt.Component;
+
 import javax.swing.JTable;
 import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 
 /**
  * Provides a colour renderer for JTables.
- *
- * @author Chris
  */
 public class ColourRenderer extends DefaultTableCellRenderer {
 

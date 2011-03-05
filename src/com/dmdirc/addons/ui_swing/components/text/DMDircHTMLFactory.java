@@ -24,8 +24,8 @@ package com.dmdirc.addons.ui_swing.components.text;
 
 import javax.swing.text.Element;
 import javax.swing.text.View;
-import javax.swing.text.html.ImageView;
 import javax.swing.text.html.HTMLEditorKit.HTMLFactory;
+import javax.swing.text.html.ImageView;
 
 /**
  * DMDircHTML factory extends HTMLFactory to use DMDircImageView.
