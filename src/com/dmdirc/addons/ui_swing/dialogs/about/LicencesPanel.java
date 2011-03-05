@@ -148,7 +148,7 @@ public final class LicencesPanel extends JPanel implements TreeSelectionListener
         licence.setText(((Licence) userObject).getBody());
         } else if (userObject instanceof PluginInfo) {
             final PluginInfo pi = (PluginInfo) userObject;
-            licence.setText("<b>Name:</b> " + pi.getNiceName() + "<br>"
+            licence.setText("<b>Name:</b> " + pi.getMainClass() + "<br>"
                     + "<b>Version:</b> " + pi.getFriendlyVersion() + "<br>"
                     + "<b>Author:</b> " + pi.getAuthor() + "<br>"
                     + "<b>Description:</b> " + pi.getDescription() + "<br>");
