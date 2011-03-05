@@ -475,6 +475,7 @@ public final class TextPane extends JComponent implements MouseWheelListener,
             /** {@inheritDoc}. */
             @Override
             public void run() {
+                lastSeenLine -= numTrimmed;
                 final LinePosition selectedRange = getSelectedRange();
                 selectedRange.setStartLine(selectedRange.getStartLine()
                         - numTrimmed);
