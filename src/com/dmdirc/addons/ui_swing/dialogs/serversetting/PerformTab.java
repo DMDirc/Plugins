@@ -84,15 +84,16 @@ public final class PerformTab extends JPanel implements ActionListener {
 
         add(target, "growx, pushx, wrap");
 
-        Collection<PerformDescription> performList = new ArrayList<PerformDescription>();
+        final Collection<PerformDescription> performList
+                = new ArrayList<PerformDescription>();
 
-        PerformDescription networkPerform = new PerformDescription(
+        final PerformDescription networkPerform = new PerformDescription(
                 PerformType.NETWORK, server.getNetwork());
-        PerformDescription networkProfilePerform = new PerformDescription(
+        final PerformDescription networkProfilePerform = new PerformDescription(
                 PerformType.NETWORK, server.getNetwork() ,server.getProfile().getName());
-        PerformDescription serverPerform = new PerformDescription(
+        final PerformDescription serverPerform = new PerformDescription(
                 PerformType.SERVER, server.getAddress());
-        PerformDescription serverProfilePerform = new PerformDescription(
+        final PerformDescription serverProfilePerform = new PerformDescription(
                 PerformType.SERVER, server.getAddress() ,server.getProfile().getName());
 
         model.addElement(networkPerform);
@@ -130,8 +131,8 @@ public final class PerformTab extends JPanel implements ActionListener {
      */
     @Override
     public void actionPerformed(final ActionEvent e) {
-        PerformDescription perform = (PerformDescription)((JComboBox) e.getSource())
-                .getSelectedItem();
+        final PerformDescription perform
+                = (PerformDescription)((JComboBox) e.getSource()).getSelectedItem();
         performPanel.switchPerform(perform);
     }
 

@@ -185,7 +185,7 @@ public class DynamicRequestHandler extends AbstractHandler {
             List<Event> myEvents = client.retrieveEvents();
 
             if (myEvents.isEmpty()) {
-                Continuation continuation = ContinuationSupport
+                final Continuation continuation = ContinuationSupport
                         .getContinuation(request, client.getMutex());
                 client.setContinuation(continuation);
                 continuation.suspend(30000L);

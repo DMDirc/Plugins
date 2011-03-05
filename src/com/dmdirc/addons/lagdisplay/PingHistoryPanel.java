@@ -92,9 +92,10 @@ public class PingHistoryPanel extends JPanel {
         g.setFont(g.getFont().deriveFont(10f));
 
         float lastX = -1, lastY = -1;
-        float pixelsperpointX = (getWidth() - 3) / (float) (history.getList().size() == 1 ? 1
+        final float pixelsperpointX = (getWidth() - 3)
+                / (float) (history.getList().size() == 1 ? 1
                 : history.getList().size() - 1);
-        float pixelsperpointY = (getHeight() - 10) / (float) maximum;
+        final float pixelsperpointY = (getHeight() - 10) / (float) maximum;
 
         if (history.isEmpty()) {
             g.drawString("No data", getWidth() / 2 - 25, getHeight() / 2 + 5);
@@ -107,8 +108,8 @@ public class PingHistoryPanel extends JPanel {
         for (int i = 0; i < list.size(); i++) {
             final Long value = list.get(i);
 
-            float x = lastX == -1 ? 2 : lastX + pixelsperpointX;
-            float y = getHeight() - 5 - value * pixelsperpointY;
+            final float x = lastX == -1 ? 2 : lastX + pixelsperpointX;
+            final float y = getHeight() - 5 - value * pixelsperpointY;
 
             if (lastX > -1) {
                 g.drawLine((int) lastX, (int) lastY, (int) x, (int) y);
@@ -125,7 +126,7 @@ public class PingHistoryPanel extends JPanel {
                 final int diffy = (int) (last1 - (10 + rect.getHeight()) / pixelsperpointY);
 
                 float posX = lastX - width + 7;
-                float posY = (float) (lastY + rect.getHeight() / 2) - 1;
+                final float posY = (float) (lastY + rect.getHeight() / 2) - 1;
                 boolean failed = posX < 0;
 
                 // Check left

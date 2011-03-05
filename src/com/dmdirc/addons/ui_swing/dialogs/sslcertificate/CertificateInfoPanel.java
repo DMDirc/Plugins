@@ -87,13 +87,13 @@ public class CertificateInfoPanel extends JScrollPane {
                         "alignx right");
                 final TextLabel text = new TextLabel(info.getValue(), false);
                 if (info.isInvalid()) {
-                    SimpleAttributeSet sas = new SimpleAttributeSet();
+                    final SimpleAttributeSet sas = new SimpleAttributeSet();
                     StyleConstants.setForeground(sas, Color.RED);
                     text.getDocument().setParagraphAttributes(0, info.getValue().
                             length(), sas, true);
                 }
                 if (info.isMissing()) {
-                    SimpleAttributeSet sas = new SimpleAttributeSet();
+                    final SimpleAttributeSet sas = new SimpleAttributeSet();
                     StyleConstants.setItalic(sas, true);
                     text.getDocument().setParagraphAttributes(0, info.getValue().
                             length(), sas, true);

@@ -154,7 +154,7 @@ public class TransferContainer extends FrameContainer implements
             percent = getPercent();
         }
 
-        boolean percentageInTitle = IdentityManager.getGlobalConfig()
+        final boolean percentageInTitle = IdentityManager.getGlobalConfig()
                 .getOptionBool(plugin.getDomain(), "general.percentageInTitle");
 
         if (percentageInTitle) {

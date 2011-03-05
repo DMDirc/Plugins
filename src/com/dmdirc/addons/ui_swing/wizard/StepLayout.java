@@ -171,14 +171,15 @@ public class StepLayout implements LayoutManager2, Serializable {
             }
         }
         synchronized (parent.getTreeLock()) {
-            int componentCount = parent.getComponentCount();
+            final int componentCount = parent.getComponentCount();
             for (int i = 0; i < componentCount; i++) {
-                Component comp = parent.getComponent(i);
+                final Component comp = parent.getComponent(i);
                 if (comp.isVisible()) {
                     comp.setVisible(false);
                     break;
                 }
             }
+
             if (componentCount > 0) {
                 currentStep = stepNumber;
                 parent.getComponent(currentStep).setVisible(true);
@@ -249,14 +250,14 @@ public class StepLayout implements LayoutManager2, Serializable {
     @Override
     public Dimension preferredLayoutSize(final Container parent) {
         synchronized (parent.getTreeLock()) {
-            Insets insets = parent.getInsets();
-            int componentCount = parent.getComponentCount();
+            final Insets insets = parent.getInsets();
+            final int componentCount = parent.getComponentCount();
             int width = 0;
             int height = 0;
 
             for (int i = 0; i < componentCount; i++) {
-                Component comp = parent.getComponent(i);
-                Dimension preferredDimension = comp.getPreferredSize();
+                final Component comp = parent.getComponent(i);
+                final Dimension preferredDimension = comp.getPreferredSize();
                 if (preferredDimension.width > width) {
                     width = preferredDimension.width;
                 }
@@ -277,14 +278,14 @@ public class StepLayout implements LayoutManager2, Serializable {
     @Override
     public Dimension minimumLayoutSize(final Container parent) {
         synchronized (parent.getTreeLock()) {
-            Insets insets = parent.getInsets();
-            int componentCount = parent.getComponentCount();
+            final Insets insets = parent.getInsets();
+            final int componentCount = parent.getComponentCount();
             int width = 0;
             int height = 0;
 
             for (int i = 0; i < componentCount; i++) {
-                Component comp = parent.getComponent(i);
-                Dimension minimumDimension = comp.getMinimumSize();
+                final Component comp = parent.getComponent(i);
+                final Dimension minimumDimension = comp.getMinimumSize();
                 if (minimumDimension.width > width) {
                     width = minimumDimension.width;
                 }
@@ -340,15 +341,15 @@ public class StepLayout implements LayoutManager2, Serializable {
      */
     @Override
     public void invalidateLayout(final Container target) {
-    //Ignore
+        //Ignore
     }
 
     /** {@inheritDoc} */
     @Override
     public void layoutContainer(final Container parent) {
         synchronized (parent.getTreeLock()) {
-            Insets insets = parent.getInsets();
-            int componentCount = parent.getComponentCount();
+            final Insets insets = parent.getInsets();
+            final int componentCount = parent.getComponentCount();
             Component comp = null;
             boolean currentFound = false;
 
