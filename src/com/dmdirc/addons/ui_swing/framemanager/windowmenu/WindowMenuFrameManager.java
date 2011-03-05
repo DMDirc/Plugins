@@ -254,7 +254,7 @@ public final class WindowMenuFrameManager extends JMenu implements
     }
 
     private JMenu getParentMenu(final FrameContainer window) {
-        FrameContainer parent = window.getParent();
+        final FrameContainer parent = window.getParent();
 
         if (parent == null) {
             return this;

@@ -454,8 +454,8 @@ public class DCCTransfer extends DCC {
     protected boolean handleSend() {
         try {
             final byte[] data = new byte[blockSize];
-            int bytesRead = fileIn.read(data);
-            readSize = readSize + bytesRead;
+            final int bytesRead = fileIn.read(data);
+            readSize += bytesRead;
 
             if (bytesRead > 0) {
                 for (DCCTransferHandler handler : handlers.get(DCCTransferHandler.class)) {

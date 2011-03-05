@@ -332,7 +332,7 @@ public final class UIUtilities {
         int width = SwingUtilities.computeStringWidth(fm, clipString);
 
         int nChars = 0;
-        for (int max = string.length(); nChars < max; nChars++) {
+        for (final int max = string.length(); nChars < max; nChars++) {
             width += fm.charWidth(string.charAt(nChars));
             if (width > avaiableWidth) {
                 break;

@@ -579,7 +579,7 @@ public class LoggingPlugin extends BasePlugin implements ActionListener,
         BufferedWriter out = null;
         try {
             if (openFiles.containsKey(filename)) {
-                OpenFile of = openFiles.get(filename);
+                final OpenFile of = openFiles.get(filename);
                 of.lastUsedTime = System.currentTimeMillis();
                 out = of.writer;
             } else {

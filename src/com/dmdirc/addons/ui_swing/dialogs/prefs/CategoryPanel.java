@@ -131,7 +131,7 @@ public class CategoryPanel extends JPanel {
             @Override
             public void correctBounds(final ComponentWrapper cw) {
                 if (cw.getComponent() == scrollPane) {
-                    int newSize = Math.max(parent.getPanelHeight(),
+                    final int newSize = Math.max(parent.getPanelHeight(),
                             scrollPane.getViewport().getExtentSize().height);
                     parent.setPanelHeight((int) (newSize * 0.95));
                 }

@@ -86,7 +86,7 @@ public class VetoableComboBoxModel extends DefaultComboBoxModel {
      */
     protected boolean fireVetoableSelectionChange(final Object newValue) {
         boolean result = true;
-        VetoableChangeEvent event = new VetoableChangeEvent(this, newValue);
+        final VetoableChangeEvent event = new VetoableChangeEvent(this, newValue);
         for (VetoableComboBoxSelectionListener listener :
             listeners.get(VetoableComboBoxSelectionListener.class)) {
                 result &= listener.selectionChanged(event);

@@ -150,45 +150,45 @@ public final class DCCPlugin extends BasePlugin implements ActionListener {
                 if (!handleExists(send, jc, nickname, parser,reverse, token)) {
                     return;
                 }
-                boolean resume = handleResume(jc);
-                    if (reverse && !token.isEmpty()) {
-                        new TransferContainer(DCCPlugin.this, send,
-                                "*Receive: " + nickname, nickname, null);
-                        send.setToken(token);
-                        if (resume) {
-                            if (IdentityManager.getGlobalConfig().getOptionBool(
-                                    getDomain(), "receive.reverse.sendtoken")) {
-                                parser.sendCTCP(nickname, "DCC", "RESUME "
-                                        + send.getShortFileName() + " 0 "
-                                        + jc.getSelectedFile().length() + " "
-                                        + token);
-                            } else {
-                                parser.sendCTCP(nickname, "DCC", "RESUME "
-                                        + send.getShortFileName() + " 0 "
-                                        + jc.getSelectedFile().length());
-                            }
+                final boolean resume = handleResume(jc);
+                if (reverse && !token.isEmpty()) {
+                    new TransferContainer(DCCPlugin.this, send,
+                            "*Receive: " + nickname, nickname, null);
+                    send.setToken(token);
+                    if (resume) {
+                        if (IdentityManager.getGlobalConfig().getOptionBool(
+                                getDomain(), "receive.reverse.sendtoken")) {
+                            parser.sendCTCP(nickname, "DCC", "RESUME "
+                                    + send.getShortFileName() + " 0 "
+                                    + jc.getSelectedFile().length() + " "
+                                    + token);
                         } else {
-                            if (listen(send)) {
-                                parser.sendCTCP(nickname, "DCC", "SEND "
-                                        + send.getShortFileName() + " "
-                                        + DCC.ipToLong(getListenIP(parser))
-                                        + " " + send.getPort() + " "
-                                        + send.getFileSize() + " " + token);
-                            }
+                            parser.sendCTCP(nickname, "DCC", "RESUME "
+                                    + send.getShortFileName() + " 0 "
+                                    + jc.getSelectedFile().length());
                         }
                     } else {
-                        new TransferContainer(DCCPlugin.this, send, "Receive: "
-                                + nickname, nickname, null);
-                        if (resume) {
-                            parser.sendCTCP(nickname, "DCC", "RESUME "
+                        if (listen(send)) {
+                            parser.sendCTCP(nickname, "DCC", "SEND "
                                     + send.getShortFileName() + " "
-                                    + send.getPort() + " "
-                                    + jc.getSelectedFile().length());
-                        } else {
-                            send.connect();
+                                    + DCC.ipToLong(getListenIP(parser))
+                                    + " " + send.getPort() + " "
+                                    + send.getFileSize() + " " + token);
                         }
                     }
+                } else {
+                    new TransferContainer(DCCPlugin.this, send, "Receive: "
+                            + nickname, nickname, null);
+                    if (resume) {
+                        parser.sendCTCP(nickname, "DCC", "RESUME "
+                                + send.getShortFileName() + " "
+                                + send.getPort() + " "
+                                + jc.getSelectedFile().length());
+                    } else {
+                        send.connect();
+                    }
                 }
+            }
 
         }, "saveFileThread: " + send.getShortFileName()).start();
     }
@@ -454,7 +454,7 @@ public final class DCCPlugin extends BasePlugin implements ActionListener {
 
         // Ignore incorrect ports, or non-numeric IP/Port
         try {
-            int portInt = Integer.parseInt(port);
+            final int portInt = Integer.parseInt(port);
             if (portInt > 65535 || portInt < 0) {
                 return;
             }

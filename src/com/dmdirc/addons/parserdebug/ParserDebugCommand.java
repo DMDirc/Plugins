@@ -68,7 +68,8 @@ public final class ParserDebugCommand extends Command {
     public void execute(final FrameContainer origin, final CommandArguments commandArgs, final CommandContext context) {
         final boolean isSilent = commandArgs.isSilent();
 
-        Parser parser = ((ServerCommandContext) context).getServer().getParser();
+        final Parser parser = ((ServerCommandContext) context).getServer()
+                .getParser();
 
         if (parser == null) {
             sendLine(origin, isSilent, FORMAT_ERROR, "Unable to get a parser for this window.");
@@ -77,7 +78,7 @@ public final class ParserDebugCommand extends Command {
         if (myPlugin.registeredParsers.containsKey(parser)) {
             try {
                 parser.getCallbackManager().delCallback(DebugInfoListener.class, myPlugin);
-                DebugWindow window = myPlugin.registeredParsers.get(parser);
+                final DebugWindow window = myPlugin.registeredParsers.get(parser);
                 window.addLine("======================", true);
                 window.addLine("No Longer Monitoring: " + parser + " (User Requested)", true);
                 window.addLine("======================", true);
@@ -89,7 +90,8 @@ public final class ParserDebugCommand extends Command {
         } else {
             try {
                 parser.getCallbackManager().addCallback(DebugInfoListener.class, myPlugin);
-                DebugWindow window = new DebugWindow(myPlugin, "Parser Debug", parser, origin.getServer());
+                final DebugWindow window = new DebugWindow(myPlugin,
+                        "Parser Debug", parser, origin.getServer());
                 myPlugin.registeredParsers.put(parser, window);
                 sendLine(origin, isSilent, FORMAT_OUTPUT, "Adding callback ok");
                 window.addLine("======================", true);

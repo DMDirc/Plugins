@@ -192,7 +192,7 @@ public class PrefsCategoryLoader extends LoggingSwingWorker<JPanel, Object> {
         final TextLabel label = new TextLabel(setting.getTitle() + ": ", false);
 
 
-        JComponent option = UIUtilities.invokeAndWait(
+        final JComponent option = UIUtilities.invokeAndWait(
                 new ReturnableThread<JComponent>() {
 
             /** {@inheritDoc} */
