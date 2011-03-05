@@ -29,6 +29,7 @@ import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.config.Identity;
 import com.dmdirc.config.IdentityManager;
+
 import java.util.List;
 
 /**

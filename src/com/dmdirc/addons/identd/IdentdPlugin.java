@@ -32,9 +32,9 @@ import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
-import com.dmdirc.util.validators.PortValidator;
 import com.dmdirc.interfaces.ActionListener;
 import com.dmdirc.plugins.BasePlugin;
+import com.dmdirc.util.validators.PortValidator;
 
 import java.util.ArrayList;
 import java.util.List;

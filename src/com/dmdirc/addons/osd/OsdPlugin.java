@@ -31,9 +31,9 @@ import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.config.prefs.SettingChangeListener;
+import com.dmdirc.plugins.BasePlugin;
 import com.dmdirc.util.validators.NumericalValidator;
 import com.dmdirc.util.validators.OptionalValidator;
-import com.dmdirc.plugins.BasePlugin;
 
 import java.util.HashMap;
 import java.util.Map;

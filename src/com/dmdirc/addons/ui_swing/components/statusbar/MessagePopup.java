@@ -24,8 +24,8 @@ package com.dmdirc.addons.ui_swing.components.statusbar;
 
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.StatusMessage;
-import java.awt.Color;
 
+import java.awt.Color;
 import java.awt.Point;
 import java.awt.Window;
 import java.awt.event.MouseEvent;

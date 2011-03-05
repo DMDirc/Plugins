@@ -22,10 +22,10 @@
 
 package com.dmdirc.addons.serverlists.io;
 
-import com.dmdirc.config.Identity;
 import com.dmdirc.addons.serverlists.ServerEntry;
 import com.dmdirc.addons.serverlists.ServerGroup;
 import com.dmdirc.addons.serverlists.ServerGroupItem;
+import com.dmdirc.config.Identity;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -37,7 +37,6 @@ import java.util.Set;
  * Provides methods to instantiate a writer for a server group or entry.
  *
  * @since 0.6.4
- * @author chris
  */
 public class ServerGroupWriter {
 

@@ -28,6 +28,7 @@ import com.dmdirc.parser.interfaces.ChannelClientInfo;
 import com.dmdirc.parser.interfaces.ChannelInfo;
 import com.dmdirc.parser.interfaces.ClientInfo;
 import com.dmdirc.parser.interfaces.Parser;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -35,8 +36,6 @@ import java.util.Map;
 
 /**
  * ChannelInfo class for the Twitter plugin.
- *
- * @author shane
  */
 public class TwitterChannelInfo implements ChannelInfo {
 

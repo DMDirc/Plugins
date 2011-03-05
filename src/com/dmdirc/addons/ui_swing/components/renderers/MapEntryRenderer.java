@@ -24,6 +24,7 @@ package com.dmdirc.addons.ui_swing.components.renderers;
 
 import java.awt.Component;
 import java.util.Map.Entry;
+
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
 

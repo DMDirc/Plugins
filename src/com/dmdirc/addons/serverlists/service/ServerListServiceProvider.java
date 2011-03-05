@@ -23,15 +23,15 @@
 package com.dmdirc.addons.serverlists.service;
 
 import com.dmdirc.ParserFactory;
+import com.dmdirc.addons.serverlists.ServerGroup;
+import com.dmdirc.addons.serverlists.ServerGroupItem;
+import com.dmdirc.addons.serverlists.ServerList;
 import com.dmdirc.parser.common.MyInfo;
 import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.plugins.ExportedService;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.plugins.Service;
 import com.dmdirc.plugins.ServiceProvider;
-import com.dmdirc.addons.serverlists.ServerGroup;
-import com.dmdirc.addons.serverlists.ServerGroupItem;
-import com.dmdirc.addons.serverlists.ServerList;
 
 import java.net.URI;
 import java.util.Arrays;
@@ -41,7 +41,6 @@ import java.util.List;
  * Provides a fake parser service which handles <code>serverlist://</code> URIs,
  * and returns a suitable parser for the corresponding server list.
  *
- * @author chris
  * @since 0.6.4
  */
 public class ServerListServiceProvider implements ServiceProvider {

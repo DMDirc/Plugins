@@ -24,8 +24,8 @@ package com.dmdirc.addons.ui_swing.components.statusbar;
 
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.ui.interfaces.StatusBarComponent;
-import java.awt.Color;
 
+import java.awt.Color;
 import java.awt.event.MouseListener;
 
 import javax.swing.JComponent;

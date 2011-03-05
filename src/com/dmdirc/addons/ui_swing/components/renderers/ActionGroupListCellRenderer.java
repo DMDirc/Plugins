@@ -23,7 +23,9 @@
 package com.dmdirc.addons.ui_swing.components.renderers;
 
 import com.dmdirc.actions.ActionGroup;
+
 import java.awt.Component;
+
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
 
