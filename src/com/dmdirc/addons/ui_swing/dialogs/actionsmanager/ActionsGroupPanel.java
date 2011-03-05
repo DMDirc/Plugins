@@ -24,6 +24,7 @@ package com.dmdirc.addons.ui_swing.dialogs.actionsmanager;
 
 import com.dmdirc.actions.Action;
 import com.dmdirc.actions.ActionGroup;
+import com.dmdirc.actions.ActionTypeComparator;
 import com.dmdirc.addons.ui_swing.components.PackingTable;
 import com.dmdirc.addons.ui_swing.components.renderers.ActionTypeTableCellRenderer;
 import com.dmdirc.addons.ui_swing.components.renderers.ArrayCellRenderer;
