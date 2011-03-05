@@ -36,15 +36,15 @@ public class KaffeineSource implements MediaSource {
     @Override
     public MediaSourceState getState() {
         final List<String> res = DcopMediaSourcePlugin.getDcopResult("dcop kaffeine KaffeineIface isPlaying");
-        if (res.size() > 0) {
+        if (res.isEmpty()) {
+            return MediaSourceState.CLOSED;
+        } else {
             final String result = res.get(0);
             if (Boolean.parseBoolean(result)) {
                 return MediaSourceState.PLAYING;
             } else {
                 return MediaSourceState.CLOSED;
             }
-        } else {
-            return MediaSourceState.CLOSED;
         }
     }
 
