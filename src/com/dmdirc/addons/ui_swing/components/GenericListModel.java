@@ -243,3 +243,4 @@ public class GenericListModel<T> extends AbstractListModel {
         return get(index);
     }
 }
+}
