@@ -25,6 +25,7 @@ package com.dmdirc.addons.ui_swing.dialogs.actioneditor;
 import com.dmdirc.actions.interfaces.ActionType;
 import com.dmdirc.addons.ui_swing.components.ImageButton;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
+import com.dmdirc.config.IdentityManager;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.util.ListenerList;
 
@@ -83,14 +84,16 @@ public class ActionTriggersListPanel extends JPanel {
     /** Lays out the components. */
     private void layoutComponents() {
         synchronized (triggers) {
+            final IconManager iconManager = new IconManager(IdentityManager
+                .getGlobalConfig());
             setVisible(false);
 
             removeAll();
 
             for (final ActionType trigger : triggers) {
                 final ImageButton button = new ImageButton("delete",
-                        IconManager.getIconManager().getIcon("close-inactive"),
-                        IconManager.getIconManager().getIcon("close-active"));
+                        iconManager.getIcon("close-inactive"),
+                        iconManager.getIcon("close-active"));
                 button.addActionListener(new ActionListener() {
 
                     /** {@inheritDoc} */

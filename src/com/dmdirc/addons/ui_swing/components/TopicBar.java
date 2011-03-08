@@ -35,7 +35,6 @@ import com.dmdirc.config.IdentityManager;
 import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.interfaces.TopicChangeListener;
 import com.dmdirc.parser.common.ChannelJoinRequest;
-import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.messages.ColourManager;
 import com.dmdirc.ui.messages.Styliser;
 
@@ -112,8 +111,8 @@ public class TopicBar extends JComponent implements ActionListener,
         controller = channelFrame.getController();
         topicText = new TextPaneInputField(parentWindow);
         topicLengthMax = channel.getMaxTopicLength();
-        errorIcon =
-                new JLabel(IconManager.getIconManager().getIcon("input-error"));
+        errorIcon = new JLabel(channelFrame.getIconManager()
+                .getIcon("input-error"));
         topicText.setEditorKit(new WrapEditorKit(channel.getConfigManager()
                 .getOptionBool(controller.getDomain(), "showfulltopic")));
         ((DefaultStyledDocument) topicText.getDocument()).setDocumentFilter(
@@ -121,12 +120,12 @@ public class TopicBar extends JComponent implements ActionListener,
 
         topicText.getActionMap().put("paste-from-clipboard",
                 new ReplacePasteAction("(\r\n|\n|\r)", " "));
-        topicEdit = new ImageButton("edit", IconManager.getIconManager().
-                getIcon("edit-inactive"), IconManager.getIconManager().
-                getIcon("edit"));
-        topicCancel = new ImageButton("cancel", IconManager.getIconManager().
-                getIcon("close"), IconManager.getIconManager().
-                getIcon("close-active"));
+        topicEdit = new ImageButton("edit",
+                channelFrame.getIconManager().getIcon("edit-inactive"),
+                channelFrame.getContainer().getIconManager().getIcon("edit"));
+        topicCancel = new ImageButton("cancel",
+                channelFrame.getIconManager().getIcon("close"),
+                channelFrame.getIconManager().getIcon("close-active"));
 
         final SwingInputHandler handler = new SwingInputHandler(topicText,
                 channelFrame.getContainer().getCommandParser(),

@@ -22,12 +22,14 @@
 
 package com.dmdirc.addons.ui_swing.components.renderers;
 
+import com.dmdirc.config.IdentityManager;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.core.dialogs.sslcertificate.CertificateChainEntry;
 
 import java.awt.Component;
 
 import javax.swing.DefaultListCellRenderer;
+import javax.swing.Icon;
 import javax.swing.JList;
 
 /**
@@ -41,23 +43,39 @@ public class CertificateChainEntryCellRenderer extends DefaultListCellRenderer {
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 1;
+    /** Icon to use for invalid entries. */
+    private final Icon invalidIcon;
+    /** Icon to use for trusted entries. */
+    private final Icon trustedIcon;
+    /** Icon to use for other entries. */
+    private final Icon icon;
+
+    public CertificateChainEntryCellRenderer() {
+        invalidIcon = new IconManager(IdentityManager.getGlobalConfig())
+                .getIcon("cross");
+        trustedIcon = new IconManager(IdentityManager.getGlobalConfig())
+                .getIcon("tick");
+        icon = new IconManager(IdentityManager.getGlobalConfig())
+                .getIcon("nothing");
+    }
 
     /** {@inheritDoc} */
     @Override
     public Component getListCellRendererComponent(final JList list,
             final Object value, final int index, final boolean isSelected,
             final boolean cellHasFocus) {
-        super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+        super.getListCellRendererComponent(list, value, index, isSelected,
+                cellHasFocus);
         if (value instanceof CertificateChainEntry) {
             final CertificateChainEntry entry = (CertificateChainEntry) value;
 
             setText(entry.getName());
             if (entry.isInvalid()) {
-                setIcon(IconManager.getIconManager().getIcon("cross"));
+                setIcon(invalidIcon);
             } else if (entry.isTrusted()) {
-                setIcon(IconManager.getIconManager().getIcon("tick"));
+                setIcon(trustedIcon);
             } else {
-                setIcon(IconManager.getIconManager().getIcon("nothing"));
+                setIcon(icon);
             }
         }
         return this;
