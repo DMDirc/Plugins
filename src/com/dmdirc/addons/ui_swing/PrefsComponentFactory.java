@@ -353,15 +353,18 @@ public final class PrefsComponentFactory {
      */
     private static JComponent getColourOption(
             final PreferencesSetting setting) {
-        final ColourChooser option = new ColourChooser(setting.getValue(),
-                true, true);
+        final OptionalColourChooser option = new OptionalColourChooser(
+                setting.getValue(), true, true, true);
 
         option.addActionListener(new ActionListener() {
 
             /** {@inheritDoc} */
             @Override
             public void actionPerformed(final ActionEvent e) {
-                setting.setValue(((ColourChooser) e.getSource()).getColour());
+                final OptionalColourChooser chooser
+                        = ((OptionalColourChooser) e.getSource());
+                setting.setValue(chooser.isEnabled() + ":"
+                        + chooser.getColour());
             }
         });
 
