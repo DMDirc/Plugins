@@ -119,7 +119,6 @@ public final class OptionalColourChooser extends JPanel implements ActionListene
         this.window = window;
         showIRC = ircColours;
         showHex = hexColours;
-        value = initialColour;
 
         editButton = new JButton("Edit");
         if (UIUtilities.isWindowsUI()) {
@@ -149,7 +148,12 @@ public final class OptionalColourChooser extends JPanel implements ActionListene
         add(previewPanel, "growx, pushx, sgy all");
         add(editButton, "sgy all");
 
-        updateColour(initialColour);
+        if (initialColour.contains(":")) {
+            value = initialColour.substring(initialColour.indexOf(':') + 1);
+        } else {
+            value = initialColour;
+        }
+        updateColour(value);
     }
 
     /** Sets the colour back to white. */

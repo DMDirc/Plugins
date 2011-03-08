@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 DMDirc Developers
+ * Copyright (c) 2006-2011 Chris Smith, Shane Mc Cormack, Gregory Holmes
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -297,7 +297,8 @@ public final class ColourPickerPanel extends JPanel implements MouseListener,
             '8', '9', 'A', 'B', 'C', 'D', 'E', 'F',
         };
 
-        return (Integer.toString(chars[value / 16])) + Integer.toString(chars[value % 16]);
+        return Character.toString(chars[value / 16])
+                + Character.toString(chars[value % 16]);
     }
 
     private void mouseMotion(final MouseEvent e) {
@@ -349,7 +350,7 @@ public final class ColourPickerPanel extends JPanel implements MouseListener,
 
             final int i = (e.getX() - BORDER_SIZE) / IRC_WIDTH;
 
-            throwAction(ACTION_IRC,  Integer.toString(i));
+            throwAction(ACTION_IRC, Integer.toString(i));
 
         } else if (showHex && e.getY() > hexOffset && e.getY() < hexOffset +
                 HEX_HEIGHT) {
