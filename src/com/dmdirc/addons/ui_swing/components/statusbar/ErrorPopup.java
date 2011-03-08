@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.components.statusbar;
 
+import com.dmdirc.config.IdentityManager;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.ErrorManager;
 import com.dmdirc.logger.ErrorReportStatus;
@@ -89,8 +90,8 @@ public class ErrorPopup extends StatusbarPopupWindow {
                 final int count = buckets.values(level).size();
 
                 panel.add(new JLabel(level.toString(),
-                        IconManager.getIconManager().getIcon(level.getIcon()),
-                        JLabel.LEFT));
+                        new IconManager(IdentityManager.getGlobalConfig())
+                        .getIcon(level.getIcon()), JLabel.LEFT));
                 panel.add(new JLabel(String.valueOf(count), JLabel.RIGHT),
                         "growx, pushx, wrap");
             }

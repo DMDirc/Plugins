@@ -27,6 +27,7 @@ import com.dmdirc.actions.interfaces.ActionType;
 import com.dmdirc.addons.ui_swing.components.ImageButton;
 import com.dmdirc.addons.ui_swing.components.ImageToggleButton;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
+import com.dmdirc.config.IdentityManager;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.util.ListenerList;
 
@@ -124,14 +125,14 @@ public class ActionConditionDisplayPanel extends JPanel implements ActionListene
 
     /** Initialises the components. */
     private void initComponents() {
+        final IconManager iconManager = new IconManager(IdentityManager
+                .getGlobalConfig());
         label = new TextLabel("", false);
-        editButton = new ImageToggleButton("edit", IconManager.getIconManager().
-                getIcon("edit-inactive"),
-                IconManager.getIconManager().getIcon("edit"));
-        deleteButton = new ImageButton("delete", IconManager.getIconManager().
-                getIcon("close-inactive"), IconManager.getIconManager().
-                getIcon("close-inactive"),
-                IconManager.getIconManager().getIcon("close-active"));
+        editButton = new ImageToggleButton("edit", iconManager.
+                getIcon("edit-inactive"), iconManager.getIcon("edit"));
+        deleteButton = new ImageButton("delete", iconManager.
+                getIcon("close-inactive"), iconManager.
+                getIcon("close-inactive"), iconManager.getIcon("close-active"));
 
         editPanel = new ActionConditionEditorPanel(condition, trigger);
         listeners = new ListenerList();

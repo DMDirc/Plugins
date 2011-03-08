@@ -25,6 +25,7 @@ package com.dmdirc.addons.ui_swing.components.statusbar;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.dialogs.updater.SwingRestartDialog;
 import com.dmdirc.addons.ui_swing.dialogs.updater.SwingUpdaterDialog;
+import com.dmdirc.config.IdentityManager;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.interfaces.StatusBarComponent;
 import com.dmdirc.updater.UpdateChecker;
@@ -97,12 +98,14 @@ public class UpdaterLabel extends StatusbarPopupPanel<JLabel> implements
         }
 
         if (newStatus.equals(STATE.CHECKING)) {
-            label.setIcon(IconManager.getIconManager().
-                    getIcon("hourglass"));
+            label.setIcon(new IconManager(IdentityManager.getGlobalConfig())
+                    .getIcon("hourglass"));
         } else if (newStatus.equals(STATE.UPDATES_AVAILABLE)) {
-            label.setIcon(IconManager.getIconManager().getIcon("update"));
+            label.setIcon(new IconManager(IdentityManager.getGlobalConfig())
+                    .getIcon("update"));
         } else if (newStatus.equals(STATE.RESTART_REQUIRED)) {
-            label.setIcon(IconManager.getIconManager().getIcon("restart-needed"));
+            label.setIcon(new IconManager(IdentityManager.getGlobalConfig())
+                    .getIcon("restart-needed"));
         }
     }
 

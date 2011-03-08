@@ -24,6 +24,7 @@ package com.dmdirc.addons.ui_swing.components.expandingsettings;
 
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.ImageButton;
+import com.dmdirc.config.IdentityManager;
 import com.dmdirc.ui.IconManager;
 
 import java.awt.event.ActionEvent;
@@ -77,9 +78,7 @@ public final class CurrentOptionsPanel extends JPanel implements
     /**
      * Adds a current option.
      *
-     * @param optionName option to add
-     * @param type Option type
-     * @param value Option value
+     * @param setting Setting to add
      */
     protected void addOption(final JComponent setting) {
         settings.add(setting);
@@ -90,8 +89,7 @@ public final class CurrentOptionsPanel extends JPanel implements
     /**
      * Deletes a current option.
      *
-     * @param optionName Option to delete
-     * @param type Option type
+     * @param setting Setting to remove
      */
     protected void delOption(final JComponent setting) {
         settings.remove(setting);
@@ -110,8 +108,9 @@ public final class CurrentOptionsPanel extends JPanel implements
         final JLabel label = new JLabel();
         final ImageButton<JComponent> button = new ImageButton<JComponent>(
                 component.getName(),
-                IconManager.getIconManager().getIcon("close-inactive"),
-                IconManager.getIconManager().getIcon("close-active"));
+                new IconManager(IdentityManager.getGlobalConfig())
+                .getIcon("close-inactive"), new IconManager(IdentityManager
+                .getGlobalConfig()).getIcon("close-active"));
         button.setObject(component);
 
         label.setText(component.getName() + ": ");

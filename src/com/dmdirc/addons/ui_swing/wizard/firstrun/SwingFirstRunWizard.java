@@ -71,7 +71,8 @@ public final class SwingFirstRunWizard implements WizardListener,
         wizardDialog = new WizardDialog("DMDirc: Setup wizard",
                 new ArrayList<Step>(), parentWindow,
                 ModalityType.APPLICATION_MODAL);
-        wizardDialog.setIconImage(IconManager.getIconManager().getImage("icon"));
+        wizardDialog.setIconImage(new IconManager(IdentityManager
+                .getGlobalConfig()).getImage("icon"));
         wizardDialog.addWizardListener(this);
         if(Apple.isAppleUI()) {
             wizardDialog.setMinimumSize(new Dimension(400, 425));

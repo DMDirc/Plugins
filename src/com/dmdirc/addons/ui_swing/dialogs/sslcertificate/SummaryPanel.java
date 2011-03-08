@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.sslcertificate;
 
+import com.dmdirc.config.IdentityManager;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.core.dialogs.sslcertificate.CertificateSummaryEntry;
 
@@ -31,8 +32,8 @@ import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-
 import javax.swing.UIManager;
+
 import net.miginfocom.swing.MigLayout;
 
 /**
@@ -61,11 +62,13 @@ public class SummaryPanel extends JPanel {
         setBorder(BorderFactory.createTitledBorder(UIManager.getBorder(
                 "TitledBorder.border"), "Summary"));
         setLayout(new MigLayout("fill, wrap 1"));
+        final IconManager iconManager = new IconManager(IdentityManager
+                .getGlobalConfig());
 
         for (CertificateSummaryEntry entry : summary) {
-            add(new JLabel(entry.getText(),
-                    entry.isGood() ? IconManager.getIconManager().getIcon("tick")
-                    : IconManager.getIconManager().getIcon("cross"), JLabel.LEFT),
+            add(new JLabel(entry.getText(), entry.isGood()
+                    ? iconManager.getIcon("tick")
+                    : iconManager.getIcon("cross"), JLabel.LEFT),
                     "growx");
         }
     }

@@ -30,7 +30,6 @@ import com.dmdirc.addons.ui_swing.components.validating.ValidatingJTextField;
 import com.dmdirc.addons.ui_swing.textpane.TextPane;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.interfaces.ConfigChangeListener;
-import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.interfaces.SearchBar;
 import com.dmdirc.ui.interfaces.SearchBar.Direction;
 import com.dmdirc.ui.messages.IRCDocument;
@@ -114,15 +113,15 @@ public final class SwingSearchBar extends JPanel implements ActionListener,
     /** Initialises components. */
     private void initComponents() {
         closeButton = new ImageButton("close",
-                IconManager.getIconManager().getIcon("close-inactive"),
-                IconManager.getIconManager().getIcon("close-active"));
+                parent.getIconManager().getIcon("close-inactive"),
+                parent.getIconManager().getIcon("close-active"));
         nextButton = new JButton();
         prevButton = new JButton();
         caseCheck = new JCheckBox();
         validator = new SearchValidator();
         searchBox = new ValidatingJTextField(validator);
         wrapIndicator = new JLabel("Search wrapped",
-                IconManager.getIconManager().getIcon("linewrap"),
+                parent.getContainer().getIconManager().getIcon("linewrap"),
                 JLabel.LEFT);
 
         nextButton.setText("Later");
