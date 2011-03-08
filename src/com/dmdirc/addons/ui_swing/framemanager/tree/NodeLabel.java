@@ -26,6 +26,7 @@ import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.ui_swing.SelectionListener;
 import com.dmdirc.addons.ui_swing.components.ImageButton;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
+import com.dmdirc.config.IdentityManager;
 import com.dmdirc.interfaces.FrameInfoListener;
 import com.dmdirc.interfaces.NotificationListener;
 import com.dmdirc.ui.IconManager;
@@ -66,8 +67,7 @@ public class NodeLabel extends JPanel implements SelectionListener,
     /** Are we the selected window? */
     private boolean selected;
     /** Node icon. */
-    private final ImageButton icon = new ImageButton("", IconManager
-            .getIconManager().getIcon("icon"));
+    private final ImageButton icon = new ImageButton("", null);
     /** Text label. */
     private final JTextPane text = new JTextPane(new DefaultStyledDocument());
     /** Current styled text. */
@@ -91,10 +91,12 @@ public class NodeLabel extends JPanel implements SelectionListener,
      */
     private void init() {
         if (window == null) {
+            icon.setIcon(new IconManager(IdentityManager.getGlobalConfig())
+                    .getIcon("icon"));
             return;
         }
 
-        icon.setIcon(IconManager.getIconManager().getIcon(window.getIcon()));
+        icon.setIcon(window.getIconManager().getIcon(window.getIcon()));
         text.setText(window.getName());
         text.setBorder(null);
 
@@ -145,7 +147,7 @@ public class NodeLabel extends JPanel implements SelectionListener,
     @Override
     public void iconChanged(final FrameContainer window, final String icon) {
         if (equals(window)) {
-            this.icon.setIcon(IconManager.getIconManager().getIcon(icon));
+            this.icon.setIcon(window.getIconManager().getIcon(icon));
         }
     }
 

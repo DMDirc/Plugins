@@ -79,8 +79,9 @@ public class MDIBar extends JPanel implements SwingWindowListener,
         this.configDomain = controller.getDomain();
         visibility = config.getOptionBool(configDomain, "mdiBarVisibility");
 
-        closeButton = new NoFocusButton(IconManager.getIconManager().
-                getScaledIcon("close-12", ICON_SIZE, ICON_SIZE));
+        closeButton = new NoFocusButton(new IconManager(IdentityManager
+                .getGlobalConfig()).getScaledIcon("close-12", ICON_SIZE,
+                ICON_SIZE));
 
         setOpaque(false);
         setLayout(new MigLayout("hmax 17, ins 1 0 0 0, fill"));

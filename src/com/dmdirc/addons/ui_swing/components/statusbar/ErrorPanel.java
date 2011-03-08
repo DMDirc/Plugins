@@ -24,6 +24,7 @@ package com.dmdirc.addons.ui_swing.components.statusbar;
 
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SwingController;
+import com.dmdirc.config.IdentityManager;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.ErrorListener;
 import com.dmdirc.logger.ErrorManager;
@@ -57,14 +58,15 @@ public class ErrorPanel extends StatusbarPopupPanel<JLabel> implements
      */
     private static final long serialVersionUID = 2;
     /** non error state image icon. */
-    private static final Icon DEFAULT_ICON = IconManager.getIconManager().
-            getIcon("normal");
+    private static final Icon DEFAULT_ICON = new IconManager(IdentityManager
+            .getGlobalConfig()).getIcon("normal");
     /** Status controller. */
     private final MainFrame mainFrame;
     /** Swing status bar. */
     private final SwingStatusBar statusBar;
     /** Error manager. */
-    private final transient ErrorManager errorManager = ErrorManager.getErrorManager();
+    private final transient ErrorManager errorManager = ErrorManager
+            .getErrorManager();
     /** Dismiss menu. */
     private final JPopupMenu menu;
     /** Dismiss menu item. */
@@ -151,8 +153,9 @@ public class ErrorPanel extends StatusbarPopupPanel<JLabel> implements
                         if (errorLevel == null ||
                                 !error.getLevel().moreImportant(errorLevel)) {
                             errorLevel = error.getLevel();
-                            label.setIcon(IconManager.getIconManager()
-                                    .getIcon(errorLevel.getIcon()));
+                            label.setIcon(new IconManager(IdentityManager
+                                    .getGlobalConfig()).getIcon(errorLevel
+                                    .getIcon()));
                         }
                     }
                     setVisible(true);

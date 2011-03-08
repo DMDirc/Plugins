@@ -126,8 +126,8 @@ public final class MainFrame extends JFrame implements WindowListener,
         focusOrder = new QueuedLinkedHashSet<TextFrame>();
         initComponents();
 
-        imageIcon = new ImageIcon(IconManager.getIconManager()
-                .getImage("icon"));
+        imageIcon = new ImageIcon(new IconManager(IdentityManager
+                .getGlobalConfig()).getImage("icon"));
         setIconImage(imageIcon.getImage());
 
         CoreUIUtils.centreWindow(this);
@@ -581,8 +581,8 @@ public final class MainFrame extends JFrame implements WindowListener,
                         "ui", "showversion");
             }
         } else {
-            imageIcon = new ImageIcon(IconManager.getIconManager().getImage(
-                    "icon"));
+            imageIcon = new ImageIcon(new IconManager(IdentityManager
+                    .getGlobalConfig()).getImage("icon"));
             UIUtilities.invokeLater(new Runnable() {
 
                 /** {@inheritDoc} */

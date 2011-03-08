@@ -35,7 +35,6 @@ import com.dmdirc.config.IdentityManager;
 import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.interfaces.FrameInfoListener;
 import com.dmdirc.interfaces.NotificationListener;
-import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.interfaces.Window;
 
@@ -303,8 +302,9 @@ public final class ButtonBar implements FrameManager, ActionListener,
      */
     private void addButton(final Window source) {
         final FrameToggleButton button = new FrameToggleButton(
-                source.getContainer().getName(), IconManager.getIconManager()
-                .getIcon(source.getContainer().getIcon()), source);
+                source.getContainer().getName(), source.getContainer()
+                .getIconManager().getIcon(source.getContainer().getIcon()),
+                source);
         button.addActionListener(this);
         button.addMouseListener(this);
         button.setHorizontalAlignment(SwingConstants.LEFT);
@@ -485,7 +485,7 @@ public final class ButtonBar implements FrameManager, ActionListener,
             public void run() {
                 final FrameToggleButton button = getButton(window);
                 if (button != null) {
-                    button.setIcon(IconManager.getIconManager().getIcon(icon));
+                    button.setIcon(window.getIconManager().getIcon(icon));
                 }
             }
         });

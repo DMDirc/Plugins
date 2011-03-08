@@ -54,6 +54,7 @@ import com.dmdirc.config.ConfigManager;
 import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.interfaces.FrameCloseListener;
 import com.dmdirc.parser.common.ChannelJoinRequest;
+import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.interfaces.InputWindow;
 import com.dmdirc.ui.interfaces.Window;
 
@@ -570,6 +571,15 @@ public abstract class TextFrame extends JPanel implements Window,
     @Override
     public SwingController getController() {
         return controller;
+    }
+
+    /**
+     * Returns the IconManager for this frame.
+     *
+     * @return This frame's IconManager
+     */
+    public IconManager getIconManager() {
+        return getContainer().getIconManager();
     }
 
     /**

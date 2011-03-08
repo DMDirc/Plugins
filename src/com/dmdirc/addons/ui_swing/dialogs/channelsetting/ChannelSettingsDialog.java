@@ -193,7 +193,7 @@ public final class ChannelSettingsDialog extends StandardDialog implements
 
     /** Initialises the channel settings. */
     private void initSettingsPanel() {
-        channelSettingsPane = new SettingsPanel(identity,
+        channelSettingsPane = new SettingsPanel(
                 "These settings are specific to this channel on this network,"
                 + " any settings specified here will overwrite global settings");
         channelSettingsPane.addOption(PreferencesManager

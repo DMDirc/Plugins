@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.components.renderers;
 
+import com.dmdirc.config.IdentityManager;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.ui.IconManager;
 
@@ -38,11 +39,14 @@ public final class ErrorLevelIconCellRenderer extends DefaultTableCellRenderer {
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 1;
+    /** Icon manager to get icons from. */
+    private final IconManager iconManager = new IconManager(IdentityManager
+            .getGlobalConfig());
 
     /** {@inheritDoc} */
     @Override
     public void setValue(final Object value) {
         setHorizontalAlignment(JLabel.CENTER);
-        setIcon(IconManager.getIconManager().getIcon(((ErrorLevel) value).getIcon()));
+        setIcon(iconManager.getIcon(((ErrorLevel) value).getIcon()));
     }
 }

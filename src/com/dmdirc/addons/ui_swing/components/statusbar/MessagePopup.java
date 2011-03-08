@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.components.statusbar;
 
+import com.dmdirc.config.IdentityManager;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.StatusMessage;
 
@@ -163,9 +164,9 @@ class MessagePopup extends StatusbarTogglePanel<JLabel> {
 
             for (StatusMessage message : messages) {
                 panel.add(new JLabel(message.getMessage(), message.getIconType()
-                        == null ? null : IconManager.getIconManager().getIcon(
-                        message.getIconType()), SwingConstants.LEFT),
-                        "grow, push, wrap");
+                        == null ? null : new IconManager(IdentityManager
+                        .getGlobalConfig()).getIcon(message.getIconType()),
+                        SwingConstants.LEFT), "grow, push, wrap");
             }
         }
 

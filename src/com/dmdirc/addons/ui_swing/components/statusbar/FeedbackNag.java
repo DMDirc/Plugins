@@ -24,6 +24,7 @@ package com.dmdirc.addons.ui_swing.components.statusbar;
 
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.dialogs.FeedbackDialog;
+import com.dmdirc.config.IdentityManager;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.interfaces.StatusBarComponent;
 
@@ -33,7 +34,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
@@ -69,8 +69,8 @@ public class FeedbackNag extends JLabel implements StatusBarComponent,
         show = new JMenuItem("Open");
         final JMenuItem dismiss = new JMenuItem("Dismiss");
 
-        setIcon(new ImageIcon(IconManager.getIconManager().getImage(
-                "feedback")));
+        setIcon(new IconManager(IdentityManager.getGlobalConfig()).getIcon(
+                "feedback"));
         setBorder(BorderFactory.createEtchedBorder());
         setToolTipText("We would appreciate any feedback you may have about "
                 + "DMDirc.");

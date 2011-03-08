@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_swing.components.colours;
 
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
+import com.dmdirc.config.IdentityManager;
 import com.dmdirc.ui.IconManager;
 
 import java.awt.Window;
@@ -74,7 +75,8 @@ public final class ColourPickerDialog extends StandardDialog {
      */
     public ColourPickerDialog(final boolean showIRC, final boolean showHex) {
         this(showIRC, showHex, null);
-        setIconImage(IconManager.getIconManager().getImage("icon"));
+        setIconImage(new IconManager(IdentityManager.getGlobalConfig())
+                .getImage("icon"));
     }
 
     /**
