@@ -26,7 +26,6 @@ import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.colours.ColourPickerDialog;
 import com.dmdirc.addons.ui_swing.components.frames.InputTextFrame;
 import com.dmdirc.config.IdentityManager;
-import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.interfaces.InputField;
 import com.dmdirc.ui.interfaces.InputValidationListener;
 import com.dmdirc.util.ListenerList;
@@ -93,10 +92,10 @@ public class SwingInputField extends JComponent implements InputField,
         textField.addKeyListener(this);
         textField.setOpaque(true);
         wrapIndicator =
-                new JLabel(IconManager.getIconManager().getIcon("linewrap"));
+                new JLabel(textFrame.getIconManager().getIcon("linewrap"));
         wrapIndicator.setVisible(false);
         errorIndicator =
-                new JLabel(IconManager.getIconManager().getIcon("input-error"));
+                new JLabel(textFrame.getIconManager().getIcon("input-error"));
         errorIndicator.setVisible(false);
 
         setLayout(new MigLayout("ins 0, hidemode 3"));

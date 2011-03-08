@@ -24,6 +24,7 @@ package com.dmdirc.addons.ui_swing.dialogs.sslcertificate;
 
 import com.dmdirc.addons.ui_swing.components.ListScroller;
 import com.dmdirc.addons.ui_swing.components.renderers.CertificateChainEntryCellRenderer;
+import com.dmdirc.config.IdentityManager;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.core.dialogs.sslcertificate.CertificateChainEntry;
 
@@ -79,10 +80,12 @@ public class CertificateChainPanel extends JPanel {
         setLayout(new MigLayout("fillx, wrap 1"));
 
         add(new JScrollPane(list), "grow, pushy");
-        add(new JLabel("Certificate is trusted", IconManager.getIconManager().
-                getIcon("tick"), JLabel.LEFT), "growx");
-        add(new JLabel("Problem with certificate", IconManager.getIconManager().
-                getIcon("cross"), JLabel.LEFT), "growx");
+        add(new JLabel("Certificate is trusted", new IconManager(
+                IdentityManager.getGlobalConfig()).getIcon("tick"),
+                JLabel.LEFT), "growx");
+        add(new JLabel("Problem with certificate", new IconManager(
+                IdentityManager.getGlobalConfig()).getIcon("cross"),
+                JLabel.LEFT), "growx");
     }
 
     /**

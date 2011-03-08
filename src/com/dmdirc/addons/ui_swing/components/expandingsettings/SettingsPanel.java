@@ -50,8 +50,6 @@ public class SettingsPanel extends JPanel {
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 3;
-    /** Config manager. */
-    private final transient Identity config;
     /** Current Settings. */
     private final DoubleMap<PreferencesSetting, JComponent> settings;
     /** Info label. */
@@ -70,28 +68,24 @@ public class SettingsPanel extends JPanel {
     /**
      * Creates a new instance of SettingsPanel.
      *
-     * @param config Config to use
      * @param infoText Info blurb.
      */
-    public SettingsPanel(final Identity config, final String infoText) {
-        this(config, infoText, true);
+    public SettingsPanel(final String infoText) {
+        this(infoText, true);
     }
 
     /**
      * Creates a new instance of SettingsPanel.
      *
-     * @param config Config to use
      * @param infoText Info blurb.
      * @param padding Should we add padding to the panel?
      */
-    public SettingsPanel(final Identity config, final String infoText,
-            final boolean padding) {
+    public SettingsPanel(final String infoText, final boolean padding) {
         super();
 
         settings = new DoubleMap<PreferencesSetting, JComponent>();
 
         this.setOpaque(UIUtilities.getTabbedPaneOpaque());
-        this.config = config;
         this.padding = padding;
 
         initComponents(infoText);
@@ -135,15 +129,9 @@ public class SettingsPanel extends JPanel {
     /**
      * Adds an option to the settings panel.
      *
-     * @param optionName Option name
-     * @param displayName Display name
-     * @param type Option type
+     * @param category Category of options to add
      */
     public void addOption(final PreferencesCategory category) {
-        if (config == null) {
-            return;
-        }
-
         this.category = category;
 
         for (PreferencesSetting setting : category.getSettings()) {
@@ -192,9 +180,7 @@ public class SettingsPanel extends JPanel {
     /**
      * Adds a current option.
      *
-     * @param optionName option to add
-     * @param type Option type
-     * @param value Option value
+     * @param setting Setting to add
      */
     protected void addCurrentOption(final JComponent setting) {
         currentOptionsPanel.addOption(setting);
@@ -203,8 +189,7 @@ public class SettingsPanel extends JPanel {
     /**
      * Deletes a current option.
      *
-     * @param optionName Option to delete
-     * @param type Option type
+     * @param setting Setting to remove
      */
     protected void removeCurrentOption(final JComponent setting) {
         currentOptionsPanel.delOption(setting);
@@ -213,7 +198,7 @@ public class SettingsPanel extends JPanel {
     /**
      * Adds an addable option.
      *
-     * @param optionName Option name
+     * @param setting Setting to add
      */
     protected void addAddableOption(final JComponent setting) {
         settings.getKey(setting).setValue(null);
@@ -223,7 +208,7 @@ public class SettingsPanel extends JPanel {
     /**
      * Returns the component associated with a setting.
      *
-     * @param component The component to get the setting for
+     * @param comp The component to get the setting for
      *
      * @return Setting or null if not found
      */

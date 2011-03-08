@@ -22,6 +22,7 @@
 package com.dmdirc.addons.ui_swing.dialogs.prefs;
 
 import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
+import com.dmdirc.config.IdentityManager;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.ui.IconManager;
@@ -56,7 +57,7 @@ public class IconLoader extends LoggingSwingWorker<Icon, Void> {
     /** {@inheritDoc} */
     @Override
     protected Icon doInBackground() {
-        return IconManager.getIconManager().getIcon(icon);
+        return new IconManager(IdentityManager.getGlobalConfig()).getIcon(icon);
     }
 
     /** {@inheritDoc} */

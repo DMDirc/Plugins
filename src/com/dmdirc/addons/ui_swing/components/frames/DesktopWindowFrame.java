@@ -26,7 +26,6 @@ import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.interfaces.FrameCloseListener;
 import com.dmdirc.interfaces.FrameInfoListener;
-import com.dmdirc.ui.IconManager;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -56,7 +55,7 @@ public class DesktopWindowFrame extends JFrame implements FrameInfoListener,
     /**
      * Creates a new instance of DesktopWindowFrame.
      *
-     * @param windowFrame Frame that we want to contain in this Desktop frame.
+     * @param windowWindow Frame that we want to contain in this Desktop frame.
      * @param placeHolder The frame to use in the main client whilst this is
      * popped out.
      */
@@ -83,8 +82,8 @@ public class DesktopWindowFrame extends JFrame implements FrameInfoListener,
         setLayout(new MigLayout("fill, ins panel"));
         setPreferredSize(windowWindow.getController().getMainFrame().getSize());
         setTitle(windowWindow.getContainer().getTitle());
-        setIconImage(IconManager.getIconManager()
-                .getImage(windowWindow.getContainer().getIcon()));
+        setIconImage(windowWindow.getIconManager().getImage(windowWindow
+                .getContainer().getIcon()));
     }
 
     /**
@@ -121,7 +120,7 @@ public class DesktopWindowFrame extends JFrame implements FrameInfoListener,
             /** {@inheritDoc} */
             @Override
             public void run() {
-                setIconImage(IconManager.getIconManager().getImage(icon));
+                setIconImage(window.getIconManager().getImage(icon));
             }
         });
     }

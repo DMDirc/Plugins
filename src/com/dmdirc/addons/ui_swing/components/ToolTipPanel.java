@@ -24,6 +24,7 @@ package com.dmdirc.addons.ui_swing.components;
 
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
+import com.dmdirc.config.IdentityManager;
 import com.dmdirc.ui.IconManager;
 
 import java.awt.Color;
@@ -77,7 +78,8 @@ public class ToolTipPanel extends JPanel implements MouseListener {
 
         defaultHelp = helpText;
         this.tooltips = new HashMap<JComponent, String>();
-        this.icon = new JLabel(IconManager.getIconManager().getIcon("warning"));
+        this.icon = new JLabel(new IconManager(IdentityManager
+                .getGlobalConfig()).getIcon("warning"));
 
         setBackground(Color.WHITE);
         setForeground(Color.BLACK);
