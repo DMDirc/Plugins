@@ -27,7 +27,6 @@ import com.dmdirc.addons.ui_swing.SelectionListener;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.interfaces.FrameInfoListener;
-import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.messages.Styliser;
 
 import java.awt.Font;
@@ -66,8 +65,7 @@ public class FrameContainerMenuItem extends JMenuItem implements FrameInfoListen
     public FrameContainerMenuItem(final SwingController controller,
             final FrameContainer frame,
             final WindowMenuFrameManager manager) {
-        super(frame.getName(), IconManager.getIconManager().getIcon(frame.
-                getIcon()));
+        super(frame.getName(), frame.getIconManager().getIcon(frame.getIcon()));
 
         this.controller = controller;
         this.frame = frame;
@@ -86,7 +84,7 @@ public class FrameContainerMenuItem extends JMenuItem implements FrameInfoListen
             @Override
             public void run() {
                 if (frame != null && window != null && frame.equals(window)) {
-                    setIcon(IconManager.getIconManager().getIcon(icon));
+                    setIcon(window.getIconManager().getIcon(icon));
                 }
             }
         });

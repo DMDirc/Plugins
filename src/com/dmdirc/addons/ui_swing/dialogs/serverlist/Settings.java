@@ -33,8 +33,8 @@ import com.dmdirc.config.prefs.PreferencesManager;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-import javax.swing.BorderFactory;
 
+import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.border.Border;
@@ -111,16 +111,14 @@ public class Settings extends JPanel implements ServerListListener {
     private SettingsPanel getSettingsPanel(final ServerGroupItem item) {
         if (!panels.containsKey(item)) {
             if (item instanceof ServerGroup) {
-                panels.put(item, new SettingsPanel(IdentityManager.
-                        getNetworkConfig(item.getName()), "", false));
+                panels.put(item, new SettingsPanel("", false));
                 addSettings(panels.get(item), new ConfigManager("irc", "",
                     item.getGroup().getNetwork(), item.getName()),
                     IdentityManager.getServerConfig(item.getName()));
             } else if (item == null) {
-                panels.put(null, new SettingsPanel(null, "", false));
+                panels.put(null, new SettingsPanel("", false));
             } else {
-                panels.put(item, new SettingsPanel(IdentityManager.
-                        getServerConfig(item.getName()), "", false));
+                panels.put(item, new SettingsPanel("", false));
             }
         }
         return panels.get(item);

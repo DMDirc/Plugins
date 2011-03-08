@@ -206,7 +206,8 @@ public class MessageLabel extends JPanel implements StatusBarComponent,
                 if (currentMessage.getIconType() == null) {
                     label.setIcon(null);
                 } else {
-                    label.setIcon(IconManager.getIconManager().getIcon(
+                    label.setIcon(new IconManager(IdentityManager
+                            .getGlobalConfig()).getIcon(
                             currentMessage.getIconType()));
                 }
                 label.setText(UIUtilities.clipStringifNeeded(MessageLabel.this,

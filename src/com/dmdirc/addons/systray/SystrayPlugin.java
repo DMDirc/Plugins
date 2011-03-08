@@ -52,7 +52,7 @@ import java.awt.event.MouseListener;
 
 /**
  * The Systray plugin shows DMDirc in the user's system tray, and allows
- * notifications to be disabled.
+ * notifications to be disabled.IconManager.getIconManager()
  */
 public final class SystrayPlugin extends BasePlugin implements ActionListener,
         MouseListener, com.dmdirc.interfaces.ActionListener {
@@ -75,8 +75,8 @@ public final class SystrayPlugin extends BasePlugin implements ActionListener,
         show.addActionListener(this);
         quit.addActionListener(this);
 
-        icon = new TrayIcon(IconManager.getIconManager().getImage("logo"),
-                "DMDirc", menu);
+        icon = new TrayIcon(new IconManager(IdentityManager.getGlobalConfig())
+                .getImage("logo"), "DMDirc", menu);
         icon.setImageAutoSize(true);
         icon.addMouseListener(this);
         registerCommand(new PopupCommand(this), PopupCommand.INFO);

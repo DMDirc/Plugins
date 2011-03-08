@@ -102,8 +102,8 @@ public final class WindowMenuFrameManager extends JMenu implements
         setMnemonic('w');
         controller.getWindowFactory().addWindowListener(this);
 
-        closeMenuItem = new JMenuItem(IconManager.getIconManager().getIcon(
-                "close"));
+        closeMenuItem = new JMenuItem(new IconManager(IdentityManager
+                .getGlobalConfig()).getIcon("close"));
         closeMenuItem.setMnemonic('c');
         closeMenuItem.setText("Close");
         closeMenuItem.setActionCommand("Close");
