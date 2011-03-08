@@ -297,7 +297,8 @@ public final class ColourPickerPanel extends JPanel implements MouseListener,
             '8', '9', 'A', 'B', 'C', 'D', 'E', 'F',
         };
 
-        return (Integer.toString(chars[value / 16])) + Integer.toString(chars[value % 16]);
+        return Character.toString(chars[value / 16])
+                + Character.toString(chars[value % 16]);
     }
 
     private void mouseMotion(final MouseEvent e) {
@@ -349,7 +350,7 @@ public final class ColourPickerPanel extends JPanel implements MouseListener,
 
             final int i = (e.getX() - BORDER_SIZE) / IRC_WIDTH;
 
-            throwAction(ACTION_IRC,  Integer.toString(i));
+            throwAction(ACTION_IRC, Integer.toString(i));
 
         } else if (showHex && e.getY() > hexOffset && e.getY() < hexOffset +
                 HEX_HEIGHT) {
