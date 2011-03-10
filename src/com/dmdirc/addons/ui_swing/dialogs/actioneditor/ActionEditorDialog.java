@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_swing.dialogs.actioneditor;
 
 import com.dmdirc.actions.Action;
+import com.dmdirc.actions.ActionStatus;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 
 import java.awt.Dimension;
@@ -202,7 +203,7 @@ public class ActionEditorDialog extends StandardDialog implements ActionListener
             conditions.setActionTrigger(action.getTriggers()[0]);
             conditions.setConditions(action.getConditions());
             conditions.setConditionTree(action.getRealConditionTree());
-            advanced.setActionEnabled(action.isEnabled());
+            advanced.setActionEnabled(action.getStatus() != ActionStatus.DISABLED);
             advanced.setConcurrencyGroup(action.getConcurrencyGroup());
             advanced.setActionStopped(action.isStopping());
         }
