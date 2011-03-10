@@ -144,7 +144,7 @@ public class AddonToggle {
      */
     public String getName() {
         if (pi != null) {
-            return pi.getNiceName();
+            return pi.getMetaData().getFriendlyName();
         }
         if (theme != null) {
             return theme.getName();
@@ -160,7 +160,7 @@ public class AddonToggle {
      */
     public String getVersion() {
         if (pi != null) {
-            return pi.getFriendlyVersion();
+            return pi.getMetaData().getFriendlyVersion();
         }
 
         if (theme != null) {
@@ -177,7 +177,7 @@ public class AddonToggle {
      */
     public String getAuthor() {
         if (pi != null) {
-            return pi.getAuthor();
+            return pi.getMetaData().getAuthor();
         }
 
         if (theme != null) {
@@ -194,7 +194,7 @@ public class AddonToggle {
      */
     public String getDescription() {
         if (pi != null) {
-            return pi.getDescription();
+            return pi.getMetaData().getDescription();
         }
 
         if (theme != null) {

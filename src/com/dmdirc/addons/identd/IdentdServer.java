@@ -130,7 +130,7 @@ public final class IdentdServer implements Runnable {
                 Logger.userError(ErrorLevel.MEDIUM, "Unable to start identd server: " + e.getMessage());
                 if (e.getMessage().equals("Permission denied")) {
                     final PluginInfo plugin = PluginManager.getPluginManager().getPluginInfoByName("identd");
-                    if (plugin != null && PluginManager.getPluginManager().delPlugin(plugin.getRelativeFilename())) {
+                    if (plugin != null && PluginManager.getPluginManager().delPlugin(plugin.getMetaData().getRelativeFilename())) {
                         PluginManager.getPluginManager().updateAutoLoad(plugin);
                     }
                 }

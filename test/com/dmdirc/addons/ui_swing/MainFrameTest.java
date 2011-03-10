@@ -1,16 +1,16 @@
 /*
  * Copyright (c) 2006-2011 DMDirc Developers
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -24,11 +24,12 @@ package com.dmdirc.addons.ui_swing;
 
 import com.dmdirc.harness.ui.DMDircUITestCase;
 import org.junit.Test;
+import org.uispec4j.Trigger;
 import org.uispec4j.Window;
 import org.uispec4j.interception.WindowInterceptor;
 
 public class MainFrameTest extends DMDircUITestCase {
-    
+
     private static Window window;
 
     static {
@@ -36,8 +37,15 @@ public class MainFrameTest extends DMDircUITestCase {
 
         window = new Window(new MainFrame(controller));
         window.containsMenuBar().check();
+        WindowInterceptor.run(new Trigger() {
+
+            @Override
+            public void run() throws Exception {
+                window.getAwtComponent().setVisible(true);
+            }
+        });
     }
-    
+
     @Test
     public void testNewServerDialog() {
         Window popup = WindowInterceptor.run(window.getMenuBar()
@@ -68,6 +76,7 @@ public class MainFrameTest extends DMDircUITestCase {
 
     @Test
     public void testProfileManagerDialog() {
+        Window main = WindowInterceptor.run(Trigger.DO_NOTHING);
         Window popup = WindowInterceptor.run(window.getMenuBar()
                 .getMenu("Settings").getSubMenu("Profile Manager").triggerClick());
         popup.titleEquals("DMDirc: Profile Editor").check();
