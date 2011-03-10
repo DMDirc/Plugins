@@ -26,7 +26,10 @@ import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
+import com.dmdirc.commandparser.BaseCommandInfo;
 import com.dmdirc.commandparser.CommandArguments;
+import com.dmdirc.commandparser.CommandInfo;
+import com.dmdirc.commandparser.CommandType;
 import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.context.CommandContext;
 
@@ -35,6 +38,11 @@ import com.dmdirc.commandparser.commands.context.CommandContext;
  */
 public class PopOutCommand extends Command {
 
+    /** A command info object for this command. */
+    public static final CommandInfo INFO = new BaseCommandInfo("popout",
+            "popout - Makes the current window pop out of the client as a "
+                + "free floating window on your desktop.",
+            CommandType.TYPE_GLOBAL);
     /** SwingController associated with this popout Command. */
     private final SwingController controller;
 

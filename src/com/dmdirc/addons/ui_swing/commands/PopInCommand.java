@@ -26,7 +26,10 @@ import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
+import com.dmdirc.commandparser.BaseCommandInfo;
 import com.dmdirc.commandparser.CommandArguments;
+import com.dmdirc.commandparser.CommandInfo;
+import com.dmdirc.commandparser.CommandType;
 import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.context.CommandContext;
 
@@ -35,6 +38,11 @@ import com.dmdirc.commandparser.commands.context.CommandContext;
  */
 public class PopInCommand extends Command {
 
+    /** A command info object for this command. */
+    public static final CommandInfo INFO = new BaseCommandInfo("popin",
+            "popin - Reattaches the current window to the main client if it"
+                + " has been detached via the popin command.",
+            CommandType.TYPE_GLOBAL);
     /** SwingController associated with this popin Command. */
     private final SwingController controller;
 
