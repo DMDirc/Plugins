@@ -43,8 +43,8 @@ import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeSelectionModel;
-import net.miginfocom.layout.PlatformDefaults;
 
+import net.miginfocom.layout.PlatformDefaults;
 import net.miginfocom.swing.MigLayout;
 
 /**
@@ -148,10 +148,10 @@ public final class LicencesPanel extends JPanel implements TreeSelectionListener
         licence.setText(((Licence) userObject).getBody());
         } else if (userObject instanceof PluginInfo) {
             final PluginInfo pi = (PluginInfo) userObject;
-            licence.setText("<b>Name:</b> " + pi.getNiceName() + "<br>"
-                    + "<b>Version:</b> " + pi.getFriendlyVersion() + "<br>"
-                    + "<b>Author:</b> " + pi.getAuthor() + "<br>"
-                    + "<b>Description:</b> " + pi.getDescription() + "<br>");
+            licence.setText("<b>Name:</b> " + pi.getMetaData().getFriendlyName() + "<br>"
+                    + "<b>Version:</b> " + pi.getMetaData().getFriendlyVersion() + "<br>"
+                    + "<b>Author:</b> " + pi.getMetaData().getAuthor() + "<br>"
+                    + "<b>Description:</b> " + pi.getMetaData().getDescription() + "<br>");
         } else {
             licence.setText("<b>Name:</b> DMDirc<br>"
                     + "<b>Version:</b> " + IdentityManager.getGlobalConfig().

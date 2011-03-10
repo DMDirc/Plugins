@@ -113,7 +113,7 @@ public class NotificationCommand extends Command implements
             final String[][] data = new String[methods.size()][1];
             int i = 0;
             for (PluginInfo method : methods) {
-                data[i][0] = method.getName();
+                data[i][0] = method.getMetaData().getName();
                 i++;
             }
 
@@ -134,7 +134,7 @@ public class NotificationCommand extends Command implements
         } else if (arg == 1 && context.getPreviousArgs().get(0)
                 .equalsIgnoreCase("--method")) {
             for (PluginInfo source : parent.getMethods()) {
-                res.add(source.getName());
+                res.add(source.getMetaData().getName());
             }
             return res;
         }

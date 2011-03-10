@@ -23,8 +23,8 @@
 package com.dmdirc.addons.ui_swing.dialogs.about;
 
 import com.dmdirc.plugins.PluginInfo;
-import java.awt.Color;
 
+import java.awt.Color;
 import java.awt.Component;
 
 import javax.swing.JLabel;
@@ -56,7 +56,7 @@ public class LicenceRenderer extends DefaultTreeCellRenderer {
         if (((DefaultMutableTreeNode) value).getUserObject()
                 instanceof PluginInfo) {
             setText(((PluginInfo) ((DefaultMutableTreeNode) value)
-                    .getUserObject()).getNiceName());
+                    .getUserObject()).getMetaData().getFriendlyName());
         }
         return label;
     }
