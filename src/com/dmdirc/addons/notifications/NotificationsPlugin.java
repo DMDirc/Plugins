@@ -130,7 +130,7 @@ public class NotificationsPlugin extends BasePlugin implements ActionListener {
      */
     private void addPlugin(final PluginInfo target) {
         if (target.hasExportedService("showNotification")) {
-            methods.add(target.getName());
+            methods.add(target.getMetaData().getName());
             addMethodToOrder(target);
         }
     }
@@ -142,8 +142,8 @@ public class NotificationsPlugin extends BasePlugin implements ActionListener {
      * @param source The notification method to be tested
      */
     private void addMethodToOrder(final PluginInfo source) {
-        if (!order.contains(source.getName())) {
-            order.add(source.getName());
+        if (!order.contains(source.getMetaData().getName())) {
+            order.add(source.getMetaData().getName());
         }
     }
 
@@ -154,7 +154,7 @@ public class NotificationsPlugin extends BasePlugin implements ActionListener {
      * @param target The plugin to be tested
      */
     private void removePlugin(final PluginInfo target) {
-        methods.remove(target.getName());
+        methods.remove(target.getMetaData().getName());
     }
 
     /**
