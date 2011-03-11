@@ -151,7 +151,7 @@ class MessagePopup extends StatusbarTogglePanel<JLabel> {
                     + (parent.getWidth() - 5)));
             panel.setBackground(parent.getBackground());
             panel.setForeground(parent.getForeground());
-            panel.setBorder(new GappedEtchedBorder());
+            panel.setBorder(new GappedEtchedBorder(this));
         }
 
         /* {@inheritDoc} */
