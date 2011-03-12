@@ -34,6 +34,7 @@ import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.interfaces.ActionListener;
 import com.dmdirc.plugins.BasePlugin;
+import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.util.validators.PortValidator;
 
 import java.util.ArrayList;
@@ -48,6 +49,18 @@ public class IdentdPlugin extends BasePlugin implements ActionListener {
     private final List<Server> servers = new ArrayList<Server>();
     /** The IdentdServer that we use. */
     private IdentdServer myServer;
+    /** This plugin's plugin info. */
+    private final PluginInfo pluginInfo;
+
+    /**
+     * Creates a new instance of this plugin.
+     *
+     * @param pluginInfo This plugin's plugin info
+     */
+    public IdentdPlugin(final PluginInfo pluginInfo) {
+        super();
+        this.pluginInfo = pluginInfo;
+    }
 
     /**
      * Called when the plugin is loaded.
@@ -97,7 +110,7 @@ public class IdentdPlugin extends BasePlugin implements ActionListener {
         } else if (type == CoreActionType.SERVER_CONNECTED
                 || type == CoreActionType.SERVER_CONNECTERROR) {
             synchronized (servers) {
-                servers.remove(arguments[0]);
+                servers.remove((Server) arguments[0]);
 
                 if (servers.isEmpty() && !IdentityManager.getGlobalConfig()
                         .getOptionBool(getDomain(), "advanced.alwaysOn")) {
@@ -111,11 +124,11 @@ public class IdentdPlugin extends BasePlugin implements ActionListener {
     @Override
     public void showConfig(final PreferencesDialogModel manager) {
         final PreferencesCategory general = new PluginPreferencesCategory(
-                getPluginInfo(), "Identd",
+                pluginInfo, "Identd",
                 "General Identd Plugin config ('Lower' options take priority " +
                 "over those above them)");
         final PreferencesCategory advanced = new PluginPreferencesCategory(
-                getPluginInfo(), "Advanced",
+                pluginInfo, "Advanced",
                 "Advanced Identd Plugin config - Only edit these if you need " +
                 "to/know what you are doing. Editing these could prevent " +
                 "access to some servers. ('Lower' options take priority over " +

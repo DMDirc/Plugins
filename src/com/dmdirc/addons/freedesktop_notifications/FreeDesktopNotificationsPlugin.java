@@ -31,7 +31,7 @@ import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
-import com.dmdirc.plugins.BasePlugin;
+import com.dmdirc.plugins.BaseFileDependantPlugin;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.messages.Styliser;
@@ -46,8 +46,8 @@ import org.apache.commons.lang.StringEscapeUtils;
 /**
  * This plugin adds freedesktop Style Notifications to dmdirc.
  */
-public final class FreeDesktopNotificationsPlugin extends BasePlugin
-        implements ConfigChangeListener {
+public final class FreeDesktopNotificationsPlugin
+        extends BaseFileDependantPlugin implements ConfigChangeListener {
 
     /** notification timeout. */
     private int timeout;
@@ -59,10 +59,17 @@ public final class FreeDesktopNotificationsPlugin extends BasePlugin
     private boolean strictescape;
     /** Strip codes. */
     private boolean stripcodes;
+    /** This plugin's plugin info. */
+    private final PluginInfo pluginInfo;
 
-    /** Creates a new instance of this plugin. */
-    public FreeDesktopNotificationsPlugin() {
-        super();
+    /**
+     * Creates a new instance of this plugin.
+     *
+     * @param pluginInfo This plugin's plugin info
+     */
+    public FreeDesktopNotificationsPlugin(final PluginInfo pluginInfo) {
+        super(pluginInfo.getMetaData());
+        this.pluginInfo = pluginInfo;
         registerCommand(new FDNotifyCommand(this), FDNotifyCommand.INFO);
     }
 
@@ -175,29 +182,47 @@ public final class FreeDesktopNotificationsPlugin extends BasePlugin
     /** {@inheritDoc} */
     @Override
     public void domainUpdated() {
-        IdentityManager.getAddonIdentity().setOption(getDomain(), "general.icon", getFilesDirString() + "icon.png");
+        IdentityManager.getAddonIdentity().setOption(getDomain(),
+                "general.icon", getFilesDirString() + "icon.png");
     }
 
     /** {@inheritDoc} */
     @Override
     public void showConfig(final PreferencesDialogModel manager) {
-        final PreferencesCategory general = new PluginPreferencesCategory(getPluginInfo(), "FreeDesktop Notifications", "General configuration for FreeDesktop Notifications plugin.");
+        final PreferencesCategory general = new PluginPreferencesCategory(
+                pluginInfo, "FreeDesktop Notifications",
+                "General configuration for FreeDesktop Notifications plugin.");
 
-        general.addSetting(new PreferencesSetting(PreferencesType.INTEGER, getDomain(), "general.timeout", "Timeout", "Length of time in seconds before the notification popup closes."));
-        general.addSetting(new PreferencesSetting(PreferencesType.FILE, getDomain(), "general.icon", "icon", "Path to icon to use on the notification."));
-        general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN, getDomain(), "advanced.escapehtml", "Escape HTML", "Some Implementations randomly parse HTML, escape it before showing?"));
-        general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN, getDomain(), "advanced.strictescape", "Strict Escape HTML", "Strictly escape HTML or just the basic characters? (&, < and >)"));
-        general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN, getDomain(), "advanced.stripcodes", "Strip Control Codes", "Strip IRC Control codes from messages?"));
+        general.addSetting(new PreferencesSetting(PreferencesType.INTEGER,
+                getDomain(), "general.timeout", "Timeout",
+                "Length of time in seconds before the notification popup closes."));
+        general.addSetting(new PreferencesSetting(PreferencesType.FILE,
+                getDomain(), "general.icon", "icon",
+                "Path to icon to use on the notification."));
+        general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
+                getDomain(), "advanced.escapehtml", "Escape HTML",
+                "Some Implementations randomly parse HTML, escape it before showing?"));
+        general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
+                getDomain(), "advanced.strictescape", "Strict Escape HTML",
+                "Strictly escape HTML or just the basic characters? (&, < and >)"));
+        general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
+                getDomain(), "advanced.stripcodes", "Strip Control Codes",
+                "Strip IRC Control codes from messages?"));
 
         manager.getCategory("Plugins").addSubCategory(general);
     }
 
     private void setCachedSettings() {
-        timeout = IdentityManager.getGlobalConfig().getOptionInt(getDomain(), "general.timeout");
-        icon = IdentityManager.getGlobalConfig().getOption(getDomain(), "general.icon");
-        escapehtml = IdentityManager.getGlobalConfig().getOptionBool(getDomain(), "advanced.escapehtml");
-        strictescape = IdentityManager.getGlobalConfig().getOptionBool(getDomain(), "advanced.strictescape");
-        stripcodes = IdentityManager.getGlobalConfig().getOptionBool(getDomain(), "advanced.stripcodes");
+        timeout = IdentityManager.getGlobalConfig().getOptionInt(getDomain(),
+                "general.timeout");
+        icon = IdentityManager.getGlobalConfig().getOption(getDomain(),
+                "general.icon");
+        escapehtml = IdentityManager.getGlobalConfig().getOptionBool(
+                getDomain(), "advanced.escapehtml");
+        strictescape = IdentityManager.getGlobalConfig().getOptionBool(
+                getDomain(), "advanced.strictescape");
+        stripcodes = IdentityManager.getGlobalConfig().getOptionBool(
+                getDomain(), "advanced.stripcodes");
     }
 
     /** {@inheritDoc} */

@@ -41,6 +41,7 @@ import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.interfaces.ActionListener;
 import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.plugins.BasePlugin;
+import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.util.RollingList;
 
@@ -70,14 +71,20 @@ public final class LagDisplayPlugin extends BasePlugin implements
     private boolean showLabels = true;
     /** The length of history to keep per-server. */
     private int historySize = 100;
+    /** This plugin's plugin info. */
+    private final PluginInfo pluginInfo;
 
     /**
      * Creates a new LagDisplayPlugin.
      *
      * @param controller The controller to add components to
+     * @param pluginInfo This plugin's plugin info
      */
-    public LagDisplayPlugin(final SwingController controller) {
+    public LagDisplayPlugin(final SwingController controller,
+            final PluginInfo pluginInfo) {
+        super();
         this.controller = controller;
+        this.pluginInfo = pluginInfo;
     }
 
     /** {@inheritDoc} */
@@ -264,7 +271,7 @@ public final class LagDisplayPlugin extends BasePlugin implements
     @Override
     public void showConfig(final PreferencesDialogModel manager) {
         final PreferencesCategory cat = new PluginPreferencesCategory(
-                getPluginInfo(), "Lag display plugin", "");
+                pluginInfo, "Lag display plugin", "");
         cat.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
                 getDomain(), "usealternate",
                 "Alternate method", "Use an alternate method of determining "

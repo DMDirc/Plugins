@@ -33,19 +33,30 @@ import com.dmdirc.parser.common.MyInfo;
 import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.parser.interfaces.ProtocolDescription;
 import com.dmdirc.plugins.BasePlugin;
+import com.dmdirc.plugins.PluginInfo;
 
 import java.net.URI;
 import java.util.ArrayList;
 
 /**
  * Facilitates creation of Twitter parsers.
- *
- * @author shane
  */
 public class TwitterPlugin extends BasePlugin {
 
     /** Are we currently unloading? */
     private volatile boolean unloading = false;
+    /** This plugin's plugin info. */
+    private final PluginInfo pluginInfo;
+
+    /**
+     * Creates a new instance of this plugin.
+     *
+     * @param pluginInfo This plugin's plugin info
+     */
+    public TwitterPlugin(final PluginInfo pluginInfo) {
+        super();
+        this.pluginInfo = pluginInfo;
+    }
 
     /** {@inheritDoc} */
     @Override
@@ -87,8 +98,8 @@ public class TwitterPlugin extends BasePlugin {
     /** {@inheritDoc} */
     @Override
     public void showConfig(final PreferencesDialogModel manager) {
-        final PreferencesCategory category = new PluginPreferencesCategory(getPluginInfo(), "Twitter Plugin", "Settings related to the twitter plugin", "category-twitter");
-        final PreferencesCategory advanced = new PluginPreferencesCategory(getPluginInfo(), "Advanced", "Advanced Settings related to the twitter plugin", "category-twitter");
+        final PreferencesCategory category = new PluginPreferencesCategory(pluginInfo, "Twitter Plugin", "Settings related to the twitter plugin", "category-twitter");
+        final PreferencesCategory advanced = new PluginPreferencesCategory(pluginInfo, "Advanced", "Advanced Settings related to the twitter plugin", "category-twitter");
 
         category.addSetting(new PreferencesSetting(PreferencesType.INTEGER, getDomain(), "statuscount", "Statuses to request", "How many statuses to request at a time?"));
         category.addSetting(new PreferencesSetting(PreferencesType.INTEGER, getDomain(), "apicalls", "API Calls", "Aim to only use how many API Calls per hour? (Twitter has a max of 350)"));

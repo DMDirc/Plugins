@@ -48,6 +48,7 @@ import com.dmdirc.logger.Logger;
 import com.dmdirc.parser.interfaces.ClientInfo;
 import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.plugins.BasePlugin;
+import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.WindowManager;
 
@@ -68,14 +69,19 @@ public final class DCCPlugin extends BasePlugin implements ActionListener {
 
     /** Our DCC Container window. */
     private PlaceholderContainer container;
+    /** This plugin's plugin info. */
+    private final PluginInfo pluginInfo;
 
     /**
      * Creates a new instance of this plugin.
      *
      * @param controller The controller to register UI implementations with
+     * @param pluginInfo This plugin's plugin info
      */
-    public DCCPlugin(final SwingController controller) {
+    public DCCPlugin(final SwingController controller,
+            final PluginInfo pluginInfo) {
         super();
+        this.pluginInfo = pluginInfo;
         registerCommand(new DCCCommand(this), DCCCommand.INFO);
         final SwingWindowFactory factory = controller.getWindowFactory();
         factory.registerImplementation(new HashSet<String>(Arrays.asList(
@@ -724,13 +730,13 @@ public final class DCCPlugin extends BasePlugin implements ActionListener {
     @Override
     public void showConfig(final PreferencesDialogModel manager) {
         final PreferencesCategory general = new PluginPreferencesCategory(
-                getPluginInfo(), "DCC", "", "category-dcc");
+                pluginInfo, "DCC", "", "category-dcc");
         final PreferencesCategory firewall = new PluginPreferencesCategory(
-                getPluginInfo(), "Firewall", "");
+                pluginInfo, "Firewall", "");
         final PreferencesCategory sending = new PluginPreferencesCategory(
-                getPluginInfo(), "Sending", "");
+                pluginInfo, "Sending", "");
         final PreferencesCategory receiving = new PluginPreferencesCategory(
-                getPluginInfo(), "Receiving", "");
+                pluginInfo, "Receiving", "");
 
         manager.getCategory("Plugins").addSubCategory(general.setInlineAfter());
         general.addSubCategory(firewall.setInline());
