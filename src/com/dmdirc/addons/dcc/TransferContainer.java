@@ -29,7 +29,6 @@ import com.dmdirc.actions.ActionManager;
 import com.dmdirc.addons.dcc.actions.DCCActions;
 import com.dmdirc.addons.dcc.io.DCC;
 import com.dmdirc.addons.dcc.io.DCCTransfer;
-import com.dmdirc.addons.ui_swing.components.frames.ComponentFrame;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.parser.interfaces.callbacks.SocketCloseListener;
@@ -93,8 +92,7 @@ public class TransferContainer extends FrameContainer implements
             final String title, final String targetNick, final Server server) {
         super(dcc.getType() == DCCTransfer.TransferType.SEND
                 ? "dcc-send-inactive" : "dcc-receive-inactive",
-                title, title, ComponentFrame.class,
-                IdentityManager.getGlobalConfig(),
+                title, title, IdentityManager.getGlobalConfig(),
                 Arrays.asList("com.dmdirc.addons.dcc.ui.TransferPanel"));
         this.plugin = plugin;
         this.dcc = dcc;

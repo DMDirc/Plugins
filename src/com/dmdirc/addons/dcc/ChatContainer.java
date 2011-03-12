@@ -27,7 +27,6 @@ import com.dmdirc.addons.dcc.actions.DCCActions;
 import com.dmdirc.addons.dcc.io.DCCChat;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.core.components.WindowComponent;
-import com.dmdirc.ui.interfaces.InputWindow;
 
 import java.util.Arrays;
 
@@ -54,8 +53,7 @@ public class ChatContainer extends DCCFrameContainer implements DCCChatHandler {
      */
     public ChatContainer(final DCCPlugin plugin, final DCCChat dcc,
             final String title, final String nick, final String targetNick) {
-        super(title, "dcc-chat-inactive", InputWindow.class,
-                DCCCommandParser.getDCCCommandParser(),
+        super(title, "dcc-chat-inactive",DCCCommandParser.getDCCCommandParser(),
                 Arrays.asList(WindowComponent.TEXTAREA.getIdentifier(),
                 WindowComponent.INPUTFIELD.getIdentifier()));
         this.dccChat = dcc;
