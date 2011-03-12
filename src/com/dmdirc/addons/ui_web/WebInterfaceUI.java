@@ -26,7 +26,6 @@ import com.dmdirc.Channel;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.Server;
 import com.dmdirc.addons.ui_web.uicomponents.WebStatusBar;
-import com.dmdirc.config.prefs.PreferencesInterface;
 import com.dmdirc.ui.core.components.StatusBarManager;
 import com.dmdirc.ui.interfaces.UIController;
 import com.dmdirc.ui.interfaces.Window;
@@ -157,34 +156,6 @@ public class WebInterfaceUI implements UIController {
     @Override
     public void showMessageDialog(final String title, final String message) {
         // Do nothing
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public PreferencesInterface getPluginPrefsPanel() {
-        //TODO FIXME
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public PreferencesInterface getUpdatesPrefsPanel() {
-        //TODO FIXME
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public PreferencesInterface getUrlHandlersPrefsPanel() {
-        //TODO FIXME
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public PreferencesInterface getThemesPrefsPanel() {
-        //TODO FIXME
-        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     /** {@inheritDoc} */
