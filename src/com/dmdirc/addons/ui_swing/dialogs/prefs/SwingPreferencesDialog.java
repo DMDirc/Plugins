@@ -27,6 +27,8 @@ import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.ListScroller;
 import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
+import com.dmdirc.addons.ui_swing.components.addonpanel.PluginPanel;
+import com.dmdirc.addons.ui_swing.components.addonpanel.ThemePanel;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.addons.ui_swing.dialogs.updater.SwingRestartDialog;
 import com.dmdirc.config.IdentityManager;
@@ -102,7 +104,11 @@ public final class SwingPreferencesDialog extends StandardDialog implements
                 mainPanel.setWaiting(true);
                 PreferencesDialogModel prefsManager = null;
                 try {
-                    prefsManager = new PreferencesDialogModel(controller);
+                    prefsManager = new PreferencesDialogModel(
+                            new PluginPanel(parentWindow, controller),
+                            new ThemePanel(parentWindow, controller),
+                            new UpdateConfigPanel(controller),
+                            new URLConfigPanel(parentWindow));
                 } catch (IllegalArgumentException ex) {
                     mainPanel.setError(ex.getMessage());
                     Logger.appError(ErrorLevel.HIGH, "Unable to load the" +
