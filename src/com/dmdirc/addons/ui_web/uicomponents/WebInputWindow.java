@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_web.uicomponents;
 
 import com.dmdirc.WritableFrameContainer;
+import com.dmdirc.addons.ui_web.Client;
 import com.dmdirc.addons.ui_web.WebInterfaceUI;
 import com.dmdirc.commandparser.parsers.CommandParser;
 import com.dmdirc.ui.input.InputHandler;
@@ -32,8 +33,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- *
- * @author chris
+ * A Web-UI specific input window.
  */
 public class WebInputWindow extends WebWindow implements InputWindow {
 
@@ -43,8 +43,8 @@ public class WebInputWindow extends WebWindow implements InputWindow {
 
     private final WebInputHandler inputhandler;
 
-    private final Map<String, WebInputHandler> inputHandlers
-            = new HashMap<String, WebInputHandler>();
+    private final Map<Client, WebInputHandler> inputHandlers
+            = new HashMap<Client, WebInputHandler>();
 
     public WebInputWindow(final WebInterfaceUI controller,
             final WritableFrameContainer parent) {
@@ -61,18 +61,18 @@ public class WebInputWindow extends WebWindow implements InputWindow {
         return inputhandler;
     }
 
-    public InputHandler getInputHandler(final String clientID) {
-        if (!inputHandlers.containsKey(clientID)) {
+    public WebInputHandler getInputHandler(final Client client) {
+        if (!inputHandlers.containsKey(client)) {
             final WebInputHandler ih = new WebInputHandler(
-                    new WebInputField(clientID), commandparser, getContainer());
+                    new WebInputField(client), commandparser, getContainer());
             ih.setTabCompleter(inputhandler.getTabCompleter());
-            inputHandlers.put(clientID, ih);
+            inputHandlers.put(client, ih);
         }
 
-        return inputHandlers.get(clientID);
+        return inputHandlers.get(client);
     }
 
-    public InputHandler getInputHandler(final String clientID,
+    public WebInputHandler getInputHandler(final Client client,
             final String text, final String selStart, final String selEnd) {
         int sel1, sel2;
 
@@ -84,7 +84,7 @@ public class WebInputWindow extends WebWindow implements InputWindow {
             sel2 = 0;
         }
 
-        final WebInputHandler ih = (WebInputHandler) getInputHandler(clientID);
+        final WebInputHandler ih = getInputHandler(client);
         final WebInputField field = (WebInputField) ih.getTarget();
         field.setContent(text);
         field.setSelStart(sel1);

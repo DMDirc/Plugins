@@ -35,8 +35,6 @@ import org.mortbay.jetty.handler.AbstractHandler;
 
 /**
  * Handles requests for DMDirc resources (URLs starting with /dmdirc/).
- *
- * @author chris
  */
 public class DMDircRequestHandler extends AbstractHandler {
 

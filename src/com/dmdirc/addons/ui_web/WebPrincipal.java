@@ -25,8 +25,7 @@ package com.dmdirc.addons.ui_web;
 import java.security.Principal;
 
 /**
- *
- * @author chris
+ * A basic principal implementation for the Web UI.
  */
 public class WebPrincipal implements Principal {
 

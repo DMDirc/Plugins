@@ -25,17 +25,16 @@ package com.dmdirc.addons.ui_web;
 import com.dmdirc.addons.ui_web.uicomponents.WebWindow;
 
 /**
- *
- * @author chris
+ * A DTO for describing a line added to a window.
  */
 public class Message {
 
     private final String message;
     private final WebWindow window;
 
-    public Message(final String message, final WebWindow aThis) {
+    public Message(final String message, final WebWindow window) {
         this.message = message;
-        this.window = aThis;
+        this.window = window;
     }
 
     public String getMessage() {

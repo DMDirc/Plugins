@@ -22,7 +22,7 @@
 
 package com.dmdirc.addons.ui_web.uicomponents;
 
-import com.dmdirc.addons.ui_web.DynamicRequestHandler;
+import com.dmdirc.addons.ui_web.Client;
 import com.dmdirc.addons.ui_web.Event;
 import com.dmdirc.ui.interfaces.InputField;
 
@@ -30,12 +30,11 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyListener;
 
 /**
- *
- * @author chris
+ * An input field for a specific
  */
 public class WebInputField implements InputField {
 
-    private String clientID;
+    private Client client;
 
     private String text;
 
@@ -45,8 +44,8 @@ public class WebInputField implements InputField {
         super();
     }
 
-    public WebInputField(final String clientID) {
-        this.clientID = clientID;
+    public WebInputField(final Client client) {
+        this.client = client;
     }
 
     /** {@inheritDoc} */
@@ -107,7 +106,7 @@ public class WebInputField implements InputField {
     /** {@inheritDoc} */
     @Override
     public void setText(final String text) {
-        DynamicRequestHandler.addEvent(clientID, new Event("settext", text));
+        client.addEvent(new Event("settext", text));
     }
 
     /** {@inheritDoc} */
@@ -119,8 +118,7 @@ public class WebInputField implements InputField {
     /** {@inheritDoc} */
     @Override
     public void setCaretPosition(final int position) {
-        DynamicRequestHandler.addEvent(clientID, new Event(
-                "setcaret", position));
+        client.addEvent(new Event("setcaret", position));
     }
 
     /** {@inheritDoc} */

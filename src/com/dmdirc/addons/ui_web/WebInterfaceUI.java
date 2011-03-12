@@ -43,24 +43,27 @@ import org.mortbay.jetty.security.SecurityHandler;
  */
 public class WebInterfaceUI implements UIController {
 
-    /** The domain used for config settings. */
-    public static final String DOMAIN = "plugin-webui";
-
     /** The web server we're using. */
     private final org.mortbay.jetty.Server webServer;
 
     /** The window manager for this UI. */
     private final WebWindowManager windowManager;
 
+    /** The dynamic request handler in use. */
+    private final DynamicRequestHandler handler;
+
     /**
      * Creates a new WebInterfaceUI belonging to the specified plugin.
+     *
+     * @param domain The domain to retrieve config settings from
      */
-    public WebInterfaceUI() {
+    public WebInterfaceUI(final String domain) {
         super();
 
         final SecurityHandler sh = new SecurityHandler();
         final Constraint constraint = new Constraint();
         final ConstraintMapping cm = new ConstraintMapping();
+        handler = new DynamicRequestHandler(this);
 
         constraint.setName("DMDirc Web UI");
         constraint.setRoles(new String[]{"user"});
@@ -69,7 +72,7 @@ public class WebInterfaceUI implements UIController {
         cm.setConstraint(constraint);
         cm.setPathSpec("/*");
 
-        sh.setUserRealm(new WebUserRealm());
+        sh.setUserRealm(new WebUserRealm(domain));
         sh.setConstraintMappings(new ConstraintMapping[]{cm});
 
         webServer = new org.mortbay.jetty.Server(5978);
@@ -79,7 +82,7 @@ public class WebInterfaceUI implements UIController {
             new RootRequestHandler(),
             new StaticRequestHandler(),
             new DMDircRequestHandler(),
-            new DynamicRequestHandler(this),
+            handler,
         });
 
         try {
@@ -90,11 +93,25 @@ public class WebInterfaceUI implements UIController {
 
         windowManager = new WebWindowManager(this);
 
-        StatusBarManager.getStatusBarManager().registerStatusBar(new WebStatusBar());
+        StatusBarManager.getStatusBarManager().registerStatusBar(new WebStatusBar(handler));
     }
 
+    /**
+     * Retrieves the window manager used by this UI.
+     *
+     * @return This UI's window manager
+     */
     public WebWindowManager getWindowManager() {
         return windowManager;
+    }
+
+    /**
+     * Retrieves the dynamic request handler in use.
+     *
+     * @return This UI's request handler
+     */
+    public DynamicRequestHandler getHandler() {
+        return handler;
     }
 
     /**

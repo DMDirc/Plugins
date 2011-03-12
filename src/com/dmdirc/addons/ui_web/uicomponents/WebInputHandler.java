@@ -29,8 +29,7 @@ import com.dmdirc.ui.input.TabCompleter;
 import com.dmdirc.ui.interfaces.InputField;
 
 /**
- *
- * @author chris
+ * An input handler for the web ui.
  */
 public class WebInputHandler extends InputHandler {
 

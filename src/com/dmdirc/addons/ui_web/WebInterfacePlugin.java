@@ -39,7 +39,7 @@ public class WebInterfacePlugin extends BasePlugin {
     @Override
     public void onLoad() {
         if (ui == null) {
-             ui = new WebInterfaceUI();
+             ui = new WebInterfaceUI(getDomain());
         }
     }
 
@@ -59,7 +59,7 @@ public class WebInterfacePlugin extends BasePlugin {
      */
     public void addWebHandler(final Handler newHandler) {
         if (ui == null) {
-             ui = new WebInterfaceUI();
+             ui = new WebInterfaceUI(getDomain());
         }
 
         ui.addWebHandler(newHandler);
