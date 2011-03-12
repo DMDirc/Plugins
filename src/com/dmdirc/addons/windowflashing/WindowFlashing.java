@@ -32,6 +32,7 @@ import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.plugins.BasePlugin;
+import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.PluginManager;
 
 import com.sun.jna.Native;
@@ -59,10 +60,17 @@ public class WindowFlashing extends BasePlugin implements ConfigChangeListener {
     private int flashcount = Integer.MAX_VALUE;
     /** Cached flags setting. */
     private int flags = 0;
+    /** This plugin's plugin info. */
+    private final PluginInfo pluginInfo;
 
-    /** Creates a new instance of this plugin. */
-    public WindowFlashing() {
+    /**
+     * Creates a new instance of this plugin.
+     *
+     * @param pluginInfo This plugin's plugin info
+     */
+    public WindowFlashing(final PluginInfo pluginInfo) {
         super();
+        this.pluginInfo = pluginInfo;
         registerCommand(new FlashWindow(this), FlashWindow.INFO);
     }
 
@@ -113,7 +121,7 @@ public class WindowFlashing extends BasePlugin implements ConfigChangeListener {
     @Override
     public void showConfig(final PreferencesDialogModel manager) {
         final PreferencesCategory category = new PluginPreferencesCategory(
-                getPluginInfo(), "Window Flashing",
+                pluginInfo, "Window Flashing",
                 "General configuration for window flashing plugin.");
 
         category.addSetting(new PreferencesSetting(

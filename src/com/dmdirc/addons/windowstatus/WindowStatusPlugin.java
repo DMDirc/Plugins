@@ -41,6 +41,7 @@ import com.dmdirc.parser.interfaces.ChannelClientInfo;
 import com.dmdirc.parser.interfaces.ChannelInfo;
 import com.dmdirc.parser.interfaces.ClientInfo;
 import com.dmdirc.plugins.BasePlugin;
+import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.util.ReturnableThread;
 
@@ -64,10 +65,17 @@ public final class WindowStatusPlugin extends BasePlugin
     private boolean shownone;
     /** Prefix for users without modes. */
     private String nonePrefix;
+    /** This plugin's plugin info. */
+    private final PluginInfo pluginInfo;
 
-    /** Creates a new instance of WindowStatusPlugin. */
-    public WindowStatusPlugin() {
+    /**
+     * Creates a new instance of WindowStatusPlugin.
+     *
+     * @param pluginInfo This plugin's plugin info
+     */
+    public WindowStatusPlugin(final PluginInfo pluginInfo) {
         super();
+        this.pluginInfo = pluginInfo;
 
         panel = UIUtilities.invokeAndWait(
                 new ReturnableThread<WindowStatusPanel>() {
@@ -211,7 +219,7 @@ public final class WindowStatusPlugin extends BasePlugin
     @Override
     public void showConfig(final PreferencesDialogModel manager) {
         final PreferencesCategory category = new PluginPreferencesCategory(
-                getPluginInfo(), "Window status", "");
+                pluginInfo, "Window status", "");
 
         category.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
                 getDomain(), "channel.shownone", "Show 'none' count",

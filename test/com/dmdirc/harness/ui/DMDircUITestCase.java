@@ -71,7 +71,7 @@ public class DMDircUITestCase extends UISpecTestCase {
         final SwingWindowFactory windowFactory = mock(SwingWindowFactory.class);
         when(controller.getDomain()).thenReturn("test");
         when(controller.getWindowFactory()).thenReturn(windowFactory);
-        when(controller.getPluginInfo()).thenReturn(pluginInfo);
+        when(controller.getVersion()).thenReturn(new Version(1));
         when(pluginInfo.getMetaData()).thenReturn(metaData);
         when(metaData.getVersion()).thenReturn(new Version(1));
 

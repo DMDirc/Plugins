@@ -34,6 +34,7 @@ import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.plugins.BasePlugin;
+import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.messages.Styliser;
@@ -61,10 +62,17 @@ public final class SystrayPlugin extends BasePlugin implements ActionListener,
     private final TrayIcon icon;
     /** Main frame instance. */
     private MainFrame mainFrame;
+    /** This plugin's plugin info. */
+    private final PluginInfo pluginInfo;
 
-    /** Creates a new system tray plugin. */
-    public SystrayPlugin() {
+    /**
+     * Creates a new system tray plugin.
+     *
+     * @param pluginInfo This plugin's plugin info
+     */
+    public SystrayPlugin(final PluginInfo pluginInfo) {
         super();
+        this.pluginInfo = pluginInfo;
         final MenuItem show = new MenuItem("Show/hide");
         final MenuItem quit = new MenuItem("Quit");
 
@@ -153,7 +161,7 @@ public final class SystrayPlugin extends BasePlugin implements ActionListener,
             continueLoading = false;
         }
         if (!continueLoading || mainFrame == null) {
-            getPluginInfo().unloadPlugin();
+            pluginInfo.unloadPlugin();
         }
         super.onLoad();
     }
@@ -170,7 +178,7 @@ public final class SystrayPlugin extends BasePlugin implements ActionListener,
     @Override
     public void showConfig(final PreferencesDialogModel manager) {
         final PreferencesCategory category = new PluginPreferencesCategory(
-                getPluginInfo(), "System Tray",
+                pluginInfo, "System Tray",
                 "General configuration settings");
 
         category.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,

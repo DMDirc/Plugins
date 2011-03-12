@@ -41,6 +41,7 @@ import com.dmdirc.parser.interfaces.ChannelClientInfo;
 import com.dmdirc.parser.interfaces.ChannelInfo;
 import com.dmdirc.parser.interfaces.ClientInfo;
 import com.dmdirc.plugins.BasePlugin;
+import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.messages.ColourManager;
 import com.dmdirc.util.ReturnableThread;
@@ -52,8 +53,6 @@ import java.util.Map;
 
 /**
  * Provides various features related to nickname colouring.
- *
- * @author chris
  */
 public final class NickColourPlugin extends BasePlugin implements ActionListener,
         ConfigChangeListener {
@@ -67,6 +66,18 @@ public final class NickColourPlugin extends BasePlugin implements ActionListener
     private boolean userandomcolour;
     private boolean settext;
     private boolean setnicklist;
+    /** This plugin's plugin info. */
+    private final PluginInfo pluginInfo;
+
+    /**
+     * Creates a new instance of this plugin.
+     *
+     * @param pluginInfo This plugin's plugin info
+     */
+    public NickColourPlugin(final PluginInfo pluginInfo) {
+        super();
+        this.pluginInfo = pluginInfo;
+    }
 
     /** {@inheritDoc} */
     @Override
@@ -247,10 +258,10 @@ public final class NickColourPlugin extends BasePlugin implements ActionListener
     @Override
     public void showConfig(final PreferencesDialogModel manager) {
         final PreferencesCategory general = new PluginPreferencesCategory(
-                getPluginInfo(), "Nick Colours",
+                pluginInfo, "Nick Colours",
                 "General configuration for NickColour plugin.");
         final PreferencesCategory colours = new PluginPreferencesCategory(
-                getPluginInfo(), "Colours",
+                pluginInfo, "Colours",
                 "Set colours for specific nicknames.", UIUtilities.invokeAndWait(
                 new ReturnableThread<NickColourPanel>() {
 
