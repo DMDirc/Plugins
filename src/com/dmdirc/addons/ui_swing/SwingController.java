@@ -26,9 +26,6 @@ import com.dmdirc.Channel;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.Server;
 import com.dmdirc.addons.ui_swing.commands.*; //NOPMD
-import com.dmdirc.addons.ui_swing.components.addonpanel.AddonPanel;
-import com.dmdirc.addons.ui_swing.components.addonpanel.PluginPanel;
-import com.dmdirc.addons.ui_swing.components.addonpanel.ThemePanel;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.addons.ui_swing.components.statusbar.FeedbackNag;
 import com.dmdirc.addons.ui_swing.components.statusbar.SwingStatusBar;
@@ -37,8 +34,6 @@ import com.dmdirc.addons.ui_swing.dialogs.StandardMessageDialog;
 import com.dmdirc.addons.ui_swing.dialogs.channelsetting.ChannelSettingsDialog;
 import com.dmdirc.addons.ui_swing.dialogs.error.ErrorListDialog;
 import com.dmdirc.addons.ui_swing.dialogs.prefs.SwingPreferencesDialog;
-import com.dmdirc.addons.ui_swing.dialogs.prefs.URLConfigPanel;
-import com.dmdirc.addons.ui_swing.dialogs.prefs.UpdateConfigPanel;
 import com.dmdirc.addons.ui_swing.dialogs.serversetting.ServerSettingsDialog;
 import com.dmdirc.addons.ui_swing.dialogs.url.URLDialog;
 import com.dmdirc.addons.ui_swing.wizard.WizardListener;
@@ -47,7 +42,6 @@ import com.dmdirc.config.Identity;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
-import com.dmdirc.config.prefs.PreferencesInterface;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
@@ -404,61 +398,6 @@ public class SwingController extends BasePlugin implements UIController {
      */
     public void showErrorDialog() {
         errorDialog.display();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public PreferencesInterface getPluginPrefsPanel() {
-        return UIUtilities.invokeAndWait(new ReturnableThread<AddonPanel>() {
-
-            /** {@inheritDoc} */
-            @Override
-            public void run() {
-                setObject(new PluginPanel(me, SwingController.this));
-            }
-        });
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public PreferencesInterface getUpdatesPrefsPanel() {
-        return UIUtilities.invokeAndWait(
-                new ReturnableThread<PreferencesInterface>() {
-
-            /** {@inheritDoc} */
-            @Override
-            public void run() {
-                setObject(new UpdateConfigPanel(SwingController.this));
-            }
-        });
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public PreferencesInterface getUrlHandlersPrefsPanel() {
-        return UIUtilities.invokeAndWait(
-                new ReturnableThread<PreferencesInterface>() {
-
-            /** {@inheritDoc} */
-            @Override
-            public void run() {
-                setObject(new URLConfigPanel(me));
-            }
-        });
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public PreferencesInterface getThemesPrefsPanel() {
-        return UIUtilities.invokeAndWait(
-                new ReturnableThread<PreferencesInterface>() {
-
-            /** {@inheritDoc} */
-            @Override
-            public void run() {
-                setObject(new ThemePanel(me, SwingController.this));
-            }
-        });
     }
 
     /**

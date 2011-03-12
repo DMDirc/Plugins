@@ -144,34 +144,6 @@ public class WebInterfaceUI implements UIController {
 
     /** {@inheritDoc} */
     @Override
-    public PreferencesInterface getPluginPrefsPanel() {
-        //TODO FIXME
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public PreferencesInterface getUpdatesPrefsPanel() {
-        //TODO FIXME
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public PreferencesInterface getUrlHandlersPrefsPanel() {
-        //TODO FIXME
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public PreferencesInterface getThemesPrefsPanel() {
-        //TODO FIXME
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public void requestWindowFocus(final Window window) {
         // TODO: Tell clients to focus
     }

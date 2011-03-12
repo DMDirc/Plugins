@@ -25,7 +25,6 @@ package com.dmdirc.addons.ui_dummy;
 import com.dmdirc.Channel;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.Server;
-import com.dmdirc.config.prefs.PreferencesInterface;
 import com.dmdirc.plugins.BasePlugin;
 import com.dmdirc.ui.core.components.StatusBarManager;
 import com.dmdirc.ui.interfaces.UIController;
@@ -80,30 +79,6 @@ public final class DummyController extends BasePlugin implements UIController {
     @Override
     public void showMessageDialog(final String title, final String message) {
         System.out.println(message);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public PreferencesInterface getPluginPrefsPanel() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public PreferencesInterface getUpdatesPrefsPanel() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public PreferencesInterface getUrlHandlersPrefsPanel() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public PreferencesInterface getThemesPrefsPanel() {
-        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     /**
