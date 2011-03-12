@@ -45,6 +45,7 @@ import com.dmdirc.parser.interfaces.ChannelInfo;
 import com.dmdirc.parser.interfaces.ClientInfo;
 import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.plugins.BasePlugin;
+import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.ui.messages.Styliser;
 import com.dmdirc.util.StreamUtil;
 
@@ -82,6 +83,8 @@ public class LoggingPlugin extends BasePlugin implements ActionListener,
     private String timestamp, usedateformat, logDirectory, colour;
     /** Cached int settings. */
     private int historyLines, backbufferLines;
+    /** This plugin's plugin info. */
+    private final PluginInfo pluginInfo;
 
     /** Open File. */
     protected static class OpenFile {
@@ -113,9 +116,14 @@ public class LoggingPlugin extends BasePlugin implements ActionListener,
     /** Date format used for "File Opened At" log. */
     final DateFormat openedAtFormat = new SimpleDateFormat("EEEE MMMM dd, yyyy - HH:mm:ss");
 
-    /** Creates a new instance of this plugin. */
-    public LoggingPlugin() {
+    /**
+     * Creates a new instance of this plugin.
+     *
+     * @param pluginInfo This plugin's plugin info
+     */
+    public LoggingPlugin(final PluginInfo pluginInfo) {
         super();
+        this.pluginInfo = pluginInfo;
         registerCommand(new LoggingCommand(), LoggingCommand.INFO);
     }
 
@@ -227,11 +235,11 @@ public class LoggingPlugin extends BasePlugin implements ActionListener,
     @Override
     public void showConfig(final PreferencesDialogModel manager) {
         final PreferencesCategory general = new PluginPreferencesCategory(
-                getPluginInfo(), "Logging", "General configuration for Logging plugin.");
+                pluginInfo, "Logging", "General configuration for Logging plugin.");
         final PreferencesCategory backbuffer = new PluginPreferencesCategory(
-                getPluginInfo(), "Back Buffer", "Options related to the automatic backbuffer");
+                pluginInfo, "Back Buffer", "Options related to the automatic backbuffer");
         final PreferencesCategory advanced = new PluginPreferencesCategory(
-                getPluginInfo(), "Advanced", "Advanced configuration for Logging plugin. You shouldn't need to edit this unless you know what you are doing.");
+                pluginInfo, "Advanced", "Advanced configuration for Logging plugin. You shouldn't need to edit this unless you know what you are doing.");
 
         general.addSetting(new PreferencesSetting(PreferencesType.DIRECTORY, getDomain(), "general.directory", "Directory", "Directory for log files"));
         general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN, getDomain(), "general.networkfolders", "Separate logs by network", "Should the files be stored in a sub-dir with the networks name?"));

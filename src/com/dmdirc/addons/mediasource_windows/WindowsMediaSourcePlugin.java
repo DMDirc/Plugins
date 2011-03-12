@@ -26,7 +26,7 @@ import com.dmdirc.addons.nowplaying.MediaSource;
 import com.dmdirc.addons.nowplaying.MediaSourceManager;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
-import com.dmdirc.plugins.BasePlugin;
+import com.dmdirc.plugins.BaseFileDependantPlugin;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.util.StreamReader;
@@ -39,16 +39,19 @@ import java.util.List;
 /**
  * Manages all Windows based media sources.
  */
-public class WindowsMediaSourcePlugin extends BasePlugin implements MediaSourceManager {
+public class WindowsMediaSourcePlugin extends BaseFileDependantPlugin
+        implements MediaSourceManager {
 
     /** Media sources. */
     private final List<MediaSource> sources;
 
     /**
      * Creates a new instance of DcopMediaSourcePlugin.
+     *
+     * @param pluginInfo This plugin's plugin info
      */
-    public WindowsMediaSourcePlugin() {
-        super();
+    public WindowsMediaSourcePlugin(final PluginInfo pluginInfo) {
+        super(pluginInfo.getMetaData());
         sources = new ArrayList<MediaSource>();
         sources.add(new DllSource(this, "Winamp", true));
         sources.add(new DllSource(this, "iTunes", false));

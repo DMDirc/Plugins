@@ -22,25 +22,28 @@
 
 package com.dmdirc.addons.mediasource_vlc;
 
+import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.util.TextFile;
 import java.io.IOException;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 public class VlcMediaSourcePluginTest {
 
     @Test
     public void testProcessInformation1() throws IOException {
-        final VlcMediaSourcePlugin plugin = new VlcMediaSourcePlugin();
+        final PluginInfo pluginInfo = mock(PluginInfo.class);
+        final VlcMediaSourcePlugin plugin = new VlcMediaSourcePlugin(pluginInfo);
         final TextFile index = new TextFile(getClass().getResourceAsStream("index-1.html"));
         final TextFile info = new TextFile(getClass().getResourceAsStream("info-1.html"));
-        
+
         plugin.parseInformation(info.getLines(), index.getLines());
-        
+
         // This doesn't work anymore because getState() calls fetchInformation()
         // which overwrites the stuff set by the parseInformation() call.
         // assertTrue(plugin.getState() == MediaSourceState.PLAYING);
-        
+
         assertEquals("Manic Street Preachers", plugin.getArtist());
         assertEquals("Send Away The Tigers", plugin.getAlbum());
         assertEquals("The Second Great Depression", plugin.getTitle());

@@ -54,12 +54,14 @@ import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.plugins.BasePlugin;
+import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.core.components.StatusBarManager;
 import com.dmdirc.ui.core.util.URLHandler;
 import com.dmdirc.ui.interfaces.InputWindow;
 import com.dmdirc.ui.interfaces.UIController;
 import com.dmdirc.ui.interfaces.Window;
+import com.dmdirc.updater.Version;
 import com.dmdirc.util.ReturnableThread;
 import com.dmdirc.util.validators.NumericalValidator;
 
@@ -115,10 +117,17 @@ public class SwingController extends BasePlugin implements UIController {
     private DMDircEventQueue eventQueue;
     /** Key listener to handle dialog key events. */
     private DialogKeyListener keyListener;
+    /** This plugin's plugin info object. */
+    private final PluginInfo pluginInfo;
 
-    /** Instantiates a new SwingController. */
-    public SwingController() {
+    /**
+     * Instantiates a new SwingController.
+     *
+     * @param pluginInfo Plugin info
+     */
+    public SwingController(final PluginInfo pluginInfo) {
         super();
+        this.pluginInfo = pluginInfo;
         setAntiAlias();
         windows = new ArrayList<java.awt.Window>();
         registerCommand(new ServerSettings(), ServerSettings.INFO);
@@ -549,7 +558,7 @@ public class SwingController extends BasePlugin implements UIController {
      */
     private PreferencesCategory createGeneralCategory() {
         final PreferencesCategory general = new PluginPreferencesCategory(
-                getPluginInfo(), "Swing UI", "These config options apply "
+                pluginInfo, "Swing UI", "These config options apply "
                 + "only to the swing UI.", "category-gui");
 
         final Map<String, String> lafs = new HashMap<String, String>();
@@ -610,7 +619,7 @@ public class SwingController extends BasePlugin implements UIController {
      */
     private PreferencesCategory createAdvancedCategory() {
         final PreferencesCategory advanced = new PluginPreferencesCategory(
-                getPluginInfo(), "Advanced", "");
+                pluginInfo, "Advanced", "");
 
         advanced.addSetting(new PreferencesSetting(
                 PreferencesType.OPTIONALINTEGER,
@@ -663,7 +672,7 @@ public class SwingController extends BasePlugin implements UIController {
      */
     private PreferencesCategory createTreeViewCategory() {
         final PreferencesCategory treeview = new PluginPreferencesCategory(
-                getPluginInfo(), "Treeview", "", "treeview");
+                pluginInfo, "Treeview", "", "treeview");
 
         treeview.addSetting(new PreferencesSetting(
                 PreferencesType.OPTIONALCOLOUR,
@@ -703,7 +712,7 @@ public class SwingController extends BasePlugin implements UIController {
      */
     private PreferencesCategory createNicklistCategory() {
         final PreferencesCategory nicklist = new PluginPreferencesCategory(
-                getPluginInfo(), "Nicklist", "", "nicklist");
+                pluginInfo, "Nicklist", "", "nicklist");
 
         nicklist.addSetting(new PreferencesSetting(
                 PreferencesType.OPTIONALCOLOUR,
@@ -794,6 +803,15 @@ public class SwingController extends BasePlugin implements UIController {
     @Override
     public void requestWindowFocus(final FrameContainer container) {
         requestWindowFocus(getWindowFactory().getSwingWindow(container));
+    }
+
+    /**
+     * Returns the version of this swing UI.
+     *
+     * @return Swing version
+     */
+    public Version getVersion() {
+        return pluginInfo.getMetaData().getVersion();
     }
 
 }

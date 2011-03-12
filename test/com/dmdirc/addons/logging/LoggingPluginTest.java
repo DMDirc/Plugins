@@ -23,13 +23,10 @@
 package com.dmdirc.addons.logging;
 
 import com.dmdirc.Channel;
-import com.dmdirc.Main;
 import com.dmdirc.Server;
 import com.dmdirc.Query;
 import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.config.IdentityManager;
-import com.dmdirc.harness.TestLoggingPlugin;
-import com.dmdirc.addons.ui_dummy.DummyController;
 import com.dmdirc.parser.interfaces.ChannelInfo;
 import com.dmdirc.parser.interfaces.ClientInfo;
 import com.dmdirc.parser.interfaces.Parser;
@@ -44,7 +41,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class LoggingPluginTest {
-    
+
     private static Server server;
     private static Channel channel;
     private static Query query;
@@ -57,14 +54,14 @@ public class LoggingPluginTest {
 
         ClientInfo clientinfo = mock(ClientInfo.class);
         when(clientinfo.toString()).thenReturn("foo!bar@baz");
-        
+
         Parser parser = mock(Parser.class);
         when(parser.getClient(anyString())).thenReturn(clientinfo);
 
         server = mock(Server.class);
         when(server.toString()).thenReturn("server");
         when(server.getParser()).thenReturn(parser);
-        
+
         ChannelInfo info = mock(ChannelInfo.class);
         when(info.toString()).thenReturn("#test");
 
@@ -90,30 +87,30 @@ public class LoggingPluginTest {
         lp.domainUpdated();
         lp.onLoad();
     }
-    
+
     @Test
     public void testChannelOpened() {
         lp.processEvent(CoreActionType.CHANNEL_OPENED, new StringBuffer(),
                 channel);
-        
+
         assertTrue(lp.lines.containsKey("#test"));
         assertEquals(2, lp.lines.get("#test").size());
         assertTrue(lp.lines.get("#test").get(1).isEmpty());
         assertTrue(lp.lines.get("#test").get(0).indexOf("opened") > -1);
         lp.lines.clear();
     }
-    
+
     @Test
     public void testChannelClosed() {
         lp.processEvent(CoreActionType.CHANNEL_CLOSED, new StringBuffer(),
                 channel);
-        
+
         assertTrue(lp.lines.containsKey("#test"));
         assertEquals(1, lp.lines.get("#test").size());
         assertTrue(lp.lines.get("#test").get(0).indexOf("closed") > -1);
         lp.lines.clear();
     }
-    
+
     @Test
     public void testQueryOpened() {
         lp.processEvent(CoreActionType.QUERY_OPENED, new StringBuffer(),
@@ -126,12 +123,12 @@ public class LoggingPluginTest {
         assertTrue(lp.lines.get("foo!bar@baz").get(0).indexOf("opened") > -1);
         lp.lines.clear();
     }
-    
+
     @Test
     public void testQueryClosed() {
         lp.processEvent(CoreActionType.QUERY_CLOSED, new StringBuffer(),
                 query);
-        
+
         assertTrue(lp.lines.containsKey("foo!bar@baz"));
         assertEquals(1, lp.lines.get("foo!bar@baz").size());
         assertTrue(lp.lines.get("foo!bar@baz").get(0).indexOf("closed") > -1);
