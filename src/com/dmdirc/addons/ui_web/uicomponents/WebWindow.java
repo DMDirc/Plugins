@@ -38,8 +38,6 @@ import java.awt.Color;
 import java.awt.font.TextAttribute;
 import java.text.AttributedCharacterIterator;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -51,26 +49,26 @@ import org.apache.commons.lang.StringEscapeUtils;
 public class WebWindow implements Window, IRCDocumentListener,
         FrameInfoListener, FrameCloseListener {
 
-    protected static int counter = 0;
+    /** The unique ID of this window, used by clients to address the window. */
+    private final String id;
 
-    protected static final Map<String, WebWindow> WINDOWS
-            = new HashMap<String, WebWindow>();
-
-    protected int myID = ++counter;
-
+    /** The container that this window corresponds to. */
     private final FrameContainer parent;
 
     /** The handler to pass global events to. */
     private final DynamicRequestHandler handler;
 
+    /** The controller that owns this window. */
+    private final WebInterfaceUI controller;
+
     public WebWindow(final WebInterfaceUI controller,
-            final FrameContainer parent) {
+            final FrameContainer parent, final String id) {
         super();
 
+        this.id = id;
         this.parent = parent;
+        this.controller = controller;
         this.handler = controller.getHandler();
-
-        WINDOWS.put(getId(), this);
 
         parent.getDocument().addIRCDocumentListener(this);
         parent.addFrameInfoListener(this);
@@ -82,14 +80,6 @@ public class WebWindow implements Window, IRCDocumentListener,
                     new Object[]{controller.getWindowManager().getWindow(
                             parent.getParent()), this}));
         }
-    }
-
-    public static Collection<WebWindow> getWindows() {
-        return WINDOWS.values();
-    }
-
-    public static WebWindow getWindow(final String id) {
-        return WINDOWS.get(id);
     }
 
     public List<String> getMessages() {
@@ -110,7 +100,7 @@ public class WebWindow implements Window, IRCDocumentListener,
     }
 
     public String getId() {
-        return String.valueOf(myID);
+        return id;
     }
 
     protected String style(final AttributedCharacterIterator aci) {
@@ -206,8 +196,7 @@ public class WebWindow implements Window, IRCDocumentListener,
     /** {@inheritDoc} */
     @Override
     public UIController getController() {
-        //TODO FIXME
-        return null;
+        return controller;
     }
 
     /** {@inheritDoc} */
@@ -258,7 +247,7 @@ public class WebWindow implements Window, IRCDocumentListener,
     /** {@inheritDoc} */
     @Override
     public void windowClosing(final FrameContainer window) {
-        handler.addEvent(new Event("closewindow", myID));
+        handler.addEvent(new Event("closewindow", id));
     }
 
     /**
