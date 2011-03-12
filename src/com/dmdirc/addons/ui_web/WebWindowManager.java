@@ -141,7 +141,9 @@ public class WebWindowManager implements FrameListener {
         if (IMPLEMENTATIONS.containsKey(window.getComponents())) {
             clazz = IMPLEMENTATIONS.get(window.getComponents());
         } else {
-            clazz = window.getWindowClass();
+            Logger.userError(ErrorLevel.MEDIUM, "Unable to create web window for"
+                    + " components: " + window.getComponents());
+            return;
         }
 
         try {
