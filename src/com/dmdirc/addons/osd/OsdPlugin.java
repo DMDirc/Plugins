@@ -32,6 +32,7 @@ import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.config.prefs.SettingChangeListener;
 import com.dmdirc.plugins.BasePlugin;
+import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.util.validators.NumericalValidator;
 import com.dmdirc.util.validators.OptionalValidator;
 
@@ -55,10 +56,17 @@ public final class OsdPlugin extends BasePlugin implements
     /** Setting objects with registered change listeners.*/
     private PreferencesSetting fontSizeSetting, backgroundSetting,
             foregroundSetting, widthSetting, timeoutSetting, maxWindowsSetting;
+    /** This plugin's plugin info. */
+    private final PluginInfo pluginInfo;
 
-    /** Creates a new instance of this plugin. */
-    public OsdPlugin() {
+    /**
+     * Creates a new instance of this plugin.
+     *
+     * @param pluginInfo This plugin's plugin info
+     */
+    public OsdPlugin(final PluginInfo pluginInfo) {
         super();
+        this.pluginInfo = pluginInfo;
         osdManager = new OsdManager(this);
         registerCommand(new OsdCommand(osdManager), OsdCommand.INFO);
     }
@@ -70,7 +78,7 @@ public final class OsdPlugin extends BasePlugin implements
         y = IdentityManager.getGlobalConfig().getOptionInt(getDomain(), "locationY");
 
         final PreferencesCategory category = new PluginPreferencesCategory(
-                getPluginInfo(), "OSD",
+                pluginInfo, "OSD",
                 "General configuration for OSD plugin.", "category-osd");
 
         fontSizeSetting = new PreferencesSetting(PreferencesType.INTEGER,

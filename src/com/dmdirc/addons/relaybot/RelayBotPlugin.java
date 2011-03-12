@@ -41,6 +41,7 @@ import com.dmdirc.parser.interfaces.ChannelClientInfo;
 import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.parser.irc.IRCParser;
 import com.dmdirc.plugins.BasePlugin;
+import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.util.ReturnableThread;
 
@@ -56,6 +57,18 @@ public class RelayBotPlugin extends BasePlugin implements ActionListener, Config
 
     /** Known RelayChannelHandlers. */
     private final Map<Channel, RelayChannelHandler> handlers = new HashMap<Channel, RelayChannelHandler>();
+    /** This plugin's plugin info. */
+    private final PluginInfo pluginInfo;
+
+    /**
+     * Creates a new instance of this plugin.
+     *
+     * @param pluginInfo This plugin's plugin info
+     */
+    public RelayBotPlugin(final PluginInfo pluginInfo) {
+        super();
+        this.pluginInfo = pluginInfo;
+    }
 
     /** {@inheritDoc} */
     @Override
@@ -263,11 +276,11 @@ public class RelayBotPlugin extends BasePlugin implements ActionListener, Config
     @Override
     public void showConfig(final PreferencesDialogModel manager) {
         final PreferencesCategory general = new PluginPreferencesCategory(
-                getPluginInfo(), "Relay Bot",
+                pluginInfo, "Relay Bot",
                 "General configuration for the Relay bot plugin.");
 
         final PreferencesCategory colours = new PluginPreferencesCategory(
-                getPluginInfo(), "Channels",
+                pluginInfo, "Channels",
                 "Identifies where and who the bot is in channels.",
                 UIUtilities.invokeAndWait(
                 new ReturnableThread<RelayChannelPanel>() {

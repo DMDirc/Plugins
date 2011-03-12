@@ -53,10 +53,17 @@ public class NowPlayingPlugin extends BasePlugin implements ActionListener  {
     private final List<MediaSourceManager> managers = new ArrayList<MediaSourceManager>();
     /** The user's preferred order for source usage. */
     private List<String> order;
+    /** This plugin's plugin info. */
+    private final PluginInfo pluginInfo;
 
-    /** Creates a new instance of this plugin. */
-    public NowPlayingPlugin() {
+    /**
+     * Creates a new instance of this plugin.
+     *
+     * @param pluginInfo This plugin's plugin info
+     */
+    public NowPlayingPlugin(final PluginInfo pluginInfo) {
         super();
+        this.pluginInfo = pluginInfo;
         registerCommand(new NowPlayingCommand(this), NowPlayingCommand.INFO);
     }
 
@@ -101,7 +108,7 @@ public class NowPlayingPlugin extends BasePlugin implements ActionListener  {
         });
 
         final PreferencesCategory category = new PluginPreferencesCategory(
-                getPluginInfo(), "Now Playing",
+                pluginInfo, "Now Playing",
                 "", "category-nowplaying", configPanel);
         manager.getCategory("Plugins").addSubCategory(category);
     }
