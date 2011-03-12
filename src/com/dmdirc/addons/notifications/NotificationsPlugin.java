@@ -48,10 +48,17 @@ public class NotificationsPlugin extends BasePlugin implements ActionListener {
     private final List<String> methods = new ArrayList<String>();
     /** The user's preferred order for method usage. */
     private List<String> order;
+    /** This plugin's plugin info. */
+    private final PluginInfo pluginInfo;
 
-    /** Creates a new instance of this plugin. */
-    public NotificationsPlugin() {
+    /**
+     * Creates a new instance of this plugin.
+     *
+     * @param pluginInfo This plugin's plugin info
+     */
+    public NotificationsPlugin(final PluginInfo pluginInfo) {
         super();
+        this.pluginInfo = pluginInfo;
         registerCommand(new NotificationCommand(this),
                 NotificationCommand.INFO);
     }
@@ -95,7 +102,7 @@ public class NotificationsPlugin extends BasePlugin implements ActionListener {
         });
 
         final PreferencesCategory category = new PluginPreferencesCategory(
-                getPluginInfo(), "Notifications", "", "category-notifications",
+                pluginInfo, "Notifications", "", "category-notifications",
                 configPanel);
         manager.getCategory("Plugins").addSubCategory(category);
     }

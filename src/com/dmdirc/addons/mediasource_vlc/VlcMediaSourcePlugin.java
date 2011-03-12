@@ -31,6 +31,7 @@ import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.plugins.BasePlugin;
+import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.util.Downloader;
 
 import java.io.File;
@@ -50,6 +51,18 @@ public class VlcMediaSourcePlugin extends BasePlugin implements MediaSource {
     /** The information obtained from VLC. */
     private final Map<String, String> information
             = new HashMap<String, String>();
+    /** This plugin's plugin info. */
+    private final PluginInfo pluginInfo;
+
+    /**
+     * Creates a new instance of this plugin.
+     *
+     * @param pluginInfo This plugin's plugin info
+     */
+    public VlcMediaSourcePlugin(final PluginInfo pluginInfo) {
+        super();
+        this.pluginInfo = pluginInfo;
+    }
 
     /** {@inheritDoc} */
     @Override
@@ -193,7 +206,7 @@ public class VlcMediaSourcePlugin extends BasePlugin implements MediaSource {
     @Override
     public void showConfig(final PreferencesDialogModel manager) {
         final PreferencesCategory general = new PluginPreferencesCategory(
-                getPluginInfo(), "VLC Media Source",
+                pluginInfo, "VLC Media Source",
                 "", "category-vlc");
 
         final PreferencesSetting setting = new PreferencesSetting(

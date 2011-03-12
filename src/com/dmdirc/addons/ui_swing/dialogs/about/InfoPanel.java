@@ -82,8 +82,8 @@ public final class InfoPanel extends JPanel {
                  + "<b>Mode Alises version: </b>" + IdentityManager
                  .getGlobalConfig().getOption("identity", "modealiasversion")
                  + "<br>"
-                 + "<b>Swing UI version: </b>" + controller.getPluginInfo()
-                 .getMetaData().getVersion().toString() + "<br>"
+                 + "<b>Swing UI version: </b>" + controller.getVersion()
+                 .toString() + "<br>"
                  + "<b>OS Version: </b>" + Info.getOSVersion() + "<br>"
                  + "<b>Profile directory: </b>" + Main.getConfigDir() + "<br>"
                  + "<b>Java version: </b>" + Info.getJavaVersion() + "<br>"
