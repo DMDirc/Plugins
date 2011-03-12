@@ -26,7 +26,6 @@ import com.dmdirc.MessageTarget;
 import com.dmdirc.Server;
 import com.dmdirc.WritableFrameContainer;
 import com.dmdirc.ui.input.TabCompleter;
-import com.dmdirc.ui.interfaces.InputWindow;
 import com.dmdirc.ui.messages.Formatter;
 
 import java.util.Collections;
@@ -48,8 +47,8 @@ public class FakeWriteableFrameContainer extends WritableFrameContainer {
      */
     public FakeWriteableFrameContainer(final MessageTarget target) {
         super(target.getIcon(), target.getName(), target.getTitle(),
-                InputWindow.class, target.getConfigManager(),
-                target.getCommandParser(), Collections.<String>emptyList());
+                target.getConfigManager(), target.getCommandParser(),
+                Collections.<String>emptyList());
         this.target = target;
     }
 
