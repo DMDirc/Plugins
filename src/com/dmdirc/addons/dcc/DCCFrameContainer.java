@@ -27,7 +27,6 @@ import com.dmdirc.WritableFrameContainer;
 import com.dmdirc.commandparser.parsers.CommandParser;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.ui.input.TabCompleter;
-import com.dmdirc.ui.interfaces.InputWindow;
 
 import java.util.Collection;
 
@@ -44,15 +43,13 @@ public abstract class DCCFrameContainer extends WritableFrameContainer {
      *
      * @param title The title of this window
      * @param icon The icon to use
-     * @param windowClass The class of window to use for this container
      * @param parser Command parser to use for this window
      * @param components The UI components that this frame requires
      */
     public DCCFrameContainer(final String title, final String icon,
-            final Class<? extends InputWindow> windowClass, final CommandParser parser,
-            final Collection<String> components) {
-        super(icon, title, title, windowClass,
-                IdentityManager.getGlobalConfig(), parser, components);
+            final CommandParser parser, final Collection<String> components) {
+        super(icon, title, title, IdentityManager.getGlobalConfig(), parser,
+                components);
     }
 
     /** {@inheritDoc} */

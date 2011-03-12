@@ -27,7 +27,6 @@ import com.dmdirc.Server;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.core.components.WindowComponent;
-import com.dmdirc.ui.interfaces.Window;
 
 import java.util.Arrays;
 
@@ -46,7 +45,7 @@ public class HistoryWindow extends FrameContainer {
      */
     public HistoryWindow(final String title, final ReverseFileReader reader,
                          final FrameContainer parent, final int numLines) {
-        super("raw", title, title, Window.class, parent.getConfigManager(),
+        super("raw", title, title, parent.getConfigManager(),
                 Arrays.asList(WindowComponent.TEXTAREA.getIdentifier()));
 
         WindowManager.getWindowManager().addWindow(parent, this);
