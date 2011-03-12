@@ -22,6 +22,7 @@
 
 package com.dmdirc.harness.ui;
 
+import com.dmdirc.ui.IconManager;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.PluginMetaData;
 import com.dmdirc.Main;
@@ -67,7 +68,7 @@ public class DMDircUITestCase extends UISpecTestCase {
     public static SwingController getMockedController() {
         final PluginInfo pluginInfo = mock(PluginInfo.class);
         final PluginMetaData metaData = mock(PluginMetaData.class);
-        SwingController controller = mock(SwingController.class);
+        final SwingController controller = mock(SwingController.class);
         final SwingWindowFactory windowFactory = mock(SwingWindowFactory.class);
         when(controller.getDomain()).thenReturn("test");
         when(controller.getWindowFactory()).thenReturn(windowFactory);
@@ -102,9 +103,11 @@ public class DMDircUITestCase extends UISpecTestCase {
         final WritableFrameContainer container = mock(
                 WritableFrameContainer.class);
         final ConfigManager config = mock(ConfigManager.class);
+        final IconManager iconManager = mock(IconManager.class);
         when(container.getDocument()).thenReturn(document);
         when(container.getConfigManager()).thenReturn(config);
         when(config.getOption(anyString(), anyString())).thenReturn("mirc");
+        when(container.getIconManager()).thenReturn(iconManager);
 
         return container;
     }
