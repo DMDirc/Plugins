@@ -38,20 +38,32 @@ import org.mortbay.jetty.security.UserRealm;
 
 /**
  * Describes the users allowed to access the web UI.
- *
- * @author chris
  */
 public class WebUserRealm implements UserRealm {
 
+    /** A map of known principals. */
     private final Map<String, Principal> principals
             = new HashMap<String, Principal>();
 
+    /** The config source to retrieve user information from. */
     private final ConfigManager config = IdentityManager.getGlobalConfig();
+
+    /** The domain to use when retrieving configuration. */
+    private final String domain;
+
+    /**
+     * Creates a new WebUserRealm information.
+     *
+     * @param domain The domain to retrieve configuration settings from
+     */
+    public WebUserRealm(final String domain) {
+        this.domain = domain;
+    }
 
     /** {@inheritDoc} */
     @Override
     public String getName() {
-        if (config.hasOptionString(WebInterfaceUI.DOMAIN, "users")) {
+        if (config.hasOptionString(domain, "users")) {
             return "DMDirc web UI";
         } else {
             return "DMDirc web UI first run -- "
@@ -70,15 +82,14 @@ public class WebUserRealm implements UserRealm {
     @Override
     public Principal authenticate(final String username,
             final Object credentials, final Request request) {
-        if (!config.hasOptionString(WebInterfaceUI.DOMAIN, "users")) {
+        if (!config.hasOptionString(domain, "users")) {
             final List<String> users = new ArrayList<String>();
             users.add(username + ":" + getHash(username, credentials));
-            IdentityManager.getConfigIdentity().setOption(WebInterfaceUI.DOMAIN,
+            IdentityManager.getConfigIdentity().setOption(domain,
                     "users", users);
         }
 
-        for (String userinfo : config.getOptionList(WebInterfaceUI.DOMAIN,
-                "users")) {
+        for (String userinfo : config.getOptionList(domain, "users")) {
             if (userinfo.startsWith(username + ":")) {
                 final String pass = userinfo.substring(username.length() + 1);
 

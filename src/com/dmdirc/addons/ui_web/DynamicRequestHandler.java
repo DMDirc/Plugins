@@ -55,8 +55,6 @@ import org.mortbay.util.ajax.JSONObjectConvertor;
 
 /**
  * Handles requests for dynamic resources (prefixed with /dynamic/).
- *
- * @author chris
  */
 public class DynamicRequestHandler extends AbstractHandler {
 
@@ -64,7 +62,7 @@ public class DynamicRequestHandler extends AbstractHandler {
     private static final long TIMEOUT = 1000 * 60 * 2; // Two minutes
 
     /** The last time each client was seen. */
-    private static final Map<String, Client> CLIENTS
+    private final Map<String, Client> clients
             = new HashMap<String, Client>();
 
     /** The controller which owns this request handler. */
@@ -73,6 +71,8 @@ public class DynamicRequestHandler extends AbstractHandler {
     /**
      * Creates a new instance of DynamicRequestHandler. Registers object
      * convertors with the JSON serialiser.
+     *
+     * @param controller The controller that this request handler is for.
      */
     public DynamicRequestHandler(final WebInterfaceUI controller) {
         super();
@@ -87,16 +87,16 @@ public class DynamicRequestHandler extends AbstractHandler {
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
-                synchronized (CLIENTS) {
+                synchronized (clients) {
                     for (Map.Entry<String, Client> entry
-                            : new HashMap<String, Client>(CLIENTS).entrySet()) {
+                            : new HashMap<String, Client>(clients).entrySet()) {
                         if (entry.getValue().getTime() > TIMEOUT) {
-                            CLIENTS.remove(entry.getKey());
+                            clients.remove(entry.getKey());
                         }
                     }
                 }
             }
-        }, ERROR, ERROR);
+        }, TIMEOUT, TIMEOUT / 2);
     }
 
     /**
@@ -112,13 +112,13 @@ public class DynamicRequestHandler extends AbstractHandler {
         if (request.getParameter("clientID") != null) {
             final String clientID = request.getParameter("clientID");
 
-            if (!CLIENTS.containsKey(clientID)) {
-                CLIENTS.put(clientID, new Client(controller,
+            if (!clients.containsKey(clientID)) {
+                clients.put(clientID, new Client(controller,
                         request.getRemoteHost()));
             }
 
-            synchronized (CLIENTS) {
-                CLIENTS.get(clientID).touch();
+            synchronized (clients) {
+                clients.get(clientID).touch();
             }
         }
 
@@ -179,7 +179,7 @@ public class DynamicRequestHandler extends AbstractHandler {
         response.setStatus(HttpServletResponse.SC_OK);
         response.setContentType("application/json");
 
-        final Client client = CLIENTS.get(request.getParameter("clientID"));
+        final Client client = clients.get(request.getParameter("clientID"));
 
         synchronized (client.getMutex()) {
             List<Event> myEvents = client.retrieveEvents();
@@ -206,8 +206,9 @@ public class DynamicRequestHandler extends AbstractHandler {
 
         if (window instanceof WebInputWindow) {
             final WebInputWindow wiw = (WebInputWindow) window;
-            wiw.getInputHandler(request.getParameter("clientID")).enterPressed(
-                    request.getParameter("input"));
+            final Client client = clients.get(request.getParameter("clientID"));
+
+            wiw.getInputHandler(client).enterPressed(request.getParameter("input"));
         }
     }
 
@@ -217,13 +218,14 @@ public class DynamicRequestHandler extends AbstractHandler {
 
         if (window instanceof WebInputWindow) {
             final WebInputWindow wiw = (WebInputWindow) window;
+            final Client client = clients.get(request.getParameter("clientID"));
 
             try {
-                ((WebInputHandler) wiw.getInputHandler(
-                        request.getParameter("clientID"),
+                wiw.getInputHandler(
+                        client,
                         request.getParameter("input"),
                         request.getParameter("selstart"),
-                        request.getParameter("selend"))).handleKeyPressed(
+                        request.getParameter("selend")).handleKeyPressed(
                         request.getParameter("input"),
                         Integer.parseInt(request.getParameter("key")),
                         Boolean.parseBoolean(request.getParameter("shift")),
@@ -240,11 +242,12 @@ public class DynamicRequestHandler extends AbstractHandler {
 
         if (window instanceof WebInputWindow) {
             final WebInputWindow wiw = (WebInputWindow) window;
-            ((WebInputHandler) wiw.getInputHandler(request.getParameter(
-                    "clientID"),
+            final Client client = clients.get(request.getParameter("clientID"));
+
+            wiw.getInputHandler(client,
                     request.getParameter("input"), request.getParameter(
                     "selstart"),
-                    request.getParameter("selend"))).doTabCompletion(false);
+                    request.getParameter("selend")).doTabCompletion(false);
         }
     }
 
@@ -255,11 +258,12 @@ public class DynamicRequestHandler extends AbstractHandler {
 
         if (window instanceof WebInputWindow) {
             final WebInputWindow wiw = (WebInputWindow) window;
-            final WebInputHandler wih = ((WebInputHandler) wiw.getInputHandler(
-                    request.getParameter("clientID"),
+            final Client client = clients.get(request.getParameter("clientID"));
+            final WebInputHandler wih = wiw.getInputHandler(
+                    client,
                     request.getParameter("input"),
                     request.getParameter("selstart"),
-                    request.getParameter("selend")));
+                    request.getParameter("selend"));
 
             if (up) {
                 wih.doBufferUp();
@@ -340,7 +344,7 @@ public class DynamicRequestHandler extends AbstractHandler {
             throws IOException {
         response.setStatus(HttpServletResponse.SC_OK);
         response.setContentType("application/json");
-        response.getWriter().write(JSON.toString(CLIENTS.values().toArray()));
+        response.getWriter().write(JSON.toString(clients.values().toArray()));
     }
 
     private void doJoinChannel(final HttpServletRequest request)
@@ -376,16 +380,12 @@ public class DynamicRequestHandler extends AbstractHandler {
                 .setHandled(true);
     }
 
-    public static void addEvent(final Event event) {
-        synchronized (CLIENTS) {
-            for (Client client : CLIENTS.values()) {
+    public void addEvent(final Event event) {
+        synchronized (clients) {
+            for (Client client : clients.values()) {
                 client.addEvent(event);
             }
         }
-    }
-
-    public static void addEvent(final String clientID, final Event event) {
-        CLIENTS.get(clientID).addEvent(event);
     }
 
 }

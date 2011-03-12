@@ -32,6 +32,9 @@ import org.mortbay.jetty.HttpConnection;
 import org.mortbay.jetty.Request;
 import org.mortbay.jetty.handler.AbstractHandler;
 
+/**
+ * Handles requests to the root of the website (/).
+ */
 public class RootRequestHandler extends AbstractHandler {
 
     /** {@inheritDoc} */

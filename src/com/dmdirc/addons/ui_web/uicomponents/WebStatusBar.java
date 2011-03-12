@@ -30,10 +30,21 @@ import com.dmdirc.ui.interfaces.StatusBarComponent;
 import com.dmdirc.ui.interfaces.StatusMessageNotifier;
 
 /**
- *
- * @author chris
+ * A status bar handler for the web UI.
  */
 public class WebStatusBar implements StatusBar {
+
+    /** The request handler to pass global events to. */
+    private final DynamicRequestHandler handler;
+
+    /**
+     * Creates a new status bar which will pass events to the specified handler.
+     *
+     * @param handler The handler to pass events to
+     */
+    public WebStatusBar(final DynamicRequestHandler handler) {
+        this.handler = handler;
+    }
 
     /** {@inheritDoc}
      *
@@ -42,7 +53,7 @@ public class WebStatusBar implements StatusBar {
     @Deprecated
     @Override
     public void setMessage(final String newMessage) {
-        DynamicRequestHandler.addEvent(new Event("statusbar", newMessage));
+        handler.addEvent(new Event("statusbar", newMessage));
     }
 
     /** {@inheritDoc}
@@ -53,7 +64,7 @@ public class WebStatusBar implements StatusBar {
     @Override
     public void setMessage(final String newMessage,
             final StatusMessageNotifier newNotifier) {
-        DynamicRequestHandler.addEvent(new Event("statusbar", newMessage));
+        handler.addEvent(new Event("statusbar", newMessage));
     }
 
     /** {@inheritDoc}
@@ -64,13 +75,13 @@ public class WebStatusBar implements StatusBar {
     @Override
     public void setMessage(final String newMessage,
             final StatusMessageNotifier newNotifier, final int timeout) {
-        DynamicRequestHandler.addEvent(new Event("statusbar", newMessage));
+        handler.addEvent(new Event("statusbar", newMessage));
     }
 
     /** {@inheritDoc} */
     @Override
     public void clearMessage() {
-        DynamicRequestHandler.addEvent(new Event("statusbar", "Ready"));
+        handler.addEvent(new Event("statusbar", "Ready"));
     }
 
     /** {@inheritDoc} */
@@ -92,7 +103,7 @@ public class WebStatusBar implements StatusBar {
     @Deprecated
     @Override
     public void setMessage(final String iconType, final String newMessage) {
-        DynamicRequestHandler.addEvent(new Event("statusbar", newMessage));
+        handler.addEvent(new Event("statusbar", newMessage));
     }
 
     /** {@inheritDoc}
@@ -103,7 +114,7 @@ public class WebStatusBar implements StatusBar {
     @Override
     public void setMessage(final String iconType, final String newMessage,
             final StatusMessageNotifier newNotifier) {
-        DynamicRequestHandler.addEvent(new Event("statusbar", newMessage));
+        handler.addEvent(new Event("statusbar", newMessage));
     }
 
     /** {@inheritDoc}
@@ -114,13 +125,13 @@ public class WebStatusBar implements StatusBar {
     @Override
     public void setMessage(final String iconType, final String newMessage,
             final StatusMessageNotifier newNotifier, final int timeout) {
-        DynamicRequestHandler.addEvent(new Event("statusbar", newMessage));
+        handler.addEvent(new Event("statusbar", newMessage));
     }
 
     /** {@inheritDoc} */
     @Override
     public void setMessage(final StatusMessage message) {
-        DynamicRequestHandler.addEvent(new Event("statusbar", message));
+        handler.addEvent(new Event("statusbar", message));
     }
 
 }

@@ -60,11 +60,15 @@ public class WebWindow implements Window, IRCDocumentListener,
 
     private final FrameContainer parent;
 
+    /** The handler to pass global events to. */
+    private final DynamicRequestHandler handler;
+
     public WebWindow(final WebInterfaceUI controller,
             final FrameContainer parent) {
         super();
 
         this.parent = parent;
+        this.handler = controller.getHandler();
 
         WINDOWS.put(getId(), this);
 
@@ -72,9 +76,9 @@ public class WebWindow implements Window, IRCDocumentListener,
         parent.addFrameInfoListener(this);
 
         if (parent.getParent() == null) {
-            DynamicRequestHandler.addEvent(new Event("newwindow", this));
+            handler.addEvent(new Event("newwindow", this));
         } else {
-            DynamicRequestHandler.addEvent(new Event("newchildwindow",
+            handler.addEvent(new Event("newchildwindow",
                     new Object[]{controller.getWindowManager().getWindow(
                             parent.getParent()), this}));
         }
@@ -210,7 +214,7 @@ public class WebWindow implements Window, IRCDocumentListener,
     @Override
     public void linesAdded(final int line, final int length, final int size) {
         for (int i = 0; i < length; i++) {
-            DynamicRequestHandler.addEvent(new Event("lineadded", new Message(
+            handler.addEvent(new Event("lineadded", new Message(
                 style(parent.getDocument().getStyledLine(line)), this)));
         }
     }
@@ -254,7 +258,7 @@ public class WebWindow implements Window, IRCDocumentListener,
     /** {@inheritDoc} */
     @Override
     public void windowClosing(final FrameContainer window) {
-        DynamicRequestHandler.addEvent(new Event("closewindow", myID));
+        handler.addEvent(new Event("closewindow", myID));
     }
 
     /**

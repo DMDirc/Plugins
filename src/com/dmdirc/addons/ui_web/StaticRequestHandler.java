@@ -35,6 +35,9 @@ import org.mortbay.jetty.HttpConnection;
 import org.mortbay.jetty.Request;
 import org.mortbay.jetty.handler.AbstractHandler;
 
+/**
+ * Handles requests for static resources.
+ */
 public class StaticRequestHandler extends AbstractHandler {
 
     private ResourceManager rm;

@@ -24,8 +24,6 @@ package com.dmdirc.addons.ui_web;
 
 /**
  * Details an event that occured.
- *
- * @author chris
  */
 public class Event {
 
