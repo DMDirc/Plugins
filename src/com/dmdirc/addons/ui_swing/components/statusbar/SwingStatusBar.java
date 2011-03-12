@@ -29,7 +29,6 @@ import com.dmdirc.logger.Logger;
 import com.dmdirc.ui.StatusMessage;
 import com.dmdirc.ui.interfaces.StatusBar;
 import com.dmdirc.ui.interfaces.StatusBarComponent;
-import com.dmdirc.ui.interfaces.StatusMessageNotifier;
 
 import java.awt.Component;
 import java.util.Arrays;
@@ -81,71 +80,6 @@ public final class SwingStatusBar extends JPanel implements StatusBar {
         add(updateLabel, COMPONENT_CONSTRAINTS);
         add(errorPanel, COMPONENT_CONSTRAINTS);
         add(inviteLabel, COMPONENT_CONSTRAINTS);
-    }
-
-    /** {@inheritDoc}
-     *
-     * @deprecated Should use {@link setMessage(StatusMessage)} instead
-     */
-    @Deprecated
-    @Override
-    public void setMessage(final String newMessage) {
-        messageLabel.setMessage(newMessage);
-    }
-
-    /** {@inheritDoc}
-     *
-     * @deprecated Should use {@link setMessage(StatusMessage)} instead
-     */
-    @Deprecated
-    @Override
-    public void setMessage(final String newMessage,
-            final StatusMessageNotifier newNotifier) {
-        messageLabel.setMessage(newMessage, newNotifier);
-    }
-
-    /** {@inheritDoc}
-     *
-     * @deprecated Should use {@link setMessage(StatusMessage)} instead
-     */
-    @Deprecated
-    @Override
-    public void setMessage(final String iconType, final String newMessage) {
-        messageLabel.setMessage(iconType, newMessage);
-    }
-
-    /** {@inheritDoc}
-     *
-     * @deprecated Should use {@link setMessage(StatusMessage)} instead
-     */
-    @Deprecated
-    @Override
-    public void setMessage(final String iconType, final String newMessage,
-            final StatusMessageNotifier newNotifier) {
-        messageLabel.setMessage(iconType, newMessage, newNotifier);
-    }
-
-    /** {@inheritDoc}
-     *
-     * @deprecated Should use {@link setMessage(StatusMessage)} instead
-     */
-    @Deprecated
-    @Override
-    public void setMessage(final String newMessage,
-            final StatusMessageNotifier newNotifier, final int timeout) {
-        messageLabel.setMessage(newMessage, newNotifier, timeout);
-    }
-
-    /** {@inheritDoc}
-     *
-     * @deprecated Should use {@link setMessage(StatusMessage)} instead
-     */
-    @Deprecated
-    @Override
-    public void setMessage(final String iconType,
-            final String newMessage,
-            final StatusMessageNotifier newNotifier, final int timeout) {
-        messageLabel.setMessage(iconType, newMessage, newNotifier, timeout);
     }
 
     /** {@inheritDoc} */

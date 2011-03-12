@@ -46,38 +46,6 @@ public class WebStatusBar implements StatusBar {
         this.handler = handler;
     }
 
-    /** {@inheritDoc}
-     *
-     * @deprecated Should use {@link setMessage(StatusMessage)} instead
-     */
-    @Deprecated
-    @Override
-    public void setMessage(final String newMessage) {
-        handler.addEvent(new Event("statusbar", newMessage));
-    }
-
-    /** {@inheritDoc}
-     *
-     * @deprecated Should use {@link setMessage(StatusMessage)} instead
-     */
-    @Deprecated
-    @Override
-    public void setMessage(final String newMessage,
-            final StatusMessageNotifier newNotifier) {
-        handler.addEvent(new Event("statusbar", newMessage));
-    }
-
-    /** {@inheritDoc}
-     *
-     * @deprecated Should use {@link setMessage(StatusMessage)} instead
-     */
-    @Deprecated
-    @Override
-    public void setMessage(final String newMessage,
-            final StatusMessageNotifier newNotifier, final int timeout) {
-        handler.addEvent(new Event("statusbar", newMessage));
-    }
-
     /** {@inheritDoc} */
     @Override
     public void clearMessage() {
@@ -96,42 +64,10 @@ public class WebStatusBar implements StatusBar {
         // Do nothing
     }
 
-    /** {@inheritDoc}
-     *
-     * @deprecated Should use {@link setMessage(StatusMessage)} instead
-     */
-    @Deprecated
-    @Override
-    public void setMessage(final String iconType, final String newMessage) {
-        handler.addEvent(new Event("statusbar", newMessage));
-    }
-
-    /** {@inheritDoc}
-     *
-     * @deprecated Should use {@link setMessage(StatusMessage)} instead
-     */
-    @Deprecated
-    @Override
-    public void setMessage(final String iconType, final String newMessage,
-            final StatusMessageNotifier newNotifier) {
-        handler.addEvent(new Event("statusbar", newMessage));
-    }
-
-    /** {@inheritDoc}
-     *
-     * @deprecated Should use {@link setMessage(StatusMessage)} instead
-     */
-    @Deprecated
-    @Override
-    public void setMessage(final String iconType, final String newMessage,
-            final StatusMessageNotifier newNotifier, final int timeout) {
-        handler.addEvent(new Event("statusbar", newMessage));
-    }
-
     /** {@inheritDoc} */
     @Override
     public void setMessage(final StatusMessage message) {
-        handler.addEvent(new Event("statusbar", message));
+        handler.addEvent(new Event("statusbar", message.getMessage()));
     }
 
 }

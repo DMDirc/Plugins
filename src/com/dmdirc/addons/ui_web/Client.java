@@ -60,8 +60,8 @@ public class Client {
         this.ip = ip;
 
         final List<Window> added = new LinkedList<Window>();
-        final List<Window> queued = new LinkedList<Window>(
-                WebWindow.getWindows());
+        final List<Window> queued
+                = new LinkedList<Window>(WebWindow.getWindows());
 
         while (!queued.isEmpty()) {
             final Window window = queued.remove(0);
@@ -72,7 +72,8 @@ public class Client {
                 events.add(new Event("newwindow", window));
                 added.add(window);
             } else if (added.contains(parent)) {
-                events.add(new Event("newchildwindow", new Object[]{parent, window}));
+                events.add(new Event("newchildwindow",
+                        new Object[]{parent, window}));
                 added.add(window);
             } else {
                 queued.add(window);
