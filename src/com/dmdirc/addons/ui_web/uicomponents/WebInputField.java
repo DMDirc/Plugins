@@ -30,7 +30,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyListener;
 
 /**
- * An input field for a specific
+ * An input field for a specific client.
  */
 public class WebInputField implements InputField {
 

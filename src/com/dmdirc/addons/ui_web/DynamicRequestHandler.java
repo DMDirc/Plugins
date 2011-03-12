@@ -201,7 +201,7 @@ public class DynamicRequestHandler extends AbstractHandler {
     }
 
     private void doInput(final HttpServletRequest request) throws IOException {
-        final WebWindow window = WebWindow.getWindow(
+        final WebWindow window = controller.getWindowManager().getWindow(
                 request.getParameter("window"));
 
         if (window instanceof WebInputWindow) {
@@ -213,7 +213,7 @@ public class DynamicRequestHandler extends AbstractHandler {
     }
 
     private void doKey(final HttpServletRequest request) throws IOException {
-        final WebWindow window = WebWindow.getWindow(
+        final WebWindow window = controller.getWindowManager().getWindow(
                 request.getParameter("window"));
 
         if (window instanceof WebInputWindow) {
@@ -237,8 +237,8 @@ public class DynamicRequestHandler extends AbstractHandler {
     }
 
     private void doTab(final HttpServletRequest request) throws IOException {
-        final WebWindow window = WebWindow.getWindow(request.getParameter(
-                "window"));
+        final WebWindow window = controller.getWindowManager().getWindow(
+                request.getParameter("window"));
 
         if (window instanceof WebInputWindow) {
             final WebInputWindow wiw = (WebInputWindow) window;
@@ -253,8 +253,8 @@ public class DynamicRequestHandler extends AbstractHandler {
 
     private void doKeyUpDown(final boolean up, final HttpServletRequest request)
             throws IOException {
-        final WebWindow window = WebWindow.getWindow(request.getParameter(
-                "window"));
+        final WebWindow window = controller.getWindowManager().getWindow(
+                request.getParameter("window"));
 
         if (window instanceof WebInputWindow) {
             final WebInputWindow wiw = (WebInputWindow) window;
@@ -294,8 +294,8 @@ public class DynamicRequestHandler extends AbstractHandler {
 
         nickEvents.add(new Event("clearnicklist", false));
 
-        for (ChannelClientInfo cci : ((Channel) (WebWindow.getWindow(
-                request.getParameter("window"))).getContainer())
+        for (ChannelClientInfo cci : ((Channel) (controller.getWindowManager()
+                .getWindow(request.getParameter("window"))).getContainer())
                 .getChannelInfo().getChannelClients()) {
             nickEvents.add(new Event("addnicklist",
                     cci.getClient().getNickname()));
@@ -328,8 +328,8 @@ public class DynamicRequestHandler extends AbstractHandler {
 
         final List<Event> windowEvents = new ArrayList<Event>();
 
-        final WebWindow window = WebWindow.getWindow(request.getParameter(
-                "window"));
+        final WebWindow window = controller.getWindowManager().getWindow(
+                request.getParameter("window"));
 
         windowEvents.add(new Event("clearwindow", window.getId()));
 
@@ -350,7 +350,7 @@ public class DynamicRequestHandler extends AbstractHandler {
     private void doJoinChannel(final HttpServletRequest request)
             throws IOException {
         final String windowID = request.getParameter("source");
-        final WebWindow window = WebWindow.getWindow(windowID);
+        final WebWindow window = controller.getWindowManager().getWindow(windowID);
         window.getContainer().getServer().join(new ChannelJoinRequest(request.
                 getParameter("channel")));
     }
@@ -358,7 +358,7 @@ public class DynamicRequestHandler extends AbstractHandler {
     private void doOpenQuery(final HttpServletRequest request)
             throws IOException {
         final String windowID = request.getParameter("source");
-        final WebWindow window = WebWindow.getWindow(windowID);
+        final WebWindow window = controller.getWindowManager().getWindow(windowID);
         window.getContainer().getServer().getQuery(request.getParameter(
                 "target"));
     }

@@ -47,8 +47,8 @@ public class WebInputWindow extends WebWindow implements InputWindow {
             = new HashMap<Client, WebInputHandler>();
 
     public WebInputWindow(final WebInterfaceUI controller,
-            final WritableFrameContainer parent) {
-        super(controller, parent);
+            final WritableFrameContainer parent, final String id) {
+        super(controller, parent, id);
         this.parent = parent;
         this.commandparser = parent.getCommandParser();
         this.inputhandler = new WebInputHandler(new WebInputField(),
