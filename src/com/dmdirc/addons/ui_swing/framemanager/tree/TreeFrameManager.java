@@ -234,6 +234,7 @@ public final class TreeFrameManager implements FrameManager,
                 window.addNotificationListener(TreeFrameManager.this);
 
                 node.getLabel().notificationSet(window, window.getNotification());
+                node.getLabel().iconChanged(window, window.getIcon());
             }
         });
     }
