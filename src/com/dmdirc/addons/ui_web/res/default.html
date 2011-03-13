@@ -2,8 +2,7 @@
 <html>
     <head>
         <title>DMDirc web interface</title>
-        <script src="javascript/prototype.js" type="text/javascript"></script>
-        <script src="javascript/scriptaculous.js" type="text/javascript"></script>
+        <script src="javascript/jquery.js" type="text/javascript"></script>
         <script src="javascript/dmdirc.js" type="text/javascript"></script>
         <link rel="stylesheet" href="style.css" type="text/css"/>
     </head>
@@ -12,26 +11,26 @@
             <img src="images/dmdirc.png" id="throbber" alt="DMDirc logo">
             <span id="title">DMDirc web interface</span>
         </div>
-        
-        <div id="toolbar"><a class="button" onclick="nsd_show();">New server</a><a class="button" onclick="wus_show();">WebUI status</a></div>
-        
+
+        <div id="toolbar"><a class="button" onclick="nsd_show();">New server</a></div>
+
         <ul id="treeview">
         </ul>
-        
+
         <div id="inputarea">
             <input type="text" id="input" onkeydown="return input_keydown(event);"
                    autocomplete="off">
         </div>
-        
+
         <div id="content">
             <p class="nowindow">
                 No windows open.
             </p>
         </div>
-        
+
         <ul id="nicklist">
         </ul>
-        
+
         <div id="statusbar">
             <div id="statusbar_main">Ready</div>
         </div>

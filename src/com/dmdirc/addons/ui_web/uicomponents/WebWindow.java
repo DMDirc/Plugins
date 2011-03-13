@@ -33,6 +33,7 @@ import com.dmdirc.ui.interfaces.UIController;
 import com.dmdirc.ui.interfaces.Window;
 import com.dmdirc.ui.messages.IRCDocumentListener;
 import com.dmdirc.ui.messages.IRCTextAttribute;
+import com.dmdirc.ui.messages.Styliser;
 
 import java.awt.Color;
 import java.awt.font.TextAttribute;
@@ -256,7 +257,7 @@ public class WebWindow implements Window, IRCDocumentListener,
      * @return This window's title
      */
     public String getTitle() {
-        return parent.getTitle();
+        return Styliser.stipControlCodes(parent.getTitle());
     }
 
     /**
@@ -265,7 +266,7 @@ public class WebWindow implements Window, IRCDocumentListener,
      * @return This window's name
      */
     public String getName() {
-        return parent.getName();
+        return Styliser.stipControlCodes(parent.getName());
     }
 
     /**
