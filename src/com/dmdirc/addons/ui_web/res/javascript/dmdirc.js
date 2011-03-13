@@ -1,64 +1,68 @@
 var enabled = true;
 var clientID = Math.ceil(Math.random() * 1000000000);
 var activeWindow = null;
-var wus_open = false;
 var windows = {};
 var interval;
+
+var treeview, nicklist;
 
 function dmdirc_start() {
     if (interval != null) {
         clearInterval(interval);
     }
 
+    treeview = new Treeview($('#treeview'));
+    nicklist = new Nicklist();
+
     setTimeout(doUpdate, 100);
 }
 
-function treeview_remove(id) {
-    $('#' + id).remove();
+function Treeview(element) {
+    this.element = element;
 }
 
-function treeview_add(name, id, type, parent) {
-    var parentNode;
+$.extend(Treeview.prototype, {
+    remove: function(id) {
+        $('#' + id).remove();
+    },
 
-    if (parent == null) {
-        parentNode = document.getElementById('treeview');
-    } else {
-        parentNode = document.getElementById(parent);
+    add: function(name, id, type, parent) {
+        var parentNode;
 
-        if (parentNode.getElementsByTagName('ul').length == 0) {
-            var newUL = document.createElement('ul');
-            parentNode.appendChild(newUL);
-            parentNode = newUL;
+        if (parent) {
+            parentNode = $('#' + parent);
+
+            // Create a new child <ul/> if needed
+            var children = parentNode.children('ul');
+
+            if (children.length == 0) {
+                parentNode.append($('<ul/>'));
+                children = parentNode.children('ul');
+            }
+
+            parentNode = children;
         } else {
-            parentNode = parentNode.getElementsByTagName('ul')[0];
+            parentNode = this.element;
         }
+
+        var newNode = $('<li/>').attr('id', id).addClass(type);
+
+        var wrapperNode = $('<div/>').css('cursor', 'pointer').text(name);
+        wrapperNode.click(function() { window_show(id); });
+
+        wrapperNode.appendTo(newNode);
+        newNode.appendTo(parentNode);
+    },
+
+    setactive: function(id) {
+        if (activeWindow != null) {
+            document.getElementById(activeWindow).style.fontWeight = 'normal';
+        }
+
+        activeWindow = id;
+        document.getElementById(activeWindow).style.fontWeight = 'bold';
     }
-
-    var newNode = document.createElement('li');
-    newNode.id = id;
-    newNode.className = type;
-
-    var wrapperNode = document.createElement('div');
-    wrapperNode.innerHTML = name;
-    wrapperNode.style.cursor = 'pointer';
-    wrapperNode.onclick = function() {treeview_click(newNode);};
-    newNode.appendChild(wrapperNode);
-
-    parentNode.appendChild(newNode);
-}
-
-function treeview_click(element) {
-    window_show(element.id);
-}
-
-function treeview_setactive(id) {
-    if (activeWindow != null) {
-        document.getElementById(activeWindow).style.fontWeight = 'normal';
-    }
-
-    activeWindow = id;
-    document.getElementById(activeWindow).style.fontWeight = 'bold';
-}
+});
 
 function nsd_show() {
     if (!enabled) {
@@ -146,41 +150,45 @@ function profiles_add(profile) {
     }
 }
 
-function nicklist_show() {
-    var nicklist = document.getElementById('nicklist');
+function Nicklist() {}
 
-    if (nicklist.style.display != 'block') {
-        document.getElementById('content').style.right = '240px';
-        nicklist.style.display = 'block';
+$.extend(Nicklist.prototype, {
+    show: function(window) {
+        var nicklist = document.getElementById('nicklist');
+
+        if (nicklist.style.display != 'block') {
+            document.getElementById('content').style.right = '240px';
+            nicklist.style.display = 'block';
+        }
 
         $.ajax('/dynamic/nicklistrefresh',
         {
-            data: {window: activeWindow},
+            data: {window: window},
             error: errFunc,
             success: handlerFunc
         });
+    },
+
+    clear: function() {
+        $('#nicklist').empty();
+    },
+
+    add: function(nick) {
+        var entry = document.createElement('li');
+        entry.innerHTML = nick;
+
+        document.getElementById('nicklist').appendChild(entry);
+    },
+
+    hide: function() {
+        var nicklist = document.getElementById('nicklist');
+
+        if (nicklist.style.display == 'block') {
+            document.getElementById('content').style.right = '15px';
+            nicklist.style.display = 'none';
+        }
     }
-}
-
-function nicklist_clear() {
-    $('#nicklist').empty();
-}
-
-function nicklist_add(nick) {
-    var entry = document.createElement('li');
-    entry.innerHTML = nick;
-
-    document.getElementById('nicklist').appendChild(entry);
-}
-
-function nicklist_hide() {
-    var nicklist = document.getElementById('nicklist');
-
-    if (nicklist.style.display == 'block') {
-        document.getElementById('content').style.right = '15px';
-        nicklist.style.display = 'none';
-    }
-}
+});
 
 function inputarea_show() {
     var ia = document.getElementById('inputarea');
@@ -317,7 +325,7 @@ function window_addline(id, line) {
 }
 
 function window_create(window, parent) {
-    treeview_add(window.name, window.id, window.type, parent == null ? null : parent.id);
+    treeview.add(window.name, window.id, window.type, parent && parent.id);
     windows[window.id] = window;
     windows[window.id].lines = [];
     window_show(window.id);
@@ -331,7 +339,7 @@ function window_create(window, parent) {
 }
 
 function window_close(id) {
-    treeview_remove(id);
+    treeview.remove(id);
     delete windows[id];
 
     if (activeWindow == id) {
@@ -341,15 +349,15 @@ function window_close(id) {
 }
 
 function window_show(id) {
-    treeview_setactive(id);
+    treeview.setactive(id);
     title_settext(windows[id].title)
 
     var className = document.getElementById(id).className;
 
     if (className == 'channel')  {
-        nicklist_show();
+        nicklist.show(activeWindow);
     } else {
-        nicklist_hide();
+        nicklist.hide();
     }
 
     if (className == 'server' || className == 'channel' || className == 'input'
@@ -452,9 +460,9 @@ function handlerFunc(data) {
         } else if (event.type == 'settext') {
             input_settext(event.arg1);
         } else if (event.type == 'clearnicklist') {
-            nicklist_clear();
+            nicklist.clear();
         } else if (event.type == 'addnicklist') {
-            nicklist_add(event.arg1);
+            nicklist.add(event.arg1);
         } else if (event.type == 'setcaret') {
             input_setcaret(event.arg1);
         } else {
