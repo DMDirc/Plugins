@@ -17,52 +17,95 @@ function dmdirc_start() {
     setTimeout(doUpdate, 100);
 }
 
-function Treeview(element) {
-    this.element = element;
-}
+(function () {
+    Treeview = function(element) {
+        this.element = element;
+    }
 
-$.extend(Treeview.prototype, {
-    remove: function(id) {
-        $('#' + id).remove();
-    },
+    var classOrder = ['globalwindow', 'server', 'raw', 'channel', 'query'];
 
-    add: function(name, id, type, parent) {
-        var parentNode;
+    /**
+     * Compares two treeview nodes by their class and text.
+     *
+     * @param a The first node to be compared
+     * @param b The second node to be compared
+     * @return -1 if the first node should be before the second, 0 if the
+     * nodes are equal, and +1 otherwise
+     */
+    function compareTreeNodes(a, b) {
+        var classA = classOrder.indexOf(a.attr('class')),
+        classB = classOrder.indexOf(b.attr('class'));
 
-        if (parent) {
-            parentNode = $('#' + parent);
+        if (classA === classB) {
+            var textA = a.text().toLowerCase(), textB = b.text().toLowerCase();
 
-            // Create a new child <ul/> if needed
-            var children = parentNode.children('ul');
+            if (textA === textB) {
+                return 0;
+            } else {
+                return textA < textB ? -1 : +1;
+            }
+        } else {
+            return classA < classB ? -1 : +1;
+        }
+    }
 
-            if (children.length == 0) {
-                parentNode.append($('<ul/>'));
-                children = parentNode.children('ul');
+    $.extend(Treeview.prototype, {
+        remove: function(id) {
+            $('#' + id).remove();
+        },
+
+        add: function(name, id, type, parent) {
+            var parentNode;
+
+            if (parent) {
+                parentNode = $('#' + parent);
+
+                // Create a new child <ul/> if needed
+                var children = parentNode.children('ul');
+
+                if (children.length == 0) {
+                    parentNode.append($('<ul/>'));
+                    children = parentNode.children('ul');
+                }
+
+                parentNode = children;
+            } else {
+                parentNode = this.element;
             }
 
-            parentNode = children;
-        } else {
-            parentNode = this.element;
+            var newNode = $('<li/>').attr('id', id).addClass(type);
+
+            var wrapperNode = $('<div/>').css('cursor', 'pointer').text(name);
+            wrapperNode.click(function() { window_show(id); });
+
+            wrapperNode.appendTo(newNode);
+
+            var previousElement;
+            parentNode.children().each(function() {
+                if (compareTreeNodes($(this), newNode) < 0) {
+                    previousElement = $(this);
+                }
+            });
+
+            if (previousElement) {
+                console.log('Inserting ' + newNode.text() + ' after ' + previousElement.text());
+                newNode.insertAfter(previousElement);
+            } else {
+                console.log('Adding ' + newNode.text());
+                newNode.prependTo(parentNode);
+            }
+        },
+
+        setactive: function(id) {
+            if (activeWindow != null) {
+                document.getElementById(activeWindow).style.fontWeight = 'normal';
+            }
+
+            activeWindow = id;
+            document.getElementById(activeWindow).style.fontWeight = 'bold';
         }
-
-        var newNode = $('<li/>').attr('id', id).addClass(type);
-
-        var wrapperNode = $('<div/>').css('cursor', 'pointer').text(name);
-        wrapperNode.click(function() { window_show(id); });
-
-        wrapperNode.appendTo(newNode);
-        newNode.appendTo(parentNode);
-    },
-
-    setactive: function(id) {
-        if (activeWindow != null) {
-            document.getElementById(activeWindow).style.fontWeight = 'normal';
-        }
-
-        activeWindow = id;
-        document.getElementById(activeWindow).style.fontWeight = 'bold';
-    }
-});
+    });
+})();
 
 function nsd_show() {
     if (!enabled) {
