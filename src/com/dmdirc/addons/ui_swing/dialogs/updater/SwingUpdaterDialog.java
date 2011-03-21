@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_swing.dialogs.updater;
 
 import com.dmdirc.addons.ui_swing.MainFrame;
+import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
 import com.dmdirc.addons.ui_swing.components.PackingTable;
 import com.dmdirc.addons.ui_swing.components.renderers.UpdateComponentTableCellRenderer;
@@ -229,6 +230,7 @@ public final class SwingUpdaterDialog extends StandardDialog implements
             if (UpdateChecker.getStatus() == STATE.RESTART_REQUIRED) {
                 SwingRestartDialog.showSwingRestartDialog(mainFrame,
                         ModalityType.MODELESS);
+                dispose();
             }
         } else if (e.getSource().equals(getCancelButton())) {
             dispose();
@@ -245,16 +247,24 @@ public final class SwingUpdaterDialog extends StandardDialog implements
     /** {@inheritDoc} */
     @Override
     public void statusChanged(final STATE newStatus) {
-        if (newStatus == STATE.UPDATING) {
-            getOkButton().setEnabled(false);
-        } else {
-            getOkButton().setEnabled(true);
-        }
-        if (newStatus == STATE.RESTART_REQUIRED) {
-            getCancelButton().setVisible(false);
-        } else {
-            getCancelButton().setVisible(true);
-        }
+        UIUtilities.invokeLater(new Runnable() {
+
+            /** {@inheritDoc} */
+            @Override
+            public void run() {
+                if (newStatus == STATE.UPDATING) {
+                    getOkButton().setEnabled(false);
+                } else {
+                    getOkButton().setEnabled(true);
+                }
+                if (newStatus == STATE.RESTART_REQUIRED) {
+                    getCancelButton().setVisible(false);
+                    dispose();
+                } else {
+                    getCancelButton().setVisible(true);
+                }
+            }
+        });
     }
 
     /** {@inheritDoc} */
