@@ -87,13 +87,7 @@ function dmdirc_start() {
                 }
             });
 
-            if (previousElement) {
-                console.log('Inserting ' + newNode.text() + ' after ' + previousElement.text());
-                newNode.insertAfter(previousElement);
-            } else {
-                console.log('Adding ' + newNode.text());
-                newNode.prependTo(parentNode);
-            }
+            previousElement && newNode.insertAfter(previousElement) || newNode.prependTo(parentNode);
         },
 
         setactive: function(id) {
