@@ -33,7 +33,6 @@ import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.NickList;
 import com.dmdirc.addons.ui_swing.components.SplitPane;
 import com.dmdirc.addons.ui_swing.components.TopicBar;
-import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputHandler;
 import com.dmdirc.addons.ui_swing.dialogs.channelsetting.ChannelSettingsDialog;
 import com.dmdirc.commandparser.PopupType;
 import com.dmdirc.config.Identity;
@@ -96,9 +95,6 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
                 controller.getDomain(), "shownicklist", this);
         ActionManager.getActionManager().registerListener(this,
                 CoreActionType.CLIENT_CLOSING);
-
-        setInputHandler(new SwingInputHandler(getInputField(),
-                owner.getCommandParser(), getContainer()));
 
         identity = IdentityManager.getChannelConfig(owner.getServer().
                 getNetwork(), owner.getChannelInfo().getName());
