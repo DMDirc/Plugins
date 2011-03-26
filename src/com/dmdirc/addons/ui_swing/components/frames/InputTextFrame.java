@@ -124,7 +124,12 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
      * Initialises the components for this frame.
      */
     private void initComponents() {
-        new SwingInputField(this, getController().getMainFrame());
+        inputField = new SwingInputField(this, getController().getMainFrame());
+        inputHandler = new SwingInputHandler(inputField,
+                getContainer().getCommandParser(), getContainer());
+        inputHandler.addValidationListener(inputField);
+        inputHandler.setTabCompleter(((WritableFrameContainer) frameParent).
+                getTabCompleter());
 
         getInputField().addMouseListener(this);
 
@@ -190,35 +195,12 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
     }
 
     /**
-     * Sets the input handler for this frame.
-     *
-     * @param newInputHandler input handler to set for this frame
-     */
-    public final void setInputHandler(final InputHandler newInputHandler) {
-        this.inputHandler = newInputHandler;
-        inputHandler.addValidationListener(inputField);
-        inputHandler.setTabCompleter(((WritableFrameContainer) frameParent).
-                getTabCompleter());
-    }
-
-    /**
      * Returns the input field for this frame.
      *
      * @return SwingInputField input field for the frame.
      */
     public final SwingInputField getInputField() {
         return inputField;
-    }
-
-    /**
-     * Sets the frames input field.
-     *
-     * @param newInputField new input field to use
-     */
-    public final void setInputField(final SwingInputField newInputField) {
-        this.inputField = newInputField;
-        setInputHandler(new SwingInputHandler(newInputField,
-                getContainer().getCommandParser(), getContainer()));
     }
 
     /**

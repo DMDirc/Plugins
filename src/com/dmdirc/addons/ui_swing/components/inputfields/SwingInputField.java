@@ -115,7 +115,6 @@ public class SwingInputField extends JComponent implements InputField,
                 textField.getInputMap(SwingInputField.WHEN_IN_FOCUSED_WINDOW));
         KeyboardFocusManager.getCurrentKeyboardFocusManager()
                 .addPropertyChangeListener(this);
-        textFrame.setInputField(this);
     }
 
     /** {@inheritDoc} */
