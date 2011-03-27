@@ -24,9 +24,7 @@ package com.dmdirc.addons.ui_swing.components.renderers;
 
 import com.dmdirc.actions.interfaces.ActionType;
 
-import java.awt.Color;
 import java.awt.Component;
-import java.awt.Font;
 
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
@@ -53,8 +51,6 @@ public final class ActionTypeRenderer extends DefaultListCellRenderer {
         if (value == null) {
             setText("");
         } else if (value instanceof String && !((String) value).isEmpty()) {
-            setBackground(Color.GRAY);
-            setFont(getFont().deriveFont(Font.BOLD));
             setText(value.toString());
         } else if (value instanceof ActionType) {
             setText(((ActionType) value).getName());
