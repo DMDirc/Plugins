@@ -110,7 +110,11 @@ public class ActionTriggersListPanel extends JPanel {
             }
 
             if (triggers.isEmpty()) {
-                add(new TextLabel("No triggers."));
+                if (isEnabled()) {
+                    add(new TextLabel("<b>Select a trigger and click Add.</b>"));
+                } else {
+                    add(new TextLabel("No Triggers."));
+                }
             }
             setVisible(true);
         }

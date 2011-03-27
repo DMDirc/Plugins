@@ -23,28 +23,27 @@
 package com.dmdirc.addons.ui_swing.dialogs.actioneditor;
 
 import com.dmdirc.actions.ActionManager;
+import com.dmdirc.actions.ActionTypeComparator;
 import com.dmdirc.actions.interfaces.ActionType;
+import com.dmdirc.addons.ui_swing.ComboBoxWidthModifier;
 import com.dmdirc.addons.ui_swing.components.renderers.ActionTypeRenderer;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
+import com.dmdirc.util.MapList;
 
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.BorderFactory;
-import javax.swing.JButton;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
-import javax.swing.JComponent;
 import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
-import javax.swing.JScrollPane;
-import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
-import javax.swing.event.PopupMenuEvent;
-import javax.swing.event.PopupMenuListener;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -61,15 +60,21 @@ public class ActionTriggersPanel extends JPanel implements ActionListener,
      */
     private static final long serialVersionUID = 1;
     /** Trigger combo box. */
-    private JComboBox trigger;
-    /** Add button. */
-    private JButton add;
+    private JComboBox triggerGroup;
+    /** Trigger combo box. */
+    private JComboBox triggerItem;
     /** Triggers list. */
     private ActionTriggersListPanel triggerList;
+    /** Are we internally changing the combo boxes? */
+    private boolean comboChange;
+    /** Triggers compatible with the currently added triggers. */
+    private final List<ActionType> compatibleTriggers;
 
     /** Instantiates the panel. */
     public ActionTriggersPanel() {
         super();
+
+        compatibleTriggers = new ArrayList<ActionType>();
 
         initComponents();
         addListeners();
@@ -81,60 +86,28 @@ public class ActionTriggersPanel extends JPanel implements ActionListener,
         setBorder(BorderFactory.createTitledBorder(UIManager.getBorder(
                 "TitledBorder.border"), "Triggers"));
 
-        trigger =
-                new JComboBox(new ActionTypeModel(getFontMetrics(getFont()),
-                ActionManager.getActionManager().getGroupedTypes()));
+        triggerGroup = new JComboBox(new DefaultComboBoxModel());
         //Only fire events on selection not on highlight
-        trigger.putClientProperty("JComboBox.isTableCellEditor", Boolean.TRUE);
-        trigger.setRenderer(new ActionTypeRenderer());
-        trigger.setPrototypeDisplayValue("Testing");
-        trigger.addPopupMenuListener(new PopupMenuListener() {
+        triggerGroup.putClientProperty("JComboBox.isTableCellEditor",
+                Boolean.TRUE);
+        triggerGroup.setRenderer(new ActionTypeRenderer());
+        triggerGroup.addPopupMenuListener(new ComboBoxWidthModifier());
 
-            @Override
-            public void popupMenuWillBecomeVisible(final PopupMenuEvent e) {
-                final JComboBox box = (JComboBox) e.getSource();
-                final Object comp = box.getUI().getAccessibleChild(box, 0);
-                if (!(comp instanceof JPopupMenu)) {
-                    return;
-                }
-                final JComponent scrollPane = (JComponent) ((JPopupMenu) comp).
-                        getComponent(0);
-                final Dimension size = scrollPane.getPreferredSize();
-                if (scrollPane instanceof JScrollPane) {
-                    size.width = Math.max(size.width, ((ActionTypeModel)
-                            trigger.getModel()).getMaxWidth() + (int)
-                            ((JScrollPane) scrollPane).getVerticalScrollBar().
-                            getPreferredSize().getWidth());
-                } else {
-                    size.width = Math.max(size.width, ((ActionTypeModel)
-                            trigger.getModel()).getMaxWidth());
-                }
-                scrollPane.setPreferredSize(size);
-                scrollPane.setMaximumSize(size);
-            }
-
-            @Override
-            public void popupMenuWillBecomeInvisible(final PopupMenuEvent e) {
-                //Not required
-            }
-
-            @Override
-            public void popupMenuCanceled(final PopupMenuEvent e) {
-                //Not required
-            }
-        });
-
-
-        add = new JButton("Add");
-        add.setEnabled(trigger.getSelectedIndex() != -1);
+        triggerItem = new JComboBox(new DefaultComboBoxModel());
+        //Only fire events on selection not on highlight
+        triggerItem.putClientProperty("JComboBox.isTableCellEditor",
+                Boolean.TRUE);
+        triggerItem.setRenderer(new ActionTypeRenderer());
+        triggerItem.addPopupMenuListener(new ComboBoxWidthModifier());
 
         triggerList = new ActionTriggersListPanel();
+        addAll(ActionManager.getActionManager().getGroupedTypes());
     }
 
     /** Adds the listeners. */
     private void addListeners() {
-        add.addActionListener(this);
-        trigger.addActionListener(this);
+        triggerGroup.addActionListener(this);
+        triggerItem.addActionListener(this);
         triggerList.addTriggerListener(this);
 
         triggerList.addPropertyChangeListener("triggerCount", this);
@@ -142,13 +115,13 @@ public class ActionTriggersPanel extends JPanel implements ActionListener,
 
     /** Lays out the components. */
     private void layoutComponents() {
-        setLayout(new MigLayout("fill, pack"));
+        setLayout(new MigLayout("fill, pack, wmax 50%"));
 
         add(new TextLabel("This action will be triggered when any of these "
                 + "events occurs: "), "growx, pushx, wrap, spanx");
         add(triggerList, "grow, push, wrap, spanx");
-        add(trigger, "growx, pushx");
-        add(add, "right");
+        add(triggerGroup, "growx, wmax 50%-(4*rel), wmin 50%-(4*rel)");
+        add(triggerItem, "growx, wmax 50%-(4*rel), wmin 50%-(4*rel)");
     }
 
     /**
@@ -184,8 +157,7 @@ public class ActionTriggersPanel extends JPanel implements ActionListener,
         for (ActionType localTrigger : triggers) {
             triggerList.addTrigger(localTrigger);
         }
-
-        repopulateTriggers();
+        addCompatible(triggerList.getTrigger(0));
     }
 
     /**
@@ -195,48 +167,101 @@ public class ActionTriggersPanel extends JPanel implements ActionListener,
      */
     @Override
     public void actionPerformed(final ActionEvent e) {
-        if (e.getSource() == trigger) {
-            add.setEnabled(trigger.getSelectedIndex() != -1);
+        if (comboChange) {
+            return;
+        }
+        if (e.getSource() == triggerGroup) {
+            if (triggerList.getTriggerCount() == 0) {
+                addList(ActionManager.getActionManager().getGroupedTypes()
+                        .get((String) triggerGroup.getSelectedItem()));
+            } else {
+                addList(compatibleTriggers);
+            }
         } else {
-            triggerList.addTrigger((ActionType) trigger.getSelectedItem());
-            repopulateTriggers();
+            triggerList.addTrigger((ActionType) triggerItem.getSelectedItem());
+            addCompatible((ActionType) triggerItem.getSelectedItem());
         }
     }
 
     /** {@inheritDoc} */
     @Override
     public void triggerRemoved(final ActionType trigger) {
-        repopulateTriggers();
+        if (triggerList.getTriggerCount() == 0) {
+            addAll(ActionManager.getActionManager().getGroupedTypes());
+        } else {
+            addCompatible(triggerList.getTrigger(0));
+        }
+    }
+
+    private void addAll(final MapList<String, ActionType> mapList) {
+        comboChange = true;
+        compatibleTriggers.clear();
+        ((DefaultComboBoxModel) triggerGroup.getModel()).removeAllElements();
+        ((DefaultComboBoxModel) triggerItem.getModel()).removeAllElements();
+        for (Map.Entry<String, List<ActionType>> entry : mapList.entrySet()) {
+            ((DefaultComboBoxModel) triggerGroup.getModel())
+                    .addElement(entry.getKey());
+        }
+        triggerGroup.setSelectedIndex(-1);
+        triggerGroup.setEnabled(triggerGroup.getModel().getSize() > 0);
+        triggerItem.setEnabled(triggerItem.getModel().getSize() > 0);
+        comboChange = false;
     }
 
     /**
-     * Repopulates the triggers in the panel.
+     * Populates the combo boxes with triggers compatible with the specified
+     * type.
+     *
+     * @param primaryType Primary type
      */
-    private void repopulateTriggers() {
-        SwingUtilities.invokeLater(new Runnable() {
-
-            /** {@inheritDoc} */
-            @Override
-            public void run() {
-                ((ActionTypeModel) trigger.getModel()).removeAllElements();
-
-                if (triggerList.getTriggerCount() == 0) {
-                    ((ActionTypeModel) trigger.getModel()).setTypeGroup(
-                            ActionManager.getActionManager().getGroupedTypes());
-                    trigger.setEnabled((trigger.getModel().getSize() > 0));
-                    return;
+    private void addCompatible(final ActionType primaryType) {
+        comboChange = true;
+        compatibleTriggers.addAll(ActionManager.getActionManager()
+                .findCompatibleTypes(primaryType));
+        ((DefaultComboBoxModel) triggerGroup.getModel()).removeAllElements();
+        ((DefaultComboBoxModel) triggerItem.getModel()).removeAllElements();
+        for (ActionType thisType : compatibleTriggers) {
+            final List<ActionType> types = triggerList.getTriggers();
+            if (!types.contains(thisType)) {
+                ((DefaultComboBoxModel) triggerItem.getModel())
+                        .addElement(thisType);
+                if (((DefaultComboBoxModel) triggerGroup.getModel())
+                        .getIndexOf(thisType.getType().getGroup()) == -1) {
+                    ((DefaultComboBoxModel) triggerGroup.getModel())
+                            .addElement(thisType.getType().getGroup());
                 }
-                for (ActionType thisType : ActionManager.getActionManager()
-                        .findCompatibleTypes(triggerList.getTrigger(0))) {
-                    final List<ActionType> types = triggerList.getTriggers();
-                    if (!types.contains(thisType)) {
-                        ((ActionTypeModel) trigger.getModel()).addElement(
-                                thisType);
-                    }
-                }
-                trigger.setEnabled(trigger.getModel().getSize() > 0);
             }
-        });
+        }
+        triggerGroup.setSelectedIndex(-1);
+        triggerItem.setSelectedIndex(-1);
+        if (triggerItem.getModel().getSize() == 0) {
+            ((DefaultComboBoxModel) triggerGroup.getModel()).removeAllElements();
+        }
+        triggerGroup.setEnabled(triggerGroup.getModel().getSize() > 0);
+        triggerItem.setEnabled(triggerItem.getModel().getSize() > 0);
+        triggerItem.setEnabled(triggerGroup.getSelectedIndex() != -1);
+        comboChange = false;
+    }
+
+    /**
+     * Adds the specified list of triggers to the items list.
+     *
+     * @param list List of triggers to add
+     */
+    private void addList(final List<ActionType> list) {
+        comboChange = true;
+        ((DefaultComboBoxModel) triggerItem.getModel()).removeAllElements();
+        Collections.sort(list, new ActionTypeComparator());
+        for (ActionType entry : list) {
+            if (compatibleTriggers.isEmpty()
+                    || compatibleTriggers.contains(entry)) {
+                ((DefaultComboBoxModel) triggerItem.getModel()).addElement(entry);
+            }
+        }
+        triggerItem.setSelectedIndex(-1);
+        triggerGroup.setEnabled(triggerGroup.getModel().getSize() > 0);
+        triggerItem.setEnabled(triggerItem.getModel().getSize() > 0);
+        comboChange = false;
     }
 
     /** {@inheritDoc} */
@@ -244,13 +269,15 @@ public class ActionTriggersPanel extends JPanel implements ActionListener,
     public void setEnabled(final boolean enabled) {
         triggerList.setEnabled(enabled);
         if (enabled) {
-            add.setEnabled(trigger.getSelectedIndex() != -1);
-            if (trigger.getModel().getSize() > 0) {
-                trigger.setEnabled(enabled);
+            if (triggerGroup.getModel().getSize() > 0) {
+                triggerGroup.setEnabled(enabled);
+            }
+            if (triggerItem.getModel().getSize() > 0) {
+                triggerItem.setEnabled(enabled);
             }
         } else {
-            add.setEnabled(false);
-            trigger.setEnabled(false);
+            triggerGroup.setEnabled(false);
+            triggerItem.setEnabled(false);
         }
     }
 
