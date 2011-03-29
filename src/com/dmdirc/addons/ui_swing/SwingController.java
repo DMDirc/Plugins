@@ -418,9 +418,24 @@ public class SwingController extends BasePlugin implements UIController {
         }
         eventQueue = new DMDircEventQueue(this);
         keyListener = new DialogKeyListener();
-        Toolkit.getDefaultToolkit().getSystemEventQueue().push(eventQueue);
-        KeyboardFocusManager.getCurrentKeyboardFocusManager().
-                addKeyEventDispatcher(keyListener);
+        UIUtilities.invokeAndWait(new Runnable() {
+
+            /** {@inheritDoc} */
+            @Override
+            public void run() {
+                Toolkit.getDefaultToolkit().getSystemEventQueue()
+                        .push(eventQueue);
+            }
+        });
+        UIUtilities.invokeAndWait(new Runnable() {
+
+            /** {@inheritDoc} */
+            @Override
+            public void run() {
+                KeyboardFocusManager.getCurrentKeyboardFocusManager()
+                        .addKeyEventDispatcher(keyListener);
+            }
+        });
 
         UIUtilities.invokeAndWait(new Runnable() {
 
