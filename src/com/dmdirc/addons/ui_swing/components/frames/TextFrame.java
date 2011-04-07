@@ -102,6 +102,8 @@ public abstract class TextFrame extends JPanel implements Window,
      * the client.
      */
     private DesktopWindowFrame popoutFrame;
+    /** Desktop place holder object used if this frame is popped out. */
+    private DesktopPlaceHolderFrame popoutPlaceholder;
 
     /**
      * Creates a new instance of Frame.
@@ -173,9 +175,11 @@ public abstract class TextFrame extends JPanel implements Window,
     public void setPopout(final boolean popout) {
         this.popout = popout;
         if (popout) {
-            getDisplayFrame();
+            popoutPlaceholder = new DesktopPlaceHolderFrame();
+            popoutFrame = new DesktopWindowFrame(this)  ;
             popoutFrame.display();
         } else if (popoutFrame != null) {
+            popoutPlaceholder = null;
             popoutFrame.dispose();
             popoutFrame = null;
         }
@@ -198,15 +202,6 @@ public abstract class TextFrame extends JPanel implements Window,
     }
 
     /**
-     * Sets the frame that has is to be used as our free floating window.
-     *
-     * @param popoutFrame frame that is to be used for free floating window
-     */
-    public void setPopoutFrame(final DesktopWindowFrame popoutFrame) {
-        this.popoutFrame = popoutFrame;
-    }
-
-    /**
      * Checks if this frame should be popped out of the client or not. Returns
      * our place holder frame if it is to be used or this TextFrame if it is
      * not to be popped out.
@@ -215,11 +210,7 @@ public abstract class TextFrame extends JPanel implements Window,
      */
     public JPanel getDisplayFrame() {
         if (popout) {
-            if (popoutFrame == null) {
-                setPopoutFrame(new DesktopWindowFrame(this,
-                    new DesktopPlaceHolderFrame()));
-            }
-            return popoutFrame.getPlaceHolder();
+            return popoutPlaceholder;
         } else {
             return this;
         }

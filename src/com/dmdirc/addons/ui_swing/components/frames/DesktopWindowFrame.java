@@ -47,11 +47,8 @@ public class DesktopWindowFrame extends JFrame implements FrameInfoListener,
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 1;
-
     /** TextFrame associated with this popout window. */
     private final TextFrame windowWindow;
-    /** Placeholder frame for this window whilst it is popped out. */
-    private final DesktopPlaceHolderFrame placeHolder;
     /** Initial location for popped out window. */
     private final Point initialLocation;
 
@@ -59,25 +56,18 @@ public class DesktopWindowFrame extends JFrame implements FrameInfoListener,
      * Creates a new instance of DesktopWindowFrame.
      *
      * @param windowWindow Frame that we want to contain in this Desktop frame.
-     * @param placeHolder The frame to use in the main client whilst this is
      * popped out.
      */
-    public DesktopWindowFrame(final TextFrame windowWindow,
-            final DesktopPlaceHolderFrame placeHolder) {
+    public DesktopWindowFrame(final TextFrame windowWindow) {
         super();
         this.windowWindow = windowWindow;
-        this.placeHolder = placeHolder;
         initialLocation = windowWindow.getLocationOnScreen();
 
         addWindowListener(new WindowAdapter() {
             /** {@inheritDoc} */
             @Override
             public void windowClosing(final WindowEvent e) {
-                setVisible(false);
                 windowWindow.setPopout(false);
-                windowWindow.setPopoutFrame(null);
-                windowWindow.getController().getMainFrame().setActiveFrame(
-                        windowWindow);
             }
         });
         windowWindow.getContainer().addFrameInfoListener(this);
@@ -100,17 +90,6 @@ public class DesktopWindowFrame extends JFrame implements FrameInfoListener,
         setLocation(initialLocation);
     }
 
-    /**
-     * Returns the frame that is being used where this popped out frame would
-     * normally be.
-     *
-     * @return DesktopPlaceHolderFrame Frame to use where this frame would
-     * normally be
-     */
-    public DesktopPlaceHolderFrame getPlaceHolder() {
-        return placeHolder;
-    }
-
     /** {@inheritDoc} */
     @Override
     public void windowClosing(final FrameContainer window) {
@@ -118,11 +97,7 @@ public class DesktopWindowFrame extends JFrame implements FrameInfoListener,
             /** {@inheritDoc} */
             @Override
             public void run() {
-                setVisible(false);
                 windowWindow.setPopout(false);
-                windowWindow.setPopoutFrame(null);
-                windowWindow.getController().getMainFrame().setActiveFrame(
-                        windowWindow);
             }
         });
     }
