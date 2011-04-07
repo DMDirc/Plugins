@@ -27,6 +27,7 @@ import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.interfaces.FrameCloseListener;
 import com.dmdirc.interfaces.FrameInfoListener;
 
+import java.awt.Point;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -51,6 +52,8 @@ public class DesktopWindowFrame extends JFrame implements FrameInfoListener,
     private final TextFrame windowWindow;
     /** Placeholder frame for this window whilst it is popped out. */
     private final DesktopPlaceHolderFrame placeHolder;
+    /** Initial location for popped out window. */
+    private final Point initialLocation;
 
     /**
      * Creates a new instance of DesktopWindowFrame.
@@ -64,6 +67,7 @@ public class DesktopWindowFrame extends JFrame implements FrameInfoListener,
         super();
         this.windowWindow = windowWindow;
         this.placeHolder = placeHolder;
+        initialLocation = windowWindow.getLocationOnScreen();
 
         addWindowListener(new WindowAdapter() {
             /** {@inheritDoc} */
@@ -79,11 +83,21 @@ public class DesktopWindowFrame extends JFrame implements FrameInfoListener,
         windowWindow.getContainer().addFrameInfoListener(this);
         windowWindow.getContainer().addCloseListener(this);
 
-        setLayout(new MigLayout("fill, ins panel"));
-        setPreferredSize(windowWindow.getController().getMainFrame().getSize());
+        setLayout(new MigLayout("fill, ins rel"));
+        add(windowWindow, "grow");
+        setPreferredSize(windowWindow.getSize());
         setTitle(windowWindow.getContainer().getTitle());
         setIconImage(windowWindow.getIconManager().getImage(windowWindow
                 .getContainer().getIcon()));
+    }
+
+    /**
+     * Packs and displays this frame.
+     */
+    public void display() {
+        pack();
+        setVisible(true);
+        setLocation(initialLocation);
     }
 
     /**
