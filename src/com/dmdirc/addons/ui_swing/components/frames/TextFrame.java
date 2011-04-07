@@ -136,7 +136,7 @@ public abstract class TextFrame extends JPanel implements Window,
     }
 
     /**
-     * Locate the appropriate command parser in the window heirarchy.
+     * Locate the appropriate command parser in the window hierarchy.
      *
      * @return Closest command parser in the tree
      */
@@ -173,9 +173,9 @@ public abstract class TextFrame extends JPanel implements Window,
     public void setPopout(final boolean popout) {
         this.popout = popout;
         if (popout) {
-            createPopoutFrame();
+            getDisplayFrame();
+            popoutFrame.display();
         } else if (popoutFrame != null) {
-            popoutFrame.setVisible(false);
             popoutFrame.dispose();
             popoutFrame = null;
         }
@@ -207,21 +207,6 @@ public abstract class TextFrame extends JPanel implements Window,
     }
 
     /**
-     * Creates a free floating window frame for us to use. This method will create
-     * a place holder frame to be used in the client in place of the original frame.
-     */
-    private void createPopoutFrame() {
-        if (popoutFrame == null) {
-            popoutFrame = new DesktopWindowFrame(TextFrame.this,
-                    new DesktopPlaceHolderFrame());
-            popoutFrame.add(TextFrame.this, "grow");
-            popoutFrame.pack();
-            popoutFrame.setVisible(true);
-            setPopoutFrame(popoutFrame);
-        }
-     }
-
-    /**
      * Checks if this frame should be popped out of the client or not. Returns
      * our place holder frame if it is to be used or this TextFrame if it is
      * not to be popped out.
@@ -231,7 +216,8 @@ public abstract class TextFrame extends JPanel implements Window,
     public JPanel getDisplayFrame() {
         if (popout) {
             if (popoutFrame == null) {
-                createPopoutFrame();
+                setPopoutFrame(new DesktopWindowFrame(TextFrame.this,
+                    new DesktopPlaceHolderFrame()));
             }
             return popoutFrame.getPlaceHolder();
         } else {

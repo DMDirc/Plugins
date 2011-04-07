@@ -79,11 +79,20 @@ public class DesktopWindowFrame extends JFrame implements FrameInfoListener,
         windowWindow.getContainer().addFrameInfoListener(this);
         windowWindow.getContainer().addCloseListener(this);
 
-        setLayout(new MigLayout("fill, ins panel"));
+        setLayout(new MigLayout("fill, ins rel"));
+        add(windowWindow, "grow");
         setPreferredSize(windowWindow.getController().getMainFrame().getSize());
         setTitle(windowWindow.getContainer().getTitle());
         setIconImage(windowWindow.getIconManager().getImage(windowWindow
                 .getContainer().getIcon()));
+    }
+
+    /**
+     * Packs and displays this frame.
+     */
+    public void display() {
+        pack();
+        setVisible(true);
     }
 
     /**
