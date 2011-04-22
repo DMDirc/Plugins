@@ -25,6 +25,7 @@ package com.dmdirc.addons.parser_msn;
 import com.dmdirc.parser.common.BaseParser;
 import com.dmdirc.parser.common.ChannelJoinRequest;
 import com.dmdirc.parser.common.ChildImplementations;
+import com.dmdirc.parser.common.CompositionState;
 import com.dmdirc.parser.common.DefaultStringConverter;
 import com.dmdirc.parser.common.QueuePriority;
 import com.dmdirc.parser.interfaces.ChannelInfo;
@@ -461,5 +462,11 @@ public class MSNParser extends BaseParser {
      */
     public void removeClient(final MsnContact contact) {
         clients.remove(contact.getEmail().getEmailAddress());
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setCompositionState(final String host, final CompositionState state) {
+        // Do nothing
     }
 }
