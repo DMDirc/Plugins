@@ -26,6 +26,7 @@ import com.dmdirc.parser.common.AwayState;
 import com.dmdirc.parser.common.BaseSocketAwareParser;
 import com.dmdirc.parser.common.ChannelJoinRequest;
 import com.dmdirc.parser.common.ChildImplementations;
+import com.dmdirc.parser.common.CompositionState;
 import com.dmdirc.parser.common.DefaultStringConverter;
 import com.dmdirc.parser.common.ParserError;
 import com.dmdirc.parser.common.QueuePriority;
@@ -35,6 +36,7 @@ import com.dmdirc.parser.interfaces.StringConverter;
 import com.dmdirc.parser.interfaces.callbacks.AwayStateListener;
 import com.dmdirc.parser.interfaces.callbacks.CallbackInterface;
 import com.dmdirc.parser.interfaces.callbacks.ChannelSelfJoinListener;
+import com.dmdirc.parser.interfaces.callbacks.CompositionStateChangeListener;
 import com.dmdirc.parser.interfaces.callbacks.ConnectErrorListener;
 import com.dmdirc.parser.interfaces.callbacks.DataInListener;
 import com.dmdirc.parser.interfaces.callbacks.DataOutListener;
@@ -68,6 +70,9 @@ import org.jivesoftware.smack.filter.PacketFilter;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Packet;
 import org.jivesoftware.smack.packet.Presence;
+import org.jivesoftware.smackx.ChatState;
+import org.jivesoftware.smackx.ChatStateListener;
+import org.jivesoftware.smackx.ChatStateManager;
 import org.jivesoftware.smackx.muc.MultiUserChat;
 
 /**
@@ -447,6 +452,8 @@ public class XmppParser extends BaseSocketAwareParser {
             connection.sendPacket(new Presence(Presence.Type.available, null, priority, Presence.Mode.available));
             connection.getRoster().addRosterListener(new RosterListenerImpl());
 
+            ChatStateManager.getInstance(connection);
+
             setServerName(connection.getServiceName());
 
             getCallback(ServerReadyListener.class).onServerReady(null, null);
@@ -593,7 +600,7 @@ public class XmppParser extends BaseSocketAwareParser {
 
     }
 
-    private class MessageListenerImpl implements MessageListener {
+    private class MessageListenerImpl implements ChatStateListener {
 
         /** {@inheritDoc} */
         @Override
@@ -603,6 +610,30 @@ public class XmppParser extends BaseSocketAwareParser {
                 getCallback(PrivateMessageListener.class).onPrivateMessage(null,
                         null, msg.getBody(), msg.getFrom());
             }
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public void stateChanged(final Chat chat, final ChatState cs) {
+            CompositionState state;
+
+            switch (cs) {
+                case paused:
+                    state = CompositionState.ENTERED_TEXT;
+                    break;
+                case composing:
+                    state = CompositionState.TYPING;
+                    break;
+                case active:
+                case gone:
+                case inactive:
+                default:
+                    state = CompositionState.IDLE;
+                    break;
+            }
+
+            getCallback(CompositionStateChangeListener.class)
+                    .onCompositionStateCanged(null, null, state, chat.getParticipant());
         }
 
     }
