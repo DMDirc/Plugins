@@ -90,6 +90,9 @@ public class XmppParser extends BaseSocketAwareParser {
     /** The connection to use. */
     private XMPPConnection connection;
 
+    /** The state manager for the current connection. */
+    private ChatStateManager stateManager;
+
     /** A cache of known chats. */
     private final Map<String, Chat> chats = new HashMap<String, Chat>();
 
@@ -451,7 +454,7 @@ public class XmppParser extends BaseSocketAwareParser {
             connection.sendPacket(new Presence(Presence.Type.available, null, priority, Presence.Mode.available));
             connection.getRoster().addRosterListener(new RosterListenerImpl());
 
-            ChatStateManager.getInstance(connection);
+            stateManager = ChatStateManager.getInstance(connection);
 
             setServerName(connection.getServiceName());
 
@@ -520,6 +523,35 @@ public class XmppParser extends BaseSocketAwareParser {
 
         getCallback(AwayStateListener.class).onAwayState(null, null,
                 AwayState.AWAY, AwayState.HERE, null);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setCompositionState(final String host, final CompositionState state) {
+        final Chat chat = chats.get(parseHostmask(host)[0]);
+
+        ChatState newState;
+
+        switch (state) {
+            case ENTERED_TEXT:
+                newState = ChatState.paused;
+                break;
+            case TYPING:
+                newState = ChatState.composing;
+                break;
+            case IDLE:
+            default:
+                newState = ChatState.active;
+                break;
+        }
+
+        if (chat != null && stateManager != null) {
+            try {
+                stateManager.setCurrentState(newState, chat);
+            } catch (XMPPException ex) {
+                // Can't set chat state... Oh well?
+            }
+        }
     }
 
     private class ConnectionListenerImpl implements ConnectionListener {

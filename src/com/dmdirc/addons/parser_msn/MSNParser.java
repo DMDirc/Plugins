@@ -462,4 +462,10 @@ public class MSNParser extends BaseParser {
     public void removeClient(final MsnContact contact) {
         clients.remove(contact.getEmail().getEmailAddress());
     }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setCompositionState(final String host, final CompositionState state) {
+        // Do nothing
+    }
 }
