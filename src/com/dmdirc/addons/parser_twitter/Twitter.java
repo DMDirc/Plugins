@@ -35,6 +35,7 @@ import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.logger.ErrorManager;
 import com.dmdirc.parser.common.CallbackManager;
 import com.dmdirc.parser.common.ChannelJoinRequest;
+import com.dmdirc.parser.common.CompositionState;
 import com.dmdirc.parser.common.DefaultStringConverter;
 import com.dmdirc.parser.common.IgnoreList;
 import com.dmdirc.parser.common.QueuePriority;
@@ -1647,6 +1648,12 @@ public class Twitter implements Parser, TwitterErrorHandler, TwitterRawHandler,
     @Override
     public List<String> getServerInformationLines() {
         return Arrays.asList(new String[]{"Twitter IRC parser: " + getServerName()});
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setCompositionState(final String host, final CompositionState state) {
+        // Do nothing
     }
 
 }
