@@ -30,6 +30,7 @@ import com.dmdirc.addons.ui_swing.actions.CutAction;
 import com.dmdirc.addons.ui_swing.actions.InputFieldCopyAction;
 import com.dmdirc.addons.ui_swing.actions.InputTextFramePasteAction;
 import com.dmdirc.addons.ui_swing.components.AwayLabel;
+import com.dmdirc.addons.ui_swing.components.TypingLabel;
 import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputField;
 import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputHandler;
 import com.dmdirc.addons.ui_swing.dialogs.paste.PasteDialog;
@@ -79,6 +80,8 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
     protected JPopupMenu nickPopup;
     /** Away label. */
     private AwayLabel awayLabel;
+    /** Typing indicator label. */
+    private TypingLabel typingLabel;
 
     /**
      * Creates a new instance of InputFrame.
@@ -139,8 +142,10 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
         inputPanel = new JPanel(new BorderLayout(
                 (int) PlatformDefaults.getUnitValueX("related").getValue(),
                 (int) PlatformDefaults.getUnitValueX("related").getValue()));
+
         inputPanel.add(awayLabel, BorderLayout.LINE_START);
         inputPanel.add(inputField, BorderLayout.CENTER);
+        inputPanel.add(typingLabel, BorderLayout.LINE_END);
 
         initInputField();
     }
@@ -156,6 +161,7 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
         inputFieldPopup.setLightWeightPopupEnabled(true);
 
         awayLabel = new AwayLabel(getContainer());
+        typingLabel = new TypingLabel(getContainer());
     }
 
     /**
