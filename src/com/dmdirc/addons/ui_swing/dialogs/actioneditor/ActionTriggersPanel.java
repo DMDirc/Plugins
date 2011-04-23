@@ -157,7 +157,6 @@ public class ActionTriggersPanel extends JPanel implements ActionListener,
         for (ActionType localTrigger : triggers) {
             triggerList.addTrigger(localTrigger);
         }
-        addCompatible(triggerList.getTrigger(0));
     }
 
     /**
