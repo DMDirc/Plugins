@@ -55,11 +55,6 @@ public class AddonCellRenderer implements TableCellRenderer {
                 label.setBackground(table.getSelectionBackground());
             } else {
                 label.setBackground(table.getBackground());
-                final Color colour = (row & 1)
-                        == 1 ? new Color(0xEE, 0xEE, 0xFF) : Color.WHITE;
-                if (!label.getBackground().equals(colour)) {
-                    label.setBackground(colour);
-                }
             }
 
             final int height = label.getPreferredSize().height;
