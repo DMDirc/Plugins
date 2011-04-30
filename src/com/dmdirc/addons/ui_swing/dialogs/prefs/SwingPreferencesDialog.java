@@ -82,7 +82,7 @@ public final class SwingPreferencesDialog extends StandardDialog implements
     /** Parent window. */
     private final MainFrame parentWindow;
     /** Panel size. */
-    private int panelSize = 300;
+    private int panelSize = 500;
 
     /**
      * Creates a new instance of SwingPreferencesDialog.

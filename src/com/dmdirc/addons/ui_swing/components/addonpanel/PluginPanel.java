@@ -85,12 +85,6 @@ public class PluginPanel extends AddonPanel implements ActionListener {
                             new AddonCell[]{
                         new AddonCell(new AddonToggle(plugin, null)), });
                 }
-
-                if (((DefaultTableModel) table.getModel()).getRowCount()
-                        > 0) {
-                    toggleButton.setEnabled(true);
-                }
-
                 table.repaint();
             }
         });

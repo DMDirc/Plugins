@@ -97,7 +97,7 @@ public class LockedLayer<T extends JComponent> extends
     private Component recentFocusOwner;
     /** Cursor to show when locked. */
     private Cursor lockedCursor = Cursor.getPredefinedCursor(
-            Cursor.WAIT_CURSOR);
+            Cursor.DEFAULT_CURSOR);
     /** Effect to apply when locked. */
     private LayerEffect[] lockedEffects = new LayerEffect[0];
     /** Focus listener. */
