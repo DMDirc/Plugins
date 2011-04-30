@@ -502,7 +502,6 @@ public class SwingController extends BasePlugin implements UIController {
     @Override
     public void showConfig(final PreferencesDialogModel manager) {
         manager.getCategory("GUI").addSubCategory(createGeneralCategory());
-
     }
 
     /**

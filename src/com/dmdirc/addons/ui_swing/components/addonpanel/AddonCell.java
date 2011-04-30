@@ -27,18 +27,18 @@ import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import java.awt.Color;
 import java.awt.Font;
 
-import javax.swing.BorderFactory;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.UIManager;
+import javax.swing.text.StyleConstants;
 
-import net.miginfocom.layout.PlatformDefaults;
 import net.miginfocom.swing.MigLayout;
 
 /**
  * Renders an addon for display in the plugin panel.
  */
-public class AddonCell extends JPanel {
+public class AddonCell extends JPanel implements AddonToggleListener {
 
     /**
      * A version number for this class. It should be changed whenever the class
@@ -47,30 +47,29 @@ public class AddonCell extends JPanel {
      */
     private static final long serialVersionUID = 1;
     /** Addon toggle object. */
-    private final Object info;
+    private final AddonToggle info;
     /** Name of the addon. */
     private final TextLabel name;
-    /** Version of the addon. */
-    private final TextLabel version;
-    /** Author of the addon. */
-    private final TextLabel author;
-    /** Description of the addon. */
-    private final TextLabel desc;
+    /** Status label. */
+    private final TextLabel status;
+    /** Addon icon. */
+    private final JLabel icon;
 
     /**
      * Creates a new addon cell representing the specified addon info.
      *
      * @param info PluginInfoToggle or ThemeToggle
      */
-    public AddonCell(final Object info) {
+    public AddonCell(final AddonToggle info) {
         super();
 
         name = new TextLabel(false);
-        version = new TextLabel(false);
-        author = new TextLabel(false);
-        desc = new TextLabel(false);
+        status = new TextLabel(false);
+        status.setAlignment(StyleConstants.ALIGN_RIGHT);
+        icon = new JLabel();
 
         this.info = info;
+        info.addListener(this);
         init();
     }
 
@@ -78,35 +77,24 @@ public class AddonCell extends JPanel {
      * Initialises the addon cell.
      */
     private void init() {
-        setLayout(new MigLayout("fill, ins 3 0 0 0"));
-
+        setLayout(new MigLayout("fill, ins 0, debug"));
         Color foreground = UIManager.getColor("Table.foreground");
-        if (info instanceof AddonToggle) {
-            final AddonToggle plugin = (AddonToggle) info;
-
-            if (!plugin.getState()) {
-                foreground = foreground.brighter().brighter().brighter();
-            }
-
-            name.setText(plugin.getName());
-            version.setText(plugin.getVersion());
-            author.setText(plugin.getAuthor());
-            desc.setText(plugin.getDescription());
+        if (!info.getState()) {
+            foreground = foreground.brighter().brighter().brighter();
         }
-
+        name.setText(info.getName());
+        status.setText(info.getState() ? "Enabled" : "Disabled");
         name.setForeground(foreground);
         name.setFont(name.getFont().deriveFont(Font.BOLD));
-        version.setForeground(foreground);
-        author.setForeground(foreground);
-        desc.setForeground(foreground);
-        desc.setBorder(BorderFactory.createEmptyBorder((int) PlatformDefaults.
-                getPanelInsets(0).getValue(), 0, 0, 0));
+        status.setForeground(foreground);
 
-        add(name, "gapleft 3, wmin 50%, wmax 50%");
-        add(version, "wmin 25%, wmax 25%");
-        add(author, "gapright 3, wmin 24.9%, wmax 24.9%, alignx right");
-        add(desc, "newline, span, grow, pushy, gapleft 3, gapright 3, wmax 99%");
-        add(new JSeparator(), "newline, span, growx, pushx");
+        add(icon, "gaptop rel, gapbottom rel, gapleft rel, "
+                + "wmin 20, wmax 20");
+        add(name, "gaptop rel, gapbottom rel, "
+                + "wmin 50% - 20, wmax 50% - 20");
+        add(status, "gaptop rel, gapbottom rel, gapright rel, "
+                + "wmin 50% - 20, wmax 50% - 20");
+        add(new JSeparator(), "newline, spanx, growx, pushx");
     }
 
     /**
@@ -124,26 +112,23 @@ public class AddonCell extends JPanel {
      * @return true iif enabled
      */
     public boolean isToggled() {
-        if (info instanceof AddonToggle) {
-            return ((AddonToggle) info).getState();
-        }
-        return false;
+        return info.getState();
     }
 
     /** {@inheritDoc} */
     @Override
-    public void setForeground(final Color color) {
+    public void setForeground(final Color fg) {
         if (name != null) {
-            name.setForeground(color);
+            name.setForeground(fg);
         }
-        if (version != null) {
-            version.setForeground(color);
+        if (status != null) {
+            status.setForeground(fg);
         }
-        if (author != null) {
-            author.setForeground(color);
-        }
-        if (desc != null) {
-            desc.setForeground(color);
-        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void addonToggled() {
+        status.setText(info.getState() ? "Enabled" : "Disabled");
     }
 }

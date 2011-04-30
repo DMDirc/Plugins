@@ -21,23 +21,33 @@
  */
 package com.dmdirc.addons.ui_swing.components.addonpanel;
 
+import com.dmdirc.config.IdentityManager;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.themes.Theme;
 import com.dmdirc.ui.themes.ThemeManager;
+import com.dmdirc.updater.UpdateChecker;
+import com.dmdirc.updater.UpdateComponent;
+import com.dmdirc.util.ListenerList;
 
 /**
  * Wraps a Addon object (Theme or Plugin) with a boolean to indicate whether
  * it should be toggled or not.
  */
-public class AddonToggle {
+public final class AddonToggle {
 
     /** The PluginInfo object we're wrapping. */
     private final PluginInfo pi;
     /** The Theme object we're wrapping. */
     private final Theme theme;
-    /** Whether or not to toggle it. */
-    private boolean toggled = false;
+    /** Update component. */
+    private final UpdateComponent updateComponent;
+    /** Addon state. */
+    private boolean state;
+    /** Whether or nor the addon update state should be toggled. */
+    private boolean updateState;
+    /** Listener list. */
+    private final ListenerList listeners;
 
     /**
      * Creates a new instance of AddonToggle to wrap the specified
@@ -53,13 +63,32 @@ public class AddonToggle {
         }
         this.pi = pi;
         this.theme = theme;
+        listeners = new ListenerList();
+        state = pi.isLoaded();
+        updateComponent = UpdateChecker.findComponent("addon-" + getID());
+        if (updateComponent != null) {
+            updateState = UpdateChecker.isEnabled(updateComponent);
+        }
     }
 
     /**
-     * Toggles this PluginInfoToggle.
+     * Sets the state of this adddon.
+     *
+     * @param state New state
      */
-    public void toggle() {
-        toggled ^= true;
+    public void setState(final boolean state) {
+        this.state = state;
+        triggerListener();
+    }
+
+    /**
+     * Sets the update state of this addon.
+     *
+     * @param updateState New update state
+     */
+    public void setUpdateState(final boolean updateState) {
+        this.updateState = updateState;
+        triggerListener();
     }
 
     /**
@@ -69,11 +98,18 @@ public class AddonToggle {
      * @return True if the plugin is or should be loaded, false otherwise.
      */
     public boolean getState() {
+        return state;
+    }
+
+    /**
+     * Gets the update state of this PluginInfo, taking into account the state
+     * of the update toggle setting.
+     *
+     * @return True if the plugin is or should be updated, false otherwise.
+     */
+    public boolean getUpdateState() {
         if (pi != null) {
-            return toggled ^ pi.isLoaded();
-        }
-        if (theme != null) {
-            return toggled ^ theme.isEnabled();
+            return updateState;
         }
         return false;
     }
@@ -105,16 +141,25 @@ public class AddonToggle {
             /** {@inheritDoc} */
             @Override
             public void run() {
-                if (pi != null && toggled) {
-                    if (pi.isLoaded()) {
-                        pi.unloadPlugin();
-                    } else {
+                if (pi != null) {
+                    if (AddonToggle.this.getState()) {
                         pi.loadPlugin();
+                    } else {
+                        pi.unloadPlugin();
                     }
                     PluginManager.getPluginManager().updateAutoLoad(pi);
+                    if (getID() != -1) {
+                        if (getUpdateState()) {
+                            IdentityManager.getConfigIdentity().unsetOption(
+                                    "updater", "enable-addon-" + getID());
+                        } else {
+                            IdentityManager.getConfigIdentity().setOption(
+                                   "updater", "enable-addon-" + getID(), false);
+                        }
+                    }
                 }
-                if (theme != null && toggled) {
-                    if (theme.isEnabled()) {
+                if (theme != null) {
+                    if (AddonToggle.this.getState()) {
                         theme.applyTheme();
                     } else {
                         theme.removeTheme();
@@ -151,6 +196,18 @@ public class AddonToggle {
         }
 
         return "Unknown addon name";
+    }
+
+    /**
+     * Returns the ID of this addon. This will return -1 for any theme.
+     *
+     * @return Addon ID
+     */
+    public int getID() {
+        if (pi != null) {
+            return pi.getMetaData().getUpdaterId();
+        }
+        return -1;
     }
 
     /**
@@ -202,6 +259,31 @@ public class AddonToggle {
         }
 
         return "There is an error with this addon.";
+    }
+
+    /**
+     * Adds an addon toggle listener to this panel.
+     *
+     * @param listener Listener to add
+     */
+    public void addListener(final AddonToggleListener listener) {
+        listeners.add(AddonToggleListener.class, listener);
+    }
+
+    /**
+     * Removes an addon toggle listener from this panel.
+     *
+     * @param listener Listener to remove
+     */
+    public void removeListener(final AddonToggleListener listener) {
+        listeners.remove(AddonToggleListener.class, listener);
+    }
+
+    /**
+     * Triggers this listener to be called across all it's listeners.
+     */
+    public void triggerListener() {
+        listeners.getCallable(AddonToggleListener.class).addonToggled();
     }
 
 }
