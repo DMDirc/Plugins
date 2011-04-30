@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_swing.components.addonpanel;
 
 import com.dmdirc.addons.ui_swing.SwingController;
+import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
 import com.dmdirc.addons.ui_swing.components.addonbrowser.BrowserWindow;
 import com.dmdirc.addons.ui_swing.components.renderers.AddonCellRenderer;
@@ -30,16 +31,15 @@ import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.config.prefs.PreferencesInterface;
 
 import java.awt.Window;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.List;
 
-import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
+import javax.swing.event.HyperlinkEvent;
+import javax.swing.event.HyperlinkEvent.EventType;
+import javax.swing.event.HyperlinkListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
@@ -49,11 +49,9 @@ import net.miginfocom.swing.MigLayout;
 /**
  * Addon panel, base class for displaying and managing addons.
  */
-public abstract class AddonPanel extends JPanel implements
-        ActionListener, ListSelectionListener, PreferencesInterface {
+public abstract class AddonPanel extends JPanel implements AddonToggleListener,
+        ListSelectionListener, PreferencesInterface, HyperlinkListener {
 
-    /** Button to enable/disable addon. */
-    protected JButton toggleButton;
     /** List of addons. */
     protected JTable addonList;
     /**
@@ -68,10 +66,14 @@ public abstract class AddonPanel extends JPanel implements
     private final SwingController controller;
     /** Addon list scroll pane. */
     private JScrollPane scrollPane;
-    /** Currently selected addon. */
-    private int selectedAddon;
     /** Blurb label. */
     private TextLabel blurbLabel;
+    /** Get more info link. */
+    private TextLabel getMoreLabel;
+    /** Addon info panel. */
+    private AddonInfoPanel addonInfo;
+    /** Selected addon. */
+    private int selectedAddon = -1;
 
     /**
      * Creates a new instance of AddonPanel
@@ -87,11 +89,7 @@ public abstract class AddonPanel extends JPanel implements
         this.controller = controller;
 
         initComponents();
-        addListeners();
         layoutComponents();
-
-        addonList.getSelectionModel().setSelectionInterval(0, 0);
-        selectedAddon = 0;
     }
 
     /** Initialises the components. */
@@ -115,7 +113,6 @@ public abstract class AddonPanel extends JPanel implements
         addonList.setShowGrid(false);
         addonList.getSelectionModel().setSelectionMode(
                 ListSelectionModel.SINGLE_SELECTION);
-        addonList.getSelectionModel().clearSelection();
 
         scrollPane = new JScrollPane(new JLabel("Loading " + getTypeName()
                 + "..."));
@@ -124,12 +121,14 @@ public abstract class AddonPanel extends JPanel implements
         scrollPane.setVerticalScrollBarPolicy(
                 JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
-        toggleButton = new JButton("Enable");
-        toggleButton.setEnabled(false);
-
         blurbLabel = new TextLabel(getTypeName().substring(0, 1).toUpperCase()
                 + getTypeName().substring(1) + " allow you to extend the "
                 + "functionality of DMDirc.");
+        getMoreLabel = new TextLabel(
+                "<a href=\"http://addons.dmdirc.com\">Get more addons</a>");
+        getMoreLabel.addHyperlinkListener(this);
+        addonInfo = new AddonInfoPanel();
+        addonInfo.addListener(this);
 
         /** {@inheritDoc}. */
         new LoggingSwingWorker<Object, Object>() {
@@ -145,6 +144,17 @@ public abstract class AddonPanel extends JPanel implements
             protected void done() {
                 super.done();
                 scrollPane.setViewportView(addonList);
+                UIUtilities.invokeLater(new Runnable() {
+
+                    /** {@inheritDoc}. */
+                    @Override
+                    public void run() {
+                        addonList.getSelectionModel()
+                                .addListSelectionListener(AddonPanel.this);
+                        addonList.getSelectionModel()
+                                .setSelectionInterval(0, 0);
+                    }
+                });
             }
         }.executeInExecutor();
     }
@@ -152,25 +162,22 @@ public abstract class AddonPanel extends JPanel implements
     /** Lays out the dialog. */
     private void layoutComponents() {
         if (controller == null) {
-            setLayout(new MigLayout("ins 0, fill, hmax " + 300));
+            setLayout(new MigLayout("ins 0, fill, hmax " + 500));
         } else {
             setLayout(new MigLayout("ins 0, fill, hmax "
                     + controller.getPrefsDialog().getPanelHeight()));
         }
 
-        add(blurbLabel, "wrap 10, growx, pushx");
-
+        add(blurbLabel, "wrap 5, growx, pushx");
+        add(getMoreLabel, "wrap 5, right");
         add(scrollPane, "wrap 5, grow, push");
-
-        add(toggleButton, "split 2, growx, pushx, sg button");
-
-        final JButton button = new JButton("Get more " + getTypeName());
-        button.addActionListener(this);
-        add(button, "growx, pushx, sg button");
+        add(addonInfo, "grow, push");
     }
 
     /**
      * Populates the addon list returning it when complete.
+     *
+     * @param table Table to be populated
      *
      * @return Populated table
      */
@@ -183,61 +190,25 @@ public abstract class AddonPanel extends JPanel implements
      */
     protected abstract String getTypeName();
 
-    /** Adds listeners to components. */
-    private void addListeners() {
-        toggleButton.addActionListener(this);
-        addonList.getSelectionModel().addListSelectionListener(this);
-    }
-
-    /**
-     * Invoked when an action occurs.
-     *
-     * @param e The event related to this action.
-     */
+    /** {@inheritDoc}. */
     @Override
-    public void actionPerformed(final ActionEvent e) {
-        if (e.getSource() == toggleButton && selectedAddon >= 0) {
-            final AddonToggle addonToggle = (AddonToggle) ((AddonCell)
-                    addonList.getModel().getValueAt(addonList
-                    .getSelectedRow(), 0)).getObject();
-
-            addonToggle.toggle();
-
-            if (addonToggle.getState()) {
-                toggleButton.setText("Disable");
-            } else {
-                toggleButton.setText("Enable");
-            }
-
-            addonList.repaint();
-        } else if (e.getSource() != toggleButton) {
-            new BrowserWindow(parentWindow);
+    public void valueChanged(final ListSelectionEvent e) {
+        final int newSelection = addonList.getSelectedRow();
+        if (newSelection == -1) {
+            addonList.getSelectionModel().setSelectionInterval(0, selectedAddon);
+        } else if (addonList.getModel().getRowCount() > newSelection) {
+            addonInfo.setAddonToggle((AddonToggle) ((AddonCell) addonList
+                    .getModel().getValueAt(newSelection, 0)).getObject());
         }
+        selectedAddon = addonList.getSelectedRow();
     }
 
     /** {@inheritDoc}. */
     @Override
-    public void valueChanged(final ListSelectionEvent e) {
-        if (!e.getValueIsAdjusting()) {
-            return;
+    public void hyperlinkUpdate(final HyperlinkEvent e) {
+        if (e.getEventType() == EventType.ACTIVATED) {
+            new BrowserWindow(parentWindow);
         }
-        final int selected = addonList.getSelectionModel()
-                .getLeadSelectionIndex();
-        if (selected == -1) {
-            return;
-        }
-        final AddonToggle addonToggle = (AddonToggle) ((AddonCell)
-                ((List) ((DefaultTableModel) addonList.getModel())
-                .getDataVector().elementAt(selected)).get(0)).getObject();
-        toggleButton.setEnabled(true);
-
-        if (addonToggle.getState()) {
-            toggleButton.setEnabled(addonToggle.isUnloadable());
-            toggleButton.setText("Disable");
-        } else {
-            toggleButton.setText("Enable");
-        }
-        selectedAddon = selected;
     }
 
     /** {@inheritDoc} */
@@ -246,10 +217,16 @@ public abstract class AddonPanel extends JPanel implements
         if (addonList.getRowCount() == 0) {
             return;
         }
-        for (int i = 1; i < addonList.getRowCount(); i++) {
+        for (int i = 0; i < addonList.getRowCount(); i++) {
             addonList.getModel().getColumnCount();
             ((AddonToggle) ((AddonCell) addonList.getModel()
                     .getValueAt(i, 0)).getObject()).apply();
         }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void addonToggled() {
+        addonList.repaint();
     }
 }

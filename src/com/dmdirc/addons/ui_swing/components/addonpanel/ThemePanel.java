@@ -78,11 +78,6 @@ public class ThemePanel extends AddonPanel {
                         new AddonCell(new AddonToggle(null, theme)), });
                 }
 
-                if (((DefaultTableModel) addonList.getModel()).getRowCount()
-                        > 0) {
-                    toggleButton.setEnabled(true);
-                }
-
                 addonList.repaint();
             }
         });
