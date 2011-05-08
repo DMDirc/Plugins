@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir=".">
+
+    <import file="build-configutils.xml"/>
+
+    <macrodef name="getplugininfo">
+        <attribute name="file"/>
+        <attribute name="prefix" default=""/>
+
+        <sequential>
+            <local name="filecontents"/>
+            <local name="domain.version"/>
+            <local name="domain.updates"/>
+            <local name="domain.metadata"/>
+            <local name="temp.dir"/>
+
+            <!-- Extract the plugin.config file -->
+            <tempfile property="temp.dir" destdir="${java.io.tmpdir}" prefix="plugintmp"/>
+            <mkdir dir="${temp.dir}"/>
+            <unzip src="@{file}" dest="${temp.dir}">
+                <patternset>
+                    <include name="META-INF/plugin.config"/>
+                </patternset>
+            </unzip>
+
+            <!-- Read the contents and tidy up -->
+            <loadfile srcfile="${temp.dir}/META-INF/plugin.config" property="filecontents"/>
+            <delete dir="${temp.dir}"/>
+
+            <readdomain contents="${filecontents}" domain="version" outputproperty="domain.version"/>
+            <readdomain contents="${filecontents}" domain="updates" outputproperty="domain.updates"/>
+            <readdomain contents="${filecontents}" domain="metadata" outputproperty="domain.metadata"/>
+
+            <readvalue domaincontents="${domain.version}" setting="number" outputproperty="@{prefix}version"/>
+            <readvalue domaincontents="${domain.updates}" setting="id" outputproperty="@{prefix}id"/>
+            <readvalue domaincontents="${domain.metadata}" setting="name" outputproperty="@{prefix}name"/>
+        </sequential>
+    </macrodef>
+
+    <macrodef name="bundleplugins">
+        <attribute name="jar"/>
+        <element name="plugins" implicit="yes"/>
+
+        <sequential>
+            <local name="temp.dir"/>
+
+            <!-- Extract the version.config file -->
+            <tempfile property="temp.dir" destdir="${java.io.tmpdir}" prefix="plugintmp"/>
+            <mkdir dir="${temp.dir}"/>
+            <unzip src="@{jar}" dest="${temp.dir}">
+                <patternset>
+                    <include name="com/dmdirc/version.config"/>
+                </patternset>
+            </unzip>
+
+            <!-- Make a directory to drop plugins in -->
+            <mkdir dir="${temp.dir}/plugins"/>
+
+            <!-- Output some boilerplate to the config -->
+            <echo file="${temp.dir}/com/dmdirc/version.config" append="true">
+keysections:
+    bundledplugins_versions
+
+bundledplugins_versions:
+</echo>
+            <for param="plugin">
+                <plugins/>
+                <sequential>
+                    <local name="plugin.version"/>
+                    <local name="plugin.id"/>
+                    <local name="plugin.name"/>
+
+                    <!-- Grab our plugin's info -->
+                    <getplugininfo prefix="plugin." file="@{plugin}"/>
+
+                    <!-- Add the information to our config -->
+                    <echo file="${temp.dir}/com/dmdirc/version.config" append="true">  ${plugin.name}=${plugin.version}</echo>
+                    <echo file="${temp.dir}/com/dmdirc/version.config" append="true"/>
+
+                    <!-- And drop the file in our directory -->
+                    <copy file="@{plugin}" todir="${temp.dir}/plugins" overwrite="true"/>
+
+                    <echo>Bundling plugin ${plugin.name} version ${plugin.version}</echo>
+                </sequential>
+            </for>
+
+            <!-- Now jar our new things back up -->
+            <jar destfile="@{jar}" basedir="${temp.dir}" update="true"/>
+
+            <delete dir="${temp.dir}"/>
+        </sequential>
+    </macrodef>
+
+</project>
