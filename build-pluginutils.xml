@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir=".">
+
+    <import file="build-configutils.xml"/>
+
+    <macrodef name="getplugininfo">
+        <attribute name="file"/>
+        <attribute name="prefix" default=""/>
+
+        <sequential>
+            <local name="filecontents"/>
+            <local name="domain.version"/>
+            <local name="domain.updates"/>
+            <local name="domain.metadata"/>
+            <local name="temp.dir"/>
+
+            <!-- Extract the plugin.config file -->
+            <tempfile property="temp.dir" destdir="${java.io.tmpdir}" prefix="plugintmp"/>
+            <mkdir dir="${temp.dir}"/>
+            <unzip src="@{file}" dest="${temp.dir}">
+                <patternset>
+                    <include name="META-INF/plugin.config"/>
+                </patternset>
+            </unzip>
+
+            <!-- Read the contents and tidy up -->
+            <loadfile srcfile="${temp.dir}/META-INF/plugin.config" property="filecontents"/>
+            <delete dir="${temp.dir}"/>
+
+            <readdomain contents="${filecontents}" domain="version" outputproperty="domain.version"/>
+            <readdomain contents="${filecontents}" domain="updates" outputproperty="domain.updates"/>
+            <readdomain contents="${filecontents}" domain="metadata" outputproperty="domain.metadata"/>
+
+            <readvalue domaincontents="${domain.version}" setting="number" outputproperty="@{prefix}version"/>
+            <readvalue domaincontents="${domain.updates}" setting="id" outputproperty="@{prefix}id"/>
+            <readvalue domaincontents="${domain.metadata}" setting="name" outputproperty="@{prefix}name"/>
+        </sequential>
+    </macrodef>
+
+</project>
