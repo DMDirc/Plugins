@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir=".">
+
+    <macrodef name="readdomain">
+        <attribute name="contents"/>
+        <attribute name="domain"/>
+        <attribute name="outputproperty"/>
+
+        <sequential>
+            <local name="extracted"/>
+            
+            <!-- Extract the entire domain contents -->
+            <propertyregex property="extracted" override="true" input="@{contents}" select="\1" defaultvalue="">
+                <regexp pattern="(?si)^.*\n\Q@{domain}\E:\n(.*?)(\n[^\n]+:\n|$)"/>
+            </propertyregex>
+
+            <!-- Trim leading whitespace -->
+            <propertyregex property="@{outputproperty}" override="true" input="${extracted}" replace="" global="true">
+                <regexp pattern="(?m)^\s+"/>
+            </propertyregex>
+        </sequential> 
+    </macrodef>
+
+    <macrodef name="readvalue">
+       <attribute name="domaincontents"/>
+       <attribute name="setting"/>
+       <attribute name="outputproperty"/>
+
+       <sequential>
+            <local name="extracted"/>
+
+            <!-- Extract the raw value -->
+            <propertyregex property="extracted" override="true" input="@{domaincontents}" select="\1">
+                <regexp pattern="(?mi)^\s*\Q@{setting}\E\s*=\s*(.*?)$"/>
+            </propertyregex>
+
+            <!-- Unescape \r, \n, \=, \#, \: and \\ -->
+            <propertyregex property="extracted" override="true" input="${extracted}" defaultvalue="${extracted}" regexp="\\n" replace="\n" global="true"/>
+            <propertyregex property="extracted" override="true" input="${extracted}" defaultvalue="${extracted}" regexp="\\r" replace="\r" global="true"/>
+            <propertyregex property="extracted" override="true" input="${extracted}" defaultvalue="${extracted}" regexp="\\=" replace="=" global="true"/>
+            <propertyregex property="extracted" override="true" input="${extracted}" defaultvalue="${extracted}" regexp="\\#" replace="#" global="true"/>
+            <propertyregex property="extracted" override="true" input="${extracted}" defaultvalue="${extracted}" regexp="\\:" replace=":" global="true"/>
+            <propertyregex property="@{outputproperty}" override="true" input="${extracted}" defaultvalue="${extracted}" regexp="\\\\" replace="\" global="true"/>
+       </sequential>
+    </macrodef>
+
+</project>
