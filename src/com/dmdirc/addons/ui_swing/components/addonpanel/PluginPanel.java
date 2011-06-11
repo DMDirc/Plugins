@@ -71,8 +71,21 @@ public class PluginPanel extends AddonPanel implements ActionListener {
     @Override
     protected JTable populateList(final JTable table) {
         final List<PluginInfo> list = new ArrayList<PluginInfo>();
+        final List<PluginInfo> sortedList = new ArrayList<PluginInfo>();
         list.addAll(PluginManager.getPluginManager().getPluginInfos());
         Collections.sort(list);
+        for (PluginInfo plugin : list) {
+            if (plugin.getMetaData().getParent() == null) {
+                final List<PluginInfo> childList = new ArrayList<PluginInfo>();
+                sortedList.add(plugin);
+                for (PluginInfo child : plugin.getChildren()) {
+                    childList.add(child);
+                }
+                Collections.sort(childList);
+                sortedList.addAll(childList);
+            }
+        }
+
 
         UIUtilities.invokeLater(new Runnable() {
 
@@ -80,7 +93,7 @@ public class PluginPanel extends AddonPanel implements ActionListener {
             @Override
             public void run() {
                 ((DefaultTableModel) table.getModel()).setNumRows(0);
-                for (PluginInfo plugin : list) {
+                for (PluginInfo plugin : sortedList) {
                     ((DefaultTableModel) table.getModel()).addRow(
                             new AddonCell[]{
                         new AddonCell(new AddonToggle(plugin, null)), });

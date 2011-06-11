@@ -88,12 +88,18 @@ public class AddonCell extends JPanel implements AddonToggleListener {
         name.setFont(name.getFont().deriveFont(Font.BOLD));
         status.setForeground(foreground);
 
+        final int initialPadding;
+        if (info.getPluginInfo().getMetaData().getParent() == null) {
+            initialPadding = 20;
+        } else {
+            initialPadding = 30;
+        }
         add(icon, "gaptop rel, gapbottom rel, gapleft rel, "
-                + "wmin 20, wmax 20");
-        add(name, "gaptop rel, gapbottom rel, "
-                + "wmin 50% - 20, wmax 50% - 20");
-        add(status, "gaptop rel, gapbottom rel, gapright rel, "
-                + "wmin 50% - 20, wmax 50% - 20");
+                    + "wmin " + initialPadding + ", wmax " + initialPadding);
+        add(name, "gaptop rel, gapbottom rel, " + "wmin 50% - "
+                + initialPadding + ", wmax 50% - " + initialPadding);
+        add(status, "gaptop rel, gapbottom rel, gapright rel, " + "wmin 50% - "
+                + initialPadding + ", wmax 50% - " + initialPadding);
         add(new JSeparator(), "newline, spanx, growx, pushx");
     }
 
