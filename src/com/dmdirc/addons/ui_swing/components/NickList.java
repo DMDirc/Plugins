@@ -33,6 +33,7 @@ import com.dmdirc.interfaces.NicklistListener;
 import com.dmdirc.parser.interfaces.ChannelClientInfo;
 
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -83,11 +84,14 @@ public class NickList extends JScrollPane implements ConfigChangeListener,
         nickList.setForeground(config.getOptionColour(
                 "ui", "nicklistforegroundcolour",
                 "ui", "foregroundcolour"));
+        nickList.setFont(new Font(config.getOption("ui", "textPaneFontName"),
+                Font.PLAIN, getFont().getSize()));
         config.addChangeListener("ui", "nicklistforegroundcolour", this);
         config.addChangeListener("ui", "foregroundcolour", this);
         config.addChangeListener("ui", "nicklistbackgroundcolour", this);
         config.addChangeListener("ui", "backgroundcolour", this);
         config.addChangeListener("ui", "nickListAltBackgroundColour", this);
+        config.addChangeListener("ui", "textPaneFontName", this);
 
         nickList.setCellRenderer(new NicklistRenderer(config, nickList));
         nickList.setSelectionMode(
@@ -218,7 +222,7 @@ public class NickList extends JScrollPane implements ConfigChangeListener,
     }
 
     /**
-     * If the mouse cursor is over a nicklist cell, sets that cell to be
+     * If the mouse cursor is over a nick list cell, sets that cell to be
      * selected and returns true. If the mouse is not over any cell, the
      * selection is unchanged and the method returns false.
      *
@@ -248,13 +252,16 @@ public class NickList extends JScrollPane implements ConfigChangeListener,
                 || "nicklistbackgroundcolour".equals(key)
                 || "backgroundcolour".equals(key)
                 || "nicklistforegroundcolour".equals(key)
-                || "foregroundcolour".equals(key)) {
+                || "foregroundcolour".equals(key)
+                || "textPaneFontName".equals(key)) {
             nickList.setBackground(config.getOptionColour(
                     "ui", "nicklistbackgroundcolour",
                     "ui", "backgroundcolour"));
             nickList.setForeground(config.getOptionColour(
                     "ui", "nicklistforegroundcolour",
                     "ui", "foregroundcolour"));
+            nickList.setFont(new Font(config.getOption("ui", "textPaneFontName"),
+                Font.PLAIN, getFont().getSize()));
             nickList.repaint();
         }
         nickList.setSelectionMode(
