@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_swing.components.addonpanel;
 
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
+import com.dmdirc.ui.IconManager;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -54,21 +55,26 @@ public class AddonCell extends JPanel implements AddonToggleListener {
     private final TextLabel status;
     /** Addon icon. */
     private final JLabel icon;
+    /** Icon manager to retrieve icons from. */
+    private final IconManager iconManager;
 
     /**
      * Creates a new addon cell representing the specified addon info.
      *
      * @param info PluginInfoToggle or ThemeToggle
+     * @param iconManager Icon manager to retrieve icons from
      */
-    public AddonCell(final AddonToggle info) {
+    public AddonCell(final AddonToggle info, final IconManager iconManager) {
         super();
+
+        this.iconManager = iconManager;
+        this.info = info;
 
         name = new TextLabel(false);
         status = new TextLabel(false);
         status.setAlignment(StyleConstants.ALIGN_RIGHT);
         icon = new JLabel();
 
-        this.info = info;
         info.addListener(this);
         init();
     }
@@ -77,11 +83,12 @@ public class AddonCell extends JPanel implements AddonToggleListener {
      * Initialises the addon cell.
      */
     private void init() {
-        setLayout(new MigLayout("fill, ins 0, debug"));
+        setLayout(new MigLayout("fill, ins 0"));
         Color foreground = UIManager.getColor("Table.foreground");
         if (!info.getState()) {
             foreground = foreground.brighter().brighter().brighter();
         }
+        icon.setIcon(iconManager.getIcon("addon"));
         name.setText(info.getName());
         status.setText(info.getState() ? "Enabled" : "Disabled");
         name.setForeground(foreground);
@@ -95,7 +102,7 @@ public class AddonCell extends JPanel implements AddonToggleListener {
             initialPadding = 30;
         }
         add(icon, "gaptop rel, gapbottom rel, gapleft rel, "
-                    + "wmin " + initialPadding + ", wmax " + initialPadding);
+                    + ", wmax " + initialPadding + ", right");
         add(name, "gaptop rel, gapbottom rel, " + "wmin 50% - "
                 + initialPadding + ", wmax 50% - " + initialPadding);
         add(status, "gaptop rel, gapbottom rel, gapright rel, " + "wmin 50% - "
