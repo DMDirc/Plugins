@@ -28,7 +28,9 @@ import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
 import com.dmdirc.addons.ui_swing.components.addonbrowser.BrowserWindow;
 import com.dmdirc.addons.ui_swing.components.renderers.AddonCellRenderer;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
+import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.prefs.PreferencesInterface;
+import com.dmdirc.ui.IconManager;
 
 import java.awt.Window;
 
@@ -64,6 +66,8 @@ public abstract class AddonPanel extends JPanel implements AddonToggleListener,
     private final Window parentWindow;
     /** Swing Controller. */
     private final SwingController controller;
+    /** The icon manager used to retrieve icons. */
+    private final IconManager iconManager;
     /** Addon list scroll pane. */
     private JScrollPane scrollPane;
     /** Blurb label. */
@@ -87,6 +91,7 @@ public abstract class AddonPanel extends JPanel implements AddonToggleListener,
 
         this.parentWindow = parentWindow;
         this.controller = controller;
+        this.iconManager = new IconManager(IdentityManager.getGlobalConfig());
 
         initComponents();
         layoutComponents();
@@ -228,5 +233,14 @@ public abstract class AddonPanel extends JPanel implements AddonToggleListener,
     @Override
     public void addonToggled() {
         addonList.repaint();
+    }
+
+    /**
+     * Returns the icon manager for this panel.
+     *
+     * @return Icon manager instance
+     */
+    public IconManager getIconManager() {
+        return iconManager;
     }
 }

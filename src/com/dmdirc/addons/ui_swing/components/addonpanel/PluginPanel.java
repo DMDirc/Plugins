@@ -95,8 +95,8 @@ public class PluginPanel extends AddonPanel implements ActionListener {
                 ((DefaultTableModel) table.getModel()).setNumRows(0);
                 for (PluginInfo plugin : sortedList) {
                     ((DefaultTableModel) table.getModel()).addRow(
-                            new AddonCell[]{
-                        new AddonCell(new AddonToggle(plugin, null)), });
+                            new AddonCell[]{ new AddonCell(new AddonToggle(
+                            plugin, null), getIconManager()), });
                 }
                 table.repaint();
             }
