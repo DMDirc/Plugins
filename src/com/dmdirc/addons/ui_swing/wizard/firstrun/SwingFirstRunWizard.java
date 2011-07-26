@@ -68,7 +68,7 @@ public final class SwingFirstRunWizard implements WizardListener,
             final SwingController controller) {
         this.controller = controller;
 
-        wizardDialog = new WizardDialog("DMDirc: Setup wizard",
+        wizardDialog = new WizardDialog("Setup wizard",
                 new ArrayList<Step>(), parentWindow,
                 ModalityType.APPLICATION_MODAL);
         wizardDialog.setIconImage(new IconManager(IdentityManager

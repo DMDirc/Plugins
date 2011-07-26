@@ -262,7 +262,7 @@ public class URLConfigPanel extends JPanel implements
     public void actionPerformed(final ActionEvent e) {
         if (e.getSource() == add) {
             new StandardInputDialog(parentWindow, ModalityType.MODELESS,
-                    "DMDIRC: New URL handler",
+                    "New URL handler",
                     "Please enter the name of the new protocol.",
                     new URLProtocolValidator()) {
 
