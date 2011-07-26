@@ -27,7 +27,6 @@ import com.dmdirc.config.IdentityManager;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.StatusMessage;
 import com.dmdirc.ui.interfaces.StatusBarComponent;
-import com.dmdirc.ui.interfaces.StatusMessageNotifier;
 
 import java.awt.Window;
 import java.awt.event.MouseEvent;
@@ -88,97 +87,6 @@ public class MessageLabel extends JPanel implements StatusBarComponent,
         label.addMouseListener(this);
         add(label, "growx, pushx");
         add(historyLabel, "gapleft 0");
-    }
-
-    /**
-     * Sets the message for this message label.
-     *
-     * @param newMessage New message
-     *
-     * @deprecated Should use {@link setMessage(StatusMessage)} instead
-     */
-    @Deprecated
-    public void setMessage(final String newMessage) {
-        setMessage(new StatusMessage(null, newMessage, null, -1,
-                IdentityManager.getGlobalConfig()));
-    }
-
-    /**
-     * Sets the message for this message label.
-     *
-     * @param newMessage New message
-     * @param newNotifier New notifier
-     *
-     * @deprecated Should use {@link setMessage(StatusMessage)} instead
-     */
-    @Deprecated
-    public void setMessage(final String newMessage,
-            final StatusMessageNotifier newNotifier) {
-        setMessage(new StatusMessage(null, newMessage, newNotifier, -1,
-                IdentityManager.getGlobalConfig()));
-    }
-
-    /**
-     * Sets the message for this message label.
-     *
-     * @param iconType Icon type
-     * @param newMessage New message
-     *
-     * @deprecated Should use {@link setMessage(StatusMessage)} instead
-     */
-    @Deprecated
-    public void setMessage(final String iconType, final String newMessage) {
-        setMessage(new StatusMessage(iconType, newMessage, null, -1,
-                IdentityManager.getGlobalConfig()));
-    }
-
-    /**
-     * Sets the message for this message label.
-     *
-     * @param iconType Icon type
-     * @param newMessage New message
-     * @param newNotifier New notifier
-     *
-     * @deprecated Should use {@link setMessage(StatusMessage)} instead
-     */
-    @Deprecated
-    public void setMessage(final String iconType, final String newMessage,
-            final StatusMessageNotifier newNotifier) {
-        setMessage(new StatusMessage(iconType, newMessage, newNotifier, -1,
-                IdentityManager.getGlobalConfig()));
-    }
-
-    /**
-     * Sets the message for this message label.
-     *
-     * @param newMessage New message
-     * @param newNotifier New notifier
-     * @param timeout New timeout
-     *
-     * @deprecated Should use {@link setMessage(StatusMessage)} instead
-     */
-    @Deprecated
-    public void setMessage(final String newMessage,
-            final StatusMessageNotifier newNotifier, final int timeout) {
-        setMessage(new StatusMessage(null, newMessage, newNotifier, timeout,
-                IdentityManager.getGlobalConfig()));
-    }
-
-    /**
-     * Sets the message for this message label.
-     *
-     * @param iconType Icon type
-     * @param newMessage New message
-     * @param newNotifier New notifier
-     * @param timeout New timeout
-     *
-     * @deprecated Should use {@link setMessage(StatusMessage)} instead
-     */
-    @Deprecated
-    public void setMessage(final String iconType, final String newMessage,
-            final StatusMessageNotifier newNotifier, final int timeout) {
-        setMessage(new StatusMessage(iconType, newMessage, newNotifier,
-                timeout, IdentityManager.getGlobalConfig()));
     }
 
     /**
