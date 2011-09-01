@@ -22,7 +22,7 @@
 
 package com.dmdirc.addons.userlevel;
 
-import com.dmdirc.actions.interfaces.ActionComponent;
+import com.dmdirc.interfaces.actions.ActionComponent;
 import com.dmdirc.parser.interfaces.ChannelClientInfo;
 
 /**

@@ -25,8 +25,8 @@ package com.dmdirc.addons.ui_web.uicomponents;
 import com.dmdirc.addons.ui_web.DynamicRequestHandler;
 import com.dmdirc.addons.ui_web.Event;
 import com.dmdirc.ui.StatusMessage;
-import com.dmdirc.ui.interfaces.StatusBar;
-import com.dmdirc.ui.interfaces.StatusBarComponent;
+import com.dmdirc.interfaces.ui.StatusBar;
+import com.dmdirc.interfaces.ui.StatusBarComponent;
 
 /**
  * A status bar handler for the web UI.

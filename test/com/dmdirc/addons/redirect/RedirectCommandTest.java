@@ -28,7 +28,7 @@ import com.dmdirc.commandparser.CommandManager;
 import com.dmdirc.commandparser.commands.context.ChatCommandContext;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.InvalidIdentityFileException;
-import com.dmdirc.ui.interfaces.InputWindow;
+import com.dmdirc.interfaces.ui.InputWindow;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;

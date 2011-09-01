@@ -25,7 +25,7 @@ package com.dmdirc.addons.ui_swing.dialogs.actioneditor;
 import com.dmdirc.actions.ActionCondition;
 import com.dmdirc.actions.ConditionTree;
 import com.dmdirc.actions.ConditionTreeFactory.ConditionTreeFactoryType;
-import com.dmdirc.actions.interfaces.ActionType;
+import com.dmdirc.interfaces.actions.ActionType;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

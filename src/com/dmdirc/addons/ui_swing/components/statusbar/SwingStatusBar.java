@@ -27,8 +27,8 @@ import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.ui.StatusMessage;
-import com.dmdirc.ui.interfaces.StatusBar;
-import com.dmdirc.ui.interfaces.StatusBarComponent;
+import com.dmdirc.interfaces.ui.StatusBar;
+import com.dmdirc.interfaces.ui.StatusBarComponent;
 
 import java.awt.Component;
 import java.util.Arrays;

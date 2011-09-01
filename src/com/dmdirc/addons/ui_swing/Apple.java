@@ -25,7 +25,7 @@ package com.dmdirc.addons.ui_swing;
 import com.dmdirc.ServerManager;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionType;
-import com.dmdirc.actions.interfaces.ActionType;
+import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.addons.ui_swing.components.menubar.MenuBar;
 import com.dmdirc.commandparser.commands.global.NewServer;
 import com.dmdirc.config.IdentityManager;

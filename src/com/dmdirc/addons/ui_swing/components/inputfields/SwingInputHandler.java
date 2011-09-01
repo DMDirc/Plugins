@@ -30,7 +30,7 @@ import com.dmdirc.commandparser.parsers.CommandParser;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.ui.input.InputHandler;
-import com.dmdirc.ui.interfaces.InputField;
+import com.dmdirc.interfaces.ui.InputField;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;

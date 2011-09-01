@@ -24,7 +24,7 @@ package com.dmdirc.addons.ui_swing.components.inputfields;
 
 import com.dmdirc.addons.ui_swing.components.colours.ColourPickerDialog;
 import com.dmdirc.config.IdentityManager;
-import com.dmdirc.ui.interfaces.InputField;
+import com.dmdirc.interfaces.ui.InputField;
 
 import java.awt.KeyboardFocusManager;
 import java.awt.Window;

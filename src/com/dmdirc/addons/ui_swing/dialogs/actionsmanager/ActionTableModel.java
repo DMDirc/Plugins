@@ -24,7 +24,7 @@ package com.dmdirc.addons.ui_swing.dialogs.actionsmanager;
 
 import com.dmdirc.actions.Action;
 import com.dmdirc.actions.ActionGroup;
-import com.dmdirc.actions.interfaces.ActionType;
+import com.dmdirc.interfaces.actions.ActionType;
 
 import java.util.ArrayList;
 import java.util.List;

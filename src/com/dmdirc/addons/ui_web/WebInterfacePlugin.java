@@ -23,7 +23,7 @@
 package com.dmdirc.addons.ui_web;
 
 import com.dmdirc.plugins.BasePlugin;
-import com.dmdirc.ui.interfaces.UIController;
+import com.dmdirc.interfaces.ui.UIController;
 
 import org.mortbay.jetty.Handler;
 

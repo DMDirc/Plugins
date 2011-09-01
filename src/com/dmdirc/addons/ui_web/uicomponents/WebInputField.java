@@ -24,7 +24,7 @@ package com.dmdirc.addons.ui_web.uicomponents;
 
 import com.dmdirc.addons.ui_web.Client;
 import com.dmdirc.addons.ui_web.Event;
-import com.dmdirc.ui.interfaces.InputField;
+import com.dmdirc.interfaces.ui.InputField;
 
 import java.awt.event.ActionListener;
 import java.awt.event.KeyListener;

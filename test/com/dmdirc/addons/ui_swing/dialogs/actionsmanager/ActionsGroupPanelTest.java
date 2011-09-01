@@ -25,7 +25,7 @@ package com.dmdirc.addons.ui_swing.dialogs.actionsmanager;
 import com.dmdirc.actions.Action;
 import com.dmdirc.actions.ActionGroup;
 import com.dmdirc.actions.CoreActionType;
-import com.dmdirc.actions.interfaces.ActionType;
+import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.harness.ui.WindowButtonHandler;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -43,26 +43,26 @@ public class ActionsGroupPanelTest extends UISpecTestCase {
     private ActionGroup group;
     private Panel panel;
     private Table table;
-    
+
     @Before
     @Override
     public void setUp() throws Exception {
         super.setUp();
-        
+
         action1 = mock(Action.class);
         when(action1.getName()).thenReturn("name 1");
         when(action1.getTriggers()).thenReturn(new ActionType[] {
             CoreActionType.ACTION_CREATED, CoreActionType.ACTION_DELETED,
         });
         when(action1.getResponse()).thenReturn(new String[] { "A" });
-                
+
         action2 = mock(Action.class);
         when(action2.getName()).thenReturn("name 2");
         when(action2.getTriggers()).thenReturn(new ActionType[] {
             CoreActionType.ACTION_CREATED
         });
         when(action2.getResponse()).thenReturn(new String[0]);
-        
+
         action3 = mock(Action.class);
         when(action3.getName()).thenReturn("name 3");
         when(action3.getTriggers()).thenReturn(new ActionType[] {
@@ -73,7 +73,7 @@ public class ActionsGroupPanelTest extends UISpecTestCase {
             "Response line 2",
             "Response line 3",
         });
-        
+
         action4 = mock(Action.class);
         when(action4.getName()).thenReturn("name 4");
         when(action4.getTriggers()).thenReturn(new ActionType[] {

@@ -22,7 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.actioneditor;
 
-import com.dmdirc.actions.interfaces.ActionType;
+import com.dmdirc.interfaces.actions.ActionType;
 
 /**
  * Action trigger removal listener.
