@@ -23,7 +23,7 @@
 package com.dmdirc.addons.dcc.actions;
 
 import com.dmdirc.Server;
-import com.dmdirc.actions.interfaces.ActionMetaType;
+import com.dmdirc.interfaces.actions.ActionMetaType;
 
 import com.dmdirc.addons.dcc.ChatContainer;
 import com.dmdirc.addons.dcc.TransferContainer;

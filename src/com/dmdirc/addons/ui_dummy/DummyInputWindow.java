@@ -24,8 +24,8 @@ package com.dmdirc.addons.ui_dummy;
 
 import com.dmdirc.WritableFrameContainer;
 import com.dmdirc.ui.input.InputHandler;
-import com.dmdirc.ui.interfaces.InputWindow;
-import com.dmdirc.ui.interfaces.UIController;
+import com.dmdirc.interfaces.ui.InputWindow;
+import com.dmdirc.interfaces.ui.UIController;
 
 /**
  * Dummy input window, used for testing.

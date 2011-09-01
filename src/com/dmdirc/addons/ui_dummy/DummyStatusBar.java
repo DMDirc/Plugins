@@ -23,8 +23,8 @@
 package com.dmdirc.addons.ui_dummy;
 
 import com.dmdirc.ui.StatusMessage;
-import com.dmdirc.ui.interfaces.StatusBar;
-import com.dmdirc.ui.interfaces.StatusBarComponent;
+import com.dmdirc.interfaces.ui.StatusBar;
+import com.dmdirc.interfaces.ui.StatusBarComponent;
 
 /**
  * Dummy status bar, used for testing.

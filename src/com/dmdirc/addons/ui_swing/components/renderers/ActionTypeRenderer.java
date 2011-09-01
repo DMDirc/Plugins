@@ -22,7 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.components.renderers;
 
-import com.dmdirc.actions.interfaces.ActionType;
+import com.dmdirc.interfaces.actions.ActionType;
 
 import java.awt.Component;
 

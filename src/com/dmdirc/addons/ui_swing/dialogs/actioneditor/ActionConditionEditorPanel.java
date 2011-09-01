@@ -24,9 +24,9 @@ package com.dmdirc.addons.ui_swing.dialogs.actioneditor;
 
 import com.dmdirc.actions.ActionCondition;
 import com.dmdirc.actions.ActionManager;
-import com.dmdirc.actions.interfaces.ActionComparison;
-import com.dmdirc.actions.interfaces.ActionComponent;
-import com.dmdirc.actions.interfaces.ActionType;
+import com.dmdirc.interfaces.actions.ActionComparison;
+import com.dmdirc.interfaces.actions.ActionComponent;
+import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.renderers.ActionCellRenderer;
 

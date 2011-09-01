@@ -25,7 +25,7 @@ package com.dmdirc.addons.ui_swing.wizard.firstrun;
 import com.dmdirc.Main;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionType;
-import com.dmdirc.actions.interfaces.ActionType;
+import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.addons.ui_swing.Apple;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.dialogs.profiles.ProfileManagerDialog;
@@ -37,7 +37,7 @@ import com.dmdirc.interfaces.ActionListener;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.ui.IconManager;
-import com.dmdirc.ui.interfaces.FirstRunWizard;
+import com.dmdirc.interfaces.ui.FirstRunWizard;
 import com.dmdirc.util.resourcemanager.ResourceManager;
 
 import java.awt.Dimension;

@@ -27,7 +27,7 @@ import com.dmdirc.Server;
 import com.dmdirc.ServerManager;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionType;
-import com.dmdirc.actions.interfaces.ActionType;
+import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SelectionListener;
 import com.dmdirc.addons.ui_swing.UIUtilities;
@@ -36,7 +36,7 @@ import com.dmdirc.config.IdentityManager;
 import com.dmdirc.interfaces.ActionListener;
 import com.dmdirc.interfaces.InviteListener;
 import com.dmdirc.ui.IconManager;
-import com.dmdirc.ui.interfaces.StatusBarComponent;
+import com.dmdirc.interfaces.ui.StatusBarComponent;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;

@@ -25,7 +25,7 @@ package com.dmdirc.addons.ui_dummy;
 import com.dmdirc.WritableFrameContainer;
 import com.dmdirc.commandparser.parsers.CommandParser;
 import com.dmdirc.ui.input.InputHandler;
-import com.dmdirc.ui.interfaces.InputField;
+import com.dmdirc.interfaces.ui.InputField;
 
 /**
  * Dummy input handler.
