@@ -23,9 +23,9 @@
 package com.dmdirc.addons.scriptplugin;
 
 import com.dmdirc.Main;
-import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.actions.interfaces.ActionType;
+import com.dmdirc.interfaces.ActionController;
 import com.dmdirc.interfaces.ActionListener;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
@@ -58,12 +58,18 @@ public final class ScriptPlugin extends BasePlugin implements ActionListener {
     private Map<String, ScriptEngineWrapper> scripts = new HashMap<String, ScriptEngineWrapper>();
     /** Used to store permanent variables */
     protected TypedProperties globalVariables = new TypedProperties();
+    /** The action controller to use. */
+    private final ActionController actionController;
 
     /**
      * Creates a new instance of the Script Plugin.
+     *
+     * @param actionController The action controller to register listeners with
      */
-    public ScriptPlugin() {
+    public ScriptPlugin(final ActionController actionController) {
         super();
+
+        this.actionController = actionController;
 
         // Add the JS Helper to the scriptFactory
         getScriptFactory().put("globalHelper", getJavaScriptHelper());
@@ -76,8 +82,7 @@ public final class ScriptPlugin extends BasePlugin implements ActionListener {
     public void onLoad() {
         // Register the plugin_loaded action initially, this will be called
         // after this method finishes for us to register the rest.
-        ActionManager.getActionManager().registerListener(this,
-                CoreActionType.PLUGIN_LOADED);
+        actionController.registerListener(this, CoreActionType.PLUGIN_LOADED);
 
         // Make sure our scripts dir exists
         final File newDir = new File(scriptDir);
@@ -101,7 +106,7 @@ public final class ScriptPlugin extends BasePlugin implements ActionListener {
     /** {@inheritDoc} */
     @Override
     public void onUnload() {
-        ActionManager.getActionManager().unregisterListener(this);
+        actionController.unregisterListener(this);
 
         final File savedVariables = new File(scriptDir+"storedVariables");
         FileOutputStream fos = null;
@@ -121,11 +126,11 @@ public final class ScriptPlugin extends BasePlugin implements ActionListener {
      * This will unregister all the actions first.
      */
     private void registerAll() {
-        ActionManager.getActionManager().registerListener(this);
-        for (Map.Entry<String, List<ActionType>> entry : ActionManager
-                .getActionManager().getGroupedTypes().entrySet()) {
+        actionController.registerListener(this);
+        for (Map.Entry<String, List<ActionType>> entry
+                : actionController.getGroupedTypes().entrySet()) {
             final List<ActionType> types = entry.getValue();
-            ActionManager.getActionManager().registerListener(this,
+            actionController.registerListener(this,
                     types.toArray(new ActionType[types.size()]));
         }
     }

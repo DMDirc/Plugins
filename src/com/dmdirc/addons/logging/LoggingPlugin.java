@@ -27,7 +27,6 @@ import com.dmdirc.FrameContainer;
 import com.dmdirc.Main;
 import com.dmdirc.Query;
 import com.dmdirc.Server;
-import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.actions.interfaces.ActionType;
 import com.dmdirc.config.IdentityManager;
@@ -36,6 +35,7 @@ import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
+import com.dmdirc.interfaces.ActionController;
 import com.dmdirc.interfaces.ActionListener;
 import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.logger.ErrorLevel;
@@ -85,26 +85,8 @@ public class LoggingPlugin extends BasePlugin implements ActionListener,
     private int historyLines, backbufferLines;
     /** This plugin's plugin info. */
     private final PluginInfo pluginInfo;
-
-    /** Open File. */
-    protected static class OpenFile {
-
-        /** Last used time. */
-        public long lastUsedTime = System.currentTimeMillis();
-
-        /** Open file's writer. */
-        public BufferedWriter writer = null;
-
-        /**
-         * Creates a new open file.
-         *
-         * @param writer Writer that has file open
-         */
-        protected OpenFile(final BufferedWriter writer) {
-            this.writer = writer;
-        }
-
-    }
+    /** The action controller to use. */
+    private final ActionController actionController;
 
     /** Timer used to close idle files. */
     protected Timer idleFileTimer;
@@ -120,10 +102,15 @@ public class LoggingPlugin extends BasePlugin implements ActionListener,
      * Creates a new instance of this plugin.
      *
      * @param pluginInfo This plugin's plugin info
+     * @param actionController The action controller to register listeners with
      */
-    public LoggingPlugin(final PluginInfo pluginInfo) {
+    public LoggingPlugin(final PluginInfo pluginInfo,
+            final ActionController actionController) {
         super();
+
         this.pluginInfo = pluginInfo;
+        this.actionController = actionController;
+
         registerCommand(new LoggingCommand(), LoggingCommand.INFO);
     }
 
@@ -154,7 +141,7 @@ public class LoggingPlugin extends BasePlugin implements ActionListener,
 
         IdentityManager.getGlobalConfig().addChangeListener(getDomain(), this);
 
-        ActionManager.getActionManager().registerListener(this,
+        actionController.registerListener(this,
                 CoreActionType.CHANNEL_OPENED,
                 CoreActionType.CHANNEL_CLOSED,
                 CoreActionType.CHANNEL_MESSAGE,
@@ -220,7 +207,7 @@ public class LoggingPlugin extends BasePlugin implements ActionListener,
             idleFileTimer.purge();
         }
 
-        ActionManager.getActionManager().unregisterListener(this);
+        actionController.unregisterListener(this);
 
         synchronized (openFiles) {
             for (OpenFile file : openFiles.values()) {
@@ -228,6 +215,7 @@ public class LoggingPlugin extends BasePlugin implements ActionListener,
             }
             openFiles.clear();
         }
+
         super.onUnload();
     }
 
@@ -847,6 +835,26 @@ public class LoggingPlugin extends BasePlugin implements ActionListener,
         colour = IdentityManager.getGlobalConfig().getOption(getDomain(), "backbuffer.colour");
         backbufferLines = IdentityManager.getGlobalConfig().getOptionInt(getDomain(), "backbuffer.lines");
         logDirectory = IdentityManager.getGlobalConfig().getOption(getDomain(), "general.directory");
+    }
+
+    /** Open File. */
+    protected static class OpenFile {
+
+        /** Last used time. */
+        public long lastUsedTime = System.currentTimeMillis();
+
+        /** Open file's writer. */
+        public BufferedWriter writer = null;
+
+        /**
+         * Creates a new open file.
+         *
+         * @param writer Writer that has file open
+         */
+        protected OpenFile(final BufferedWriter writer) {
+            this.writer = writer;
+        }
+
     }
 
 }
