@@ -27,7 +27,7 @@ import com.dmdirc.FrameContainer;
 import com.dmdirc.Query;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionType;
-import com.dmdirc.actions.interfaces.ActionType;
+import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.interfaces.ActionListener;
 import com.dmdirc.interfaces.FrameCloseListener;
 import com.dmdirc.interfaces.NicklistListener;

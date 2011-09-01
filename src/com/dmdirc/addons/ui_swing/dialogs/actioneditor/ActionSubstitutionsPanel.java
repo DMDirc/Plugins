@@ -23,7 +23,7 @@
 package com.dmdirc.addons.ui_swing.dialogs.actioneditor;
 
 import com.dmdirc.actions.ActionSubstitutor;
-import com.dmdirc.actions.interfaces.ActionType;
+import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.addons.ui_swing.components.substitutions.Substitution;
 import com.dmdirc.addons.ui_swing.components.substitutions.SubstitutionLabel;
 import com.dmdirc.addons.ui_swing.components.substitutions.SubstitutionsPanel;

@@ -29,8 +29,8 @@ import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.core.components.WindowComponent;
-import com.dmdirc.ui.interfaces.FrameListener;
-import com.dmdirc.ui.interfaces.Window;
+import com.dmdirc.interfaces.ui.FrameListener;
+import com.dmdirc.interfaces.ui.Window;
 
 import java.util.Arrays;
 import java.util.Collection;

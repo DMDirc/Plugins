@@ -27,7 +27,7 @@ import com.dmdirc.addons.ui_web.Client;
 import com.dmdirc.addons.ui_web.WebInterfaceUI;
 import com.dmdirc.commandparser.parsers.CommandParser;
 import com.dmdirc.ui.input.InputHandler;
-import com.dmdirc.ui.interfaces.InputWindow;
+import com.dmdirc.interfaces.ui.InputWindow;
 
 import java.util.HashMap;
 import java.util.Map;

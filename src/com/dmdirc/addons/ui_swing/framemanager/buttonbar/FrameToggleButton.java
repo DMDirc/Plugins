@@ -22,7 +22,7 @@
 package com.dmdirc.addons.ui_swing.framemanager.buttonbar;
 
 import com.dmdirc.FrameContainer;
-import com.dmdirc.ui.interfaces.Window;
+import com.dmdirc.interfaces.ui.Window;
 import javax.swing.Icon;
 import javax.swing.JToggleButton;
 

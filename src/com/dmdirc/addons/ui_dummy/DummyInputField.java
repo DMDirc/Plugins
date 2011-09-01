@@ -22,7 +22,7 @@
 
 package com.dmdirc.addons.ui_dummy;
 
-import com.dmdirc.ui.interfaces.InputField;
+import com.dmdirc.interfaces.ui.InputField;
 
 import java.awt.event.ActionListener;
 import java.awt.event.KeyListener;

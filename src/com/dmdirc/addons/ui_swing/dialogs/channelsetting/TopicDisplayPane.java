@@ -30,7 +30,7 @@ import com.dmdirc.addons.ui_swing.actions.TopicEnterAction;
 import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputHandler;
 import com.dmdirc.addons.ui_swing.components.inputfields.TextAreaInputField;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
-import com.dmdirc.ui.interfaces.InputWindow;
+import com.dmdirc.interfaces.ui.InputWindow;
 
 import java.awt.Color;
 import java.awt.event.KeyEvent;
