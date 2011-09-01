@@ -22,7 +22,7 @@
 
 package com.dmdirc.addons.time;
 
-import com.dmdirc.actions.ActionManager;
+import com.dmdirc.interfaces.ActionController;
 import com.dmdirc.plugins.BasePlugin;
 
 import java.util.Calendar;
@@ -32,7 +32,7 @@ import java.util.TimerTask;
 /**
  * Provides various time-related features.
  */
-public final class TimePlugin  extends BasePlugin {
+public final class TimePlugin extends BasePlugin {
 
     /** Have we registered our types already? */
     private static boolean registered;
@@ -40,10 +40,19 @@ public final class TimePlugin  extends BasePlugin {
     private Timer timer;
     /** The Manager to use for managing timers. */
     private TimerManager manager;
+    /** The action controller to use. */
+    private final ActionController actionController;
 
-    /** Creates a new instance of this plugin. */
-    public TimePlugin() {
+    /**
+     * Creates a new instance of this plugin.
+     *
+     * @param actionController The action controller to register listeners with
+     */
+    public TimePlugin(final ActionController actionController) {
         super();
+
+        this.actionController = actionController;
+
         registerCommand(new TimerCommand(manager), TimerCommand.INFO);
     }
 
@@ -51,8 +60,7 @@ public final class TimePlugin  extends BasePlugin {
     @Override
     public void onLoad() {
         if (!registered) {
-            ActionManager.getActionManager().registerTypes(
-                    TimeActionType.values());
+            actionController.registerTypes(TimeActionType.values());
             registered = true;
         }
 
@@ -76,16 +84,13 @@ public final class TimePlugin  extends BasePlugin {
     public void runTimer() {
         final Calendar cal = Calendar.getInstance();
 
-        ActionManager.getActionManager().triggerEvent(
-                TimeActionType.TIME_MINUTE, null, cal);
+        actionController.triggerEvent(TimeActionType.TIME_MINUTE, null, cal);
 
         if (cal.get(Calendar.MINUTE) == 0) {
-            ActionManager.getActionManager().triggerEvent(
-                    TimeActionType.TIME_HOUR, null, cal);
+            actionController.triggerEvent(TimeActionType.TIME_HOUR, null, cal);
 
             if (cal.get(Calendar.HOUR_OF_DAY) == 0) {
-                ActionManager.getActionManager().triggerEvent(
-                        TimeActionType.TIME_DAY, null, cal);
+                actionController.triggerEvent(TimeActionType.TIME_DAY, null, cal);
             }
         }
     }
@@ -98,6 +103,7 @@ public final class TimePlugin  extends BasePlugin {
             timer = null;
         }
         manager = null;
+
         super.onUnload();
     }
 
