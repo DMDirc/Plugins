@@ -27,8 +27,8 @@ import com.dmdirc.FrameContainer;
 import com.dmdirc.Server;
 import com.dmdirc.plugins.BasePlugin;
 import com.dmdirc.ui.core.components.StatusBarManager;
-import com.dmdirc.ui.interfaces.UIController;
-import com.dmdirc.ui.interfaces.Window;
+import com.dmdirc.interfaces.ui.UIController;
+import com.dmdirc.interfaces.ui.Window;
 
 import java.net.URI;
 

@@ -24,7 +24,7 @@ package com.dmdirc.addons.ui_swing.dialogs.channelsetting;
 
 import com.dmdirc.Channel;
 import com.dmdirc.addons.ui_swing.UIUtilities;
-import com.dmdirc.ui.interfaces.InputWindow;
+import com.dmdirc.interfaces.ui.InputWindow;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

@@ -22,8 +22,8 @@
 
 package com.dmdirc.addons.dcc.actions;
 
-import com.dmdirc.actions.interfaces.ActionMetaType;
-import com.dmdirc.actions.interfaces.ActionType;
+import com.dmdirc.interfaces.actions.ActionMetaType;
+import com.dmdirc.interfaces.actions.ActionType;
 
 /**
  * DCC actions.

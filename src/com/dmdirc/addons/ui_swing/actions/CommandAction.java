@@ -23,7 +23,7 @@
 package com.dmdirc.addons.ui_swing.actions;
 
 import com.dmdirc.commandparser.parsers.CommandParser;
-import com.dmdirc.ui.interfaces.Window;
+import com.dmdirc.interfaces.ui.Window;
 
 import java.awt.event.ActionEvent;
 

@@ -31,8 +31,8 @@ import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.ui.core.components.WindowComponent;
-import com.dmdirc.ui.interfaces.FrameListener;
-import com.dmdirc.ui.interfaces.Window;
+import com.dmdirc.interfaces.ui.FrameListener;
+import com.dmdirc.interfaces.ui.Window;
 import com.dmdirc.util.ListenerList;
 
 import java.util.Arrays;

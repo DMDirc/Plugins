@@ -55,8 +55,8 @@ import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.interfaces.FrameCloseListener;
 import com.dmdirc.parser.common.ChannelJoinRequest;
 import com.dmdirc.ui.IconManager;
-import com.dmdirc.ui.interfaces.InputWindow;
-import com.dmdirc.ui.interfaces.Window;
+import com.dmdirc.interfaces.ui.InputWindow;
+import com.dmdirc.interfaces.ui.Window;
 
 import java.awt.Point;
 import java.awt.event.KeyEvent;

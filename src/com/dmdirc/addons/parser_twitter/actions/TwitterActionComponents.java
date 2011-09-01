@@ -24,7 +24,7 @@ package com.dmdirc.addons.parser_twitter.actions;
 
 import com.dmdirc.Server;
 import com.dmdirc.ServerManager;
-import com.dmdirc.actions.interfaces.ActionComponent;
+import com.dmdirc.interfaces.actions.ActionComponent;
 import com.dmdirc.addons.parser_twitter.Twitter;
 import com.dmdirc.addons.parser_twitter.api.TwitterStatus;
 import com.dmdirc.addons.parser_twitter.api.TwitterUser;

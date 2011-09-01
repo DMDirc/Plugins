@@ -25,7 +25,7 @@ package com.dmdirc.addons.ui_swing.components.inputfields;
 import com.dmdirc.addons.ui_swing.components.colours.ColourPickerDialog;
 import com.dmdirc.addons.ui_swing.components.validating.ValidatingJTextField;
 import com.dmdirc.config.IdentityManager;
-import com.dmdirc.ui.interfaces.InputField;
+import com.dmdirc.interfaces.ui.InputField;
 import com.dmdirc.util.validators.Validator;
 
 import java.awt.event.ActionEvent;

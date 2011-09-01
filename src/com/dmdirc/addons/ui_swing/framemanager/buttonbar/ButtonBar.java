@@ -36,7 +36,7 @@ import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.interfaces.FrameInfoListener;
 import com.dmdirc.interfaces.NotificationListener;
 import com.dmdirc.ui.WindowManager;
-import com.dmdirc.ui.interfaces.Window;
+import com.dmdirc.interfaces.ui.Window;
 
 import java.awt.Color;
 import java.awt.Dimension;

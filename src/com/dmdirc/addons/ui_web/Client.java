@@ -22,7 +22,7 @@
 
 package com.dmdirc.addons.ui_web;
 
-import com.dmdirc.ui.interfaces.Window;
+import com.dmdirc.interfaces.ui.Window;
 
 import java.util.LinkedList;
 import java.util.List;

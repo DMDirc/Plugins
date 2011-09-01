@@ -23,7 +23,7 @@
 package com.dmdirc.addons.windowstatus;
 
 import com.dmdirc.addons.ui_swing.UIUtilities;
-import com.dmdirc.ui.interfaces.StatusBarComponent;
+import com.dmdirc.interfaces.ui.StatusBarComponent;
 import com.dmdirc.ui.messages.Styliser;
 
 import javax.swing.BorderFactory;
