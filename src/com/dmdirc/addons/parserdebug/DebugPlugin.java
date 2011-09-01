@@ -23,9 +23,9 @@
 package com.dmdirc.addons.parserdebug;
 
 import com.dmdirc.Server;
-import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.actions.interfaces.ActionType;
+import com.dmdirc.interfaces.ActionController;
 import com.dmdirc.interfaces.ActionListener;
 import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.parser.interfaces.callbacks.DebugInfoListener;
@@ -44,24 +44,34 @@ public final class DebugPlugin extends BasePlugin implements DebugInfoListener, 
     /** Map of parsers registered. */
     protected final Map<Parser, DebugWindow> registeredParsers
             = new HashMap<Parser, DebugWindow>();
+    /** The action controller to use. */
+    private final ActionController actionController;
 
-    /** Creates a new instance of this plugin. */
-    public DebugPlugin() {
+    /**
+     * Creates a new instance of this plugin.
+     *
+     * @param actionController The action controller to register listeners with
+     */
+    public DebugPlugin(final ActionController actionController) {
         super();
+
+        this.actionController = actionController;
+
         registerCommand(new ParserDebugCommand(this), ParserDebugCommand.INFO);
     }
 
     /** {@inheritDoc} */
     @Override
     public void onLoad() {
-        ActionManager.getActionManager().unregisterListener(this,
-                CoreActionType.SERVER_DISCONNECTED);
+        actionController.registerListener(this, CoreActionType.SERVER_DISCONNECTED);
         super.onLoad();
     }
 
     /** {@inheritDoc} */
     @Override
     public void onUnload() {
+        actionController.unregisterListener(this);
+
         final ArrayList<DebugWindow> windowList = new ArrayList<DebugWindow>();
         for (Parser parser : registeredParsers.keySet()) {
             try {

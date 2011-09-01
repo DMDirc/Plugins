@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.systray;
 
-import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.actions.interfaces.ActionType;
 import com.dmdirc.addons.ui_swing.MainFrame;
@@ -33,6 +32,7 @@ import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
+import com.dmdirc.interfaces.ActionController;
 import com.dmdirc.plugins.BasePlugin;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.PluginManager;
@@ -64,15 +64,22 @@ public final class SystrayPlugin extends BasePlugin implements ActionListener,
     private MainFrame mainFrame;
     /** This plugin's plugin info. */
     private final PluginInfo pluginInfo;
+    /** The action controller to use. */
+    private final ActionController actionController;
 
     /**
      * Creates a new system tray plugin.
      *
      * @param pluginInfo This plugin's plugin info
+     * @param actionController The action controller to use
      */
-    public SystrayPlugin(final PluginInfo pluginInfo) {
+    public SystrayPlugin(final PluginInfo pluginInfo,
+            final ActionController actionController) {
         super();
+
         this.pluginInfo = pluginInfo;
+        this.actionController = actionController;
+
         final MenuItem show = new MenuItem("Show/hide");
         final MenuItem quit = new MenuItem("Quit");
 
@@ -155,8 +162,7 @@ public final class SystrayPlugin extends BasePlugin implements ActionListener,
             mainFrame = ((SwingController) PluginManager.getPluginManager()
                     .getPluginInfoByName("ui_swing").getPlugin())
                     .getMainFrame();
-            ActionManager.getActionManager().registerListener(this,
-                CoreActionType.CLIENT_MINIMISED);
+            actionController.registerListener(this, CoreActionType.CLIENT_MINIMISED);
         } catch (AWTException ex) {
             continueLoading = false;
         }
@@ -170,7 +176,7 @@ public final class SystrayPlugin extends BasePlugin implements ActionListener,
     @Override
     public void onUnload() {
         SystemTray.getSystemTray().remove(icon);
-        ActionManager.getActionManager().unregisterListener(this);
+        actionController.unregisterListener(this);
         super.onUnload();
     }
 

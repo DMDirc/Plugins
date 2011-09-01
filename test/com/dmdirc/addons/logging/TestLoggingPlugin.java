@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.logging;
 
+import com.dmdirc.interfaces.ActionController;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.util.MapList;
 import static org.mockito.Mockito.*;
@@ -31,7 +32,7 @@ public class TestLoggingPlugin extends LoggingPlugin {
     public final MapList<Object, String> lines = new MapList<Object, String>();
 
     public TestLoggingPlugin() {
-        super(mock(PluginInfo.class));
+        super(mock(PluginInfo.class), mock(ActionController.class));
     }
 
     @Override

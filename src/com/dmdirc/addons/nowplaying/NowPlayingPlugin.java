@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.nowplaying;
 
-import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.actions.interfaces.ActionType;
 import com.dmdirc.addons.ui_swing.UIUtilities;
@@ -30,6 +29,7 @@ import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
+import com.dmdirc.interfaces.ActionController;
 import com.dmdirc.interfaces.ActionListener;
 import com.dmdirc.plugins.BasePlugin;
 import com.dmdirc.plugins.Plugin;
@@ -55,15 +55,22 @@ public class NowPlayingPlugin extends BasePlugin implements ActionListener  {
     private List<String> order;
     /** This plugin's plugin info. */
     private final PluginInfo pluginInfo;
+    /** The action controller to use. */
+    private final ActionController actionController;
 
     /**
      * Creates a new instance of this plugin.
      *
      * @param pluginInfo This plugin's plugin info
+     * @param actionController The action controller to register listeners with
      */
-    public NowPlayingPlugin(final PluginInfo pluginInfo) {
+    public NowPlayingPlugin(final PluginInfo pluginInfo,
+            final ActionController actionController) {
         super();
+
         this.pluginInfo = pluginInfo;
+        this.actionController = actionController;
+
         registerCommand(new NowPlayingCommand(this), NowPlayingCommand.INFO);
     }
 
@@ -75,8 +82,8 @@ public class NowPlayingPlugin extends BasePlugin implements ActionListener  {
 
         loadSettings();
 
-        ActionManager.getActionManager().registerListener(this,
-                CoreActionType.PLUGIN_LOADED, CoreActionType.PLUGIN_UNLOADED);
+        actionController.registerListener(this, CoreActionType.PLUGIN_LOADED,
+                CoreActionType.PLUGIN_UNLOADED);
 
         for (PluginInfo target : PluginManager.getPluginManager().getPluginInfos()) {
             if (target.isLoaded()) {
@@ -91,7 +98,8 @@ public class NowPlayingPlugin extends BasePlugin implements ActionListener  {
     public void onUnload() {
         sources.clear();
         managers.clear();
-        ActionManager.getActionManager().unregisterListener(this);
+        actionController.unregisterListener(this);
+
         super.onUnload();
     }
 
