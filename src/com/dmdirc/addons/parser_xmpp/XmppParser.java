@@ -32,6 +32,7 @@ import com.dmdirc.parser.common.ParserError;
 import com.dmdirc.parser.common.QueuePriority;
 import com.dmdirc.parser.interfaces.ChannelInfo;
 import com.dmdirc.parser.interfaces.LocalClientInfo;
+import com.dmdirc.parser.interfaces.ServerInfo;
 import com.dmdirc.parser.interfaces.StringConverter;
 import com.dmdirc.parser.interfaces.callbacks.AwayStateListener;
 import com.dmdirc.parser.interfaces.callbacks.CallbackInterface;
@@ -552,6 +553,17 @@ public class XmppParser extends BaseSocketAwareParser {
                 // Can't set chat state... Oh well?
             }
         }
+    }
+
+    @Override
+    /* @todo Add support for proxies */
+    public ServerInfo getServerInfo() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void setServerInfo(ServerInfo serverInfo) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     private class ConnectionListenerImpl implements ConnectionListener {

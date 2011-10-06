@@ -31,6 +31,7 @@ import com.dmdirc.parser.common.QueuePriority;
 import com.dmdirc.parser.interfaces.ChannelInfo;
 import com.dmdirc.parser.interfaces.ClientInfo;
 import com.dmdirc.parser.interfaces.LocalClientInfo;
+import com.dmdirc.parser.interfaces.ServerInfo;
 import com.dmdirc.parser.interfaces.StringConverter;
 
 import java.net.URI;
@@ -468,5 +469,16 @@ public class MSNParser extends BaseParser {
     @Override
     public void setCompositionState(final String host, final CompositionState state) {
         // Do nothing
+    }
+
+    @Override
+    /* @todo Add support for proxies */
+    public ServerInfo getServerInfo() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void setServerInfo(ServerInfo serverInfo) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }
