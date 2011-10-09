@@ -27,6 +27,7 @@ import com.dmdirc.ChannelEventHandler;
 import com.dmdirc.parser.common.CallbackManager;
 import com.dmdirc.parser.common.CallbackNotFoundException;
 import com.dmdirc.parser.common.CallbackObject;
+import com.dmdirc.parser.common.ChildImplementations;
 import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.parser.interfaces.callbacks.CallbackInterface;
 import com.dmdirc.parser.interfaces.callbacks.ChannelMessageListener;
@@ -35,6 +36,7 @@ import com.dmdirc.parser.irc.IRCParser;
 
 import java.lang.reflect.Field;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -63,12 +65,25 @@ public class RelayCallbackManager extends CallbackManager implements SocketClose
      * @param parser
      */
     public RelayCallbackManager(final RelayBotPlugin myPlugin, final IRCParser parser) {
-        super(parser, IRCParser.IMPL_MAP);
+        super(parser, getImplementations());
 
         this.myPlugin = myPlugin;
         this.originalCBM = parser.getCallbackManager();
         setCallbackManager(parser, this);
         addCallback(SocketCloseListener.class, this);
+    }
+
+    private static Map<Class<?>, Class<?>> getImplementations() {
+        final Map<Class<?>, Class<?>> implementations
+                = new HashMap<Class<?>, Class<?>>();
+
+        for (Class<?> child : IRCParser.class.getAnnotation(ChildImplementations.class).value()) {
+            for (Class<?> iface : child.getInterfaces()) {
+                implementations.put(iface, child);
+            }
+        }
+
+        return implementations;
     }
 
     /** {@inheritDoc} */
