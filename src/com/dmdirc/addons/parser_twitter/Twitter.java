@@ -627,6 +627,18 @@ public class Twitter implements Parser, TwitterErrorHandler, TwitterRawHandler,
 
     /** {@inheritDoc} */
     @Override
+    public URI getProxy() {
+        return null;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setProxy(final URI proxy) {
+        // TODO: Not supported (yet)
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public Map<Object, Object> getMap() {
         return myMap;
     }
