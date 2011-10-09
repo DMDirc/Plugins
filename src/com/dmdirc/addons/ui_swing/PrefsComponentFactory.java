@@ -167,6 +167,7 @@ public final class PrefsComponentFactory {
             final PreferencesSetting setting) {
         final JCheckBox option = new JCheckBox();
         option.setSelected(Boolean.parseBoolean(setting.getValue()));
+        option.setOpaque(false);
         option.addChangeListener(new ChangeListener() {
 
             /** {@inheritDoc} */
