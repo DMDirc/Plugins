@@ -35,10 +35,10 @@ import com.dmdirc.config.IdentityManager;
 import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.interfaces.FrameInfoListener;
 import com.dmdirc.interfaces.NotificationListener;
-import com.dmdirc.ui.WindowManager;
 import com.dmdirc.interfaces.ui.Window;
+import com.dmdirc.ui.WindowManager;
+import com.dmdirc.ui.Colour;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
@@ -422,7 +422,7 @@ public final class ButtonBar implements FrameManager, ActionListener,
     /** {@inheritDoc} */
     @Override
     public void notificationSet(final FrameContainer window,
-            final Color colour) {
+            final Colour colour) {
         UIUtilities.invokeLater(new Runnable() {
 
             /** {@inheritDoc} */
@@ -430,7 +430,7 @@ public final class ButtonBar implements FrameManager, ActionListener,
             public void run() {
                 final FrameToggleButton button = getButton(window);
                 if (button != null) {
-                    button.setForeground(colour);
+                    button.setForeground(UIUtilities.convertColour(colour));
                 }
             }
         });

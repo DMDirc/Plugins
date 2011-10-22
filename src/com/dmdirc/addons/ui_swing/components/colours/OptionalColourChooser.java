@@ -159,7 +159,7 @@ public final class OptionalColourChooser extends JPanel implements ActionListene
     /** Sets the colour back to white. */
     public void clearColour() {
         value = "ffffff";
-        previewPanel.setBackground(ColourManager.getColour("ffffff"));
+        previewPanel.setBackground(Color.WHITE);
         previewPanel.setToolTipText("");
     }
 
@@ -184,10 +184,11 @@ public final class OptionalColourChooser extends JPanel implements ActionListene
      */
     private void updateColour(final String newColour) {
         if (newColour.isEmpty()) {
-            previewPanel.setBackground(ColourManager.getColour("ffffff"));
+            previewPanel.setBackground(Color.WHITE);
             previewPanel.setToolTipText("");
         } else {
-            previewPanel.setBackground(ColourManager.parseColour(newColour));
+            previewPanel.setBackground(UIUtilities.convertColour(
+                    ColourManager.parseColour(newColour)));
             previewPanel.setToolTipText(newColour);
         }
     }

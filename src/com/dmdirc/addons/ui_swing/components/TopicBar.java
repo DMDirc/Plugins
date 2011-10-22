@@ -35,7 +35,6 @@ import com.dmdirc.config.IdentityManager;
 import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.interfaces.TopicChangeListener;
 import com.dmdirc.parser.common.ChannelJoinRequest;
-import com.dmdirc.ui.messages.ColourManager;
 import com.dmdirc.ui.messages.Styliser;
 
 import java.awt.Color;
@@ -221,7 +220,7 @@ public class TopicBar extends JComponent implements ActionListener,
                     channel.getStyliser().addStyledString(
                             (StyledDocument) topicText.getDocument(),
                             new String[]{Styliser.CODE_HEXCOLOUR
-                                    + ColourManager.getHex(foregroundColour)
+                                    + UIUtilities.getHex(foregroundColour)
                                     + channel.getCurrentTopic().getTopic(), },
                             as);
                 }
@@ -331,10 +330,12 @@ public class TopicBar extends JComponent implements ActionListener,
      * Load and set colours.
      */
     private void setColours() {
-        backgroundColour = channel.getConfigManager().getOptionColour(
-                "ui", "inputbackgroundcolour", "ui", "backgroundcolour");
-        foregroundColour = channel.getConfigManager().getOptionColour(
-                "ui", "inputforegroundcolour", "ui", "foregroundcolour");
+        backgroundColour = UIUtilities.convertColour(
+                channel.getConfigManager().getOptionColour(
+                "ui", "inputbackgroundcolour", "ui", "backgroundcolour"));
+        foregroundColour = UIUtilities.convertColour(
+                channel.getConfigManager().getOptionColour(
+                "ui", "inputforegroundcolour", "ui", "foregroundcolour"));
         setBackground(backgroundColour);
         setForeground(foregroundColour);
         setDisabledTextColour(foregroundColour);
