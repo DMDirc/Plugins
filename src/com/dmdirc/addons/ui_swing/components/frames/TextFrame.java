@@ -563,10 +563,12 @@ public abstract class TextFrame extends JPanel implements Window,
      * Updates colour settings from their config values.
      */
     private void updateColours() {
-        getTextPane().setForeground(getContainer().getConfigManager()
-                .getOptionColour("ui", "foregroundcolour"));
-        getTextPane().setBackground(getContainer().getConfigManager()
-                .getOptionColour("ui", "backgroundcolour"));
+        getTextPane().setForeground(UIUtilities.convertColour(
+                getContainer().getConfigManager()
+                .getOptionColour("ui", "foregroundcolour")));
+        getTextPane().setBackground(UIUtilities.convertColour(
+                getContainer().getConfigManager()
+                .getOptionColour("ui", "backgroundcolour")));
     }
 
     /** Disposes of this window, removing any listeners. */

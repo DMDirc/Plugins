@@ -44,13 +44,13 @@ import com.dmdirc.interfaces.FrameInfoListener;
 import com.dmdirc.interfaces.NotificationListener;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
+import com.dmdirc.ui.Colour;
 import com.dmdirc.ui.CoreUIUtils;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.util.ListenerList;
 import com.dmdirc.util.QueuedLinkedHashSet;
 import com.dmdirc.util.ReturnableThread;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
@@ -717,7 +717,7 @@ public final class MainFrame extends JFrame implements WindowListener,
     /** {@inheritDoc} */
     @Override
     public void notificationSet(final FrameContainer window,
-            final Color colour) {
+            final Colour colour) {
         if (activeFrame.getContainer().equals(window)) {
             window.clearNotification();
         }

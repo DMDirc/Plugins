@@ -24,11 +24,13 @@ package com.dmdirc.addons.ui_swing.framemanager.tree;
 
 import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.ui_swing.SelectionListener;
+import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.ImageButton;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.interfaces.FrameInfoListener;
 import com.dmdirc.interfaces.NotificationListener;
+import com.dmdirc.ui.Colour;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.messages.Styliser;
 
@@ -129,9 +131,9 @@ public class NodeLabel extends JPanel implements SelectionListener,
     /** {@inheritDoc} */
     @Override
     public void notificationSet(final FrameContainer window,
-            final Color colour) {
+            final Colour colour) {
         if (equals(window)) {
-            notificationColour = colour;
+            notificationColour = UIUtilities.convertColour(colour);
         }
     }
 

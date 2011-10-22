@@ -27,8 +27,10 @@ import com.dmdirc.addons.ui_swing.actions.UndoAction;
 import com.dmdirc.addons.ui_swing.components.DMDircUndoableEditListener;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
+import com.dmdirc.ui.Colour;
 import com.dmdirc.util.ReturnableThread;
 
+import java.awt.Color;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -452,5 +454,37 @@ public final class UIUtilities {
      */
     public static void addComboBoxWidthModifier(final JComboBox combo) {
         combo.addPopupMenuListener(new ComboBoxWidthModifier());
+    }
+
+    /**
+     * Converts a DMDirc {@link Colour} into an AWT-specific {@link Color} by
+     * copying the values of the red, green and blue channels.
+     *
+     * @param colour The colour to be converted
+     * @return A corresponding AWT colour
+     */
+    public static Color convertColour(final Colour colour) {
+        return new Color(colour.getRed(), colour.getGreen(), colour.getBlue());
+    }
+
+    /**
+     * Converts the given colour into a hexadecimal string.
+     *
+     * @param colour The colour to be converted
+     * @return A corresponding 6 character hex string
+     */
+    public static String getHex(final Color colour) {
+        return getHex(colour.getRed()) + getHex(colour.getGreen())
+                + getHex(colour.getBlue());
+    }
+
+    /**
+     * Converts the specified integer (in the range 0-255) into a hex string.
+     * @param value The integer to convert
+     * @return A 2 char hex string representing the specified integer
+     */
+    private static String getHex(final int value) {
+        final String hex = Integer.toHexString(value);
+        return (hex.length() < 2 ? "0" : "") + hex;
     }
 }

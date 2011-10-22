@@ -34,9 +34,9 @@ import com.dmdirc.interfaces.FrameInfoListener;
 import com.dmdirc.interfaces.NotificationListener;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
+import com.dmdirc.ui.Colour;
 import com.dmdirc.ui.WindowManager;
 
-import java.awt.Color;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.io.Serializable;
@@ -271,12 +271,14 @@ public final class TreeFrameManager implements FrameManager,
 
     /** Sets treeview colours. */
     private void setColours() {
-        tree.setBackground(IdentityManager.getGlobalConfig().getOptionColour(
+        tree.setBackground(UIUtilities.convertColour(
+                IdentityManager.getGlobalConfig().getOptionColour(
                 "treeview", "backgroundcolour",
-                "ui", "backgroundcolour"));
-        tree.setForeground(IdentityManager.getGlobalConfig().getOptionColour(
+                "ui", "backgroundcolour")));
+        tree.setForeground(UIUtilities.convertColour(
+                IdentityManager.getGlobalConfig().getOptionColour(
                 "treeview", "foregroundcolour",
-                "ui", "foregroundcolour"));
+                "ui", "foregroundcolour")));
 
         tree.repaint();
     }
@@ -360,7 +362,7 @@ public final class TreeFrameManager implements FrameManager,
 
     /** {@inheritDoc} */
     @Override
-    public void notificationSet(final FrameContainer window, final Color colour) {
+    public void notificationSet(final FrameContainer window, final Colour colour) {
         SwingUtilities.invokeLater(new Runnable() {
 
             /** {@inheritDoc} */

@@ -43,6 +43,7 @@ import com.dmdirc.parser.interfaces.ClientInfo;
 import com.dmdirc.plugins.BasePlugin;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.PluginManager;
+import com.dmdirc.ui.Colour;
 import com.dmdirc.ui.messages.ColourManager;
 import com.dmdirc.util.ReturnableThread;
 
@@ -119,7 +120,7 @@ public final class NickColourPlugin extends BasePlugin implements ActionListener
                 toLowerCase("*:" + client.getClient().getNickname());
 
         if (useowncolour && client.getClient().equals(myself)) {
-            final Color color = ColourManager.parseColour(owncolour);
+            final Color color = UIUtilities.convertColour(ColourManager.parseColour(owncolour));
             putColour(map, color, color);
         } else if (userandomcolour) {
             putColour(map, getColour(client.getClient().getNickname()), getColour(client.
@@ -141,10 +142,10 @@ public final class NickColourPlugin extends BasePlugin implements ActionListener
             Color nickColor = null;
 
             if (parts[0] != null) {
-                textColor = ColourManager.parseColour(parts[0], null);
+                textColor = UIUtilities.convertColour(ColourManager.parseColour(parts[0], null));
             }
             if (parts[1] != null) {
-                nickColor = ColourManager.parseColour(parts[1], null);
+                nickColor = UIUtilities.convertColour(ColourManager.parseColour(parts[1], null));
             }
 
             putColour(map, textColor, nickColor);
@@ -183,9 +184,9 @@ public final class NickColourPlugin extends BasePlugin implements ActionListener
             count += nick.charAt(i);
         }
 
-        count = count % randColours.length;
+        count %= randColours.length;
 
-        return ColourManager.parseColour(randColours[count]);
+        return UIUtilities.convertColour(ColourManager.parseColour(randColours[count]));
     }
 
     /**

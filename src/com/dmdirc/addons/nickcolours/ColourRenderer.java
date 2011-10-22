@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.nickcolours;
 
+import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.ui.messages.ColourManager;
 
 import java.awt.Color;
@@ -59,7 +60,7 @@ public class ColourRenderer extends DefaultTableCellRenderer {
             final boolean hasFocus, final int row, final int column) {
         Color colour = null;
         if (value != null && !((String) value).isEmpty()) {
-            colour = ColourManager.parseColour((String) value, null);
+            colour = UIUtilities.convertColour(ColourManager.parseColour((String) value, null));
         }
 
         setHorizontalAlignment(CENTER);

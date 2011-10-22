@@ -408,11 +408,14 @@ public final class SwingSearchBar extends JPanel implements ActionListener,
 
     /** Sets the colours used in this document. */
     private void setColours() {
-        searchBox.setForeground(IdentityManager.getGlobalConfig().
-                getOptionColour("ui", "foregroundcolour"));
-        searchBox.setBackground(IdentityManager.getGlobalConfig().
-                getOptionColour("ui", "backgroundcolour"));
-        searchBox.setCaretColor(IdentityManager.getGlobalConfig().
-                getOptionColour("ui", "foregroundcolour"));
+        searchBox.setForeground(UIUtilities.convertColour(
+                IdentityManager.getGlobalConfig().
+                getOptionColour("ui", "foregroundcolour")));
+        searchBox.setBackground(UIUtilities.convertColour(
+                IdentityManager.getGlobalConfig().
+                getOptionColour("ui", "backgroundcolour")));
+        searchBox.setCaretColor(UIUtilities.convertColour(
+                IdentityManager.getGlobalConfig().
+                getOptionColour("ui", "foregroundcolour")));
     }
 }
