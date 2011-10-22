@@ -123,8 +123,9 @@ public class OsdWindow extends JDialog implements MouseListener,
 
         panel = new JPanel();
         panel.setBorder(new LineBorder(Color.BLACK));
-        panel.setBackground(IdentityManager.getGlobalConfig().getOptionColour(plugin.getDomain(),
-                "bgcolour"));
+        panel.setBackground(UIUtilities.convertColour(
+                IdentityManager.getGlobalConfig().getOptionColour(plugin.getDomain(),
+                "bgcolour")));
 
         final int width = IdentityManager.getGlobalConfig().getOptionInt(plugin.getDomain(),
                 "width");
@@ -132,8 +133,9 @@ public class OsdWindow extends JDialog implements MouseListener,
         setLayout(new MigLayout("wmin " + width + ", wmax " + width + ", ins rel, fill"));
 
         label = new JLabel(text);
-        label.setForeground(IdentityManager.getGlobalConfig().getOptionColour(plugin.getDomain(),
-                "fgcolour"));
+        label.setForeground(UIUtilities.convertColour(
+                IdentityManager.getGlobalConfig().getOptionColour(plugin.getDomain(),
+                "fgcolour")));
         label.setFont(label.getFont().deriveFont(
                 (float) IdentityManager.getGlobalConfig().getOptionInt(plugin.getDomain(),
                 "fontSize")));
@@ -254,7 +256,7 @@ public class OsdWindow extends JDialog implements MouseListener,
      * @param colour The background colour to use
      */
     public void setBackgroundColour(final String colour) {
-        panel.setBackground(ColourManager.parseColour(colour));
+        panel.setBackground(UIUtilities.convertColour(ColourManager.parseColour(colour)));
     }
 
     /**
@@ -263,7 +265,7 @@ public class OsdWindow extends JDialog implements MouseListener,
      * @param colour The foreground colour to use
      */
     public void setForegroundColour(final String colour) {
-        label.setForeground(ColourManager.parseColour(colour));
+        label.setForeground(UIUtilities.convertColour(ColourManager.parseColour(colour)));
     }
 
     /** {@inheritDoc} */

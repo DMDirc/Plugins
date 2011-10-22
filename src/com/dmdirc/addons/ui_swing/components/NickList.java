@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_swing.components;
 
 import com.dmdirc.Channel;
+import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.frames.ChannelFrame;
 import com.dmdirc.addons.ui_swing.components.renderers.NicklistRenderer;
 import com.dmdirc.addons.ui_swing.textpane.ClickType;
@@ -78,12 +79,14 @@ public class NickList extends JScrollPane implements ConfigChangeListener,
 
         nickList = new JList();
 
-        nickList.setBackground(config.getOptionColour(
+        nickList.setBackground(UIUtilities.convertColour(
+                config.getOptionColour(
                 "ui", "nicklistbackgroundcolour",
-                "ui", "backgroundcolour"));
-        nickList.setForeground(config.getOptionColour(
+                "ui", "backgroundcolour")));
+        nickList.setForeground(UIUtilities.convertColour(
+                config.getOptionColour(
                 "ui", "nicklistforegroundcolour",
-                "ui", "foregroundcolour"));
+                "ui", "foregroundcolour")));
         nickList.setFont(new Font(config.getOption("ui", "textPaneFontName"),
                 Font.PLAIN, getFont().getSize()));
         config.addChangeListener("ui", "nicklistforegroundcolour", this);
@@ -254,12 +257,14 @@ public class NickList extends JScrollPane implements ConfigChangeListener,
                 || "nicklistforegroundcolour".equals(key)
                 || "foregroundcolour".equals(key)
                 || "textPaneFontName".equals(key)) {
-            nickList.setBackground(config.getOptionColour(
+            nickList.setBackground(UIUtilities.convertColour(
+                    config.getOptionColour(
                     "ui", "nicklistbackgroundcolour",
-                    "ui", "backgroundcolour"));
-            nickList.setForeground(config.getOptionColour(
+                    "ui", "backgroundcolour")));
+            nickList.setForeground(UIUtilities.convertColour(
+                    config.getOptionColour(
                     "ui", "nicklistforegroundcolour",
-                    "ui", "foregroundcolour"));
+                    "ui", "foregroundcolour")));
             nickList.setFont(new Font(config.getOption("ui", "textPaneFontName"),
                 Font.PLAIN, getFont().getSize()));
             nickList.repaint();

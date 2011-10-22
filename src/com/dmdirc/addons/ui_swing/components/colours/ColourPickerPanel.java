@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.components.colours;
 
+import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.ui.messages.ColourManager;
 
 import java.awt.Color;
@@ -142,7 +143,7 @@ public final class ColourPickerPanel extends JPanel implements MouseListener,
                 ircOffset = offset;
 
                 for (int i = 0; i < 16; i++) {
-                    g.setColor(ColourManager.getColour(i));
+                    g.setColor(UIUtilities.convertColour(ColourManager.getColour(i)));
                     g.fillRect(i * IRC_WIDTH + BORDER_SIZE, offset, IRC_WIDTH,
                             IRC_HEIGHT);
                     g.setColor(Color.BLACK);
@@ -251,7 +252,7 @@ public final class ColourPickerPanel extends JPanel implements MouseListener,
     private static Color getIrcColour(final MouseEvent e) {
         final int i = (e.getX() - BORDER_SIZE) / IRC_WIDTH;
 
-        return ColourManager.getColour(i);
+        return UIUtilities.convertColour(ColourManager.getColour(i));
     }
 
     /**
