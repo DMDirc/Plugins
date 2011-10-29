@@ -74,7 +74,7 @@ public final class AddOptionCellRenderer extends DefaultListCellRenderer {
             setting = null;
         }
         if (setting == null) {
-           setText(value.toString());
+           setText((String) value);
         } else {
             setText(setting.getTitle());
         }
