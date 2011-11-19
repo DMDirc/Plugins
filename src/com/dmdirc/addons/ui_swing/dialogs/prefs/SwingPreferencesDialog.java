@@ -69,6 +69,8 @@ public final class SwingPreferencesDialog extends StandardDialog implements
     private static final long serialVersionUID = 9;
     /** Previously instantiated instance of SwingPreferencesDialog. */
     private static volatile SwingPreferencesDialog me;
+    /** Parent UI Controller. */
+    private final SwingController controller;
     /** Preferences tab list, used to switch option types. */
     private JList tabList;
     /** Main panel. */
@@ -92,6 +94,7 @@ public final class SwingPreferencesDialog extends StandardDialog implements
     private SwingPreferencesDialog(final SwingController controller) {
         super(controller.getMainFrame(), ModalityType.MODELESS);
 
+        this.controller = controller;
         this.parentWindow = controller.getMainFrame();
 
         initComponents();
@@ -272,7 +275,7 @@ public final class SwingPreferencesDialog extends StandardDialog implements
             if (tabList.getSelectedIndex() > -1) {
                 final PreferencesCategory node = (PreferencesCategory) tabList.
                         getSelectedValue();
-                IdentityManager.getConfigIdentity().setOption("dialogstate",
+                controller.getGlobalIdentity().setOption("dialogstate",
                         "preferences", node.getPath());
             }
             saveOptions();
@@ -346,7 +349,7 @@ public final class SwingPreferencesDialog extends StandardDialog implements
     }
 
     private void restoreActiveCategory() {
-        final String oldCategoryPath = IdentityManager.getGlobalConfig().
+        final String oldCategoryPath = controller.getGlobalConfig().
                 getOption("dialogstate", "preferences");
         final DefaultListModel model = (DefaultListModel) tabList.getModel();
         int indexToSelect = 0;
