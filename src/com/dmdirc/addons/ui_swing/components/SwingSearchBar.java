@@ -28,7 +28,6 @@ import com.dmdirc.addons.ui_swing.components.frames.InputTextFrame;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.addons.ui_swing.components.validating.ValidatingJTextField;
 import com.dmdirc.addons.ui_swing.textpane.TextPane;
-import com.dmdirc.config.IdentityManager;
 import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.interfaces.ui.SearchBar;
 import com.dmdirc.interfaces.ui.SearchBar.Direction;
@@ -70,7 +69,7 @@ public final class SwingSearchBar extends JPanel implements ActionListener,
     /** Frame parent. */
     private final TextFrame parent;
     /** Close button. */
-    private ImageButton closeButton;
+    private ImageButton<Object> closeButton;
     /** Next match button. */
     private JButton nextButton;
     /** Previous match button. */
@@ -112,7 +111,7 @@ public final class SwingSearchBar extends JPanel implements ActionListener,
 
     /** Initialises components. */
     private void initComponents() {
-        closeButton = new ImageButton("close",
+        closeButton = new ImageButton<Object>("close",
                 parent.getIconManager().getIcon("close-inactive"),
                 parent.getIconManager().getIcon("close-active"));
         nextButton = new JButton();
@@ -157,9 +156,9 @@ public final class SwingSearchBar extends JPanel implements ActionListener,
         caseCheck.addActionListener(this);
         searchBox.getDocument().addDocumentListener(this);
 
-        IdentityManager.getGlobalConfig().addChangeListener(
+        parent.getController().getGlobalConfig().addChangeListener(
                 "ui", "backgroundcolour", this);
-        IdentityManager.getGlobalConfig().addChangeListener(
+        parent.getController().getGlobalConfig().addChangeListener(
                 "ui", "foregroundcolour", this);
     }
 
@@ -409,13 +408,13 @@ public final class SwingSearchBar extends JPanel implements ActionListener,
     /** Sets the colours used in this document. */
     private void setColours() {
         searchBox.setForeground(UIUtilities.convertColour(
-                IdentityManager.getGlobalConfig().
+                parent.getController().getGlobalConfig().
                 getOptionColour("ui", "foregroundcolour")));
         searchBox.setBackground(UIUtilities.convertColour(
-                IdentityManager.getGlobalConfig().
+                parent.getController().getGlobalConfig().
                 getOptionColour("ui", "backgroundcolour")));
         searchBox.setCaretColor(UIUtilities.convertColour(
-                IdentityManager.getGlobalConfig().
+                parent.getController().getGlobalConfig().
                 getOptionColour("ui", "foregroundcolour")));
     }
 }

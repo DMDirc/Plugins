@@ -24,7 +24,6 @@ package com.dmdirc.addons.ui_swing.components;
 
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.config.ConfigManager;
-import com.dmdirc.config.IdentityManager;
 import com.dmdirc.interfaces.ConfigChangeListener;
 
 import java.awt.Component;
@@ -59,38 +58,42 @@ public class SplitPane extends JSplitPane implements ConfigChangeListener {
     /**
      * Instantiates a new snapping split pane. Defaults to using a horizontal
      * split, two null components and snapping to the left component.
+     *
+     * @param manager Config manager to read values from
      */
-    public SplitPane() {
-        this(Orientation.HORIZONTAL, null, null);
+    public SplitPane(final ConfigManager manager) {
+        this(manager, Orientation.HORIZONTAL, null, null);
     }
 
     /**
      * Instantiates a new snapping split pane. Defaults to using a horizontal
      * split, two null components and snapping to the left component.
      *
+     * @param manager Config manager to read values from
      * @param orientation Split pane orientation
      */
-    public SplitPane(final Orientation orientation) {
-        this(orientation, null, null);
+    public SplitPane(final ConfigManager manager, final Orientation orientation) {
+        this(manager, orientation, null, null);
     }
 
     /**
      * Instantiates a new snapping split pane. Defaults to using two null
      * components.
      *
+     * @param manager Config manager to read values from
      * @param orientation Split pane orientation
      * <code>JSplitPane.HORIZONTAL_SPLIT</code> or
      * <code>JSplitPane.VERTICAL_SPLIT</code>
      * @param leftComponent left component
      * @param rightComponent right component
      */
-    public SplitPane(final Orientation orientation,
+    public SplitPane(final ConfigManager manager, final Orientation orientation,
             final Component leftComponent, final Component rightComponent) {
         super((orientation.equals(Orientation.HORIZONTAL))
                 ? HORIZONTAL_SPLIT : VERTICAL_SPLIT,
                 true, leftComponent, rightComponent);
 
-        config = IdentityManager.getGlobalConfig();
+        config = manager;
         useOneTouchExpandable = config.getOptionBool(
                 "ui", "useOneTouchExpandable");
 

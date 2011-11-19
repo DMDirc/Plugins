@@ -38,7 +38,6 @@ import com.dmdirc.addons.ui_swing.framemanager.FrameManager;
 import com.dmdirc.addons.ui_swing.framemanager.FramemanagerPosition;
 import com.dmdirc.addons.ui_swing.framemanager.ctrltab.CtrlTabWindowManager;
 import com.dmdirc.addons.ui_swing.framemanager.tree.TreeFrameManager;
-import com.dmdirc.config.IdentityManager;
 import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.interfaces.FrameInfoListener;
 import com.dmdirc.interfaces.NotificationListener;
@@ -65,6 +64,7 @@ import javax.swing.MenuSelectionManager;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 
+import lombok.Getter;
 import net.miginfocom.swing.MigLayout;
 
 /**
@@ -107,6 +107,7 @@ public final class MainFrame extends JFrame implements WindowListener,
     /** Exit code. */
     private int exitCode = 0;
     /** Status bar. */
+    @Getter
     private SwingStatusBar statusBar;
     /** Main split pane. */
     private SplitPane mainSplitPane;
@@ -126,27 +127,27 @@ public final class MainFrame extends JFrame implements WindowListener,
         focusOrder = new QueuedLinkedHashSet<TextFrame>();
         initComponents();
 
-        imageIcon = new ImageIcon(new IconManager(IdentityManager
-                .getGlobalConfig()).getImage("icon"));
+        imageIcon = new ImageIcon(new IconManager(controller.getGlobalConfig())
+                .getImage("icon"));
         setIconImage(imageIcon.getImage());
 
         CoreUIUtils.centreWindow(this);
 
         addWindowListener(this);
 
-        showVersion = IdentityManager.getGlobalConfig().getOptionBool("ui",
+        showVersion = controller.getGlobalConfig().getOptionBool("ui",
                 "showversion");
-        version = IdentityManager.getGlobalConfig().getOption("version",
+        version = controller.getGlobalConfig().getOption("version",
                 "version");
-        IdentityManager.getGlobalConfig().addChangeListener("ui", "lookandfeel",
+        controller.getGlobalConfig().addChangeListener("ui", "lookandfeel",
                 this);
-        IdentityManager.getGlobalConfig().addChangeListener("ui", "showversion",
+        controller.getGlobalConfig().addChangeListener("ui", "showversion",
                 this);
-        IdentityManager.getGlobalConfig().addChangeListener("ui",
+        controller.getGlobalConfig().addChangeListener("ui",
                 "framemanager", this);
-        IdentityManager.getGlobalConfig().addChangeListener("ui",
+        controller.getGlobalConfig().addChangeListener("ui",
                 "framemanagerPosition", this);
-        IdentityManager.getGlobalConfig().addChangeListener("icon", "icon",
+        controller.getGlobalConfig().addChangeListener("icon", "icon",
                 this);
 
 
@@ -173,15 +174,6 @@ public final class MainFrame extends JFrame implements WindowListener,
 
         setTitle(getTitlePrefix());
         frameManager = new CtrlTabWindowManager(controller, this, rootPane);
-    }
-
-    /**
-     * Returns the status bar for this frame.
-     *
-     * @return Status bar
-     */
-    public SwingStatusBar getStatusBar() {
-        return statusBar;
     }
 
     /**
@@ -337,11 +329,11 @@ public final class MainFrame extends JFrame implements WindowListener,
                     controller.getWindowFactory().removeWindowListener(
                             mainFrameManager);
                 }
-                final String manager = IdentityManager.getGlobalConfig().
-                        getOption("ui", "framemanager");
+                final String manager = controller.getGlobalConfig()
+                        .getOption("ui", "framemanager");
                 try {
-                    mainFrameManager = (FrameManager) Class.forName(manager).
-                            getConstructor().newInstance();
+                    mainFrameManager = (FrameManager) Class.forName(manager)
+                            .getConstructor().newInstance();
                 } catch (InvocationTargetException ex) {
                     Logger.appError(ErrorLevel.MEDIUM, "Unable to load frame "
                             + "manager, falling back to default.", ex);
@@ -421,10 +413,10 @@ public final class MainFrame extends JFrame implements WindowListener,
      * @return Returns the initialised split pane
      */
     private SplitPane initSplitPane() {
-        final SplitPane splitPane = new SplitPane(SplitPane
-                .Orientation.HORIZONTAL);
-        position = FramemanagerPosition.getPosition(IdentityManager.
-                getGlobalConfig().getOption("ui", "framemanagerPosition"));
+        final SplitPane splitPane = new SplitPane(controller.getGlobalConfig(),
+                SplitPane.Orientation.HORIZONTAL);
+        position = FramemanagerPosition.getPosition(controller
+                .getGlobalConfig().getOption("ui", "framemanagerPosition"));
 
         if (position == FramemanagerPosition.UNKNOWN) {
             position = FramemanagerPosition.LEFT;
@@ -448,7 +440,7 @@ public final class MainFrame extends JFrame implements WindowListener,
                 splitPane.setResizeWeight(0.0);
                 splitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
                 frameManagerPanel.setPreferredSize(new Dimension(
-                        Integer.MAX_VALUE, IdentityManager.getGlobalConfig().
+                        Integer.MAX_VALUE, controller.getGlobalConfig().
                         getOptionInt("ui", "frameManagerSize")));
                 break;
             case LEFT:
@@ -457,7 +449,7 @@ public final class MainFrame extends JFrame implements WindowListener,
                 splitPane.setResizeWeight(0.0);
                 splitPane.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
                 frameManagerPanel.setPreferredSize(new Dimension(
-                        IdentityManager.getGlobalConfig().getOptionInt("ui",
+                        controller.getGlobalConfig().getOptionInt("ui",
                         "frameManagerSize"), Integer.MAX_VALUE));
                 break;
             case BOTTOM:
@@ -466,7 +458,7 @@ public final class MainFrame extends JFrame implements WindowListener,
                 splitPane.setResizeWeight(1.0);
                 splitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
                 frameManagerPanel.setPreferredSize(new Dimension(
-                        Integer.MAX_VALUE, IdentityManager.getGlobalConfig().
+                        Integer.MAX_VALUE, controller.getGlobalConfig().
                         getOptionInt("ui", "frameManagerSize")));
                 break;
             case RIGHT:
@@ -475,7 +467,7 @@ public final class MainFrame extends JFrame implements WindowListener,
                 splitPane.setResizeWeight(1.0);
                 splitPane.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
                 frameManagerPanel.setPreferredSize(new Dimension(
-                        IdentityManager.getGlobalConfig().getOptionInt("ui",
+                        controller.getGlobalConfig().getOptionInt("ui",
                         "frameManagerSize"), Integer.MAX_VALUE));
                 break;
             default:
@@ -498,7 +490,7 @@ public final class MainFrame extends JFrame implements WindowListener,
      * @param exitCode Exit code
      */
     public void quit(final int exitCode) {
-        if (exitCode == 0 && IdentityManager.getGlobalConfig().getOptionBool(
+        if (exitCode == 0 && controller.getGlobalConfig().getOptionBool(
                 "ui", "confirmQuit")) {
             final StandardQuestionDialog dialog = new ConfirmQuitDialog(this) {
 
@@ -538,9 +530,9 @@ public final class MainFrame extends JFrame implements WindowListener,
             protected Void doInBackground() {
                 ActionManager.getActionManager().triggerEvent(
                         CoreActionType.CLIENT_CLOSING, null);
-                ServerManager.getServerManager().closeAll(IdentityManager.
-                        getGlobalConfig().getOption("general", "closemessage"));
-                IdentityManager.getConfigIdentity().setOption("ui",
+                ServerManager.getServerManager().closeAll(controller
+                        .getGlobalConfig().getOption("general", "closemessage"));
+                controller.getGlobalIdentity().setOption("ui",
                         "frameManagerSize",
                         String.valueOf(getFrameManagerSize()));
                 return null;
@@ -577,12 +569,12 @@ public final class MainFrame extends JFrame implements WindowListener,
                     }
                 });
             } else {
-                showVersion = IdentityManager.getGlobalConfig().getOptionBool(
+                showVersion = controller.getGlobalConfig().getOptionBool(
                         "ui", "showversion");
             }
         } else {
-            imageIcon = new ImageIcon(new IconManager(IdentityManager
-                    .getGlobalConfig()).getImage("icon"));
+            imageIcon = new ImageIcon(new IconManager(controller
+                        .getGlobalConfig()).getImage("icon"));
             UIUtilities.invokeLater(new Runnable() {
 
                 /** {@inheritDoc} */
@@ -735,7 +727,7 @@ public final class MainFrame extends JFrame implements WindowListener,
         if (!quitting) {
             removeWindowListener(this);
         }
-        IdentityManager.getGlobalConfig().removeListener(this);
+        controller.getGlobalConfig().removeListener(this);
         super.dispose();
     }
 }

@@ -38,6 +38,7 @@ import com.dmdirc.addons.ui_swing.dialogs.serversetting.ServerSettingsDialog;
 import com.dmdirc.addons.ui_swing.dialogs.url.URLDialog;
 import com.dmdirc.addons.ui_swing.wizard.WizardListener;
 import com.dmdirc.addons.ui_swing.wizard.firstrun.SwingFirstRunWizard;
+import com.dmdirc.config.ConfigManager;
 import com.dmdirc.config.Identity;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
@@ -78,11 +79,13 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.UIManager.LookAndFeelInfo;
 
+import lombok.Getter;
 import net.miginfocom.layout.PlatformDefaults;
 
 /**
  * Controls the main swing UI.
  */
+@SuppressWarnings("PMD.UnusedPrivateField")
 public class SwingController extends BasePlugin implements UIController {
 
     /**
@@ -93,16 +96,20 @@ public class SwingController extends BasePlugin implements UIController {
     private static final long serialVersionUID = 1;
 
     /** Window factory. */
+    @Getter
     private final SwingWindowFactory windowFactory =
             new SwingWindowFactory(this);
     /** Waiting on mainframe creation. */
     private final AtomicBoolean mainFrameCreated = new AtomicBoolean(false);
     /** URL Handler to use. */
-    private final URLHandler urlHandler = new URLHandler(this);
+    @Getter
+    private final URLHandler URLHandler = new URLHandler(this);
     /** Singleton instance of MainFrame. */
-    private MainFrame me;
+    @Getter
+    private MainFrame mainFrame;
     /** Status bar. */
-    private SwingStatusBar statusBar;
+    @Getter
+    private SwingStatusBar swingStatusBar;
     /** Top level window list. */
     private final List<java.awt.Window> windows;
     /** Error dialog. */
@@ -113,6 +120,15 @@ public class SwingController extends BasePlugin implements UIController {
     private DialogKeyListener keyListener;
     /** This plugin's plugin info object. */
     private final PluginInfo pluginInfo;
+    /** Global config manager. */
+    @Getter
+    private final ConfigManager globalConfig;
+    /** Global config identity. */
+    @Getter
+    private final Identity globalIdentity;
+    /** Addon config identity. */
+    @Getter
+    private final Identity addonIdentity;
 
     /**
      * Instantiates a new SwingController.
@@ -122,6 +138,12 @@ public class SwingController extends BasePlugin implements UIController {
     public SwingController(final PluginInfo pluginInfo) {
         super();
         this.pluginInfo = pluginInfo;
+        globalConfig = IdentityManager.getIdentityManager()
+                .getGlobalConfiguration();
+        globalIdentity = IdentityManager.getIdentityManager()
+                .getGlobalConfigIdentity();
+        addonIdentity = IdentityManager.getIdentityManager()
+                .getGlobalAddonIdentity();
         setAntiAlias();
         windows = new ArrayList<java.awt.Window>();
         registerCommand(new ServerSettings(), ServerSettings.INFO);
@@ -136,8 +158,8 @@ public class SwingController extends BasePlugin implements UIController {
      */
     public final void setAntiAlias() {
         // For this to work it *HAS* to be before anything else UI related.
-        final boolean aaSetting = IdentityManager.getGlobalConfig().
-                getOptionBool("ui", "antialias");
+        final boolean aaSetting = getGlobalConfig()
+                .getOptionBool("ui", "antialias");
         System.setProperty("awt.useSystemAAFontSettings",
                 Boolean.toString(aaSetting));
         System.setProperty("swing.aatext", Boolean.toString(aaSetting));
@@ -150,44 +172,6 @@ public class SwingController extends BasePlugin implements UIController {
      */
     protected boolean hasMainFrame() {
         return mainFrameCreated.get();
-    }
-
-    /**
-     * Returns a URL Handler which may be used when working with the Swing UI.
-     *
-     * @return A URL handler for use with the swing UI
-     * @since 0.6.5
-     */
-    public URLHandler getURLHandler() {
-        return urlHandler;
-    }
-
-    /**
-     * Returns the window factory used by this controller.
-     *
-     * @return This controller's window factory
-     * @since 0.6.4
-     */
-    public SwingWindowFactory getWindowFactory() {
-        return windowFactory;
-    }
-
-    /**
-     * Retrieves the main window used by this UI.
-     *
-     * @return This UI's main window
-     */
-    public MainFrame getMainFrame() {
-        return me;
-    }
-
-    /**
-     * Retrieves the Swing Status Bar used by this UI.
-     *
-     * @return This UI's status bar
-     */
-    public SwingStatusBar getSwingStatusBar() {
-        return statusBar;
     }
 
     /** {@inheritDoc} */
@@ -213,8 +197,8 @@ public class SwingController extends BasePlugin implements UIController {
                         semaphore.release();
                     }
                 };
-                final SwingFirstRunWizard wizard = new SwingFirstRunWizard(me,
-                        SwingController.this);
+                final SwingFirstRunWizard wizard = new SwingFirstRunWizard(
+                        getMainFrame(), SwingController.this);
                 wizard.getWizardDialog().addWizardListener(listener);
                 wizard.display();
             }
@@ -230,9 +214,9 @@ public class SwingController extends BasePlugin implements UIController {
             /** {@inheritDoc} */
             @Override
             public void run() {
-                ChannelSettingsDialog.showChannelSettingsDialog(channel, me,
-                        (InputWindow) getWindowFactory().getSwingWindow(
-                        channel));
+                ChannelSettingsDialog.showChannelSettingsDialog(channel,
+                        getMainFrame(), (InputWindow) getWindowFactory()
+                        .getSwingWindow(channel));
             }
         });
     }
@@ -245,7 +229,8 @@ public class SwingController extends BasePlugin implements UIController {
             /** {@inheritDoc} */
             @Override
             public void run() {
-                ServerSettingsDialog.showServerSettingsDialog(server, me);
+                ServerSettingsDialog.showServerSettingsDialog(
+                        server, getMainFrame());
             }
         });
     }
@@ -255,7 +240,7 @@ public class SwingController extends BasePlugin implements UIController {
      */
     public void updateLookAndFeel() {
         try {
-            UIManager.setLookAndFeel(UIUtilities.getLookAndFeel(IdentityManager.
+            UIManager.setLookAndFeel(UIUtilities.getLookAndFeel(
                     getGlobalConfig().getOption("ui", "lookandfeel")));
             final int state = UIUtilities.invokeAndWait(
                     new ReturnableThread<Integer>() {
@@ -263,7 +248,7 @@ public class SwingController extends BasePlugin implements UIController {
                 /** {@inheritDoc} */
                 @Override
                 public void run() {
-                    setObject(me.getExtendedState());
+                    setObject(getMainFrame().getExtendedState());
                 }
             });
             UIUtilities.invokeLater(new Runnable() {
@@ -281,7 +266,7 @@ public class SwingController extends BasePlugin implements UIController {
                     @Override
                     public void run() {
                         SwingUtilities.updateComponentTreeUI(window);
-                        if (window != me) {
+                        if (window != getMainFrame()) {
                             window.pack();
                         }
                     }
@@ -292,7 +277,7 @@ public class SwingController extends BasePlugin implements UIController {
                 /** {@inheritDoc} */
                 @Override
                 public void run() {
-                    me.setExtendedState(state);
+                    getMainFrame().setExtendedState(state);
                 }
             });
         } catch (ClassNotFoundException ex) {
@@ -332,7 +317,7 @@ public class SwingController extends BasePlugin implements UIController {
 
         try {
             UIUtilities.initUISettings();
-            UIManager.setLookAndFeel(UIUtilities.getLookAndFeel(IdentityManager.
+            UIManager.setLookAndFeel(UIUtilities.getLookAndFeel(
                     getGlobalConfig().getOption("ui", "lookandfeel")));
         } catch (UnsupportedOperationException ex) {
             Logger.userError(ErrorLevel.LOW, "Unable to set UI Settings");
@@ -360,7 +345,7 @@ public class SwingController extends BasePlugin implements UIController {
             /** {@inheritDoc} */
             @Override
             public void run() {
-                URLDialog.showURLDialog(url, me, urlHandler);
+                URLDialog.showURLDialog(url, getMainFrame(), getURLHandler());
 
             }
         });
@@ -387,8 +372,8 @@ public class SwingController extends BasePlugin implements UIController {
             /** {@inheritDoc} */
             @Override
             public void run() {
-                new StandardMessageDialog(me, ModalityType.MODELESS, title,
-                        message).display();
+                new StandardMessageDialog(getMainFrame(), ModalityType.MODELESS,
+                        title, message).display();
             }
         });
     }
@@ -443,13 +428,13 @@ public class SwingController extends BasePlugin implements UIController {
             @Override
             public void run() {
                 initUISettings();
-                me = new MainFrame(SwingController.this);
-                me.setVisible(true);
+                mainFrame = new MainFrame(SwingController.this);
+                getMainFrame().setVisible(true);
                 mainFrameCreated.set(true);
-                statusBar = me.getStatusBar();
-                errorDialog = new ErrorListDialog(me);
+                swingStatusBar = getMainFrame().getStatusBar();
+                errorDialog = new ErrorListDialog(getMainFrame());
                 StatusBarManager.getStatusBarManager().registerStatusBar(
-                        statusBar);
+                        getSwingStatusBar());
             }
         });
 
@@ -467,9 +452,10 @@ public class SwingController extends BasePlugin implements UIController {
         errorDialog.dispose();
         WindowManager.getWindowManager().removeListener(windowFactory);
         mainFrameCreated.set(false);
-        me.dispose();
+        getMainFrame().dispose();
         windowFactory.dispose();
-        StatusBarManager.getStatusBarManager().registerStatusBar(statusBar);
+        StatusBarManager.getStatusBarManager()
+                .registerStatusBar(getSwingStatusBar());
         eventQueue.pop();
         KeyboardFocusManager.getCurrentKeyboardFocusManager().
                 removeKeyEventDispatcher(keyListener);
@@ -482,10 +468,9 @@ public class SwingController extends BasePlugin implements UIController {
     /** {@inheritDoc} */
     @Override
     public void domainUpdated() {
-        final Identity defaults = IdentityManager.getAddonIdentity();
-        defaults.setOption("ui", "textPaneFontName",
+        getAddonIdentity().setOption("ui", "textPaneFontName",
                 UIManager.getFont("TextPane.font").getFamily());
-        defaults.setOption("ui", "textPaneFontSize",
+        getAddonIdentity().setOption("ui", "textPaneFontSize",
                 UIManager.getFont("TextPane.font").getSize());
     }
 
@@ -741,7 +726,7 @@ public class SwingController extends BasePlugin implements UIController {
      * @param menuItem Menu item to add
      */
     public void addMenuItem(final String parentMenu, final JMenuItem menuItem) {
-        me.getJMenuBar().addMenuItem(parentMenu, menuItem);
+        getMainFrame().getJMenuBar().addMenuItem(parentMenu, menuItem);
     }
 
     /** {@inheritDoc} */
