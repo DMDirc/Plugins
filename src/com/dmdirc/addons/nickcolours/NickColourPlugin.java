@@ -277,27 +277,33 @@ public final class NickColourPlugin extends BasePlugin implements ActionListener
 
         general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
                 "ui", "shownickcoloursintext", "Show colours in text area",
-                "Colour nicknames in main text area?"));
+                "Colour nicknames in main text area?",
+                manager.getConfigManager(), manager.getIdentity()));
         general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
                 "ui", "shownickcoloursinnicklist", "Show colours in"
-                + " nick list", "Colour nicknames in channel nick lists?"));
+                + " nick list", "Colour nicknames in channel nick lists?",
+                manager.getConfigManager(), manager.getIdentity()));
         general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
                 getDomain(), "settext", "Set colours in textarea",
-                "Should the plugin set the textarea colour of nicks?"));
+                "Should the plugin set the textarea colour of nicks?",
+                manager.getConfigManager(), manager.getIdentity()));
         general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
                 getDomain(), "setnicklist", "Set colours in nick list",
-                "Should the plugin set the nick list colour of nicks?"));
+                "Should the plugin set the nick list colour of nicks?",
+                manager.getConfigManager(), manager.getIdentity()));
         general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
                 getDomain(), "userandomcolour", "Use random colour",
-                "Use a pseudo-random colour for each person?"));
+                "Use a pseudo-random colour for each person?",
+                manager.getConfigManager(), manager.getIdentity()));
         general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
                 getDomain(), "useowncolour", "Use colour for own nick",
-                "Always use the same colour for our own nickname?"));
+                "Always use the same colour for our own nickname?",
+                manager.getConfigManager(), manager.getIdentity()));
         general.addSetting(
                 new PreferencesSetting(PreferencesType.COLOUR, getDomain(),
                 "owncolour", "Colour to use for own nick",
                 "Colour used for our own nickname, if above setting is "
-                + "enabled."));
+                + "enabled.", manager.getConfigManager(), manager.getIdentity()));
 
         general.addSubCategory(colours);
         manager.getCategory("Plugins").addSubCategory(general);

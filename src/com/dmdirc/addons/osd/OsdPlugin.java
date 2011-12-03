@@ -83,24 +83,30 @@ public final class OsdPlugin extends BasePlugin implements
 
         fontSizeSetting = new PreferencesSetting(PreferencesType.INTEGER,
                 getDomain(), "fontSize", "Font size", "Changes the font " +
-                "size of the OSD").registerChangeListener(this);
+                "size of the OSD", manager.getConfigManager(),
+                manager.getIdentity()).registerChangeListener(this);
         backgroundSetting = new PreferencesSetting(PreferencesType.COLOUR,
                 getDomain(), "bgcolour", "Background colour",
-                "Background colour for the OSD").registerChangeListener(this);
+                "Background colour for the OSD", manager.getConfigManager(),
+                manager.getIdentity()).registerChangeListener(this);
         foregroundSetting = new PreferencesSetting(PreferencesType.COLOUR,
                 getDomain(), "fgcolour", "Foreground colour",
-                "Foreground colour for the OSD").registerChangeListener(this);
+                "Foreground colour for the OSD", manager.getConfigManager(),
+                manager.getIdentity()).registerChangeListener(this);
         widthSetting = new PreferencesSetting(PreferencesType.INTEGER,
-                getDomain(), "width", "OSD Width", "Width of the OSD Window").
-                registerChangeListener(this);
+                getDomain(), "width", "OSD Width", "Width of the OSD Window",
+                manager.getConfigManager(), manager.getIdentity())
+                .registerChangeListener(this);
         timeoutSetting = new PreferencesSetting(PreferencesType.OPTIONALINTEGER,
                 new OptionalValidator(new NumericalValidator(1, Integer.MAX_VALUE)),
                 getDomain(), "timeout", "Timeout", "Length of time in " +
-                "seconds before the OSD window closes");
+                "seconds before the OSD window closes", manager.getConfigManager(),
+                manager.getIdentity());
         maxWindowsSetting = new PreferencesSetting(PreferencesType.OPTIONALINTEGER,
                 new OptionalValidator(new NumericalValidator(1, Integer.MAX_VALUE)),
-                getDomain(), "maxWindows", "Maximum open windows", "Maximum number of OSD " +
-                "windows that will be displayed at any given time");
+                getDomain(), "maxWindows", "Maximum open windows",
+                "Maximum number of OSD windows that will be displayed at any given time",
+                manager.getConfigManager(), manager.getIdentity());
 
         category.addSetting(fontSizeSetting);
         category.addSetting(backgroundSetting);
@@ -118,7 +124,8 @@ public final class OsdPlugin extends BasePlugin implements
 
         category.addSetting(new PreferencesSetting(getDomain(), "newbehaviour",
                 "New window policy", "What to do when an OSD Window "
-                + "is opened when there are other, existing windows open", posOptions));
+                + "is opened when there are other, existing windows open",
+                posOptions, manager.getConfigManager(), manager.getIdentity()));
 
         category.addChangeListener(this);
         manager.getCategory("Plugins").addSubCategory(category);

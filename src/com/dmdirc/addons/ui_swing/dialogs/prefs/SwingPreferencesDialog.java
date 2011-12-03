@@ -110,7 +110,9 @@ public final class SwingPreferencesDialog extends StandardDialog implements
                             new PluginPanel(parentWindow, controller),
                             new ThemePanel(parentWindow, controller),
                             new UpdateConfigPanel(controller),
-                            new URLConfigPanel(parentWindow));
+                            new URLConfigPanel(controller, parentWindow),
+                            controller.getGlobalConfig(),
+                            controller.getGlobalIdentity());
                 } catch (IllegalArgumentException ex) {
                     mainPanel.setError(ex.getMessage());
                     Logger.appError(ErrorLevel.HIGH, "Unable to load the" +
@@ -183,7 +185,7 @@ public final class SwingPreferencesDialog extends StandardDialog implements
      * Initialises GUI components.
      */
     private void initComponents() {
-        mainPanel = new CategoryPanel(this);
+        mainPanel = new CategoryPanel(controller.getPrefsComponentFactory(), this);
 
         tabList = new JList(new DefaultListModel());
         tabList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);

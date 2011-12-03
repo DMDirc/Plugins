@@ -26,6 +26,7 @@ import com.dmdirc.addons.ui_swing.components.expandingsettings.SettingsPanel;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.addons.serverlists.ServerGroup;
 import com.dmdirc.addons.serverlists.ServerGroupItem;
+import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.config.ConfigManager;
 import com.dmdirc.config.Identity;
 import com.dmdirc.config.prefs.PreferencesManager;
@@ -59,14 +60,18 @@ public class Settings extends JPanel implements ServerListListener {
             new HashMap<ServerGroupItem, SettingsPanel>();
     /** Platform border. */
     private final Border border;
+    /** Swing controller. */
+    private final SwingController controller;
 
     /**
      * Instantiates a new settings panel.
      *
+     * @param controller Swing controller
      * @param model Backing model
      */
-    public Settings(final ServerListModel model) {
+    public Settings(final SwingController controller, final ServerListModel model) {
         super();
+        this.controller = controller;
         this.model = model;
         addListeners();
         border = UIManager.getBorder("TitledBorder.border");
@@ -111,14 +116,14 @@ public class Settings extends JPanel implements ServerListListener {
     private SettingsPanel getSettingsPanel(final ServerGroupItem item) {
         if (!panels.containsKey(item)) {
             if (item instanceof ServerGroup) {
-                panels.put(item, new SettingsPanel("", false));
+                panels.put(item, new SettingsPanel(controller, "", false));
                 addSettings(panels.get(item), new ConfigManager("irc", "",
                     item.getGroup().getNetwork(), item.getName()),
                     IdentityManager.getServerConfig(item.getName()));
             } else if (item == null) {
-                panels.put(null, new SettingsPanel("", false));
+                panels.put(null, new SettingsPanel(controller, "", false));
             } else {
-                panels.put(item, new SettingsPanel("", false));
+                panels.put(item, new SettingsPanel(controller, "", false));
             }
         }
         return panels.get(item);

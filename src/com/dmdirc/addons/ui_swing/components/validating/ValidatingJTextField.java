@@ -23,7 +23,6 @@
 package com.dmdirc.addons.ui_swing.components.validating;
 
 import com.dmdirc.addons.ui_swing.UIUtilities;
-import com.dmdirc.config.IdentityManager;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.util.validators.ValidationResponse;
 import com.dmdirc.util.validators.Validator;
@@ -65,25 +64,27 @@ public class ValidatingJTextField extends JComponent implements DocumentListener
     /**
      * Instantiates a new Validating text field.
      *
+     * @param iconManager Icon manager
      * @param validator Validator instance
      */
-    public ValidatingJTextField(final Validator<String> validator) {
-        this(new JTextField(), validator);
+    public ValidatingJTextField(final IconManager iconManager,
+            final Validator<String> validator) {
+        this(iconManager, new JTextField(), validator);
     }
 
     /**
      * Instantiates a new Validating text field.
      *
+     * @param iconManager Icon manager
      * @param textField JTextField to wrap
      * @param validator Validator instance
      */
-    public ValidatingJTextField(final JTextField textField,
-            final Validator<String> validator) {
+    public ValidatingJTextField(final IconManager iconManager,
+            final JTextField textField, final Validator<String> validator) {
         super();
         this.textField = textField;
         this.validator = validator;
-        errorIcon = new JLabel(new IconManager(IdentityManager
-                .getGlobalConfig()).getIcon("input-error"));
+        errorIcon = new JLabel(iconManager.getIcon("input-error"));
 
         setLayout(new MigLayout("fill, ins 0, hidemode 3, gap 0"));
         add(textField, "grow, pushx");

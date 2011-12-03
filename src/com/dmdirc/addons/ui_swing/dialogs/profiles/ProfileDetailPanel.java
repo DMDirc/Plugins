@@ -22,7 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.profiles;
 
-import com.dmdirc.addons.ui_swing.MainFrame;
+import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.reorderablelist.ReorderableJList;
 import com.dmdirc.addons.ui_swing.components.validating.NoDuplicatesInListValidator;
 import com.dmdirc.addons.ui_swing.components.validating.ValidatingJTextField;
@@ -67,8 +67,8 @@ public final class ProfileDetailPanel extends JPanel implements ActionListener,
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 2;
-    /** Main frame. */
-    private final MainFrame mainFrame;
+    /** Swing controller. */
+    private final SwingController controller;
     /** Parent window. */
     private final Window parentWindow;
     /** Displayed profile. */
@@ -102,14 +102,14 @@ public final class ProfileDetailPanel extends JPanel implements ActionListener,
      * Creates a new profile detail panel.
      *
      * @param model The list model to use to validate names
-     * @param mainFrame Main frame
+     * @param controller Swing controller
      * @param parentWindow Parent window
      */
     @SuppressWarnings("unchecked")
     public ProfileDetailPanel(final ProfileListModel model,
-            final MainFrame mainFrame, final Window parentWindow) {
+            final SwingController controller, final Window parentWindow) {
         super();
-        this.mainFrame = mainFrame;
+        this.controller = controller;
         this.parentWindow = parentWindow;
 
         this.model = model;
@@ -127,9 +127,12 @@ public final class ProfileDetailPanel extends JPanel implements ActionListener,
 
     /** Initialises the components in the main panel. */
     private void initMainComponents() {
-        name = new ValidatingJTextField(new ProfileNameValidator());
-        realname = new ValidatingJTextField(new NotEmptyValidator());
-        ident = new ValidatingJTextField(new IdentValidator());
+        name = new ValidatingJTextField(controller.getIconManager(),
+                new ProfileNameValidator());
+        realname = new ValidatingJTextField(controller.getIconManager(),
+                new NotEmptyValidator());
+        ident = new ValidatingJTextField(controller.getIconManager(),
+                new IdentValidator());
         nicknames = new ReorderableJList(nicknameModel);
 
         passBorder = nicknames.getBorder();
@@ -266,7 +269,8 @@ public final class ProfileDetailPanel extends JPanel implements ActionListener,
         if (e.getSource() == addButton) {
             final int index = nicknames.getSelectedIndex();
             nicknames.getSelectionModel().clearSelection();
-            new StandardInputDialog(ProfileManagerDialog.getProfileManagerDialog(mainFrame),
+            new StandardInputDialog(controller, ProfileManagerDialog
+                    .getProfileManagerDialog(controller),
                     ModalityType.DOCUMENT_MODAL, "New Nickname",
                     "Please enter the new nickname", validator) {
 
@@ -293,7 +297,7 @@ public final class ProfileDetailPanel extends JPanel implements ActionListener,
             }.display();
         } else if (e.getSource() == editButton) {
             final StandardInputDialog dialog = new StandardInputDialog(
-                    ProfileManagerDialog.getProfileManagerDialog(mainFrame),
+                    controller, ProfileManagerDialog.getProfileManagerDialog(controller),
                     ModalityType.DOCUMENT_MODAL, "Edit Nickname",
                     "Please enter the new nickname", validator) {
 

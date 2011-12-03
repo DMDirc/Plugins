@@ -32,6 +32,7 @@ import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
 import com.dmdirc.addons.ui_swing.dialogs.StringArrayComparator;
 import com.dmdirc.addons.ui_swing.dialogs.actioneditor.ActionEditorDialog;
 
+import com.dmdirc.ui.IconManager;
 import java.awt.Window;
 import java.awt.Dialog.ModalityType;
 import java.awt.event.ActionEvent;
@@ -81,16 +82,21 @@ public final class ActionsGroupPanel extends JPanel implements ActionListener,
     private JButton delete;
     /** Action group. */
     private ActionGroup group;
+    /** Prefs component factory. */
+    private IconManager iconManager;
 
     /**
      * Creates a new instance of ActionsManagerDialog.
      *
+     * @param iconManager Prefs component factory
      * @param parent Parent window
      * @param group Action group to display
      */
-    public ActionsGroupPanel(final Window parent, final ActionGroup group) {
+    public ActionsGroupPanel(final IconManager iconManager,
+            final Window parent, final ActionGroup group) {
         super();
 
+        this.iconManager = iconManager;
         this.parent = parent;
         this.group = group;
 
@@ -243,10 +249,11 @@ public final class ActionsGroupPanel extends JPanel implements ActionListener,
     @Override
     public void actionPerformed(final ActionEvent e) {
         if (e.getSource() == add) {
-            ActionEditorDialog.showActionEditorDialog(parent, group.getName());
+            ActionEditorDialog.showActionEditorDialog(iconManager, parent,
+                    group.getName());
         } else if (e.getSource() == edit) {
-            ActionEditorDialog.showActionEditorDialog(parent, group.getName(),
-                    model.getAction(
+            ActionEditorDialog.showActionEditorDialog(iconManager, parent,
+                    group.getName(), model.getAction(
                     table.getRowSorter().convertRowIndexToModel(table.
                     getSelectedRow())));
         } else if (e.getSource() == delete) {

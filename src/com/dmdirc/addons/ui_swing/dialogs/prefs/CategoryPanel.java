@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.prefs;
 
+import com.dmdirc.addons.ui_swing.PrefsComponentFactory;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
 import com.dmdirc.addons.ui_swing.components.TitlePanel;
@@ -76,26 +77,33 @@ public class CategoryPanel extends JPanel {
     private Map<PreferencesCategory, JPanel> panels;
     /** Category loading swing worker. */
     private LoggingSwingWorker worker;
+    /** Prefs component factory. */
+    private final PrefsComponentFactory factory;
 
     /**
      * Instantiates a new category panel.
      *
+     * @param factory Prefs component factory instance
      * @param parent Parent window
      */
-    public CategoryPanel(final SwingPreferencesDialog parent) {
-        this(parent, null);
+    public CategoryPanel(final PrefsComponentFactory factory,
+            final SwingPreferencesDialog parent) {
+        this(factory, parent, null);
     }
 
     /**
      * Instantiates a new category panel.
      *
+     * @param factory Prefs component factory instance
      * @param parent Parent window
      * @param category Initial category
      */
-    public CategoryPanel(final SwingPreferencesDialog parent,
+    public CategoryPanel(final PrefsComponentFactory factory,
+            final SwingPreferencesDialog parent,
             final PreferencesCategory category) {
         super(new MigLayout("fillx, wrap, ins 0"));
         this.parent = parent;
+        this.factory = factory;
 
         panels = Collections.synchronizedMap(
                 new HashMap<PreferencesCategory, JPanel>());
@@ -235,7 +243,7 @@ public class CategoryPanel extends JPanel {
                 }
             });
 
-            worker = new PrefsCategoryLoader(this, category);
+            worker = new PrefsCategoryLoader(factory, this, category);
             worker.executeInExecutor();
         } else {
             categoryLoaded(category);

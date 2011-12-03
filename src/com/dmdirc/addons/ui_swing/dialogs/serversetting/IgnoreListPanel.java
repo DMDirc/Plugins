@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_swing.dialogs.serversetting;
 
 import com.dmdirc.Server;
+import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialog;
 import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
@@ -64,6 +65,8 @@ public final class IgnoreListPanel extends JPanel implements ActionListener,
     private final Server server;
     /** Parent window. */
     private final Window parentWindow;
+    /** Swing controller. */
+    private final SwingController controller;
     /** Add button. */
     private JButton addButton;
     /** Remove button. */
@@ -82,12 +85,15 @@ public final class IgnoreListPanel extends JPanel implements ActionListener,
     /**
      * Creates a new instance of IgnoreList.
      *
+     * @param controller Swing controller
      * @param server Parent server
      * @param parentWindow Parent window
      */
-    public IgnoreListPanel(final Server server, final Window parentWindow) {
+    public IgnoreListPanel(final SwingController controller,
+            final Server server, final Window parentWindow) {
         super();
 
+        this.controller = controller;
         this.server = server;
         this.parentWindow = parentWindow;
 
@@ -97,7 +103,7 @@ public final class IgnoreListPanel extends JPanel implements ActionListener,
         populateList();
     }
 
-    /** Initialises teh components. */
+    /** Initialises the components. */
     private void initComponents() {
         cachedIgnoreList = new IgnoreList(server.getIgnoreList().getRegexList());
 
@@ -176,17 +182,18 @@ public final class IgnoreListPanel extends JPanel implements ActionListener,
     @Override
     public void actionPerformed(final ActionEvent e) {
         if (e.getSource() == addButton) {
-            new StandardInputDialog(parentWindow, ModalityType.MODELESS,
-                    "New ignore list entry",
+            new StandardInputDialog(controller, parentWindow,
+                    ModalityType.MODELESS, "New ignore list entry",
                     "Please enter the new ignore list entry",
                     viewToggle.isSelected() ? new ValidatorChain<String>(
                     new NotEmptyValidator(), new RegexValidator())
                     : new NotEmptyValidator()) {
 
                 /**
-                 * A version number for this class. It should be changed whenever the class
-                 * structure is changed (or anything else that would prevent serialized
-                 * objects being unserialized with the new class).
+                 * A version number for this class. It should be changed
+                 * whenever the class structure is changed (or anything else
+                 * that would prevent serialized objects being unserialized
+                 * with the new class).
                  */
                 private static final long serialVersionUID = 2;
 

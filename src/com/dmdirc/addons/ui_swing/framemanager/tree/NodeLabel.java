@@ -27,7 +27,6 @@ import com.dmdirc.addons.ui_swing.SelectionListener;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.ImageButton;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
-import com.dmdirc.config.IdentityManager;
 import com.dmdirc.interfaces.FrameInfoListener;
 import com.dmdirc.interfaces.NotificationListener;
 import com.dmdirc.ui.Colour;
@@ -93,7 +92,7 @@ public class NodeLabel extends JPanel implements SelectionListener,
      */
     private void init() {
         if (window == null) {
-            icon.setIcon(new IconManager(IdentityManager.getGlobalConfig())
+            icon.setIcon(new IconManager(window.getConfigManager())
                     .getIcon("icon"));
             return;
         }

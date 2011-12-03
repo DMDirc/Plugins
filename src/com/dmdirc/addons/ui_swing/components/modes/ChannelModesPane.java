@@ -23,7 +23,7 @@
 package com.dmdirc.addons.ui_swing.components.modes;
 
 import com.dmdirc.Channel;
-import com.dmdirc.config.ConfigManager;
+import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.parser.interfaces.Parser;
 
 /** Non list mode panel. */
@@ -37,15 +37,20 @@ public final class ChannelModesPane extends ModesPane {
     private static final long serialVersionUID = 1;
     /** Parent channel. */
     private final Channel channel;
+    /** Swing controller. */
+    private final SwingController controller;
 
     /**
      * Creates a new instance of ChannelModesPane.
      *
+     * @param controller Swing controller
      * @param channel Parent channel
      */
-    public ChannelModesPane(final Channel channel) {
+    public ChannelModesPane(final SwingController controller,
+            final Channel channel) {
         super();
 
+        this.controller = controller;
         this.channel = channel;
         initModesPanel();
     }
@@ -120,7 +125,7 @@ public final class ChannelModesPane extends ModesPane {
 
     /** {@inheritDoc} */
     @Override
-    public ConfigManager getConfigManager() {
-        return channel.getConfigManager();
+    public SwingController getSwingController() {
+        return controller;
     }
 }

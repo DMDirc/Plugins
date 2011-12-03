@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.prefs;
 
+import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.PackingTable;
 import com.dmdirc.addons.ui_swing.components.URLProtocolPanel;
 import com.dmdirc.addons.ui_swing.components.renderers.URIHandlerCellRenderer;
@@ -65,6 +66,8 @@ public class URLConfigPanel extends JPanel implements
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 1;
+    /** Swing controller. */
+    private final SwingController controller;
     /** Protocol list. */
     private PackingTable table;
     /** Table mode. */
@@ -89,11 +92,14 @@ public class URLConfigPanel extends JPanel implements
     /**
      * Instantiates a new URL config panel.
      *
+     * @param controller Swing controller
      * @param parentWindow Parent window
      */
-    public URLConfigPanel(final Window parentWindow) {
+    public URLConfigPanel(final SwingController controller,
+            final Window parentWindow) {
         super();
 
+        this.controller = controller;
         this.parentWindow = parentWindow;
 
         initComponents();
@@ -143,7 +149,7 @@ public class URLConfigPanel extends JPanel implements
 
         tableScrollPane.setViewportView(table);
 
-        final Set<String> options = IdentityManager.getGlobalConfig().
+        final Set<String> options = controller.getGlobalConfig().
                 getOptions("protocol").keySet();
 
         for (String option : options) {
@@ -261,8 +267,8 @@ public class URLConfigPanel extends JPanel implements
     @Override
     public void actionPerformed(final ActionEvent e) {
         if (e.getSource() == add) {
-            new StandardInputDialog(parentWindow, ModalityType.MODELESS,
-                    "New URL handler",
+            new StandardInputDialog(controller, parentWindow,
+                    ModalityType.MODELESS, "New URL handler",
                     "Please enter the name of the new protocol.",
                     new URLProtocolValidator()) {
 

@@ -27,6 +27,7 @@ import com.dmdirc.actions.ConditionTree;
 import com.dmdirc.actions.ConditionTreeFactory.ConditionTreeFactoryType;
 import com.dmdirc.interfaces.actions.ActionType;
 
+import com.dmdirc.ui.IconManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
@@ -64,20 +65,29 @@ public class ActionConditionsPanel extends JPanel implements ActionListener,
     private boolean treeValidates = true;
     /** list validates? */
     private boolean listValidates = true;
+    /** Icon manager. */
+    private IconManager iconManager;
 
-    /** Instantiates the panel. */
-    public ActionConditionsPanel() {
-        this(null);
+    /**
+     * Instantiates the panel.
+     *
+     * @param iconManager Icon manager
+     */
+    public ActionConditionsPanel(final IconManager iconManager) {
+        this(iconManager, null);
     }
 
     /**
      * Instantiates the panel.
      *
+     * @param iconManager Icon manager
      * @param trigger Action trigger
      */
-    public ActionConditionsPanel(final ActionType trigger) {
+    public ActionConditionsPanel(final IconManager iconManager,
+            final ActionType trigger) {
         super();
 
+        this.iconManager = iconManager;
         initComponents();
         addListeners();
         layoutComponents();
@@ -95,7 +105,7 @@ public class ActionConditionsPanel extends JPanel implements ActionListener,
 
     /** Initialises the components. */
     private void initComponents() {
-        tree = new ActionConditionsTreePanel();
+        tree = new ActionConditionsTreePanel(iconManager);
         list = new ActionConditionsListPanel(tree);
         add = new JButton("Add");
     }

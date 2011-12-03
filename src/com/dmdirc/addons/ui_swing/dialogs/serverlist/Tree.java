@@ -25,6 +25,7 @@ package com.dmdirc.addons.ui_swing.dialogs.serverlist;
 import com.dmdirc.addons.ui_swing.components.TreeScroller;
 import com.dmdirc.addons.ui_swing.components.renderers.ServerGroupTreeRenderer;
 import com.dmdirc.addons.serverlists.ServerGroupItem;
+import com.dmdirc.ui.IconManager;
 
 import java.awt.Rectangle;
 import java.awt.Window;
@@ -69,16 +70,21 @@ public class Tree extends JPanel implements TreeSelectionListener,
     private final JButton addItemButton;
     /** Parent window. */
     private final Window parentWindow;
+    /** Icon manager. */
+    private final IconManager iconManager;
 
     /**
      * Instantiates a new tree of server groups.
      *
+     * @param iconManager Icon Manager
      * @param model Model backing this tree
      * @param parentWindow Dialog's parent window
      */
-    public Tree(final ServerListModel model, final Window parentWindow) {
+    public Tree(final IconManager iconManager, final ServerListModel model,
+            final Window parentWindow) {
         super();
 
+        this.iconManager = iconManager;
         this.model = model;
         this.parentWindow = parentWindow;
         addGroupButton = new JButton("Add group");
@@ -193,9 +199,9 @@ public class Tree extends JPanel implements TreeSelectionListener,
     @Override
     public void actionPerformed(final ActionEvent e) {
         if (e.getSource() == addGroupButton) {
-            new AddGroupInputDialog(parentWindow, items, model).display();
+            new AddGroupInputDialog(iconManager, parentWindow, items, model).display();
         } else {
-            new AddEntryInputDialog(parentWindow, items, model).display();
+            new AddEntryInputDialog(iconManager, parentWindow, items, model).display();
         }
     }
 

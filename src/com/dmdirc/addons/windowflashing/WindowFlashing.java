@@ -128,17 +128,21 @@ public class WindowFlashing extends BasePlugin implements ConfigChangeListener {
                 PreferencesType.OPTIONALINTEGER, getDomain(), "blinkrate",
                 "Blink rate", "Specifies the rate at which the taskbar and or "
                 + "caption will blink, if unspecified this will be your cursor "
-                + "blink rate."));
+                + "blink rate.",
+                manager.getConfigManager(), manager.getIdentity()));
         category.addSetting(new PreferencesSetting(
                 PreferencesType.OPTIONALINTEGER, getDomain(), "flashcount",
                 "Flash count", "Specifies the number of times to blink, if "
-                + "unspecified this will blink indefinitely"));
+                + "unspecified this will blink indefinitely",
+                manager.getConfigManager(), manager.getIdentity()));
         category.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
                 getDomain(), "flashtaskbar", "Flash taskbar",
-                "Should the taskbar entry flash?"));
+                "Should the taskbar entry flash?",
+                manager.getConfigManager(), manager.getIdentity()));
         category.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
                 getDomain(), "flashcaption", "Flash caption",
-                "Should the window caption flash?"));
+                "Should the window caption flash?",
+                manager.getConfigManager(), manager.getIdentity()));
 
         manager.addCategory(category);
     }

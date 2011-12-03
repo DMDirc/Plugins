@@ -195,19 +195,24 @@ public final class FreeDesktopNotificationsPlugin
 
         general.addSetting(new PreferencesSetting(PreferencesType.INTEGER,
                 getDomain(), "general.timeout", "Timeout",
-                "Length of time in seconds before the notification popup closes."));
+                "Length of time in seconds before the notification popup closes.",
+                manager.getConfigManager(), manager.getIdentity()));
         general.addSetting(new PreferencesSetting(PreferencesType.FILE,
                 getDomain(), "general.icon", "icon",
-                "Path to icon to use on the notification."));
+                "Path to icon to use on the notification.",
+                manager.getConfigManager(), manager.getIdentity()));
         general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
                 getDomain(), "advanced.escapehtml", "Escape HTML",
-                "Some Implementations randomly parse HTML, escape it before showing?"));
+                "Some Implementations randomly parse HTML, escape it before showing?",
+                manager.getConfigManager(), manager.getIdentity()));
         general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
                 getDomain(), "advanced.strictescape", "Strict Escape HTML",
-                "Strictly escape HTML or just the basic characters? (&, < and >)"));
+                "Strictly escape HTML or just the basic characters? (&, < and >)",
+                manager.getConfigManager(), manager.getIdentity()));
         general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
                 getDomain(), "advanced.stripcodes", "Strip Control Codes",
-                "Strip IRC Control codes from messages?"));
+                "Strip IRC Control codes from messages?",
+                manager.getConfigManager(), manager.getIdentity()));
 
         manager.getCategory("Plugins").addSubCategory(general);
     }

@@ -24,7 +24,6 @@ package com.dmdirc.addons.ui_swing.components.statusbar;
 
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SwingController;
-import com.dmdirc.config.IdentityManager;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.ErrorListener;
 import com.dmdirc.logger.ErrorManager;
@@ -58,8 +57,7 @@ public class ErrorPanel extends StatusbarPopupPanel<JLabel> implements
      */
     private static final long serialVersionUID = 2;
     /** non error state image icon. */
-    private static final Icon DEFAULT_ICON = new IconManager(IdentityManager
-            .getGlobalConfig()).getIcon("normal");
+    private final Icon DEFAULT_ICON;
     /** Status controller. */
     private final MainFrame mainFrame;
     /** Swing status bar. */
@@ -79,7 +77,7 @@ public class ErrorPanel extends StatusbarPopupPanel<JLabel> implements
     private ErrorLevel errorLevel;
 
     /**
-     * Creates a new ErrorPanel for the speicified status bar.
+     * Creates a new ErrorPanel for the specified status bar.
      *
      * @param controller Swing controller
      * @param mainFrame Main frame
@@ -92,6 +90,8 @@ public class ErrorPanel extends StatusbarPopupPanel<JLabel> implements
         this.controller = controller;
         this.mainFrame = mainFrame;
         this.statusBar = statusBar;
+        DEFAULT_ICON = new IconManager(controller.getGlobalConfig())
+                .getIcon("normal");
 
         menu = new JPopupMenu();
         dismiss = new JMenuItem("Clear All");
@@ -153,7 +153,7 @@ public class ErrorPanel extends StatusbarPopupPanel<JLabel> implements
                         if (errorLevel == null ||
                                 !error.getLevel().moreImportant(errorLevel)) {
                             errorLevel = error.getLevel();
-                            label.setIcon(new IconManager(IdentityManager
+                            label.setIcon(new IconManager(controller
                                     .getGlobalConfig()).getIcon(errorLevel
                                     .getIcon()));
                         }
