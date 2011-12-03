@@ -554,6 +554,12 @@ public class XmppParser extends BaseSocketAwareParser {
         }
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public void requestGroupList(final String searchTerms) {
+        // Do nothing
+    }
+
     private class ConnectionListenerImpl implements ConnectionListener {
 
         /** {@inheritDoc} */
