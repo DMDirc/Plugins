@@ -22,9 +22,9 @@
 
 package com.dmdirc.addons.ui_swing.components.inputfields;
 
+import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.colours.ColourPickerDialog;
 import com.dmdirc.addons.ui_swing.components.validating.ValidatingJTextField;
-import com.dmdirc.config.IdentityManager;
 import com.dmdirc.interfaces.ui.InputField;
 import com.dmdirc.util.validators.Validator;
 
@@ -46,28 +46,33 @@ public class ValidatingTextFieldInputField extends ValidatingJTextField
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 2;
-
     /** Colour picker. */
-    protected ColourPickerDialog colourPicker;
+    private ColourPickerDialog colourPicker;
+    /** Swing controller. */
+    private final SwingController controller;
 
     /**
      * Creates a new text field with the specified validator.
      *
+     * @param controller Swing controller
      * @param validator Validator for this textfield
      */
-    public ValidatingTextFieldInputField(final Validator<String> validator) {
-        super(validator);
+    public ValidatingTextFieldInputField(final SwingController controller,
+            final Validator<String> validator) {
+        this(controller, new JTextField(), validator);
     }
 
     /**
      * Creates a new text field with the specified validator.
      *
+     * @param controller Swing controller
      * @param validator Validator for this textfield
      * @param textField Textfield to use as a base
      */
-    public ValidatingTextFieldInputField(final JTextField textField,
-            final Validator<String> validator) {
-        super(textField, validator);
+    public ValidatingTextFieldInputField(final SwingController controller,
+            final JTextField textField, final Validator<String> validator) {
+        super(controller.getIconManager(), textField, validator);
+        this.controller = controller;
     }
 
     /** {@inheritDoc} */
@@ -85,7 +90,7 @@ public class ValidatingTextFieldInputField extends ValidatingJTextField
     /** {@inheritDoc} */
     @Override
     public void showColourPicker(final boolean irc, final boolean hex) {
-        if (IdentityManager.getGlobalConfig().getOptionBool("general",
+        if (controller.getGlobalConfig().getOptionBool("general",
                 "showcolourdialog")) {
             colourPicker = new ColourPickerDialog(irc, hex);
             colourPicker.addActionListener(new ActionListener() {

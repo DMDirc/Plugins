@@ -98,7 +98,7 @@ public class ChannelMenu extends JMenu implements ActionListener,
     @Override
     public void actionPerformed(final ActionEvent e) {
         if (e.getActionCommand().equals("JoinChannel")) {
-            new ChannelJoinDialog(mainFrame, ModalityType.MODELESS,
+            new ChannelJoinDialog(controller, ModalityType.MODELESS,
                     "Join channel", "Enter the name of the channel to join.")
                     .display();
         } else if (e.getActionCommand().equals("ChannelSettings")) {

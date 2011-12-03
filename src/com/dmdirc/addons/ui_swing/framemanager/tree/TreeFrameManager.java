@@ -28,7 +28,6 @@ import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.TreeScroller;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.addons.ui_swing.framemanager.FrameManager;
-import com.dmdirc.config.IdentityManager;
 import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.interfaces.FrameInfoListener;
 import com.dmdirc.interfaces.NotificationListener;
@@ -133,22 +132,23 @@ public final class TreeFrameManager implements FrameManager,
 
             @Override
             public void run() {
-                model = new TreeViewModel(new TreeViewNode(null, null));
+                model = new TreeViewModel(controller, new TreeViewNode(null,
+                        null));
                 tree = new Tree(TreeFrameManager.this, model,
                         TreeFrameManager.this.controller);
                 tree.setCellRenderer(new TreeViewTreeCellRenderer(
                         TreeFrameManager.this));
                 tree.setVisible(true);
 
-                IdentityManager.getGlobalConfig().addChangeListener("treeview",
+                controller.getGlobalConfig().addChangeListener("treeview",
                         TreeFrameManager.this);
-                IdentityManager.getGlobalConfig().addChangeListener("ui",
+                controller.getGlobalConfig().addChangeListener("ui",
                         "sortrootwindows", TreeFrameManager.this);
-                IdentityManager.getGlobalConfig().addChangeListener("ui",
+                controller.getGlobalConfig().addChangeListener("ui",
                         "sortchildwindows", TreeFrameManager.this);
-                IdentityManager.getGlobalConfig().addChangeListener("ui",
+                controller.getGlobalConfig().addChangeListener("ui",
                         "backgroundcolour", TreeFrameManager.this);
-                IdentityManager.getGlobalConfig().addChangeListener("ui",
+                controller.getGlobalConfig().addChangeListener("ui",
                         "foregroundcolour", TreeFrameManager.this);
             }
         });
@@ -272,11 +272,11 @@ public final class TreeFrameManager implements FrameManager,
     /** Sets treeview colours. */
     private void setColours() {
         tree.setBackground(UIUtilities.convertColour(
-                IdentityManager.getGlobalConfig().getOptionColour(
+                controller.getGlobalConfig().getOptionColour(
                 "treeview", "backgroundcolour",
                 "ui", "backgroundcolour")));
         tree.setForeground(UIUtilities.convertColour(
-                IdentityManager.getGlobalConfig().getOptionColour(
+                controller.getGlobalConfig().getOptionColour(
                 "treeview", "foregroundcolour",
                 "ui", "foregroundcolour")));
 

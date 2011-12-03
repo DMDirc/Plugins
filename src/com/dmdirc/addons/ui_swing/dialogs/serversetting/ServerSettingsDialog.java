@@ -25,6 +25,7 @@ package com.dmdirc.addons.ui_swing.dialogs.serversetting;
 import com.dmdirc.addons.ui_swing.components.modes.UserModesPane;
 import com.dmdirc.Server;
 import com.dmdirc.ServerState;
+import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.expandingsettings.SettingsPanel;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
@@ -57,6 +58,10 @@ public final class ServerSettingsDialog extends StandardDialog implements Action
     private static volatile ServerSettingsDialog me;
     /** Parent server. */
     private final Server server;
+    /** Parent window. */
+    private final Window parentWindow;
+    /** Swing controller. */
+    private final SwingController controller;
     /** User modes panel. */
     private UserModesPane modesPanel;
     /** Ignore list panel. */
@@ -67,18 +72,19 @@ public final class ServerSettingsDialog extends StandardDialog implements Action
     private SettingsPanel settingsPanel;
     /** The tabbed pane. */
     private JTabbedPane tabbedPane;
-    /** Parent window. */
-    private final Window parentWindow;
 
     /**
      * Creates a new instance of ServerSettingsDialog.
      *
+     * @param controller Swing controller
      * @param server The server object that we're editing settings for
      * @param parentWindow Parent window
      */
-    private ServerSettingsDialog(final Server server, final Window parentWindow) {
+    private ServerSettingsDialog(final SwingController controller,
+            final Server server, final Window parentWindow) {
         super(parentWindow, ModalityType.MODELESS);
 
+        this.controller = controller;
         this.server = server;
         this.parentWindow = parentWindow;
 
@@ -92,12 +98,14 @@ public final class ServerSettingsDialog extends StandardDialog implements Action
     /**
      * Creates the dialog if one doesn't exist, and displays it.
      *
+     * @param controller Swing controller
      * @param server The server object that we're editing settings for
      * @param parentWindow Parent window
      */
-    public static void showServerSettingsDialog(final Server server,
+    public static void showServerSettingsDialog(
+            final SwingController controller,final Server server,
             final Window parentWindow) {
-        me = getServerSettingsDialog(server, parentWindow);
+        me = getServerSettingsDialog(controller, server, parentWindow);
 
         me.display();
         me.requestFocusInWindow();
@@ -106,16 +114,18 @@ public final class ServerSettingsDialog extends StandardDialog implements Action
     /**
      * Returns the current instance of the ServerSettingsDialog.
      *
+     * @param controller Swing controller
      * @param server The server object that we're editing settings for
      * @param parentWindow Parent window
      *
      * @return The current ServerSettingsDialog instance
      */
     public static ServerSettingsDialog getServerSettingsDialog(
+            final SwingController controller,
             final Server server, final Window parentWindow) {
         synchronized (ServerSettingsDialog.class) {
             if (me == null) {
-                me = new ServerSettingsDialog(server, parentWindow);
+                me = new ServerSettingsDialog(controller, server, parentWindow);
             }
         }
 
@@ -139,18 +149,18 @@ public final class ServerSettingsDialog extends StandardDialog implements Action
 
         tabbedPane = new JTabbedPane();
 
-        modesPanel = new UserModesPane(server);
+        modesPanel = new UserModesPane(controller, server);
 
         ignoreList =
-                new IgnoreListPanel(server, parentWindow);
+                new IgnoreListPanel(controller, server, parentWindow);
 
         performPanel =
                 new PerformTab(server);
 
         settingsPanel =
-                new SettingsPanel("These settings are specific to this " +
-                "network, any settings specified here will overwrite global " +
-                "settings");
+                new SettingsPanel(controller, "These settings are specific to "
+                        + "this network, any settings specified here will "
+                        + "overwrite global settings");
 
         if (settingsPanel != null) {
             addSettings();

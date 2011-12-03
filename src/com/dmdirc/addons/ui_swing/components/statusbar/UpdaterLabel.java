@@ -22,12 +22,11 @@
 
 package com.dmdirc.addons.ui_swing.components.statusbar;
 
-import com.dmdirc.addons.ui_swing.MainFrame;
+import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.dialogs.updater.SwingRestartDialog;
 import com.dmdirc.addons.ui_swing.dialogs.updater.SwingUpdaterDialog;
-import com.dmdirc.config.IdentityManager;
-import com.dmdirc.ui.IconManager;
 import com.dmdirc.interfaces.ui.StatusBarComponent;
+import com.dmdirc.ui.IconManager;
 import com.dmdirc.updater.UpdateChecker;
 import com.dmdirc.updater.UpdateChecker.STATE;
 import com.dmdirc.updater.UpdateCheckerListener;
@@ -37,6 +36,8 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
+
+import lombok.Getter;
 
 /**
  * Updater label is responsible for handling the display of updates in the
@@ -52,17 +53,19 @@ public class UpdaterLabel extends StatusbarPopupPanel<JLabel> implements
      */
     private static final long serialVersionUID = 1;
     /** Swing controller. */
-    private final MainFrame mainFrame;
+    @Getter
+    private final SwingController controller;
 
     /**
-     * Instantiates a new updater label, handles showing updates on the status bar.
+     * Instantiates a new updater label, handles showing updates on the status
+     * bar.
      *
-     * @param mainFrame Main frame
+     * @param controller Swing controller
      */
-    public UpdaterLabel(final MainFrame mainFrame) {
+    public UpdaterLabel(final SwingController controller) {
         super(new JLabel());
 
-        this.mainFrame = mainFrame;
+        this.controller = controller;
         setBorder(BorderFactory.createEtchedBorder());
         UpdateChecker.addListener(this);
         setVisible(false);
@@ -79,11 +82,14 @@ public class UpdaterLabel extends StatusbarPopupPanel<JLabel> implements
         super.mouseClicked(mouseEvent);
 
         if (mouseEvent.getButton() == MouseEvent.BUTTON1) {
-            if (UpdateChecker.getStatus().equals(UpdateChecker.STATE.RESTART_REQUIRED)) {
-                SwingRestartDialog.showSwingRestartDialog(mainFrame, ModalityType.MODELESS);
-            } else if (!UpdateChecker.getStatus().equals(UpdateChecker.STATE.CHECKING)) {
-                SwingUpdaterDialog.showSwingUpdaterDialog(
-                        UpdateChecker.getAvailableUpdates(), mainFrame);
+            if (UpdateChecker.getStatus().equals(
+                    UpdateChecker.STATE.RESTART_REQUIRED)) {
+                SwingRestartDialog.showSwingRestartDialog(controller
+                        .getMainFrame(), ModalityType.MODELESS);
+            } else if (!UpdateChecker.getStatus().equals(
+                    UpdateChecker.STATE.CHECKING)) {
+                SwingUpdaterDialog.showSwingUpdaterDialog(UpdateChecker
+                        .getAvailableUpdates(), controller.getMainFrame());
             }
         }
     }
@@ -98,13 +104,13 @@ public class UpdaterLabel extends StatusbarPopupPanel<JLabel> implements
         }
 
         if (newStatus.equals(STATE.CHECKING)) {
-            label.setIcon(new IconManager(IdentityManager.getGlobalConfig())
+            label.setIcon(new IconManager(controller.getGlobalConfig())
                     .getIcon("hourglass"));
         } else if (newStatus.equals(STATE.UPDATES_AVAILABLE)) {
-            label.setIcon(new IconManager(IdentityManager.getGlobalConfig())
+            label.setIcon(new IconManager(controller.getGlobalConfig())
                     .getIcon("update"));
         } else if (newStatus.equals(STATE.RESTART_REQUIRED)) {
-            label.setIcon(new IconManager(IdentityManager.getGlobalConfig())
+            label.setIcon(new IconManager(controller.getGlobalConfig())
                     .getIcon("restart-needed"));
         }
     }
@@ -112,6 +118,6 @@ public class UpdaterLabel extends StatusbarPopupPanel<JLabel> implements
     /** {@inheritDoc} */
     @Override
     protected StatusbarPopupWindow getWindow() {
-        return new UpdaterPopup(this, mainFrame);
+        return new UpdaterPopup(this, controller.getMainFrame());
     }
 }

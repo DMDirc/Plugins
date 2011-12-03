@@ -23,7 +23,7 @@
 package com.dmdirc.addons.ui_swing.components.modes;
 
 import com.dmdirc.Server;
-import com.dmdirc.config.ConfigManager;
+import com.dmdirc.addons.ui_swing.SwingController;
 
 /** User mode panel. */
 public final class UserModesPane extends ModesPane {
@@ -36,15 +36,20 @@ public final class UserModesPane extends ModesPane {
     private static final long serialVersionUID = 1;
     /** Parent server. */
     private final Server server;
+    /** Swing controller. */
+    private final SwingController controller;
 
     /**
      * Creates a new instance of UserModesPane.
      *
+     * @param controller Swing controller
      * @param server Parent server
      */
-    public UserModesPane(final Server server) {
+    public UserModesPane(final SwingController controller,
+            final Server server) {
         super();
 
+        this.controller = controller;
         this.server = server;
         initModesPanel();
     }
@@ -113,7 +118,7 @@ public final class UserModesPane extends ModesPane {
 
     /** {@inheritDoc} */
     @Override
-    public ConfigManager getConfigManager() {
-        return server.getConfigManager();
+    public SwingController getSwingController() {
+        return controller;
     }
 }

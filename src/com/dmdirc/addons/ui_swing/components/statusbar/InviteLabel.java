@@ -27,16 +27,15 @@ import com.dmdirc.Server;
 import com.dmdirc.ServerManager;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionType;
-import com.dmdirc.interfaces.actions.ActionType;
-import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SelectionListener;
+import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
-import com.dmdirc.config.IdentityManager;
 import com.dmdirc.interfaces.ActionListener;
 import com.dmdirc.interfaces.InviteListener;
-import com.dmdirc.ui.IconManager;
+import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.interfaces.ui.StatusBarComponent;
+import com.dmdirc.ui.IconManager;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
@@ -68,23 +67,23 @@ public class InviteLabel extends StatusbarPopupPanel<JLabel> implements
     private final JMenuItem dismiss;
     /** Accept invites menu item. */
     private final JMenuItem accept;
-    /** Parent window. */
-    private final MainFrame mainFrame;
+    /** Swing controller. */
+    private final SwingController controller;
     /** Active server. */
     private Server activeServer;
 
     /**
      * Instantiates a new invite label.
      *
-     * @param mainFrame Parent window
+     * @param controller Swing controller
      */
-    public InviteLabel(final MainFrame mainFrame) {
+    public InviteLabel(final SwingController controller) {
         super(new JLabel());
 
-        this.mainFrame = mainFrame;
+        this.controller = controller;
 
         setBorder(BorderFactory.createEtchedBorder());
-        label.setIcon(new IconManager(IdentityManager.getGlobalConfig())
+        label.setIcon(new IconManager(controller.getGlobalConfig())
                 .getIcon("invite"));
 
         menu = new JPopupMenu();
@@ -99,7 +98,7 @@ public class InviteLabel extends StatusbarPopupPanel<JLabel> implements
             server.addInviteListener(this);
         }
 
-        mainFrame.addSelectionListener(this);
+        controller.getMainFrame().addSelectionListener(this);
         ActionManager.getActionManager().registerListener(this,
                 CoreActionType.SERVER_CONNECTED);
         ActionManager.getActionManager().registerListener(this,
@@ -113,11 +112,11 @@ public class InviteLabel extends StatusbarPopupPanel<JLabel> implements
     /** {@inheritDoc} */
     @Override
     protected StatusbarPopupWindow getWindow() {
-        return new InvitePopup(this, activeServer, mainFrame);
+        return new InvitePopup(this, activeServer, controller.getMainFrame());
     }
 
     /**
-     * Popuplates the menu.
+     * Populates the menu.
      */
     private void popuplateMenu() {
         menu.removeAll();

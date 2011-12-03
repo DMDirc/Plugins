@@ -61,27 +61,34 @@ public final class ActionGroupSettingsPanel extends JPanel implements ActionList
     private Map<JButton, PreferencesSetting> settingMap;
     /** Parent dialog. */
     private Window window;
+    /** Prefs component factory. */
+    private PrefsComponentFactory factory;
 
     /**
      * Initialises a new action group information panel.
      *
+     * @param factory Prefs component factory
      * @param group Action group
      */
-    public ActionGroupSettingsPanel(final ActionGroup group) {
-        this(group, null);
+    public ActionGroupSettingsPanel(final PrefsComponentFactory factory,
+            final ActionGroup group) {
+        this(factory, group, null);
     }
 
     /**
      * Initialises a new action group information panel.
      *
+     * @param factory Prefs component factory
      * @param group Action group
      * @param window Parent window
      *
      * @since 0.6
      */
-    public ActionGroupSettingsPanel(final ActionGroup group, final Window window) {
+    public ActionGroupSettingsPanel(final PrefsComponentFactory factory,
+            final ActionGroup group, final Window window) {
         super();
 
+        this.factory = factory;
         this.window = window;
 
         initComponents();
@@ -114,8 +121,7 @@ public final class ActionGroupSettingsPanel extends JPanel implements ActionList
         for (PreferencesSetting setting : settings) {
             final JLabel label = new JLabel(setting.getTitle());
             label.setToolTipText(setting.getTitle());
-            final JComponent component =
-                    PrefsComponentFactory.getComponent(setting);
+            final JComponent component = factory.getComponent(setting);
 
             if (component instanceof DurationDisplay) {
                 ((DurationDisplay) component).setWindow(window);

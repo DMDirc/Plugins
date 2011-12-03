@@ -745,42 +745,50 @@ public final class DCCPlugin extends BasePlugin implements ActionListener {
 
         firewall.addSetting(new PreferencesSetting(PreferencesType.TEXT,
                 getDomain(), "firewall.ip", "Forced IP",
-                "What IP should be sent as our IP (Blank = work it out)"));
+                "What IP should be sent as our IP (Blank = work it out)",
+                manager.getConfigManager(), manager.getIdentity()));
         firewall.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
                 getDomain(), "firewall.ports.usePortRange", "Use Port Range",
                 "Useful if you have a firewall that only forwards specific "
-                + "ports"));
+                + "ports", manager.getConfigManager(), manager.getIdentity()));
         firewall.addSetting(new PreferencesSetting(PreferencesType.INTEGER,
                 getDomain(), "firewall.ports.startPort", "Start Port",
-                "Port to try to listen on first"));
+                "Port to try to listen on first", manager.getConfigManager(),
+                manager.getIdentity()));
         firewall.addSetting(new PreferencesSetting(PreferencesType.INTEGER,
                 getDomain(), "firewall.ports.endPort", "End Port",
-                "Port to try to listen on last"));
+                "Port to try to listen on last", manager.getConfigManager(),
+                manager.getIdentity()));
         receiving.addSetting(new PreferencesSetting(PreferencesType.DIRECTORY,
                 getDomain(), "receive.savelocation", "Default save location",
-                "Where the save as window defaults to?"));
+                "Where the save as window defaults to?",
+                manager.getConfigManager(), manager.getIdentity()));
         sending.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
                 getDomain(), "send.reverse", "Reverse DCC",
                 "With reverse DCC, the sender connects rather than "
-                + "listens like normal dcc"));
+                + "listens like normal dcc", manager.getConfigManager(),
+                manager.getIdentity()));
         sending.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
                 getDomain(), "send.forceturbo", "Use Turbo DCC",
                 "Turbo DCC doesn't wait for ack packets. this is "
-                + "faster but not always supported."));
+                + "faster but not always supported.",
+                manager.getConfigManager(), manager.getIdentity()));
         receiving.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
                 getDomain(), "receive.reverse.sendtoken",
                 "Send token in reverse receive",
                 "If you have problems with reverse dcc receive resume,"
-                + " try toggling this."));
+                + " try toggling this.", manager.getConfigManager(),
+                manager.getIdentity()));
         general.addSetting(new PreferencesSetting(PreferencesType.INTEGER,
                 getDomain(), "send.blocksize", "Blocksize to use for DCC",
                 "Change the block size for send/receive, this can "
-                + "sometimes speed up transfers."));
+                + "sometimes speed up transfers.", manager.getConfigManager(),
+                manager.getIdentity()));
         general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
                 getDomain(), "general.percentageInTitle",
                 "Show percentage of transfers in the window title",
                 "Show the current percentage of transfers in the DCC window "
-                + "title"));
+                + "title", manager.getConfigManager(), manager.getIdentity()));
     }
 
 }

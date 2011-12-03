@@ -36,7 +36,7 @@ public class GappedEtchedBorder extends EtchedBorder {
     /** Java serialisation version ID. */
     private static final long serialVersionUID = 1;
     /** Parent popup window. */
-    private final StatusbarPopupWindow outer;
+    private transient final StatusbarPopupWindow outer;
 
     /**
      * Creates a new etched border leaving a gap where the specified window is.

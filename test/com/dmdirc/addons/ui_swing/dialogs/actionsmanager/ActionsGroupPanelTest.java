@@ -90,7 +90,7 @@ public class ActionsGroupPanelTest extends UISpecTestCase {
             action1, action2, action3, action4,
         })));
 
-        panel = new Panel(new ActionsGroupPanel(null, group));
+        panel = new Panel(new ActionsGroupPanel(null, null, group));
         table = panel.getTable();
     }
 

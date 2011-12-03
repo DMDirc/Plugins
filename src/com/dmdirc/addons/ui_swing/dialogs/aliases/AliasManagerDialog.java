@@ -28,6 +28,7 @@ import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionComparison;
 import com.dmdirc.actions.wrappers.Alias;
 import com.dmdirc.actions.wrappers.AliasWrapper;
+import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.PackingTable;
 import com.dmdirc.addons.ui_swing.components.renderers.ActionConditionCellRenderer;
 import com.dmdirc.addons.ui_swing.components.renderers.ArrayCellRenderer;
@@ -86,17 +87,22 @@ public final class AliasManagerDialog extends StandardDialog implements
     private int selectedRow;
     /** Substitutions panel. */
     private AliasSubstitutionsPanel subsPanel;
-    /** Show/Hide subsitution button. */
+    /** Show/Hide substitution button. */
     private JButton showSubs;
+    /** Swing controller. */
+    private SwingController controller;
 
     /**
      * Creates a new instance of ErrorListDialog.
      *
+     * @param controller Swing controller
      * @param parentWindow Parent window
      */
-    private AliasManagerDialog(final Window parentWindow) {
+    private AliasManagerDialog(final SwingController controller,
+            final Window parentWindow) {
         super(parentWindow, ModalityType.MODELESS);
 
+        this.controller = controller;
         setTitle("Alias manager");
 
         selectedRow = -1;
@@ -109,10 +115,12 @@ public final class AliasManagerDialog extends StandardDialog implements
     /**
      * Creates the dialog if one doesn't exist, and displays it.
      *
+     * @param controller Swing controller
      * @param parentWindow Parent window
      */
-    public static void showAliasManagerDialog(final Window parentWindow) {
-        me = getAliasManagerDialog(parentWindow);
+    public static void showAliasManagerDialog(final SwingController controller,
+            final Window parentWindow) {
+        me = getAliasManagerDialog(controller, parentWindow);
 
         me.display();
         me.requestFocusInWindow();
@@ -121,15 +129,16 @@ public final class AliasManagerDialog extends StandardDialog implements
     /**
      * Returns the instance of AliasManagerDialog.
      *
+     * @param controller Swing controller
      * @param parentWindow Parent window
      *
      * @return Instance of AliasManagerDialog
      */
     public static AliasManagerDialog getAliasManagerDialog(
-            final Window parentWindow) {
+            final SwingController controller, final Window parentWindow) {
         synchronized (AliasManagerDialog.class) {
             if (me == null) {
-                me = new AliasManagerDialog(parentWindow);
+                me = new AliasManagerDialog(controller, parentWindow);
             }
         }
 
@@ -187,7 +196,7 @@ public final class AliasManagerDialog extends StandardDialog implements
 
         scrollPane.setViewportView(table);
 
-        aliasDetails = new AliasPanel();
+        aliasDetails = new AliasPanel(controller);
         subsPanel = new AliasSubstitutionsPanel();
         subsPanel.setVisible(false);
         showSubs = new JButton("Show Substitutions");

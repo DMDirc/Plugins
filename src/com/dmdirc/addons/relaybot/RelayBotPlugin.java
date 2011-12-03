@@ -296,10 +296,12 @@ public class RelayBotPlugin extends BasePlugin implements ActionListener, Config
         colours.setInline().setInlineAfter();
         general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
                 getDomain(), "joinOnDiscover", "Join on discover",
-                "Do you want fake clients to join the channel?"));
+                "Do you want fake clients to join the channel?",
+                manager.getConfigManager(), manager.getIdentity()));
         general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
                 getDomain(), "colourFullName", "Colour full name",
-                "Do you want to colour the full name?"));
+                "Do you want to colour the full name?",
+                manager.getConfigManager(), manager.getIdentity()));
         manager.getCategory("Plugins").addSubCategory(general);
         general.addSubCategory(colours);
     }

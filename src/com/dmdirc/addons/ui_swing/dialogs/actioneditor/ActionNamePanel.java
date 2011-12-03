@@ -26,6 +26,7 @@ import com.dmdirc.actions.ActionGroup;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.addons.ui_swing.components.validating.ValidatingJTextField;
 import com.dmdirc.actions.validators.ActionNameValidator;
+import com.dmdirc.ui.IconManager;
 import com.dmdirc.util.validators.FileNameValidator;
 import com.dmdirc.util.validators.ValidatorChain;
 
@@ -57,23 +58,28 @@ public class ActionNamePanel extends JPanel implements PropertyChangeListener {
     private ValidatingJTextField name;
     /** Action group. */
     private ActionGroup group;
+    /** Icon manager. */
+    private IconManager iconManager;
 
     /**
      * Instantiates the panel.
      *
+     * @param iconManager Icon manager
      * @param group Associated group for this action
      */
-    public ActionNamePanel(final String group) {
-        this("", group);
+    public ActionNamePanel(final IconManager iconManager, final String group) {
+        this(iconManager, "", group);
     }
 
     /**
      * Instantiates the panel.
      *
+     * @param iconManager Icon manager
      * @param name Initial name of the action
      * @param group Associated group for this action
      */
-    public ActionNamePanel(final String name, final String group) {
+    public ActionNamePanel(final IconManager iconManager, final String name,
+            final String group) {
         super();
 
         if (name == null) {
@@ -81,6 +87,7 @@ public class ActionNamePanel extends JPanel implements PropertyChangeListener {
         } else {
             this.existingName = name;
         }
+        this.iconManager = iconManager;
         this.group = ActionManager.getActionManager().getOrCreateGroup(group);
 
         initComponents();
@@ -114,7 +121,8 @@ public class ActionNamePanel extends JPanel implements PropertyChangeListener {
     /** Initialises the components. */
     @SuppressWarnings("unchecked")
     private void initComponents() {
-        name = new ValidatingJTextField(new JTextField(existingName),
+        name = new ValidatingJTextField(iconManager,
+                new JTextField(existingName),
                 new ValidatorChain<String>(new FileNameValidator(),
                 new ActionNameValidator(group, existingName)));
     }

@@ -98,19 +98,48 @@ public class TwitterPlugin extends BasePlugin {
     /** {@inheritDoc} */
     @Override
     public void showConfig(final PreferencesDialogModel manager) {
-        final PreferencesCategory category = new PluginPreferencesCategory(pluginInfo, "Twitter Plugin", "Settings related to the twitter plugin", "category-twitter");
-        final PreferencesCategory advanced = new PluginPreferencesCategory(pluginInfo, "Advanced", "Advanced Settings related to the twitter plugin", "category-twitter");
+        final PreferencesCategory category = new PluginPreferencesCategory(pluginInfo,
+                "Twitter Plugin", "Settings related to the twitter plugin", "category-twitter");
+        final PreferencesCategory advanced = new PluginPreferencesCategory(pluginInfo,
+                "Advanced", "Advanced Settings related to the twitter plugin", "category-twitter");
 
-        category.addSetting(new PreferencesSetting(PreferencesType.INTEGER, getDomain(), "statuscount", "Statuses to request", "How many statuses to request at a time?"));
-        category.addSetting(new PreferencesSetting(PreferencesType.INTEGER, getDomain(), "apicalls", "API Calls", "Aim to only use how many API Calls per hour? (Twitter has a max of 350)"));
-        category.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN, getDomain(), "saveLastIDs", "Remember shown items", "Should previously shown items not be shown again next time?"));
-        category.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN, getDomain(), "getSentMessages", "Show own Direct Messages", "Should we try to show our own direct messages to people not just ones to us?"));
+        category.addSetting(new PreferencesSetting(PreferencesType.INTEGER,
+                getDomain(), "statuscount", "Statuses to request",
+                "How many statuses to request at a time?",
+                manager.getConfigManager(), manager.getIdentity()));
+        category.addSetting(new PreferencesSetting(PreferencesType.INTEGER,
+                getDomain(), "apicalls", "API Calls",
+                "Aim to only use how many API Calls per hour? (Twitter has a max of 350)",
+                manager.getConfigManager(), manager.getIdentity()));
+        category.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
+                getDomain(), "saveLastIDs", "Remember shown items",
+                "Should previously shown items not be shown again next time?",
+                manager.getConfigManager(), manager.getIdentity()));
+        category.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
+                getDomain(), "getSentMessages", "Show own Direct Messages",
+                "Should we try to show our own direct messages to people not just ones to us?",
+                manager.getConfigManager(), manager.getIdentity()));
 
-        advanced.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN, getDomain(), "autoAt", "Prepend nicknames with @", "Should all nicknmaes be shown with an @ infront of them? (Makes tab competion easier)"));
-        advanced.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN, getDomain(), "replaceOpeningNickname", "Replace opening nickame?", "Should nicknames at the start of the message be replaced? (eg Replace foo: with @foo)"));
-        advanced.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN, getDomain(), "debugEnabled", "Debugging Enabled?", "Should more debugging be enabled on the twitter plugin?"));
-        advanced.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN, getDomain(), "hide500Errors", "Hide HTTP 50x Errors", "At times twitter gives a lot of 502/503 errors. Should this be hidden from you?"));
-        advanced.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN, getDomain(), "autoLeaveMessageChannel", "Leave & channels automatically?", "Should you automatically be parted from & channels after sending a message?"));
+        advanced.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
+                getDomain(), "autoAt", "Prepend nicknames with @",
+                "Should all nicknmaes be shown with an @ infront of them? (Makes tab competion easier)",
+                manager.getConfigManager(), manager.getIdentity()));
+        advanced.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
+                getDomain(), "replaceOpeningNickname", "Replace opening nickame?",
+                "Should nicknames at the start of the message be replaced? (eg Replace foo: with @foo)",
+                manager.getConfigManager(), manager.getIdentity()));
+        advanced.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
+                getDomain(), "debugEnabled", "Debugging Enabled?",
+                "Should more debugging be enabled on the twitter plugin?",
+                manager.getConfigManager(), manager.getIdentity()));
+        advanced.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
+                getDomain(), "hide500Errors", "Hide HTTP 50x Errors",
+                "At times twitter gives a lot of 502/503 errors. Should this be hidden from you?",
+                manager.getConfigManager(), manager.getIdentity()));
+        advanced.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
+                getDomain(), "autoLeaveMessageChannel", "Leave & channels automatically?",
+                "Should you automatically be parted from & channels after sending a message?",
+                manager.getConfigManager(), manager.getIdentity()));
 
         category.addSubCategory(advanced);
 

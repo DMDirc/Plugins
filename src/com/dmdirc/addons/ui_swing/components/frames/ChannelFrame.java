@@ -87,11 +87,11 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
 
         initComponents();
 
-        IdentityManager.getGlobalConfig().addChangeListener("ui",
+        controller.getGlobalConfig().addChangeListener("ui",
                 "channelSplitPanePosition", this);
-        IdentityManager.getGlobalConfig().addChangeListener(
+        controller.getGlobalConfig().addChangeListener(
                 controller.getDomain(), "showtopicbar", this);
-        IdentityManager.getGlobalConfig().addChangeListener(
+        controller.getGlobalConfig().addChangeListener(
                 controller.getDomain(), "shownicklist", this);
         ActionManager.getActionManager().registerListener(this,
                 CoreActionType.CLIENT_CLOSING);
@@ -159,7 +159,7 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
     @Override
     public void actionPerformed(final ActionEvent actionEvent) {
         if (actionEvent.getSource() == settingsMI) {
-            ChannelSettingsDialog.showChannelSettingsDialog(
+            ChannelSettingsDialog.showChannelSettingsDialog(controller,
                     (Channel) getContainer(), getController().getMainFrame(),
                     (InputWindow) getController().getWindowFactory()
                     .getSwingWindow(frameParent));

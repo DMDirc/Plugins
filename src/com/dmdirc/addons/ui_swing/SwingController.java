@@ -56,6 +56,7 @@ import com.dmdirc.ui.core.util.URLHandler;
 import com.dmdirc.interfaces.ui.InputWindow;
 import com.dmdirc.interfaces.ui.UIController;
 import com.dmdirc.interfaces.ui.Window;
+import com.dmdirc.ui.IconManager;
 import com.dmdirc.updater.Version;
 import com.dmdirc.util.ReturnableThread;
 import com.dmdirc.util.validators.NumericalValidator;
@@ -80,6 +81,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.UIManager.LookAndFeelInfo;
 
 import lombok.Getter;
+
 import net.miginfocom.layout.PlatformDefaults;
 
 /**
@@ -129,6 +131,12 @@ public class SwingController extends BasePlugin implements UIController {
     /** Addon config identity. */
     @Getter
     private final Identity addonIdentity;
+    /** Global Swing UI Icon manager. */
+    @Getter
+    private final IconManager iconManager;
+    /** Prefs component factory instance. */
+    @Getter
+    private final PrefsComponentFactory prefsComponentFactory;
 
     /**
      * Instantiates a new SwingController.
@@ -144,6 +152,8 @@ public class SwingController extends BasePlugin implements UIController {
                 .getGlobalConfigIdentity();
         addonIdentity = IdentityManager.getIdentityManager()
                 .getGlobalAddonIdentity();
+        iconManager = new IconManager(globalConfig);
+        prefsComponentFactory = new PrefsComponentFactory(this);
         setAntiAlias();
         windows = new ArrayList<java.awt.Window>();
         registerCommand(new ServerSettings(), ServerSettings.INFO);
@@ -214,9 +224,9 @@ public class SwingController extends BasePlugin implements UIController {
             /** {@inheritDoc} */
             @Override
             public void run() {
-                ChannelSettingsDialog.showChannelSettingsDialog(channel,
-                        getMainFrame(), (InputWindow) getWindowFactory()
-                        .getSwingWindow(channel));
+                ChannelSettingsDialog.showChannelSettingsDialog(
+                        SwingController.this, channel, getMainFrame(),
+                        (InputWindow) getWindowFactory().getSwingWindow(channel));
             }
         });
     }
@@ -230,7 +240,7 @@ public class SwingController extends BasePlugin implements UIController {
             @Override
             public void run() {
                 ServerSettingsDialog.showServerSettingsDialog(
-                        server, getMainFrame());
+                        SwingController.this, server, getMainFrame());
             }
         });
     }
@@ -523,25 +533,32 @@ public class SwingController extends BasePlugin implements UIController {
         }
 
         general.addSetting(new PreferencesSetting("ui", "lookandfeel",
-                "Look and feel", "The Java look and feel to use", lafs));
+                "Look and feel", "The Java look and feel to use", lafs,
+                globalConfig, globalIdentity));
         general.addSetting(new PreferencesSetting("ui", "framemanager",
                 "Window manager", "Which window manager should be used?",
-                framemanagers));
+                framemanagers,
+                globalConfig, globalIdentity));
         general.addSetting(new PreferencesSetting("ui", "framemanagerPosition",
                 "Window manager position", "Where should the window "
-                + "manager be positioned?", fmpositions));
+                + "manager be positioned?", fmpositions,
+                globalConfig, globalIdentity));
         general.addSetting(new PreferencesSetting(PreferencesType.FONT,
                 "ui", "textPaneFontName", "Textpane font",
-                "Font for the textpane"));
+                "Font for the textpane",
+                globalConfig, globalIdentity));
         general.addSetting(new PreferencesSetting(PreferencesType.INTEGER,
                 "ui", "textPaneFontSize", "Textpane font size",
-                "Font size for the textpane"));
+                "Font size for the textpane",
+                globalConfig, globalIdentity));
         general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
                 "ui", "sortrootwindows", "Sort root windows",
-                "Sort child windows in the frame managers?"));
+                "Sort child windows in the frame managers?",
+                globalConfig, globalIdentity));
         general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
                 "ui", "sortchildwindows", "Sort child windows",
-                "Sort root windows in the frame managers?"));
+                "Sort root windows in the frame managers?",
+                globalConfig, globalIdentity));
 
         general.addSubCategory(createNicklistCategory());
         general.addSubCategory(createTreeViewCategory());
@@ -563,42 +580,52 @@ public class SwingController extends BasePlugin implements UIController {
                 PreferencesType.OPTIONALINTEGER,
                 new NumericalValidator(10, -1), "ui", "frameBufferSize",
                 "Window buffer size", "The maximum number of lines in a window"
-                + " buffer"));
+                + " buffer",
+                globalConfig, globalIdentity));
         advanced.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
                 getDomain(), "mdiBarVisibility", "MDI Bar Visibility",
-                "Controls the visibility of the MDI bar"));
+                "Controls the visibility of the MDI bar",
+                globalConfig, globalIdentity));
         advanced.addSetting(
                 new PreferencesSetting(PreferencesType.BOOLEAN, "ui",
                 "useOneTouchExpandable", "Use one touch expandable split "
                 + "panes?", "Use one touch expandable arrows for "
-                + "collapsing/expanding the split panes"));
+                + "collapsing/expanding the split panes",
+                globalConfig, globalIdentity));
         advanced.addSetting(new PreferencesSetting(PreferencesType.INTEGER,
                 getDomain(), "windowMenuItems", "Window menu item count",
-                "Number of items to show in the window menu"));
+                "Number of items to show in the window menu",
+                globalConfig, globalIdentity));
         advanced.addSetting(
                 new PreferencesSetting(PreferencesType.INTEGER, getDomain(),
                 "windowMenuScrollInterval", "Window menu scroll interval",
                 "Number of milliseconds to pause when autoscrolling in the "
-                + "window menu"));
+                + "window menu",
+                globalConfig, globalIdentity));
         advanced.addSetting(
                 new PreferencesSetting(PreferencesType.BOOLEAN, getDomain(),
                 "showtopicbar", "Show topic bar",
-                "Shows a graphical topic bar in channels."));
+                "Shows a graphical topic bar in channels.",
+                globalConfig, globalIdentity));
         advanced.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
                 getDomain(),
                 "shownicklist", "Show nicklist?",
-                "Do you want the nicklist visible"));
+                "Do you want the nicklist visible",
+                globalConfig, globalIdentity));
         advanced.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
                 getDomain(), "showfulltopic", "Show full topic in topic bar?",
                "Do you want to show the full topic in the topic bar or just"
-               + "first line?"));
+               + "first line?",
+                globalConfig, globalIdentity));
         advanced.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
                 getDomain(), "hideEmptyTopicBar", "Hide empty topic bar?",
-                "Do you want to hide the topic bar when there is no topic"));
+                "Do you want to hide the topic bar when there is no topic",
+                globalConfig, globalIdentity));
         advanced.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
                 getDomain(), "textpanelinenotification",
                 "New line notification", "Do you want to be notified about new "
-                + "lines whilst scrolled up?"));
+                + "lines whilst scrolled up?",
+                globalConfig, globalIdentity));
 
         return advanced;
     }
@@ -615,30 +642,37 @@ public class SwingController extends BasePlugin implements UIController {
         treeview.addSetting(new PreferencesSetting(
                 PreferencesType.OPTIONALCOLOUR,
                 "treeview", "backgroundcolour", "Treeview background colour",
-                "Background colour to use for the treeview"));
+                "Background colour to use for the treeview",
+                globalConfig, globalIdentity));
         treeview.addSetting(new PreferencesSetting(
                 PreferencesType.OPTIONALCOLOUR,
                 "treeview", "foregroundcolour", "Treeview foreground colour",
-                "Foreground colour to use for the treeview"));
+                "Foreground colour to use for the treeview",
+                globalConfig, globalIdentity));
         treeview.addSetting(new PreferencesSetting(
                 PreferencesType.OPTIONALCOLOUR,
                 "ui", "treeviewRolloverColour", "Treeview rollover colour",
                 "Background colour to use when the mouse cursor is over a "
-                + "node"));
+                + "node",
+                globalConfig, globalIdentity));
         treeview.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
                 "ui", "treeviewActiveBold", "Active node bold",
-                "Make the active node bold?"));
+                "Make the active node bold?",
+                globalConfig, globalIdentity));
         treeview.addSetting(new PreferencesSetting(
                 PreferencesType.OPTIONALCOLOUR,
                 "ui", "treeviewActiveBackground", "Active node background",
-                "Background colour to use for active treeview node"));
+                "Background colour to use for active treeview node",
+                globalConfig, globalIdentity));
         treeview.addSetting(new PreferencesSetting(
                 PreferencesType.OPTIONALCOLOUR,
                 "ui", "treeviewActiveForeground", "Active node foreground",
-                "Foreground colour to use for active treeview node"));
+                "Foreground colour to use for active treeview node",
+                globalConfig, globalIdentity));
         treeview.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
                 getDomain(), "showtreeexpands", "Show expand/collapse handles",
-                "Do you want to show tree view collapse/expand handles"));
+                "Do you want to show tree view collapse/expand handles",
+                globalConfig, globalIdentity));
 
         return treeview;
     }
@@ -655,22 +689,27 @@ public class SwingController extends BasePlugin implements UIController {
         nicklist.addSetting(new PreferencesSetting(
                 PreferencesType.OPTIONALCOLOUR,
                 "ui", "nicklistbackgroundcolour", "Nicklist background colour",
-                "Background colour to use for the nicklist"));
+                "Background colour to use for the nicklist",
+                globalConfig, globalIdentity));
         nicklist.addSetting(new PreferencesSetting(
                 PreferencesType.OPTIONALCOLOUR,
                 "ui", "nicklistforegroundcolour", "Nicklist foreground colour",
-                "Foreground colour to use for the nicklist"));
+                "Foreground colour to use for the nicklist",
+                globalConfig, globalIdentity));
         nicklist.addSetting(new PreferencesSetting(
                 PreferencesType.OPTIONALCOLOUR,
                 "ui", "nickListAltBackgroundColour",
                 "Alternate background colour",
-                "Background colour to use for every other nicklist entry"));
+                "Background colour to use for every other nicklist entry",
+                globalConfig, globalIdentity));
         nicklist.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
                 "nicklist", "sortByMode", "Sort nicklist by user mode",
-                "Sort nicknames by the modes that they have?"));
+                "Sort nicknames by the modes that they have?",
+                globalConfig, globalIdentity));
         nicklist.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
                 "nicklist", "sortByCase", "Sort nicklist by case",
-                "Sort nicknames in a case-sensitive manner?"));
+                "Sort nicknames in a case-sensitive manner?",
+                globalConfig, globalIdentity));
 
         return nicklist;
     }
