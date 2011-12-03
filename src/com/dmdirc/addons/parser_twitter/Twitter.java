@@ -1668,4 +1668,10 @@ public class Twitter implements Parser, TwitterErrorHandler, TwitterRawHandler,
         // Do nothing
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public void requestGroupList(final String searchTerms) {
+        // Do nothing
+    }
+
 }

@@ -469,4 +469,10 @@ public class MSNParser extends BaseParser {
     public void setCompositionState(final String host, final CompositionState state) {
         // Do nothing
     }
+
+    /** {@inheritDoc} */
+    @Override
+    public void requestGroupList(final String searchTerms) {
+        // Do nothing
+    }
 }
