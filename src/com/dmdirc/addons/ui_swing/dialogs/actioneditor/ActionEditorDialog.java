@@ -26,6 +26,7 @@ import com.dmdirc.actions.Action;
 import com.dmdirc.actions.ActionStatus;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 
+import com.dmdirc.ui.IconManager;
 import java.awt.Dimension;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
@@ -78,30 +79,36 @@ public class ActionEditorDialog extends StandardDialog implements ActionListener
     private Action action;
     /** Action group. */
     private String group;
+    /** Icon manager. */
+    private IconManager iconManager;
 
     /**
      * Instantiates the panel.
      *
+     * @param iconManager Icon manager
      * @param window Parent window
      * @param group Action's group
      */
-    private ActionEditorDialog(final Window window, final String group) {
-        this(window, group, null);
+    private ActionEditorDialog(final IconManager iconManager,
+            final Window window, final String group) {
+        this(iconManager, window, group, null);
     }
 
     /**
      * Instantiates the panel.
      *
+     * @param iconManager Icon manager
      * @param window Parent window
      * @param action Action to be edited
      * @param group Action's group
      */
-    private ActionEditorDialog(final Window window, final String group,
-            final Action action) {
+    private ActionEditorDialog(final IconManager iconManager,
+            final Window window, final String group, final Action action) {
         super(window, ModalityType.DOCUMENT_MODAL);
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         setTitle("Action Editor");
 
+        this.iconManager = iconManager;
         this.group = group;
         this.action = action;
 
@@ -127,24 +134,26 @@ public class ActionEditorDialog extends StandardDialog implements ActionListener
     /**
      * Creates the dialog if one doesn't exist, and displays it.
      *
+     * @param iconManager Icon manager
      * @param window Parent window
      * @param group Action's group
      */
-    public static void showActionEditorDialog(final Window window,
-            final String group) {
-        showActionEditorDialog(window, group, null);
+    public static void showActionEditorDialog(final IconManager iconManager,
+            final Window window, final String group) {
+        showActionEditorDialog(iconManager, window, group, null);
     }
 
     /**
      * Creates the dialog if one doesn't exist, and displays it.
      *
+     * @param iconManager Icon manager
      * @param window Parent window
      * @param group Action's group
      * @param action Action to be edited
      */
-    public static void showActionEditorDialog(final Window window,
-            final String group, final Action action) {
-        getActionEditorDialog(window, group, action);
+    public static void showActionEditorDialog(final IconManager iconManager,
+            final Window window, final String group, final Action action) {
+        getActionEditorDialog(iconManager, window, group, action);
 
         me.display();
     }
@@ -152,30 +161,34 @@ public class ActionEditorDialog extends StandardDialog implements ActionListener
     /**
      * Returns the current instance of the ActionEditorDialog.
      *
+     * @param iconManager Icon manager
      * @param window Parent window
      * @param group Action's group
      *
      * @return The current ActionEditorDialog instance
      */
-    public static ActionEditorDialog getActionEditorDialog(final Window window,
+    public static ActionEditorDialog getActionEditorDialog(
+            final IconManager iconManager, final Window window,
             final String group) {
-        return getActionEditorDialog(window, group, null);
+        return getActionEditorDialog(iconManager, window, group, null);
     }
 
     /**
      * Returns the current instance of the ActionEditorDialog.
      *
+     * @param iconManager Icon manager
      * @param window Parent window
      * @param group Action's group
      * @param action Action to be edited
      *
      * @return The current ActionEditorDialog instance
      */
-    public static ActionEditorDialog getActionEditorDialog(final Window window,
+    public static ActionEditorDialog getActionEditorDialog(
+            final IconManager iconManager, final Window window,
             final String group, final Action action) {
         synchronized (ActionEditorDialog.class) {
             if (me == null) {
-                me = new ActionEditorDialog(window, group, action);
+                me = new ActionEditorDialog(iconManager, window, group, action);
             }
         }
 
@@ -212,10 +225,10 @@ public class ActionEditorDialog extends StandardDialog implements ActionListener
     /** Initialises the components. */
     private void initComponents() {
         orderButtons(new JButton(), new JButton());
-        name = new ActionNamePanel("", group);
+        name = new ActionNamePanel(iconManager, "", group);
         triggers = new ActionTriggersPanel();
         response = new ActionResponsePanel();
-        conditions = new ActionConditionsPanel();
+        conditions = new ActionConditionsPanel(iconManager);
         substitutions = new ActionSubstitutionsPanel();
         advanced = new ActionAdvancedPanel();
         showSubstitutions = new JButton("Show Substitutions");

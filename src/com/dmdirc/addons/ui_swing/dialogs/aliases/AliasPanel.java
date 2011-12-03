@@ -26,6 +26,7 @@ import com.dmdirc.actions.ActionCondition;
 import com.dmdirc.actions.CoreActionComparison;
 import com.dmdirc.actions.CoreActionComponent;
 import com.dmdirc.actions.wrappers.Alias;
+import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.inputfields.ValidatingTextFieldInputField;
 import com.dmdirc.addons.ui_swing.components.renderers.ActionComparisonCellRenderer;
@@ -70,13 +71,18 @@ public final class AliasPanel extends JPanel implements ActionListener {
     /** Alias. */
     private Alias alias;
 
-    /** Creates a new instance of AliasPanel. */
+    /**
+     * Creates a new instance of AliasPanel.
+     *
+     * @param controller Swing controller
+     */
     @SuppressWarnings("unchecked")
-    public AliasPanel() {
+    public AliasPanel(final SwingController controller) {
         super();
 
-        command = new ValidatingTextFieldInputField(new ValidatorChain<String>(
-                new CommandNameValidator(), new FileNameValidator()));
+        command = new ValidatingTextFieldInputField(controller,
+                new ValidatorChain<String>(new CommandNameValidator(),
+                new FileNameValidator()));
         command.setEnabled(false);
         //new SwingInputHandler(command, GlobalCommandParser
         //        .getGlobalCommandParser(), inputWindow)

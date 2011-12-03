@@ -275,16 +275,20 @@ public final class LagDisplayPlugin extends BasePlugin implements
         cat.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
                 getDomain(), "usealternate",
                 "Alternate method", "Use an alternate method of determining "
-                + "lag which bypasses bouncers or proxies that may reply?"));
+                + "lag which bypasses bouncers or proxies that may reply?",
+                manager.getConfigManager(), manager.getIdentity()));
         cat.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
                 getDomain(), "graph", "Show graph", "Show a graph of ping times " +
-                "for the current server in the information popup?"));
+                "for the current server in the information popup?",
+                manager.getConfigManager(), manager.getIdentity()));
         cat.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
                 getDomain(), "labels", "Show labels", "Show labels on selected " +
-                "points on the ping graph?"));
+                "points on the ping graph?",
+                manager.getConfigManager(), manager.getIdentity()));
         cat.addSetting(new PreferencesSetting(PreferencesType.INTEGER,
                 getDomain(), "history", "Graph points", "Number of data points " +
-                "to plot on the graph, if enabled."));
+                "to plot on the graph, if enabled.",
+                manager.getConfigManager(), manager.getIdentity()));
         manager.getCategory("Plugins").addSubCategory(cat);
     }
 

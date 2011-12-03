@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_swing.dialogs.channelsetting;
 
 import com.dmdirc.Channel;
+import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.renderers.ExtendedListModeCellRenderer;
 import com.dmdirc.addons.ui_swing.components.renderers.ListModeCellRenderer;
@@ -88,27 +89,32 @@ public final class ChannelListModesPane extends JPanel implements ActionListener
     private final MapList<Character, ChannelListModeItem> existingListItems;
     /** Mode count label. */
     private final JLabel modeCount;
-    /** Cell renderer. */
-    private ListCellRenderer renderer;
     /** Extended info toggle. */
     private final JCheckBox toggle;
     /** Parent window. */
     private final Window parentWindow;
+    /** Swing controller. */
+    private final SwingController controller;
+    /** Cell renderer. */
+    private ListCellRenderer renderer;
 
     /**
      * Creates a new instance of ChannelListModePane.
      *
+     * @param controller Swing controller
      * @param channel Parent channel
      * @param parentWindow Parent window
      */
-    public ChannelListModesPane(final Channel channel, final Window parentWindow) {
+    public ChannelListModesPane(final SwingController controller,
+            final Channel channel, final Window parentWindow) {
         super();
 
+        this.controller = controller;
         this.setOpaque(UIUtilities.getTabbedPaneOpaque());
         this.channel = channel;
         this.parentWindow = parentWindow;
 
-        if (IdentityManager.getGlobalConfig().getOptionBool("general",
+        if (channel.getConfigManager().getOptionBool("general",
                 "extendedListModes")) {
             renderer = new ExtendedListModeCellRenderer();
         } else {
@@ -125,7 +131,7 @@ public final class ChannelListModesPane extends JPanel implements ActionListener
         removeListModeButton.setEnabled(false);
         modeCount = new JLabel();
         toggle = new JCheckBox("Show extended information",
-                IdentityManager.getGlobalConfig().getOptionBool("general",
+                channel.getConfigManager().getOptionBool("general",
                 "extendedListModes"));
         toggle.setOpaque(UIUtilities.getTabbedPaneOpaque());
 
@@ -220,7 +226,7 @@ public final class ChannelListModesPane extends JPanel implements ActionListener
         removeListModeButton.addActionListener(this);
         listModesMenu.addActionListener(this);
         toggle.addActionListener(this);
-        IdentityManager.getGlobalConfig().addChangeListener("general",
+        channel.getConfigManager().addChangeListener("general",
                 "extendedListModes", this);
 
     }
@@ -270,7 +276,7 @@ public final class ChannelListModesPane extends JPanel implements ActionListener
 
         channel.getChannelInfo().flushModes();
 
-        IdentityManager.getConfigIdentity().setOption("general",
+        controller.getGlobalIdentity().setOption("general",
                 "extendedListModes", toggle.isSelected());
     }
 
@@ -283,8 +289,8 @@ public final class ChannelListModesPane extends JPanel implements ActionListener
             modeText = channel.getConfigManager().
                     getOption("server", "mode" + listModesArray[selectedIndex]);
         }
-        new StandardInputDialog(parentWindow, ModalityType.DOCUMENT_MODAL,
-                "Add new " + modeText,
+        new StandardInputDialog(controller, parentWindow,
+                ModalityType.DOCUMENT_MODAL, "Add new " + modeText,
                 "Please enter the hostmask for the new " + modeText,
                 new NotEmptyValidator()) {
 

@@ -71,8 +71,8 @@ public final class SwingFirstRunWizard implements WizardListener,
         wizardDialog = new WizardDialog("Setup wizard",
                 new ArrayList<Step>(), parentWindow,
                 ModalityType.APPLICATION_MODAL);
-        wizardDialog.setIconImage(new IconManager(IdentityManager
-                .getGlobalConfig()).getImage("icon"));
+        wizardDialog.setIconImage(new IconManager(controller.getGlobalConfig())
+                .getImage("icon"));
         wizardDialog.addWizardListener(this);
         if(Apple.isAppleUI()) {
             wizardDialog.setMinimumSize(new Dimension(400, 425));
@@ -94,9 +94,9 @@ public final class SwingFirstRunWizard implements WizardListener,
             extractActions();
         }
 
-        IdentityManager.getConfigIdentity().setOption("updater", "enable",
+        controller.getGlobalIdentity().setOption("updater", "enable",
                 ((CommunicationStep) wizardDialog.getStep(1)).checkUpdates());
-        IdentityManager.getConfigIdentity().setOption("general", "submitErrors",
+        controller.getGlobalIdentity().setOption("general", "submitErrors",
                 ((CommunicationStep) wizardDialog.getStep(1)).checkErrors());
 
         if (((ProfileStep) wizardDialog.getStep(2)).getProfileManagerState()) {
@@ -105,7 +105,7 @@ public final class SwingFirstRunWizard implements WizardListener,
                 @Override
                 public void processEvent(final ActionType type,
                         final StringBuffer format, final Object... arguments) {
-                    ProfileManagerDialog.showProfileManagerDialog(controller.getMainFrame());
+                    ProfileManagerDialog.showProfileManagerDialog(controller);
                 }
             }, CoreActionType.CLIENT_OPENED);
 

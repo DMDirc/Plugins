@@ -24,6 +24,7 @@ package com.dmdirc.addons.ui_swing.components;
 
 import com.dmdirc.addons.ui_swing.components.validating.ValidatingJTextField;
 import com.dmdirc.config.prefs.PreferencesSetting;
+import com.dmdirc.ui.IconManager;
 import com.dmdirc.util.ListenerList;
 
 import java.awt.event.ActionEvent;
@@ -40,7 +41,6 @@ import net.miginfocom.swing.MigLayout;
 /**
  * File browser component.
  *
- * @author Simon Mott
  * @since 0.6.3
  */
 public class FileBrowser extends JPanel implements ActionListener {
@@ -61,10 +61,12 @@ public class FileBrowser extends JPanel implements ActionListener {
     /**
      * Creates a new File Browser.
      *
+     * @param iconManager Icon Manager to get icons from
      * @param setting The setting to create the component for
      * @param type The type of filechooser we want (Files/Directories/Both)
      */
-    public FileBrowser(final PreferencesSetting setting, final int type) {
+    public FileBrowser(final IconManager iconManager,
+            final PreferencesSetting setting, final int type) {
         super();
 
         fileChooser.setFileSelectionMode(type);
@@ -72,8 +74,8 @@ public class FileBrowser extends JPanel implements ActionListener {
         final JButton browseButton = new JButton("Browse");
         browseButton.addActionListener(this);
 
-        pathField = new ValidatingJTextField(new JTextField(setting.getValue()),
-                setting.getValidator());
+        pathField = new ValidatingJTextField(iconManager,
+                new JTextField(setting.getValue()), setting.getValidator());
 
         setLayout(new MigLayout("ins 0, fill"));
         add(pathField, "growx, pushx, sgy all");

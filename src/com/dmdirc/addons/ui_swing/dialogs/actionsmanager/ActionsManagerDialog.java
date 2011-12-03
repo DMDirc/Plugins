@@ -77,6 +77,12 @@ public final class ActionsManagerDialog extends StandardDialog implements
     private static final long serialVersionUID = 1;
     /** Previously created instance of ActionsManagerDialog. */
     private static volatile ActionsManagerDialog me;
+    /** Are we saving? */
+    private final AtomicBoolean saving = new AtomicBoolean(false);
+    /** Duplicate action group validator. */
+    private final ValidatorChain<String> validator;
+    /** Swing controller. */
+    private final SwingController controller;
     /** Info label. */
     private TextLabel infoLabel;
     /** Group list. */
@@ -97,10 +103,6 @@ public final class ActionsManagerDialog extends StandardDialog implements
     private ActionGroupSettingsPanel activeSettings;
     /** Group panel. */
     private JPanel groupPanel;
-    /** Are we saving? */
-    private final AtomicBoolean saving = new AtomicBoolean(false);
-    /** Duplicate action group validator. */
-    private final ValidatorChain<String> validator;
 
     /**
      * Creates a new instance of ActionsManagerDialog.
@@ -111,6 +113,7 @@ public final class ActionsManagerDialog extends StandardDialog implements
         super(Apple.isAppleUI() ? new AppleJFrame((MainFrame) parentWindow,
                 controller) : null, ModalityType.MODELESS);
 
+        this.controller= controller;
         initComponents();
         validator = new ValidatorChain<String>(
                 new ActionGroupNoDuplicatesInListValidator(groups,
@@ -180,10 +183,11 @@ public final class ActionsManagerDialog extends StandardDialog implements
                 + " to suit your needs.");
         groups = new JList(new SortedListModel<ActionGroup>(
                 new ActionGroupNameComparator()));
-        actions = new ActionsGroupPanel(this, null);
+        actions = new ActionsGroupPanel(controller.getIconManager(), this, null);
         info = new ActionGroupInformationPanel(null);
         settings = new HashMap<ActionGroup, ActionGroupSettingsPanel>();
-        activeSettings = new ActionGroupSettingsPanel(null, this);
+        activeSettings = new ActionGroupSettingsPanel(controller
+                .getPrefsComponentFactory(), null, this);
         settings.put(null, activeSettings);
         add = new JButton("Add");
         edit = new JButton("Edit");
@@ -294,7 +298,8 @@ public final class ActionsManagerDialog extends StandardDialog implements
         actions.setActionGroup(group);
         if (!settings.containsKey(group)) {
             final ActionGroupSettingsPanel currentSettings =
-                    new ActionGroupSettingsPanel(group, this);
+                    new ActionGroupSettingsPanel(controller
+                    .getPrefsComponentFactory(), group, this);
             settings.put(group, currentSettings);
             currentSettings.setBorder(BorderFactory.createTitledBorder(
                     UIManager.getBorder("TitledBorder.border"), "Settings"));
@@ -330,7 +335,7 @@ public final class ActionsManagerDialog extends StandardDialog implements
             for (ActionGroupSettingsPanel loopSettings : settings.values()) {
                 loopSettings.save();
             }
-            IdentityManager.getConfigIdentity().setOption("dialogstate",
+            controller.getGlobalIdentity().setOption("dialogstate",
                     "actionsmanagerdialog", groups.getSelectedIndex());
             dispose();
         }
@@ -342,7 +347,7 @@ public final class ActionsManagerDialog extends StandardDialog implements
     private void addGroup() {
         final int index = groups.getSelectedIndex();
         groups.getSelectionModel().clearSelection();
-        new StandardInputDialog(this,
+        new StandardInputDialog(controller, this,
                 ModalityType.DOCUMENT_MODAL, "New action group",
                 "Please enter the name of the new action group", validator) {
 
@@ -382,8 +387,8 @@ public final class ActionsManagerDialog extends StandardDialog implements
     private void editGroup() {
         final String oldName =
                 ((ActionGroup) groups.getSelectedValue()).getName();
-        final StandardInputDialog inputDialog = new StandardInputDialog(this,
-                ModalityType.DOCUMENT_MODAL, "Edit action group",
+        final StandardInputDialog inputDialog = new StandardInputDialog(
+                controller, this, ModalityType.DOCUMENT_MODAL, "Edit action group",
                 "Please enter the new name of the action group", validator) {
 
             /** Java Serialisation verion ID. */

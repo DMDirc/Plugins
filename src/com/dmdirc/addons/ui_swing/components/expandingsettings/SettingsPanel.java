@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_swing.components.expandingsettings;
 
 import com.dmdirc.addons.ui_swing.PrefsComponentFactory;
+import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.config.prefs.PreferencesCategory;
@@ -63,24 +64,32 @@ public class SettingsPanel extends JPanel {
     private final boolean padding;
     /** Preferences Category. */
     private PreferencesCategory category;
+    /** Swing controller. */
+    private final SwingController controller;
 
     /**
      * Creates a new instance of SettingsPanel.
      *
+     * @param controller Swing controller
      * @param infoText Info blurb.
      */
-    public SettingsPanel(final String infoText) {
-        this(infoText, true);
+    public SettingsPanel(final SwingController controller,
+            final String infoText) {
+        this(controller, infoText, true);
     }
 
     /**
      * Creates a new instance of SettingsPanel.
      *
+     * @param controller Swing controller
      * @param infoText Info blurb.
      * @param padding Should we add padding to the panel?
      */
-    public SettingsPanel(final String infoText, final boolean padding) {
+    public SettingsPanel(final SwingController controller,
+            final String infoText, final boolean padding) {
         super();
+
+        this.controller = controller;
 
         settings = new DoubleMap<PreferencesSetting, JComponent>();
 
@@ -135,8 +144,8 @@ public class SettingsPanel extends JPanel {
 
         for (PreferencesSetting setting : category.getSettings()) {
             if (settings.get(setting) == null) {
-                final JComponent component = PrefsComponentFactory
-                        .getComponent(setting);
+                final JComponent component = controller
+                        .getPrefsComponentFactory().getComponent(setting);
                 component.setName(setting.getTitle());
                 settings.put(setting, component);
             }

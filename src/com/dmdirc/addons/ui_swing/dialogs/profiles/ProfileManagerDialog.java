@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_swing.dialogs.profiles;
 
 import com.dmdirc.addons.ui_swing.MainFrame;
+import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.ListScroller;
 import com.dmdirc.addons.ui_swing.components.renderers.ProfileListCellRenderer;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
@@ -60,8 +61,8 @@ public final class ProfileManagerDialog extends StandardDialog implements
     private static final long serialVersionUID = 2;
     /** Previously created instance of ProfileEditorDialog. */
     private static volatile ProfileManagerDialog me;
-    /** main frame. */
-    private final MainFrame mainFrame;
+    /** Swing controller. */
+    private final SwingController controller;
     /** Profile list. */
     private JList profileList;
     /** Profile list mode. */
@@ -82,11 +83,11 @@ public final class ProfileManagerDialog extends StandardDialog implements
     /**
      * Creates a new instance of ProfileEditorDialog.
      *
-     * @param parentWindow main frame
+     * @param controller Swing controller
      */
-    private ProfileManagerDialog(final MainFrame mainFrame) {
-        super(mainFrame, ModalityType.MODELESS);
-        this.mainFrame = mainFrame;
+    private ProfileManagerDialog(final SwingController controller) {
+        super(controller.getMainFrame(), ModalityType.MODELESS);
+        this.controller = controller;
         deletedProfiles = new ArrayList<Profile>();
 
         initComponents();
@@ -105,10 +106,10 @@ public final class ProfileManagerDialog extends StandardDialog implements
     /**
      * Creates the dialog if one doesn't exist, and displays it.
      *
-     * @param mainFrame Main frame
+     * @param controller Swing controller
      */
-    public static void showProfileManagerDialog(final MainFrame mainFrame) {
-        me = getProfileManagerDialog(mainFrame);
+    public static void showProfileManagerDialog(final SwingController controller) {
+        me = getProfileManagerDialog(controller);
 
         me.display();
         me.requestFocusInWindow();
@@ -117,15 +118,15 @@ public final class ProfileManagerDialog extends StandardDialog implements
     /**
      * Returns the current instance of the ProfileManagerDialog.
      *
-     * @param mainFrame Main frame
+     * @param controller Swing controller
      *
      * @return The current ProfileManagerDialog instance
      */
     public static ProfileManagerDialog getProfileManagerDialog(
-            final MainFrame mainFrame) {
+            final SwingController controller) {
         synchronized (ProfileManagerDialog.class) {
             if (me == null) {
-                me = new ProfileManagerDialog(mainFrame);
+                me = new ProfileManagerDialog(controller);
             }
         }
 
@@ -142,7 +143,7 @@ public final class ProfileManagerDialog extends StandardDialog implements
 
         model = new ProfileListModel();
         profileList = new JList(model);
-        details = new ProfileDetailPanel(model, mainFrame, this);
+        details = new ProfileDetailPanel(model, controller, this);
         addButton = new JButton("Add");
         deleteButton = new JButton("Delete");
         infoLabel =
@@ -214,7 +215,7 @@ public final class ProfileManagerDialog extends StandardDialog implements
             dispose();
         }
         if (NewServerDialog.isNewServerDialogShowing()) {
-            NewServerDialog.getNewServerDialog(mainFrame).populateProfiles();
+            NewServerDialog.getNewServerDialog(controller).populateProfiles();
         }
     }
 

@@ -27,7 +27,6 @@ import com.dmdirc.addons.ui_swing.SelectionListener;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.ImageButton;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
-import com.dmdirc.config.IdentityManager;
 import com.dmdirc.interfaces.FrameInfoListener;
 import com.dmdirc.interfaces.NotificationListener;
 import com.dmdirc.ui.Colour;
@@ -45,6 +44,8 @@ import javax.swing.UIManager;
 import javax.swing.text.DefaultStyledDocument;
 import javax.swing.text.StyledDocument;
 
+import lombok.Getter;
+
 import net.miginfocom.layout.PlatformDefaults;
 import net.miginfocom.swing.MigLayout;
 
@@ -61,6 +62,7 @@ public class NodeLabel extends JPanel implements SelectionListener,
      */
     private static final long serialVersionUID = 1;
     /** The window this node represents in the tree. */
+    @Getter
     private final FrameContainer window;
     /** Colour used to show if the mouse is over this node. */
     private boolean rollover;
@@ -93,7 +95,7 @@ public class NodeLabel extends JPanel implements SelectionListener,
      */
     private void init() {
         if (window == null) {
-            icon.setIcon(new IconManager(IdentityManager.getGlobalConfig())
+            icon.setIcon(new IconManager(getWindow().getConfigManager())
                     .getIcon("icon"));
             return;
         }

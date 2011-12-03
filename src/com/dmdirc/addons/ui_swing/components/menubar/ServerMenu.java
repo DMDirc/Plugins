@@ -122,9 +122,9 @@ public class ServerMenu extends JMenu implements ActionListener,
     @Override
     public void actionPerformed(final ActionEvent e) {
         if ("NewServer".equals(e.getActionCommand())) {
-            NewServerDialog.showNewServerDialog(mainFrame);
+            NewServerDialog.showNewServerDialog(controller);
         } else if (e.getActionCommand().equals("ServerList")) {
-            ServerListDialog.showServerListDialog(mainFrame,
+            ServerListDialog.showServerListDialog(controller, mainFrame,
                     controller.getURLHandler());
         } else if (e.getActionCommand().equals("Exit")) {
             mainFrame.quit();

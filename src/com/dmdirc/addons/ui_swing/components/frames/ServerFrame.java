@@ -56,6 +56,8 @@ public final class ServerFrame extends InputTextFrame implements
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 9;
+    /** Swing controller. */
+    private final SwingController controller;
     /** popup menu item. */
     private JMenuItem settingsMI;
     /** The SSL certificate dialog we're displaying for this server, if any. */
@@ -70,6 +72,7 @@ public final class ServerFrame extends InputTextFrame implements
     public ServerFrame(final SwingController controller, final Server owner) {
         super(controller, owner);
 
+        this.controller= controller;
         initComponents();
 
         owner.addCertificateProblemListener(this);
@@ -96,8 +99,8 @@ public final class ServerFrame extends InputTextFrame implements
     @Override
     public void actionPerformed(final ActionEvent actionEvent) {
         if (actionEvent.getSource() == settingsMI) {
-            ServerSettingsDialog.showServerSettingsDialog(getContainer().
-                    getServer(), getController().getMainFrame());
+            ServerSettingsDialog.showServerSettingsDialog(controller,
+                    getContainer().getServer(), getController().getMainFrame());
         }
     }
 
@@ -163,8 +166,9 @@ public final class ServerFrame extends InputTextFrame implements
     @Override
     public void windowClosing(final FrameContainer window) {
         if (ServerSettingsDialog.hasServerSettingsDialog()) {
-            ServerSettingsDialog.getServerSettingsDialog(getContainer()
-                    .getServer(), getController().getMainFrame()).dispose();
+            ServerSettingsDialog.getServerSettingsDialog(controller,
+                    getContainer().getServer(),
+                    getController().getMainFrame()).dispose();
         }
 
         super.windowClosing(window);

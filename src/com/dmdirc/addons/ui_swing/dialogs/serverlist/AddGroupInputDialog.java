@@ -30,6 +30,7 @@ import com.dmdirc.util.validators.NotEmptyValidator;
 import com.dmdirc.util.validators.Validator;
 import com.dmdirc.addons.serverlists.ServerGroup;
 
+import com.dmdirc.ui.IconManager;
 import java.awt.Window;
 import java.awt.Dialog.ModalityType;
 import java.awt.event.ActionEvent;
@@ -72,18 +73,23 @@ public class AddGroupInputDialog extends StandardDialog {
     private final JTree tree;
     /** Parent model. */
     private final ServerListModel serverListModel;
+    /** Icon manager. */
+    private final IconManager iconManager;
 
     /**
      * Instantiates a new standard input dialog.
      *
+     * @param iconManager Icon manager
      * @param items Parent tree
      * @param owner Dialog owner
      * @param model Server list model
      */
-    public AddGroupInputDialog(final Window owner, final JTree items,
+    public AddGroupInputDialog(final IconManager iconManager,
+            final Window owner, final JTree items,
             final ServerListModel model) {
         super(owner, ModalityType.MODELESS);
 
+        this.iconManager = iconManager;
         this.tree = items;
         this.serverListModel = model;
         this.validator = new NotEmptyValidator();
@@ -131,7 +137,7 @@ public class AddGroupInputDialog extends StandardDialog {
      */
     private void initComponents() {
         orderButtons(new JButton(), new JButton());
-        groupName = new ValidatingJTextField(validator);
+        groupName = new ValidatingJTextField(iconManager, validator);
         networkName = new JTextField();
         blurb = new TextLabel(message);
         validateText();

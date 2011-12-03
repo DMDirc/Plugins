@@ -211,7 +211,7 @@ public class VlcMediaSourcePlugin extends BasePlugin implements MediaSource {
 
         final PreferencesSetting setting = new PreferencesSetting(
                 PreferencesType.LABEL, getDomain(), "", "Instructions",
-                "Instructions");
+                "Instructions", manager.getConfigManager(), manager.getIdentity());
         setting.setValue("<html><p>"
                 + "The VLC media source requires that VLC's web interface is"
                 + " enabled. To do this, follow the steps below:</p>"
@@ -237,7 +237,8 @@ public class VlcMediaSourcePlugin extends BasePlugin implements MediaSource {
         general.addSetting(setting);
         general.addSetting(new PreferencesSetting(PreferencesType.TEXT,
                 getDomain(), "host", "Hostname and port",
-                "The host and port that VLC listens on for web connections"));
+                "The host and port that VLC listens on for web connections",
+                manager.getConfigManager(), manager.getIdentity()));
 
         manager.getCategory("Plugins").addSubCategory(general);
     }

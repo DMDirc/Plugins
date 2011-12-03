@@ -22,9 +22,9 @@
 
 package com.dmdirc.addons.ui_swing.components.modes;
 
+import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.validating.ValidatingJTextField;
-import com.dmdirc.config.ConfigManager;
 import com.dmdirc.util.validators.RegexStringValidator;
 
 import java.awt.Component;
@@ -62,18 +62,18 @@ public final class ParamModePanel extends JPanel implements ActionListener {
      * @param thisMode The mode that this panel should deal with
      * @param state The current state of the mode
      * @param value The current value of the mode
-     * @param configManager The config manager to use to get mode names
+     * @param controller  Swing controller to gain access to settings/icons
      */
     public ParamModePanel(final String thisMode, final boolean state,
-            final String value, final ConfigManager configManager) {
+            final String value, final SwingController controller) {
         super();
         this.mode = thisMode;
         this.originalValue = value;
         String text;
         String tooltip;
-        if (configManager.hasOptionString("server", "mode" + mode)) {
-            tooltip = "Mode " + mode + ": " + configManager.getOption(
-                    "server", "mode" + mode);
+        if (controller.getGlobalConfig().hasOptionString("server", "mode" + mode)) {
+            tooltip = "Mode " + mode + ": " + controller.getGlobalConfig()
+                    .getOption("server", "mode" + mode);
         } else {
             tooltip = "Mode " + mode + ": Unknown";
         }
@@ -82,8 +82,8 @@ public final class ParamModePanel extends JPanel implements ActionListener {
 
         text = "Mode " + mode + ": ";
 
-        if (configManager.hasOptionString("server", "mode" + mode)) {
-            text = configManager.getOption("server", "mode" + mode)
+        if (controller.getGlobalConfig().hasOptionString("server", "mode" + mode)) {
+            text = controller.getGlobalConfig().getOption("server", "mode" + mode)
                     + " [+" + mode + "]: ";
         }
 
@@ -92,8 +92,8 @@ public final class ParamModePanel extends JPanel implements ActionListener {
         checkBox.setOpaque(UIUtilities.getTabbedPaneOpaque());
         add(checkBox);
 
-        textField = new ValidatingJTextField(new RegexStringValidator("^[^ ]*$",
-                "Cannot contain spaces"));
+        textField = new ValidatingJTextField(controller.getIconManager(),
+                new RegexStringValidator("^[^ ]*$", "Cannot contain spaces"));
         textField.setText(value);
         add(textField, "growx, pushx");
 

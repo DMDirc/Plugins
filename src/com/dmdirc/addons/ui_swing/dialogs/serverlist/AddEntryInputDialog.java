@@ -31,6 +31,7 @@ import com.dmdirc.util.validators.URIValidator;
 import com.dmdirc.util.validators.Validator;
 import com.dmdirc.addons.serverlists.ServerGroup;
 
+import com.dmdirc.ui.IconManager;
 import java.awt.Window;
 import java.awt.Dialog.ModalityType;
 import java.awt.event.ActionEvent;
@@ -75,18 +76,23 @@ public class AddEntryInputDialog extends StandardDialog {
     private final JTree items;
     /** Parent model. */
     private final ServerListModel model;
+    /** Icon manager. */
+    private final IconManager iconManager;
 
     /**
      * Instantiates a new standard input dialog.
      *
+     * @param iconManager Icon manager
      * @param items Parent tree
      * @param owner Dialog owner
      * @param model Server list model
      */
-    public AddEntryInputDialog(final Window owner, final JTree items,
+    public AddEntryInputDialog(final IconManager iconManager,
+            final Window owner, final JTree items,
             final ServerListModel model) {
         super(owner, ModalityType.MODELESS);
 
+        this.iconManager = iconManager;
         this.items = items;
         this.model = model;
         this.entryValidator = new NotEmptyValidator();
@@ -122,8 +128,8 @@ public class AddEntryInputDialog extends StandardDialog {
      */
     private void initComponents() {
         orderButtons(new JButton(), new JButton());
-        entryName = new ValidatingJTextField(entryValidator);
-        uri = new ValidatingJTextField(new URIJTextField(), uriValidator);
+        entryName = new ValidatingJTextField(iconManager, entryValidator);
+        uri = new ValidatingJTextField(iconManager, new URIJTextField(), uriValidator);
         blurb = new TextLabel(message);
         validateText();
     }

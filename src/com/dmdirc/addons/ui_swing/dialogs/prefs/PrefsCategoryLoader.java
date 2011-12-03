@@ -64,19 +64,26 @@ public class PrefsCategoryLoader extends LoggingSwingWorker<JPanel, Object> {
             getValue();
     /** Error panel. */
     private JPanel errorCategory;
+    /** Category panel. */
     private final CategoryPanel categoryPanel;
+    /** Category to display. */
     private final PreferencesCategory category;
+    /** Prefs component factory instance. */
+    private final PrefsComponentFactory factory;
 
     /**
      * Instantiates a new preferences category loader.
      *
+     * @param factory Prefs component factory instance
      * @param categoryPanel Parent Category panel
      * @param category Preferences Category to load
      */
-    public PrefsCategoryLoader(final CategoryPanel categoryPanel,
+    public PrefsCategoryLoader(final PrefsComponentFactory factory,
+            final CategoryPanel categoryPanel,
             final PreferencesCategory category) {
         super();
 
+        this.factory = factory;
         this.categoryPanel = categoryPanel;
         this.category = category;
 
@@ -93,8 +100,6 @@ public class PrefsCategoryLoader extends LoggingSwingWorker<JPanel, Object> {
 
     /**
      * {@inheritDoc}
-     *
-     * @throws Exception if unable to compute a result
      */
     @Override
     protected JPanel doInBackground() {
@@ -198,7 +203,7 @@ public class PrefsCategoryLoader extends LoggingSwingWorker<JPanel, Object> {
             /** {@inheritDoc} */
             @Override
             public void run() {
-                JComponent option = PrefsComponentFactory.getComponent(setting);
+                JComponent option = factory.getComponent(setting);
                 option.setToolTipText(null);
                 setObject(option);
             }

@@ -25,6 +25,7 @@ package com.dmdirc.addons.ui_swing.dialogs.serverlist;
 import com.dmdirc.addons.ui_swing.components.LockedLayer;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.addons.serverlists.ServerGroupItem;
+import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.ui.core.util.URLHandler;
 
 import java.awt.Window;
@@ -80,12 +81,13 @@ public final class ServerListDialog extends StandardDialog implements
     /**
      * Creates the dialog if one doesn't exist, and displays it.
      *
+     * @param controller Swing Controller
      * @param parentWindow Parent window
      * @param urlHandler The URL Handler to use to handle clicked links
      */
-    public static void showServerListDialog(final Window parentWindow,
-            final URLHandler urlHandler) {
-        me = getServerListDialog(parentWindow, urlHandler);
+    public static void showServerListDialog(final SwingController controller,
+            final Window parentWindow, final URLHandler urlHandler) {
+        me = getServerListDialog(controller, parentWindow, urlHandler);
 
         me.display();
         me.requestFocusInWindow();
@@ -94,16 +96,19 @@ public final class ServerListDialog extends StandardDialog implements
     /**
      * Returns the current instance of the ServerListDialog.
      *
+     * @param controller Swing Controller
      * @param parentWindow Parent window
      * @param urlHandler The URL Handler to use to handle clicked links
+     *
      * @return The current ServerListDialog instance
      */
     public static ServerListDialog getServerListDialog(
-            final Window parentWindow, final URLHandler urlHandler) {
+            final SwingController controller, final Window parentWindow,
+            final URLHandler urlHandler) {
         synchronized (ServerListDialog.class) {
             if (me == null) {
-                me = new ServerListDialog(parentWindow, ModalityType.MODELESS,
-                        urlHandler);
+                me = new ServerListDialog(controller, parentWindow,
+                ModalityType.MODELESS, urlHandler);
             }
         }
 
@@ -117,8 +122,9 @@ public final class ServerListDialog extends StandardDialog implements
      * @param modalityType Desired modality
      * @param urlHandler The URL Handler to use to handle clicked links
      */
-    private ServerListDialog(final Window window,
-            final ModalityType modalityType, final URLHandler urlHandler) {
+    private ServerListDialog(final SwingController controller,
+            final Window window, final ModalityType modalityType,
+            final URLHandler urlHandler) {
         super(window, modalityType);
 
         setTitle("Server List");
@@ -141,7 +147,7 @@ public final class ServerListDialog extends StandardDialog implements
                 null)));
         profileLayer = new JXLayer<Profiles>(new Profiles(model), profileLock);
         performLayer = new JXLayer<Perform>(new Perform(model), performLock);
-        settingsLayer = new JXLayer<Settings>(new Settings(model),
+        settingsLayer = new JXLayer<Settings>(new Settings(controller, model),
                 settingsLock);
         infoLayer = new JXLayer<Info>(new Info(model, urlHandler), infoLock);
         help = new Help();
@@ -149,7 +155,8 @@ public final class ServerListDialog extends StandardDialog implements
 
         setLayout(new MigLayout("fill, wrap 2, wmin 600, wmax 600"));
 
-        add(new Tree(model, this), "grow, spany 4, wmax 150, wmin 150");
+        add(new Tree(controller.getIconManager(), model, this),
+                "grow, spany 4, wmax 150, wmin 150");
         add(help, "pos 160 0.5al");
         add(infoLayer, "growx, pushx");
         add(settingsLayer, "grow, push, gaptop unrel, gapbottom unrel");

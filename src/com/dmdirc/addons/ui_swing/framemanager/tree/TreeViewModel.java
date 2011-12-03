@@ -24,9 +24,11 @@ package com.dmdirc.addons.ui_swing.framemanager.tree;
 
 import com.dmdirc.FrameContainerComparator;
 import com.dmdirc.GlobalWindow;
-import com.dmdirc.config.IdentityManager;
+import com.dmdirc.addons.ui_swing.SwingController;
 
 import javax.swing.tree.DefaultTreeModel;
+
+import lombok.Getter;
 
 /**
  * A simple sorted tree data model based on DefaultTreeModel.
@@ -41,28 +43,21 @@ public class TreeViewModel extends DefaultTreeModel {
     private static final long serialVersionUID = 1;
     /** Frame container comparator. */
     private final FrameContainerComparator comparator;
+    /** Parent UI Controller. */
+    @Getter
+    private SwingController controller;
 
     /**
      * Creates a tree in which any node can have children.
      *
+     * @param controller Parent UI
      * @param root a TreeNode object that is the root of the tree.
      */
-    public TreeViewModel(final TreeViewNode root) {
-        this(root, false);
-    }
+    public TreeViewModel(final SwingController controller,
+            final TreeViewNode root) {
+        super(root, false);
 
-    /**
-     * Creates a tree specifying whether any node can have children,
-     * or whether only certain nodes can have children.
-     *
-     * @param asksAllowsChildren true = ask whether child can have chilren,
-     * false all nodes can have chilren.
-     * @param root a root TreeNode.
-     */
-    public TreeViewModel(final TreeViewNode root,
-            final boolean asksAllowsChildren) {
-        super(root, asksAllowsChildren);
-
+        this.controller = controller;
         comparator = new FrameContainerComparator();
     }
 
@@ -105,12 +100,12 @@ public class TreeViewModel extends DefaultTreeModel {
             return 0;
         }
 
-        if (parent.equals(root) && !IdentityManager.getGlobalConfig().
+        if (parent.equals(root) && !getController().getGlobalConfig().
                 getOptionBool("ui", "sortrootwindows")) {
             return parent.getChildCount();
         }
 
-        if (IdentityManager.getGlobalConfig().getOptionBool("ui",
+        if (getController().getGlobalConfig().getOptionBool("ui",
                 "sortchildwindows")) {
             for (int i = 0; i < parent.getChildCount(); i++) {
                 final TreeViewNode child = (TreeViewNode) parent.getChildAt(i);

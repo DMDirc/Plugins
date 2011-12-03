@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_swing.dialogs;
 
 import com.dmdirc.addons.ui_swing.MainFrame;
+import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.parser.common.ChannelJoinRequest;
 
 import java.awt.Dialog.ModalityType;
@@ -42,16 +43,17 @@ public class ChannelJoinDialog extends StandardInputDialog {
      * Creates a new dialog which prompts a user and then joins the channel
      * they specify.
      *
-     * @param owner Parent window
+     * @param controller Swing controller
      * @param modality Window modality
      * @param title Window title
      * @param message Window message
      */
-    public ChannelJoinDialog(final MainFrame owner, final ModalityType modality,
-            final String title, final String message) {
-        super(owner, modality, title, message);
+    public ChannelJoinDialog(final SwingController controller,
+            final ModalityType modality, final String title,
+            final String message) {
+        super(controller, controller.getMainFrame(), modality, title, message);
 
-        this.mainFrame = owner;
+        this.mainFrame = controller.getMainFrame();
     }
 
     /** {@inheritDoc} */
