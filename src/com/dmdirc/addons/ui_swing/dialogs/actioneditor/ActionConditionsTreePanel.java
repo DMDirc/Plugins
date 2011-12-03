@@ -29,6 +29,7 @@ import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.addons.ui_swing.components.validating.ValidatingJTextField;
 import com.dmdirc.actions.validators.ConditionRuleValidator;
 
+import com.dmdirc.ui.IconManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
@@ -72,13 +73,18 @@ public class ActionConditionsTreePanel extends JPanel implements ActionListener,
     private ConditionRuleValidator treeValidator;
     /** validates. */
     private boolean validates = true;
+    /** Icon manager. */
+    private IconManager iconManager;
 
     /**
      * Instantiates the panel.
+     *
+     * @param iconManager Icon manager
      */
-    public ActionConditionsTreePanel() {
+    public ActionConditionsTreePanel(final IconManager iconManager) {
         super();
 
+        this.iconManager = iconManager;
         initComponents();
         addListeners();
         layoutComponents();
@@ -94,7 +100,7 @@ public class ActionConditionsTreePanel extends JPanel implements ActionListener,
         customButton = new JRadioButton("The conditions match a custom rule");
         treeValidator = new ConditionRuleValidator(conditionCount);
 
-        rule = new ValidatingJTextField(treeValidator);
+        rule = new ValidatingJTextField(iconManager, treeValidator);
 
         group.add(allButton);
         group.add(oneButton);

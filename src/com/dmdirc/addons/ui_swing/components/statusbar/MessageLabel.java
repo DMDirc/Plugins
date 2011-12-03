@@ -23,7 +23,7 @@
 package com.dmdirc.addons.ui_swing.components.statusbar;
 
 import com.dmdirc.addons.ui_swing.UIUtilities;
-import com.dmdirc.config.IdentityManager;
+import com.dmdirc.config.ConfigManager;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.StatusMessage;
 import com.dmdirc.interfaces.ui.StatusBarComponent;
@@ -67,20 +67,23 @@ public class MessageLabel extends JPanel implements StatusBarComponent,
     private StatusMessage currentMessage;
     /** Timer to clear the message. */
     private transient TimerTask messageTimer;
+    /** Config manager to read settings from. */
+    private ConfigManager config;
 
     /**
      * Instantiates a new message label.
      *
      * @param parentWindow Parent window
+     * @param config Config manager to read settings from
      */
-    public MessageLabel(final Window parentWindow) {
+    public MessageLabel(final Window parentWindow, final ConfigManager config) {
         super(new MigLayout("fill, ins 0, gap 0  0"));
+        this.config = config;
         queue = new ConcurrentLinkedQueue<StatusMessage>();
-        defaultMessage = new StatusMessage(null, "Ready.", null, -1,
-                IdentityManager.getGlobalConfig());
+        defaultMessage = new StatusMessage(null, "Ready.", null, -1, config);
         currentMessage = defaultMessage;
         label = new JLabel();
-        historyLabel = new MessagePopup(this, parentWindow);
+        historyLabel = new MessagePopup(this, parentWindow, config);
         label.setText("Ready.");
         label.setBorder(new SidelessEtchedBorder(
                 SidelessEtchedBorder.Side.RIGHT));
@@ -114,8 +117,7 @@ public class MessageLabel extends JPanel implements StatusBarComponent,
                 if (currentMessage.getIconType() == null) {
                     label.setIcon(null);
                 } else {
-                    label.setIcon(new IconManager(IdentityManager
-                            .getGlobalConfig()).getIcon(
+                    label.setIcon(new IconManager(config).getIcon(
                             currentMessage.getIconType()));
                 }
                 label.setText(UIUtilities.clipStringifNeeded(MessageLabel.this,

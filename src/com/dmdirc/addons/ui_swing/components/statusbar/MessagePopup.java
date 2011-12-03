@@ -22,7 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.components.statusbar;
 
-import com.dmdirc.config.IdentityManager;
+import com.dmdirc.config.ConfigManager;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.StatusMessage;
 
@@ -57,19 +57,24 @@ class MessagePopup extends StatusbarTogglePanel<JLabel> {
     private final List<StatusMessage> messages;
     /** Parent panel. */
     private final JPanel parent;
+    /** Config manager. */
+    private final ConfigManager configManager;
 
     /**
      * Creates a new message history popup.
      *
      * @param parent Parent to size against
      * @param parentWindow Parent window
+     * @param configManager Config manager
      */
-    public MessagePopup(final JPanel parent, final Window parentWindow) {
+    public MessagePopup(final JPanel parent, final Window parentWindow,
+            final ConfigManager configManager) {
         super(new JLabel("^"),
                 new SidelessEtchedBorder(SidelessEtchedBorder.Side.LEFT),
                 new SidelessEtchedBorder(SidelessEtchedBorder.Side.TOP));
         this.parentWindow = parentWindow;
         this.parent = parent;
+        this.configManager = configManager;
         messages = new ArrayList<StatusMessage>();
     }
 
@@ -164,9 +169,9 @@ class MessagePopup extends StatusbarTogglePanel<JLabel> {
 
             for (StatusMessage message : messages) {
                 panel.add(new JLabel(message.getMessage(), message.getIconType()
-                        == null ? null : new IconManager(IdentityManager
-                        .getGlobalConfig()).getIcon(message.getIconType()),
-                        SwingConstants.LEFT), "grow, push, wrap");
+                        == null ? null : new IconManager(configManager)
+                        .getIcon(message.getIconType()), SwingConstants.LEFT),
+                        "grow, push, wrap");
             }
         }
 

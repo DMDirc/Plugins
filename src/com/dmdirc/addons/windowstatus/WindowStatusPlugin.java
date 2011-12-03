@@ -223,13 +223,16 @@ public final class WindowStatusPlugin extends BasePlugin
 
         category.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
                 getDomain(), "channel.shownone", "Show 'none' count",
-                "Should the count for users with no state be shown?"));
+                "Should the count for users with no state be shown?",
+                manager.getConfigManager(), manager.getIdentity()));
         category.addSetting(new PreferencesSetting(PreferencesType.TEXT,
                 getDomain(), "channel.noneprefix", "'None' count prefix",
-                "The Prefix to use when showing the 'none' count"));
+                "The Prefix to use when showing the 'none' count",
+                manager.getConfigManager(), manager.getIdentity()));
         category.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
                 getDomain(), "client.showname", "Show real name",
-                "Should the realname for clients be shown if known?"));
+                "Should the realname for clients be shown if known?",
+                manager.getConfigManager(), manager.getIdentity()));
 
         manager.getCategory("Plugins").addSubCategory(category);
     }

@@ -22,9 +22,9 @@
 
 package com.dmdirc.addons.ui_swing.components.modes;
 
+import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
-import com.dmdirc.config.ConfigManager;
 
 import java.awt.Insets;
 import java.util.HashMap;
@@ -111,7 +111,7 @@ public abstract class ModesPane extends JPanel {
                     mode.subSequence(0, 1));
 
             final ParamModePanel panel = new ParamModePanel(mode, state, value,
-                    getConfigManager());
+                    getSwingController());
 
             getParamModes().put(mode, panel);
         }
@@ -235,11 +235,11 @@ public abstract class ModesPane extends JPanel {
     }
 
     /**
-     * Returns the config manager to retrieve values from
+     * Returns the Swing controller to grab various objects from.
      *
-     * @return Config manager
+     * @return Swing controller
      */
-    public abstract ConfigManager getConfigManager();
+    public abstract SwingController getSwingController();
 
     /**
      * Checks whether there is a plain text description for this mode.

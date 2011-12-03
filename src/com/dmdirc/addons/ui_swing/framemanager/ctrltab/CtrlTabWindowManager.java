@@ -77,7 +77,7 @@ public class CtrlTabWindowManager implements SwingWindowListener,
             final MainFrame mainFrame,
             final JComponent component) {
         nodes = new HashMap<Window, TreeViewNode>();
-        model = new TreeViewModel(new TreeViewNode(null, null));
+        model = new TreeViewModel(controller, new TreeViewNode(null, null));
         selectionModel = new DefaultTreeSelectionModel();
         treeScroller = new TreeScroller(model, selectionModel, false) {
 
