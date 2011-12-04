@@ -29,6 +29,7 @@ import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.addons.ui_swing.dialogs.ChannelJoinDialog;
+import com.dmdirc.addons.ui_swing.dialogs.channellist.ChannelListDialog;
 
 import java.awt.Dialog.ModalityType;
 import java.awt.event.ActionEvent;
@@ -56,7 +57,7 @@ public class ChannelMenu extends JMenu implements ActionListener,
     /** Main frame. */
     private final MainFrame mainFrame;
     /** Menu items to be disabled/enabled. */
-    private JMenuItem csd, join;
+    private JMenuItem csd, join, list;
 
     /**
      * Creates a new channel menu.
@@ -92,6 +93,13 @@ public class ChannelMenu extends JMenu implements ActionListener,
         csd.setActionCommand("ChannelSettings");
         csd.addActionListener(this);
         add(csd);
+
+        list = new JMenuItem();
+        list.setText("List channels...");
+        list.setMnemonic('l');
+        list.setActionCommand("ListChannels");
+        list.addActionListener(this);
+        add(list);
     }
 
     /** {@inheritDoc} */
@@ -107,6 +115,8 @@ public class ChannelMenu extends JMenu implements ActionListener,
             if (activeWindow instanceof Channel) {
                 controller.showChannelSettingsDialog(((Channel) activeWindow));
             }
+        } else if (e.getActionCommand().equals("ListChannels")) {
+            new ChannelListDialog(controller).display();
         }
     }
 
