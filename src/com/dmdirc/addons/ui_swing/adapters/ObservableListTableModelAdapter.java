@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.adapters;
 
+import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.util.ListObserver;
 import com.dmdirc.util.ObservableList;
 
@@ -67,21 +68,42 @@ public abstract class ObservableListTableModelAdapter<T> extends AbstractTableMo
         @Override
         public void onItemsAdded(final Object source, final int startIndex,
                 final int endIndex) {
-            fireTableRowsInserted(startIndex, endIndex);
+            UIUtilities.invokeLater(new Runnable() {
+
+                /** {@inheritDoc} */
+                @Override
+                public void run() {
+                    fireTableRowsInserted(startIndex, endIndex);
+                }
+            });
         }
 
         /** {@inheritDoc} */
         @Override
         public void onItemsRemoved(final Object source, final int startIndex,
                 final int endIndex) {
-            fireTableRowsDeleted(startIndex, endIndex);
+            UIUtilities.invokeLater(new Runnable() {
+
+                /** {@inheritDoc} */
+                @Override
+                public void run() {
+                    fireTableRowsDeleted(startIndex, endIndex);
+                }
+            });
         }
 
         /** {@inheritDoc} */
         @Override
         public void onItemsChanged(final Object source, final int startIndex,
                 final int endIndex) {
-            fireTableRowsUpdated(startIndex, endIndex);
+            UIUtilities.invokeLater(new Runnable() {
+
+                /** {@inheritDoc} */
+                @Override
+                public void run() {
+                    fireTableRowsUpdated(startIndex, endIndex);
+                }
+            });
         }
     }
 
