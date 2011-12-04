@@ -68,6 +68,7 @@ public class StandardDialog extends JDialog {
             setIconImages(owner.getIconImages());
         }
         orderButtons(new JButton(), new JButton());
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
     }
 
     /**
@@ -83,6 +84,7 @@ public class StandardDialog extends JDialog {
             setIconImages(owner.getIconImages());
         }
         orderButtons(new JButton(), new JButton());
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
     }
 
     /**
