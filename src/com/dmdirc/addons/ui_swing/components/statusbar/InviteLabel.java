@@ -27,6 +27,7 @@ import com.dmdirc.Server;
 import com.dmdirc.ServerManager;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionType;
+import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SelectionListener;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
@@ -67,8 +68,8 @@ public class InviteLabel extends StatusbarPopupPanel<JLabel> implements
     private final JMenuItem dismiss;
     /** Accept invites menu item. */
     private final JMenuItem accept;
-    /** Swing controller. */
-    private final SwingController controller;
+    /** Main frame. */
+    private final MainFrame mainFrame;
     /** Active server. */
     private Server activeServer;
 
@@ -76,11 +77,13 @@ public class InviteLabel extends StatusbarPopupPanel<JLabel> implements
      * Instantiates a new invite label.
      *
      * @param controller Swing controller
+     * @param mainFrame Main frame
      */
-    public InviteLabel(final SwingController controller) {
+    public InviteLabel(final SwingController controller,
+            final MainFrame mainFrame) {
         super(new JLabel());
 
-        this.controller = controller;
+        this.mainFrame = mainFrame;
 
         setBorder(BorderFactory.createEtchedBorder());
         label.setIcon(new IconManager(controller.getGlobalConfig())
@@ -98,7 +101,7 @@ public class InviteLabel extends StatusbarPopupPanel<JLabel> implements
             server.addInviteListener(this);
         }
 
-        controller.getMainFrame().addSelectionListener(this);
+        mainFrame.addSelectionListener(this);
         ActionManager.getActionManager().registerListener(this,
                 CoreActionType.SERVER_CONNECTED);
         ActionManager.getActionManager().registerListener(this,
@@ -112,7 +115,7 @@ public class InviteLabel extends StatusbarPopupPanel<JLabel> implements
     /** {@inheritDoc} */
     @Override
     protected StatusbarPopupWindow getWindow() {
-        return new InvitePopup(this, activeServer, controller.getMainFrame());
+        return new InvitePopup(this, activeServer, mainFrame);
     }
 
     /**
