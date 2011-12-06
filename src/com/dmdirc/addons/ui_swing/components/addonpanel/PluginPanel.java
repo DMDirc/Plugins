@@ -75,7 +75,7 @@ public class PluginPanel extends AddonPanel implements ActionListener {
         list.addAll(PluginManager.getPluginManager().getPluginInfos());
         Collections.sort(list);
         for (PluginInfo plugin : list) {
-            if (plugin.getMetaData().getParent() == null) {
+            if (plugin.getMetaData().getParents().length == 0) {
                 final List<PluginInfo> childList = new ArrayList<PluginInfo>();
                 sortedList.add(plugin);
                 for (PluginInfo child : plugin.getChildren()) {
