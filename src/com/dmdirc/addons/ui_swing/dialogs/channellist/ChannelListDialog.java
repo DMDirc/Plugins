@@ -27,6 +27,7 @@ import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.JLabel;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -40,11 +41,15 @@ public class ChannelListDialog extends StandardDialog implements
     private static final long serialVersionUID = 1L;
     /** List panel. */
     private ChannelListPanel list;
+    /** Size label. */
+    private JLabel total;
 
     public ChannelListDialog(final SwingController controller) {
         super(controller.getMainFrame(), ModalityType.MODELESS);
         setTitle("Channel List");
-        list = new ChannelListPanel(controller.getMainFrame().getActiveFrame().getContainer().getServer());
+        total = new JLabel("No results.");
+        list = new ChannelListPanel(controller.getMainFrame().getActiveFrame()
+                .getContainer().getServer(), total);
         layoutComponents();
         getCancelButton().setText("Close");
         getCancelButton().addActionListener(this);
@@ -53,8 +58,9 @@ public class ChannelListDialog extends StandardDialog implements
     /** Lays out the components in this dialog. */
     private void layoutComponents() {
         setLayout(new MigLayout("fill, wmin 40%, hmin 40%, hidemode 3"));
-        add(list, "grow, push, wrap");
-        add(getCancelButton(), "split, right");
+        add(list, "grow, push, wrap, spanx 2");
+        add(total, "left");
+        add(getCancelButton(), "right");
     }
 
     /**
