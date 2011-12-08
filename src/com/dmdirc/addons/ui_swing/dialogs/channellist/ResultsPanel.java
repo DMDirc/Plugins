@@ -24,39 +24,58 @@ package com.dmdirc.addons.ui_swing.dialogs.channellist;
 
 import com.dmdirc.addons.ui_swing.components.PackingTable;
 import com.dmdirc.lists.GroupListManager;
+import javax.swing.JLabel;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
+import javax.swing.table.TableModel;
 
 import net.miginfocom.swing.MigLayout;
 
 /**
  * Displays the results of a group list search in a table.
  */
-public class ResultsPanel extends JPanel {
+public class ResultsPanel extends JPanel implements TableModelListener {
 
     /** Serial version UID. */
     private static final long serialVersionUID = 1L;
     /** Group list manager to perform searches on. */
     private GroupListManager manager;
+    /** Size label. */
+    private JLabel total;
 
     /**
      * Creates a new panel to show group list results.
      *
      * @param manager Group manager to show results
+     * @param total Label to update with total
      */
-    public ResultsPanel(final GroupListManager manager) {
+    public ResultsPanel(final GroupListManager manager, final JLabel total) {
         this.manager = manager;
+        this.total = total;
         layoutComponents();
     }
 
     /** Lays out the components in the panel. */
     private void layoutComponents() {
+        final ChannelListTableModel model = new ChannelListTableModel(manager);
         final JScrollPane sp = new JScrollPane();
-        final PackingTable table = new PackingTable(
-                new ChannelListTableModel(manager), sp);
+        final PackingTable table = new PackingTable(model, sp);
+        model.addTableModelListener(this);
         sp.setViewportView(table);
         setLayout(new MigLayout("fill, hidemode 3, ins 0"));
         add(sp, "grow, push");
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @param e Table event model
+     */
+    @Override
+    public void tableChanged(final TableModelEvent e) {
+        total.setText("Total: " + ((TableModel) e.getSource()).getRowCount());
     }
 }
