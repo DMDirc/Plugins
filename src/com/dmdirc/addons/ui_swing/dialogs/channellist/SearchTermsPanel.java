@@ -32,10 +32,12 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import lombok.AutoGenMethodStub;
 
 import net.miginfocom.swing.MigLayout;
 
 /** Gathers input for a group list search and begins the search. */
+@AutoGenMethodStub
 public class SearchTermsPanel extends JPanel implements ActionListener, GroupListObserver {
 
     /** Serial version UID. */
@@ -63,6 +65,7 @@ public class SearchTermsPanel extends JPanel implements ActionListener, GroupLis
     private void layoutComponents() {
         search = new JButton("Search");
         search.addActionListener(this);
+        searchTerms.addActionListener(this);
         setLayout(new MigLayout("fill, hidemode 3, ins 0"));
         add(new JLabel("Search terms: "), "align label");
         add(searchTerms, "growx, pushx");
@@ -78,12 +81,6 @@ public class SearchTermsPanel extends JPanel implements ActionListener, GroupLis
     public void actionPerformed(final ActionEvent e) {
         manager.startSearch(searchTerms.getText());
         search.setEnabled(false);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onGroupListStarted() {
-        //Ignore
     }
 
     /** {@inheritDoc} */
