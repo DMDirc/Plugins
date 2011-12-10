@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_swing.dialogs.channellist;
 
 import com.dmdirc.lists.GroupListManager;
+import com.dmdirc.lists.GroupListObserver;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -34,10 +35,8 @@ import javax.swing.JTextField;
 
 import net.miginfocom.swing.MigLayout;
 
-/**
- * Gathers input for a group list search and begins the search.
- */
-public class SearchTermsPanel extends JPanel implements ActionListener {
+/** Gathers input for a group list search and begins the search. */
+public class SearchTermsPanel extends JPanel implements ActionListener, GroupListObserver {
 
     /** Serial version UID. */
     private static final long serialVersionUID = 1L;
@@ -45,6 +44,8 @@ public class SearchTermsPanel extends JPanel implements ActionListener {
     private GroupListManager manager;
     /** Search terms input field. */
     private JTextField searchTerms;
+    /** Search button. */
+    private JButton search;
 
     /**
      * Creates a new panel to gather input for a group list search.
@@ -55,11 +56,12 @@ public class SearchTermsPanel extends JPanel implements ActionListener {
         this.manager = manager;
         searchTerms = new JTextField();
         layoutComponents();
+        manager.addGroupListObserver(this);
     }
 
     /** Lays out the components in the panel. */
     private void layoutComponents() {
-        final JButton search = new JButton("Search");
+        search = new JButton("Search");
         search.addActionListener(this);
         setLayout(new MigLayout("fill, hidemode 3, ins 0"));
         add(new JLabel("Search terms: "), "align label");
@@ -75,5 +77,20 @@ public class SearchTermsPanel extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(final ActionEvent e) {
         manager.startSearch(searchTerms.getText());
+        search.setEnabled(false);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onGroupListStarted() {
+        //Ignore
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onGroupListFinished() {
+        if (search != null) {
+            search.setEnabled(true);
+        }
     }
 }
