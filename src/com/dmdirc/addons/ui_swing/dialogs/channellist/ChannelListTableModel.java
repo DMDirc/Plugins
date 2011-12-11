@@ -89,4 +89,14 @@ public class ChannelListTableModel extends ObservableListTableModelAdapter<Group
         return COLUMN_NAMES[column];
     }
 
+    /**
+     * Returns the group list entry at the specified row.
+     *
+     * @param row Row index
+     *
+     * @return Group list entry
+     */
+    public GroupListEntry getGroupListEntry(final int row) {
+        return list.get(row);
+    }
 }

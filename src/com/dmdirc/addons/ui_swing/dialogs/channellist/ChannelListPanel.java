@@ -24,8 +24,8 @@ package com.dmdirc.addons.ui_swing.dialogs.channellist;
 
 import com.dmdirc.Server;
 import com.dmdirc.lists.GroupListManager;
-import javax.swing.JLabel;
 
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import net.miginfocom.swing.MigLayout;
