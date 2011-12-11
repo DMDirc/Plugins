@@ -24,20 +24,27 @@ package com.dmdirc.addons.ui_swing.dialogs.channellist;
 
 import com.dmdirc.addons.ui_swing.components.PackingTable;
 import com.dmdirc.lists.GroupListManager;
-import javax.swing.JLabel;
 
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
 
+import lombok.AutoGenMethodStub;
+
 import net.miginfocom.swing.MigLayout;
 
 /**
  * Displays the results of a group list search in a table.
  */
-public class ResultsPanel extends JPanel implements TableModelListener {
+@AutoGenMethodStub
+public class ResultsPanel extends JPanel implements TableModelListener,
+        MouseListener {
 
     /** Serial version UID. */
     private static final long serialVersionUID = 1L;
@@ -45,6 +52,10 @@ public class ResultsPanel extends JPanel implements TableModelListener {
     private GroupListManager manager;
     /** Size label. */
     private JLabel total;
+    /** Results table. */
+    private PackingTable table;
+    /** Results table model. */
+    private ChannelListTableModel model;
 
     /**
      * Creates a new panel to show group list results.
@@ -60,9 +71,10 @@ public class ResultsPanel extends JPanel implements TableModelListener {
 
     /** Lays out the components in the panel. */
     private void layoutComponents() {
-        final ChannelListTableModel model = new ChannelListTableModel(manager);
+        model = new ChannelListTableModel(manager);
         final JScrollPane sp = new JScrollPane();
-        final PackingTable table = new PackingTable(model, sp);
+        table = new PackingTable(model, sp);
+        table.addMouseListener(this);
         model.addTableModelListener(this);
         sp.setViewportView(table);
         setLayout(new MigLayout("fill, hidemode 3, ins 0"));
@@ -77,5 +89,20 @@ public class ResultsPanel extends JPanel implements TableModelListener {
     @Override
     public void tableChanged(final TableModelEvent e) {
         total.setText("Total: " + ((TableModel) e.getSource()).getRowCount());
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @param e Mouse event
+     */
+    @Override
+    public void mouseClicked(final MouseEvent e) {
+        if (e.getClickCount() == 2) {
+            final int index = table.getSelectedRow();
+            if (index != -1) {
+                manager.joinGroupListEntry(model.getGroupListEntry(index));
+            }
+        }
     }
 }
