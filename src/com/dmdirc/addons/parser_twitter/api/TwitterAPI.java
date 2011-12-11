@@ -1442,10 +1442,6 @@ public class TwitterAPI {
             if (isDebug()) {
                 handleError(ex, "* (1) setStatus: " + status + " | " + id, apiInput, apiOutput);
             }
-        } catch (final IOException ex) {
-            if (isDebug()) {
-                handleError(ex, "* (2) setStatus: " + status + " | " + id, apiInput, apiOutput);
-            }
         }
 
         return false;
