@@ -64,7 +64,11 @@ public final class AddonToggle {
         this.pi = pi;
         this.theme = theme;
         listeners = new ListenerList();
-        state = pi.isLoaded();
+        if (pi == null) {
+            state = theme.isEnabled();
+        } else {
+            state = pi.isLoaded();
+        }
         updateComponent = UpdateChecker.findComponent("addon-" + getID());
         if (updateComponent != null) {
             updateState = UpdateChecker.isEnabled(updateComponent);
