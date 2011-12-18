@@ -144,6 +144,9 @@ public class AddonInfoPanel extends JPanel implements ActionListener,
      */
     @Override
     public void actionPerformed(final ActionEvent e) {
+        if (addonToggle == null) {
+            return;
+        }
         if (e.getSource() == update) {
             addonToggle.setUpdateState(update.isSelected());
         } else if (e.getSource() == status) {
