@@ -70,6 +70,8 @@ public class AddonInfoPanel extends JPanel implements ActionListener,
         //updateLabel = new TextLabel("Check for updates for this addon", false);
         listeners = new ListenerList();
 
+        status.setEnabled(false);
+
         layoutComponents();
         update.addActionListener(this);
         status.addActionListener(this);
