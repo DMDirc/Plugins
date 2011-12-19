@@ -95,8 +95,9 @@ public class AddonCell extends JPanel implements AddonToggleListener {
         name.setFont(name.getFont().deriveFont(Font.BOLD));
         status.setForeground(foreground);
 
-        final int initialPadding;
-        if (info.getPluginInfo().getMetaData().getParents().length == 0) {
+        int initialPadding;
+        if (info.getTheme()!= null || info.getPluginInfo().getMetaData()
+                .getParents().length == 0) {
             initialPadding = 20;
         } else {
             initialPadding = 30;
