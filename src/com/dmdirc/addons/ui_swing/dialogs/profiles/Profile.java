@@ -26,6 +26,7 @@ import com.dmdirc.config.Identity;
 import com.dmdirc.config.IdentityManager;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -44,6 +45,8 @@ public class Profile {
     private List<String> nicknames;
     /** Does this profile need saving? */
     private boolean modified;
+    /** Has this profile been marked deleted? */
+    private boolean deleted = false;
 
     /** Creates a new profile. */
     public Profile() {
@@ -56,7 +59,7 @@ public class Profile {
      * @param name Profile's name
      */
     public Profile(final String name) {
-        this(name, "");
+        this(name, null);
     }
 
     /**
@@ -91,7 +94,8 @@ public class Profile {
      */
     public Profile(final String name, final String nickname,
             final String realname, final String ident) {
-        this(name, Arrays.asList(new String[]{nickname, }), realname, ident);
+        this(name, (nickname == null) ? new ArrayList<String>()
+                : Arrays.asList(new String[]{nickname, }), realname, ident);
     }
 
     /**
@@ -121,7 +125,7 @@ public class Profile {
             final boolean modified) {
         this.oldName = name;
         this.name = name;
-        this.nicknames = nicknames;
+        this.nicknames = new ArrayList<String>(nicknames);
         this.realname = realname;
         this.ident = ident;
         this.modified = modified;
@@ -155,7 +159,7 @@ public class Profile {
      * @return Profile's nicknames list
      */
     public List<String> getNicknames() {
-        return nicknames;
+        return new ArrayList<String>(nicknames);
     }
 
     /**
@@ -165,7 +169,7 @@ public class Profile {
      */
     public void setNicknames(final List<String> nicknames) {
         if (!this.nicknames.equals(nicknames)) {
-            this.nicknames = nicknames;
+            this.nicknames = new ArrayList<String>(nicknames);
             setModified(true);
         }
     }
@@ -202,6 +206,24 @@ public class Profile {
      */
     public void delNickname(final String nickname) {
         if (nicknames.remove(nickname)) {
+            setModified(true);
+        }
+    }
+
+    /**
+     * Edits a nickname in the list.
+     *
+     * @param nickname Nickname to edit
+     * @param newNickname Edited nickname
+     */
+    public void editNickname(final String nickname, final String newNickname) {
+        if (nickname.isEmpty() || newNickname.isEmpty()) {
+            return;
+        }
+        if (!nickname.equals(newNickname)) {
+            final int index = nicknames.indexOf(nickname);
+            nicknames.remove(nickname);
+            nicknames.add(index, newNickname);
             setModified(true);
         }
     }
@@ -275,6 +297,24 @@ public class Profile {
      */
     public void setModified(final boolean modified) {
         this.modified = modified;
+    }
+
+    /**
+     * Has this profile been marked deleted?
+     *
+     * @return true iif the profile has been marked deleted
+     */
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    /**
+     * Sets whether the profile has been deleted.
+     *
+     * @param deleted Marks this profile deletion
+     */
+    public void setDeleted(final boolean deleted) {
+        this.deleted = deleted;
     }
 
     /** Saves this profile. */
@@ -378,6 +418,6 @@ public class Profile {
     public String toString() {
         return "[Profile: name='" + name + "', nickname='" + nicknames +
                 "', realname='" + realname + "', ident='" + ident +
-                "', modified='" + modified + "']";
+                "', modified='" + modified + "', deleted='" + deleted + "']";
     }
 }
