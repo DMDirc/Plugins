@@ -25,7 +25,7 @@ package com.dmdirc.addons.ui_swing;
 import com.dmdirc.Channel;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.Server;
-import com.dmdirc.addons.ui_swing.commands.*; //NOPMD
+import com.dmdirc.addons.ui_swing.commands.*;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.addons.ui_swing.components.statusbar.FeedbackNag;
 import com.dmdirc.addons.ui_swing.components.statusbar.SwingStatusBar;
@@ -46,26 +46,26 @@ import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
+import com.dmdirc.interfaces.ui.InputWindow;
+import com.dmdirc.interfaces.ui.UIController;
+import com.dmdirc.interfaces.ui.Window;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.plugins.BasePlugin;
 import com.dmdirc.plugins.PluginInfo;
+import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.core.components.StatusBarManager;
 import com.dmdirc.ui.core.util.URLHandler;
-import com.dmdirc.interfaces.ui.InputWindow;
-import com.dmdirc.interfaces.ui.UIController;
-import com.dmdirc.interfaces.ui.Window;
-import com.dmdirc.ui.IconManager;
 import com.dmdirc.updater.Version;
 import com.dmdirc.util.ReturnableThread;
 import com.dmdirc.util.validators.NumericalValidator;
 
+import java.awt.Dialog.ModalityType;
 import java.awt.Font;
 import java.awt.GraphicsEnvironment;
 import java.awt.KeyboardFocusManager;
 import java.awt.Toolkit;
-import java.awt.Dialog.ModalityType;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -77,8 +77,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import javax.swing.JMenuItem;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.UIManager.LookAndFeelInfo;
+import javax.swing.UnsupportedLookAndFeelException;
 
 import lombok.Getter;
 
@@ -125,6 +125,9 @@ public class SwingController extends BasePlugin implements UIController {
     /** Global config manager. */
     @Getter
     private final ConfigManager globalConfig;
+    /** Identity Manager. */
+    @Getter
+    private final IdentityManager identityManager;
     /** Global config identity. */
     @Getter
     private final Identity globalIdentity;
@@ -142,16 +145,15 @@ public class SwingController extends BasePlugin implements UIController {
      * Instantiates a new SwingController.
      *
      * @param pluginInfo Plugin info
+     * @param identityManager Identity Manager
      */
-    public SwingController(final PluginInfo pluginInfo) {
+    public SwingController(final PluginInfo pluginInfo, final IdentityManager identityManager) {
         super();
         this.pluginInfo = pluginInfo;
-        globalConfig = IdentityManager.getIdentityManager()
-                .getGlobalConfiguration();
-        globalIdentity = IdentityManager.getIdentityManager()
-                .getGlobalConfigIdentity();
-        addonIdentity = IdentityManager.getIdentityManager()
-                .getGlobalAddonIdentity();
+        this.identityManager = identityManager;
+        globalConfig = identityManager.getGlobalConfiguration();
+        globalIdentity = identityManager.getGlobalConfigIdentity();
+        addonIdentity = identityManager.getGlobalAddonIdentity();
         iconManager = new IconManager(globalConfig);
         prefsComponentFactory = new PrefsComponentFactory(this);
         setAntiAlias();
