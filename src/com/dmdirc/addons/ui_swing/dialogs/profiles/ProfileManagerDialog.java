@@ -23,61 +23,104 @@
 package com.dmdirc.addons.ui_swing.dialogs.profiles;
 
 import com.dmdirc.addons.ui_swing.SwingController;
-import com.dmdirc.addons.ui_swing.components.ListScroller;
+import com.dmdirc.addons.ui_swing.cinch.ConfirmAction;
+import com.dmdirc.addons.ui_swing.cinch.InputAction;
+import com.dmdirc.addons.ui_swing.cinch.SwingUIBindings;
+import com.dmdirc.addons.ui_swing.cinch.ValidatesIf;
 import com.dmdirc.addons.ui_swing.components.renderers.ProfileListCellRenderer;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
-import com.dmdirc.addons.ui_swing.dialogs.NewServerDialog;
+import com.dmdirc.addons.ui_swing.components.validating.ValidatableJTextField;
+import com.dmdirc.addons.ui_swing.components.validating.ValidatableReorderableJList;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
-import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
-import com.dmdirc.config.Identity;
-import com.dmdirc.config.IdentityManager;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import com.palantir.ptoss.cinch.core.Bindable;
+import com.palantir.ptoss.cinch.core.Bindings;
+import com.palantir.ptoss.cinch.swing.Action;
+import com.palantir.ptoss.cinch.swing.Bound;
+import com.palantir.ptoss.cinch.swing.BoundSelection;
+import com.palantir.ptoss.cinch.swing.EnabledIf;
 
+import java.awt.EventQueue;
+
+import javax.swing.Box;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
-import javax.swing.WindowConstants;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 
 import net.miginfocom.swing.MigLayout;
 
 /** Profile editing dialog. */
-public final class ProfileManagerDialog extends StandardDialog implements
-        ActionListener, ListSelectionListener {
+@SuppressWarnings("unused")
+public final class ProfileManagerDialog extends StandardDialog {
 
-    /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
-     */
-    private static final long serialVersionUID = 2;
+    /** Serial version UID. */
+    private static final long serialVersionUID = 3;
     /** Previously created instance of ProfileEditorDialog. */
     private static volatile ProfileManagerDialog me;
-    /** Swing controller. */
-    private final SwingController controller;
-    /** Profile list. */
-    private JList profileList;
-    /** Profile list mode. */
-    private ProfileListModel model;
-    /** Profile detail panel. */
-    private ProfileDetailPanel details;
-    /** Info label. */
-    private TextLabel infoLabel;
-    /** Add button. */
-    private JButton addButton;
-    /** Delete button. */
-    private JButton deleteButton;
-    /** Selected index. */
-    private int selectedIndex;
-    /** Deleted profiles. */
-    private final List<Profile> deletedProfiles;
+    /** Model used to store state. */
+    private final ProfileManagerModel model;
+    /** Dialog controller, used to perform actions. */
+    @Bindable
+    private final ProfileManagerController controller;
+    /** List of profiles. */
+    @Bound(to = "profiles")
+    @BoundSelection(to = "selectedProfile", multi = false)
+    private final JList profileList = new JList();
+    /** List of nicknames for a profile. */
+    @Bound(to = "nicknames")
+    @BoundSelection(to = "selectedNickname", multi = false)
+    @EnabledIf(to = "manipulateProfileAllowed")
+    @ValidatesIf(to = "nicknamesValid")
+    private final ValidatableReorderableJList nicknames
+            = new ValidatableReorderableJList();
+    /** Adds a new nickname to the active profile. */
+    @InputAction(
+            call = "addNickname",
+            validator = AddNicknameValidator.class)
+    @EnabledIf(to = "manipulateProfileAllowed")
+    private final JButton addNickname = new JButton("Add");
+    /** Edits the active nickname in the active profile. */
+    @InputAction(
+            call = "editNickname",
+            validator = EditNicknameValidator.class,
+            content = "getSelectedNickname")
+    @EnabledIf(to = "manipulateNicknameAllowed")
+    private final JButton editNickname = new JButton("Edit");
+    /** Deletes the selected nickname from the active profile. */
+    @ConfirmAction(call = "deleteNickname")
+    @EnabledIf(to = "manipulateNicknameAllowed")
+    private final JButton deleteNickname = new JButton("Delete");
+    /** Edits the name of the active profile. */
+    @Bound(to = "name")
+    @EnabledIf(to = "manipulateProfileAllowed")
+    @ValidatesIf(to = "nameValid")
+    private final ValidatableJTextField name;
+    /** Edits the realname for the active profile. */
+    @Bound(to = "realname")
+    @EnabledIf(to = "manipulateProfileAllowed")
+    @ValidatesIf(to = "realnameValid")
+    private final ValidatableJTextField realname;
+    /** Edits the ident for the active profile. */
+    @Bound(to = "ident")
+    @EnabledIf(to = "manipulateProfileAllowed")
+    @ValidatesIf(to = "identValid")
+    private final ValidatableJTextField ident;
+    /** Adds a new profile to the list. */
+    @Action(call = "addProfile")
+    private final JButton addProfile = new JButton("Add");
+    /** Deletes the active profile. */
+    @ConfirmAction(call = "deleteProfile")
+    @EnabledIf(to = "manipulateProfileAllowed")
+    private final JButton deleteProfile = new JButton("Delete");
+    /** Saves and closes the dialog. */
+    @Action(call = "saveAndCloseDialog")
+    @EnabledIf(to = "OKAllowed")
+    private final JButton okButton = getOkButton();
+    /** Closes the dialog without saving. */
+    @Action(call = "closeDialog")
+    private final JButton cancelButton = getCancelButton();
 
     /**
      * Creates a new instance of ProfileEditorDialog.
@@ -86,20 +129,14 @@ public final class ProfileManagerDialog extends StandardDialog implements
      */
     private ProfileManagerDialog(final SwingController controller) {
         super(controller.getMainFrame(), ModalityType.MODELESS);
-        this.controller = controller;
-        deletedProfiles = new ArrayList<Profile>();
-
+        this.model = new ProfileManagerModel(controller.getIdentityManager());
+        this.controller = new ProfileManagerController(this, model);
+        final Bindings bindings = SwingUIBindings.extendedBindings();
+        realname = new ValidatableJTextField(controller.getIconManager());
+        ident = new ValidatableJTextField(controller.getIconManager());
+        name = new ValidatableJTextField(controller.getIconManager());
         initComponents();
-
-        layoutComponents();
-
-        addListeners();
-
-        if (model.getSize() > 0) {
-            profileList.setSelectedIndex(0);
-        } else {
-            selectedIndex = -1;
-        }
+        bindings.bind(this);
     }
 
     /**
@@ -108,10 +145,16 @@ public final class ProfileManagerDialog extends StandardDialog implements
      * @param controller Swing controller
      */
     public static void showProfileManagerDialog(final SwingController controller) {
-        me = getProfileManagerDialog(controller);
+        EventQueue.invokeLater(new Runnable() {
 
-        me.display();
-        me.requestFocusInWindow();
+            @Override
+            public void run() {
+                me = getProfileManagerDialog(controller);
+
+                me.display();
+                me.requestFocusInWindow();
+            }
+        });
     }
 
     /**
@@ -134,199 +177,42 @@ public final class ProfileManagerDialog extends StandardDialog implements
 
     /** Initialises the components. */
     private void initComponents() {
-        setTitle("Profile Editor");
-        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        setResizable(false);
-
-        orderButtons(new JButton(), new JButton());
-
-        model = new ProfileListModel();
-        profileList = new JList(model);
-        details = new ProfileDetailPanel(model, controller, this);
-        addButton = new JButton("Add");
-        deleteButton = new JButton("Delete");
-        infoLabel =
-                new TextLabel("Profiles describe information needed to "
-                + "connect to a server.  You can use a different profile for "
-                + "each connection.");
-
-        profileList.setCellRenderer(new ProfileListCellRenderer());
         profileList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        ListScroller.register(profileList);
+        nicknames.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        profileList.setCellRenderer(new ProfileListCellRenderer());
 
-        populateList();
-    }
+        setLayout(new MigLayout("fill, wmin 700, wmax 700, flowy"));
 
-    /** Lays out the dialog. */
-    private void layoutComponents() {
-        getContentPane().setLayout(new MigLayout("fill, wmin 700, wmax 700"));
-
-        getContentPane().add(infoLabel, "wrap, spanx 2");
-        getContentPane().add(new JScrollPane(profileList),
-                "growy, wmin 200, wmax 200");
-        getContentPane().add(details, "grow, wrap");
-        getContentPane().add(addButton, "wrap, wmin 200, wmax 200");
-        getContentPane().add(deleteButton, "left, wmin 200, wmax 200");
-        getContentPane().add(getLeftButton(), "split, right, sg button");
-        getContentPane().add(getRightButton(), "right, sg button");
-    }
-
-    /** Adds listeners to the components. */
-    private void addListeners() {
-        getOkButton().addActionListener(this);
-        getCancelButton().addActionListener(this);
-
-        addButton.addActionListener(this);
-        deleteButton.addActionListener(this);
-
-        profileList.addListSelectionListener(this);
-    }
-
-    /** Populates the profile list. */
-    public void populateList() {
-        final String profileString = "profile";
-        model.clear();
-        final List<Identity> profiles = IdentityManager.getCustomIdentities(
-                "profile");
-        for (Identity profile : profiles) {
-            model.add(new Profile(profile.getName(),
-                    profile.getOptionList(profileString, "nicknames"),
-                    profile.getOption(profileString, "realname"),
-                    profile.getOption(profileString, "ident"),
-                    false));
-        }
-    }
-
-    /** Saves the profile list. */
-    private void save() {
-        if (details.validateDetails()) {
-            details.save();
-            final Iterator<Profile> it = model.iterator();
-
-            while (it.hasNext()) {
-                it.next().save();
-            }
-
-            for (Profile profile : deletedProfiles) {
-                profile.delete();
-            }
-
-            dispose();
-        }
-        if (NewServerDialog.isNewServerDialogShowing()) {
-            NewServerDialog.getNewServerDialog(controller).populateProfiles();
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Action event
-     */
-    @Override
-    public void actionPerformed(final ActionEvent e) {
-        if (e.getSource().equals(getOkButton())) {
-            save();
-        } else if (e.getSource().equals(getCancelButton())) {
-            dispose();
-        } else if (e.getSource().equals(addButton)) {
-            addProfile();
-        } else if (e.getSource().equals(deleteButton)) {
-            new StandardQuestionDialog(this, ModalityType.DOCUMENT_MODAL,
-                    "Delete Confirmaton",
-                    "Are you sure you want to delete this profile?") {
-
-                /**
-                 * A version number for this class. It should be changed whenever the class
-                 * structure is changed (or anything else that would prevent serialized
-                 * objects being unserialized with the new class).
-                 */
-                private static final long serialVersionUID = 1;
-
-                /** {@inheritDoc} */
-                @Override
-                public boolean save() {
-                    final Profile selectedProfile = (Profile) profileList.
-                            getSelectedValue();
-                    int selected = profileList.getSelectedIndex();
-                    deletedProfiles.add(selectedProfile);
-                    model.remove(selectedProfile);
-                    final int profilesSize = profileList.getModel().getSize();
-                    if (profilesSize == 0) {
-                        selected = -1;
-                    } else if (selected >= profilesSize) {
-                        selected = profilesSize - 1;
-                    } else if (selected <= 0) {
-                        selected = 0;
-                    }
-                    profileList.setSelectedIndex(selected);
-                    return true;
-                }
-
-                /** {@inheritDoc} */
-                @Override
-                public void cancelled() {
-                    //Ignore
-                }
-            }.display();
-        }
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public boolean enterPressed() {
-        executeAction(getOkButton());
-        return true;
-    }
-
-    /**
-     * Prompts and adds a new profile
-     */
-    private void addProfile() {
-        final String nick = System.getProperty("user.name").replace(' ', '_');
-
-        String name = "New Profile";
-        int i = 1;
-
-        while (model.contains(name)) {
-            name = "New Profile " + ++i;
-        }
-
-        final Profile profile = new Profile(name, nick, nick);
-        model.add(profile);
-        profileList.setSelectedIndex(model.indexOf(profile));
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void valueChanged(final ListSelectionEvent e) {
-        if (e.getValueIsAdjusting() && !details.validateDetails()) {
-            profileList.setSelectedIndex(selectedIndex);
-        }
-        if (!e.getValueIsAdjusting()) {
-            details.save();
-            details.setProfile((Profile) profileList.getSelectedValue());
-            if (profileList.getSelectedIndex() == -1) {
-                deleteButton.setEnabled(false);
-            } else {
-                deleteButton.setEnabled(true);
-            }
-        }
-        if (model.getSize() == 0) {
-            getOkButton().setEnabled(false);
-        } else {
-            getOkButton().setEnabled(true);
-        }
-        selectedIndex = profileList.getSelectedIndex();
+        add(new TextLabel("Profiles describe the information needed to connect "
+                + "to a server.  You can use a different profile for each "
+                + "connection."), "spanx 3");
+        add(new JScrollPane(profileList), "spany 3, growy, "
+                + "wmin 200, wmax 200");
+        add(addProfile, "grow");
+        add(deleteProfile, "grow, wrap");
+        add(new JLabel("Name: "), "align label, span 2, split 2, flowx, sgx label");
+        add(name, "growx, pushx, sgx textinput");
+        add(new JLabel("Nicknames: "), "align label, span 2, split 2, flowx, sgx label, aligny 50%");
+        add(new JScrollPane(nicknames), "grow, push");
+        add(Box.createGlue(), "flowx, span 4, split 4, sgx label");
+        add(addNickname, "grow");
+        add(editNickname, "grow");
+        add(deleteNickname, "grow");
+        add(new JLabel("Realname: "), "align label, span 2, split 2, flowx, sgx label");
+        add(realname, "growx, pushx, sgx textinput");
+        add(new JLabel("Ident: "), "align label, span 2, split 2, flowx, sgx label");
+        add(ident, "growx, pushx, sgx textinput");
+        add(getLeftButton(), "flowx, split 2, right, sg button");
+        add(getRightButton(), "right, sg button");
     }
 
     /** {@inheritDoc} */
     @Override
     public void dispose() {
-        if (me == null) {
-            return;
-        }
-        synchronized (me) {
+        synchronized (ProfileManagerDialog.class) {
+            if (me == null) {
+                return;
+            }
             super.dispose();
             me = null;
         }
