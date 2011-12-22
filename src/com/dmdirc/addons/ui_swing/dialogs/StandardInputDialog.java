@@ -25,6 +25,8 @@ package com.dmdirc.addons.ui_swing.dialogs;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.addons.ui_swing.components.validating.ValidatingJTextField;
+import com.dmdirc.config.ConfigManager;
+import com.dmdirc.ui.IconManager;
 import com.dmdirc.util.validators.ValidationResponse;
 import com.dmdirc.util.validators.Validator;
 
@@ -126,7 +128,11 @@ public abstract class StandardInputDialog extends StandardDialog {
      */
     private void initComponents() {
         orderButtons(new JButton(), new JButton());
-        textField = new ValidatingJTextField(controller.getIconManager(), validator);
+        if (controller == null) {
+            textField = new ValidatingJTextField(new IconManager(new ConfigManager("", "", "", "")), validator);
+        } else {
+            textField = new ValidatingJTextField(controller.getIconManager(), validator);
+        }
         blurb = new TextLabel(message);
         validateText();
     }
