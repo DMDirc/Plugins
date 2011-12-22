@@ -99,6 +99,8 @@ version:
             <zipfileset src="${plugins.lib}/miglayout-3.7.4-swing.jar" includes="net/miginfocom/layout/**,net/miginfocom/swing/**"/>
             <zipfileset src="${plugins.lib}/menuscroller.jar" includes="darrylbu/util/**"/>
             <zipfileset src="${plugins.lib}/jxlayer.jar" includes="org/jdesktop/jxlayer/**"/>
+            <zipfileset src="${plugins.lib}/cinch.jar" includes="*/**"/>
+            <zipfileset src="${plugins.lib}/cinchsupport.jar" includes="*/**"/>
         </jar>
 
         <jar destfile="${plugins.dist}/parser_twitter.jar" update="true">

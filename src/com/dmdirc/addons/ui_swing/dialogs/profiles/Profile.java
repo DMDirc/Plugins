@@ -23,150 +23,64 @@
 package com.dmdirc.addons.ui_swing.dialogs.profiles;
 
 import com.dmdirc.config.Identity;
-import com.dmdirc.config.IdentityManager;
 
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
-/** Profile wrapper class. */
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+/**
+ * Profile wrapper class.
+ */
+@EqualsAndHashCode(exclude = {"identity", "deleted"})
+@ToString(exclude = "identity")
+@SuppressWarnings("unused")
 public class Profile {
 
-    /** Old Name. */
-    private String oldName;
-    /** Name. */
+    /** Identity backing this profile. */
+    private Identity identity;
+    /** Profile Name, must be a sanitised filename. */
+    @Getter @Setter
     private String name;
     /** Real name. */
+    @Getter @Setter
     private String realname;
     /** Ident. */
+    @Getter @Setter
     private String ident;
     /** Nicknames. */
+    @Getter @Setter
     private List<String> nicknames;
-    /** Does this profile need saving? */
-    private boolean modified;
+    /** Has this profile been marked deleted? */
+    @Getter @Setter
+    private boolean deleted = false;
 
     /** Creates a new profile. */
     public Profile() {
-        this("");
+        this(null);
     }
 
     /**
-     * Creates a new profile.
+     * Creates a new profile based off the specified Identity.
      *
-     * @param name Profile's name
+     * @param identity Identity to create profile from
      */
-    public Profile(final String name) {
-        this(name, "");
-    }
-
-    /**
-     * Creates a new profile.
-     *
-     * @param name Profile's name
-     * @param nickname Profile's nickname
-     */
-    public Profile(final String name, final String nickname) {
-        this(name, nickname, "");
-    }
-
-    /**
-     *
-     *
-     * @param name Profile's name
-     * @param nickname Profile's nickname
-     * @param realname Profile's realname
-     */
-    public Profile(final String name, final String nickname,
-            final String realname) {
-        this(name, nickname, realname, "");
-    }
-
-    /**
-     * Creates a new profile.
-     *
-     * @param name Profile's name
-     * @param nickname Profile's nickname
-     * @param realname Profile's realname
-     * @param ident Profile's ident
-     */
-    public Profile(final String name, final String nickname,
-            final String realname, final String ident) {
-        this(name, Arrays.asList(new String[]{nickname, }), realname, ident);
-    }
-
-    /**
-     * Creates a new profile.
-     *
-     * @param name Profile's name
-     * @param nicknames Profile's nicknames
-     * @param realname Profile's realname
-     * @param ident Profile's ident
-     */
-    public Profile(final String name, final List<String> nicknames,
-            final String realname, final String ident) {
-        this(name, nicknames, realname, ident, true);
-    }
-
-    /**
-     * Creates a new profile.
-     *
-     * @param name Profile's name
-     * @param nicknames Profile's nickname
-     * @param realname Profile's realname
-     * @param ident Profile's ident
-     * @param modified Has this profile been modified
-     */
-    public Profile(final String name, final List<String> nicknames,
-            final String realname, final String ident,
-            final boolean modified) {
-        this.oldName = name;
-        this.name = name;
-        this.nicknames = nicknames;
-        this.realname = realname;
-        this.ident = ident;
-        this.modified = modified;
-    }
-
-    /**
-     * Returns the name of this profile.
-     *
-     * @return Profile's name
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * Sets the name of this profile.
-     *
-     * @param name Profile's new name
-     */
-    public void setName(final String name) {
-        if (!this.name.equals(name)) {
-            this.oldName = this.name;
-            this.name = name;
-            setModified(true);
-        }
-    }
-
-    /**
-     * Gets the nicknames list for this profile.
-     *
-     * @return Profile's nicknames list
-     */
-    public List<String> getNicknames() {
-        return nicknames;
-    }
-
-    /**
-     * Sets the nicknames list for this profile.
-     *
-     * @param nicknames Profile's new nicknames list
-     */
-    public void setNicknames(final List<String> nicknames) {
-        if (!this.nicknames.equals(nicknames)) {
-            this.nicknames = nicknames;
-            setModified(true);
+    public Profile(final Identity identity) {
+        this.identity = identity;
+        if (identity == null) {
+            name = "New Profile";
+            nicknames = new ArrayList<String>();
+            realname = "";
+            ident = "";
+        } else {
+            name = identity.getOption("identity", "name");
+            nicknames = identity.getOptionList("profile", "nicknames");
+            realname = identity.getOption("profile", "realname");
+            ident = identity.getOption("profile", "ident");
         }
     }
 
@@ -178,7 +92,6 @@ public class Profile {
     public void addNickname(final String nickname) {
         if (!nicknames.contains(nickname)) {
             nicknames.add(nickname);
-            setModified(true);
         }
     }
 
@@ -191,7 +104,6 @@ public class Profile {
     public void addNickname(final String nickname, final int position) {
         if (!nicknames.contains(nickname)) {
             nicknames.add(position, nickname);
-            setModified(true);
         }
     }
 
@@ -201,183 +113,49 @@ public class Profile {
      * @param nickname An existing nickname from the profile
      */
     public void delNickname(final String nickname) {
-        if (nicknames.remove(nickname)) {
-            setModified(true);
+        nicknames.remove(nickname);
+    }
+
+    /**
+     * Edits a nickname in the list.
+     *
+     * @param nickname Nickname to edit
+     * @param newNickname Edited nickname
+     */
+    public void editNickname(final String nickname, final String newNickname) {
+        if (nickname.isEmpty() || newNickname.isEmpty()) {
+            return;
         }
-    }
-
-    /**
-     * Gets the specified nickname for this profile
-     *
-     * @param index Index of the nickname to retrieve
-     *
-     * @return Profile's nickname
-     */
-    public String getNickname(final int index) {
-        return nicknames.get(index);
-    }
-
-    /**
-     * Gets the realname for this profile.
-     *
-     * @return Profile's realname
-     */
-    public String getRealname() {
-        return realname;
-    }
-
-    /**
-     * Sets the realname for this profile.
-     *
-     * @param realname Profile's new realname
-     */
-    public void setRealname(final String realname) {
-        if (!this.realname.equals(realname)) {
-            this.realname = realname;
-            setModified(true);
+        if (!nickname.equals(newNickname)) {
+            final int index = nicknames.indexOf(nickname);
+            nicknames.remove(nickname);
+            nicknames.add(index, newNickname);
         }
-    }
-
-    /**
-     * Gets the ident for this profile.
-     *
-     * @return Profile's ident
-     */
-    public String getIdent() {
-        return ident;
-    }
-
-    /**
-     * Sets the ident for this profile.
-     *
-     * @param ident Profile's new ident
-     */
-    public void setIdent(final String ident) {
-        if (this.ident == null || !this.ident.equals(ident)) {
-            this.ident = ident;
-            setModified(true);
-        }
-    }
-
-    /**
-     * Has this profile been modified?
-     *
-     * @return true iif the profile has been modified
-     */
-    public boolean isModified() {
-        return modified;
-    }
-
-    /**
-     * Sets whether the profile has been modified.
-     *
-     * @param modified Modified state for the profile
-     */
-    public void setModified(final boolean modified) {
-        this.modified = modified;
     }
 
     /** Saves this profile. */
     public void save() {
-        if (modified) {
-            final String profileString = "profile";
-            final List<Identity> identities = IdentityManager
-                    .getCustomIdentities("profile");
-            Identity profile = null;
-
-            for (Identity identity : identities) {
-                if (identity.getName().equalsIgnoreCase(oldName)) {
-                    profile = identity;
-                    break;
-                }
+        if (identity == null) {
+            try {
+                identity = Identity.buildProfile(name);
+            } catch (IOException ex) {
+                return;
             }
-
-            if (profile == null) {
-                try {
-                    profile = Identity.buildProfile(name);
-                } catch (IOException ex) {
-                    // TODO: ??
-                }
-            }
-
-            profile.setOption("identity", "name", name);
-            profile.setOption(profileString, "nicknames", nicknames);
-            profile.setOption(profileString, "realname", realname);
-            profile.setOption(profileString, "ident", ident);
-            modified = false;
-            this.oldName = name;
         }
+
+        identity.setOption("identity", "name", name);
+        identity.setOption("profile", "nicknames", nicknames);
+        identity.setOption("profile", "realname", realname);
+        identity.setOption("profile", "ident", ident);
     }
 
-    /** Deletes the profile. */
+    /**
+     * Deletes the profile.
+     */
     public void delete() {
-        final List<Identity> identities = IdentityManager.getCustomIdentities(
-                "profile");
-        Identity profile = null;
-
-        for (Identity identity : identities) {
-            if (identity.getName().equals(name)) {
-                profile = identity;
-                break;
-            }
-        }
-
-        if (profile == null) {
+        if (identity == null) {
             return;
         }
-        profile.delete();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public boolean equals(final Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-
-        final Profile other = (Profile) obj;
-
-        if (!this.name.equals(other.name)) {
-            return false;
-        }
-        if (!this.nicknames.equals(other.nicknames)) {
-            return false;
-        }
-        if (!this.realname.equals(other.realname)) {
-            return false;
-        }
-        if (this.ident == null && other.ident != null) {
-            return false;
-        }
-        if (this.ident != null && !this.ident.equals(other.ident)) {
-            return false;
-        }
-
-        return true;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public int hashCode() {
-        int hash = 5;
-        hash = 79 * hash + (this.name != null ? this.name.hashCode() : 0);
-        hash = 79 * hash +
-                (this.nicknames != null ? this.nicknames.hashCode() : 0);
-        hash = 79 * hash +
-                (this.realname != null ? this.realname.hashCode() : 0);
-        hash = 79 * hash + (this.ident != null ? this.ident.hashCode() : 0);
-
-        return hash;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String toString() {
-        return "[Profile: name='" + name + "', nickname='" + nicknames +
-                "', realname='" + realname + "', ident='" + ident +
-                "', modified='" + modified + "']";
+        identity.delete();
     }
 }
