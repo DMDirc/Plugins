@@ -55,9 +55,9 @@ import javax.swing.ListSelectionModel;
 /**
  * Reorderable JList.
  *
- * @param <E> Type held in this list
+ * @param Type held in this list
  */
-public final class ReorderableJList<E> extends JList<E> implements DragSourceListener,
+public class ReorderableJList extends JList implements DragSourceListener,
         DropTargetListener, DragGestureListener {
 
     /**
@@ -82,7 +82,7 @@ public final class ReorderableJList<E> extends JList<E> implements DragSourceLis
 
     /** Instantiate new ReorderableJList. */
     public ReorderableJList() {
-        this(new DefaultListModel<E>());
+        this(new DefaultListModel());
     }
 
     /**
@@ -90,10 +90,10 @@ public final class ReorderableJList<E> extends JList<E> implements DragSourceLis
      *
      * @param model Model
      */
-    public ReorderableJList(final DefaultListModel<E> model) {
+    public ReorderableJList(final DefaultListModel model) {
         super(model);
 
-        setCellRenderer(new ReorderableJListCellRenderer<E>(this));
+        setCellRenderer(new ReorderableJListCellRenderer(this));
         setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         setTransferHandler(new ArrayListTransferHandler());
 
@@ -119,8 +119,8 @@ public final class ReorderableJList<E> extends JList<E> implements DragSourceLis
      * @return Returns the default list model for this list
      */
     @Override
-    public DefaultListModel<E> getModel() {
-        return (DefaultListModel<E>) super.getModel();
+    public DefaultListModel getModel() {
+        return (DefaultListModel) super.getModel();
     }
 
     /**
@@ -128,7 +128,7 @@ public final class ReorderableJList<E> extends JList<E> implements DragSourceLis
      *
      * @param model Model for the list
      */
-    public void setModel(final DefaultListModel<E> model) { //NOPMD stupid
+    public void setModel(final DefaultListModel model) { //NOPMD stupid
         super.setModel(model);
     }
 
@@ -238,7 +238,6 @@ public final class ReorderableJList<E> extends JList<E> implements DragSourceLis
 
     /** {@inheritDoc} */
     @Override
-    @SuppressWarnings("unchecked")
     public void drop(final DropTargetDropEvent dtde) {
         //check source and reject
         if (dtde.getSource() != dropTarget) {
@@ -273,10 +272,10 @@ public final class ReorderableJList<E> extends JList<E> implements DragSourceLis
 
         //move items
         final boolean sourceBeforeTarget = draggedIndex < index;
-        final DefaultListModel<E> mod = getModel();
+        final DefaultListModel mod = getModel();
         final int newIndex = sourceBeforeTarget ? index - 1 : index;
         mod.remove(draggedIndex);
-        for (E item : (ArrayList<E>) dragged) {
+        for (Object item : (ArrayList<?>) dragged) {
             mod.add(newIndex, item);
         }
 
