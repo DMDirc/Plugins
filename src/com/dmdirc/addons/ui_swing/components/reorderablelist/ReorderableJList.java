@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.components.reorderablelist;
 
-
 import com.dmdirc.addons.ui_swing.components.renderers.ReorderableJListCellRenderer;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
@@ -56,7 +55,7 @@ import javax.swing.ListSelectionModel;
 /**
  * Reorderable JList.
  */
-public final class ReorderableJList extends JList implements DragSourceListener,
+public class ReorderableJList extends JList implements DragSourceListener,
         DropTargetListener, DragGestureListener {
 
     /**

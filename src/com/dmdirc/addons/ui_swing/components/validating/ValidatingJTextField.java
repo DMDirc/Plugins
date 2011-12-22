@@ -32,6 +32,7 @@ import java.awt.Font;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseListener;
 
+import javax.swing.Icon;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
@@ -71,7 +72,6 @@ public class ValidatingJTextField extends JComponent implements DocumentListener
             final Validator<String> validator) {
         this(iconManager, new JTextField(), validator);
     }
-
     /**
      * Instantiates a new Validating text field.
      *
@@ -81,10 +81,22 @@ public class ValidatingJTextField extends JComponent implements DocumentListener
      */
     public ValidatingJTextField(final IconManager iconManager,
             final JTextField textField, final Validator<String> validator) {
+        this(iconManager.getIcon("input-error"), textField, validator);
+    }
+
+    /**
+     * Instantiates a new Validating text field.
+     *
+     * @param icon Icon to show on error
+     * @param textField JTextField to wrap
+     * @param validator Validator instance
+     */
+    public ValidatingJTextField(final Icon icon,
+            final JTextField textField, final Validator<String> validator) {
         super();
         this.textField = textField;
         this.validator = validator;
-        errorIcon = new JLabel(iconManager.getIcon("input-error"));
+        errorIcon = new JLabel(icon);
 
         setLayout(new MigLayout("fill, ins 0, hidemode 3, gap 0"));
         add(textField, "grow, pushx");
