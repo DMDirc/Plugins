@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.components.reorderablelist;
 
-
 import com.dmdirc.addons.ui_swing.components.renderers.ReorderableJListCellRenderer;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
@@ -55,8 +54,10 @@ import javax.swing.ListSelectionModel;
 
 /**
  * Reorderable JList.
+ *
+ * @param <E> Type held in this list
  */
-public final class ReorderableJList extends JList implements DragSourceListener,
+public final class ReorderableJList<E> extends JList<E> implements DragSourceListener,
         DropTargetListener, DragGestureListener {
 
     /**
@@ -81,7 +82,7 @@ public final class ReorderableJList extends JList implements DragSourceListener,
 
     /** Instantiate new ReorderableJList. */
     public ReorderableJList() {
-        this(new DefaultListModel());
+        this(new DefaultListModel<E>());
     }
 
     /**
@@ -89,10 +90,10 @@ public final class ReorderableJList extends JList implements DragSourceListener,
      *
      * @param model Model
      */
-    public ReorderableJList(final DefaultListModel model) {
+    public ReorderableJList(final DefaultListModel<E> model) {
         super(model);
 
-        setCellRenderer(new ReorderableJListCellRenderer(this));
+        setCellRenderer(new ReorderableJListCellRenderer<E>(this));
         setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         setTransferHandler(new ArrayListTransferHandler());
 
@@ -112,10 +113,14 @@ public final class ReorderableJList extends JList implements DragSourceListener,
         }
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     *
+     * @return Returns the default list model for this list
+     */
     @Override
-    public DefaultListModel getModel() {
-        return (DefaultListModel) super.getModel();
+    public DefaultListModel<E> getModel() {
+        return (DefaultListModel<E>) super.getModel();
     }
 
     /**
@@ -123,7 +128,7 @@ public final class ReorderableJList extends JList implements DragSourceListener,
      *
      * @param model Model for the list
      */
-    public void setModel(final DefaultListModel model) { //NOPMD stupid
+    public void setModel(final DefaultListModel<E> model) { //NOPMD stupid
         super.setModel(model);
     }
 
@@ -233,6 +238,7 @@ public final class ReorderableJList extends JList implements DragSourceListener,
 
     /** {@inheritDoc} */
     @Override
+    @SuppressWarnings("unchecked")
     public void drop(final DropTargetDropEvent dtde) {
         //check source and reject
         if (dtde.getSource() != dropTarget) {
@@ -267,10 +273,10 @@ public final class ReorderableJList extends JList implements DragSourceListener,
 
         //move items
         final boolean sourceBeforeTarget = draggedIndex < index;
-        final DefaultListModel mod = getModel();
+        final DefaultListModel<E> mod = getModel();
         final int newIndex = sourceBeforeTarget ? index - 1 : index;
         mod.remove(draggedIndex);
-        for (Object item : (ArrayList<?>) dragged) {
+        for (E item : (ArrayList<E>) dragged) {
             mod.add(newIndex, item);
         }
 

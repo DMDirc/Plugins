@@ -38,7 +38,7 @@ import net.miginfocom.swing.MigLayout;
 /**
  * Renderer for the reorderable JList, procides visual clues to DnD.
  */
-public class ReorderableJListCellRenderer implements ListCellRenderer {
+public class ReorderableJListCellRenderer<E> implements ListCellRenderer<E> {
 
     /**
      * A version number for this class. It should be changed whenever the class
