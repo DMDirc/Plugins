@@ -46,8 +46,8 @@ import com.dmdirc.logger.Logger;
 import com.dmdirc.ui.Colour;
 import com.dmdirc.ui.CoreUIUtils;
 import com.dmdirc.ui.IconManager;
-import com.dmdirc.util.ListenerList;
-import com.dmdirc.util.QueuedLinkedHashSet;
+import com.dmdirc.util.collections.ListenerList;
+import com.dmdirc.util.collections.QueuedLinkedHashSet;
 import com.dmdirc.util.ReturnableThread;
 
 import java.awt.Dimension;

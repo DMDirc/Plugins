@@ -30,7 +30,7 @@ import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.plugins.BasePlugin;
-import com.dmdirc.util.StreamUtil;
+import com.dmdirc.util.io.StreamUtils;
 import com.dmdirc.util.validators.ValidationResponse;
 
 import java.io.File;
@@ -97,7 +97,7 @@ public final class ScriptPlugin extends BasePlugin implements ActionListener {
             } catch (IOException e) {
                 Logger.userError(ErrorLevel.LOW, "Error reading savedVariables from '"+savedVariables.getPath()+"': "+e.getMessage(), e);
             } finally {
-                StreamUtil.close(fis);
+                StreamUtils.close(fis);
             }
         }
         super.onLoad();
@@ -116,7 +116,7 @@ public final class ScriptPlugin extends BasePlugin implements ActionListener {
         } catch (IOException e) {
             Logger.userError(ErrorLevel.LOW, "Error reading savedVariables to '"+savedVariables.getPath()+"': "+e.getMessage(), e);
         } finally {
-            StreamUtil.close(fos);
+            StreamUtils.close(fos);
         }
         super.onUnload();
     }

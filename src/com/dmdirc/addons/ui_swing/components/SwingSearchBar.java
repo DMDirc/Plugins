@@ -34,7 +34,7 @@ import com.dmdirc.interfaces.ui.SearchBar.Direction;
 import com.dmdirc.ui.messages.IRCDocument;
 import com.dmdirc.ui.messages.IRCDocumentSearcher;
 import com.dmdirc.ui.messages.LinePosition;
-import com.dmdirc.util.ListenerList;
+import com.dmdirc.util.collections.ListenerList;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

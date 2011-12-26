@@ -23,7 +23,7 @@
 package com.dmdirc.addons.mediasource_vlc;
 
 import com.dmdirc.plugins.PluginInfo;
-import com.dmdirc.util.TextFile;
+import com.dmdirc.util.io.TextFile;
 import java.io.IOException;
 import org.junit.Test;
 import static org.junit.Assert.*;

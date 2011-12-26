@@ -33,7 +33,7 @@ import com.dmdirc.logger.Logger;
 import com.dmdirc.ui.core.components.WindowComponent;
 import com.dmdirc.interfaces.ui.FrameListener;
 import com.dmdirc.interfaces.ui.Window;
-import com.dmdirc.util.ListenerList;
+import com.dmdirc.util.collections.ListenerList;
 
 import java.util.Arrays;
 import java.util.Collection;

@@ -29,7 +29,7 @@ import com.dmdirc.logger.Logger;
 import com.dmdirc.plugins.BaseFileDependantPlugin;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.PluginManager;
-import com.dmdirc.util.StreamReader;
+import com.dmdirc.util.io.StreamReader;
 import com.dmdirc.util.resourcemanager.ResourceManager;
 
 import java.io.IOException;

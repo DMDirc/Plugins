@@ -24,7 +24,7 @@ package com.dmdirc.addons.lagdisplay;
 
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.plugins.PluginManager;
-import com.dmdirc.util.RollingList;
+import com.dmdirc.util.collections.RollingList;
 
 import java.awt.Color;
 import java.awt.Dimension;

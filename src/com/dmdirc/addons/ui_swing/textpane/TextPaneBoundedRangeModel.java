@@ -21,7 +21,7 @@
  */
 package com.dmdirc.addons.ui_swing.textpane;
 
-import com.dmdirc.util.ListenerList;
+import com.dmdirc.util.collections.ListenerList;
 
 import javax.swing.BoundedRangeModel;
 import javax.swing.event.ChangeEvent;

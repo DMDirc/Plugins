@@ -24,7 +24,7 @@ package com.dmdirc.addons.logging;
 
 import com.dmdirc.interfaces.ActionController;
 import com.dmdirc.plugins.PluginInfo;
-import com.dmdirc.util.MapList;
+import com.dmdirc.util.collections.MapList;
 import static org.mockito.Mockito.*;
 
 public class TestLoggingPlugin extends LoggingPlugin {

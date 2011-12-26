@@ -24,7 +24,7 @@ package com.dmdirc.addons.ui_swing.components.durationeditor;
 
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.util.DateUtils;
-import com.dmdirc.util.ListenerList;
+import com.dmdirc.util.collections.ListenerList;
 
 import java.awt.Insets;
 import java.awt.Window;

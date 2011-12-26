@@ -24,7 +24,7 @@ package com.dmdirc.addons.scriptplugin;
 
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
-import com.dmdirc.util.StreamUtil;
+import com.dmdirc.util.io.StreamUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -99,7 +99,7 @@ public class ScriptEngineWrapper {
                 fr = new FileReader(file);
                 result.eval(fr);
             } finally {
-                StreamUtil.close(fr);
+                StreamUtils.close(fr);
             }
         }
 

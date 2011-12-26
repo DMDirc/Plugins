@@ -28,10 +28,10 @@ import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
-import com.dmdirc.util.ConfigFile;
-import com.dmdirc.util.DownloadListener;
-import com.dmdirc.util.Downloader;
-import com.dmdirc.util.InvalidConfigFileException;
+import com.dmdirc.util.io.ConfigFile;
+import com.dmdirc.util.io.DownloadListener;
+import com.dmdirc.util.io.Downloader;
+import com.dmdirc.util.io.InvalidConfigFileException;
 
 import java.io.File;
 import java.io.IOException;

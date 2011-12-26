@@ -22,7 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.components;
 
-import com.dmdirc.util.ListenerList;
+import com.dmdirc.util.collections.ListenerList;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

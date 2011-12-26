@@ -25,7 +25,7 @@ package com.dmdirc.addons.ui_swing.wizard;
 import com.dmdirc.addons.ui_swing.components.EtchedLineBorder;
 import com.dmdirc.addons.ui_swing.components.TitlePanel;
 import com.dmdirc.addons.ui_swing.components.EtchedLineBorder.BorderSide;
-import com.dmdirc.util.ListenerList;
+import com.dmdirc.util.collections.ListenerList;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;

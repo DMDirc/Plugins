@@ -31,7 +31,7 @@ import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.util.CommandUtils;
-import com.dmdirc.util.StreamReader;
+import com.dmdirc.util.io.StreamReader;
 
 import java.io.File;
 import java.io.IOException;
