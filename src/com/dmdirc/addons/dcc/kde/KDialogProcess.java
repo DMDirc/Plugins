@@ -22,7 +22,7 @@
 
 package com.dmdirc.addons.dcc.kde;
 
-import com.dmdirc.util.StreamReader;
+import com.dmdirc.util.io.StreamReader;
 
 import java.io.File;
 import java.io.IOException;

@@ -47,7 +47,7 @@ import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.plugins.BasePlugin;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.ui.messages.Styliser;
-import com.dmdirc.util.StreamUtil;
+import com.dmdirc.util.io.StreamUtils;
 
 import java.awt.Color;
 import java.io.BufferedWriter;
@@ -188,7 +188,7 @@ public class LoggingPlugin extends BasePlugin implements ActionListener,
             final Collection<String> old = new ArrayList<String>(openFiles.size());
             for (Map.Entry<String, OpenFile> entry : openFiles.entrySet()) {
                 if (entry.getValue().lastUsedTime < oldestTime) {
-                    StreamUtil.close(entry.getValue().writer);
+                    StreamUtils.close(entry.getValue().writer);
                     old.add(entry.getKey());
                 }
             }
@@ -211,7 +211,7 @@ public class LoggingPlugin extends BasePlugin implements ActionListener,
 
         synchronized (openFiles) {
             for (OpenFile file : openFiles.values()) {
-                StreamUtil.close(file.writer);
+                StreamUtils.close(file.writer);
             }
             openFiles.clear();
         }
@@ -338,7 +338,7 @@ public class LoggingPlugin extends BasePlugin implements ActionListener,
             case QUERY_CLOSED:
                 appendLine(filename, "*** Query closed at: %s", openedAtFormat.format(new Date()));
                 if (openFiles.containsKey(filename)) {
-                    StreamUtil.close(openFiles.get(filename).writer);
+                    StreamUtils.close(openFiles.get(filename).writer);
                     openFiles.remove(filename);
                 }
                 break;
@@ -387,7 +387,7 @@ public class LoggingPlugin extends BasePlugin implements ActionListener,
             case CHANNEL_CLOSED:
                 appendLine(filename, "*** Channel closed at: %s", openedAtFormat.format(new Date()));
                 if (openFiles.containsKey(filename)) {
-                    StreamUtil.close(openFiles.get(filename).writer);
+                    StreamUtils.close(openFiles.get(filename).writer);
                     openFiles.remove(filename);
                 }
                 break;

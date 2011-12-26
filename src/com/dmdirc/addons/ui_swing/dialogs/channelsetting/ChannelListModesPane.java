@@ -32,7 +32,7 @@ import com.dmdirc.config.IdentityManager;
 import com.dmdirc.util.validators.NotEmptyValidator;
 import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.parser.common.ChannelListModeItem;
-import com.dmdirc.util.MapList;
+import com.dmdirc.util.collections.MapList;
 
 import java.awt.Window;
 import java.awt.Dialog.ModalityType;

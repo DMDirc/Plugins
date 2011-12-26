@@ -28,7 +28,7 @@ import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.addons.ui_swing.ComboBoxWidthModifier;
 import com.dmdirc.addons.ui_swing.components.renderers.ActionTypeRenderer;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
-import com.dmdirc.util.MapList;
+import com.dmdirc.util.collections.MapList;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

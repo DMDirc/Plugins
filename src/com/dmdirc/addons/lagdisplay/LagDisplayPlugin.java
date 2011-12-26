@@ -43,7 +43,7 @@ import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.plugins.BasePlugin;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.PluginManager;
-import com.dmdirc.util.RollingList;
+import com.dmdirc.util.collections.RollingList;
 
 import java.util.Date;
 import java.util.HashMap;

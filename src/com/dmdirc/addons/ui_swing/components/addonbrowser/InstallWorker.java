@@ -27,7 +27,7 @@ import com.dmdirc.actions.ActionManager;
 import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.themes.ThemeManager;
-import com.dmdirc.util.Downloader;
+import com.dmdirc.util.io.Downloader;
 
 import java.io.File;
 import java.io.IOException;

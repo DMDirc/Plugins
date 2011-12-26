@@ -23,8 +23,8 @@
 package com.dmdirc.addons.ui_swing.adapters;
 
 import com.dmdirc.addons.ui_swing.UIUtilities;
-import com.dmdirc.util.ListObserver;
-import com.dmdirc.util.ObservableList;
+import com.dmdirc.util.collections.ListObserver;
+import com.dmdirc.util.collections.ObservableList;
 
 import javax.swing.table.AbstractTableModel;
 

@@ -29,7 +29,7 @@ import com.dmdirc.addons.ui_swing.components.ImageToggleButton;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.ui.IconManager;
-import com.dmdirc.util.ListenerList;
+import com.dmdirc.util.collections.ListenerList;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

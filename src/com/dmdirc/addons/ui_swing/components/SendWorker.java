@@ -24,7 +24,7 @@ package com.dmdirc.addons.ui_swing.components;
 
 import com.dmdirc.addons.ui_swing.dialogs.FeedbackDialog;
 import com.dmdirc.config.IdentityManager;
-import com.dmdirc.util.Downloader;
+import com.dmdirc.util.io.Downloader;
 
 import java.io.IOException;
 import java.net.MalformedURLException;

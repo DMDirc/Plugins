@@ -30,7 +30,7 @@ import com.dmdirc.addons.serverlists.ServerEntry;
 import com.dmdirc.addons.serverlists.ServerGroup;
 import com.dmdirc.addons.serverlists.ServerGroupItem;
 import com.dmdirc.addons.serverlists.ServerList;
-import com.dmdirc.util.ListenerList;
+import com.dmdirc.util.collections.ListenerList;
 
 import java.io.IOException;
 import java.net.URI;

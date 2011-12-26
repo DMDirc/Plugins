@@ -28,7 +28,7 @@ import com.dmdirc.ui.themes.Theme;
 import com.dmdirc.ui.themes.ThemeManager;
 import com.dmdirc.updater.UpdateChecker;
 import com.dmdirc.updater.UpdateComponent;
-import com.dmdirc.util.ListenerList;
+import com.dmdirc.util.collections.ListenerList;
 
 /**
  * Wraps a Addon object (Theme or Plugin) with a boolean to indicate whether

@@ -32,7 +32,7 @@ import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.plugins.BasePlugin;
 import com.dmdirc.plugins.PluginInfo;
-import com.dmdirc.util.Downloader;
+import com.dmdirc.util.io.Downloader;
 
 import java.io.File;
 import java.io.IOException;

@@ -26,7 +26,7 @@ import com.dmdirc.addons.nowplaying.MediaSource;
 import com.dmdirc.addons.nowplaying.MediaSourceState;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
-import com.dmdirc.util.StreamUtil;
+import com.dmdirc.util.io.StreamUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -144,8 +144,8 @@ public class TitleMediaSource implements MediaSource {
             Logger.userError(ErrorLevel.LOW, "Unable to retrieve media source info",
                     ex);
         } finally {
-            StreamUtil.close(reader);
-            StreamUtil.close(input);
+            StreamUtils.close(reader);
+            StreamUtils.close(input);
         }
 
         return "";

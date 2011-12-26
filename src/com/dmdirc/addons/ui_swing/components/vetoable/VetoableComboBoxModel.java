@@ -22,7 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.components.vetoable;
 
-import com.dmdirc.util.ListenerList;
+import com.dmdirc.util.collections.ListenerList;
 
 import javax.swing.DefaultComboBoxModel;
 

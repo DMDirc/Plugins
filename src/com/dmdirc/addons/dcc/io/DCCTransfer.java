@@ -23,7 +23,7 @@
 package com.dmdirc.addons.dcc.io;
 
 import com.dmdirc.addons.dcc.DCCTransferHandler;
-import com.dmdirc.util.ListenerList;
+import com.dmdirc.util.collections.ListenerList;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;

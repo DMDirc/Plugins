@@ -24,7 +24,7 @@ package com.dmdirc.addons.ui_swing.dialogs.actioneditor;
 
 import com.dmdirc.actions.ActionTypeComparator;
 import com.dmdirc.interfaces.actions.ActionType;
-import com.dmdirc.util.MapList;
+import com.dmdirc.util.collections.MapList;
 
 import java.awt.FontMetrics;
 import java.util.Collections;

@@ -28,7 +28,7 @@ import com.dmdirc.addons.ui_swing.components.frames.InputTextFrame;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.interfaces.ui.InputField;
 import com.dmdirc.interfaces.ui.InputValidationListener;
-import com.dmdirc.util.ListenerList;
+import com.dmdirc.util.collections.ListenerList;
 import com.dmdirc.util.ReturnableThread;
 
 import java.awt.Color;
