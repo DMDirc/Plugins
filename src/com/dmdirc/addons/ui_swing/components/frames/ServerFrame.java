@@ -50,11 +50,7 @@ import net.miginfocom.swing.MigLayout;
 public final class ServerFrame extends InputTextFrame implements
         ActionListener, CertificateProblemListener {
 
-    /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
-     */
+    /** Serial version UID. */
     private static final long serialVersionUID = 9;
     /** Swing controller. */
     private final SwingController controller;
@@ -99,8 +95,7 @@ public final class ServerFrame extends InputTextFrame implements
     @Override
     public void actionPerformed(final ActionEvent actionEvent) {
         if (actionEvent.getSource() == settingsMI) {
-            ServerSettingsDialog.showServerSettingsDialog(controller,
-                    getContainer().getServer(), getController().getMainFrame());
+            controller.showDialog(ServerSettingsDialog.class);
         }
     }
 
@@ -149,7 +144,7 @@ public final class ServerFrame extends InputTextFrame implements
     public void certificateProblemEncountered(final X509Certificate[] chain,
             final Collection<CertificateException> problems,
             final CertificateManager certificateManager) {
-        sslDialog = new SSLCertificateDialog(getController().getMainFrame(),
+        sslDialog = new SSLCertificateDialog(getController(), getController().getMainFrame(),
                 new SSLCertificateDialogModel(chain, problems, certificateManager));
         sslDialog.display();
     }
@@ -165,12 +160,7 @@ public final class ServerFrame extends InputTextFrame implements
     /** {@inheritDoc} */
     @Override
     public void windowClosing(final FrameContainer window) {
-        if (ServerSettingsDialog.hasServerSettingsDialog()) {
-            ServerSettingsDialog.getServerSettingsDialog(controller,
-                    getContainer().getServer(),
-                    getController().getMainFrame()).dispose();
-        }
-
+        controller.getDialogManager().dispose(ServerSettingsDialog.class);
         super.windowClosing(window);
     }
 

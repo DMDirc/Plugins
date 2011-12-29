@@ -21,7 +21,7 @@
  */
 package com.dmdirc.addons.ui_swing.dialogs;
 
-import java.awt.Window;
+import com.dmdirc.addons.ui_swing.SwingController;
 
 /**
  * A simple dialog to confirm and handle the quitting of the client.
@@ -39,10 +39,10 @@ public abstract class ConfirmQuitDialog extends StandardQuestionDialog {
     /**
      * Creates a new client quit confirmation dialog.
      *
-     * @param window Parent window
+     * @param controller Swing controller
      */
-    public ConfirmQuitDialog(final Window window) {
-        super(window, ModalityType.APPLICATION_MODAL, "Quit confirm",
+    public ConfirmQuitDialog(final SwingController controller) {
+        super(controller, ModalityType.APPLICATION_MODAL, "Quit confirm",
                     "You are about to quit DMDirc, are you sure?");
     }
 

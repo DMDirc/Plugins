@@ -70,6 +70,8 @@ public class InviteLabel extends StatusbarPopupPanel<JLabel> implements
     private final JMenuItem accept;
     /** Main frame. */
     private final MainFrame mainFrame;
+    /** Swing controller. */
+    private final SwingController controller;
     /** Active server. */
     private Server activeServer;
 
@@ -83,6 +85,7 @@ public class InviteLabel extends StatusbarPopupPanel<JLabel> implements
             final MainFrame mainFrame) {
         super(new JLabel());
 
+        this.controller = controller;
         this.mainFrame = mainFrame;
 
         setBorder(BorderFactory.createEtchedBorder());
@@ -97,7 +100,7 @@ public class InviteLabel extends StatusbarPopupPanel<JLabel> implements
         accept.setActionCommand("acceptAll");
         accept.addActionListener(this);
 
-        for (Server server : ServerManager.getServerManager().getServers()) {
+        for (final Server server : ServerManager.getServerManager().getServers()) {
             server.addInviteListener(this);
         }
 
@@ -115,7 +118,7 @@ public class InviteLabel extends StatusbarPopupPanel<JLabel> implements
     /** {@inheritDoc} */
     @Override
     protected StatusbarPopupWindow getWindow() {
-        return new InvitePopup(this, activeServer, mainFrame);
+        return new InvitePopup(controller, this, activeServer, mainFrame);
     }
 
     /**
@@ -125,7 +128,7 @@ public class InviteLabel extends StatusbarPopupPanel<JLabel> implements
         menu.removeAll();
 
         final Collection<Invite> invites = activeServer.getInvites();
-        for (Invite invite : invites) {
+        for (final Invite invite : invites) {
             menu.add(new JMenuItem(new InviteAction(invite)));
         }
         menu.add(new JSeparator());

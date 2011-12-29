@@ -22,6 +22,8 @@
 
 package com.dmdirc.addons.ui_swing.components.addonbrowser;
 
+import com.dmdirc.addons.ui_swing.SwingController;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -34,17 +36,21 @@ public class InstallListener implements ActionListener {
     private final AddonInfo info;
     /** Parent window. */
     private final BrowserWindow parentWindow;
+    /** Swing controller. */
+    private final SwingController controller;
 
     /**
      * Instantiates a new install listener.
      *
+     * @param controller Swing controller
      * @param info Addoninfo to install
      * @param parentWindow Parent window
      */
-    public InstallListener(final AddonInfo info,
-            final BrowserWindow parentWindow) {
+    public InstallListener(final SwingController controller,
+            final AddonInfo info, final BrowserWindow parentWindow) {
         super();
 
+        this.controller = controller;
         this.info = info;
         this.parentWindow = parentWindow;
     }
@@ -56,8 +62,8 @@ public class InstallListener implements ActionListener {
      */
     @Override
     public void actionPerformed(final ActionEvent e) {
-        final InstallerWindow installer = new InstallerWindow(parentWindow,
-                info);
+        final InstallerWindow installer = new InstallerWindow(controller,
+                parentWindow, info);
         installer.display(parentWindow);
         new InstallWorker(info, installer).executeInExecutor();
     }

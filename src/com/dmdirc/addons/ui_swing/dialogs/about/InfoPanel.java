@@ -25,7 +25,6 @@ package com.dmdirc.addons.ui_swing.dialogs.about;
 import com.dmdirc.Main;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
-import com.dmdirc.config.IdentityManager;
 import com.dmdirc.ui.core.util.Info;
 import com.dmdirc.util.DateUtils;
 
@@ -45,14 +44,10 @@ import net.miginfocom.swing.MigLayout;
 /** Info panel. */
 public final class InfoPanel extends JPanel {
 
-    /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
-     */
+    /** Serial version UID. */
     private static final long serialVersionUID = 1;
     /** Parent controller. */
-    private SwingController controller;
+    private final SwingController controller;
 
     /**
      * Creates a new instance of InfoPanel.
@@ -63,7 +58,7 @@ public final class InfoPanel extends JPanel {
         super();
 
         this.controller = controller;
-        this.setOpaque(UIUtilities.getTabbedPaneOpaque());
+        setOpaque(UIUtilities.getTabbedPaneOpaque());
         initComponents();
     }
 
@@ -79,7 +74,7 @@ public final class InfoPanel extends JPanel {
 
          infoPane.setText("<html>"
                  + "<b>DMDirc version: </b>" + Info.getDMDircVersion() + "<br>"
-                 + "<b>Mode Alises version: </b>" + IdentityManager
+                 + "<b>Mode Alises version: </b>" + controller
                  .getGlobalConfig().getOption("identity", "modealiasversion")
                  + "<br>"
                  + "<b>Swing UI version: </b>" + controller.getVersion()

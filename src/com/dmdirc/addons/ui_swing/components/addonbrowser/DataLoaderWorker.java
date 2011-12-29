@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_swing.components.addonbrowser;
 
 import com.dmdirc.Main;
+import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
@@ -67,19 +68,24 @@ public class DataLoaderWorker
     private final JProgressBar jpb = new JProgressBar(0, 100);
     /** Refresh addons feed? */
     private final boolean download;
+    /** Swing controller. */
+    private final SwingController controller;
 
     /**
      * Creates a new data loader worker.
      *
+     * @param controller Swing controller
      * @param table Table to load data into
      * @param download Download new addons feed?
      * @param browserWindow Browser window to pass to table objects
      * @param scrollPane Table's parent scrollpane
      */
-    public DataLoaderWorker(final AddonTable table, final boolean download,
+    public DataLoaderWorker(final SwingController controller,
+            final AddonTable table, final boolean download,
             final BrowserWindow browserWindow, final JScrollPane scrollPane) {
         super();
 
+        this.controller = controller;
         this.download = download;
         this.table = table;
         this.browserWindow = browserWindow;
@@ -104,7 +110,7 @@ public class DataLoaderWorker
                 Downloader.downloadPage("http://addons.dmdirc.com/feed",
                         Main.getConfigDir() + File.separator + "addons.feed",
                         this);
-            } catch (IOException ex) {
+            } catch (final IOException ex) {
                 loadingPanel.removeAll();
                 loadingPanel.add(new TextLabel("Unable to download feeds."));
                 return Collections.<AddonInfo>emptyList();
@@ -117,15 +123,15 @@ public class DataLoaderWorker
                 + File.separator + "addons.feed");
         try {
             data.read();
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             return Collections.<AddonInfo>emptyList();
-        } catch (InvalidConfigFileException ex) {
+        } catch (final InvalidConfigFileException ex) {
             return Collections.<AddonInfo>emptyList();
         }
 
         final List<AddonInfo> list = new ArrayList<AddonInfo>();
-        for (Map<String, String> entry : data.getKeyDomains().values()) {
-            list.add(new AddonInfo(entry));
+        for (final Map<String, String> entry : data.getKeyDomains().values()) {
+            list.add(new AddonInfo(controller.getGlobalConfig(), entry));
         }
         return list;
     }
@@ -140,9 +146,9 @@ public class DataLoaderWorker
         Collection<AddonInfo> data;
         try {
             data = get();
-        } catch (InterruptedException ex) {
+        } catch (final InterruptedException ex) {
             data = Collections.<AddonInfo>emptyList();
-        } catch (ExecutionException ex) {
+        } catch (final ExecutionException ex) {
             Logger.appError(ErrorLevel.MEDIUM, ex.getMessage(), ex);
             data = Collections.<AddonInfo>emptyList();
         }
@@ -153,9 +159,9 @@ public class DataLoaderWorker
             selectedRow = 0;
         }
         table.getModel().setRowCount(0);
-        for (AddonInfo info : data) {
+        for (final AddonInfo info : data) {
             table.getModel().addRow(new Object[]{
-                new AddonInfoLabel(info, browserWindow),
+                new AddonInfoLabel(controller, info, browserWindow),
             });
         }
         table.getSelectionModel().setSelectionInterval(selectedRow, selectedRow);

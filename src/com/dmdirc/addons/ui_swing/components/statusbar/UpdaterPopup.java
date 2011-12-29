@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.components.statusbar;
 
+import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.updater.Update;
 import com.dmdirc.updater.UpdateChecker;
 
@@ -49,11 +50,13 @@ public class UpdaterPopup extends StatusbarPopupWindow {
     /**
      * Creates a new popup window for the specified panel and window.
      *
+     * @param controller Swing controller
      * @param parent The panel that owns this popup
      * @param parentWindow The Window that owns this popup
      */
-    public UpdaterPopup(final JPanel parent, final Window parentWindow) {
-        super(parent, parentWindow);
+    public UpdaterPopup(final SwingController controller, final JPanel parent,
+            final Window parentWindow) {
+        super(controller, parent, parentWindow);
     }
 
     /** {@inheritDoc} */
@@ -79,7 +82,7 @@ public class UpdaterPopup extends StatusbarPopupWindow {
 
             panel.add(new JSeparator(), "span, growx, pushx, wrap");
 
-            for (Update update : updates) {
+            for (final Update update : updates) {
                 panel.add(new JLabel(update.getComponent().getFriendlyName()),
                         "growx, pushx");
                 panel.add(new JLabel(update.getRemoteVersion(), JLabel.CENTER),

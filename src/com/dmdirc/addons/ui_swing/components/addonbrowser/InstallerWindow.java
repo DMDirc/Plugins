@@ -22,10 +22,10 @@
 
 package com.dmdirc.addons.ui_swing.components.addonbrowser;
 
+import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 
-import java.awt.Dialog.ModalityType;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -57,12 +57,13 @@ public class InstallerWindow extends StandardDialog implements ActionListener {
     /**
      * Instantiates a new installer window.
      *
+     * @param controller Swing controller
      * @param parentWindow Parent window
-     * @param info Assocaited addon info
+     * @param info Associated addon info
      */
-    public InstallerWindow(final BrowserWindow parentWindow,
-            final AddonInfo info) {
-        super(parentWindow, ModalityType.MODELESS);
+    public InstallerWindow(final SwingController controller,
+            final BrowserWindow parentWindow, final AddonInfo info) {
+        super(controller, parentWindow, ModalityType.MODELESS);
         this.info = info;
         this.parentWindow = parentWindow;
         setTitle("Installing addon...");

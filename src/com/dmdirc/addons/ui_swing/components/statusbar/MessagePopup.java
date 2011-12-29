@@ -22,8 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.components.statusbar;
 
-import com.dmdirc.config.ConfigManager;
-import com.dmdirc.ui.IconManager;
+import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.ui.StatusMessage;
 
 import java.awt.Color;
@@ -57,31 +56,31 @@ class MessagePopup extends StatusbarTogglePanel<JLabel> {
     private final List<StatusMessage> messages;
     /** Parent panel. */
     private final JPanel parent;
-    /** Config manager. */
-    private final ConfigManager configManager;
+    /** Swing controller. */
+    private final SwingController controller;
 
     /**
      * Creates a new message history popup.
      *
      * @param parent Parent to size against
      * @param parentWindow Parent window
-     * @param configManager Config manager
+     * @param controller Swing controller
      */
     public MessagePopup(final JPanel parent, final Window parentWindow,
-            final ConfigManager configManager) {
+            final SwingController controller) {
         super(new JLabel("^"),
                 new SidelessEtchedBorder(SidelessEtchedBorder.Side.LEFT),
                 new SidelessEtchedBorder(SidelessEtchedBorder.Side.TOP));
         this.parentWindow = parentWindow;
         this.parent = parent;
-        this.configManager = configManager;
+        this.controller = controller;
         messages = new ArrayList<StatusMessage>();
     }
 
     /* {@inheritDoc} */
     @Override
     protected StatusbarPopupWindow getWindow() {
-        return new MessageHistoryPanel(this);
+        return new MessageHistoryPanel(controller, this);
     }
 
     /* {@inheritDoc} */
@@ -144,8 +143,9 @@ class MessagePopup extends StatusbarTogglePanel<JLabel> {
          *
          * @param window Parent window
          */
-        public MessageHistoryPanel(final JPanel parent) {
-            super(parent, parentWindow);
+        public MessageHistoryPanel(final SwingController controller,
+                final JPanel parent) {
+            super(controller, parent, parentWindow);
         }
 
         /* {@inheritDoc} */
@@ -167,9 +167,9 @@ class MessagePopup extends StatusbarTogglePanel<JLabel> {
                 return;
             }
 
-            for (StatusMessage message : messages) {
+            for (final StatusMessage message : messages) {
                 panel.add(new JLabel(message.getMessage(), message.getIconType()
-                        == null ? null : new IconManager(configManager)
+                        == null ? null : controller.getIconManager()
                         .getIcon(message.getIconType()), SwingConstants.LEFT),
                         "grow, push, wrap");
             }

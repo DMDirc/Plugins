@@ -23,8 +23,9 @@
 package com.dmdirc.addons.ui_swing.dialogs.serversetting;
 
 import com.dmdirc.Server;
-import com.dmdirc.actions.wrappers.PerformWrapper.PerformDescription;
 import com.dmdirc.actions.wrappers.PerformType;
+import com.dmdirc.actions.wrappers.PerformWrapper.PerformDescription;
+import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.performpanel.PerformPanel;
 import com.dmdirc.addons.ui_swing.components.performpanel.PerformRenderer;
@@ -45,32 +46,30 @@ import net.miginfocom.swing.MigLayout;
  */
 public final class PerformTab extends JPanel implements ActionListener {
 
-    /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
-     */
+    /** Serial version UID. */
     private static final long serialVersionUID = 1;
-
     /** Parent server. */
     private final Server server;
-
+    /** Swing controller. */
+    private final SwingController controller;
     /** Network/server combo box. */
     private JComboBox target;
-
+    /** Perform panel. */
     private PerformPanel performPanel;
 
 
     /**
      * Creates a new instance of IgnoreList.
      *
+     * @param controller Swing controller
      * @param server Parent server
      */
-    public PerformTab(final Server server) {
+    public PerformTab(final SwingController controller, final Server server) {
         super();
+        this.controller = controller;
         this.server = server;
 
-        this.setOpaque(UIUtilities.getTabbedPaneOpaque());
+        setOpaque(UIUtilities.getTabbedPaneOpaque());
         initComponents();
         addListeners();
     }
@@ -108,7 +107,7 @@ public final class PerformTab extends JPanel implements ActionListener {
         performList.add(serverPerform);
         performList.add(serverProfilePerform);
 
-        performPanel = new PerformPanel(performList);
+        performPanel = new PerformPanel(controller, performList);
         performPanel.switchPerform(networkPerform);
         add(performPanel, "grow, push");
 

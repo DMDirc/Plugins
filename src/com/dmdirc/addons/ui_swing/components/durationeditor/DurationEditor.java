@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.components.durationeditor;
 
+import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.util.collections.ListenerList;
 
@@ -75,8 +76,8 @@ public class DurationEditor extends StandardDialog implements ActionListener {
     /**
      * Instantiates a new duration editor.
      */
-    public DurationEditor() {
-        this(0);
+    public DurationEditor(final SwingController controller) {
+        this(controller, 0);
     }
 
     /**
@@ -86,8 +87,9 @@ public class DurationEditor extends StandardDialog implements ActionListener {
      *
      * @since 0.6
      */
-    public DurationEditor(final Window window) {
-        this(window, 0);
+    public DurationEditor(final SwingController controller,
+            final Window window) {
+        this(controller, window, 0);
     }
 
     /**
@@ -95,20 +97,23 @@ public class DurationEditor extends StandardDialog implements ActionListener {
      *
      * @param duration Starting duration
      */
-    public DurationEditor(final long duration) {
-        this(null, duration);
+    public DurationEditor(final SwingController controller,
+            final long duration) {
+        this(controller, controller.getMainFrame(), duration);
     }
 
     /**
      * Instantiates a new duration editor.
      *
+     * @param controller Swing controller
      * @param window Parent window.
      * @param duration Starting duration
      *
      * @since 0.6
      */
-    public DurationEditor(final Window window, final long duration) {
-        super(window, ModalityType.MODELESS);
+    public DurationEditor(final SwingController controller,
+            final Window window, final long duration) {
+        super(controller, window, ModalityType.MODELESS);
 
         this.window = window;
 
@@ -234,7 +239,7 @@ public class DurationEditor extends StandardDialog implements ActionListener {
      * @param newDuration New duration
      */
     protected void fireDurationListener(final int newDuration) {
-        for (DurationListener listener : listeners.get(DurationListener.class)) {
+        for (final DurationListener listener : listeners.get(DurationListener.class)) {
             listener.durationUpdated(newDuration);
         }
     }

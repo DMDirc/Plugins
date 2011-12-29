@@ -51,32 +51,28 @@ import net.miginfocom.swing.MigLayout;
  */
 public class CategoryPanel extends JPanel {
 
-    /**
-     * A version number for this class. It should be changed whenever the
-     * class structure is changed (or anything else that would prevent
-     * serialized objects being unserialized with the new class).
-     */
+    /** Serial version UID. */
     private static final long serialVersionUID = -3268284364607758509L;
     /** Active preferences category. */
     private PreferencesCategory category;
     /** Parent window. */
-    private SwingPreferencesDialog parent;
+    private final SwingPreferencesDialog parent;
     /** Title label. */
-    private TitlePanel title;
+    private final TitlePanel title;
     /** Tooltip display area. */
-    private ToolTipPanel tooltip;
+    private final ToolTipPanel tooltip;
     /** Contents Panel. */
-    private JScrollPane scrollPane;
+    private final JScrollPane scrollPane;
     /** Loading panel. */
-    private JPanel loading;
+    private final JPanel loading;
     /** Loading panel. */
-    private JPanel nullCategory;
+    private final JPanel nullCategory;
     /** Loading panel. */
-    private JPanel waitingCategory;
+    private final JPanel waitingCategory;
     /** Category panel map. */
-    private Map<PreferencesCategory, JPanel> panels;
+    private final Map<PreferencesCategory, JPanel> panels;
     /** Category loading swing worker. */
-    private LoggingSwingWorker worker;
+    private LoggingSwingWorker<JPanel, Object> worker;
     /** Prefs component factory. */
     private final PrefsComponentFactory factory;
 
@@ -124,8 +120,8 @@ public class CategoryPanel extends JPanel {
 
         title = new TitlePanel(BorderFactory.createEtchedBorder(),
                 "Preferences");
-        tooltip = new ToolTipPanel("Hover over a setting to see a "
-                + "description, if available.");
+        tooltip = new ToolTipPanel(parent.getIconManager(),
+                "Hover over a setting to see a description, if available.");
 
         add(title, "pushx, growx, h 45!");
         add(scrollPane, "grow, push");
@@ -189,7 +185,7 @@ public class CategoryPanel extends JPanel {
                     //Hack around mig bug
                     panel.invalidate();
                     panel.validate();
-                    for (Component component : panel.getComponents()) {
+                    for (final Component component : panel.getComponents()) {
                         if (component instanceof JPanel) {
                             component.invalidate();
                             component.validate();
@@ -202,7 +198,7 @@ public class CategoryPanel extends JPanel {
                         public void run() {
                             panel.invalidate();
                             panel.validate();
-                            for (Component component : panel.getComponents()) {
+                            for (final Component component : panel.getComponents()) {
                                 if (component instanceof JPanel) {
                                     component.invalidate();
                                     component.validate();

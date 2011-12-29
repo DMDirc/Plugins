@@ -24,6 +24,7 @@ package com.dmdirc.addons.ui_swing.components.performpanel;
 
 import com.dmdirc.actions.wrappers.PerformWrapper;
 import com.dmdirc.actions.wrappers.PerformWrapper.PerformDescription;
+import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.inputfields.TextAreaInputField;
 
 import java.util.Collection;
@@ -42,19 +43,14 @@ import net.miginfocom.swing.MigLayout;
  * Creates a text area that fills whatever space it has available. This panel
  * facilitates modification of performs.
  *
- * @author Simon Mott
  * @since 0.6.4
  */
 public class PerformPanel extends JPanel {
 
-    /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
-     */
+    /** Serial version UID. */
     private static final long serialVersionUID = 1;
     /** Text area that the perform is displayed in. */
-    private JTextArea performSpace;
+    private final JTextArea performSpace;
     /** Map of performs this panel can display. */
     private final Map<PerformDescription, String[]> performs = new
             HashMap<PerformDescription, String[]>();
@@ -66,9 +62,11 @@ public class PerformPanel extends JPanel {
      * performs at the time of creation.
      *
      * By default this panel displays a blank text area.
+     *
+     * @param controller Swing controller
      */
-    public PerformPanel() {
-        this(Collections.<PerformDescription>emptyList());
+    public PerformPanel(final SwingController controller) {
+        this(controller, Collections.<PerformDescription>emptyList());
     }
 
     /**
@@ -77,16 +75,18 @@ public class PerformPanel extends JPanel {
      *
      * By default this panel displays a blank text area.
      *
+     * @param controller Swing controller
      * @param performs Collection of PerformDescriptions to initialise
      */
-    public PerformPanel(final Collection<PerformDescription> performs) {
+    public PerformPanel(final SwingController controller,
+            final Collection<PerformDescription> performs) {
         super();
 
-        for (PerformDescription perform : performs) {
+        for (final PerformDescription perform : performs) {
             addPerform(perform);
         }
         setLayout(new MigLayout("ins 0, fill"));
-        performSpace = new TextAreaInputField("");
+        performSpace = new TextAreaInputField(controller, "");
         add(new JScrollPane(performSpace), "grow, push");
     }
 
@@ -118,7 +118,7 @@ public class PerformPanel extends JPanel {
         if (visiblePerform != null) {
             performs.put(visiblePerform, performSpace.getText().split("\n"));
         }
-        for (Entry<PerformDescription, String[]> perform
+        for (final Entry<PerformDescription, String[]> perform
                 : performs.entrySet()) {
             PerformWrapper.getPerformWrapper().setPerform(perform.getKey(),
                     perform.getValue());
@@ -158,7 +158,7 @@ public class PerformPanel extends JPanel {
     private String implode(final String[] lines) {
         final StringBuilder res = new StringBuilder();
 
-        for (String line : lines) {
+        for (final String line : lines) {
             res.append('\n');
             res.append(line);
         }

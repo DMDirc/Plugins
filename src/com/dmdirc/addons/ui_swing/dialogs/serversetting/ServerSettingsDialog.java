@@ -22,12 +22,12 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.serversetting;
 
-import com.dmdirc.addons.ui_swing.components.modes.UserModesPane;
 import com.dmdirc.Server;
 import com.dmdirc.ServerState;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.expandingsettings.SettingsPanel;
+import com.dmdirc.addons.ui_swing.components.modes.UserModesPane;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
 import com.dmdirc.config.Identity;
@@ -48,20 +48,12 @@ import net.miginfocom.swing.MigLayout;
  */
 public final class ServerSettingsDialog extends StandardDialog implements ActionListener {
 
-    /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
-     */
+    /** Serial version UID. */
     private static final long serialVersionUID = 2;
-    /** Server settings dialogs, semi singleton use. */
-    private static volatile ServerSettingsDialog me;
     /** Parent server. */
     private final Server server;
     /** Parent window. */
     private final Window parentWindow;
-    /** Swing controller. */
-    private final SwingController controller;
     /** User modes panel. */
     private UserModesPane modesPanel;
     /** Ignore list panel. */
@@ -80,11 +72,10 @@ public final class ServerSettingsDialog extends StandardDialog implements Action
      * @param server The server object that we're editing settings for
      * @param parentWindow Parent window
      */
-    private ServerSettingsDialog(final SwingController controller,
+    public ServerSettingsDialog(final SwingController controller,
             final Server server, final Window parentWindow) {
-        super(parentWindow, ModalityType.MODELESS);
+        super(controller, parentWindow, ModalityType.MODELESS);
 
-        this.controller = controller;
         this.server = server;
         this.parentWindow = parentWindow;
 
@@ -95,71 +86,23 @@ public final class ServerSettingsDialog extends StandardDialog implements Action
         initListeners();
     }
 
-    /**
-     * Creates the dialog if one doesn't exist, and displays it.
-     *
-     * @param controller Swing controller
-     * @param server The server object that we're editing settings for
-     * @param parentWindow Parent window
-     */
-    public static void showServerSettingsDialog(
-            final SwingController controller,final Server server,
-            final Window parentWindow) {
-        me = getServerSettingsDialog(controller, server, parentWindow);
-
-        me.display();
-        me.requestFocusInWindow();
-    }
-
-    /**
-     * Returns the current instance of the ServerSettingsDialog.
-     *
-     * @param controller Swing controller
-     * @param server The server object that we're editing settings for
-     * @param parentWindow Parent window
-     *
-     * @return The current ServerSettingsDialog instance
-     */
-    public static ServerSettingsDialog getServerSettingsDialog(
-            final SwingController controller,
-            final Server server, final Window parentWindow) {
-        synchronized (ServerSettingsDialog.class) {
-            if (me == null) {
-                me = new ServerSettingsDialog(controller, server, parentWindow);
-            }
-        }
-
-        return me;
-    }
-
-    /**
-     * Checks if a Server settings dialog exists.
-     *
-     * @return true iif a dialog exists
-     */
-    public static boolean hasServerSettingsDialog() {
-        synchronized (ServerSettingsDialog.class) {
-            return me != null;
-        }
-    }
-
     /** Initialises the main UI components. */
     private void initComponents() {
         orderButtons(new JButton(), new JButton());
 
         tabbedPane = new JTabbedPane();
 
-        modesPanel = new UserModesPane(controller, server);
+        modesPanel = new UserModesPane(getController(), server);
 
         ignoreList =
-                new IgnoreListPanel(controller, server, parentWindow);
+                new IgnoreListPanel(getController(), server, parentWindow);
 
         performPanel =
-                new PerformTab(server);
+                new PerformTab(getController(), server);
 
         settingsPanel =
-                new SettingsPanel(controller, "These settings are specific to "
-                        + "this network, any settings specified here will "
+                new SettingsPanel(getController(), "These settings are specific"
+                        + " to this network, any settings specified here will "
                         + "overwrite global settings");
 
         if (settingsPanel != null) {
@@ -204,7 +147,8 @@ public final class ServerSettingsDialog extends StandardDialog implements Action
     /** Saves the settings from this dialog. */
     public void saveSettings() {
         if (server.getState() != ServerState.CONNECTED) {
-            new StandardQuestionDialog(parentWindow, ModalityType.MODELESS,
+            new StandardQuestionDialog(getController(), parentWindow,
+                    ModalityType.MODELESS,
                     "Server has been disconnected.", "Any changes you have " +
                     "made will be lost, are you sure you want to close this " +
                     "dialog?") {
@@ -254,18 +198,6 @@ public final class ServerSettingsDialog extends StandardDialog implements Action
             saveSettings();
         } else if (e.getSource() == getCancelButton()) {
             dispose();
-        }
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void dispose() {
-        if (me == null) {
-            return;
-        }
-        synchronized (me) {
-            super.dispose();
-            me = null;
         }
     }
 }

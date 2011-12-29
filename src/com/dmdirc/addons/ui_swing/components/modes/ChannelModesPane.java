@@ -29,11 +29,7 @@ import com.dmdirc.parser.interfaces.Parser;
 /** Non list mode panel. */
 public final class ChannelModesPane extends ModesPane {
 
-    /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
-     */
+    /** Serial version UID. */
     private static final long serialVersionUID = 1;
     /** Parent channel. */
     private final Channel channel;
