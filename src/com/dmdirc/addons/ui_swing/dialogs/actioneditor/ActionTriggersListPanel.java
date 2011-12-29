@@ -22,10 +22,9 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.actioneditor;
 
-import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.addons.ui_swing.components.ImageButton;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
-import com.dmdirc.config.IdentityManager;
+import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.util.collections.ListenerList;
 
@@ -55,27 +54,40 @@ public class ActionTriggersListPanel extends JPanel {
     private final List<ActionType> triggers;
     /** Listeners. */
     private final ListenerList listeners = new ListenerList();
+    /** Icon manager. */
+    private final IconManager iconManager;
 
-    /** Instantiates the panel. */
-    public ActionTriggersListPanel() {
-        this(new ArrayList<ActionType>());
+    /**
+     * Instantiates the panel.
+     *
+     * @param iconManager Icon Manager
+     */
+    public ActionTriggersListPanel(final IconManager iconManager) {
+        this(iconManager, new ArrayList<ActionType>());
     }
 
     /**
      * Instantiates the panel.
      *
+     * @param iconManager Icon Manager
      * @param triggers Trigger list
      */
-    public ActionTriggersListPanel(final List<ActionType> triggers) {
+    public ActionTriggersListPanel(final IconManager iconManager,
+            final List<ActionType> triggers) {
         super();
 
+        this.iconManager = iconManager;
         this.triggers = new ArrayList<ActionType>(triggers);
 
         initComponents();
         layoutComponents();
     }
 
-    /** Initialises the components. */
+    /**
+     * Initialises the components.
+     *
+     * @param iconManager Icon Manager
+     */
     private void initComponents() {
         setOpaque(false);
         setLayout(new MigLayout("fillx, wrap 2"));
@@ -84,15 +96,13 @@ public class ActionTriggersListPanel extends JPanel {
     /** Lays out the components. */
     private void layoutComponents() {
         synchronized (triggers) {
-            final IconManager iconManager = new IconManager(IdentityManager
-                .getGlobalConfig());
             setVisible(false);
 
             removeAll();
 
             for (final ActionType trigger : triggers) {
-                final ImageButton button = new ImageButton("delete",
-                        iconManager.getIcon("close-inactive"),
+                final ImageButton<?> button = new ImageButton<Object>(
+                        "delete", iconManager.getIcon("close-inactive"),
                         iconManager.getIcon("close-active"));
                 button.addActionListener(new ActionListener() {
 
@@ -169,7 +179,7 @@ public class ActionTriggersListPanel extends JPanel {
      * Clears the trigger list.
      */
     public void clearTriggers() {
-        for (ActionType trigger : triggers) {
+        for (final ActionType trigger : triggers) {
             delTrigger(trigger);
         }
     }
@@ -237,7 +247,7 @@ public class ActionTriggersListPanel extends JPanel {
      * @param type Removed trigger
      */
     protected void fireTriggerRemoved(final ActionType type) {
-        for (ActionTriggerRemovalListener listener : listeners.get(
+        for (final ActionTriggerRemovalListener listener : listeners.get(
                 ActionTriggerRemovalListener.class)) {
             listener.triggerRemoved(type);
         }

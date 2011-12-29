@@ -22,8 +22,10 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.sslcertificate;
 
+import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
+import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.core.dialogs.sslcertificate.SSLCertificateDialogModel;
 
 import java.awt.Window;
@@ -43,12 +45,10 @@ import net.miginfocom.swing.MigLayout;
 public class SSLCertificateDialog extends StandardDialog implements ActionListener,
         ListSelectionListener {
 
-    /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
-     */
+    /** Serial version UID. */
     private static final long serialVersionUID = 1;
+    /** Icon manager. */
+    private final IconManager iconManager;
     /** SSL Certificate dialog model. */
     private SSLCertificateDialogModel model;
     /** Panel listing actions that can be taken on a certificate. */
@@ -67,14 +67,16 @@ public class SSLCertificateDialog extends StandardDialog implements ActionListen
     /**
      * Creates a new instance of ActionsManagerDialog.
      *
+     * @param controller Swing controller
      * @param parent Parent window for the dialog
      * @param model dialog model
      */
-    public SSLCertificateDialog(final Window parent,
-            final SSLCertificateDialogModel model) {
-        super(parent, ModalityType.MODELESS);
+    public SSLCertificateDialog(final SwingController controller,
+            final Window parent, final SSLCertificateDialogModel model) {
+        super(controller, parent, ModalityType.MODELESS);
 
         this.model = model;
+        this.iconManager = controller.getIconManager();
         this.selectedIndex = 0;
 
         initComponents();
@@ -95,9 +97,9 @@ public class SSLCertificateDialog extends StandardDialog implements ActionListen
     private void initComponents() {
         orderButtons(new JButton(), new JButton());
         actions = new ActionsPanel();
-        chain = new CertificateChainPanel();
+        chain = new CertificateChainPanel(iconManager);
         info = new CertificateInfoPanel();
-        summary = new SummaryPanel();
+        summary = new SummaryPanel(iconManager);
         blurb = new TextLabel();
 
         chain.setChain(model.getCertificateChain());

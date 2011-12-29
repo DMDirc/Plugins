@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.url;
 
+import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.URLProtocolPanel;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
@@ -39,34 +40,30 @@ import net.miginfocom.swing.MigLayout;
 /** URL Protocol dialog. */
 public final class URLDialog extends StandardDialog implements ActionListener {
 
-    /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
-     */
+    /** Serial version UID. */
     private static final long serialVersionUID = 1;
-    /** A previously created instance of URLDialog. */
-    private static volatile URLDialog me;
     /** URL protocol config panel. */
     private URLProtocolPanel panel;
     /** URL. */
-    private URI url;
+    private final URI url;
     /** Blurb label. */
     private TextLabel blurb;
     /** Swing controller. */
-    private Window parentWindow;
+    private final Window parentWindow;
     /** The URL Handler to use to handle clicked links. */
     private final URLHandler urlHandler;
 
     /**
      * Instantiates the URLDialog.
      *
+     * @param controller Swing controller
      * @param url URL to open once added
      * @param parentWindow Parent window
      * @param urlHandler The URL Handler to use to handle clicked links
      */
-    private URLDialog(final URI url, final Window parentWindow, final URLHandler urlHandler) {
-        super(parentWindow, ModalityType.MODELESS);
+    public URLDialog(final SwingController controller, final URI url,
+            final Window parentWindow, final URLHandler urlHandler) {
+        super(controller, parentWindow, ModalityType.MODELESS);
 
         this.url = url;
         this.parentWindow = parentWindow;
@@ -79,48 +76,13 @@ public final class URLDialog extends StandardDialog implements ActionListener {
         setTitle("Unknown URL Protocol");
     }
 
-    /**
-     * Creates the new URLDialog if one doesn't exist, and displays it.
-     *
-     * @param url URL to open once added
-     * @param parentWindow Parent window
-     * @param urlHandler The URL Handler to use to handle clicked links
-     */
-    public static void showURLDialog(final URI url,
-            final Window parentWindow, final URLHandler urlHandler) {
-        me = getURLDialog(url, parentWindow, urlHandler);
-
-        me.display();
-        me.requestFocusInWindow();
-    }
-
-    /**
-     * Returns the current instance of the URLDialog.
-     *
-     * @param url URL to open once added
-     * @param parentWindow Parent window
-     * @param urlHandler The URL Handler to use to handle clicked links
-     *
-     * @return The current URLDialog instance
-     */
-    public static URLDialog getURLDialog(final URI url,
-            final Window parentWindow, final URLHandler urlHandler) {
-        synchronized (URLDialog.class) {
-            if (me == null) {
-                me = new URLDialog(url, parentWindow, urlHandler);
-            }
-        }
-
-        return me;
-    }
-
     /** Initialises the components. */
     private void initComponents() {
         orderButtons(new JButton(), new JButton());
         blurb = new TextLabel("Please select the appropriate action to " +
                 "handle " + url.getScheme() + ":// URLs from the list " +
                 "below.");
-        panel = new URLProtocolPanel(url, false);
+        panel = new URLProtocolPanel(getController(), url, false);
     }
 
     /** Lays out the components. */
@@ -172,17 +134,5 @@ public final class URLDialog extends StandardDialog implements ActionListener {
         super.validate();
 
         setLocationRelativeTo(parentWindow);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void dispose() {
-        if (me == null) {
-            return;
-        }
-        synchronized (me) {
-            super.dispose();
-            me = null;
-        }
     }
 }

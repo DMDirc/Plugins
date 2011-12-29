@@ -28,20 +28,19 @@ import com.dmdirc.addons.ui_swing.components.URLProtocolPanel;
 import com.dmdirc.addons.ui_swing.components.renderers.URIHandlerCellRenderer;
 import com.dmdirc.addons.ui_swing.components.renderers.URISchemeCellRenderer;
 import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialog;
-import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.prefs.PreferencesInterface;
 import com.dmdirc.config.validators.URLProtocolValidator;
 
-import java.awt.Window;
 import java.awt.Dialog.ModalityType;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -60,11 +59,7 @@ import net.miginfocom.swing.MigLayout;
 public class URLConfigPanel extends JPanel implements
         ListSelectionListener, ActionListener, PreferencesInterface {
 
-    /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
-     */
+    /** Serial version UID. */
     private static final long serialVersionUID = 1;
     /** Swing controller. */
     private final SwingController controller;
@@ -87,7 +82,7 @@ public class URLConfigPanel extends JPanel implements
     /** Selected row. */
     private int selectedRow;
     /** Parent window. */
-    private Window parentWindow;
+    private final Window parentWindow;
 
     /**
      * Instantiates a new URL config panel.
@@ -113,7 +108,7 @@ public class URLConfigPanel extends JPanel implements
      */
     private void initComponents() {
         tableScrollPane = new JScrollPane();
-        model = new URLHandlerTableModel();
+        model = new URLHandlerTableModel(controller.getGlobalConfig());
         table = new PackingTable(model, tableScrollPane) {
 
             private static final long serialVersionUID = 1;
@@ -141,7 +136,7 @@ public class URLConfigPanel extends JPanel implements
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         table.getRowSorter().toggleSortOrder(0);
         details = new HashMap<URI, URLProtocolPanel>();
-        empty = new URLProtocolPanel(null, true);
+        empty = new URLProtocolPanel(controller, null, true);
         activeComponent = empty;
         add = new JButton("Add");
         remove = new JButton("Remove");
@@ -152,12 +147,12 @@ public class URLConfigPanel extends JPanel implements
         final Set<String> options = controller.getGlobalConfig().
                 getOptions("protocol").keySet();
 
-        for (String option : options) {
+        for (final String option : options) {
             try {
                 final URI uri = new URI(option + "://example.test.com");
                 model.addURI(uri);
-                details.put(uri, new URLProtocolPanel(uri, true));
-            } catch (URISyntaxException ex) {
+                details.put(uri, new URLProtocolPanel(controller, uri, true));
+            } catch (final URISyntaxException ex) {
                 //Ignore wont happen
             }
         }
@@ -190,13 +185,13 @@ public class URLConfigPanel extends JPanel implements
     public void save() {
         valueChanged(null);
         final Map<URI, String> handlers = model.getURLHandlers();
-        final Set<String> protocols = IdentityManager.getGlobalConfig().
+        final Set<String> protocols = controller.getGlobalConfig().
                 getOptions("protocol").keySet();
-        for (String protocol : protocols) {
+        for (final String protocol : protocols) {
             URI uri;
             try {
                 uri = new URI(protocol + "://example.test.com");
-            } catch (URISyntaxException ex) {
+            } catch (final URISyntaxException ex) {
                 uri = null;
             }
             if (uri != null && handlers.containsKey(uri)) {
@@ -206,7 +201,7 @@ public class URLConfigPanel extends JPanel implements
             }
             handlers.remove(uri);
         }
-        for (Entry<URI, String> entry : handlers.entrySet()) {
+        for (final Entry<URI, String> entry : handlers.entrySet()) {
             saveHandler(entry.getKey().getScheme(), entry.getValue());
         }
     }
@@ -219,10 +214,10 @@ public class URLConfigPanel extends JPanel implements
      */
     private void saveHandler(final String protocol, final String handler) {
         if (handler.isEmpty()) {
-            IdentityManager.getConfigIdentity().unsetOption("protocol",
+            controller.getGlobalIdentity().unsetOption("protocol",
                     protocol);
         } else {
-            IdentityManager.getConfigIdentity().setOption("protocol",
+            controller.getGlobalIdentity().setOption("protocol",
                     protocol, handler);
 
         }
@@ -272,11 +267,7 @@ public class URLConfigPanel extends JPanel implements
                     "Please enter the name of the new protocol.",
                     new URLProtocolValidator()) {
 
-                /**
-                 * A version number for this class. It should be changed whenever the
-                 * class structure is changed (or anything else that would prevent
-                 * serialized objects being unserialized with the new class).
-                 */
+                /** Serial version UID. */
                 private static final long serialVersionUID = 1;
 
                 /** {@inheritDoc} */
@@ -286,9 +277,10 @@ public class URLConfigPanel extends JPanel implements
                         final URI uri = new URI(getText() +
                                 "://example.test.com");
                         model.addURI(uri);
-                        details.put(uri, new URLProtocolPanel(uri, true));
+                        details.put(uri, new URLProtocolPanel(controller, uri,
+                                true));
                         return true;
-                    } catch (URISyntaxException ex) {
+                    } catch (final URISyntaxException ex) {
                         return false;
                     }
                 }

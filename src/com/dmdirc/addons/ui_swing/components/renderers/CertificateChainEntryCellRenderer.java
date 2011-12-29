@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.components.renderers;
 
-import com.dmdirc.config.IdentityManager;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.core.dialogs.sslcertificate.CertificateChainEntry;
 
@@ -37,21 +36,25 @@ import javax.swing.JList;
  */
 public class CertificateChainEntryCellRenderer extends DefaultListCellRenderer {
 
-    /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
-     */
+    /** Serial version UID. */
     private static final long serialVersionUID = 1;
     /** Icon to use for invalid entries. */
-    private final Icon invalidIcon = new IconManager(IdentityManager
-            .getGlobalConfig()).getIcon("cross");
+    private final Icon invalidIcon;
     /** Icon to use for trusted entries. */
-    private final Icon trustedIcon = new IconManager(IdentityManager
-            .getGlobalConfig()).getIcon("tick");
+    private final Icon trustedIcon;
     /** Icon to use for other entries. */
-    private final Icon icon = new IconManager(IdentityManager
-            .getGlobalConfig()).getIcon("nothing");
+    private final Icon icon;
+
+    /**
+     * Creates a new renderer.
+     *
+     * @param iconManager Icon manager
+     */
+    public CertificateChainEntryCellRenderer(final IconManager iconManager) {
+        icon = iconManager.getIcon("nothing");
+        trustedIcon = iconManager.getIcon("tick");
+        invalidIcon = iconManager.getIcon("cross");
+    }
 
     /** {@inheritDoc} */
     @Override

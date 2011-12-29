@@ -22,7 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.error;
 
-import com.dmdirc.addons.ui_swing.MainFrame;
+import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.logger.ErrorManager;
 import com.dmdirc.logger.ErrorReportStatus;
@@ -51,11 +51,7 @@ import net.miginfocom.swing.MigLayout;
 public final class ErrorListDialog extends StandardDialog implements
         ActionListener, ListSelectionListener, TableModelListener {
 
-    /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
-     */
+    /** Serial version UID. */
     private static final long serialVersionUID = 5;
     /** Table model. */
     private final ErrorTableModel tableModel;
@@ -79,10 +75,10 @@ public final class ErrorListDialog extends StandardDialog implements
     /**
      * Creates a new instance of ErrorListDialog.
      *
-     * @param mainFrame Main frame
+     * @param controller Swing controller
      */
-    public ErrorListDialog(final MainFrame mainFrame) {
-        super(mainFrame, ModalityType.MODELESS);
+    public ErrorListDialog(final SwingController controller) {
+        super(controller, ModalityType.MODELESS);
 
         setTitle("Error list");
         setMinimumSize(new Dimension(600, 550));
@@ -102,7 +98,8 @@ public final class ErrorListDialog extends StandardDialog implements
 
         scrollPane = new JScrollPane();
 
-        table = new ErrorTable(tableModel, scrollPane);
+        table = new ErrorTable(getController().getIconManager(), tableModel,
+                scrollPane);
 
         table.setPreferredScrollableViewportSize(new Dimension(600, 150));
         scrollPane.setMinimumSize(new Dimension(150, 100));
@@ -164,7 +161,11 @@ public final class ErrorListDialog extends StandardDialog implements
         getContentPane().add(splitPane);
     }
 
-    /** {@inheritDoc}. */
+    /**
+     * {@inheritDoc}
+     *
+     * @param e List selection event
+     */
     @Override
     public void valueChanged(final ListSelectionEvent e) {
         if (!e.getValueIsAdjusting()) {
@@ -174,7 +175,7 @@ public final class ErrorListDialog extends StandardDialog implements
                 try {
                     error = tableModel.getError(table.getRowSorter()
                             .convertRowIndexToModel(localRow));
-                } catch (IndexOutOfBoundsException ex) {
+                } catch (final IndexOutOfBoundsException ex) {
                     //In the extremely rare case the error gets deleted whilst
                     //we're changing the value, bail out gracefully
                     return;

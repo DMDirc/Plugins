@@ -26,8 +26,6 @@ import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.parser.common.ChannelJoinRequest;
 
-import java.awt.Dialog.ModalityType;
-
 /**
  * A dialog to prompt the user for a channel and then join that channel.
  */

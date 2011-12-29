@@ -25,7 +25,6 @@ package com.dmdirc.addons.ui_swing.components.addonbrowser;
 import javax.swing.ButtonModel;
 import javax.swing.JTextField;
 import javax.swing.RowFilter;
-import javax.swing.RowFilter.Entry;
 import javax.swing.table.DefaultTableModel;
 
 /**

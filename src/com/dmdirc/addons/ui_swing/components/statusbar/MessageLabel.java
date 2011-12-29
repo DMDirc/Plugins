@@ -22,11 +22,10 @@
 
 package com.dmdirc.addons.ui_swing.components.statusbar;
 
+import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
-import com.dmdirc.config.ConfigManager;
-import com.dmdirc.ui.IconManager;
-import com.dmdirc.ui.StatusMessage;
 import com.dmdirc.interfaces.ui.StatusBarComponent;
+import com.dmdirc.ui.StatusMessage;
 
 import java.awt.Window;
 import java.awt.event.MouseEvent;
@@ -67,23 +66,25 @@ public class MessageLabel extends JPanel implements StatusBarComponent,
     private StatusMessage currentMessage;
     /** Timer to clear the message. */
     private transient TimerTask messageTimer;
-    /** Config manager to read settings from. */
-    private ConfigManager config;
+    /** Swing controller. */
+    private final SwingController controller;
 
     /**
      * Instantiates a new message label.
      *
+     * @param controller Swing controller
      * @param parentWindow Parent window
-     * @param config Config manager to read settings from
      */
-    public MessageLabel(final Window parentWindow, final ConfigManager config) {
+    public MessageLabel(final SwingController controller,
+            final Window parentWindow) {
         super(new MigLayout("fill, ins 0, gap 0  0"));
-        this.config = config;
+        this.controller = controller;
         queue = new ConcurrentLinkedQueue<StatusMessage>();
-        defaultMessage = new StatusMessage(null, "Ready.", null, -1, config);
+        defaultMessage = new StatusMessage(null, "Ready.", null, -1,
+                controller.getGlobalConfig());
         currentMessage = defaultMessage;
         label = new JLabel();
-        historyLabel = new MessagePopup(this, parentWindow, config);
+        historyLabel = new MessagePopup(this, parentWindow, controller);
         label.setText("Ready.");
         label.setBorder(new SidelessEtchedBorder(
                 SidelessEtchedBorder.Side.RIGHT));
@@ -117,7 +118,7 @@ public class MessageLabel extends JPanel implements StatusBarComponent,
                 if (currentMessage.getIconType() == null) {
                     label.setIcon(null);
                 } else {
-                    label.setIcon(new IconManager(config).getIcon(
+                    label.setIcon(controller.getIconManager().getIcon(
                             currentMessage.getIconType()));
                 }
                 label.setText(UIUtilities.clipStringifNeeded(MessageLabel.this,

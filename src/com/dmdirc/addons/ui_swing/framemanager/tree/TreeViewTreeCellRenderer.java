@@ -24,7 +24,6 @@ package com.dmdirc.addons.ui_swing.framemanager.tree;
 
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.config.ConfigManager;
-import com.dmdirc.config.IdentityManager;
 import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.ui.messages.Styliser;
 
@@ -44,12 +43,6 @@ import net.miginfocom.layout.PlatformDefaults;
 public class TreeViewTreeCellRenderer implements TreeCellRenderer,
         ConfigChangeListener {
 
-    /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
-     */
-    private static final long serialVersionUID = 3;
     /** Parent frame manager. */
     private final TreeFrameManager manager;
     /** Config manager. */
@@ -70,10 +63,11 @@ public class TreeViewTreeCellRenderer implements TreeCellRenderer,
      *
      * @param manager Parent TreeFrameManager
      */
-    public TreeViewTreeCellRenderer(final TreeFrameManager manager) {
+    public TreeViewTreeCellRenderer(final ConfigManager config,
+            final TreeFrameManager manager) {
         this.manager = manager;
 
-        config = IdentityManager.getGlobalConfig();
+        this.config = config;
         styliser = new Styliser(null, config);
 
         setColours();

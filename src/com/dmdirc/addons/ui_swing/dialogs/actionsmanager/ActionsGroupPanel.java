@@ -25,6 +25,7 @@ package com.dmdirc.addons.ui_swing.dialogs.actionsmanager;
 import com.dmdirc.actions.Action;
 import com.dmdirc.actions.ActionGroup;
 import com.dmdirc.actions.ActionTypeComparator;
+import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.PackingTable;
 import com.dmdirc.addons.ui_swing.components.renderers.ActionTypeTableCellRenderer;
 import com.dmdirc.addons.ui_swing.components.renderers.ArrayCellRenderer;
@@ -32,7 +33,6 @@ import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
 import com.dmdirc.addons.ui_swing.dialogs.StringArrayComparator;
 import com.dmdirc.addons.ui_swing.dialogs.actioneditor.ActionEditorDialog;
 
-import com.dmdirc.ui.IconManager;
 import java.awt.Window;
 import java.awt.Dialog.ModalityType;
 import java.awt.event.ActionEvent;
@@ -82,21 +82,21 @@ public final class ActionsGroupPanel extends JPanel implements ActionListener,
     private JButton delete;
     /** Action group. */
     private ActionGroup group;
-    /** Prefs component factory. */
-    private IconManager iconManager;
+    /** Swing controller. */
+    private SwingController controller;
 
     /**
      * Creates a new instance of ActionsManagerDialog.
      *
-     * @param iconManager Prefs component factory
+     * @param controller Swing controller
      * @param parent Parent window
      * @param group Action group to display
      */
-    public ActionsGroupPanel(final IconManager iconManager,
+    public ActionsGroupPanel(final SwingController controller,
             final Window parent, final ActionGroup group) {
         super();
 
-        this.iconManager = iconManager;
+        this.controller = controller;
         this.parent = parent;
         this.group = group;
 
@@ -249,10 +249,10 @@ public final class ActionsGroupPanel extends JPanel implements ActionListener,
     @Override
     public void actionPerformed(final ActionEvent e) {
         if (e.getSource() == add) {
-            ActionEditorDialog.showActionEditorDialog(iconManager, parent,
+            controller.showDialog(ActionEditorDialog.class, parent,
                     group.getName());
         } else if (e.getSource() == edit) {
-            ActionEditorDialog.showActionEditorDialog(iconManager, parent,
+            controller.showDialog(ActionEditorDialog.class, parent,
                     group.getName(), model.getAction(
                     table.getRowSorter().convertRowIndexToModel(table.
                     getSelectedRow())));
@@ -261,8 +261,8 @@ public final class ActionsGroupPanel extends JPanel implements ActionListener,
                     model.getAction(
                     table.getRowSorter().convertRowIndexToModel(table.
                     getSelectedRow()));
-            new StandardQuestionDialog(parent, ModalityType.APPLICATION_MODAL,
-                    "Confirm deletion",
+            new StandardQuestionDialog(controller, parent,
+                    ModalityType.APPLICATION_MODAL, "Confirm deletion",
                     "Are you sure you wish to delete the action '" + action.
                     getName() + "'?") {
 

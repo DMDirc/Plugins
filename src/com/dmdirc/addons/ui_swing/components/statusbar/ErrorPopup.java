@@ -22,7 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.components.statusbar;
 
-import com.dmdirc.config.IdentityManager;
+import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.ErrorManager;
 import com.dmdirc.logger.ErrorReportStatus;
@@ -39,27 +39,28 @@ import javax.swing.JPanel;
 import javax.swing.JSeparator;
 
 /**
- * Shows a breakdown of errors that have occured.
+ * Shows a breakdown of errors that have occurred.
  *
  * @since 0.6.3m1
  */
 public class ErrorPopup extends StatusbarPopupWindow {
 
-    /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
-     */
+    /** Serial version UID. */
     private static final long serialVersionUID = 1;
+    /** Icon manager. */
+    private final IconManager iconManager;
 
     /**
      * Creates a new error popup.
      *
+     * @param controller Swing controller
      * @param parent Parent panel
      * @param parentWindow Parent window
      */
-    public ErrorPopup(final JPanel parent, final Window parentWindow) {
-        super(parent, parentWindow);
+    public ErrorPopup(final SwingController controller, final JPanel parent,
+            final Window parentWindow) {
+        super(controller, parent, parentWindow);
+        iconManager = controller.getIconManager();
     }
 
     /** {@inheritDoc} */
@@ -72,7 +73,7 @@ public class ErrorPopup extends StatusbarPopupWindow {
         final MapList<ErrorReportStatus, ProgramError> statuses
                 = new MapList<ErrorReportStatus, ProgramError>();
 
-        for (ProgramError error : errors) {
+        for (final ProgramError error : errors) {
             buckets.add(error.getLevel(), error);
             statuses.add(error.getReportStatus(), error);
         }
@@ -85,13 +86,12 @@ public class ErrorPopup extends StatusbarPopupWindow {
         header.setFont(header.getFont().deriveFont(Font.BOLD));
         panel.add(header, "growx, pushx, wrap");
 
-        for (ErrorLevel level : ErrorLevel.values()) {
+        for (final ErrorLevel level : ErrorLevel.values()) {
             if (buckets.containsKey(level)) {
                 final int count = buckets.values(level).size();
 
-                panel.add(new JLabel(level.toString(),
-                        new IconManager(IdentityManager.getGlobalConfig())
-                        .getIcon(level.getIcon()), JLabel.LEFT));
+                panel.add(new JLabel(level.toString(), iconManager.getIcon(
+                        level.getIcon()), JLabel.LEFT));
                 panel.add(new JLabel(String.valueOf(count), JLabel.RIGHT),
                         "growx, pushx, wrap");
             }
@@ -107,7 +107,7 @@ public class ErrorPopup extends StatusbarPopupWindow {
         header.setFont(header.getFont().deriveFont(Font.BOLD));
         panel.add(header, "growx, pushx, wrap");
 
-        for (ErrorReportStatus status : ErrorReportStatus.values()) {
+        for (final ErrorReportStatus status : ErrorReportStatus.values()) {
             if (statuses.containsKey(status)) {
                 final int count = statuses.values(status).size();
 
