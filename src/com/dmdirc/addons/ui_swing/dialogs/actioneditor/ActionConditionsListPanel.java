@@ -23,16 +23,17 @@
 package com.dmdirc.addons.ui_swing.dialogs.actioneditor;
 
 import com.dmdirc.actions.ActionCondition;
-import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
+import com.dmdirc.interfaces.actions.ActionType;
+import com.dmdirc.ui.IconManager;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
 import java.util.Map;
+
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -41,44 +42,48 @@ import net.miginfocom.swing.MigLayout;
 /**
  * Action conditions list panel.
  */
-public class ActionConditionsListPanel extends JPanel implements ActionConditionRemovalListener,
+public class ActionConditionsListPanel extends JPanel implements
+        ActionConditionRemovalListener,
         PropertyChangeListener {
 
-    /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
-     */
+    /** Serial version UID. */
     private static final long serialVersionUID = 1;
+    /** Conditions list. */
+    private final List<ActionConditionDisplayPanel> conditions;
+    /** Condition tree panel. */
+    private final ActionConditionsTreePanel treePanel;
+    /** Condition validation results. */
+    private final Map<ActionConditionDisplayPanel, Boolean> validations;
+    /** Icon manager. */
+    private final IconManager iconManager;
     /** Action trigger. */
     private ActionType trigger;
-    /** Conditions list. */
-    private List<ActionConditionDisplayPanel> conditions;
-    /** Condition tree panel. */
-    private ActionConditionsTreePanel treePanel;
-    /** Condition validation results. */
-    private Map<ActionConditionDisplayPanel, Boolean> validations;
     /** validates. */
     private boolean validates = true;
 
     /**
      * Instantiates the panel.
      *
+     * @param iconManager Icon manager
      * @param treePanel Condition tree panel.
      */
-    public ActionConditionsListPanel(final ActionConditionsTreePanel treePanel) {
-        this(null, new ArrayList<ActionConditionDisplayPanel>(), treePanel);
+    public ActionConditionsListPanel(final IconManager iconManager,
+            final ActionConditionsTreePanel treePanel) {
+        this(iconManager, null, new ArrayList<ActionConditionDisplayPanel>(),
+                treePanel);
     }
 
     /**
      * Instantiates the panel.
      *
+     * @param iconManager Icon manager
      * @param trigger Action trigger
      * @param treePanel Condition tree panel.
      */
-    public ActionConditionsListPanel(final ActionType trigger,
-            final ActionConditionsTreePanel treePanel) {
-        this(trigger, new ArrayList<ActionConditionDisplayPanel>(), treePanel);
+    public ActionConditionsListPanel(final IconManager iconManager,
+            final ActionType trigger, final ActionConditionsTreePanel treePanel) {
+        this(iconManager, trigger, new ArrayList<ActionConditionDisplayPanel>(),
+                treePanel);
     }
 
     /**
@@ -88,13 +93,15 @@ public class ActionConditionsListPanel extends JPanel implements ActionCondition
      * @param conditions List of existing conditions;
      * @param treePanel Condition tree panel.
      */
-    public ActionConditionsListPanel(final ActionType trigger,
+    public ActionConditionsListPanel(final IconManager iconManager,
+            final ActionType trigger,
             final List<ActionConditionDisplayPanel> conditions,
             final ActionConditionsTreePanel treePanel) {
         super();
 
         validations = new HashMap<ActionConditionDisplayPanel, Boolean>();
 
+        this.iconManager = iconManager;
         this.trigger = trigger;
         this.conditions = new ArrayList<ActionConditionDisplayPanel>(conditions);
         this.treePanel = treePanel;
@@ -115,7 +122,7 @@ public class ActionConditionsListPanel extends JPanel implements ActionCondition
 
     /** Adds the listeners. */
     private void addListeners() {
-        for (ActionConditionDisplayPanel condition : conditions) {
+        for (final ActionConditionDisplayPanel condition : conditions) {
             condition.addConditionListener(this);
         }
     }
@@ -126,14 +133,15 @@ public class ActionConditionsListPanel extends JPanel implements ActionCondition
         removeAll();
         int index = 0;
         if (trigger == null) {
-            add(new TextLabel("You must add at least one trigger before you can add conditions."),
+            add(new TextLabel(
+                    "You must add at least one trigger before you can add conditions."),
                     "alignx center, aligny top, grow, push, w 90%!");
         } else if (trigger.getType().getArgNames().length == 0) {
             add(new TextLabel("Trigger does not have any arguments."),
                     "alignx center, aligny top, grow, push, w 90%!");
         } else {
             synchronized (conditions) {
-                for (ActionConditionDisplayPanel condition : conditions) {
+                for (final ActionConditionDisplayPanel condition : conditions) {
                     add(new JLabel(index + "."), "aligny top");
                     add(condition, "growx, pushx, aligny top");
                     index++;
@@ -155,7 +163,7 @@ public class ActionConditionsListPanel extends JPanel implements ActionCondition
      */
     public void addCondition(final ActionCondition condition) {
         final ActionConditionDisplayPanel panel =
-                new ActionConditionDisplayPanel(condition, trigger);
+                new ActionConditionDisplayPanel(iconManager, condition, trigger);
         panel.addConditionListener(this);
         panel.addPropertyChangeListener("validationResult", this);
         validations.put(panel, panel.checkError());
@@ -176,7 +184,7 @@ public class ActionConditionsListPanel extends JPanel implements ActionCondition
         ActionConditionDisplayPanel removeCondition = null;
 
         synchronized (conditions) {
-            for (ActionConditionDisplayPanel localCondition : conditions) {
+            for (final ActionConditionDisplayPanel localCondition : conditions) {
                 if (localCondition.getCondition().equals(condition)) {
                     removeCondition = localCondition;
                     break;
@@ -195,7 +203,7 @@ public class ActionConditionsListPanel extends JPanel implements ActionCondition
      * Clear conditions.
      */
     public void clearConditions() {
-        for (ActionConditionDisplayPanel condition : conditions) {
+        for (final ActionConditionDisplayPanel condition : conditions) {
             delCondition(condition.getCondition());
         }
     }
@@ -210,7 +218,7 @@ public class ActionConditionsListPanel extends JPanel implements ActionCondition
                 new ArrayList<ActionCondition>();
 
         synchronized (conditions) {
-            for (ActionConditionDisplayPanel condition : conditions) {
+            for (final ActionConditionDisplayPanel condition : conditions) {
                 conditionList.add(condition.getCondition());
             }
         }
@@ -228,7 +236,7 @@ public class ActionConditionsListPanel extends JPanel implements ActionCondition
             conditions.clear();
         }
 
-        for (ActionConditionDisplayPanel panel : conditions) {
+        for (final ActionConditionDisplayPanel panel : conditions) {
             panel.setTrigger(trigger);
         }
         this.trigger = trigger;
@@ -250,7 +258,7 @@ public class ActionConditionsListPanel extends JPanel implements ActionCondition
     /** {@inheritDoc} */
     @Override
     public void setEnabled(final boolean enabled) {
-        for (ActionConditionDisplayPanel condition : conditions) {
+        for (final ActionConditionDisplayPanel condition : conditions) {
             condition.setEnabled(enabled);
         }
     }
@@ -264,7 +272,7 @@ public class ActionConditionsListPanel extends JPanel implements ActionCondition
         }
 
         boolean pass = true;
-        for (boolean validation : validations.values()) {
+        for (final boolean validation : validations.values()) {
             if (!validation) {
                 pass = false;
                 break;

@@ -23,8 +23,8 @@
 package com.dmdirc.addons.ui_swing.wizard;
 
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
-
 import com.dmdirc.ui.CoreUIUtils;
+
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -39,11 +39,7 @@ import javax.swing.JButton;
  */
 public final class WizardDialog extends StandardDialog implements ActionListener {
 
-    /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
-     */
+    /** Serial version UID. */
     private static final long serialVersionUID = 2;
     /** Wizard. */
     private final WizardPanel wizard;
@@ -60,7 +56,7 @@ public final class WizardDialog extends StandardDialog implements ActionListener
      */
     public WizardDialog(final String title, final List<Step> steps,
             final Window parentWindow, final ModalityType modality) {
-        super(parentWindow, modality);
+        super(null, parentWindow, modality);
 
         setTitle(title);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);

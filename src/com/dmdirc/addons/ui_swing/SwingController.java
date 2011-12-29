@@ -25,11 +25,17 @@ package com.dmdirc.addons.ui_swing;
 import com.dmdirc.Channel;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.Server;
-import com.dmdirc.addons.ui_swing.commands.*; //NOPMD
+import com.dmdirc.addons.ui_swing.commands.ChannelSettings;
+import com.dmdirc.addons.ui_swing.commands.Input;
+import com.dmdirc.addons.ui_swing.commands.PopInCommand;
+import com.dmdirc.addons.ui_swing.commands.PopOutCommand;
+import com.dmdirc.addons.ui_swing.commands.ServerSettings;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.addons.ui_swing.components.statusbar.FeedbackNag;
 import com.dmdirc.addons.ui_swing.components.statusbar.SwingStatusBar;
 import com.dmdirc.addons.ui_swing.dialogs.DialogKeyListener;
+import com.dmdirc.addons.ui_swing.dialogs.DialogManager;
+import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.addons.ui_swing.dialogs.StandardMessageDialog;
 import com.dmdirc.addons.ui_swing.dialogs.channelsetting.ChannelSettingsDialog;
 import com.dmdirc.addons.ui_swing.dialogs.error.ErrorListDialog;
@@ -46,7 +52,6 @@ import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
-import com.dmdirc.interfaces.ui.InputWindow;
 import com.dmdirc.interfaces.ui.UIController;
 import com.dmdirc.interfaces.ui.Window;
 import com.dmdirc.logger.ErrorLevel;
@@ -81,7 +86,6 @@ import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.UnsupportedLookAndFeelException;
 
 import lombok.Getter;
-
 import net.miginfocom.layout.PlatformDefaults;
 
 /**
@@ -89,14 +93,6 @@ import net.miginfocom.layout.PlatformDefaults;
  */
 @SuppressWarnings("PMD.UnusedPrivateField")
 public class SwingController extends BasePlugin implements UIController {
-
-    /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
-     */
-    private static final long serialVersionUID = 1;
-
     /** Window factory. */
     @Getter
     private final SwingWindowFactory windowFactory =
@@ -140,6 +136,12 @@ public class SwingController extends BasePlugin implements UIController {
     /** Prefs component factory instance. */
     @Getter
     private final PrefsComponentFactory prefsComponentFactory;
+    /** Dialog manager. */
+    @Getter
+    private final DialogManager dialogManager;
+    /** Apple handler, deals with Mac specific code. */
+    @Getter
+    private final Apple apple;
 
     /**
      * Instantiates a new SwingController.
@@ -151,11 +153,13 @@ public class SwingController extends BasePlugin implements UIController {
         super();
         this.pluginInfo = pluginInfo;
         this.identityManager = identityManager;
+        apple = new Apple(getGlobalConfig());
         globalConfig = identityManager.getGlobalConfiguration();
         globalIdentity = identityManager.getGlobalConfigIdentity();
         addonIdentity = identityManager.getGlobalAddonIdentity();
         iconManager = new IconManager(globalConfig);
         prefsComponentFactory = new PrefsComponentFactory(this);
+        dialogManager = new DialogManager(this);
         setAntiAlias();
         windows = new ArrayList<java.awt.Window>();
         registerCommand(new ServerSettings(), ServerSettings.INFO);
@@ -226,9 +230,8 @@ public class SwingController extends BasePlugin implements UIController {
             /** {@inheritDoc} */
             @Override
             public void run() {
-                ChannelSettingsDialog.showChannelSettingsDialog(
-                        SwingController.this, channel, getMainFrame(),
-                        (InputWindow) getWindowFactory().getSwingWindow(channel));
+                showDialog(ChannelSettingsDialog.class, channel,
+                        getWindowFactory().getSwingWindow(channel));
             }
         });
     }
@@ -241,10 +244,25 @@ public class SwingController extends BasePlugin implements UIController {
             /** {@inheritDoc} */
             @Override
             public void run() {
-                ServerSettingsDialog.showServerSettingsDialog(
-                        SwingController.this, server, getMainFrame());
+                showDialog(ServerSettingsDialog.class,
+                        server, getWindowFactory().getSwingWindow(server));
             }
         });
+    }
+
+    /**
+     * Proxy method to {@link DialogManager} that shows a dialog in the client.
+     * For more details on what parameters might be required see
+     * {@link DialogManager#getDialog(Class, Object...)}
+     *
+     * @see DialogManager#getDialog(Class, Object...) getDialog
+     *
+     * @param klass The class of the dialog to show
+     * @param params Any non standard parameters required
+     */
+    public <T extends StandardDialog> void showDialog(final Class<T> klass,
+            final Object... params) {
+        dialogManager.showDialog(klass, params);
     }
 
     /**
@@ -292,16 +310,16 @@ public class SwingController extends BasePlugin implements UIController {
                     getMainFrame().setExtendedState(state);
                 }
             });
-        } catch (ClassNotFoundException ex) {
+        } catch (final ClassNotFoundException ex) {
             Logger.userError(ErrorLevel.LOW,
                     "Unable to change Look and Feel: " + ex.getMessage());
-        } catch (InstantiationException ex) {
+        } catch (final InstantiationException ex) {
             Logger.userError(ErrorLevel.LOW,
                     "Unable to change Look and Feel: " + ex.getMessage());
-        } catch (IllegalAccessException ex) {
+        } catch (final IllegalAccessException ex) {
             Logger.userError(ErrorLevel.LOW,
                     "Unable to change Look and Feel: " + ex.getMessage());
-        } catch (UnsupportedLookAndFeelException ex) {
+        } catch (final UnsupportedLookAndFeelException ex) {
             Logger.userError(ErrorLevel.LOW,
                     "Unable to change Look and Feel: " + ex.getMessage());
         }
@@ -313,8 +331,6 @@ public class SwingController extends BasePlugin implements UIController {
     private void initUISettings() {
         // This will do nothing on non OS X Systems
         if (Apple.isApple()) {
-            final Apple apple = Apple.getApple();
-
             apple.setUISettings();
             apple.setListener();
         }
@@ -331,15 +347,15 @@ public class SwingController extends BasePlugin implements UIController {
             UIUtilities.initUISettings();
             UIManager.setLookAndFeel(UIUtilities.getLookAndFeel(
                     getGlobalConfig().getOption("ui", "lookandfeel")));
-        } catch (UnsupportedOperationException ex) {
+        } catch (final UnsupportedOperationException ex) {
             Logger.userError(ErrorLevel.LOW, "Unable to set UI Settings");
-        } catch (UnsupportedLookAndFeelException ex) {
+        } catch (final UnsupportedLookAndFeelException ex) {
             Logger.userError(ErrorLevel.LOW, "Unable to set UI Settings");
-        } catch (IllegalAccessException ex) {
+        } catch (final IllegalAccessException ex) {
             Logger.userError(ErrorLevel.LOW, "Unable to set UI Settings");
-        } catch (InstantiationException ex) {
+        } catch (final InstantiationException ex) {
             Logger.userError(ErrorLevel.LOW, "Unable to set UI Settings");
-        } catch (ClassNotFoundException ex) {
+        } catch (final ClassNotFoundException ex) {
             Logger.userError(ErrorLevel.LOW, "Unable to set UI Settings");
         }
 
@@ -357,8 +373,7 @@ public class SwingController extends BasePlugin implements UIController {
             /** {@inheritDoc} */
             @Override
             public void run() {
-                URLDialog.showURLDialog(url, getMainFrame(), getURLHandler());
-
+                showDialog(URLDialog.class, url, getURLHandler());
             }
         });
     }
@@ -384,8 +399,8 @@ public class SwingController extends BasePlugin implements UIController {
             /** {@inheritDoc} */
             @Override
             public void run() {
-                new StandardMessageDialog(getMainFrame(), ModalityType.MODELESS,
-                        title, message).display();
+                new StandardMessageDialog(SwingController.this, getMainFrame(),
+                        ModalityType.MODELESS, title, message).display();
             }
         });
     }
@@ -444,7 +459,7 @@ public class SwingController extends BasePlugin implements UIController {
                 getMainFrame().setVisible(true);
                 mainFrameCreated.set(true);
                 swingStatusBar = getMainFrame().getStatusBar();
-                errorDialog = new ErrorListDialog(getMainFrame());
+                errorDialog = new ErrorListDialog(SwingController.this);
                 StatusBarManager.getStatusBarManager().registerStatusBar(
                         getSwingStatusBar());
             }
@@ -471,7 +486,7 @@ public class SwingController extends BasePlugin implements UIController {
         eventQueue.pop();
         KeyboardFocusManager.getCurrentKeyboardFocusManager().
                 removeKeyEventDispatcher(keyListener);
-        for (java.awt.Window window : getTopLevelWindows()) {
+        for (final java.awt.Window window : getTopLevelWindows()) {
             window.dispose();
         }
         super.onUnload();
@@ -492,7 +507,7 @@ public class SwingController extends BasePlugin implements UIController {
      * @return Swing prefs dialog
      */
     public SwingPreferencesDialog getPrefsDialog() {
-        return SwingPreferencesDialog.getSwingPreferencesDialog(this);
+        return getDialogManager().getDialog(SwingPreferencesDialog.class);
     }
 
     /** {@inheritDoc} */
@@ -530,7 +545,7 @@ public class SwingController extends BasePlugin implements UIController {
         final LookAndFeelInfo[] plaf = UIManager.getInstalledLookAndFeels();
 
         lafs.put("Native", "Native");
-        for (LookAndFeelInfo laf : plaf) {
+        for (final LookAndFeelInfo laf : plaf) {
             lafs.put(laf.getName(), laf.getName());
         }
 

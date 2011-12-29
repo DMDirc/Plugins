@@ -29,6 +29,9 @@ import javax.swing.JPanel;
  */
 public abstract class Step extends JPanel {
 
+    /** Serial version UID. */
+    private static final long serialVersionUID = -4377227842788563488L;
+
     /**
      * Returns the title for this step.
      *

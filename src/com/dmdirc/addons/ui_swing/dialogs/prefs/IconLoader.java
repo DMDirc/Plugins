@@ -19,14 +19,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 package com.dmdirc.addons.ui_swing.dialogs.prefs;
 
 import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
-import com.dmdirc.config.IdentityManager;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.ui.IconManager;
+
 import java.util.concurrent.ExecutionException;
+
 import javax.swing.Icon;
 
 /**
@@ -39,17 +41,22 @@ public class IconLoader extends LoggingSwingWorker<Icon, Void> {
     private final CategoryLabel label;
     /** Icon to load. */
     private final String icon;
+    /** Icon manager. */
+    private final IconManager iconManager;
 
     /**
      * Creates a new icon loader adding the specified icon to the specified
      * icon after it has been loaded in the background.
      *
+     * @param iconManager Icon manager
      * @param label Label to load category for
-     * @param icon Icon to load
+     * @param icon Icon to load1111
      */
-    public IconLoader(final CategoryLabel label, final String icon) {
+    public IconLoader(final IconManager iconManager,
+            final CategoryLabel label, final String icon) {
         super();
 
+        this.iconManager = iconManager;
         this.label = label;
         this.icon = icon;
     }
@@ -57,7 +64,7 @@ public class IconLoader extends LoggingSwingWorker<Icon, Void> {
     /** {@inheritDoc} */
     @Override
     protected Icon doInBackground() {
-        return new IconManager(IdentityManager.getGlobalConfig()).getIcon(icon);
+        return iconManager.getIcon(icon);
     }
 
     /** {@inheritDoc} */

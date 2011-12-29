@@ -22,10 +22,11 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.paste;
 
+import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
+import com.dmdirc.addons.ui_swing.components.frames.InputTextFrame;
 import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputHandler;
 import com.dmdirc.addons.ui_swing.components.inputfields.TextAreaInputField;
-import com.dmdirc.addons.ui_swing.components.frames.InputTextFrame;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 
@@ -43,21 +44,17 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 
+import lombok.AutoGenMethodStub;
 import net.miginfocom.swing.MigLayout;
 
 /**
  * Allows the user to confirm and modify a multi-line paste.
- *
- * @author Greboid
  */
+@AutoGenMethodStub
 public final class PasteDialog extends StandardDialog implements ActionListener,
         KeyListener {
 
-    /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
-     */
+    /** Serial version UID. */
     private static final long serialVersionUID = 4;
     /** Number of lines Label. */
     private TextLabel infoLabel;
@@ -70,20 +67,22 @@ public final class PasteDialog extends StandardDialog implements ActionListener,
     /** Edit button. */
     private JButton editButton;
     /** Parent window. */
-    private Window parentWindow;
+    private final Window parentWindow;
 
     /**
      * Creates a new instance of PreferencesDialog.
      *
+     * @param controller Swing controller
      * @param newParent The frame that owns this dialog
      * @param text text to show in the paste dialog
      * @param parentWindow Parent window
      */
-    public PasteDialog(final InputTextFrame newParent, final String text,
+    public PasteDialog(final SwingController controller,
+            final InputTextFrame newParent, final String text,
             final Window parentWindow) {
-        super(parentWindow, ModalityType.MODELESS);
+        super(controller, parentWindow, ModalityType.MODELESS);
 
-        this.parent = newParent;
+        parent = newParent;
         this.parentWindow = parentWindow;
 
         initComponents(text);
@@ -104,7 +103,7 @@ public final class PasteDialog extends StandardDialog implements ActionListener,
      */
     private void initComponents(final String text) {
         scrollPane = new JScrollPane();
-        textField = new TextAreaInputField(text);
+        textField = new TextAreaInputField(getController(), text);
         editButton = new JButton("Edit");
         infoLabel = new TextLabel();
 
@@ -195,7 +194,7 @@ public final class PasteDialog extends StandardDialog implements ActionListener,
             if (!textField.getText().isEmpty()) {
                 final String[] lines = textField.getText().split("(\n|\r\n|\r)",
                         Integer.MAX_VALUE);
-                for (String line : lines) {
+                for (final String line : lines) {
                     if (!line.isEmpty()) {
                         parent.getContainer().sendLine(line);
                         parent.getInputHandler().addToBuffer(line);
@@ -234,25 +233,5 @@ public final class PasteDialog extends StandardDialog implements ActionListener,
         infoLabel.setText("This will be sent as "
                 + parent.getContainer().getNumLines(textField.getText())
                 + " lines.");
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Key event
-     */
-    @Override
-    public void keyPressed(final KeyEvent e) {
-        //Ignore.
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Key event
-     */
-    @Override
-    public void keyReleased(final KeyEvent e) {
-        //Ignore.
     }
 }

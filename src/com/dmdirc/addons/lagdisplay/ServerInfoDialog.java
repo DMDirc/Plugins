@@ -61,10 +61,12 @@ public class ServerInfoDialog extends StatusbarPopupWindow {
      * @param parent The {@link JPanel} to use for positioning
      */
     public ServerInfoDialog(final LagDisplayPlugin ldp, final StatusbarPanel parent) {
-        super(parent, ((SwingController) PluginManager.getPluginManager()
+        super(((SwingController) PluginManager.getPluginManager()
+                .getPluginInfoByName("ui_swing").getPlugin()), parent,
+                ((SwingController) PluginManager.getPluginManager()
                 .getPluginInfoByName("ui_swing").getPlugin()).getMainFrame());
 
-        this.plugin = ldp;
+        plugin = ldp;
     }
 
     /** {@inheritDoc} */
@@ -80,7 +82,7 @@ public class ServerInfoDialog extends StatusbarPopupWindow {
                 panel.add(new JSeparator(), "span, grow, wrap");
             }
 
-            for (Server server : servers) {
+            for (final Server server : servers) {
                 panel.add(new JLabel(server.getName()));
                 panel.add(new JLabel(server.getState() == ServerState.CONNECTED
                         ? server.getNetwork() : "---", JLabel.CENTER), "grow");

@@ -22,7 +22,10 @@
 
 package com.dmdirc.addons.ui_swing.dialogs;
 
+import com.dmdirc.addons.ui_swing.MainFrame;
+import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.ui.CoreUIUtils;
+import com.dmdirc.ui.IconManager;
 
 import java.awt.Component;
 import java.awt.Dialog;
@@ -37,17 +40,21 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.SwingUtilities;
 
+import lombok.Getter;
+
 /**
  * Provides common methods for dialogs.
  */
+@SuppressWarnings("unused")
 public class StandardDialog extends JDialog {
 
-    /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
-     */
+    /** Serial version UID. */
     private static final long serialVersionUID = 1;
+    /** Dialog manager. */
+    private final DialogManager dialogManager;
+    /** Swing controller. */
+    @Getter
+    private SwingController controller;
     /** The OK button for this frame. */
     private JButton okButton;
     /** The cancel button for this frame. */
@@ -55,14 +62,20 @@ public class StandardDialog extends JDialog {
     /** Parent window. */
     private Window owner;
 
+
+
     /**
      * Creates a new instance of StandardDialog.
-     * @param owner The frame that owns this dialog
+     *
+     * @param controller Parent swing controller
      * @param modal Whether to display modally or not
      */
-    public StandardDialog(final Frame owner, final boolean modal) {
-        super(owner, modal);
-        this.owner = owner;
+    public StandardDialog(final SwingController controller,
+            final ModalityType modal) {
+        super(controller.getMainFrame(), modal);
+        this.owner = controller.getMainFrame();
+        this.controller = controller;
+        dialogManager = controller.getDialogManager();
 
         if (owner != null) {
             setIconImages(owner.getIconImages());
@@ -73,12 +86,16 @@ public class StandardDialog extends JDialog {
 
     /**
      * Creates a new instance of StandardDialog.
-     * @param owner The frame that owns this dialog
+     *
+     * @param controller Parent swing controller
      * @param modal Whether to display modally or not
      */
-    public StandardDialog(final Window owner, final ModalityType modal) {
-        super(owner, modal);
-        this.owner = owner;
+    public StandardDialog(final SwingController controller,
+            final boolean modal) {
+        super(controller.getMainFrame(), modal);
+        this.owner = controller.getMainFrame();
+        this.controller = controller;
+        dialogManager = controller.getDialogManager();
 
         if (owner != null) {
             setIconImages(owner.getIconImages());
@@ -89,12 +106,71 @@ public class StandardDialog extends JDialog {
 
     /**
      * Creates a new instance of StandardDialog.
+     *
+     * @param controller Parent swing controller
      * @param owner The frame that owns this dialog
      * @param modal Whether to display modally or not
      */
-    public StandardDialog(final Dialog owner, final boolean modal) {
+    public StandardDialog(final SwingController controller, final Frame owner,
+            final boolean modal) {
         super(owner, modal);
         this.owner = owner;
+        this.controller = controller;
+        if (controller != null) {
+            dialogManager = controller.getDialogManager();
+        } else {
+            dialogManager = null;
+        }
+
+        if (owner != null) {
+            setIconImages(owner.getIconImages());
+        }
+        orderButtons(new JButton(), new JButton());
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+    }
+
+    /**
+     * Creates a new instance of StandardDialog.
+     *
+     * @param controller Parent swing controller
+     * @param owner The frame that owns this dialog
+     * @param modal Whether to display modally or not
+     */
+    public StandardDialog(final SwingController controller, final Window owner,
+            final ModalityType modal) {
+        super(owner, modal);
+        this.owner = owner;
+        this.controller = controller;
+        if (controller != null) {
+            dialogManager = controller.getDialogManager();
+        } else {
+            dialogManager = null;
+        }
+
+        if (owner != null) {
+            setIconImages(owner.getIconImages());
+        }
+        orderButtons(new JButton(), new JButton());
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+    }
+
+    /**
+     * Creates a new instance of StandardDialog.
+     *
+     * @param controller Parent swing controller
+     * @param owner The frame that owns this dialog
+     * @param modal Whether to display modally or not
+     */
+    public StandardDialog(final SwingController controller, final Dialog owner,
+            final boolean modal) {
+        super(owner, modal);
+        this.owner = owner;
+        this.controller = controller;
+        if (controller != null) {
+            dialogManager = controller.getDialogManager();
+        } else {
+            dialogManager = null;
+        }
 
         if (owner != null) {
             setIconImages(owner.getIconImages());
@@ -106,6 +182,15 @@ public class StandardDialog extends JDialog {
     @Override
     public void setTitle(final String title) {
         super.setTitle("DMDirc: " + title);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void dispose() {
+        if (dialogManager != null) {
+            dialogManager.dispose(this);
+        }
+        super.dispose();
     }
 
     /**
@@ -322,5 +407,23 @@ public class StandardDialog extends JDialog {
     public boolean escapePressed() {
         executeAction(getCancelButton());
         return true;
+    }
+
+    /**
+     * Returns the Swing main frame.
+     *
+     * @return Main frame
+     */
+    public MainFrame getMainFrame() {
+        return getController().getMainFrame();
+    }
+
+    /**
+     * Returns the icon manager.
+     *
+     * @return Icon manager
+     */
+    public IconManager getIconManager() {
+        return getController().getIconManager();
     }
 }

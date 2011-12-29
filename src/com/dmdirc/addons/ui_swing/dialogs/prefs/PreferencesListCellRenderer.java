@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_swing.dialogs.prefs;
 
 import com.dmdirc.config.prefs.PreferencesCategory;
+import com.dmdirc.ui.IconManager;
 
 import java.awt.Component;
 import java.awt.Font;
@@ -49,6 +50,8 @@ public class PreferencesListCellRenderer extends JLabel implements ListCellRende
     private static final long serialVersionUID = 1;
     /** Number of categories shown. */
     private final int numCats;
+    /** Icon manager. */
+    private IconManager iconManager;
     /** Label map. */
     private Map<PreferencesCategory, JLabel> labelMap;
 
@@ -57,9 +60,11 @@ public class PreferencesListCellRenderer extends JLabel implements ListCellRende
      *
      * @param numCats Number of categories in the list
      */
-    public PreferencesListCellRenderer(final int numCats) {
+    public PreferencesListCellRenderer(final IconManager iconManager,
+            final int numCats) {
         labelMap = new HashMap<PreferencesCategory, JLabel>();
         this.numCats = numCats;
+        this.iconManager = iconManager;
     }
 
     /** {@inheritDoc} */
@@ -69,7 +74,8 @@ public class PreferencesListCellRenderer extends JLabel implements ListCellRende
             final boolean cellHasFocus) {
         final PreferencesCategory cat = (PreferencesCategory) value;
         if (!labelMap.containsKey(cat)) {
-            labelMap.put(cat, new CategoryLabel(list, cat, numCats, index));
+            labelMap.put(cat, new CategoryLabel(iconManager,
+                    list, cat, numCats, index));
         }
         final JLabel label = labelMap.get(cat);
 

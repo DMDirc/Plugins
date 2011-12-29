@@ -37,7 +37,6 @@ import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
 import com.dmdirc.addons.ui_swing.dialogs.StringArrayComparator;
 
 import java.awt.Dimension;
-import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -63,14 +62,8 @@ import net.miginfocom.swing.MigLayout;
 public final class AliasManagerDialog extends StandardDialog implements
         ActionListener, ListSelectionListener {
 
-    /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
-     */
+    /** Serial version UID. */
     private static final long serialVersionUID = 3;
-    /** Previously instantiated instance of AliasManagerDialog. */
-    private static volatile AliasManagerDialog me;
     /** Table scrollpane. */
     private JScrollPane scrollPane;
     /** Error table. */
@@ -89,8 +82,6 @@ public final class AliasManagerDialog extends StandardDialog implements
     private AliasSubstitutionsPanel subsPanel;
     /** Show/Hide substitution button. */
     private JButton showSubs;
-    /** Swing controller. */
-    private SwingController controller;
 
     /**
      * Creates a new instance of ErrorListDialog.
@@ -98,11 +89,9 @@ public final class AliasManagerDialog extends StandardDialog implements
      * @param controller Swing controller
      * @param parentWindow Parent window
      */
-    private AliasManagerDialog(final SwingController controller,
-            final Window parentWindow) {
-        super(parentWindow, ModalityType.MODELESS);
+    public AliasManagerDialog(final SwingController controller) {
+        super(controller, ModalityType.MODELESS);
 
-        this.controller = controller;
         setTitle("Alias manager");
 
         selectedRow = -1;
@@ -110,39 +99,6 @@ public final class AliasManagerDialog extends StandardDialog implements
         initComponents();
         layoutComponents();
         initListeners();
-    }
-
-    /**
-     * Creates the dialog if one doesn't exist, and displays it.
-     *
-     * @param controller Swing controller
-     * @param parentWindow Parent window
-     */
-    public static void showAliasManagerDialog(final SwingController controller,
-            final Window parentWindow) {
-        me = getAliasManagerDialog(controller, parentWindow);
-
-        me.display();
-        me.requestFocusInWindow();
-    }
-
-    /**
-     * Returns the instance of AliasManagerDialog.
-     *
-     * @param controller Swing controller
-     * @param parentWindow Parent window
-     *
-     * @return Instance of AliasManagerDialog
-     */
-    public static AliasManagerDialog getAliasManagerDialog(
-            final SwingController controller, final Window parentWindow) {
-        synchronized (AliasManagerDialog.class) {
-            if (me == null) {
-                me = new AliasManagerDialog(controller, parentWindow);
-            }
-        }
-
-        return me;
     }
 
     /** Initialises the components. */
@@ -196,7 +152,7 @@ public final class AliasManagerDialog extends StandardDialog implements
 
         scrollPane.setViewportView(table);
 
-        aliasDetails = new AliasPanel(controller);
+        aliasDetails = new AliasPanel(getController());
         subsPanel = new AliasSubstitutionsPanel();
         subsPanel.setVisible(false);
         showSubs = new JButton("Show Substitutions");
@@ -319,7 +275,7 @@ public final class AliasManagerDialog extends StandardDialog implements
             }
             if (checkForDuplicates()) {
                 final StandardQuestionDialog dialog = new StandardQuestionDialog(
-                        this, ModalityType.APPLICATION_MODAL,
+                        getController(), this, ModalityType.APPLICATION_MODAL,
                         "Duplicate Aliases", "There are duplicate aliases in "
                         + "the table, these need to be removed before saving") {
 
@@ -495,17 +451,5 @@ public final class AliasManagerDialog extends StandardDialog implements
         }
 
         return false;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void dispose() {
-        if (me == null) {
-            return;
-        }
-        synchronized (me) {
-            super.dispose();
-            me = null;
-        }
     }
 }

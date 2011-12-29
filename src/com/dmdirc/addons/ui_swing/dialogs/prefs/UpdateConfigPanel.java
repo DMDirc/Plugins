@@ -26,7 +26,6 @@ import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.PackingTable;
 import com.dmdirc.config.ConfigManager;
 import com.dmdirc.config.Identity;
-import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.prefs.PreferencesInterface;
 import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.logger.ErrorLevel;
@@ -90,11 +89,11 @@ public class UpdateConfigPanel extends JPanel implements ActionListener,
     /** {@inheritDoc} */
     @Override
     public void save() {
-        final Identity identity = IdentityManager.getConfigIdentity();
+        final Identity identity = controller.getGlobalIdentity();
         identity.setOption("updater", "enable", enable.isSelected());
 
-        IdentityManager.getConfigIdentity().setOption("updater", "channel",
-                updateChannel.getSelectedItem().toString());
+        identity.setOption("updater", "channel", updateChannel
+                .getSelectedItem().toString());
 
         for (int i = 0; i < tableModel.getRowCount(); i++) {
             final String componentName = tableModel.getComponent(i).getName();
@@ -110,14 +109,13 @@ public class UpdateConfigPanel extends JPanel implements ActionListener,
      * Initialises the components.
      */
     private void initComponents() {
-        final ConfigManager config = IdentityManager.getGlobalConfig();
+        final ConfigManager config = controller.getGlobalConfig();
         enable = new JCheckBox();
         scrollPane = new JScrollPane();
         tableModel = new UpdateTableModel(UpdateChecker.getComponents());
         table = new PackingTable(tableModel, scrollPane);
         checkNow = new JButton("Check now");
-        checkNow.setEnabled(IdentityManager.getGlobalConfig().getOptionBool(
-                "updater", "enable"));
+        checkNow.setEnabled(config.getOptionBool("updater", "enable"));
         updateChannel = new JComboBox(new DefaultComboBoxModel(UpdateChannel.
                 values()));
 
@@ -139,7 +137,7 @@ public class UpdateConfigPanel extends JPanel implements ActionListener,
      */
     private void addListeners() {
         checkNow.addActionListener(this);
-        IdentityManager.getGlobalConfig().addChangeListener("updater",
+        controller.getGlobalConfig().addChangeListener("updater",
                 "enable", this);
         enable.addActionListener(this);
     }
@@ -175,7 +173,7 @@ public class UpdateConfigPanel extends JPanel implements ActionListener,
     /** {@inheritDoc} */
     @Override
     public void configChanged(final String domain, final    String key) {
-        checkNow.setEnabled(IdentityManager.getGlobalConfig().getOptionBool(
+        checkNow.setEnabled(controller.getGlobalConfig().getOptionBool(
                 "updater", "enable"));
     }
 }

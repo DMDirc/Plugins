@@ -71,8 +71,6 @@ public class AddEntryInputDialog extends StandardDialog {
     private final JTree items;
     /** Parent model. */
     private final ServerListModel model;
-    /** Swing controller. */
-    private final SwingController controller;
 
     /**
      * Instantiates a new standard input dialog.
@@ -85,9 +83,8 @@ public class AddEntryInputDialog extends StandardDialog {
     public AddEntryInputDialog(final SwingController controller,
             final Window owner, final JTree items,
             final ServerListModel model) {
-        super(owner, ModalityType.MODELESS);
+        super(controller, owner, ModalityType.MODELESS);
 
-        this.controller = controller;
         this.items = items;
         this.model = model;
         this.entryValidator = new NotEmptyValidator();
@@ -123,8 +120,8 @@ public class AddEntryInputDialog extends StandardDialog {
      */
     private void initComponents() {
         orderButtons(new JButton(), new JButton());
-        entryName = new ValidatingJTextField(controller.getIconManager(), entryValidator);
-        uri = new ValidatingJTextField(controller.getIconManager(), new URIJTextField(), uriValidator);
+        entryName = new ValidatingJTextField(getIconManager(), entryValidator);
+        uri = new ValidatingJTextField(getIconManager(), new URIJTextField(), uriValidator);
         blurb = new TextLabel(message);
         validateText();
     }
