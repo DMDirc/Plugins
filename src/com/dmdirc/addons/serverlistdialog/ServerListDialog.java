@@ -20,15 +20,14 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.ui_swing.dialogs.serverlist;
+package com.dmdirc.addons.serverlistdialog;
 
-import com.dmdirc.addons.ui_swing.components.LockedLayer;
-import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.addons.serverlists.ServerGroupItem;
 import com.dmdirc.addons.ui_swing.SwingController;
+import com.dmdirc.addons.ui_swing.components.LockedLayer;
+import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.ui.core.util.URLHandler;
 
-import java.awt.Window;
 import java.awt.color.ColorSpace;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -47,18 +46,12 @@ import org.jdesktop.jxlayer.plaf.effect.BufferedImageOpEffect;
 public final class ServerListDialog extends StandardDialog implements
         ActionListener, ServerListListener {
 
-    /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
-     */
+    /** Serial version UID. */
     private static final long serialVersionUID = 2;
     /** Server list model. */
     private final ServerListModel model;
     /** Connect button. */
     private final JButton connectButton;
-    /** Previously created instance of dialog. */
-    private static ServerListDialog me = null;
     /** Info lock. */
     private final LockedLayer<Info> infoLock;
     /** Perform lock. */
@@ -79,53 +72,15 @@ public final class ServerListDialog extends StandardDialog implements
     private final Help help;
 
     /**
-     * Creates the dialog if one doesn't exist, and displays it.
-     *
-     * @param controller Swing Controller
-     * @param parentWindow Parent window
-     * @param urlHandler The URL Handler to use to handle clicked links
-     */
-    public static void showServerListDialog(final SwingController controller,
-            final Window parentWindow, final URLHandler urlHandler) {
-        me = getServerListDialog(controller, parentWindow, urlHandler);
-
-        me.display();
-        me.requestFocusInWindow();
-    }
-
-    /**
-     * Returns the current instance of the ServerListDialog.
-     *
-     * @param controller Swing Controller
-     * @param parentWindow Parent window
-     * @param urlHandler The URL Handler to use to handle clicked links
-     *
-     * @return The current ServerListDialog instance
-     */
-    public static ServerListDialog getServerListDialog(
-            final SwingController controller, final Window parentWindow,
-            final URLHandler urlHandler) {
-        synchronized (ServerListDialog.class) {
-            if (me == null) {
-                me = new ServerListDialog(controller, parentWindow,
-                ModalityType.MODELESS, urlHandler);
-            }
-        }
-
-        return me;
-    }
-
-    /**
      * Creates a new server list dialog.
      *
-     * @param window Parent window
+     * @param controller Swing controller
      * @param modalityType Desired modality
      * @param urlHandler The URL Handler to use to handle clicked links
      */
-    private ServerListDialog(final SwingController controller,
-            final Window window, final ModalityType modalityType,
+    public ServerListDialog(final SwingController controller,
             final URLHandler urlHandler) {
-        super(window, modalityType);
+        super(controller, controller.getMainFrame(), ModalityType.MODELESS);
 
         setTitle("Server List");
         model = new ServerListModel();
@@ -145,7 +100,8 @@ public final class ServerListDialog extends StandardDialog implements
         infoLock = new LockedLayer<Info>(new BufferedImageOpEffect(
                 new ColorConvertOp(ColorSpace.getInstance(ColorSpace.CS_GRAY),
                 null)));
-        profileLayer = new JXLayer<Profiles>(new Profiles(model), profileLock);
+        profileLayer = new JXLayer<Profiles>(new Profiles(model, controller),
+                profileLock);
         performLayer = new JXLayer<Perform>(new Perform(model), performLock);
         settingsLayer = new JXLayer<Settings>(new Settings(controller, model),
                 settingsLock);
@@ -155,7 +111,7 @@ public final class ServerListDialog extends StandardDialog implements
 
         setLayout(new MigLayout("fill, wrap 2, wmin 600, wmax 600"));
 
-        add(new Tree(controller.getIconManager(), model, this),
+        add(new Tree(controller, model, this),
                 "grow, spany 4, wmax 150, wmin 150");
         add(help, "pos 160 0.5al");
         add(infoLayer, "growx, pushx");
@@ -195,18 +151,6 @@ public final class ServerListDialog extends StandardDialog implements
             dispose();
         } else if (e.getSource() == connectButton) {
             model.getSelectedItem().connect();
-        }
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void dispose() {
-        synchronized (ServerListDialog.class) {
-            if (me == null) {
-                return;
-            }
-            super.dispose();
-            me = null;
         }
     }
 

@@ -19,33 +19,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+package com.dmdirc.addons.serverlistdialog;
 
-package com.dmdirc.addons.ui_swing.dialogs.serverlist;
-
-import com.dmdirc.addons.ui_swing.components.text.TextLabel;
-
-import javax.swing.JPanel;
-
-import net.miginfocom.swing.MigLayout;
+import javax.swing.JTextField;
 
 /**
- * Introductory panel for the Server list dialog.
+ * Simple extention of JTextField to return an URI usable string (defaulting to
+ * an irc scheme if none specified).
  */
-public class Help extends JPanel {
+public class URIJTextField extends JTextField {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever
+     * the class structure is changed (or anything else that would
+     * prevent serialized objects being unserialized with the new
+     * class).
      */
-    private static final long serialVersionUID = 2;
+    private static final long serialVersionUID = 1;
 
-    /**
-     * Creates a new help panel.
-     */
-    public Help() {
-        setLayout(new MigLayout("fill"));
-        add(new TextLabel("Please select an item from the left to start " +
-                "editing options and settings."), "grow, pushy");
+    /** {@inheritDoc} */
+    @Override
+    public String getText() {
+        final String hostname = super.getText();
+        if (hostname.indexOf("://") == -1) {
+            return "irc://" + hostname;
+        } else {
+            return hostname;
+        }
     }
 }

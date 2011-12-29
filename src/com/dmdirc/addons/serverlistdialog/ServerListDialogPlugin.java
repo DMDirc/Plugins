@@ -19,32 +19,46 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.dmdirc.addons.ui_swing.dialogs.serverlist;
 
-import javax.swing.JTextField;
+package com.dmdirc.addons.serverlistdialog;
+
+import com.dmdirc.addons.ui_swing.SwingController;
+import com.dmdirc.addons.ui_swing.components.menubar.MenuBar;
+import com.dmdirc.plugins.PluginManager;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JMenuItem;
 
 /**
- * Simple extention of JTextField to return an URI usable string (defaulting to
- * an irc scheme if none specified).
+ * Server list dialog plugin.
  */
-public class URIJTextField extends JTextField {
-
+public class ServerListDialogPlugin implements ActionListener {
+    
+    /** Swing controller. */
+    private final SwingController controller;
+    
     /**
-     * A version number for this class. It should be changed whenever
-     * the class structure is changed (or anything else that would
-     * prevent serialized objects being unserialized with the new
-     * class).
+     * Creates a new server list dialog plugin.
      */
-    private static final long serialVersionUID = 1;
+    public ServerListDialogPlugin(final PluginManager pluginManager) {
+        controller = (SwingController) pluginManager.getPluginInfoByName(
+                "ui_swing").getPlugin();
+        final JMenuItem item = new JMenuItem("Server lists");
+        item.setMnemonic('l');
+        item.addActionListener(this);
+        ((MenuBar) controller.getMainFrame().getJMenuBar()).addMenuItem(
+                "Server", item);
+    }
 
-    /** {@inheritDoc} */
+    /** 
+     * {@inheritDoc}
+     * 
+     * @param e Action event
+     */
     @Override
-    public String getText() {
-        final String hostname = super.getText();
-        if (hostname.indexOf("://") == -1) {
-            return "irc://" + hostname;
-        } else {
-            return hostname;
-        }
+    public void actionPerformed(final ActionEvent e) {
+        controller.showDialog(ServerListDialog.class);
     }
 }

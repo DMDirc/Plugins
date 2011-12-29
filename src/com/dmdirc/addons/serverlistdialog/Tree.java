@@ -20,12 +20,12 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.ui_swing.dialogs.serverlist;
+package com.dmdirc.addons.serverlistdialog;
 
+import com.dmdirc.addons.serverlists.ServerGroupItem;
+import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.TreeScroller;
 import com.dmdirc.addons.ui_swing.components.renderers.ServerGroupTreeRenderer;
-import com.dmdirc.addons.serverlists.ServerGroupItem;
-import com.dmdirc.ui.IconManager;
 
 import java.awt.Rectangle;
 import java.awt.Window;
@@ -52,11 +52,7 @@ import net.miginfocom.swing.MigLayout;
 public class Tree extends JPanel implements TreeSelectionListener,
         ServerListListener, ActionListener {
 
-    /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
-     */
+    /** Serial version UID. */
     private static final long serialVersionUID = 2;
     /** Tree. */
     private final JTree items;
@@ -70,21 +66,21 @@ public class Tree extends JPanel implements TreeSelectionListener,
     private final JButton addItemButton;
     /** Parent window. */
     private final Window parentWindow;
-    /** Icon manager. */
-    private final IconManager iconManager;
+    /** Swing controller. */
+    private final SwingController controller;
 
     /**
      * Instantiates a new tree of server groups.
      *
-     * @param iconManager Icon Manager
+     * @param controller Swing controller
      * @param model Model backing this tree
      * @param parentWindow Dialog's parent window
      */
-    public Tree(final IconManager iconManager, final ServerListModel model,
+    public Tree(final SwingController controller, final ServerListModel model,
             final Window parentWindow) {
         super();
 
-        this.iconManager = iconManager;
+        this.controller = controller;
         this.model = model;
         this.parentWindow = parentWindow;
         addGroupButton = new JButton("Add group");
@@ -93,12 +89,7 @@ public class Tree extends JPanel implements TreeSelectionListener,
         treeModel = model.getTreeModel();
         items = new JTree(treeModel) {
 
-            /**
-             * A version number for this class. It should be changed whenever
-             * the class structure is changed (or anything else that would
-             * prevent serialized objects being unserialized with the new
-             * class).
-             */
+            /** Serial version UID. */
             private static final long serialVersionUID = 2;
 
             /** {@inheritDoc} */
@@ -145,7 +136,11 @@ public class Tree extends JPanel implements TreeSelectionListener,
         addItemButton.addActionListener(this);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     *
+     * @param e Tree selection event
+     */
     @Override
     public final void valueChanged(final TreeSelectionEvent e) {
         if (items.getSelectionPath() == null) {
@@ -199,9 +194,9 @@ public class Tree extends JPanel implements TreeSelectionListener,
     @Override
     public void actionPerformed(final ActionEvent e) {
         if (e.getSource() == addGroupButton) {
-            new AddGroupInputDialog(iconManager, parentWindow, items, model).display();
+            new AddGroupInputDialog(controller, parentWindow, items, model).display();
         } else {
-            new AddEntryInputDialog(iconManager, parentWindow, items, model).display();
+            new AddEntryInputDialog(controller, parentWindow, items, model).display();
         }
     }
 
@@ -216,7 +211,7 @@ public class Tree extends JPanel implements TreeSelectionListener,
     private DefaultMutableTreeNode getNodeForGroup(final ServerGroupItem item) {
         DefaultMutableTreeNode node = (DefaultMutableTreeNode) items.getModel()
                 .getRoot();
-        final Enumeration enumeration = ((DefaultMutableTreeNode) items
+        final Enumeration<?> enumeration = ((DefaultMutableTreeNode) items
                 .getModel().getRoot()).breadthFirstEnumeration();
         while (enumeration.hasMoreElements()) {
             final DefaultMutableTreeNode current =
