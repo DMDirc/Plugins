@@ -20,10 +20,9 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.ui_swing.dialogs.serverlist;
+package com.dmdirc.addons.serverlistdialog;
 
 import com.dmdirc.addons.ui_swing.components.expandingsettings.SettingsPanel;
-import com.dmdirc.config.IdentityManager;
 import com.dmdirc.addons.serverlists.ServerGroup;
 import com.dmdirc.addons.serverlists.ServerGroupItem;
 import com.dmdirc.addons.ui_swing.SwingController;
@@ -47,11 +46,7 @@ import net.miginfocom.swing.MigLayout;
  */
 public class Settings extends JPanel implements ServerListListener {
 
-    /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
-     */
+    /** Serial version UID. */
     private static final long serialVersionUID = 2;
     /** Server list model. */
     private final ServerListModel model;
@@ -119,7 +114,7 @@ public class Settings extends JPanel implements ServerListListener {
                 panels.put(item, new SettingsPanel(controller, "", false));
                 addSettings(panels.get(item), new ConfigManager("irc", "",
                     item.getGroup().getNetwork(), item.getName()),
-                    IdentityManager.getServerConfig(item.getName()));
+                    controller.getIdentityManager().createServerConfig(item.getName()));
             } else if (item == null) {
                 panels.put(null, new SettingsPanel(controller, "", false));
             } else {

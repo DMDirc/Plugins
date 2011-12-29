@@ -20,19 +20,18 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.ui_swing.dialogs.serverlist;
+package com.dmdirc.addons.serverlistdialog;
 
+import com.dmdirc.addons.serverlists.ServerGroup;
+import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.addons.ui_swing.components.validating.ValidatingJTextField;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialog;
 import com.dmdirc.util.validators.NotEmptyValidator;
 import com.dmdirc.util.validators.Validator;
-import com.dmdirc.addons.serverlists.ServerGroup;
-import com.dmdirc.ui.IconManager;
 
 import java.awt.Window;
-import java.awt.Dialog.ModalityType;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -53,11 +52,7 @@ import net.miginfocom.swing.MigLayout;
  */
 public class AddGroupInputDialog extends StandardDialog {
 
-    /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
-     */
+    /** Serial version UID. */
     private static final long serialVersionUID = 1;
     /** Validator. */
     private final Validator<String> validator;
@@ -73,23 +68,20 @@ public class AddGroupInputDialog extends StandardDialog {
     private final JTree tree;
     /** Parent model. */
     private final ServerListModel serverListModel;
-    /** Icon manager. */
-    private final IconManager iconManager;
 
     /**
      * Instantiates a new standard input dialog.
      *
-     * @param iconManager Icon manager
+     * @param controller Swing controller
      * @param items Parent tree
      * @param owner Dialog owner
      * @param model Server list model
      */
-    public AddGroupInputDialog(final IconManager iconManager,
+    public AddGroupInputDialog(final SwingController controller,
             final Window owner, final JTree items,
             final ServerListModel model) {
-        super(owner, ModalityType.MODELESS);
+        super(controller, owner, ModalityType.MODELESS);
 
-        this.iconManager = iconManager;
         this.tree = items;
         this.serverListModel = model;
         this.validator = new NotEmptyValidator();
@@ -137,7 +129,7 @@ public class AddGroupInputDialog extends StandardDialog {
      */
     private void initComponents() {
         orderButtons(new JButton(), new JButton());
-        groupName = new ValidatingJTextField(iconManager, validator);
+        groupName = new ValidatingJTextField(getIconManager(), validator);
         networkName = new JTextField();
         blurb = new TextLabel(message);
         validateText();
