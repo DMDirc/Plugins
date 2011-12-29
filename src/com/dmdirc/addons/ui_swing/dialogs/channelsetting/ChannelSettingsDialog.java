@@ -22,14 +22,14 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.channelsetting;
 
-import com.dmdirc.addons.ui_swing.components.modes.ChannelModesPane;
 import com.dmdirc.Channel;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.expandingsettings.SettingsPanel;
+import com.dmdirc.addons.ui_swing.components.frames.InputTextFrame;
+import com.dmdirc.addons.ui_swing.components.modes.ChannelModesPane;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.config.Identity;
-import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.prefs.PreferencesManager;
 import com.dmdirc.interfaces.ui.InputWindow;
 
@@ -50,22 +50,14 @@ import net.miginfocom.swing.MigLayout;
 public final class ChannelSettingsDialog extends StandardDialog implements
         ActionListener {
 
-    /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
-     */
+    /** Serial version UID. */
     private static final long serialVersionUID = 8;
-    /** Channel settings dialogs, semi singleton use. */
-    private static volatile ChannelSettingsDialog me;
     /** The channel object that this dialog belongs to. */
     private final Channel channel;
     /** Channel identity file. */
     private final Identity identity;
     /** Channel window. */
     private final InputWindow channelWindow;
-    /** Swing controller. */
-    private final SwingController controller;
     /** Tabbed pane. */
     private JTabbedPane tabbedPane;
     /** Client settings panel. */
@@ -82,61 +74,22 @@ public final class ChannelSettingsDialog extends StandardDialog implements
      *
      * @param controller Swing controller
      * @param newChannel The channel object that we're editing settings for
+     * @param parentWindow Parent window
+     * @param channelWindow Channel window
      */
-    private ChannelSettingsDialog(final SwingController controller,
-            final Channel newChannel, final Window parentWindow,
-            final InputWindow channelWindow) {
-        super(parentWindow, ModalityType.MODELESS);
+    public ChannelSettingsDialog(final SwingController controller,
+            final Channel newChannel, final Window parentWindow) {
+        super(controller, parentWindow, ModalityType.MODELESS);
 
-        this.controller = controller;
         channel = newChannel;
-        identity = IdentityManager.getChannelConfig(channel.getServer().
-                getNetwork(), channel.getChannelInfo().getName());
-        this.channelWindow = channelWindow;
+        identity = getController().getIdentityManager().createChannelConfig(
+                channel.getServer().getNetwork(),
+                channel.getChannelInfo().getName());
+        this.channelWindow = (InputTextFrame) controller.getWindowFactory()
+                .getSwingWindow(newChannel);
 
         initComponents();
         initListeners();
-    }
-
-    /**
-     * Creates the dialog if one doesn't exist, and displays it.
-     *
-     * @param controller Swing controller
-     * @param channel The channel object that we're editing settings for
-     * @param parentWindow Parent window
-     * @param channelWindow Channel window
-     */
-    public static void showChannelSettingsDialog(
-            final SwingController controller, final Channel channel,
-            final Window parentWindow,final InputWindow channelWindow) {
-        me = getChannelSettingsDialog(controller, channel, parentWindow,
-                channelWindow);
-
-        me.display();
-        me.requestFocusInWindow();
-    }
-
-    /**
-     * Returns the current instance of the ChannelSettingsDialog.
-     *
-     * @param controller Swing controller
-     * @param channel The channel object that we're editing settings for
-     * @param parentWindow Parent window
-     * @param channelWindow Channel window
-     *
-     * @return The current ChannelSettingsDialog instance
-     */
-    public static ChannelSettingsDialog getChannelSettingsDialog(
-            final SwingController controller, final Channel channel,
-            final Window parentWindow, final InputWindow channelWindow) {
-        synchronized (ChannelSettingsDialog.class) {
-            if (me == null) {
-                me = new ChannelSettingsDialog(controller, channel,
-                        parentWindow, channelWindow);
-            }
-        }
-
-        return me;
     }
 
     /** Initialises the main UI components. */
@@ -175,7 +128,7 @@ public final class ChannelSettingsDialog extends StandardDialog implements
 
     /** Initialises the IRC Settings tab. */
     private void initIrcTab() {
-        channelModesPane = new ChannelModesPane(controller, channel);
+        channelModesPane = new ChannelModesPane(getController(), channel);
 
         final JScrollPane channelModesSP = new JScrollPane(channelModesPane);
         channelModesSP.setHorizontalScrollBarPolicy(
@@ -189,7 +142,8 @@ public final class ChannelSettingsDialog extends StandardDialog implements
 
     /** Initialises the IRC Settings tab. */
     private void initListModesTab() {
-        channelListModesPane = new ChannelListModesPane(controller, channel, this);
+        channelListModesPane = new ChannelListModesPane(getController(),
+                channel, this);
         tabbedPane.addTab("List Modes", channelListModesPane);
     }
 
@@ -202,7 +156,7 @@ public final class ChannelSettingsDialog extends StandardDialog implements
 
     /** Initialises the channel settings. */
     private void initSettingsPanel() {
-        channelSettingsPane = new SettingsPanel(controller,
+        channelSettingsPane = new SettingsPanel(getController(),
                 "These settings are specific to this channel on this network,"
                 + " any settings specified here will overwrite global settings");
         channelSettingsPane.addOption(PreferencesManager
@@ -241,17 +195,5 @@ public final class ChannelSettingsDialog extends StandardDialog implements
                 String.valueOf(tabbedPane.getSelectedIndex()));
 
         dispose();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void dispose() {
-        if (me == null) {
-            return;
-        }
-        synchronized (me) {
-            super.dispose();
-            me = null;
-        }
     }
 }

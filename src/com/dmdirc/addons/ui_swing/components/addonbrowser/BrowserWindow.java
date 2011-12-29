@@ -22,6 +22,8 @@
 
 package com.dmdirc.addons.ui_swing.components.addonbrowser;
 
+import com.dmdirc.addons.ui_swing.SwingController;
+
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -83,14 +85,19 @@ public class BrowserWindow extends JDialog implements ActionListener {
     private final JRadioButton statusButton = new JRadioButton("Status", false);
     /** Row sorter. */
     private final AddonSorter sorter;
+    /** Swing controller. */
+    private final SwingController controller;
 
     /**
      * Creates and displays a new browser window.
      *
+     * @param controller Swing controller
      * @param parentWindow Parent window
      */
-    public BrowserWindow(final Window parentWindow) {
+    public BrowserWindow(final SwingController controller,
+            final Window parentWindow) {
         super(parentWindow, "DMDirc Addon Browser", ModalityType.MODELESS);
+        this.controller = controller;
         setIconImages(parentWindow.getIconImages());
         setResizable(false);
         setLayout(new MigLayout("fill, wmin 650, hmin 600"));
@@ -188,7 +195,7 @@ public class BrowserWindow extends JDialog implements ActionListener {
      * @param download Download new addon feed?
      */
     public final void loadData(final boolean download) {
-        new DataLoaderWorker(list, download, this, scrollPane)
+        new DataLoaderWorker(controller, list, download, this, scrollPane)
                 .executeInExecutor();
     }
 

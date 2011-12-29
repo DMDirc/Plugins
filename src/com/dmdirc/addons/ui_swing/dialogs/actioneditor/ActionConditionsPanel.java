@@ -26,8 +26,8 @@ import com.dmdirc.actions.ActionCondition;
 import com.dmdirc.actions.ConditionTree;
 import com.dmdirc.actions.ConditionTreeFactory.ConditionTreeFactoryType;
 import com.dmdirc.interfaces.actions.ActionType;
-
 import com.dmdirc.ui.IconManager;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
@@ -39,8 +39,8 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
-
 import javax.swing.UIManager;
+
 import net.miginfocom.swing.MigLayout;
 
 /**
@@ -49,11 +49,7 @@ import net.miginfocom.swing.MigLayout;
 public class ActionConditionsPanel extends JPanel implements ActionListener,
         PropertyChangeListener {
 
-    /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
-     */
+    /** Serial version UID. */
     private static final long serialVersionUID = 1;
     /** Tree panel. */
     private ActionConditionsTreePanel tree;
@@ -66,7 +62,7 @@ public class ActionConditionsPanel extends JPanel implements ActionListener,
     /** list validates? */
     private boolean listValidates = true;
     /** Icon manager. */
-    private IconManager iconManager;
+    private final IconManager iconManager;
 
     /**
      * Instantiates the panel.
@@ -106,7 +102,7 @@ public class ActionConditionsPanel extends JPanel implements ActionListener,
     /** Initialises the components. */
     private void initComponents() {
         tree = new ActionConditionsTreePanel(iconManager);
-        list = new ActionConditionsListPanel(tree);
+        list = new ActionConditionsListPanel(iconManager, tree);
         add = new JButton("Add");
     }
 
@@ -171,7 +167,7 @@ public class ActionConditionsPanel extends JPanel implements ActionListener,
     public void setConditions(final List<ActionCondition> conditions) {
         list.clearConditions();
 
-        for (ActionCondition condition : conditions) {
+        for (final ActionCondition condition : conditions) {
             list.addCondition(condition);
         }
     }

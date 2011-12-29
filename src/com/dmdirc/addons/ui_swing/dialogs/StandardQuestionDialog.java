@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.dialogs;
 
+import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 
 import java.awt.Window;
@@ -39,6 +40,8 @@ import net.miginfocom.swing.MigLayout;
  */
 public abstract class StandardQuestionDialog extends StandardDialog {
 
+    /** Serial version UID. */
+    private static final long serialVersionUID = 1;
     /** Message. */
     private final String message;
     /** Blurb label. */
@@ -49,14 +52,39 @@ public abstract class StandardQuestionDialog extends StandardDialog {
     /**
      * Instantiates a new standard input dialog.
      *
+     * @param controller Swing controller
      * @param owner Dialog owner
      * @param modal modality type
      * @param title Dialog title
      * @param message Dialog message
      */
-    public StandardQuestionDialog(final Window owner, final ModalityType modal,
-            final String title, final String message) {
-        super(owner, modal);
+    public StandardQuestionDialog(final SwingController controller,
+            final Window owner, final ModalityType modal, final String title,
+            final String message) {
+        super(controller, owner, modal);
+
+        this.message = message;
+
+        setTitle(title);
+        setDefaultCloseOperation(StandardInputDialog.DISPOSE_ON_CLOSE);
+
+        initComponents();
+        addListeners();
+        layoutComponents();
+    }
+
+    /**
+     * Instantiates a new standard input dialog.
+     *
+     * @param controller Swing controller
+     * @param modal modality type
+     * @param title Dialog title
+     * @param message Dialog message
+     */
+    public StandardQuestionDialog(final SwingController controller,
+            final ModalityType modal, final String title,
+            final String message) {
+        super(controller, modal);
 
         this.message = message;
 

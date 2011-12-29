@@ -22,8 +22,9 @@
 
 package com.dmdirc.addons.serverlistdialog;
 
-import com.dmdirc.addons.ui_swing.components.performpanel.PerformPanel;
 import com.dmdirc.addons.serverlists.ServerGroupItem;
+import com.dmdirc.addons.ui_swing.SwingController;
+import com.dmdirc.addons.ui_swing.components.performpanel.PerformPanel;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
@@ -37,11 +38,7 @@ import net.miginfocom.swing.MigLayout;
  */
 public class Perform extends JPanel implements ServerListListener {
 
-    /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
-     */
+    /** Serial version UID. */
     private static final long serialVersionUID = 2;
     /** Perform panel. */
     private final PerformPanel performPanel;
@@ -53,13 +50,14 @@ public class Perform extends JPanel implements ServerListListener {
     /**
      * Creates a new perform panel backed by the specified model.
      *
+     * @param controller Swing controller
      * @param model Backing model
      */
-    public Perform(final ServerListModel model) {
+    public Perform(final SwingController controller, final ServerListModel model) {
         super();
 
         this.model = model;
-        performPanel = new PerformPanel();
+        performPanel = new PerformPanel(controller);
 
         addListeners();
         if (model.getSelectedItemPerformDescription() != null) {

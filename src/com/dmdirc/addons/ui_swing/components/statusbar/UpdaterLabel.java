@@ -31,13 +31,10 @@ import com.dmdirc.updater.UpdateChecker;
 import com.dmdirc.updater.UpdateChecker.STATE;
 import com.dmdirc.updater.UpdateCheckerListener;
 
-import java.awt.Dialog.ModalityType;
 import java.awt.event.MouseEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
-
-import lombok.Getter;
 
 /**
  * Updater label is responsible for handling the display of updates in the
@@ -53,7 +50,6 @@ public class UpdaterLabel extends StatusbarPopupPanel<JLabel> implements
      */
     private static final long serialVersionUID = 1;
     /** Swing controller. */
-    @Getter
     private final SwingController controller;
 
     /**
@@ -84,12 +80,11 @@ public class UpdaterLabel extends StatusbarPopupPanel<JLabel> implements
         if (mouseEvent.getButton() == MouseEvent.BUTTON1) {
             if (UpdateChecker.getStatus().equals(
                     UpdateChecker.STATE.RESTART_REQUIRED)) {
-                SwingRestartDialog.showSwingRestartDialog(controller
-                        .getMainFrame(), ModalityType.MODELESS);
+                controller.showDialog(SwingRestartDialog.class);
             } else if (!UpdateChecker.getStatus().equals(
                     UpdateChecker.STATE.CHECKING)) {
-                SwingUpdaterDialog.showSwingUpdaterDialog(UpdateChecker
-                        .getAvailableUpdates(), controller.getMainFrame());
+                controller.showDialog(SwingUpdaterDialog.class, UpdateChecker
+                        .getAvailableUpdates());
             }
         }
     }
@@ -118,6 +113,6 @@ public class UpdaterLabel extends StatusbarPopupPanel<JLabel> implements
     /** {@inheritDoc} */
     @Override
     protected StatusbarPopupWindow getWindow() {
-        return new UpdaterPopup(this, controller.getMainFrame());
+        return new UpdaterPopup(controller, this, controller.getMainFrame());
     }
 }

@@ -40,13 +40,6 @@ import net.miginfocom.swing.MigLayout;
  */
 public class ReorderableJListCellRenderer implements ListCellRenderer {
 
-    /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
-     */
-    private static final long serialVersionUID = 1;
-
     /** Parent list. */
     private final ReorderableJList parent;
 

@@ -199,7 +199,7 @@ public final class PrefsComponentFactory {
         option.setRenderer(new MapEntryRenderer());
         option.setEditable(false);
 
-        for (Map.Entry<String, String> entry : setting.getComboOptions()
+        for (final Map.Entry<String, String> entry : setting.getComboOptions()
                 .entrySet()) {
             if (entry.getKey().equals(setting.getValue())) {
                 option.setSelectedItem(entry);
@@ -211,11 +211,12 @@ public final class PrefsComponentFactory {
 
             /** {@inheritDoc} */
             @Override
+            @SuppressWarnings("unchecked")
             public void actionPerformed(final ActionEvent e) {
                 final Object selected = ((JComboBox) e.getSource())
                         .getSelectedItem();
                 if (selected != null) {
-                    setting.setValue((String) ((Map.Entry) selected).getKey());
+                    setting.setValue(((Map.Entry<String, String>) selected).getKey());
                 }
             }
         });
@@ -252,7 +253,7 @@ public final class PrefsComponentFactory {
                 option = new JSpinner(new SpinnerNumberModel());
                 option.setValue(Integer.parseInt(setting.getValue()));
             }
-        } catch (NumberFormatException ex) {
+        } catch (final NumberFormatException ex) {
             option = new JSpinner(new SpinnerNumberModel());
         }
 
@@ -283,8 +284,8 @@ public final class PrefsComponentFactory {
                 .getValue().substring(1 + setting.getValue().indexOf(':'));
 
         OptionalJSpinner option;
-        final Validator optionalValidator = setting.getValidator();
-        Validator numericalValidator = null;
+        final Validator<?> optionalValidator = setting.getValidator();
+        Validator<?> numericalValidator = null;
         if (optionalValidator instanceof OptionalValidator) {
             numericalValidator = ((OptionalValidator) setting.getValidator()).
                     getValidator();
@@ -305,7 +306,7 @@ public final class PrefsComponentFactory {
                         ((NumericalValidator) numericalValidator).getMax(),
                         1), state);
             }
-        } catch (NumberFormatException ex) {
+        } catch (final NumberFormatException ex) {
             option = new OptionalJSpinner(new SpinnerNumberModel(), state);
         }
 
@@ -334,9 +335,10 @@ public final class PrefsComponentFactory {
         DurationDisplay option;
 
         try {
-            option = new DurationDisplay(Integer.parseInt(setting.getValue()));
-        } catch (NumberFormatException ex) {
-            option = new DurationDisplay();
+            option = new DurationDisplay(controller, Integer.parseInt(
+                    setting.getValue()));
+        } catch (final NumberFormatException ex) {
+            option = new DurationDisplay(controller);
         }
 
         option.addDurationListener(new DurationListener() {
@@ -360,7 +362,7 @@ public final class PrefsComponentFactory {
     private JComponent getColourOption(
             final PreferencesSetting setting) {
         final OptionalColourChooser option = new OptionalColourChooser(
-                setting.getValue(), true, true, true);
+                controller.getIconManager(), setting.getValue(), true, true, true);
 
         option.addActionListener(new ActionListener() {
 
@@ -391,8 +393,8 @@ public final class PrefsComponentFactory {
         final String colour = setting.getValue() == null ? "0" : setting
                 .getValue().substring(1 + setting.getValue().indexOf(':'));
 
-        final OptionalColourChooser option = new OptionalColourChooser(colour,
-                state, true, true);
+        final OptionalColourChooser option = new OptionalColourChooser(
+                controller.getIconManager(), colour, state, true, true);
 
         option.addActionListener(new ActionListener() {
 

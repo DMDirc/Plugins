@@ -24,8 +24,6 @@ package com.dmdirc.addons.ui_swing.components.statusbar;
 
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.dialogs.FeedbackDialog;
-import com.dmdirc.config.IdentityManager;
-import com.dmdirc.ui.IconManager;
 import com.dmdirc.interfaces.ui.StatusBarComponent;
 
 import java.awt.event.ActionEvent;
@@ -69,8 +67,7 @@ public class FeedbackNag extends JLabel implements StatusBarComponent,
         show = new JMenuItem("Open");
         final JMenuItem dismiss = new JMenuItem("Dismiss");
 
-        setIcon(new IconManager(IdentityManager.getGlobalConfig()).getIcon(
-                "feedback"));
+        setIcon(controller.getIconManager().getIcon("feedback"));
         setBorder(BorderFactory.createEtchedBorder());
         setToolTipText("We would appreciate any feedback you may have about "
                 + "DMDirc.");
@@ -112,7 +109,7 @@ public class FeedbackNag extends JLabel implements StatusBarComponent,
     @Override
     public void mouseReleased(final MouseEvent e) {
         if (e.getButton() == 1) {
-            FeedbackDialog.showFeedbackDialog(controller.getMainFrame());
+            controller.showDialog(FeedbackDialog.class);
             controller.getSwingStatusBar().removeComponent(this);
         }
         checkMouseEvent(e);
@@ -157,7 +154,7 @@ public class FeedbackNag extends JLabel implements StatusBarComponent,
     @Override
     public void actionPerformed(final ActionEvent e) {
         if (e.getSource() == show) {
-            FeedbackDialog.showFeedbackDialog(controller.getMainFrame());
+            controller.showDialog(FeedbackDialog.class);
         }
         controller.getSwingStatusBar().removeComponent(this);
     }

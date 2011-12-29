@@ -33,11 +33,8 @@ import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.NickList;
 import com.dmdirc.addons.ui_swing.components.SplitPane;
 import com.dmdirc.addons.ui_swing.components.TopicBar;
-import com.dmdirc.addons.ui_swing.dialogs.channelsetting.ChannelSettingsDialog;
 import com.dmdirc.commandparser.PopupType;
 import com.dmdirc.config.Identity;
-import com.dmdirc.config.IdentityManager;
-import com.dmdirc.interfaces.ui.InputWindow;
 
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -96,8 +93,8 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
         ActionManager.getActionManager().registerListener(this,
                 CoreActionType.CLIENT_CLOSING);
 
-        identity = IdentityManager.getChannelConfig(owner.getServer().
-                getNetwork(), owner.getChannelInfo().getName());
+        identity = controller.getIdentityManager().createChannelConfig(
+                owner.getServer().getNetwork(), owner.getChannelInfo().getName());
     }
 
     /**
@@ -159,10 +156,7 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
     @Override
     public void actionPerformed(final ActionEvent actionEvent) {
         if (actionEvent.getSource() == settingsMI) {
-            ChannelSettingsDialog.showChannelSettingsDialog(controller,
-                    (Channel) getContainer(), getController().getMainFrame(),
-                    (InputWindow) getController().getWindowFactory()
-                    .getSwingWindow(frameParent));
+            getController().showChannelSettingsDialog((Channel) getContainer());
         }
     }
 
@@ -281,7 +275,7 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
     @Override
     public void dispose() {
         ActionManager.getActionManager().unregisterListener(this);
-        IdentityManager.getGlobalConfig().removeListener(this);
+        controller.getGlobalConfig().removeListener(this);
         super.dispose();
     }
 }

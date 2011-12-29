@@ -23,7 +23,6 @@
 package com.dmdirc.addons.ui_swing.components.colours;
 
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
-import com.dmdirc.config.IdentityManager;
 import com.dmdirc.ui.IconManager;
 
 import java.awt.Window;
@@ -38,59 +37,61 @@ import javax.swing.JDialog;
  */
 public final class ColourPickerDialog extends StandardDialog {
 
-    /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
-     */
+    /** Serial version UID. */
     private static final long serialVersionUID = 1;
     /** Colour chooser panel. */
-    private ColourPickerPanel colourChooser;
+    private final ColourPickerPanel colourChooser;
 
     /**
      * Creates a new instance of ColourPickerDialog.
      *
+     * @param iconManager Icon manager
+     *
      * @since 0.6
      */
-    public ColourPickerDialog() {
-        this(true, true);
+    public ColourPickerDialog(final IconManager iconManager) {
+        this(iconManager, true, true);
     }
 
     /**
      * Creates a new instance of ColourPickerDialog.
      *
+     * @param iconManager Icon manager
      * @param window Parent window
      *
      * @since 0.6
      */
-    public ColourPickerDialog(final Window window) {
-        this(true, true, window);
-    }
-
-    /**
-     * Creates a new instance of ColourPickerDialog.
-     *
-     * @param showIRC show irc colours
-     * @param showHex show hex colours
-     */
-    public ColourPickerDialog(final boolean showIRC, final boolean showHex) {
-        this(showIRC, showHex, null);
-        setIconImage(new IconManager(IdentityManager.getGlobalConfig())
-                .getImage("icon"));
-    }
-
-    /**
-     * Creates a new instance of ColourPickerDialog.
-     *
-     * @param showIRC show irc colours
-     * @param showHex show hex colours
-     * @param window Parent window
-     *
-     * @since 0.6
-     */
-    public ColourPickerDialog(final boolean showIRC, final boolean showHex,
+    public ColourPickerDialog(final IconManager iconManager,
             final Window window) {
-        super(window, ModalityType.MODELESS);
+        this(iconManager, true, true, window);
+    }
+
+    /**
+     * Creates a new instance of ColourPickerDialog.
+     *
+     * @param iconManager Icon manager
+     * @param showIRC show irc colours
+     * @param showHex show hex colours
+     */
+    public ColourPickerDialog(final IconManager iconManager,
+            final boolean showIRC, final boolean showHex) {
+        this(iconManager, showIRC, showHex, null);
+    }
+
+    /**
+     * Creates a new instance of ColourPickerDialog.
+     *
+     * @param iconManager Icon manager
+     * @param showIRC show irc colours
+     * @param showHex show hex colours
+     * @param window Parent window
+     *
+     * @since 0.6
+     */
+    public ColourPickerDialog(final IconManager iconManager,
+            final boolean showIRC, final boolean showHex, final Window window) {
+        super(null, window, ModalityType.MODELESS);
+        setIconImage(iconManager.getImage("icon"));
 
         colourChooser = new ColourPickerPanel(showIRC, showHex);
 
@@ -100,27 +101,6 @@ public final class ColourPickerDialog extends StandardDialog {
         setFocusableWindowState(false);
 
         setWindow(window);
-    }
-
-    /**
-     * Creates and shows a new Colour picker dialog.
-     * @return Colour picker dialog
-     */
-    public static ColourPickerDialog showColourPicker() {
-        return showColourPicker(true, true);
-    }
-
-    /**
-     * Creates and shows a new Colour picker dialog.
-     * @return Colour picker dialog
-     * @param showIRC show irc colours
-     * @param showHex show hex colours
-     */
-    public static ColourPickerDialog showColourPicker(final boolean showIRC,
-            final boolean showHex) {
-        final ColourPickerDialog cpd = new ColourPickerDialog(showIRC, showHex);
-        cpd.display();
-        return cpd;
     }
 
     /**
