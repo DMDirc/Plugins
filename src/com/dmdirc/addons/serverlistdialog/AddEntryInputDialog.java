@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.ui_swing.dialogs.serverlist;
+package com.dmdirc.addons.serverlistdialog;
 
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.addons.ui_swing.components.validating.ValidatingJTextField;
@@ -30,10 +30,9 @@ import com.dmdirc.util.validators.NotEmptyValidator;
 import com.dmdirc.util.validators.URIValidator;
 import com.dmdirc.util.validators.Validator;
 import com.dmdirc.addons.serverlists.ServerGroup;
+import com.dmdirc.addons.ui_swing.SwingController;
 
-import com.dmdirc.ui.IconManager;
 import java.awt.Window;
-import java.awt.Dialog.ModalityType;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -54,11 +53,7 @@ import net.miginfocom.swing.MigLayout;
  */
 public class AddEntryInputDialog extends StandardDialog {
 
-    /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
-     */
+    /** Serial version UID. */
     private static final long serialVersionUID = 1;
     /** Entry name Validator. */
     private final Validator<String> entryValidator;
@@ -76,23 +71,23 @@ public class AddEntryInputDialog extends StandardDialog {
     private final JTree items;
     /** Parent model. */
     private final ServerListModel model;
-    /** Icon manager. */
-    private final IconManager iconManager;
+    /** Swing controller. */
+    private final SwingController controller;
 
     /**
      * Instantiates a new standard input dialog.
      *
-     * @param iconManager Icon manager
+     * @param controller Swing controller
      * @param items Parent tree
      * @param owner Dialog owner
      * @param model Server list model
      */
-    public AddEntryInputDialog(final IconManager iconManager,
+    public AddEntryInputDialog(final SwingController controller,
             final Window owner, final JTree items,
             final ServerListModel model) {
         super(owner, ModalityType.MODELESS);
 
-        this.iconManager = iconManager;
+        this.controller = controller;
         this.items = items;
         this.model = model;
         this.entryValidator = new NotEmptyValidator();
@@ -128,8 +123,8 @@ public class AddEntryInputDialog extends StandardDialog {
      */
     private void initComponents() {
         orderButtons(new JButton(), new JButton());
-        entryName = new ValidatingJTextField(iconManager, entryValidator);
-        uri = new ValidatingJTextField(iconManager, new URIJTextField(), uriValidator);
+        entryName = new ValidatingJTextField(controller.getIconManager(), entryValidator);
+        uri = new ValidatingJTextField(controller.getIconManager(), new URIJTextField(), uriValidator);
         blurb = new TextLabel(message);
         validateText();
     }

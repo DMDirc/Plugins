@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.ui_swing.dialogs.serverlist;
+package com.dmdirc.addons.serverlistdialog;
 
 import com.dmdirc.actions.wrappers.PerformWrapper.PerformDescription;
 import com.dmdirc.actions.wrappers.PerformType;

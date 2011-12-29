@@ -20,42 +20,32 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.ui_swing.dialogs.serverlist;
+package com.dmdirc.addons.serverlistdialog;
 
-import com.dmdirc.addons.serverlists.ServerGroupItem;
+import com.dmdirc.addons.ui_swing.components.text.TextLabel;
+
+import javax.swing.JPanel;
+
+import net.miginfocom.swing.MigLayout;
 
 /**
- * Server list listener.
+ * Introductory panel for the Server list dialog.
  */
-public interface ServerListListener {
+public class Help extends JPanel {
 
     /**
-     * Called to indicate the selected server group has changed.
-     *
-     * @param item Currently selected item
+     * A version number for this class. It should be changed whenever the class
+     * structure is changed (or anything else that would prevent serialized
+     * objects being unserialized with the new class).
      */
-    void serverGroupChanged(ServerGroupItem item);
+    private static final long serialVersionUID = 2;
 
     /**
-     * Called to indicate the dialog has been closed.
-     *
-     * @param save Do we need to save changes
+     * Creates a new help panel.
      */
-    void dialogClosed(final boolean save);
-
-    /**
-     * Called to indicate a server group has been added.
-     *
-     * @param parent Parent group
-     * @param group New group
-     */
-    void serverGroupAdded(ServerGroupItem parent, ServerGroupItem group);
-
-    /**
-     * Called to indicate a server group has been removed.
-     *
-     * @param parent Parent group
-     * @param group Removed group
-     */
-    void serverGroupRemoved(ServerGroupItem parent, ServerGroupItem group);
+    public Help() {
+        setLayout(new MigLayout("fill"));
+        add(new TextLabel("Please select an item from the left to start " +
+                "editing options and settings."), "grow, pushy");
+    }
 }

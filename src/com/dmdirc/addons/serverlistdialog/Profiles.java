@@ -20,11 +20,11 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.ui_swing.dialogs.serverlist;
+package com.dmdirc.addons.serverlistdialog;
 
+import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.vetoable.VetoableComboBoxModel;
 import com.dmdirc.config.Identity;
-import com.dmdirc.config.IdentityManager;
 import com.dmdirc.addons.serverlists.ServerGroupItem;
 
 import java.util.HashMap;
@@ -46,11 +46,7 @@ import net.miginfocom.swing.MigLayout;
  */
 public class Profiles extends JPanel implements ServerListListener {
 
-    /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
-     */
+    /** Serial version UID. */
     private static final long serialVersionUID = 2;
     /** Server list model. */
     private final ServerListModel model;
@@ -59,16 +55,20 @@ public class Profiles extends JPanel implements ServerListListener {
             new HashMap<ServerGroupItem, JComboBox>();
     /** Info label. */
     private final JLabel label;
+    /** Swing controller. */
+    private final SwingController controller;
 
     /**
      * Creates a new profile panel backed by the specified model.
      *
      * @param model Backing server list model
+     * @param controller Swing controller
      */
-    public Profiles(final ServerListModel model) {
+    public Profiles(final ServerListModel model, final SwingController controller) {
         super();
 
         this.model = model;
+        this.controller = controller;
 
         label = new JLabel("Use this profile on this network: ");
         setBorder(BorderFactory.createTitledBorder(UIManager.getBorder(
@@ -109,8 +109,8 @@ public class Profiles extends JPanel implements ServerListListener {
         if (!combos.containsKey(item)) {
             final DefaultComboBoxModel comboModel = new VetoableComboBoxModel();
 
-            final List<Identity> profiles = IdentityManager.getCustomIdentities(
-                    "profile");
+            final List<Identity> profiles = controller.getIdentityManager()
+                    .getIdentitiesByType("profile");
             Identity selectedItem = null;
             comboModel.addElement(null);
             for (Identity profile : profiles) {
