@@ -26,7 +26,7 @@ import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.actions.CloseFrameContainerAction;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
-import com.dmdirc.config.IdentityManager;
+import com.dmdirc.config.ConfigManager;
 import com.dmdirc.interfaces.ConfigChangeListener;
 
 import java.awt.Rectangle;
@@ -63,6 +63,8 @@ public class Tree extends JTree implements MouseMotionListener,
     private final TreeFrameManager manager;
     /** UI Controller. */
     private final SwingController controller;
+    /** Config manager. */
+    private final ConfigManager config;
     /** Drag selection enabled? */
     private boolean dragSelect;
     /** Drag button 1? */
@@ -83,6 +85,7 @@ public class Tree extends JTree implements MouseMotionListener,
 
         this.manager = manager;
         this.controller = controller;
+        this.config = controller.getGlobalConfig();
 
         putClientProperty("JTree.lineStyle", "Angled");
         getInputMap().setParent(null);
@@ -101,13 +104,10 @@ public class Tree extends JTree implements MouseMotionListener,
                 (int) PlatformDefaults.getUnitValueX("related").getValue()));
         setFocusable(false);
 
-        dragSelect = IdentityManager.getGlobalConfig().getOptionBool("treeview",
-                "dragSelection");
-        showHandles = IdentityManager.getGlobalConfig().getOptionBool(
-                controller.getDomain(), "showtreeexpands");
-        IdentityManager.getGlobalConfig().addChangeListener(
-                controller.getDomain(), "showtreeexpands", this);
-        IdentityManager.getGlobalConfig().addChangeListener("treeview", this);
+        dragSelect = config.getOptionBool("treeview", "dragSelection");
+        showHandles = config.getOptionBool(controller.getDomain(), "showtreeexpands");
+        config.addChangeListener(controller.getDomain(), "showtreeexpands", this);
+        config.addChangeListener("treeview", this);
 
         setShowsRootHandles(showHandles);
         putClientProperty("showHandles", showHandles);
@@ -162,12 +162,9 @@ public class Tree extends JTree implements MouseMotionListener,
     @Override
     public void configChanged(final String domain, final String key) {
         if ("dragSelection".equals(key)) {
-            dragSelect = IdentityManager.getGlobalConfig().getOptionBool(
-                    "treeview",
-                    "dragSelection");
+            dragSelect = config.getOptionBool("treeview", "dragSelection");
         } else if ("showtreeexpands".equals(key)) {
-            showHandles = IdentityManager.getGlobalConfig().getOptionBool(
-                    controller.getDomain(), "showtreeexpands");
+            config.getOptionBool(controller.getDomain(), "showtreeexpands");
             setShowsRootHandles(showHandles);
             putClientProperty("showHandles", showHandles);
         }

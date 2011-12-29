@@ -80,7 +80,7 @@ public final class ServerListDialog extends StandardDialog implements
      */
     public ServerListDialog(final SwingController controller,
             final URLHandler urlHandler) {
-        super(controller.getMainFrame(), ModalityType.MODELESS);
+        super(controller, controller.getMainFrame(), ModalityType.MODELESS);
 
         setTitle("Server List");
         model = new ServerListModel();
@@ -102,7 +102,8 @@ public final class ServerListDialog extends StandardDialog implements
                 null)));
         profileLayer = new JXLayer<Profiles>(new Profiles(model, controller),
                 profileLock);
-        performLayer = new JXLayer<Perform>(new Perform(model), performLock);
+        performLayer = new JXLayer<Perform>(new Perform(controller, model),
+                performLock);
         settingsLayer = new JXLayer<Settings>(new Settings(controller, model),
                 settingsLock);
         infoLayer = new JXLayer<Info>(new Info(model, urlHandler), infoLock);

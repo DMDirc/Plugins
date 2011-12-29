@@ -68,7 +68,7 @@ public class PlaceholderContainer extends FrameContainer {
         if (dccs > 0) {
             new StandardQuestionDialog(((SwingController) PluginManager
                     .getPluginManager().getPluginInfoByName("ui_swing")
-                    .getPlugin()).getMainFrame(), ModalityType.MODELESS,
+                    .getPlugin()), ModalityType.MODELESS,
                     "Close confirmation",
                     "Closing this window will cause all existing DCCs "
                     + "to terminate, are you sure you want to do this?") {

@@ -32,14 +32,23 @@ import com.dmdirc.addons.ui_swing.components.ImageToggleButton;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.harness.ui.ClassComponentMatcher;
 import com.dmdirc.harness.ui.DMDircUITestCase;
+import com.dmdirc.ui.IconManager;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.swing.ImageIcon;
+
 import org.junit.Test;
 import org.uispec4j.Button;
 import org.uispec4j.Panel;
 import org.uispec4j.ToggleButton;
 import org.uispec4j.UIComponent;
-import static org.mockito.Mockito.*;
+
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class ActionConditionDisplayPanelTest extends DMDircUITestCase {
 
@@ -49,29 +58,35 @@ public class ActionConditionDisplayPanelTest extends DMDircUITestCase {
         ActionManager.getActionManager().initialise();
     }
 
+    public IconManager im() {
+        final IconManager im = mock(IconManager.class);
+        when(im.getIcon(anyString())).thenReturn(new ImageIcon());
+        return im;
+    }
+
     @Test
     public void testBlankInitialising() {
-        ActionConditionDisplayPanel panel = new ActionConditionDisplayPanel(
+        final ActionConditionDisplayPanel panel = new ActionConditionDisplayPanel(im(),
                 new ActionCondition(-1, null, null, ""),
                 CoreActionType.CHANNEL_MESSAGE);
-        Panel test = new Panel(panel);
+        final Panel test = new Panel(panel);
 
-        Matcher matcher = pattern.matcher(test.getTextBox(new ClassComponentMatcher(
+        final Matcher matcher = pattern.matcher(test.getTextBox(new ClassComponentMatcher(
                 TextLabel.class)).getText());
         matcher.find();
         assertEquals("The ...", matcher.group(1).trim());
-        UIComponent[] components = test.getUIComponents(new ClassComponentMatcher(
+        final UIComponent[] components = test.getUIComponents(new ClassComponentMatcher(
                 ActionConditionEditorPanel.class));
         assertNotNull(components);
         assertTrue(components.length == 1);
         assertTrue(components[0].isEnabled());
         assertTrue(components[0].isVisible());
-        ToggleButton toggle = test.getToggleButton(new ClassComponentMatcher(
+        final ToggleButton toggle = test.getToggleButton(new ClassComponentMatcher(
                 ImageToggleButton.class));
         assertTrue(toggle.isEnabled());
         assertTrue(toggle.isVisible());
         assertTrue(toggle.isSelected());
-        Button button = test.getButton(new ClassComponentMatcher(
+        final Button button = test.getButton(new ClassComponentMatcher(
                 ImageButton.class));
         assertTrue(button.isEnabled());
         assertTrue(button.isVisible());
@@ -79,29 +94,29 @@ public class ActionConditionDisplayPanelTest extends DMDircUITestCase {
 
     @Test
     public void testInitialising() {
-        ActionConditionDisplayPanel panel = new ActionConditionDisplayPanel(
+        final ActionConditionDisplayPanel panel = new ActionConditionDisplayPanel(im(),
                 new ActionCondition(2, CoreActionComponent.CHANNEL_NAME,
                 CoreActionComparison.STRING_STARTSWITH, "abc"),
                 CoreActionType.CHANNEL_MESSAGE);
-        Panel test = new Panel(panel);
+        final Panel test = new Panel(panel);
 
-        Matcher matcher = pattern.matcher(test.getTextBox(new ClassComponentMatcher(
+        final Matcher matcher = pattern.matcher(test.getTextBox(new ClassComponentMatcher(
                 TextLabel.class)).getText());
         matcher.find();
         assertEquals("The message's name starts with 'abc'", matcher.group(1).
                 trim());
-        UIComponent[] components = test.getUIComponents(new ClassComponentMatcher(
+        final UIComponent[] components = test.getUIComponents(new ClassComponentMatcher(
                 ActionConditionEditorPanel.class));
         assertNotNull(components);
         assertTrue(components.length == 1);
         assertTrue(components[0].isEnabled());
         assertFalse(components[0].isVisible());
-        ToggleButton toggle = test.getToggleButton(new ClassComponentMatcher(
+        final ToggleButton toggle = test.getToggleButton(new ClassComponentMatcher(
                 ImageToggleButton.class));
         assertTrue(toggle.isEnabled());
         assertTrue(toggle.isVisible());
         assertFalse(toggle.isSelected());
-        Button button = test.getButton(new ClassComponentMatcher(
+        final Button button = test.getButton(new ClassComponentMatcher(
                 ImageButton.class));
         assertTrue(button.isEnabled());
         assertTrue(button.isVisible());
@@ -109,11 +124,11 @@ public class ActionConditionDisplayPanelTest extends DMDircUITestCase {
 
     @Test
     public void testSetTrigger() {
-        ActionConditionDisplayPanel panel = new ActionConditionDisplayPanel(
+        final ActionConditionDisplayPanel panel = new ActionConditionDisplayPanel(im(),
                 new ActionCondition(2, CoreActionComponent.CHANNEL_NAME,
                 CoreActionComparison.STRING_STARTSWITH, "abc"),
                 CoreActionType.CHANNEL_MESSAGE);
-        Panel test = new Panel(panel);
+        final Panel test = new Panel(panel);
 
         panel.setTrigger(null);
 
@@ -155,16 +170,16 @@ public class ActionConditionDisplayPanelTest extends DMDircUITestCase {
 
     @Test
     public void testDeleteCondition() {
-        ActionConditionDisplayPanel panel = new ActionConditionDisplayPanel(
+        final ActionConditionDisplayPanel panel = new ActionConditionDisplayPanel(im(),
                 new ActionCondition(2, CoreActionComponent.CHANNEL_NAME,
                 CoreActionComparison.STRING_STARTSWITH, "abc"),
                 CoreActionType.CHANNEL_MESSAGE);
-        Panel test = new Panel(panel);
-        ActionConditionRemovalListener listener = mock(
+        final Panel test = new Panel(panel);
+        final ActionConditionRemovalListener listener = mock(
                 ActionConditionRemovalListener.class);
         panel.addConditionListener(listener);
 
-        Button button = test.getButton(new ClassComponentMatcher(
+        final Button button = test.getButton(new ClassComponentMatcher(
                 ImageButton.class));
         assertTrue(button.isEnabled());
         assertTrue(button.isVisible());
@@ -175,20 +190,20 @@ public class ActionConditionDisplayPanelTest extends DMDircUITestCase {
 
     @Test
     public void testEditCondition() {
-        ActionConditionDisplayPanel panel = new ActionConditionDisplayPanel(
+        final ActionConditionDisplayPanel panel = new ActionConditionDisplayPanel(im(),
                 new ActionCondition(2, CoreActionComponent.CHANNEL_NAME,
                 CoreActionComparison.STRING_STARTSWITH, "abc"),
                 CoreActionType.CHANNEL_MESSAGE);
-        Panel test = new Panel(panel);
+        final Panel test = new Panel(panel);
 
-        UIComponent[] components = test.getUIComponents(new ClassComponentMatcher(
+        final UIComponent[] components = test.getUIComponents(new ClassComponentMatcher(
                 ActionConditionEditorPanel.class));
         assertNotNull(components);
         assertTrue(components.length == 1);
         assertTrue(components[0].isEnabled());
         assertFalse(components[0].isVisible());
 
-        ToggleButton toggle = test.getToggleButton(new ClassComponentMatcher(
+        final ToggleButton toggle = test.getToggleButton(new ClassComponentMatcher(
                 ImageToggleButton.class));
         assertTrue(toggle.isEnabled());
         assertTrue(toggle.isVisible());
@@ -205,21 +220,21 @@ public class ActionConditionDisplayPanelTest extends DMDircUITestCase {
 
     @Test
     public void testSetEnabled() {
-        ActionConditionDisplayPanel panel = new ActionConditionDisplayPanel(
+        final ActionConditionDisplayPanel panel = new ActionConditionDisplayPanel(im(),
                 new ActionCondition(2, CoreActionComponent.CHANNEL_NAME,
                 CoreActionComparison.STRING_STARTSWITH, "abc"),
                 CoreActionType.CHANNEL_MESSAGE);
-        Panel test = new Panel(panel);
+        final Panel test = new Panel(panel);
 
-        UIComponent[] components = test.getUIComponents(new ClassComponentMatcher(
+        final UIComponent[] components = test.getUIComponents(new ClassComponentMatcher(
                 ActionConditionEditorPanel.class));
         assertNotNull(components);
         assertTrue(components.length == 1);
         assertTrue(components[0].isEnabled());
-        ToggleButton toggle = test.getToggleButton(new ClassComponentMatcher(
+        final ToggleButton toggle = test.getToggleButton(new ClassComponentMatcher(
                 ImageToggleButton.class));
         assertTrue(toggle.isEnabled());
-        Button button = test.getButton(new ClassComponentMatcher(
+        final Button button = test.getButton(new ClassComponentMatcher(
                 ImageButton.class));
         assertTrue(button.isEnabled());
 
@@ -235,9 +250,9 @@ public class ActionConditionDisplayPanelTest extends DMDircUITestCase {
 
     @Test
     public void testUpdateSentence() {
-        ActionConditionDisplayPanel panel = new ActionConditionDisplayPanel(
+        final ActionConditionDisplayPanel panel = new ActionConditionDisplayPanel(im(),
                 new ActionCondition(-1, null, null, ""), null);
-        Panel test = new Panel(panel);
+        final Panel test = new Panel(panel);
 
         Matcher matcher = pattern.matcher(test.getTextBox(new ClassComponentMatcher(
                 TextLabel.class)).getText());

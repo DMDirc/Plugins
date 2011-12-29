@@ -46,9 +46,9 @@ import com.dmdirc.logger.Logger;
 import com.dmdirc.ui.Colour;
 import com.dmdirc.ui.CoreUIUtils;
 import com.dmdirc.ui.IconManager;
+import com.dmdirc.util.ReturnableThread;
 import com.dmdirc.util.collections.ListenerList;
 import com.dmdirc.util.collections.QueuedLinkedHashSet;
-import com.dmdirc.util.ReturnableThread;
 
 import java.awt.Dimension;
 import java.awt.event.WindowEvent;
@@ -334,28 +334,28 @@ public final class MainFrame extends JFrame implements WindowListener,
                 try {
                     mainFrameManager = (FrameManager) Class.forName(manager)
                             .getConstructor().newInstance();
-                } catch (InvocationTargetException ex) {
+                } catch (final InvocationTargetException ex) {
                     Logger.appError(ErrorLevel.MEDIUM, "Unable to load frame "
                             + "manager, falling back to default.", ex);
-                } catch (InstantiationException ex) {
+                } catch (final InstantiationException ex) {
                     Logger.userError(ErrorLevel.MEDIUM, "Unable to load frame "
                             + "manager, falling back to default.", ex);
-                } catch (NoSuchMethodException ex) {
+                } catch (final NoSuchMethodException ex) {
                     Logger.userError(ErrorLevel.MEDIUM, "Unable to load frame "
                             + "manager, falling back to default.", ex);
-                } catch (SecurityException ex) {
+                } catch (final SecurityException ex) {
                     Logger.userError(ErrorLevel.MEDIUM, "Unable to load frame "
                             + "manager, falling back to default.", ex);
-                } catch (IllegalAccessException ex) {
+                } catch (final IllegalAccessException ex) {
                     Logger.userError(ErrorLevel.MEDIUM, "Unable to load frame "
                             + "manager, falling back to default.", ex);
-                } catch (IllegalArgumentException ex) {
+                } catch (final IllegalArgumentException ex) {
                     Logger.userError(ErrorLevel.MEDIUM, "Unable to load frame "
                             + "manager, falling back to default.", ex);
-                } catch (ClassNotFoundException ex) {
+                } catch (final ClassNotFoundException ex) {
                     Logger.userError(ErrorLevel.MEDIUM, "Unable to load frame "
                             + "manager, falling back to default.", ex);
-                } catch (LinkageError ex) {
+                } catch (final LinkageError ex) {
                     Logger.userError(ErrorLevel.MEDIUM, "Unable to load frame "
                             + "manager, falling back to default.", ex);
                 } finally {
@@ -384,7 +384,7 @@ public final class MainFrame extends JFrame implements WindowListener,
         mainSplitPane = initSplitPane();
 
         final MenuBar menu = new MenuBar(controller, this);
-        Apple.getApple().setMenuBar(menu);
+        controller.getApple().setMenuBar(menu);
         setJMenuBar(menu);
 
         setPreferredSize(new Dimension(800, 600));
@@ -492,14 +492,9 @@ public final class MainFrame extends JFrame implements WindowListener,
     public void quit(final int exitCode) {
         if (exitCode == 0 && controller.getGlobalConfig().getOptionBool(
                 "ui", "confirmQuit")) {
-            final StandardQuestionDialog dialog = new ConfirmQuitDialog(this) {
+            final StandardQuestionDialog dialog = new ConfirmQuitDialog(controller) {
 
-                /**
-                 * A version number for this class. It should be changed
-                 * whenever the class structure is changed (or anything else
-                 * that would prevent serialized objects being unserialized
-                 * with the new class).
-                 */
+                /** Serial version UID. */
                 private static final long serialVersionUID = 9;
 
                 /** {@inheritDoc} */
@@ -623,7 +618,7 @@ public final class MainFrame extends JFrame implements WindowListener,
                     activeFrame.activateFrame();
                 }
 
-                for (SelectionListener listener : listeners.get(
+                for (final SelectionListener listener : listeners.get(
                         SelectionListener.class)) {
                     listener.selectionChanged(activeFrame);
                 }

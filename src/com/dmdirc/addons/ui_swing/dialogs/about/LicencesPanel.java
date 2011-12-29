@@ -24,13 +24,13 @@ package com.dmdirc.addons.ui_swing.dialogs.about;
 
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.TreeScroller;
-import com.dmdirc.config.IdentityManager;
+import com.dmdirc.config.ConfigManager;
 import com.dmdirc.plugins.PluginInfo;
 
 import java.awt.Font;
 import java.awt.Rectangle;
-import javax.swing.BorderFactory;
 
+import javax.swing.BorderFactory;
 import javax.swing.JEditorPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -50,14 +50,13 @@ import net.miginfocom.swing.MigLayout;
 /**
  * Licences panel.
  */
-public final class LicencesPanel extends JPanel implements TreeSelectionListener {
+public final class LicencesPanel extends JPanel implements
+        TreeSelectionListener {
 
-    /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
-     */
+    /** Serial version UID. */
     private static final long serialVersionUID = 3;
+    /** Config manager. */
+    private final ConfigManager config;
     /** Licence scroll pane. */
     private JScrollPane scrollPane;
     /** Licence list model */
@@ -67,10 +66,15 @@ public final class LicencesPanel extends JPanel implements TreeSelectionListener
     /** Licence list. */
     private JTree list;
 
-    /** Creates a new instance of LicencesPanel. */
-    public LicencesPanel() {
+    /**
+     * Creates a new instance of LicencesPanel.
+     *
+     * @param config Config manager
+     */
+    public LicencesPanel(final ConfigManager config) {
         super();
 
+        this.config = config;
         initComponents();
         addListeners();
         layoutComponents();
@@ -84,7 +88,7 @@ public final class LicencesPanel extends JPanel implements TreeSelectionListener
     }
 
     /**
-     *  Lays out the components.
+     * Lays out the components.
      */
     private void layoutComponents() {
         setLayout(new MigLayout("ins rel, fill"));
@@ -99,8 +103,10 @@ public final class LicencesPanel extends JPanel implements TreeSelectionListener
         list = new JTree(listModel) {
 
             /**
-             * A version number for this class. It should be changed whenever the class
-             * structure is changed (or anything else that would prevent serialized
+             * A version number for this class. It should be changed whenever
+             * the class
+             * structure is changed (or anything else that would prevent
+             * serialized
              * objects being unserialized with the new class).
              */
             private static final long serialVersionUID = 1;
@@ -145,17 +151,20 @@ public final class LicencesPanel extends JPanel implements TreeSelectionListener
         final Object userObject = ((DefaultMutableTreeNode) e.getPath().
                 getLastPathComponent()).getUserObject();
         if (userObject instanceof Licence) {
-        licence.setText(((Licence) userObject).getBody());
+            licence.setText(((Licence) userObject).getBody());
         } else if (userObject instanceof PluginInfo) {
             final PluginInfo pi = (PluginInfo) userObject;
-            licence.setText("<b>Name:</b> " + pi.getMetaData().getFriendlyName() + "<br>"
-                    + "<b>Version:</b> " + pi.getMetaData().getFriendlyVersion() + "<br>"
+            licence.setText("<b>Name:</b> "
+                    + pi.getMetaData().getFriendlyName() + "<br>"
+                    + "<b>Version:</b> "
+                    + pi.getMetaData().getFriendlyVersion() + "<br>"
                     + "<b>Author:</b> " + pi.getMetaData().getAuthor() + "<br>"
-                    + "<b>Description:</b> " + pi.getMetaData().getDescription() + "<br>");
+                    + "<b>Description:</b> "
+                    + pi.getMetaData().getDescription() + "<br>");
         } else {
             licence.setText("<b>Name:</b> DMDirc<br>"
-                    + "<b>Version:</b> " + IdentityManager.getGlobalConfig().
-                    getOption("version", "version") + "<br>"
+                    + "<b>Version:</b> " + config
+                    .getOption("version", "version") + "<br>"
                     + "<b>Desciption:</b> The intelligent IRC client");
         }
         UIUtilities.resetScrollPane(scrollPane);

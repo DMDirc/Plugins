@@ -19,9 +19,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 package com.dmdirc.addons.ui_swing.components.addonpanel;
 
-import com.dmdirc.config.IdentityManager;
+import com.dmdirc.config.Identity;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.themes.Theme;
@@ -48,6 +49,8 @@ public final class AddonToggle {
     private boolean updateState;
     /** Listener list. */
     private final ListenerList listeners;
+    /** Identity to change update settings in. */
+    private final Identity identity;
 
     /**
      * Creates a new instance of AddonToggle to wrap the specified
@@ -56,11 +59,13 @@ public final class AddonToggle {
      * @param pi The PluginInfo to be wrapped can be null
      * @param theme The Theme to be wrapped can be null
      */
-    public AddonToggle(final PluginInfo pi, final Theme theme) {
+    public AddonToggle(final Identity identity, final PluginInfo pi,
+            final Theme theme) {
         if ((pi == null) == (theme == null)) {
             throw new IllegalArgumentException("You must wrap a plugin or "
                     + "a theme.");
         }
+        this.identity = identity;
         this.pi = pi;
         this.theme = theme;
         listeners = new ListenerList();
@@ -154,11 +159,11 @@ public final class AddonToggle {
                     PluginManager.getPluginManager().updateAutoLoad(pi);
                     if (getID() != -1) {
                         if (getUpdateState()) {
-                            IdentityManager.getConfigIdentity().unsetOption(
-                                    "updater", "enable-addon-" + getID());
+                            identity.unsetOption("updater", "enable-addon-"
+                                    + getID());
                         } else {
-                            IdentityManager.getConfigIdentity().setOption(
-                                   "updater", "enable-addon-" + getID(), false);
+                            identity.setOption("updater", "enable-addon-"
+                                    + getID(), false);
                         }
                     }
                 }

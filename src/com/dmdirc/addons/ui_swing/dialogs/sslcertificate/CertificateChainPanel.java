@@ -24,7 +24,6 @@ package com.dmdirc.addons.ui_swing.dialogs.sslcertificate;
 
 import com.dmdirc.addons.ui_swing.components.ListScroller;
 import com.dmdirc.addons.ui_swing.components.renderers.CertificateChainEntryCellRenderer;
-import com.dmdirc.config.IdentityManager;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.core.dialogs.sslcertificate.CertificateChainEntry;
 
@@ -47,12 +46,10 @@ import net.miginfocom.swing.MigLayout;
  */
 public class CertificateChainPanel extends JPanel {
 
-    /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
-     */
+    /** Serial version UID. */
     private static final long serialVersionUID = 1;
+    /** Icon manager. */
+    private final IconManager iconManager;
     /** Chain list. */
     private JList list;
     /** List model. */
@@ -60,8 +57,11 @@ public class CertificateChainPanel extends JPanel {
 
     /**
      * Creates a new certificate chain panel.
+     *
+     * @param iconManager Icon Manager
      */
-    public CertificateChainPanel() {
+    public CertificateChainPanel(final IconManager iconManager) {
+        this.iconManager = iconManager;
         initComponents();
         layoutComponents();
     }
@@ -69,7 +69,7 @@ public class CertificateChainPanel extends JPanel {
     private void initComponents() {
         model = new DefaultListModel();
         list = new JList(model);
-        list.setCellRenderer(new CertificateChainEntryCellRenderer());
+        list.setCellRenderer(new CertificateChainEntryCellRenderer(iconManager));
         list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         ListScroller.register(list);
     }
@@ -80,12 +80,10 @@ public class CertificateChainPanel extends JPanel {
         setLayout(new MigLayout("fillx, wrap 1"));
 
         add(new JScrollPane(list), "grow, pushy");
-        add(new JLabel("Certificate is trusted", new IconManager(
-                IdentityManager.getGlobalConfig()).getIcon("tick"),
-                JLabel.LEFT), "growx");
-        add(new JLabel("Problem with certificate", new IconManager(
-                IdentityManager.getGlobalConfig()).getIcon("cross"),
-                JLabel.LEFT), "growx");
+        add(new JLabel("Certificate is trusted", iconManager
+                .getIcon("tick"),JLabel.LEFT), "growx");
+        add(new JLabel("Problem with certificate", iconManager
+                .getIcon("cross"), JLabel.LEFT), "growx");
     }
 
     /**
@@ -97,7 +95,7 @@ public class CertificateChainPanel extends JPanel {
         if (certificateChain == null) {
             model.clear();
         } else {
-            for (CertificateChainEntry entry : certificateChain) {
+            for (final CertificateChainEntry entry : certificateChain) {
                 model.addElement(entry);
             }
         }

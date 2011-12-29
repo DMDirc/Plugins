@@ -24,6 +24,7 @@ package com.dmdirc.addons.ui_swing.dialogs.error;
 
 import com.dmdirc.addons.ui_swing.components.PackingTable;
 import com.dmdirc.addons.ui_swing.components.renderers.ErrorLevelIconCellRenderer;
+import com.dmdirc.ui.IconManager;
 
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
@@ -34,17 +35,22 @@ import javax.swing.table.TableCellRenderer;
  */
 public class ErrorTable extends PackingTable {
 
+    /** Serial version UID. */
     private static final long serialVersionUID = 3994014806819705247L;
+    /** Icon manager. */
+    private final IconManager iconManager;
 
     /**
      * Table listing ProgramErrors in the client.
      *
+     * @param iconManager Icon manager
      * @param tableModel Table model
      * @param scrollPane Parent scrollpane
      */
-    public ErrorTable(final ErrorTableModel tableModel,
-            final JScrollPane scrollPane) {
+    public ErrorTable(final IconManager iconManager,
+            final ErrorTableModel tableModel, final JScrollPane scrollPane) {
         super(tableModel, scrollPane, true);
+        this.iconManager = iconManager;
 
         setAutoCreateRowSorter(true);
         setAutoCreateColumnsFromModel(true);
@@ -64,7 +70,7 @@ public class ErrorTable extends PackingTable {
             final int column) {
         switch (column) {
             case 2:
-                return new ErrorLevelIconCellRenderer();
+                return new ErrorLevelIconCellRenderer(iconManager);
             default:
                 return super.getCellRenderer(row, column);
         }

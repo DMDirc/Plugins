@@ -24,7 +24,6 @@ package com.dmdirc.addons.ui_swing.components.expandingsettings;
 
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.ImageButton;
-import com.dmdirc.config.IdentityManager;
 import com.dmdirc.ui.IconManager;
 
 import java.awt.event.ActionEvent;
@@ -44,28 +43,29 @@ import net.miginfocom.swing.MigLayout;
 public final class CurrentOptionsPanel extends JPanel implements
         ActionListener {
 
-    /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
-     */
+    /** Serial version UID. */
     private static final long serialVersionUID = 2;
     /** Parent settings panel. */
     private final SettingsPanel parent;
     /** Curent options to display. */
     private final List<JComponent> settings;
+    /** Icon manager. */
+    private final IconManager iconManager;
 
     /**
      * Creates a new instance of CurrentOptionsPanel.
      *
+     * @param iconManager IconManager
      * @param parent Parent settings panel.
      */
-    protected CurrentOptionsPanel(final SettingsPanel parent) {
+    protected CurrentOptionsPanel(final IconManager iconManager,
+            final SettingsPanel parent) {
         super();
 
+        this.iconManager= iconManager;
         this.parent = parent;
 
-        this.setOpaque(UIUtilities.getTabbedPaneOpaque());
+        setOpaque(UIUtilities.getTabbedPaneOpaque());
         settings = new ArrayList<JComponent>();
     }
 
@@ -107,10 +107,8 @@ public final class CurrentOptionsPanel extends JPanel implements
     private void addCurrentOption(final JComponent component) {
         final JLabel label = new JLabel();
         final ImageButton<JComponent> button = new ImageButton<JComponent>(
-                component.getName(),
-                new IconManager(IdentityManager.getGlobalConfig())
-                .getIcon("close-inactive"), new IconManager(IdentityManager
-                .getGlobalConfig()).getIcon("close-active"));
+                component.getName(), iconManager.getIcon("close-inactive"),
+                iconManager.getIcon("close-active"));
         button.setObject(component);
 
         label.setText(component.getName() + ": ");
@@ -132,7 +130,7 @@ public final class CurrentOptionsPanel extends JPanel implements
 
         removeAll();
 
-        for (JComponent setting : settings) {
+        for (final JComponent setting : settings) {
             addCurrentOption(setting);
         }
 

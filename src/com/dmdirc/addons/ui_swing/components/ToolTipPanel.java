@@ -24,7 +24,6 @@ package com.dmdirc.addons.ui_swing.components;
 
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
-import com.dmdirc.config.IdentityManager;
 import com.dmdirc.ui.IconManager;
 
 import java.awt.Color;
@@ -51,11 +50,7 @@ import org.jdesktop.jxlayer.plaf.LayerUI;
  */
 public class ToolTipPanel extends JPanel implements MouseListener {
 
-    /**
-     * A version number for this class. It should be changed whenever the
-     * class structure is changed (or anything else that would prevent
-     * serialized objects being unserialized with the new class).
-     */
+    /** Serial version UID. */
     private static final long serialVersionUID = -8929794537312606692L;
     /** Default tool tip. */
     private final String defaultHelp;
@@ -71,15 +66,15 @@ public class ToolTipPanel extends JPanel implements MouseListener {
     /**
      * Instantiates a new tool tip panel.
      *
+     * @param iconManager Icon Manager
      * @param helpText Default help message when idle
      */
-    public ToolTipPanel(final String helpText) {
+    public ToolTipPanel(final IconManager iconManager, final String helpText) {
         super(new MigLayout("hidemode 3"));
 
         defaultHelp = helpText;
-        this.tooltips = new HashMap<JComponent, String>();
-        this.icon = new JLabel(new IconManager(IdentityManager
-                .getGlobalConfig()).getIcon("warning"));
+        tooltips = new HashMap<JComponent, String>();
+        icon = new JLabel(iconManager.getIcon("warning"));
 
         setBackground(Color.WHITE);
         setForeground(Color.BLACK);
@@ -241,7 +236,7 @@ public class ToolTipPanel extends JPanel implements MouseListener {
     @Override
     public void mouseEntered(final MouseEvent e) {
         if (e.getSource() instanceof JComponent) {
-            setText(tooltips.get((JComponent) e.getSource()));
+            setText(tooltips.get(e.getSource()));
         }
     }
 

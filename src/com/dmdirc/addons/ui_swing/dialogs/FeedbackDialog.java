@@ -32,7 +32,6 @@ import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.ui.core.util.Info;
 
 import java.awt.Insets;
-import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -46,20 +45,17 @@ import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import lombok.AutoGenMethodStub;
+
 import net.miginfocom.swing.MigLayout;
 
 /** Feedback form. */
+@AutoGenMethodStub
 public final class FeedbackDialog extends StandardDialog implements
         ActionListener, DocumentListener {
 
-    /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
-     */
+    /** Serial version UID. */
     private static final long serialVersionUID = 1;
-    /** A previously created instance of FeedbackDialog. */
-    private static FeedbackDialog me;
     /** Information label. */
     private TextLabel info;
     /** Name field. */
@@ -78,10 +74,10 @@ public final class FeedbackDialog extends StandardDialog implements
     /**
      * Instantiates the feedback dialog.
      *
-     * @param parentWindow Parent window
+     * @param controller Swing controller
      */
-    private FeedbackDialog(final Window parentWindow) {
-        super(parentWindow, ModalityType.MODELESS);
+    public FeedbackDialog(final SwingController controller) {
+        super(controller, ModalityType.MODELESS);
 
         initComponents();
         layoutComponents();
@@ -89,41 +85,6 @@ public final class FeedbackDialog extends StandardDialog implements
 
         setTitle("Feedback");
         setResizable(false);
-    }
-
-    /**
-     * Creates the new feedback dialog if one doesn't exist, and displays it.
-     *
-     * @param parentWindow Parent window
-     */
-    public static void showFeedbackDialog(final Window parentWindow) {
-        me = getFeedbackDialog(parentWindow);
-
-        me.display();
-        me.requestFocusInWindow();
-    }
-
-    /**
-     * Returns the current instance of the FeedbackDialog.
-     *
-     * @param parentWindow Parent window
-     *
-     * @return The current FeedbackDialog instance
-     */
-    public static FeedbackDialog getFeedbackDialog(final Window parentWindow) {
-        synchronized (FeedbackDialog.class) {
-            if (me == null) {
-                me = new FeedbackDialog(parentWindow);
-                me.serverCheckbox.setEnabled(ServerManager.getServerManager().
-                        numServers() > 0);
-            } else if (!me.isVisible()) {
-                me = new FeedbackDialog(parentWindow);
-                me.serverCheckbox.setEnabled(ServerManager.getServerManager().
-                    numServers() > 0);
-            }
-        }
-
-        return me;
     }
 
     /** Initialises the components. */
@@ -258,7 +219,7 @@ public final class FeedbackDialog extends StandardDialog implements
             dmdircInfo.append("Look & Feel: ").append(
                     SwingController.getLookAndFeel());
         }
-        new SendWorker(me, name.getText().trim(), email.getText().trim(),
+        new SendWorker(this, name.getText().trim(), email.getText().trim(),
                 feedback.getText().trim(), serverInfo.toString().trim(),
                 dmdircInfo.toString().trim()).executeInExecutor();
     }
@@ -288,33 +249,23 @@ public final class FeedbackDialog extends StandardDialog implements
         }
     }
 
-    /** {@inheritDoc} */
+    /**
+     * @{inheritDoc}
+     *
+     * @param e Document event
+     */
     @Override
     public void insertUpdate(final DocumentEvent e) {
         validateInput();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     *
+     * @param e Document event
+     */
     @Override
     public void removeUpdate(final DocumentEvent e) {
         validateInput();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void changedUpdate(final DocumentEvent e) {
-    //Ignore
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void dispose() {
-        if (me == null) {
-            return;
-        }
-        synchronized (me) {
-            super.dispose();
-            me = null;
-        }
     }
 }

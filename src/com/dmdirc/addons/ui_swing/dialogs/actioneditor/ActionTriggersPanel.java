@@ -24,10 +24,11 @@ package com.dmdirc.addons.ui_swing.dialogs.actioneditor;
 
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.ActionTypeComparator;
-import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.addons.ui_swing.ComboBoxWidthModifier;
 import com.dmdirc.addons.ui_swing.components.renderers.ActionTypeRenderer;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
+import com.dmdirc.interfaces.actions.ActionType;
+import com.dmdirc.ui.IconManager;
 import com.dmdirc.util.collections.MapList;
 
 import java.awt.event.ActionEvent;
@@ -70,37 +71,45 @@ public class ActionTriggersPanel extends JPanel implements ActionListener,
     /** Triggers compatible with the currently added triggers. */
     private final List<ActionType> compatibleTriggers;
 
-    /** Instantiates the panel. */
-    public ActionTriggersPanel() {
+    /**
+     * Instantiates the panel.
+     *
+     * @param iconManager Icon manager
+     * */
+    public ActionTriggersPanel(final IconManager iconManager) {
         super();
 
         compatibleTriggers = new ArrayList<ActionType>();
 
-        initComponents();
+        initComponents(iconManager);
         addListeners();
         layoutComponents();
     }
 
-    /** Initialises the components. */
-    private void initComponents() {
+    /**
+     * Initialises the components.
+     *
+     * @param iconManager Icon manager
+     * */
+    private void initComponents(final IconManager iconManager) {
         setBorder(BorderFactory.createTitledBorder(UIManager.getBorder(
                 "TitledBorder.border"), "Triggers"));
 
         triggerGroup = new JComboBox(new DefaultComboBoxModel());
-        //Only fire events on selection not on highlight
+        // Only fire events on selection not on highlight
         triggerGroup.putClientProperty("JComboBox.isTableCellEditor",
                 Boolean.TRUE);
         triggerGroup.setRenderer(new ActionTypeRenderer());
         triggerGroup.addPopupMenuListener(new ComboBoxWidthModifier());
 
         triggerItem = new JComboBox(new DefaultComboBoxModel());
-        //Only fire events on selection not on highlight
+        // Only fire events on selection not on highlight
         triggerItem.putClientProperty("JComboBox.isTableCellEditor",
                 Boolean.TRUE);
         triggerItem.setRenderer(new ActionTypeRenderer());
         triggerItem.addPopupMenuListener(new ComboBoxWidthModifier());
 
-        triggerList = new ActionTriggersListPanel();
+        triggerList = new ActionTriggersListPanel(iconManager);
         addAll(ActionManager.getActionManager().getGroupedTypes());
     }
 
@@ -154,7 +163,7 @@ public class ActionTriggersPanel extends JPanel implements ActionListener,
     public void setTriggers(final ActionType[] triggers) {
         triggerList.clearTriggers();
 
-        for (ActionType localTrigger : triggers) {
+        for (final ActionType localTrigger : triggers) {
             triggerList.addTrigger(localTrigger);
         }
     }
@@ -197,7 +206,8 @@ public class ActionTriggersPanel extends JPanel implements ActionListener,
         compatibleTriggers.clear();
         ((DefaultComboBoxModel) triggerGroup.getModel()).removeAllElements();
         ((DefaultComboBoxModel) triggerItem.getModel()).removeAllElements();
-        for (Map.Entry<String, List<ActionType>> entry : mapList.entrySet()) {
+        for (final Map.Entry<String, List<ActionType>> entry : mapList
+                .entrySet()) {
             ((DefaultComboBoxModel) triggerGroup.getModel())
                     .addElement(entry.getKey());
         }
@@ -219,7 +229,7 @@ public class ActionTriggersPanel extends JPanel implements ActionListener,
                 .findCompatibleTypes(primaryType));
         ((DefaultComboBoxModel) triggerGroup.getModel()).removeAllElements();
         ((DefaultComboBoxModel) triggerItem.getModel()).removeAllElements();
-        for (ActionType thisType : compatibleTriggers) {
+        for (final ActionType thisType : compatibleTriggers) {
             final List<ActionType> types = triggerList.getTriggers();
             if (!types.contains(thisType)) {
                 ((DefaultComboBoxModel) triggerItem.getModel())
@@ -234,7 +244,8 @@ public class ActionTriggersPanel extends JPanel implements ActionListener,
         triggerGroup.setSelectedIndex(-1);
         triggerItem.setSelectedIndex(-1);
         if (triggerItem.getModel().getSize() == 0) {
-            ((DefaultComboBoxModel) triggerGroup.getModel()).removeAllElements();
+            ((DefaultComboBoxModel) triggerGroup.getModel())
+                    .removeAllElements();
         }
         triggerGroup.setEnabled(triggerGroup.getModel().getSize() > 0);
         triggerItem.setEnabled(triggerItem.getModel().getSize() > 0);
@@ -251,10 +262,11 @@ public class ActionTriggersPanel extends JPanel implements ActionListener,
         comboChange = true;
         ((DefaultComboBoxModel) triggerItem.getModel()).removeAllElements();
         Collections.sort(list, new ActionTypeComparator());
-        for (ActionType entry : list) {
+        for (final ActionType entry : list) {
             if (compatibleTriggers.isEmpty()
                     || compatibleTriggers.contains(entry)) {
-                ((DefaultComboBoxModel) triggerItem.getModel()).addElement(entry);
+                ((DefaultComboBoxModel) triggerItem.getModel())
+                        .addElement(entry);
             }
         }
         triggerItem.setSelectedIndex(-1);

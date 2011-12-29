@@ -40,11 +40,7 @@ import javax.swing.text.BadLocationException;
 public class ValidatingTextFieldInputField extends ValidatingJTextField
         implements InputField {
 
-    /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
-     */
+    /** Serial version UID. */
     private static final long serialVersionUID = 2;
     /** Colour picker. */
     private ColourPickerDialog colourPicker;
@@ -92,7 +88,8 @@ public class ValidatingTextFieldInputField extends ValidatingJTextField
     public void showColourPicker(final boolean irc, final boolean hex) {
         if (controller.getGlobalConfig().getOptionBool("general",
                 "showcolourdialog")) {
-            colourPicker = new ColourPickerDialog(irc, hex);
+            colourPicker = new ColourPickerDialog(controller.getIconManager(),
+                    irc, hex);
             colourPicker.addActionListener(new ActionListener() {
 
                 @Override
@@ -100,7 +97,7 @@ public class ValidatingTextFieldInputField extends ValidatingJTextField
                     try {
                         getDocument().insertString(getCaretPosition(),
                                 actionEvent.getActionCommand(), null);
-                    } catch (BadLocationException ex) {
+                    } catch (final BadLocationException ex) {
                         //Ignore, wont happen
                     }
                     colourPicker.dispose();

@@ -48,6 +48,8 @@ import net.miginfocom.swing.MigLayout;
  */
 public abstract class StandardInputDialog extends StandardDialog {
 
+    /** Serial version UID. */
+    private static final long serialVersionUID = 1;
     /** Validator. */
     private Validator<String> validator;
     /** Text field. */
@@ -58,8 +60,6 @@ public abstract class StandardInputDialog extends StandardDialog {
     private String message;
     /** Are we saving? */
     protected final AtomicBoolean saving = new AtomicBoolean(false);
-    /** Swing controller. */
-    private final SwingController controller;
 
     /**
      * Instantiates a new standard input dialog.
@@ -97,9 +97,8 @@ public abstract class StandardInputDialog extends StandardDialog {
             final Window owner, final ModalityType modal,
             final String title, final String message,
             final Validator<String> validator) {
-        super(owner, modal);
+        super(controller, owner, modal);
 
-        this.controller = controller;
         this.validator = validator;
         this.message = message;
 
@@ -128,10 +127,10 @@ public abstract class StandardInputDialog extends StandardDialog {
      */
     private void initComponents() {
         orderButtons(new JButton(), new JButton());
-        if (controller == null) {
+        if (getController() == null) {
             textField = new ValidatingJTextField(new IconManager(new ConfigManager("", "", "", "")), validator);
         } else {
-            textField = new ValidatingJTextField(controller.getIconManager(), validator);
+            textField = new ValidatingJTextField(getController().getIconManager(), validator);
         }
         blurb = new TextLabel(message);
         validateText();

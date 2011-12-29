@@ -28,10 +28,9 @@ import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.actions.ReplacePasteAction;
 import com.dmdirc.addons.ui_swing.components.frames.ChannelFrame;
-import com.dmdirc.addons.ui_swing.components.inputfields.TextPaneInputField;
 import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputHandler;
+import com.dmdirc.addons.ui_swing.components.inputfields.TextPaneInputField;
 import com.dmdirc.addons.ui_swing.components.text.WrapEditorKit;
-import com.dmdirc.config.IdentityManager;
 import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.interfaces.TopicChangeListener;
 import com.dmdirc.parser.common.ChannelJoinRequest;
@@ -69,11 +68,7 @@ public class TopicBar extends JComponent implements ActionListener,
         ConfigChangeListener, HyperlinkListener, MouseListener,
         DocumentListener, TopicChangeListener {
 
-    /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
-     */
+    /** Serial version UID. */
     private static final long serialVersionUID = 1;
     /** Topic text. */
     private final TextPaneInputField topicText;
@@ -106,9 +101,10 @@ public class TopicBar extends JComponent implements ActionListener,
             final ChannelFrame channelFrame) {
         super();
 
-        this.channel = (Channel) channelFrame.getContainer();
+        channel = (Channel) channelFrame.getContainer();
         controller = channelFrame.getController();
-        topicText = new TextPaneInputField(parentWindow);
+        topicText = new TextPaneInputField(channelFrame.getController(),
+                parentWindow);
         topicLengthMax = channel.getMaxTopicLength();
         errorIcon = new JLabel(channelFrame.getIconManager()
                 .getIcon("input-error"));
@@ -119,10 +115,10 @@ public class TopicBar extends JComponent implements ActionListener,
 
         topicText.getActionMap().put("paste-from-clipboard",
                 new ReplacePasteAction("(\r\n|\n|\r)", " "));
-        topicEdit = new ImageButton("edit",
+        topicEdit = new ImageButton<Object>("edit",
                 channelFrame.getIconManager().getIcon("edit-inactive"),
                 channelFrame.getContainer().getIconManager().getIcon("edit"));
-        topicCancel = new ImageButton("cancel",
+        topicCancel = new ImageButton<Object>("cancel",
                 channelFrame.getIconManager().getIcon("close"),
                 channelFrame.getIconManager().getIcon("close-active"));
 
@@ -184,17 +180,17 @@ public class TopicBar extends JComponent implements ActionListener,
         topicText.addHyperlinkListener(this);
         topicText.addMouseListener(this);
         topicText.getDocument().addDocumentListener(this);
-        IdentityManager.getGlobalConfig().addChangeListener(
+        controller.getGlobalConfig().addChangeListener(
                 "ui", "backgroundcolour", this);
-        IdentityManager.getGlobalConfig().addChangeListener(
+        controller.getGlobalConfig().addChangeListener(
                 "ui", "foregroundcolour", this);
-        IdentityManager.getGlobalConfig().addChangeListener(
+        controller.getGlobalConfig().addChangeListener(
                 "ui", "inputbackgroundcolour", this);
-        IdentityManager.getGlobalConfig().addChangeListener(
+        controller.getGlobalConfig().addChangeListener(
                 "ui", "inputforegroundcolour", this);
-        IdentityManager.getGlobalConfig().addChangeListener(
+        controller.getGlobalConfig().addChangeListener(
                 controller.getDomain(), "showfulltopic", this);
-        IdentityManager.getGlobalConfig().addChangeListener(
+        controller.getGlobalConfig().addChangeListener(
                 controller.getDomain(), "hideEmptyTopicBar", this);
 
         topicText.setFocusable(false);

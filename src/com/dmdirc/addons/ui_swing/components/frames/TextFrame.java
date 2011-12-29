@@ -53,10 +53,10 @@ import com.dmdirc.commandparser.parsers.GlobalCommandParser;
 import com.dmdirc.config.ConfigManager;
 import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.interfaces.FrameCloseListener;
-import com.dmdirc.parser.common.ChannelJoinRequest;
-import com.dmdirc.ui.IconManager;
 import com.dmdirc.interfaces.ui.InputWindow;
 import com.dmdirc.interfaces.ui.Window;
+import com.dmdirc.parser.common.ChannelJoinRequest;
+import com.dmdirc.ui.IconManager;
 
 import java.awt.Point;
 import java.awt.event.KeyEvent;
@@ -115,7 +115,7 @@ public abstract class TextFrame extends JPanel implements Window,
             final SwingController controller) {
         super();
         this.controller = controller;
-        this.frameParent = owner;
+        frameParent = owner;
 
         final ConfigManager config = owner.getConfigManager();
 
@@ -310,7 +310,7 @@ public abstract class TextFrame extends JPanel implements Window,
      * @param newTextPane new text pane to use
      */
     protected final void setTextPane(final TextPane newTextPane) {
-        this.textPane = newTextPane;
+        textPane = newTextPane;
     }
 
     /** {@inheritDoc} */
@@ -413,7 +413,7 @@ public abstract class TextFrame extends JPanel implements Window,
         final Object[][] arguments = new Object[parts.length][1];
 
         int i = 0;
-        for (String part : parts) {
+        for (final String part : parts) {
             arguments[i++][0] = part;
         }
 
@@ -500,7 +500,7 @@ public abstract class TextFrame extends JPanel implements Window,
     private JComponent populatePopupMenu(final JComponent menu,
             final PopupMenu popup,
             final Object[][] arguments) {
-        for (PopupMenuItem menuItem : popup.getItems()) {
+        for (final PopupMenuItem menuItem : popup.getItems()) {
             if (menuItem.isDivider()) {
                 menu.add(new JSeparator());
             } else if (menuItem.isSubMenu()) {

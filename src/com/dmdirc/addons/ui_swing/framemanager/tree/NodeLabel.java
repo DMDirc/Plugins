@@ -68,7 +68,7 @@ public class NodeLabel extends JPanel implements SelectionListener,
     /** Are we the selected window? */
     private boolean selected;
     /** Node icon. */
-    private final ImageButton icon = new ImageButton("", null);
+    private final ImageButton<?> icon = new ImageButton<Object>("", null);
     /** Text label. */
     private final JTextPane text = new JTextPane(new DefaultStyledDocument());
     /** Current styled text. */

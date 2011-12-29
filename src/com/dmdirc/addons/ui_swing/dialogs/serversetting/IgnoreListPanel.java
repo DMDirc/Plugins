@@ -27,13 +27,13 @@ import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialog;
 import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
+import com.dmdirc.parser.common.IgnoreList;
 import com.dmdirc.util.validators.NotEmptyValidator;
 import com.dmdirc.util.validators.RegexValidator;
 import com.dmdirc.util.validators.ValidatorChain;
-import com.dmdirc.parser.common.IgnoreList;
 
-import java.awt.Window;
 import java.awt.Dialog.ModalityType;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -55,11 +55,7 @@ import net.miginfocom.swing.MigLayout;
 public final class IgnoreListPanel extends JPanel implements ActionListener,
         ListSelectionListener {
 
-    /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
-     */
+    /** Serial version UID. */
     private static final long serialVersionUID = 2;
     /** Parent server. */
     private final Server server;
@@ -218,7 +214,7 @@ public final class IgnoreListPanel extends JPanel implements ActionListener,
             }.display();
         } else if (e.getSource() == delButton && list.getSelectedIndex()
                 != -1) {
-            new StandardQuestionDialog(parentWindow,
+            new StandardQuestionDialog(controller, parentWindow,
                     ModalityType.APPLICATION_MODAL,
                     "Confirm deletion",
                     "Are you sure you want to delete this item?") {

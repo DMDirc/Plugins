@@ -27,10 +27,10 @@ import com.dmdirc.addons.ui_swing.Apple;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
 import com.dmdirc.commandparser.parsers.CommandParser;
+import com.dmdirc.interfaces.ui.InputField;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.ui.input.InputHandler;
-import com.dmdirc.interfaces.ui.InputField;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
@@ -76,12 +76,7 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
 
         localTarget.getActionMap().put("upArrow", new AbstractAction() {
 
-            /**
-             * A version number for this class. It should be changed whenever
-             * the class structure is changed (or anything else that would
-             * prevent serialized objects being unserialized with the new
-             * class).
-             */
+            /** Serial version UID. */
             private static final long serialVersionUID = 1;
 
             /** {@inheritDoc} */
@@ -114,12 +109,7 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
 
         localTarget.getActionMap().put("downArrow", new AbstractAction() {
 
-            /**
-             * A version number for this class. It should be changed whenever
-             * the class structure is changed (or anything else that would
-             * prevent serialized objects being unserialized with the new
-             * class).
-             */
+            /** Serial version UID. */
             private static final long serialVersionUID = 1;
 
             /** {@inheritDoc} */
@@ -154,18 +144,13 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
 
         localTarget.getActionMap().put("insert-tab", new AbstractAction() {
 
-            /**
-             * A version number for this class. It should be changed whenever
-             * the class structure is changed (or anything else that would
-             * prevent serialized objects being unserialized with the new
-             * class).
-             */
+            /** Serial version UID. */
             private static final long serialVersionUID = 1;
 
             /** {@inheritDoc} */
             @Override
             public void actionPerformed(final ActionEvent e) {
-                new LoggingSwingWorker() {
+                new LoggingSwingWorker<Object, Void>() {
 
                     /** {@inheritDoc} */
                     @Override
@@ -186,18 +171,13 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
         localTarget.getActionMap().put("insert-shift-tab",
                 new AbstractAction() {
 
-            /**
-             * A version number for this class. It should be changed whenever
-             * the class structure is changed (or anything else that would
-             * prevent serialized objects being unserialized with the new
-             * class).
-             */
+            /** Serial version UID. */
             private static final long serialVersionUID = 1;
 
             /** {@inheritDoc} */
             @Override
             public void actionPerformed(final ActionEvent e) {
-                new LoggingSwingWorker() {
+                new LoggingSwingWorker<Object, Void>() {
 
                     /** {@inheritDoc} */
                     @Override
@@ -236,12 +216,7 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
 
         localTarget.getActionMap().put("enterButton", new AbstractAction() {
 
-            /**
-             * A version number for this class. It should be changed whenever
-             * the class structure is changed (or anything else that would
-             * prevent serialized objects being unserialized with the new
-             * class).
-             */
+            /** Serial version UID. */
             private static final long serialVersionUID = 1;
 
             /** {@inheritDoc} */
@@ -267,7 +242,7 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
                             return;
                         }
                         if (source.isEditable()) {
-                            new LoggingSwingWorker() {
+                            new LoggingSwingWorker<Object, Void>() {
 
                                 /** {@inheritDoc} */
                                 @Override
