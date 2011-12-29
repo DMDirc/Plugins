@@ -23,7 +23,7 @@
 package com.dmdirc.addons.ui_swing.framemanager.windowmenu;
 
 import com.dmdirc.addons.ui_swing.UIUtilities;
-import com.dmdirc.config.IdentityManager;
+import com.dmdirc.config.ConfigManager;
 import com.dmdirc.interfaces.ConfigChangeListener;
 
 import darrylbu.util.MenuScroller;
@@ -35,37 +35,41 @@ import javax.swing.JMenu;
  */
 public class WindowMenuScroller implements ConfigChangeListener {
 
-    /** Menu scroller. */
-    private MenuScroller scroller;
+    /** Config manager. */
+    private final ConfigManager config;
     /** Config domain. */
     private final String configDomain;
     /** Menu to scroll. */
     private final JMenu menu;
     /** Fixed menu item count. */
     private final int fixedCount;
+    /** Menu scroller. */
+    private MenuScroller scroller;
 
     /**
      * Creates a new menu scroller for the window menu.
      *
      * @param menu Menu to create scroller for
+     * @param config Config manager
      * @param configDomain Domain to check config settings in
      * @param fixedCount Number of fixed items in the menu
      */
-    public WindowMenuScroller(final JMenu menu, final String configDomain,
-            final int fixedCount) {
+    public WindowMenuScroller(final JMenu menu, final ConfigManager config,
+            final String configDomain, final int fixedCount) {
         this.menu = menu;
+        this.config = config;
         this.configDomain = configDomain;
         this.fixedCount = fixedCount;
         this.scroller = new MenuScroller(menu,
-                IdentityManager.getGlobalConfig().getOptionInt(configDomain,
+                config.getOptionInt(configDomain,
                 "windowMenuItems"),
-                IdentityManager.getGlobalConfig().getOptionInt(configDomain,
+                config.getOptionInt(configDomain,
                 "windowMenuScrollInterval"), fixedCount, 0);
         scroller.setShowSeperators(false);
 
-        IdentityManager.getGlobalConfig().addChangeListener(configDomain,
+        config.addChangeListener(configDomain,
                 "windowMenuItems", this);
-        IdentityManager.getGlobalConfig().addChangeListener(configDomain,
+        config.addChangeListener(configDomain,
                 "windowMenuScrollInterval", this);
     }
 
@@ -79,11 +83,9 @@ public class WindowMenuScroller implements ConfigChangeListener {
             public void run() {
                 scroller.dispose();
                 scroller = new MenuScroller(menu,
-                        IdentityManager.getGlobalConfig().getOptionInt(
-                        configDomain, "windowMenuItems"),
-                        IdentityManager.getGlobalConfig().getOptionInt(
-                        configDomain, "windowMenuScrollInterval"), fixedCount,
-                        0);
+                        config.getOptionInt(configDomain, "windowMenuItems"),
+                        config.getOptionInt(configDomain, "windowMenuScrollInterval"),
+                        fixedCount, 0);
                 scroller.setShowSeperators(false);
             }
         });

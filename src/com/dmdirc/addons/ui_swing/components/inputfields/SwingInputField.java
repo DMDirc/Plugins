@@ -22,14 +22,14 @@
 
 package com.dmdirc.addons.ui_swing.components.inputfields;
 
+import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.colours.ColourPickerDialog;
 import com.dmdirc.addons.ui_swing.components.frames.InputTextFrame;
-import com.dmdirc.config.IdentityManager;
 import com.dmdirc.interfaces.ui.InputField;
 import com.dmdirc.interfaces.ui.InputValidationListener;
-import com.dmdirc.util.collections.ListenerList;
 import com.dmdirc.util.ReturnableThread;
+import com.dmdirc.util.collections.ListenerList;
 
 import java.awt.Color;
 import java.awt.FontMetrics;
@@ -54,11 +54,7 @@ import net.miginfocom.swing.MigLayout;
 public class SwingInputField extends JComponent implements InputField,
         KeyListener, InputValidationListener, PropertyChangeListener {
 
-    /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
-     */
+    /** Serial version UID. */
     private static final long serialVersionUID = 1;
     /** Colour picker. */
     private ColourPickerDialog colourPicker;
@@ -72,6 +68,8 @@ public class SwingInputField extends JComponent implements InputField,
     private final ListenerList listeners;
     /** Parent Window. */
     private final Window parentWindow;
+    /** Swing controller. */
+    private final SwingController controller;
 
     /**
      * Instantiates a new swing input field.
@@ -83,6 +81,7 @@ public class SwingInputField extends JComponent implements InputField,
             final Window parentWindow) {
         super();
 
+        controller = textFrame.getController();
         this.parentWindow = parentWindow;
 
         listeners = new ListenerList();
@@ -151,9 +150,10 @@ public class SwingInputField extends JComponent implements InputField,
             /** {@inheritDoc} */
             @Override
             public void run() {
-                if (IdentityManager.getGlobalConfig().getOptionBool("general",
+                if (controller.getGlobalConfig().getOptionBool("general",
                         "showcolourdialog")) {
-                    colourPicker = new ColourPickerDialog(irc, hex, parentWindow);
+                    colourPicker = new ColourPickerDialog(controller
+                            .getIconManager(), irc, hex, parentWindow);
                     colourPicker.addActionListener(new ActionListener() {
 
                         @Override
@@ -162,7 +162,7 @@ public class SwingInputField extends JComponent implements InputField,
                                 textField.getDocument().
                                         insertString(textField.getCaretPosition(),
                                         actionEvent.getActionCommand(), null);
-                            } catch (BadLocationException ex) {
+                            } catch (final BadLocationException ex) {
                             //Ignore, wont happen
                             }
                             colourPicker.dispose();
@@ -483,7 +483,7 @@ public class SwingInputField extends JComponent implements InputField,
      */
     @Override
     public void keyTyped(final KeyEvent e) {
-        for (KeyListener listener : listeners.get(KeyListener.class)) {
+        for (final KeyListener listener : listeners.get(KeyListener.class)) {
             listener.keyTyped(e);
         }
     }
@@ -495,7 +495,7 @@ public class SwingInputField extends JComponent implements InputField,
      */
     @Override
     public void keyPressed(final KeyEvent e) {
-        for (KeyListener listener : listeners.get(KeyListener.class)) {
+        for (final KeyListener listener : listeners.get(KeyListener.class)) {
             listener.keyPressed(e);
         }
     }
@@ -507,7 +507,7 @@ public class SwingInputField extends JComponent implements InputField,
      */
     @Override
     public void keyReleased(final KeyEvent e) {
-        for (KeyListener listener : listeners.get(KeyListener.class)) {
+        for (final KeyListener listener : listeners.get(KeyListener.class)) {
             listener.keyReleased(e);
         }
     }

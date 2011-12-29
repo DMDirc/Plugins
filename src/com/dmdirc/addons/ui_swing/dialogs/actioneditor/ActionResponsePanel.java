@@ -22,9 +22,9 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.actioneditor;
 
+import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.inputfields.TextAreaInputField;
-import com.dmdirc.config.IdentityManager;
 
 import java.util.TreeSet;
 
@@ -44,11 +44,7 @@ import net.miginfocom.swing.MigLayout;
  */
 public class ActionResponsePanel extends JPanel {
 
-    /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
-     */
+    /** Serial version UID. */
     private static final long serialVersionUID = 1;
     /** Response text area. */
     private JTextArea response;
@@ -57,18 +53,26 @@ public class ActionResponsePanel extends JPanel {
     /** Response scrollpane. */
     private JScrollPane scrollPane;
 
-    /** Instantiates the panel. */
-    public ActionResponsePanel() {
+    /**
+     * Instantiates the panel.
+     *
+     * @param controller Swing controller
+     */
+    public ActionResponsePanel(final SwingController controller) {
         super();
 
-        initComponents();
+        initComponents(controller);
         addListeners();
         layoutComponents();
     }
 
-    /** Initialises the components. */
-    private void initComponents() {
-        response = new TextAreaInputField("");
+    /**
+     * Initialises the components.
+     *
+     * @param controller Swing controller
+     */
+    private void initComponents(final SwingController controller) {
+        response = new TextAreaInputField(controller, "");
         scrollPane = new JScrollPane(response);
         response.setRows(4);
         //new SwingInputHandler(response, GlobalCommandParser
@@ -81,10 +85,10 @@ public class ActionResponsePanel extends JPanel {
 
         final TreeSet<String> formatters = new TreeSet<String>(
                 String.CASE_INSENSITIVE_ORDER);
-        formatters.addAll(IdentityManager.getGlobalConfig().getOptions(
-                "formatter").keySet());
+        formatters.addAll(controller.getGlobalConfig().getOptions("formatter")
+                .keySet());
 
-        for (String format : formatters) {
+        for (final String format : formatters) {
             ((DefaultComboBoxModel) formatter.getModel()).addElement(format);
         }
     }

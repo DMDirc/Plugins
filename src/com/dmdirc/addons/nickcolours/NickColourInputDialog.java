@@ -52,7 +52,7 @@ public class NickColourInputDialog extends StandardDialog
     /** Whether or not this is a new entry (as opposed to editing an old one). */
     private boolean isnew;
     /** The row we're editing, if this isn't a new entry. */
-    private int row;
+    private final int row;
     /** The NickColourPanel we're reporting to. */
     private final NickColourPanel panel;
     /** nickname textfield. */
@@ -78,7 +78,7 @@ public class NickColourInputDialog extends StandardDialog
             final String nickname, final String network,
             final String textcolour, final String nickcolour) {
         super(((SwingController) PluginManager.getPluginManager()
-                .getPluginInfoByName("ui_swing").getPlugin()).getMainFrame(), false);
+                .getPluginInfoByName("ui_swing").getPlugin()), false);
 
         this.panel = panel;
         this.row = row;
@@ -119,8 +119,10 @@ public class NickColourInputDialog extends StandardDialog
 
         nickname = new JTextField(defaultNickname);
         network = new JTextField(defaultNetwork);
-        textColour = new ColourChooser(defaultTextColour, true, true);
-        nicklistColour = new ColourChooser(defaultNickColour, true, true);
+        textColour = new ColourChooser(getController().getIconManager(),
+                defaultTextColour, true, true);
+        nicklistColour = new ColourChooser(getController().getIconManager(),
+                defaultNickColour, true, true);
     }
 
     /** Initialises the listeners. */

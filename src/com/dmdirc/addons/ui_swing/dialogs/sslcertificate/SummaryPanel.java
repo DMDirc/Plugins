@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.sslcertificate;
 
-import com.dmdirc.config.IdentityManager;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.core.dialogs.sslcertificate.CertificateSummaryEntry;
 
@@ -41,19 +40,19 @@ import net.miginfocom.swing.MigLayout;
  */
 public class SummaryPanel extends JPanel {
 
-    /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
-     */
+    /** Serial version UID. */
     private static final long serialVersionUID = 1;
+    /** Icon manager. */
+    private final IconManager iconManager;
     /** List of certificate summary entries. */
     private List<CertificateSummaryEntry> summary;
-
     /**
      * Creates a Certificate chain summary panel.
+     *
+     * @param iconManager Icon Manager
      */
-    public SummaryPanel() {
+    public SummaryPanel(final IconManager iconManager) {
+        this.iconManager = iconManager;
         summary = new ArrayList<CertificateSummaryEntry>();
         layoutComponents();
     }
@@ -62,8 +61,6 @@ public class SummaryPanel extends JPanel {
         setBorder(BorderFactory.createTitledBorder(UIManager.getBorder(
                 "TitledBorder.border"), "Summary"));
         setLayout(new MigLayout("fill, wrap 1"));
-        final IconManager iconManager = new IconManager(IdentityManager
-                .getGlobalConfig());
 
         for (CertificateSummaryEntry entry : summary) {
             add(new JLabel(entry.getText(), entry.isGood()

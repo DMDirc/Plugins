@@ -24,10 +24,10 @@ package com.dmdirc.addons.ui_swing.components.addonpanel;
 
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionType;
-import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.interfaces.ActionListener;
+import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.PluginManager;
 
@@ -74,11 +74,11 @@ public class PluginPanel extends AddonPanel implements ActionListener {
         final List<PluginInfo> sortedList = new ArrayList<PluginInfo>();
         list.addAll(PluginManager.getPluginManager().getPluginInfos());
         Collections.sort(list);
-        for (PluginInfo plugin : list) {
+        for (final PluginInfo plugin : list) {
             if (plugin.getMetaData().getParents().length == 0) {
                 final List<PluginInfo> childList = new ArrayList<PluginInfo>();
                 sortedList.add(plugin);
-                for (PluginInfo child : plugin.getChildren()) {
+                for (final PluginInfo child : plugin.getChildren()) {
                     childList.add(child);
                 }
                 Collections.sort(childList);
@@ -93,10 +93,11 @@ public class PluginPanel extends AddonPanel implements ActionListener {
             @Override
             public void run() {
                 ((DefaultTableModel) table.getModel()).setNumRows(0);
-                for (PluginInfo plugin : sortedList) {
+                for (final PluginInfo plugin : sortedList) {
                     ((DefaultTableModel) table.getModel()).addRow(
                             new AddonCell[]{ new AddonCell(new AddonToggle(
-                            plugin, null), getIconManager()), });
+                                    controller.getGlobalIdentity(), plugin,
+                                    null), getIconManager()), });
                 }
                 table.repaint();
             }

@@ -36,11 +36,7 @@ import java.util.List;
  */
 public class StepLayout implements LayoutManager2, Serializable {
 
-    /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
-     */
+    /** Serial version UID. */
     private static final long serialVersionUID = 2;
     /** Cards vector. */
     private final List<Step> steps;
@@ -105,7 +101,7 @@ public class StepLayout implements LayoutManager2, Serializable {
      *
      * @return List of steps
      */
-    public List getSteps() {
+    public List<Step> getSteps() {
         return steps;
     }
 

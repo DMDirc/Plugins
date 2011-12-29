@@ -28,6 +28,7 @@ import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.TreeScroller;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.addons.ui_swing.framemanager.FrameManager;
+import com.dmdirc.config.ConfigManager;
 import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.interfaces.FrameInfoListener;
 import com.dmdirc.interfaces.NotificationListener;
@@ -62,11 +63,7 @@ public final class TreeFrameManager implements FrameManager,
         Serializable, ConfigChangeListener, NotificationListener,
         FrameInfoListener {
 
-    /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
-     */
+    /** Serial version UID. */
     private static final long serialVersionUID = 5;
     /** display tree. */
     private Tree tree;
@@ -78,6 +75,8 @@ public final class TreeFrameManager implements FrameManager,
     private SwingController controller;
     /** Tree scroller. */
     private TreeScroller scroller;
+    /** Configuration manager. */
+    private ConfigManager config;
 
     /** creates a new instance of the TreeFrameManager. */
     public TreeFrameManager() {
@@ -127,6 +126,7 @@ public final class TreeFrameManager implements FrameManager,
     @Override
     public void setController(final SwingController controller) {
         this.controller = controller;
+        this.config = controller.getGlobalConfig();
 
         UIUtilities.invokeLater(new Runnable() {
 
@@ -136,7 +136,7 @@ public final class TreeFrameManager implements FrameManager,
                         null));
                 tree = new Tree(TreeFrameManager.this, model,
                         TreeFrameManager.this.controller);
-                tree.setCellRenderer(new TreeViewTreeCellRenderer(
+                tree.setCellRenderer(new TreeViewTreeCellRenderer(config,
                         TreeFrameManager.this));
                 tree.setVisible(true);
 

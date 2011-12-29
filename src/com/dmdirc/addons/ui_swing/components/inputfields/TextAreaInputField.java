@@ -22,8 +22,8 @@
 
 package com.dmdirc.addons.ui_swing.components.inputfields;
 
+import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.colours.ColourPickerDialog;
-import com.dmdirc.config.IdentityManager;
 import com.dmdirc.interfaces.ui.InputField;
 
 import java.awt.KeyboardFocusManager;
@@ -41,24 +41,24 @@ import javax.swing.text.BadLocationException;
 public class TextAreaInputField extends JTextArea implements InputField,
         PropertyChangeListener {
 
-    /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
-     */
+    /** Serial version UID. */
     private static final long serialVersionUID = 2;
-
     /** Colour picker. */
     protected ColourPickerDialog colourPicker;
+    /** Swing controller. */
+    private final SwingController controller;
 
     /**
      * Creates a new text area with the specified number of rows and columns.
      *
+     * @param controller Swing controller
      * @param rows The number of rows to use
      * @param columns The number of columns to use
      */
-    public TextAreaInputField(final int rows, final int columns) {
+    public TextAreaInputField(final SwingController controller, final int rows,
+            final int columns) {
         super(rows, columns);
+        this.controller = controller;
         KeyboardFocusManager.getCurrentKeyboardFocusManager()
                 .addPropertyChangeListener(this);
     }
@@ -66,10 +66,13 @@ public class TextAreaInputField extends JTextArea implements InputField,
     /**
      * Creates a new text area containing the specified text.
      *
+     * @param controller Swing controller
      * @param text The text to contain initially
      */
-    public TextAreaInputField(final String text) {
+    public TextAreaInputField(final SwingController controller,
+            final String text) {
         super(text);
+        this.controller = controller;
         KeyboardFocusManager.getCurrentKeyboardFocusManager()
                 .addPropertyChangeListener(this);
     }
@@ -89,9 +92,10 @@ public class TextAreaInputField extends JTextArea implements InputField,
     /** {@inheritDoc} */
     @Override
     public void showColourPicker(final boolean irc, final boolean hex) {
-        if (IdentityManager.getGlobalConfig().getOptionBool("general",
+        if (controller.getGlobalConfig().getOptionBool("general",
                 "showcolourdialog")) {
-            colourPicker = new ColourPickerDialog(irc, hex);
+            colourPicker = new ColourPickerDialog(controller.getIconManager(),
+                    irc, hex);
             colourPicker.addActionListener(new ActionListener() {
 
                 @Override
@@ -99,7 +103,7 @@ public class TextAreaInputField extends JTextArea implements InputField,
                     try {
                         getDocument().insertString(getCaretPosition(),
                                 actionEvent.getActionCommand(), null);
-                    } catch (BadLocationException ex) {
+                    } catch (final BadLocationException ex) {
                         //Ignore, wont happen
                     }
                     colourPicker.dispose();
