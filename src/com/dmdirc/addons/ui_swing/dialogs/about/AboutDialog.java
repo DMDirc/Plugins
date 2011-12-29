@@ -42,63 +42,23 @@ import net.miginfocom.swing.MigLayout;
 public final class AboutDialog extends StandardDialog implements
         ActionListener, ChangeListener {
 
-    /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
-     */
+    /** Serial version UID. */
     private static final long serialVersionUID = 5;
-    /** Previously created instance of AboutDialog. */
-    private static AboutDialog me = null;
     /** Tabbed pane to use. */
     private JTabbedPane tabbedPane;
     /** Credits panel. */
     private CreditsPanel cp;
     /** Tab history. */
     private int history = 0;
-    /** Parent swing controller. */
-    private SwingController controller;
-
     /**
      * Creates a new instance of AboutDialog.
      *
      * @param controller Parent controller
      */
-    private AboutDialog(final SwingController controller) {
-        super(controller.getMainFrame(), ModalityType.MODELESS);
-
-        this.controller = controller;
+    public AboutDialog(final SwingController controller) {
+        super(controller, ModalityType.MODELESS);
 
         initComponents();
-    }
-
-    /**
-     * Creates the dialog if one doesn't exist, and displays it.
-     *
-     * @param controller Parent controller
-     */
-    public static void showAboutDialog(final SwingController controller) {
-        me = getAboutDialog(controller);
-
-        me.display();
-        me.requestFocusInWindow();
-    }
-
-    /**
-     * Returns the current instance of the AboutDialog.
-     *
-     * @param controller Parent controller
-     *
-     * @return The current AboutDialog instance
-     */
-    public static AboutDialog getAboutDialog(final SwingController controller) {
-        synchronized (AboutDialog.class) {
-            if (me == null) {
-                me = new AboutDialog(controller);
-            }
-        }
-
-        return me;
     }
 
     /** Initialises the main UI components. */
@@ -114,12 +74,13 @@ public final class AboutDialog extends StandardDialog implements
         getOkButton().addActionListener(this);
         getCancelButton().addActionListener(this);
 
-        cp = new CreditsPanel(controller.getURLHandler());
+        cp = new CreditsPanel(getController().getURLHandler());
 
-        tabbedPane.add("About", new AboutPanel(controller.getURLHandler()));
+        tabbedPane.add("About", new AboutPanel(getController().getURLHandler()));
         tabbedPane.add("Credits", cp);
-        tabbedPane.add("Licences", new LicencesPanel());
-        tabbedPane.add("Information", new InfoPanel(controller));
+        tabbedPane.add("Licences", new LicencesPanel(getController()
+                .getGlobalConfig()));
+        tabbedPane.add("Information", new InfoPanel(getController()));
         tabbedPane.addChangeListener(this);
 
         getContentPane().setLayout(new MigLayout("ins rel, wrap 1, fill, " +
@@ -143,18 +104,6 @@ public final class AboutDialog extends StandardDialog implements
     public boolean enterPressed() {
         executeAction(getOkButton());
         return true;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void dispose() {
-        if (me == null) {
-            return;
-        }
-        synchronized (me) {
-            super.dispose();
-            me = null;
-        }
     }
 
     /** {@inheritDoc} */

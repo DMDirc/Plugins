@@ -23,7 +23,6 @@
 package com.dmdirc.addons.ui_swing.components;
 
 import com.dmdirc.addons.ui_swing.dialogs.FeedbackDialog;
-import com.dmdirc.config.IdentityManager;
 import com.dmdirc.util.io.Downloader;
 
 import java.io.IOException;
@@ -35,22 +34,22 @@ import java.util.Map;
 /**
  * Sends feedback worker thread.
  */
-public class SendWorker extends LoggingSwingWorker {
+public class SendWorker extends LoggingSwingWorker<Object, Void> {
 
     /** Parent feedback dialog. */
-    private FeedbackDialog dialog;
+    private final FeedbackDialog dialog;
     /** Name. */
-    private String name;
+    private final String name;
     /** Email. */
-    private String email;
+    private final String email;
     /** Feedback. */
-    private String feedback;
+    private final String feedback;
     /** Server name. */
-    private String serverInfo;
+    private final String serverInfo;
     /** DMDirc Info. */
-    private String dmdircInfo;
+    private final String dmdircInfo;
     /** Error/Success message. */
-    private StringBuilder error;
+    private final StringBuilder error;
 
     /**
      * Creates a new send worker to send feedback.
@@ -105,8 +104,8 @@ public class SendWorker extends LoggingSwingWorker {
         if (!feedback.isEmpty()) {
             postData.put("feedback", feedback);
         }
-        postData.put("version", IdentityManager.getGlobalConfig().getOption(
-                "version", "version"));
+        postData.put("version", dialog.getController().getGlobalConfig()
+                .getOption("version", "version"));
         if (!serverInfo.isEmpty()) {
             postData.put("serverInfo", serverInfo);
         }
@@ -131,15 +130,15 @@ public class SendWorker extends LoggingSwingWorker {
                     Downloader.getPage("http://www.dmdirc.com/feedback.php",
                     postData);
             if (response.size() >= 1) {
-                for (String responseLine : response) {
+                for (final String responseLine : response) {
                     error.append(responseLine).append("\n");
                 }
             } else {
                 error.append("Failure: Unknown response from the server.");
             }
-        } catch (MalformedURLException ex) {
+        } catch (final MalformedURLException ex) {
             error.append("Malformed feedback URL.");
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             error.append("Failure: ").append(ex.getMessage());
         }
     }

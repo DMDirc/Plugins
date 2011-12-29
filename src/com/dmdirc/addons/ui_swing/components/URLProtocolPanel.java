@@ -22,8 +22,8 @@
 
 package com.dmdirc.addons.ui_swing.components;
 
+import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.dialogs.url.URLSubsitutionsPanel;
-import com.dmdirc.config.IdentityManager;
 import com.dmdirc.ui.core.util.URLHandler;
 
 import java.awt.event.ActionEvent;
@@ -51,12 +51,14 @@ import net.miginfocom.swing.MigLayout;
 public class URLProtocolPanel extends JPanel implements ActionListener,
         DocumentListener {
 
-    /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
-     */
+    /** Serial version UID. */
     private static final long serialVersionUID = 1;
+    /** Swing controller. */
+    private final SwingController controller;
+    /** URL. */
+    private final URI uri;
+    /** Show insets? */
+    private final boolean useInsets;
     /** Show file chooser. */
     private JButton showFileChooser;
     /** Command text field. */
@@ -75,23 +77,22 @@ public class URLProtocolPanel extends JPanel implements ActionListener,
     private JLabel subsLabel;
     /** example label. */
     private JLabel exampleLabel;
-    /** URL. */
-    private final URI uri;
-    /** Show insets? */
-    private final boolean useInsets;
     /** Substitutions panel. */
     private URLSubsitutionsPanel subsPanel;
 
     /**
      * Instantiates the URLDialog.
      *
+     * @param controller Swing controller
      * @param url URL to open once added
      * @param useInsets Show insets?
      */
-    public URLProtocolPanel(final URI url, final boolean useInsets) {
+    public URLProtocolPanel(final SwingController controller, final URI url,
+            final boolean useInsets) {
         super();
 
-        this.uri = url;
+        this.controller = controller;
+        uri = url;
         this.useInsets = useInsets;
 
         initComponents();
@@ -123,9 +124,11 @@ public class URLProtocolPanel extends JPanel implements ActionListener,
         optionType.add(mail);
         optionType.add(custom);
 
-        subsPanel = new URLSubsitutionsPanel(Arrays.asList(new String[]{"url",
-            "fragment", "host", "path", "port", "query", "protocol", "username",
-            "password"
+        subsPanel = new URLSubsitutionsPanel(Arrays.asList(new String[] {
+                "url",
+                "fragment", "host", "path", "port", "query", "protocol",
+                "username",
+                "password"
         }));
         subsPanel.setVisible(custom.isSelected());
 
@@ -163,7 +166,7 @@ public class URLProtocolPanel extends JPanel implements ActionListener,
 
     /** Saves the settings. */
     public void save() {
-        IdentityManager.getConfigIdentity().setOption("protocol",
+        controller.getGlobalIdentity().setOption("protocol",
                 uri.getScheme().toLowerCase(), getSelection());
     }
 
@@ -203,11 +206,11 @@ public class URLProtocolPanel extends JPanel implements ActionListener,
      * Updates the selection.
      */
     public void updateSelection() {
-        if (uri != null && IdentityManager.getGlobalConfig().hasOptionString(
+        if (uri != null && controller.getGlobalConfig().hasOptionString(
                 "protocol", uri.getScheme())) {
             final String option =
-                    IdentityManager.getGlobalConfig().getOption("protocol",
-                    uri.getScheme());
+                    controller.getGlobalConfig().getOption("protocol",
+                            uri.getScheme());
 
             if ("DMDIRC".equals(option)) {
                 optionType.setSelected(dmdirc.getModel(), true);
@@ -250,7 +253,7 @@ public class URLProtocolPanel extends JPanel implements ActionListener,
             fileChooser.addChoosableFileFilter(new ExecutableFileFilter());
             fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
             if (fileChooser.showDialog(this, "Select")
-                    == JFileChooser.APPROVE_OPTION) {
+                == JFileChooser.APPROVE_OPTION) {
                 commandPath.setText(fileChooser.getSelectedFile().toString());
             }
         } else {
@@ -285,6 +288,6 @@ public class URLProtocolPanel extends JPanel implements ActionListener,
     /** {@inheritDoc} */
     @Override
     public void changedUpdate(final DocumentEvent e) {
-        //Ignore
+        // Ignore
     }
 }

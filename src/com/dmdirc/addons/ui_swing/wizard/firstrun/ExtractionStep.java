@@ -31,6 +31,8 @@ import javax.swing.JCheckBox;
  */
 public abstract class ExtractionStep extends Step {
 
+    /** Serial version UID. */
+    private static final long serialVersionUID = 7431623190030730680L;
     /** Plugins checkbox. */
     protected final JCheckBox plugins;
     /** Actions checkbox. */

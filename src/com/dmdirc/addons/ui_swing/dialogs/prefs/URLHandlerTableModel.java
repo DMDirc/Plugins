@@ -22,7 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.prefs;
 
-import com.dmdirc.config.IdentityManager;
+import com.dmdirc.config.ConfigManager;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -37,12 +37,10 @@ import javax.swing.table.AbstractTableModel;
  */
 public class URLHandlerTableModel extends AbstractTableModel {
 
-    /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
-     */
+    /** Serial version UID. */
     private static final long serialVersionUID = 3;
+    /** Config Manager. */
+    private final ConfigManager configManager;
     /** Data list. */
     private List<URI> uris;
     /** Handlers list. */
@@ -50,21 +48,25 @@ public class URLHandlerTableModel extends AbstractTableModel {
 
     /**
      * Instantiates a new table model.
+     *
+     * @param configManager Config manager
      */
-    public URLHandlerTableModel() {
-        this(new ArrayList<URI>(), new ArrayList<String>());
+    public URLHandlerTableModel(final ConfigManager configManager) {
+        this(configManager, new ArrayList<URI>(), new ArrayList<String>());
     }
 
     /**
      * Instantiates a new table model.
      *
+     * @param configManager Config manager
      * @param uris URIs to show
      * @param handlers Handlers to show
      */
-    public URLHandlerTableModel(final List<URI> uris,
-            final List<String> handlers) {
+    public URLHandlerTableModel(final ConfigManager configManager,
+            final List<URI> uris, final List<String> handlers) {
         super();
 
+        this.configManager = configManager;
         this.uris = uris;
         this.handlers = handlers;
     }
@@ -171,10 +173,8 @@ public class URLHandlerTableModel extends AbstractTableModel {
      */
     public void addURI(final URI uri) {
         final String handler;
-        if (IdentityManager.getGlobalConfig().hasOptionString("protocol",
-                uri.getScheme())) {
-            handler = IdentityManager.getGlobalConfig().getOption("protocol",
-                    uri.getScheme());
+        if (configManager.hasOptionString("protocol", uri.getScheme())) {
+            handler = configManager.getOption("protocol", uri.getScheme());
         } else {
             handler = "";
         }

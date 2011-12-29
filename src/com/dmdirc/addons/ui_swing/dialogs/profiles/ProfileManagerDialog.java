@@ -40,8 +40,6 @@ import com.palantir.ptoss.cinch.swing.Bound;
 import com.palantir.ptoss.cinch.swing.BoundSelection;
 import com.palantir.ptoss.cinch.swing.EnabledIf;
 
-import java.awt.EventQueue;
-
 import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -127,8 +125,8 @@ public final class ProfileManagerDialog extends StandardDialog {
      *
      * @param controller Swing controller
      */
-    private ProfileManagerDialog(final SwingController controller) {
-        super(controller.getMainFrame(), ModalityType.MODELESS);
+    public ProfileManagerDialog(final SwingController controller) {
+        super(controller, ModalityType.MODELESS);
         this.model = new ProfileManagerModel(controller.getIdentityManager());
         this.controller = new ProfileManagerController(this, model);
         final Bindings bindings = SwingUIBindings.extendedBindings();
@@ -137,42 +135,6 @@ public final class ProfileManagerDialog extends StandardDialog {
         name = new ValidatableJTextField(controller.getIconManager());
         initComponents();
         bindings.bind(this);
-    }
-
-    /**
-     * Creates the dialog if one doesn't exist, and displays it.
-     *
-     * @param controller Swing controller
-     */
-    public static void showProfileManagerDialog(final SwingController controller) {
-        EventQueue.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                me = getProfileManagerDialog(controller);
-
-                me.display();
-                me.requestFocusInWindow();
-            }
-        });
-    }
-
-    /**
-     * Returns the current instance of the ProfileManagerDialog.
-     *
-     * @param controller Swing controller
-     *
-     * @return The current ProfileManagerDialog instance
-     */
-    public static ProfileManagerDialog getProfileManagerDialog(
-            final SwingController controller) {
-        synchronized (ProfileManagerDialog.class) {
-            if (me == null) {
-                me = new ProfileManagerDialog(controller);
-            }
-        }
-
-        return me;
     }
 
     /** Initialises the components. */
@@ -204,17 +166,5 @@ public final class ProfileManagerDialog extends StandardDialog {
         add(ident, "growx, pushx, sgx textinput");
         add(getLeftButton(), "flowx, split 2, right, sg button");
         add(getRightButton(), "right, sg button");
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void dispose() {
-        synchronized (ProfileManagerDialog.class) {
-            if (me == null) {
-                return;
-            }
-            super.dispose();
-            me = null;
-        }
     }
 }

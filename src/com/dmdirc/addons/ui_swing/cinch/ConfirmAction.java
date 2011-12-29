@@ -139,7 +139,7 @@ public @interface ConfirmAction {
                 /** {@inheritDoc} */
                 @Override
                 public void actionPerformed(final ActionEvent e) {
-                    new StandardQuestionDialog(
+                    new StandardQuestionDialog(null,
                             (Window) ((AbstractButton) actionObject)
                             .getTopLevelAncestor(), ModalityType.DOCUMENT_MODAL,
                             "Confirmaton", message) {

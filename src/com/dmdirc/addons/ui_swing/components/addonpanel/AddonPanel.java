@@ -28,7 +28,6 @@ import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
 import com.dmdirc.addons.ui_swing.components.addonbrowser.BrowserWindow;
 import com.dmdirc.addons.ui_swing.components.renderers.AddonCellRenderer;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
-import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.prefs.PreferencesInterface;
 import com.dmdirc.ui.IconManager;
 
@@ -56,16 +55,12 @@ public abstract class AddonPanel extends JPanel implements AddonToggleListener,
 
     /** List of addons. */
     protected JTable addonList;
-    /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
-     */
+    /** Swing Controller. */
+    protected final SwingController controller;
+    /** Serial version UID. */
     private static final long serialVersionUID = 3;
     /** Parent Window. */
     private final Window parentWindow;
-    /** Swing Controller. */
-    private final SwingController controller;
     /** The icon manager used to retrieve icons. */
     private final IconManager iconManager;
     /** Addon list scroll pane. */
@@ -91,7 +86,7 @@ public abstract class AddonPanel extends JPanel implements AddonToggleListener,
 
         this.parentWindow = parentWindow;
         this.controller = controller;
-        this.iconManager = new IconManager(IdentityManager.getGlobalConfig());
+        iconManager = controller.getIconManager();
 
         initComponents();
         layoutComponents();
@@ -212,7 +207,7 @@ public abstract class AddonPanel extends JPanel implements AddonToggleListener,
     @Override
     public void hyperlinkUpdate(final HyperlinkEvent e) {
         if (e.getEventType() == EventType.ACTIVATED) {
-            new BrowserWindow(parentWindow);
+            new BrowserWindow(controller.getGlobalConfig(), parentWindow);
         }
     }
 

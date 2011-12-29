@@ -65,9 +65,9 @@ public class MenuBar extends JMenuBar {
 
         add(new ServerMenu(controller, mainFrame));
         add(new ChannelMenu(controller, mainFrame));
-        add(new SettingsMenu(controller, mainFrame));
+        add(new SettingsMenu(controller));
         add(new WindowMenuFrameManager(controller, mainFrame));
-        add(new HelpMenu(controller, mainFrame));
+        add(new HelpMenu(controller));
         final int tempCount = getComponentCount();
         add(Box.createHorizontalGlue(), "growx, pushx");
         add(new MDIBar(controller, mainFrame));
@@ -106,6 +106,6 @@ public class MenuBar extends JMenuBar {
             add(menu);
         }
 
-        menu.add(menuItem);
+        menu.add(menuItem, 0);
     }
 }

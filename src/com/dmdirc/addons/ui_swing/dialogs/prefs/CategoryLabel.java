@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_swing.dialogs.prefs;
 
 import com.dmdirc.config.prefs.PreferencesCategory;
+import com.dmdirc.ui.IconManager;
 
 import java.awt.Dimension;
 
@@ -39,11 +40,7 @@ import net.miginfocom.layout.PlatformDefaults;
  */
 public class CategoryLabel extends JLabel {
 
-    /**
-     * A version number for this class. It should be changed whenever the
-     * class structure is changed (or anything else that would prevent
-     * serialized objects being unserialized with the new class).
-     */
+    /** Serial version UID. */
     private static final long serialVersionUID = -1659415238166842265L;
     /** Panel gap. */
     private final int padding = (int)
@@ -54,12 +51,14 @@ public class CategoryLabel extends JLabel {
     /**
      * Creates a new category label.
      *
+     * @param iconManager Icon manager
      * @param parentList Parent list
      * @param category Parent category
      * @param numCats Number of categories shown
      * @param index Index of this label
      */
-    public CategoryLabel(final JList parentList,
+    public CategoryLabel(final IconManager iconManager,
+            final JList parentList,
             final PreferencesCategory category, final int numCats,
             final int index) {
         super();
@@ -67,7 +66,8 @@ public class CategoryLabel extends JLabel {
         this.parentList = parentList;
 
         setText(category.getTitle());
-        new IconLoader(this, category.getIcon()).executeInExecutor();
+        new IconLoader(iconManager, this, category.getIcon())
+                .executeInExecutor();
 
         int level = 0;
         PreferencesCategory temp = category;

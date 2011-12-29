@@ -45,16 +45,11 @@ import javax.swing.JPanel;
 /**
  * The ColourPickerPanel allows users to pick either an IRC colour or a hex
  * colour visually.
- * @author chris
  */
 public final class ColourPickerPanel extends JPanel implements MouseListener,
         MouseMotionListener, MouseWheelListener {
 
-    /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
-     */
+    /** Serial version UID. */
     private static final long serialVersionUID = 1;
     /** ActionEvent ID for when a hex colour is selected. */
     public static final int ACTION_HEX = 10001;
@@ -103,8 +98,8 @@ public final class ColourPickerPanel extends JPanel implements MouseListener,
             final boolean newShowHex) {
         super();
 
-        this.showIrc = newShowIrc;
-        this.showHex = newShowHex;
+        showIrc = newShowIrc;
+        showHex = newShowHex;
 
         final int height = 110 + (showIrc ? 15 : 0) + (showHex ? 125 : 0);
 
@@ -282,7 +277,7 @@ public final class ColourPickerPanel extends JPanel implements MouseListener,
     private void throwAction(final int id, final String message) {
         final ActionEvent event = new ActionEvent(this, id, message);
 
-        for (ActionListener listener : listeners) {
+        for (final ActionListener listener : listeners) {
             listener.actionPerformed(event);
         }
     }

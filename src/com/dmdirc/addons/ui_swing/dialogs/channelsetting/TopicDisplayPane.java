@@ -51,11 +51,7 @@ import net.miginfocom.swing.MigLayout;
  */
 public class TopicDisplayPane extends JPanel implements DocumentListener {
 
-    /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
-     */
+    /** Serial version UID. */
     private static final long serialVersionUID = 1;
     /** Parent topic pane. */
     private final ChannelSettingsDialog parent;
@@ -87,7 +83,7 @@ public class TopicDisplayPane extends JPanel implements DocumentListener {
 
         this.channel = channel;
         this.parent = parent;
-        this.topicLengthMax = channel.getServer().getParser().getMaxTopicLength();
+        topicLengthMax = channel.getServer().getParser().getMaxTopicLength();
         this.channelWindow = channelWindow;
 
         initComponents();
@@ -100,7 +96,7 @@ public class TopicDisplayPane extends JPanel implements DocumentListener {
     /** Initialises the components. */
     private void initComponents() {
         topicLengthLabel = new JLabel();
-        topicText = new TextAreaInputField(100, 4);
+        topicText = new TextAreaInputField(parent.getController(), 100, 4);
         topicWho = new TextLabel();
         topicWho.setOpaque(false);
 
