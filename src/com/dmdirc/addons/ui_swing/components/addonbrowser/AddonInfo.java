@@ -22,7 +22,8 @@
 
 package com.dmdirc.addons.ui_swing.components.addonbrowser;
 
-import com.dmdirc.config.IdentityManager;
+import com.dmdirc.config.ConfigManager;
+import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.updater.UpdateChannel;
 import com.dmdirc.updater.UpdateChecker;
 import com.dmdirc.updater.UpdateComponent;
@@ -33,22 +34,60 @@ import java.util.Map;
 
 import javax.swing.ImageIcon;
 
+import lombok.Getter;
+
 /**
  * Describes an addon.
  */
+@SuppressWarnings("PMD.UnusedPrivateField")
 public class AddonInfo {
+    /** Addon site ID. */
+    @Getter
     private final int id;
+    /**
+     * Stable download name. This should be prepended with
+     * http://addons.dmdirc.com/addondownload/ to get a full URL.
+     */
+    @Getter
     private final String stableDownload;
+    /**
+     * Stable download name. This should be prepended with
+     * http://addons.dmdirc.com/addondownload/ to get a full URL.
+     */
+    @Getter
     private final String unstableDownload;
+    /**
+     * Stable download name. This should be prepended with
+     * http://addons.dmdirc.com/addondownload/ to get a full URL.
+     */
+    @Getter
     private final String nightlyDownload;
+    /** Addon title. */
+    @Getter
     private final String title;
+    /** Addon author and email. */
+    @Getter
     private final String author;
+    /** Addon rating from 0-10. */
+    @Getter
     private final int rating;
+    /** Full text description. */
+    @Getter
     private final String description;
+    /** Addon type, {@link ActionType}. */
+    @Getter
     private final AddonType type;
+    /** Has this addon been verified by the developers? */
+    @Getter
     private final boolean verified;
+    /** Date this addon was updated. */
+    @Getter
     private final int date;
+    /** Screenshot image. */
+    @Getter
     private final ImageIcon screenshot;
+    /** Current client update channel. */
+    @Getter
     private UpdateChannel channel;
 
     /**
@@ -56,143 +95,38 @@ public class AddonInfo {
      *
      * @param entry List of entries
      */
-    public AddonInfo(final Map<String, String> entry) {
-        this.id = Integer.parseInt(entry.get("id"));
-        this.title = entry.get("title");
-        this.author = entry.get("user");
-        this.rating = Integer.parseInt(entry.get("rating"));
-        this.type = entry.get("type").equals("plugin") ?
-            AddonType.TYPE_PLUGIN : entry.get("type").equals("theme") ?
-                AddonType.TYPE_THEME : AddonType.TYPE_ACTION_PACK;
-        this.stableDownload = entry.containsKey("stable") ? entry.get("stable") : "";
-        this.unstableDownload = entry.containsKey("unstable") ? entry.get("unstable") : "";
-        this.nightlyDownload = entry.containsKey("nightly") ? entry.get("nightly") : "";
-        this.description = entry.get("description");
-        this.verified = entry.get("verified").equals("yes");
-        this.date = Integer.parseInt(entry.get("date"));
+    public AddonInfo(final ConfigManager configManager,
+            final Map<String, String> entry) {
+        id = Integer.parseInt(entry.get("id"));
+        title = entry.get("title");
+        author = entry.get("user");
+        rating = Integer.parseInt(entry.get("rating"));
+        type = entry.get("type").equals("plugin") ?
+                AddonType.TYPE_PLUGIN : entry.get("type").equals("theme") ?
+                        AddonType.TYPE_THEME : AddonType.TYPE_ACTION_PACK;
+        stableDownload = entry.containsKey("stable") ? entry.get("stable") : "";
+        unstableDownload = entry.containsKey("unstable") ? entry
+                .get("unstable") : "";
+        nightlyDownload = entry.containsKey("nightly") ? entry.get("nightly")
+                : "";
+        description = entry.get("description");
+        verified = entry.get("verified").equals("yes");
+        date = Integer.parseInt(entry.get("date"));
         if (entry.get("screenshot").equals("yes")) {
-            this.screenshot = new ImageIcon(URLBuilder.buildURL(
+            screenshot = new ImageIcon(URLBuilder.buildURL(
                     "http://addons.dmdirc.com/addonimg/" + id));
-            this.screenshot.setImage(this.screenshot.getImage().
-                   getScaledInstance(150, 150, Image.SCALE_SMOOTH));
+            screenshot.setImage(screenshot.getImage().
+                    getScaledInstance(150, 150, Image.SCALE_SMOOTH));
         } else {
-            this.screenshot = new ImageIcon(URLBuilder.buildURL(
+            screenshot = new ImageIcon(URLBuilder.buildURL(
                     "dmdirc://com/dmdirc/res/logo.png"));
         }
         try {
-            channel = UpdateChannel.valueOf(IdentityManager.getGlobalConfig()
-                    .getOption("updater", "channel"));
-        } catch (IllegalArgumentException ex) {
+            channel = UpdateChannel.valueOf(configManager.getOption(
+                    "updater", "channel"));
+        } catch (final IllegalArgumentException ex) {
             channel = UpdateChannel.NONE;
         }
-    }
-
-    /**
-     * Returns the addon author.
-     *
-     * @return Addon author
-     */
-    public String getAuthor() {
-        return author;
-    }
-
-    /**
-     * Returns the addon date.
-     *
-     * @return Addon date
-     */
-    public int getDate() {
-        return date;
-    }
-
-    /**
-     * Returns the addon description.
-     *
-     * @return Addon description
-     */
-    public String getDescription() {
-        return description;
-    }
-
-    /**
-     * Returns the addon ID.
-     *
-     * @return Addon ID
-     */
-    public int getId() {
-        return id;
-    }
-
-    /**
-     * Returns the addon rating.
-     *
-     * @return Addon rating
-     */
-    public int getRating() {
-        return rating;
-    }
-
-    /**
-     * Returns the stable download location.
-     *
-     * @return Stable download location
-     */
-    public String getStableDownload() {
-        return stableDownload;
-    }
-
-    /**
-     * Returns the addon title.
-     *
-     * @return Addon title
-     */
-    public String getTitle() {
-        return title;
-    }
-
-    /**
-     * Returns the addon type.
-     *
-     * @return Addon type
-     */
-    public AddonType getType() {
-        return type;
-    }
-
-    /**
-     * Returns the unstable download location.
-     *
-     * @return Unstable download location
-     */
-    public String getUnstableDownload() {
-        return unstableDownload;
-    }
-
-    /**
-     * Returns the nightly download location.
-     *
-     * @return Nightly download location
-     */
-    public String getNightlyDownload() {
-        return nightlyDownload;
-    }
-
-    /**
-     * Returns whether the addon is verified.
-     *
-     * @return true iff the addon is verified
-     */
-    public boolean isVerified() {
-        return verified;
-    }
-
-    /**
-     * Returns the screen shot for the addon.
-     *
-     * @return Addon screenshot
-     */
-    public ImageIcon getScreenshot() {
-        return screenshot;
     }
 
     /**
@@ -201,7 +135,7 @@ public class AddonInfo {
      * @return true iff installed
      */
     public boolean isInstalled() {
-        for (UpdateComponent comp : UpdateChecker.getComponents()) {
+        for (final UpdateComponent comp : UpdateChecker.getComponents()) {
             if (comp.getName().equals("addon-" + getId())) {
                 return true;
             }
@@ -226,19 +160,19 @@ public class AddonInfo {
      */
     @SuppressWarnings("fallthrough")
     public String getDownload() {
-        switch (channel) { //NOPMD
+        switch (channel) { // NOPMD
             case NONE:
-                //fallthrough
+                // fallthrough
             case NIGHTLY:
                 if (!nightlyDownload.isEmpty()) {
                     return nightlyDownload;
                 }
-                //fallthrough
+                // fallthrough
             case UNSTABLE:
                 if (!unstableDownload.isEmpty()) {
                     return unstableDownload;
                 }
-                //fallthrough
+                // fallthrough
             case STABLE:
                 if (!stableDownload.isEmpty()) {
                     return stableDownload;

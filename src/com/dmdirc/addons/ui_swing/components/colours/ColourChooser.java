@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_swing.components.colours;
 
 import com.dmdirc.addons.ui_swing.UIUtilities;
+import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.messages.ColourManager;
 
 import java.awt.Color;
@@ -44,62 +45,68 @@ import net.miginfocom.swing.MigLayout;
  */
 public final class ColourChooser extends JPanel implements ActionListener {
 
-    /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
-     */
+    /** Serial version UID. */
     private static final long serialVersionUID = 1;
     /** Edit button. */
-    private JButton editButton;
+    private final JButton editButton;
     /** Panel to show the colour preview. */
-    private JPanel previewPanel;
+    private final JPanel previewPanel;
+    /** Event listeners. */
+    private final EventListenerList listeners;
+    /** Icon manager. */
+    private final IconManager iconManager;
     /** Colours picking dialog. */
     private ColourPickerDialog cpd;
     /** show irc colours. */
-    private boolean showIRC;
+    private final boolean showIRC;
     /** show hex colours. */
-    private boolean showHex;
+    private final boolean showHex;
     /** The value of this component. */
     private String value;
-    /** Event listeners. */
-    private final EventListenerList listeners;
     /** Action command. */
     private String command;
     /** Parent window. */
     private Window window;
 
-    /** Creates a new instance of ColourChooser. */
-    public ColourChooser() {
-        this("ffffff", true, true);
+    /**
+     * Creates a new instance of ColourChooser.
+     *
+     * @param iconManager Icon manager
+     * */
+    public ColourChooser(final IconManager iconManager) {
+        this(iconManager, "ffffff", true, true);
     }
 
     /**
      * Creates a new instance of ColourChooser.
      *
+     * @param iconManager Icon Manager
      * @param window Parent window
      *
      * @since 0.6
      */
-    public ColourChooser(final Window window) {
-        this("ffffff", true, true, window);
+    public ColourChooser(final IconManager iconManager, final Window window) {
+        this(iconManager, "ffffff", true, true, window);
     }
 
     /**
      * Creates a new instance of ColourChooser.
      *
+     * @param iconManager Icon manager
      * @param initialColour Snitial colour
      * @param ircColours Show irc colours
      * @param hexColours Show hex colours
      */
-    public ColourChooser(final String initialColour, final boolean ircColours,
+    public ColourChooser(final IconManager iconManager,
+            final String initialColour, final boolean ircColours,
             final boolean hexColours) {
-        this(initialColour, ircColours, hexColours, null);
+        this(iconManager, initialColour, ircColours, hexColours, null);
     }
 
     /**
      * Creates a new instance of ColourChooser.
      *
+     * @param iconManager Icon manager
      * @param initialColour initial colour
      * @param ircColours show irc colours
      * @param hexColours show hex colours
@@ -107,10 +114,12 @@ public final class ColourChooser extends JPanel implements ActionListener {
      *
      * @since 0.6
      */
-    public ColourChooser(final String initialColour, final boolean ircColours,
+    public ColourChooser(final IconManager iconManager,
+            final String initialColour, final boolean ircColours,
             final boolean hexColours, final Window window) {
         super();
 
+        this.iconManager = iconManager;
         this.window = window;
         showIRC = ircColours;
         showHex = hexColours;
@@ -142,6 +151,7 @@ public final class ColourChooser extends JPanel implements ActionListener {
 
     /**
      * Returns the selected colour from this component.
+     *
      * @return This components colour, as a string
      */
     public String getColour() {
@@ -150,6 +160,7 @@ public final class ColourChooser extends JPanel implements ActionListener {
 
     /**
      * Sets the selected colour for this component.
+     *
      * @param newValue New colour
      */
     public void setColour(final String newValue) {
@@ -166,6 +177,7 @@ public final class ColourChooser extends JPanel implements ActionListener {
 
     /**
      * Updates the colour panel.
+     *
      * @param newColour The new colour to use.
      */
     private void updateColour(final String newColour) {
@@ -187,7 +199,7 @@ public final class ColourChooser extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(final ActionEvent e) {
         if (e.getSource() == editButton) {
-            cpd = new ColourPickerDialog(showIRC, showHex, window);
+            cpd = new ColourPickerDialog(iconManager, showIRC, showHex, window);
             cpd.addActionListener(this);
             cpd.display(editButton);
         } else {
@@ -239,7 +251,7 @@ public final class ColourChooser extends JPanel implements ActionListener {
             if (localListenerList[i] == ActionListener.class) {
                 ((ActionListener) localListenerList[i + 1]).actionPerformed(
                         new ActionEvent(this,
-                        ActionEvent.ACTION_PERFORMED, command));
+                                ActionEvent.ACTION_PERFORMED, command));
             }
         }
     }

@@ -44,6 +44,8 @@ import net.miginfocom.swing.MigLayout;
  */
 public abstract class ModesPane extends JPanel {
 
+    /** Serial version UID. */
+    private static final long serialVersionUID = 1;
     /** The checkboxes used for boolean modes. */
     private final Map<String, JCheckBox> modeCheckBoxes;
     /** The ParamModePanels used for parameter-requiring modes. */

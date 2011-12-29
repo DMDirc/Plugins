@@ -31,7 +31,6 @@ import com.dmdirc.updater.UpdateChecker;
 import com.dmdirc.updater.UpdateChecker.STATE;
 import com.dmdirc.updater.UpdateCheckerListener;
 
-import java.awt.Dialog.ModalityType;
 import java.awt.event.MouseEvent;
 
 import javax.swing.BorderFactory;
@@ -84,12 +83,11 @@ public class UpdaterLabel extends StatusbarPopupPanel<JLabel> implements
         if (mouseEvent.getButton() == MouseEvent.BUTTON1) {
             if (UpdateChecker.getStatus().equals(
                     UpdateChecker.STATE.RESTART_REQUIRED)) {
-                SwingRestartDialog.showSwingRestartDialog(controller
-                        .getMainFrame(), ModalityType.MODELESS);
+                controller.showDialog(SwingRestartDialog.class);
             } else if (!UpdateChecker.getStatus().equals(
                     UpdateChecker.STATE.CHECKING)) {
-                SwingUpdaterDialog.showSwingUpdaterDialog(UpdateChecker
-                        .getAvailableUpdates(), controller.getMainFrame());
+                controller.showDialog(SwingUpdaterDialog.class, UpdateChecker
+                        .getAvailableUpdates());
             }
         }
     }

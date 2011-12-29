@@ -24,7 +24,6 @@ package com.dmdirc.addons.ui_swing.components.menubar;
 
 import com.dmdirc.ServerManager;
 import com.dmdirc.addons.ui_swing.Apple;
-import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.dialogs.FeedbackDialog;
 import com.dmdirc.addons.ui_swing.dialogs.about.AboutDialog;
@@ -40,28 +39,19 @@ import javax.swing.JMenuItem;
  */
 public class HelpMenu extends JMenu implements ActionListener {
 
-    /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
-     */
+    /** Serial version UID. */
     private static final long serialVersionUID = 1;
     /** Swing controller. */
     private final SwingController controller;
-    /** Main frame. */
-    private final MainFrame mainFrame;
 
     /**
      * Instantiates a new help menu.
      *
      * @param controller Swing controller
-     * @param mainFrame Main frame
      */
-    public HelpMenu(final SwingController controller,
-            final MainFrame mainFrame) {
+    public HelpMenu(final SwingController controller) {
         super("Help");
         this.controller = controller;
-        this.mainFrame = mainFrame;
         setMnemonic('h');
         initHelpMenu();
     }
@@ -104,11 +94,11 @@ public class HelpMenu extends JMenu implements ActionListener {
     @Override
     public void actionPerformed(final ActionEvent e) {
         if (e.getActionCommand().equals("About")) {
-            AboutDialog.showAboutDialog(controller);
+            controller.showDialog(AboutDialog.class);
         } else if (e.getActionCommand().equals("JoinDevChat")) {
             ServerManager.getServerManager().joinDevChat();
         } else if (e.getActionCommand().equals("feedback")) {
-            FeedbackDialog.showFeedbackDialog(mainFrame);
+            controller.showDialog(FeedbackDialog.class);
         }
     }
 }

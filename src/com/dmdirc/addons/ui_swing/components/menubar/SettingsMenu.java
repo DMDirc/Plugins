@@ -23,7 +23,6 @@
 package com.dmdirc.addons.ui_swing.components.menubar;
 
 import com.dmdirc.addons.ui_swing.Apple;
-import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.dialogs.actionsmanager.ActionsManagerDialog;
 import com.dmdirc.addons.ui_swing.dialogs.aliases.AliasManagerDialog;
@@ -41,22 +40,14 @@ import javax.swing.JMenuItem;
  */
 public class SettingsMenu extends JMenu implements ActionListener {
 
-    /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
-     */
+    /** Serial version UID. */
     private static final long serialVersionUID = 1;
     /** Swing controller. */
     private final SwingController controller;
-    /** Main frame. */
-    private final MainFrame mainFrame;
 
-    public SettingsMenu(final SwingController controller,
-            final MainFrame mainFrame) {
+    public SettingsMenu(final SwingController controller) {
         super("Settings");
         this.controller = controller;
-        this.mainFrame = mainFrame;
         setMnemonic('e');
         initSettingsMenu();
     }
@@ -102,14 +93,13 @@ public class SettingsMenu extends JMenu implements ActionListener {
     @Override
     public void actionPerformed(final ActionEvent e) {
         if ("Preferences".equals(e.getActionCommand())) {
-            SwingPreferencesDialog.showSwingPreferencesDialog(controller);
+            controller.showDialog(SwingPreferencesDialog.class);
         } else if (e.getActionCommand().equals("Profile")) {
-            ProfileManagerDialog.showProfileManagerDialog(controller);
+            controller.showDialog(ProfileManagerDialog.class);
         }  else if (e.getActionCommand().equals("Actions")) {
-            ActionsManagerDialog.showActionsManagerDialog(mainFrame,
-                    controller);
+            controller.showDialog(ActionsManagerDialog.class);
         } else if (e.getActionCommand().equals("Aliases")) {
-            AliasManagerDialog.showAliasManagerDialog(controller, mainFrame);
+            controller.showDialog(AliasManagerDialog.class);
         }
     }
 }

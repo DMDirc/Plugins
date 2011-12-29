@@ -108,7 +108,7 @@ public class DurationEditor extends StandardDialog implements ActionListener {
      * @since 0.6
      */
     public DurationEditor(final Window window, final long duration) {
-        super(window, ModalityType.MODELESS);
+        super(null, window, ModalityType.MODELESS);
 
         this.window = window;
 
