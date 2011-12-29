@@ -28,7 +28,6 @@ import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.renderers.ExtendedListModeCellRenderer;
 import com.dmdirc.addons.ui_swing.components.renderers.ListModeCellRenderer;
 import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialog;
-import com.dmdirc.config.IdentityManager;
 import com.dmdirc.util.validators.NotEmptyValidator;
 import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.parser.common.ChannelListModeItem;
@@ -402,7 +401,7 @@ public final class ChannelListModesPane extends JPanel implements ActionListener
     /** {@inheritDoc} */
     @Override
     public void configChanged(final String domain, final String key) {
-        if (IdentityManager.getGlobalConfig().getOptionBool("general",
+        if (controller.getGlobalConfig().getOptionBool("general",
                 "extendedListModes")) {
             renderer = new ListModeCellRenderer();
         } else {

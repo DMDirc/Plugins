@@ -50,11 +50,7 @@ import javax.swing.SwingUtilities;
 public class ErrorPanel extends StatusbarPopupPanel<JLabel> implements
         ErrorListener, ActionListener {
 
-    /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
-     */
+    /** Serial version UID. */
     private static final long serialVersionUID = 2;
     /** non error state image icon. */
     private final Icon DEFAULT_ICON;
@@ -109,7 +105,7 @@ public class ErrorPanel extends StatusbarPopupPanel<JLabel> implements
     /** {@inheritDoc} */
     @Override
     protected StatusbarPopupWindow getWindow() {
-        return new ErrorPopup(this, mainFrame);
+        return new ErrorPopup(controller, this, mainFrame);
     }
 
     /** Clears the error. */
@@ -149,7 +145,7 @@ public class ErrorPanel extends StatusbarPopupPanel<JLabel> implements
                 if (errors.isEmpty()) {
                     setVisible(false);
                 } else {
-                    for (ProgramError error : errors) {
+                    for (final ProgramError error : errors) {
                         if (errorLevel == null ||
                                 !error.getLevel().moreImportant(errorLevel)) {
                             errorLevel = error.getLevel();
@@ -251,7 +247,7 @@ public class ErrorPanel extends StatusbarPopupPanel<JLabel> implements
         } else {
             final Collection<ProgramError> errors =
                     ErrorManager.getErrorManager().getErrors();
-            for (ProgramError error : errors) {
+            for (final ProgramError error : errors) {
                 ErrorManager.getErrorManager().deleteError(error);
             }
         }

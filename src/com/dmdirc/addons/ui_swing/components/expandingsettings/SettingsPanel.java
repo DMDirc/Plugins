@@ -27,7 +27,6 @@ import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesSetting;
-
 import com.dmdirc.util.collections.DoubleMap;
 
 import javax.swing.BorderFactory;
@@ -43,11 +42,7 @@ import net.miginfocom.swing.MigLayout;
  */
 public class SettingsPanel extends JPanel {
 
-    /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
-     */
+    /** Serial version UID. */
     private static final long serialVersionUID = 3;
     /** Current Settings. */
     private final DoubleMap<PreferencesSetting, JComponent> settings;
@@ -92,7 +87,7 @@ public class SettingsPanel extends JPanel {
 
         settings = new DoubleMap<PreferencesSetting, JComponent>();
 
-        this.setOpaque(UIUtilities.getTabbedPaneOpaque());
+        setOpaque(UIUtilities.getTabbedPaneOpaque());
         this.padding = padding;
 
         initComponents(infoText);
@@ -109,7 +104,8 @@ public class SettingsPanel extends JPanel {
         infoLabel.setVisible(!infoText.isEmpty());
 
         addOptionPanel = new AddOptionPanel(this);
-        currentOptionsPanel = new CurrentOptionsPanel(this);
+        currentOptionsPanel = new CurrentOptionsPanel(controller
+                .getIconManager(), this);
         scrollPane = new JScrollPane(currentOptionsPanel);
 
         scrollPane.setBorder(BorderFactory.createTitledBorder(UIManager.
@@ -141,7 +137,7 @@ public class SettingsPanel extends JPanel {
     public void addOption(final PreferencesCategory category) {
         this.category = category;
 
-        for (PreferencesSetting setting : category.getSettings()) {
+        for (final PreferencesSetting setting : category.getSettings()) {
             if (settings.get(setting) == null) {
                 final JComponent component = controller
                         .getPrefsComponentFactory().getComponent(setting);
@@ -161,7 +157,7 @@ public class SettingsPanel extends JPanel {
         addOptionPanel.clearOptions();
         currentOptionsPanel.clearOptions();
 
-        for (PreferencesSetting setting : category.getSettings()) {
+        for (final PreferencesSetting setting : category.getSettings()) {
             if (setting.isSet()) {
                 addCurrentOption(settings.get(setting));
             } else {

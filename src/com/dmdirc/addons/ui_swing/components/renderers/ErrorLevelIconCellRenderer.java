@@ -22,26 +22,28 @@
 
 package com.dmdirc.addons.ui_swing.components.renderers;
 
-import com.dmdirc.config.IdentityManager;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.ui.IconManager;
 
 import javax.swing.JLabel;
-
 import javax.swing.table.DefaultTableCellRenderer;
 
 /** List cell renderer for dates. */
 public final class ErrorLevelIconCellRenderer extends DefaultTableCellRenderer {
 
-    /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
-     */
+    /** Serial version UID. */
     private static final long serialVersionUID = 1;
     /** Icon manager to get icons from. */
-    private final IconManager iconManager = new IconManager(IdentityManager
-            .getGlobalConfig());
+    private final IconManager iconManager;
+
+    /**
+     * Creates a new renderer.
+     *
+     * @param iconManager Icon manager
+     */
+    public ErrorLevelIconCellRenderer(final IconManager iconManager) {
+        this.iconManager = iconManager;
+    }
 
     /** {@inheritDoc} */
     @Override

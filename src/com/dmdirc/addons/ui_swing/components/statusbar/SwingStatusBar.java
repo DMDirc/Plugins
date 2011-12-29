@@ -24,11 +24,11 @@ package com.dmdirc.addons.ui_swing.components.statusbar;
 
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SwingController;
+import com.dmdirc.interfaces.ui.StatusBar;
+import com.dmdirc.interfaces.ui.StatusBarComponent;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.ui.StatusMessage;
-import com.dmdirc.interfaces.ui.StatusBar;
-import com.dmdirc.interfaces.ui.StatusBarComponent;
 
 import java.awt.Component;
 import java.util.Arrays;
@@ -69,8 +69,7 @@ public final class SwingStatusBar extends JPanel implements StatusBar {
             final MainFrame mainFrame) {
         super();
 
-        messageLabel = new MessageLabel(mainFrame,
-                controller.getGlobalConfig());
+        messageLabel = new MessageLabel(controller, mainFrame);
         errorPanel = new ErrorPanel(controller, mainFrame, this);
         updateLabel = new UpdaterLabel(controller);
         inviteLabel = new InviteLabel(controller, mainFrame);
@@ -104,7 +103,7 @@ public final class SwingStatusBar extends JPanel implements StatusBar {
                     "instance of java.awt.component"));
             return;
         }
-        if (!Arrays.asList(getComponents()).contains((Component) component)) {
+        if (!Arrays.asList(getComponents()).contains(component)) {
             SwingUtilities.invokeLater(new Runnable() {
 
                 /** {@inheritDoc} */

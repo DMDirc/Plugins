@@ -23,11 +23,10 @@
 package com.dmdirc.addons.ui_swing.dialogs.actioneditor;
 
 import com.dmdirc.actions.ActionCondition;
-import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.addons.ui_swing.components.ImageButton;
 import com.dmdirc.addons.ui_swing.components.ImageToggleButton;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
-import com.dmdirc.config.IdentityManager;
+import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.util.collections.ListenerList;
 
@@ -44,21 +43,17 @@ import net.miginfocom.swing.MigLayout;
 /**
  * Action condition display panel.
  */
-public class ActionConditionDisplayPanel extends JPanel implements ActionListener,
-        PropertyChangeListener {
+public class ActionConditionDisplayPanel extends JPanel implements
+        ActionListener, PropertyChangeListener {
 
-    /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
-     */
+    /** Serial version UID. */
     private static final long serialVersionUID = 1;
     /** Info label. */
     private TextLabel label;
     /** Edit button. */
     private JToggleButton editButton;
     /** Delete button. */
-    private ImageButton deleteButton;
+    private ImageButton<Object> deleteButton;
     /** Edit panel. */
     private ActionConditionEditorPanel editPanel;
     /** Listeners. */
@@ -71,11 +66,12 @@ public class ActionConditionDisplayPanel extends JPanel implements ActionListene
     /**
      * Instantiates the panel.
      *
+     * @param iconManager Icon Manager
      * @param condition Action condition
      * @param trigger Action trigger
      */
-    public ActionConditionDisplayPanel(final ActionCondition condition,
-            final ActionType trigger) {
+    public ActionConditionDisplayPanel(final IconManager iconManager,
+            final ActionCondition condition, final ActionType trigger) {
         super();
 
         this.trigger = trigger;
@@ -83,7 +79,7 @@ public class ActionConditionDisplayPanel extends JPanel implements ActionListene
                 condition.getComponent(), condition.getComparison(),
                 condition.getTarget());
 
-        initComponents();
+        initComponents(iconManager);
         addListeners();
         layoutComponents();
         setTrigger(trigger);
@@ -91,7 +87,8 @@ public class ActionConditionDisplayPanel extends JPanel implements ActionListene
         layoutComponents();
 
         if (condition.getArg() == -1 && condition.getComponent() == null &&
-                condition.getComparison() == null && condition.getTarget().isEmpty()) {
+                condition.getComparison() == null
+                && condition.getTarget().isEmpty()) {
             editPanel.setVisible(true);
             editButton.setSelected(true);
         }
@@ -123,14 +120,16 @@ public class ActionConditionDisplayPanel extends JPanel implements ActionListene
         label.setText(updateSentence());
     }
 
-    /** Initialises the components. */
-    private void initComponents() {
-        final IconManager iconManager = new IconManager(IdentityManager
-                .getGlobalConfig());
+    /**
+     * Initialises the components.
+     *
+     * @param iconManager Icon Manager
+     */
+    private void initComponents(final IconManager iconManager) {
         label = new TextLabel("", false);
         editButton = new ImageToggleButton("edit", iconManager.
                 getIcon("edit-inactive"), iconManager.getIcon("edit"));
-        deleteButton = new ImageButton("delete", iconManager.
+        deleteButton = new ImageButton<Object>("delete", iconManager.
                 getIcon("close-inactive"), iconManager.
                 getIcon("close-inactive"), iconManager.getIcon("close-active"));
 
@@ -177,7 +176,8 @@ public class ActionConditionDisplayPanel extends JPanel implements ActionListene
      *
      * @param listener Listener to add
      */
-    public void addConditionListener(final ActionConditionRemovalListener listener) {
+    public void addConditionListener(
+            final ActionConditionRemovalListener listener) {
         if (listener == null) {
             return;
         }
@@ -190,7 +190,8 @@ public class ActionConditionDisplayPanel extends JPanel implements ActionListene
      *
      * @param listener Listener to remove
      */
-    public void removeConditionListener(final ActionConditionRemovalListener listener) {
+    public void removeConditionListener(
+            final ActionConditionRemovalListener listener) {
         listeners.remove(ActionConditionRemovalListener.class, listener);
     }
 
@@ -199,8 +200,10 @@ public class ActionConditionDisplayPanel extends JPanel implements ActionListene
      *
      * @param condition Removed condition
      */
-    protected void fireConditionRemoved(final ActionConditionDisplayPanel condition) {
-        for (ActionConditionRemovalListener listener : listeners.get(ActionConditionRemovalListener.class)) {
+    protected void fireConditionRemoved(
+            final ActionConditionDisplayPanel condition) {
+        for (final ActionConditionRemovalListener listener : listeners
+                .get(ActionConditionRemovalListener.class)) {
             listener.conditionRemoved(condition);
         }
     }

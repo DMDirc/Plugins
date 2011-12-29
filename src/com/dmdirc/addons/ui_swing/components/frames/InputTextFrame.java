@@ -35,10 +35,10 @@ import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputField;
 import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputHandler;
 import com.dmdirc.addons.ui_swing.dialogs.paste.PasteDialog;
 import com.dmdirc.config.ConfigManager;
+import com.dmdirc.interfaces.ui.InputWindow;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.ui.input.InputHandler;
-import com.dmdirc.interfaces.ui.InputWindow;
 
 import java.awt.BorderLayout;
 import java.awt.Point;
@@ -62,12 +62,10 @@ import net.miginfocom.layout.PlatformDefaults;
 public abstract class InputTextFrame extends TextFrame implements InputWindow,
         MouseListener {
 
-    /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
-     */
+    /** Serial version UID. */
     private static final long serialVersionUID = 3;
+    /** Swing controller. */
+    private final SwingController controller;
     /** Input field panel. */
     protected JPanel inputPanel;
     /** The InputHandler for our input field. */
@@ -86,6 +84,7 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
     /**
      * Creates a new instance of InputFrame.
      *
+     * @param controller Swing controller
      * @param owner WritableFrameContainer owning this frame.
      * @param controller Swing controller
      */
@@ -93,6 +92,7 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
             final WritableFrameContainer owner) {
         super(owner, controller);
 
+        this.controller = controller;
         initComponents();
 
         final ConfigManager config = owner.getConfigManager();
@@ -293,7 +293,7 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
                     isDataFlavorAvailable(DataFlavor.stringFlavor)) {
                 return;
             }
-        } catch (IllegalStateException ex) {
+        } catch (final IllegalStateException ex) {
             Logger.userError(ErrorLevel.LOW, "Unable to paste from clipboard.");
             return;
         }
@@ -304,10 +304,10 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
             clipboard = (String) Toolkit.getDefaultToolkit().
                     getSystemClipboard().getData(DataFlavor.stringFlavor);
             doPaste(clipboard);
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             Logger.userError(ErrorLevel.LOW,
                     "Unable to get clipboard contents: " + ex.getMessage());
-        } catch (UnsupportedFlavorException ex) {
+        } catch (final UnsupportedFlavorException ex) {
             Logger.userError(ErrorLevel.LOW, "Unsupported clipboard type", ex);
         }
     }
@@ -336,11 +336,11 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
             if (pasteTrigger != null && getContainer().getNumLines(text)
                     > pasteTrigger) {
                 //show the multi line paste dialog
-                new PasteDialog(this, text, getController().getMainFrame()).
-                        display();
+                new PasteDialog(controller, this, text, getController()
+                        .getMainFrame()).display();
             } else {
                 //send the lines
-                for (String clipboardLine : clipboardLines) {
+                for (final String clipboardLine : clipboardLines) {
                     getContainer().sendLine(clipboardLine);
                 }
             }

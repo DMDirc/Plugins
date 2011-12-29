@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_swing.components.colours;
 
 import com.dmdirc.addons.ui_swing.UIUtilities;
+import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.messages.ColourManager;
 import com.dmdirc.util.collections.ListenerList;
 
@@ -43,36 +44,39 @@ import net.miginfocom.swing.MigLayout;
 /**
  * Colour chooser widget.
  */
-public final class OptionalColourChooser extends JPanel implements ActionListener {
+public final class OptionalColourChooser extends JPanel implements
+        ActionListener {
 
-    /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
-     */
+    /** Serial version UID. */
     private static final long serialVersionUID = 1;
-    /** Enabled checkbox. */
-    private JCheckBox enabled;
-    /** Edit button. */
-    private JButton editButton;
-    /** Panel to show the colour preview. */
-    private JPanel previewPanel;
-    /** Colours picking dialog. */
-    private ColourPickerDialog cpd;
-    /** show irc colours. */
-    private boolean showIRC;
-    /** show hex colours. */
-    private boolean showHex;
-    /** The value of this component. */
     private String value;
     /** Our listeners. */
     private final ListenerList listeners = new ListenerList();
+    /** Icon manager. */
+    private final IconManager iconManager;
+    /** Enabled checkbox. */
+    private final JCheckBox enabled;
+    /** Edit button. */
+    private final JButton editButton;
+    /** Panel to show the colour preview. */
+    private final JPanel previewPanel;
+    /** Colours picking dialog. */
+    private ColourPickerDialog cpd;
+    /** show irc colours. */
+    private final boolean showIRC;
+    /** show hex colours. */
+    private final boolean showHex;
+    /** The value of this component. */
     /** Parent window. */
     private Window window;
 
-    /** Creates a new instance of ColourChooser. */
-    public OptionalColourChooser() {
-        this("", false, true, true);
+    /**
+     * Creates a new instance of ColourChooser.
+     *
+     * @param iconManager Icon manager
+     */
+    public OptionalColourChooser(final IconManager iconManager) {
+        this(iconManager, "", false, true, true);
     }
 
     /**
@@ -82,27 +86,32 @@ public final class OptionalColourChooser extends JPanel implements ActionListene
      *
      * @since 0.6
      */
-    public OptionalColourChooser(final Window window) {
-        this("", false, true, true, window);
+    public OptionalColourChooser(final IconManager iconManager,
+            final Window window) {
+        this(iconManager, "", false, true, true, window);
     }
 
     /**
      * Creates a new instance of ColourChooser.
      *
+     * @param iconManager Icon manager
      * @param initialColour Snitial colour
      * @param initialState Initial state
      * @param ircColours Show irc colours
      * @param hexColours Show hex colours
      */
-    public OptionalColourChooser(final String initialColour,
+    public OptionalColourChooser(final IconManager iconManager,
+            final String initialColour,
             final boolean initialState, final boolean ircColours,
             final boolean hexColours) {
-        this(initialColour, initialState, ircColours, hexColours, null);
+        this(iconManager, initialColour, initialState, ircColours, hexColours,
+                null);
     }
 
     /**
      * Creates a new instance of ColourChooser.
      *
+     * @param iconManager Icon manager
      * @param initialColour Snitial colour
      * @param initialState Initial state
      * @param ircColours Show irc colours
@@ -111,11 +120,13 @@ public final class OptionalColourChooser extends JPanel implements ActionListene
      *
      * @since 0.6
      */
-    public OptionalColourChooser(final String initialColour,
+    public OptionalColourChooser(final IconManager iconManager,
+            final String initialColour,
             final boolean initialState, final boolean ircColours,
             final boolean hexColours, final Window window) {
         super();
 
+        this.iconManager = iconManager;
         this.window = window;
         showIRC = ircColours;
         showHex = hexColours;
@@ -180,6 +191,7 @@ public final class OptionalColourChooser extends JPanel implements ActionListene
 
     /**
      * Updates the colour panel.
+     *
      * @param newColour The new colour to use.
      */
     private void updateColour(final String newColour) {
@@ -201,7 +213,7 @@ public final class OptionalColourChooser extends JPanel implements ActionListene
     @Override
     public void actionPerformed(final ActionEvent e) {
         if (e.getSource() == editButton) {
-            cpd = new ColourPickerDialog(showIRC, showHex, window);
+            cpd = new ColourPickerDialog(iconManager, showIRC, showHex, window);
             cpd.addActionListener(this);
             cpd.display(editButton);
         } else if (e.getSource() == enabled) {
@@ -229,7 +241,8 @@ public final class OptionalColourChooser extends JPanel implements ActionListene
      * Informs all action listeners that an action has occured.
      */
     protected void fireActionEvent() {
-        for (ActionListener listener : listeners.get(ActionListener.class)) {
+        for (final ActionListener listener : listeners
+                .get(ActionListener.class)) {
             listener.actionPerformed(new ActionEvent(this, 1, "stuffChanged"));
         }
     }

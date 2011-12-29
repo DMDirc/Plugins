@@ -30,8 +30,6 @@ import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.SwingWindowListener;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
-import com.dmdirc.config.IdentityManager;
-import com.dmdirc.ui.IconManager;
 import com.dmdirc.util.ReturnableThread;
 
 import java.awt.Component;
@@ -102,8 +100,8 @@ public final class WindowMenuFrameManager extends JMenu implements
         setMnemonic('w');
         controller.getWindowFactory().addWindowListener(this);
 
-        closeMenuItem = new JMenuItem(new IconManager(IdentityManager
-                .getGlobalConfig()).getIcon("close"));
+        closeMenuItem = new JMenuItem(controller
+                .getIconManager().getIcon("close"));
         closeMenuItem.setMnemonic('c');
         closeMenuItem.setText("Close");
         closeMenuItem.setActionCommand("Close");
@@ -117,7 +115,8 @@ public final class WindowMenuFrameManager extends JMenu implements
 
         mainFrame.addSelectionListener(this);
 
-        new WindowMenuScroller(this, controller.getDomain(), itemCount);
+        new WindowMenuScroller(this, controller.getGlobalConfig(),
+                controller.getDomain(), itemCount);
         checkMenuItems();
     }
 
@@ -373,8 +372,8 @@ public final class WindowMenuFrameManager extends JMenu implements
                     = ((FrameContainerMenuInterface) component).getFrame();
             if (sortBefore(newChild, child)) {
                 return i;
-            } else if (!sortAfter(newChild, child) && IdentityManager.
-                    getGlobalConfig().getOptionBool("treeview",
+            } else if (!sortAfter(newChild, child) && controller
+                    .getGlobalConfig().getOptionBool("treeview",
                     "sortwindows") && newChild.getName().compareToIgnoreCase(
                     child.getName()) < 0) {
                 return i;

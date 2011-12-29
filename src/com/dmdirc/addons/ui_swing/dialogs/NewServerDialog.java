@@ -32,7 +32,6 @@ import com.dmdirc.addons.ui_swing.components.vetoable.VetoableComboBoxModel;
 import com.dmdirc.addons.ui_swing.components.vetoable.VetoableComboBoxSelectionListener;
 import com.dmdirc.addons.ui_swing.dialogs.profiles.ProfileManagerDialog;
 import com.dmdirc.config.Identity;
-import com.dmdirc.config.IdentityManager;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.util.validators.PortValidator;
@@ -63,14 +62,8 @@ import net.miginfocom.swing.MigLayout;
 public final class NewServerDialog extends StandardDialog implements
         ActionListener, VetoableComboBoxSelectionListener {
 
-    /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
-     */
+    /** Serial version UID. */
     private static final long serialVersionUID = 8;
-    /** A previously created instance of NewServerDialog. */
-    private static volatile NewServerDialog me;
     /** checkbox. */
     private JCheckBox newServerWindowCheck;
     /** checkbox. */
@@ -85,8 +78,6 @@ public final class NewServerDialog extends StandardDialog implements
     private JComboBox identityField;
     /** button. */
     private JButton editProfileButton;
-    /** Swing controller. */
-    private final SwingController controller;
     /**  Opening new server? */
     private boolean openingServer = false;
 
@@ -95,10 +86,8 @@ public final class NewServerDialog extends StandardDialog implements
      *
      * @param mainFrame Main frame
      */
-    private NewServerDialog(final SwingController controller) {
-        super(controller.getMainFrame(), ModalityType.MODELESS);
-
-        this.controller = controller;
+    public NewServerDialog(final SwingController controller) {
+        super(controller, controller.getMainFrame(), ModalityType.MODELESS);
 
         initComponents();
         layoutComponents();
@@ -117,51 +106,13 @@ public final class NewServerDialog extends StandardDialog implements
         serverField.requestFocus();
     }
 
-    /**
-     * Creates the new server dialog if one doesn't exist, and displays it.
-     *
-     * @param controller Swing controller
-     */
-    public static void showNewServerDialog(final SwingController controller) {
-        me = getNewServerDialog(controller);
-
-        me.display();
-    }
-
-    /**
-     * Returns the current instance of the NewServerDialog.
-     *
-     * @param controller Swing controller
-     *
-     * @return The current NewServerDialog instance
-     */
-    public static NewServerDialog getNewServerDialog(
-            final SwingController controller) {
-        synchronized (NewServerDialog.class) {
-            if (me == null) {
-                me = new NewServerDialog(controller);
-            }
-        }
-
-        return me;
-    }
-
-    /**
-     * Is the new server dialog showing?
-     *
-     * @return true iif the NSD is showing
-     */
-    public static synchronized boolean isNewServerDialogShowing() {
-        return me != null;
-    }
-
     /** Updates the values to defaults. */
     private void update() {
-        serverField.setText(controller.getGlobalConfig().getOption("general",
+        serverField.setText(getController().getGlobalConfig().getOption("general",
                 "server"));
-        portField.setText(controller.getGlobalConfig().getOption("general",
+        portField.setText(getController().getGlobalConfig().getOption("general",
                 "port"));
-        passwordField.setText(controller.getGlobalConfig().getOption("general",
+        passwordField.setText(getController().getGlobalConfig().getOption("general",
                 "password"));
         sslCheck.setSelected(false);
         newServerWindowCheck.setEnabled(false);
@@ -169,7 +120,7 @@ public final class NewServerDialog extends StandardDialog implements
         serverField.requestFocusInWindow();
 
         if (ServerManager.getServerManager().numServers() == 0 ||
-                controller.getMainFrame().getActiveFrame() == null) {
+                getController().getMainFrame().getActiveFrame() == null) {
             newServerWindowCheck.setSelected(true);
             newServerWindowCheck.setEnabled(false);
         } else {
@@ -194,9 +145,9 @@ public final class NewServerDialog extends StandardDialog implements
      * Initialises the components in this dialog.
      */
     private void initComponents() {
-        serverField = new ValidatingJTextField(controller.getIconManager(),
+        serverField = new ValidatingJTextField(getController().getIconManager(),
                 new ServerNameValidator());
-        portField = new ValidatingJTextField(controller.getIconManager(),
+        portField = new ValidatingJTextField(getController().getIconManager(),
                 new PortValidator());
         passwordField = new JPasswordField();
         newServerWindowCheck = new JCheckBox();
@@ -225,8 +176,8 @@ public final class NewServerDialog extends StandardDialog implements
 
     /** Populates the profiles list. */
     public void populateProfiles() {
-        final List<Identity> profiles = IdentityManager.getCustomIdentities(
-                "profile");
+        final List<Identity> profiles = getController().getIdentityManager()
+                .getIdentitiesByType("profile");
         ((DefaultComboBoxModel) identityField.getModel()).removeAllElements();
         for (Identity profile : profiles) {
             ((DefaultComboBoxModel) identityField.getModel()).addElement(profile);
@@ -291,7 +242,7 @@ public final class NewServerDialog extends StandardDialog implements
             // Open in a new window?
             if (newServerWindowCheck.isSelected()
                     || ServerManager.getServerManager().numServers() == 0
-                    || controller.getMainFrame().getActiveFrame() == null) {
+                    || getController().getMainFrame().getActiveFrame() == null) {
 
                 new LoggingSwingWorker<Void, Void>() {
                     @Override
@@ -302,7 +253,7 @@ public final class NewServerDialog extends StandardDialog implements
                     }
                 }.executeInExecutor();
             } else {
-                final Server server = controller.getMainFrame()
+                final Server server = getController().getMainFrame()
                         .getActiveFrame().getContainer().getServer();
 
                 new LoggingSwingWorker<Void, Void>() {
@@ -335,7 +286,7 @@ public final class NewServerDialog extends StandardDialog implements
         if (e.getSource() == getOkButton()) {
             save();
         } else if (e.getSource() == editProfileButton) {
-            ProfileManagerDialog.showProfileManagerDialog(controller);
+            getController().showDialog(ProfileManagerDialog.class);
         } else if (e.getSource() == getCancelButton()) {
             dispose();
         }
@@ -346,18 +297,6 @@ public final class NewServerDialog extends StandardDialog implements
     public boolean enterPressed() {
         executeAction(getOkButton());
         return true;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void dispose() {
-        if (me == null) {
-            return;
-        }
-        synchronized (NewServerDialog.this) {
-            super.dispose();
-            me = null;
-        }
     }
 
     /** {@inheritDoc} */

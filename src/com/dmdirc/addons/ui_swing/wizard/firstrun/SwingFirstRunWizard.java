@@ -25,7 +25,6 @@ package com.dmdirc.addons.ui_swing.wizard.firstrun;
 import com.dmdirc.Main;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionType;
-import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.addons.ui_swing.Apple;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.dialogs.profiles.ProfileManagerDialog;
@@ -33,15 +32,16 @@ import com.dmdirc.addons.ui_swing.wizard.Step;
 import com.dmdirc.addons.ui_swing.wizard.WizardDialog;
 import com.dmdirc.addons.ui_swing.wizard.WizardListener;
 import com.dmdirc.interfaces.ActionListener;
+import com.dmdirc.interfaces.actions.ActionType;
+import com.dmdirc.interfaces.ui.FirstRunWizard;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.ui.IconManager;
-import com.dmdirc.interfaces.ui.FirstRunWizard;
 import com.dmdirc.util.resourcemanager.ResourceManager;
 
+import java.awt.Dialog.ModalityType;
 import java.awt.Dimension;
 import java.awt.Window;
-import java.awt.Dialog.ModalityType;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -74,9 +74,9 @@ public final class SwingFirstRunWizard implements WizardListener,
                 .getImage("icon"));
         wizardDialog.addWizardListener(this);
         if(Apple.isAppleUI()) {
-            wizardDialog.setMinimumSize(new Dimension(400, 425));
+            wizardDialog.setMinimumSize(new Dimension(400, 500));
         } else {
-            wizardDialog.setMinimumSize(new Dimension(400, 400));
+            wizardDialog.setMinimumSize(new Dimension(400, 500));
         }
     }
 
@@ -104,7 +104,7 @@ public final class SwingFirstRunWizard implements WizardListener,
                 @Override
                 public void processEvent(final ActionType type,
                         final StringBuffer format, final Object... arguments) {
-                    ProfileManagerDialog.showProfileManagerDialog(controller);
+                    controller.showDialog(ProfileManagerDialog.class);
                 }
             }, CoreActionType.CLIENT_OPENED);
 

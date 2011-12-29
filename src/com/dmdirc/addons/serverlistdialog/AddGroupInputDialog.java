@@ -68,8 +68,6 @@ public class AddGroupInputDialog extends StandardDialog {
     private final JTree tree;
     /** Parent model. */
     private final ServerListModel serverListModel;
-    /** Swing controller. */
-    private final SwingController controller;
 
     /**
      * Instantiates a new standard input dialog.
@@ -82,9 +80,8 @@ public class AddGroupInputDialog extends StandardDialog {
     public AddGroupInputDialog(final SwingController controller,
             final Window owner, final JTree items,
             final ServerListModel model) {
-        super(owner, ModalityType.MODELESS);
+        super(controller, owner, ModalityType.MODELESS);
 
-        this.controller = controller;
         this.tree = items;
         this.serverListModel = model;
         this.validator = new NotEmptyValidator();
@@ -132,7 +129,7 @@ public class AddGroupInputDialog extends StandardDialog {
      */
     private void initComponents() {
         orderButtons(new JButton(), new JButton());
-        groupName = new ValidatingJTextField(controller.getIconManager(), validator);
+        groupName = new ValidatingJTextField(getIconManager(), validator);
         networkName = new JTextField();
         blurb = new TextLabel(message);
         validateText();

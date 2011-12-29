@@ -31,7 +31,6 @@ import com.dmdirc.addons.ui_swing.actions.CloseFrameContainerAction;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.addons.ui_swing.framemanager.FrameManager;
 import com.dmdirc.addons.ui_swing.framemanager.FramemanagerPosition;
-import com.dmdirc.config.IdentityManager;
 import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.interfaces.FrameInfoListener;
 import com.dmdirc.interfaces.NotificationListener;
@@ -84,7 +83,7 @@ public final class ButtonBar implements FrameManager, ActionListener,
     /** The default height of buttons. */
     private static final int BUTTON_HEIGHT = 25;
     /** A map of windows to the buttons we're using for them. */
-    private final Map<Window, FrameToggleButton> buttons;
+    private Map<Window, FrameToggleButton> buttons;
     /** The scrolling panel for our ButtonBar. */
      private final JScrollPane scrollPane;
     /** The panel used for our buttons. */
@@ -100,11 +99,9 @@ public final class ButtonBar implements FrameManager, ActionListener,
     /** Selected window. */
     private Window activeWindow;
     /** Sort root windows prefs setting. */
-    private boolean sortRootWindows = IdentityManager.getGlobalConfig()
-            .getOptionBool("ui", "sortrootwindows");
+    private boolean sortRootWindows;
     /** Sort child windows prefs setting. */
-    private boolean sortChildWindows = IdentityManager.getGlobalConfig()
-            .getOptionBool("ui", "sortchildwindows");
+    private boolean sortChildWindows;
     /** UI Window Factory. */
     private SwingWindowFactory windowFactory;
     /** UI Controller. */
@@ -121,17 +118,6 @@ public final class ButtonBar implements FrameManager, ActionListener,
         scrollPane.setMinimumSize(new Dimension(0, BUTTON_HEIGHT
                 + ((int) PlatformDefaults.getUnitValueX("related")
                 .getValue()) * 2));
-
-        buttons = Collections.synchronizedMap(
-                new HashMap<Window, FrameToggleButton>());
-        position = FramemanagerPosition.getPosition(
-                IdentityManager.getGlobalConfig().getOption("ui",
-                "framemanagerPosition"));
-
-        IdentityManager.getGlobalConfig().addChangeListener("ui",
-                        "sortrootwindows", this);
-        IdentityManager.getGlobalConfig().addChangeListener("ui",
-                        "sortchildwindows", this);
     }
 
     /**
@@ -240,6 +226,21 @@ public final class ButtonBar implements FrameManager, ActionListener,
         }
         scrollPane.getViewport().addMouseWheelListener(buttonPanel);
         scrollPane.getViewport().add(buttonPanel);
+
+        buttons = Collections.synchronizedMap(
+                new HashMap<Window, FrameToggleButton>());
+        position = FramemanagerPosition.getPosition(
+        controller.getGlobalConfig().getOption("ui",
+                "framemanagerPosition"));
+        sortChildWindows = controller.getGlobalConfig()
+                .getOptionBool("ui", "sortchildwindows");
+        sortRootWindows = controller.getGlobalConfig()
+                .getOptionBool("ui", "sortrootwindows");
+
+        controller.getGlobalConfig().addChangeListener("ui",
+                        "sortrootwindows", this);
+        controller.getGlobalConfig().addChangeListener("ui",
+                        "sortchildwindows", this);
     }
 
     /**
@@ -590,10 +591,10 @@ public final class ButtonBar implements FrameManager, ActionListener,
     @Override
     public void configChanged(final String domain, final String key) {
         if ("sortrootwindows".equals(key)) {
-            sortRootWindows = IdentityManager.getGlobalConfig()
+            sortRootWindows = controller.getGlobalConfig()
                     .getOptionBool("ui", "sortrootwindows");
         } else if ("sortchildwindows".equals(key)) {
-            sortChildWindows = IdentityManager.getGlobalConfig()
+            sortChildWindows = controller.getGlobalConfig()
                     .getOptionBool("ui", "sortrootwindows");
         }
         relayout();

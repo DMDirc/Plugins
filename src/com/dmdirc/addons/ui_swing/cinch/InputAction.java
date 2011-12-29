@@ -27,7 +27,6 @@ import com.dmdirc.util.validators.PermissiveValidator;
 import com.dmdirc.util.validators.Validator;
 
 import com.google.common.collect.ImmutableList;
-
 import com.palantir.ptoss.cinch.core.Bindable;
 import com.palantir.ptoss.cinch.core.BindableModel;
 import com.palantir.ptoss.cinch.core.Binding;
@@ -116,12 +115,12 @@ public @interface InputAction {
         @Override
         public Collection<Binding> wire(final BindingContext context) {
             final List<Field> actions = context.getAnnotatedFields(InputAction.class);
-            for (Field field : actions) {
+            for (final Field field : actions) {
                 final InputAction action = field.getAnnotation(InputAction.class);
                 try {
                     wire(action.call(), action.message(), action.content(),
                             action.validator(), field, context);
-                } catch (Exception e) {
+                } catch (final Exception e) {
                     Throwables.throwUncheckedException(e);
                     throw new BindingException("could not wire up "
                             + "@InputAction on " + field.getName(), e);
@@ -180,7 +179,7 @@ public @interface InputAction {
             final Validator<String> validatorInstance;
             final Constructor<?> ctor = validator.getConstructor(
                     BindableModel.class);
-            validatorInstance = (Validator) ctor.newInstance(
+            validatorInstance = (Validator<String>) ctor.newInstance(
                     context.getBindableModels().toArray()[0]);
             aalMethod.invoke(actionObject, new ActionListener() {
 
@@ -208,10 +207,10 @@ public @interface InputAction {
                                 ofm.getMethod().setAccessible(true);
                                 ofm.getMethod().invoke(ofm.getObject(), getText());
                                 ofm.getMethod().setAccessible(accessible);
-                            } catch (InvocationTargetException itex) {
+                            } catch (final InvocationTargetException itex) {
                                 LOGGER.error("exception during action firing",
                                         itex.getCause());
-                            } catch (Exception ex) {
+                            } catch (final Exception ex) {
                                 LOGGER.error("exception during action firing", ex);
                             }
                             return true;
@@ -232,7 +231,7 @@ public @interface InputAction {
                                             .invoke(existingMethod.getObject());
                                     existingMethod.getMethod()
                                             .setAccessible(accessible);
-                                } catch (Exception e) {
+                                } catch (final Exception e) {
                                     content = "";
                                 }
                             } else {

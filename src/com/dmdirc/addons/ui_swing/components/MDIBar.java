@@ -28,9 +28,7 @@ import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.SwingWindowListener;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.config.ConfigManager;
-import com.dmdirc.config.IdentityManager;
 import com.dmdirc.interfaces.ConfigChangeListener;
-import com.dmdirc.ui.IconManager;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -75,13 +73,12 @@ public class MDIBar extends JPanel implements SwingWindowListener,
         super();
 
         this.mainFrame = mainFrame;
-        this.config = IdentityManager.getGlobalConfig();
-        this.configDomain = controller.getDomain();
+        config = controller.getGlobalConfig();
+        configDomain = controller.getDomain();
         visibility = config.getOptionBool(configDomain, "mdiBarVisibility");
 
-        closeButton = new NoFocusButton(new IconManager(IdentityManager
-                .getGlobalConfig()).getScaledIcon("close-12", ICON_SIZE,
-                ICON_SIZE));
+        closeButton = new NoFocusButton(controller.getIconManager()
+                .getScaledIcon("close-12", ICON_SIZE,ICON_SIZE));
 
         setOpaque(false);
         setLayout(new MigLayout("hmax 17, ins 1 0 0 0, fill"));

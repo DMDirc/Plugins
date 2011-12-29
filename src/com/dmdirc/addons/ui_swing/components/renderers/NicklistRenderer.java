@@ -91,7 +91,7 @@ public final class NicklistRenderer extends DefaultListCellRenderer implements
             setBackground(altBackgroundColour);
         }
 
-        final Map map = ((ChannelClientInfo) value).getMap();
+        final Map<?, ?> map = ((ChannelClientInfo) value).getMap();
 
         if (showColours && map != null) {
             if (map.containsKey(ChannelClientProperty.NICKLIST_FOREGROUND)) {

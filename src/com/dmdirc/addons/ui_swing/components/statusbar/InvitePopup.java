@@ -24,6 +24,7 @@ package com.dmdirc.addons.ui_swing.components.statusbar;
 
 import com.dmdirc.Invite;
 import com.dmdirc.Server;
+import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.util.DateUtils;
 
 import java.awt.Window;
@@ -50,20 +51,21 @@ public class InvitePopup extends StatusbarPopupWindow {
     /**
      * Creates a new InvitePopup for the specified panel and server.
      *
+     * @param controller Swing controller
      * @param parent The parent of this popup
      * @param server The server to show invites for
      * @param parentWindow Parent window
      */
-    public InvitePopup(final JPanel parent, final Server server,
-            final Window parentWindow) {
-        super(parent, parentWindow);
+    public InvitePopup(final SwingController controller, final JPanel parent,
+            final Server server, final Window parentWindow) {
+        super(controller, parent, parentWindow);
         this.server = server;
     }
 
     /** {@inheritDoc} */
     @Override
     protected void initContent(final JPanel panel) {
-        for (Invite invite : server.getInvites()) {
+        for (final Invite invite : server.getInvites()) {
             panel.add(new JLabel(invite.getChannel()), "growx, pushx");
             panel.add(new JLabel(invite.getSource()[0], JLabel.CENTER),
                     "growx, pushx, al center");

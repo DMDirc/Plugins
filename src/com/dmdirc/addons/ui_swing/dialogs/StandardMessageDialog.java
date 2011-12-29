@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.dialogs;
 
+import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 
 import java.awt.Window;
@@ -39,11 +40,7 @@ import net.miginfocom.swing.MigLayout;
  */
 public class StandardMessageDialog extends StandardDialog {
 
-    /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
-     */
+    /** Serial version UID. */
     private static final long serialVersionUID = 1;
     /** Message. */
     private final String message;
@@ -53,14 +50,16 @@ public class StandardMessageDialog extends StandardDialog {
     /**
      * Instantiates a new standard input dialog.
      *
+     * @param controller Swing controller
      * @param owner Dialog owner
      * @param modal modality type
      * @param title Dialog title
      * @param message Dialog message
      */
-    public StandardMessageDialog(final Window owner, final ModalityType modal,
-            final String title, final String message) {
-        super(owner, modal);
+    public StandardMessageDialog(final SwingController controller,
+            final Window owner, final ModalityType modal, final String title,
+            final String message) {
+        super(controller, owner, modal);
 
         this.message = message;
 
