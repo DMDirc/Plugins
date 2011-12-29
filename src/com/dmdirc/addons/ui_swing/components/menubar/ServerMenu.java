@@ -29,9 +29,6 @@ import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.addons.ui_swing.dialogs.NewServerDialog;
-import com.dmdirc.addons.ui_swing.dialogs.serverlist.ServerListDialog;
-import com.dmdirc.plugins.PluginInfo;
-import com.dmdirc.plugins.PluginManager;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -41,9 +38,12 @@ import javax.swing.JMenuItem;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
 
+import lombok.AutoGenMethodStub;
+
 /**
  * A menu providing server related commands to the menu bar.
  */
+@AutoGenMethodStub
 public class ServerMenu extends JMenu implements ActionListener,
         MenuListener {
 
@@ -58,7 +58,7 @@ public class ServerMenu extends JMenu implements ActionListener,
     /** Main frame. */
     private final MainFrame mainFrame;
     /** Menu items which can be enabled/disabled. */
-    private JMenuItem ssd, disconnect, serverlist;
+    private JMenuItem ssd, disconnect;
 
     /**
      * Creates a new Server menu.
@@ -81,12 +81,6 @@ public class ServerMenu extends JMenu implements ActionListener,
      * Initialises the server menu.
      */
     private void initServerMenu() {
-        serverlist = new JMenuItem();
-        serverlist.setText("Server lists");
-        serverlist.setMnemonic('l');
-        serverlist.setActionCommand("ServerList");
-        serverlist.addActionListener(this);
-
         JMenuItem menuItem = new JMenuItem();
         menuItem.setText("New Server...");
         menuItem.setMnemonic('n');
@@ -123,9 +117,6 @@ public class ServerMenu extends JMenu implements ActionListener,
     public void actionPerformed(final ActionEvent e) {
         if ("NewServer".equals(e.getActionCommand())) {
             NewServerDialog.showNewServerDialog(controller);
-        } else if (e.getActionCommand().equals("ServerList")) {
-            ServerListDialog.showServerListDialog(controller, mainFrame,
-                    controller.getURLHandler());
         } else if (e.getActionCommand().equals("Exit")) {
             mainFrame.quit();
         } else if (e.getActionCommand().equals("ServerSettings")) {
@@ -150,29 +141,5 @@ public class ServerMenu extends JMenu implements ActionListener,
         disconnect.setEnabled(activeWindow != null && activeWindow
                 .getServer() != null && activeWindow.getServer().getState()
                 == ServerState.CONNECTED);
-
-        final PluginInfo plugin = PluginManager.getPluginManager()
-                .getPluginInfoByName("serverlists");
-        if (plugin != null) {
-            if (!plugin.isLoaded()) {
-                plugin.loadPlugin();
-            }
-
-            if (getMenuComponent(0) != serverlist) {
-                add(serverlist, 0);
-            }
-        }
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public final void menuDeselected(final MenuEvent e) {
-        //Ignore
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public final void menuCanceled(final MenuEvent e) {
-        //Ignore
     }
 }

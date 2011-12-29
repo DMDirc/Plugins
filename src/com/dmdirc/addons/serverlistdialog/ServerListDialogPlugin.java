@@ -20,32 +20,45 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.ui_swing.dialogs.serverlist;
+package com.dmdirc.addons.serverlistdialog;
 
-import com.dmdirc.addons.ui_swing.components.text.TextLabel;
+import com.dmdirc.addons.ui_swing.SwingController;
+import com.dmdirc.addons.ui_swing.components.menubar.MenuBar;
+import com.dmdirc.plugins.PluginManager;
 
-import javax.swing.JPanel;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-import net.miginfocom.swing.MigLayout;
+import javax.swing.JMenuItem;
 
 /**
- * Introductory panel for the Server list dialog.
+ * Server list dialog plugin.
  */
-public class Help extends JPanel {
+public class ServerListDialogPlugin implements ActionListener {
+
+    /** Swing controller. */
+    private final SwingController controller;
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * Creates a new server list dialog plugin.
      */
-    private static final long serialVersionUID = 2;
+    public ServerListDialogPlugin(final PluginManager pluginManager) {
+        controller = (SwingController) pluginManager.getPluginInfoByName(
+                "ui_swing").getPlugin();
+        final JMenuItem item = new JMenuItem("Server lists");
+        item.setMnemonic('l');
+        item.addActionListener(this);
+        ((MenuBar) controller.getMainFrame().getJMenuBar()).addMenuItem(
+                "Server", item);
+    }
 
     /**
-     * Creates a new help panel.
+     * {@inheritDoc}
+     *
+     * @param e Action event
      */
-    public Help() {
-        setLayout(new MigLayout("fill"));
-        add(new TextLabel("Please select an item from the left to start " +
-                "editing options and settings."), "grow, pushy");
+    @Override
+    public void actionPerformed(final ActionEvent e) {
+        new ServerListDialog(controller, controller.getURLHandler()).display();
     }
 }
