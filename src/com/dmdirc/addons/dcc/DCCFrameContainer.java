@@ -25,7 +25,7 @@ package com.dmdirc.addons.dcc;
 import com.dmdirc.Server;
 import com.dmdirc.WritableFrameContainer;
 import com.dmdirc.commandparser.parsers.CommandParser;
-import com.dmdirc.config.IdentityManager;
+import com.dmdirc.config.ConfigManager;
 import com.dmdirc.ui.input.TabCompleter;
 
 import java.util.Collection;
@@ -43,13 +43,14 @@ public abstract class DCCFrameContainer extends WritableFrameContainer {
      *
      * @param title The title of this window
      * @param icon The icon to use
+     * @param configManager Config manager
      * @param parser Command parser to use for this window
      * @param components The UI components that this frame requires
      */
     public DCCFrameContainer(final String title, final String icon,
-            final CommandParser parser, final Collection<String> components) {
-        super(icon, title, title, IdentityManager.getGlobalConfig(), parser,
-                components);
+            final ConfigManager configManager, final CommandParser parser,
+            final Collection<String> components) {
+        super(icon, title, title, configManager, parser, components);
     }
 
     /** {@inheritDoc} */

@@ -30,7 +30,7 @@ import com.dmdirc.addons.dcc.io.DCC;
 import com.dmdirc.addons.dcc.io.DCCChat;
 import com.dmdirc.addons.dcc.io.DCCTransfer;
 import com.dmdirc.addons.dcc.kde.KFileChooser;
-import com.dmdirc.addons.ui_swing.SwingController;
+import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.commandparser.BaseCommandInfo;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandInfo;
@@ -39,9 +39,7 @@ import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.IntelligentCommand;
 import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.commandparser.commands.context.ServerCommandContext;
-import com.dmdirc.config.IdentityManager;
 import com.dmdirc.parser.interfaces.Parser;
-import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 import com.dmdirc.ui.input.TabCompletionType;
 
@@ -62,14 +60,18 @@ public class DCCCommand extends Command implements IntelligentCommand {
 
     /** My Plugin. */
     private final DCCPlugin myPlugin;
+    /** Main frame instance used as the parent for dialogs. */
+    private final MainFrame mainFrame;
 
     /**
      * Creates a new instance of DCCCommand.
      *
+     * @param mainFrame mainFrame instance to use
      * @param plugin The DCC Plugin that this command belongs to
      */
-    public DCCCommand(final DCCPlugin plugin) {
+    public DCCCommand(final MainFrame mainFrame, final DCCPlugin plugin) {
         super();
+        this.mainFrame = mainFrame;
         myPlugin = plugin;
     }
 
@@ -137,6 +139,7 @@ public class DCCCommand extends Command implements IntelligentCommand {
         final DCCChat chat = new DCCChat();
         if (myPlugin.listen(chat)) {
             final ChatContainer window = new ChatContainer(myPlugin, chat,
+                    origin.getConfigManager(),
                     "*Chat: " + target, myNickname, target);
             parser.sendCTCP(target, "DCC", "CHAT chat " + DCC.ipToLong(
                     myPlugin.getListenIP(parser)) + " " + chat.getPort());
@@ -180,10 +183,10 @@ public class DCCCommand extends Command implements IntelligentCommand {
                         || !handleInvalidItems(jc)) {
                     return;
                 }
-                final DCCTransfer send = new DCCTransfer(IdentityManager
-                        .getGlobalConfig().getOptionInt(myPlugin.getDomain(),
+                final DCCTransfer send = new DCCTransfer(origin
+                        .getConfigManager().getOptionInt(myPlugin.getDomain(),
                         "send.blocksize"));
-                send.setTurbo(IdentityManager.getGlobalConfig().getOptionBool(
+                send.setTurbo(origin.getConfigManager().getOptionBool(
                         myPlugin.getDomain(), "send.forceturbo"));
                 send.setType(DCCTransfer.TransferType.SEND);
 
@@ -197,10 +200,11 @@ public class DCCCommand extends Command implements IntelligentCommand {
                 send.setFileName(jc.getSelectedFile().getAbsolutePath());
                 send.setFileSize(jc.getSelectedFile().length());
 
-                if (IdentityManager.getGlobalConfig().getOptionBool(
+                if (origin.getConfigManager().getOptionBool(
                         myPlugin.getDomain(), "send.reverse")) {
                     final Parser parser = server.getParser();
-                    new TransferContainer(myPlugin, send, "Send: " + target,
+                    new TransferContainer(myPlugin, send,
+                            origin.getConfigManager(), "Send: " + target,
                             target, server);
                     parser.sendCTCP(target, "DCC", "SEND \""
                             + jc.getSelectedFile().getName() + "\" "
@@ -211,7 +215,8 @@ public class DCCCommand extends Command implements IntelligentCommand {
                 } else {
                     final Parser parser = server.getParser();
                     if (myPlugin.listen(send)) {
-                        new TransferContainer(myPlugin, send, "*Send: "
+                        new TransferContainer(myPlugin, send,
+                                origin.getConfigManager(), "*Send: "
                                 + target, target, server);
                         parser.sendCTCP(target, "DCC", "SEND \""
                                 + jc.getSelectedFile().getName() + "\" "
@@ -274,9 +279,7 @@ public class DCCCommand extends Command implements IntelligentCommand {
         jc.setDialogTitle("Send file to " + target + " - DMDirc ");
         jc.setFileSelectionMode(JFileChooser.FILES_ONLY);
         jc.setMultiSelectionEnabled(false);
-        return jc.showOpenDialog(((SwingController) PluginManager
-                .getPluginManager().getPluginInfoByName("ui_swing")
-                .getPlugin()).getMainFrame());
+        return jc.showOpenDialog(mainFrame);
         }
     }
 

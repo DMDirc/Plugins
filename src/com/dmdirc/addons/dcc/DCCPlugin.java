@@ -26,7 +26,6 @@ import com.dmdirc.Main;
 import com.dmdirc.Server;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionType;
-import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.addons.dcc.actions.DCCActions;
 import com.dmdirc.addons.dcc.io.DCC;
 import com.dmdirc.addons.dcc.io.DCCChat;
@@ -35,6 +34,7 @@ import com.dmdirc.addons.dcc.kde.KFileChooser;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.SwingWindowFactory;
 import com.dmdirc.addons.ui_swing.components.frames.ComponentFrame;
+import com.dmdirc.config.ConfigManager;
 import com.dmdirc.config.Identity;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
@@ -43,6 +43,7 @@ import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.interfaces.ActionListener;
+import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.parser.interfaces.ClientInfo;
@@ -71,6 +72,10 @@ public final class DCCPlugin extends BasePlugin implements ActionListener {
     private PlaceholderContainer container;
     /** This plugin's plugin info. */
     private final PluginInfo pluginInfo;
+    /** Config manager to read settings from. */
+    private final ConfigManager config;
+    /** Parent swing controller. */
+    private final SwingController controller;
 
     /**
      * Creates a new instance of this plugin.
@@ -79,10 +84,13 @@ public final class DCCPlugin extends BasePlugin implements ActionListener {
      * @param pluginInfo This plugin's plugin info
      */
     public DCCPlugin(final SwingController controller,
-            final PluginInfo pluginInfo) {
+            final PluginInfo pluginInfo, final PluginManager pluginManager) {
         super();
+        this.controller = controller;
+        config = controller.getGlobalConfig();
         this.pluginInfo = pluginInfo;
-        registerCommand(new DCCCommand(this), DCCCommand.INFO);
+        registerCommand(new DCCCommand(controller.getMainFrame(), this),
+                DCCCommand.INFO);
         final SwingWindowFactory factory = controller.getWindowFactory();
         factory.registerImplementation(new HashSet<String>(Arrays.asList(
                 "com.dmdirc.addons.dcc.ui.PlaceholderPanel")),
@@ -140,11 +148,10 @@ public final class DCCPlugin extends BasePlugin implements ActionListener {
             @Override
             public void run() {
                 final JFileChooser jc = KFileChooser.getFileChooser(
-                        DCCPlugin.this, IdentityManager.getGlobalConfig()
-                        .getOption(getDomain(), "receive.savelocation"));
+                        DCCPlugin.this,
+                        config.getOption(getDomain(), "receive.savelocation"));
                 int result;
-                if (IdentityManager.getGlobalConfig().getOptionBool(getDomain(),
-                        "receive.autoaccept")) {
+                if (config.getOptionBool(getDomain(), "receive.autoaccept")) {
                     result = JFileChooser.APPROVE_OPTION;
                 } else {
                     result = showFileChooser(send, jc);
@@ -158,12 +165,12 @@ public final class DCCPlugin extends BasePlugin implements ActionListener {
                 }
                 final boolean resume = handleResume(jc);
                 if (reverse && !token.isEmpty()) {
-                    new TransferContainer(DCCPlugin.this, send,
+                    new TransferContainer(DCCPlugin.this, send, config,
                             "*Receive: " + nickname, nickname, null);
                     send.setToken(token);
                     if (resume) {
-                        if (IdentityManager.getGlobalConfig().getOptionBool(
-                                getDomain(), "receive.reverse.sendtoken")) {
+                        if (config.getOptionBool(getDomain(),
+                                "receive.reverse.sendtoken")) {
                             parser.sendCTCP(nickname, "DCC", "RESUME "
                                     + send.getShortFileName() + " 0 "
                                     + jc.getSelectedFile().length() + " "
@@ -183,8 +190,8 @@ public final class DCCPlugin extends BasePlugin implements ActionListener {
                         }
                     }
                 } else {
-                    new TransferContainer(DCCPlugin.this, send, "Receive: "
-                            + nickname, nickname, null);
+                    new TransferContainer(DCCPlugin.this, send, config,
+                            "Receive: " + nickname, nickname, null);
                     if (resume) {
                         parser.sendCTCP(nickname, "DCC", "RESUME "
                                 + send.getShortFileName() + " "
@@ -216,13 +223,11 @@ public final class DCCPlugin extends BasePlugin implements ActionListener {
             final String token) {
         if (jc.getSelectedFile().exists() && send.getFileSize() > -1
                 && send.getFileSize() <= jc.getSelectedFile().length()) {
-            if (IdentityManager.getGlobalConfig().getOptionBool(getDomain(),
-                    "receive.autoaccept")) {
+            if (config.getOptionBool(getDomain(), "receive.autoaccept")) {
                 return false;
             } else {
-                JOptionPane.showMessageDialog(((SwingController) PluginManager
-                        .getPluginManager().getPluginInfoByName("ui_swing")
-                        .getPlugin()).getMainFrame(), "This file has already "
+                JOptionPane.showMessageDialog(controller.getMainFrame(),
+                        "This file has already "
                         + "been completed, or is longer than the file you are "
                         + "receiving.\nPlease choose a different file.",
                         "Problem with selected file",
@@ -243,14 +248,11 @@ public final class DCCPlugin extends BasePlugin implements ActionListener {
      */
     private boolean handleResume(final JFileChooser jc) {
         if (jc.getSelectedFile().exists()) {
-            if (IdentityManager.getGlobalConfig().getOptionBool(getDomain(),
-                    "receive.autoaccept")) {
+            if (config.getOptionBool(getDomain(), "receive.autoaccept")) {
                 return true;
             } else {
                 final int result = JOptionPane.showConfirmDialog(
-                        ((SwingController) PluginManager
-                        .getPluginManager().getPluginInfoByName("ui_swing")
-                        .getPlugin()).getMainFrame(), "This file exists already"
+                        controller.getMainFrame(), "This file exists already"
                         + ", do you want to resume an exisiting download?",
                         "Resume Download?", JOptionPane.YES_NO_OPTION);
                 return (result == JOptionPane.YES_OPTION);
@@ -278,9 +280,7 @@ public final class DCCPlugin extends BasePlugin implements ActionListener {
                 jc.setFileSelectionMode(JFileChooser.FILES_ONLY);
                 jc.setMultiSelectionEnabled(false);
                 jc.setSelectedFile(new File(send.getFileName()));
-        return jc.showSaveDialog(((SwingController) PluginManager
-                .getPluginManager().getPluginInfoByName("ui_swing")
-                .getPlugin()).getMainFrame());
+        return jc.showSaveDialog(controller.getMainFrame());
     }
 
     /** {@inheritDoc} */
@@ -299,14 +299,14 @@ public final class DCCPlugin extends BasePlugin implements ActionListener {
      * @return True if Socket was opened.
      */
     protected boolean listen(final DCC dcc) {
-        final boolean usePortRange = IdentityManager.getGlobalConfig()
-                .getOptionBool(getDomain(), "firewall.ports.usePortRange");
+        final boolean usePortRange = config.getOptionBool(getDomain(),
+                "firewall.ports.usePortRange");
         try {
             if (usePortRange) {
-                final int startPort = IdentityManager.getGlobalConfig()
-                        .getOptionInt(getDomain(), "firewall.ports.startPort");
-                final int endPort = IdentityManager.getGlobalConfig()
-                        .getOptionInt(getDomain(), "firewall.ports.endPort");
+                final int startPort = config.getOptionInt(getDomain(),
+                        "firewall.ports.startPort");
+                final int endPort = config.getOptionInt(getDomain(),
+                        "firewall.ports.endPort");
                 dcc.listen(startPort, endPort);
             } else {
                 dcc.listen();
@@ -328,8 +328,7 @@ public final class DCCPlugin extends BasePlugin implements ActionListener {
     public void handleProcessEvent(final ActionType type,
             final StringBuffer format, final boolean dontAsk,
             final Object... arguments) {
-        if (IdentityManager.getGlobalConfig().getOptionBool(getDomain(),
-                "receive.autoaccept") && !dontAsk) {
+        if (config.getOptionBool(getDomain(), "receive.autoaccept") && !dontAsk) {
             handleProcessEvent(type, format, true, arguments);
             return;
         }
@@ -375,14 +374,14 @@ public final class DCCPlugin extends BasePlugin implements ActionListener {
             }
             final String myNickname = ((Server) arguments[0]).getParser()
                     .getLocalClient().getNickname();
-            final DCCFrameContainer f = new ChatContainer(this, chat,
+            final DCCFrameContainer f = new ChatContainer(this, chat, config,
                     "Chat: " + nickname, myNickname, nickname);
             f.addLine("DCCChatStarting", nickname, chat.getHost(),
                     chat.getPort());
             chat.connect();
         } else {
             ActionManager.getActionManager().triggerEvent(
-                    DCCActions.DCC_CHAT_REQUEST, null, ((Server) arguments[0]),
+                    DCCActions.DCC_CHAT_REQUEST, null, arguments[0],
                     nickname);
             askQuestion("User " + nickname + " on "
                     + ((Server) arguments[0]).getName()
@@ -478,7 +477,7 @@ public final class DCCPlugin extends BasePlugin implements ActionListener {
             } else {
                 ActionManager.getActionManager().triggerEvent(
                         DCCActions.DCC_SEND_REQUEST, null,
-                        ((Server) arguments[0]), nickname, filename);
+                        arguments[0], nickname, filename);
                 askQuestion("User " + nickname + " on "
                         + ((Server) arguments[0]).getName()
                         + " would like to send you a file over DCC.\n\nFile: "
@@ -490,10 +489,9 @@ public final class DCCPlugin extends BasePlugin implements ActionListener {
         } else {
             final boolean newSend = send == null;
             if (newSend) {
-                send = new DCCTransfer(IdentityManager.getGlobalConfig()
-                        .getOptionInt(getDomain(), "send.blocksize"));
-                send.setTurbo(IdentityManager.getGlobalConfig().getOptionBool(
-                        getDomain(), "send.forceturbo"));
+                send = new DCCTransfer(config.getOptionInt(getDomain(),
+                        "send.blocksize"));
+                send.setTurbo(config.getOptionBool(getDomain(), "send.forceturbo"));
             }
             try {
                 send.setAddress(Long.parseLong(ip), Integer.parseInt(port));
@@ -628,14 +626,15 @@ public final class DCCPlugin extends BasePlugin implements ActionListener {
      * Create the container window.
      */
     protected void createContainer() {
-        container = new PlaceholderContainer(this);
+        container = new PlaceholderContainer(this, config, controller);
         WindowManager.getWindowManager().addWindow(container);
     }
 
     /** {@inheritDoc} */
     @Override
     public void domainUpdated() {
-        final Identity defaults = IdentityManager.getAddonIdentity();
+        final Identity defaults = IdentityManager.getIdentityManager()
+                .getGlobalAddonIdentity();
 
         defaults.setOption(getDomain(), "receive.savelocation",
                 Main.getConfigDir() + "downloads"
@@ -647,8 +646,8 @@ public final class DCCPlugin extends BasePlugin implements ActionListener {
      */
     @Override
     public void onLoad() {
-        final File dir = new File(IdentityManager.getGlobalConfig()
-                .getOption(getDomain(), "receive.savelocation"));
+        final File dir = new File(config.getOption(getDomain(),
+                "receive.savelocation"));
         if (dir.exists()) {
             if (!dir.isDirectory()) {
                 Logger.userError(ErrorLevel.LOW,
@@ -698,8 +697,7 @@ public final class DCCPlugin extends BasePlugin implements ActionListener {
      * @return The IP Address we should send as our listening IP.
      */
     public String getListenIP(final Parser parser) {
-        final String configIP = IdentityManager.getGlobalConfig().getOption(
-                getDomain(), "firewall.ip");
+        final String configIP = config.getOption(getDomain(), "firewall.ip");
         if (!configIP.isEmpty()) {
             try {
                 return InetAddress.getByName(configIP).getHostAddress();
