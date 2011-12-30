@@ -142,7 +142,7 @@ public class RelayCallbackManager extends CallbackManager implements SocketClose
     private void setCallbackManager(final IRCParser parser, final CallbackManager cbm) {
         try {
             // Get the old callback manager
-            final Field field = parser.getClass().getDeclaredField("myCallbackManager");
+            final Field field = parser.getClass().getSuperclass().getDeclaredField("callbackManager");
             field.setAccessible(true);
             @SuppressWarnings("unchecked")
             final CallbackManager oldCBM = (CallbackManager) field.get(parser);
