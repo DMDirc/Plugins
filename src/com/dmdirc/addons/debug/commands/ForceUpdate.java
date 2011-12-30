@@ -25,9 +25,9 @@ package com.dmdirc.addons.debug.commands;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.debug.Debug;
 import com.dmdirc.addons.debug.DebugCommand;
+import com.dmdirc.addons.debug.DebugPlugin;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.commands.context.CommandContext;
-import com.dmdirc.config.IdentityManager;
 import com.dmdirc.ui.messages.Styliser;
 import com.dmdirc.updater.UpdateChecker;
 
@@ -39,10 +39,11 @@ public class ForceUpdate extends DebugCommand {
     /**
      * Creates a new instance of the command.
      *
+     * @param plugin Parent debug plugin
      * @param command Parent command
      */
-    public ForceUpdate(final Debug command) {
-        super(command);
+    public ForceUpdate(final DebugPlugin plugin, final Debug command) {
+        super(plugin, command);
     }
 
     /** {@inheritDoc} */
@@ -61,8 +62,8 @@ public class ForceUpdate extends DebugCommand {
     @Override
     public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
-        if (IdentityManager.getGlobalConfig().getOptionBool("updater",
-                "enable")) {
+        if (getPlugin().getIdentityManager().getGlobalConfiguration()
+                .getOptionBool("updater","enable")) {
             new Thread(new UpdateChecker(), "Forced update checker").start();
         } else {
             sendLine(origin, args.isSilent(), FORMAT_ERROR, "Update checking is "

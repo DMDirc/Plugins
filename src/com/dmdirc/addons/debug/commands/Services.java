@@ -25,10 +25,10 @@ package com.dmdirc.addons.debug.commands;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.debug.Debug;
 import com.dmdirc.addons.debug.DebugCommand;
+import com.dmdirc.addons.debug.DebugPlugin;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.commands.IntelligentCommand;
 import com.dmdirc.commandparser.commands.context.CommandContext;
-import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.plugins.Service;
 import com.dmdirc.plugins.ServiceProvider;
 import com.dmdirc.ui.input.AdditionalTabTargets;
@@ -41,10 +41,11 @@ public class Services extends DebugCommand implements IntelligentCommand {
     /**
      * Creates a new instance of the command.
      *
+     * @param plugin Parent debug plugin
      * @param command Parent command
      */
-    public Services(final Debug command) {
-        super(command);
+    public Services(final DebugPlugin plugin, final Debug command) {
+        super(plugin, command);
     }
 
     /** {@inheritDoc} */
@@ -65,8 +66,7 @@ public class Services extends DebugCommand implements IntelligentCommand {
     public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
         sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Available Services:");
-        for (Service service : PluginManager.getPluginManager()
-                .getAllServices()) {
+        for (Service service : getPlugin().getPluginManager().getAllServices()) {
             sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "    "
                     + service.toString());
             if (args.getArguments().length > 0

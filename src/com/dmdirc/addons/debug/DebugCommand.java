@@ -26,9 +26,12 @@ import com.dmdirc.FrameContainer;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.commands.context.CommandContext;
 
+import lombok.Getter;
+
 /**
  * Debug command, serves as a proxy between debug commands and normal commands.
  */
+@SuppressWarnings("unused")
 public abstract class DebugCommand {
     /** The format name used for command output. */
     public static final String FORMAT_OUTPUT = "commandOutput";
@@ -36,6 +39,9 @@ public abstract class DebugCommand {
     public static final String FORMAT_ERROR = "commandError";
     /** Parent debug command. */
     private final Debug command;
+    /** Parent debug plugin. */
+    @Getter
+    private final DebugPlugin plugin;
 
     /**
      * Returns this command's name.
@@ -78,10 +84,12 @@ public abstract class DebugCommand {
     /**
      * Creates a new debug command.
      *
+     * @param plugin Parent plugin
      * @param command Parent debug command
      */
-    public DebugCommand(final Debug command) {
+    public DebugCommand(final DebugPlugin plugin, final Debug command) {
         this.command = command;
+        this.plugin = plugin;
     }
 
 

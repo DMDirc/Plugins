@@ -26,6 +26,7 @@ import com.dmdirc.FrameContainer;
 import com.dmdirc.Server;
 import com.dmdirc.addons.debug.Debug;
 import com.dmdirc.addons.debug.DebugCommand;
+import com.dmdirc.addons.debug.DebugPlugin;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.commands.context.CommandContext;
 
@@ -37,10 +38,11 @@ public class ServerInfo extends DebugCommand {
     /**
      * Creates a new instance of the command.
      *
+     * @param plugin Parent debug plugin
      * @param command Parent command
      */
-    public ServerInfo(final Debug command) {
-        super(command);
+    public ServerInfo(final DebugPlugin plugin, final Debug command) {
+        super(plugin, command);
     }
 
     /** {@inheritDoc} */
