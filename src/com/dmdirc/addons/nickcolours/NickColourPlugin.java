@@ -43,10 +43,10 @@ import com.dmdirc.parser.interfaces.ClientInfo;
 import com.dmdirc.plugins.BasePlugin;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.PluginManager;
+import com.dmdirc.ui.Colour;
 import com.dmdirc.ui.messages.ColourManager;
 import com.dmdirc.util.ReturnableThread;
 
-import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -119,7 +119,7 @@ public final class NickColourPlugin extends BasePlugin implements ActionListener
                 toLowerCase("*:" + client.getClient().getNickname());
 
         if (useowncolour && client.getClient().equals(myself)) {
-            final Color color = UIUtilities.convertColour(ColourManager.parseColour(owncolour));
+            final Colour color = ColourManager.parseColour(owncolour);
             putColour(map, color, color);
         } else if (userandomcolour) {
             putColour(map, getColour(client.getClient().getNickname()), getColour(client.
@@ -137,14 +137,14 @@ public final class NickColourPlugin extends BasePlugin implements ActionListener
         }
 
         if (parts != null) {
-            Color textColor = null;
-            Color nickColor = null;
+            Colour textColor = null;
+            Colour nickColor = null;
 
             if (parts[0] != null) {
-                textColor = UIUtilities.convertColour(ColourManager.parseColour(parts[0], null));
+                textColor = ColourManager.parseColour(parts[0], null);
             }
             if (parts[1] != null) {
-                nickColor = UIUtilities.convertColour(ColourManager.parseColour(parts[1], null));
+                nickColor = ColourManager.parseColour(parts[1], null);
             }
 
             putColour(map, textColor, nickColor);
@@ -159,8 +159,8 @@ public final class NickColourPlugin extends BasePlugin implements ActionListener
      * @param textColour Text colour to be inserted
      * @param nickColour Nick colour to be inserted
      */
-    private void putColour(final Map<Object, Object> map, final Color textColour,
-            final Color nickColour) {
+    private void putColour(final Map<Object, Object> map, final Colour textColour,
+            final Colour nickColour) {
         if (settext && textColour != null) {
             map.put(ChannelClientProperty.TEXT_FOREGROUND, textColour);
         }
@@ -176,7 +176,7 @@ public final class NickColourPlugin extends BasePlugin implements ActionListener
      * @param nick The nickname of the client whose colour we're determining
      * @return Colour of the specified nickname
      */
-    private Color getColour(final String nick) {
+    private Colour getColour(final String nick) {
         int count = 0;
 
         for (int i = 0; i < nick.length(); i++) {
@@ -185,7 +185,7 @@ public final class NickColourPlugin extends BasePlugin implements ActionListener
 
         count %= randColours.length;
 
-        return UIUtilities.convertColour(ColourManager.parseColour(randColours[count]));
+        return ColourManager.parseColour(randColours[count]);
     }
 
     /**
