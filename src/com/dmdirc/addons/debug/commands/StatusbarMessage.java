@@ -25,9 +25,9 @@ package com.dmdirc.addons.debug.commands;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.debug.Debug;
 import com.dmdirc.addons.debug.DebugCommand;
+import com.dmdirc.addons.debug.DebugPlugin;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.commands.context.CommandContext;
-import com.dmdirc.config.IdentityManager;
 import com.dmdirc.ui.StatusMessage;
 import com.dmdirc.ui.core.components.StatusBarManager;
 
@@ -39,10 +39,11 @@ public class StatusbarMessage extends DebugCommand {
     /**
      * Creates a new instance of the command.
      *
+     * @param plugin Parent debug plugin
      * @param command Parent command
      */
-    public StatusbarMessage(final Debug command) {
-        super(command);
+    public StatusbarMessage(final DebugPlugin plugin, final Debug command) {
+        super(plugin, command);
     }
 
     /** {@inheritDoc} */
@@ -63,6 +64,6 @@ public class StatusbarMessage extends DebugCommand {
             final CommandArguments args, final CommandContext context) {
         StatusBarManager.getStatusBarManager().setMessage(new StatusMessage(
                 null, "Test: " + args.getArgumentsAsString(), null, 5,
-                IdentityManager.getGlobalConfig()));
+                getPlugin().getIdentityManager().getGlobalConfiguration()));
     }
 }

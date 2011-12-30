@@ -23,18 +23,23 @@
 package com.dmdirc.addons.debug;
 
 import com.dmdirc.addons.debug.commands.*; //NOPMD
+import com.dmdirc.config.IdentityManager;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.plugins.BasePlugin;
+import com.dmdirc.plugins.PluginManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import lombok.Getter;
+
 /**
  * Debug plugin providing commands to aid in debugging the client.
  */
+@SuppressWarnings("unused")
 public class DebugPlugin extends BasePlugin {
 
     /** List of build in debug commands to load. */
@@ -50,12 +55,24 @@ public class DebugPlugin extends BasePlugin {
     private final Map<String, DebugCommand> commands;
     /** Debug command. */
     private final Debug debugCommand;
+    /** Plugin manager instance. */
+    @Getter
+    private final PluginManager pluginManager;
+    /** Identity manager instance. */
+    @Getter
+    private final IdentityManager identityManager;
 
     /**
      * Creates a new debug plugin.
+     *
+     * @param identityManager Identity manager instance
+     * @param pluginManager Plugin manager instance.
      */
-    public DebugPlugin() {
+    public DebugPlugin(final IdentityManager identityManager,
+            final PluginManager pluginManager) {
         super();
+        this.identityManager = identityManager;
+        this.pluginManager = pluginManager;
         commands = new HashMap<String, DebugCommand>();
         debugCommand = new Debug(this);
         registerCommand(debugCommand, Debug.INFO);
@@ -68,7 +85,7 @@ public class DebugPlugin extends BasePlugin {
         for (Class<DebugCommand> type : CLASSES) {
             try {
                 addCommand(type.getConstructor(Debug.class)
-                        .newInstance(debugCommand));
+                        .newInstance(this, debugCommand));
             } catch (LinkageError e) {
                 Logger.appError(ErrorLevel.HIGH,
                         "Unable to load debug command", e);

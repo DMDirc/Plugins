@@ -25,10 +25,10 @@ package com.dmdirc.addons.debug.commands;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.debug.Debug;
 import com.dmdirc.addons.debug.DebugCommand;
+import com.dmdirc.addons.debug.DebugPlugin;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.commands.context.CommandContext;
-import com.dmdirc.plugins.PluginManager;
 
 /**
  * Opens the DMDirc first run wizard.
@@ -38,10 +38,11 @@ public class FirstRun extends DebugCommand {
     /**
      * Creates a new instance of the command.
      *
+     * @param plugin Parent debug plugin
      * @param command Parent command
      */
-    public FirstRun(final Debug command) {
-        super(command);
+    public FirstRun(final DebugPlugin plugin, final Debug command) {
+        super(plugin, command);
     }
 
     /** {@inheritDoc} */
@@ -60,7 +61,7 @@ public class FirstRun extends DebugCommand {
     @Override
     public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
-        ((SwingController) PluginManager.getPluginManager()
+        ((SwingController) getPlugin().getPluginManager()
                 .getPluginInfoByName("ui_swing").getPlugin())
                 .showFirstRunWizard();
     }
