@@ -39,6 +39,7 @@ import com.dmdirc.parser.common.CompositionState;
 import com.dmdirc.parser.common.DefaultStringConverter;
 import com.dmdirc.parser.common.IgnoreList;
 import com.dmdirc.parser.common.QueuePriority;
+import com.dmdirc.parser.common.ThreadedParser;
 import com.dmdirc.parser.interfaces.ChannelClientInfo;
 import com.dmdirc.parser.interfaces.ChannelInfo;
 import com.dmdirc.parser.interfaces.ClientInfo;
@@ -85,7 +86,7 @@ import java.util.Map;
 /**
  * Twitter Parser for DMDirc.
  */
-public class Twitter implements Parser, TwitterErrorHandler, TwitterRawHandler,
+public class Twitter extends ThreadedParser implements TwitterErrorHandler, TwitterRawHandler,
         ConfigChangeListener {
 
     /** Number of loops between clearing of the status cache. */
