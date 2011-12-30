@@ -39,11 +39,11 @@ import com.dmdirc.parser.common.CompositionState;
 import com.dmdirc.parser.common.DefaultStringConverter;
 import com.dmdirc.parser.common.IgnoreList;
 import com.dmdirc.parser.common.QueuePriority;
+import com.dmdirc.parser.common.ThreadedParser;
 import com.dmdirc.parser.interfaces.ChannelClientInfo;
 import com.dmdirc.parser.interfaces.ChannelInfo;
 import com.dmdirc.parser.interfaces.ClientInfo;
 import com.dmdirc.parser.interfaces.LocalClientInfo;
-import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.parser.interfaces.StringConverter;
 import com.dmdirc.parser.interfaces.callbacks.AuthNoticeListener;
 import com.dmdirc.parser.interfaces.callbacks.ChannelJoinListener;
@@ -85,7 +85,7 @@ import java.util.Map;
 /**
  * Twitter Parser for DMDirc.
  */
-public class Twitter implements Parser, TwitterErrorHandler, TwitterRawHandler,
+public class Twitter extends ThreadedParser implements TwitterErrorHandler, TwitterRawHandler,
         ConfigChangeListener {
 
     /** Number of loops between clearing of the status cache. */
@@ -253,6 +253,7 @@ public class Twitter implements Parser, TwitterErrorHandler, TwitterRawHandler,
     /** {@inheritDoc} */
     @Override
     public void disconnect(final String message) {
+        super.disconnect(message);
         connected = false;
         PARSERS.remove(this);
         api = new TwitterAPI("", "", "", false, -1, false);

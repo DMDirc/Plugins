@@ -130,6 +130,7 @@ public class XmppParser extends BaseSocketAwareParser {
     /** {@inheritDoc} */
     @Override
     public void disconnect(final String message) {
+        super.disconnect(message);
         // TODO: Pass quit message on as presence?
         connection.disconnect();
     }

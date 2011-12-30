@@ -84,6 +84,7 @@ public class MSNParser extends BaseParser {
     /** {@inheritDoc} */
     @Override
     public void disconnect(final String message) {
+        super.disconnect(message);
         try {
             msn.logout();
         } catch (Exception ex) {
