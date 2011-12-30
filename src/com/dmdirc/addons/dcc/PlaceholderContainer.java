@@ -26,8 +26,7 @@ import com.dmdirc.FrameContainer;
 import com.dmdirc.Server;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
-import com.dmdirc.config.IdentityManager;
-import com.dmdirc.plugins.PluginManager;
+import com.dmdirc.config.ConfigManager;
 
 import java.awt.Dialog.ModalityType;
 import java.util.Arrays;
@@ -39,17 +38,22 @@ public class PlaceholderContainer extends FrameContainer {
 
     /** The plugin which owns this placeholder. */
     private final DCCPlugin plugin;
+    /** Parent swing controller. */
+    private final SwingController controller;
 
     /**
      * Creates a placeholder DCC frame.
      *
      * @param plugin The plugin which owns this placeholder
+     * @param config Config manager
+     * @param controller Swing controller
      */
-    public PlaceholderContainer(final DCCPlugin plugin) {
-        super("dcc", "DCCs", "DCCs", IdentityManager.getGlobalConfig(),
-                Arrays.asList("com.dmdirc.addons.dcc.ui.PlaceholderPanel"));
-
+    public PlaceholderContainer(final DCCPlugin plugin,
+            final ConfigManager config, final SwingController controller) {
+        super("dcc", "DCCs", "DCCs", config, Arrays.asList(
+                "com.dmdirc.addons.dcc.ui.PlaceholderPanel"));
         this.plugin = plugin;
+        this.controller = controller;
     }
 
     /** {@inheritDoc} */
@@ -66,9 +70,7 @@ public class PlaceholderContainer extends FrameContainer {
         }
 
         if (dccs > 0) {
-            new StandardQuestionDialog(((SwingController) PluginManager
-                    .getPluginManager().getPluginInfoByName("ui_swing")
-                    .getPlugin()), ModalityType.MODELESS,
+            new StandardQuestionDialog(controller, ModalityType.MODELESS,
                     "Close confirmation",
                     "Closing this window will cause all existing DCCs "
                     + "to terminate, are you sure you want to do this?") {

@@ -25,6 +25,7 @@ package com.dmdirc.addons.dcc;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.addons.dcc.actions.DCCActions;
 import com.dmdirc.addons.dcc.io.DCCChat;
+import com.dmdirc.config.ConfigManager;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.core.components.WindowComponent;
 
@@ -47,16 +48,19 @@ public class ChatContainer extends DCCFrameContainer implements DCCChatHandler {
      *
      * @param plugin the DCC Plugin responsible for this window
      * @param dcc The DCCChat object this window wraps around
+     * @param configManager Config manager
      * @param title The title of this window
      * @param nick My Current Nickname
      * @param targetNick Nickname of target
      */
     public ChatContainer(final DCCPlugin plugin, final DCCChat dcc,
-            final String title, final String nick, final String targetNick) {
-        super(title, "dcc-chat-inactive",DCCCommandParser.getDCCCommandParser(),
+            final ConfigManager configManager, final String title,
+            final String nick, final String targetNick) {
+        super(title, "dcc-chat-inactive", configManager,
+                DCCCommandParser.getDCCCommandParser(),
                 Arrays.asList(WindowComponent.TEXTAREA.getIdentifier(),
                 WindowComponent.INPUTFIELD.getIdentifier()));
-        this.dccChat = dcc;
+        dccChat = dcc;
         dcc.setHandler(this);
         nickname = nick;
         otherNickname = targetNick;
