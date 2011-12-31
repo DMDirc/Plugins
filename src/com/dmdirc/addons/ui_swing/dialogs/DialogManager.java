@@ -187,7 +187,7 @@ public class DialogManager {
      */
     public StandardDialog dispose(final Class<? extends StandardDialog> klass) {
         if (dialogs.containsKey(klass)) {
-            return dialogs.remove(dialogs.get(klass));
+            return dialogs.remove(klass);
         }
         return null;
     }
