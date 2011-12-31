@@ -24,7 +24,6 @@ package com.dmdirc.addons.logging;
 
 import com.dmdirc.FrameContainer;
 import com.dmdirc.Server;
-import com.dmdirc.config.IdentityManager;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.core.components.WindowComponent;
 
@@ -50,7 +49,7 @@ public class HistoryWindow extends FrameContainer {
 
         WindowManager.getWindowManager().addWindow(parent, this);
 
-        final int frameBufferSize = IdentityManager.getGlobalConfig().getOptionInt(
+        final int frameBufferSize = parent.getConfigManager().getOptionInt(
                 "ui", "frameBufferSize");
         addLine(reader.getLinesAsString(Math.min(frameBufferSize, numLines)), false);
     }

@@ -29,14 +29,14 @@ import com.dmdirc.commandparser.CommandType;
 import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.IntelligentCommand;
 import com.dmdirc.commandparser.commands.context.CommandContext;
-import com.dmdirc.plugins.Plugin;
-import com.dmdirc.plugins.PluginInfo;
-import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.input.AdditionalTabTargets;
+
+import lombok.AllArgsConstructor;
 
 /**
  * The dcop command retrieves information from a dcop application.
  */
+@AllArgsConstructor
 public final class LoggingCommand extends Command implements
         IntelligentCommand {
 
@@ -46,33 +46,15 @@ public final class LoggingCommand extends Command implements
     public static final BaseCommandInfo INFO = new BaseCommandInfo(LOGGING,
             "logging - <set|help> [parameters]",
             CommandType.TYPE_SERVER);
+    /** Logging plugin. */
+    private final LoggingPlugin plugin;
 
     /** {@inheritDoc} */
     @Override
     public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
-        final PluginInfo pluginInfo = PluginManager.getPluginManager().getPluginInfoByName("logging");
-        if (pluginInfo == null) {
-            sendLine(origin, args.isSilent(), FORMAT_ERROR, "Logging Plugin is not loaded.");
-            return;
-        }
-        final Plugin gotPlugin = pluginInfo.getPlugin();
-
-        if (!(gotPlugin instanceof LoggingPlugin)) {
-            sendLine(origin, args.isSilent(), FORMAT_ERROR, "Logging Plugin is not loaded.");
-            return;
-        }
-
-        final LoggingPlugin plugin = (LoggingPlugin) gotPlugin;
-
         if (args.getArguments().length > 0) {
-            if (args.getArguments()[0].equalsIgnoreCase("reload")) {
-                if (PluginManager.getPluginManager().reloadPlugin(pluginInfo.getFilename())) {
-                    sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Plugin reloaded.");
-                } else {
-                    sendLine(origin, args.isSilent(), FORMAT_ERROR, "Plugin failed to reload.");
-                }
-            } else if (args.getArguments()[0].equalsIgnoreCase("history")) {
+            if (args.getArguments()[0].equalsIgnoreCase("history")) {
                 if (!plugin.showHistory(origin)) {
                     sendLine(origin, args.isSilent(), FORMAT_ERROR, "Unable to open history for this window.");
                 }

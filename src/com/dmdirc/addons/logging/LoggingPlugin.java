@@ -29,6 +29,8 @@ import com.dmdirc.Query;
 import com.dmdirc.Server;
 import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.interfaces.actions.ActionType;
+import com.dmdirc.config.ConfigManager;
+import com.dmdirc.config.Identity;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
@@ -87,6 +89,10 @@ public class LoggingPlugin extends BasePlugin implements ActionListener,
     private final PluginInfo pluginInfo;
     /** The action controller to use. */
     private final ActionController actionController;
+    /** Global config. */
+    private final ConfigManager config;
+    /** Addon identity. */
+    private final Identity identity;
 
     /** Timer used to close idle files. */
     protected Timer idleFileTimer;
@@ -105,20 +111,23 @@ public class LoggingPlugin extends BasePlugin implements ActionListener,
      * @param actionController The action controller to register listeners with
      */
     public LoggingPlugin(final PluginInfo pluginInfo,
-            final ActionController actionController) {
+            final ActionController actionController,
+            final IdentityManager identityManager) {
         super();
 
         this.pluginInfo = pluginInfo;
         this.actionController = actionController;
+        config = identityManager.getGlobalConfiguration();
+        identity = identityManager.getGlobalAddonIdentity();
 
-        registerCommand(new LoggingCommand(), LoggingCommand.INFO);
+        registerCommand(new LoggingCommand(this), LoggingCommand.INFO);
     }
 
     /** {@inheritDoc} */
     @Override
     public void domainUpdated() {
-        IdentityManager.getAddonIdentity().setOption(getDomain(),
-                "general.directory", Main.getConfigDir() + "logs" + System.getProperty("file.separator"));
+        identity.setOption(getDomain(), "general.directory",
+                Main.getConfigDir() + "logs" + System.getProperty("file.separator"));
     }
 
     /**
@@ -139,7 +148,7 @@ public class LoggingPlugin extends BasePlugin implements ActionListener,
             }
         }
 
-        IdentityManager.getGlobalConfig().addChangeListener(getDomain(), this);
+        config.addChangeListener(getDomain(), this);
 
         actionController.registerListener(this,
                 CoreActionType.CHANNEL_OPENED,
@@ -350,9 +359,9 @@ public class LoggingPlugin extends BasePlugin implements ActionListener,
                 final String overrideNick = isME ? getDisplayName(parser.getLocalClient()) : "";
 
                 if (type == CoreActionType.QUERY_MESSAGE || type == CoreActionType.QUERY_SELF_MESSAGE) {
-                    appendLine(filename, "<%s> %s", getDisplayName(client, overrideNick), (String) arguments[2]);
+                    appendLine(filename, "<%s> %s", getDisplayName(client, overrideNick), arguments[2]);
                 } else {
-                    appendLine(filename, "* %s %s", getDisplayName(client, overrideNick), (String) arguments[2]);
+                    appendLine(filename, "* %s %s", getDisplayName(client, overrideNick), arguments[2]);
                 }
                 break;
         }
@@ -865,20 +874,20 @@ public class LoggingPlugin extends BasePlugin implements ActionListener,
 
     /** Updates cached settings. */
     public void setCachedSettings() {
-        networkfolders = IdentityManager.getGlobalConfig().getOptionBool(getDomain(), "general.networkfolders");
-        filenamehash = IdentityManager.getGlobalConfig().getOptionBool(getDomain(), "advanced.filenamehash");
-        addtime = IdentityManager.getGlobalConfig().getOptionBool(getDomain(), "general.addtime");
-        stripcodes = IdentityManager.getGlobalConfig().getOptionBool(getDomain(), "general.stripcodes");
-        channelmodeprefix = IdentityManager.getGlobalConfig().getOptionBool(getDomain(), "general.channelmodeprefix");
-        autobackbuffer = IdentityManager.getGlobalConfig().getOptionBool(getDomain(), "backbuffer.autobackbuffer");
-        backbufferTimestamp = IdentityManager.getGlobalConfig().getOptionBool(getDomain(), "backbuffer.timestamp");
-        usedate = IdentityManager.getGlobalConfig().getOptionBool(getDomain(), "advanced.usedate");
-        timestamp = IdentityManager.getGlobalConfig().getOption(getDomain(), "general.timestamp");
-        usedateformat = IdentityManager.getGlobalConfig().getOption(getDomain(), "advanced.usedateformat");
-        historyLines = IdentityManager.getGlobalConfig().getOptionInt(getDomain(), "history.lines");
-        colour = IdentityManager.getGlobalConfig().getOption(getDomain(), "backbuffer.colour");
-        backbufferLines = IdentityManager.getGlobalConfig().getOptionInt(getDomain(), "backbuffer.lines");
-        logDirectory = IdentityManager.getGlobalConfig().getOption(getDomain(), "general.directory");
+        networkfolders = config.getOptionBool(getDomain(), "general.networkfolders");
+        filenamehash = config.getOptionBool(getDomain(), "advanced.filenamehash");
+        addtime = config.getOptionBool(getDomain(), "general.addtime");
+        stripcodes = config.getOptionBool(getDomain(), "general.stripcodes");
+        channelmodeprefix = config.getOptionBool(getDomain(), "general.channelmodeprefix");
+        autobackbuffer = config.getOptionBool(getDomain(), "backbuffer.autobackbuffer");
+        backbufferTimestamp = config.getOptionBool(getDomain(), "backbuffer.timestamp");
+        usedate = config.getOptionBool(getDomain(), "advanced.usedate");
+        timestamp = config.getOption(getDomain(), "general.timestamp");
+        usedateformat = config.getOption(getDomain(), "advanced.usedateformat");
+        historyLines = config.getOptionInt(getDomain(), "history.lines");
+        colour = config.getOption(getDomain(), "backbuffer.colour");
+        backbufferLines = config.getOptionInt(getDomain(), "backbuffer.lines");
+        logDirectory = config.getOption(getDomain(), "general.directory");
     }
 
     /** Open File. */
