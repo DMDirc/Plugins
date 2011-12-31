@@ -34,7 +34,7 @@ public class IdentClientTest {
 
     @BeforeClass
     public static void setUpClass() throws Exception {
-        IdentityManager.load();
+        IdentityManager.getIdentityManager().initialise();
     }
 
     protected IdentClient getClient() {

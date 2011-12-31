@@ -216,8 +216,8 @@ public class RelayChannelHandler implements ChannelMessageListener {
         final PluginInfo nickColour = PluginManager.getPluginManager()
                 .getPluginInfoByName("nickcolour");
 
-        final boolean fullColour = IdentityManager.getGlobalConfig()
-                .getOptionBool(myPlugin.getDomain(), "colourFullName");
+        final boolean fullColour = IdentityManager.getIdentityManager()
+                .getGlobalConfiguration().getOptionBool(myPlugin.getDomain(), "colourFullName");
         final RelayClientInfo client = (RelayClientInfo) channelClient
                 .getClient();
         final boolean oldValue = client.getShowFullNickname();
@@ -264,16 +264,16 @@ public class RelayChannelHandler implements ChannelMessageListener {
                 channel.getName());
         String botName;
         try {
-            botName = IdentityManager.getGlobalConfig().getOption(
-                    myPlugin.getDomain(), channelName);
+            botName = IdentityManager.getIdentityManager().getGlobalConfiguration()
+                    .getOption(myPlugin.getDomain(), channelName);
         } catch (IllegalArgumentException iae) {
             botName = "";
         }
         final boolean isBot = parser.getStringConverter().equalsIgnoreCase(
                 botName, channelClient.getClient().getNickname());
 
-        final boolean joinNew = IdentityManager.getGlobalConfig().getOptionBool(
-                myPlugin.getDomain(), "joinOnDiscover");
+        final boolean joinNew = IdentityManager.getIdentityManager()
+                .getGlobalConfiguration().getOptionBool(myPlugin.getDomain(), "joinOnDiscover");
 
         // See if we need to modify this message
         if (channelClient instanceof IRCChannelClientInfo

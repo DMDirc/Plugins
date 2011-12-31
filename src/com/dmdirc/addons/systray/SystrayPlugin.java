@@ -90,7 +90,7 @@ public final class SystrayPlugin extends BasePlugin implements ActionListener,
         show.addActionListener(this);
         quit.addActionListener(this);
 
-        icon = new TrayIcon(new IconManager(IdentityManager.getGlobalConfig())
+        icon = new TrayIcon(new IconManager(IdentityManager.getIdentityManager().getGlobalConfiguration())
                 .getImage("logo"), "DMDirc", menu);
         icon.setImageAutoSize(true);
         icon.addMouseListener(this);
@@ -258,8 +258,9 @@ public final class SystrayPlugin extends BasePlugin implements ActionListener,
     @Override
     public void processEvent(final ActionType type, final StringBuffer format,
             final Object... arguments) {
-        if (type == CoreActionType.CLIENT_MINIMISED && IdentityManager
-                .getGlobalConfig().getOptionBool(getDomain(), "autominimise")) {
+        if (type == CoreActionType.CLIENT_MINIMISED
+                && IdentityManager.getIdentityManager()
+                .getGlobalConfiguration().getOptionBool(getDomain(), "autominimise")) {
             mainFrame.setVisible(false);
         }
     }

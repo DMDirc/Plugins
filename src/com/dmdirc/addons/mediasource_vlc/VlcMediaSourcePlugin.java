@@ -254,11 +254,11 @@ public class VlcMediaSourcePlugin extends BasePlugin implements MediaSource {
         List<String> res2;
 
         try {
-            res = Downloader.getPage("http://"
-                    + IdentityManager.getGlobalConfig().getOption(getDomain(),
+            res = Downloader.getPage("http://" + IdentityManager
+                    .getIdentityManager().getGlobalConfiguration().getOption(getDomain(),
                     "host") + "/old/info.html");
-            res2 = Downloader.getPage("http://"
-                    + IdentityManager.getGlobalConfig().getOption(getDomain(),
+            res2 = Downloader.getPage("http://" + IdentityManager
+                    .getIdentityManager().getGlobalConfiguration().getOption(getDomain(),
                     "host") + "/old/");
             parseInformation(res, res2);
             return true;

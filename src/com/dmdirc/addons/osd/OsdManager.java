@@ -68,8 +68,8 @@ public class OsdManager {
      * Displays as many windows as appropriate.
      */
     private synchronized void displayWindows() {
-        final Integer maxWindows = IdentityManager.getGlobalConfig().
-                getOptionInt(plugin.getDomain(), "maxWindows", false);
+        final Integer maxWindows = IdentityManager.getIdentityManager().getGlobalConfiguration()
+                .getOptionInt(plugin.getDomain(), "maxWindows", false);
 
         QueuedMessage nextItem;
 
@@ -91,11 +91,12 @@ public class OsdManager {
      * @param message Text to display in the OSD window.
      */
     private synchronized void displayWindow(final int timeout, final String message) {
-        final OsdPolicy policy = OsdPolicy.valueOf(IdentityManager.
-                getGlobalConfig().getOption(plugin.getDomain(), "newbehaviour").
-                toUpperCase());
-        final int startY = IdentityManager.getGlobalConfig().getOptionInt(
-                plugin.getDomain(), "locationY");
+        final OsdPolicy policy = OsdPolicy.valueOf(IdentityManager
+                .getIdentityManager().getGlobalConfiguration()
+                .getOption(plugin.getDomain(), "newbehaviour")
+                .toUpperCase());
+        final int startY = IdentityManager.getIdentityManager()
+                .getGlobalConfiguration().getOptionInt(plugin.getDomain(), "locationY");
 
         windowList.add(UIUtilities.invokeAndWait(
                 new ReturnableThread<OsdWindow>() {
@@ -104,7 +105,7 @@ public class OsdManager {
             @Override
             public void run() {
                 setObject(new OsdWindow(timeout, message, false,
-                        IdentityManager.getGlobalConfig().getOptionInt(
+                        IdentityManager.getIdentityManager().getGlobalConfiguration().getOptionInt(
                         plugin.getDomain(), "locationX"), policy.getYPosition(
                         OsdManager.this, startY), plugin, OsdManager.this));
             }
@@ -118,9 +119,10 @@ public class OsdManager {
      * @param window The window that we are destroying.
      */
     public synchronized void closeWindow(final OsdWindow window) {
-        final OsdPolicy policy = OsdPolicy.valueOf(IdentityManager.
-                getGlobalConfig().getOption(plugin.getDomain(), "newbehaviour").
-                toUpperCase());
+        final OsdPolicy policy = OsdPolicy.valueOf(IdentityManager
+                .getIdentityManager().getGlobalConfiguration()
+                .getOption(plugin.getDomain(), "newbehaviour")
+                .toUpperCase());
 
         int oldY = window.getDesiredY();
         final int closedIndex = windowList.indexOf(window);

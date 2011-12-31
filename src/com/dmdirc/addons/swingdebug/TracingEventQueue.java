@@ -78,9 +78,9 @@ public class TracingEventQueue extends DMDircEventQueue implements
 
         eventTimeMap = Collections.synchronizedMap(
                 new HashMap<AWTEvent, Long>());
-        IdentityManager.getGlobalConfig().addChangeListener(
+        IdentityManager.getIdentityManager().getGlobalConfiguration().addChangeListener(
                 parentPlugin.getDomain(), "debugEDT", this);
-        IdentityManager.getGlobalConfig().addChangeListener(
+        IdentityManager.getIdentityManager().getGlobalConfiguration().addChangeListener(
                 parentPlugin.getDomain(), "slowedttaskthreshold", this);
         checkTracing();
 
@@ -222,10 +222,10 @@ public class TracingEventQueue extends DMDircEventQueue implements
     }
 
     private void checkTracing() {
-        final boolean tracing = IdentityManager.getGlobalConfig().
-                getOptionBool(parentPlugin.getDomain(), "debugEDT");
-        thresholdDelay = IdentityManager.getGlobalConfig().
-                getOptionInt(parentPlugin.getDomain(), "slowedttaskthreshold");
+        final boolean tracing = IdentityManager.getIdentityManager().getGlobalConfiguration()
+                .getOptionBool(parentPlugin.getDomain(), "debugEDT");
+        thresholdDelay = IdentityManager.getIdentityManager().getGlobalConfiguration()
+                .getOptionInt(parentPlugin.getDomain(), "slowedttaskthreshold");
         if (tracing) {
             running = true;
             tracingThread = new Thread(this);

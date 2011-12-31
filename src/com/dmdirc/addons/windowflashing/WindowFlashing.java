@@ -103,7 +103,8 @@ public class WindowFlashing extends BasePlugin implements ConfigChangeListener {
                 .getPlugin()).getMainFrame();
         user32 = (User32) Native.loadLibrary("user32", User32.class);
         setupFlashObject();
-        IdentityManager.getGlobalConfig().addChangeListener(getDomain(), this);
+        IdentityManager.getIdentityManager().getGlobalConfiguration()
+                .addChangeListener(getDomain(), this);
         super.onLoad();
     }
 
@@ -185,20 +186,23 @@ public class WindowFlashing extends BasePlugin implements ConfigChangeListener {
      */
     private int getFlags() {
         int returnValue = 0;
-        if (IdentityManager.getGlobalConfig().getOptionBool(getDomain(),
-                "flashtaskbar")) {
+        if (IdentityManager.getIdentityManager().getGlobalConfiguration()
+                .getOptionBool(getDomain(), "flashtaskbar")) {
             returnValue |= WinUser.FLASHW_TRAY;
         }
-        if (IdentityManager.getGlobalConfig().getOptionBool(getDomain(),
-                "flashcaption")) {
+
+        if (IdentityManager.getIdentityManager().getGlobalConfiguration()
+                .getOptionBool(getDomain(), "flashcaption")) {
             returnValue |= WinUser.FLASHW_CAPTION;
         }
-        if (IdentityManager.getGlobalConfig().getOptionBool(getDomain(),
-                "flashcount")) {
+
+        if (IdentityManager.getIdentityManager().getGlobalConfiguration()
+                .getOptionBool(getDomain(), "flashcount")) {
             returnValue |= WinUser.FLASHW_TIMER;
         } else {
             returnValue |= WinUser.FLASHW_TIMERNOFG;
         }
+
         return returnValue;
     }
 
@@ -208,10 +212,10 @@ public class WindowFlashing extends BasePlugin implements ConfigChangeListener {
      * @return Blink rate
      */
     private int getTimeout() {
-        if (IdentityManager.getGlobalConfig().hasOptionInt(getDomain(),
-                "blinkrate")) {
-            return IdentityManager.getGlobalConfig().getOptionInt(
-                    getDomain(), "blinkrate");
+        if (IdentityManager.getIdentityManager().getGlobalConfiguration()
+                .hasOptionInt(getDomain(), "blinkrate")) {
+            return IdentityManager.getIdentityManager().getGlobalConfiguration()
+                    .getOptionInt(getDomain(), "blinkrate");
         } else {
             return 0;
         }
@@ -223,10 +227,10 @@ public class WindowFlashing extends BasePlugin implements ConfigChangeListener {
      * @return Number of flashes before stopping
      */
     private int getCount() {
-        if (IdentityManager.getGlobalConfig().hasOptionInt(getDomain(),
-                "flashcount")) {
-            return IdentityManager.getGlobalConfig().getOptionInt(
-                    getDomain(), "flashcount");
+        if (IdentityManager.getIdentityManager().getGlobalConfiguration()
+                .hasOptionInt(getDomain(), "flashcount")) {
+            return IdentityManager.getIdentityManager().getGlobalConfiguration()
+                    .getOptionInt(getDomain(), "flashcount");
         } else {
             return Integer.MAX_VALUE;
         }

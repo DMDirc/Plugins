@@ -74,8 +74,10 @@ public final class OsdPlugin extends BasePlugin implements
     /** {@inheritDoc} */
     @Override
     public void showConfig(final PreferencesDialogModel manager) {
-        x = IdentityManager.getGlobalConfig().getOptionInt(getDomain(), "locationX");
-        y = IdentityManager.getGlobalConfig().getOptionInt(getDomain(), "locationY");
+        x = IdentityManager.getIdentityManager().getGlobalConfiguration()
+                .getOptionInt(getDomain(), "locationX");
+        y = IdentityManager.getIdentityManager().getGlobalConfiguration()
+                .getOptionInt(getDomain(), "locationY");
 
         final PreferencesCategory category = new PluginPreferencesCategory(
                 pluginInfo, "OSD",
@@ -154,8 +156,10 @@ public final class OsdPlugin extends BasePlugin implements
     /** {@inheritDoc} */
     @Override
     public void save() {
-        IdentityManager.getConfigIdentity().setOption(getDomain(), "locationX", x);
-        IdentityManager.getConfigIdentity().setOption(getDomain(), "locationY", y);
+        IdentityManager.getIdentityManager().getGlobalConfigIdentity()
+                .setOption(getDomain(), "locationX", x);
+        IdentityManager.getIdentityManager().getGlobalConfigIdentity()
+                .setOption(getDomain(), "locationY", y);
     }
 
     /** {@inheritDoc} */

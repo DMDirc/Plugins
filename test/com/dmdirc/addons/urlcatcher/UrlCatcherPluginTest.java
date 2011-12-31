@@ -34,7 +34,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 public class UrlCatcherPluginTest {
-    
+
     private static FrameContainer container;
 
     @BeforeClass
@@ -44,7 +44,7 @@ public class UrlCatcherPluginTest {
         final ConfigManager manager = mock(ConfigManager.class);
 
         when(container.getConfigManager()).thenReturn(manager);
-        
+
         final Styliser styliser = new Styliser(container);
 
         when(container.getStyliser()).thenReturn(styliser);
@@ -52,8 +52,8 @@ public class UrlCatcherPluginTest {
 
     @Test
     public void testURLCounting() throws InvalidIdentityFileException {
-        IdentityManager.load();
-        
+        IdentityManager.getIdentityManager().initialise();
+
         final UrlCatcherPlugin plugin = new UrlCatcherPlugin();
 
         plugin.processEvent(CoreActionType.CHANNEL_MESSAGE, null,
@@ -62,26 +62,26 @@ public class UrlCatcherPluginTest {
                 container, "This is a message - http://www.google.com/ foo");
         plugin.processEvent(CoreActionType.CHANNEL_MESSAGE, null,
                 container, "This is a message - http://www.google.com/ foo");
-        
+
         assertEquals(1, plugin.getURLS().size());
         assertEquals(3, (int) plugin.getURLS().get("http://www.google.com/"));
     }
-    
+
     @Test
     public void testURLCatching() throws InvalidIdentityFileException {
-        IdentityManager.load();
-        
+        IdentityManager.getIdentityManager().initialise();
+
         final UrlCatcherPlugin plugin = new UrlCatcherPlugin();
 
         plugin.processEvent(CoreActionType.CHANNEL_MESSAGE, null,
                 container, "http://www.google.com/ www.example.com foo://bar.baz");
         plugin.processEvent(CoreActionType.CHANNEL_MESSAGE, null,
                 container, "No URLs here, no sir!");
-        
+
         assertEquals(3, plugin.getURLS().size());
         assertTrue(plugin.getURLS().containsKey("http://www.google.com/"));
         assertTrue(plugin.getURLS().containsKey("www.example.com"));
         assertTrue(plugin.getURLS().containsKey("foo://bar.baz"));
-    }    
+    }
 
 }
