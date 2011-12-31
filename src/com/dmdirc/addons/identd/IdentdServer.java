@@ -22,12 +22,8 @@
 
 package com.dmdirc.addons.identd;
 
-import com.dmdirc.config.IdentityManager;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
-import com.dmdirc.plugins.PluginInfo;
-import com.dmdirc.plugins.PluginManager;
-
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -122,18 +118,13 @@ public final class IdentdServer implements Runnable {
     public void startServer() {
         if (myThread == null) {
             try {
-                final int identPort = IdentityManager.getGlobalConfig().getOptionInt(myPlugin.getDomain(), "advanced.port");
+                final int identPort = myPlugin.getConfig().getOptionInt(
+                        myPlugin.getDomain(), "advanced.port");
                 serverSocket = new ServerSocket(identPort);
                 myThread = new Thread(this);
                 myThread.start();
             } catch (IOException e) {
-                Logger.userError(ErrorLevel.MEDIUM, "Unable to start identd server: " + e.getMessage());
-                if (e.getMessage().equals("Permission denied")) {
-                    final PluginInfo plugin = PluginManager.getPluginManager().getPluginInfoByName("identd");
-                    if (plugin != null && PluginManager.getPluginManager().delPlugin(plugin.getMetaData().getRelativeFilename())) {
-                        PluginManager.getPluginManager().updateAutoLoad(plugin);
-                    }
-                }
+                Logger.userError(ErrorLevel.HIGH, "Unable to start identd server: " + e.getMessage());
             }
         }
     }

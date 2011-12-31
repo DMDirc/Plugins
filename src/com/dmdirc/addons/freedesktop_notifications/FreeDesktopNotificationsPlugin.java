@@ -22,6 +22,8 @@
 
 package com.dmdirc.addons.freedesktop_notifications;
 
+import com.dmdirc.config.ConfigManager;
+import com.dmdirc.config.Identity;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
@@ -61,15 +63,27 @@ public final class FreeDesktopNotificationsPlugin
     private boolean stripcodes;
     /** This plugin's plugin info. */
     private final PluginInfo pluginInfo;
+    /** Global config. */
+    private final ConfigManager config;
+    /** Addon identity. */
+    private final Identity identity;
+    /** Plugin manager instance. */
+    private final PluginManager pluginManager;
 
     /**
      * Creates a new instance of this plugin.
      *
      * @param pluginInfo This plugin's plugin info
+     * @param identityManager Identity Manager instance
      */
-    public FreeDesktopNotificationsPlugin(final PluginInfo pluginInfo) {
+    public FreeDesktopNotificationsPlugin(final PluginInfo pluginInfo,
+            final IdentityManager identityManager,
+            final PluginManager pluginManager) {
         super(pluginInfo.getMetaData());
         this.pluginInfo = pluginInfo;
+        this.pluginManager = pluginManager;
+        config = identityManager.getGlobalConfiguration();
+        identity = identityManager.getGlobalAddonIdentity();
         registerCommand(new FDNotifyCommand(this), FDNotifyCommand.INFO);
     }
 
@@ -144,11 +158,11 @@ public final class FreeDesktopNotificationsPlugin
      */
     @Override
     public void onLoad() {
-        IdentityManager.getGlobalConfig().addChangeListener(getDomain(), this);
+        config.addChangeListener(getDomain(), this);
         setCachedSettings();
 
         // Extract required Files
-        final PluginInfo pi = PluginManager.getPluginManager().getPluginInfoByName("freedesktop_notifications");
+        final PluginInfo pi = pluginManager.getPluginInfoByName("freedesktop_notifications");
 
         // This shouldn't actually happen, but check to make sure.
         if (pi != null) {
@@ -175,14 +189,14 @@ public final class FreeDesktopNotificationsPlugin
      */
     @Override
     public synchronized void onUnload() {
-        IdentityManager.getGlobalConfig().removeListener(this);
+        config.removeListener(this);
         super.onUnload();
     }
 
     /** {@inheritDoc} */
     @Override
     public void domainUpdated() {
-        IdentityManager.getAddonIdentity().setOption(getDomain(),
+        identity.setOption(getDomain(),
                 "general.icon", getFilesDirString() + "icon.png");
     }
 
@@ -218,16 +232,11 @@ public final class FreeDesktopNotificationsPlugin
     }
 
     private void setCachedSettings() {
-        timeout = IdentityManager.getGlobalConfig().getOptionInt(getDomain(),
-                "general.timeout");
-        icon = IdentityManager.getGlobalConfig().getOption(getDomain(),
-                "general.icon");
-        escapehtml = IdentityManager.getGlobalConfig().getOptionBool(
-                getDomain(), "advanced.escapehtml");
-        strictescape = IdentityManager.getGlobalConfig().getOptionBool(
-                getDomain(), "advanced.strictescape");
-        stripcodes = IdentityManager.getGlobalConfig().getOptionBool(
-                getDomain(), "advanced.stripcodes");
+        timeout = config.getOptionInt(getDomain(), "general.timeout");
+        icon = config.getOption(getDomain(), "general.icon");
+        escapehtml = config.getOptionBool( getDomain(), "advanced.escapehtml");
+        strictescape = config.getOptionBool(getDomain(), "advanced.strictescape");
+        stripcodes = config.getOptionBool(getDomain(), "advanced.stripcodes");
     }
 
     /** {@inheritDoc} */

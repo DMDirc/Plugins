@@ -25,6 +25,7 @@ package com.dmdirc.addons.identd;
 import com.dmdirc.Server;
 import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.interfaces.actions.ActionType;
+import com.dmdirc.config.ConfigManager;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
@@ -40,6 +41,8 @@ import com.dmdirc.util.validators.PortValidator;
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.Getter;
+
 /**
  * The Identd plugin answers ident requests from IRC servers.
  */
@@ -53,6 +56,9 @@ public class IdentdPlugin extends BasePlugin implements ActionListener {
     private final PluginInfo pluginInfo;
     /** The action controller to use. */
     private final ActionController actionController;
+    /** Global config. */
+    @Getter
+    private ConfigManager config;
 
     /**
      * Creates a new instance of this plugin.
@@ -61,11 +67,13 @@ public class IdentdPlugin extends BasePlugin implements ActionListener {
      * @param actionController The action controller to register listeners with
      */
     public IdentdPlugin(final PluginInfo pluginInfo,
-            final ActionController actionController) {
+            final ActionController actionController,
+            final IdentityManager identityManager) {
         super();
 
         this.pluginInfo = pluginInfo;
         this.actionController = actionController;
+        config = identityManager.getGlobalConfiguration();
     }
 
     /**
@@ -80,8 +88,7 @@ public class IdentdPlugin extends BasePlugin implements ActionListener {
                 CoreActionType.SERVER_CONNECTERROR);
 
         myServer = new IdentdServer(this);
-        if (IdentityManager.getGlobalConfig().getOptionBool(getDomain(),
-                "advanced.alwaysOn")) {
+        if (config.getOptionBool(getDomain(), "advanced.alwaysOn")) {
             myServer.startServer();
         }
     }
@@ -116,10 +123,10 @@ public class IdentdPlugin extends BasePlugin implements ActionListener {
         } else if (type == CoreActionType.SERVER_CONNECTED
                 || type == CoreActionType.SERVER_CONNECTERROR) {
             synchronized (servers) {
-                servers.remove((Server) arguments[0]);
+                servers.remove(arguments[0]);
 
-                if (servers.isEmpty() && !IdentityManager.getGlobalConfig()
-                        .getOptionBool(getDomain(), "advanced.alwaysOn")) {
+                if (servers.isEmpty() && !config.getOptionBool(getDomain(),
+                        "advanced.alwaysOn")) {
                     myServer.stopServer();
                 }
             }

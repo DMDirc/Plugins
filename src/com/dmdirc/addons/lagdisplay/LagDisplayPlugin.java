@@ -32,7 +32,6 @@ import com.dmdirc.addons.ui_swing.SelectionListener;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.config.ConfigManager;
-import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
@@ -42,7 +41,6 @@ import com.dmdirc.interfaces.ActionListener;
 import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.plugins.BasePlugin;
 import com.dmdirc.plugins.PluginInfo;
-import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.util.collections.RollingList;
 
 import java.util.Date;
@@ -57,7 +55,7 @@ public final class LagDisplayPlugin extends BasePlugin implements
         ActionListener, ConfigChangeListener, SelectionListener {
 
     /** The panel we use in the status bar. */
-    private final LagDisplayPanel panel = new LagDisplayPanel(this);
+    private final LagDisplayPanel panel;
     /** A cache of ping times. */
     private final Map<Server, String> pings = new WeakHashMap<Server, String>();
     /** Ping history. */
@@ -73,6 +71,8 @@ public final class LagDisplayPlugin extends BasePlugin implements
     private int historySize = 100;
     /** This plugin's plugin info. */
     private final PluginInfo pluginInfo;
+    /** Global config. */
+    private ConfigManager config;
 
     /**
      * Creates a new LagDisplayPlugin.
@@ -85,6 +85,8 @@ public final class LagDisplayPlugin extends BasePlugin implements
         super();
         this.controller = controller;
         this.pluginInfo = pluginInfo;
+        config = controller.getGlobalConfig();
+        panel = new LagDisplayPanel(this, controller);
     }
 
     /** {@inheritDoc} */
@@ -92,7 +94,7 @@ public final class LagDisplayPlugin extends BasePlugin implements
     public void onLoad() {
         controller.getSwingStatusBar().addComponent(panel);
         controller.getMainFrame().addSelectionListener(this);
-        IdentityManager.getGlobalConfig().addChangeListener(getDomain(), this);
+        config.addChangeListener(getDomain(), this);
         readConfig();
         ActionManager.getActionManager().registerListener(this,
                 CoreActionType.SERVER_GOTPING, CoreActionType.SERVER_NOPING,
@@ -105,16 +107,15 @@ public final class LagDisplayPlugin extends BasePlugin implements
     public void onUnload() {
         controller.getMainFrame().removeSelectionListener(this);
         controller.getSwingStatusBar().removeComponent(panel);
-        IdentityManager.getConfigIdentity().removeListener(this);
+        config.removeListener(this);
         ActionManager.getActionManager().unregisterListener(this);
     }
 
     /** Reads the plugin's global configuration settings. */
     private void readConfig() {
-        final ConfigManager manager = IdentityManager.getGlobalConfig();
-        showGraph = manager.getOptionBool(getDomain(), "graph");
-        showLabels = manager.getOptionBool(getDomain(), "labels");
-        historySize = manager.getOptionInt(getDomain(), "history");
+        showGraph = config.getOptionBool(getDomain(), "graph");
+        showLabels = config.getOptionBool(getDomain(), "labels");
+        historySize = config.getOptionInt(getDomain(), "history");
     }
 
     /**
@@ -180,9 +181,7 @@ public final class LagDisplayPlugin extends BasePlugin implements
             }
         }
 
-        final TextFrame activeFrame = ((SwingController) PluginManager
-                .getPluginManager().getPluginInfoByName("ui_swing").getPlugin())
-                .getMainFrame().getActiveFrame();
+        final TextFrame activeFrame = controller.getMainFrame().getActiveFrame();
         final FrameContainer active = activeFrame == null ? null
                 : activeFrame.getContainer();
 
@@ -210,7 +209,7 @@ public final class LagDisplayPlugin extends BasePlugin implements
         } else if (type.equals(CoreActionType.SERVER_DISCONNECTED)) {
             if (((Server) arguments[0]).isChild(active) || arguments[0] == active) {
                 panel.getComponent().setText("Not connected");
-                pings.remove((Server) arguments[0]);
+                pings.remove(arguments[0]);
             }
 
             panel.refreshDialog();
@@ -231,7 +230,7 @@ public final class LagDisplayPlugin extends BasePlugin implements
                     panel.getComponent().setText(value);
                 }
             } catch (NumberFormatException ex) {
-                pings.remove((Server) arguments[0]);
+                pings.remove(arguments[0]);
             }
 
             if (format != null) {

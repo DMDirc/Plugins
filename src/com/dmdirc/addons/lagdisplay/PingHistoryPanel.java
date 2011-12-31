@@ -22,8 +22,7 @@
 
 package com.dmdirc.addons.lagdisplay;
 
-import com.dmdirc.addons.ui_swing.SwingController;
-import com.dmdirc.plugins.PluginManager;
+import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.util.collections.RollingList;
 
 import java.awt.Color;
@@ -62,8 +61,10 @@ public class PingHistoryPanel extends JPanel {
      * Creates a new history panel for the specified plugin.
      *
      * @param plugin The plugin that owns this panel
+     * @param mainFrame Swing main frame
      */
-    public PingHistoryPanel(final LagDisplayPlugin plugin) {
+    public PingHistoryPanel(final LagDisplayPlugin plugin,
+            final MainFrame mainFrame) {
         super();
 
         setMinimumSize(new Dimension(50, 100));
@@ -71,9 +72,7 @@ public class PingHistoryPanel extends JPanel {
         setOpaque(false);
 
         this.plugin = plugin;
-        this.history = plugin.getHistory(((SwingController) PluginManager
-                .getPluginManager().getPluginInfoByName("ui_swing")
-                .getPlugin()).getMainFrame().getActiveFrame().getContainer()
+        history = plugin.getHistory(mainFrame.getActiveFrame().getContainer()
                 .getServer());
 
         for (Long value : history.getList()) {
