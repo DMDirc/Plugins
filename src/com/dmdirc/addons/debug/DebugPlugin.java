@@ -84,7 +84,7 @@ public class DebugPlugin extends BasePlugin {
     public void onLoad() {
         for (Class<DebugCommand> type : CLASSES) {
             try {
-                addCommand(type.getConstructor(Debug.class)
+                addCommand(type.getConstructor(DebugPlugin.class, Debug.class)
                         .newInstance(this, debugCommand));
             } catch (LinkageError e) {
                 Logger.appError(ErrorLevel.HIGH,
