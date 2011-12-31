@@ -737,8 +737,8 @@ public class Twitter extends ThreadedParser implements TwitterErrorHandler, Twit
                     if (api.useOAuth()) {
                         api.setAccessPin(bits[0]);
                         if (api.isAllowed(true)) {
-                            IdentityManager.getConfigIdentity().setOption(myPlugin.getDomain(), "token-" + myServerName + "-" + myUsername, api.getToken());
-                            IdentityManager.getConfigIdentity().setOption(myPlugin.getDomain(), "tokenSecret-" + myServerName + "-" + myUsername, api.getTokenSecret());
+                            IdentityManager.getIdentityManager().getGlobalConfigIdentity().setOption(myPlugin.getDomain(), "token-" + myServerName + "-" + myUsername, api.getToken());
+                            IdentityManager.getIdentityManager().getGlobalConfigIdentity().setOption(myPlugin.getDomain(), "tokenSecret-" + myServerName + "-" + myUsername, api.getTokenSecret());
                             sendChannelMessage(channel, "Thank you for authorising DMDirc.");
                             updateTwitterChannel();
                             wantAuth = false;
@@ -1149,9 +1149,9 @@ public class Twitter extends ThreadedParser implements TwitterErrorHandler, Twit
                 first = false;
 
                 // Store last IDs
-                IdentityManager.getConfigIdentity().setOption(myPlugin.getDomain(), "lastReplyId-" + myServerName + "-" + myUsername, Long.toString(lastReplyId));
-                IdentityManager.getConfigIdentity().setOption(myPlugin.getDomain(), "lastTimelineId-" + myServerName + "-" + myUsername, Long.toString(lastTimelineId));
-                IdentityManager.getConfigIdentity().setOption(myPlugin.getDomain(), "lastDirectMessageId-" + myServerName + "-" + myUsername, Long.toString(lastDirectMessageId));
+                IdentityManager.getIdentityManager().getGlobalConfigIdentity().setOption(myPlugin.getDomain(), "lastReplyId-" + myServerName + "-" + myUsername, Long.toString(lastReplyId));
+                IdentityManager.getIdentityManager().getGlobalConfigIdentity().setOption(myPlugin.getDomain(), "lastTimelineId-" + myServerName + "-" + myUsername, Long.toString(lastTimelineId));
+                IdentityManager.getIdentityManager().getGlobalConfigIdentity().setOption(myPlugin.getDomain(), "lastDirectMessageId-" + myServerName + "-" + myUsername, Long.toString(lastDirectMessageId));
 
                 // Get Updates for search channels
                 for (final TwitterChannelInfo searchChannel : channels.values()) {

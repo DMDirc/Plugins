@@ -52,9 +52,9 @@ public class ServerList implements IdentityListener {
      * Creates a new ServerList and loads groups and servers.
      */
     public ServerList() {
-        IdentityManager.addIdentityListener("servergroup", this);
+        IdentityManager.getIdentityManager().registerIdentityListener("servergroup", this);
 
-        for (Identity identity : IdentityManager.getCustomIdentities("servergroup")) {
+        for (Identity identity : IdentityManager.getIdentityManager().getIdentitiesByType("servergroup")) {
             identityAdded(identity);
         }
 

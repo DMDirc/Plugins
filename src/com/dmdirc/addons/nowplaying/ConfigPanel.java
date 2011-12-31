@@ -108,8 +108,8 @@ public class ConfigPanel extends JPanel implements PreferencesInterface,
             list.getModel().addElement(source);
         }
 
-        textfield = new JTextField(IdentityManager.getGlobalConfig().getOption(
-                plugin.getDomain(), "format"));
+        textfield = new JTextField(IdentityManager.getIdentityManager()
+                .getGlobalConfiguration().getOption(plugin.getDomain(), "format"));
         textfield.addKeyListener(this);
         preview = new TextLabel("Preview:\n");
 
@@ -200,8 +200,8 @@ public class ConfigPanel extends JPanel implements PreferencesInterface,
     @Override
     public void save() {
         plugin.saveSettings(getSources());
-        IdentityManager.getConfigIdentity().setOption(plugin.getDomain(),
-                "format", textfield.getText());
+        IdentityManager.getIdentityManager().getGlobalConfigIdentity()
+                .setOption(plugin.getDomain(), "format", textfield.getText());
     }
 
     /**

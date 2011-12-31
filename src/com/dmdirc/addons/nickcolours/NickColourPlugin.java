@@ -29,6 +29,7 @@ import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
+import com.dmdirc.config.ConfigManager;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
@@ -128,10 +129,10 @@ public final class NickColourPlugin extends BasePlugin implements ActionListener
 
         String[] parts = null;
 
-        if (IdentityManager.getGlobalConfig().hasOptionString(getDomain(),
-                nickOption1)) {
+        if (IdentityManager.getIdentityManager().getGlobalConfiguration()
+                .hasOptionString(getDomain(), nickOption1)) {
             parts = getParts(nickOption1);
-        } else if (IdentityManager.getGlobalConfig().hasOptionString(
+        } else if (IdentityManager.getIdentityManager().getGlobalConfiguration().hasOptionString(
                 getDomain(), nickOption2)) {
             parts = getParts(nickOption2);
         }
@@ -196,8 +197,8 @@ public final class NickColourPlugin extends BasePlugin implements ActionListener
     public Object[][] getData() {
         final List<Object[]> data = new ArrayList<Object[]>();
 
-        for (String key : IdentityManager.getGlobalConfig().getOptions(
-                getDomain()).keySet()) {
+        for (String key : IdentityManager.getIdentityManager().getGlobalConfiguration()
+                .getOptions(getDomain()).keySet()) {
             if (key.startsWith("color:")) {
                 final String network = key.substring(6, key.indexOf(':', 6));
                 final String user = key.substring(1 + key.indexOf(':', 6));
@@ -228,8 +229,8 @@ public final class NickColourPlugin extends BasePlugin implements ActionListener
      * @return The colours specified by the given key
      */
     private String[] getParts(final String key) {
-        String[] parts = IdentityManager.getGlobalConfig().getOption(
-                getDomain(), key).split(":");
+        String[] parts = IdentityManager.getIdentityManager().getGlobalConfiguration()
+                .getOption(getDomain(), key).split(":");
 
         if (parts.length == 0) {
             parts = new String[]{null, null};
@@ -313,20 +314,17 @@ public final class NickColourPlugin extends BasePlugin implements ActionListener
      * Updates cached settings.
      */
     private void setCachedSettings() {
-        useowncolour = IdentityManager.getGlobalConfig().getOptionBool(
-                getDomain(), "useowncolour");
-        owncolour = IdentityManager.getGlobalConfig().getOption(getDomain(),
-                "owncolour");
-        userandomcolour = IdentityManager.getGlobalConfig().getOptionBool(
-                getDomain(), "userandomcolour");
-        settext = IdentityManager.getGlobalConfig().getOptionBool(getDomain(),
-                "settext");
-        setnicklist = IdentityManager.getGlobalConfig().getOptionBool(
-                getDomain(), "setnicklist");
-        if (IdentityManager.getGlobalConfig().hasOptionString(getDomain(),
+        final ConfigManager config = IdentityManager.getIdentityManager()
+                .getGlobalConfiguration();
+        useowncolour = config.getOptionBool(getDomain(), "useowncolour");
+        owncolour = config.getOption(getDomain(), "owncolour");
+        userandomcolour = config.getOptionBool(getDomain(), "userandomcolour");
+        settext = config.getOptionBool(getDomain(), "settext");
+        setnicklist = config.getOptionBool(getDomain(), "setnicklist");
+        if (config.hasOptionString(getDomain(),
                 "randomcolours")) {
-            randColours = IdentityManager.getGlobalConfig().getOptionList(
-                    getDomain(), "randomcolours").toArray(new String[0]);
+            randColours = config.getOptionList(getDomain(), "randomcolours")
+                    .toArray(new String[0]);
         }
     }
 

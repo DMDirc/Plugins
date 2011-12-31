@@ -93,8 +93,8 @@ public final class ScriptCommand extends Command implements IntelligentCommand {
                 sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Evaluating: "+script);
                 try {
                     ScriptEngineWrapper wrapper;
-                    if (IdentityManager.getGlobalConfig().hasOptionString(myPlugin.getDomain(), "eval.baseFile")) {
-                        final String baseFile = myPlugin.getScriptDir()+'/'+IdentityManager.getGlobalConfig().getOption(myPlugin.getDomain(), "eval.baseFile");
+                    if (IdentityManager.getIdentityManager().getGlobalConfiguration().hasOptionString(myPlugin.getDomain(), "eval.baseFile")) {
+                        final String baseFile = myPlugin.getScriptDir()+'/'+IdentityManager.getIdentityManager().getGlobalConfiguration().getOption(myPlugin.getDomain(), "eval.baseFile");
                         if (new File(baseFile).exists()) {
                             wrapper = new ScriptEngineWrapper(myPlugin, baseFile);
                         } else {
@@ -110,7 +110,7 @@ public final class ScriptCommand extends Command implements IntelligentCommand {
                 } catch (Exception e) {
                     sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Exception: "+e+" -> "+e.getMessage());
 
-                    if (IdentityManager.getGlobalConfig().getOptionBool(myPlugin.getDomain(), "eval.showStackTrace")) {
+                    if (IdentityManager.getIdentityManager().getGlobalConfiguration().getOptionBool(myPlugin.getDomain(), "eval.showStackTrace")) {
                         try {
                             final Class<?> logger = Class.forName("com.dmdirc.logger.Logger");
                             if (logger != null) {
@@ -137,9 +137,9 @@ public final class ScriptCommand extends Command implements IntelligentCommand {
                 final String functionName = bits[0];
                 final String script = args.getArgumentsAsString(2);
                 sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Saving as '"+functionName+"': "+script);
-                if (IdentityManager.getGlobalConfig().hasOptionString(myPlugin.getDomain(), "eval.baseFile")) {
+                if (IdentityManager.getIdentityManager().getGlobalConfiguration().hasOptionString(myPlugin.getDomain(), "eval.baseFile")) {
                     try {
-                        final String baseFile = myPlugin.getScriptDir()+'/'+IdentityManager.getGlobalConfig().getOption(myPlugin.getDomain(), "eval.baseFile");
+                        final String baseFile = myPlugin.getScriptDir()+'/'+IdentityManager.getIdentityManager().getGlobalConfiguration().getOption(myPlugin.getDomain(), "eval.baseFile");
                         final FileWriter writer = new FileWriter(baseFile, true);
                         writer.write("function ");
                         writer.write(functionName);

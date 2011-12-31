@@ -47,7 +47,7 @@ public class DMDircUITestCase extends UISpecTestCase {
 
     static {
         try {
-            IdentityManager.load();
+            IdentityManager.getIdentityManager().initialise();
         } catch (InvalidIdentityFileException ex) {
             //Ignore
         }

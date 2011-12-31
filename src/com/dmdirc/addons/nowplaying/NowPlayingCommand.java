@@ -150,8 +150,8 @@ public final class NowPlayingCommand extends Command implements
      */
     private String getInformation(final MediaSource source, final String format) {
         if (format.isEmpty()) {
-            return parent.doSubstitution(IdentityManager.getGlobalConfig()
-                    .getOption(parent.getDomain(), "format"), source);
+            return parent.doSubstitution(IdentityManager.getIdentityManager()
+                    .getGlobalConfiguration().getOption(parent.getDomain(), "format"), source);
         } else {
             return parent.doSubstitution(format, source);
         }

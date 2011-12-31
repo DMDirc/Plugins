@@ -103,7 +103,8 @@ public class OsdWindow extends JDialog implements MouseListener,
         this.osdManager = osdManager;
 
         if (timeout < 0) {
-            this.timeout = IdentityManager.getGlobalConfig().getOptionInt(
+            this.timeout = IdentityManager.getIdentityManager()
+                    .getGlobalConfiguration().getOptionInt(
                     osdManager.getPlugin().getDomain(), "timeout", false);
         } else {
             this.timeout = timeout;
@@ -124,21 +125,21 @@ public class OsdWindow extends JDialog implements MouseListener,
         panel = new JPanel();
         panel.setBorder(new LineBorder(Color.BLACK));
         panel.setBackground(UIUtilities.convertColour(
-                IdentityManager.getGlobalConfig().getOptionColour(plugin.getDomain(),
-                "bgcolour")));
+                IdentityManager.getIdentityManager().getGlobalConfiguration()
+                .getOptionColour(plugin.getDomain(), "bgcolour")));
 
-        final int width = IdentityManager.getGlobalConfig().getOptionInt(plugin.getDomain(),
-                "width");
+        final int width = IdentityManager.getIdentityManager().getGlobalConfiguration()
+                .getOptionInt(plugin.getDomain(), "width");
         setContentPane(panel);
         setLayout(new MigLayout("wmin " + width + ", wmax " + width + ", ins rel, fill"));
 
         label = new JLabel(text);
         label.setForeground(UIUtilities.convertColour(
-                IdentityManager.getGlobalConfig().getOptionColour(plugin.getDomain(),
-                "fgcolour")));
+                IdentityManager.getIdentityManager().getGlobalConfiguration()
+                .getOptionColour(plugin.getDomain(), "fgcolour")));
         label.setFont(label.getFont().deriveFont(
-                (float) IdentityManager.getGlobalConfig().getOptionInt(plugin.getDomain(),
-                "fontSize")));
+                (float) IdentityManager.getIdentityManager()
+                .getGlobalConfiguration().getOptionInt(plugin.getDomain(), "fontSize")));
         label.setHorizontalAlignment(SwingConstants.CENTER);
         add(label, "alignx center, hmin " + label.getFont().getSize());
 

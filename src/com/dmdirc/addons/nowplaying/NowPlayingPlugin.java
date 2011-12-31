@@ -128,13 +128,16 @@ public class NowPlayingPlugin extends BasePlugin implements ActionListener  {
      */
     protected void saveSettings(final List<String> newOrder) {
         order = newOrder;
-        IdentityManager.getConfigIdentity().setOption(getDomain(), "sourceOrder", order);
+        IdentityManager.getIdentityManager().getGlobalConfigIdentity()
+                .setOption(getDomain(), "sourceOrder", order);
     }
 
     /** Loads the plugins settings. */
     private void loadSettings() {
-        if (IdentityManager.getGlobalConfig().hasOptionString(getDomain(), "sourceOrder")) {
-            order = IdentityManager.getGlobalConfig().getOptionList(getDomain(), "sourceOrder");
+        if (IdentityManager.getIdentityManager().getGlobalConfiguration()
+                .hasOptionString(getDomain(), "sourceOrder")) {
+            order = IdentityManager.getIdentityManager().getGlobalConfiguration()
+                    .getOptionList(getDomain(), "sourceOrder");
         } else {
             order = new ArrayList<String>();
         }

@@ -58,7 +58,8 @@ public class UserLevelPlugin extends BasePlugin implements ActionListener,
                     new AccessLevelComponent(),
                     new ChannelAccessLevelComponent()
                 });
-        IdentityManager.getGlobalConfig().addChangeListener(DOMAIN, this);
+        IdentityManager.getIdentityManager().getGlobalConfiguration()
+                .addChangeListener(DOMAIN, this);
         loadLevels();
     }
 
@@ -66,7 +67,7 @@ public class UserLevelPlugin extends BasePlugin implements ActionListener,
     @Override
     public void onUnload() {
         ActionManager.getActionManager().unregisterListener(this);
-        IdentityManager.getGlobalConfig().removeListener(this);
+        IdentityManager.getIdentityManager().getGlobalConfiguration().removeListener(this);
     }
 
     /** {@inheritDoc} */
@@ -126,8 +127,8 @@ public class UserLevelPlugin extends BasePlugin implements ActionListener,
     private void loadLevels() {
         LEVELS.clear();
 
-        for (Map.Entry<String, String> item
-                : IdentityManager.getGlobalConfig().getOptions(DOMAIN).entrySet()) {
+        for (Map.Entry<String, String> item : IdentityManager.getIdentityManager()
+                .getGlobalConfiguration().getOptions(DOMAIN).entrySet()) {
             try {
                 LEVELS.put(item.getKey(), Integer.parseInt(item.getValue()));
             } catch (NumberFormatException ex) {

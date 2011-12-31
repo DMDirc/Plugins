@@ -105,7 +105,7 @@ public abstract class ServerGroupItemBase implements ServerGroupItem {
      */
     protected Identity getProfileIdentity() {
         if (profile != null) {
-            for (Identity identity : IdentityManager.getCustomIdentities("profile")) {
+            for (Identity identity : IdentityManager.getIdentityManager().getIdentitiesByType("profile")) {
                 if (profile.equals(identity.getName())) {
                     return identity;
                 }
@@ -113,7 +113,7 @@ public abstract class ServerGroupItemBase implements ServerGroupItem {
         }
 
         if (getParent() == null) {
-            return IdentityManager.getCustomIdentities("profile").get(0);
+            return IdentityManager.getIdentityManager().getIdentitiesByType("profile").get(0);
         } else {
             return getParent().getProfileIdentity();
         }

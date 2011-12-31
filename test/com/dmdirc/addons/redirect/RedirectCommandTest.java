@@ -38,7 +38,7 @@ public class RedirectCommandTest {
 
     @BeforeClass
     public static void setupClass() throws InvalidIdentityFileException {
-        IdentityManager.load();
+        IdentityManager.getIdentityManager().initialise();
         CommandManager.getCommandManager().initCommands();
     }
 
@@ -49,7 +49,8 @@ public class RedirectCommandTest {
         final MessageTarget target = mock(MessageTarget.class);
         final InputWindow window = mock(InputWindow.class);
         //when(window.getCommandParser()).thenReturn(parser);
-        when(window.getContainer().getConfigManager()).thenReturn(IdentityManager.getGlobalConfig());
+        when(window.getContainer().getConfigManager()).thenReturn(
+                IdentityManager.getIdentityManaer().getGlobalConfiguration());
 
         command.execute(target, new CommandArguments("/redirect /echo test"),
                 new ChatCommandContext(window.getContainer(), command.INFO, target));
