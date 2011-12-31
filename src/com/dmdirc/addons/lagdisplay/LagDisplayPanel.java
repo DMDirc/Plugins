@@ -21,6 +21,7 @@
  */
 package com.dmdirc.addons.lagdisplay;
 
+import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.statusbar.StatusbarPopupPanel;
 import com.dmdirc.addons.ui_swing.components.statusbar.StatusbarPopupWindow;
 
@@ -40,21 +41,26 @@ public class LagDisplayPanel extends StatusbarPopupPanel<JLabel> {
     private static final long serialVersionUID = 2;
     /** Lag display plugin. */
     private final LagDisplayPlugin plugin;
+    /** Swing controller. */
+    private final SwingController controller;
 
     /**
      * Creates a new {@link LagDisplayPanel} for the specified plugin.
      *
      * @param plugin The plugin that owns this panel
+     * @param controller Parent Swing controller
      */
-    public LagDisplayPanel(final LagDisplayPlugin plugin) {
+    public LagDisplayPanel(final LagDisplayPlugin plugin,
+            final SwingController controller) {
         super(new JLabel());
 
         this.plugin = plugin;
+        this.controller = controller;
     }
 
     /** {@inheritDoc} */
     @Override
     protected StatusbarPopupWindow getWindow() {
-        return new ServerInfoDialog(plugin, this);
+        return new ServerInfoDialog(plugin, this, controller);
     }
 }

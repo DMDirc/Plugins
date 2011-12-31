@@ -25,11 +25,10 @@ package com.dmdirc.addons.lagdisplay;
 import com.dmdirc.Server;
 import com.dmdirc.ServerManager;
 import com.dmdirc.ServerState;
+import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.statusbar.StatusbarPanel;
 import com.dmdirc.addons.ui_swing.components.statusbar.StatusbarPopupWindow;
-import com.dmdirc.plugins.PluginManager;
-
 import java.util.List;
 
 import javax.swing.JLabel;
@@ -53,20 +52,23 @@ public class ServerInfoDialog extends StatusbarPopupWindow {
 
     /** The lag display plugin. */
     protected final LagDisplayPlugin plugin;
+    /** Swing main frame. */
+    private final MainFrame mainFrame;
 
     /**
      * Creates a new ServerInfoDialog.
      *
      * @param ldp The {@link LagDisplayPlugin} we're using for info
      * @param parent The {@link JPanel} to use for positioning
+     * @param controller Parent Swing controller
      */
-    public ServerInfoDialog(final LagDisplayPlugin ldp, final StatusbarPanel parent) {
-        super(((SwingController) PluginManager.getPluginManager()
-                .getPluginInfoByName("ui_swing").getPlugin()), parent,
-                ((SwingController) PluginManager.getPluginManager()
-                .getPluginInfoByName("ui_swing").getPlugin()).getMainFrame());
+    public ServerInfoDialog(final LagDisplayPlugin ldp,
+            final StatusbarPanel parent,
+            final SwingController controller) {
+        super(controller, parent, controller.getMainFrame());
 
         plugin = ldp;
+        mainFrame = controller.getMainFrame();
     }
 
     /** {@inheritDoc} */
@@ -78,7 +80,7 @@ public class ServerInfoDialog extends StatusbarPopupWindow {
             panel.add(new JLabel("No open servers."));
         } else {
             if (plugin.shouldShowGraph()) {
-                panel.add(new PingHistoryPanel(plugin), "span, grow, wrap");
+                panel.add(new PingHistoryPanel(plugin, mainFrame), "span, grow, wrap");
                 panel.add(new JSeparator(), "span, grow, wrap");
             }
 

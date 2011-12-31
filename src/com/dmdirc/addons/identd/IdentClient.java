@@ -25,7 +25,6 @@ package com.dmdirc.addons.identd;
 import com.dmdirc.Server;
 import com.dmdirc.ServerManager;
 import com.dmdirc.config.ConfigManager;
-import com.dmdirc.config.IdentityManager;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 
@@ -82,7 +81,7 @@ public final class IdentClient implements Runnable {
             in = new BufferedReader(new InputStreamReader(mySocket.getInputStream()));
             final String inputLine;
             if ((inputLine = in.readLine()) != null) {
-                out.println(getIdentResponse(inputLine, IdentityManager.getGlobalConfig()));
+                out.println(getIdentResponse(inputLine, myPlugin.getConfig()));
             }
         } catch (IOException e) {
             if (thisThread == myThread) {
