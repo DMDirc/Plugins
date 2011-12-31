@@ -49,6 +49,9 @@ public final class IdentdServer implements Runnable {
     /** The plugin that owns us. */
     private final IdentdPlugin myPlugin;
 
+    /** Have we failed to start this server previously? */
+    private boolean failed = false;
+
     /**
      * Create the IdentdServer.
      */
@@ -116,7 +119,7 @@ public final class IdentdServer implements Runnable {
      * Start the ident server
      */
     public void startServer() {
-        if (myThread == null) {
+        if (!failed && myThread == null) {
             try {
                 final int identPort = myPlugin.getConfig().getOptionInt(
                         myPlugin.getDomain(), "advanced.port");
@@ -125,6 +128,9 @@ public final class IdentdServer implements Runnable {
                 myThread.start();
             } catch (IOException e) {
                 Logger.userError(ErrorLevel.HIGH, "Unable to start identd server: " + e.getMessage());
+                if (e.getMessage().equals("Permission denied")) {
+                    failed = true;
+                }
             }
         }
     }
