@@ -35,12 +35,12 @@ import org.junit.Test;
 import static org.mockito.Mockito.*;
 
 public class DebugTest {
-    
+
     @BeforeClass
     public static void setUp() throws InvalidIdentityFileException {
         // Command has a dependency on CommandManager (to get the command char)
         // And CommandManager has a dependency on IdentityManager for the same
-        IdentityManager.load();
+        IdentityManager.getIdentityManager().initialise();
         CommandManager.getCommandManager().initCommands();
     }
 
@@ -49,34 +49,34 @@ public class DebugTest {
     public void testNoArgs() {
         final CommandArguments arguments = mock(CommandArguments.class);
         final FrameContainer container = mock(FrameContainer.class);
-        
+
         when(arguments.isCommand()).thenReturn(true);
         when(arguments.getArguments()).thenReturn(new String[0]);
-        
+
         final Debug debug = new Debug(null);
-        
+
         debug.execute(container, arguments, null);
         verify(container).addLine(eq("commandUsage"), anyObject(),
                 eq("debug"), anyObject());
     }
-    
+
     /** Checks the debug command with an invalid subcommand shows an error. */
     @Test
     public void testInvalidArg() {
         final DebugPlugin plugin = mock(DebugPlugin.class);
         final CommandArguments arguments = mock(CommandArguments.class);
         final FrameContainer container = mock(FrameContainer.class);
-        
+
         when(plugin.getCommand("test")).thenReturn(null);
         when(arguments.isCommand()).thenReturn(true);
         when(arguments.getArguments()).thenReturn(new String[]{"test"});
-        
+
         final Debug debug = new Debug(plugin);
-        
+
         debug.execute(container, arguments, null);
         verify(container).addLine(eq("commandError"), anyObject());
     }
-    
+
     /** Checks the debug command executes a subcommand with no args. */
     @Test
     public void testCommandNoArgs() {
@@ -85,21 +85,21 @@ public class DebugTest {
         final FrameContainer container = mock(FrameContainer.class);
         final DebugCommand command = mock(DebugCommand.class);
         final CommandContext context = mock(CommandContext.class);
-        
+
         when(plugin.getCommand("test")).thenReturn(command);
         when(arguments.isCommand()).thenReturn(true);
         when(arguments.getArguments()).thenReturn(new String[]{"test"});
         when(arguments.getArgumentsAsString(1)).thenReturn("");
         when(command.getName()).thenReturn("test");
-        
+
         final Debug debug = new Debug(plugin);
-        
+
         debug.execute(container, arguments, context);
-        
+
         verify(container, never()).addLine(anyString(), anyObject());
         verify(command).execute(same(container), eqLine("/test"), same(context));
     }
-    
+
     /** Checks the debug command executes a subcommand with args. */
     @Test
     public void testCommandWithArgs() {
@@ -108,17 +108,17 @@ public class DebugTest {
         final FrameContainer container = mock(FrameContainer.class);
         final DebugCommand command = mock(DebugCommand.class);
         final CommandContext context = mock(CommandContext.class);
-        
+
         when(plugin.getCommand("test")).thenReturn(command);
         when(arguments.isCommand()).thenReturn(true);
         when(arguments.getArguments()).thenReturn(new String[]{"test", "1", "2", "3"});
         when(arguments.getArgumentsAsString(1)).thenReturn("1 2 3");
         when(command.getName()).thenReturn("test");
-        
+
         final Debug debug = new Debug(plugin);
-        
+
         debug.execute(container, arguments, context);
-        
+
         verify(container, never()).addLine(anyString(), anyObject());
         verify(command).execute(same(container), eqLine("/test 1 2 3"), same(context));
     }

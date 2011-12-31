@@ -109,10 +109,10 @@ public class NotificationsPlugin extends BasePlugin implements ActionListener {
 
     /** Loads the plugins settings. */
     private void loadSettings() {
-        if (IdentityManager.getGlobalConfig().hasOptionString(getDomain(),
-                "methodOrder")) {
-            order = IdentityManager.getGlobalConfig().getOptionList(
-                    getDomain(), "methodOrder");
+        if (IdentityManager.getIdentityManager().getGlobalConfiguration()
+                .hasOptionString(getDomain(), "methodOrder")) {
+            order = IdentityManager.getIdentityManager()
+                    .getGlobalConfiguration().getOptionList(getDomain(), "methodOrder");
         } else {
             order = new ArrayList<String>();
         }
@@ -222,7 +222,7 @@ public class NotificationsPlugin extends BasePlugin implements ActionListener {
      */
     protected void saveSettings(final List<String> newOrder) {
         order = newOrder;
-        IdentityManager.getConfigIdentity().setOption(getDomain(),
-                "methodOrder", order);
+        IdentityManager.getIdentityManager().getGlobalConfigIdentity()
+                .setOption(getDomain(), "methodOrder", order);
     }
 }

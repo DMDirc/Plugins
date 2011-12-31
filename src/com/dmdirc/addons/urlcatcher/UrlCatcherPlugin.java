@@ -59,7 +59,7 @@ public class UrlCatcherPlugin extends BasePlugin implements ActionListener,
     public void onLoad() {
         ActionManager.getActionManager().registerListener(this,
                 CoreActionType.CLIENT_LINE_ADDED);
-        IdentityManager.getGlobalConfig().addChangeListener(getDomain(), this);
+        IdentityManager.getIdentityManager().getGlobalConfiguration().addChangeListener(getDomain(), this);
         updateConfig();
         super.onLoad();
     }
@@ -68,7 +68,7 @@ public class UrlCatcherPlugin extends BasePlugin implements ActionListener,
     @Override
     public void onUnload() {
         ActionManager.getActionManager().unregisterListener(this);
-        IdentityManager.getGlobalConfig().removeListener(this);
+        IdentityManager.getIdentityManager().getGlobalConfiguration().removeListener(this);
         super.onUnload();
     }
 
@@ -76,7 +76,7 @@ public class UrlCatcherPlugin extends BasePlugin implements ActionListener,
      * Re-reads the configuration of the URL catcher plugin.
      */
     private void updateConfig() {
-        captureRaw = IdentityManager.getGlobalConfig().getOptionBool(getDomain(), "captureraw");
+        captureRaw = IdentityManager.getIdentityManager().getGlobalConfiguration().getOptionBool(getDomain(), "captureraw");
     }
 
     /** {@inheritDoc} */

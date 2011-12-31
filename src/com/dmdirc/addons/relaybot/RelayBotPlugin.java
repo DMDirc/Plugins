@@ -83,7 +83,8 @@ public class RelayBotPlugin extends BasePlugin implements ActionListener, Config
                 CoreActionType.SERVER_DISCONNECTED);
         ActionManager.getActionManager().registerListener(this,
                 CoreActionType.CHANNEL_QUIT);
-        IdentityManager.getGlobalConfig().addChangeListener(getDomain(), this);
+        IdentityManager.getIdentityManager().getGlobalConfiguration()
+                .addChangeListener(getDomain(), this);
 
         // Add ourself to all currently known channels that we should be
         // connected with.
@@ -139,8 +140,8 @@ public class RelayBotPlugin extends BasePlugin implements ActionListener, Config
             final ChannelClientInfo cci = (ChannelClientInfo) arguments[1];
             final String channelName = parser.getStringConverter().toLowerCase(chan.getName());
 
-            if (IdentityManager.getGlobalConfig().hasOptionString(getDomain(), channelName)) {
-                final String botName = IdentityManager.getGlobalConfig().getOption(getDomain(), channelName);
+            if (IdentityManager.getIdentityManager().getGlobalConfiguration().hasOptionString(getDomain(), channelName)) {
+                final String botName = IdentityManager.getIdentityManager().getGlobalConfiguration().getOption(getDomain(), channelName);
                 if (parser.getStringConverter().equalsIgnoreCase(botName, cci.getClient().getNickname())) {
                     // The bot quit :(
                     final RelayChannelHandler handler = getHandler(chan);
@@ -171,7 +172,7 @@ public class RelayBotPlugin extends BasePlugin implements ActionListener, Config
     /** {@inheritDoc} */
     @Override
     public void configChanged(final String domain, final String key) {
-        final boolean wasUnset = !IdentityManager.getGlobalConfig().hasOptionString(domain, key);
+        final boolean wasUnset = !IdentityManager.getIdentityManager().getGlobalConfiguration().hasOptionString(domain, key);
 
         for (Server server : ServerManager.getServerManager().getServers()) {
             if (server.hasChannel(key)) {
@@ -214,7 +215,7 @@ public class RelayBotPlugin extends BasePlugin implements ActionListener, Config
                 return handlers.get(channel);
             } else {
                 final String channelName = channel.getServer().getParser().getStringConverter().toLowerCase(channel.getName());
-                if (IdentityManager.getGlobalConfig().hasOptionString(getDomain(), channelName)) {
+                if (IdentityManager.getIdentityManager().getGlobalConfiguration().hasOptionString(getDomain(), channelName)) {
                     final RelayChannelHandler handler = new RelayChannelHandler(this, channel);
                     handlers.put(channel, handler);
                     return handler;
@@ -253,7 +254,8 @@ public class RelayBotPlugin extends BasePlugin implements ActionListener, Config
      * @return A multi-dimensional array of channel data.
      */
     public String[][] getData() {
-        final Map<String, String> settings = IdentityManager.getGlobalConfig()
+        final Map<String, String> settings
+                = IdentityManager.getIdentityManager().getGlobalConfiguration()
                 .getOptions(getDomain());
         int i = 0;
         for (Map.Entry<String, String> entry : settings.entrySet()) {

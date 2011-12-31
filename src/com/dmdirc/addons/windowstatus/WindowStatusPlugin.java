@@ -95,7 +95,8 @@ public final class WindowStatusPlugin extends BasePlugin
                 .getPluginInfoByName("ui_swing").getPlugin();
         controller.getSwingStatusBar().addComponent(panel);
         controller.getMainFrame().addSelectionListener(this);
-        IdentityManager.getGlobalConfig().addChangeListener(getDomain(), this);
+        IdentityManager.getIdentityManager().getGlobalConfiguration()
+                .addChangeListener(getDomain(), this);
         updateCache();
     }
 
@@ -115,12 +116,12 @@ public final class WindowStatusPlugin extends BasePlugin
 
     /** Updates the cached config settings. */
     private void updateCache() {
-        showname = IdentityManager.getGlobalConfig().getOptionBool(getDomain(),
-                "client.showname");
-        shownone = IdentityManager.getGlobalConfig().getOptionBool(getDomain(),
-                "channel.shownone");
-        nonePrefix = IdentityManager.getGlobalConfig().getOption(getDomain(),
-                "channel.noneprefix");
+        showname = IdentityManager.getIdentityManager().getGlobalConfiguration()
+                .getOptionBool(getDomain(), "client.showname");
+        shownone = IdentityManager.getIdentityManager().getGlobalConfiguration()
+                .getOptionBool(getDomain(), "channel.shownone");
+        nonePrefix = IdentityManager.getIdentityManager().getGlobalConfiguration()
+                .getOption(getDomain(), "channel.noneprefix");
         updateStatus();
     }
 

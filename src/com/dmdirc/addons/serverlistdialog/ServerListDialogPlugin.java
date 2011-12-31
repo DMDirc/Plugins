@@ -23,7 +23,6 @@
 package com.dmdirc.addons.serverlistdialog;
 
 import com.dmdirc.addons.ui_swing.SwingController;
-import com.dmdirc.addons.ui_swing.components.menubar.MenuBar;
 import com.dmdirc.plugins.PluginManager;
 
 import java.awt.event.ActionEvent;
@@ -48,8 +47,7 @@ public class ServerListDialogPlugin implements ActionListener {
         final JMenuItem item = new JMenuItem("Server lists");
         item.setMnemonic('l');
         item.addActionListener(this);
-        ((MenuBar) controller.getMainFrame().getJMenuBar()).addMenuItem(
-                "Server", item);
+        controller.getMainFrame().getJMenuBar().addMenuItem("Server", item);
     }
 
     /**

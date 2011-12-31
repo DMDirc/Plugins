@@ -46,7 +46,7 @@ public class WebUserRealm implements UserRealm {
             = new HashMap<String, Principal>();
 
     /** The config source to retrieve user information from. */
-    private final ConfigManager config = IdentityManager.getGlobalConfig();
+    private final ConfigManager config = IdentityManager.getIdentityManager().getGlobalConfiguration();
 
     /** The domain to use when retrieving configuration. */
     private final String domain;
@@ -85,8 +85,8 @@ public class WebUserRealm implements UserRealm {
         if (!config.hasOptionString(domain, "users")) {
             final List<String> users = new ArrayList<String>();
             users.add(username + ":" + getHash(username, credentials));
-            IdentityManager.getConfigIdentity().setOption(domain,
-                    "users", users);
+            IdentityManager.getIdentityManager().getGlobalConfigIdentity()
+                    .setOption(domain, "users", users);
         }
 
         for (String userinfo : config.getOptionList(domain, "users")) {
