@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.logging;
 
+import com.dmdirc.config.IdentityManager;
 import com.dmdirc.interfaces.ActionController;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.util.collections.MapList;
@@ -32,7 +33,7 @@ public class TestLoggingPlugin extends LoggingPlugin {
     public final MapList<Object, String> lines = new MapList<Object, String>();
 
     public TestLoggingPlugin() {
-        super(mock(PluginInfo.class), mock(ActionController.class));
+        super(mock(PluginInfo.class), mock(ActionController.class), IdentityManager.getIdentityManager());
     }
 
     @Override
