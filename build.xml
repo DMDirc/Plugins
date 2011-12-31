@@ -65,8 +65,6 @@
                 <local name="plugin.jar"/>
                 <local name="plugin.version"/>
 
-                <mkdir dir="${plugins.build.metadata}/${plugin.name}/META-INF"/>
-
                 <dirname file="@{configfile}" property="plugin.src.dir"/>
                 <basename file="${plugin.src.dir}" property="plugin.name"/>
                 <property name="plugin.jar" value="${plugins.dist}/${plugin.name}.jar"/>
