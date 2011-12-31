@@ -476,6 +476,9 @@ public class ProfileManagerModel extends DefaultBindableModel {
         if (selectedProfile == null) {
             return new ValidationResponse();
         }
+        if (selectedProfile.getIdent().isEmpty()) {
+            return new ValidationResponse();
+        }
         return new IdentValidator().validate(selectedProfile.getIdent());
     }
 
