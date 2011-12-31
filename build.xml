@@ -68,26 +68,36 @@
                 <dirname file="@{configfile}" property="plugin.src.dir"/>
                 <basename file="${plugin.src.dir}" property="plugin.name"/>
                 <property name="plugin.jar" value="${plugins.dist}/${plugin.name}.jar"/>
-                <propertyregex property="plugin.build.dir" input="${plugin.src.dir}" regexp="\Q${plugins.src}\E/?(.*)" replace="\1"/>
 
-                <copy todir="${plugins.build.metadata}/${plugin.name}/META-INF">
-                    <fileset file="@{configfile}"/>
-                    <fileset dir="${plugin.src.dir}" includes="identities/** licences/**"/>
-                </copy>
+                <if>
+                    <not>
+                        <uptodate targetfile="${plugin.jar}">
+                            <srcfiles dir="${plugin.src.dir}" includes="*"/>
+                        </uptodate>
+                    </not>
+                    <then>
+                        <propertyregex property="plugin.build.dir" input="${plugin.src.dir}" regexp="\Q${plugins.src}\E/?(.*)" replace="\1"/>
 
-                <git-describe dir=".git" property="plugin.version" subdir="${plugin.src.dir}" />
+                        <copy todir="${plugins.build.metadata}/${plugin.name}/META-INF">
+                            <fileset file="@{configfile}"/>
+                            <fileset dir="${plugin.src.dir}" includes="identities/** licences/**"/>
+                        </copy>
 
-                <echo file="${plugins.build.metadata}/${plugin.name}/META-INF/plugin.config" append="true">
+                        <git-describe dir=".git" property="plugin.version" subdir="${plugin.src.dir}" />
+
+                        <echo file="${plugins.build.metadata}/${plugin.name}/META-INF/plugin.config" append="true">
 version:
   number=${plugin.version}
 </echo>
 
-                <jar destfile="${plugin.jar}">
-                    <fileset dir="${plugins.build.classes}" includes="${plugin.build.dir}/**"/>
-                    <fileset dir="${plugins.build.metadata}/${plugin.name}" includes="META-INF/**"/>
-                </jar>
+                        <jar destfile="${plugin.jar}">
+                            <fileset dir="${plugins.build.classes}" includes="${plugin.build.dir}/**"/>
+                            <fileset dir="${plugins.build.metadata}/${plugin.name}" includes="META-INF/**"/>
+                        </jar>
 
-                <echo>Built ${plugin.name} plugin version ${plugin.version}</echo>
+                        <echo>Built ${plugin.name} plugin version ${plugin.version}</echo>
+                    </then>
+                </if>
             </sequential>
         </for>
     </target>
