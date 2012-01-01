@@ -27,6 +27,7 @@ import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.updater.components.LauncherComponent;
 
+import java.awt.Dialog.ModalityType;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -50,23 +51,20 @@ public class SwingRestartDialog extends StandardDialog implements ActionListener
      * Dialog to restart the client.
      *
      * @param controller Swing controller
-     * @param modal Modality
      */
-    public SwingRestartDialog(final SwingController controller,
-            final ModalityType modal) {
-        this(controller, modal, "finish updating");
+    public SwingRestartDialog(final SwingController controller) {
+        this(controller, "finish updating");
     }
 
     /**
      * Dialog to restart the client.
      *
      * @param controller Swing controller
-     * @param modal Modality
      * @param cause Reason for restart
      */
     public SwingRestartDialog(final SwingController controller,
-            final ModalityType modal, final String cause) {
-        super(controller, modal);
+            final String cause) {
+        super(controller, ModalityType.APPLICATION_MODAL);
         this.cause = cause;
 
         setTitle("Restart needed");
