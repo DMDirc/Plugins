@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2006-2012, Alexander Potochkin
+ * Copyright (c) 2006-2009, Alexander Potochkin
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
