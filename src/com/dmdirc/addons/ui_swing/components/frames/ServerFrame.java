@@ -95,7 +95,7 @@ public final class ServerFrame extends InputTextFrame implements
     @Override
     public void actionPerformed(final ActionEvent actionEvent) {
         if (actionEvent.getSource() == settingsMI) {
-            controller.showDialog(ServerSettingsDialog.class);
+            controller.showServerSettingsDialog(getContainer().getServer());
         }
     }
 
