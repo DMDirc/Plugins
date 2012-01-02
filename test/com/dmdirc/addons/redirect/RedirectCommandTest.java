@@ -26,6 +26,7 @@ import com.dmdirc.MessageTarget;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandManager;
 import com.dmdirc.commandparser.commands.context.ChatCommandContext;
+import com.dmdirc.commandparser.commands.global.Echo;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.InvalidIdentityFileException;
 import com.dmdirc.interfaces.ui.InputWindow;
@@ -41,7 +42,7 @@ public class RedirectCommandTest {
     @BeforeClass
     public static void setupClass() throws InvalidIdentityFileException {
         IdentityManager.getIdentityManager().initialise();
-        CommandManager.getCommandManager().initCommands();
+        CommandManager.getCommandManager().registerCommand(new Echo(), Echo.INFO);
     }
 
     @Ignore
@@ -55,7 +56,7 @@ public class RedirectCommandTest {
                 IdentityManager.getIdentityManager().getGlobalConfiguration());
 
         command.execute(target, new CommandArguments("/redirect /echo test"),
-                new ChatCommandContext(window.getContainer(), command.INFO, target));
+                new ChatCommandContext(window.getContainer(), RedirectCommand.INFO, target));
 
         verify(target).sendLine("test");
     }
