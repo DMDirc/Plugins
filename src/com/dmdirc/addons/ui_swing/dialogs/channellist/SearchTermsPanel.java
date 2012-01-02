@@ -33,12 +33,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import lombok.AutoGenMethodStub;
-
 import net.miginfocom.swing.MigLayout;
 
 /** Gathers input for a group list search and begins the search. */
-@AutoGenMethodStub
 public class SearchTermsPanel extends JPanel implements ActionListener,
         GroupListObserver {
 
@@ -91,5 +88,11 @@ public class SearchTermsPanel extends JPanel implements ActionListener,
         if (search != null) {
             search.setEnabled(true);
         }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onGroupListStarted() {
+        // Do nothing
     }
 }

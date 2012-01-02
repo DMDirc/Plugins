@@ -38,12 +38,9 @@ import javax.swing.JMenuItem;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
 
-import lombok.AutoGenMethodStub;
-
 /**
  * A menu providing server related commands to the menu bar.
  */
-@AutoGenMethodStub
 public class ServerMenu extends JMenu implements ActionListener,
         MenuListener {
 
@@ -141,5 +138,17 @@ public class ServerMenu extends JMenu implements ActionListener,
         disconnect.setEnabled(activeWindow != null && activeWindow
                 .getServer() != null && activeWindow.getServer().getState()
                 == ServerState.CONNECTED);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void menuDeselected(final MenuEvent e) {
+        // Do nothing
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void menuCanceled(final MenuEvent e) {
+        // Do nothing
     }
 }

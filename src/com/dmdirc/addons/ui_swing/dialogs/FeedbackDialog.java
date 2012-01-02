@@ -45,12 +45,9 @@ import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import lombok.AutoGenMethodStub;
-
 import net.miginfocom.swing.MigLayout;
 
 /** Feedback form. */
-@AutoGenMethodStub
 public final class FeedbackDialog extends StandardDialog implements
         ActionListener, DocumentListener {
 
@@ -267,5 +264,11 @@ public final class FeedbackDialog extends StandardDialog implements
     @Override
     public void removeUpdate(final DocumentEvent e) {
         validateInput();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void changedUpdate(final DocumentEvent e) {
+        // Do nothing
     }
 }

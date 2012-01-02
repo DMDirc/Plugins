@@ -44,13 +44,11 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 
-import lombok.AutoGenMethodStub;
 import net.miginfocom.swing.MigLayout;
 
 /**
  * Allows the user to confirm and modify a multi-line paste.
  */
-@AutoGenMethodStub
 public final class PasteDialog extends StandardDialog implements ActionListener,
         KeyListener {
 
@@ -233,5 +231,17 @@ public final class PasteDialog extends StandardDialog implements ActionListener,
         infoLabel.setText("This will be sent as "
                 + parent.getContainer().getNumLines(textField.getText())
                 + " lines.");
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void keyPressed(final KeyEvent e) {
+        // Do nothing
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void keyReleased(final KeyEvent e) {
+        // Do nothing
     }
 }
