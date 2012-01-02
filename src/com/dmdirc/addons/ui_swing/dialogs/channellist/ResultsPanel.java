@@ -35,14 +35,11 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
 
-import lombok.AutoGenMethodStub;
-
 import net.miginfocom.swing.MigLayout;
 
 /**
  * Displays the results of a group list search in a table.
  */
-@AutoGenMethodStub
 public class ResultsPanel extends JPanel implements TableModelListener,
         MouseListener {
 
@@ -104,5 +101,29 @@ public class ResultsPanel extends JPanel implements TableModelListener,
                 manager.joinGroupListEntry(model.getGroupListEntry(index));
             }
         }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void mousePressed(final MouseEvent e) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void mouseReleased(final MouseEvent e) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void mouseEntered(final MouseEvent e) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void mouseExited(final MouseEvent e) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }
