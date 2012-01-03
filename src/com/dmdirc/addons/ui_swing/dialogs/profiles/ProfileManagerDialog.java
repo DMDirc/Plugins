@@ -76,13 +76,15 @@ public final class ProfileManagerDialog extends StandardDialog {
     /** Adds a new nickname to the active profile. */
     @InputAction(
             call = "addNickname",
-            validator = AddNicknameValidator.class)
+            validator = AddNicknameValidator.class,
+            message = "Enter nickname to add:")
     @EnabledIf(to = "manipulateProfileAllowed")
     private final JButton addNickname = new JButton("Add");
     /** Edits the active nickname in the active profile. */
     @InputAction(
             call = "editNickname",
             validator = EditNicknameValidator.class,
+            message = "Enter edited nickname:",
             content = "getSelectedNickname")
     @EnabledIf(to = "manipulateNicknameAllowed")
     private final JButton editNickname = new JButton("Edit");
