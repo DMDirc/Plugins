@@ -80,7 +80,7 @@ public @interface InputAction {
      *
      * @return Message
      */
-    String message() default "Are you sure you want to do this?";
+    String message() default "Fill in the following:";
 
     /**
      * Class name of the validator to use in the input dialog.
