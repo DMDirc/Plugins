@@ -24,13 +24,14 @@ package com.dmdirc.addons.windowflashing;
 
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SwingController;
+import com.dmdirc.config.ConfigBinder;
+import com.dmdirc.config.ConfigBinding;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
-import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.plugins.BasePlugin;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.PluginManager;
@@ -46,8 +47,14 @@ import com.sun.jna.platform.win32.WinUser.FLASHWINFO;
 /**
  * Native notification plugin to make DMDirc support windows task bar flashing.
  */
-public class WindowFlashing extends BasePlugin implements ConfigChangeListener {
+public class WindowFlashing extends BasePlugin {
 
+    /** This plugin's plugin info. */
+    private final PluginInfo pluginInfo;
+    /** Config binder. */
+    private final ConfigBinder binder;
+    /** Parent swing controller. */
+    private final SwingController controller;
     /** Library instance. */
     private User32 user32;
     /** Flash info object. */
@@ -55,22 +62,36 @@ public class WindowFlashing extends BasePlugin implements ConfigChangeListener {
     /** Swing main frame. */
     private MainFrame mainFrame;
     /** Cached blink rate setting. */
-    private int blinkrate = 0;
+    @ConfigBinding(domain="plugin-windowflashing", key="blinkrate",
+            fallbacks={"plugin-windowflashing", "blinkratefallback"})
+    private int blinkrate;
     /** Cached count setting. */
-    private int flashcount = Integer.MAX_VALUE;
-    /** Cached flags setting. */
-    private int flags = 0;
-    /** This plugin's plugin info. */
-    private final PluginInfo pluginInfo;
+    @ConfigBinding(domain="plugin-windowflashing", key="flashcount",
+            fallbacks={"plugin-windowflashing", "flashcountfallback"})
+    private int flashcount;
+    /** Cached flash taskbar setting. */
+    @ConfigBinding(domain="plugin-windowflashing", key="flashtaskbar")
+    private boolean flashtaskbar;
+    /** Cached flash caption setting. */
+    @ConfigBinding(domain="plugin-windowflashing", key="flashcaption")
+    private boolean flashcaption;
 
     /**
      * Creates a new instance of this plugin.
      *
      * @param pluginInfo This plugin's plugin info
+     * @param pluginManager Plugin manager
+     * @param identityManager Identity Manager
+     * @param controller Parent swing controller
      */
-    public WindowFlashing(final PluginInfo pluginInfo) {
+    public WindowFlashing(final PluginInfo pluginInfo,
+            final PluginManager pluginManager,
+            final IdentityManager identityManager,
+            final SwingController controller) {
         super();
         this.pluginInfo = pluginInfo;
+        this.controller = controller;
+        binder = identityManager.getGlobalConfiguration().getBinder();
         registerCommand(new FlashWindow(this), FlashWindow.INFO);
     }
 
@@ -98,19 +119,16 @@ public class WindowFlashing extends BasePlugin implements ConfigChangeListener {
     /** {@inheritDoc} */
     @Override
     public void onLoad() {
-        mainFrame = ((SwingController) PluginManager
-                .getPluginManager().getPluginInfoByName("ui_swing")
-                .getPlugin()).getMainFrame();
+        mainFrame = controller.getMainFrame();
         user32 = (User32) Native.loadLibrary("user32", User32.class);
-        setupFlashObject();
-        IdentityManager.getIdentityManager().getGlobalConfiguration()
-                .addChangeListener(getDomain(), this);
+        binder.bind(this, WindowFlashing.class);
         super.onLoad();
     }
 
     /** {@inheritDoc} */
     @Override
     public void onUnload() {
+        binder.unbind(this);
         mainFrame = null;
         user32 = null;
         flashInfo = null;
@@ -145,15 +163,7 @@ public class WindowFlashing extends BasePlugin implements ConfigChangeListener {
                 "Should the window caption flash?",
                 manager.getConfigManager(), manager.getIdentity()));
 
-        manager.addCategory(category);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void configChanged(final String domain, final String key) {
-        blinkrate = getTimeout();
-        flashcount = getCount();
-        flags = getFlags();
+        manager.getCategory("Plugins").addSubCategory(category);
     }
 
     /**
@@ -161,7 +171,7 @@ public class WindowFlashing extends BasePlugin implements ConfigChangeListener {
      */
     private void setupFlashObject() {
         flashInfo = new FLASHWINFO();
-        flashInfo.dwFlags = flags;
+        flashInfo.dwFlags = getFlags();
         flashInfo.dwTimeout = blinkrate;
         flashInfo.uCount = flashcount;
         flashInfo.hWnd = getHWND();
@@ -186,53 +196,17 @@ public class WindowFlashing extends BasePlugin implements ConfigChangeListener {
      */
     private int getFlags() {
         int returnValue = 0;
-        if (IdentityManager.getIdentityManager().getGlobalConfiguration()
-                .getOptionBool(getDomain(), "flashtaskbar")) {
+        if (flashtaskbar) {
             returnValue |= WinUser.FLASHW_TRAY;
         }
-
-        if (IdentityManager.getIdentityManager().getGlobalConfiguration()
-                .getOptionBool(getDomain(), "flashcaption")) {
+        if (flashcaption) {
             returnValue |= WinUser.FLASHW_CAPTION;
         }
-
-        if (IdentityManager.getIdentityManager().getGlobalConfiguration()
-                .getOptionBool(getDomain(), "flashcount")) {
+        if (flashcount >= 0) {
             returnValue |= WinUser.FLASHW_TIMER;
         } else {
             returnValue |= WinUser.FLASHW_TIMERNOFG;
         }
-
         return returnValue;
-    }
-
-    /**
-     * Returns the blink rate value from the config.
-     *
-     * @return Blink rate
-     */
-    private int getTimeout() {
-        if (IdentityManager.getIdentityManager().getGlobalConfiguration()
-                .hasOptionInt(getDomain(), "blinkrate")) {
-            return IdentityManager.getIdentityManager().getGlobalConfiguration()
-                    .getOptionInt(getDomain(), "blinkrate");
-        } else {
-            return 0;
-        }
-    }
-
-    /**
-     * Returns the flash count value from the config.
-     *
-     * @return Number of flashes before stopping
-     */
-    private int getCount() {
-        if (IdentityManager.getIdentityManager().getGlobalConfiguration()
-                .hasOptionInt(getDomain(), "flashcount")) {
-            return IdentityManager.getIdentityManager().getGlobalConfiguration()
-                    .getOptionInt(getDomain(), "flashcount");
-        } else {
-            return Integer.MAX_VALUE;
-        }
     }
 }
