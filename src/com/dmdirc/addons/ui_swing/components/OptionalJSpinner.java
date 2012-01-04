@@ -103,6 +103,7 @@ public class OptionalJSpinner extends JPanel implements ActionListener,
 
         spinner.addChangeListener(this);
         checkbox.addActionListener(this);
+        spinner.setEnabled(checkbox.isSelected());
     }
 
     /**
