@@ -94,8 +94,6 @@ public class OptionalJSpinner extends JPanel implements ActionListener,
         spinner = new JSpinner(model);
         listeners = new ListenerList();
 
-        spinner.setEnabled(enabled);
-
         setLayout(new MigLayout("fill"));
 
         add(checkbox, "");
@@ -103,6 +101,7 @@ public class OptionalJSpinner extends JPanel implements ActionListener,
 
         spinner.addChangeListener(this);
         checkbox.addActionListener(this);
+        spinner.setEnabled(checkbox.isSelected());
     }
 
     /**
