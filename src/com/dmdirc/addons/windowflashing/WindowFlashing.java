@@ -22,6 +22,8 @@
 
 package com.dmdirc.addons.windowflashing;
 
+import com.dmdirc.actions.ActionManager;
+import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.config.ConfigBinder;
@@ -32,6 +34,8 @@ import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
+import com.dmdirc.interfaces.ActionListener;
+import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.plugins.BasePlugin;
 import com.dmdirc.plugins.PluginInfo;
 
@@ -46,7 +50,7 @@ import com.sun.jna.platform.win32.WinUser.FLASHWINFO;
 /**
  * Native notification plugin to make DMDirc support windows task bar flashing.
  */
-public class WindowFlashing extends BasePlugin {
+public class WindowFlashing extends BasePlugin implements ActionListener {
 
     /** This plugin's plugin info. */
     private final PluginInfo pluginInfo;
@@ -81,15 +85,18 @@ public class WindowFlashing extends BasePlugin {
      * @param pluginInfo This plugin's plugin info
      * @param identityManager Identity Manager
      * @param controller Parent swing controller
+     * @param actionManager Action manager
      */
     public WindowFlashing(final PluginInfo pluginInfo,
             final IdentityManager identityManager,
-            final SwingController controller) {
+            final SwingController controller,
+            final ActionManager actionManager) {
         super();
         this.pluginInfo = pluginInfo;
         this.controller = controller;
         binder = identityManager.getGlobalConfiguration().getBinder();
         registerCommand(new FlashWindow(this), FlashWindow.INFO);
+        actionManager.registerListener(this, CoreActionType.CLIENT_FOCUS_GAINED);
     }
 
     /**
@@ -164,13 +171,26 @@ public class WindowFlashing extends BasePlugin {
     }
 
     /**
-     * Creates a new flash info object with the cached settings.
+     * Creates a new flash info object that starts flashing with the configured
+     * settings.
      */
     private void setupFlashObject() {
         flashInfo = new FLASHWINFO();
         flashInfo.dwFlags = getFlags();
         flashInfo.dwTimeout = blinkrate;
         flashInfo.uCount = flashcount;
+        flashInfo.hWnd = getHWND();
+        flashInfo.cbSize = flashInfo.size();
+    }
+
+    /**
+     * Creates a new flash object that stops the flashing.
+     */
+    private void stopFlashObject() {
+        flashInfo = new FLASHWINFO();
+        flashInfo.dwFlags = WinUser.FLASHW_STOP;
+        flashInfo.dwTimeout = 0;
+        flashInfo.uCount = 0;
         flashInfo.hWnd = getHWND();
         flashInfo.cbSize = flashInfo.size();
     }
@@ -205,5 +225,14 @@ public class WindowFlashing extends BasePlugin {
             returnValue |= WinUser.FLASHW_TIMERNOFG;
         }
         return returnValue;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void processEvent(final ActionType type, final StringBuffer format,
+            final Object... arguments) {
+        if (mainFrame != null) {
+            stopFlashObject();
+        }
     }
 }
