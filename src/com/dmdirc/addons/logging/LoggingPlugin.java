@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.logging;
 
+import com.dmdirc.util.io.ReverseFileReader;
 import com.dmdirc.Channel;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.Main;

@@ -23,8 +23,7 @@
 package com.dmdirc.addons.parser_twitter.api;
 
 /**
- *
- * @author shane
+ * Enumeration of possible states of this
  */
 public enum APIAllowed {
 
