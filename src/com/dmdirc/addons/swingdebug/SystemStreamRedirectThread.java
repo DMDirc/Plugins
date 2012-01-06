@@ -22,6 +22,8 @@
 
 package com.dmdirc.addons.swingdebug;
 
+import com.dmdirc.ui.messages.IRCDocument;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -29,32 +31,21 @@ import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.io.PrintStream;
 
-import javax.swing.text.BadLocationException;
-import javax.swing.text.Document;
-
 /**
  * Simple utility class to redirect System streams to the specified Document.
  */
 public class SystemStreamRedirectThread implements Runnable {
 
-    /**
-     * Enum to identify System streams.
-     */
-    public enum Stream {
-        /** System.out. */
-        OUT,
-        /** System.in. */
-        IN;
-    }
-
     /** Is this thread running? */
     private boolean running = false;
     /** Reader to for the system stream. */
-    private final BufferedReader rar;
+    private final BufferedReader reader;
     /** Stream identifier. */
-    private final Stream stream;
+    private final SystemStreamType stream;
     /** Document to output stream into. */
-    private final Document document;
+    private final IRCDocument document;
+    /** Original System stream. */
+    private PrintStream originalStream;
 
     /**
      * Constructs a new redirection thread.
@@ -64,20 +55,22 @@ public class SystemStreamRedirectThread implements Runnable {
      *
      * @throws IOException On error redirecting stream
      */
-    public SystemStreamRedirectThread(final Stream stream,
-            final Document document) throws IOException {
+    public SystemStreamRedirectThread(final SystemStreamType stream,
+            final IRCDocument document) throws IOException {
         super();
         this.stream = stream;
         this.document = document;
 
         final PipedInputStream in = new PipedInputStream();
         final PipedOutputStream out = new PipedOutputStream(in);
-        rar = new BufferedReader(new InputStreamReader(in));
+        reader = new BufferedReader(new InputStreamReader(in));
         switch (stream) {
-            case OUT:
+            case Out:
+                originalStream = System.out;
                 System.setOut(new PrintStream(out));
                 break;
-            case IN:
+            case Error:
+                originalStream = System.err;
                 System.setErr(new PrintStream(out));
                 break;
             default:
@@ -92,10 +85,8 @@ public class SystemStreamRedirectThread implements Runnable {
         running = true;
         while (running) {
             try {
-                if (rar.ready()) {
-                    document.insertString(document.getLength(), rar.readLine(),
-                            null);
-                    document.insertString(document.getLength(), "\n", null);
+                if (reader.ready()) {
+                    document.addText(new String[]{reader.readLine(), });
                 } else {
                     try {
                         Thread.sleep(500);
@@ -103,8 +94,7 @@ public class SystemStreamRedirectThread implements Runnable {
                         //Ignore
                     }
                 }
-            } catch (BadLocationException ex) {
-                running = false;
+                Thread.yield();
             } catch (IOException ex) {
                 running = false;
             }
@@ -126,6 +116,17 @@ public class SystemStreamRedirectThread implements Runnable {
      */
     public void cancel() {
         running = false;
+        switch (stream) {
+            case Out:
+                System.setOut(originalStream);
+                break;
+            case Error:
+                System.setErr(originalStream);
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown stream type: "
+                        + stream);
+        }
     }
 
     /**
