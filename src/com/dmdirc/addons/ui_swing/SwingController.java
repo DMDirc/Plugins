@@ -149,7 +149,8 @@ public class SwingController extends BasePlugin implements UIController {
      * @param pluginInfo Plugin info
      * @param identityManager Identity Manager
      */
-    public SwingController(final PluginInfo pluginInfo, final IdentityManager identityManager) {
+    public SwingController(final PluginInfo pluginInfo,
+            final IdentityManager identityManager) {
         super();
         this.pluginInfo = pluginInfo;
         this.identityManager = identityManager;
