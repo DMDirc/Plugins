@@ -30,6 +30,7 @@ import com.dmdirc.util.collections.ListenerList;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -45,16 +46,14 @@ import net.miginfocom.swing.MigLayout;
  */
 public class WizardPanel extends JPanel implements ActionListener {
 
-    /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
-     */
+    /** Serial version UID. */
     private static final long serialVersionUID = 2;
-    /** Step panel list. */
-    private final StepLayout steps;
     /** Wizard title. */
     private final String title;
+    /** Step Listeners. */
+    private final ListenerList stepListeners;
+    /** List of steps. */
+    private final List<Step> steps;
     /** Step panel. */
     private JPanel stepsPanel;
     /** Title panel. */
@@ -67,8 +66,6 @@ public class WizardPanel extends JPanel implements ActionListener {
     private JButton next;
     /** Progress label. */
     private JLabel progressLabel;
-    /** Step Listeners. */
-    private final ListenerList stepListeners;
 
     /**
      * Creates a new instance of WizardPanel.
@@ -80,9 +77,9 @@ public class WizardPanel extends JPanel implements ActionListener {
         super();
 
         stepListeners = new ListenerList();
+        this.steps = new ArrayList<Step>(steps);
 
         this.title = title;
-        this.steps = new StepLayout();
 
         initComponents();
         layoutComponents();
@@ -96,7 +93,7 @@ public class WizardPanel extends JPanel implements ActionListener {
     private void initComponents() {
         titleLabel = new TitlePanel(new EtchedLineBorder(EtchedBorder.LOWERED,
                 BorderSide.BOTTOM), title);
-        stepsPanel = new JPanel(steps);
+        stepsPanel = new JPanel(new MigLayout("fillx"));
 
         progressLabel = new JLabel();
 
@@ -129,9 +126,10 @@ public class WizardPanel extends JPanel implements ActionListener {
     /** Displays the wizard. */
     public void display() {
         if (!steps.isEmpty()) {
-            steps.first(stepsPanel);
+            stepsPanel.removeAll();
+            stepsPanel.add(steps.get(0));
             currentStep = 0;
-            titleLabel.setText(steps.getStep(currentStep).getTitle());
+            titleLabel.setText(steps.get(currentStep).getTitle());
 
             prev.setEnabled(false);
             if (steps.size() == 1) {
@@ -162,7 +160,7 @@ public class WizardPanel extends JPanel implements ActionListener {
      * @param step Step to add
      */
     public void addStep(final Step step) {
-        stepsPanel.add(step, step.toString());
+        steps.add(step);
     }
 
     /**
@@ -187,14 +185,17 @@ public class WizardPanel extends JPanel implements ActionListener {
     protected void nextStep() {
         if ("Next \u00BB".equals(next.getText())) {
             prev.setEnabled(true);
-            fireStepAboutToBeDisplayed(steps.getStep(currentStep + 1));
-            steps.next(stepsPanel);
-            fireStepHidden(steps.getStep(currentStep));
+            fireStepAboutToBeDisplayed(steps.get(currentStep + 1));
+            stepsPanel.setVisible(false);
+            stepsPanel.removeAll();
+            stepsPanel.add(steps.get(currentStep + 1));
+            stepsPanel.setVisible(true);
+            fireStepHidden(steps.get(currentStep));
             currentStep++;
             if (currentStep == steps.size() - 1) {
                 next.setText("Finish");
             }
-            titleLabel.setText(steps.getStep(currentStep).getTitle());
+            titleLabel.setText(steps.get(currentStep).getTitle());
             updateProgressLabel();
         } else if ("Finish".equals(next.getText())) {
             fireWizardFinished();
@@ -203,15 +204,18 @@ public class WizardPanel extends JPanel implements ActionListener {
 
     /** Moves to the previous step. */
     protected void prevStep() {
-        fireStepAboutToBeDisplayed(steps.getStep(currentStep - 1));
-        steps.previous(stepsPanel);
-        fireStepHidden(steps.getStep(currentStep));
+        fireStepAboutToBeDisplayed(steps.get(currentStep - 1));
+        stepsPanel.setVisible(false);
+        stepsPanel.removeAll();
+        stepsPanel.add(steps.get(currentStep - 1));
+        stepsPanel.setVisible(true);
+        fireStepHidden(steps.get(currentStep));
         currentStep--;
         if (currentStep == 0) {
             prev.setEnabled(false);
         }
         next.setText("Next \u00BB");
-        titleLabel.setText(steps.getStep(currentStep).getTitle());
+        titleLabel.setText(steps.get(currentStep).getTitle());
         updateProgressLabel();
     }
 
@@ -223,7 +227,7 @@ public class WizardPanel extends JPanel implements ActionListener {
      * @return Specified step.
      */
     public Step getStep(final int stepNumber) {
-        return steps.getStep(stepNumber);
+        return steps.get(stepNumber);
     }
 
     /**
