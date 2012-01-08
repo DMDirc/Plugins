@@ -35,7 +35,9 @@ import java.util.Arrays;
 
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 
+import net.miginfocom.layout.PlatformDefaults;
 import net.miginfocom.swing.MigLayout;
 
 /** Status bar, shows message and info on the GUI. */
@@ -48,8 +50,9 @@ public final class SwingStatusBar extends JPanel implements StatusBar {
      */
     private static final long serialVersionUID = 5;
     /** Mig layout component restraints. */
-    private static final String COMPONENT_CONSTRAINTS
-            = "sgy components, hmax 20, hmin 20, wmin 20, shrink 0";
+    private final String componentConstraints;
+    /** Height for the status bar. */
+    private final int height;
     /** message label. */
     private final MessageLabel messageLabel;
     /** error panel. */
@@ -69,6 +72,11 @@ public final class SwingStatusBar extends JPanel implements StatusBar {
             final MainFrame mainFrame) {
         super();
 
+        height = getFontMetrics(UIManager.getFont("Table.font")).getHeight()
+                + (int) PlatformDefaults.getUnitValueX("related").getValue();
+        componentConstraints = "sgy components, hmax "+height+", hmin "+height
+                +", wmin 20, shrink 0";
+
         messageLabel = new MessageLabel(controller, mainFrame);
         errorPanel = new ErrorPanel(controller, mainFrame, this);
         updateLabel = new UpdaterLabel(controller);
@@ -76,10 +84,11 @@ public final class SwingStatusBar extends JPanel implements StatusBar {
 
         setLayout(new MigLayout("fill, ins 0, hidemode 3"));
 
-        add(messageLabel, "growx, pushx, sgy components, hmax 20, hmin 20");
-        add(updateLabel, COMPONENT_CONSTRAINTS);
-        add(errorPanel, COMPONENT_CONSTRAINTS);
-        add(inviteLabel, COMPONENT_CONSTRAINTS);
+        add(messageLabel, "growx, pushx, sgy components, hmax "+height
+                +", hmin "+height);
+        add(updateLabel, componentConstraints);
+        add(errorPanel, componentConstraints);
+        add(inviteLabel, componentConstraints);
     }
 
     /** {@inheritDoc} */
@@ -112,10 +121,10 @@ public final class SwingStatusBar extends JPanel implements StatusBar {
                     remove(updateLabel);
                     remove(errorPanel);
                     remove(inviteLabel);
-                    add((Component) component, COMPONENT_CONSTRAINTS);
-                    add(updateLabel, COMPONENT_CONSTRAINTS);
-                    add(inviteLabel, COMPONENT_CONSTRAINTS);
-                    add(errorPanel, COMPONENT_CONSTRAINTS);
+                    add((Component) component, componentConstraints);
+                    add(updateLabel, componentConstraints);
+                    add(inviteLabel, componentConstraints);
+                    add(errorPanel, componentConstraints);
                     validate();
                 }
             });

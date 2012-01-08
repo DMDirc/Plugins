@@ -41,6 +41,7 @@ import javax.swing.JComponent;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JTree;
+import javax.swing.UIManager;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
@@ -95,7 +96,8 @@ public class Tree extends JTree implements MouseMotionListener,
         getSelectionModel().setSelectionMode(
                 TreeSelectionModel.SINGLE_TREE_SELECTION);
         setRootVisible(false);
-        setRowHeight(16);
+        setRowHeight(getFontMetrics(
+                UIManager.getFont("Tree.font")).getHeight() + 2);
         setOpaque(true);
         setBorder(BorderFactory.createEmptyBorder(
                 (int) PlatformDefaults.getUnitValueX("related").getValue(),
