@@ -62,8 +62,10 @@ import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.MenuSelectionManager;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 
+import net.miginfocom.layout.PlatformDefaults;
 import lombok.Getter;
 import net.miginfocom.swing.MigLayout;
 
@@ -402,8 +404,11 @@ public final class MainFrame extends JFrame implements WindowListener,
      * Lays out the this component.
      */
     private void layoutComponents() {
+        final int height = getFontMetrics(UIManager.getFont("Table.font"))
+                .getHeight() + (int) PlatformDefaults.getUnitValueX("related")
+                .getValue();
         getContentPane().add(mainSplitPane, "grow, push");
-        getContentPane().add(statusBar, "hmax 20, wmax 100%-2*rel, "
+        getContentPane().add(statusBar, "hmax "+height+", wmax 100%-2*rel, "
                 + "wmin 100%-2*rel, south, gap rel rel 0 rel");
     }
 
