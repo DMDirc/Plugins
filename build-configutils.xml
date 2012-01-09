@@ -11,7 +11,7 @@
 
             <!-- Extract the entire domain contents -->
             <propertyregex property="extracted" override="true" input="@{contents}" select="\1" defaultvalue="">
-                <regexp pattern="(?si)^.*\n\Q@{domain}\E:\n(.*?)(\n[^\n]+:\n|$)"/>
+                <regexp pattern="(?si)^.*[\r\n]+\Q@{domain}\E:[\r\n]+(.*?)([\r\n]+[^\r\n]+:[\r\n]+|$)"/>
             </propertyregex>
 
             <!-- Trim leading whitespace -->
@@ -31,7 +31,7 @@
 
             <!-- Extract the raw value -->
             <propertyregex property="extracted" override="true" input="@{domaincontents}" select="\1">
-                <regexp pattern="(?mi)^\s*\Q@{setting}\E\s*=\s*(.*?)$"/>
+                <regexp pattern="(?mi)^\s*\Q@{setting}\E\s*=\s*(.*?)[\r\n]*?$"/>
             </propertyregex>
 
             <!-- Unescape \r, \n, \=, \#, \: and \\ -->
