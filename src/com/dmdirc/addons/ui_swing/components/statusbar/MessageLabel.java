@@ -89,8 +89,8 @@ public class MessageLabel extends JPanel implements StatusBarComponent,
         label.setBorder(new SidelessEtchedBorder(
                 SidelessEtchedBorder.Side.RIGHT));
         label.addMouseListener(this);
-        add(label, "growx, pushx");
-        add(historyLabel, "gapleft 0");
+        add(label, "grow, push");
+        add(historyLabel, "grow, gapleft 0");
     }
 
     /**

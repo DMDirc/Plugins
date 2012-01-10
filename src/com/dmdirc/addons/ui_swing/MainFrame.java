@@ -404,11 +404,8 @@ public final class MainFrame extends JFrame implements WindowListener,
      * Lays out the this component.
      */
     private void layoutComponents() {
-        final int height = getFontMetrics(UIManager.getFont("Table.font"))
-                .getHeight() + (int) PlatformDefaults.getUnitValueX("related")
-                .getValue();
         getContentPane().add(mainSplitPane, "grow, push");
-        getContentPane().add(statusBar, "hmax "+height+", wmax 100%-2*rel, "
+        getContentPane().add(statusBar, "wmax 100%-2*rel, "
                 + "wmin 100%-2*rel, south, gap rel rel 0 rel");
     }
 

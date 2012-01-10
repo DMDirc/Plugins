@@ -73,6 +73,7 @@ public final class SwingStatusBar extends JPanel implements StatusBar {
         super();
 
         height = getFontMetrics(UIManager.getFont("Table.font")).getHeight()
+                + (int) PlatformDefaults.getUnitValueX("related").getValue()
                 + (int) PlatformDefaults.getUnitValueX("related").getValue();
         componentConstraints = "sgy components, hmax "+height+", hmin "+height
                 +", wmin 20, shrink 0";
@@ -84,8 +85,8 @@ public final class SwingStatusBar extends JPanel implements StatusBar {
 
         setLayout(new MigLayout("fill, ins 0, hidemode 3"));
 
-        add(messageLabel, "growx, pushx, sgy components, hmax "+height
-                +", hmin "+height);
+        add(messageLabel, "grow, push, sgy components, hmax " + height
+                + ", hmin " + height);
         add(updateLabel, componentConstraints);
         add(errorPanel, componentConstraints);
         add(inviteLabel, componentConstraints);
