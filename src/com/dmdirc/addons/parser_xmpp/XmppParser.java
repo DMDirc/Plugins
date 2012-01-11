@@ -42,6 +42,7 @@ import com.dmdirc.parser.interfaces.callbacks.DataInListener;
 import com.dmdirc.parser.interfaces.callbacks.DataOutListener;
 import com.dmdirc.parser.interfaces.callbacks.NumericListener;
 import com.dmdirc.parser.interfaces.callbacks.OtherAwayStateListener;
+import com.dmdirc.parser.interfaces.callbacks.PrivateActionListener;
 import com.dmdirc.parser.interfaces.callbacks.PrivateMessageListener;
 import com.dmdirc.parser.interfaces.callbacks.ServerReadyListener;
 import com.dmdirc.parser.interfaces.callbacks.SocketCloseListener;
@@ -171,13 +172,13 @@ public class XmppParser extends BaseSocketAwareParser {
     /** {@inheritDoc} */
     @Override
     public int getMaxLength(final String type, final String target) {
-        return -1; // TODO
+        return Integer.MAX_VALUE;
     }
 
     /** {@inheritDoc} */
     @Override
     public int getMaxLength() {
-        return -1; // TODO
+        return Integer.MAX_VALUE;
     }
 
     /** {@inheritDoc} */
@@ -399,7 +400,7 @@ public class XmppParser extends BaseSocketAwareParser {
     /** {@inheritDoc} */
     @Override
     public void sendAction(final String target, final String message) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        sendMessage(target, "/me " + message);
     }
 
     /** {@inheritDoc} */
@@ -644,9 +645,14 @@ public class XmppParser extends BaseSocketAwareParser {
         @Override
         public void processMessage(final Chat chat, final Message msg) {
             if (msg.getBody() != null) {
-                // TOOD: Handle error messages
-                getCallback(PrivateMessageListener.class).onPrivateMessage(null,
-                        null, msg.getBody(), msg.getFrom());
+                // TODO: Handle error messages
+                if (msg.getBody().startsWith("/me ")) {
+                    getCallback(PrivateActionListener.class).onPrivateAction(null,
+                            null, msg.getBody().substring(4), msg.getFrom());
+                } else {
+                    getCallback(PrivateMessageListener.class).onPrivateMessage(null,
+                            null, msg.getBody(), msg.getFrom());
+                }
             }
         }
 
