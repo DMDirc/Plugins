@@ -75,6 +75,8 @@ import org.jivesoftware.smackx.ChatStateListener;
 import org.jivesoftware.smackx.ChatStateManager;
 import org.jivesoftware.smackx.muc.MultiUserChat;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * A parser which can understand the XMPP protocol.
  */
@@ -82,6 +84,7 @@ import org.jivesoftware.smackx.muc.MultiUserChat;
     XmppClientInfo.class, XmppLocalClientInfo.class, XmppFakeChannel.class,
     XmppChannelClientInfo.class
 })
+@Slf4j
 public class XmppParser extends BaseSocketAwareParser {
 
     /** Pattern to use to extract priority. */
@@ -126,6 +129,9 @@ public class XmppParser extends BaseSocketAwareParser {
             useFakeChannel = address.getQuery().matches("(?i).*(^|&)showchannel($|&).*");
             priority = matcher.find() ? Integer.parseInt(matcher.group(1)) : 0;
         }
+
+         log.debug("XMPP parser created with query string {}, parsed fake channel = {}, priority = {}",
+                 new Object[] { address.getQuery(), useFakeChannel, priority });
     }
 
     /** {@inheritDoc} */
@@ -381,6 +387,7 @@ public class XmppParser extends BaseSocketAwareParser {
     @Override
     public void sendMessage(final String target, final String message) {
         if (!chats.containsKey(target)) {
+            log.debug("Creating new chat for {}", target);
             chats.put(target, connection.getChatManager().createChat(target, new MessageListenerImpl()));
         }
 
@@ -472,6 +479,8 @@ public class XmppParser extends BaseSocketAwareParser {
                 fakeChannel.updateContacts(contacts.values());
             }
         } catch (XMPPException ex) {
+            log.debug("Go an XMPP exception", ex);
+
             connection = null;
 
             final ParserError error = new ParserError(ParserError.ERROR_ERROR, "Unable to connect", "");
@@ -495,6 +504,8 @@ public class XmppParser extends BaseSocketAwareParser {
      * @param isBack True if the client is coming back, false if they're going away
      */
     public void handleAwayStateChange(final XmppClientInfo client, final boolean isBack) {
+        log.debug("Handling away state change for {} to {}", client.getNickname(), isBack);
+
         if (useFakeChannel) {
             getCallback(OtherAwayStateListener.class)
                     .onAwayStateOther(null, null, client,
@@ -530,6 +541,8 @@ public class XmppParser extends BaseSocketAwareParser {
     /** {@inheritDoc} */
     @Override
     public void setCompositionState(final String host, final CompositionState state) {
+        log.debug("Setting composition state for {} to {}", host, state);
+
         final Chat chat = chats.get(parseHostmask(host)[0]);
 
         ChatState newState;
@@ -552,6 +565,7 @@ public class XmppParser extends BaseSocketAwareParser {
                 stateManager.setCurrentState(newState, chat);
             } catch (XMPPException ex) {
                 // Can't set chat state... Oh well?
+                log.info("Couldn't set composition state", ex);
             }
         }
     }
