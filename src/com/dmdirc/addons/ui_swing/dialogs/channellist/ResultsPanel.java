@@ -106,24 +106,24 @@ public class ResultsPanel extends JPanel implements TableModelListener,
     /** {@inheritDoc} */
     @Override
     public void mousePressed(final MouseEvent e) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        //Ignore
     }
 
     /** {@inheritDoc} */
     @Override
     public void mouseReleased(final MouseEvent e) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        //Ignore
     }
 
     /** {@inheritDoc} */
     @Override
     public void mouseEntered(final MouseEvent e) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        //Ignore
     }
 
     /** {@inheritDoc} */
     @Override
     public void mouseExited(final MouseEvent e) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        //Ignore
     }
 }
