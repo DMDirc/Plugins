@@ -28,6 +28,7 @@ import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 
 import java.awt.Dimension;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
@@ -36,11 +37,13 @@ import java.beans.PropertyChangeListener;
 import javax.swing.JButton;
 import javax.swing.SwingUtilities;
 
+import lombok.extern.slf4j.Slf4j;
 import net.miginfocom.swing.MigLayout;
 
 /**
  * Action editor dialog.
  */
+@Slf4j
 public class ActionEditorDialog extends StandardDialog implements
         ActionListener,
         PropertyChangeListener {
@@ -81,8 +84,21 @@ public class ActionEditorDialog extends StandardDialog implements
      * @param group Action's group
      */
     public ActionEditorDialog(final SwingController controller,
-            final String group) {
-        this(controller, group, null);
+            final Window parentWindow, final String group) {
+        super(controller, parentWindow, ModalityType.DOCUMENT_MODAL);
+        log.debug("loading with group: " + group);
+        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+        setTitle("Action Editor");
+
+        this.group = group;
+        this.action = null;
+
+        initComponents();
+        addListeners();
+        doComponents();
+        layoutComponents();
+
+        setResizable(false);
     }
 
     /**
@@ -93,12 +109,13 @@ public class ActionEditorDialog extends StandardDialog implements
      * @param group Action's group
      */
     public ActionEditorDialog(final SwingController controller,
-            final String group, final Action action) {
-        super(controller, ModalityType.DOCUMENT_MODAL);
+            final Window parentWindow, final Action action) {
+        super(controller, parentWindow, ModalityType.DOCUMENT_MODAL);
+        log.debug("loading with action: " + action);
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         setTitle("Action Editor");
 
-        this.group = group;
+        this.group = action.getGroup();
         this.action = action;
 
         initComponents();

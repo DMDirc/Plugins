@@ -249,11 +249,11 @@ public final class ActionsGroupPanel extends JPanel implements ActionListener,
     @Override
     public void actionPerformed(final ActionEvent e) {
         if (e.getSource() == add) {
-            controller.showDialog(ActionEditorDialog.class, parent,
+            controller.showDialog(ActionEditorDialog.class, this, parent,
                     group.getName());
         } else if (e.getSource() == edit) {
-            controller.showDialog(ActionEditorDialog.class, parent,
-                    group.getName(), model.getAction(
+            controller.showDialog(ActionEditorDialog.class, this, parent,
+                    model.getAction(
                     table.getRowSorter().convertRowIndexToModel(table.
                     getSelectedRow())));
         } else if (e.getSource() == delete) {
