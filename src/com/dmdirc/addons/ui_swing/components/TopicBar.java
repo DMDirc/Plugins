@@ -267,7 +267,11 @@ public class TopicBar extends JComponent implements ActionListener,
         }
         ((ChannelFrame) controller.getWindowFactory().getSwingWindow(channel))
                 .getInputField().requestFocusInWindow();
-        topicText.setText(channel.getCurrentTopic().getTopic());
+        if (channel.getCurrentTopic() == null) {
+            topicText.setText("");
+        } else {
+            topicText.setText(channel.getCurrentTopic().getTopic());
+        }
         topicText.setFocusable(false);
         topicText.setEditable(false);
         topicCancel.setVisible(false);
