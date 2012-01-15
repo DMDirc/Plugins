@@ -24,8 +24,10 @@ package com.dmdirc.addons.ui_swing.dialogs.prefs;
 
 import com.dmdirc.updater.UpdateChecker;
 import com.dmdirc.updater.UpdateComponent;
+import com.dmdirc.updater.manager.UpdateStatus;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -60,14 +62,16 @@ public class UpdateTableModel extends AbstractTableModel {
      *
      * @param updates Update components to show
      */
-    public UpdateTableModel(final List<UpdateComponent> updates) {
+    public UpdateTableModel(final Collection<UpdateComponent> updates) {
         super();
 
         this.updates = new ArrayList<UpdateComponent>(updates);
         this.enabled = new HashMap<UpdateComponent, Boolean>();
 
         for (UpdateComponent update : this.updates) {
-            enabled.put(update, UpdateChecker.isEnabled(update));
+            enabled.put(update,
+                    UpdateChecker.getManager().getStatus(update)
+                    != UpdateStatus.CHECKING_NOT_PERMITTED);
         }
     }
 

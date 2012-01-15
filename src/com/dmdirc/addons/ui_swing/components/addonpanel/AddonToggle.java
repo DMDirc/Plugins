@@ -29,6 +29,7 @@ import com.dmdirc.ui.themes.Theme;
 import com.dmdirc.ui.themes.ThemeManager;
 import com.dmdirc.updater.UpdateChecker;
 import com.dmdirc.updater.UpdateComponent;
+import com.dmdirc.updater.manager.UpdateStatus;
 import com.dmdirc.util.collections.ListenerList;
 
 /**
@@ -41,8 +42,6 @@ public final class AddonToggle {
     private final PluginInfo pi;
     /** The Theme object we're wrapping. */
     private final Theme theme;
-    /** Update component. */
-    private final UpdateComponent updateComponent;
     /** Addon state. */
     private boolean state;
     /** Whether or nor the addon update state should be toggled. */
@@ -74,9 +73,13 @@ public final class AddonToggle {
         } else {
             state = pi.isLoaded();
         }
-        updateComponent = UpdateChecker.findComponent("addon-" + getID());
-        if (updateComponent != null) {
-            updateState = UpdateChecker.isEnabled(updateComponent);
+
+        for (UpdateComponent comp : UpdateChecker.getManager().getComponents()) {
+            if (comp.getName().equals("addon-" + getID())) {
+                updateState = UpdateChecker.getManager().getStatus(comp)
+                        != UpdateStatus.CHECKING_NOT_PERMITTED;
+                break;
+            }
         }
     }
 
