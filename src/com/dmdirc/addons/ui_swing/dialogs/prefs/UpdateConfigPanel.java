@@ -112,7 +112,7 @@ public class UpdateConfigPanel extends JPanel implements ActionListener,
         final ConfigManager config = controller.getGlobalConfig();
         enable = new JCheckBox();
         scrollPane = new JScrollPane();
-        tableModel = new UpdateTableModel(UpdateChecker.getComponents());
+        tableModel = new UpdateTableModel(UpdateChecker.getManager().getComponents());
         table = new PackingTable(tableModel, scrollPane);
         checkNow = new JButton("Check now");
         checkNow.setEnabled(config.getOptionBool("updater", "enable"));

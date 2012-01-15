@@ -29,6 +29,7 @@ import com.dmdirc.ui.themes.Theme;
 import com.dmdirc.ui.themes.ThemeManager;
 import com.dmdirc.updater.UpdateChecker;
 import com.dmdirc.updater.UpdateComponent;
+import com.dmdirc.updater.manager.UpdateStatus;
 import com.dmdirc.util.collections.ListenerList;
 
 /**
@@ -74,10 +75,18 @@ public final class AddonToggle {
         } else {
             state = pi.isLoaded();
         }
-        updateComponent = UpdateChecker.findComponent("addon-" + getID());
-        if (updateComponent != null) {
-            updateState = UpdateChecker.isEnabled(updateComponent);
+
+        UpdateComponent foundComponent = null;
+        for (UpdateComponent comp : UpdateChecker.getManager().getComponents()) {
+            if (comp.getName().equals("addon-" + getID())) {
+                foundComponent = comp;
+                updateState = UpdateChecker.getManager().getStatus(foundComponent)
+                        != UpdateStatus.CHECKING_NOT_PERMITTED;
+                break;
+            }
         }
+
+        updateComponent = foundComponent;
     }
 
     /**

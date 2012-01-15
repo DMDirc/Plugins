@@ -22,7 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.components.renderers;
 
-import com.dmdirc.updater.UpdateStatus;
+import com.dmdirc.updater.manager.UpdateStatus;
 
 import java.awt.Component;
 
@@ -51,7 +51,7 @@ public class UpdateStatusTableCellRenderer extends DefaultTableCellRenderer {
         if (value == null) {
             setValue("Unknown");
         } else if (value instanceof UpdateStatus) {
-            setValue(((UpdateStatus) value).toString());
+            setValue(((UpdateStatus) value).getDescription());
         } else {
             setValue(value.toString());
         }

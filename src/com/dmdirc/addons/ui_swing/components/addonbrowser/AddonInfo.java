@@ -135,7 +135,7 @@ public class AddonInfo {
      * @return true iff installed
      */
     public boolean isInstalled() {
-        for (final UpdateComponent comp : UpdateChecker.getComponents()) {
+        for (UpdateComponent comp : UpdateChecker.getManager().getComponents()) {
             if (comp.getName().equals("addon-" + getId())) {
                 return true;
             }
