@@ -22,13 +22,15 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.updater;
 
-import com.dmdirc.updater.Update;
+import com.dmdirc.updater.UpdateChecker;
 import com.dmdirc.updater.UpdateComponent;
-import com.dmdirc.updater.UpdateListener;
-import com.dmdirc.updater.UpdateStatus;
+import com.dmdirc.updater.manager.CachingUpdateManager;
+import com.dmdirc.updater.manager.UpdateStatus;
+import com.dmdirc.updater.manager.UpdateStatusListener;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,7 +40,7 @@ import javax.swing.table.AbstractTableModel;
 /**
  * Update table model.
  */
-public class UpdateTableModel extends AbstractTableModel implements UpdateListener {
+public class UpdateTableModel extends AbstractTableModel implements UpdateStatusListener {
 
     /**
      * A version number for this class. It should be changed whenever the class
@@ -46,25 +48,34 @@ public class UpdateTableModel extends AbstractTableModel implements UpdateListen
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 3;
+    /** The update manager to use. */
+    private final CachingUpdateManager updateManager;
     /** Data list. */
-    private List<Update> updates;
+    private final List<UpdateComponent> updates = new ArrayList<UpdateComponent>();
     /** Enabled list. */
-    private Map<Update, Boolean> enabled;
+    private final List<UpdateComponent> enabled = new ArrayList<UpdateComponent>();
+    /** Cached progress for each component. */
+    private final Map<UpdateComponent, Double> progress = new HashMap<UpdateComponent, Double>();
     /** Number formatter. */
     private NumberFormat formatter;
 
     /** Creates a new instance of UpdateTableModel. */
     public UpdateTableModel() {
-        this(new ArrayList<Update>());
+        this(UpdateChecker.getManager(), Collections.<UpdateComponent>emptyList());
     }
 
     /**
      * Creates a new instance of UpdateTableModel.
      *
-     * @param updates List of updates
+     * @param updateManager The update manager to use
+     * @param updates List of components to display
      */
-    public UpdateTableModel(final List<Update> updates) {
+    public UpdateTableModel(final CachingUpdateManager updateManager,
+            final List<UpdateComponent> updates) {
         super();
+
+        this.updateManager = updateManager;
+        this.updateManager.addUpdateStatusListener(this);
 
         setUpdates(updates);
         formatter = NumberFormat.getNumberInstance();
@@ -77,14 +88,12 @@ public class UpdateTableModel extends AbstractTableModel implements UpdateListen
      *
      * @param updates List of updates
      */
-    public void setUpdates(final List<Update> updates) {
-        this.updates = new ArrayList<Update>(updates);
-        this.enabled = new HashMap<Update, Boolean>();
-
-        for (Update update : updates) {
-            update.addUpdateListener(this);
-            enabled.put(update, true);
-        }
+    public void setUpdates(final List<UpdateComponent> updates) {
+        this.updates.clear();
+        this.updates.addAll(updates);
+        this.enabled.clear();
+        this.enabled.addAll(updates);
+        this.progress.clear();
 
         fireTableDataChanged();
     }
@@ -153,20 +162,24 @@ public class UpdateTableModel extends AbstractTableModel implements UpdateListen
         if (rowIndex < 0) {
             throw new IllegalArgumentException("Must specify a positive integer");
         }
+
+        final UpdateComponent component = updates.get(rowIndex);
+
         switch (columnIndex) {
             case 0:
-                return enabled.get(updates.get(rowIndex));
+                return enabled.contains(component);
             case 1:
-                return updates.get(rowIndex).getComponent();
+                return component;
             case 2:
-                return updates.get(rowIndex).getRemoteVersion();
+                return updateManager.getCheckResult(component).getUpdatedVersionName();
             case 3:
-                if (updates.get(rowIndex).getStatus().equals(UpdateStatus.DOWNLOADING)) {
-                    return updates.get(rowIndex).getStatus() + " ("
-                            + formatter.format(updates.get(rowIndex).getProgress()) + "%)";
-                } else {
-                    return updates.get(rowIndex).getStatus();
-                }
+                final UpdateStatus status = updateManager.getStatus(component);
+                final boolean hasProgress = progress.containsKey(component)
+                        && progress.get(component) > 0;
+
+                return status.getDescription() + (hasProgress
+                        ? " (" + formatter.format(progress.get(component)) + "%)"
+                        : "");
             default:
                 throw new IllegalArgumentException("Unknown column: "
                         + columnIndex);
@@ -186,7 +199,7 @@ public class UpdateTableModel extends AbstractTableModel implements UpdateListen
         }
         switch (columnIndex) {
             case 0:
-                enabled.put(updates.get(rowIndex), (Boolean) aValue);
+                enabled.add(updates.get(rowIndex));
                 break;
             default:
                 throw new IllegalArgumentException("Unknown column: "
@@ -202,7 +215,7 @@ public class UpdateTableModel extends AbstractTableModel implements UpdateListen
      *
      * @return Specified Update
      */
-    public Update getUpdate(final int rowIndex) {
+    public UpdateComponent getUpdate(final int rowIndex) {
         return updates.get(rowIndex);
     }
 
@@ -211,8 +224,8 @@ public class UpdateTableModel extends AbstractTableModel implements UpdateListen
      *
      * @return Update list
      */
-    public List<Update> getUpdates() {
-        return new ArrayList<Update>(updates);
+    public List<UpdateComponent> getUpdates() {
+        return Collections.unmodifiableList(updates);
     }
 
     /**
@@ -222,8 +235,8 @@ public class UpdateTableModel extends AbstractTableModel implements UpdateListen
      *
      * @return true iif the component needs to be updated
      */
-    public boolean isEnabled(final Update update) {
-        return enabled.get(update);
+    public boolean isEnabled(final UpdateComponent update) {
+        return enabled.contains(update);
     }
 
     /**
@@ -242,9 +255,8 @@ public class UpdateTableModel extends AbstractTableModel implements UpdateListen
      *
      * @param update Update to add
      */
-    public void addRow(final Update update) {
+    public void addRow(final UpdateComponent update) {
         updates.add(update);
-        update.addUpdateListener(this);
         fireTableRowsInserted(updates.indexOf(update), updates.indexOf(update));
     }
 
@@ -254,7 +266,6 @@ public class UpdateTableModel extends AbstractTableModel implements UpdateListen
      * @param row Row to remove
      */
     public void removeRow(final int row) {
-        updates.get(row).removeUpdateListener(this);
         updates.remove(row);
         fireTableRowsDeleted(row, row);
     }
@@ -266,20 +277,16 @@ public class UpdateTableModel extends AbstractTableModel implements UpdateListen
      *
      * @return Index of the update or -1 if not found.
      */
-    public int indexOf(final Update update) {
+    public int indexOf(final UpdateComponent update) {
         return updates.indexOf(update);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void updateStatusChange(final Update update, final UpdateStatus status) {
-        fireTableCellUpdated(updates.indexOf(update), 3);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void updateProgressChange(final Update update, final float progress) {
-        fireTableCellUpdated(updates.indexOf(update), 3);
+    public void updateStatusChanged(final UpdateComponent component,
+            final UpdateStatus status, final double progress) {
+        this.progress.put(component, progress);
+        fireTableCellUpdated(updates.indexOf(component), 3);
     }
 }
 

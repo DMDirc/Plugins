@@ -23,15 +23,14 @@
 package com.dmdirc.addons.ui_swing.components.statusbar;
 
 import com.dmdirc.addons.ui_swing.SwingController;
-import com.dmdirc.updater.Update;
 import com.dmdirc.updater.UpdateChecker;
+import com.dmdirc.updater.UpdateComponent;
+import com.dmdirc.updater.manager.UpdateStatus;
 
 import java.awt.Window;
-import java.util.List;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JSeparator;
 
 /**
  * Information popup for the updater label.
@@ -62,33 +61,14 @@ public class UpdaterPopup extends StatusbarPopupWindow {
     /** {@inheritDoc} */
     @Override
     protected void initContent(final JPanel panel) {
-        final UpdateChecker.STATE state = UpdateChecker.getStatus();
+        for (UpdateComponent component : UpdateChecker.getManager().getComponents()) {
+            final UpdateStatus status = UpdateChecker.getManager().getStatus(component);
 
-        if (state.equals(UpdateChecker.STATE.CHECKING)) {
-            panel.add(new JLabel("Checking for updates..."));
-        } else {
-            final List<Update> updates = UpdateChecker.getAvailableUpdates();
-
-            if (state.equals(UpdateChecker.STATE.RESTART_REQUIRED)) {
-                panel.add(new JLabel("A restart is required to install updates."),
-                        "span,wrap");
-            } else if (state.equals(UpdateChecker.STATE.UPDATING)) {
-                panel.add(new JLabel("Update in progress..."), "span,wrap");
-            } else {
-                panel.add(new JLabel(updates.size() == 1
-                        ? "There is one update available" : "There are "
-                        + updates.size() + " updates available"), "span,wrap");
-            }
-
-            panel.add(new JSeparator(), "span, growx, pushx, wrap");
-
-            for (final Update update : updates) {
-                panel.add(new JLabel(update.getComponent().getFriendlyName()),
+            if (status != UpdateStatus.IDLE && status != UpdateStatus.CHECKING_NOT_PERMITTED) {
+                panel.add(new JLabel(component.getFriendlyName()),
                         "growx, pushx");
-                panel.add(new JLabel(update.getRemoteVersion(), JLabel.CENTER),
-                        "growx, pushx, al center");
-                panel.add(new JLabel(update.getStatus().toString(), JLabel.RIGHT),
-                        "growx, pushx, al right, wrap");
+                panel.add(new JLabel(status.getDescription()),
+                        "growx, pushx");
             }
         }
     }

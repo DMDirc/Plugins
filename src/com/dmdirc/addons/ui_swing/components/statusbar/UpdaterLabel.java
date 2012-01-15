@@ -28,8 +28,9 @@ import com.dmdirc.addons.ui_swing.dialogs.updater.SwingUpdaterDialog;
 import com.dmdirc.interfaces.ui.StatusBarComponent;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.updater.UpdateChecker;
-import com.dmdirc.updater.UpdateChecker.STATE;
-import com.dmdirc.updater.UpdateCheckerListener;
+import com.dmdirc.updater.manager.UpdateManager;
+import com.dmdirc.updater.manager.UpdateManagerListener;
+import com.dmdirc.updater.manager.UpdateManagerStatus;
 
 import java.awt.event.MouseEvent;
 
@@ -41,7 +42,7 @@ import javax.swing.JLabel;
  * status bar.
  */
 public class UpdaterLabel extends StatusbarPopupPanel<JLabel> implements
-        StatusBarComponent, UpdateCheckerListener {
+        StatusBarComponent, UpdateManagerListener {
 
     /**
      * A version number for this class. It should be changed whenever the class
@@ -63,7 +64,7 @@ public class UpdaterLabel extends StatusbarPopupPanel<JLabel> implements
 
         this.controller = controller;
         setBorder(BorderFactory.createEtchedBorder());
-        UpdateChecker.addListener(this);
+        UpdateChecker.getManager().addUpdateManagerListener(this);
         setVisible(false);
         label.setText(null);
     }
@@ -78,35 +79,13 @@ public class UpdaterLabel extends StatusbarPopupPanel<JLabel> implements
         super.mouseClicked(mouseEvent);
 
         if (mouseEvent.getButton() == MouseEvent.BUTTON1) {
-            if (UpdateChecker.getStatus().equals(
-                    UpdateChecker.STATE.RESTART_REQUIRED)) {
+            if (UpdateChecker.getManager().getManagerStatus()
+                    == UpdateManagerStatus.IDLE_RESTART_NEEDED) {
                 controller.showDialog(SwingRestartDialog.class);
-            } else if (!UpdateChecker.getStatus().equals(
-                    UpdateChecker.STATE.CHECKING)) {
-                controller.showDialog(SwingUpdaterDialog.class, UpdateChecker
-                        .getAvailableUpdates());
+            } else {
+                controller.showDialog(SwingUpdaterDialog.class,
+                        UpdateChecker.getManager());
             }
-        }
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void statusChanged(final STATE newStatus) {
-        if (newStatus.equals(STATE.IDLE)) {
-            setVisible(false);
-        } else {
-            setVisible(true);
-        }
-
-        if (newStatus.equals(STATE.CHECKING)) {
-            label.setIcon(new IconManager(controller.getGlobalConfig())
-                    .getIcon("hourglass"));
-        } else if (newStatus.equals(STATE.UPDATES_AVAILABLE)) {
-            label.setIcon(new IconManager(controller.getGlobalConfig())
-                    .getIcon("update"));
-        } else if (newStatus.equals(STATE.RESTART_REQUIRED)) {
-            label.setIcon(new IconManager(controller.getGlobalConfig())
-                    .getIcon("restart-needed"));
         }
     }
 
@@ -114,5 +93,27 @@ public class UpdaterLabel extends StatusbarPopupPanel<JLabel> implements
     @Override
     protected StatusbarPopupWindow getWindow() {
         return new UpdaterPopup(controller, this, controller.getMainFrame());
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void updateManagerStatusChanged(final UpdateManager manager,
+            final UpdateManagerStatus status) {
+        if (status == UpdateManagerStatus.IDLE) {
+            setVisible(false);
+        } else {
+            setVisible(true);
+        }
+
+        if (status == UpdateManagerStatus.WORKING) {
+            label.setIcon(new IconManager(controller.getGlobalConfig())
+                    .getIcon("hourglass"));
+        } else if (status == UpdateManagerStatus.IDLE_UPDATE_AVAILABLE) {
+            label.setIcon(new IconManager(controller.getGlobalConfig())
+                    .getIcon("update"));
+        } else if (status == UpdateManagerStatus.IDLE_RESTART_NEEDED) {
+            label.setIcon(new IconManager(controller.getGlobalConfig())
+                    .getIcon("restart-needed"));
+        }
     }
 }

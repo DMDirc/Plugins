@@ -30,14 +30,18 @@ import com.dmdirc.addons.ui_swing.components.renderers.UpdateComponentTableCellR
 import com.dmdirc.addons.ui_swing.components.renderers.UpdateStatusTableCellRenderer;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
-import com.dmdirc.updater.Update;
 import com.dmdirc.updater.UpdateChecker;
-import com.dmdirc.updater.UpdateChecker.STATE;
-import com.dmdirc.updater.UpdateCheckerListener;
+import com.dmdirc.updater.UpdateComponent;
+import com.dmdirc.updater.manager.CachingUpdateManager;
+import com.dmdirc.updater.manager.UpdateManager;
+import com.dmdirc.updater.manager.UpdateManagerListener;
+import com.dmdirc.updater.manager.UpdateManagerStatus;
+import com.dmdirc.updater.manager.UpdateStatus;
 
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -54,10 +58,12 @@ import net.miginfocom.swing.MigLayout;
  * and walks them through the process of downloading the update.
  */
 public final class SwingUpdaterDialog extends StandardDialog implements
-        ActionListener, UpdateCheckerListener {
+        ActionListener, UpdateManagerListener {
 
     /** Serial version UID. */
     private static final long serialVersionUID = 3;
+    /** The update manager to use. */
+    private final CachingUpdateManager updateManager;
     /** Update table. */
     private JTable table;
     /** Table scrollpane. */
@@ -72,18 +78,19 @@ public final class SwingUpdaterDialog extends StandardDialog implements
     /**
      * Creates a new instance of the updater dialog.
      *
-     * @param updates A list of updates that are available.
+     * @param updateManager The update manager to use for information
      * @param controller Swing controller
      */
-    public SwingUpdaterDialog(final List<Update> updates,
+    public SwingUpdaterDialog(final CachingUpdateManager updateManager,
             final SwingController controller) {
         super(controller, ModalityType.MODELESS);
 
-        initComponents(updates);
+        this.updateManager = updateManager;
+
+        initComponents();
         layoutComponents();
 
-        UpdateChecker.addListener(this);
-
+        updateManager.addUpdateManagerListener(this);
         getOkButton().addActionListener(this);
         getCancelButton().addActionListener(this);
 
@@ -96,7 +103,7 @@ public final class SwingUpdaterDialog extends StandardDialog implements
      *
      * @param updates The updates that are available
      */
-    private void initComponents(final List<Update> updates) {
+    private void initComponents() {
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         updateStatusRenderer = new UpdateStatusTableCellRenderer();
         updateComponentRenderer = new UpdateComponentTableCellRenderer();
@@ -104,8 +111,16 @@ public final class SwingUpdaterDialog extends StandardDialog implements
         header = new TextLabel("An update is available for one or more "
                 + "components of DMDirc:");
 
+        final List<UpdateComponent> updates = new ArrayList<UpdateComponent>();
+        for (UpdateComponent component : updateManager.getComponents()) {
+            if (updateManager.getStatus(component) != UpdateStatus.IDLE
+                    && updateManager.getStatus(component) != UpdateStatus.CHECKING_NOT_PERMITTED) {
+                updates.add(component);
+            }
+        }
+
         scrollPane = new JScrollPane();
-        table = new PackingTable(new UpdateTableModel(updates), scrollPane) {
+        table = new PackingTable(new UpdateTableModel(updateManager, updates), scrollPane) {
 
             /** Serialisation version ID. */
             private static final long serialVersionUID = 1;
@@ -165,23 +180,21 @@ public final class SwingUpdaterDialog extends StandardDialog implements
 
             header.setText("DMDirc is updating the following components:");
 
-            for (Update update : ((UpdateTableModel) table.getModel()).getUpdates()) {
-                if (!((UpdateTableModel) table.getModel()).isEnabled(update)) {
-                    UpdateChecker.removeUpdate(update);
-                }
-            }
-
             new LoggingSwingWorker<Void, Void>() {
 
                 /** {@inheritDoc} */
                 @Override
                 protected Void doInBackground() {
-                    UpdateChecker.applyUpdates();
+                    for (UpdateComponent update : ((UpdateTableModel) table.getModel()).getUpdates()) {
+                        if (((UpdateTableModel) table.getModel()).isEnabled(update)) {
+                            updateManager.install(update);
+                        }
+                    }
                     return null;
                 }
             }.executeInExecutor();
 
-            if (UpdateChecker.getStatus() == STATE.RESTART_REQUIRED) {
+            if (UpdateChecker.getManager().getManagerStatus() == UpdateManagerStatus.IDLE_RESTART_NEEDED) {
                 getController().showDialog(SwingRestartDialog.class);
                 dispose();
             }
@@ -199,19 +212,16 @@ public final class SwingUpdaterDialog extends StandardDialog implements
 
     /** {@inheritDoc} */
     @Override
-    public void statusChanged(final STATE newStatus) {
+    public void updateManagerStatusChanged(final UpdateManager manager,
+            final UpdateManagerStatus status) {
         UIUtilities.invokeLater(new Runnable() {
 
             /** {@inheritDoc} */
             @Override
             public void run() {
-                if (newStatus == STATE.UPDATING) {
-                    getOkButton().setEnabled(false);
-                } else {
-                    getOkButton().setEnabled(true);
-                }
-                if (newStatus == STATE.RESTART_REQUIRED) {
-                    getCancelButton().setVisible(false);
+                getOkButton().setEnabled(status != UpdateManagerStatus.WORKING);
+
+                if (status == UpdateManagerStatus.IDLE_RESTART_NEEDED) {
                     dispose();
                 } else {
                     getCancelButton().setVisible(true);
