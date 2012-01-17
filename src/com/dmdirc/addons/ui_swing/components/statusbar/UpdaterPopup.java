@@ -68,7 +68,7 @@ public class UpdaterPopup extends StatusbarPopupWindow {
                 panel.add(new JLabel(component.getFriendlyName()),
                         "growx, pushx");
                 panel.add(new JLabel(status.getDescription()),
-                        "growx, pushx");
+                        "growx, pushx, wrap");
             }
         }
     }
