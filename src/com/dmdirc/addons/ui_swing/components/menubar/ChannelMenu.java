@@ -133,9 +133,8 @@ public class ChannelMenu extends JMenu implements ActionListener,
         csd.setEnabled(activeWindow instanceof Channel && activeWindow
                 .getServer() != null && activeWindow.getServer().getState()
                 == ServerState.CONNECTED);
-        list.setEnabled(activeWindow instanceof Channel && activeWindow
-                .getServer() != null && activeWindow.getServer().getState()
-                == ServerState.CONNECTED);
+        list.setEnabled(activeWindow != null && activeWindow.getServer() != null
+                && activeWindow.getServer().getState() == ServerState.CONNECTED);
     }
 
     /** {@inheritDoc} */
