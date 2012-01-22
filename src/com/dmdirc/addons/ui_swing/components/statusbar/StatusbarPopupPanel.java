@@ -51,7 +51,6 @@ public abstract class StatusbarPopupPanel<T extends JComponent> extends
      */
     public StatusbarPopupPanel(final T label) {
         super(label);
-        addMouseListener(this);
     }
 
     /**

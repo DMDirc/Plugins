@@ -206,6 +206,9 @@ public class StandardDialog extends JDialog {
      * @param owner Window to center on
      */
     public void display(final Component owner) {
+        if (isVisible()) {
+            return;
+        }
         addWindowListener(new WindowAdapter() {
 
             /** {@inheritDoc} */
