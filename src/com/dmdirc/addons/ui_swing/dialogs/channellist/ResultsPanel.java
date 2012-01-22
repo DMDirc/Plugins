@@ -72,6 +72,7 @@ public class ResultsPanel extends JPanel implements TableModelListener,
         final JScrollPane sp = new JScrollPane();
         table = new PackingTable(model, sp);
         table.addMouseListener(this);
+        table.setAutoCreateRowSorter(true);
         model.addTableModelListener(this);
         sp.setViewportView(table);
         setLayout(new MigLayout("fill, hidemode 3, ins 0"));
