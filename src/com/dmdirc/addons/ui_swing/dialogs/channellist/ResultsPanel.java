@@ -27,10 +27,13 @@ import com.dmdirc.lists.GroupListManager;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.Arrays;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.RowSorter;
+import javax.swing.SortOrder;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
@@ -72,6 +75,7 @@ public class ResultsPanel extends JPanel implements TableModelListener,
         final JScrollPane sp = new JScrollPane();
         table = new PackingTable(model, sp);
         table.addMouseListener(this);
+        table.setAutoCreateRowSorter(true);
         model.addTableModelListener(this);
         sp.setViewportView(table);
         setLayout(new MigLayout("fill, hidemode 3, ins 0"));
