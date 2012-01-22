@@ -76,11 +76,11 @@ public class UpdaterLabel extends StatusbarPopupPanel<JLabel> implements
      */
     @Override
     public void mouseReleased(final MouseEvent mouseEvent) {
-        super.mouseClicked(mouseEvent);
-
+        super.mouseReleased(mouseEvent);
         if (mouseEvent.getButton() == MouseEvent.BUTTON1) {
             if (UpdateChecker.getManager().getManagerStatus()
                     == UpdateManagerStatus.IDLE_RESTART_NEEDED) {
+                closeDialog();
                 controller.showDialog(SwingRestartDialog.class);
             } else {
                 controller.showDialog(SwingUpdaterDialog.class,
