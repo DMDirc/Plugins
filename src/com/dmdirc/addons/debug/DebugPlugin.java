@@ -45,12 +45,13 @@ public class DebugPlugin extends BasePlugin {
     /** List of build in debug commands to load. */
     private static final Class[] CLASSES = {
         Benchmark.class, ColourSpam.class, ConfigInfo.class, ConfigStats.class,
-        com.dmdirc.addons.debug.commands.Error.class, FirstRun.class,
-        ForceUpdate.class, GlobalConfigInfo.class, Identities.class,
-        MemInfo.class, Notify.class, RunGC.class, ServerInfo.class,
-        ServerState.class, Services.class, ShowRaw.class, Threads.class,
-        Time.class, StatusbarMessage.class,
+        com.dmdirc.addons.debug.commands.Error.class, FakeUpdates.class,
+        FirstRun.class, ForceUpdate.class, GlobalConfigInfo.class,
+        Identities.class, MemInfo.class, Notify.class, RunGC.class,
+        ServerInfo.class, ServerState.class, Services.class, ShowRaw.class,
+        Threads.class, Time.class, StatusbarMessage.class,
     };
+
     /** List of registered debug commands. */
     private final Map<String, DebugCommand> commands;
     /** Debug command. */
