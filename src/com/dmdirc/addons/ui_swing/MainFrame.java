@@ -698,7 +698,9 @@ public final class MainFrame extends JFrame implements WindowListener,
     @Override
     public void titleChanged(final FrameContainer window,
             final String title) {
-        setTitle(title);
+        if (activeFrame != null && activeFrame.getContainer().equals(window)) {
+            setTitle(title);
+        }
     }
 
     /** {@inheritDoc} */
