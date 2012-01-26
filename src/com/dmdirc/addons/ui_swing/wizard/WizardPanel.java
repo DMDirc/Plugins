@@ -22,9 +22,11 @@
 
 package com.dmdirc.addons.ui_swing.wizard;
 
+import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.EtchedLineBorder;
-import com.dmdirc.addons.ui_swing.components.TitlePanel;
 import com.dmdirc.addons.ui_swing.components.EtchedLineBorder.BorderSide;
+import com.dmdirc.addons.ui_swing.components.TitlePanel;
+import com.dmdirc.addons.ui_swing.components.XScrollablePanel;
 import com.dmdirc.util.collections.ListenerList;
 
 import java.awt.Color;
@@ -37,6 +39,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.border.EtchedBorder;
 
 import net.miginfocom.swing.MigLayout;
@@ -54,6 +57,8 @@ public class WizardPanel extends JPanel implements ActionListener {
     private final ListenerList stepListeners;
     /** List of steps. */
     private final List<Step> steps;
+    /** Step scroll pane. */
+    private JScrollPane sp;
     /** Step panel. */
     private JPanel stepsPanel;
     /** Title panel. */
@@ -93,7 +98,8 @@ public class WizardPanel extends JPanel implements ActionListener {
     private void initComponents() {
         titleLabel = new TitlePanel(new EtchedLineBorder(EtchedBorder.LOWERED,
                 BorderSide.BOTTOM), title);
-        stepsPanel = new JPanel(new MigLayout("fillx"));
+        stepsPanel = new XScrollablePanel(new MigLayout("fillx"));
+        sp = new JScrollPane(stepsPanel);
 
         progressLabel = new JLabel();
 
@@ -119,7 +125,7 @@ public class WizardPanel extends JPanel implements ActionListener {
 
         setLayout(new MigLayout("fill, wrap 1, ins 0"));
         add(titleLabel, "growx, pushx");
-        add(stepsPanel, "grow, push");
+        add(sp, "grow, push");
         add(progressPanel, "growx, pushx");
     }
 
@@ -130,6 +136,7 @@ public class WizardPanel extends JPanel implements ActionListener {
             stepsPanel.add(steps.get(0));
             currentStep = 0;
             titleLabel.setText(steps.get(currentStep).getTitle());
+            UIUtilities.resetScrollPane(sp);
 
             prev.setEnabled(false);
             if (steps.size() == 1) {
