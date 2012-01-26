@@ -52,7 +52,7 @@ public final class TimePlugin extends BasePlugin {
         super();
 
         this.actionController = actionController;
-
+        manager = new TimerManager();
         registerCommand(new TimerCommand(manager), TimerCommand.INFO);
     }
 
@@ -75,8 +75,6 @@ public final class TimePlugin extends BasePlugin {
                 runTimer();
             }
         }, 1000 * offset, 1000 * 60);
-
-        manager = new TimerManager();
         super.onLoad();
     }
 
