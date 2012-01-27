@@ -25,6 +25,7 @@ package com.dmdirc.addons.ui_swing.dialogs;
 import com.dmdirc.Server;
 import com.dmdirc.ServerManager;
 import com.dmdirc.addons.ui_swing.SwingController;
+import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
 import com.dmdirc.addons.ui_swing.components.validating.ValidatingJTextField;
 import com.dmdirc.addons.ui_swing.components.vetoable.VetoableChangeEvent;
@@ -32,6 +33,8 @@ import com.dmdirc.addons.ui_swing.components.vetoable.VetoableComboBoxModel;
 import com.dmdirc.addons.ui_swing.components.vetoable.VetoableComboBoxSelectionListener;
 import com.dmdirc.addons.ui_swing.dialogs.profiles.ProfileManagerDialog;
 import com.dmdirc.config.Identity;
+import com.dmdirc.config.IdentityListener;
+import com.dmdirc.config.IdentityManager;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.util.validators.PortValidator;
@@ -60,10 +63,12 @@ import net.miginfocom.swing.MigLayout;
  * Dialog that allows the user to enter details of a new server to connect to.
  */
 public final class NewServerDialog extends StandardDialog implements
-        ActionListener, VetoableComboBoxSelectionListener {
+        ActionListener, VetoableComboBoxSelectionListener, IdentityListener {
 
     /** Serial version UID. */
     private static final long serialVersionUID = 8;
+    /** Identity Manager. */
+    private final IdentityManager identityManager;
     /** checkbox. */
     private JCheckBox newServerWindowCheck;
     /** checkbox. */
@@ -88,12 +93,14 @@ public final class NewServerDialog extends StandardDialog implements
      */
     public NewServerDialog(final SwingController controller) {
         super(controller, controller.getMainFrame(), ModalityType.MODELESS);
+        identityManager = controller.getIdentityManager();
 
         initComponents();
         layoutComponents();
         addListeners();
         setResizable(false);
 
+        identityManager.registerIdentityListener("profile", this);
         update();
     }
 
@@ -306,5 +313,38 @@ public final class NewServerDialog extends StandardDialog implements
             return false;
         }
         return true;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void identityAdded(final Identity identity) {
+        UIUtilities.invokeLater(new Runnable() {
+
+            /** {@inheritDoc} */
+            @Override
+            public void run() {
+                populateProfiles();
+            }
+        });
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void dispose() {
+        identityManager.unregisterIdentityListener(this);
+        super.dispose();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void identityRemoved(final Identity identity) {
+        UIUtilities.invokeLater(new Runnable() {
+
+            /** {@inheritDoc} */
+            @Override
+            public void run() {
+                populateProfiles();
+            }
+        });
     }
 }
