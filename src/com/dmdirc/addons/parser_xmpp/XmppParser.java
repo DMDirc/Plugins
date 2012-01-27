@@ -51,6 +51,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -437,6 +438,12 @@ public class XmppParser extends BaseSocketAwareParser {
     /** {@inheritDoc} */
     @Override
     public void run() {
+        if (getURI().getUserInfo() == null || !getURI().getUserInfo().contains(":")) {
+            getCallback(ConnectErrorListener.class).onConnectError(this,
+                         new Date(), new ParserError(ParserError.ERROR_USER,
+                         "User name and password must be specified in URI", ""));
+                 return;
+        }
         final String[] userInfoParts = getURI().getUserInfo().split(":", 2);
         final String[] userParts = userInfoParts[0].split("@", 2);
 
@@ -458,7 +465,14 @@ public class XmppParser extends BaseSocketAwareParser {
             connection.addPacketWriterListener(new PacketListenerImpl(DataOutListener.class), new AcceptAllPacketFilter());
             connection.getChatManager().addChatListener(new ChatManagerListenerImpl());
 
-            connection.login(userInfoParts[0], userInfoParts[1], "DMDirc.");
+            try {
+                connection.login(userInfoParts[0], userInfoParts[1], "DMDirc.");
+            } catch (XMPPException ex) {
+                 getCallback(ConnectErrorListener.class).onConnectError(this,
+                         new Date(), new ParserError(ParserError.ERROR_USER,
+                         ex.getMessage(), ""));
+                 return;
+            }
 
             connection.sendPacket(new Presence(Presence.Type.available, null, priority, Presence.Mode.available));
             connection.getRoster().addRosterListener(new RosterListenerImpl());
