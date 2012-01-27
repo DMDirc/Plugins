@@ -40,19 +40,18 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
+import lombok.extern.slf4j.Slf4j;
+
 import net.miginfocom.swing.MigLayout;
 
 /**
  * Message label handles showing messages in the status bar.
  */
+@Slf4j
 public class MessageLabel extends JPanel implements StatusBarComponent,
         MouseListener {
 
-    /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
-     */
+    /** Serial version UID. */
     private static final long serialVersionUID = 1;
     /** Default status bar message. */
     private final StatusMessage defaultMessage;
@@ -99,8 +98,11 @@ public class MessageLabel extends JPanel implements StatusBarComponent,
      * @param message Message object to show
      */
     public void setMessage(final StatusMessage message) {
+        log.info("Adding message to queue {}", message);
         queue.add(message);
+        log.debug("Queue size: {}", queue.size());
         if (queue.size() == 1) {
+            log.info("Showing only messsage {}", message);
             currentMessage = message;
             updateCurrentMessage();
         }
@@ -115,6 +117,7 @@ public class MessageLabel extends JPanel implements StatusBarComponent,
             /** {@inheritDoc} */
             @Override
             public void run() {
+                log.info("Updating current message: {}", currentMessage);
                 if (currentMessage.getIconType() == null) {
                     label.setIcon(null);
                 } else {
@@ -125,9 +128,11 @@ public class MessageLabel extends JPanel implements StatusBarComponent,
                         currentMessage.getMessage(), getWidth()));
                 if (messageTimer != null && (System.currentTimeMillis()
                         - messageTimer.scheduledExecutionTime()) <= 0) {
+                    log.debug("Cancelling message timer.");
                     messageTimer.cancel();
                 }
                 if (!defaultMessage.equals(currentMessage)) {
+                    log.debug("Starting new message timer.");
                     messageTimer = new MessageTimerTask(MessageLabel.this);
                     new Timer("SwingStatusBar messageTimer").schedule(
                             messageTimer, new Date(System.currentTimeMillis()
@@ -141,11 +146,16 @@ public class MessageLabel extends JPanel implements StatusBarComponent,
      * Removes the message from the status bar.
      */
     public void clearMessage() {
+        log.info("Adding message to history {}", currentMessage);
         historyLabel.addMessage(currentMessage);
+        log.debug("Queue size: {}", queue.size());
         if (queue.size() <= 1) {
+            queue.remove();
+            log.info("Reverting to default message.");
             currentMessage = defaultMessage;
         } else {
             currentMessage = queue.poll();
+            log.info("Showing next message in queue: {}", currentMessage);
         }
         updateCurrentMessage();
     }
