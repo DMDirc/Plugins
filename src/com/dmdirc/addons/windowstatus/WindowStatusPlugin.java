@@ -205,7 +205,7 @@ public final class WindowStatusPlugin extends BasePlugin
                 final ClientInfo client = frame.getServer().getParser()
                         .getClient(frame.getHost());
                 final String realname = client.getRealname();
-                if (!realname.isEmpty()) {
+                if (realname != null && !realname.isEmpty()) {
                     textString.append(" - ");
                     textString.append(client.getRealname());
                 }
