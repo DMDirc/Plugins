@@ -35,8 +35,8 @@ import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.interfaces.FrameInfoListener;
 import com.dmdirc.interfaces.NotificationListener;
 import com.dmdirc.interfaces.ui.Window;
-import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.Colour;
+import com.dmdirc.ui.WindowManager;
 
 import java.awt.Dimension;
 import java.awt.Insets;
@@ -72,11 +72,7 @@ public final class ButtonBar implements FrameManager, ActionListener,
         ComponentListener, Serializable, NotificationListener,
         FrameInfoListener, MouseListener, ConfigChangeListener {
 
-    /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
-     */
+    /** Serial version UID. */
     private static final long serialVersionUID = 3;
     /** The default number of buttons per row or column. */
     private static final int NUM_CELLS = 1;
@@ -217,6 +213,10 @@ public final class ButtonBar implements FrameManager, ActionListener,
         this.windowFactory = controller.getWindowFactory();
         this.controller = controller;
 
+        position = FramemanagerPosition.getPosition(
+        controller.getGlobalConfig().getOption("ui",
+                "framemanagerPosition"));
+
         if (position.isHorizontal()) {
             buttonPanel = new ButtonPanel(controller,
                     new MigLayout("ins rel, fill, flowx"), this);
@@ -229,9 +229,6 @@ public final class ButtonBar implements FrameManager, ActionListener,
 
         buttons = Collections.synchronizedMap(
                 new HashMap<Window, FrameToggleButton>());
-        position = FramemanagerPosition.getPosition(
-        controller.getGlobalConfig().getOption("ui",
-                "framemanagerPosition"));
         sortChildWindows = controller.getGlobalConfig()
                 .getOptionBool("ui", "sortchildwindows");
         sortRootWindows = controller.getGlobalConfig()
