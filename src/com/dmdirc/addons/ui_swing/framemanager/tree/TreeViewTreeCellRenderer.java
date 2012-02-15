@@ -31,11 +31,11 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 
+import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JTree;
+import javax.swing.UIManager;
 import javax.swing.tree.TreeCellRenderer;
-
-import net.miginfocom.layout.PlatformDefaults;
 
 /**
  * Displays a node in a tree according to its type.
@@ -135,9 +135,9 @@ public class TreeViewTreeCellRenderer implements TreeCellRenderer,
         label.setBackground(background);
         label.setOpaque(true);
         label.setTextStyle(styliser, sb.toString());
-        label.setPreferredSize(new Dimension(100000, label.getFont().getSize()
-                + (int) (PlatformDefaults.getUnitValueX("related").
-                getValue())));
+        label.setBorder(BorderFactory.createEmptyBorder(1, 0, 2, 0));
+        label.setPreferredSize(new Dimension(100000, tree.getFontMetrics(
+                UIManager.getFont("Tree.font")).getHeight() + 2));
 
         return label;
     }

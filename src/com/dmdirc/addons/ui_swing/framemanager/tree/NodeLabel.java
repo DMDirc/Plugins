@@ -34,17 +34,14 @@ import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.messages.Styliser;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Font;
 
-import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.JTextPane;
 import javax.swing.UIManager;
 import javax.swing.text.DefaultStyledDocument;
 import javax.swing.text.StyledDocument;
 
-import net.miginfocom.layout.PlatformDefaults;
 import net.miginfocom.swing.MigLayout;
 
 /**
@@ -108,11 +105,6 @@ public class NodeLabel extends JPanel implements SelectionListener,
 
         icon.setToolTipText(null);
         text.setToolTipText(null);
-        setBorder(BorderFactory.createEmptyBorder(1, 0, 2, 0));
-
-        setPreferredSize(new Dimension(100000, getFont().getSize()
-                + (int) PlatformDefaults.getUnitValueX("related").
-                getValue()));
         notificationColour = null;
         selected = false;
     }
