@@ -31,12 +31,14 @@ import com.dmdirc.ui.Colour;
 import com.dmdirc.util.ReturnableThread;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Enumeration;
 
 import javax.swing.BorderFactory;
 import javax.swing.JComboBox;
@@ -44,9 +46,11 @@ import javax.swing.JComponent;
 import javax.swing.JScrollPane;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
+import javax.swing.UIDefaults;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.plaf.FontUIResource;
 import javax.swing.text.JTextComponent;
 import javax.swing.undo.UndoManager;
 
@@ -57,7 +61,7 @@ import net.miginfocom.layout.PlatformDefaults;
  */
 public final class UIUtilities {
 
-    /** Not intended to be instatiated. */
+    /** Not intended to be instantiated. */
     private UIUtilities() {
     }
 
@@ -89,15 +93,13 @@ public final class UIUtilities {
 
     /**
      * Initialises any settings required by this UI (this is always called
-     * before any aspect of the UI is instansiated).
+     * before any aspect of the UI is instantiated).
      *
      * @throws UnsupportedOperationException If unable to switch to the system
      * look and feel
      */
     public static void initUISettings() {
-
         try {
-
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (InstantiationException ex) {
             throw new UnsupportedOperationException("Unable to switch to the " +
@@ -134,6 +136,27 @@ public final class UIUtilities {
                     "Label.foreground"));
         }
         PlatformDefaults.setDefaultRowAlignmentBaseline(false);
+    }
+
+    /**
+     * Sets the font of all components in the current look and feel to the
+     * specified font, using the style and size from the original font.
+     *
+     * @param font New font
+     */
+    public static void setUIFont(final Font font) {
+        final Enumeration keys = UIManager.getDefaults().keys();
+        while (keys.hasMoreElements()) {
+            final Object key = keys.nextElement();
+            final Object value = UIManager.get(key);
+            if (value instanceof FontUIResource) {
+                final FontUIResource orig = (FontUIResource) value;
+                UIManager.put(key, new UIDefaults.ProxyLazyValue(
+                        "javax.swing.plaf.FontUIResource", new Object[] {
+                            font.getFontName(), orig.getStyle(), orig.getSize()
+                        }));
+            }
+        }
     }
 
     /**
