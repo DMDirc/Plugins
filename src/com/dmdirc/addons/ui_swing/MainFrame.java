@@ -51,6 +51,7 @@ import com.dmdirc.util.collections.ListenerList;
 import com.dmdirc.util.collections.QueuedLinkedHashSet;
 
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
 import java.awt.event.WindowListener;
@@ -65,11 +66,14 @@ import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
+
 import net.miginfocom.swing.MigLayout;
 
 /**
  * The main application frame.
  */
+@Slf4j
 public final class MainFrame extends JFrame implements WindowListener,
         ConfigChangeListener, SwingWindowListener, FrameInfoListener,
         NotificationListener {
@@ -147,6 +151,8 @@ public final class MainFrame extends JFrame implements WindowListener,
                 "framemanager", this);
         controller.getGlobalConfig().addChangeListener("ui",
                 "framemanagerPosition", this);
+        controller.getGlobalConfig().addChangeListener("ui",
+                "textPaneFontName", this);
         controller.getGlobalConfig().addChangeListener("icon", "icon",
                 this);
 
@@ -563,6 +569,12 @@ public final class MainFrame extends JFrame implements WindowListener,
                         setVisible(true);
                     }
                 });
+            } else if ("textPaneFontName".equals(key)) {
+                final String font = controller.getGlobalConfig()
+                        .getOptionString("ui", "textPaneFontName");
+                log.debug("Changing textpane font: {}", font);
+                UIUtilities.setUIFont(new Font(font, Font.PLAIN, 12));
+                SwingUtilities.updateComponentTreeUI(this);
             } else {
                 showVersion = controller.getGlobalConfig().getOptionBool(
                         "ui", "showversion");

@@ -273,44 +273,7 @@ public class SwingController extends BasePlugin implements UIController {
         try {
             UIManager.setLookAndFeel(UIUtilities.getLookAndFeel(
                     getGlobalConfig().getOption("ui", "lookandfeel")));
-            final int state = UIUtilities.invokeAndWait(
-                    new ReturnableThread<Integer>() {
-
-                /** {@inheritDoc} */
-                @Override
-                public void run() {
-                    setObject(getMainFrame().getExtendedState());
-                }
-            });
-            UIUtilities.invokeLater(new Runnable() {
-
-                /** {@inheritDoc} */
-                @Override
-                public void run() {
-                    SwingUtilities.updateComponentTreeUI(errorDialog);
-                }
-            });
-            for (final java.awt.Window window : getTopLevelWindows()) {
-                UIUtilities.invokeLater(new Runnable() {
-
-                    /** {@inheritDoc} */
-                    @Override
-                    public void run() {
-                        SwingUtilities.updateComponentTreeUI(window);
-                        if (window != getMainFrame()) {
-                            window.pack();
-                        }
-                    }
-                });
-            }
-            UIUtilities.invokeLater(new Runnable() {
-
-                /** {@inheritDoc} */
-                @Override
-                public void run() {
-                    getMainFrame().setExtendedState(state);
-                }
-            });
+            updateComponentTrees();
         } catch (final ClassNotFoundException ex) {
             Logger.userError(ErrorLevel.LOW,
                     "Unable to change Look and Feel: " + ex.getMessage());
@@ -324,6 +287,50 @@ public class SwingController extends BasePlugin implements UIController {
             Logger.userError(ErrorLevel.LOW,
                     "Unable to change Look and Feel: " + ex.getMessage());
         }
+    }
+
+    /**
+     * Updates the component trees of all known windows in the Swing UI.
+     */
+    public void updateComponentTrees() {
+        final int state = UIUtilities.invokeAndWait(
+                new ReturnableThread<Integer>() {
+
+                    /** {@inheritDoc} */
+                    @Override
+                    public void run() {
+                        setObject(getMainFrame().getExtendedState());
+                    }
+                });
+        UIUtilities.invokeLater(new Runnable() {
+
+            /** {@inheritDoc} */
+            @Override
+            public void run() {
+                SwingUtilities.updateComponentTreeUI(errorDialog);
+            }
+        });
+        for (final java.awt.Window window : getTopLevelWindows()) {
+            UIUtilities.invokeLater(new Runnable() {
+
+                /** {@inheritDoc} */
+                @Override
+                public void run() {
+                    SwingUtilities.updateComponentTreeUI(window);
+                    if (window != getMainFrame()) {
+                        window.pack();
+                    }
+                }
+            });
+        }
+        UIUtilities.invokeLater(new Runnable() {
+
+            /** {@inheritDoc} */
+            @Override
+            public void run() {
+                getMainFrame().setExtendedState(state);
+            }
+        });
     }
 
     /**
@@ -348,6 +355,8 @@ public class SwingController extends BasePlugin implements UIController {
             UIUtilities.initUISettings();
             UIManager.setLookAndFeel(UIUtilities.getLookAndFeel(
                     getGlobalConfig().getOption("ui", "lookandfeel")));
+            UIUtilities.setUIFont(new Font(getGlobalConfig()
+                    .getOption("ui", "textPaneFontName"), Font.PLAIN, 12));
         } catch (final UnsupportedOperationException ex) {
             Logger.userError(ErrorLevel.LOW, "Unable to set UI Settings");
         } catch (final UnsupportedLookAndFeelException ex) {
