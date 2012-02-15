@@ -147,10 +147,10 @@ public final class ErrorListDialog extends StandardDialog implements
         panel.setLayout(new MigLayout("fill"));
 
         panel.add(errorDetails, "wrap, grow, push");
-        panel.add(deleteAllButton, "split 4, tag left, sgx button");
-        panel.add(deleteButton, "tag other, sgx button");
-        panel.add(sendButton, "tag other, sgx button");
-        panel.add(getCancelButton(), "tag ok, sgx button");
+        panel.add(deleteAllButton, "split 4, tag left, sg button");
+        panel.add(deleteButton, "tag other, sg button");
+        panel.add(sendButton, "tag other, sg button");
+        panel.add(getCancelButton(), "tag ok, sg button");
 
         splitPane.setTopComponent(scrollPane);
         splitPane.setBottomComponent(panel);
