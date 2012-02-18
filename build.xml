@@ -9,6 +9,8 @@
     <property name="plugins.dist" location="dist"/>
     <property name="plugins.lib" location="lib"/>
 
+    <import file="build-tests.xml"/>
+
     <path id="plugins.classpath">
        <pathelement path="${plugins.dmdirc.build.dir}"/>
        <fileset dir="${plugins.lib}" includes="*.jar"/>
