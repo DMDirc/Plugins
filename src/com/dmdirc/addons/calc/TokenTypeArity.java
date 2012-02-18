@@ -24,8 +24,6 @@ package com.dmdirc.addons.calc;
 
 /**
  * Describes the arity (number of operands) of a token type.
- *
- * @author chris
  */
 public enum TokenTypeArity {
 

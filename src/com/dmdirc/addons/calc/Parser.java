@@ -29,33 +29,26 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import lombok.RequiredArgsConstructor;
+
 /**
  * The parser takes the output from a {@link Lexer} and applies precdence rules
  * to build the tokens into a tree.
- *
- * @author chris
  */
+@RequiredArgsConstructor
 public class Parser {
+
+    /** A list of token types sorted by their precendece. */
+    protected static final List<TokenType> TOKENS_BY_PRECEDENCE;
 
     /** The lexer whose output will be parsed. */
     protected final Lexer lexer;
-    /** A list of token types sorted by their precendece. */
-    protected static final List<TokenType> TOKENS_BY_PRECEDENCE;
 
     static {
         TOKENS_BY_PRECEDENCE = new ArrayList<TokenType>(Arrays.asList(
                 TokenType.values()));
         Collections.sort(TOKENS_BY_PRECEDENCE,
                 new TokenTypePrecedenceComparator());
-    }
-
-    /**
-     * Creates a new parser for the specified lexer.
-     *
-     * @param lexer The lexer whose output should be parsed
-     */
-    public Parser(final Lexer lexer) {
-        this.lexer = lexer;
     }
 
     /**
