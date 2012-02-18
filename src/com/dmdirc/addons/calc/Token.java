@@ -22,12 +22,18 @@
 
 package com.dmdirc.addons.calc;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
+
 /**
  * Describes a distinct piece of a mathematical formula, as tokenised by a
  * {@link Lexer}.
- *
- * @author chris
  */
+@Getter
+@ToString
+@RequiredArgsConstructor
+@SuppressWarnings("PMD.UnusedPrivateField")
 public class Token {
 
     /** The type of this token. */
@@ -35,40 +41,5 @@ public class Token {
 
     /** The content of this token, if any. */
     private final String content;
-
-    /**
-     * Creates a new token.
-     *
-     * @param type The type of the token
-     * @param content The content of the token
-     */
-    public Token(final TokenType type, final String content) {
-        this.type = type;
-        this.content = content;
-    }
-
-    /**
-     * Retrieves the content of this token.
-     *
-     * @return This token's content
-     */
-    public String getContent() {
-        return content;
-    }
-
-    /**
-     * Retrieves the type of this token.
-     *
-     * @return This token's type
-     */
-    public TokenType getType() {
-        return type;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String toString() {
-        return "[type: " + type + "; content: " + content + "]";
-    }
 
 }

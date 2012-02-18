@@ -30,13 +30,11 @@ import java.util.List;
 /**
  * The lexer takes a String input and produces an ordered list of {@link Token}s
  * corresponding to the input.
- *
- * @author chris
  */
 public class Lexer {
 
     /** The input string. */
-    final String input;
+    private final String input;
 
     /**
      * Creates a new lexer for the specified input string.

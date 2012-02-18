@@ -25,48 +25,29 @@ package com.dmdirc.addons.calc;
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
+
 /**
  * Describes a tree of {@link Token}s.
- *
- * @author chris
  */
+@ToString
+@RequiredArgsConstructor
+@SuppressWarnings("PMD.UnusedPrivateField")
 public class TreeToken {
 
     /** The children of this node. */
+    @Getter
     private final List<TreeToken> children = new ArrayList<TreeToken>();
 
     /** The token at the root of the tree. */
+    @Getter
     private final Token token;
 
     /** Whether or not this tree has been processed. */
+    @Getter
     private boolean processed = false;
-
-    /**
-     * Creates a new tree with the specified token at the root.
-     *
-     * @param token The root token
-     */
-    public TreeToken(final Token token) {
-        this.token = token;
-    }
-
-    /**
-     * Retrieves the (direct) children of this tree.
-     *
-     * @return This tree's children
-     */
-    public List<TreeToken> getChildren() {
-        return children;
-    }
-
-    /**
-     * Retrieves the root token of this tree.
-     *
-     * @return This tree's token
-     */
-    public Token getToken() {
-        return token;
-    }
 
     /**
      * Adds the specified child to this tree.
@@ -75,15 +56,6 @@ public class TreeToken {
      */
     public void addChild(final TreeToken token) {
         children.add(token);
-    }
-
-    /**
-     * Determines if this tree has been processed.
-     *
-     * @return True if the tree has been processed, false otherwise
-     */
-    public boolean isProcessed() {
-        return processed;
     }
 
     /**
@@ -100,13 +72,6 @@ public class TreeToken {
      */
     public Number evaluate() {
         return token.getType().evaluate(this);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String toString() {
-        return "[token: " + token + "; children: " + children + "; processed: "
-                + processed + "]";
     }
 
 }

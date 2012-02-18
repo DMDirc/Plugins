@@ -22,25 +22,17 @@
 
 package com.dmdirc.addons.calc;
 
+import lombok.RequiredArgsConstructor;
+
 /**
  * A simple evaluator which just requests that the {@link TreeToken} evaluates
  * itself.
- *
- * @author chris
  */
+@RequiredArgsConstructor
 public class Evaluator {
 
     /** The token to be evaluated. */
     private final TreeToken node;
-
-    /**
-     * Creates a new evaluator for the specified token.
-     *
-     * @param node The token to be evaluated
-     */
-    public Evaluator(final TreeToken node) {
-        this.node = node;
-    }
 
     /**
      * Evaluates the token and returns the numeric result.
