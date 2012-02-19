@@ -126,22 +126,22 @@ public class ProfileManagerModel extends DefaultBindableModel {
      * @param profile Profile to delete
      */
     public void deleteProfile(final Profile profile) {
-        profile.setDeleted(true);
-        final int selected;
-        if (selectedProfile == null) {
-            selected = -1;
-        } else {
-            selected = displayedProfiles.indexOf(selectedProfile);
+        if (profile == null) {
+            return;
         }
+        profile.setDeleted(true);
+        final int selected = displayedProfiles.indexOf(selectedProfile);
         displayedProfiles.remove(profile);
         final int size = displayedProfiles.size();
         Profile newSelectedProfile = null;
         if (profile != selectedProfile) {
             newSelectedProfile = selectedProfile;
-        } else if (selected >= size && size != 0) {
+        } else if (selected >= size && size > 0) {
             newSelectedProfile = displayedProfiles.get(size - 1);
-        } else if (selected <= 0 && size != 0) {
+        } else if (selected <= 0 && size > 0) {
             newSelectedProfile = displayedProfiles.get(0);
+        } else if (selected - 1 >= 0 && size != 0) {
+            newSelectedProfile = displayedProfiles.get(selected - 1);
         }
         update();
         upadateSelectedProfile(newSelectedProfile);
@@ -248,16 +248,18 @@ public class ProfileManagerModel extends DefaultBindableModel {
         if (selectedProfile == null || nickname == null) {
             return;
         }
-        final int selected = selectedProfile.getNicknames().indexOf(selectedProfile);
+        final int selected = selectedProfile.getNicknames().indexOf(nickname);
         selectedProfile.delNickname(nickname);
         final int size = selectedProfile.getNicknames().size();
         String newSelectedNickname = null;
-        if (nickname.equals(selectedNickname)) {
+        if (!nickname.equals(selectedNickname)) {
             newSelectedNickname = selectedNickname;
-        } else if (selected >= size && size != 0) {
+        } else if (selected >= size && size > 0) {
             newSelectedNickname = selectedProfile.getNicknames().get(size - 1);
-        } else if (selected <= 0 && size != 0) {
+        } else if (selected <= 0 && size > 0) {
             newSelectedNickname = selectedProfile.getNicknames().get(0);
+        } else if (selected - 1 >= 0 && size != 0) {
+            newSelectedNickname = selectedProfile.getNicknames().get(selected - 1);
         }
         update();
         selectedNickname = newSelectedNickname;
@@ -428,10 +430,8 @@ public class ProfileManagerModel extends DefaultBindableModel {
         if (filenameValidation.isFailure()) {
             return filenameValidation;
         }
-        if (((Profile) getSelectedProfile()).getName().equals(selectedProfile.getName())) {
-            return new ValidationResponse();
-        }
-        return new ProfileNameValidator(profiles).validate(selectedProfile.getName());
+        return new ProfileNameValidator(profiles, selectedProfile).validate(
+                selectedProfile.getName());
     }
 
     /**
