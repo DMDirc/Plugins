@@ -51,7 +51,7 @@ import net.miginfocom.swing.MigLayout;
 
 /** Profile editing dialog. */
 @SuppressWarnings("unused")
-public final class ProfileManagerDialog extends StandardDialog {
+public class ProfileManagerDialog extends StandardDialog {
 
     /** Serial version UID. */
     private static final long serialVersionUID = 3;
