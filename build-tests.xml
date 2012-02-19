@@ -31,6 +31,6 @@
         <clover-setup initstring="${clover.init.string}"/>
     </target>
 
-    <target name="compile-for-tests" depends="clean,with.clover,jar"/>
+    <target name="compile-for-tests" depends="clean,with.clover,compile"/>
 
 </project>
