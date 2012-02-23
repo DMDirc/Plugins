@@ -24,6 +24,7 @@ package com.dmdirc.addons.time;
 
 import com.dmdirc.FrameContainer;
 import com.dmdirc.WritableFrameContainer;
+import com.dmdirc.commandparser.CommandManager;
 import com.dmdirc.commandparser.parsers.CommandParser;
 import com.dmdirc.commandparser.parsers.GlobalCommandParser;
 
@@ -102,7 +103,8 @@ public final class TimedCommand extends TimerTask {
     public void run() {
         CommandParser parser;
         if (origin == null) {
-            parser = GlobalCommandParser.getGlobalCommandParser();
+            parser = new GlobalCommandParser(origin.getConfigManager(),
+                    CommandManager.getCommandManager());
         } else {
             parser = ((WritableFrameContainer) origin).getCommandParser();
         }

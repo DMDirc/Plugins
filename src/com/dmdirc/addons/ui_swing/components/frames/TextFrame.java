@@ -44,6 +44,7 @@ import com.dmdirc.addons.ui_swing.textpane.TextPaneHomeAction;
 import com.dmdirc.addons.ui_swing.textpane.TextPaneListener;
 import com.dmdirc.addons.ui_swing.textpane.TextPanePageDownAction;
 import com.dmdirc.addons.ui_swing.textpane.TextPanePageUpAction;
+import com.dmdirc.commandparser.CommandManager;
 import com.dmdirc.commandparser.PopupManager;
 import com.dmdirc.commandparser.PopupMenu;
 import com.dmdirc.commandparser.PopupMenuItem;
@@ -156,7 +157,8 @@ public abstract class TextFrame extends JPanel implements Window,
         }
 
         if (localParser == null) {
-            localParser = GlobalCommandParser.getGlobalCommandParser();
+            localParser = new GlobalCommandParser(frameParent.getConfigManager(),
+                    CommandManager.getCommandManager());
         }
 
         return localParser;

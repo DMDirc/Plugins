@@ -30,8 +30,8 @@ import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.ui.messages.IRCDocument;
 import com.dmdirc.ui.messages.IRCTextAttribute;
 import com.dmdirc.ui.messages.LinePosition;
-import com.dmdirc.util.collections.ListenerList;
 import com.dmdirc.util.URLBuilder;
+import com.dmdirc.util.collections.ListenerList;
 
 import java.awt.Cursor;
 import java.awt.Graphics;
