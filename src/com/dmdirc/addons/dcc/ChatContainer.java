@@ -57,7 +57,7 @@ public class ChatContainer extends DCCFrameContainer implements DCCChatHandler {
             final ConfigManager configManager, final String title,
             final String nick, final String targetNick) {
         super(title, "dcc-chat-inactive", configManager,
-                DCCCommandParser.getDCCCommandParser(),
+                DCCCommandParser.getDCCCommandParser(configManager),
                 Arrays.asList(WindowComponent.TEXTAREA.getIdentifier(),
                 WindowComponent.INPUTFIELD.getIdentifier()));
         dccChat = dcc;

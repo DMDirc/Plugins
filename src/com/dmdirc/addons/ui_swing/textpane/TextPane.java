@@ -74,6 +74,8 @@ public final class TextPane extends JComponent implements MouseWheelListener,
     private final Window frame;
     /** Indicator to show whether new lines have been added. */
     private final JLabel newLineIndicator;
+    /** Line add sync. */
+    private final Object lineSync = new Object();
     /** Last seen line. */
     private int lastSeenLine = 0;
     /** Show new line notifications. */
@@ -516,11 +518,10 @@ public final class TextPane extends JComponent implements MouseWheelListener,
             /** {@inheritDoc}. */
             @Override
             public void run() {
-                if (showNotification && scrollModel.getValue() != line) {
-                    newLineIndicator.setVisible(true);
-                }
-
-                setScrollBarMax(size, length);
+                    setScrollBarMax(size, length);
+                    if (showNotification && scrollModel.getValue() != line) {
+                        newLineIndicator.setVisible(true);
+                    }
             }
         });
     }
