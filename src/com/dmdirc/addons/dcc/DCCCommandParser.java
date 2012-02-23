@@ -27,6 +27,7 @@ import com.dmdirc.WritableFrameContainer;
 import com.dmdirc.commandparser.CommandManager;
 import com.dmdirc.commandparser.CommandType;
 import com.dmdirc.commandparser.parsers.GlobalCommandParser;
+import com.dmdirc.config.ConfigManager;
 
 /**
  * DCC CommandParser.
@@ -41,9 +42,11 @@ public final class DCCCommandParser extends GlobalCommandParser {
 
     /**
      * Creates a new instance of the GlobalCommandParser.
+     *
+     * @param configManager Config manager
      */
-    private DCCCommandParser() {
-        super();
+    private DCCCommandParser(final ConfigManager configManager) {
+        super(configManager, CommandManager.getCommandManager());
     }
 
     /**
@@ -51,9 +54,9 @@ public final class DCCCommandParser extends GlobalCommandParser {
      *
      * @return The singleton DCCCommandParser
      */
-    public static synchronized DCCCommandParser getDCCCommandParser() {
+    public static synchronized DCCCommandParser getDCCCommandParser(final ConfigManager configManager) {
         if (me == null) {
-            me = new DCCCommandParser();
+            me = new DCCCommandParser(configManager);
         }
 
         return me;
