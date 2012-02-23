@@ -98,7 +98,9 @@ public final class SwingPreferencesDialog extends StandardDialog implements
                             new UpdateConfigPanel(controller),
                             new URLConfigPanel(controller, getMainFrame()),
                             controller.getGlobalConfig(),
-                            controller.getGlobalIdentity());
+                            controller.getGlobalIdentity(),
+                            controller.getActionManager(),
+                            controller.getPluginManager());
                 } catch (IllegalArgumentException ex) {
                     mainPanel.setError(ex.getMessage());
                     Logger.appError(ErrorLevel.HIGH, "Unable to load the" +
