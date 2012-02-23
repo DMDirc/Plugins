@@ -25,6 +25,7 @@ package com.dmdirc.addons.ui_swing;
 import com.dmdirc.Channel;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.Server;
+import com.dmdirc.actions.ActionManager;
 import com.dmdirc.addons.ui_swing.commands.ChannelSettings;
 import com.dmdirc.addons.ui_swing.commands.Input;
 import com.dmdirc.addons.ui_swing.commands.PopInCommand;
@@ -58,6 +59,7 @@ import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.plugins.BasePlugin;
 import com.dmdirc.plugins.PluginInfo;
+import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.core.components.StatusBarManager;
@@ -139,6 +141,12 @@ public class SwingController extends BasePlugin implements UIController {
     /** Dialog manager. */
     @Getter
     private final DialogManager dialogManager;
+    /** Action manager. */
+    @Getter
+    private final ActionManager actionManager;
+    /** Plugin manager. */
+    @Getter
+    private final PluginManager pluginManager;
     /** Apple handler, deals with Mac specific code. */
     @Getter
     private final Apple apple;
@@ -150,10 +158,14 @@ public class SwingController extends BasePlugin implements UIController {
      * @param identityManager Identity Manager
      */
     public SwingController(final PluginInfo pluginInfo,
-            final IdentityManager identityManager) {
+            final IdentityManager identityManager,
+            final PluginManager pluginManager,
+            final ActionManager actionManager) {
         super();
         this.pluginInfo = pluginInfo;
         this.identityManager = identityManager;
+        this.actionManager = actionManager;
+        this.pluginManager = pluginManager;
         apple = new Apple(getGlobalConfig());
         globalConfig = identityManager.getGlobalConfiguration();
         globalIdentity = identityManager.getGlobalConfigIdentity();
