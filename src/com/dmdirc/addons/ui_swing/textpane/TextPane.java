@@ -138,7 +138,8 @@ public final class TextPane extends JComponent implements MouseWheelListener,
         };
         addMouseMotionListener(doScrollRectToVisible);
 
-        setScrollBarMax(document.getNumLines(), document.getNumLines() - 1);
+        scrollModel.setRangeProperties(document.getNumLines() - 1, 0, 0,
+                document.getNumLines() - 1, false);
     }
 
     /** {@inheritDoc} */
@@ -154,35 +155,6 @@ public final class TextPane extends JComponent implements MouseWheelListener,
      */
     public int getLastVisibleLine() {
         return scrollModel.getValue();
-    }
-
-    /**
-     * Sets the scrollbar's maximum position. If the current position is
-     * within <code>linesAllowed</code> of the end of the document, the
-     * scrollbar's current position is set to the end of the document.
-     *
-     * @param lines Current number of lines
-     * @param linesAllowed The number of lines allowed below the
-     * current position
-     * @since 0.6
-     */
-    protected void setScrollBarMax(final int lines, final int linesAllowed) {
-        final int currentLine = scrollModel.getValue();
-        final int allowedDeviation = lines - 1 - linesAllowed;
-        boolean setToMax = currentLine == allowedDeviation;
-
-        if (allowedDeviation <= 0) {
-            setToMax = true;
-        }
-
-        if (lines <= 1) {
-            scrollModel.setRangeProperties(lines, 0, lines, lines, false);
-        } else if (setToMax) {
-            scrollModel.setRangeProperties(lines - 1, 0, 0, lines - 1, false);
-        } else {
-            scrollModel.setRangeProperties(scrollModel.getValue(), 0, 0,
-                    lines - 1, false);
-        }
     }
 
     /**
@@ -488,7 +460,13 @@ public final class TextPane extends JComponent implements MouseWheelListener,
                     selectedRange.setEndLine(0);
                 }
                 setSelectedTexT(selectedRange);
-                setScrollBarMax(newSize, 1);
+                if (scrollModel.getValue() == scrollModel.getMaximum()) {
+                    scrollModel.setRangeProperties(newSize - 1, 0, 0,
+                            newSize - 1, showNotification);
+                } else {
+                    scrollModel.setRangeProperties(scrollModel.getValue()
+                            - numTrimmed, 0, 0, newSize - 1, showNotification);
+                }
             }
         });
     }
@@ -516,11 +494,16 @@ public final class TextPane extends JComponent implements MouseWheelListener,
             /** {@inheritDoc}. */
             @Override
             public void run() {
-                if (showNotification && scrollModel.getValue() != line) {
-                    newLineIndicator.setVisible(true);
+                if (scrollModel.getValue() == scrollModel.getMaximum()) {
+                    scrollModel.setRangeProperties(size - 1, 0, 0, size - 1,
+                            showNotification);
+                    if (showNotification) {
+                        newLineIndicator.setVisible(true);
+                    }
+                } else {
+                    scrollModel.setRangeProperties(scrollModel.getValue(), 0,
+                            0, size - 1, showNotification);
                 }
-
-                setScrollBarMax(size, length);
             }
         });
     }
