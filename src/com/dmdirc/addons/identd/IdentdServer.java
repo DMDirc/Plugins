@@ -22,8 +22,10 @@
 
 package com.dmdirc.addons.identd;
 
+import com.dmdirc.ServerManager;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -32,8 +34,6 @@ import java.util.List;
 
 /**
  * The IdentdServer watches over the ident port when required
- *
- * @author Shane "Dataforce" Mc Cormack
  */
 public final class IdentdServer implements Runnable {
 
@@ -49,15 +49,19 @@ public final class IdentdServer implements Runnable {
     /** The plugin that owns us. */
     private final IdentdPlugin myPlugin;
 
+    /** Server manager. */
+    private final ServerManager serverManager;
+
     /** Have we failed to start this server previously? */
     private boolean failed = false;
 
     /**
      * Create the IdentdServer.
      */
-    public IdentdServer(final IdentdPlugin plugin) {
+    public IdentdServer(final IdentdPlugin plugin, final ServerManager serverManager) {
         super();
         myPlugin = plugin;
+        this.serverManager = serverManager;
     }
 
     /**
@@ -69,7 +73,7 @@ public final class IdentdServer implements Runnable {
         while (myThread == thisThread) {
             try {
                 final Socket clientSocket = serverSocket.accept();
-                final IdentClient client = new IdentClient(this, clientSocket, myPlugin);
+                final IdentClient client = new IdentClient(this, clientSocket, myPlugin, serverManager);
                 addClient(client);
             } catch (IOException e) {
                 if (myThread == thisThread) {

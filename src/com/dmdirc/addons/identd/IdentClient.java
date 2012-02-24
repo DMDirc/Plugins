@@ -53,16 +53,23 @@ public final class IdentClient implements Runnable {
     /** The plugin that owns us. */
     private final IdentdPlugin myPlugin;
 
+    /** Server manager. */
+    private final ServerManager serverManager;
+
     /**
      * Create the IdentClient.
      *
      * @param server The server that owns this
      * @param socket The socket we are handing
+     * @param plugin Parent plugin
+     * @param serverManager Server manager to retrieve servers from
      */
-    public IdentClient(final IdentdServer server, final Socket socket, final IdentdPlugin plugin) {
+    public IdentClient(final IdentdServer server, final Socket socket,
+            final IdentdPlugin plugin, final ServerManager serverManager) {
         myServer = server;
         mySocket = socket;
         myPlugin = plugin;
+        this.serverManager = serverManager;
 
         myThread = new Thread(this);
         myThread.start();
@@ -73,6 +80,10 @@ public final class IdentClient implements Runnable {
      */
     @Override
     public void run() {
+        if (mySocket == null) {
+            myServer.delClient(this);
+            return;
+        }
         final Thread thisThread = Thread.currentThread();
         PrintWriter out = null;
         BufferedReader in = null;
@@ -89,9 +100,15 @@ public final class IdentClient implements Runnable {
             }
         } finally {
             try {
-                out.close();
-                in.close();
-                mySocket.close();
+                if (out != null) {
+                    out.close();
+                }
+                if (in != null) {
+                    in.close();
+                }
+                if (mySocket != null) {
+                    mySocket.close();
+                }
             } catch (IOException e) {
             }
         }
@@ -221,8 +238,8 @@ public final class IdentClient implements Runnable {
      * @param port Port to check for
      * @return The server instance listening on the given port
      */
-    protected static Server getServerByPort(final int port) {
-        for (Server server : ServerManager.getServerManager().getServers()) {
+    protected Server getServerByPort(final int port) {
+        for (Server server : serverManager.getServers()) {
             if (server.getParser().getLocalPort() == port) {
                 return server;
             }
