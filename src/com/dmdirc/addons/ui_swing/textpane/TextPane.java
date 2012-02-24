@@ -43,6 +43,7 @@ import java.awt.event.MouseMotionAdapter;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
+import java.util.concurrent.Semaphore;
 
 import javax.swing.BoundedRangeModel;
 import javax.swing.JComponent;
@@ -74,6 +75,8 @@ public final class TextPane extends JComponent implements MouseWheelListener,
     private final Window frame;
     /** Indicator to show whether new lines have been added. */
     private final JLabel newLineIndicator;
+    /** Line add sync. */
+    private final Semaphore lineSync = new Semaphore(1, true);
     /** Last seen line. */
     private int lastSeenLine = 0;
     /** Show new line notifications. */
@@ -167,6 +170,7 @@ public final class TextPane extends JComponent implements MouseWheelListener,
      * @since 0.6
      */
     protected void setScrollBarMax(final int lines, final int linesAllowed) {
+        lineSync.acquireUninterruptibly();
         final int currentLine = scrollModel.getValue();
         final int allowedDeviation = lines - 1 - linesAllowed;
         boolean setToMax = currentLine == allowedDeviation;
@@ -183,6 +187,7 @@ public final class TextPane extends JComponent implements MouseWheelListener,
             scrollModel.setRangeProperties(scrollModel.getValue(), 0, 0,
                     lines - 1, false);
         }
+        lineSync.release();
     }
 
     /**
@@ -191,7 +196,9 @@ public final class TextPane extends JComponent implements MouseWheelListener,
      * @param position new position of the scrollbar
      */
     public void setScrollBarPosition(final int position) {
+        lineSync.acquireUninterruptibly();
         scrollModel.setValue(position);
+        lineSync.release();
     }
 
     /**
@@ -201,6 +208,7 @@ public final class TextPane extends JComponent implements MouseWheelListener,
      */
     @Override
     public void adjustmentValueChanged(final AdjustmentEvent e) {
+        lineSync.acquireUninterruptibly();
         if (showNotification && e.getValue() >= scrollModel.getMaximum()) {
             newLineIndicator.setVisible(false);
         }
@@ -210,6 +218,7 @@ public final class TextPane extends JComponent implements MouseWheelListener,
         final int lines = scrollModel.getMaximum() - lastSeenLine;
         newLineIndicator.setText("↓ " + lines + " new line"
                 + (lines == 1 ? "" : "s") + " ↓");
+        lineSync.release();
     }
 
     /**
@@ -219,11 +228,13 @@ public final class TextPane extends JComponent implements MouseWheelListener,
      */
     @Override
     public void mouseWheelMoved(final MouseWheelEvent e) {
+        lineSync.acquireUninterruptibly();
         if (e.getWheelRotation() > 0) {
             scrollModel.setValue(scrollModel.getValue() + e.getScrollAmount());
         } else {
             scrollModel.setValue(scrollModel.getValue() - e.getScrollAmount());
         }
+        lineSync.release();
     }
 
     /**
@@ -449,22 +460,30 @@ public final class TextPane extends JComponent implements MouseWheelListener,
 
     /** Scrolls one page up in the textpane. */
     public void pageDown() {
+        lineSync.acquireUninterruptibly();
         scrollModel.setValue(scrollModel.getValue() + 10);
+        lineSync.release();
     }
 
     /** Scrolls one page down in the textpane. */
     public void pageUp() {
+        lineSync.acquireUninterruptibly();
         scrollModel.setValue(scrollModel.getValue() - 10);
+        lineSync.release();
     }
 
     /** Scrolls to the beginning of the TextPane. */
     public void goToHome() {
+        lineSync.acquireUninterruptibly();
         scrollModel.setValue(0);
+        lineSync.release();
     }
 
     /** Scrolls to the end of the TextPane. */
     public void goToEnd() {
+        lineSync.acquireUninterruptibly();
         scrollModel.setValue(scrollModel.getMaximum());
+        lineSync.release();
     }
 
     /** {@inheritDoc}. */
@@ -475,6 +494,7 @@ public final class TextPane extends JComponent implements MouseWheelListener,
             /** {@inheritDoc}. */
             @Override
             public void run() {
+                lineSync.acquireUninterruptibly();
                 lastSeenLine -= numTrimmed;
                 final LinePosition selectedRange = getSelectedRange();
                 selectedRange.setStartLine(selectedRange.getStartLine()
@@ -489,6 +509,7 @@ public final class TextPane extends JComponent implements MouseWheelListener,
                 }
                 setSelectedTexT(selectedRange);
                 setScrollBarMax(newSize, 1);
+                lineSync.release();
             }
         });
     }
@@ -501,9 +522,11 @@ public final class TextPane extends JComponent implements MouseWheelListener,
             /** {@inheritDoc}. */
             @Override
             public void run() {
+                lineSync.acquireUninterruptibly();
                 scrollModel.setMaximum(0);
                 scrollModel.setValue(0);
                 canvas.recalc();
+                lineSync.release();
             }
         });
     }
@@ -516,11 +539,12 @@ public final class TextPane extends JComponent implements MouseWheelListener,
             /** {@inheritDoc}. */
             @Override
             public void run() {
+                lineSync.acquireUninterruptibly();
                 if (showNotification && scrollModel.getValue() != line) {
                     newLineIndicator.setVisible(true);
                 }
-
                 setScrollBarMax(size, length);
+                lineSync.release();
             }
         });
     }
