@@ -27,6 +27,7 @@ import com.dmdirc.ServerManager;
 import com.dmdirc.config.ConfigManager;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
+import com.dmdirc.util.io.StreamUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -34,10 +35,9 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
+
 /**
  * The IdentClient responds to an ident request.
- *
- * @author Shane "Dataforce" Mc Cormack
  */
 public final class IdentClient implements Runnable {
 
@@ -53,17 +53,29 @@ public final class IdentClient implements Runnable {
     /** The plugin that owns us. */
     private final IdentdPlugin myPlugin;
 
+    /** Server manager. */
+    private final ServerManager serverManager;
+
     /**
      * Create the IdentClient.
      *
      * @param server The server that owns this
      * @param socket The socket we are handing
+     * @param plugin Parent plugin
+     * @param serverManager Server manager to retrieve servers from
      */
-    public IdentClient(final IdentdServer server, final Socket socket, final IdentdPlugin plugin) {
+    public IdentClient(final IdentdServer server, final Socket socket,
+            final IdentdPlugin plugin, final ServerManager serverManager) {
         myServer = server;
         mySocket = socket;
         myPlugin = plugin;
+        this.serverManager = serverManager;
+    }
 
+    /**
+     * Starts this ident client in a new thread.
+     */
+    public void start() {
         myThread = new Thread(this);
         myThread.start();
     }
@@ -88,14 +100,11 @@ public final class IdentClient implements Runnable {
                 Logger.userError(ErrorLevel.HIGH, "ClientSocket Error: " + e.getMessage());
             }
         } finally {
-            try {
-                out.close();
-                in.close();
-                mySocket.close();
-            } catch (IOException e) {
-            }
+            StreamUtils.close(in);
+            StreamUtils.close(out);
+            StreamUtils.close(mySocket);
+            myServer.delClient(this);
         }
-        myServer.delClient(this);
     }
 
     /**
@@ -208,10 +217,7 @@ public final class IdentClient implements Runnable {
             if (tmpThread != null) {
                 tmpThread.interrupt();
             }
-            try {
-                mySocket.close();
-            } catch (IOException e) {
-            }
+            StreamUtils.close(mySocket);
         }
     }
 
@@ -221,8 +227,8 @@ public final class IdentClient implements Runnable {
      * @param port Port to check for
      * @return The server instance listening on the given port
      */
-    protected static Server getServerByPort(final int port) {
-        for (Server server : ServerManager.getServerManager().getServers()) {
+    protected Server getServerByPort(final int port) {
+        for (Server server : serverManager.getServers()) {
             if (server.getParser().getLocalPort() == port) {
                 return server;
             }
