@@ -23,8 +23,8 @@
 package com.dmdirc.addons.identd;
 
 import com.dmdirc.Server;
+import com.dmdirc.ServerManager;
 import com.dmdirc.actions.CoreActionType;
-import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.config.ConfigManager;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
@@ -34,6 +34,7 @@ import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.interfaces.ActionController;
 import com.dmdirc.interfaces.ActionListener;
+import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.plugins.BasePlugin;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.util.validators.PortValidator;
@@ -56,6 +57,8 @@ public class IdentdPlugin extends BasePlugin implements ActionListener {
     private final PluginInfo pluginInfo;
     /** The action controller to use. */
     private final ActionController actionController;
+    /** Server manager. */
+    private final ServerManager serverManager;
     /** Global config. */
     @Getter
     private ConfigManager config;
@@ -65,14 +68,18 @@ public class IdentdPlugin extends BasePlugin implements ActionListener {
      *
      * @param pluginInfo This plugin's plugin info
      * @param actionController The action controller to register listeners with
+     * @param identityManager Identity manager to get settings from
+     * @param serverManager Server manager to retrieve servers from
      */
     public IdentdPlugin(final PluginInfo pluginInfo,
             final ActionController actionController,
-            final IdentityManager identityManager) {
+            final IdentityManager identityManager,
+            final ServerManager serverManager) {
         super();
 
         this.pluginInfo = pluginInfo;
         this.actionController = actionController;
+        this.serverManager = serverManager;
         config = identityManager.getGlobalConfiguration();
     }
 
@@ -87,7 +94,7 @@ public class IdentdPlugin extends BasePlugin implements ActionListener {
                 CoreActionType.SERVER_CONNECTING,
                 CoreActionType.SERVER_CONNECTERROR);
 
-        myServer = new IdentdServer(this);
+        myServer = new IdentdServer(this, serverManager);
         if (config.getOptionBool(getDomain(), "advanced.alwaysOn")) {
             myServer.startServer();
         }
