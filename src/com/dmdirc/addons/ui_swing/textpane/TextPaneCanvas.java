@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.textpane;
 
-import com.dmdirc.addons.ui_swing.BackgroundOption;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.config.ConfigManager;
@@ -31,12 +30,10 @@ import com.dmdirc.ui.messages.IRCDocument;
 import com.dmdirc.ui.messages.IRCTextAttribute;
 import com.dmdirc.ui.messages.LinePosition;
 import com.dmdirc.util.collections.ListenerList;
-import com.dmdirc.util.URLBuilder;
 
 import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
@@ -94,14 +91,10 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
     private int firstVisibleLine;
     /** Last visible line (from the top). */
     private int lastVisibleLine;
-    /** Background image. */
-    private Image backgroundImage;
     /** Config Manager. */
     private final ConfigManager manager;
     /** Config domain. */
     private final String domain;
-    /** Background image option. */
-    private BackgroundOption backgroundOption;
     /** Quick copy? */
     private boolean quickCopy;
     /** Mouse click listeners. */
@@ -129,8 +122,6 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
         addMouseListener(this);
         addMouseMotionListener(this);
         addComponentListener(this);
-        manager.addChangeListener(domain, "textpanebackground", this);
-        manager.addChangeListener(domain, "textpanebackgroundoption", this);
         manager.addChangeListener("ui", "quickCopy", this);
 
         updateCachedSettings();
@@ -150,10 +141,6 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
         if (desktopHints != null) {
             g.addRenderingHints(desktopHints);
         }
-        g.setColor(textPane.getBackground());
-        g.fill(g.getClipBounds());
-        UIUtilities.paintBackground(g, getBounds(), backgroundImage,
-                backgroundOption);
         paintOntoGraphics(g);
     }
 
@@ -170,20 +157,6 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
      * Updates cached config settings.
      */
     private void updateCachedSettings() {
-        final String backgroundPath = manager.getOption(domain,
-                "textpanebackground");
-        if (backgroundPath.isEmpty()) {
-            backgroundImage = null;
-        } else {
-            new BackgroundImageLoader(TextPaneCanvas.this,
-                    URLBuilder.buildURL(backgroundPath)).executeInExecutor();
-        }
-        try {
-            backgroundOption = BackgroundOption.valueOf(manager.getOption(
-                    domain, "textpanebackgroundoption"));
-        } catch (IllegalArgumentException ex) {
-            backgroundOption = BackgroundOption.CENTER;
-        }
         quickCopy = manager.getOptionBool("ui", "quickCopy");
         UIUtilities.invokeLater(new Runnable() {
 
@@ -1091,15 +1064,5 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
      */
     public void removeTextPaneListener(final TextPaneListener listener) {
         listeners.remove(TextPaneListener.class, listener);
-    }
-
-    /**
-     * Sets the background image for this canvas.
-     *
-     * @param image Background image
-     */
-    protected void setBackgroundImage(final Image image) {
-        backgroundImage = image;
-        recalc();
     }
 }

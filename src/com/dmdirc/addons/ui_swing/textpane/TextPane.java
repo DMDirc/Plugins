@@ -52,6 +52,8 @@ import javax.swing.SwingConstants;
 
 import net.miginfocom.swing.MigLayout;
 
+import org.jdesktop.jxlayer.JXLayer;
+
 /**
  * Styled, scrollable text pane.
  */
@@ -99,7 +101,11 @@ public final class TextPane extends JComponent implements MouseWheelListener,
 
         setLayout(new MigLayout("fill, hidemode 3"));
         canvas = new TextPaneCanvas(this, document);
-        add(canvas, "dock center");
+        final JXLayer<JComponent> layer = new JXLayer<JComponent>(canvas);
+        layer.setUI(new BackgroundPainter(frame.getContainer().getConfigManager(),
+                "plugin-ui_swing", "textpanebackground",
+                "textpanebackgroundoption"));
+        add(layer, "dock center");
         add(newLineIndicator, "dock south, center, grow");
         scrollModel = new TextPaneBoundedRangeModel();
         scrollModel.setExtent(0);
