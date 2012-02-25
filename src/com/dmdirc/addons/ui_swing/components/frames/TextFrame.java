@@ -544,6 +544,7 @@ public abstract class TextFrame extends JPanel implements Window,
     @Override
     public void windowClosing(final FrameContainer window) {
         setVisible(false);
+        getTextPane().close();
     }
 
     /** {@inheritDoc} */

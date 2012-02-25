@@ -52,6 +52,8 @@ import javax.swing.SwingConstants;
 
 import net.miginfocom.swing.MigLayout;
 
+import org.jdesktop.jxlayer.JXLayer;
+
 /**
  * Styled, scrollable text pane.
  */
@@ -74,6 +76,8 @@ public final class TextPane extends JComponent implements MouseWheelListener,
     private final Window frame;
     /** Indicator to show whether new lines have been added. */
     private final JLabel newLineIndicator;
+    /** Background painter. */
+    private final BackgroundPainter backgroundPainter;
     /** Last seen line. */
     private int lastSeenLine = 0;
     /** Show new line notifications. */
@@ -98,8 +102,13 @@ public final class TextPane extends JComponent implements MouseWheelListener,
         newLineIndicator.setVisible(false);
 
         setLayout(new MigLayout("fill, hidemode 3"));
+        backgroundPainter = new BackgroundPainter(frame.getContainer()
+                .getConfigManager(), "plugin-ui_swing", "textpanebackground",
+                "textpanebackgroundoption");
         canvas = new TextPaneCanvas(this, document);
-        add(canvas, "dock center");
+        final JXLayer<JComponent> layer = new JXLayer<JComponent>(canvas);
+        layer.setUI(backgroundPainter);
+        add(layer, "dock center");
         add(newLineIndicator, "dock south, center, grow");
         scrollModel = new TextPaneBoundedRangeModel();
         scrollModel.setExtent(0);
@@ -573,5 +582,12 @@ public final class TextPane extends JComponent implements MouseWheelListener,
                 }
             });
         }
+    }
+
+    /**
+     * Called to close this textpane and any associated resources.
+     */
+    public void close() {
+        backgroundPainter.unbind();
     }
 }
