@@ -40,7 +40,6 @@ import javax.swing.AbstractAction;
 import javax.swing.JComponent;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
-import javax.swing.SwingUtilities;
 import javax.swing.text.JTextComponent;
 
 /**
@@ -291,15 +290,8 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
                     && (flags & HANDLE_RETURN) == HANDLE_RETURN) {
                 target.setText("");
             }
-            SwingUtilities.invokeLater(new Runnable() {
-
-                /** {@inheritDoc} */
-                @Override
-                public void run() {
-                    handleKeyPressed(line, e.getKeyCode(), e.isShiftDown(),
-                            UIUtilities.isCtrlDown(e));
-                }
-            });
+            handleKeyPressed(line, e.getKeyCode(), e.isShiftDown(),
+                    UIUtilities.isCtrlDown(e));
         }
     }
 
