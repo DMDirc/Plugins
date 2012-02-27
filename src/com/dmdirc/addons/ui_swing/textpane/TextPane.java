@@ -147,8 +147,22 @@ public final class TextPane extends JComponent implements MouseWheelListener,
         };
         addMouseMotionListener(doScrollRectToVisible);
 
-        scrollModel.setRangeProperties(document.getNumLines() - 1, 0, 0,
-                document.getNumLines() - 1, false);
+        setRangeProperties(document.getNumLines() - 1, document.getNumLines() - 1);
+    }
+
+    /**
+     * Sets the range properties of the scroll model.  This method takes into
+     * account the scroll model working with 0 indexed line numbers.
+     *
+     * @param max Total number of lines
+     * @param value Current line
+     */
+    private void setRangeProperties(final int max, final int value) {
+        if (max == 1) {
+            scrollModel.setRangeProperties(1, 0, 1, 1, false);
+        } else {
+            scrollModel.setRangeProperties(value, 0, 0, max - 1, false);
+        }
     }
 
     /** {@inheritDoc} */
@@ -470,11 +484,10 @@ public final class TextPane extends JComponent implements MouseWheelListener,
                 }
                 setSelectedTexT(selectedRange);
                 if (scrollModel.getValue() == scrollModel.getMaximum()) {
-                    scrollModel.setRangeProperties(newSize - 1, 0, 0,
-                            newSize - 1, showNotification);
+                    setRangeProperties(newSize, newSize);
                 } else {
-                    scrollModel.setRangeProperties(scrollModel.getValue()
-                            - numTrimmed, 0, 0, newSize - 1, showNotification);
+                    setRangeProperties(newSize, scrollModel.getValue()
+                            - numTrimmed);
                 }
             }
         });
@@ -504,11 +517,9 @@ public final class TextPane extends JComponent implements MouseWheelListener,
             @Override
             public void run() {
                 if (scrollModel.getValue() == scrollModel.getMaximum()) {
-                    scrollModel.setRangeProperties(size -1, 0, 0, size - 1,
-                            showNotification);
+                    setRangeProperties(size, size);
                 } else {
-                    scrollModel.setRangeProperties(scrollModel.getValue(), 0,
-                            0, size -1, showNotification);
+                    setRangeProperties(size, scrollModel.getValue());
                     if (showNotification) {
                         newLineIndicator.setVisible(true);
                     }
