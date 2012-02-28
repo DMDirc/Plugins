@@ -26,7 +26,6 @@ import com.dmdirc.Channel;
 import com.dmdirc.ChannelClientProperty;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionType;
-import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.config.ConfigManager;
@@ -38,6 +37,7 @@ import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.interfaces.ActionListener;
 import com.dmdirc.interfaces.ConfigChangeListener;
+import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.parser.interfaces.ChannelClientInfo;
 import com.dmdirc.parser.interfaces.ChannelInfo;
 import com.dmdirc.parser.interfaces.ClientInfo;
@@ -46,11 +46,11 @@ import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.Colour;
 import com.dmdirc.ui.messages.ColourManager;
-import com.dmdirc.util.ReturnableThread;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
 
 /**
  * Provides various features related to nickname colouring.
@@ -264,15 +264,15 @@ public final class NickColourPlugin extends BasePlugin implements ActionListener
         final PreferencesCategory colours = new PluginPreferencesCategory(
                 pluginInfo, "Colours",
                 "Set colours for specific nicknames.", UIUtilities.invokeAndWait(
-                new ReturnableThread<NickColourPanel>() {
+                new Callable<NickColourPanel>() {
 
                     /** {@inheritDoc} */
                     @Override
-                    public void run() {
-                        setObject(new NickColourPanel(
+                    public NickColourPanel call() {
+                        return new NickColourPanel(
                                 (SwingController) PluginManager.getPluginManager()
                                 .getPluginInfoByName("ui_swing").getPlugin(),
-                                NickColourPlugin.this));
+                                NickColourPlugin.this);
                     }
                 }));
 

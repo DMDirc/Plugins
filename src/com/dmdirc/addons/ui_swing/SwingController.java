@@ -65,7 +65,6 @@ import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.core.components.StatusBarManager;
 import com.dmdirc.ui.core.util.URLHandler;
 import com.dmdirc.updater.Version;
-import com.dmdirc.util.ReturnableThread;
 import com.dmdirc.util.validators.NumericalValidator;
 
 import java.awt.Dialog.ModalityType;
@@ -78,6 +77,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -88,6 +88,7 @@ import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.UnsupportedLookAndFeelException;
 
 import lombok.Getter;
+
 import net.miginfocom.layout.PlatformDefaults;
 
 /**
@@ -306,12 +307,12 @@ public class SwingController extends BasePlugin implements UIController {
      */
     public void updateComponentTrees() {
         final int state = UIUtilities.invokeAndWait(
-                new ReturnableThread<Integer>() {
+                new Callable<Integer>() {
 
                     /** {@inheritDoc} */
                     @Override
-                    public void run() {
-                        setObject(getMainFrame().getExtendedState());
+                    public Integer call() {
+                        return getMainFrame().getExtendedState();
                     }
                 });
         UIUtilities.invokeLater(new Runnable() {

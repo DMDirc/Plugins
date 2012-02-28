@@ -24,12 +24,12 @@ package com.dmdirc.addons.osd;
 
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.config.IdentityManager;
-import com.dmdirc.util.ReturnableThread;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+import java.util.concurrent.Callable;
 
 /**
  * Class to manage OSD Windows.
@@ -99,15 +99,15 @@ public class OsdManager {
                 .getGlobalConfiguration().getOptionInt(plugin.getDomain(), "locationY");
 
         windowList.add(UIUtilities.invokeAndWait(
-                new ReturnableThread<OsdWindow>() {
+                new Callable<OsdWindow>() {
 
             /** {@inheritDoc} */
             @Override
-            public void run() {
-                setObject(new OsdWindow(timeout, message, false,
+            public OsdWindow call() {
+                return new OsdWindow(timeout, message, false,
                         IdentityManager.getIdentityManager().getGlobalConfiguration().getOptionInt(
                         plugin.getDomain(), "locationX"), policy.getYPosition(
-                        OsdManager.this, startY), plugin, OsdManager.this));
+                        OsdManager.this, startY), plugin, OsdManager.this);
             }
         }));
     }
