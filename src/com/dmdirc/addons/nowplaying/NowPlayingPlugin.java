@@ -23,7 +23,6 @@
 package com.dmdirc.addons.nowplaying;
 
 import com.dmdirc.actions.CoreActionType;
-import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
@@ -31,15 +30,16 @@ import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.interfaces.ActionController;
 import com.dmdirc.interfaces.ActionListener;
+import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.plugins.BasePlugin;
 import com.dmdirc.plugins.Plugin;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.PluginManager;
-import com.dmdirc.util.ReturnableThread;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 /**
  * Plugin that allows users to advertise what they're currently playing or
@@ -107,11 +107,11 @@ public class NowPlayingPlugin extends BasePlugin implements ActionListener  {
     @Override
     public void showConfig(final PreferencesDialogModel manager) {
         final ConfigPanel configPanel = UIUtilities.invokeAndWait(
-                new ReturnableThread<ConfigPanel>() {
+                new Callable<ConfigPanel>() {
 
             @Override
-            public void run() {
-                setObject(new ConfigPanel(NowPlayingPlugin.this, order));
+            public ConfigPanel call() {
+                return new ConfigPanel(NowPlayingPlugin.this, order);
             }
         });
 

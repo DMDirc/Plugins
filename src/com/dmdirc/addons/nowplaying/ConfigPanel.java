@@ -30,7 +30,6 @@ import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.prefs.PreferencesInterface;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
-import com.dmdirc.util.ReturnableThread;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -40,6 +39,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.Callable;
 
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
@@ -158,12 +158,12 @@ public class ConfigPanel extends JPanel implements PreferencesInterface,
         }
 
         final String text = plugin.doSubstitution(
-                UIUtilities.invokeAndWait(new ReturnableThread<String>() {
+                UIUtilities.invokeAndWait(new Callable<String>() {
 
             /** {@inheritDoc} */
             @Override
-            public void run() {
-                setObject(textfield.getText());
+            public String call() {
+                return textfield.getText();
             }
         }), source);
         SwingUtilities.invokeLater(new Runnable() {
