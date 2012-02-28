@@ -23,20 +23,20 @@ package com.dmdirc.addons.notifications;
 
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionType;
-import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.interfaces.ActionListener;
+import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.plugins.BasePlugin;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.PluginManager;
-import com.dmdirc.util.ReturnableThread;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 /**
  * Notification Manager plugin, aggregates notification sources exposing them
@@ -91,13 +91,13 @@ public class NotificationsPlugin extends BasePlugin implements ActionListener {
     @Override
     public void showConfig(final PreferencesDialogModel manager) {
         final NotificationConfig configPanel = UIUtilities.invokeAndWait(
-                new ReturnableThread<NotificationConfig>() {
+                new Callable<NotificationConfig>() {
 
             /** {@inheritDoc} */
             @Override
-            public void run() {
-                setObject(new NotificationConfig(NotificationsPlugin.this,
-                        order));
+            public NotificationConfig call() {
+                return new NotificationConfig(NotificationsPlugin.this,
+                        order);
             }
         });
 
