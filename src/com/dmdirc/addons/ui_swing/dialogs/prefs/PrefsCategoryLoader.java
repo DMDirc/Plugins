@@ -35,9 +35,10 @@ import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
-import com.dmdirc.util.ReturnableThread;
 
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
+
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -198,14 +199,14 @@ public class PrefsCategoryLoader extends LoggingSwingWorker<JPanel, Object> {
 
 
         final JComponent option = UIUtilities.invokeAndWait(
-                new ReturnableThread<JComponent>() {
+                new Callable<JComponent>() {
 
             /** {@inheritDoc} */
             @Override
-            public void run() {
+            public JComponent call() {
                 JComponent option = factory.getComponent(setting);
                 option.setToolTipText(null);
-                setObject(option);
+                return option;
             }
         });
 
@@ -270,10 +271,10 @@ public class PrefsCategoryLoader extends LoggingSwingWorker<JPanel, Object> {
     private void addInlineCategory(final PreferencesCategory category,
             final JPanel parent) {
         final JPanel panel = UIUtilities.invokeAndWait(
-                new ReturnableThread<JPanel>() {
+                new Callable<JPanel>() {
 
             @Override
-            public void run() {
+            public JPanel call() {
                 final JPanel panel =
                 new NoRemovePanel(new MigLayout("fillx, gap unrel, wrap 2, " +
                     "hidemode 3, pack, wmax 470-" + leftPadding + "-" +
@@ -281,7 +282,7 @@ public class PrefsCategoryLoader extends LoggingSwingWorker<JPanel, Object> {
                 panel.setName(category.getPath());
                 panel.setBorder(BorderFactory.createTitledBorder(UIManager.
                         getBorder("TitledBorder.border"), category.getTitle()));
-                setObject(panel);
+                return panel;
             }
         });
 
@@ -299,16 +300,16 @@ public class PrefsCategoryLoader extends LoggingSwingWorker<JPanel, Object> {
      */
     private JPanel addCategory(final PreferencesCategory category) {
         final JPanel panel = UIUtilities.invokeAndWait(
-                new ReturnableThread<JPanel>() {
+                new Callable<JPanel>() {
 
             @Override
-            public void run() {
+            public JPanel call() {
                 final JPanel panel = new NoRemovePanel(
                         new MigLayout("fillx, gap unrel, wrap 2, pack, " +
                         "hidemode 3, wmax 470-" + leftPadding + "-" +
                         rightPadding + "-2*" + padding));
                 panel.setName(category.getPath());
-                setObject(panel);
+                return panel;
             }
         });
 

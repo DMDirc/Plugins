@@ -30,7 +30,6 @@ import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.SwingWindowListener;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
-import com.dmdirc.util.ReturnableThread;
 
 import java.awt.Component;
 import java.awt.event.ActionEvent;
@@ -40,9 +39,10 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicBoolean;
-import javax.swing.AbstractButton;
 
+import javax.swing.AbstractButton;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
@@ -135,14 +135,14 @@ public final class WindowMenuFrameManager extends JMenu implements
     public void windowAdded(final TextFrame parent, final TextFrame window) {
         if (parent == null) {
             final FrameContainerMenuItem item = UIUtilities.invokeAndWait(
-                    new ReturnableThread<FrameContainerMenuItem>() {
+                    new Callable<FrameContainerMenuItem>() {
 
                         /** {@inheritDoc} */
                         @Override
-                        public void run() {
-                            setObject(new FrameContainerMenuItem(controller,
+                        public FrameContainerMenuItem call() {
+                            return new FrameContainerMenuItem(controller,
                                     window.getContainer(),
-                                    WindowMenuFrameManager.this));
+                                    WindowMenuFrameManager.this);
                         }
                     });
             items.put(window.getContainer(), item);
@@ -157,26 +157,26 @@ public final class WindowMenuFrameManager extends JMenu implements
             });
         } else {
             final FrameContainerMenuItem item = UIUtilities.invokeAndWait(
-                    new ReturnableThread<FrameContainerMenuItem>() {
+                    new Callable<FrameContainerMenuItem>() {
 
                         /** {@inheritDoc} */
                         @Override
-                        public void run() {
-                            setObject(new FrameContainerMenuItem(controller,
+                        public FrameContainerMenuItem call() {
+                            return new FrameContainerMenuItem(controller,
                                     window.getContainer(),
-                                    WindowMenuFrameManager.this));
+                                    WindowMenuFrameManager.this);
                         }
                     });
             final JMenu parentMenu;
             if (!menus.containsKey(parent.getContainer())) {
                 final FrameContainerMenu replacement = UIUtilities.invokeAndWait(
-                        new ReturnableThread<FrameContainerMenu>() {
+                        new Callable<FrameContainerMenu>() {
 
                             /** {@inheritDoc} */
                             @Override
-                            public void run() {
-                                setObject(new FrameContainerMenu(parent.
-                                        getContainer(), controller));
+                            public FrameContainerMenu call() {
+                                return new FrameContainerMenu(parent.
+                                        getContainer(), controller);
                             }
                         });
                 replaceItemWithMenu(getParentMenu(parent.getContainer()),
@@ -347,22 +347,22 @@ public final class WindowMenuFrameManager extends JMenu implements
     private int getIndex(final FrameContainer newChild, final JMenu menu) {
         final int count = menu == this ? itemCount : 0;
         final int menuItemCount = UIUtilities.invokeAndWait(
-                new ReturnableThread<Integer>() {
+                new Callable<Integer>() {
 
                     /** {@inheritDoc} */
                     @Override
-                    public void run() {
-                        setObject(menu.getMenuComponentCount());
+                    public Integer call() {
+                        return menu.getMenuComponentCount();
                     }
                 });
         for (int i = count; i < menuItemCount; i++) {
             final int index = i;
             final Component component = UIUtilities.invokeAndWait(
-                    new ReturnableThread<Component>() {
+                    new Callable<Component>() {
 
                         @Override
-                        public void run() {
-                            setObject(menu.getMenuComponent(index));
+                        public Component call() {
+                            return menu.getMenuComponent(index);
                         }
                     });
             if (!(component instanceof FrameContainerMenuInterface)) {
@@ -380,12 +380,12 @@ public final class WindowMenuFrameManager extends JMenu implements
             }
         }
 
-        return UIUtilities.invokeAndWait(new ReturnableThread<Integer>() {
+        return UIUtilities.invokeAndWait(new Callable<Integer>() {
 
             /** {@inheritDoc} */
             @Override
-            public void run() {
-                setObject(menu.getMenuComponentCount());
+            public Integer call() {
+                return menu.getMenuComponentCount();
             }
         });
     }

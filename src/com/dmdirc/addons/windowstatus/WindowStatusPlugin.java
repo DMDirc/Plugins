@@ -43,11 +43,11 @@ import com.dmdirc.parser.interfaces.ClientInfo;
 import com.dmdirc.plugins.BasePlugin;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.PluginManager;
-import com.dmdirc.util.ReturnableThread;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.Callable;
 
 /**
  * Displays information related to the current window in the status bar.
@@ -78,12 +78,12 @@ public final class WindowStatusPlugin extends BasePlugin
         this.pluginInfo = pluginInfo;
 
         panel = UIUtilities.invokeAndWait(
-                new ReturnableThread<WindowStatusPanel>() {
+                new Callable<WindowStatusPanel>() {
 
             /** {@inheritDoc} */
             @Override
-            public void run() {
-                setObject(new WindowStatusPanel());
+            public WindowStatusPanel call() {
+                return new WindowStatusPanel();
             }
         });
     }

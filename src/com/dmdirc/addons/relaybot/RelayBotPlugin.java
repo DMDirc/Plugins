@@ -27,7 +27,6 @@ import com.dmdirc.Server;
 import com.dmdirc.ServerManager;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionType;
-import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
@@ -37,18 +36,19 @@ import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.interfaces.ActionListener;
 import com.dmdirc.interfaces.ConfigChangeListener;
+import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.parser.interfaces.ChannelClientInfo;
 import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.parser.irc.IRCParser;
 import com.dmdirc.plugins.BasePlugin;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.PluginManager;
-import com.dmdirc.util.ReturnableThread;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Callable;
 
 /**
  * This plugin makes certain relay bots less obnoxious looking.
@@ -285,14 +285,14 @@ public class RelayBotPlugin extends BasePlugin implements ActionListener, Config
                 pluginInfo, "Channels",
                 "Identifies where and who the bot is in channels.",
                 UIUtilities.invokeAndWait(
-                new ReturnableThread<RelayChannelPanel>() {
+                new Callable<RelayChannelPanel>() {
 
             /** {@inheritDoc} */
             @Override
-            public void run() {
-                setObject(new RelayChannelPanel(PluginManager.getPluginManager()
+            public RelayChannelPanel call() {
+                return new RelayChannelPanel(PluginManager.getPluginManager()
                         .getPluginInfoByName("ui_swing").getPlugin(),
-                        RelayBotPlugin.this));
+                        RelayBotPlugin.this);
             }
         }));
         colours.setInline().setInlineAfter();

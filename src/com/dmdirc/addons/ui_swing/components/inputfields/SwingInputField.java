@@ -28,7 +28,6 @@ import com.dmdirc.addons.ui_swing.components.colours.ColourPickerDialog;
 import com.dmdirc.addons.ui_swing.components.frames.InputTextFrame;
 import com.dmdirc.interfaces.ui.InputField;
 import com.dmdirc.interfaces.ui.InputValidationListener;
-import com.dmdirc.util.ReturnableThread;
 import com.dmdirc.util.collections.ListenerList;
 
 import java.awt.Color;
@@ -41,6 +40,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.concurrent.Callable;
 
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -132,12 +132,12 @@ public class SwingInputField extends JComponent implements InputField,
     /** {@inheritDoc} */
     @Override
     public boolean requestFocusInWindow() {
-        return UIUtilities.invokeAndWait(new ReturnableThread<Boolean>() {
+        return UIUtilities.invokeAndWait(new Callable<Boolean>() {
 
             /** {@inheritDoc} */
             @Override
-            public void run() {
-                setObject(textField.requestFocusInWindow());
+            public Boolean call() {
+                return textField.requestFocusInWindow();
             }
         });
     }
@@ -201,12 +201,12 @@ public class SwingInputField extends JComponent implements InputField,
      * @return JTextField
      */
     public JTextField getTextField() {
-        return UIUtilities.invokeAndWait(new ReturnableThread<JTextField>() {
+        return UIUtilities.invokeAndWait(new Callable<JTextField>() {
 
             /** {@inheritDoc} */
             @Override
-            public void run() {
-                setObject(textField);
+            public JTextField call() {
+                return textField;
             }
         });
     }
@@ -266,12 +266,12 @@ public class SwingInputField extends JComponent implements InputField,
     /** {@inheritDoc} */
     @Override
     public String getSelectedText() {
-        return UIUtilities.invokeAndWait(new ReturnableThread<String>() {
+        return UIUtilities.invokeAndWait(new Callable<String>() {
 
             /** {@inheritDoc} */
             @Override
-            public void run() {
-                setObject(textField.getSelectedText());
+            public String call() {
+                return textField.getSelectedText();
             }
         });
     }
@@ -279,12 +279,12 @@ public class SwingInputField extends JComponent implements InputField,
     /** {@inheritDoc} */
     @Override
     public int getSelectionEnd() {
-        return UIUtilities.invokeAndWait(new ReturnableThread<Integer>() {
+        return UIUtilities.invokeAndWait(new Callable<Integer>() {
 
             /** {@inheritDoc} */
             @Override
-            public void run() {
-                setObject(textField.getSelectionEnd());
+            public Integer call() {
+                return textField.getSelectionEnd();
             }
         });
     }
@@ -292,12 +292,12 @@ public class SwingInputField extends JComponent implements InputField,
     /** {@inheritDoc} */
     @Override
     public int getSelectionStart() {
-        return UIUtilities.invokeAndWait(new ReturnableThread<Integer>() {
+        return UIUtilities.invokeAndWait(new Callable<Integer>() {
 
             /** {@inheritDoc} */
             @Override
-            public void run() {
-                setObject(textField.getSelectionStart());
+            public Integer call() {
+                return textField.getSelectionStart();
             }
         });
     }
@@ -305,12 +305,12 @@ public class SwingInputField extends JComponent implements InputField,
     /** {@inheritDoc} */
     @Override
     public String getText() {
-        return UIUtilities.invokeAndWait(new ReturnableThread<String>() {
+        return UIUtilities.invokeAndWait(new Callable<String>() {
 
             /** {@inheritDoc} */
             @Override
-            public void run() {
-                setObject(textField.getText());
+            public String call() {
+                return textField.getText();
             }
         });
     }
@@ -331,12 +331,12 @@ public class SwingInputField extends JComponent implements InputField,
     /** {@inheritDoc} */
     @Override
     public int getCaretPosition() {
-        return UIUtilities.invokeAndWait(new ReturnableThread<Integer>() {
+        return UIUtilities.invokeAndWait(new Callable<Integer>() {
 
             /** {@inheritDoc} */
             @Override
-            public void run() {
-                setObject(textField.getCaretPosition());
+            public Integer call() {
+                return textField.getCaretPosition();
             }
         });
     }
@@ -423,12 +423,12 @@ public class SwingInputField extends JComponent implements InputField,
     /** {@inheritDoc} */
     @Override
     public boolean hasFocus() {
-        return UIUtilities.invokeAndWait(new ReturnableThread<Boolean>() {
+        return UIUtilities.invokeAndWait(new Callable<Boolean>() {
 
             /** {@inheritDoc} */
             @Override
-            public void run() {
-                setObject(textField.hasFocus());
+            public Boolean call() {
+                return textField.hasFocus();
             }
         });
     }
@@ -436,12 +436,12 @@ public class SwingInputField extends JComponent implements InputField,
     /** {@inheritDoc} */
     @Override
     public boolean isFocusOwner() {
-        return UIUtilities.invokeAndWait(new ReturnableThread<Boolean>() {
+        return UIUtilities.invokeAndWait(new Callable<Boolean>() {
 
             /** {@inheritDoc} */
             @Override
-            public void run() {
-                setObject(textField.isFocusOwner());
+            public Boolean call() {
+                return textField.isFocusOwner();
             }
         });
     }

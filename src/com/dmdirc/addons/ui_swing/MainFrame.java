@@ -46,7 +46,6 @@ import com.dmdirc.logger.Logger;
 import com.dmdirc.ui.Colour;
 import com.dmdirc.ui.CoreUIUtils;
 import com.dmdirc.ui.IconManager;
-import com.dmdirc.util.ReturnableThread;
 import com.dmdirc.util.collections.ListenerList;
 import com.dmdirc.util.collections.QueuedLinkedHashSet;
 
@@ -56,6 +55,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
 import java.awt.event.WindowListener;
 import java.lang.reflect.InvocationTargetException;
+import java.util.concurrent.Callable;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -188,16 +188,16 @@ public final class MainFrame extends JFrame implements WindowListener,
      * @return Frame manager size.
      */
     public int getFrameManagerSize() {
-        return UIUtilities.invokeAndWait(new ReturnableThread<Integer>() {
+        return UIUtilities.invokeAndWait(new Callable<Integer>() {
 
             /** {@inheritDoc} */
             @Override
-            public void run() {
+            public Integer call() {
                 if (position == FramemanagerPosition.LEFT || position
                         == FramemanagerPosition.RIGHT) {
-                    setObject(frameManagerPanel.getWidth());
+                    return frameManagerPanel.getWidth();
                 } else {
-                    setObject(frameManagerPanel.getHeight());
+                    return frameManagerPanel.getHeight();
                 }
             }
         });
@@ -209,12 +209,12 @@ public final class MainFrame extends JFrame implements WindowListener,
      * @return The active window
      */
     public TextFrame getActiveFrame() {
-        return UIUtilities.invokeAndWait(new ReturnableThread<TextFrame>() {
+        return UIUtilities.invokeAndWait(new Callable<TextFrame>() {
 
             /** {@inheritDoc} */
             @Override
-            public void run() {
-                setObject(activeFrame);
+            public TextFrame call() {
+                return activeFrame;
             }
         });
     }
