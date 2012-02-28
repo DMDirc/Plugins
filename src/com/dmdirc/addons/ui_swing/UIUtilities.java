@@ -39,6 +39,8 @@ import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Enumeration;
+import java.util.concurrent.Callable;
+import java.util.concurrent.FutureTask;
 
 import javax.swing.BorderFactory;
 import javax.swing.JComboBox;
@@ -54,11 +56,14 @@ import javax.swing.plaf.FontUIResource;
 import javax.swing.text.JTextComponent;
 import javax.swing.undo.UndoManager;
 
+import lombok.SneakyThrows;
+
 import net.miginfocom.layout.PlatformDefaults;
 
 /**
  * UI constants.
  */
+@SuppressWarnings("PMD.UnusedImports")
 public final class UIUtilities {
 
     /** Not intended to be instantiated. */
@@ -207,13 +212,45 @@ public final class UIUtilities {
         }
     }
 
+
+
+    /**
+     * Invokes and waits for the specified callable, executed on the EDT.
+     *
+     * @param <T> The return type of the returnable thread
+     * @param returnable Thread to be executed
+     *
+     * @return Result from the completed thread or null if an exception occurred
+     *
+     * @throws Exception This method will re throw any exception thrown in the
+     * executed code
+     */
+    @SneakyThrows
+    @SuppressWarnings("PMD.AvoidThrowingRawExceptionTypes")
+    public static <T> T invokeAndWait(final Callable<T> returnable) {
+        try {
+            if (SwingUtilities.isEventDispatchThread()) {
+                return returnable.call();
+            } else {
+                final FutureTask<T> task = new FutureTask<T>(returnable);
+                SwingUtilities.invokeAndWait(task);
+                return task.get();
+            }
+        } catch (Exception ex) {
+            throw ex;
+        }
+    }
+
     /**
      * Invokes and waits for the specified runnable, executed on the EDT.
      *
      * @param <T> The return type of the returnable thread
      * @param returnable Thread to be executed
      * @return Result from the compelted thread
+     *
+     * @deprecated In favour of {@link #invokeAndWait(java.util.concurrent.Callable) }
      */
+    @Deprecated
     public static <T> T invokeAndWait(final ReturnableThread<T> returnable) {
         if (SwingUtilities.isEventDispatchThread()) {
             returnable.run();
