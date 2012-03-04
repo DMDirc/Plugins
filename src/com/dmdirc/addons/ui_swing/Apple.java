@@ -218,8 +218,8 @@ public final class Apple implements InvocationHandler, ActionListener {
      * @return true if we are using the OS X look and feel
      */
     public static boolean isAppleUI() {
-        return isApple() && UIManager.getLookAndFeel().getClass().getName().
-                equals("apple.laf.AquaLookAndFeel");
+        final String name = UIManager.getLookAndFeel().getClass().getName();
+        return isApple() && (name.equals("apple.laf.AquaLookAndFeel") || name.equals("com.apple.laf.AquaLookAndFeel"));
     }
 
     /**
@@ -395,12 +395,16 @@ public final class Apple implements InvocationHandler, ActionListener {
         if (!isApple() || menuBar == null) {
             return;
         }
-        event.setHandled(true);
         final ActionEvent actionEvent = new ActionEvent(this,
                 ActionEvent.ACTION_PERFORMED, name);
 
-        Toolkit.getDefaultToolkit().getSystemEventQueue()
-                .postEvent(actionEvent);
+        for (int i = 0; i < menuBar.getMenuCount(); i++) {
+            final JMenu menu = menuBar.getMenu(i);
+            if (menu instanceof java.awt.event.ActionListener) {
+                ((java.awt.event.ActionListener)menu).actionPerformed(actionEvent);
+                event.setHandled(true);
+            }
+        }
     }
 
     /**
