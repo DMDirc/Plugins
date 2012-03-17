@@ -227,7 +227,7 @@ public class DynamicRequestHandler extends AbstractHandler {
                         request.getParameter("selstart"),
                         request.getParameter("selend")).handleKeyPressed(
                         request.getParameter("input"),
-                        Integer.parseInt(request.getParameter("key")),
+                        Integer.parseInt(request.getParameter("key")), 0, 
                         Boolean.parseBoolean(request.getParameter("shift")),
                         Boolean.parseBoolean(request.getParameter("ctrl")));
             } catch (NumberFormatException ex) {
