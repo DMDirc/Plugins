@@ -290,8 +290,8 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
                     && (flags & HANDLE_RETURN) == HANDLE_RETURN) {
                 target.setText("");
             }
-            handleKeyPressed(line, e.getKeyCode(), e.isShiftDown(),
-                    UIUtilities.isCtrlDown(e));
+            handleKeyPressed(line, target.getCaretPosition(), e.getKeyCode(),
+                    e.isShiftDown(), UIUtilities.isCtrlDown(e));
         }
     }
 

@@ -101,9 +101,10 @@ public class WebInputHandler extends InputHandler {
     /** {@inheritDoc} */
     @Override
     @SuppressWarnings("PMD")
-    public void handleKeyPressed(final String line, final int keyCode,
-            final boolean shiftPressed, final boolean ctrlPressed) {
-        super.handleKeyPressed(line, keyCode, shiftPressed, ctrlPressed);
+    public void handleKeyPressed(final String line, final int caretPosition,
+            final int keyCode, final boolean shiftPressed,
+            final boolean ctrlPressed) {
+        super.handleKeyPressed(line, caretPosition, keyCode, shiftPressed, ctrlPressed);
     }
 
 }
