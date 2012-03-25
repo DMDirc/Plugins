@@ -148,6 +148,16 @@ version:
             <zipfileset src="${plugins.lib}/platform.jar" includes="com/**"/>
         </jar>
 
+        <jar destfile="${plugins.dist}/sessionlock.jar" update="true">
+            <zipfileset src="${plugins.lib}/jna.jar" includes="com/sun/jna/*"/>
+            <zipfileset src="${plugins.lib}/jna.jar" includes="com/sun/jna/ptr/*"/>
+            <zipfileset src="${plugins.lib}/jna.jar" includes="com/sun/jna/win32/**"/>
+            <zipfileset src="${plugins.lib}/jna.jar" includes="com/sun/jna/win32-amd64/**"/>
+            <zipfileset src="${plugins.lib}/jna.jar" includes="com/sun/jna/win32-x86/**"/>
+            <zipfileset src="${plugins.lib}/platform.jar" includes="com/sun/jna/platform/win32/**"/>
+            <zipfileset src="${plugins.lib}/JavaWindowsSessionLockSupport.jar" includes="com/greboid/**"/>
+        </jar>
+
         <jar destfile="${plugins.dist}/freedesktop_notifications.jar" update="true">
             <zipfileset src="${plugins.lib}/commons-lang-2.4.jar" includes="org/apache/**" excludes="**/*.html"/>
         </jar>
