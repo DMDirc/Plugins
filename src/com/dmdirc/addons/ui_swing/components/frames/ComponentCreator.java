@@ -58,6 +58,7 @@ public class ComponentCreator {
         final Set<JComponent> components = new HashSet<JComponent>();
 
         injector.addParameter(frame);
+        injector.addParameter(owner);
         injector.addParameter(controller);
         injector.addParameter(controller.getMainFrame());
 
@@ -70,8 +71,14 @@ public class ComponentCreator {
                 } else if (string.equals(WindowComponent.TEXTAREA
                         .getIdentifier())) {
                     clazz = TextPane.class;
+                } else {
+                    clazz = Class.forName(string);
                 }
                 object = injector.createInstance(clazz);
+            } catch(ClassNotFoundException ex) {
+                object = null;
+                Logger.userError(ErrorLevel.HIGH, "Unable to create component: "
+                        + ex.getMessage());
             } catch (IllegalArgumentException ex) {
                 object = null;
                 Logger.userError(ErrorLevel.HIGH, "Unable to create component: "

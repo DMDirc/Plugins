@@ -31,6 +31,7 @@ import com.dmdirc.addons.dcc.io.DCCChat;
 import com.dmdirc.addons.dcc.io.DCCTransfer;
 import com.dmdirc.addons.dcc.kde.KFileChooser;
 import com.dmdirc.addons.ui_swing.MainFrame;
+import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.commandparser.BaseCommandInfo;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandInfo;
@@ -44,6 +45,7 @@ import com.dmdirc.ui.input.AdditionalTabTargets;
 import com.dmdirc.ui.input.TabCompletionType;
 
 import java.io.File;
+import java.util.concurrent.Callable;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -170,21 +172,32 @@ public class DCCCommand extends Command implements IntelligentCommand {
             final Server server, final boolean isSilent, final String filename) {
         // New thread to ask the user what file to send
         final File givenFile = new File(filename);
-        new Thread(new Runnable() {
+        final File selectedFile = UIUtilities.invokeAndWait(new Callable<File>() {
 
-            /** {@inheritDoc} */
             @Override
-            public void run() {
+            public File call() {
                 final JFileChooser jc = givenFile.exists()
                         ? KFileChooser.getFileChooser(origin.getConfigManager(),
                                 myPlugin, givenFile)
                         : KFileChooser.getFileChooser(origin.getConfigManager(),
                                 myPlugin);
                 final int result = showFileChooser(givenFile, target, jc);
+
                 if (result != JFileChooser.APPROVE_OPTION
                         || !handleInvalidItems(jc)) {
-                    return;
+                    return null;
                 }
+                return jc.getSelectedFile();
+            }
+        });
+        if (selectedFile == null) {
+            return;
+        }
+        new Thread(new Runnable() {
+
+            /** {@inheritDoc} */
+            @Override
+            public void run() {
                 final DCCTransfer send = new DCCTransfer(origin
                         .getConfigManager().getOptionInt(myPlugin.getDomain(),
                         "send.blocksize"));
@@ -194,13 +207,13 @@ public class DCCCommand extends Command implements IntelligentCommand {
 
                 ActionManager.getActionManager().triggerEvent(
                         DCCActions.DCC_SEND_REQUEST_SENT,
-                        null, server, target, jc.getSelectedFile());
+                        null, server, target, selectedFile);
 
                 sendLine(origin, isSilent, FORMAT_OUTPUT,
                         "Starting DCC Send with: " + target);
 
-                send.setFileName(jc.getSelectedFile().getAbsolutePath());
-                send.setFileSize(jc.getSelectedFile().length());
+                send.setFileName(selectedFile.getAbsolutePath());
+                send.setFileSize(selectedFile.length());
 
                 if (origin.getConfigManager().getOptionBool(
                         myPlugin.getDomain(), "send.reverse")) {
@@ -209,7 +222,7 @@ public class DCCCommand extends Command implements IntelligentCommand {
                             origin.getConfigManager(), "Send: " + target,
                             target, server);
                     parser.sendCTCP(target, "DCC", "SEND \""
-                            + jc.getSelectedFile().getName() + "\" "
+                            + selectedFile.getName() + "\" "
                             + DCC.ipToLong(myPlugin.getListenIP(parser))
                             + " 0 " + send.getFileSize() + " "
                             + send.makeToken()
@@ -221,7 +234,7 @@ public class DCCCommand extends Command implements IntelligentCommand {
                                 origin.getConfigManager(), "*Send: "
                                 + target, target, server);
                         parser.sendCTCP(target, "DCC", "SEND \""
-                                + jc.getSelectedFile().getName() + "\" "
+                                + selectedFile.getName() + "\" "
                                 + DCC.ipToLong(myPlugin.getListenIP(parser))
                                 + " " + send.getPort() + " " + send.getFileSize()
                                 + (send.isTurbo() ? " T" : ""));
