@@ -55,7 +55,6 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
 import java.awt.event.WindowListener;
 import java.lang.reflect.InvocationTargetException;
-import java.util.concurrent.Callable;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -188,19 +187,12 @@ public final class MainFrame extends JFrame implements WindowListener,
      * @return Frame manager size.
      */
     public int getFrameManagerSize() {
-        return UIUtilities.invokeAndWait(new Callable<Integer>() {
-
-            /** {@inheritDoc} */
-            @Override
-            public Integer call() {
-                if (position == FramemanagerPosition.LEFT || position
-                        == FramemanagerPosition.RIGHT) {
-                    return frameManagerPanel.getWidth();
-                } else {
-                    return frameManagerPanel.getHeight();
-                }
-            }
-        });
+        if (position == FramemanagerPosition.LEFT
+                || position == FramemanagerPosition.RIGHT) {
+            return frameManagerPanel.getWidth();
+        } else {
+            return frameManagerPanel.getHeight();
+        }
     }
 
     /**
@@ -209,14 +201,7 @@ public final class MainFrame extends JFrame implements WindowListener,
      * @return The active window
      */
     public TextFrame getActiveFrame() {
-        return UIUtilities.invokeAndWait(new Callable<TextFrame>() {
-
-            /** {@inheritDoc} */
-            @Override
-            public TextFrame call() {
-                return activeFrame;
-            }
-        });
+        return activeFrame;
     }
 
     /** {@inheritDoc} */
@@ -228,11 +213,18 @@ public final class MainFrame extends JFrame implements WindowListener,
     /** {@inheritDoc}. */
     @Override
     public void setTitle(final String title) {
-        if (title == null || activeFrame == null) {
-            super.setTitle(getTitlePrefix());
-        } else {
-            super.setTitle(getTitlePrefix() + " - " + title);
-        }
+        UIUtilities.invokeLater(new Runnable() {
+
+            /** {@inheritDoc}. */
+            @Override
+            public void run() {
+                if (title == null || activeFrame == null) {
+                    MainFrame.super.setTitle(getTitlePrefix());
+                } else {
+                    MainFrame.super.setTitle(getTitlePrefix() + " - " + title);
+                }
+            }
+        });
     }
 
     /**
