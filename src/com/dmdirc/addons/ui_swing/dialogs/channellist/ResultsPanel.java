@@ -97,7 +97,8 @@ public class ResultsPanel extends JPanel implements TableModelListener,
     @Override
     public void mouseClicked(final MouseEvent e) {
         if (e.getClickCount() == 2) {
-            final int index = table.getSelectedRow();
+            final int index = table.getRowSorter().convertRowIndexToModel(
+                    table.getSelectedRow());
             if (index != -1) {
                 manager.joinGroupListEntry(model.getGroupListEntry(index));
             }

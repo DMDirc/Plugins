@@ -27,6 +27,7 @@ import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 import javax.swing.JLabel;
 
 import net.miginfocom.swing.MigLayout;
