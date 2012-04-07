@@ -195,7 +195,7 @@ public class DynamicRequestHandler extends AbstractHandler {
 
             client.setContinuation(null);
 
-            final String json = JSON.toString(myEvents.toArray());
+            final String json = toJSON(myEvents.toArray());
             response.getWriter().write(json);
         }
     }
@@ -227,7 +227,7 @@ public class DynamicRequestHandler extends AbstractHandler {
                         request.getParameter("selstart"),
                         request.getParameter("selend")).handleKeyPressed(
                         request.getParameter("input"),
-                        Integer.parseInt(request.getParameter("key")), 0, 
+                        Integer.parseInt(request.getParameter("key")), 0,
                         Boolean.parseBoolean(request.getParameter("shift")),
                         Boolean.parseBoolean(request.getParameter("ctrl")));
             } catch (NumberFormatException ex) {
@@ -301,7 +301,7 @@ public class DynamicRequestHandler extends AbstractHandler {
                     cci.getClient().getNickname()));
         }
 
-        response.getWriter().write(JSON.toString(nickEvents.toArray()));
+        response.getWriter().write(toJSON(nickEvents.toArray()));
     }
 
     private void doProfiles(final HttpServletResponse response) throws
@@ -317,7 +317,7 @@ public class DynamicRequestHandler extends AbstractHandler {
             profileEvents.add(new Event("addprofile", identity.getName()));
         }
 
-        response.getWriter().write(JSON.toString(profileEvents.toArray()));
+        response.getWriter().write(toJSON(profileEvents.toArray()));
     }
 
     private void doWindowRefresh(final HttpServletRequest request,
@@ -336,14 +336,14 @@ public class DynamicRequestHandler extends AbstractHandler {
             windowEvents.add(new Event("lineadded", new Message(line, window)));
         }
 
-        response.getWriter().write(JSON.toString(windowEvents.toArray()));
+        response.getWriter().write(toJSON(windowEvents.toArray()));
     }
 
     private void doClients(final HttpServletResponse response)
             throws IOException {
         response.setStatus(HttpServletResponse.SC_OK);
         response.setContentType("application/json");
-        response.getWriter().write(JSON.toString(clients.values().toArray()));
+        response.getWriter().write(toJSON(clients.values().toArray()));
     }
 
     private void doJoinChannel(final HttpServletRequest request)
@@ -384,6 +384,18 @@ public class DynamicRequestHandler extends AbstractHandler {
                 client.addEvent(event);
             }
         }
+    }
+
+    /**
+     * Utility method to convert an object into a JSON string. Performs the
+     * conversion using {@link JSON#toString(java.lang.Object)}, and then
+     * post-processes the output to encode certain control characters.
+     *
+     * @param object The object to be JSON-ified.
+     * @return A JSON representation of the specified object.
+     */
+    private static String toJSON(final Object object) {
+        return JSON.toString(object).replace("\001", "\\u0001");
     }
 
 }
