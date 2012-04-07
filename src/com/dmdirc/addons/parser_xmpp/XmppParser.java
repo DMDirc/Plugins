@@ -214,6 +214,16 @@ public class XmppParser extends BaseSocketAwareParser {
         // Urgh, hacky horrible rubbish. These commands should call methods.
         if (message.toUpperCase().startsWith("WHOIS ")) {
             handleWhois(message.split(" ")[1]);
+        } else if (message.length() > 0 && message.charAt(0) == '<') {
+            // Looks vaguely like XML, let's send it.
+            connection.sendPacket(new Packet() {
+
+                /** {@inheritDoc} */
+                @Override
+                public String toXML() {
+                    return message;
+                }
+            });
         }
     }
 
