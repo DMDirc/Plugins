@@ -508,10 +508,10 @@ public class XmppParser extends BaseSocketAwareParser {
 
             final ParserError error = new ParserError(ParserError.ERROR_ERROR, "Unable to connect", "");
 
-            if (ex.getCause() instanceof IOException) {
-                // Pass along the underlying socket error instead of an XMPP
+            if (ex.getWrappedThrowable() instanceof Exception) {
+                // Pass along the underlying exception instead of an XMPP
                 // specific one
-                error.setException((IOException) ex.getCause());
+                error.setException((Exception) ex.getWrappedThrowable());
             } else {
                 error.setException(ex);
             }
