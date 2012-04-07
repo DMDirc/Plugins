@@ -680,8 +680,17 @@ public class XmppParser extends BaseSocketAwareParser {
         /** {@inheritDoc} */
         @Override
         public void processMessage(final Chat chat, final Message msg) {
+            if (msg.getType() == Message.Type.error) {
+                getCallback(NumericListener.class).onNumeric(null, null,
+                        404, new String[] {
+                            ":xmpp", "404", getLocalClient().getNickname(),
+                            msg.getFrom(),
+                            "Cannot send message: " + msg.getError().toString()
+                        });
+                return;
+            }
+
             if (msg.getBody() != null) {
-                // TODO: Handle error messages
                 if (msg.getBody().startsWith("/me ")) {
                     getCallback(PrivateActionListener.class).onPrivateAction(null,
                             null, msg.getBody().substring(4), msg.getFrom());
