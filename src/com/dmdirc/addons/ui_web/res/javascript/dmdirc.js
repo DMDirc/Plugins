@@ -7,17 +7,17 @@ var interval;
 var treeview, nicklist;
 
 function dmdirc_start() {
-    if (interval != null) {
+    if (interval) {
         clearInterval(interval);
     }
 
     treeview = new Treeview($('#treeview'));
-    nicklist = new Nicklist();
+    nicklist = new Nicklist($('#nicklist'));
 
     setTimeout(doUpdate, 100);
 }
 
-(function () {
+(function() {
     Treeview = function(element) {
         this.element = element;
     }
@@ -63,7 +63,7 @@ function dmdirc_start() {
                 // Create a new child <ul/> if needed
                 var children = parentNode.children('ul');
 
-                if (children.length == 0) {
+                if (children.length === 0) {
                     parentNode.append($('<ul/>'));
                     children = parentNode.children('ul');
                 }
@@ -91,12 +91,51 @@ function dmdirc_start() {
         },
 
         setactive: function(id) {
-            if (activeWindow != null) {
+            if (activeWindow) {
                 document.getElementById(activeWindow).style.fontWeight = 'normal';
             }
 
             activeWindow = id;
             document.getElementById(activeWindow).style.fontWeight = 'bold';
+        }
+    });
+})();
+
+(function() {
+    Nicklist = function(element) {
+        this.element = element;
+    };
+
+    $.extend(Nicklist.prototype, {
+        show: function(window) {
+            if (this.element.css('display') !== 'block') {
+                document.getElementById('content').style.right = '240px';
+                this.element.css('display', 'block');
+            }
+
+            $.ajax('/dynamic/nicklistrefresh', {
+                data: {window: window},
+                error: errFunc,
+                success: handlerFunc
+            });
+        },
+
+        clear: function() {
+            this.element.empty();
+        },
+
+        add: function(nick) {
+            var entry = document.createElement('li');
+            entry.innerHTML = nick;
+
+            this.element.append(entry);
+        },
+
+        hide: function() {
+            if (this.element.css('display') === 'block') {
+                document.getElementById('content').style.right = '15px';
+                this.element.css('display', 'none');
+            }
         }
     });
 })();
@@ -127,8 +166,7 @@ function nsd_show() {
 
     $('#nsd').load('/static/newserverdialog.html');
 
-    $.ajax('/dynamic/getprofiles',
-    {
+    $.ajax('/dynamic/getprofiles', {
         error: errFunc,
         success: handlerFunc
     });
@@ -154,8 +192,7 @@ function nsd_ok() {
         return;
     }
 
-    $.ajax('/dynamic/newserver',
-    {
+    $.ajax('/dynamic/newserver', {
         data: {
             server: server,
             port: port,
@@ -186,46 +223,6 @@ function profiles_add(profile) {
         elements[i].appendChild(option);
     }
 }
-
-function Nicklist() {}
-
-$.extend(Nicklist.prototype, {
-    show: function(window) {
-        var nicklist = document.getElementById('nicklist');
-
-        if (nicklist.style.display != 'block') {
-            document.getElementById('content').style.right = '240px';
-            nicklist.style.display = 'block';
-        }
-
-        $.ajax('/dynamic/nicklistrefresh',
-        {
-            data: {window: window},
-            error: errFunc,
-            success: handlerFunc
-        });
-    },
-
-    clear: function() {
-        $('#nicklist').empty();
-    },
-
-    add: function(nick) {
-        var entry = document.createElement('li');
-        entry.innerHTML = nick;
-
-        document.getElementById('nicklist').appendChild(entry);
-    },
-
-    hide: function() {
-        var nicklist = document.getElementById('nicklist');
-
-        if (nicklist.style.display == 'block') {
-            document.getElementById('content').style.right = '15px';
-            nicklist.style.display = 'none';
-        }
-    }
-});
 
 function inputarea_show() {
     var ia = document.getElementById('inputarea');
@@ -260,7 +257,7 @@ function input_keydown(e) {
         keynum = e.which;
     }
 
-    if (keynum == 13) {
+    if (keynum === 13) {
         keynum = 10;
     }
 
@@ -269,9 +266,8 @@ function input_keydown(e) {
     var alt = e.altKey;
     var el = document.getElementById('input');
 
-    if (keynum == 10 && !control) {
-        $.ajax('/dynamic/input',
-        {
+    if (keynum === 10 && !control) {
+        $.ajax('/dynamic/input', {
             data: {
                 input: el.value,
                 clientID: clientID,
@@ -281,9 +277,8 @@ function input_keydown(e) {
         });
 
         el.value = '';
-    } else if (keynum == 9 && !control) {
-        $.ajax('/dynamic/tab',
-        {
+    } else if (keynum === 9 && !control) {
+        $.ajax('/dynamic/tab', {
             data: {
                 input: el.value,
                 selstart: el.selectionStart,
@@ -295,10 +290,9 @@ function input_keydown(e) {
         });
 
         return false;
-    } else if (keynum == 38 || keynum == 40) {
+    } else if (keynum === 38 || keynum === 40) {
         // up/down
-        $.ajax('/dynamic/key' + ((keynum == 38) ? 'up' : 'down'),
-        {
+        $.ajax('/dynamic/key' + ((keynum === 38) ? 'up' : 'down'), {
             data: {
                 input: el.value,
                 selstart: el.selectionStart,
@@ -310,10 +304,9 @@ function input_keydown(e) {
         });
 
         return false;
-    } else if (control && (keynum == 10 || keynum == 66 || keynum == 70 || keynum == 73
-        || keynum == 75 || keynum == 79 || keynum == 85)) {
-        $.ajax('/dynamic/key',
-        {
+    } else if (control && (keynum === 10 || keynum === 66 || keynum === 70
+               || keynum === 73 || keynum === 75 || keynum === 79 || keynum === 85)) {
+        $.ajax('/dynamic/key', {
             data: {
                 input: el.value,
                 selstart: el.selectionStart,
@@ -341,7 +334,7 @@ function input_setcaret(pos) {
 }
 
 function window_clear(id) {
-    if (activeWindow == id) {
+    if (activeWindow === id) {
         $('#content').empty();
     }
 
@@ -352,7 +345,7 @@ function window_addline(id, line) {
     var p = document.createElement('p');
     p.innerHTML = line;
 
-    if (activeWindow == id) {
+    if (activeWindow === id) {
         document.getElementById('content').appendChild(p);
         var objDiv = document.getElementById('content');
         objDiv.scrollTop = objDiv.scrollHeight;
@@ -367,8 +360,7 @@ function window_create(window, parent) {
     windows[window.id].lines = [];
     window_show(window.id);
 
-    $.ajax('/dynamic/windowrefresh',
-    {
+    $.ajax('/dynamic/windowrefresh', {
         data: {window: window.id},
         error: errFunc,
         success: handlerFunc
@@ -391,14 +383,14 @@ function window_show(id) {
 
     var className = document.getElementById(id).className;
 
-    if (className == 'channel')  {
+    if (className === 'channel')  {
         nicklist.show(activeWindow);
     } else {
         nicklist.hide();
     }
 
-    if (className == 'server' || className == 'channel' || className == 'input'
-        || className == 'query') {
+    if (className === 'server' || className === 'channel'
+        || className === 'input' || className === 'query') {
         inputarea_show();
     } else {
         inputarea_hide();
@@ -410,6 +402,7 @@ function window_show(id) {
     windows[id].lines.forEach(function(x) {
         objDiv.appendChild(x);
     });
+
     objDiv.scrollTop = objDiv.scrollHeight;
 }
 
@@ -430,8 +423,7 @@ function link_hyperlink(url) {
 }
 
 function link_channel(channel) {
-    $.ajax('/dynamic/joinchannel',
-    {
+    $.ajax('/dynamic/joinchannel', {
         data: {
             clientID: clientID,
             source: activeWindow,
@@ -442,8 +434,7 @@ function link_channel(channel) {
 }
 
 function link_query(user) {
-    $.ajax('/dynamic/openquery',
-    {
+    $.ajax('/dynamic/openquery', {
         data: {
             clientID: clientID,
             source: activeWindow,
@@ -454,8 +445,7 @@ function link_query(user) {
 }
 
 function doUpdate() {
-    $.ajax('/dynamic/feed',
-    {
+    $.ajax('/dynamic/feed', {
         data: {clientID: clientID},
         scriptCharset: 'UTF-8',
         success: updateHandlerFunc,
@@ -478,29 +468,29 @@ function handlerFunc(data) {
     for (var i = 0; i < data.length; i++) {
         var event = data[i];
 
-        if (event.type == 'statusbar') {
+        if (event.type === 'statusbar') {
             statusbar_settext(event.arg1);
-        } else if (event.type == 'clearprofiles') {
+        } else if (event.type === 'clearprofiles') {
             profiles_clear();
-        } else if (event.type == 'addprofile') {
+        } else if (event.type === 'addprofile') {
             profiles_add(event.arg1);
-        } else if (event.type == 'newwindow') {
+        } else if (event.type === 'newwindow') {
             window_create(event.arg1);
-        } else if (event.type == 'closewindow') {
+        } else if (event.type === 'closewindow') {
             window_close(event.arg1);
-        } else if (event.type == 'newchildwindow') {
+        } else if (event.type === 'newchildwindow') {
             window_create(event.arg1[1], event.arg1[0]);
-        } else if (event.type == 'clearwindow') {
+        } else if (event.type === 'clearwindow') {
             window_clear(event.arg1);
-        } else if (event.type == 'lineadded') {
+        } else if (event.type === 'lineadded') {
             window_addline(event.arg1.window, event.arg1.message);
-        } else if (event.type == 'settext') {
+        } else if (event.type === 'settext') {
             input_settext(event.arg1);
-        } else if (event.type == 'clearnicklist') {
+        } else if (event.type === 'clearnicklist') {
             nicklist.clear();
-        } else if (event.type == 'addnicklist') {
+        } else if (event.type === 'addnicklist') {
             nicklist.add(event.arg1);
-        } else if (event.type == 'setcaret') {
+        } else if (event.type === 'setcaret') {
             input_setcaret(event.arg1);
         } else {
             statusbar_settext("Unknown event type: " + event.type);
