@@ -47,7 +47,6 @@ import com.dmdirc.parser.interfaces.callbacks.PrivateMessageListener;
 import com.dmdirc.parser.interfaces.callbacks.ServerReadyListener;
 import com.dmdirc.parser.interfaces.callbacks.SocketCloseListener;
 
-import java.io.IOException;
 import java.net.URI;
 import java.util.Collection;
 import java.util.Collections;
@@ -57,6 +56,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import lombok.extern.slf4j.Slf4j;
 
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.ChatManagerListener;
@@ -75,8 +76,6 @@ import org.jivesoftware.smackx.ChatState;
 import org.jivesoftware.smackx.ChatStateListener;
 import org.jivesoftware.smackx.ChatStateManager;
 import org.jivesoftware.smackx.muc.MultiUserChat;
-
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * A parser which can understand the XMPP protocol.
@@ -508,10 +507,10 @@ public class XmppParser extends BaseSocketAwareParser {
 
             final ParserError error = new ParserError(ParserError.ERROR_ERROR, "Unable to connect", "");
 
-            if (ex.getCause() instanceof IOException) {
-                // Pass along the underlying socket error instead of an XMPP
+            if (ex.getWrappedThrowable() instanceof Exception) {
+                // Pass along the underlying exception instead of an XMPP
                 // specific one
-                error.setException((IOException) ex.getCause());
+                error.setException((Exception) ex.getWrappedThrowable());
             } else {
                 error.setException(ex);
             }
