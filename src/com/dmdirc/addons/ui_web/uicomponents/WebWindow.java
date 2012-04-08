@@ -147,7 +147,7 @@ public class WebWindow implements Window, IRCDocumentListener,
                 builder.append("; ");
             } else if (entry.getKey().equals(TextAttribute.WEIGHT)) {
                 builder.append("font-weight: bold; ");
-            } else if (entry.getKey().equals(TextAttribute.FAMILY)) {
+            } else if (entry.getKey().equals(TextAttribute.FAMILY) && "monospaced".equals(entry.getValue())) {
                 builder.append("font-family: monospace; ");
             } else if (entry.getKey().equals(TextAttribute.POSTURE)) {
                 builder.append("font-style: italic; ");
