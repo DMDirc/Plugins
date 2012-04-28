@@ -24,9 +24,9 @@ package com.dmdirc.addons.ui_web.uicomponents;
 
 import com.dmdirc.WritableFrameContainer;
 import com.dmdirc.commandparser.parsers.CommandParser;
+import com.dmdirc.interfaces.ui.InputField;
 import com.dmdirc.ui.input.InputHandler;
 import com.dmdirc.ui.input.TabCompleter;
-import com.dmdirc.interfaces.ui.InputField;
 
 /**
  * An input handler for the web ui.

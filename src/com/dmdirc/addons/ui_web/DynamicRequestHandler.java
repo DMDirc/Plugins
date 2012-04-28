@@ -45,6 +45,7 @@ import java.util.TimerTask;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import lombok.extern.slf4j.Slf4j;
 import org.mortbay.jetty.HttpConnection;
 import org.mortbay.jetty.Request;
 import org.mortbay.jetty.handler.AbstractHandler;
@@ -56,6 +57,7 @@ import org.mortbay.util.ajax.JSONObjectConvertor;
 /**
  * Handles requests for dynamic resources (prefixed with /dynamic/).
  */
+@Slf4j
 public class DynamicRequestHandler extends AbstractHandler {
 
     /** Number of milliseconds before a client is timed out. */
@@ -395,7 +397,12 @@ public class DynamicRequestHandler extends AbstractHandler {
      * @return A JSON representation of the specified object.
      */
     private static String toJSON(final Object object) {
-        return JSON.toString(object).replace("\001", "\\u0001");
+        try {
+            return JSON.toString(object).replace("\001", "\\u0001");
+        } catch (RuntimeException ex) {
+            log.error("Unable to encode JSON: {}", object, ex);
+            throw ex;
+        }
     }
 
 }

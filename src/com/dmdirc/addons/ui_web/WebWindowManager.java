@@ -25,12 +25,12 @@ package com.dmdirc.addons.ui_web;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.ui_web.uicomponents.WebInputWindow;
 import com.dmdirc.addons.ui_web.uicomponents.WebWindow;
+import com.dmdirc.interfaces.ui.FrameListener;
+import com.dmdirc.interfaces.ui.Window;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.core.components.WindowComponent;
-import com.dmdirc.interfaces.ui.FrameListener;
-import com.dmdirc.interfaces.ui.Window;
 
 import java.util.Arrays;
 import java.util.Collection;

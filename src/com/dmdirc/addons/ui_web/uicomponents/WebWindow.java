@@ -29,8 +29,8 @@ import com.dmdirc.addons.ui_web.Message;
 import com.dmdirc.addons.ui_web.WebInterfaceUI;
 import com.dmdirc.interfaces.FrameCloseListener;
 import com.dmdirc.interfaces.FrameInfoListener;
-import com.dmdirc.interfaces.ui.UIController;
 import com.dmdirc.interfaces.ui.Window;
+import com.dmdirc.ui.messages.IRCDocument;
 import com.dmdirc.ui.messages.IRCDocumentListener;
 import com.dmdirc.ui.messages.IRCTextAttribute;
 import com.dmdirc.ui.messages.Styliser;
@@ -39,27 +39,34 @@ import java.awt.Color;
 import java.awt.font.TextAttribute;
 import java.text.AttributedCharacterIterator;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+
+import lombok.Getter;
 
 import org.apache.commons.lang.StringEscapeUtils;
 
 /**
  * A server-side representation of a "window" in the Web UI.
  */
+@SuppressWarnings("PMD.UnusedPrivateField")
 public class WebWindow implements Window, IRCDocumentListener,
         FrameInfoListener, FrameCloseListener {
 
     /** The unique ID of this window, used by clients to address the window. */
+    @Getter
     private final String id;
 
     /** The container that this window corresponds to. */
-    private final FrameContainer parent;
+    @Getter
+    private final FrameContainer container;
 
     /** The handler to pass global events to. */
     private final DynamicRequestHandler handler;
 
     /** The controller that owns this window. */
+    @Getter
     private final WebInterfaceUI controller;
 
     public WebWindow(final WebInterfaceUI controller,
@@ -67,12 +74,13 @@ public class WebWindow implements Window, IRCDocumentListener,
         super();
 
         this.id = id;
-        this.parent = parent;
+        this.container = parent;
         this.controller = controller;
         this.handler = controller.getHandler();
 
         parent.getDocument().addIRCDocumentListener(this);
         parent.addFrameInfoListener(this);
+        parent.addCloseListener(this);
 
         if (parent.getParent() == null) {
             handler.addEvent(new Event("newwindow", this));
@@ -84,24 +92,19 @@ public class WebWindow implements Window, IRCDocumentListener,
     }
 
     public List<String> getMessages() {
-        final List<String> messages = new ArrayList<String>(getContainer()
-                .getDocument().getNumLines());
+        final IRCDocument document = getContainer().getDocument();
 
-        for (int i = 0; i < getContainer().getDocument().getNumLines(); i++) {
-            messages.add(style(getContainer().getDocument().getStyledLine(i)));
+        if (document == null) {
+            return Collections.<String>emptyList();
+        }
+
+        final List<String> messages = new ArrayList<String>(document.getNumLines());
+
+        for (int i = 0; i < document.getNumLines(); i++) {
+            messages.add(style(document.getStyledLine(i)));
         }
 
         return messages;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public FrameContainer getContainer() {
-        return parent;
-    }
-
-    public String getId() {
-        return id;
     }
 
     protected String style(final AttributedCharacterIterator aci) {
@@ -196,16 +199,10 @@ public class WebWindow implements Window, IRCDocumentListener,
 
     /** {@inheritDoc} */
     @Override
-    public UIController getController() {
-        return controller;
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public void linesAdded(final int line, final int length, final int size) {
         for (int i = 0; i < length; i++) {
             handler.addEvent(new Event("lineadded", new Message(
-                style(parent.getDocument().getStyledLine(line)), this)));
+                style(container.getDocument().getStyledLine(line)), this)));
         }
     }
 
@@ -257,7 +254,7 @@ public class WebWindow implements Window, IRCDocumentListener,
      * @return This window's title
      */
     public String getTitle() {
-        return Styliser.stipControlCodes(parent.getTitle());
+        return Styliser.stipControlCodes(container.getTitle());
     }
 
     /**
@@ -266,7 +263,7 @@ public class WebWindow implements Window, IRCDocumentListener,
      * @return This window's name
      */
     public String getName() {
-        return Styliser.stipControlCodes(parent.getName());
+        return Styliser.stipControlCodes(container.getName());
     }
 
     /**
@@ -276,7 +273,7 @@ public class WebWindow implements Window, IRCDocumentListener,
      */
     public String getType() {
         // TODO: Pass icon properly instead of relying on type
-        return parent.getClass().getSimpleName().toLowerCase();
+        return container.getClass().getSimpleName().toLowerCase();
     }
 
 }

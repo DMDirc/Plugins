@@ -33,12 +33,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import lombok.RequiredArgsConstructor;
+
 import org.mortbay.jetty.Request;
 import org.mortbay.jetty.security.UserRealm;
 
 /**
  * Describes the users allowed to access the web UI.
  */
+@RequiredArgsConstructor
 public class WebUserRealm implements UserRealm {
 
     /** A map of known principals. */
@@ -50,15 +54,6 @@ public class WebUserRealm implements UserRealm {
 
     /** The domain to use when retrieving configuration. */
     private final String domain;
-
-    /**
-     * Creates a new WebUserRealm information.
-     *
-     * @param domain The domain to retrieve configuration settings from
-     */
-    public WebUserRealm(final String domain) {
-        this.domain = domain;
-    }
 
     /** {@inheritDoc} */
     @Override

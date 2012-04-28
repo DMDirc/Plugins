@@ -76,11 +76,6 @@ public class StaticRequestHandler extends AbstractHandler {
                         : HttpConnection.getCurrentConnection().getRequest())
                         .setHandled(true);
             }
-
-            /*response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
-            response.setHeader("location", "/static/default");
-
-            */
         }
     }
 }

@@ -24,54 +24,22 @@ package com.dmdirc.addons.ui_web;
 
 import java.security.Principal;
 
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
+
 /**
  * A basic principal implementation for the Web UI.
  */
+@RequiredArgsConstructor
+@Getter
+@EqualsAndHashCode
+@ToString
+@SuppressWarnings("PMD.UnusedPrivateField")
 public class WebPrincipal implements Principal {
 
-    private final String username;
-
-    public WebPrincipal(final String username) {
-        this.username = username;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String getName() {
-        return username;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public boolean equals(final Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final WebPrincipal other = (WebPrincipal) obj;
-        if (this.username != other.username
-                && (this.username == null
-                || !this.username.equals(other.username))) {
-            return false;
-        }
-        return true;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public int hashCode() {
-        int hash = 7;
-        hash =
-        97 * hash + (this.username != null ? this.username.hashCode() : 0);
-        return hash;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String toString() {
-        return getName();
-    }
+    /** The username of the principal. */
+    private final String name;
 
 }
