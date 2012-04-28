@@ -71,6 +71,7 @@ body {
     border: 1px solid black;
     padding-left: 30px;
     margin: 0px;
+    overflow-y: auto;
 }
 
 #treeview ul {
@@ -103,7 +104,8 @@ body {
     bottom: 40px;
     padding: 4px;
     border: 1px solid black;
-    overflow: auto;
+    overflow-y: auto;
+    word-wrap: break-word;
 }
 
 #content p, #wus_requests p {
@@ -129,6 +131,7 @@ body {
     margin: 0px;
     padding: 0px;
     display: none;
+    overflow-y: auto;
 }
 
 #nicklist li {
