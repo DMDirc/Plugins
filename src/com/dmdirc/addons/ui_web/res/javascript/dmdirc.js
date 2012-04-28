@@ -17,6 +17,10 @@ function dmdirc_start() {
     setTimeout(doUpdate, 100);
 }
 
+function log() {
+    console && console.log && console.log.apply(console, arguments);
+}
+
 (function() {
     Treeview = function(element) {
         this.element = element;
@@ -125,10 +129,7 @@ function dmdirc_start() {
         },
 
         add: function(nick) {
-            var entry = document.createElement('li');
-            entry.innerHTML = nick;
-
-            this.element.append(entry);
+            this.element.append($('<li>').text(nick));
         },
 
         hide: function() {
@@ -458,7 +459,7 @@ function updateHandlerFunc(transport) {
         handlerFunc(transport);
         doUpdate();
     } catch (ex) {
-        console && console.log('Exception: ' + ex.stack);
+        log('Exception when handling update results', ex);
     }
 }
 
@@ -506,5 +507,6 @@ function updateErrFunc(transport) {
 function errFunc(transport) {
     statusbar_settext('Error while perfoming remote call...');
 
-    console && console.log(transport.status + "\n" + transport.statusText + "\n" + transport.responseText);
+    log('Error when performing remote call, status: ', transport.status,
+        ' text: ', transport.statusText, ' response: ', transport.responseText);
 }
