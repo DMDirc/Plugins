@@ -23,7 +23,8 @@
 package com.dmdirc.addons.ui_web;
 
 import com.dmdirc.plugins.BasePlugin;
-import com.dmdirc.interfaces.ui.UIController;
+
+import lombok.Getter;
 
 import org.mortbay.jetty.Handler;
 
@@ -33,23 +34,15 @@ import org.mortbay.jetty.Handler;
 public class WebInterfacePlugin extends BasePlugin {
 
     /** The UI that we're using. */
-    private WebInterfaceUI ui;
+    @Getter
+    private WebInterfaceUI controller;
 
     /** {@inheritDoc} */
     @Override
     public void onLoad() {
-        if (ui == null) {
-             ui = new WebInterfaceUI(getDomain());
+        if (controller == null) {
+            controller = new WebInterfaceUI(getDomain());
         }
-    }
-
-    /**
-     * Returns the UI Controller for the web interface.
-     *
-     * @return The web interface's UI controller
-     */
-    public UIController getController() {
-        return ui;
     }
 
     /**
@@ -58,10 +51,10 @@ public class WebInterfacePlugin extends BasePlugin {
      * @param newHandler The handler to be added
      */
     public void addWebHandler(final Handler newHandler) {
-        if (ui == null) {
-             ui = new WebInterfaceUI(getDomain());
+        if (controller == null) {
+            controller = new WebInterfaceUI(getDomain());
         }
 
-        ui.addWebHandler(newHandler);
+        controller.addWebHandler(newHandler);
     }
 }
