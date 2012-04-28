@@ -27,6 +27,8 @@ import com.dmdirc.interfaces.ui.Window;
 import java.util.LinkedList;
 import java.util.List;
 
+import lombok.Getter;
+
 import org.mortbay.util.ajax.Continuation;
 
 /**
@@ -41,6 +43,7 @@ public class Client {
     private Continuation continuation;
 
     /** The IP address of the client. */
+    @Getter
     private final String ip;
 
     /** An ordered list of events to be sent to the client */
@@ -78,15 +81,6 @@ public class Client {
                 queued.add(window);
             }
         }
-    }
-
-    /**
-     * Retrieves the IP address of this client.
-     *
-     * @return The client's IP address
-     */
-    public String getIp() {
-        return ip;
     }
 
     /**

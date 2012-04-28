@@ -26,22 +26,25 @@ import com.dmdirc.WritableFrameContainer;
 import com.dmdirc.addons.ui_web.Client;
 import com.dmdirc.addons.ui_web.WebInterfaceUI;
 import com.dmdirc.commandparser.parsers.CommandParser;
-import com.dmdirc.ui.input.InputHandler;
 import com.dmdirc.interfaces.ui.InputWindow;
+import com.dmdirc.ui.input.InputHandler;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import lombok.Getter;
 
 /**
  * A Web-UI specific input window.
  */
 public class WebInputWindow extends WebWindow implements InputWindow {
 
-    private final WritableFrameContainer parent;
+    @Getter
+    private final WritableFrameContainer container;
 
     private final CommandParser commandparser;
 
-    private final WebInputHandler inputhandler;
+    private final WebInputHandler inputHandler;
 
     private final Map<Client, WebInputHandler> inputHandlers
             = new HashMap<Client, WebInputHandler>();
@@ -49,23 +52,23 @@ public class WebInputWindow extends WebWindow implements InputWindow {
     public WebInputWindow(final WebInterfaceUI controller,
             final WritableFrameContainer parent, final String id) {
         super(controller, parent, id);
-        this.parent = parent;
+        this.container = parent;
         this.commandparser = parent.getCommandParser();
-        this.inputhandler = new WebInputHandler(new WebInputField(),
+        this.inputHandler = new WebInputHandler(new WebInputField(),
                 commandparser, getContainer());
     }
 
     /** {@inheritDoc} */
     @Override
     public InputHandler getInputHandler() {
-        return inputhandler;
+        return inputHandler;
     }
 
     public WebInputHandler getInputHandler(final Client client) {
         if (!inputHandlers.containsKey(client)) {
             final WebInputHandler ih = new WebInputHandler(
                     new WebInputField(client), commandparser, getContainer());
-            ih.setTabCompleter(inputhandler.getTabCompleter());
+            ih.setTabCompleter(inputHandler.getTabCompleter());
             inputHandlers.put(client, ih);
         }
 
@@ -91,12 +94,6 @@ public class WebInputWindow extends WebWindow implements InputWindow {
         field.setSelEnd(sel2);
 
         return ih;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public WritableFrameContainer getContainer() {
-        return parent;
     }
 
 }

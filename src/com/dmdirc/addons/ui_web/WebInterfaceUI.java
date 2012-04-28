@@ -26,11 +26,13 @@ import com.dmdirc.Channel;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.Server;
 import com.dmdirc.addons.ui_web.uicomponents.WebStatusBar;
-import com.dmdirc.ui.core.components.StatusBarManager;
 import com.dmdirc.interfaces.ui.UIController;
 import com.dmdirc.interfaces.ui.Window;
+import com.dmdirc.ui.core.components.StatusBarManager;
 
 import java.net.URI;
+
+import lombok.Getter;
 
 import org.mortbay.jetty.Handler;
 import org.mortbay.jetty.security.Constraint;
@@ -46,9 +48,11 @@ public class WebInterfaceUI implements UIController {
     private final org.mortbay.jetty.Server webServer;
 
     /** The window manager for this UI. */
+    @Getter
     private final WebWindowManager windowManager;
 
     /** The dynamic request handler in use. */
+    @Getter
     private final DynamicRequestHandler handler;
 
     /**
@@ -93,24 +97,6 @@ public class WebInterfaceUI implements UIController {
         windowManager = new WebWindowManager(this);
 
         StatusBarManager.getStatusBarManager().registerStatusBar(new WebStatusBar(handler));
-    }
-
-    /**
-     * Retrieves the window manager used by this UI.
-     *
-     * @return This UI's window manager
-     */
-    public WebWindowManager getWindowManager() {
-        return windowManager;
-    }
-
-    /**
-     * Retrieves the dynamic request handler in use.
-     *
-     * @return This UI's request handler
-     */
-    public DynamicRequestHandler getHandler() {
-        return handler;
     }
 
     /**
