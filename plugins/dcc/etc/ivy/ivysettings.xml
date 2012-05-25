@@ -1,0 +1,10 @@
+<ivysettings>
+    <settings defaultResolver="default"/>
+    <credentials host="nexus.dmdirc.com" realm="Sonatype Nexus Repository Manager" username="${username}" passwd="${password}"/>
+    <resolvers>
+        <ibiblio name="default" root="http://nexus.dmdirc.com/nexus/content/groups/public" m2compatible="true"/>
+        <ibiblio name="upload-snapshot" root="http://nexus.dmdirc.com/nexus/content/repositories/snapshots" m2compatible="true" />
+        <ibiblio name="upload-nightlies" root="http://nexus.dmdirc.com/nexus/content/repositories/nightlies" m2compatible="true" />
+        <ibiblio name="upload-release" root="http://nexus.dmdirc.com/nexus/content/repositories/releases" m2compatible="true" />
+    </resolvers>
+</ivysettings>

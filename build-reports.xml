@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:ivy="antlib:org.apache.ivy.ant">
+    <description>Checkstyle, findbugs, CPD and PMD reports</description>
+
+    <target name="-init-checkstyle" depends="-init-dependencies">
+        <mkdir dir="${basedir}/reports" />
+        <ivy:cachepath organisation="com.puppycrawl.tools" module="checkstyle" revision="5.5" 
+                       inline="true" conf="default" pathid="checkstyle.classpath" transitive="true" />
+		<taskdef resource="checkstyletask.properties" classpathref="checkstyle.classpath" />
+    </target>
+
+    <target name="-init-pmd" depends="-init-dependencies">
+        <mkdir dir="${basedir}/reports" />
+        <taskdef name="pmd" classpathref="lib.classpath" classname="net.sourceforge.pmd.ant.PMDTask" />
+    </target>
+
+    <target name="-init-cpd" depends="-init-dependencies">
+        <mkdir dir="${basedir}/reports" />
+        <taskdef name="cpd" classpathref="lib.classpath" classname="net.sourceforge.pmd.cpd.CPDTask" />
+    </target>
+
+    <target name="-init-findbugs" depends="-init-dependencies">
+        <mkdir dir="${basedir}/reports" />
+        <taskdef name="findbugs" classpathref="lib.classpath" classname="edu.umd.cs.findbugs.anttask.FindBugsTask" />
+    </target>
+    
+    <target name="checkstyle" depends="checkstyle-checks, -move-index" description="Run checkstyle." /> 
+    
+    <target name="checkstyle-checks" depends="-init-checkstyle">
+        <checkstyle config="../../etc/reports/checkstyle_checks.xml" 
+                    failureProperty="checkstyle.failure" failOnViolation="false">
+            <fileset  dir="${basedir}/src/" includes="**/*.java" />
+            <formatter type="xml" tofile="reports/checkstyle.xml"/>
+        </checkstyle>
+        <xslt in="reports/checkstyle.xml" out="reports/checkstyle.html" style="../../etc/reports/checkstyle.xsl"/>
+    </target>
+    
+    <target name="-move-index">
+        <copy file="../../etc/reports/checkstyle.html" tofile="reports/checkstyle.html"/>
+        <copy file="../../etc/reports/sorttable.js" tofile="reports/sorttable.js"/>
+    </target>
+    
+    <target name="pmd" description="Run PMD." depends="-init-pmd">
+        <pmd shortFilenames="true">
+            <ruleset>etc/reports/pmd_checks.xml</ruleset>
+            <formatter type="xml" toFile="reports/report-pmd.xml" linkPrefix="http://pmd.sourceforge.net/xref/"/>
+            <fileset dir="${basedir}/src/" includes="com/dmdirc/**/*.java"/>
+        </pmd>
+        <xslt in="reports/report-pmd.xml" style="../../etc/reports/pmd.xslt" out="reports/report-pmd.html" />
+    </target>
+    
+    <target name="cpd" description="Run CPD." depends="-init-cpd">
+        <cpd format="xml" minimumTokenCount="50" outputFile="reports/report-cpd.xml">
+            <fileset dir="src/com/">
+                <include name="**/*.java"/>
+            </fileset>
+        </cpd>
+        <xslt in="reports/report-cpd.xml" style="../../etc/reports/cpd.xslt" out="reports/report-cpd.html" />
+    </target>
+    
+    <target name="findbugs" depends="-init-findbugs,jar" description="Run Findbugs.">
+        <mkdir dir="reports/findbugs" />
+        <findbugs home="" effort="max"
+                            jvmargs="-Xmx512M"
+                            output="xml:withMessages"
+                             outputFile="reports/findbugs/report-fb.xml" reportLevel="low">
+            <sourcePath path="src/" />
+            <class location="${dest.jar}" />
+        </findbugs>
+        <xslt in="reports/findbugs/report-fb.xml" style="../../etc/reports/findbugs.xslt" out="reports/report-fb.html" />
+    </target>
+</project>

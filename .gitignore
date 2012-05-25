@@ -1,2 +1,20 @@
+#.gitignore file
+
+plugins/*/*.key
+plugins/*/build/*
+plugins/*/dist/*
+plugins/*/lib/*.jar
+plugins/*/run/*
+plugins/*/reports/*
+plugins/*build-before-profiler.xml
+plugins/*/nbproject/profiler-build-impl.xml
+plugins/*/nbproject/genfiles.properties
+plugins/*/nbproject/private
 /build
 /dist
+/lib/*.jar
+/run
+build-before-profiler.xml
+/nbproject/private
+/nbproject/profiler-build-impl.xml
+/nbproject/genfiles.properties
