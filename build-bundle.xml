@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="DMDirc-Bundle-Libs" basedir="." default="default">
+    <description>Bundles runtime libraries into DMDirc plugin.</description>
+
+    <target name="-bundle-runtime-libs" depends="dir.check" if="dir.exists">
+        <taskdef resource="net/sf/antcontrib/antlib.xml" classpathref="lib.classpath"/>
+        <foreach target="add-lib-to-jar" param="foreach.file">
+            <param name="dist.jar" value="${dist.jar}"/>
+            <path>
+                <fileset dir="run">
+                    <include name="**/*.jar" />
+                </fileset>
+            </path>
+        </foreach>
+    </target>
+
+    <target name="add-lib-to-jar">
+        <jar jarfile="${dist.jar}" update="true">
+            <zipfileset src="${foreach.file}" includes="**/*.class" excludes="META-INF/**/*.*" />
+        </jar>
+    </target>
+
+    <target name="-bundle-resources">
+        <move todir="${build.classes.dir}/META-INF/">
+            <fileset dir="${build.classes.dir}" includes="**/identities/**, **/licences/**"/>
+            <mapper>
+                <mapper type="regexp" from="(.*)/identities/(.*)" to="/identities/\2" />
+                <mapper type="regexp" from="(.*)/licences/(.*)" to="/licences/\2" />
+            </mapper>
+
+        </move>
+    </target>
+
+    <target name="dir.check">
+        <condition property="dir.exists">
+            <available file="run" type="dir"/>
+        </condition>
+    </target>
+
+</project>

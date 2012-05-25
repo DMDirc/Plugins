@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="tabcompletion_mirc" default="default" basedir=".">
+    <description>Builds, tests, and runs the project DMDirc-Plugin.</description>
+
+    <property name="git.dir" value="../../.git"/>
+
+    <import file="nbproject/build-impl.xml"/>
+    <import file="../../build-common.xml"/>
+
+    <target name="-pre-init" depends="-init-dependencies"/>
+    <target name="-post-init" depends="check-plugin.config"/>
+    <target name="-post-compile" depends="-add-version, -bundle-resources" />
+    <target name="-post-jar" depends="-bundle-runtime-libs" />
+
+</project>

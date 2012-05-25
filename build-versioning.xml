@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="DMDirc-versioning" default="default" basedir=".">
+    <description>Adds automatic versioning information to DMDirc</description>
+
+    <available file="${git.dir}" property="is.git"/>
+
+    <target name="-init-version">
+        <taskdef name="git-describe" classname="org.mdonoughe.JGitDescribeTask" classpathref="lib.classpath"/>
+    </target>
+
+    <target name="-add-version" depends="-init-version, -add-git-version" />
+
+    <target name="-add-git-version" if="is.git">
+       <git-describe dir="${git.dir}" property="git.version" subdir="${basedir}/${src.dir}" />
+       <copy file="${basedir}/plugin.config" tofile="${build.classes.dir}/META-INF/plugin.config" />
+        <echo file="${build.classes.dir}/META-INF/plugin.config" append="true">
+version:
+  number=${git.version}
+</echo>
+    </target>
+
+</project>
