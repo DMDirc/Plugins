@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:ivy="antlib:org.apache.ivy.ant">
+    <description>Publish artifacts for DMDirc</description>
+
+    <available file="${git.dir}" property="is.git" />
+
+    <target name="-init-version">
+        <taskdef name="git-describe" classname="org.mdonoughe.JGitDescribeTask" classpathref="lib.classpath"/>
+    </target>
+
+    <target name="-get-git-version" depends="-init-version" if="is.git">
+        <property name="resolved.src.dir" location="${src.dir}"/>
+        <git-describe dir="${git.dir}" property="git.version" subdir="${basedir}/${src.dir}" />
+    </target>
+
+    <target name="publish-snapshot" depends="-get-git-version">
+        <git-describe dir=".git" property="git.version" subdir="${src.dir}" />
+        <ivy:resolve file="{$basedir}/ivy.xml"/>
+        <ivy:deliver deliverpattern="${build.dir}/ivy.xml" pubrevision="${git.version}-SNAPSHOT" />
+        <ivy:makepom ivyfile="${build.dir}/ivy.xml" pomfile="dist/${ant.project.name}.pom">
+            <mapping conf="default" scope="compile"/>
+        </ivy:makepom>
+        <ivy:retrieve/>
+        <ivy:publish
+            pubrevision="${git.version}-SNAPSHOT"
+            status="integration"
+            overwrite="true"
+            publishivy="false"
+            artifactspattern="dist/[artifact].[ext]"
+            resolver="upload-snapshot"/>
+    </target>
+    <target name="publish-release" depends="-get-git-version">
+        <ivy:resolve file="{$basedir}/ivy.xml"/>
+        <ivy:deliver deliverpattern="${build.dir}/ivy.xml" pubrevision="${git.version}" />
+        <ivy:makepom ivyfile="${build.dir}/ivy.xml" pomfile="dist/${ant.project.name}.pom">
+            <mapping conf="default" scope="compile"/>
+        </ivy:makepom>
+        <ivy:retrieve/>
+        <ivy:publish
+            pubrevision="${git.version}"
+            status="release"
+            overwrite="true"
+            publishivy="false"
+            artifactspattern="dist/[artifact].[ext]"
+            resolver="upload-release"/>
+    </target>
+    <target name="publish-nightlies" depends="-get-git-version">
+        <tstamp>
+            <format property="timestamp" pattern="yyyyddMM" />
+        </tstamp>
+        <ivy:resolve file="{$basedir}/ivy.xml"/>
+        <ivy:deliver deliverpattern="${build.dir}/ivy.xml" pubrevision="Nightly-${timestamp}_${git.version}" />
+        <ivy:makepom ivyfile="${build.dir}/ivy.xml" pomfile="dist/${ant.project.name}.pom">
+            <mapping conf="default" scope="compile"/>
+        </ivy:makepom>
+        <ivy:retrieve/>
+        <ivy:publish
+            pubrevision="Nightly-${timestamp}_${git.version}"
+            status="release"
+            overwrite="true"
+            publishivy="false"
+            artifactspattern="dist/[artifact].[ext]"
+            resolver="upload-nightlies"/>
+    </target>
+</project>

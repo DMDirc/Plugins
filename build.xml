@@ -1,170 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="DMDirc Plugins" default="default" basedir=".">
-    <description>Builds, packages and tests DMDirc plugins.</description>
+<project name="DMDirc-Plugin" default="default" basedir=".">
+    <description>Builds, tests, and runs the project DMDirc-Plugin.</description>
+    <macrodef name="iterate">
+        <attribute name="target"/>
+        <sequential>
+            <subant target="@{target}">
+                <fileset dir="plugins" includes="*/build.xml"/>
+            </subant>
+        </sequential>
+    </macrodef>
 
-    <property name="plugins.src" location="src"/>
-    <property name="plugins.build" location="build"/>
-    <property name="plugins.build.classes" location="${plugins.build}/classes"/>
-    <property name="plugins.build.metadata" location="${plugins.build}/metadata"/>
-    <property name="plugins.dist" location="dist"/>
-    <property name="plugins.lib" location="lib"/>
-
-    <import file="build-tests.xml"/>
-
-    <path id="plugins.classpath">
-       <pathelement path="${plugins.dmdirc.build.dir}"/>
-       <fileset dir="${plugins.lib}" includes="*.jar"/>
-    </path>
-
-    <condition property="plugins.dmdirc.exists">
-       <available classname="com.dmdirc.Main" classpathref="plugins.classpath"/>
-    </condition>
-
-    <condition property="plugins.need.antlib">
-       <not>
-           <typefound name="foreach"/>
-       </not>
-    </condition>
-
-    <target name="-init-taskdefs" if="plugins.need.antlib">
-        <taskdef resource="net/sf/antcontrib/antlib.xml" classpathref="plugins.classpath"/>
+    <target name="build">
+        <iterate target="compile"/>
     </target>
-
-    <taskdef name="git-describe" classname="org.mdonoughe.JGitDescribeTask" classpathref="plugins.classpath"/>
-
-    <target name="-check-dmdirc-jar" unless="plugins.dmdirc.exists">
-       <fail>DMDirc class files not found. Please put DMDirc on the classpath or specify the 'plugins.dmdirc.build.dir' property.</fail>
+    <target name="jar">
+        <iterate target="jar"/>
     </target>
-
-    <target name="-init-compile" depends="-check-dmdirc-jar">
-       <mkdir dir="${plugins.build}"/>
-       <mkdir dir="${plugins.build.classes}"/>
-       <mkdir dir="${plugins.build.metadata}"/>
-    </target>
-
-    <target name="compile" depends="-init-compile">
-       <javac srcdir="${plugins.src}" destdir="${plugins.build.classes}"
-              classpathref="plugins.classpath" includeantruntime="false"
-              debug="true"/>
-
-       <copy todir="${plugins.build.classes}">
-          <fileset dir="${plugins.src}">
-             <exclude name="**/*.java"/>
-             <exclude name="**/plugin.config"/>
-          </fileset>
-       </copy>
-    </target>
-
-    <target name="jar" depends="-package,-add-libs"/>
-
-    <target name="-package" depends="-init-taskdefs, compile">
-        <for param="configfile">
-            <fileset dir="${plugins.src}" includes="**/plugin.config"/>
-            <sequential>
-                <local name="plugin.src.dir"/>
-                <local name="plugin.build.dir"/>
-                <local name="plugin.name"/>
-                <local name="plugin.jar"/>
-                <local name="plugin.version"/>
-
-                <dirname file="@{configfile}" property="plugin.src.dir"/>
-                <basename file="${plugin.src.dir}" property="plugin.name"/>
-                <property name="plugin.jar" value="${plugins.dist}/${plugin.name}.jar"/>
-
-                <if>
-                    <not>
-                        <uptodate targetfile="${plugin.jar}">
-                            <srcfiles dir="${plugin.src.dir}" includes="*"/>
-                        </uptodate>
-                    </not>
-                    <then>
-                        <propertyregex property="plugin.build.dir" input="${plugin.src.dir}" regexp="\Q${plugins.src}\E/?(.*)" replace="\1"/>
-
-                        <copy todir="${plugins.build.metadata}/${plugin.name}/META-INF">
-                            <fileset file="@{configfile}"/>
-                            <fileset dir="${plugin.src.dir}" includes="identities/** licences/**"/>
-                        </copy>
-
-                        <git-describe dir=".git" property="plugin.version" subdir="${plugin.src.dir}" />
-
-                        <echo file="${plugins.build.metadata}/${plugin.name}/META-INF/plugin.config" append="true">
-version:
-  number=${plugin.version}
-</echo>
-
-                        <jar destfile="${plugin.jar}">
-                            <fileset dir="${plugins.build.classes}" includes="${plugin.build.dir}/**"/>
-                            <fileset dir="${plugins.build.metadata}/${plugin.name}" includes="META-INF/**"/>
-                        </jar>
-
-                        <echo>Built ${plugin.name} plugin version ${plugin.version}</echo>
-                    </then>
-                </if>
-            </sequential>
-        </for>
-    </target>
-
-    <target name="-add-libs">
-        <jar destfile="${plugins.dist}/ui_swing.jar" update="true">
-            <zipfileset src="${plugins.lib}/miglayout-4.0-swing.jar" includes="net/miginfocom/layout/**,net/miginfocom/swing/**"/>
-            <zipfileset src="${plugins.lib}/menuscroller.jar" includes="darrylbu/util/**"/>
-            <zipfileset src="${plugins.lib}/jxlayer.jar" includes="org/jdesktop/jxlayer/**"/>
-            <zipfileset src="${plugins.lib}/cinch.jar" includes="*/**"/>
-            <zipfileset src="${plugins.lib}/cinchsupport.jar" includes="*/**"/>
-        </jar>
-
-        <jar destfile="${plugins.dist}/parser_twitter.jar" update="true">
-            <zipfileset src="${plugins.lib}/commons-codec-1.3.jar" includes="org/apache/**" excludes="**/*.html"/>
-            <zipfileset src="${plugins.lib}/signpost-core-1.1-SNAPSHOT.jar" includes="com/google/** oauth/signpost/**"/>
-            <zipfileset src="${plugins.lib}/commons-lang-2.4.jar" includes="org/apache/**" excludes="**/*.html"/>
-        </jar>
-
-        <jar destfile="${plugins.dist}/ui_web.jar" update="true">
-            <zipfileset src="${plugins.lib}/commons-lang-2.4.jar" includes="org/apache/**" excludes="**/*.html"/>
-            <zipfileset src="${plugins.lib}/jetty-6.1.22.jar" includes="org/mortbay/**"/>
-            <zipfileset src="${plugins.lib}/jetty-util-6.1.22.jar" includes="org/mortbay/**"/>
-            <zipfileset src="${plugins.lib}/servlet-api-2.5-20081211.jar" includes="javax/servlet/**"/>
-        </jar>
-
-        <jar destfile="${plugins.dist}/parser_irc.jar" update="true">
-            <!-- TODO: this could also be a jar in the lib dir -->
-            <fileset dir="${plugins.dmdirc.build.dir}">
-                <include name="com/dmdirc/parser/irc/**/*.class"/>
-            </fileset>
-        </jar>
-
-        <jar destfile="${plugins.dist}/parser_xmpp.jar" update="true">
-            <zipfileset src="${plugins.lib}/smack.jar" includes="org/**"/>
-            <zipfileset src="${plugins.lib}/smackx.jar" includes="org/** com/**"/>
-        </jar>
-
-       <jar destfile="${plugins.dist}/parser_msn.jar" update="true">
-            <zipfileset src="${plugins.lib}/jml-1.0b4-full.jar" includes="net/** org/**"/>
-            <zipfileset src="${plugins.lib}/httpcore.jar" includes="org/**"/>
-        </jar>
-
-        <jar destfile="${plugins.dist}/windowflashing.jar" update="true">
-            <zipfileset src="${plugins.lib}/jna.jar" includes="com/**"/>
-            <zipfileset src="${plugins.lib}/platform.jar" includes="com/**"/>
-        </jar>
-
-        <jar destfile="${plugins.dist}/sessionlock.jar" update="true">
-            <zipfileset src="${plugins.lib}/jna.jar" includes="com/sun/jna/*"/>
-            <zipfileset src="${plugins.lib}/jna.jar" includes="com/sun/jna/ptr/*"/>
-            <zipfileset src="${plugins.lib}/jna.jar" includes="com/sun/jna/win32/**"/>
-            <zipfileset src="${plugins.lib}/jna.jar" includes="com/sun/jna/win32-amd64/**"/>
-            <zipfileset src="${plugins.lib}/jna.jar" includes="com/sun/jna/win32-x86/**"/>
-            <zipfileset src="${plugins.lib}/platform.jar" includes="com/sun/jna/platform/win32/**"/>
-            <zipfileset src="${plugins.lib}/JavaWindowsSessionLockSupport.jar" includes="com/greboid/**"/>
-        </jar>
-
-        <jar destfile="${plugins.dist}/freedesktop_notifications.jar" update="true">
-            <zipfileset src="${plugins.lib}/commons-lang-2.4.jar" includes="org/apache/**" excludes="**/*.html"/>
-        </jar>
-    </target>
-
     <target name="clean">
-       <delete dir="${plugins.build}"/>
-       <delete dir="${plugins.dist}"/>
+        <iterate target="clean"/>
     </target>
+    <target name="test">
+        <iterate target="test"/>
+    </target>
+    <target name="test-both">
+        <iterate target="test-both"/>
+    </target>
+    <target name="javadoc">
+        <iterate target="javadoc"/>
+    </target>
+    <target name="pmd">
+        <iterate target="pmd"/>
+    </target>
+    <target name="findbugs">
+        <iterate target="findbugs"/>
+    </target>
+    <target name="cpd">
+        <iterate target="cpd"/>
+    </target>
+    <target name="checkstyle">
+        <iterate target="checkstyle"/>
+    </target>
+    <target name="publish-release">
+        <iterate target="publish-release" />
+    </target>
+    <target name="publish-nightlies">
+        <iterate target="publish-nightlies" />
+    </target>
+    <target name="debug" />
+    <target name="run" />
+
 </project>
