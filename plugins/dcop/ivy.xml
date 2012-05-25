@@ -1,0 +1,31 @@
+<ivy-module version="2.0">
+    <info organisation="com.dmdirc.addons" module="dcop"/>
+
+    <configurations>
+        <conf name="build" description="Everything needed to build"/>
+        <conf name="compile" description="Everything needed to compile"/>
+        <conf name="test" description="Everything needed to test"/>
+        <conf name="runtime" description="Everything needed at runtime"/>
+        <conf name="default" extends="build,compile,test"/>
+    </configurations>
+
+    <publications>
+        <artifact type="jar" ext="jar" conf="default"/>
+        <artifact type="pom" ext="pom" conf="default"/>
+    </publications>
+
+    <dependencies defaultconfmapping="*->default">
+        <dependency org="ant-contrib" name="ant-contrib" rev="1.0b3" conf="build" />
+        <dependency org="com.github.shanemcc" name="jgit-describe" rev="latest.release" conf="build" />
+        <dependency org="junit" name="junit" rev="4.+" conf="test" />
+        <dependency org="org.mockito" name="mockito-all" rev="1.+" conf="test" />
+        <dependency org="com.dmdirc" name="client" rev="latest.integration" conf="compile" />
+
+        <dependency org="pmd" name="pmd" rev="4.+" conf="test" />
+        <dependency org="com.cenqua.clover" name="clover" rev="3.+" conf="test" />
+        <dependency org="com.puppycrawl.tools" name="checkstyle" rev="5.+" conf="test" />
+        <dependency org="net.sourceforge.findbugs" name="findbugs-ant" rev="1.+" conf="test" />
+
+        <exclude org="ant" module="ant"/>
+    </dependencies>
+</ivy-module>

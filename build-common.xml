@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+    <property name="git.dir" value="../.git"/>
+
+    <import file="build-ivy.xml"/>
+    <import file="build-versioning.xml"/>
+    <import file="build-bundle.xml"/>
+    <import file="build-publish.xml"/>
+    <import file="build-tests.xml"/>
+    <import file="build-reports.xml"/>
+
+    <target name="check-plugin.config">
+        <fail message="All plugins require a ${basedir}/plugin.config">
+            <condition>
+                <not>
+                    <available file="${basedir}/plugin.config" />
+                </not>
+            </condition>
+        </fail>
+    </target>
+</project>

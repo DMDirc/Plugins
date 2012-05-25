@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:ivy="antlib:org.apache.ivy.ant">
+    <description>Ivy utilities for DMDirc</description>
+
+    <property name="ivy.install.version" value="2.2.0"/>
+    <property name="ivy.cache.ttl.default" value="7d"/>
+
+    <target name="-init-lib-directory">
+        <mkdir dir="lib"/>
+    </target>
+    
+    <target name="-init-ivy" depends="-init-lib-directory">
+        <path id="lib.classpath">
+           <fileset dir="lib" includes="*.jar"/>
+        </path>
+
+        <available classname="org.apache.ivy.ant.IvyConfigure"
+              property="ivy.available" classpathref="lib.classpath" />
+    </target>
+    
+    <target name="-taskdef-ivy" unless="ivy.loaded">
+        <taskdef resource="org/apache/ivy/ant/antlib.xml" uri="antlib:org.apache.ivy.ant" classpathref="lib.classpath"/>
+        <property name="ivy.loaded" value="true" />
+    </target>
+
+    <target name="-download-ivy" depends="-init-ivy, -taskdef-ivy" unless="ivy.available">
+        <echo message="Retrieving Ivy"/>
+        <get src="http://repo1.maven.org/maven2/org/apache/ivy/ivy/${ivy.install.version}/ivy-${ivy.install.version}.jar"
+             dest="lib/ivy-${ivy.install.version}.jar"/>
+    </target>
+
+    <target name="-init-dependencies" depends="-download-ivy" unless="ivy.done">
+        <ivy:settings file="etc/ivy/ivysettings.xml"/>
+        <ivy:retrieve symlink="true" pattern="lib/[artifact]-[revision].[ext]" />
+        <ivy:retrieve symlink="true" pattern="run/[artifact]-[revision].[ext]" conf="runtime"/>
+        <pathconvert property="lib.classpath.computed" dirsep="/" pathsep=":">
+            <path>
+                <fileset dir="lib" includes="*.jar"/>
+            </path>
+            <map from="${basedir}${file.separator}" to=""/>
+        </pathconvert>
+        <touch mkdirs="true" file="nbproject/private/private.properties"/>
+        <propertyfile file="nbproject/private/private.properties">
+            <entry operation="=" key="lib.classpath" value="${lib.classpath.computed}"/>
+        </propertyfile>
+        <property name="ivy.done" value="true"/>
+    </target>
+
+    <target name="-post-clean">
+        <delete dir="lib"/>
+    </target>
+</project>
