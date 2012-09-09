@@ -22,17 +22,16 @@
 
 package com.dmdirc.addons.debug;
 
+import com.dmdirc.TestMain;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.commands.context.CommandContext;
-import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.InvalidIdentityFileException;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import static com.dmdirc.harness.CommandArgsMatcher.*;
-import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
 
 public class DebugTest {
@@ -41,7 +40,7 @@ public class DebugTest {
     public static void setUp() throws InvalidIdentityFileException {
         // Command has a dependency on CommandManager (to get the command char)
         // And CommandManager has a dependency on IdentityManager for the same
-        IdentityManager.getIdentityManager().initialise();
+        TestMain.getTestMain();
     }
 
     /** Checks the debug command with no arguments shows usage. */

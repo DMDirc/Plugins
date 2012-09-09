@@ -121,7 +121,7 @@ public final class SwingFirstRunWizard implements WizardListener,
     /** {@inheritDoc} */
     @Override
     public void extractPlugins() {
-        Main.extractCorePlugins(null);
+        controller.getMain().extractCorePlugins(null);
     }
 
     /** {@inheritDoc} */
@@ -131,7 +131,7 @@ public final class SwingFirstRunWizard implements WizardListener,
     }
 
     /** Extracts the core actions. */
-    public static void extractCoreActions() {
+    public void extractCoreActions() {
         //Copy actions
         final Map<String, byte[]> resources =
                 ResourceManager.getResourceManager().
@@ -139,7 +139,7 @@ public final class SwingFirstRunWizard implements WizardListener,
         for (Entry<String, byte[]> resource : resources.entrySet()) {
             try {
                 final String resourceName =
-                        Main.getConfigDir() + "actions" +
+                        controller.getIdentityManager().getConfigDir() + "actions" +
                         resource.getKey().
                         substring(27, resource.getKey().length());
                 final File newDir =

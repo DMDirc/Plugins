@@ -67,6 +67,8 @@ public final class FeedbackDialog extends StandardDialog implements
     private JCheckBox dmdircCheckbox;
     /** Sent. */
     private boolean sentReport = false;
+    /** My Controller. */
+    private SwingController controller;
 
     /**
      * Instantiates the feedback dialog.
@@ -76,6 +78,7 @@ public final class FeedbackDialog extends StandardDialog implements
     public FeedbackDialog(final SwingController controller) {
         super(controller, ModalityType.MODELESS);
 
+        this.controller = controller;
         initComponents();
         layoutComponents();
         addListeners();
@@ -208,7 +211,7 @@ public final class FeedbackDialog extends StandardDialog implements
             dmdircInfo.append("DMDirc version: ").append(
                     Info.getDMDircVersion()).append("\n");
             dmdircInfo.append("Profile directory: ").append(
-                    Main.getConfigDir()).append("\n");
+                    controller.getIdentityManager().getConfigDir()).append("\n");
             dmdircInfo.append("Java version: ").append(
                     Info.getJavaVersion()).append("\n");
             dmdircInfo.append("OS Version: ").append(

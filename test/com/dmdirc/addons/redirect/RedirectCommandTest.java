@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.redirect;
 
+import com.dmdirc.TestMain;
 import com.dmdirc.MessageTarget;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandManager;
@@ -41,7 +42,7 @@ public class RedirectCommandTest {
 
     @BeforeClass
     public static void setupClass() throws InvalidIdentityFileException {
-        IdentityManager.getIdentityManager().initialise();
+        TestMain.getTestMain();
         CommandManager.getCommandManager().registerCommand(new Echo(), Echo.INFO);
     }
 
