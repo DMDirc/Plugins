@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.urlcatcher;
 
+import com.dmdirc.TestMain;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.config.ConfigManager;
@@ -52,7 +53,7 @@ public class UrlCatcherPluginTest {
 
     @Test
     public void testURLCounting() throws InvalidIdentityFileException {
-        IdentityManager.getIdentityManager().initialise();
+        TestMain.getTestMain();
 
         final UrlCatcherPlugin plugin = new UrlCatcherPlugin();
 
@@ -69,7 +70,7 @@ public class UrlCatcherPluginTest {
 
     @Test
     public void testURLCatching() throws InvalidIdentityFileException {
-        IdentityManager.getIdentityManager().initialise();
+        TestMain.getTestMain();
 
         final UrlCatcherPlugin plugin = new UrlCatcherPlugin();
 

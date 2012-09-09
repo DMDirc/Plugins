@@ -22,8 +22,8 @@
 
 package com.dmdirc.addons.scriptplugin;
 
-import com.dmdirc.Main;
 import com.dmdirc.actions.CoreActionType;
+import com.dmdirc.config.IdentityManager;
 import com.dmdirc.interfaces.ActionController;
 import com.dmdirc.interfaces.ActionListener;
 import com.dmdirc.interfaces.actions.ActionType;
@@ -49,7 +49,7 @@ import javax.script.ScriptEngineManager;
 public final class ScriptPlugin extends BasePlugin implements ActionListener {
 
     /** Script Directory */
-    private final String scriptDir = Main.getConfigDir() + "scripts/";
+    private final String scriptDir;
     /** Script Engine Manager */
     private ScriptEngineManager scriptFactory = new ScriptEngineManager();
     /** Instance of the javaScriptHelper class */
@@ -65,10 +65,11 @@ public final class ScriptPlugin extends BasePlugin implements ActionListener {
      * Creates a new instance of the Script Plugin.
      *
      * @param actionController The action controller to register listeners with
+     * @param identityManager The Identity Manager that controls the current config
      */
-    public ScriptPlugin(final ActionController actionController) {
+    public ScriptPlugin(final ActionController actionController, final IdentityManager identityManager) {
         super();
-
+        scriptDir = identityManager.getConfigDir() + "scripts/";
         this.actionController = actionController;
 
         // Add the JS Helper to the scriptFactory
