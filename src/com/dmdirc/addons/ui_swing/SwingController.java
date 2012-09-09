@@ -24,6 +24,7 @@ package com.dmdirc.addons.ui_swing;
 
 import com.dmdirc.Channel;
 import com.dmdirc.FrameContainer;
+import com.dmdirc.Main;
 import com.dmdirc.Server;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.addons.ui_swing.commands.ChannelSettings;
@@ -108,6 +109,9 @@ public class SwingController extends BasePlugin implements UIController {
     /** Singleton instance of MainFrame. */
     @Getter
     private MainFrame mainFrame;
+    /** Instance of Main. */
+    @Getter
+    private final Main main;
     /** Status bar. */
     @Getter
     private SwingStatusBar swingStatusBar;
@@ -161,8 +165,10 @@ public class SwingController extends BasePlugin implements UIController {
     public SwingController(final PluginInfo pluginInfo,
             final IdentityManager identityManager,
             final PluginManager pluginManager,
+            final Main main,
             final ActionManager actionManager) {
         super();
+        this.main = main;
         this.pluginInfo = pluginInfo;
         this.identityManager = identityManager;
         this.actionManager = actionManager;

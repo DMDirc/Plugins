@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.components.addonbrowser;
 
-import com.dmdirc.Main;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
@@ -108,7 +107,7 @@ public class DataLoaderWorker
             loadingPanel.add(Box.createVerticalGlue(), "growy, pushy");
             try {
                 Downloader.downloadPage("http://addons.dmdirc.com/feed",
-                        Main.getConfigDir() + File.separator + "addons.feed",
+                        controller.getIdentityManager().getConfigDir() + File.separator + "addons.feed",
                         this);
             } catch (final IOException ex) {
                 loadingPanel.removeAll();
@@ -119,7 +118,7 @@ public class DataLoaderWorker
 
         loadingPanel.removeAll();
         loadingPanel.add(new TextLabel("Loading addon info, please wait."));
-        final ConfigFile data = new ConfigFile(Main.getConfigDir()
+        final ConfigFile data = new ConfigFile(controller.getIdentityManager().getConfigDir()
                 + File.separator + "addons.feed");
         try {
             data.read();

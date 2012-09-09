@@ -23,7 +23,6 @@
 package com.dmdirc.addons.ui_swing;
 
 import com.dmdirc.FrameContainer;
-import com.dmdirc.Main;
 import com.dmdirc.ServerManager;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionType;
@@ -268,7 +267,7 @@ public final class MainFrame extends JFrame implements WindowListener,
             /** {@inheritDoc} */
             @Override
             public void run() {
-                Main.quit(exitCode);
+                controller.getMain().quit(exitCode);
             }
         }, "Quit thread").start();
     }
