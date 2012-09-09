@@ -24,6 +24,7 @@ package com.dmdirc.addons.ui_swing.components.addonbrowser;
 
 import com.dmdirc.Main;
 import com.dmdirc.actions.ActionManager;
+import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.themes.ThemeManager;
@@ -42,19 +43,23 @@ public class InstallWorker extends LoggingSwingWorker<String, Void> {
     private final AddonInfo info;
     /** Window to show installer progress. */
     private final InstallerWindow installer;
+    /** */
+    private final SwingController controller;
 
-    public InstallWorker(final AddonInfo info, final InstallerWindow window) {
+    public InstallWorker(final AddonInfo info, final InstallerWindow window,
+            final SwingController controller) {
         super();
 
         this.info = info;
         this.installer = window;
+        this.controller = controller;
     }
 
     /** {@inheritDoc} */
     @Override
     protected String doInBackground() {
         try {
-            final File file = new File(Main.getConfigDir(),
+            final File file = new File(controller.getIdentityManager().getConfigDir(),
                     "." + info.getDownload());
             Downloader.downloadPage("http://addons.dmdirc.com/addondownload/"
                     + info.getDownload(), file.getAbsolutePath());

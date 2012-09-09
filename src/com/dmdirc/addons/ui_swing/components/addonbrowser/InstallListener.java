@@ -65,6 +65,6 @@ public class InstallListener implements ActionListener {
         final InstallerWindow installer = new InstallerWindow(controller,
                 parentWindow, info);
         installer.display(parentWindow);
-        new InstallWorker(info, installer).executeInExecutor();
+        new InstallWorker(info, installer, controller).executeInExecutor();
     }
 }

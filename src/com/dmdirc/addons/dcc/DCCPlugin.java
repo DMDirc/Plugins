@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.dcc;
 
-import com.dmdirc.Main;
 import com.dmdirc.Server;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionType;
@@ -75,16 +74,22 @@ public final class DCCPlugin extends BasePlugin implements ActionListener {
     private final ConfigManager config;
     /** Parent swing controller. */
     private final SwingController controller;
+    /** Parent identity manager. */
+    private final IdentityManager identityManager;
 
     /**
      * Creates a new instance of this plugin.
      *
      * @param controller The controller to register UI implementations with
      * @param pluginInfo This plugin's plugin info
+     * @param identityManager The Identity Manager that controls the current config
      */
     public DCCPlugin(final SwingController controller,
-            final PluginInfo pluginInfo) {
+            final PluginInfo pluginInfo,
+            final IdentityManager identityManager
+            ) {
         super();
+        this.identityManager = identityManager;
         this.controller = controller;
         config = controller.getGlobalConfig();
         this.pluginInfo = pluginInfo;
@@ -636,7 +641,7 @@ public final class DCCPlugin extends BasePlugin implements ActionListener {
                 .getGlobalAddonIdentity();
 
         defaults.setOption(getDomain(), "receive.savelocation",
-                Main.getConfigDir() + "downloads"
+                identityManager.getConfigDir() + "downloads"
                 + System.getProperty("file.separator"));
     }
 

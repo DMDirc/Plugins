@@ -80,7 +80,7 @@ public final class InfoPanel extends JPanel {
                  + "<b>Swing UI version: </b>" + controller.getVersion()
                  .toString() + "<br>"
                  + "<b>OS Version: </b>" + Info.getOSVersion() + "<br>"
-                 + "<b>Profile directory: </b>" + Main.getConfigDir() + "<br>"
+                 + "<b>Profile directory: </b>" + controller.getIdentityManager().getConfigDir() + "<br>"
                  + "<b>Java version: </b>" + Info.getJavaVersion() + "<br>"
                  + "<b>Look and Feel: </b>" + SwingController.getLookAndFeel()
                  + "<br>"

@@ -94,6 +94,8 @@ public class LoggingPlugin extends BasePlugin implements ActionListener,
     private final ConfigManager config;
     /** Addon identity. */
     private final Identity identity;
+    /** Parent Identity Manager. */
+    private final IdentityManager identityManager;
 
     /** Timer used to close idle files. */
     protected Timer idleFileTimer;
@@ -110,11 +112,13 @@ public class LoggingPlugin extends BasePlugin implements ActionListener,
      *
      * @param pluginInfo This plugin's plugin info
      * @param actionController The action controller to register listeners with
+     * @param identityManager The Identity Manager that controls the current config
      */
     public LoggingPlugin(final PluginInfo pluginInfo,
             final ActionController actionController,
             final IdentityManager identityManager) {
         super();
+        this.identityManager = identityManager;
 
         this.pluginInfo = pluginInfo;
         this.actionController = actionController;
@@ -128,7 +132,7 @@ public class LoggingPlugin extends BasePlugin implements ActionListener,
     @Override
     public void domainUpdated() {
         identity.setOption(getDomain(), "general.directory",
-                Main.getConfigDir() + "logs" + System.getProperty("file.separator"));
+                identityManager.getConfigDir() + "logs" + System.getProperty("file.separator"));
     }
 
     /**

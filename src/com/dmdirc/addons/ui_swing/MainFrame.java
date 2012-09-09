@@ -268,7 +268,7 @@ public final class MainFrame extends JFrame implements WindowListener,
             /** {@inheritDoc} */
             @Override
             public void run() {
-                Main.quit(exitCode);
+                controller.getMain().quit(exitCode);
             }
         }, "Quit thread").start();
     }
