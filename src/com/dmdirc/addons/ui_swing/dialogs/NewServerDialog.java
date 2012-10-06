@@ -126,7 +126,7 @@ public final class NewServerDialog extends StandardDialog implements
 
         serverField.requestFocusInWindow();
 
-        if (ServerManager.getServerManager().numServers() == 0 ||
+        if (getController().getMain().getServerManager().numServers() == 0 ||
                 getController().getMainFrame().getActiveFrame() == null) {
             newServerWindowCheck.setSelected(true);
             newServerWindowCheck.setEnabled(false);
@@ -248,13 +248,13 @@ public final class NewServerDialog extends StandardDialog implements
 
             // Open in a new window?
             if (newServerWindowCheck.isSelected()
-                    || ServerManager.getServerManager().numServers() == 0
+                    || getController().getMain().getServerManager().numServers() == 0
                     || getController().getMainFrame().getActiveFrame() == null) {
 
                 new LoggingSwingWorker<Void, Void>() {
                     @Override
                     protected Void doInBackground() {
-                        final Server server = new Server(address, profile);
+                        final Server server = new Server(getController().getMain().getServerManager(), address, profile);
                         server.connect();
                         return null;
                     }
@@ -269,7 +269,7 @@ public final class NewServerDialog extends StandardDialog implements
                     @Override
                     protected Void doInBackground() {
                         if (server == null) {
-                            final Server newServer = new Server(address, profile);
+                            final Server newServer = new Server(getController().getMain().getServerManager(), address, profile);
                             newServer.connect();
                         } else {
                             server.connect(address, profile);

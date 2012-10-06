@@ -28,6 +28,7 @@ import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
 import com.dmdirc.commandparser.parsers.CommandParser;
 import com.dmdirc.interfaces.ui.InputField;
+import com.dmdirc.interfaces.ui.UIController;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.ui.input.InputHandler;
@@ -51,14 +52,16 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
      * Creates a new instance of InputHandler. Adds listeners to the target
      * that we need to operate.
      *
+     * @param controller The UIController that owns this input handler.
      * @param target The text field this input handler is dealing with.
      * @param commandParser The command parser to use for this text field.
      * @param parentWindow The window that owns this input handler
      */
-    public SwingInputHandler(final InputField target,
+    public SwingInputHandler(final UIController controller,
+            final InputField target,
             final CommandParser commandParser,
             final WritableFrameContainer parentWindow) {
-        super(target, commandParser, parentWindow);
+        super(controller, target, commandParser, parentWindow);
     }
 
     /** {@inheritDoc} */

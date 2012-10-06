@@ -213,7 +213,7 @@ public class RelayChannelHandler implements ChannelMessageListener {
     */
     private void colourClient(final ChannelClientInfo channelClient) {
         // Use nick colour plugin to colour the client if available.
-        final PluginInfo nickColour = PluginManager.getPluginManager()
+        final PluginInfo nickColour = myPlugin.getPluginManager()
                 .getPluginInfoByName("nickcolour");
 
         final boolean fullColour = IdentityManager.getIdentityManager()

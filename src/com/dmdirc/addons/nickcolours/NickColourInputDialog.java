@@ -77,7 +77,7 @@ public class NickColourInputDialog extends StandardDialog
     public NickColourInputDialog(final NickColourPanel panel, final int row,
             final String nickname, final String network,
             final String textcolour, final String nickcolour) {
-        super(((SwingController) PluginManager.getPluginManager()
+        super(((SwingController) panel.getPlugin().getPluginInfo().getMetaData().getManager()
                 .getPluginInfoByName("ui_swing").getPlugin()), false);
 
         this.panel = panel;

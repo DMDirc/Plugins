@@ -85,7 +85,7 @@ public class NowPlayingPlugin extends BasePlugin implements ActionListener  {
         actionController.registerListener(this, CoreActionType.PLUGIN_LOADED,
                 CoreActionType.PLUGIN_UNLOADED);
 
-        for (PluginInfo target : PluginManager.getPluginManager().getPluginInfos()) {
+        for (PluginInfo target : pluginInfo.getMetaData().getManager().getPluginInfos()) {
             if (target.isLoaded()) {
                 addPlugin(target);
             }

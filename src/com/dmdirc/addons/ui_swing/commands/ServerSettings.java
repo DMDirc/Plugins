@@ -52,7 +52,7 @@ public class ServerSettings extends Command implements IntelligentCommand {
     @Override
     public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
-        ((SwingController) PluginManager.getPluginManager()
+        ((SwingController) getController().getMain().getPluginManager()
                 .getPluginInfoByName("ui_swing").getPlugin())
                 .showServerSettingsDialog(context.getSource().getServer());
     }

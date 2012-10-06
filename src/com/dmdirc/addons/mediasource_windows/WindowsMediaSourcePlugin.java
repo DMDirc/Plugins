@@ -45,6 +45,9 @@ public class WindowsMediaSourcePlugin extends BaseFileDependantPlugin
     /** Media sources. */
     private final List<MediaSource> sources;
 
+    /** My plugin info. */
+    private final PluginInfo pluginInfo;
+
     /**
      * Creates a new instance of DcopMediaSourcePlugin.
      *
@@ -52,6 +55,7 @@ public class WindowsMediaSourcePlugin extends BaseFileDependantPlugin
      */
     public WindowsMediaSourcePlugin(final PluginInfo pluginInfo) {
         super(pluginInfo.getMetaData());
+        this.pluginInfo = pluginInfo;
         sources = new ArrayList<MediaSource>();
         sources.add(new DllSource(this, "Winamp", true));
         sources.add(new DllSource(this, "iTunes", false));
@@ -93,7 +97,7 @@ public class WindowsMediaSourcePlugin extends BaseFileDependantPlugin
     @Override
     public void onLoad() {
         // Extract GetMediaInfo.exe and required DLLs
-        final PluginInfo pi = PluginManager.getPluginManager().getPluginInfoByName("windowsmediasource");
+        final PluginInfo pi = pluginInfo.getMetaData().getManager().getPluginInfoByName("windowsmediasource");
 
         // This shouldn't actually happen, but check to make sure.
         if (pi == null) {

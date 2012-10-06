@@ -159,7 +159,7 @@ public final class SystrayPlugin extends BasePlugin implements ActionListener,
         boolean continueLoading = true;
         try {
             SystemTray.getSystemTray().add(icon);
-            mainFrame = ((SwingController) PluginManager.getPluginManager()
+            mainFrame = ((SwingController) pluginInfo.getMetaData().getManager()
                     .getPluginInfoByName("ui_swing").getPlugin())
                     .getMainFrame();
             actionController.registerListener(this, CoreActionType.CLIENT_MINIMISED);

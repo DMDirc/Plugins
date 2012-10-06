@@ -42,6 +42,17 @@ public class StaticRequestHandler extends AbstractHandler {
 
     private ResourceManager rm;
 
+    private final WebInterfaceUI controller;
+
+    /**
+     * Create a new StaticRequestHandler.
+     *
+     * @param controller UI Controller that owns this handler.
+     */
+    public StaticRequestHandler(final WebInterfaceUI controller) {
+        this.controller = controller;
+    }
+
     /** {@inheritDoc} */
     @Override
     public void handle(final String target, final HttpServletRequest request,
@@ -50,7 +61,7 @@ public class StaticRequestHandler extends AbstractHandler {
 
         if (rm == null) {
             try {
-                rm = PluginManager.getPluginManager()
+                rm = controller.getMain().getPluginManager()
                     .getPluginInfoByName("ui_web").getResourceManager();
             } catch (IOException ex) {
                 // Die horribly
