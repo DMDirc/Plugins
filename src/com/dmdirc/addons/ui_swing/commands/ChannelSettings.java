@@ -33,7 +33,6 @@ import com.dmdirc.commandparser.commands.CommandOptions;
 import com.dmdirc.commandparser.commands.IntelligentCommand;
 import com.dmdirc.commandparser.commands.context.ChannelCommandContext;
 import com.dmdirc.commandparser.commands.context.CommandContext;
-import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 
 /**
@@ -52,7 +51,7 @@ public class ChannelSettings extends Command implements
     @Override
     public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
-        ((SwingController) PluginManager.getPluginManager()
+        ((SwingController) getController().getMain().getPluginManager()
                 .getPluginInfoByName("ui_swing").getPlugin())
                 .showChannelSettingsDialog(((ChannelCommandContext) context)
                 .getChannel());

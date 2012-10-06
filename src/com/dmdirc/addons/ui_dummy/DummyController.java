@@ -24,6 +24,7 @@ package com.dmdirc.addons.ui_dummy;
 
 import com.dmdirc.Channel;
 import com.dmdirc.FrameContainer;
+import com.dmdirc.Main;
 import com.dmdirc.Server;
 import com.dmdirc.plugins.BasePlugin;
 import com.dmdirc.ui.core.components.StatusBarManager;
@@ -37,12 +38,22 @@ import java.net.URI;
  */
 public final class DummyController extends BasePlugin implements UIController {
 
+    /** The main that owns us. */
+    private final Main main;
+
     /**
      * Creates a new instance of DummyController.
      */
-    public DummyController() {
+    public DummyController(final Main main) {
         super();
+        this.main = main;
         StatusBarManager.getStatusBarManager().registerStatusBar(new DummyStatusBar());
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Main getMain() {
+        return main;
     }
 
     /** {@inheritDoc} */

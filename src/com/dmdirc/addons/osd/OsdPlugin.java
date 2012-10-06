@@ -71,6 +71,15 @@ public final class OsdPlugin extends BasePlugin implements
         registerCommand(new OsdCommand(osdManager), OsdCommand.INFO);
     }
 
+    /**
+     * Get our PluginInfo.
+     *
+     * @return our PluginInfo.
+     */
+    public PluginInfo getPluginInfo() {
+        return pluginInfo;
+    }
+
     /** {@inheritDoc} */
     @Override
     public void showConfig(final PreferencesDialogModel manager) {

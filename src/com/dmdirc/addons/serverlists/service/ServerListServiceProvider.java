@@ -51,15 +51,20 @@ public class ServerListServiceProvider implements ServiceProvider {
     /** The services that this provider providers. */
     private final List<Service> services;
 
+    /** Plugin Manager */
+    private final PluginManager pluginManager;
+
     /**
      * Creates a new server list service provider.
      *
+     * @param pluginManager The PluginManager to use.
      * @param serverList The {@link ServerList} to retrieve items from
      */
-    public ServerListServiceProvider(final ServerList serverList) {
+    public ServerListServiceProvider(final PluginManager pluginManager, final ServerList serverList) {
         this.serverList = serverList;
+        this.pluginManager = pluginManager;
         this.services = Arrays.asList(new Service[] {
-           PluginManager.getPluginManager().getService("parser", "serverlist", true)
+           pluginManager.getService("parser", "serverlist", true)
         });
     }
 
@@ -145,7 +150,7 @@ public class ServerListServiceProvider implements ServiceProvider {
      * @return A corresponding parser instance
      */
     protected Parser getParserForItem(final MyInfo myInfo, final ServerGroupItem item) {
-        return new ParserFactory().getParser(myInfo, item.getAddress());
+        return new ParserFactory(pluginManager).getParser(myInfo, item.getAddress());
     }
 
 }

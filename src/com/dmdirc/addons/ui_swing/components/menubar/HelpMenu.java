@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.components.menubar;
 
-import com.dmdirc.ServerManager;
 import com.dmdirc.addons.ui_swing.Apple;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.dialogs.FeedbackDialog;
@@ -96,7 +95,7 @@ public class HelpMenu extends JMenu implements ActionListener {
         if (e.getActionCommand().equals("About")) {
             controller.showDialog(AboutDialog.class);
         } else if (e.getActionCommand().equals("JoinDevChat")) {
-            ServerManager.getServerManager().joinDevChat();
+            controller.getMain().getServerManager().joinDevChat();
         } else if (e.getActionCommand().equals("feedback")) {
             controller.showDialog(FeedbackDialog.class);
         }

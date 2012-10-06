@@ -23,6 +23,7 @@
 package com.dmdirc.addons.serverlists;
 
 import com.dmdirc.Precondition;
+import com.dmdirc.ServerManager;
 import com.dmdirc.addons.serverlists.io.ServerGroupReader;
 import com.dmdirc.addons.serverlists.io.ServerGroupWriter;
 import com.dmdirc.addons.serverlists.service.ServerListServiceProvider;
@@ -30,6 +31,7 @@ import com.dmdirc.config.Identity;
 import com.dmdirc.config.IdentityListener;
 import com.dmdirc.config.IdentityManager;
 
+import com.dmdirc.plugins.PluginManager;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
@@ -48,17 +50,24 @@ public class ServerList implements IdentityListener {
     private final Map<ServerGroup, ServerGroupWriter> groups
             = new HashMap<ServerGroup, ServerGroupWriter>();
 
+    /** ServerManager that ServerEntrys use to create servers */
+    private final ServerManager serverManager;
+
     /**
      * Creates a new ServerList and loads groups and servers.
+     *
+     * @param pluginManager Plugin Manager to use.
+     * @param serverManager Server Manager to use.
      */
-    public ServerList() {
+    public ServerList(final PluginManager pluginManager, final ServerManager serverManager) {
+        this.serverManager = serverManager;
         IdentityManager.getIdentityManager().registerIdentityListener("servergroup", this);
 
         for (Identity identity : IdentityManager.getIdentityManager().getIdentitiesByType("servergroup")) {
             identityAdded(identity);
         }
 
-        new ServerListServiceProvider(this).register();
+        new ServerListServiceProvider(pluginManager, this).register();
     }
 
     /**
@@ -136,7 +145,7 @@ public class ServerList implements IdentityListener {
     @Override
     public void identityAdded(final Identity identity) {
         try {
-            final ServerGroupReader reader = new ServerGroupReader(identity);
+            final ServerGroupReader reader = new ServerGroupReader(serverManager, identity);
             addServerGroup(reader.read(), reader.getWriter());
         } catch (IllegalArgumentException ex) {
             // Silently ignore

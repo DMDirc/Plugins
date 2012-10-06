@@ -25,7 +25,6 @@ package com.dmdirc.addons.ui_swing.components.addonbrowser;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
-import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.themes.ThemeManager;
 import com.dmdirc.util.io.Downloader;
 
@@ -68,11 +67,11 @@ public class InstallWorker extends LoggingSwingWorker<String, Void> {
                     ActionManager.installActionPack(file.getAbsolutePath());
                     break;
                 case TYPE_PLUGIN:
-                    final File newFile = new File(PluginManager
+                    final File newFile = new File(controller.getMain()
                             .getPluginManager().getDirectory(),
                             info.getTitle() + ".jar");
                     if (file.renameTo(newFile)) {
-                        PluginManager.getPluginManager().addPlugin(
+                        controller.getMain().getPluginManager().addPlugin(
                                 newFile.getName());
                     } else {
                         return "Unable to install addon, failed to move file: "

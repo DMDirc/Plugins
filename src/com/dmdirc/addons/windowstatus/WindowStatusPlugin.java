@@ -42,7 +42,6 @@ import com.dmdirc.parser.interfaces.ChannelInfo;
 import com.dmdirc.parser.interfaces.ClientInfo;
 import com.dmdirc.plugins.BasePlugin;
 import com.dmdirc.plugins.PluginInfo;
-import com.dmdirc.plugins.PluginManager;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -91,7 +90,7 @@ public final class WindowStatusPlugin extends BasePlugin
     /** {@inheritDoc} */
     @Override
     public void onLoad() {
-        controller = (SwingController) PluginManager.getPluginManager()
+        controller = (SwingController) pluginInfo.getMetaData().getManager()
                 .getPluginInfoByName("ui_swing").getPlugin();
         controller.getSwingStatusBar().addComponent(panel);
         controller.getMainFrame().addSelectionListener(this);
