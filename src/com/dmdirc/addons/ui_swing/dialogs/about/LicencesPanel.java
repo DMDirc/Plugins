@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.about;
 
+import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.TreeScroller;
 import com.dmdirc.config.ConfigManager;
@@ -65,16 +66,19 @@ public final class LicencesPanel extends JPanel implements
     private JEditorPane licence;
     /** Licence list. */
     private JTree list;
+    /** Swing Controller. */
+    private final SwingController controller;
 
     /**
      * Creates a new instance of LicencesPanel.
      *
      * @param config Config manager
      */
-    public LicencesPanel(final ConfigManager config) {
+    public LicencesPanel(final SwingController controller) {
         super();
 
-        this.config = config;
+        this.controller = controller;
+        this.config = controller.getGlobalConfig();
         initComponents();
         addListeners();
         layoutComponents();
@@ -130,7 +134,7 @@ public final class LicencesPanel extends JPanel implements
         list.getSelectionModel().setSelectionMode(TreeSelectionModel.
                 SINGLE_TREE_SELECTION);
         new TreeScroller(list);
-        new LicenceLoader(list, listModel).executeInExecutor();
+        new LicenceLoader(controller, list, listModel).executeInExecutor();
         licence = new JEditorPane();
         licence.setEditorKit(new HTMLEditorKit());
         final Font font = UIManager.getFont("Label.font");

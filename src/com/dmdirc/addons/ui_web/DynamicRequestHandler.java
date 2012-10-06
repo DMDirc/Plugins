@@ -278,7 +278,8 @@ public class DynamicRequestHandler extends AbstractHandler {
     private void doNewServer(final HttpServletRequest request)
             throws IOException {
         try {
-            new Server(new URI("irc://" + request.getParameter("password") + "@"
+            new Server(controller.getMain().getServerManager(),
+                    new URI("irc://" + request.getParameter("password") + "@"
                     + request.getParameter("server") + ":"
                     + request.getParameter("port")),
                     findProfile(request.getParameter("profile"))).connect();

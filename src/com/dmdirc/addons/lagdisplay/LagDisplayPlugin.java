@@ -89,6 +89,14 @@ public final class LagDisplayPlugin extends BasePlugin implements
         panel = new LagDisplayPanel(this, controller);
     }
 
+    /**
+     * Get our PluginInfo.
+     * @return Our PluginInfo.
+     */
+    public PluginInfo getPluginInfo() {
+        return pluginInfo;
+    }
+
     /** {@inheritDoc} */
     @Override
     public void onLoad() {

@@ -40,15 +40,19 @@ public class DcopMediaSourcePlugin extends BasePlugin
     /** Media sources. */
     private final List<MediaSource> sources;
 
+    /** This plugins plugin manager. */
+    private final PluginManager pluginManager;
+
     /**
      * Creates a new instance of DcopMediaSourcePlugin.
      */
-    public DcopMediaSourcePlugin() {
+    public DcopMediaSourcePlugin(final PluginManager pluginManager) {
         super();
+        this.pluginManager = pluginManager;
         sources = new ArrayList<MediaSource>();
-        sources.add(new AmarokSource());
-        sources.add(new KaffeineSource());
-        sources.add(new NoatunSource());
+        sources.add(new AmarokSource(this));
+        sources.add(new KaffeineSource(this));
+        sources.add(new NoatunSource(this));
     }
 
     /**
@@ -58,10 +62,10 @@ public class DcopMediaSourcePlugin extends BasePlugin
      * @return The result of the dcop query, line-by-line
      */
     @SuppressWarnings("unchecked")
-    protected static List<String> getDcopResult(final String query) {
+    protected List<String> getDcopResult(final String query) {
         try {
-            return (List<String>) PluginManager.getPluginManager()
-                    .getExportedService("dcop").execute(query);
+            return (List<String>) pluginManager.getExportedService("dcop")
+                    .execute(query);
         } catch (NoSuchProviderException nspe) {
             return new ArrayList<String>();
         }

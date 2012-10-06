@@ -91,7 +91,7 @@ public final class WindowStatusPlugin extends BasePlugin
     /** {@inheritDoc} */
     @Override
     public void onLoad() {
-        controller = (SwingController) PluginManager.getPluginManager()
+        controller = (SwingController) pluginInfo.getMetaData().getManager()
                 .getPluginInfoByName("ui_swing").getPlugin();
         controller.getSwingStatusBar().addComponent(panel);
         controller.getMainFrame().addSelectionListener(this);

@@ -159,7 +159,7 @@ public final class AddonToggle {
                     } else {
                         pi.unloadPlugin();
                     }
-                    PluginManager.getPluginManager().updateAutoLoad(pi);
+                    pi.getMetaData().getManager().updateAutoLoad(pi);
                     if (getID() != -1) {
                         if (getUpdateState()) {
                             identity.unsetOption("updater", "enable-addon-"
