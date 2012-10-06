@@ -32,10 +32,22 @@ import java.util.List;
  */
 public class AmarokSource implements MediaSource {
 
+    /** Our parent plugin. */
+    private DcopMediaSourcePlugin myPlugin;
+
+    /**
+     * Create a new instance of this source.
+     *
+     * @param myPlugin The plugin that owns this source.
+     */
+    public AmarokSource(final DcopMediaSourcePlugin myPlugin) {
+        this.myPlugin = myPlugin;
+    }
+
     /** {@inheritDoc} */
     @Override
     public MediaSourceState getState() {
-        final List<String> res = DcopMediaSourcePlugin.getDcopResult("dcop amarok player status");
+        final List<String> res = myPlugin.getDcopResult("dcop amarok player status");
         if (res.isEmpty()) {
             return MediaSourceState.CLOSED;
         } else {
@@ -67,44 +79,43 @@ public class AmarokSource implements MediaSource {
     /** {@inheritDoc} */
     @Override
     public String getArtist() {
-        return DcopMediaSourcePlugin.getDcopResult("dcop amarok player artist").get(0);
+        return myPlugin.getDcopResult("dcop amarok player artist").get(0);
     }
 
     /** {@inheritDoc} */
     @Override
     public String getTitle() {
-        return DcopMediaSourcePlugin.getDcopResult("dcop amarok player title").get(0);
+        return myPlugin.getDcopResult("dcop amarok player title").get(0);
     }
 
     /** {@inheritDoc} */
     @Override
     public String getAlbum() {
-        return DcopMediaSourcePlugin.getDcopResult("dcop amarok player album").get(0);
+        return myPlugin.getDcopResult("dcop amarok player album").get(0);
     }
 
     /** {@inheritDoc} */
     @Override
     public String getLength() {
-        return DcopMediaSourcePlugin.getDcopResult("dcop amarok player totalTime").get(0);
+        return myPlugin.getDcopResult("dcop amarok player totalTime").get(0);
     }
 
     /** {@inheritDoc} */
     @Override
     public String getTime() {
-        return DcopMediaSourcePlugin.getDcopResult(
-                "dcop amarok player currentTime").get(0);
+        return myPlugin.getDcopResult("dcop amarok player currentTime").get(0);
     }
 
     /** {@inheritDoc} */
     @Override
     public String getFormat() {
-        return DcopMediaSourcePlugin.getDcopResult("dcop amarok player type").get(0);
+        return myPlugin.getDcopResult("dcop amarok player type").get(0);
     }
 
     /** {@inheritDoc} */
     @Override
     public String getBitrate() {
-        return DcopMediaSourcePlugin.getDcopResult("dcop amarok player bitrate").get(0);
+        return myPlugin.getDcopResult("dcop amarok player bitrate").get(0);
     }
 
 }

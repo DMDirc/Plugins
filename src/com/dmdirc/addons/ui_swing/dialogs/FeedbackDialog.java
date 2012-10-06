@@ -181,7 +181,7 @@ public final class FeedbackDialog extends StandardDialog implements
         final StringBuilder serverInfo = new StringBuilder();
         final StringBuilder dmdircInfo = new StringBuilder();
         if (serverCheckbox.isSelected()) {
-            for (Server server : ServerManager.getServerManager()
+            for (Server server : getController().getMain().getServerManager()
                     .getServers()) {
                 if (server.getState().isDisconnected()) {
                     continue;

@@ -32,10 +32,22 @@ import java.util.List;
  */
 public class NoatunSource implements MediaSource {
 
+    /** Our parent plugin. */
+    private DcopMediaSourcePlugin myPlugin;
+
+    /**
+     * Create a new instance of this source.
+     *
+     * @param myPlugin The plugin that owns this source.
+     */
+    public NoatunSource(final DcopMediaSourcePlugin myPlugin) {
+        this.myPlugin = myPlugin;
+    }
+
     /** {@inheritDoc} */
     @Override
     public MediaSourceState getState() {
-        final List<String> res = DcopMediaSourcePlugin.getDcopResult("dcop noatun Noatun state");
+        final List<String> res = myPlugin.getDcopResult("dcop noatun Noatun state");
         if (res.isEmpty()) {
             return MediaSourceState.CLOSED;
         } else {
@@ -67,8 +79,7 @@ public class NoatunSource implements MediaSource {
     /** {@inheritDoc} */
     @Override
     public String getArtist() {
-        final String result = DcopMediaSourcePlugin.getDcopResult(
-                "dcop noatun Noatun title").get(0);
+        final String result = myPlugin.getDcopResult("dcop noatun Noatun title").get(0);
         if (result.indexOf(" - ") == -1) {
             return "";
         }
@@ -78,8 +89,7 @@ public class NoatunSource implements MediaSource {
     /** {@inheritDoc} */
     @Override
     public String getTitle() {
-        final String result = DcopMediaSourcePlugin.getDcopResult(
-                "dcop noatun Noatun title").get(0);
+        final String result = myPlugin.getDcopResult("dcop noatun Noatun title").get(0);
         if (result.indexOf(" - ") == -1) {
             return "";
         }
@@ -95,14 +105,13 @@ public class NoatunSource implements MediaSource {
     /** {@inheritDoc} */
     @Override
     public String getLength() {
-        return DcopMediaSourcePlugin.getDcopResult(
-                "dcop noatun Noatun lengthString").get(0);
+        return myPlugin.getDcopResult("dcop noatun Noatun lengthString").get(0);
     }
 
     /** {@inheritDoc} */
     @Override
     public String getTime() {
-        return duration(Integer.parseInt(DcopMediaSourcePlugin.getDcopResult(
+        return duration(Integer.parseInt(myPlugin.getDcopResult(
                 "dcop noatun Noatun position").get(0)) /1000);
     }
 

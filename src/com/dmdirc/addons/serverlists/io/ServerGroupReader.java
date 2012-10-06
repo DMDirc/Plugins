@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.serverlists.io;
 
+import com.dmdirc.ServerManager;
 import com.dmdirc.addons.serverlists.ServerGroup;
 import com.dmdirc.config.Identity;
 
@@ -48,9 +49,9 @@ public class ServerGroupReader {
      *
      * @param identity The identity describing the server group
      */
-    public ServerGroupReader(final Identity identity) {
+    public ServerGroupReader(final ServerManager serverManager, final Identity identity) {
         this.identity = identity;
-        this.entryReader = new ServerEntryReader(identity);
+        this.entryReader = new ServerEntryReader(serverManager, identity);
     }
 
     /**

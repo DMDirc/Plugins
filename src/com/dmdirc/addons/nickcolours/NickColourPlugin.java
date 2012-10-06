@@ -80,6 +80,15 @@ public final class NickColourPlugin extends BasePlugin implements ActionListener
         this.pluginInfo = pluginInfo;
     }
 
+    /**
+     * Get our PluginInfo
+     *
+     * @return our PluginInfo
+     */
+    public PluginInfo getPluginInfo() {
+        return pluginInfo;
+    }
+
     /** {@inheritDoc} */
     @Override
     public void processEvent(final ActionType type, final StringBuffer format,
@@ -270,7 +279,7 @@ public final class NickColourPlugin extends BasePlugin implements ActionListener
                     @Override
                     public NickColourPanel call() {
                         return new NickColourPanel(
-                                (SwingController) PluginManager.getPluginManager()
+                                (SwingController) pluginInfo.getMetaData().getManager()
                                 .getPluginInfoByName("ui_swing").getPlugin(),
                                 NickColourPlugin.this);
                     }

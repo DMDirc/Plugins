@@ -32,10 +32,22 @@ import java.util.List;
  */
 public class KaffeineSource implements MediaSource {
 
+    /** Our parent plugin. */
+    private DcopMediaSourcePlugin myPlugin;
+
+    /**
+     * Create a new instance of this source.
+     *
+     * @param myPlugin The plugin that owns this source.
+     */
+    public KaffeineSource(final DcopMediaSourcePlugin myPlugin) {
+        this.myPlugin = myPlugin;
+    }
+
     /** {@inheritDoc} */
     @Override
     public MediaSourceState getState() {
-        final List<String> res = DcopMediaSourcePlugin.getDcopResult("dcop kaffeine KaffeineIface isPlaying");
+        final List<String> res = myPlugin.getDcopResult("dcop kaffeine KaffeineIface isPlaying");
         if (res.isEmpty()) {
             return MediaSourceState.CLOSED;
         } else {
@@ -57,35 +69,32 @@ public class KaffeineSource implements MediaSource {
     /** {@inheritDoc} */
     @Override
     public String getArtist() {
-        return DcopMediaSourcePlugin.getDcopResult(
-                "dcop kaffeine KaffeineIface artist").get(0);
+        return myPlugin.getDcopResult("dcop kaffeine KaffeineIface artist").get(0);
     }
 
     /** {@inheritDoc} */
     @Override
     public String getTitle() {
-        return DcopMediaSourcePlugin.getDcopResult(
-                "dcop kaffeine KaffeineIface title").get(0);
+        return myPlugin.getDcopResult("dcop kaffeine KaffeineIface title").get(0);
     }
 
     /** {@inheritDoc} */
     @Override
     public String getAlbum() {
-        return DcopMediaSourcePlugin.getDcopResult(
-                "dcop kaffeine KaffeineIface album").get(0);
+        return myPlugin.getDcopResult("dcop kaffeine KaffeineIface album").get(0);
     }
 
     /** {@inheritDoc} */
     @Override
     public String getLength() {
-        return duration(Integer.parseInt(DcopMediaSourcePlugin.getDcopResult(
+        return duration(Integer.parseInt(myPlugin.getDcopResult(
                 "dcop kaffeine KaffeineIface getLength").get(0)));
     }
 
     /** {@inheritDoc} */
     @Override
     public String getTime() {
-        return duration(Integer.parseInt(DcopMediaSourcePlugin.getDcopResult(
+        return duration(Integer.parseInt(myPlugin.getDcopResult(
                 "dcop kaffeine KaffeineIface getTimePos").get(0)));
     }
 

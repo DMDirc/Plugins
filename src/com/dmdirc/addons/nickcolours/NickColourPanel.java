@@ -140,6 +140,15 @@ public class NickColourPanel extends JPanel implements ActionListener,
     }
 
     /**
+     * Get an instance of the plugin that owns us.
+     *
+     * @return Our plugin.
+     */
+    public NickColourPlugin getPlugin() {
+        return plugin;
+    }
+
+    /**
      * {@inheritDoc}
      *
      * @param e Action event

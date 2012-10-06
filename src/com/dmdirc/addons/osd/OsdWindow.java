@@ -96,7 +96,7 @@ public class OsdWindow extends JDialog implements MouseListener,
      */
     public OsdWindow(final int timeout, final String text, final boolean config, final int x,
             final int y, final OsdPlugin plugin, final OsdManager osdManager) {
-        super(((SwingController) PluginManager.getPluginManager()
+        super(((SwingController) plugin.getPluginInfo().getMetaData().getManager()
                 .getPluginInfoByName("ui_swing").getPlugin()).getMainFrame(), false);
 
         this.config = config;

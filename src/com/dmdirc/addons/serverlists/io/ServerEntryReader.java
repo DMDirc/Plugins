@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.serverlists.io;
 
+import com.dmdirc.ServerManager;
 import com.dmdirc.addons.serverlists.ServerEntry;
 import com.dmdirc.addons.serverlists.ServerGroup;
 import com.dmdirc.config.Identity;
@@ -39,14 +40,18 @@ public class ServerEntryReader {
     /** The identity to read entries from. */
     private final Identity identity;
 
+    /** ServerManager that ServerEntrys use to create servers */
+    private final ServerManager serverManager;
+
     /**
      * Creates a new Server Entry Reader which will read from the specified
      * identity.
      *
      * @param identity The identity which defines our server entries
      */
-    public ServerEntryReader(final Identity identity) {
+    public ServerEntryReader(final ServerManager serverManager, final Identity identity) {
         this.identity = identity;
+        this.serverManager = serverManager;
     }
 
     /**
@@ -70,7 +75,7 @@ public class ServerEntryReader {
         final String serverName = identity.getOption(name, "name");
         final URI serverURI = new URI(identity.getOption(name, "address"));
 
-        return new ServerEntry(group, serverName, serverURI, null);
+        return new ServerEntry(serverManager, group, serverName, serverURI, null);
     }
 
 }
