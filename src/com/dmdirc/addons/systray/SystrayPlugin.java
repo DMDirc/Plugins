@@ -35,7 +35,6 @@ import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.interfaces.ActionController;
 import com.dmdirc.plugins.BasePlugin;
 import com.dmdirc.plugins.PluginInfo;
-import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.messages.Styliser;
 import com.dmdirc.util.validators.ValidationResponse;
@@ -159,7 +158,7 @@ public final class SystrayPlugin extends BasePlugin implements ActionListener,
         boolean continueLoading = true;
         try {
             SystemTray.getSystemTray().add(icon);
-            mainFrame = ((SwingController) PluginManager.getPluginManager()
+            mainFrame = ((SwingController) pluginInfo.getMetaData().getManager()
                     .getPluginInfoByName("ui_swing").getPlugin())
                     .getMainFrame();
             actionController.registerListener(this, CoreActionType.CLIENT_MINIMISED);

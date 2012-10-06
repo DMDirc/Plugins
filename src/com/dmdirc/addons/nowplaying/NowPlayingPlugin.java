@@ -34,7 +34,6 @@ import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.plugins.BasePlugin;
 import com.dmdirc.plugins.Plugin;
 import com.dmdirc.plugins.PluginInfo;
-import com.dmdirc.plugins.PluginManager;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -85,7 +84,7 @@ public class NowPlayingPlugin extends BasePlugin implements ActionListener  {
         actionController.registerListener(this, CoreActionType.PLUGIN_LOADED,
                 CoreActionType.PLUGIN_UNLOADED);
 
-        for (PluginInfo target : PluginManager.getPluginManager().getPluginInfos()) {
+        for (PluginInfo target : pluginInfo.getMetaData().getManager().getPluginInfos()) {
             if (target.isLoaded()) {
                 addPlugin(target);
             }

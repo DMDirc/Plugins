@@ -23,7 +23,6 @@
 package com.dmdirc.addons.lagdisplay;
 
 import com.dmdirc.Server;
-import com.dmdirc.ServerManager;
 import com.dmdirc.ServerState;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SwingController;
@@ -74,7 +73,7 @@ public class ServerInfoDialog extends StatusbarPopupWindow {
     /** {@inheritDoc} */
     @Override
     protected void initContent(final JPanel panel) {
-        final List<Server> servers = ServerManager.getServerManager().getServers();
+        final List<Server> servers = getController().getMain().getServerManager().getServers();
 
         if (servers.isEmpty()) {
             panel.add(new JLabel("No open servers."));

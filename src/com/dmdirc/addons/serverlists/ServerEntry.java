@@ -24,6 +24,7 @@ package com.dmdirc.addons.serverlists;
 
 import com.dmdirc.Server;
 
+import com.dmdirc.ServerManager;
 import java.net.URI;
 
 /**
@@ -40,6 +41,9 @@ public class ServerEntry extends ServerGroupItemBase {
     /** The group that owns this entry. */
     private final ServerGroup group;
 
+    /** The manager to use to create new servers. */
+    private final ServerManager serverManager;
+
     /**
      * Creates a new server entry.
      *
@@ -48,8 +52,10 @@ public class ServerEntry extends ServerGroupItemBase {
      * @param address The address of this server
      * @param profile The name of the profile to be used by this server
      */
-    public ServerEntry(final ServerGroup group, final String name,
+    public ServerEntry(final ServerManager serverManager,
+            final ServerGroup group, final String name,
             final URI address, final String profile) {
+        this.serverManager = serverManager;
         setName(name);
         setProfile(profile);
         this.address = address;
@@ -91,7 +97,7 @@ public class ServerEntry extends ServerGroupItemBase {
     /** {@inheritDoc} */
     @Override
     public void connect() {
-        final Server server = new Server(address, getProfileIdentity());
+        final Server server = new Server(serverManager, address, getProfileIdentity());
         server.connect();
     }
 

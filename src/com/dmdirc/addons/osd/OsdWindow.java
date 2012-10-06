@@ -25,7 +25,6 @@ package com.dmdirc.addons.osd;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.config.IdentityManager;
-import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.messages.ColourManager;
 
 import java.awt.Color;
@@ -96,7 +95,7 @@ public class OsdWindow extends JDialog implements MouseListener,
      */
     public OsdWindow(final int timeout, final String text, final boolean config, final int x,
             final int y, final OsdPlugin plugin, final OsdManager osdManager) {
-        super(((SwingController) PluginManager.getPluginManager()
+        super(((SwingController) plugin.getPluginInfo().getMetaData().getManager()
                 .getPluginInfoByName("ui_swing").getPlugin()).getMainFrame(), false);
 
         this.config = config;

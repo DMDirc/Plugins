@@ -24,7 +24,6 @@ package com.dmdirc.addons.relaybot;
 
 import com.dmdirc.Channel;
 import com.dmdirc.Server;
-import com.dmdirc.ServerManager;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.addons.ui_swing.UIUtilities;
@@ -88,7 +87,7 @@ public class RelayBotPlugin extends BasePlugin implements ActionListener, Config
 
         // Add ourself to all currently known channels that we should be
         // connected with.
-        for (Server server : ServerManager.getServerManager().getServers()) {
+        for (Server server : getPluginManager().getMain().getServerManager().getServers()) {
             final Parser parser = server.getParser();
             if (parser instanceof IRCParser && !(parser.getCallbackManager() instanceof RelayCallbackManager)) {
                 new RelayCallbackManager(this, (IRCParser) parser);
@@ -99,13 +98,22 @@ public class RelayBotPlugin extends BasePlugin implements ActionListener, Config
         }
     }
 
+    /**
+     * Get our plugin manager.
+     *
+     * @return Our plugin manager.
+     */
+    protected PluginManager getPluginManager() {
+        return pluginInfo.getMetaData().getManager();
+    }
+
     /** {@inheritDoc} */
     @Override
     public void onUnload() {
         ActionManager.getActionManager().unregisterListener(this);
 
         // Remove RelayCallbackManagers
-        for (Server server : ServerManager.getServerManager().getServers()) {
+        for (Server server : getPluginManager().getMain().getServerManager().getServers()) {
             final Parser parser = server.getParser();
             if (parser instanceof IRCParser && parser.getCallbackManager() instanceof RelayCallbackManager) {
                 ((RelayCallbackManager) parser.getCallbackManager()).onSocketClosed(parser, new Date());
@@ -174,7 +182,7 @@ public class RelayBotPlugin extends BasePlugin implements ActionListener, Config
     public void configChanged(final String domain, final String key) {
         final boolean wasUnset = !IdentityManager.getIdentityManager().getGlobalConfiguration().hasOptionString(domain, key);
 
-        for (Server server : ServerManager.getServerManager().getServers()) {
+        for (Server server : getPluginManager().getMain().getServerManager().getServers()) {
             if (server.hasChannel(key)) {
                 final Channel chan = server.getChannel(key);
                 if (wasUnset) {
@@ -290,7 +298,7 @@ public class RelayBotPlugin extends BasePlugin implements ActionListener, Config
             /** {@inheritDoc} */
             @Override
             public RelayChannelPanel call() {
-                return new RelayChannelPanel(PluginManager.getPluginManager()
+                return new RelayChannelPanel(getPluginManager()
                         .getPluginInfoByName("ui_swing").getPlugin(),
                         RelayBotPlugin.this);
             }

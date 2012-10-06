@@ -43,7 +43,6 @@ import com.dmdirc.parser.interfaces.ChannelInfo;
 import com.dmdirc.parser.interfaces.ClientInfo;
 import com.dmdirc.plugins.BasePlugin;
 import com.dmdirc.plugins.PluginInfo;
-import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.Colour;
 import com.dmdirc.ui.messages.ColourManager;
 
@@ -78,6 +77,15 @@ public final class NickColourPlugin extends BasePlugin implements ActionListener
     public NickColourPlugin(final PluginInfo pluginInfo) {
         super();
         this.pluginInfo = pluginInfo;
+    }
+
+    /**
+     * Get our PluginInfo
+     *
+     * @return our PluginInfo
+     */
+    public PluginInfo getPluginInfo() {
+        return pluginInfo;
     }
 
     /** {@inheritDoc} */
@@ -270,7 +278,7 @@ public final class NickColourPlugin extends BasePlugin implements ActionListener
                     @Override
                     public NickColourPanel call() {
                         return new NickColourPanel(
-                                (SwingController) PluginManager.getPluginManager()
+                                (SwingController) pluginInfo.getMetaData().getManager()
                                 .getPluginInfoByName("ui_swing").getPlugin(),
                                 NickColourPlugin.this);
                     }

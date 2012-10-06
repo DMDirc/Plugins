@@ -24,7 +24,6 @@ package com.dmdirc.addons.ui_swing.components.statusbar;
 
 import com.dmdirc.Invite;
 import com.dmdirc.Server;
-import com.dmdirc.ServerManager;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.addons.ui_swing.MainFrame;
@@ -100,7 +99,7 @@ public class InviteLabel extends StatusbarPopupPanel<JLabel> implements
         accept.setActionCommand("acceptAll");
         accept.addActionListener(this);
 
-        for (final Server server : ServerManager.getServerManager().getServers()) {
+        for (final Server server : controller.getMain().getServerManager().getServers()) {
             server.addInviteListener(this);
         }
 
