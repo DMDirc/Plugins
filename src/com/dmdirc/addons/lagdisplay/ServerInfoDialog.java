@@ -74,7 +74,7 @@ public class ServerInfoDialog extends StatusbarPopupWindow {
     /** {@inheritDoc} */
     @Override
     protected void initContent(final JPanel panel) {
-        final List<Server> servers = ServerManager.getServerManager().getServers();
+        final List<Server> servers = plugin.getPluginInfo().getMetaData().getManager().getMain().getServerManager().getServers();
 
         if (servers.isEmpty()) {
             panel.add(new JLabel("No open servers."));

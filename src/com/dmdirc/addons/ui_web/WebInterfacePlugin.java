@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_web;
 
+import com.dmdirc.Main;
 import com.dmdirc.plugins.BasePlugin;
 
 import lombok.Getter;
@@ -33,15 +34,27 @@ import org.mortbay.jetty.Handler;
  */
 public class WebInterfacePlugin extends BasePlugin {
 
+    /** Our instance of main. */
+    private final Main main;
+
     /** The UI that we're using. */
     @Getter
     private WebInterfaceUI controller;
+
+    /**
+     * Create a new WebInterfacePlugin
+     *
+     * @param main The instance of main that this client uses.
+     */
+    public WebInterfacePlugin(final Main main) {
+        this.main = main;
+    }
 
     /** {@inheritDoc} */
     @Override
     public void onLoad() {
         if (controller == null) {
-            controller = new WebInterfaceUI(getDomain());
+            controller = new WebInterfaceUI(main, getDomain());
         }
     }
 
@@ -52,7 +65,7 @@ public class WebInterfacePlugin extends BasePlugin {
      */
     public void addWebHandler(final Handler newHandler) {
         if (controller == null) {
-            controller = new WebInterfaceUI(getDomain());
+            controller = new WebInterfaceUI(main, getDomain());
         }
 
         controller.addWebHandler(newHandler);

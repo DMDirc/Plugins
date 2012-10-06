@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.serverlistdialog;
 
+import com.dmdirc.ServerManager;
 import com.dmdirc.actions.wrappers.PerformWrapper.PerformDescription;
 import com.dmdirc.actions.wrappers.PerformType;
 import com.dmdirc.logger.ErrorLevel;
@@ -30,6 +31,7 @@ import com.dmdirc.addons.serverlists.ServerEntry;
 import com.dmdirc.addons.serverlists.ServerGroup;
 import com.dmdirc.addons.serverlists.ServerGroupItem;
 import com.dmdirc.addons.serverlists.ServerList;
+import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.util.collections.ListenerList;
 
 import java.io.IOException;
@@ -45,16 +47,20 @@ import javax.swing.tree.DefaultTreeModel;
 public class ServerListModel {
 
     /** Server list. */
-    private final ServerList list = new ServerList();
+    private final ServerList list;
     /** Listener list. */
     private final ListenerList listeners;
     /** Active server item. */
     private ServerGroupItem activeItem;
+    /** ServerManager that ServerEntrys use to create servers */
+    private final ServerManager serverManager;
 
     /**
      * Creates a new server list model.
      */
-    public ServerListModel() {
+    public ServerListModel(final PluginManager pluginManager, final ServerManager serverManager) {
+        this.serverManager = serverManager;
+        list = new ServerList(pluginManager, serverManager);
         listeners = new ListenerList();
     }
 
@@ -217,7 +223,7 @@ public class ServerListModel {
      */
     public void addEntry(final ServerGroup parentGroup, final String entryName,
             final URI url) {
-        final ServerGroupItem sg = new ServerEntry(parentGroup, entryName, url,
+        final ServerGroupItem sg = new ServerEntry(serverManager, parentGroup, entryName, url,
                 null);
         parentGroup.addItem(sg);
         for (ServerListListener listener : listeners.get(

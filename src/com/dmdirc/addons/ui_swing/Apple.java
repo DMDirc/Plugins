@@ -112,6 +112,8 @@ public final class Apple implements InvocationHandler, ActionListener {
     private MenuBar menuBar = null;
     /** Has the CLIENT_OPENED action been called? */
     private boolean clientOpened = false;
+    /** Our swing controller. */
+    private final SwingController controller;
 
     /**
      * Create the Apple class.
@@ -127,8 +129,9 @@ public final class Apple implements InvocationHandler, ActionListener {
      *
      * @param configManager Config manager
      */
-    public Apple(final ConfigManager configManager) {
+    public Apple(final ConfigManager configManager, final SwingController controller) {
         this.configManager = configManager;
+        this.controller = controller;
         if (isApple()) {
             try {
                 System.loadLibrary("DMDirc-Apple"); // NOPMD
@@ -477,7 +480,7 @@ public final class Apple implements InvocationHandler, ActionListener {
             synchronized (addresses) {
                 clientOpened = true;
                 for (final URI addr : addresses) {
-                    ServerManager.getServerManager().connectToAddress(addr);
+                    controller.getMain().getServerManager().connectToAddress(addr);
                 }
                 addresses.clear();
             }
@@ -508,7 +511,7 @@ public final class Apple implements InvocationHandler, ActionListener {
                         Thread.currentThread().setContextClassLoader(
                                 ClassLoader.getSystemClassLoader());
                     }
-                    ServerManager.getServerManager().connectToAddress(addr);
+                    controller.getMain().getServerManager().connectToAddress(addr);
                 } else {
                     addresses.add(addr);
                 }

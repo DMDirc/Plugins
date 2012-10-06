@@ -24,6 +24,7 @@ package com.dmdirc.addons.ui_web;
 
 import com.dmdirc.Channel;
 import com.dmdirc.FrameContainer;
+import com.dmdirc.Main;
 import com.dmdirc.Server;
 import com.dmdirc.addons.ui_web.uicomponents.WebStatusBar;
 import com.dmdirc.interfaces.ui.UIController;
@@ -56,14 +57,18 @@ public class WebInterfaceUI implements UIController {
     @Getter
     private final DynamicRequestHandler handler;
 
+    /** Instance of Main that owns us. */
+    private final Main main;
+
     /**
      * Creates a new WebInterfaceUI belonging to the specified plugin.
      *
      * @param domain The domain to retrieve config settings from
      */
-    public WebInterfaceUI(final String domain) {
+    public WebInterfaceUI(final Main main, final String domain) {
         super();
 
+        this.main = main;
         final SecurityHandler sh = new SecurityHandler();
         final Constraint constraint = new Constraint();
         final ConstraintMapping cm = new ConstraintMapping();
@@ -84,7 +89,7 @@ public class WebInterfaceUI implements UIController {
         webServer.setHandlers(new Handler[]{
             sh,
             new RootRequestHandler(),
-            new StaticRequestHandler(),
+            new StaticRequestHandler(this),
             new DMDircRequestHandler(),
             handler,
         });
@@ -98,6 +103,12 @@ public class WebInterfaceUI implements UIController {
         windowManager = new WebWindowManager(this);
 
         StatusBarManager.getStatusBarManager().registerStatusBar(new WebStatusBar(handler));
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Main getMain() {
+        return main;
     }
 
     /**
