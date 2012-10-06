@@ -131,7 +131,7 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
      */
     private void initComponents() {
         inputField = new SwingInputField(this, getController().getMainFrame());
-        inputHandler = new SwingInputHandler(inputField,
+        inputHandler = new SwingInputHandler(controller, inputField,
                 getContainer().getCommandParser(), getContainer());
         inputHandler.addValidationListener(inputField);
         inputHandler.setTabCompleter(((WritableFrameContainer) frameParent).

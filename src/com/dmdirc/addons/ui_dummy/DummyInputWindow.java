@@ -35,19 +35,23 @@ public class DummyInputWindow implements InputWindow {
     /** Our container. */
     private final WritableFrameContainer container;
 
+    /** Our Controller. */
+    private final UIController controller;
+
     /**
      * Instantiates a new DummyInputWindow.
      *
      * @param owner Parent window
      */
-    public DummyInputWindow(final WritableFrameContainer owner) {
+    public DummyInputWindow(final UIController controller, final WritableFrameContainer owner) {
+        this.controller = controller;
         this.container = owner;
     }
 
     /** {@inheritDoc} */
     @Override
     public InputHandler getInputHandler() {
-        return new DummyInputHandler(new DummyInputField(), null,
+        return new DummyInputHandler(controller, new DummyInputField(), null,
                 getContainer());
     }
 
@@ -60,7 +64,7 @@ public class DummyInputWindow implements InputWindow {
     /** {@inheritDoc} */
     @Override
     public UIController getController() {
-        return new DummyController();
+        return controller;
     }
 
 }

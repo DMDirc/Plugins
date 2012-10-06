@@ -32,7 +32,6 @@ import com.dmdirc.interfaces.ActionListener;
 import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.plugins.BasePlugin;
 import com.dmdirc.plugins.PluginInfo;
-import com.dmdirc.plugins.PluginManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,7 +69,7 @@ public class NotificationsPlugin extends BasePlugin implements ActionListener {
         loadSettings();
         ActionManager.getActionManager().registerListener(this,
                 CoreActionType.PLUGIN_LOADED, CoreActionType.PLUGIN_UNLOADED);
-        for (PluginInfo target : PluginManager.getPluginManager()
+        for (PluginInfo target : pluginInfo.getMetaData().getManager()
                 .getPluginInfos()) {
             if (target.isLoaded()) {
                 addPlugin(target);
@@ -171,7 +170,7 @@ public class NotificationsPlugin extends BasePlugin implements ActionListener {
      * @return The method with the specified name or null if none were found.
      */
     public PluginInfo getMethod(final String name) {
-        return PluginManager.getPluginManager().getPluginInfoByName(name);
+        return pluginInfo.getMetaData().getManager().getPluginInfoByName(name);
     }
 
     /**
@@ -182,7 +181,7 @@ public class NotificationsPlugin extends BasePlugin implements ActionListener {
     public List<PluginInfo> getMethods() {
         final List<PluginInfo> plugins = new ArrayList<PluginInfo>();
         for (String method : methods) {
-            plugins.add(PluginManager.getPluginManager()
+            plugins.add(pluginInfo.getMetaData().getManager()
                     .getPluginInfoByName(method));
         }
         return plugins;
@@ -208,7 +207,7 @@ public class NotificationsPlugin extends BasePlugin implements ActionListener {
         }
         for (String method : order) {
             if (methods.contains(method)) {
-                return PluginManager.getPluginManager().getPluginInfoByName(
+                return pluginInfo.getMetaData().getManager().getPluginInfoByName(
                     method);
             }
         }

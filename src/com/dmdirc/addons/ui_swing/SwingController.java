@@ -176,7 +176,7 @@ public class SwingController extends BasePlugin implements UIController {
         globalConfig = identityManager.getGlobalConfiguration();
         globalIdentity = identityManager.getGlobalConfigIdentity();
         addonIdentity = identityManager.getGlobalAddonIdentity();
-        apple = new Apple(getGlobalConfig());
+        apple = new Apple(getGlobalConfig(), this);
         iconManager = new IconManager(globalConfig);
         prefsComponentFactory = new PrefsComponentFactory(this);
         dialogManager = new DialogManager(this);

@@ -23,6 +23,7 @@
 package com.dmdirc.addons.userlevel;
 
 import com.dmdirc.interfaces.actions.ActionComponent;
+import com.dmdirc.interfaces.actions.ActionComponentArgument;
 import com.dmdirc.parser.interfaces.ClientInfo;
 
 /**
@@ -34,9 +35,9 @@ public class AccessLevelComponent implements ActionComponent {
 
     /** {@inheritDoc} */
     @Override
-    public Object get(final Object argument) {
-        UserLevelPlugin.doGlobalLevel((ClientInfo) argument);
-        return ((ClientInfo) argument).getMap().get("level");
+    public Object get(final ActionComponentArgument arg) {
+        UserLevelPlugin.doGlobalLevel((ClientInfo) arg.getObject());
+        return ((ClientInfo) arg.getObject()).getMap().get("level");
     }
 
     /** {@inheritDoc} */

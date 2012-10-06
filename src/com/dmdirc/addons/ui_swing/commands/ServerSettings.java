@@ -32,7 +32,6 @@ import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.CommandOptions;
 import com.dmdirc.commandparser.commands.IntelligentCommand;
 import com.dmdirc.commandparser.commands.context.CommandContext;
-import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 
 /**
@@ -52,7 +51,7 @@ public class ServerSettings extends Command implements IntelligentCommand {
     @Override
     public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
-        ((SwingController) PluginManager.getPluginManager()
+        ((SwingController) getController().getMain().getPluginManager()
                 .getPluginInfoByName("ui_swing").getPlugin())
                 .showServerSettingsDialog(context.getSource().getServer());
     }

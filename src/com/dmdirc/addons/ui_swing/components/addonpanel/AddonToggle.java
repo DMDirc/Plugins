@@ -24,7 +24,6 @@ package com.dmdirc.addons.ui_swing.components.addonpanel;
 
 import com.dmdirc.config.Identity;
 import com.dmdirc.plugins.PluginInfo;
-import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.themes.Theme;
 import com.dmdirc.ui.themes.ThemeManager;
 import com.dmdirc.updater.UpdateChecker;
@@ -159,7 +158,7 @@ public final class AddonToggle {
                     } else {
                         pi.unloadPlugin();
                     }
-                    PluginManager.getPluginManager().updateAutoLoad(pi);
+                    pi.getMetaData().getManager().updateAutoLoad(pi);
                     if (getID() != -1) {
                         if (getUpdateState()) {
                             identity.unsetOption("updater", "enable-addon-"
