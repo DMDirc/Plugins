@@ -1,0 +1,8 @@
+Change-Id: I44628ce632eabf87c299b24f072531afb93498db
+Code-Review+2: Chris Smith <chris@dmdirc.com>
+Automatic-Compile+1: DMDirc Build Manager
+Submitted-by: Chris Smith <chris@dmdirc.com>
+Submitted-at: Sat, 19 Feb 2011 18:16:47 +0100
+Reviewed-on: http://gerrit.dmdirc.com/1997
+Project: plugins
+Branch: refs/heads/master

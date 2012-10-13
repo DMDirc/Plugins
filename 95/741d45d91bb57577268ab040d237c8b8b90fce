@@ -1,0 +1,8 @@
+Change-Id: I95741d45d91bb57577268ab040d237c8b8b90fce
+Code-Review+2: Shane Mc Cormack <shane@dmdirc.com>
+Verified+1: Greg Holmes <greg@dmdirc.com>
+Submitted-by: Greg Holmes <greg@dmdirc.com>
+Submitted-at: Tue, 05 Jan 2010 01:06:32 +0100
+Reviewed-on: http://gerrit.dmdirc.com/284
+Project: plugins
+Branch: refs/heads/master

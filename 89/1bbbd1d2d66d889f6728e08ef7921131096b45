@@ -1,0 +1,9 @@
+Change-Id: I891bbbd1d2d66d889f6728e08ef7921131096b45
+Automatic-Compile+1: Greg Holmes <greg@dmdirc.com>
+Code-Review+2: Greg Holmes <greg@dmdirc.com>
+Automatic-Compile-1: DMDirc Local Commits <dmdirc@googlemail.com>
+Submitted-by: Greg Holmes <greg@dmdirc.com>
+Submitted-at: Sat, 23 Jan 2010 23:29:50 +0100
+Reviewed-on: http://gerrit.dmdirc.com/576
+Project: plugins
+Branch: refs/heads/master

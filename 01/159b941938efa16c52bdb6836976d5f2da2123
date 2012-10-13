@@ -1,0 +1,9 @@
+Automatic-Compile+1: Shane Mc Cormack <shane@dmdirc.com>
+Code-Review+2: Shane Mc Cormack <shane@dmdirc.com>
+Verified+1: Greg Holmes <greg@dmdirc.com>
+Automatic-Compile-2: DMDirc Local Commits <dmdirc@googlemail.com>
+Submitted-by: Shane Mc Cormack <shane@dmdirc.com>
+Submitted-at: Thu, 14 Jan 2010 00:49:39 +0100
+Reviewed-on: http://gerrit.dmdirc.com/484
+Project: plugins
+Branch: refs/heads/master

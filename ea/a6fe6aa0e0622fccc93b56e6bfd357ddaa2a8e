@@ -1,0 +1,8 @@
+Change-Id: Ieaa6fe6aa0e0622fccc93b56e6bfd357ddaa2a8e
+Code-Review+2: Chris Smith <chris@dmdirc.com>
+Automatic-Compile+1: DMDirc Local Commits <dmdirc@googlemail.com>
+Submitted-by: DMDirc Local Commits <dmdirc@googlemail.com>
+Submitted-at: Sun, 28 Nov 2010 00:07:49 +0100
+Reviewed-on: http://gerrit.dmdirc.com/1613
+Project: plugins
+Branch: refs/heads/master

@@ -1,0 +1,8 @@
+Change-Id: Ia702f31e928d11ff466337e8cbfb4556bb4eccc4
+Automatic-Compile+1: Chris Smith <chris@dmdirc.com>
+Code-Review+2: Chris Smith <chris@dmdirc.com>
+Submitted-by: Chris Smith <chris@dmdirc.com>
+Submitted-at: Sun, 24 Jan 2010 20:56:02 +0100
+Reviewed-on: http://gerrit.dmdirc.com/602
+Project: plugins
+Branch: refs/heads/master

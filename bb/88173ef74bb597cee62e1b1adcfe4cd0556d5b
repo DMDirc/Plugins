@@ -1,0 +1,9 @@
+Change-Id: Ibb88173ef74bb597cee62e1b1adcfe4cd0556d5b
+Code-Review+2: Greg Holmes <greg@dmdirc.com>
+Verified+1: Greg Holmes <greg@dmdirc.com>
+Automatic-Compile+1: DMDirc Local Commits <dmdirc@googlemail.com>
+Submitted-by: Shane Mc Cormack <shane@dmdirc.com>
+Submitted-at: Wed, 13 Jan 2010 18:19:19 +0100
+Reviewed-on: http://gerrit.dmdirc.com/482
+Project: plugins
+Branch: refs/heads/master

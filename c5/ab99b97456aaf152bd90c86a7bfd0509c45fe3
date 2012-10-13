@@ -1,0 +1,8 @@
+Automatic-Compile+1: Greg Holmes <greg@dmdirc.com>
+Code-Review+2: Greg Holmes <greg@dmdirc.com>
+Automatic-Compile-2: DMDirc Local Commits <dmdirc@googlemail.com>
+Submitted-by: Greg Holmes <greg@dmdirc.com>
+Submitted-at: Sat, 14 Aug 2010 20:33:22 +0100
+Reviewed-on: http://gerrit.dmdirc.com/1459
+Project: plugins
+Branch: refs/heads/master

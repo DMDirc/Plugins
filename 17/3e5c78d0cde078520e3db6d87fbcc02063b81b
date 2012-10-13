@@ -1,0 +1,10 @@
+Change-Id: I173e5c78d0cde078520e3db6d87fbcc02063b81b
+Code-Review-1: Shane Mc Cormack <shane@dmdirc.com>
+Automatic-Compile+1: Greg Holmes <greg@dmdirc.com>
+Code-Review+2: Greg Holmes <greg@dmdirc.com>
+Automatic-Compile-2: DMDirc Local Commits <dmdirc@googlemail.com>
+Submitted-by: Greg Holmes <greg@dmdirc.com>
+Submitted-at: Sat, 23 Jan 2010 21:43:58 +0100
+Reviewed-on: http://gerrit.dmdirc.com/566
+Project: plugins
+Branch: refs/heads/master

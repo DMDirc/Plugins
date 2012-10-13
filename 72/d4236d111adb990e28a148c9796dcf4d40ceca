@@ -1,0 +1,8 @@
+Code-Review-1: Chris Smith <chris@dmdirc.com>
+Code-Review+2: Shane Mc Cormack <shane@dmdirc.com>
+Automatic-Compile+1: DMDirc Local Commits <dmdirc@googlemail.com>
+Submitted-by: Shane Mc Cormack <shane@dmdirc.com>
+Submitted-at: Mon, 08 Feb 2010 00:13:32 +0100
+Reviewed-on: http://gerrit.dmdirc.com/850
+Project: plugins
+Branch: refs/heads/master

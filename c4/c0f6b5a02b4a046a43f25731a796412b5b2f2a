@@ -1,0 +1,8 @@
+Change-Id: Ic4c0f6b5a02b4a046a43f25731a796412b5b2f2a
+Code-Review+2: Greg Holmes <greg@dmdirc.com>
+Verified+1: Greg Holmes <greg@dmdirc.com>
+Submitted-by: Greg Holmes <greg@dmdirc.com>
+Submitted-at: Mon, 11 Jan 2010 23:47:42 +0100
+Reviewed-on: http://gerrit.dmdirc.com/443
+Project: plugins
+Branch: refs/heads/master

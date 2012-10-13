@@ -1,0 +1,8 @@
+Change-Id: Ie8fe55536d320ab50472d8090b63c701cc4b12ba
+Code-Review+2: Shane Mc Cormack <shane@dmdirc.com>
+Verified+1: Shane Mc Cormack <shane@dmdirc.com>
+Submitted-by: Shane Mc Cormack <shane@dmdirc.com>
+Submitted-at: Sun, 03 Jan 2010 03:00:07 +0100
+Reviewed-on: http://gerrit.dmdirc.com/230
+Project: plugins
+Branch: refs/heads/master

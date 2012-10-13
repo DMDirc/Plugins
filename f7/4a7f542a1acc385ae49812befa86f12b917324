@@ -1,0 +1,8 @@
+Automatic-Compile+1: Chris Smith <chris@dmdirc.com>
+Code-Review+2: Chris Smith <chris@dmdirc.com>
+Automatic-Compile-2: DMDirc Local Commits <dmdirc@googlemail.com>
+Submitted-by: Chris Smith <chris@dmdirc.com>
+Submitted-at: Sat, 20 Mar 2010 21:49:31 +0100
+Reviewed-on: http://gerrit.dmdirc.com/1130
+Project: plugins
+Branch: refs/heads/master

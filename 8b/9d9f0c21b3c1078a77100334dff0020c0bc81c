@@ -1,0 +1,8 @@
+Change-Id: I8b9d9f0c21b3c1078a77100334dff0020c0bc81c
+Automatic-Compile+1: Greg Holmes <greg@dmdirc.com>
+Code-Review+2: Greg Holmes <greg@dmdirc.com>
+Submitted-by: Greg Holmes <greg@dmdirc.com>
+Submitted-at: Sun, 24 Jan 2010 04:14:04 +0100
+Reviewed-on: http://gerrit.dmdirc.com/584
+Project: plugins
+Branch: refs/heads/master
