@@ -263,6 +263,12 @@ public class Twitter extends ThreadedParser implements TwitterErrorHandler, Twit
 
     /** {@inheritDoc} */
     @Override
+    public void quit(final String message) {
+        disconnect(message);
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public void joinChannel(final String channel) {
         joinChannels(new ChannelJoinRequest(channel));
     }
