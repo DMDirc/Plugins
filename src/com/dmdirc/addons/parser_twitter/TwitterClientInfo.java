@@ -332,4 +332,10 @@ public class TwitterClientInfo implements LocalClientInfo {
         return AwayState.HERE;
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public String getAwayReason() {
+        return "";
+    }
+
 }
