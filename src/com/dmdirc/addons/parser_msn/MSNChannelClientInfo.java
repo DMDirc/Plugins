@@ -63,6 +63,12 @@ public class MSNChannelClientInfo extends BaseChannelClientInfo {
 
     /** {@inheritDoc} */
     @Override
+    public String getAllModesPrefix() {
+        return "";
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public void kick(final String message) {
         //Ignore
     }

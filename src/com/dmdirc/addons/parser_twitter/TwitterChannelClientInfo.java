@@ -124,6 +124,12 @@ public class TwitterChannelClientInfo implements ChannelClientInfo {
     /** {@inheritDoc} */
     @Override
     public String getAllModes() {
+        return getImportantMode();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public String getAllModesPrefix() {
         return getImportantModePrefix();
     }
 

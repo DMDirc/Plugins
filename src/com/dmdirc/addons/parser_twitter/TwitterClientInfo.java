@@ -271,6 +271,12 @@ public class TwitterClientInfo implements LocalClientInfo {
 
     /** {@inheritDoc} */
     @Override
+    public String getAccountName() {
+        return getNickname();
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public int getChannelCount() {
         synchronized (channelClients) {
             return channelClients.size();
