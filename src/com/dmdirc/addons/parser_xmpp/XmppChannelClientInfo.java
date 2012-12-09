@@ -62,6 +62,12 @@ public class XmppChannelClientInfo extends BaseChannelClientInfo {
 
     /** {@inheritDoc} */
     @Override
+    public String getAllModesPrefix() {
+        return ""; // TODO: Implement
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public void kick(final String message) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
