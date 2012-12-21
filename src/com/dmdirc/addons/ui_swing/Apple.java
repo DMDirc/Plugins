@@ -55,8 +55,7 @@ public final class Apple implements InvocationHandler, ActionListener {
     /**
      * Dummy interface for ApplicationEvent from the Apple UI on non-Apple
      * platforms.
-     * http://developer.apple.com/documentation/Java/Reference/1.5.0/appledoc/
-     * api/com/apple/eawt/ApplicationEvent.html
+     * http://developer.apple.com/documentation/Java/Reference/1.5.0/appledoc/api/com/apple/eawt/ApplicationEvent.html
      */
     public interface ApplicationEvent {
 
@@ -177,34 +176,6 @@ public final class Apple implements InvocationHandler, ActionListener {
     }
 
     /**
-     * Get the "NSApplication" object.
-     *
-     * @return Object that on OSX will be an "NSApplication"
-     */
-    public Object getNSApplication() {
-        synchronized (Apple.class) {
-            if (isApple() && nsApplication == null) {
-                try {
-                    final Class<?> app = Class.forName(
-                            "com.apple.cocoa.application.NSApplication");
-                    final Method method = app.getMethod("sharedApplication",
-                            new Class[0]);
-                    nsApplication = method.invoke(null, new Object[0]);
-                } catch (final ClassNotFoundException ex) {
-                    nsApplication = null;
-                } catch (final NoSuchMethodException ex) {
-                    nsApplication = null;
-                } catch (final IllegalAccessException ex) {
-                    nsApplication = null;
-                } catch (final InvocationTargetException ex) {
-                    nsApplication = null;
-                }
-            }
-            return nsApplication;
-        }
-    }
-
-    /**
      * Are we on OS X?
      *
      * @return true if we are running on OS X
@@ -258,15 +229,9 @@ public final class Apple implements InvocationHandler, ActionListener {
         }
 
         try {
-            final Field type = isCritical ? getNSApplication().getClass().
-                    getField("UserAttentionRequestCritical")
-                    : getNSApplication().
-                            getClass().getField("Informational");
-            final Method method = getNSApplication().getClass().getMethod(
-                    "requestUserAttention", new Class[] { Integer.TYPE });
-            method.invoke(getNSApplication(), new Object[] { type.get(null) });
-        } catch (final NoSuchFieldException ex) {
-            Logger.userError(ErrorLevel.LOW, "Unable to find OS X classes");
+            final Method method = getApplication().getClass().getMethod(
+                "requestUserAttention", new Class[] { Boolean.TYPE });
+            method.invoke(getApplication(), new Object[] { isCritical });
         } catch (final NoSuchMethodException ex) {
             Logger.userError(ErrorLevel.LOW, "Unable to find OS X classes");
         } catch (final IllegalAccessException ex) {
