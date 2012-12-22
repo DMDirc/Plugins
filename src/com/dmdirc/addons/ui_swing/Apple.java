@@ -32,8 +32,9 @@ import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 
+import java.awt.Image;
+import java.awt.PopupMenu;
 import java.awt.event.ActionEvent;
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -41,9 +42,11 @@ import java.lang.reflect.Proxy;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.EventObject;
 import java.util.List;
 
 import javax.swing.JMenu;
+import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.UIManager;
 
@@ -51,65 +54,24 @@ import javax.swing.UIManager;
  * Integrate DMDirc with OS X better.
  */
 public final class Apple implements InvocationHandler, ActionListener {
-
-    /**
-     * Dummy interface for ApplicationEvent from the Apple UI on non-Apple
-     * platforms.
-     * http://developer.apple.com/documentation/Java/Reference/1.5.0/appledoc/api/com/apple/eawt/ApplicationEvent.html
-     */
-    public interface ApplicationEvent {
-
-        /**
-         * Provides the filename associated with a particular AppleEvent.
-         *
-         * @return The filename associated with a particular AppleEvent.
-         */
-        String getFilename();
-
-        /**
-         * Whether or not this event is handled.
-         *
-         * @return True if the event is handled, false otherwise
-         */
-        boolean isHandled();
-
-        /**
-         * Sets the handled state of this event.
-         *
-         * @param handled The new 'handled' state for this event.
-         */
-        void setHandled(boolean handled);
-
-        /**
-         * Retrieves the source of this event.
-         *
-         * @return This event's source
-         */
-        Object getSource();
-
-        /**
-         * Get a string representation of this object.
-         *
-         * @return A string representation of this object.
-         */
-        @Override
-        String toString();
-    }
-
     /** Store any addresses that are opened before CLIENT_OPENED. */
     private final List<URI> addresses = new ArrayList<URI>();
+
     /** Config manager used to read settings. */
     private final ConfigManager configManager;
+
     /** The "Application" object used to do stuff on OS X. */
     private Object application;
-    /** The "NSApplication" object used to do cocoa stuff on OS X. */
-    private Object nsApplication;
+
     /** Are we listening? */
     private boolean isListener = false;
+
     /** The MenuBar for the application. */
     private MenuBar menuBar = null;
+
     /** Has the CLIENT_OPENED action been called? */
     private boolean clientOpened = false;
+
     /** Our swing controller. */
     private final SwingController controller;
 
@@ -134,13 +96,63 @@ public final class Apple implements InvocationHandler, ActionListener {
             try {
                 System.loadLibrary("DMDirc-Apple"); // NOPMD
                 registerOpenURLCallback();
-                ActionManager.getActionManager().registerListener(this,
-                        CoreActionType.CLIENT_OPENED);
-            } catch (final UnsatisfiedLinkError ule) {
-                Logger.userError(ErrorLevel.MEDIUM,
-                        "Unable to load JNI library.", ule);
+                ActionManager.getActionManager().registerListener(this, CoreActionType.CLIENT_OPENED);
+            } catch (UnsatisfiedLinkError ule) {
+                Logger.appError(ErrorLevel.MEDIUM, "Unable to load JNI library.", ule);
             }
         }
+    }
+
+    /**
+     * Register the getURL Callback.
+     *
+     * @return 0 on success, 1 on failure.
+     */
+    private synchronized final native int registerOpenURLCallback();
+
+
+    /**
+     * Call a method on the given object.
+     *
+     * @param obj Object to call method on.
+     * @oaram className Name of class that object really is.
+     * @param methodName Method to call
+     * @param classes Array of classes to pass when calling getMethod
+     * @param objects Array of objects to pass when invoking.
+     * @return Output from method.invoke()
+     */
+    private Object reflectMethod(final Object obj, final String className, final String methodName, final Class[] classes, final Object[] objects) {
+        try {
+            final Class<?> clazz = className == null ? obj.getClass() : Class.forName(className);
+            final Method method = clazz.getMethod(methodName, classes == null ? new Class[0] : classes);
+            return method.invoke(obj, objects == null ? new Object[0] : objects);
+        } catch (IllegalArgumentException ex) {
+            Logger.userError(ErrorLevel.LOW, "Unable to find OS X classes");
+        } catch (InvocationTargetException ex) {
+            Logger.userError(ErrorLevel.LOW, "Unable to find OS X classes");
+        } catch (final ClassNotFoundException ex) {
+            Logger.userError(ErrorLevel.LOW, "Unable to find OS X classes");
+        } catch (final NoSuchMethodException ex) {
+            Logger.userError(ErrorLevel.LOW, "Unable to find OS X classes");
+        } catch (final IllegalAccessException ex) {
+            Logger.userError(ErrorLevel.LOW, "Unable to find OS X classes");
+        }
+
+        return null;
+    }
+
+    /**
+     * Handle a method call to the apple Application class.
+     *
+     * @param methodName Method to call
+     * @param classes Array of classes to pass when calling getMethod
+     * @param objects Array of objects to pass when invoking.
+     * @return Output from method.invoke()
+     */
+    private Object doAppleMethod(final String methodName, final Class[] classes, final Object[] objects) {
+        if (!isApple()) { return null; }
+
+        return reflectMethod(getApplication(), null, methodName, classes, objects);
     }
 
     /**
@@ -151,25 +163,7 @@ public final class Apple implements InvocationHandler, ActionListener {
     public Object getApplication() {
         synchronized (Apple.class) {
             if (isApple() && application == null) {
-                try {
-                    final Class<?> app = Class.forName(
-                            "com.apple.eawt.Application");
-                    final Method method = app.getMethod("getApplication",
-                            new Class[0]);
-                    application = method.invoke(null, new Object[0]);
-                } catch (final ClassNotFoundException ex) {
-                    application = null;
-                } catch (final NoSuchMethodException ex) {
-                    application = null;
-                } catch (final SecurityException ex) {
-                    application = null;
-                } catch (final IllegalAccessException ex) {
-                    application = null;
-                } catch (final IllegalArgumentException ex) {
-                    application = null;
-                } catch (final InvocationTargetException ex) {
-                    application = null;
-                }
+                application = reflectMethod(null, "com.apple.eawt.Application", "getApplication", null, null);
             }
             return application;
         }
@@ -203,75 +197,114 @@ public final class Apple implements InvocationHandler, ActionListener {
         }
 
         // Set some Apple OS X related stuff from http://tinyurl.com/6xwuld
-        final String aaText = configManager
-                .getOptionBool("ui", "antialias") ? "on" : "off";
+        final String aaText = configManager.getOptionBool("ui", "antialias") ? "on" : "off";
 
         System.setProperty("apple.awt.antialiasing", aaText);
         System.setProperty("apple.awt.textantialiasing", aaText);
         System.setProperty("apple.awt.showGrowBox", "true");
-        System.setProperty("com.apple.mrj.application.apple.menu.about.name",
-                "DMDirc");
+        System.setProperty("com.apple.mrj.application.apple.menu.about.name", "DMDirc");
         System.setProperty("apple.laf.useScreenMenuBar", "true");
-        System.setProperty("com.apple.mrj.application.growbox.intrudes",
-                "false");
+        System.setProperty("com.apple.mrj.application.growbox.intrudes", "false");
         System.setProperty("com.apple.mrj.application.live-resize", "true");
     }
 
     /**
-     * Request user attention (Bounce the dock).
+     * Requests this application to move to the foreground.
+     *
+     * @param allWindows if all windows of this application should be moved to
+     *                   the foreground, or only the foremost one
+     */
+    public void requestForeground(final boolean allWindows) {
+        doAppleMethod("requestForeground", new Class[]{Boolean.TYPE}, new Object[]{allWindows});
+    }
+
+    /**
+     * Requests user attention to this application (usually through bouncing
+     * the Dock icon). Critical requests will continue to bounce the Dock icon
+     * until the app is activated. An already active application requesting
+     * attention does nothing.
      *
      * @param isCritical If this is false, the dock icon only bounces once,
      *            otherwise it will bounce until clicked on.
      */
     public void requestUserAttention(final boolean isCritical) {
-        if (!isApple()) {
-            return;
-        }
-
-        try {
-            final Method method = getApplication().getClass().getMethod(
-                "requestUserAttention", new Class[] { Boolean.TYPE });
-            method.invoke(getApplication(), new Object[] { isCritical });
-        } catch (final NoSuchMethodException ex) {
-            Logger.userError(ErrorLevel.LOW, "Unable to find OS X classes");
-        } catch (final IllegalAccessException ex) {
-            Logger.userError(ErrorLevel.LOW, "Unable to find OS X classes");
-        } catch (final InvocationTargetException ex) {
-            Logger.userError(ErrorLevel.LOW, "Unable to find OS X classes");
-        }
+        doAppleMethod("requestUserAttention", new Class[]{Boolean.TYPE}, new Object[]{isCritical});
     }
 
     /**
-     * Set this up as a listener for the Apple Events.
+     * Attaches the contents of the provided PopupMenu to the application's Dock icon.
      *
-     * @return True if the listener was added, else false.
+     * @param menu the PopupMenu to attach to this application's Dock icon
      */
-    public boolean setListener() {
-        if (!isApple() || isListener) {
-            return false;
-        }
+    public void setDockMenu(final PopupMenu menu) {
+        doAppleMethod("setDockMenu", new Class[]{PopupMenu.class}, new Object[]{menu});
+    }
 
+    /**
+     * Get the PopupMenu attached to the application's Dock icon.
+     *
+     * @return the PopupMenu attached to this application's Dock icon
+     */
+    public PopupMenu getDockMenu() {
+        final Object result = doAppleMethod("getDockMenu", null, null);
+        return (result instanceof PopupMenu) ? (PopupMenu)result : null;
+    }
+
+    /**
+     * Changes this application's Dock icon to the provided image.
+     *
+     * @param image The image to use
+     */
+    public void setDockIconImage(final Image image) {
+        doAppleMethod("setDockIconImage", new Class[]{Image.class}, new Object[]{image});
+    }
+
+    /**
+     * Obtains an image of this application's Dock icon.
+     *
+     * @return The application's dock icon.
+     */
+    public Image getDockIconImage() {
+        final Object result = doAppleMethod("getDockIconImage", null, null);
+        return (result instanceof Image) ? (Image)result : null;
+    }
+
+    /**
+     * Affixes a small system provided badge to this application's Dock icon.
+     * Usually a number.
+     *
+     * @param badge textual label to affix to the Dock icon
+     */
+    public void setDockIconBadge(final String badge) {
+        doAppleMethod("setDockIconBadge", new Class[]{String.class}, new Object[]{badge});
+    }
+
+    /**
+     * Sets the default menu bar to use when there are no active frames.
+     * Only used when the system property "apple.laf.useScreenMenuBar" is
+     * "true", and the Aqua Look and Feel is active.
+     *
+     * @param menuBar to use when no other frames are active
+     */
+    public void setDefaultMenuBar(final JMenuBar menuBar) {
+        doAppleMethod("setDefaultMenuBar", new Class[]{JMenuBar.class}, new Object[]{menuBar});
+    }
+
+    /**
+     * Add this application as a handler for the given event.
+     *
+     * @param handlerClass Class used as the handler.
+     * @param handlerMethod Method used to set the handler.
+     * @return True if we succeeded.
+     */
+    private boolean addHandler(final String handlerClass, final String handlerMethod) {
         try {
-            final Class<?> listenerClass = Class.forName(
-                    "com.apple.eawt.ApplicationListener");
-            final Object listener = Proxy.newProxyInstance(getClass().
-                    getClassLoader(), new Class[] { listenerClass }, this);
+            final Class<?> listenerClass = Class.forName(handlerClass);
+            final Object listener = Proxy.newProxyInstance(getClass().getClassLoader(), new Class[]{listenerClass}, this);
 
-            Method method = getApplication().getClass().getMethod(
-                    "addApplicationListener", new Class[] { listenerClass });
+            Method method = getApplication().getClass().getMethod(handlerMethod, new Class[]{listenerClass});
             method.invoke(getApplication(), listener);
 
-            isListener = true;
-
-            method = getApplication().getClass().getMethod(
-                    "setEnabledPreferencesMenu", new Class[] { Boolean.TYPE });
-            method.invoke(getApplication(), new Object[] { Boolean.TRUE });
-
-            method =
-                    getApplication().getClass().getMethod(
-                            "setEnabledAboutMenu",
-                            new Class[] { Boolean.TYPE });
-            method.invoke(getApplication(), new Object[] { Boolean.TRUE });
             return true;
         } catch (final ClassNotFoundException ex) {
             return false;
@@ -285,36 +318,60 @@ public final class Apple implements InvocationHandler, ActionListener {
     }
 
     /**
+     * Set this up as a listener for the Apple Events.
+     *
+     * @return True if the listener was added, else false.
+     */
+    public boolean setListener() {
+        if (!isApple() || isListener) {
+            return false;
+        }
+
+        addHandler("com.apple.eawt.OpenURIHandler", "setOpenURIHandler");
+        addHandler("com.apple.eawt.AboutHandler", "setAboutHandler");
+        addHandler("com.apple.eawt.QuitHandler", "setQuitHandler");
+        addHandler("com.apple.eawt.PreferencesHandler", "setPreferencesHandler");
+        isListener = true;
+
+        return true;
+    }
+
+    /**
      * {@inheritDoc}
      *
      * @throws Throwable Throws stuff on errors
      */
     @Override
-    public Object invoke(final Object proxy, final Method method,
-            final Object[] args) throws Throwable {
+    public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
+        System.out.println("Invoked");
         if (!isApple()) {
             return null;
         }
 
         try {
-            final ApplicationEvent event = (ApplicationEvent) Proxy.
-                    newProxyInstance(getClass().getClassLoader(), new Class[] {
-                            ApplicationEvent.class }, new InvocationHandler() {
+            System.out.println("Invoking: " + method.getName());
 
-                                /** {@inheritDoc} */
-                                @Override
-                                public Object invoke(final Object p,
-                                        final Method m,
-                                        final Object[] a) throws Throwable {
-                                    return args[0].getClass()
-                                            .getMethod(m.getName(), m.
-                                                    getParameterTypes())
-                                            .invoke(args[0], a);
-                                }
-                            });
-            final Method thisMethod = this.getClass().getMethod(
-                    method.getName(), new Class[] { ApplicationEvent.class });
-            return thisMethod.invoke(this, event);
+            final Class[] classes = new Class[args.length];
+
+            for (int i = 0; i < args.length; i++) {
+                if (EventObject.class.isInstance(args[i])) {
+                    classes[i] = EventObject.class;
+                } else {
+                    final Class c = args[i].getClass();
+                    if (c.getCanonicalName().equals("com.apple.eawt.QuitResponse")) {
+                        classes[i] = Object.class;
+                    } else {
+                        System.out.println("Arg: " + c.getCanonicalName());
+                        classes[i] = c;
+                    }
+                }
+            }
+
+            final Method thisMethod = this.getClass().getMethod(method.getName(), classes);
+            System.out.println("Invoking: " + thisMethod);
+            final Object result = thisMethod.invoke(this, args);
+            System.out.println("Result: " + result);
+            return result;
         } catch (final NoSuchMethodException e) {
             if (method.getName().equals("equals") && args.length == 1) {
                 return Boolean.valueOf(proxy == args[0]);
@@ -354,32 +411,19 @@ public final class Apple implements InvocationHandler, ActionListener {
      * Handle an event using the menuBar.
      *
      * @param name The name of the event according to the menubar
-     * @param event The ApplicationEvent we are handingle
      */
-    public void handleMenuBarEvent(final String name,
-            final ApplicationEvent event) {
+    public void handleMenuBarEvent(final String name) {
         if (!isApple() || menuBar == null) {
             return;
         }
-        final ActionEvent actionEvent = new ActionEvent(this,
-                ActionEvent.ACTION_PERFORMED, name);
+        final ActionEvent actionEvent = new ActionEvent(this, ActionEvent.ACTION_PERFORMED, name);
 
         for (int i = 0; i < menuBar.getMenuCount(); i++) {
             final JMenu menu = menuBar.getMenu(i);
             if (menu instanceof java.awt.event.ActionListener) {
                 ((java.awt.event.ActionListener)menu).actionPerformed(actionEvent);
-                event.setHandled(true);
             }
         }
-    }
-
-    /**
-     * This is called when Quit is selected from the Application menu.
-     *
-     * @param event an ApplicationEvent object
-     */
-    public void handleQuit(final ApplicationEvent event) {
-        handleMenuBarEvent("Exit", event);
     }
 
     /**
@@ -387,8 +431,8 @@ public final class Apple implements InvocationHandler, ActionListener {
      *
      * @param event an ApplicationEvent object
      */
-    public void handleAbout(final ApplicationEvent event) {
-        handleMenuBarEvent("About", event);
+    public void handleAbout(final EventObject event) {
+        handleMenuBarEvent("About");
     }
 
     /**
@@ -396,50 +440,13 @@ public final class Apple implements InvocationHandler, ActionListener {
      *
      * @param event an ApplicationEvent object
      */
-    public void handlePreferences(final ApplicationEvent event) {
-        handleMenuBarEvent("Preferences", event);
-    }
-
-    /**
-     * This is called when the Application is opened.
-     *
-     * @param event an ApplicationEvent object
-     */
-    public void handleOpenApplication(final ApplicationEvent event) {
-        // We don't currently support this
-    }
-
-    /**
-     * This is called when the application is asked to open a file.
-     *
-     * @param event an ApplicationEvent object
-     */
-    public void handleOpenFile(final ApplicationEvent event) {
-        // We don't currently support this
-    }
-
-    /**
-     * This is called when asked to print.
-     *
-     * @param event an ApplicationEvent object
-     */
-    public void handlePrintFile(final ApplicationEvent event) {
-        // We don't currently support this
-    }
-
-    /**
-     * This is called when the application is reopened.
-     *
-     * @param event an ApplicationEvent object
-     */
-    public void handleReopenApplication(final ApplicationEvent event) {
-        // We don't currently support this
+    public void handlePreferences(final EventObject event) {
+        handleMenuBarEvent("Preferences");
     }
 
     /** {@inheritDoc} */
     @Override
-    public void processEvent(final ActionType type, final StringBuffer format,
-            final Object... arguments) {
+    public void processEvent(final ActionType type, final StringBuffer format, final Object... arguments) {
         if (type == CoreActionType.CLIENT_OPENED) {
             synchronized (addresses) {
                 clientOpened = true;
@@ -452,43 +459,81 @@ public final class Apple implements InvocationHandler, ActionListener {
     }
 
     /**
-     * Callback from JNI library.
-     * If called before the client has finished opening, the URL will be added
-     * to a list that will be connected to once the CLIENT_OPENED action is
-     * called. Otherwise we connect right away.
+     * This is called when Quit is selected from the Application menu.
      *
-     * @param url The irc url to connect to.
+     * @param event an ApplicationEvent object
+     * @param quitResponse QuitResponse object.
+     */
+    public void handleQuitRequestWith(final EventObject event, final Object quitResponse) {
+        // Technically we should tell OS X if the quit succeeds or not, but we
+        // have no way of knowing the result just yet.
+        //
+        // So instead we will just tell it that the quit was cancelled every
+        // time, and then just quit anyway if we need to.
+        reflectMethod(quitResponse, null, "cancelQuit", null, null);
+
+        handleMenuBarEvent("Exit");
+    }
+
+    /**
+     * Callback from our JNI library.
+     * This should work when not launcher via JavaApplicationStub
+     *
+     * @param url The irc url string to connect to.
      */
     public void handleOpenURL(final String url) {
+        System.out.println("url: " + url);
+        try {
+            final URI addr = NewServer.getURI(url);
+            handleURI(addr);
+        } catch (final URISyntaxException use) { }
+    }
+
+    /**
+     * Callback from OSX Directly.
+     * This will work if we were launched using the JavaApplicationStub
+     *
+     * @param event Event related to this callback. This event will have a
+     *              reflectable getURI method to get a URI.
+     */
+    public void openURI(final EventObject event) {
         if (!isApple()) {
             return;
         }
-        synchronized (addresses) {
-            try {
-                final URI addr = NewServer.getURI(url);
-                if (clientOpened) {
-                    // When the JNI callback is called there is no
-                    // ContextClassLoader set, which causes an NPE in
-                    // IconManager if no servers have been connected to yet.
-                    if (Thread.currentThread().getContextClassLoader()
-                    == null) {
-                        Thread.currentThread().setContextClassLoader(
-                                ClassLoader.getSystemClassLoader());
-                    }
-                    controller.getMain().getServerManager().connectToAddress(addr);
-                } else {
-                    addresses.add(addr);
-                }
-            } catch (final URISyntaxException iae) {
-                // Do nothing
-            }
+        System.out.println("OpenURI Called!");
+
+        final Object obj = reflectMethod(event, null, "getURI", null, null);
+        if (obj instanceof URI) {
+            final URI uri = (URI)obj;
+            System.out.println("URI: " + uri);
+            handleURI(uri);
+        } else {
+            System.out.println("Obj: " + obj);
         }
     }
 
     /**
-     * Register the getURL Callback.
+     * Handle connecting to a URI.
      *
-     * @return 0 on success, 1 on failure.
+     * If called before the client has finished opening, the URI will be added
+     * to a list that will be connected to once the CLIENT_OPENED action is
+     * called. Otherwise we connect right away.
+     *
+     * @param uri URI to connect to.
      */
-    private synchronized native int registerOpenURLCallback();
+    private void handleURI(final URI uri) {
+        synchronized (addresses) {
+            if (clientOpened) {
+                // When the JNI callback is called there is no
+                // ContextClassLoader set, which causes an NPE in
+                // IconManager if no servers have been connected to yet.
+                if (Thread.currentThread().getContextClassLoader() == null) {
+                    Thread.currentThread().setContextClassLoader(ClassLoader.getSystemClassLoader());
+                }
+                controller.getMain().getServerManager().connectToAddress(uri);
+            } else {
+                addresses.add(uri);
+            }
+        }
+    }
 }
