@@ -22,41 +22,51 @@
 
 package com.dmdirc.addons.redirect;
 
-import com.dmdirc.TestMain;
 import com.dmdirc.MessageTarget;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandManager;
 import com.dmdirc.commandparser.commands.context.ChatCommandContext;
 import com.dmdirc.commandparser.commands.global.Echo;
-import com.dmdirc.config.IdentityManager;
+import com.dmdirc.commandparser.parsers.CommandParser;
+import com.dmdirc.commandparser.parsers.GlobalCommandParser;
+import com.dmdirc.config.ConfigManager;
 import com.dmdirc.config.InvalidIdentityFileException;
 import com.dmdirc.interfaces.ui.InputWindow;
 
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.mockito.Mockito.*;
 
 public class RedirectCommandTest {
+    
+    private CommandManager controller;
 
-    @BeforeClass
-    public static void setupClass() throws InvalidIdentityFileException {
-        TestMain.getTestMain();
-        CommandManager.getCommandManager().registerCommand(new Echo(), Echo.INFO);
+    @Before
+    public void setup() throws InvalidIdentityFileException {
+        controller = mock(CommandManager.class);
+        when(controller.getCommandChar()).thenReturn('/');
     }
 
     @Ignore
     @Test
     public void testExecute() {
-        final RedirectCommand command = new RedirectCommand();
+        final ConfigManager manager = mock(ConfigManager.class);
         final MessageTarget target = mock(MessageTarget.class);
         final InputWindow window = mock(InputWindow.class);
-        //when(window.getCommandParser()).thenReturn(parser);
-        when(window.getContainer().getConfigManager()).thenReturn(
-                IdentityManager.getIdentityManager().getGlobalConfiguration());
+        when(manager.getOptionInt("general", "commandhistory")).thenReturn(2);
+        when(manager.getOption("formatter", "commandOutput")).thenReturn("%1$s");
+        when(manager.getOptionString("formatter", "commandOutput")).thenReturn("%1$s");
+        when (window.getContainer()).thenReturn(target);
+        when(window.getContainer().getConfigManager()).thenReturn(manager);
+        final CommandParser parser = new GlobalCommandParser(manager, controller);
+        parser.registerCommand(new Echo(controller), Echo.INFO);
+        when(target.getCommandParser()).thenReturn(parser);
+        
+        final RedirectCommand command = new RedirectCommand(controller);
 
-        command.execute(target, new CommandArguments("/redirect /echo test"),
+        command.execute(target, new CommandArguments(controller, "/redirect /echo test"),
                 new ChatCommandContext(window.getContainer(), RedirectCommand.INFO, target));
 
         verify(target).sendLine("test");
