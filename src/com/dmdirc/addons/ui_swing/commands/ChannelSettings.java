@@ -33,6 +33,7 @@ import com.dmdirc.commandparser.commands.CommandOptions;
 import com.dmdirc.commandparser.commands.IntelligentCommand;
 import com.dmdirc.commandparser.commands.context.ChannelCommandContext;
 import com.dmdirc.commandparser.commands.context.CommandContext;
+import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 
 /**
@@ -46,6 +47,15 @@ public class ChannelSettings extends Command implements
     public static final CommandInfo INFO = new BaseCommandInfo("channelsettings",
             "channelsettings - opens the channel settings window",
             CommandType.TYPE_CHANNEL);
+
+    /**
+     * Creates a new instance of the ChannelSettings command
+     *
+     * @param controller Command controller for the command
+     */
+    public ChannelSettings(final CommandController controller) {
+        super(controller);
+    }
 
     /** {@inheritDoc} */
     @Override

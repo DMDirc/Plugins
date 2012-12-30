@@ -29,6 +29,7 @@ import com.dmdirc.commandparser.CommandType;
 import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.IntelligentCommand;
 import com.dmdirc.commandparser.commands.context.CommandContext;
+import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 import com.dmdirc.ui.messages.Styliser;
 
@@ -49,10 +50,12 @@ public final class OsdCommand extends Command implements IntelligentCommand {
     /**
      * Creates a new instance of OsdCommand.
      *
+     * @param commandController Command controller
      * @param osdManager OSD Manager used to control OSD windows
      */
-    public OsdCommand(final OsdManager osdManager) {
-        super();
+    public OsdCommand(final CommandController commandController,
+            final OsdManager osdManager) {
+        super(commandController);
 
         this.osdManager = osdManager;
     }
