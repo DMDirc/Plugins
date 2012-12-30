@@ -521,7 +521,7 @@ public final class MainFrame extends JFrame implements WindowListener,
             protected Void doInBackground() {
                 ActionManager.getActionManager().triggerEvent(
                         CoreActionType.CLIENT_CLOSING, null);
-                controller.getMain().getServerManager().closeAll(controller
+                controller.getServerManager().closeAll(controller
                         .getGlobalConfig().getOption("general", "closemessage"));
                 controller.getGlobalIdentity().setOption("ui",
                         "frameManagerSize",

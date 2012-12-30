@@ -24,11 +24,11 @@ package com.dmdirc.addons.ui_swing.components.inputfields;
 
 import com.dmdirc.WritableFrameContainer;
 import com.dmdirc.addons.ui_swing.Apple;
+import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
 import com.dmdirc.commandparser.parsers.CommandParser;
 import com.dmdirc.interfaces.ui.InputField;
-import com.dmdirc.interfaces.ui.UIController;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.ui.input.InputHandler;
@@ -57,11 +57,11 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
      * @param commandParser The command parser to use for this text field.
      * @param parentWindow The window that owns this input handler
      */
-    public SwingInputHandler(final UIController controller,
+    public SwingInputHandler(final SwingController controller,
             final InputField target,
             final CommandParser commandParser,
             final WritableFrameContainer parentWindow) {
-        super(controller, target, commandParser, parentWindow);
+        super(target, commandParser, parentWindow, controller.getPluginManager());
     }
 
     /** {@inheritDoc} */

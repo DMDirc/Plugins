@@ -83,7 +83,7 @@ public final class ServerListDialog extends StandardDialog implements
         super(controller, controller.getMainFrame(), ModalityType.MODELESS);
 
         setTitle("Server List");
-        model = new ServerListModel(controller.getPluginManager(), controller.getMain().getServerManager());
+        model = new ServerListModel(controller.getPluginManager(), controller.getServerManager());
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
         connectButton = new JButton("Connect");

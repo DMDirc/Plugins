@@ -23,7 +23,6 @@
 package com.dmdirc.addons.ui_dummy;
 
 import com.dmdirc.Channel;
-import com.dmdirc.interfaces.ui.UIController;
 
 /**
  * Dummy channel window, used for testing.
@@ -36,7 +35,7 @@ public final class DummyChannelWindow extends DummyInputWindow {
      * @param controller Parent Controller
      * @param parent Parent channel
      */
-    public DummyChannelWindow(final UIController controller, final Channel parent) {
+    public DummyChannelWindow(final DummyController controller, final Channel parent) {
         super(controller, parent);
     }
 }
