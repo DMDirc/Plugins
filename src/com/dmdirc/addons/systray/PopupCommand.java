@@ -28,6 +28,7 @@ import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandType;
 import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.context.CommandContext;
+import com.dmdirc.interfaces.CommandController;
 
 /**
  * The /popup command allows the user to show a popup message from the system
@@ -44,10 +45,13 @@ public final class PopupCommand extends Command {
 
     /**
      * Creates a new instance of PopupCommand.
+     *
+     * @param commandController Command controller
      * @param newParent The plugin that this command belongs to
      */
-    public PopupCommand(final SystrayPlugin newParent) {
-        super();
+    public PopupCommand(final CommandController commandController,
+            final SystrayPlugin newParent) {
+        super(commandController);
 
         this.parent = newParent;
     }

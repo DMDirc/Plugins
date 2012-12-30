@@ -30,6 +30,7 @@ import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.interfaces.ActionController;
 import com.dmdirc.interfaces.ActionListener;
+import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.plugins.BasePlugin;
 import com.dmdirc.plugins.Plugin;
@@ -60,17 +61,20 @@ public class NowPlayingPlugin extends BasePlugin implements ActionListener  {
     /**
      * Creates a new instance of this plugin.
      *
+     * @param commandController Command controller
      * @param pluginInfo This plugin's plugin info
      * @param actionController The action controller to register listeners with
      */
-    public NowPlayingPlugin(final PluginInfo pluginInfo,
+    public NowPlayingPlugin(final CommandController commandController,
+            final PluginInfo pluginInfo,
             final ActionController actionController) {
         super();
 
         this.pluginInfo = pluginInfo;
         this.actionController = actionController;
 
-        registerCommand(new NowPlayingCommand(this), NowPlayingCommand.INFO);
+        registerCommand(new NowPlayingCommand(commandController, this),
+                NowPlayingCommand.INFO);
     }
 
     /** {@inheritDoc} */

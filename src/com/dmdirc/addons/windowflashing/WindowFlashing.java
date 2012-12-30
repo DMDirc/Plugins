@@ -35,6 +35,7 @@ import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.interfaces.ActionListener;
+import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.plugins.BasePlugin;
 import com.dmdirc.plugins.PluginInfo;
@@ -90,13 +91,14 @@ public class WindowFlashing extends BasePlugin implements ActionListener {
     public WindowFlashing(final PluginInfo pluginInfo,
             final IdentityManager identityManager,
             final SwingController controller,
-            final ActionManager actionManager) {
+            final ActionManager actionManager,
+            final CommandController commandController) {
         super();
         this.pluginInfo = pluginInfo;
         this.controller = controller;
         this.actionManager = actionManager;
         binder = identityManager.getGlobalConfiguration().getBinder();
-        registerCommand(new FlashWindow(this), FlashWindow.INFO);
+        registerCommand(new FlashWindow(commandController, this), FlashWindow.INFO);
     }
 
     /**

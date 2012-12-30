@@ -32,6 +32,7 @@ import com.dmdirc.commandparser.CommandInfo;
 import com.dmdirc.commandparser.CommandType;
 import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.context.CommandContext;
+import com.dmdirc.interfaces.CommandController;
 
 /**
  * Command to pop out windows.
@@ -49,10 +50,12 @@ public class PopOutCommand extends Command {
     /**
      * Create a new instance of PopOutCommand.
      *
+     * @param commandController Command controller
      * @param controller SwingWindowController associated with this command
      */
-    public PopOutCommand(final SwingController controller) {
-        super();
+    public PopOutCommand(final CommandController commandController,
+            final SwingController controller) {
+        super(commandController);
         this.controller = controller;
     }
 

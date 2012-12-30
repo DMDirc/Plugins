@@ -30,6 +30,7 @@ import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
+import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
@@ -67,24 +68,24 @@ public final class FreeDesktopNotificationsPlugin
     private final ConfigManager config;
     /** Addon identity. */
     private final Identity identity;
-    /** Plugin manager instance. */
-    private final PluginManager pluginManager;
 
     /**
      * Creates a new instance of this plugin.
      *
      * @param pluginInfo This plugin's plugin info
+     * @param pluginManager Parent plugin manager
      * @param identityManager Identity Manager instance
      */
     public FreeDesktopNotificationsPlugin(final PluginInfo pluginInfo,
             final IdentityManager identityManager,
-            final PluginManager pluginManager) {
+            final PluginManager pluginManager,
+            final CommandController commandController) {
         super(pluginInfo.getMetaData());
         this.pluginInfo = pluginInfo;
-        this.pluginManager = pluginManager;
         config = identityManager.getGlobalConfiguration();
         identity = identityManager.getGlobalAddonIdentity();
-        registerCommand(new FDNotifyCommand(this), FDNotifyCommand.INFO);
+        registerCommand(new FDNotifyCommand(commandController, this),
+                FDNotifyCommand.INFO);
     }
 
     /**
@@ -161,14 +162,11 @@ public final class FreeDesktopNotificationsPlugin
         config.addChangeListener(getDomain(), this);
         setCachedSettings();
 
-        // Extract required Files
-        final PluginInfo pi = pluginManager.getPluginInfoByName("freedesktop_notifications");
-
         // This shouldn't actually happen, but check to make sure.
-        if (pi != null) {
+        if (pluginInfo != null) {
             // Now get the RM
             try {
-                final ResourceManager res = pi.getResourceManager();
+                final ResourceManager res = pluginInfo.getResourceManager();
 
                 // Extract the files needed
                 try {
