@@ -28,6 +28,7 @@ import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandType;
 import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.context.CommandContext;
+import com.dmdirc.interfaces.CommandController;
 
 /**
  * The FDNotify Command shows a nice popup on using the FreeDesktop
@@ -45,10 +46,12 @@ public final class FDNotifyCommand extends Command {
     /**
      * Creates a new instance of FDNotifyCommand.
      *
+     * @param commandController Command controller
      * @param myPlugin the plugin creating this command.
      */
-    public FDNotifyCommand(final FreeDesktopNotificationsPlugin myPlugin) {
-        super();
+    public FDNotifyCommand(final CommandController commandController,
+            final FreeDesktopNotificationsPlugin myPlugin) {
+        super(commandController);
         this.myPlugin = myPlugin;
     }
 

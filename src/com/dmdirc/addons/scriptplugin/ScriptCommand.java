@@ -31,6 +31,7 @@ import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.IntelligentCommand;
 import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.config.IdentityManager;
+import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 
 import java.io.File;
@@ -57,10 +58,12 @@ public final class ScriptCommand extends Command implements IntelligentCommand {
     /**
      * Creates a new instance of ScriptCommand.
      *
+     * @param commandController Command controller
      * @param plugin Parent plugin
      */
-    public ScriptCommand(final ScriptPlugin plugin) {
-        super();
+    public ScriptCommand(final CommandController commandController,
+            final ScriptPlugin plugin) {
+        super(commandController);
         myPlugin = plugin;
     }
 

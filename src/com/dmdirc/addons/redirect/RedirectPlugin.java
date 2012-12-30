@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.redirect;
 
+import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.plugins.BasePlugin;
 
 /**
@@ -30,9 +31,14 @@ import com.dmdirc.plugins.BasePlugin;
  */
 public final class RedirectPlugin extends BasePlugin {
 
-    /** Creates a new instance of this plugin. */
-    public RedirectPlugin() {
+    /**
+     * Creates a new instance of this plugin.
+     *
+     * @param commandController Command controller
+     */
+    public RedirectPlugin(final CommandController commandController) {
         super();
-        registerCommand(new RedirectCommand(), RedirectCommand.INFO);
+        registerCommand(new RedirectCommand(commandController),
+                RedirectCommand.INFO);
     }
 }

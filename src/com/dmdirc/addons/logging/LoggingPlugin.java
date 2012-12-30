@@ -39,6 +39,7 @@ import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.interfaces.ActionController;
 import com.dmdirc.interfaces.ActionListener;
+import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
@@ -112,10 +113,12 @@ public class LoggingPlugin extends BasePlugin implements ActionListener,
      * @param pluginInfo This plugin's plugin info
      * @param actionController The action controller to register listeners with
      * @param identityManager The Identity Manager that controls the current config
+     * @param commandController Command controller
      */
     public LoggingPlugin(final PluginInfo pluginInfo,
             final ActionController actionController,
-            final IdentityManager identityManager) {
+            final IdentityManager identityManager,
+            final CommandController commandController) {
         super();
         this.identityManager = identityManager;
 
@@ -124,7 +127,8 @@ public class LoggingPlugin extends BasePlugin implements ActionListener,
         config = identityManager.getGlobalConfiguration();
         identity = identityManager.getGlobalAddonIdentity();
 
-        registerCommand(new LoggingCommand(this), LoggingCommand.INFO);
+        registerCommand(new LoggingCommand(commandController, this),
+                LoggingCommand.INFO);
     }
 
     /** {@inheritDoc} */
