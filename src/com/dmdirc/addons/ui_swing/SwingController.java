@@ -26,6 +26,7 @@ import com.dmdirc.Channel;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.Main;
 import com.dmdirc.Server;
+import com.dmdirc.ServerManager;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.addons.ui_swing.commands.ChannelSettings;
 import com.dmdirc.addons.ui_swing.commands.Input;
@@ -105,7 +106,7 @@ public class SwingController extends BasePlugin implements UIController {
     private final AtomicBoolean mainFrameCreated = new AtomicBoolean(false);
     /** URL Handler to use. */
     @Getter
-    private final URLHandler URLHandler = new URLHandler(this);
+    private final URLHandler URLHandler;
     /** Singleton instance of MainFrame. */
     @Getter
     private MainFrame mainFrame;
@@ -155,24 +156,31 @@ public class SwingController extends BasePlugin implements UIController {
     /** Apple handler, deals with Mac specific code. */
     @Getter
     private final Apple apple;
+    /** Server manager. */
+    @Getter
+    private final ServerManager serverManager;
 
     /**
      * Instantiates a new SwingController.
      *
      * @param pluginInfo Plugin info
      * @param identityManager Identity Manager
+     * @param main Main
      */
     public SwingController(final PluginInfo pluginInfo,
             final IdentityManager identityManager,
             final PluginManager pluginManager,
-            final Main main,
-            final ActionManager actionManager) {
+            final ActionManager actionManager,
+            final ServerManager serverManager,
+            final Main main) {
         super();
         this.main = main;
         this.pluginInfo = pluginInfo;
         this.identityManager = identityManager;
         this.actionManager = actionManager;
         this.pluginManager = pluginManager;
+        this.serverManager = serverManager;
+        URLHandler = new URLHandler(this, serverManager);
         globalConfig = identityManager.getGlobalConfiguration();
         globalIdentity = identityManager.getGlobalConfigIdentity();
         addonIdentity = identityManager.getGlobalAddonIdentity();

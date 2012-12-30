@@ -25,7 +25,6 @@ package com.dmdirc.addons.ui_dummy;
 import com.dmdirc.WritableFrameContainer;
 import com.dmdirc.ui.input.InputHandler;
 import com.dmdirc.interfaces.ui.InputWindow;
-import com.dmdirc.interfaces.ui.UIController;
 
 /**
  * Dummy input window, used for testing.
@@ -36,14 +35,14 @@ public class DummyInputWindow implements InputWindow {
     private final WritableFrameContainer container;
 
     /** Our Controller. */
-    private final UIController controller;
+    private final DummyController controller;
 
     /**
      * Instantiates a new DummyInputWindow.
      *
      * @param owner Parent window
      */
-    public DummyInputWindow(final UIController controller, final WritableFrameContainer owner) {
+    public DummyInputWindow(final DummyController controller, final WritableFrameContainer owner) {
         this.controller = controller;
         this.container = owner;
     }
@@ -63,7 +62,7 @@ public class DummyInputWindow implements InputWindow {
 
     /** {@inheritDoc} */
     @Override
-    public UIController getController() {
+    public DummyController getController() {
         return controller;
     }
 
