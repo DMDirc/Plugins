@@ -29,6 +29,7 @@ import com.dmdirc.commandparser.CommandType;
 import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.IntelligentCommand;
 import com.dmdirc.commandparser.commands.context.CommandContext;
+import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 
 import java.util.Map.Entry;
@@ -53,10 +54,12 @@ public final class TimerCommand extends Command implements IntelligentCommand {
     /**
      * Creates a new instance of TimerCommand.
      *
+     * @param commandController Command controller
      * @param manager The instance of TimerManager associated with this command
      */
-    public TimerCommand(final TimerManager manager) {
-        super();
+    public TimerCommand(final CommandController commandController,
+            final TimerManager manager) {
+        super(commandController);
 
         this.manager = manager;
     }

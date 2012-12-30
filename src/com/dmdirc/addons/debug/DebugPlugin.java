@@ -24,6 +24,7 @@ package com.dmdirc.addons.debug;
 
 import com.dmdirc.addons.debug.commands.*; //NOPMD
 import com.dmdirc.config.IdentityManager;
+import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.plugins.BasePlugin;
@@ -66,16 +67,18 @@ public class DebugPlugin extends BasePlugin {
     /**
      * Creates a new debug plugin.
      *
+     * @param commandController Command controller
      * @param identityManager Identity manager instance
      * @param pluginManager Plugin manager instance.
      */
-    public DebugPlugin(final IdentityManager identityManager,
+    public DebugPlugin(final CommandController commandController,
+            final IdentityManager identityManager,
             final PluginManager pluginManager) {
         super();
         this.identityManager = identityManager;
         this.pluginManager = pluginManager;
         commands = new HashMap<String, DebugCommand>();
-        debugCommand = new Debug(this);
+        debugCommand = new Debug(commandController, this);
         registerCommand(debugCommand, Debug.INFO);
     }
 

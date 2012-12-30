@@ -28,6 +28,7 @@ import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandType;
 import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.context.CommandContext;
+import com.dmdirc.interfaces.CommandController;
 
 import java.io.IOException;
 
@@ -50,6 +51,15 @@ public class NotifyMyAndroidCommand extends Command {
     /** The configuration domain to retrieve settings from. */
     @Setter
     private String configDomain;
+
+    /**
+     * Creates a new instance of the NotifyMyAndroidCommand command
+     *
+     * @param controller Command controller for the command
+     */
+    public NotifyMyAndroidCommand(final CommandController controller) {
+        super(controller);
+    }
 
     /** {@inheritDoc} */
     @Override

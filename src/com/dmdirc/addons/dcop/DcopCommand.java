@@ -29,6 +29,7 @@ import com.dmdirc.commandparser.CommandInfo;
 import com.dmdirc.commandparser.CommandType;
 import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.context.CommandContext;
+import com.dmdirc.interfaces.CommandController;
 
 import java.util.List;
 
@@ -41,6 +42,15 @@ public final class DcopCommand extends Command {
     public static final CommandInfo INFO = new BaseCommandInfo("dcop",
             "dcop <app> <object> <function> - retrieves information from a DCOP aplication",
             CommandType.TYPE_SERVER);
+
+    /**
+     * Creates a new instance of the DcopCommand command
+     *
+     * @param controller Command controller for the command
+     */
+    public DcopCommand(final CommandController controller) {
+        super(controller);
+    }
 
     /** {@inheritDoc} */
     @Override

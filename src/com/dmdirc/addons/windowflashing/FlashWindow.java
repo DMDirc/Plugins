@@ -28,6 +28,7 @@ import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandType;
 import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.context.CommandContext;
+import com.dmdirc.interfaces.CommandController;
 
 /**
  * Command to flash an inactive window under Windows.
@@ -44,10 +45,11 @@ public class FlashWindow extends Command {
     /**
      * Creates a new flash window command.
      *
+     * @param controller Command controller
      * @param plugin Parent plugin to trigger window flashing
      */
-    public FlashWindow(final WindowFlashing plugin) {
-        super();
+    public FlashWindow(final CommandController controller, final WindowFlashing plugin) {
+        super(controller);
         this.plugin = plugin;
     }
 

@@ -32,6 +32,7 @@ import com.dmdirc.commandparser.commands.IntelligentCommand;
 import com.dmdirc.commandparser.commands.context.ChatCommandContext;
 import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.config.IdentityManager;
+import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 import com.dmdirc.ui.input.TabCompleter;
 
@@ -56,10 +57,12 @@ public final class NowPlayingCommand extends Command implements
     /**
      * Creates a new instance of NowPlayingCommand.
      *
+     * @param commandController Command controller
      * @param parent The plugin that's instantiating this command
      */
-    public NowPlayingCommand(final NowPlayingPlugin parent) {
-        super();
+    public NowPlayingCommand(final CommandController commandController,
+            final NowPlayingPlugin parent) {
+        super(commandController);
 
         this.parent = parent;
     }
