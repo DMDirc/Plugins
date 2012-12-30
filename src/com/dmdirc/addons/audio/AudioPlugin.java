@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.audio;
 
+import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.plugins.BasePlugin;
 
 /**
@@ -29,10 +30,14 @@ import com.dmdirc.plugins.BasePlugin;
  */
 public final class AudioPlugin extends BasePlugin {
 
-    /** Creates a new instance of this plugin. */
-    public AudioPlugin() {
+    /**
+     * Creates a new instance of this plugin.
+     *
+     * @param commandController Command controller
+     */
+    public AudioPlugin(final CommandController commandController) {
         super();
-        registerCommand(new AudioCommand(), AudioCommand.INFO);
-        registerCommand(new BeepCommand(), BeepCommand.INFO);
+        registerCommand(new AudioCommand(commandController), AudioCommand.INFO);
+        registerCommand(new BeepCommand(commandController), BeepCommand.INFO);
     }
 }

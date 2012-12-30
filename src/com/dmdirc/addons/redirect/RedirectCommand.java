@@ -31,6 +31,7 @@ import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.IntelligentCommand;
 import com.dmdirc.commandparser.commands.context.ChatCommandContext;
 import com.dmdirc.commandparser.commands.context.CommandContext;
+import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 import com.dmdirc.ui.input.TabCompleter;
 
@@ -46,6 +47,15 @@ public class RedirectCommand extends Command implements IntelligentCommand {
             "redirect <command> - sends the output of the command to a "
                 + "channel or query window",
             CommandType.TYPE_CHAT);
+
+    /**
+     * Creates a new instance of the RedirectCommand command
+     *
+     * @param controller Command controller for the command
+     */
+    public RedirectCommand(final CommandController controller) {
+        super(controller);
+    }
 
     /** {@inheritDoc} */
     @Override

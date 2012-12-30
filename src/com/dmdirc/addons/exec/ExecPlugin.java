@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.exec;
 
+import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.plugins.BasePlugin;
 
 /**
@@ -29,9 +30,13 @@ import com.dmdirc.plugins.BasePlugin;
  */
 public class ExecPlugin extends BasePlugin {
 
-    /** Creates a new instance of this plugin. */
-    public ExecPlugin() {
+    /**
+     * Creates a new instance of this plugin.
+     *
+     * @param commandController Command controller
+     */
+    public ExecPlugin(final CommandController commandController) {
         super();
-        registerCommand(new ExecCommand(), ExecCommand.INFO);
+        registerCommand(new ExecCommand(commandController), ExecCommand.INFO);
     }
 }

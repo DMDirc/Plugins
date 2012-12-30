@@ -23,6 +23,7 @@
 package com.dmdirc.addons.activewindow;
 
 import com.dmdirc.addons.ui_swing.SwingController;
+import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.messages.MessageSinkManager;
 import com.dmdirc.plugins.BasePlugin;
 
@@ -35,14 +36,16 @@ public final class ActiveWindowPlugin extends BasePlugin {
     /**
      * Creates a new instance of this plugin.
      *
+     * @param commandController Command controller
      * @param controller The controller to use to find active windows
      */
-    public ActiveWindowPlugin(final SwingController controller) {
+    public ActiveWindowPlugin(final CommandController commandController,
+            final SwingController controller) {
         super();
 
         sink = new ActiveWindowMessageSink(controller.getMainFrame());
 
-        registerCommand(new ActiveCommand(controller.getMainFrame()),
+        registerCommand(new ActiveCommand(commandController, controller.getMainFrame()),
                 ActiveCommand.INFO);
     }
 
