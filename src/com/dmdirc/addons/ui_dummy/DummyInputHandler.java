@@ -26,7 +26,6 @@ import com.dmdirc.WritableFrameContainer;
 import com.dmdirc.commandparser.parsers.CommandParser;
 import com.dmdirc.ui.input.InputHandler;
 import com.dmdirc.interfaces.ui.InputField;
-import com.dmdirc.interfaces.ui.UIController;
 
 /**
  * Dummy input handler.
@@ -42,11 +41,11 @@ public class DummyInputHandler extends InputHandler {
      * @param commandParser The command parser to use for this text field.
      * @param parentWindow The window that owns this input handler
      */
-    public DummyInputHandler(final UIController controller,
+    public DummyInputHandler(final DummyController controller,
             final InputField target,
             final CommandParser commandParser,
             final WritableFrameContainer parentWindow) {
-        super(controller, target, commandParser, parentWindow);
+        super(target, commandParser, parentWindow, controller.getPluginManager());
     }
 
     /** {@inheritDoc} */

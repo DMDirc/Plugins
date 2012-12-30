@@ -444,7 +444,7 @@ public final class Apple implements InvocationHandler, ActionListener {
             synchronized (addresses) {
                 clientOpened = true;
                 for (final URI addr : addresses) {
-                    controller.getMain().getServerManager().connectToAddress(addr);
+                    controller.getServerManager().connectToAddress(addr);
                 }
                 addresses.clear();
             }
@@ -518,7 +518,7 @@ public final class Apple implements InvocationHandler, ActionListener {
                 if (Thread.currentThread().getContextClassLoader() == null) {
                     Thread.currentThread().setContextClassLoader(ClassLoader.getSystemClassLoader());
                 }
-                controller.getMain().getServerManager().connectToAddress(uri);
+                controller.getServerManager().connectToAddress(uri);
             } else {
                 addresses.add(uri);
             }

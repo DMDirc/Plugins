@@ -23,7 +23,6 @@
 package com.dmdirc.addons.ui_web;
 
 import com.dmdirc.Channel;
-import com.dmdirc.Server;
 import com.dmdirc.addons.ui_web.uicomponents.WebInputHandler;
 import com.dmdirc.addons.ui_web.uicomponents.WebInputWindow;
 import com.dmdirc.addons.ui_web.uicomponents.WebWindow;
@@ -278,7 +277,7 @@ public class DynamicRequestHandler extends AbstractHandler {
     private void doNewServer(final HttpServletRequest request)
             throws IOException {
         try {
-            new Server(controller.getMain().getServerManager(),
+            controller.getMain().getServerManager().createServer(
                     new URI("irc://" + request.getParameter("password") + "@"
                     + request.getParameter("server") + ":"
                     + request.getParameter("port")),
