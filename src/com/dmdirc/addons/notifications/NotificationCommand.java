@@ -29,6 +29,7 @@ import com.dmdirc.commandparser.CommandType;
 import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.IntelligentCommand;
 import com.dmdirc.commandparser.commands.context.CommandContext;
+import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.plugins.ExportedService;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.ui.input.AdditionalTabTargets;
@@ -54,10 +55,12 @@ public class NotificationCommand extends Command implements
     /**
      * Creates a new instance of this notification command.
      *
+     * @param commandController Command controller
      * @param parent The plugin that's instantiating this command
      */
-    public NotificationCommand(final NotificationsPlugin parent) {
-        super();
+    public NotificationCommand(final CommandController commandController,
+            final NotificationsPlugin parent) {
+        super(commandController);
 
         this.parent = parent;
     }

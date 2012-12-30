@@ -27,6 +27,7 @@ import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
+import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.plugins.BasePlugin;
 import com.dmdirc.plugins.PluginInfo;
 
@@ -36,7 +37,7 @@ import com.dmdirc.plugins.PluginInfo;
 public class NotifyMyAndroidPlugin extends BasePlugin {
 
     /** The command to register. */
-    private final NotifyMyAndroidCommand command = new NotifyMyAndroidCommand();
+    private final NotifyMyAndroidCommand command;
 
     /** Our info object. */
     private final PluginInfo pluginInfo;
@@ -44,9 +45,12 @@ public class NotifyMyAndroidPlugin extends BasePlugin {
     /**
      * Creates a new instance of the {@link NotifyMyAndroidPlugin}.
      *
+     * @param commandController Command controller
      * @param pluginInfo The plugin info object for this plugin.
      */
-    public NotifyMyAndroidPlugin(final PluginInfo pluginInfo) {
+    public NotifyMyAndroidPlugin(final CommandController commandController,
+            final PluginInfo pluginInfo) {
+        command = new NotifyMyAndroidCommand(commandController);
         registerCommand(command, NotifyMyAndroidCommand.INFO);
 
         this.pluginInfo = pluginInfo;
