@@ -55,7 +55,6 @@ import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
-import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.ui.UIController;
 import com.dmdirc.interfaces.ui.Window;
 import com.dmdirc.logger.ErrorLevel;
@@ -164,16 +163,11 @@ public class SwingController extends BasePlugin implements UIController {
     /**
      * Instantiates a new SwingController.
      *
-     * @param commandController Command controller
      * @param pluginInfo Plugin info
      * @param identityManager Identity Manager
-     * @param pluginManager Plugin manager
-     * @param serverManager Server manager
-     * @param main Main instance (used to quit the client)
-     * @param actionManager Action manager
+     * @param main Main
      */
-    public SwingController(final CommandController commandController,
-            final PluginInfo pluginInfo,
+    public SwingController(final PluginInfo pluginInfo,
             final IdentityManager identityManager,
             final PluginManager pluginManager,
             final ActionManager actionManager,
@@ -196,16 +190,11 @@ public class SwingController extends BasePlugin implements UIController {
         dialogManager = new DialogManager(this);
         setAntiAlias();
         windows = new ArrayList<java.awt.Window>();
-        registerCommand(new ServerSettings(commandController),
-                ServerSettings.INFO);
-        registerCommand(new ChannelSettings(commandController),
-                ChannelSettings.INFO);
-        registerCommand(new Input(commandController, windowFactory),
-                Input.INFO);
-        registerCommand(new PopOutCommand(commandController, this),
-                PopOutCommand.INFO);
-        registerCommand(new PopInCommand(commandController, this),
-                PopInCommand.INFO);
+        registerCommand(new ServerSettings(), ServerSettings.INFO);
+        registerCommand(new ChannelSettings(), ChannelSettings.INFO);
+        registerCommand(new Input(windowFactory), Input.INFO);
+        registerCommand(new PopOutCommand(this), PopOutCommand.INFO);
+        registerCommand(new PopInCommand(this), PopInCommand.INFO);
     }
 
     /**

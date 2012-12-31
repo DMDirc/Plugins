@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.calc;
 
-import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.plugins.BasePlugin;
 
 /**
@@ -30,13 +29,9 @@ import com.dmdirc.plugins.BasePlugin;
  */
 public class CalcPlugin extends BasePlugin {
 
-    /**
-     * Creates a new instance of this plugin.
-     *
-     * @param controller Command controller
-     */
-    public CalcPlugin(final CommandController controller) {
+    /** Creates a new instance of this plugin. */
+    public CalcPlugin() {
         super();
-        registerCommand(new CalcCommand(controller), CalcCommand.INFO);
+        registerCommand(new CalcCommand(), CalcCommand.INFO);
     }
 }

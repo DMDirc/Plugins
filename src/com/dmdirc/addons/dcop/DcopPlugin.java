@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.dcop;
 
-import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.plugins.BasePlugin;
 
 import java.io.BufferedReader;
@@ -36,14 +35,10 @@ import java.util.List;
  */
 public final class DcopPlugin extends BasePlugin {
 
-    /**
-     * Creates a new instance of this plugin.
-     *
-     * @param commandController Command controller
-     */
-    public DcopPlugin(final CommandController commandController) {
+    /** Creates a new instance of this plugin. */
+    public DcopPlugin() {
         super();
-        registerCommand(new DcopCommand(commandController), DcopCommand.INFO);
+        registerCommand(new DcopCommand(), DcopCommand.INFO);
     }
 
     /**

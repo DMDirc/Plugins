@@ -42,7 +42,6 @@ import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.interfaces.ActionListener;
-import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
@@ -84,19 +83,18 @@ public final class DCCPlugin extends BasePlugin implements ActionListener {
      * @param controller The controller to register UI implementations with
      * @param pluginInfo This plugin's plugin info
      * @param identityManager The Identity Manager that controls the current config
-     * @param commandController Command controller
      */
     public DCCPlugin(final SwingController controller,
             final PluginInfo pluginInfo,
-            final IdentityManager identityManager,
-            final CommandController commandController) {
+            final IdentityManager identityManager
+            ) {
         super();
         this.identityManager = identityManager;
         this.controller = controller;
         config = controller.getGlobalConfig();
         this.pluginInfo = pluginInfo;
-        registerCommand(new DCCCommand(commandController,
-                controller.getMainFrame(), this), DCCCommand.INFO);
+        registerCommand(new DCCCommand(controller.getMainFrame(), this),
+                DCCCommand.INFO);
         final SwingWindowFactory factory = controller.getWindowFactory();
         factory.registerImplementation(new HashSet<String>(Arrays.asList(
                 "com.dmdirc.addons.dcc.ui.PlaceholderPanel")),

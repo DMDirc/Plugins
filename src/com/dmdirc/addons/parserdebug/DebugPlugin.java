@@ -26,7 +26,6 @@ import com.dmdirc.Server;
 import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.interfaces.ActionController;
 import com.dmdirc.interfaces.ActionListener;
-import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.parser.interfaces.callbacks.DebugInfoListener;
@@ -51,17 +50,14 @@ public final class DebugPlugin extends BasePlugin implements DebugInfoListener, 
     /**
      * Creates a new instance of this plugin.
      *
-     * @param commandController Command controller
      * @param actionController The action controller to register listeners with
      */
-    public DebugPlugin(final CommandController commandController,
-            final ActionController actionController) {
+    public DebugPlugin(final ActionController actionController) {
         super();
 
         this.actionController = actionController;
 
-        registerCommand(new ParserDebugCommand(commandController, this),
-                ParserDebugCommand.INFO);
+        registerCommand(new ParserDebugCommand(this), ParserDebugCommand.INFO);
     }
 
     /** {@inheritDoc} */

@@ -30,12 +30,12 @@ import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
-import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.plugins.BaseFileDependantPlugin;
 import com.dmdirc.plugins.PluginInfo;
+import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.messages.Styliser;
 import com.dmdirc.util.io.StreamReader;
 import com.dmdirc.util.resourcemanager.ResourceManager;
@@ -67,23 +67,24 @@ public final class FreeDesktopNotificationsPlugin
     private final ConfigManager config;
     /** Addon identity. */
     private final Identity identity;
+    /** Plugin manager instance. */
+    private final PluginManager pluginManager;
 
     /**
      * Creates a new instance of this plugin.
      *
      * @param pluginInfo This plugin's plugin info
      * @param identityManager Identity Manager instance
-     * @param commandController Command controller
      */
     public FreeDesktopNotificationsPlugin(final PluginInfo pluginInfo,
             final IdentityManager identityManager,
-            final CommandController commandController) {
+            final PluginManager pluginManager) {
         super(pluginInfo.getMetaData());
         this.pluginInfo = pluginInfo;
+        this.pluginManager = pluginManager;
         config = identityManager.getGlobalConfiguration();
         identity = identityManager.getGlobalAddonIdentity();
-        registerCommand(new FDNotifyCommand(commandController, this),
-                FDNotifyCommand.INFO);
+        registerCommand(new FDNotifyCommand(this), FDNotifyCommand.INFO);
     }
 
     /**
@@ -160,11 +161,14 @@ public final class FreeDesktopNotificationsPlugin
         config.addChangeListener(getDomain(), this);
         setCachedSettings();
 
+        // Extract required Files
+        final PluginInfo pi = pluginManager.getPluginInfoByName("freedesktop_notifications");
+
         // This shouldn't actually happen, but check to make sure.
-        if (pluginInfo != null) {
+        if (pi != null) {
             // Now get the RM
             try {
-                final ResourceManager res = pluginInfo.getResourceManager();
+                final ResourceManager res = pi.getResourceManager();
 
                 // Extract the files needed
                 try {
