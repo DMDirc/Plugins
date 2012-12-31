@@ -30,34 +30,23 @@ import com.dmdirc.plugins.BasePlugin;
 import com.dmdirc.ui.core.components.StatusBarManager;
 import com.dmdirc.interfaces.ui.UIController;
 import com.dmdirc.interfaces.ui.Window;
-import com.dmdirc.plugins.PluginManager;
 
 import java.net.URI;
-
-import lombok.Getter;
 
 /**
  * Implements a dummy UI controller.
  */
-@SuppressWarnings("PMD.UnusedPrivateField")
 public final class DummyController extends BasePlugin implements UIController {
 
     /** The main that owns us. */
     private final Main main;
-    /** Plugin manager. */
-    @Getter
-    private final PluginManager pluginManager;
 
     /**
      * Creates a new instance of DummyController.
-     *
-     * @param main Main
-     * @param pluginManager Plugin manager
      */
-    public DummyController(final Main main, final PluginManager pluginManager) {
+    public DummyController(final Main main) {
         super();
         this.main = main;
-        this.pluginManager = pluginManager;
         StatusBarManager.getStatusBarManager().registerStatusBar(new DummyStatusBar());
     }
 
