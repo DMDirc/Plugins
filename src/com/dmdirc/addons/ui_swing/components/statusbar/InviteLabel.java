@@ -99,7 +99,7 @@ public class InviteLabel extends StatusbarPopupPanel<JLabel> implements
         accept.setActionCommand("acceptAll");
         accept.addActionListener(this);
 
-        for (final Server server : controller.getServerManager().getServers()) {
+        for (final Server server : controller.getMain().getServerManager().getServers()) {
             server.addInviteListener(this);
         }
 

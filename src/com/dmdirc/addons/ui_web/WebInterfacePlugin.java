@@ -24,7 +24,6 @@ package com.dmdirc.addons.ui_web;
 
 import com.dmdirc.Main;
 import com.dmdirc.plugins.BasePlugin;
-import com.dmdirc.plugins.PluginManager;
 
 import lombok.Getter;
 
@@ -42,24 +41,20 @@ public class WebInterfacePlugin extends BasePlugin {
     @Getter
     private WebInterfaceUI controller;
 
-    /** Plugin manager. */
-    private final PluginManager pluginManager;
-
     /**
      * Create a new WebInterfacePlugin
      *
      * @param main The instance of main that this client uses.
      */
-    public WebInterfacePlugin(final PluginManager pluginManager, final Main main) {
+    public WebInterfacePlugin(final Main main) {
         this.main = main;
-        this.pluginManager = pluginManager;
     }
 
     /** {@inheritDoc} */
     @Override
     public void onLoad() {
         if (controller == null) {
-            controller = new WebInterfaceUI(pluginManager, main, getDomain());
+            controller = new WebInterfaceUI(main, getDomain());
         }
     }
 
@@ -70,7 +65,7 @@ public class WebInterfacePlugin extends BasePlugin {
      */
     public void addWebHandler(final Handler newHandler) {
         if (controller == null) {
-            controller = new WebInterfaceUI(pluginManager, main, getDomain());
+            controller = new WebInterfaceUI(main, getDomain());
         }
 
         controller.addWebHandler(newHandler);

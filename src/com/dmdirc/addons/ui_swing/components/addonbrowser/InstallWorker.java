@@ -67,11 +67,11 @@ public class InstallWorker extends LoggingSwingWorker<String, Void> {
                     ActionManager.installActionPack(file.getAbsolutePath());
                     break;
                 case TYPE_PLUGIN:
-                    final File newFile = new File(controller
+                    final File newFile = new File(controller.getMain()
                             .getPluginManager().getDirectory(),
                             info.getTitle() + ".jar");
                     if (file.renameTo(newFile)) {
-                        controller.getPluginManager().addPlugin(
+                        controller.getMain().getPluginManager().addPlugin(
                                 newFile.getName());
                     } else {
                         return "Unable to install addon, failed to move file: "
