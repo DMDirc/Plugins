@@ -97,7 +97,7 @@ public class ServerEntry extends ServerGroupItemBase {
     /** {@inheritDoc} */
     @Override
     public void connect() {
-        final Server server = serverManager.createServer(address, getProfileIdentity());
+        final Server server = new Server(serverManager, address, getProfileIdentity());
         server.connect();
     }
 
