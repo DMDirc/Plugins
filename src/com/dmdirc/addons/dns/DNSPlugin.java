@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.dns;
 
-import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.plugins.BasePlugin;
 
 import java.net.InetAddress;
@@ -36,14 +35,10 @@ import java.util.List;
  */
 public final class DNSPlugin extends BasePlugin {
 
-    /**
-     * Creates a new instance of this plugin.
-     *
-     * @param commandController Command controller
-     */
-    public DNSPlugin(final CommandController commandController) {
+    /** Creates a new instance of this plugin. */
+    public DNSPlugin() {
         super();
-        registerCommand(new DNSCommand(commandController), DNSCommand.INFO);
+        registerCommand(new DNSCommand(), DNSCommand.INFO);
     }
 
     /**

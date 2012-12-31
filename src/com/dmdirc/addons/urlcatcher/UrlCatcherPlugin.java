@@ -29,7 +29,6 @@ import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.interfaces.ActionListener;
-import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.plugins.BasePlugin;
 import com.dmdirc.ui.messages.Styliser;
@@ -49,14 +48,10 @@ public class UrlCatcherPlugin extends BasePlugin implements ActionListener,
     /** Whether to capture URLs from the raw window. */
     private boolean captureRaw = false;
 
-    /**
-     * Creates a new instance of this plugin.
-     *
-     * @param commandController Command controller
-     */
-    public UrlCatcherPlugin(final CommandController commandController) {
+    /** Creates a new instance of this plugin. */
+    public UrlCatcherPlugin() {
         super();
-        registerCommand(new UrlListCommand(commandController, this), UrlListCommand.INFO);
+        registerCommand(new UrlListCommand(this), UrlListCommand.INFO);
     }
 
     /** {@inheritDoc} */

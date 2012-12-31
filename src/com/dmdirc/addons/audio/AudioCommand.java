@@ -29,7 +29,6 @@ import com.dmdirc.commandparser.CommandInfo;
 import com.dmdirc.commandparser.CommandType;
 import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.context.CommandContext;
-import com.dmdirc.interfaces.CommandController;
 
 import java.io.File;
 
@@ -41,15 +40,6 @@ public class AudioCommand extends Command {
     /** A command info object for this command. */
     public static final CommandInfo INFO = new BaseCommandInfo("audio",
             "audio <file> - plays the specified file", CommandType.TYPE_GLOBAL);
-
-    /**
-     * Creates a new instance of the AudioCommand command
-     *
-     * @param controller Command controller for the command
-     */
-    public AudioCommand(final CommandController controller) {
-        super(controller);
-    }
 
     /** {@inheritDoc} */
     @Override

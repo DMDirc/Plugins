@@ -29,7 +29,6 @@ import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandType;
 import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.context.CommandContext;
-import com.dmdirc.interfaces.CommandController;
 
 /**
  * A command to bounce the icon in the OSX dock.
@@ -53,12 +52,9 @@ public class DockBounceCommand extends Command {
     /**
      * Creates an instance of {@link DockBounceCommand}.
      *
-     * @param commandController Command controller
      * @param apple The UI wrapper for Apple-specific things
      */
-    public DockBounceCommand(final CommandController commandController,
-            final Apple apple) {
-        super(commandController);
+    public DockBounceCommand(final Apple apple) {
         this.apple = apple;
     }
 

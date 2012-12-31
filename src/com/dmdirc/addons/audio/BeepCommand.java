@@ -29,7 +29,6 @@ import com.dmdirc.commandparser.CommandInfo;
 import com.dmdirc.commandparser.CommandType;
 import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.context.CommandContext;
-import com.dmdirc.interfaces.CommandController;
 
 import java.awt.Toolkit;
 
@@ -41,15 +40,6 @@ public class BeepCommand extends Command {
     /** A command info object for this command. */
     public static final CommandInfo INFO = new BaseCommandInfo("beep",
             "beep - emits a beep", CommandType.TYPE_GLOBAL);
-
-    /**
-     * Creates a new instance of the BeepCommand command
-     *
-     * @param controller Command controller for the command
-     */
-    public BeepCommand(final CommandController controller) {
-        super(controller);
-    }
 
     /** {@inheritDoc} */
     @Override

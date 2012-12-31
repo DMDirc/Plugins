@@ -26,7 +26,6 @@ import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.interfaces.ActionController;
 import com.dmdirc.interfaces.ActionListener;
-import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
@@ -65,13 +64,10 @@ public final class ScriptPlugin extends BasePlugin implements ActionListener {
     /**
      * Creates a new instance of the Script Plugin.
      *
-     * @param commandController Command controller
      * @param actionController The action controller to register listeners with
      * @param identityManager The Identity Manager that controls the current config
      */
-    public ScriptPlugin(final CommandController commandController,
-            final ActionController actionController,
-            final IdentityManager identityManager) {
+    public ScriptPlugin(final ActionController actionController, final IdentityManager identityManager) {
         super();
         scriptDir = identityManager.getConfigDir() + "scripts/";
         this.actionController = actionController;
@@ -79,8 +75,7 @@ public final class ScriptPlugin extends BasePlugin implements ActionListener {
         // Add the JS Helper to the scriptFactory
         getScriptFactory().put("globalHelper", getJavaScriptHelper());
         getScriptFactory().put("globalVariables", getGlobalVariables());
-        registerCommand(new ScriptCommand(commandController, this),
-                ScriptCommand.INFO);
+        registerCommand(new ScriptCommand(this), ScriptCommand.INFO);
     }
 
     /** {@inheritDoc} */

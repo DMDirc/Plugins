@@ -22,11 +22,12 @@
 
 package com.dmdirc.addons.urlcatcher;
 
+import com.dmdirc.TestMain;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.config.ConfigManager;
+import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.InvalidIdentityFileException;
-import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.ui.messages.Styliser;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -52,7 +53,9 @@ public class UrlCatcherPluginTest {
 
     @Test
     public void testURLCounting() throws InvalidIdentityFileException {
-        final UrlCatcherPlugin plugin = new UrlCatcherPlugin(mock(CommandController.class));
+        TestMain.getTestMain();
+
+        final UrlCatcherPlugin plugin = new UrlCatcherPlugin();
 
         plugin.processEvent(CoreActionType.CHANNEL_MESSAGE, null,
                 container, "This is a message - http://www.google.com/ foo");
@@ -67,7 +70,9 @@ public class UrlCatcherPluginTest {
 
     @Test
     public void testURLCatching() throws InvalidIdentityFileException {
-        final UrlCatcherPlugin plugin = new UrlCatcherPlugin(mock(CommandController.class));
+        TestMain.getTestMain();
+
+        final UrlCatcherPlugin plugin = new UrlCatcherPlugin();
 
         plugin.processEvent(CoreActionType.CHANNEL_MESSAGE, null,
                 container, "http://www.google.com/ www.example.com foo://bar.baz");

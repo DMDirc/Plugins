@@ -32,7 +32,6 @@ import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.CommandOptions;
 import com.dmdirc.commandparser.commands.IntelligentCommand;
 import com.dmdirc.commandparser.commands.context.CommandContext;
-import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 
 /**
@@ -47,15 +46,6 @@ public class ServerSettings extends Command implements IntelligentCommand {
     public static final CommandInfo INFO = new BaseCommandInfo("serversettings",
             "serversettings - opens the server settings window",
             CommandType.TYPE_SERVER);
-
-    /**
-     * Creates a new instance of the ServerSettings command
-     *
-     * @param controller Command controller for the command
-     */
-    public ServerSettings(final CommandController controller) {
-        super(controller);
-    }
 
     /** {@inheritDoc} */
     @Override

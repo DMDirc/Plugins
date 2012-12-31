@@ -22,17 +22,26 @@
 
 package com.dmdirc.addons.debug;
 
+import com.dmdirc.TestMain;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.commands.context.CommandContext;
-import com.dmdirc.interfaces.CommandController;
+import com.dmdirc.config.InvalidIdentityFileException;
 
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import static com.dmdirc.harness.CommandArgsMatcher.*;
 import static org.mockito.Mockito.*;
 
 public class DebugTest {
+
+    @BeforeClass
+    public static void setUp() throws InvalidIdentityFileException {
+        // Command has a dependency on CommandManager (to get the command char)
+        // And CommandManager has a dependency on IdentityManager for the same
+        TestMain.getTestMain();
+    }
 
     /** Checks the debug command with no arguments shows usage. */
     @Test
@@ -43,7 +52,7 @@ public class DebugTest {
         when(arguments.isCommand()).thenReturn(true);
         when(arguments.getArguments()).thenReturn(new String[0]);
 
-        final Debug debug = new Debug(mock(CommandController.class), null);
+        final Debug debug = new Debug(null);
 
         debug.execute(container, arguments, null);
         verify(container).addLine(eq("commandUsage"), anyObject(),
@@ -61,7 +70,7 @@ public class DebugTest {
         when(arguments.isCommand()).thenReturn(true);
         when(arguments.getArguments()).thenReturn(new String[]{"test"});
 
-        final Debug debug = new Debug(mock(CommandController.class), plugin);
+        final Debug debug = new Debug(plugin);
 
         debug.execute(container, arguments, null);
         verify(container).addLine(eq("commandError"), anyObject());
@@ -75,16 +84,14 @@ public class DebugTest {
         final FrameContainer container = mock(FrameContainer.class);
         final DebugCommand command = mock(DebugCommand.class);
         final CommandContext context = mock(CommandContext.class);
-        final CommandController commandController = mock(CommandController.class);
 
         when(plugin.getCommand("test")).thenReturn(command);
         when(arguments.isCommand()).thenReturn(true);
         when(arguments.getArguments()).thenReturn(new String[]{"test"});
         when(arguments.getArgumentsAsString(1)).thenReturn("");
         when(command.getName()).thenReturn("test");
-        when(commandController.getCommandChar()).thenReturn('/');
 
-        final Debug debug = new Debug(commandController, plugin);
+        final Debug debug = new Debug(plugin);
 
         debug.execute(container, arguments, context);
 
@@ -100,16 +107,14 @@ public class DebugTest {
         final FrameContainer container = mock(FrameContainer.class);
         final DebugCommand command = mock(DebugCommand.class);
         final CommandContext context = mock(CommandContext.class);
-        final CommandController commandController = mock(CommandController.class);
 
         when(plugin.getCommand("test")).thenReturn(command);
         when(arguments.isCommand()).thenReturn(true);
         when(arguments.getArguments()).thenReturn(new String[]{"test", "1", "2", "3"});
         when(arguments.getArgumentsAsString(1)).thenReturn("1 2 3");
         when(command.getName()).thenReturn("test");
-        when(commandController.getCommandChar()).thenReturn('/');
 
-        final Debug debug = new Debug(commandController, plugin);
+        final Debug debug = new Debug(plugin);
 
         debug.execute(container, arguments, context);
 

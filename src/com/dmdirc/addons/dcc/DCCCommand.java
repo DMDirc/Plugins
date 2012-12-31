@@ -40,7 +40,6 @@ import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.IntelligentCommand;
 import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.commandparser.commands.context.ServerCommandContext;
-import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 import com.dmdirc.ui.input.TabCompletionType;
@@ -69,13 +68,11 @@ public class DCCCommand extends Command implements IntelligentCommand {
     /**
      * Creates a new instance of DCCCommand.
      *
-     * @param commandController Command controller
      * @param mainFrame mainFrame instance to use
      * @param plugin The DCC Plugin that this command belongs to
      */
-    public DCCCommand(final CommandController commandController,
-            final MainFrame mainFrame, final DCCPlugin plugin) {
-        super(commandController);
+    public DCCCommand(final MainFrame mainFrame, final DCCPlugin plugin) {
+        super();
         this.mainFrame = mainFrame;
         myPlugin = plugin;
     }

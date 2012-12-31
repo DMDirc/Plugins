@@ -29,7 +29,6 @@ import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.interfaces.ActionListener;
-import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.plugins.BasePlugin;
 import com.dmdirc.plugins.PluginInfo;
@@ -54,14 +53,12 @@ public class NotificationsPlugin extends BasePlugin implements ActionListener {
     /**
      * Creates a new instance of this plugin.
      *
-     * @param commandController Command controller
      * @param pluginInfo This plugin's plugin info
      */
-    public NotificationsPlugin(final CommandController commandController,
-            final PluginInfo pluginInfo) {
+    public NotificationsPlugin(final PluginInfo pluginInfo) {
         super();
         this.pluginInfo = pluginInfo;
-        registerCommand(new NotificationCommand(commandController, this),
+        registerCommand(new NotificationCommand(this),
                 NotificationCommand.INFO);
     }
 

@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.contactlist;
 
-import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.plugins.BasePlugin;
 
 /**
@@ -30,13 +29,9 @@ import com.dmdirc.plugins.BasePlugin;
  */
 public final class ContactListPlugin extends BasePlugin {
 
-    /**
-     * Creates a new instance of this plugin.
-     *
-     * @param commandController Command controller
-     */
-    public ContactListPlugin(final CommandController commandController) {
+    /** Creates a new instance of this plugin. */
+    public ContactListPlugin() {
         super();
-        registerCommand(new ContactListCommand(commandController), ContactListCommand.INFO);
+        registerCommand(new ContactListCommand(), ContactListCommand.INFO);
     }
 }

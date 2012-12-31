@@ -33,7 +33,6 @@ import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.interfaces.ActionController;
-import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.plugins.BasePlugin;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.ui.IconManager;
@@ -70,12 +69,10 @@ public final class SystrayPlugin extends BasePlugin implements ActionListener,
     /**
      * Creates a new system tray plugin.
      *
-     * @param commandController Command controller
      * @param pluginInfo This plugin's plugin info
      * @param actionController The action controller to use
      */
-    public SystrayPlugin(final CommandController commandController,
-            final PluginInfo pluginInfo,
+    public SystrayPlugin(final PluginInfo pluginInfo,
             final ActionController actionController) {
         super();
 
@@ -96,8 +93,7 @@ public final class SystrayPlugin extends BasePlugin implements ActionListener,
                 .getImage("logo"), "DMDirc", menu);
         icon.setImageAutoSize(true);
         icon.addMouseListener(this);
-        registerCommand(new PopupCommand(commandController, this),
-                PopupCommand.INFO);
+        registerCommand(new PopupCommand(this), PopupCommand.INFO);
     }
 
     /**

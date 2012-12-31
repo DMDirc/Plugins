@@ -31,7 +31,6 @@ import com.dmdirc.commandparser.CommandType;
 import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.IntelligentCommand;
 import com.dmdirc.commandparser.commands.context.CommandContext;
-import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 import com.dmdirc.interfaces.ui.InputWindow;
 
@@ -53,12 +52,10 @@ public class Input extends Command implements IntelligentCommand {
     /**
      * Creates a new input command.
      *
-     * @param commandController Command controller
      * @param windowFactory Window factory to get windows from
      */
-    public Input(final CommandController commandController,
-            final SwingWindowFactory windowFactory) {
-        super(commandController);
+    public Input(final SwingWindowFactory windowFactory) {
+        super();
         this.windowFactory = windowFactory;
     }
 
@@ -69,6 +66,7 @@ public class Input extends Command implements IntelligentCommand {
         if (args.getArguments().length == 0) {
             showUsage(origin, args.isSilent(), "input",
                     "[--clear] <text to insert into inputfield");
+            return;
         } else if (args.getArguments().length == 1
                 && "--clear".equals(args.getArgumentsAsString(0))) {
             ((InputWindow) windowFactory.getSwingWindow(origin))

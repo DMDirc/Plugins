@@ -31,7 +31,6 @@ import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.config.prefs.SettingChangeListener;
-import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.plugins.BasePlugin;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.util.validators.NumericalValidator;
@@ -63,16 +62,13 @@ public final class OsdPlugin extends BasePlugin implements
     /**
      * Creates a new instance of this plugin.
      *
-     * @param commandController Command controller
      * @param pluginInfo This plugin's plugin info
      */
-    public OsdPlugin(final CommandController commandController,
-            final PluginInfo pluginInfo) {
+    public OsdPlugin(final PluginInfo pluginInfo) {
         super();
         this.pluginInfo = pluginInfo;
         osdManager = new OsdManager(this);
-        registerCommand(new OsdCommand(commandController, osdManager),
-                OsdCommand.INFO);
+        registerCommand(new OsdCommand(osdManager), OsdCommand.INFO);
     }
 
     /**
