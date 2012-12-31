@@ -36,7 +36,7 @@ import java.net.URI;
 /**
  * Implements a dummy UI controller.
  */
-public final class DummyController extends BasePlugin implements UIController {
+public class DummyController extends BasePlugin implements UIController {
 
     /** The main that owns us. */
     private final Main main;
