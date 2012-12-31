@@ -54,9 +54,7 @@ public class DBusMediaSource extends BasePlugin implements MediaSourceManager {
     /** {@inheritDoc} */
     @Override
     public void onLoad() {
-        sources = new ArrayList<MediaSource>(Arrays.asList(new MediaSource[]{
-            new BansheeSource(this),
-        }));
+        sources = new ArrayList<MediaSource>();
 
         if (new File("/usr/bin/qdbus").exists()) {
             qdbus = "/usr/bin/qdbus";
@@ -160,7 +158,7 @@ public class DBusMediaSource extends BasePlugin implements MediaSourceManager {
         final Map<String, String> res = new HashMap<String, String>();
 
         for (String line : lines) {
-            final int index = line.indexOf(':');
+            final int index = line.indexOf(':', line.indexOf(':') + 1);
 
             if (index == -1 || index >= line.length() - 2) {
                 continue;

@@ -54,20 +54,33 @@ public class MPRISSource implements MediaSource {
         this.source = source;
         this.service = service;
 
-        final List<String> info = source.doDBusCall("org.mpris." + service, "/",
-                "org.freedesktop.MediaPlayer.Identity");
+        final String info = getFirstValue("org.mpris.MediaPlayer2.Identity");
 
         if (info.isEmpty()) {
             throw new IllegalArgumentException("No service with that name found");
         }
 
-        this.name = info.get(0).replace(' ', '_');
+        this.name = info.replace(' ', '_');
+    }
+
+    /**
+     * Get the first line of the output for a dbus call to the given function
+     * against this service in the /org/mpris/MediaPlayer2 obejct.
+     *
+     * @param function Function to get data for.
+     * @return First line of output.
+     */
+    protected String getFirstValue(final String function) {
+        final List<String> info = source.doDBusCall("org.mpris." + service,
+                "/org/mpris/MediaPlayer2", function);
+
+        return info.isEmpty() ? "" : info.get(0);
     }
 
     /** {@inheritDoc} */
     @Override
     public MediaSourceState getState() {
-        final char[] status = getStatus();
+        final String status = getStatus();
 
         if (status == null) {
             data = null;
@@ -76,11 +89,11 @@ public class MPRISSource implements MediaSource {
 
         data = getTrackInfo();
 
-        if (status[0] == '0') {
+        if (status.equalsIgnoreCase("Playing")) {
             return MediaSourceState.PLAYING;
-        } else if (status[0] == '1') {
+        } else if (status.equalsIgnoreCase("Paused")) {
             return MediaSourceState.PAUSED;
-        } else if (status[0] == '2') {
+        } else if (status.equalsIgnoreCase("Stopped")) {
             return MediaSourceState.STOPPED;
         } else {
             return MediaSourceState.NOTKNOWN;
@@ -108,31 +121,46 @@ public class MPRISSource implements MediaSource {
     /** {@inheritDoc} */
     @Override
     public String getArtist() {
-        return getData("artist");
+        return getData("xesam:artist");
     }
 
     /** {@inheritDoc} */
     @Override
     public String getTitle() {
-        return getData("title");
+        return getData("xesam:title");
     }
 
     /** {@inheritDoc} */
     @Override
     public String getAlbum() {
-        return getData("album");
+        return getData("xesam:album");
     }
 
     /** {@inheritDoc} */
     @Override
     public String getLength() {
-        return getData("time");
+        try {
+            final Long len = Long.parseLong(getData("mpris:length"));
+            return duration(len / 1000);
+        } catch (final NumberFormatException nfe) {
+            return "Unknown";
+        }
     }
 
     /** {@inheritDoc} */
     @Override
     public String getTime() {
-        return "Unknown";
+        try {
+            final String position = getFirstValue("org.mpris.MediaPlayer2.Player.Position");
+            final Long len = Long.parseLong(position);
+            if (len == 0) {
+                return "Unknown";
+            } else {
+                return duration(len / 1000);
+            }
+        } catch (final NumberFormatException nfe) {
+            return "Unknown";
+        }
     }
 
     /** {@inheritDoc} */
@@ -144,7 +172,7 @@ public class MPRISSource implements MediaSource {
     /** {@inheritDoc} */
     @Override
     public String getBitrate() {
-        return getData("audio-bitrate");
+        return "Unknown";
     }
 
     /**
@@ -153,11 +181,8 @@ public class MPRISSource implements MediaSource {
      * @return A map of metadata returned by the MPRIS service
      */
     protected Map<String, String> getTrackInfo() {
-        // If only there were a standard...
         final List<String> list = source.doDBusCall("org.mpris." + service,
-                "/Player", "org.freedesktop.MediaPlayer.GetMetadata");
-        list.addAll(source.doDBusCall("org.mpris." + service,
-                "/Player", "org.freedesktop.MediaPlayer.GetMetaData"));
+                "/org/mpris/MediaPlayer2", "org.mpris.MediaPlayer2.Player.Metadata");
         return DBusMediaSource.parseDictionary(list);
     }
 
@@ -166,35 +191,46 @@ public class MPRISSource implements MediaSource {
      *
      * @return The returned status or null if the service isn't running
      */
-    protected char[] getStatus() {
-        if (source.doDBusCall("org.mpris." + service, "/",
-                "org.freedesktop.MediaPlayer.Identity").isEmpty()) {
-            // Calling dbus-send can seemingly start applications that have
-            // quit (not entirely sure how), so check that it's running first.
+    protected String getStatus() {
+        if (getFirstValue("org.mpris.MediaPlayer2.Identity").isEmpty()) {
             return null;
         }
 
-        final List<String> res = DBusMediaSource.getInfo(new String[]{
-            "/usr/bin/dbus-send", "--print-reply", "--dest=org.mpris." + service,
-            "/Player", "org.freedesktop.MediaPlayer.GetStatus"
-        });
-
-        if (res.isEmpty()) {
-            return null;
-        }
-
-        final char[] result = new char[4];
-        int i = 0;
-
-        for (String line : res) {
-            final String tline = line.trim();
-
-            if (tline.startsWith("int32")) {
-                result[i++] = tline.charAt(tline.length() - 1);
-            }
-        }
-
-        return result;
+        return getFirstValue("org.mpris.MediaPlayer2.Player.PlaybackStatus");
     }
 
+    /**
+     * Get the duration in seconds as a string.
+     *
+     * @param seconds Input to get duration for
+     * @return Duration as a string
+     */
+    private String duration(final long secondsInput) {
+        final StringBuilder result = new StringBuilder();
+        final long hours = secondsInput / 3600;
+        final long minutes = secondsInput / 60 % 60;
+        final long seconds = secondsInput % 60;
+
+        if (hours > 0) {
+            if (hours < 10) {
+                result.append('0');
+            }
+
+            result.append(hours).append(":");
+        }
+
+        if (minutes < 10) {
+            result.append('0');
+        }
+
+        result.append(minutes).append(":");
+
+        if (seconds < 10) {
+            result.append('0');
+        }
+
+        result.append(seconds);
+
+        return result.toString();
+    }
 }
