@@ -30,12 +30,14 @@ import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
+import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
-import com.dmdirc.plugins.BaseFileDependantPlugin;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.PluginManager;
+import com.dmdirc.plugins.implementations.BaseCommandPlugin;
+import com.dmdirc.plugins.implementations.PluginFilesHelper;
 import com.dmdirc.ui.messages.Styliser;
 import com.dmdirc.util.io.StreamReader;
 import com.dmdirc.util.resourcemanager.ResourceManager;
@@ -49,7 +51,7 @@ import org.apache.commons.lang.StringEscapeUtils;
  * This plugin adds freedesktop Style Notifications to dmdirc.
  */
 public final class FreeDesktopNotificationsPlugin
-        extends BaseFileDependantPlugin implements ConfigChangeListener {
+        extends BaseCommandPlugin implements ConfigChangeListener {
 
     /** notification timeout. */
     private int timeout;
@@ -69,19 +71,25 @@ public final class FreeDesktopNotificationsPlugin
     private final Identity identity;
     /** Plugin manager instance. */
     private final PluginManager pluginManager;
+    /** Plugin files helper. */
+    private final PluginFilesHelper filesHelper;
 
     /**
      * Creates a new instance of this plugin.
      *
      * @param pluginInfo This plugin's plugin info
      * @param identityManager Identity Manager instance
+     * @param pluginManager Plugin manager
+     * @param commandController Command controller to register commands
      */
     public FreeDesktopNotificationsPlugin(final PluginInfo pluginInfo,
             final IdentityManager identityManager,
-            final PluginManager pluginManager) {
-        super(pluginInfo.getMetaData());
+            final PluginManager pluginManager,
+            final CommandController commandController) {
+        super(commandController);
         this.pluginInfo = pluginInfo;
         this.pluginManager = pluginManager;
+        this.filesHelper = new PluginFilesHelper(pluginInfo.getMetaData());
         config = identityManager.getGlobalConfiguration();
         identity = identityManager.getGlobalAddonIdentity();
         registerCommand(new FDNotifyCommand(this), FDNotifyCommand.INFO);
@@ -95,13 +103,13 @@ public final class FreeDesktopNotificationsPlugin
      * @return True if the notification was shown.
      */
     public boolean showNotification(final String title, final String message) {
-        if (getFilesDir() == null) { return false; }
+        if (filesHelper.getFilesDir() == null) { return false; }
 
         final ArrayList<String> args = new ArrayList<String>();
 
         args.add("/usr/bin/env");
         args.add("python");
-        args.add(getFilesDirString() + "notify.py");
+        args.add(filesHelper.getFilesDirString() + "notify.py");
         args.add("-a");
         args.add("DMDirc");
         args.add("-i");
@@ -172,8 +180,8 @@ public final class FreeDesktopNotificationsPlugin
 
                 // Extract the files needed
                 try {
-                    res.extractResoucesEndingWith(getFilesDir(), ".py");
-                    res.extractResoucesEndingWith(getFilesDir(), ".png");
+                    res.extractResoucesEndingWith(filesHelper.getFilesDir(), ".py");
+                    res.extractResoucesEndingWith(filesHelper.getFilesDir(), ".png");
                 } catch (IOException ex) {
                     Logger.userError(ErrorLevel.MEDIUM, "Unable to extract files for Free desktop notifications: " + ex.getMessage(), ex);
                 }
@@ -197,7 +205,7 @@ public final class FreeDesktopNotificationsPlugin
     @Override
     public void domainUpdated() {
         identity.setOption(getDomain(),
-                "general.icon", getFilesDirString() + "icon.png");
+                "general.icon", filesHelper.getFilesDirString() + "icon.png");
     }
 
     /** {@inheritDoc} */

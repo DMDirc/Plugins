@@ -32,7 +32,7 @@ import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.parser.common.MyInfo;
 import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.parser.interfaces.ProtocolDescription;
-import com.dmdirc.plugins.BasePlugin;
+import com.dmdirc.plugins.implementations.BasePlugin;
 import com.dmdirc.plugins.PluginInfo;
 
 import java.net.URI;

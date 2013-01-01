@@ -24,7 +24,7 @@ package com.dmdirc.addons.mediasource_mplayer;
 
 import com.dmdirc.addons.nowplaying.MediaSource;
 import com.dmdirc.addons.nowplaying.MediaSourceState;
-import com.dmdirc.plugins.BasePlugin;
+import com.dmdirc.plugins.implementations.BasePlugin;
 
 import java.io.BufferedReader;
 import java.io.IOException;

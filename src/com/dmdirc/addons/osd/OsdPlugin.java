@@ -31,8 +31,9 @@ import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.config.prefs.SettingChangeListener;
-import com.dmdirc.plugins.BasePlugin;
+import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.plugins.PluginInfo;
+import com.dmdirc.plugins.implementations.BaseCommandPlugin;
 import com.dmdirc.util.validators.NumericalValidator;
 import com.dmdirc.util.validators.OptionalValidator;
 
@@ -42,7 +43,7 @@ import java.util.Map;
 /**
  * Allows the user to display on-screen-display messages.
  */
-public final class OsdPlugin extends BasePlugin implements
+public final class OsdPlugin extends BaseCommandPlugin implements
         CategoryChangeListener, PreferencesInterface, SettingChangeListener {
 
     /** Config OSD Window. */
@@ -63,9 +64,11 @@ public final class OsdPlugin extends BasePlugin implements
      * Creates a new instance of this plugin.
      *
      * @param pluginInfo This plugin's plugin info
+     * @param commandController Command controller to register commands
      */
-    public OsdPlugin(final PluginInfo pluginInfo) {
-        super();
+    public OsdPlugin(final PluginInfo pluginInfo,
+            final CommandController commandController) {
+        super(commandController);
         this.pluginInfo = pluginInfo;
         osdManager = new OsdManager(this);
         registerCommand(new OsdCommand(osdManager), OsdCommand.INFO);

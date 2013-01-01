@@ -23,7 +23,7 @@
 package com.dmdirc.addons.sessionlock;
 
 import com.dmdirc.actions.ActionManager;
-import com.dmdirc.plugins.BasePlugin;
+import com.dmdirc.plugins.implementations.BasePlugin;
 
 import com.greboid.lock.LockAdapter;
 import com.greboid.lock.LockListener;

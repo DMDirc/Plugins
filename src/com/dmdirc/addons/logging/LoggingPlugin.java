@@ -39,6 +39,7 @@ import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.interfaces.ActionController;
 import com.dmdirc.interfaces.ActionListener;
+import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
@@ -46,8 +47,8 @@ import com.dmdirc.parser.interfaces.ChannelClientInfo;
 import com.dmdirc.parser.interfaces.ChannelInfo;
 import com.dmdirc.parser.interfaces.ClientInfo;
 import com.dmdirc.parser.interfaces.Parser;
-import com.dmdirc.plugins.BasePlugin;
 import com.dmdirc.plugins.PluginInfo;
+import com.dmdirc.plugins.implementations.BaseCommandPlugin;
 import com.dmdirc.ui.messages.Styliser;
 import com.dmdirc.util.io.StreamUtils;
 
@@ -75,7 +76,7 @@ import java.util.TimerTask;
 /**
  * Adds logging facility to client.
  */
-public class LoggingPlugin extends BasePlugin implements ActionListener,
+public class LoggingPlugin extends BaseCommandPlugin implements ActionListener,
         ConfigChangeListener {
 
     /** Cached boolean settings. */
@@ -112,11 +113,13 @@ public class LoggingPlugin extends BasePlugin implements ActionListener,
      * @param pluginInfo This plugin's plugin info
      * @param actionController The action controller to register listeners with
      * @param identityManager The Identity Manager that controls the current config
+     * @param commandController Command controller to register commands
      */
     public LoggingPlugin(final PluginInfo pluginInfo,
             final ActionController actionController,
-            final IdentityManager identityManager) {
-        super();
+            final IdentityManager identityManager,
+            final CommandController commandController) {
+        super(commandController);
         this.identityManager = identityManager;
 
         this.pluginInfo = pluginInfo;

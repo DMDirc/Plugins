@@ -23,7 +23,7 @@
 package com.dmdirc.addons.tabcompletion_bash;
 
 import com.dmdirc.WritableFrameContainer;
-import com.dmdirc.plugins.BasePlugin;
+import com.dmdirc.plugins.implementations.BasePlugin;
 import com.dmdirc.ui.input.TabCompleter;
 import com.dmdirc.ui.input.tabstyles.TabCompletionStyle;
 

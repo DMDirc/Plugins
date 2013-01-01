@@ -23,20 +23,24 @@
 package com.dmdirc.addons.osx_integration;
 
 import com.dmdirc.addons.ui_swing.SwingController;
-import com.dmdirc.plugins.BasePlugin;
+import com.dmdirc.interfaces.CommandController;
+import com.dmdirc.plugins.implementations.BaseCommandPlugin;
 
 /**
  * A plugin which provides extra commands that integrate with the OS X
  * environment.
  */
-public class OsxIntegrationPlugin extends BasePlugin {
+public class OsxIntegrationPlugin extends BaseCommandPlugin {
 
     /**
      * Creates an instance of {@link OsxIntegrationPlugin}.
      *
      * @param controller The Swing UI which runs on the OS X environment
+     * @param commandController Command controller to register commands
      */
-    public OsxIntegrationPlugin(final SwingController controller) {
+    public OsxIntegrationPlugin(final SwingController controller,
+            final CommandController commandController) {
+        super(commandController);
         registerCommand(new DockBounceCommand(controller.getApple()),
                 DockBounceCommand.INFO);
     }

@@ -22,16 +22,21 @@
 
 package com.dmdirc.addons.calc;
 
-import com.dmdirc.plugins.BasePlugin;
+import com.dmdirc.interfaces.CommandController;
+import com.dmdirc.plugins.implementations.BaseCommandPlugin;
 
 /**
  * A plugin which parses and evaluates various mathematical expressions.
  */
-public class CalcPlugin extends BasePlugin {
+public class CalcPlugin extends BaseCommandPlugin {
 
-    /** Creates a new instance of this plugin. */
-    public CalcPlugin() {
-        super();
+    /**
+     * Creates a new instance of this plugin.
+     *
+     * @param commandController Command controller to register commands
+     */
+    public CalcPlugin(final CommandController commandController) {
+        super(commandController);
         registerCommand(new CalcCommand(), CalcCommand.INFO);
     }
 }

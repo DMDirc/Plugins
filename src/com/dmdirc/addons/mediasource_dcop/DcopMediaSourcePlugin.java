@@ -24,7 +24,7 @@ package com.dmdirc.addons.mediasource_dcop;
 
 import com.dmdirc.addons.nowplaying.MediaSource;
 import com.dmdirc.addons.nowplaying.MediaSourceManager;
-import com.dmdirc.plugins.BasePlugin;
+import com.dmdirc.plugins.implementations.BasePlugin;
 import com.dmdirc.plugins.NoSuchProviderException;
 import com.dmdirc.plugins.PluginManager;
 
