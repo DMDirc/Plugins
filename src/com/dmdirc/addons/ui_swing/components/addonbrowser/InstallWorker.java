@@ -58,7 +58,7 @@ public class InstallWorker extends LoggingSwingWorker<String, Void> {
     protected String doInBackground() {
         try {
             final File file = new File(controller.getIdentityManager().getConfigDir(),
-                    "." + info.getDownload());
+                    "." + info.getId());
             Downloader.downloadPage("http://addons.dmdirc.com/addondownload/"
                     + info.getDownload(), file.getAbsolutePath());
 
@@ -97,10 +97,6 @@ public class InstallWorker extends LoggingSwingWorker<String, Void> {
     /** {@inheritDoc} */
     @Override
     protected void done() {
-        if (!isCancelled()) {
-            installer.finished("");
-            return;
-        }
         String message = "";
         try {
             message = get();
