@@ -305,6 +305,6 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
      */
     @Override
     public void keyReleased(final KeyEvent e) {
-        //Ignore
+        validateText();
     }
 }
