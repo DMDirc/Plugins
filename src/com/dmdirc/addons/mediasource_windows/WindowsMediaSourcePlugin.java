@@ -26,8 +26,9 @@ import com.dmdirc.addons.nowplaying.MediaSource;
 import com.dmdirc.addons.nowplaying.MediaSourceManager;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
-import com.dmdirc.plugins.BaseFileDependantPlugin;
 import com.dmdirc.plugins.PluginInfo;
+import com.dmdirc.plugins.implementations.BasePlugin;
+import com.dmdirc.plugins.implementations.PluginFilesHelper;
 import com.dmdirc.util.io.StreamReader;
 import com.dmdirc.util.resourcemanager.ResourceManager;
 
@@ -38,7 +39,7 @@ import java.util.List;
 /**
  * Manages all Windows based media sources.
  */
-public class WindowsMediaSourcePlugin extends BaseFileDependantPlugin
+public class WindowsMediaSourcePlugin extends BasePlugin
         implements MediaSourceManager {
 
     /** Media sources. */
@@ -47,14 +48,18 @@ public class WindowsMediaSourcePlugin extends BaseFileDependantPlugin
     /** My plugin info. */
     private final PluginInfo pluginInfo;
 
+    /** Plugin files helper. */
+    private final PluginFilesHelper filesHelper;
+
     /**
      * Creates a new instance of DcopMediaSourcePlugin.
      *
      * @param pluginInfo This plugin's plugin info
      */
     public WindowsMediaSourcePlugin(final PluginInfo pluginInfo) {
-        super(pluginInfo.getMetaData());
+        super();
         this.pluginInfo = pluginInfo;
+        this.filesHelper = new PluginFilesHelper(pluginInfo.getMetaData());
         sources = new ArrayList<MediaSource>();
         sources.add(new DllSource(this, "Winamp", true));
         sources.add(new DllSource(this, "iTunes", false));
@@ -75,7 +80,10 @@ public class WindowsMediaSourcePlugin extends BaseFileDependantPlugin
      */
     protected MediaInfoOutput getOutput(final String player, final String method) {
         try {
-            final Process myProcess = Runtime.getRuntime().exec(new String[]{getFilesDirString() + "GetMediaInfo.exe", player, method});
+            final Process myProcess = Runtime.getRuntime().exec(new String[]{
+                filesHelper.getFilesDirString() + "GetMediaInfo.exe",
+                player,
+                method});
             final StringBuffer data = new StringBuffer();
             new StreamReader(myProcess.getErrorStream()).start();
             new StreamReader(myProcess.getInputStream(), data).start();
@@ -109,8 +117,8 @@ public class WindowsMediaSourcePlugin extends BaseFileDependantPlugin
 
             // Extract the .dlls and .exe
             try {
-                res.extractResoucesEndingWith(getFilesDir(), ".dll");
-                res.extractResoucesEndingWith(getFilesDir(), ".exe");
+                res.extractResoucesEndingWith(filesHelper.getFilesDir(), ".dll");
+                res.extractResoucesEndingWith(filesHelper.getFilesDir(), ".exe");
             } catch (IOException ex) {
                 Logger.userError(ErrorLevel.MEDIUM, "Unable to extract files for windows media source: " + ex.getMessage(), ex);
             }

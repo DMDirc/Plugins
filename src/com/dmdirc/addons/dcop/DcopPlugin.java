@@ -22,7 +22,8 @@
 
 package com.dmdirc.addons.dcop;
 
-import com.dmdirc.plugins.BasePlugin;
+import com.dmdirc.interfaces.CommandController;
+import com.dmdirc.plugins.implementations.BaseCommandPlugin;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -33,11 +34,15 @@ import java.util.List;
 /**
  * Allows the user to execute dcop commands (and read the results).
  */
-public final class DcopPlugin extends BasePlugin {
+public final class DcopPlugin extends BaseCommandPlugin {
 
-    /** Creates a new instance of this plugin. */
-    public DcopPlugin() {
-        super();
+    /**
+     * Creates a new instance of this plugin.
+     *
+     * @param commandController Command controller to register commands
+     */
+    public DcopPlugin(final CommandController commandController) {
+        super(commandController);
         registerCommand(new DcopCommand(), DcopCommand.INFO);
     }
 

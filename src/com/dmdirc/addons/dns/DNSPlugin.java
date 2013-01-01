@@ -22,7 +22,8 @@
 
 package com.dmdirc.addons.dns;
 
-import com.dmdirc.plugins.BasePlugin;
+import com.dmdirc.interfaces.CommandController;
+import com.dmdirc.plugins.implementations.BaseCommandPlugin;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -33,11 +34,15 @@ import java.util.List;
 /**
  * DNS plugin.
  */
-public final class DNSPlugin extends BasePlugin {
+public final class DNSPlugin extends BaseCommandPlugin {
 
-    /** Creates a new instance of this plugin. */
-    public DNSPlugin() {
-        super();
+    /**
+     * Creates a new instance of this plugin.
+     *
+     * @param commandController Command controller to register commands
+     */
+    public DNSPlugin(final CommandController commandController) {
+        super(commandController);
         registerCommand(new DNSCommand(), DNSCommand.INFO);
     }
 

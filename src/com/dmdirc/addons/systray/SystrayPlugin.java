@@ -33,8 +33,9 @@ import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.interfaces.ActionController;
-import com.dmdirc.plugins.BasePlugin;
+import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.plugins.PluginInfo;
+import com.dmdirc.plugins.implementations.BaseCommandPlugin;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.messages.Styliser;
 import com.dmdirc.util.validators.ValidationResponse;
@@ -54,8 +55,8 @@ import java.awt.event.MouseListener;
  * The Systray plugin shows DMDirc in the user's system tray, and allows
  * notifications to be disabled.
  */
-public final class SystrayPlugin extends BasePlugin implements ActionListener,
-        MouseListener, com.dmdirc.interfaces.ActionListener {
+public final class SystrayPlugin extends BaseCommandPlugin implements
+        ActionListener, MouseListener, com.dmdirc.interfaces.ActionListener {
 
     /** The tray icon we're currently using. */
     private final TrayIcon icon;
@@ -71,10 +72,12 @@ public final class SystrayPlugin extends BasePlugin implements ActionListener,
      *
      * @param pluginInfo This plugin's plugin info
      * @param actionController The action controller to use
+     * @param commandController Command controller to register commands
      */
     public SystrayPlugin(final PluginInfo pluginInfo,
-            final ActionController actionController) {
-        super();
+            final ActionController actionController,
+            final CommandController commandController) {
+        super(commandController);
 
         this.pluginInfo = pluginInfo;
         this.actionController = actionController;

@@ -22,16 +22,21 @@
 
 package com.dmdirc.addons.contactlist;
 
-import com.dmdirc.plugins.BasePlugin;
+import com.dmdirc.interfaces.CommandController;
+import com.dmdirc.plugins.implementations.BaseCommandPlugin;
 
 /**
  * Plugin to provide a POC contact list.
  */
-public final class ContactListPlugin extends BasePlugin {
+public final class ContactListPlugin extends BaseCommandPlugin {
 
-    /** Creates a new instance of this plugin. */
-    public ContactListPlugin() {
-        super();
+    /**
+     * Creates a new instance of this plugin.
+     *
+     * @param commandController Command controller to register commands
+     */
+    public ContactListPlugin(final CommandController commandController) {
+        super(commandController);
         registerCommand(new ContactListCommand(), ContactListCommand.INFO);
     }
 }

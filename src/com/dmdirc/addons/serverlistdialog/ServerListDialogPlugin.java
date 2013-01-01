@@ -24,6 +24,7 @@ package com.dmdirc.addons.serverlistdialog;
 
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.plugins.PluginManager;
+import com.dmdirc.plugins.implementations.BasePlugin;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -33,7 +34,7 @@ import javax.swing.JMenuItem;
 /**
  * Server list dialog plugin.
  */
-public class ServerListDialogPlugin implements ActionListener {
+public class ServerListDialogPlugin extends BasePlugin implements ActionListener {
 
     /** Swing controller. */
     private final SwingController controller;

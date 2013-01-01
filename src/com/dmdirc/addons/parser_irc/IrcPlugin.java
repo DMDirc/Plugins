@@ -27,7 +27,7 @@ import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.parser.interfaces.ProtocolDescription;
 import com.dmdirc.parser.irc.IRCParser;
 import com.dmdirc.parser.irc.IRCProtocolDescription;
-import com.dmdirc.plugins.BasePlugin;
+import com.dmdirc.plugins.implementations.BasePlugin;
 
 import java.net.URI;
 
