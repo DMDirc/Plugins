@@ -54,13 +54,14 @@ import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
+import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.ui.UIController;
 import com.dmdirc.interfaces.ui.Window;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
-import com.dmdirc.plugins.BasePlugin;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.PluginManager;
+import com.dmdirc.plugins.implementations.BaseCommandPlugin;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.core.components.StatusBarManager;
@@ -96,7 +97,7 @@ import net.miginfocom.layout.PlatformDefaults;
  * Controls the main swing UI.
  */
 @SuppressWarnings("PMD.UnusedPrivateField")
-public class SwingController extends BasePlugin implements UIController {
+public class SwingController extends BaseCommandPlugin implements UIController {
     /** Window factory. */
     @Getter
     private final SwingWindowFactory windowFactory =
@@ -161,13 +162,18 @@ public class SwingController extends BasePlugin implements UIController {
      *
      * @param pluginInfo Plugin info
      * @param identityManager Identity Manager
+     * @param pluginManager Plugin manager
+     * @param main Main instance
+     * @param actionManager Action manager
+     * @param commandController Command controller to register commands
      */
     public SwingController(final PluginInfo pluginInfo,
             final IdentityManager identityManager,
             final PluginManager pluginManager,
             final Main main,
-            final ActionManager actionManager) {
-        super();
+            final ActionManager actionManager,
+            final CommandController commandController) {
+        super(commandController);
         this.main = main;
         this.pluginInfo = pluginInfo;
         this.identityManager = identityManager;

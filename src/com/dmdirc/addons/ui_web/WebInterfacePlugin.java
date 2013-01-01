@@ -23,7 +23,7 @@
 package com.dmdirc.addons.ui_web;
 
 import com.dmdirc.Main;
-import com.dmdirc.plugins.BasePlugin;
+import com.dmdirc.plugins.implementations.BasePlugin;
 
 import lombok.Getter;
 

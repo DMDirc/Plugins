@@ -23,7 +23,8 @@
 package com.dmdirc.addons.time;
 
 import com.dmdirc.interfaces.ActionController;
-import com.dmdirc.plugins.BasePlugin;
+import com.dmdirc.interfaces.CommandController;
+import com.dmdirc.plugins.implementations.BaseCommandPlugin;
 
 import java.util.Calendar;
 import java.util.Timer;
@@ -32,7 +33,7 @@ import java.util.TimerTask;
 /**
  * Provides various time-related features.
  */
-public final class TimePlugin extends BasePlugin {
+public final class TimePlugin extends BaseCommandPlugin {
 
     /** Have we registered our types already? */
     private static boolean registered;
@@ -47,9 +48,11 @@ public final class TimePlugin extends BasePlugin {
      * Creates a new instance of this plugin.
      *
      * @param actionController The action controller to register listeners with
+     * @param commandController Command controller to register commands
      */
-    public TimePlugin(final ActionController actionController) {
-        super();
+    public TimePlugin(final ActionController actionController,
+            final CommandController commandController) {
+        super(commandController);
 
         this.actionController = actionController;
         manager = new TimerManager();

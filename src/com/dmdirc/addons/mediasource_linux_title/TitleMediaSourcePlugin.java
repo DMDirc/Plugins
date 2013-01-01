@@ -24,7 +24,7 @@ package com.dmdirc.addons.mediasource_linux_title;
 
 import com.dmdirc.addons.nowplaying.MediaSource;
 import com.dmdirc.addons.nowplaying.MediaSourceManager;
-import com.dmdirc.plugins.BasePlugin;
+import com.dmdirc.plugins.implementations.BasePlugin;
 
 import java.util.ArrayList;
 import java.util.List;

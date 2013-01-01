@@ -29,9 +29,10 @@ import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.interfaces.ActionListener;
+import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.actions.ActionType;
-import com.dmdirc.plugins.BasePlugin;
 import com.dmdirc.plugins.PluginInfo;
+import com.dmdirc.plugins.implementations.BaseCommandPlugin;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +42,7 @@ import java.util.concurrent.Callable;
  * Notification Manager plugin, aggregates notification sources exposing them
  * via a single command.
  */
-public class NotificationsPlugin extends BasePlugin implements ActionListener {
+public class NotificationsPlugin extends BaseCommandPlugin implements ActionListener {
 
     /** The notification methods that we know of. */
     private final List<String> methods = new ArrayList<String>();
@@ -54,9 +55,11 @@ public class NotificationsPlugin extends BasePlugin implements ActionListener {
      * Creates a new instance of this plugin.
      *
      * @param pluginInfo This plugin's plugin info
+     * @param commandController Command controller to register commands
      */
-    public NotificationsPlugin(final PluginInfo pluginInfo) {
-        super();
+    public NotificationsPlugin(final PluginInfo pluginInfo,
+            final CommandController commandController) {
+        super(commandController);
         this.pluginInfo = pluginInfo;
         registerCommand(new NotificationCommand(this),
                 NotificationCommand.INFO);

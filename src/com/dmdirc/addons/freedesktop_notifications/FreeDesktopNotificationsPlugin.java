@@ -30,12 +30,13 @@ import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
+import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
-import com.dmdirc.plugins.BaseFileDependantPlugin;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.PluginManager;
+import com.dmdirc.plugins.implementations.BaseFileDependantCommandPlugin;
 import com.dmdirc.ui.messages.Styliser;
 import com.dmdirc.util.io.StreamReader;
 import com.dmdirc.util.resourcemanager.ResourceManager;
@@ -49,7 +50,7 @@ import org.apache.commons.lang.StringEscapeUtils;
  * This plugin adds freedesktop Style Notifications to dmdirc.
  */
 public final class FreeDesktopNotificationsPlugin
-        extends BaseFileDependantPlugin implements ConfigChangeListener {
+        extends BaseFileDependantCommandPlugin implements ConfigChangeListener {
 
     /** notification timeout. */
     private int timeout;
@@ -75,11 +76,14 @@ public final class FreeDesktopNotificationsPlugin
      *
      * @param pluginInfo This plugin's plugin info
      * @param identityManager Identity Manager instance
+     * @param pluginManager Plugin manager
+     * @param commandController Command controller to register commands
      */
     public FreeDesktopNotificationsPlugin(final PluginInfo pluginInfo,
             final IdentityManager identityManager,
-            final PluginManager pluginManager) {
-        super(pluginInfo.getMetaData());
+            final PluginManager pluginManager,
+            final CommandController commandController) {
+        super(pluginInfo.getMetaData(), commandController);
         this.pluginInfo = pluginInfo;
         this.pluginManager = pluginManager;
         config = identityManager.getGlobalConfiguration();

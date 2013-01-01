@@ -26,10 +26,11 @@ import com.dmdirc.Server;
 import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.interfaces.ActionController;
 import com.dmdirc.interfaces.ActionListener;
+import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.parser.interfaces.callbacks.DebugInfoListener;
-import com.dmdirc.plugins.BasePlugin;
+import com.dmdirc.plugins.implementations.BaseCommandPlugin;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -39,7 +40,8 @@ import java.util.Map;
 /**
  * This causes parser debugging to be spammed to the console.
  */
-public final class DebugPlugin extends BasePlugin implements DebugInfoListener, ActionListener {
+public final class DebugPlugin extends BaseCommandPlugin implements
+        DebugInfoListener, ActionListener {
 
     /** Map of parsers registered. */
     protected final Map<Parser, DebugWindow> registeredParsers
@@ -51,9 +53,11 @@ public final class DebugPlugin extends BasePlugin implements DebugInfoListener, 
      * Creates a new instance of this plugin.
      *
      * @param actionController The action controller to register listeners with
+     * @param commandController Command controller to register commands
      */
-    public DebugPlugin(final ActionController actionController) {
-        super();
+    public DebugPlugin(final ActionController actionController,
+            final CommandController commandController) {
+        super(commandController);
 
         this.actionController = actionController;
 

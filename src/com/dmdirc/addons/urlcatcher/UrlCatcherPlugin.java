@@ -29,8 +29,9 @@ import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.interfaces.ActionListener;
+import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.ConfigChangeListener;
-import com.dmdirc.plugins.BasePlugin;
+import com.dmdirc.plugins.implementations.BaseCommandPlugin;
 import com.dmdirc.ui.messages.Styliser;
 
 import java.util.HashMap;
@@ -40,17 +41,21 @@ import java.util.Map;
  * A plugin which logs all observed URLs and allows the user to list them
  * later.
  */
-public class UrlCatcherPlugin extends BasePlugin implements ActionListener,
-        ConfigChangeListener {
+public class UrlCatcherPlugin extends BaseCommandPlugin implements
+        ActionListener, ConfigChangeListener {
 
     /* URLs and the number of times they were mentioned. */
     private final Map<String, Integer> urls = new HashMap<String, Integer>();
     /** Whether to capture URLs from the raw window. */
     private boolean captureRaw = false;
 
-    /** Creates a new instance of this plugin. */
-    public UrlCatcherPlugin() {
-        super();
+    /**
+     * Creates a new instance of this plugin.
+     *
+     * @param commandController Command controller to register commands
+     */
+    public UrlCatcherPlugin(final CommandController commandController) {
+        super(commandController);
         registerCommand(new UrlListCommand(this), UrlListCommand.INFO);
     }
 

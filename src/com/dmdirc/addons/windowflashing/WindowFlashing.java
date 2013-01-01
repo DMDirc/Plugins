@@ -35,9 +35,10 @@ import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.interfaces.ActionListener;
+import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.actions.ActionType;
-import com.dmdirc.plugins.BasePlugin;
 import com.dmdirc.plugins.PluginInfo;
+import com.dmdirc.plugins.implementations.BaseCommandPlugin;
 
 import com.sun.jna.Native;
 import com.sun.jna.NativeLibrary;
@@ -50,7 +51,7 @@ import com.sun.jna.platform.win32.WinUser.FLASHWINFO;
 /**
  * Native notification plugin to make DMDirc support windows task bar flashing.
  */
-public class WindowFlashing extends BasePlugin implements ActionListener {
+public class WindowFlashing extends BaseCommandPlugin implements ActionListener {
 
     /** This plugin's plugin info. */
     private final PluginInfo pluginInfo;
@@ -86,12 +87,14 @@ public class WindowFlashing extends BasePlugin implements ActionListener {
      * @param identityManager Identity Manager
      * @param controller Parent swing controller
      * @param actionManager Action manager
+     * @param commandController command controller to register commands
      */
     public WindowFlashing(final PluginInfo pluginInfo,
             final IdentityManager identityManager,
             final SwingController controller,
-            final ActionManager actionManager) {
-        super();
+            final ActionManager actionManager,
+            final CommandController commandController) {
+        super(commandController);
         this.pluginInfo = pluginInfo;
         this.controller = controller;
         this.actionManager = actionManager;

@@ -24,10 +24,11 @@ package com.dmdirc.addons.debug;
 
 import com.dmdirc.addons.debug.commands.*; //NOPMD
 import com.dmdirc.config.IdentityManager;
+import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
-import com.dmdirc.plugins.BasePlugin;
 import com.dmdirc.plugins.PluginManager;
+import com.dmdirc.plugins.implementations.BaseCommandPlugin;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,7 +41,7 @@ import lombok.Getter;
  * Debug plugin providing commands to aid in debugging the client.
  */
 @SuppressWarnings("unused")
-public class DebugPlugin extends BasePlugin {
+public class DebugPlugin extends BaseCommandPlugin {
 
     /** List of build in debug commands to load. */
     private static final Class[] CLASSES = {
@@ -68,10 +69,12 @@ public class DebugPlugin extends BasePlugin {
      *
      * @param identityManager Identity manager instance
      * @param pluginManager Plugin manager instance.
+     * @param commandController Command controller to register commands
      */
     public DebugPlugin(final IdentityManager identityManager,
-            final PluginManager pluginManager) {
-        super();
+            final PluginManager pluginManager,
+            final CommandController commandController) {
+        super(commandController);
         this.identityManager = identityManager;
         this.pluginManager = pluginManager;
         commands = new HashMap<String, DebugCommand>();

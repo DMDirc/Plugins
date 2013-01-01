@@ -42,13 +42,14 @@ import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.interfaces.ActionListener;
+import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.parser.interfaces.ClientInfo;
 import com.dmdirc.parser.interfaces.Parser;
-import com.dmdirc.plugins.BasePlugin;
 import com.dmdirc.plugins.PluginInfo;
+import com.dmdirc.plugins.implementations.BaseCommandPlugin;
 import com.dmdirc.ui.WindowManager;
 
 import java.io.File;
@@ -64,7 +65,7 @@ import javax.swing.JOptionPane;
 /**
  * This plugin adds DCC to DMDirc.
  */
-public final class DCCPlugin extends BasePlugin implements ActionListener {
+public final class DCCPlugin extends BaseCommandPlugin implements ActionListener {
 
     /** Our DCC Container window. */
     private PlaceholderContainer container;
@@ -83,12 +84,13 @@ public final class DCCPlugin extends BasePlugin implements ActionListener {
      * @param controller The controller to register UI implementations with
      * @param pluginInfo This plugin's plugin info
      * @param identityManager The Identity Manager that controls the current config
+     * @param commandController Command controller to register commands
      */
     public DCCPlugin(final SwingController controller,
             final PluginInfo pluginInfo,
-            final IdentityManager identityManager
-            ) {
-        super();
+            final IdentityManager identityManager,
+            final CommandController commandController) {
+        super(commandController);
         this.identityManager = identityManager;
         this.controller = controller;
         config = controller.getGlobalConfig();

@@ -22,7 +22,7 @@
 
 package com.dmdirc.addons.serverlists;
 
-import com.dmdirc.plugins.BasePlugin;
+import com.dmdirc.plugins.implementations.BasePlugin;
 
 /** Dummy plugin for server lists. */
 public class ServerListPlugin extends BasePlugin {}

@@ -26,7 +26,7 @@ import com.dmdirc.addons.nowplaying.MediaSource;
 import com.dmdirc.addons.nowplaying.MediaSourceManager;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
-import com.dmdirc.plugins.BasePlugin;
+import com.dmdirc.plugins.implementations.BasePlugin;
 
 import java.io.BufferedReader;
 import java.io.File;
