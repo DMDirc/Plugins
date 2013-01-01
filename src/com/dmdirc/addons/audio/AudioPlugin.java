@@ -22,16 +22,21 @@
 
 package com.dmdirc.addons.audio;
 
-import com.dmdirc.plugins.BasePlugin;
+import com.dmdirc.interfaces.CommandController;
+import com.dmdirc.plugins.implementations.BaseCommandPlugin;
 
 /**
  * Adds Audio playing facility to client.
  */
-public final class AudioPlugin extends BasePlugin {
+public final class AudioPlugin extends BaseCommandPlugin {
 
-    /** Creates a new instance of this plugin. */
-    public AudioPlugin() {
-        super();
+    /**
+     * Creates a new instance of this plugin.
+     *
+     * @param commandController Command controller to register commands
+     */
+    public AudioPlugin(final CommandController commandController) {
+        super(commandController);
         registerCommand(new AudioCommand(), AudioCommand.INFO);
         registerCommand(new BeepCommand(), BeepCommand.INFO);
     }

@@ -22,17 +22,22 @@
 
 package com.dmdirc.addons.redirect;
 
-import com.dmdirc.plugins.BasePlugin;
+import com.dmdirc.interfaces.CommandController;
+import com.dmdirc.plugins.implementations.BaseCommandPlugin;
 
 /**
  * The redirect plugin allows the suer to redirect the output of commands that
  * would normally echo their results locally to a channel or chat window instead.
  */
-public final class RedirectPlugin extends BasePlugin {
+public final class RedirectPlugin extends BaseCommandPlugin {
 
-    /** Creates a new instance of this plugin. */
-    public RedirectPlugin() {
-        super();
+    /**
+     * Creates a new instance of this plugin.
+     *
+     * @param commandController Command controller to register commands
+     */
+    public RedirectPlugin(final CommandController commandController) {
+        super(commandController);
         registerCommand(new RedirectCommand(), RedirectCommand.INFO);
     }
 }

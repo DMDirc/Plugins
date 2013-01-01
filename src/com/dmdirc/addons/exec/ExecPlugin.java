@@ -22,16 +22,21 @@
 
 package com.dmdirc.addons.exec;
 
-import com.dmdirc.plugins.BasePlugin;
+import com.dmdirc.interfaces.CommandController;
+import com.dmdirc.plugins.implementations.BaseCommandPlugin;
 
 /**
  * A plugin which provides an execute command.
  */
-public class ExecPlugin extends BasePlugin {
+public class ExecPlugin extends BaseCommandPlugin {
 
-    /** Creates a new instance of this plugin. */
-    public ExecPlugin() {
-        super();
+    /**
+     * Creates a new instance of this plugin.
+     *
+     * @param commandController Command controller to register commands
+     */
+    public ExecPlugin(final CommandController commandController) {
+        super(commandController);
         registerCommand(new ExecCommand(), ExecCommand.INFO);
     }
 }

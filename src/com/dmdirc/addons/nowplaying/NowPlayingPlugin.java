@@ -30,10 +30,11 @@ import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.interfaces.ActionController;
 import com.dmdirc.interfaces.ActionListener;
+import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.actions.ActionType;
-import com.dmdirc.plugins.BasePlugin;
 import com.dmdirc.plugins.Plugin;
 import com.dmdirc.plugins.PluginInfo;
+import com.dmdirc.plugins.implementations.BaseCommandPlugin;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -44,7 +45,7 @@ import java.util.concurrent.Callable;
  * Plugin that allows users to advertise what they're currently playing or
  * listening to.
  */
-public class NowPlayingPlugin extends BasePlugin implements ActionListener  {
+public class NowPlayingPlugin extends BaseCommandPlugin implements ActionListener  {
 
     /** The sources that we know of. */
     private final List<MediaSource> sources = new ArrayList<MediaSource>();
@@ -62,10 +63,12 @@ public class NowPlayingPlugin extends BasePlugin implements ActionListener  {
      *
      * @param pluginInfo This plugin's plugin info
      * @param actionController The action controller to register listeners with
+     * @param commandController Command controller to register commands
      */
     public NowPlayingPlugin(final PluginInfo pluginInfo,
-            final ActionController actionController) {
-        super();
+            final ActionController actionController,
+            final CommandController commandController) {
+        super(commandController);
 
         this.pluginInfo = pluginInfo;
         this.actionController = actionController;

@@ -26,10 +26,11 @@ import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.config.IdentityManager;
 import com.dmdirc.interfaces.ActionController;
 import com.dmdirc.interfaces.ActionListener;
+import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
-import com.dmdirc.plugins.BasePlugin;
+import com.dmdirc.plugins.implementations.BaseCommandPlugin;
 import com.dmdirc.util.io.StreamUtils;
 import com.dmdirc.util.validators.ValidationResponse;
 
@@ -46,7 +47,7 @@ import javax.script.ScriptEngineManager;
 /**
  * This allows javascript scripts to be used in DMDirc.
  */
-public final class ScriptPlugin extends BasePlugin implements ActionListener {
+public final class ScriptPlugin extends BaseCommandPlugin implements ActionListener {
 
     /** Script Directory */
     private final String scriptDir;
@@ -66,9 +67,12 @@ public final class ScriptPlugin extends BasePlugin implements ActionListener {
      *
      * @param actionController The action controller to register listeners with
      * @param identityManager The Identity Manager that controls the current config
+     * @param commandController Command controller to register commands
      */
-    public ScriptPlugin(final ActionController actionController, final IdentityManager identityManager) {
-        super();
+    public ScriptPlugin(final ActionController actionController,
+            final IdentityManager identityManager,
+            final CommandController commandController) {
+        super(commandController);
         scriptDir = identityManager.getConfigDir() + "scripts/";
         this.actionController = actionController;
 

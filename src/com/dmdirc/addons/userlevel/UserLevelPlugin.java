@@ -31,7 +31,7 @@ import com.dmdirc.interfaces.ActionListener;
 import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.parser.interfaces.ChannelClientInfo;
 import com.dmdirc.parser.interfaces.ClientInfo;
-import com.dmdirc.plugins.BasePlugin;
+import com.dmdirc.plugins.implementations.BasePlugin;
 
 import java.util.HashMap;
 import java.util.Map;
