@@ -40,7 +40,6 @@ import java.awt.event.KeyEvent;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Enumeration;
 import java.util.concurrent.Callable;
-import java.util.concurrent.FutureTask;
 
 import javax.swing.BorderFactory;
 import javax.swing.JComboBox;
@@ -136,10 +135,7 @@ public final class UIUtilities {
         UIManager.put("SplitPane.dividerSize", (int) PlatformDefaults.
                 getPanelInsets(0).getValue());
         UIManager.put("TreeUI", TreeUI.class.getName());
-        if (isGTKUI()) {
-            UIManager.put("TitledBorder.titleColor", UIManager.getColor(
-                    "Label.foreground"));
-        }
+        UIManager.put("TextField.background", new Color(255, 255, 255));
         PlatformDefaults.setDefaultRowAlignmentBaseline(false);
     }
 
