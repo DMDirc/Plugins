@@ -136,10 +136,7 @@ public final class UIUtilities {
         UIManager.put("SplitPane.dividerSize", (int) PlatformDefaults.
                 getPanelInsets(0).getValue());
         UIManager.put("TreeUI", TreeUI.class.getName());
-        if (isGTKUI()) {
-            UIManager.put("TitledBorder.titleColor", UIManager.getColor(
-                    "Label.foreground"));
-        }
+        UIManager.put("TextField.background", new Color(255, 255, 255));
         PlatformDefaults.setDefaultRowAlignmentBaseline(false);
     }
 
