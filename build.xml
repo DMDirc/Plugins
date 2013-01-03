@@ -111,6 +111,7 @@ version:
             <zipfileset src="${plugins.lib}/jxlayer.jar" includes="org/jdesktop/jxlayer/**"/>
             <zipfileset src="${plugins.lib}/cinch.jar" includes="*/**"/>
             <zipfileset src="${plugins.lib}/cinchsupport.jar" includes="*/**"/>
+            <zipfileset src="${plugins.lib}/java-swing-ayatana-1.2.4.jar" includes="*/**"/>
         </jar>
 
         <jar destfile="${plugins.dist}/parser_twitter.jar" update="true">
