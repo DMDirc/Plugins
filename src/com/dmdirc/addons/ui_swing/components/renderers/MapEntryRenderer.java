@@ -26,7 +26,9 @@ import java.awt.Component;
 import java.util.Map.Entry;
 
 import javax.swing.DefaultListCellRenderer;
+import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.ListCellRenderer;
 
 /**
  * Map entry renderer.
@@ -39,22 +41,36 @@ public final class MapEntryRenderer extends DefaultListCellRenderer {
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 1;
+    /** Current list cell renderer. */
+    private final ListCellRenderer renderer;
+    /** Renderer cast to JLabel. */
+    private final JLabel label;
+
+    public MapEntryRenderer(final ListCellRenderer renderer) {
+        if (renderer instanceof JLabel) {
+            this.label = (JLabel) renderer;
+        } else {
+            this.label = new JLabel();
+        }
+        this.renderer = renderer;
+    }
 
     @Override
     public Component getListCellRendererComponent(final JList list,
             final Object value, final int index, final boolean isSelected,
             final boolean cellHasFocus) {
 
-        super.getListCellRendererComponent(list, value, index, isSelected,
+        renderer.getListCellRendererComponent(
+                list, value, index, isSelected,
                 cellHasFocus);
         if (value == null) {
-            setText("Any");
+            label.setText("Any");
         } else if (value instanceof Entry) {
-            setText((String) ((Entry<?, ?>) value).getValue());
+            label.setText((String) ((Entry<?, ?>) value).getValue());
         } else {
-            setText(value.toString());
+            label.setText(value.toString());
         }
 
-        return this;
+        return label;
     }
 }

@@ -52,6 +52,7 @@ import javax.swing.UIDefaults;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.plaf.ColorUIResource;
 import javax.swing.plaf.FontUIResource;
 import javax.swing.text.JTextComponent;
 import javax.swing.undo.UndoManager;
@@ -136,10 +137,7 @@ public final class UIUtilities {
         UIManager.put("SplitPane.dividerSize", (int) PlatformDefaults.
                 getPanelInsets(0).getValue());
         UIManager.put("TreeUI", TreeUI.class.getName());
-        if (isGTKUI()) {
-            UIManager.put("TitledBorder.titleColor", UIManager.getColor(
-                    "Label.foreground"));
-        }
+        UIManager.put("TextField.background", new Color(255, 255, 255));
         PlatformDefaults.setDefaultRowAlignmentBaseline(false);
     }
 
