@@ -26,7 +26,9 @@ import java.awt.Component;
 import java.util.Map.Entry;
 
 import javax.swing.DefaultListCellRenderer;
+import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.ListCellRenderer;
 
 /**
  * Map entry renderer.
@@ -39,22 +41,49 @@ public final class MapEntryRenderer extends DefaultListCellRenderer {
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 1;
+    /** Current list cell renderer. */
+    private final ListCellRenderer renderer;
+    /** Renderer cast to JLabel. */
+    private final JLabel label;
 
+    /**
+     * Creates a new map entry renderer. Renders a map entry as its value.
+     *
+     * @param renderer Renderer
+     */
+    public MapEntryRenderer(final ListCellRenderer renderer) {
+        /*
+         * All List cell renderers in Swing are JLabels, as checked by asserts
+         * in odd UI delegates.  Check and cast here to access nice convenience
+         * methods of a jabel, if not create a jabel and return that as the
+         * component.  This is mainly a workaround for look and feel's based on
+         * synth and add their own rendering.
+         */
+        if (renderer instanceof JLabel) {
+            this.label = (JLabel) renderer;
+        } else {
+            this.label = new JLabel();
+        }
+        this.renderer = renderer;
+    }
+
+    /** {@inheritDoc} */
     @Override
     public Component getListCellRendererComponent(final JList list,
             final Object value, final int index, final boolean isSelected,
             final boolean cellHasFocus) {
 
-        super.getListCellRendererComponent(list, value, index, isSelected,
+        renderer.getListCellRendererComponent(
+                list, value, index, isSelected,
                 cellHasFocus);
         if (value == null) {
-            setText("Any");
+            label.setText("Any");
         } else if (value instanceof Entry) {
-            setText((String) ((Entry<?, ?>) value).getValue());
+            label.setText((String) ((Entry<?, ?>) value).getValue());
         } else {
-            setText(value.toString());
+            label.setText(value.toString());
         }
 
-        return this;
+        return label;
     }
 }
