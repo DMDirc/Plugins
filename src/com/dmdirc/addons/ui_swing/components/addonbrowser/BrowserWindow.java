@@ -211,7 +211,9 @@ public class BrowserWindow extends JDialog implements ActionListener {
             /** {@inheritDoc} */
             @Override
             public void run() {
-                sorter.sort();
+                if (list.getRowCount() > 0) {
+                    sorter.sort();
+                }
             }
         });
     }
