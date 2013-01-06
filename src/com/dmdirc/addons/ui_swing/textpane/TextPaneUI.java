@@ -22,6 +22,8 @@
 
 package com.dmdirc.addons.ui_swing.textpane;
 
+import com.dmdirc.addons.ui_swing.UIUtilities;
+
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.UIManager;
@@ -37,8 +39,7 @@ public class TextPaneUI extends ComponentUI {
     @Override
     public void installUI(final JComponent c) {
         Border border;
-        if (UIManager.getLookAndFeel().getClass().getName().equals(
-                "com.sun.java.swing.plaf.gtk.GTKLookAndFeel")) {
+        if (UIUtilities.isGTKUI()) {
             border = UIManager.getBorder("TitledBorder.border");
         } else {
             border = UIManager.getBorder("TextField.border");
