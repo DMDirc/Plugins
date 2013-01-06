@@ -143,7 +143,8 @@ public class ProfileManagerDialog extends StandardDialog {
     private void initComponents() {
         profileList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         nicknames.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        profileList.setCellRenderer(new ProfileListCellRenderer());
+        profileList.setCellRenderer(new ProfileListCellRenderer(
+                profileList.getCellRenderer()));
 
         setLayout(new MigLayout("fill, wmin 700, wmax 700, flowy"));
 

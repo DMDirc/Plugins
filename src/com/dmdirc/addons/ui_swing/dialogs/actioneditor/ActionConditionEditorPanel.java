@@ -133,9 +133,9 @@ public class ActionConditionEditorPanel extends JPanel implements
             }
         };
 
-        arguments.setRenderer(new ActionCellRenderer());
-        components.setRenderer(new ActionCellRenderer());
-        comparisons.setRenderer(new ActionCellRenderer());
+        arguments.setRenderer(new ActionCellRenderer(arguments.getRenderer()));
+        components.setRenderer(new ActionCellRenderer(components.getRenderer()));
+        comparisons.setRenderer(new ActionCellRenderer(comparisons.getRenderer()));
 
         components.setEnabled(false);
         comparisons.setEnabled(false);

@@ -58,7 +58,7 @@ public class FontPicker extends JComboBox {
         setPrototypeDisplayValue("test");
         this.fontFamily = fontFamily;
 
-        setRenderer(new FontListCellRenderer());
+        setRenderer(new FontListCellRenderer(getRenderer()));
         new LoggingSwingWorker<String[], String[]>() {
 
             /** {@inheritDoc} */

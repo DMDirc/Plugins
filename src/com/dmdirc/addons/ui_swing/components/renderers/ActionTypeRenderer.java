@@ -24,41 +24,40 @@ package com.dmdirc.addons.ui_swing.components.renderers;
 
 import com.dmdirc.interfaces.actions.ActionType;
 
-import java.awt.Component;
-
-import javax.swing.DefaultListCellRenderer;
-import javax.swing.JList;
+import javax.swing.JLabel;
+import javax.swing.ListCellRenderer;
 
 /**
  * Displays actions types and headers in a pretty fashion.
  */
-public final class ActionTypeRenderer extends DefaultListCellRenderer {
+public final class ActionTypeRenderer extends DMDircListCellRenderer {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class.
      */
     private static final long serialVersionUID = 1;
 
+    /**
+     * Creates a new instance of this renderer.
+     *
+     * @param renderer RendereParent renderer
+     */
+    public ActionTypeRenderer(final ListCellRenderer renderer) {
+        super(renderer);
+    }
+
     /** {@inheritDoc} */
     @Override
-    public Component getListCellRendererComponent(final JList list,
-            final Object value, final int index, final boolean isSelected,
-            final boolean cellHasFocus) {
-        super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-
+    protected void renderLabel(final JLabel label, final Object value) {
         if (value == null) {
-            setText("Select a value");
+            label.setText("Select a value");
         } else if (value instanceof String && !((String) value).isEmpty()) {
-            setText(value.toString());
+            label.setText(value.toString());
         } else if (value instanceof ActionType) {
-            setText(((ActionType) value).getName());
+            label.setText(((ActionType) value).getName());
         } else {
-            setText(value.toString());
+            label.setText(value.toString());
         }
-
-        return this;
     }
 
 }

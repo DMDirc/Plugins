@@ -22,16 +22,18 @@
 
 package com.dmdirc.addons.ui_swing.components.renderers;
 
-import com.dmdirc.parser.common.ChannelListModeItem;
+import com.dmdirc.actions.wrappers.PerformWrapper.PerformDescription;
 
-import java.awt.Component;
 
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 
-/** List mode cell renderer. */
-public class ListModeCellRenderer extends DMDircListCellRenderer {
+/**
+ * Custom renderer for PerformDescriptions.
+ *
+ * @since 0.6.4
+ */
+public class PerformRenderer extends DMDircListCellRenderer {
 
     /**
      * A version number for this class.
@@ -43,19 +45,25 @@ public class ListModeCellRenderer extends DMDircListCellRenderer {
      *
      * @param renderer RendereParent renderer
      */
-    public ListModeCellRenderer(final ListCellRenderer renderer) {
+    public PerformRenderer(final ListCellRenderer renderer) {
         super(renderer);
     }
 
     /** {@inheritDoc} */
     @Override
     protected void renderLabel(final JLabel label, final Object value) {
-        if (value == null) {
-            label.setText("");
-        } else if (value instanceof ChannelListModeItem) {
-            label.setText(((ChannelListModeItem) value).getItem());
+        final PerformDescription perform = (PerformDescription) value;
+        final String target = perform.getTarget();
+        final String profile = perform.getProfile();
+        final String type = perform.getType().toString();
+        String friendlyText = type + " perform (" + target + ") ";
+
+        if (profile != null) {
+            friendlyText += "This profile (" + profile + ")";
         } else {
-            label.setText(value.toString());
+            friendlyText += "Any profile";
         }
+        label.setText(friendlyText);
     }
+
 }

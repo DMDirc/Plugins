@@ -25,16 +25,14 @@ package com.dmdirc.addons.ui_swing.components.renderers;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.core.dialogs.sslcertificate.CertificateChainEntry;
 
-import java.awt.Component;
-
-import javax.swing.DefaultListCellRenderer;
 import javax.swing.Icon;
-import javax.swing.JList;
+import javax.swing.JLabel;
+import javax.swing.ListCellRenderer;
 
 /**
  * Renderer for Certificate chain entries, shows the verified icon and name.
  */
-public class CertificateChainEntryCellRenderer extends DefaultListCellRenderer {
+public class CertificateChainEntryCellRenderer extends DMDircListCellRenderer {
 
     /** Serial version UID. */
     private static final long serialVersionUID = 1;
@@ -50,7 +48,9 @@ public class CertificateChainEntryCellRenderer extends DefaultListCellRenderer {
      *
      * @param iconManager Icon manager
      */
-    public CertificateChainEntryCellRenderer(final IconManager iconManager) {
+    public CertificateChainEntryCellRenderer(final IconManager iconManager,
+            final ListCellRenderer renderer) {
+        super(renderer);
         icon = iconManager.getIcon("nothing");
         trustedIcon = iconManager.getIcon("tick");
         invalidIcon = iconManager.getIcon("cross");
@@ -58,23 +58,18 @@ public class CertificateChainEntryCellRenderer extends DefaultListCellRenderer {
 
     /** {@inheritDoc} */
     @Override
-    public Component getListCellRendererComponent(final JList list,
-            final Object value, final int index, final boolean isSelected,
-            final boolean cellHasFocus) {
-        super.getListCellRendererComponent(list, value, index, isSelected,
-                cellHasFocus);
+    protected void renderLabel(final JLabel label, final Object value) {
         if (value instanceof CertificateChainEntry) {
             final CertificateChainEntry entry = (CertificateChainEntry) value;
 
-            setText(entry.getName());
+            label.setText(entry.getName());
             if (entry.isInvalid()) {
-                setIcon(invalidIcon);
+                label.setIcon(invalidIcon);
             } else if (entry.isTrusted()) {
-                setIcon(trustedIcon);
+                label.setIcon(trustedIcon);
             } else {
-                setIcon(icon);
+                label.setIcon(icon);
             }
         }
-        return this;
     }
 }

@@ -28,7 +28,7 @@ import com.dmdirc.actions.wrappers.PerformWrapper.PerformDescription;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.performpanel.PerformPanel;
-import com.dmdirc.addons.ui_swing.components.performpanel.PerformRenderer;
+import com.dmdirc.addons.ui_swing.components.renderers.PerformRenderer;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -100,7 +100,7 @@ public final class PerformTab extends JPanel implements ActionListener {
         model.addElement(serverPerform);
         model.addElement(serverProfilePerform);
 
-        target.setRenderer(new PerformRenderer());
+        target.setRenderer(new PerformRenderer(target.getRenderer()));
 
         performList.add(networkPerform);
         performList.add(networkProfilePerform);

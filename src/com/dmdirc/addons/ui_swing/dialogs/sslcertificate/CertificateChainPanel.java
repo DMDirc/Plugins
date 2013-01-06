@@ -69,7 +69,8 @@ public class CertificateChainPanel extends JPanel {
     private void initComponents() {
         model = new DefaultListModel();
         list = new JList(model);
-        list.setCellRenderer(new CertificateChainEntryCellRenderer(iconManager));
+        list.setCellRenderer(new CertificateChainEntryCellRenderer(iconManager,
+                list.getCellRenderer()));
         list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         ListScroller.register(list);
     }
