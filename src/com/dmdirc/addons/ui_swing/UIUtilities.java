@@ -316,7 +316,7 @@ public final class UIUtilities {
         final String nimbus = "sun.swing.plaf.nimbus.NimbusLookAndFeel";
 
         return !(windows.equals(uiname) || Apple.isAppleUI() || nimbus.equals(
-                uiname));
+                uiname) || isGTKUI());
     }
 
     /**
