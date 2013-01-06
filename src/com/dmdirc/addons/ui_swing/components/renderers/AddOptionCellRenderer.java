@@ -25,21 +25,17 @@ package com.dmdirc.addons.ui_swing.components.renderers;
 import com.dmdirc.addons.ui_swing.components.expandingsettings.SettingsPanel;
 import com.dmdirc.config.prefs.PreferencesSetting;
 
-import java.awt.Component;
-
-import javax.swing.DefaultListCellRenderer;
 import javax.swing.JComponent;
-import javax.swing.JList;
+import javax.swing.JLabel;
+import javax.swing.ListCellRenderer;
 
 /**
  * Add option combo box cell renderer.
  */
-public final class AddOptionCellRenderer extends DefaultListCellRenderer {
+public final class AddOptionCellRenderer extends DMDircListCellRenderer {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class.
      */
     private static final long serialVersionUID = 1;
     /** Parent settings panel. */
@@ -49,24 +45,20 @@ public final class AddOptionCellRenderer extends DefaultListCellRenderer {
      * Creates a new add option cell renderer.
      *
      * @param settingsPanel Parent settings panel
+     * @param renderer Parent renderer
      */
-    public AddOptionCellRenderer(final SettingsPanel settingsPanel) {
-        super();
+    public AddOptionCellRenderer(final SettingsPanel settingsPanel,
+            final ListCellRenderer renderer) {
+        super(renderer);
 
         this.settingsPanel = settingsPanel;
     }
 
     /** {@inheritDoc} */
     @Override
-    public Component getListCellRendererComponent(
-            final JList list,
-            final Object value,
-            final int index,
-            final boolean isSelected,
+    protected void renderValue(final JLabel label, final Object value,
+            final int index, final boolean isSelected,
             final boolean cellHasFocus) {
-        super.getListCellRendererComponent(list, value, index, isSelected,
-                cellHasFocus);
-
         final PreferencesSetting setting;
         if (value instanceof JComponent) {
             setting = settingsPanel.getSettingForComponent((JComponent) value);
@@ -74,11 +66,9 @@ public final class AddOptionCellRenderer extends DefaultListCellRenderer {
             setting = null;
         }
         if (setting == null) {
-           setText((String) value);
+           label.setText((String) value);
         } else {
-            setText(setting.getTitle());
+            label.setText(setting.getTitle());
         }
-
-        return this;
     }
 }

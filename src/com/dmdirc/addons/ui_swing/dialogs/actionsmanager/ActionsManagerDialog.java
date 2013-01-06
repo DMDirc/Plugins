@@ -152,7 +152,8 @@ public final class ActionsManagerDialog extends StandardDialog implements
         actions.setBorder(BorderFactory.createTitledBorder(UIManager.getBorder(
                 "TitledBorder.border"), "Actions"));
 
-        groups.setCellRenderer(new ActionGroupListCellRenderer());
+        groups.setCellRenderer(new ActionGroupListCellRenderer(
+                groups.getCellRenderer()));
         groups.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         edit.setEnabled(false);
         delete.setEnabled(false);

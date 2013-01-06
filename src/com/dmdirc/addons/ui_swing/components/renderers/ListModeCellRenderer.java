@@ -24,36 +24,37 @@ package com.dmdirc.addons.ui_swing.components.renderers;
 
 import com.dmdirc.parser.common.ChannelListModeItem;
 
-import java.awt.Component;
-
-import javax.swing.DefaultListCellRenderer;
-import javax.swing.JList;
+import javax.swing.JLabel;
+import javax.swing.ListCellRenderer;
 
 /** List mode cell renderer. */
-public class ListModeCellRenderer extends DefaultListCellRenderer {
+public class ListModeCellRenderer extends DMDircListCellRenderer {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class.
      */
     private static final long serialVersionUID = 1;
 
+    /**
+     * Creates a new instance of this renderer.
+     *
+     * @param renderer RendereParent renderer
+     */
+    public ListModeCellRenderer(final ListCellRenderer renderer) {
+        super(renderer);
+    }
+
     /** {@inheritDoc} */
     @Override
-    public Component getListCellRendererComponent(final JList list,
-            final Object value, final int index, final boolean isSelected,
+    protected void renderValue(final JLabel label, final Object value,
+            final int index, final boolean isSelected,
             final boolean cellHasFocus) {
-        super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-
         if (value == null) {
-            setText("");
+            label.setText("");
         } else if (value instanceof ChannelListModeItem) {
-            setText(((ChannelListModeItem) value).getItem());
+            label.setText(((ChannelListModeItem) value).getItem());
         } else {
-            setText(value.toString());
+            label.setText(value.toString());
         }
-
-        return this;
     }
 }

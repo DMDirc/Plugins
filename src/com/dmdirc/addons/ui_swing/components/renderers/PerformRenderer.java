@@ -20,36 +20,40 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.ui_swing.components.performpanel;
+package com.dmdirc.addons.ui_swing.components.renderers;
 
 import com.dmdirc.actions.wrappers.PerformWrapper.PerformDescription;
 
-import java.awt.Component;
 
-import javax.swing.DefaultListCellRenderer;
-import javax.swing.JList;
+import javax.swing.JLabel;
+import javax.swing.ListCellRenderer;
 
 /**
  * Custom renderer for PerformDescriptions.
  *
- * @author Simon Mott
  * @since 0.6.4
  */
-public class PerformRenderer extends DefaultListCellRenderer {
+public class PerformRenderer extends DMDircListCellRenderer {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class.
      */
     private static final long serialVersionUID = 1;
 
+    /**
+     * Creates a new instance of this renderer.
+     *
+     * @param renderer RendereParent renderer
+     */
+    public PerformRenderer(final ListCellRenderer renderer) {
+        super(renderer);
+    }
+
     /** {@inheritDoc} */
     @Override
-    public Component getListCellRendererComponent(final JList list,
-            final Object value, final int index, final boolean isSelected,
+    protected void renderValue(final JLabel label, final Object value,
+            final int index, final boolean isSelected,
             final boolean cellHasFocus) {
-
         final PerformDescription perform = (PerformDescription) value;
         final String target = perform.getTarget();
         final String profile = perform.getProfile();
@@ -61,9 +65,7 @@ public class PerformRenderer extends DefaultListCellRenderer {
         } else {
             friendlyText += "Any profile";
         }
-
-        return super.getListCellRendererComponent(list, friendlyText, index,
-                isSelected, cellHasFocus);
+        label.setText(friendlyText);
     }
 
 }

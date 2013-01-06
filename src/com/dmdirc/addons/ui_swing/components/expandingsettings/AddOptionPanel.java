@@ -84,7 +84,8 @@ public class AddOptionPanel extends JPanel implements ActionListener {
         addOptionComboBox = new JComboBox(new DefaultComboBoxModel());
         addOptionButton = new JButton("Add");
 
-        addOptionComboBox.setRenderer(new AddOptionCellRenderer(parent));
+        addOptionComboBox.setRenderer(new AddOptionCellRenderer(parent,
+                addOptionComboBox.getRenderer()));
 
         addInputNone = new JLabel("");
         addInputCurrent = addInputNone;

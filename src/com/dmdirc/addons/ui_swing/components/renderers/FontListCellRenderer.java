@@ -21,41 +21,40 @@
  */
 package com.dmdirc.addons.ui_swing.components.renderers;
 
-import java.awt.Component;
 import java.awt.Font;
 
-import javax.swing.DefaultListCellRenderer;
-import javax.swing.JList;
+import javax.swing.JLabel;
+import javax.swing.ListCellRenderer;
 
 /**
  * Font list cell renderer.
  */
-public class FontListCellRenderer extends DefaultListCellRenderer {
+public class FontListCellRenderer extends DMDircListCellRenderer {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class.
+
+    /**
+     * Creates a new instance of this renderer.
+     *
+     * @param renderer RendereParent renderer
      */
-    private static final long serialVersionUID = -3559254527228184993L;
+    public FontListCellRenderer(final ListCellRenderer renderer) {
+        super(renderer);
+    }
 
     /** {@inheritDoc} */
     @Override
-    public Component getListCellRendererComponent(final JList list,
-            final Object value, final int index, final boolean isSelected,
+    protected void renderValue(final JLabel label, final Object value,
+            final int index, final boolean isSelected,
             final boolean cellHasFocus) {
-
-        super.getListCellRendererComponent(list, value, index, isSelected,
-                cellHasFocus);
         if (value == null) {
-            setText("Default");
+            label.setText("Default");
         } else if (value instanceof Font) {
-            setFont((Font) value);
-            setText(((Font) value).getFamily());
+            label.setFont((Font) value);
+            label.setText(((Font) value).getFamily());
         } else {
-            setText(value.toString());
+            label.setText(value.toString());
         }
-
-        return this;
     }
 }

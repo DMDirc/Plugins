@@ -22,60 +22,35 @@
 
 package com.dmdirc.addons.ui_swing.components.renderers;
 
-import java.awt.Component;
 import java.util.Map.Entry;
 
-import javax.swing.DefaultListCellRenderer;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 
 /**
- * Map entry renderer.
+ *  Renders a map entry as its value.
  */
-public final class MapEntryRenderer extends DefaultListCellRenderer {
+public final class MapEntryRenderer extends DMDircListCellRenderer {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class.
      */
     private static final long serialVersionUID = 1;
-    /** Current list cell renderer. */
-    private final ListCellRenderer renderer;
-    /** Renderer cast to JLabel. */
-    private final JLabel label;
 
     /**
-     * Creates a new map entry renderer. Renders a map entry as its value.
+     * Creates a new instance of this renderer.
      *
-     * @param renderer Renderer
+     * @param renderer RendereParent renderer
      */
     public MapEntryRenderer(final ListCellRenderer renderer) {
-        /*
-         * All List cell renderers in Swing are JLabels, as checked by asserts
-         * in odd UI delegates.  Check and cast here to access nice convenience
-         * methods of a jabel, if not create a jabel and return that as the
-         * component.  This is mainly a workaround for look and feel's based on
-         * synth and add their own rendering.
-         */
-        if (renderer instanceof JLabel) {
-            this.label = (JLabel) renderer;
-        } else {
-            this.label = new JLabel();
-        }
-        this.renderer = renderer;
+        super(renderer);
     }
 
     /** {@inheritDoc} */
     @Override
-    public Component getListCellRendererComponent(final JList list,
-            final Object value, final int index, final boolean isSelected,
+    protected void renderValue(final JLabel label, final Object value,
+            final int index, final boolean isSelected,
             final boolean cellHasFocus) {
-
-        renderer.getListCellRendererComponent(
-                list, value, index, isSelected,
-                cellHasFocus);
         if (value == null) {
             label.setText("Any");
         } else if (value instanceof Entry) {
@@ -83,7 +58,5 @@ public final class MapEntryRenderer extends DefaultListCellRenderer {
         } else {
             label.setText(value.toString());
         }
-
-        return label;
     }
 }
