@@ -623,6 +623,8 @@ public final class MainFrame extends JFrame implements WindowListener,
                 framePanel.setVisible(true);
 
                 if (activeFrame != null) {
+                    activeFrame.requestFocus();
+                    activeFrame.requestFocusInWindow();
                     activeFrame.activateFrame();
                 }
 
