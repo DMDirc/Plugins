@@ -19,40 +19,51 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 package com.dmdirc.addons.ui_swing.components.renderers;
 
-import java.awt.Font;
+import com.dmdirc.actions.wrappers.PerformWrapper.PerformDescription;
+
 
 import javax.swing.JLabel;
 import javax.swing.ListCellRenderer;
 
 /**
- * Font list cell renderer.
+ * Custom renderer for PerformDescriptions.
+ *
+ * @since 0.6.4
  */
-public class FontListCellRenderer extends DMDircListCellRenderer {
+public class PerformRenderer extends DMDircListCellRenderer {
 
     /**
      * A version number for this class.
+     */
+    private static final long serialVersionUID = 1;
 
     /**
      * Creates a new instance of this renderer.
      *
      * @param renderer RendereParent renderer
      */
-    public FontListCellRenderer(final ListCellRenderer renderer) {
+    public PerformRenderer(final ListCellRenderer renderer) {
         super(renderer);
     }
 
     /** {@inheritDoc} */
     @Override
     protected void renderLabel(final JLabel label, final Object value) {
-        if (value == null) {
-            label.setText("Default");
-        } else if (value instanceof Font) {
-            label.setFont((Font) value);
-            label.setText(((Font) value).getFamily());
+        final PerformDescription perform = (PerformDescription) value;
+        final String target = perform.getTarget();
+        final String profile = perform.getProfile();
+        final String type = perform.getType().toString();
+        String friendlyText = type + " perform (" + target + ") ";
+
+        if (profile != null) {
+            friendlyText += "This profile (" + profile + ")";
         } else {
-            label.setText(value.toString());
+            friendlyText += "Any profile";
         }
+        label.setText(friendlyText);
     }
+
 }

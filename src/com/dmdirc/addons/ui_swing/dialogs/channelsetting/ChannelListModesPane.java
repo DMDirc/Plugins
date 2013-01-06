@@ -94,8 +94,12 @@ public final class ChannelListModesPane extends JPanel implements ActionListener
     private final Window parentWindow;
     /** Swing controller. */
     private final SwingController controller;
+    /** Native cell renderer. */
+    private final ListCellRenderer nativeRenderer;
     /** Cell renderer. */
     private ListCellRenderer renderer;
+    /** Mode list. */
+    private JList list;
 
     /**
      * Creates a new instance of ChannelListModePane.
@@ -113,11 +117,13 @@ public final class ChannelListModesPane extends JPanel implements ActionListener
         this.channel = channel;
         this.parentWindow = parentWindow;
 
+        list = new JList();
+        nativeRenderer = list.getCellRenderer();
         if (channel.getConfigManager().getOptionBool("general",
                 "extendedListModes")) {
             renderer = new ExtendedListModeCellRenderer();
         } else {
-            renderer = new ListModeCellRenderer();
+            renderer = new ListModeCellRenderer(nativeRenderer);
         }
         listModesPanel = new JScrollPane();
         listModesPanels = new ArrayList<JList>();
@@ -185,8 +191,7 @@ public final class ChannelListModesPane extends JPanel implements ActionListener
             }
             model.addElement(modeText);
 
-            final JList list =
-                    new JList(new DefaultListModel());
+            list = new JList(new DefaultListModel());
             list.setCellRenderer(renderer);
             list.setVisibleRowCount(8);
             list.addListSelectionListener(this);
@@ -351,7 +356,7 @@ public final class ChannelListModesPane extends JPanel implements ActionListener
             if (toggle.isSelected()) {
                 renderer = new ExtendedListModeCellRenderer();
             } else {
-                renderer = new ListModeCellRenderer();
+                renderer = new ListModeCellRenderer(nativeRenderer);
             }
             for (JList list : listModesPanels) {
                 list.setCellRenderer(renderer);
@@ -403,7 +408,7 @@ public final class ChannelListModesPane extends JPanel implements ActionListener
     public void configChanged(final String domain, final String key) {
         if (controller.getGlobalConfig().getOptionBool("general",
                 "extendedListModes")) {
-            renderer = new ListModeCellRenderer();
+            renderer = new ListModeCellRenderer(nativeRenderer);
         } else {
             renderer = new ExtendedListModeCellRenderer();
         }

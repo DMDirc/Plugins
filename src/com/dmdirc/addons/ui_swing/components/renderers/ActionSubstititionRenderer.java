@@ -25,33 +25,32 @@ package com.dmdirc.addons.ui_swing.components.renderers;
 
 import com.dmdirc.addons.ui_swing.components.substitutions.Substitution;
 
-import java.awt.Component;
-
-import javax.swing.DefaultListCellRenderer;
-import javax.swing.JList;
+import javax.swing.JLabel;
+import javax.swing.ListCellRenderer;
 
 /**
  * Displays actions using getName not toString.
  */
-public final class ActionSubstititionRenderer extends DefaultListCellRenderer {
+public final class ActionSubstititionRenderer extends DMDircListCellRenderer {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class.
      */
     private static final long serialVersionUID = 1;
 
+    /**
+     * Creates a new instance of this renderer.
+     *
+     * @param renderer RendereParent renderer
+     */
+    public ActionSubstititionRenderer(final ListCellRenderer renderer) {
+        super(renderer);
+    }
+
     /** {@inheritDoc} */
     @Override
-    public Component getListCellRendererComponent(final JList list,
-            final Object value, final int index, final boolean isSelected,
-            final boolean cellHasFocus) {
-        super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-
-        setText(((Substitution) value).getValue());
-
-        return this;
+    protected void renderLabel(final JLabel label, final Object value) {
+        label.setText(((Substitution) value).getValue());
     }
 
 }

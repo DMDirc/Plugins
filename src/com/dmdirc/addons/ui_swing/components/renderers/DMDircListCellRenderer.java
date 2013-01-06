@@ -19,51 +19,60 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
-package com.dmdirc.addons.ui_swing.components.performpanel;
-
-import com.dmdirc.actions.wrappers.PerformWrapper.PerformDescription;
+package com.dmdirc.addons.ui_swing.components.renderers;
 
 import java.awt.Component;
 
-import javax.swing.DefaultListCellRenderer;
+import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.ListCellRenderer;
+
+import lombok.RequiredArgsConstructor;
 
 /**
- * Custom renderer for PerformDescriptions.
- *
- * @author Simon Mott
- * @since 0.6.4
+ * Simplifies implementing a cell renderer, works around oddities in look and
+ * feels.
  */
-public class PerformRenderer extends DefaultListCellRenderer {
+@RequiredArgsConstructor(callSuper = false)
+public abstract class DMDircListCellRenderer implements ListCellRenderer {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class.
      */
     private static final long serialVersionUID = 1;
+    /**
+     * Parent cell renderer.
+     */
+    private final ListCellRenderer parentRenderer;
+    /**
+     * Label to use if parent doesn't supply one.
+     */
+    private final JLabel renderLabel = new JLabel();
 
-    /** {@inheritDoc} */
+    /**
+     * Renders the label to display as a list cell.
+     *
+     * @param label Label to render
+     * @param value Object to render
+     */
+    protected abstract void renderLabel(final JLabel label, final Object value);
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Component getListCellRendererComponent(final JList list,
             final Object value, final int index, final boolean isSelected,
             final boolean cellHasFocus) {
-
-        final PerformDescription perform = (PerformDescription) value;
-        final String target = perform.getTarget();
-        final String profile = perform.getProfile();
-        final String type = perform.getType().toString();
-        String friendlyText = type + " perform (" + target + ") ";
-
-        if (profile != null) {
-            friendlyText += "This profile (" + profile + ")";
+        final Component component = parentRenderer.getListCellRendererComponent(
+                list, value, index, isSelected,
+                cellHasFocus);
+        if (component instanceof JLabel) {
+            renderLabel((JLabel) component, value);
+            return component;
         } else {
-            friendlyText += "Any profile";
+            renderLabel(renderLabel, value);
+            return renderLabel;
         }
-
-        return super.getListCellRendererComponent(list, friendlyText, index,
-                isSelected, cellHasFocus);
     }
-
 }

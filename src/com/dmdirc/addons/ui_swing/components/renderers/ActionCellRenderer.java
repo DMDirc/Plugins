@@ -26,46 +26,44 @@ import com.dmdirc.interfaces.actions.ActionComparison;
 import com.dmdirc.interfaces.actions.ActionComponent;
 import com.dmdirc.interfaces.actions.ActionType;
 
-import java.awt.Component;
-
-import javax.swing.DefaultListCellRenderer;
-import javax.swing.JList;
+import javax.swing.JLabel;
+import javax.swing.ListCellRenderer;
 
 /**
  * Displays actions using getName not toString.
  */
-public class ActionCellRenderer extends DefaultListCellRenderer {
+public class ActionCellRenderer extends DMDircListCellRenderer {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class.
      */
     private static final long serialVersionUID = 1;
 
+    /**
+     * Creates a new instance of this renderer.
+     *
+     * @param renderer RendereParent renderer
+     */
+    public ActionCellRenderer(final ListCellRenderer renderer) {
+        super(renderer);
+    }
+
     /** {@inheritDoc} */
     @Override
-    public Component getListCellRendererComponent(final JList list,
-            final Object value, final int index, final boolean isSelected,
-            final boolean cellHasFocus) {
-        super.getListCellRendererComponent(list, value, index, isSelected,
-                cellHasFocus);
-
+    protected void renderLabel(final JLabel label, final Object value) {
         if (value instanceof ActionComparison) {
-            setText(((ActionComparison) value).getName());
+            label.setText(((ActionComparison) value).getName());
         } else if (value instanceof ActionComponent) {
-            setText(((ActionComponent) value).getName());
+            label.setText(((ActionComponent) value).getName());
         } else if (value instanceof ActionType) {
-            setText(((ActionType) value).getName());
+            label.setText(((ActionType) value).getName());
         } else if (value instanceof Class<?>) {
-            setText(((Class<?>) value).getSimpleName());
+            label.setText(((Class<?>) value).getSimpleName());
         } else if (value == null) {
-            setText("");
+            label.setText("");
         } else {
-            setText(value.toString());
+            label.setText(value.toString());
         }
-
-        return this;
     }
 
 }

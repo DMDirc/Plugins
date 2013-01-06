@@ -24,35 +24,33 @@ package com.dmdirc.addons.ui_swing.components.renderers;
 
 import com.dmdirc.addons.ui_swing.dialogs.profiles.Profile;
 
-import java.awt.Component;
-
-import javax.swing.DefaultListCellRenderer;
-import javax.swing.JList;
+import javax.swing.JLabel;
+import javax.swing.ListCellRenderer;
 
 /** Profile list renderer. */
-public class ProfileListCellRenderer extends DefaultListCellRenderer {
+public class ProfileListCellRenderer extends DMDircListCellRenderer {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class.
      */
     private static final long serialVersionUID = 1;
 
+    /**
+     * Creates a new instance of this renderer.
+     *
+     * @param renderer RendereParent renderer
+     */
+    public ProfileListCellRenderer(final ListCellRenderer renderer) {
+        super(renderer);
+    }
+
     /** {@inheritDoc} */
     @Override
-    public Component getListCellRendererComponent(final JList list,
-            final Object value, final int index, final boolean isSelected,
-            final boolean cellHasFocus) {
-        super.getListCellRendererComponent(list, value, index, isSelected,
-                cellHasFocus);
-
+    protected void renderLabel(final JLabel label, final Object value) {
         if (!(value instanceof Profile)) {
-            setText("");
+            label.setText("");
         } else {
-            setText(((Profile) value).getName());
+            label.setText(((Profile) value).getName());
         }
-
-        return this;
     }
 }
