@@ -66,6 +66,27 @@ import net.miginfocom.layout.PlatformDefaults;
 @SuppressWarnings("PMD.UnusedImports")
 public final class UIUtilities {
 
+    /**
+     * GTK LAF class name.
+     */
+    private static final String GTKUI
+            = "com.sun.java.swing.plaf.gtk.GTKLookAndFeel";
+    /**
+     * Nimbus LAF class name.
+     */
+    private static final String NIMBUSUI
+            = "sun.swing.plaf.nimbus.NimbusLookAndFeel";
+    /**
+     * Windows LAF class name.
+     */
+    private static final String WINDOWSUI
+            = "com.sun.java.swing.plaf.windows.WindowsLookAndFeel";
+    /**
+     * Windows classic LAF class name.
+     */
+    private static final String WINDOWSCLASSICUI
+            = "com.sun.java.swing.plaf.windows.WindowsClassicLookAndFeel";
+
     /** Not intended to be instantiated. */
     private UIUtilities() {
     }
@@ -283,10 +304,36 @@ public final class UIUtilities {
      * @return true iif the LAF is GTK
      */
     public static boolean isGTKUI() {
-        return "com.sun.java.swing.plaf.gtk.GTKLookAndFeel".equals(UIManager
-                .getLookAndFeel().getClass().getName());
+        return GTKUI.equals(UIManager.getLookAndFeel().getClass().getName());
     }
 
+    /**
+     * Check if we are using the Nimbus look and feel.
+     *
+     * @return true iif the LAF is Nimbus
+     */
+    public static boolean isNimbusUI() {
+        return NIMBUSUI.equals(UIManager.getLookAndFeel().getClass().getName());
+    }
+
+    /**
+     * Check if we are using the new Windows Look and Feel.
+     *
+     * @return true iif the current LAF is Windows
+     */
+    public static boolean isWindowsNewUI() {
+        return WINDOWSUI.equals(
+                UIManager.getLookAndFeel().getClass().getName());
+    }
+
+    /**
+     * Check if we are using the new Windows Classic Look and Feel.
+     *
+     * @return true iif the current LAF is Windows Classic
+     */
+    public static boolean isWindowsClassicUI() {
+        return WINDOWSCLASSICUI.equals(UIManager.getLookAndFeel().getClass().getName());
+    }
 
     /**
      * Check if we are using one of the Windows Look and Feels.
@@ -294,29 +341,19 @@ public final class UIUtilities {
      * @return True iff the current LAF is "Windows" or "Windows Classic"
      */
     public static boolean isWindowsUI() {
-        final String uiname = UIManager.getLookAndFeel().getClass().getName();
-        final String windows =
-                "com.sun.java.swing.plaf.windows.WindowsLookAndFeel";
-        final String classic =
-                "com.sun.java.swing.plaf.windows.WindowsClassicLookAndFeel";
-
-        return windows.equals(uiname) || classic.equals(uiname);
+        return isWindowsNewUI() || isWindowsClassicUI();
     }
 
     /**
-     * Get the value to pass to set Opaque on items being added to a JTabbedPane.
+     * Get the value to pass to set Opaque on items being added to a
+     * JTabbedPane.  Currently they need to be transparent on Windows
+     * (non classic), Apple, Nimbus and GTK.
      *
-     * @return True iff the current LAF is not Windows or OS X.
+     * @return True if tabbed panes should be opaque
      * @since 0.6
      */
     public static boolean getTabbedPaneOpaque() {
-        final String uiname = UIManager.getLookAndFeel().getClass().getName();
-        final String windows =
-                "com.sun.java.swing.plaf.windows.WindowsLookAndFeel";
-        final String nimbus = "sun.swing.plaf.nimbus.NimbusLookAndFeel";
-
-        return !(windows.equals(uiname) || Apple.isAppleUI() || nimbus.equals(
-                uiname));
+        return !(isWindowsNewUI() || Apple.isAppleUI() || isNimbusUI() || isGTKUI());
     }
 
     /**
