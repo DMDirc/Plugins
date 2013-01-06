@@ -99,14 +99,14 @@ public class ActionTriggersPanel extends JPanel implements ActionListener,
         // Only fire events on selection not on highlight
         triggerGroup.putClientProperty("JComboBox.isTableCellEditor",
                 Boolean.TRUE);
-        triggerGroup.setRenderer(new ActionTypeRenderer());
+        triggerGroup.setRenderer(new ActionTypeRenderer(triggerGroup.getRenderer()));
         triggerGroup.addPopupMenuListener(new ComboBoxWidthModifier());
 
         triggerItem = new JComboBox(new DefaultComboBoxModel());
         // Only fire events on selection not on highlight
         triggerItem.putClientProperty("JComboBox.isTableCellEditor",
                 Boolean.TRUE);
-        triggerItem.setRenderer(new ActionTypeRenderer());
+        triggerItem.setRenderer(new ActionTypeRenderer(triggerItem.getRenderer()));
         triggerItem.addPopupMenuListener(new ComboBoxWidthModifier());
 
         triggerList = new ActionTriggersListPanel(iconManager);

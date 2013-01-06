@@ -99,7 +99,8 @@ public final class AliasPanel extends JPanel implements ActionListener {
         argumentNumber.setEnabled(false);
         response.setRows(5);
 
-        argumentComponent.setRenderer(new ActionComparisonCellRenderer());
+        argumentComponent.setRenderer(new ActionComparisonCellRenderer(
+                argumentComponent.getRenderer()));
         argumentComponent.putClientProperty("JComboBox.isTableCellEditor",
                 Boolean.TRUE);
         argumentComponent.addActionListener(this);
