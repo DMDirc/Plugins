@@ -69,6 +69,7 @@ import net.miginfocom.swing.MigLayout;
 
 import org.java.ayatana.ApplicationMenu;
 import org.java.ayatana.AyatanaDesktop;
+import org.java.ayatana.AyatanaLibrary;
 
 /**
  * The main application frame.
@@ -131,6 +132,7 @@ public final class MainFrame extends JFrame implements WindowListener,
         focusOrder = new QueuedLinkedHashSet<TextFrame>();
         initComponents();
         if (AyatanaDesktop.isSupported()) {
+            AyatanaLibrary.load();
             ApplicationMenu.tryInstall(this, getJMenuBar(), new UnityMenu());
         }
 
