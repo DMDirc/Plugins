@@ -166,6 +166,11 @@ public class ActionTriggersPanel extends JPanel implements ActionListener,
         for (final ActionType localTrigger : triggers) {
             triggerList.addTrigger(localTrigger);
         }
+
+        if (triggers.length > 0) {
+            addCompatible(triggers[0]);
+            setEnabled(true);
+        }
     }
 
     /**
@@ -224,32 +229,37 @@ public class ActionTriggersPanel extends JPanel implements ActionListener,
      * @param primaryType Primary type
      */
     private void addCompatible(final ActionType primaryType) {
+        final DefaultComboBoxModel groupModel = (DefaultComboBoxModel) triggerGroup.getModel();
+        final DefaultComboBoxModel itemModel = (DefaultComboBoxModel) triggerItem.getModel();
+
         comboChange = true;
-        compatibleTriggers.addAll(ActionManager.getActionManager()
-                .findCompatibleTypes(primaryType));
-        ((DefaultComboBoxModel) triggerGroup.getModel()).removeAllElements();
-        ((DefaultComboBoxModel) triggerItem.getModel()).removeAllElements();
-        for (final ActionType thisType : compatibleTriggers) {
-            final List<ActionType> types = triggerList.getTriggers();
+        compatibleTriggers.clear();
+        groupModel.removeAllElements();
+        itemModel.removeAllElements();
+        final List<ActionType> types = triggerList.getTriggers();
+
+        for (final ActionType thisType : ActionManager.getActionManager().findCompatibleTypes(primaryType)) {
             if (!types.contains(thisType)) {
-                ((DefaultComboBoxModel) triggerItem.getModel())
-                        .addElement(thisType);
-                if (((DefaultComboBoxModel) triggerGroup.getModel())
-                        .getIndexOf(thisType.getType().getGroup()) == -1) {
-                    ((DefaultComboBoxModel) triggerGroup.getModel())
-                            .addElement(thisType.getType().getGroup());
+                compatibleTriggers.add(thisType);
+                itemModel.addElement(thisType);
+                if (groupModel.getIndexOf(thisType.getType().getGroup()) == -1) {
+                    groupModel.addElement(thisType.getType().getGroup());
                 }
             }
         }
         triggerGroup.setSelectedIndex(-1);
         triggerItem.setSelectedIndex(-1);
-        if (triggerItem.getModel().getSize() == 0) {
-            ((DefaultComboBoxModel) triggerGroup.getModel())
-                    .removeAllElements();
+        if (itemModel.getSize() == 0) {
+            groupModel.removeAllElements();
         }
-        triggerGroup.setEnabled(triggerGroup.getModel().getSize() > 0);
-        triggerItem.setEnabled(triggerItem.getModel().getSize() > 0);
+        triggerGroup.setEnabled(groupModel.getSize() > 0);
+        if (groupModel.getSize() == 1) {
+            triggerGroup.setSelectedIndex(0);
+        }
+
+        triggerItem.setEnabled(itemModel.getSize() > 0);
         triggerItem.setEnabled(triggerGroup.getSelectedIndex() != -1);
+
         comboChange = false;
     }
 
