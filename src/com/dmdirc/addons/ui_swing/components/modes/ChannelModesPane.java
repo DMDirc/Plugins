@@ -109,8 +109,13 @@ public final class ChannelModesPane extends ModesPane {
     @Override
     public void alterMode(final boolean add, final String mode,
             final String parameter) {
-        channel.getChannelInfo().alterMode(getBooleanModes().get(mode)
-                .isSelected(), mode.toCharArray()[0], "");
+        final boolean state;
+        if (getBooleanModes().containsKey(mode)) {
+            state = getBooleanModes().get(mode).isSelected();
+        } else {
+            state = getParamModes().get(mode).getState();
+        }
+        channel.getChannelInfo().alterMode(state, mode.charAt(0), parameter);
     }
 
     /** {@inheritDoc} */
