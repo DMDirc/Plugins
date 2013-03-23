@@ -68,6 +68,7 @@ import com.dmdirc.ui.core.components.StatusBarManager;
 import com.dmdirc.ui.core.util.URLHandler;
 import com.dmdirc.updater.Version;
 import com.dmdirc.util.validators.NumericalValidator;
+import com.dmdirc.util.validators.OptionalValidator;
 
 import java.awt.Dialog.ModalityType;
 import java.awt.Font;
@@ -630,10 +631,10 @@ public class SwingController extends BaseCommandPlugin implements UIController {
 
         advanced.addSetting(new PreferencesSetting(
                 PreferencesType.OPTIONALINTEGER,
-                new NumericalValidator(10, -1), "ui", "frameBufferSize",
-                "Window buffer size", "The maximum number of lines in a window"
-                + " buffer",
-                globalConfig, globalIdentity));
+                new OptionalValidator(new NumericalValidator(10, -1)),
+                "ui", "frameBufferSize",
+                "Window buffer size", "The maximum number of lines in a "
+                + "window buffer", globalConfig, globalIdentity));
         advanced.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
                 getDomain(), "mdiBarVisibility", "MDI Bar Visibility",
                 "Controls the visibility of the MDI bar",
