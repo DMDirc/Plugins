@@ -90,6 +90,12 @@ public class TopicBar extends JComponent implements ActionListener,
     private Color backgroundColour;
     /** Error icon. */
     private final JLabel errorIcon;
+    /** Show the topic bar? */
+    private boolean showBar;
+    /** Show the full topic, or truncate? */
+    private boolean showFull;
+    /** Hide topic bar when topic is empty? */
+    private boolean hideEmpty;
 
     /**
      * Instantiates a new topic bar.
@@ -106,10 +112,10 @@ public class TopicBar extends JComponent implements ActionListener,
         topicText = new TextPaneInputField(channelFrame.getController(),
                 parentWindow);
         topicLengthMax = channel.getMaxTopicLength();
+        updateOptions();
         errorIcon = new JLabel(channelFrame.getIconManager()
                 .getIcon("input-error"));
-        topicText.setEditorKit(new WrapEditorKit(channel.getConfigManager()
-                .getOptionBool(controller.getDomain(), "showfulltopic")));
+        topicText.setEditorKit(new WrapEditorKit(showFull));
         ((DefaultStyledDocument) topicText.getDocument()).setDocumentFilter(
                 new NewlinesDocumentFilter());
 
@@ -150,7 +156,6 @@ public class TopicBar extends JComponent implements ActionListener,
                 "enterButton");
         topicText.getActionMap().put("enterButton", new AbstractAction(
                 "enterButton") {
-
             /**
              * A version number for this class. It should be changed whenever the class
              * structure is changed (or anything else that would prevent serialized
@@ -168,7 +173,6 @@ public class TopicBar extends JComponent implements ActionListener,
                 "escapeButton");
         topicText.getActionMap().put("escapeButton", new AbstractAction(
                 "escapeButton") {
-
             private static final long serialVersionUID = 1;
 
             /** {@inheritDoc} */
@@ -192,7 +196,10 @@ public class TopicBar extends JComponent implements ActionListener,
                 controller.getDomain(), "showfulltopic", this);
         controller.getGlobalConfig().addChangeListener(
                 controller.getDomain(), "hideEmptyTopicBar", this);
+        controller.getGlobalConfig().addChangeListener(
+                controller.getDomain(), "showtopicbar", this);
 
+        setVisible(true);
         topicText.setFocusable(false);
         topicText.setEditable(false);
         topicCancel.setVisible(false);
@@ -204,7 +211,6 @@ public class TopicBar extends JComponent implements ActionListener,
     @Override
     public final void topicChanged(final Channel channel, final Topic topic) {
         UIUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -216,14 +222,9 @@ public class TopicBar extends JComponent implements ActionListener,
                     channel.getStyliser().addStyledString(
                             (StyledDocument) topicText.getDocument(),
                             new String[]{Styliser.CODE_HEXCOLOUR
-                                    + UIUtilities.getHex(foregroundColour)
-                                    + channel.getCurrentTopic().getTopic(), },
+                        + UIUtilities.getHex(foregroundColour)
+                        + channel.getCurrentTopic().getTopic(),},
                             as);
-                }
-                if (channel.getConfigManager().getOptionBool(controller.
-                        getDomain(),
-                        "hideEmptyTopicBar")) {
-                    setVisible(topicText.getDocument().getLength() != 0);
                 }
                 topicText.setCaretPosition(0);
                 validateTopic();
@@ -231,6 +232,20 @@ public class TopicBar extends JComponent implements ActionListener,
                 setVisible(true);
             }
         });
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setVisible(final boolean visibility) {
+        if (!showBar || !visibility) {
+            super.setVisible(false);
+            return;
+        }
+        if (hideEmpty) {
+            super.setVisible(topicText.getDocument().getLength() != 0);
+            return;
+        }
+        super.setVisible(true);
     }
 
     /**
@@ -373,7 +388,6 @@ public class TopicBar extends JComponent implements ActionListener,
      */
     public void setCaretPosition(final int position) {
         UIUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -389,7 +403,6 @@ public class TopicBar extends JComponent implements ActionListener,
      */
     public void setCaretColor(final Color optionColour) {
         UIUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -406,7 +419,6 @@ public class TopicBar extends JComponent implements ActionListener,
     @Override
     public void setForeground(final Color optionColour) {
         UIUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -422,7 +434,6 @@ public class TopicBar extends JComponent implements ActionListener,
      */
     public void setDisabledTextColour(final Color optionColour) {
         UIUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -439,7 +450,6 @@ public class TopicBar extends JComponent implements ActionListener,
     @Override
     public void setBackground(final Color optionColour) {
         UIUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -451,21 +461,24 @@ public class TopicBar extends JComponent implements ActionListener,
     /** {@inheritDoc} */
     @Override
     public void configChanged(final String domain, final String key) {
+        updateOptions();
+        setVisible(showBar);
         if ("showfulltopic".equals(key)) {
-            topicText.setEditorKit(new WrapEditorKit(channel.getConfigManager()
-                .getOptionBool(controller.getDomain(), "showfulltopic")));
+            topicText.setEditorKit(new WrapEditorKit(showFull));
             ((DefaultStyledDocument) topicText.getDocument()).setDocumentFilter(
                     new NewlinesDocumentFilter());
             topicChanged(channel, null);
         }
         setColours();
-        if ("hideEmptyTopicBar".equals(key)) {
-            setVisible(true);
-            if (channel.getConfigManager().getOptionBool(controller.getDomain(),
-                    "hideEmptyTopicBar")) {
-                setVisible(topicText.getDocument().getLength() != 0);
-            }
-        }
+    }
+
+    private void updateOptions() {
+        showFull = channel.getConfigManager()
+                .getOptionBool(controller.getDomain(), "showfulltopic");
+        hideEmpty = channel.getConfigManager()
+                .getOptionBool(controller.getDomain(), "hideEmptyTopicBar");
+        showBar = channel.getConfigManager()
+                .getOptionBool(controller.getDomain(), "showtopicbar");
     }
 
     /**
@@ -480,7 +493,6 @@ public class TopicBar extends JComponent implements ActionListener,
      */
     public void validateTopic() {
         UIUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -560,7 +572,6 @@ public class TopicBar extends JComponent implements ActionListener,
         validateTopic();
         if (topicText.isEditable()) {
             SwingUtilities.invokeLater(new Runnable() {
-
                 @Override
                 public void run() {
                     applyAttributes();

@@ -27,7 +27,6 @@ import com.dmdirc.FrameContainer;
 import com.dmdirc.ServerState;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionType;
-import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.NickList;
@@ -35,6 +34,7 @@ import com.dmdirc.addons.ui_swing.components.SplitPane;
 import com.dmdirc.addons.ui_swing.components.TopicBar;
 import com.dmdirc.commandparser.PopupType;
 import com.dmdirc.config.Identity;
+import com.dmdirc.interfaces.actions.ActionType;
 
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -87,8 +87,6 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
         controller.getGlobalConfig().addChangeListener("ui",
                 "channelSplitPanePosition", this);
         controller.getGlobalConfig().addChangeListener(
-                controller.getDomain(), "showtopicbar", this);
-        controller.getGlobalConfig().addChangeListener(
                 controller.getDomain(), "shownicklist", this);
         ActionManager.getActionManager().registerListener(this,
                 CoreActionType.CLIENT_CLOSING);
@@ -124,8 +122,6 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
         nicklist = new NickList(this, getContainer().getConfigManager());
         settingsMI = new JMenuItem("Settings");
         settingsMI.addActionListener(this);
-        topicBar.setVisible(getContainer().getConfigManager().getOptionBool(
-                getController().getDomain(), "showtopicbar"));
 
         splitPane = new SplitPane(controller.getGlobalConfig(),
                 SplitPane.Orientation.HORIZONTAL);
@@ -177,7 +173,6 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
             final int splitPanePosition = getContainer().getConfigManager()
                     .getOptionInt("ui", "channelSplitPanePosition");
             UIUtilities.invokeLater(new Runnable() {
-
                 /** {@inheritDoc} */
                 @Override
                 public void run() {
@@ -187,10 +182,6 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
                             getDividerSize() - splitPanePosition);
                 }
             });
-        }
-        if ("showtopicbar".equals(key)) {
-            topicBar.setVisible(getContainer().getConfigManager().getOptionBool(
-                    getController().getDomain(), "showtopicbar"));
         }
         if ("shownicklist".equals(key)) {
             if (getContainer().getConfigManager().getOptionBool(getController()
@@ -211,7 +202,6 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
 
     private void saveSplitPanePosition() {
         UIUtilities.invokeAndWait(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
