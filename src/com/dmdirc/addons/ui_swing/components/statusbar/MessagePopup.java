@@ -24,13 +24,12 @@ package com.dmdirc.addons.ui_swing.components.statusbar;
 
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.ui.StatusMessage;
+import com.dmdirc.util.collections.RollingList;
 
 import java.awt.Color;
 import java.awt.Point;
 import java.awt.Window;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -53,7 +52,7 @@ class MessagePopup extends StatusbarTogglePanel<JLabel> {
     /** Parent window. */
     private final Window parentWindow;
     /** List of historical messages. */
-    private final List<StatusMessage> messages;
+    private final RollingList<StatusMessage> messages;
     /** Parent panel. */
     private final JPanel parent;
     /** Swing controller. */
@@ -74,7 +73,7 @@ class MessagePopup extends StatusbarTogglePanel<JLabel> {
         this.parentWindow = parentWindow;
         this.parent = parent;
         this.controller = controller;
-        messages = new ArrayList<StatusMessage>();
+        messages = new RollingList<StatusMessage>(5);
     }
 
     /* {@inheritDoc} */
@@ -111,7 +110,7 @@ class MessagePopup extends StatusbarTogglePanel<JLabel> {
      * @param message to add
      */
     public void addMessage(final StatusMessage message) {
-        synchronized(message) {
+        synchronized (message) {
             messages.add(message);
         }
     }
@@ -167,7 +166,7 @@ class MessagePopup extends StatusbarTogglePanel<JLabel> {
                 return;
             }
 
-            for (final StatusMessage message : messages) {
+            for (final StatusMessage message : messages.getList()) {
                 panel.add(new JLabel(message.getMessage(), message.getIconType()
                         == null ? null : controller.getIconManager()
                         .getIcon(message.getIconType()), SwingConstants.LEFT),
