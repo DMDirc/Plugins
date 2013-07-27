@@ -30,7 +30,6 @@ import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.implementations.BasePlugin;
 import com.dmdirc.plugins.implementations.PluginFilesHelper;
 import com.dmdirc.util.io.StreamReader;
-import com.dmdirc.util.resourcemanager.ResourceManager;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -44,10 +43,6 @@ public class WindowsMediaSourcePlugin extends BasePlugin
 
     /** Media sources. */
     private final List<MediaSource> sources;
-
-    /** My plugin info. */
-    private final PluginInfo pluginInfo;
-
     /** Plugin files helper. */
     private final PluginFilesHelper filesHelper;
 
@@ -58,8 +53,7 @@ public class WindowsMediaSourcePlugin extends BasePlugin
      */
     public WindowsMediaSourcePlugin(final PluginInfo pluginInfo) {
         super();
-        this.pluginInfo = pluginInfo;
-        this.filesHelper = new PluginFilesHelper(pluginInfo.getMetaData());
+        this.filesHelper = new PluginFilesHelper(pluginInfo);
         sources = new ArrayList<MediaSource>();
         sources.add(new DllSource(this, "Winamp", true));
         sources.add(new DllSource(this, "iTunes", false));
@@ -103,27 +97,12 @@ public class WindowsMediaSourcePlugin extends BasePlugin
     /** {@inheritDoc} */
     @Override
     public void onLoad() {
-        // Extract GetMediaInfo.exe and required DLLs
-        final PluginInfo pi = pluginInfo.getMetaData().getManager().getPluginInfoByName("windowsmediasource");
-
-        // This shouldn't actually happen, but check to make sure.
-        if (pi == null) {
-            return;
-        }
-
-        // Now get the RM
+        // Extract the .dlls and .exe
         try {
-            final ResourceManager res = pi.getResourceManager();
-
-            // Extract the .dlls and .exe
-            try {
-                res.extractResoucesEndingWith(filesHelper.getFilesDir(), ".dll");
-                res.extractResoucesEndingWith(filesHelper.getFilesDir(), ".exe");
-            } catch (IOException ex) {
-                Logger.userError(ErrorLevel.MEDIUM, "Unable to extract files for windows media source: " + ex.getMessage(), ex);
-            }
-        } catch (IOException ioe) {
-            Logger.userError(ErrorLevel.LOW, "Unable to open ResourceManager for windowsmediasource: " + ioe.getMessage(), ioe);
+            filesHelper.extractResoucesEndingWith(".dll");
+            filesHelper.extractResoucesEndingWith(".exe");
+        } catch (IOException ex) {
+            Logger.userError(ErrorLevel.MEDIUM, "Unable to extract files for windows media source: " + ex.getMessage(), ex);
         }
     }
 }
