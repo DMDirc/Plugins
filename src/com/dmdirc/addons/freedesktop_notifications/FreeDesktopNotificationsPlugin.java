@@ -35,12 +35,10 @@ import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.plugins.PluginInfo;
-import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.plugins.implementations.BaseCommandPlugin;
 import com.dmdirc.plugins.implementations.PluginFilesHelper;
 import com.dmdirc.ui.messages.Styliser;
 import com.dmdirc.util.io.StreamReader;
-import com.dmdirc.util.resourcemanager.ResourceManager;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -69,8 +67,6 @@ public final class FreeDesktopNotificationsPlugin
     private final ConfigManager config;
     /** Addon identity. */
     private final Identity identity;
-    /** Plugin manager instance. */
-    private final PluginManager pluginManager;
     /** Plugin files helper. */
     private final PluginFilesHelper filesHelper;
 
@@ -79,17 +75,14 @@ public final class FreeDesktopNotificationsPlugin
      *
      * @param pluginInfo This plugin's plugin info
      * @param identityManager Identity Manager instance
-     * @param pluginManager Plugin manager
      * @param commandController Command controller to register commands
      */
     public FreeDesktopNotificationsPlugin(final PluginInfo pluginInfo,
             final IdentityManager identityManager,
-            final PluginManager pluginManager,
             final CommandController commandController) {
         super(commandController);
         this.pluginInfo = pluginInfo;
-        this.pluginManager = pluginManager;
-        this.filesHelper = new PluginFilesHelper(pluginInfo.getMetaData());
+        this.filesHelper = new PluginFilesHelper(pluginInfo);
         config = identityManager.getGlobalConfiguration();
         identity = identityManager.getGlobalAddonIdentity();
         registerCommand(new FDNotifyCommand(this), FDNotifyCommand.INFO);
@@ -103,7 +96,9 @@ public final class FreeDesktopNotificationsPlugin
      * @return True if the notification was shown.
      */
     public boolean showNotification(final String title, final String message) {
-        if (filesHelper.getFilesDir() == null) { return false; }
+        if (filesHelper.getFilesDir() == null) {
+            return false;
+        }
 
         final ArrayList<String> args = new ArrayList<String>();
 
@@ -130,7 +125,10 @@ public final class FreeDesktopNotificationsPlugin
             final StringBuffer data = new StringBuffer();
             new StreamReader(myProcess.getErrorStream()).start();
             new StreamReader(myProcess.getInputStream(), data).start();
-            try { myProcess.waitFor(); } catch (InterruptedException e) { }
+            try {
+                myProcess.waitFor();
+            } catch (InterruptedException e) {
+            }
             return true;
         } catch (SecurityException e) {
         } catch (IOException e) {
@@ -147,7 +145,9 @@ public final class FreeDesktopNotificationsPlugin
      */
     public String prepareString(final String input) {
         String output = input;
-        if (stripcodes) { output = Styliser.stipControlCodes(output); }
+        if (stripcodes) {
+            output = Styliser.stipControlCodes(output);
+        }
         if (escapehtml) {
             if (strictescape) {
                 output = StringEscapeUtils.escapeHtml(output);
@@ -168,26 +168,12 @@ public final class FreeDesktopNotificationsPlugin
     public void onLoad() {
         config.addChangeListener(getDomain(), this);
         setCachedSettings();
-
-        // Extract required Files
-        final PluginInfo pi = pluginManager.getPluginInfoByName("freedesktop_notifications");
-
-        // This shouldn't actually happen, but check to make sure.
-        if (pi != null) {
-            // Now get the RM
-            try {
-                final ResourceManager res = pi.getResourceManager();
-
-                // Extract the files needed
-                try {
-                    res.extractResoucesEndingWith(filesHelper.getFilesDir(), ".py");
-                    res.extractResoucesEndingWith(filesHelper.getFilesDir(), ".png");
-                } catch (IOException ex) {
-                    Logger.userError(ErrorLevel.MEDIUM, "Unable to extract files for Free desktop notifications: " + ex.getMessage(), ex);
-                }
-            } catch (IOException ioe) {
-                Logger.userError(ErrorLevel.LOW, "Unable to open ResourceManager for freedesktop_notifications: "+ioe.getMessage(), ioe);
-            }
+        // Extract the files needed
+        try {
+            filesHelper.extractResoucesEndingWith(".py");
+            filesHelper.extractResoucesEndingWith(".png");
+        } catch (IOException ex) {
+            Logger.userError(ErrorLevel.MEDIUM, "Unable to extract files for Free desktop notifications: " + ex.getMessage(), ex);
         }
         super.onLoad();
     }
@@ -242,7 +228,7 @@ public final class FreeDesktopNotificationsPlugin
     private void setCachedSettings() {
         timeout = config.getOptionInt(getDomain(), "general.timeout");
         icon = config.getOption(getDomain(), "general.icon");
-        escapehtml = config.getOptionBool( getDomain(), "advanced.escapehtml");
+        escapehtml = config.getOptionBool(getDomain(), "advanced.escapehtml");
         strictescape = config.getOptionBool(getDomain(), "advanced.strictescape");
         stripcodes = config.getOptionBool(getDomain(), "advanced.stripcodes");
     }
@@ -253,4 +239,3 @@ public final class FreeDesktopNotificationsPlugin
         setCachedSettings();
     }
 }
-
