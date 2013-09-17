@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_swing.dialogs;
 
 import com.dmdirc.Server;
+import com.dmdirc.ServerManager;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
@@ -68,6 +69,8 @@ public final class NewServerDialog extends StandardDialog implements
     private static final long serialVersionUID = 8;
     /** Identity Manager. */
     private final IdentityManager identityManager;
+    /** Server manager. */
+    private final ServerManager serverManager;
     /** checkbox. */
     private JCheckBox newServerWindowCheck;
     /** checkbox. */
@@ -93,6 +96,7 @@ public final class NewServerDialog extends StandardDialog implements
     public NewServerDialog(final SwingController controller) {
         super(controller, controller.getMainFrame(), ModalityType.MODELESS);
         identityManager = controller.getIdentityManager();
+        serverManager = controller.getMain().getServerManager();
 
         initComponents();
         layoutComponents();
@@ -125,7 +129,7 @@ public final class NewServerDialog extends StandardDialog implements
 
         serverField.requestFocusInWindow();
 
-        if (getController().getMain().getServerManager().numServers() == 0 ||
+        if (serverManager.numServers() == 0 ||
                 getController().getMainFrame().getActiveFrame() == null) {
             newServerWindowCheck.setSelected(true);
             newServerWindowCheck.setEnabled(false);
@@ -247,14 +251,13 @@ public final class NewServerDialog extends StandardDialog implements
 
             // Open in a new window?
             if (newServerWindowCheck.isSelected()
-                    || getController().getMain().getServerManager().numServers() == 0
+                    || serverManager.numServers() == 0
                     || getController().getMainFrame().getActiveFrame() == null) {
 
                 new LoggingSwingWorker<Void, Void>() {
                     @Override
                     protected Void doInBackground() {
-                        final Server server = new Server(getController().getMain().getServerManager(), address, profile);
-                        server.connect();
+                        serverManager.connectToAddress(address, profile);
                         return null;
                     }
                 }.executeInExecutor();
@@ -268,8 +271,7 @@ public final class NewServerDialog extends StandardDialog implements
                     @Override
                     protected Void doInBackground() {
                         if (server == null) {
-                            final Server newServer = new Server(getController().getMain().getServerManager(), address, profile);
-                            newServer.connect();
+                            serverManager.connectToAddress(address, profile);
                         } else {
                             server.connect(address, profile);
                         }

@@ -22,9 +22,8 @@
 
 package com.dmdirc.addons.serverlists;
 
-import com.dmdirc.Server;
-
 import com.dmdirc.ServerManager;
+
 import java.net.URI;
 
 /**
@@ -97,8 +96,7 @@ public class ServerEntry extends ServerGroupItemBase {
     /** {@inheritDoc} */
     @Override
     public void connect() {
-        final Server server = new Server(serverManager, address, getProfileIdentity());
-        server.connect();
+        serverManager.connectToAddress(address, getProfileIdentity());
     }
 
     /** {@inheritDoc} */
