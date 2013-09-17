@@ -22,12 +22,12 @@
 
 package com.dmdirc.addons.parser_twitter.actions;
 
+import com.dmdirc.Main;
 import com.dmdirc.Server;
 import com.dmdirc.interfaces.actions.ActionComponent;
 import com.dmdirc.addons.parser_twitter.Twitter;
 import com.dmdirc.addons.parser_twitter.api.TwitterStatus;
 import com.dmdirc.addons.parser_twitter.api.TwitterUser;
-import com.dmdirc.interfaces.actions.ActionComponentArgument;
 import com.dmdirc.parser.interfaces.Parser;
 
 /**
@@ -43,10 +43,10 @@ public enum TwitterActionComponents implements ActionComponent {
 
         /** {@inheritDoc} */
         @Override
-        public Object get(final ActionComponentArgument arg) {
-            final long id = Long.parseLong(((String) arg.getObject()).substring(1));
+        public Object get(final Object arg) {
+            final long id = Long.parseLong(((String) arg).substring(1));
 
-            for (Server server : arg.getMain().getServerManager().getServers()) {
+            for (Server server : Main.mainInstance.getServerManager().getServers()) {
                 final Parser parser = server.getParser();
 
                 if (parser instanceof Twitter) {
@@ -86,8 +86,8 @@ public enum TwitterActionComponents implements ActionComponent {
 
         /** {@inheritDoc} */
         @Override
-        public Object get(final ActionComponentArgument arg) {
-            return ((TwitterStatus) arg.getObject()).getUser();
+        public Object get(final Object arg) {
+            return ((TwitterStatus) arg).getUser();
         }
 
         /** {@inheritDoc} */
@@ -115,8 +115,8 @@ public enum TwitterActionComponents implements ActionComponent {
 
         /** {@inheritDoc} */
         @Override
-        public Object get(final ActionComponentArgument arg) {
-            return ((TwitterUser) arg.getObject()).getScreenName();
+        public Object get(final Object arg) {
+            return ((TwitterUser) arg).getScreenName();
         }
 
         /** {@inheritDoc} */
