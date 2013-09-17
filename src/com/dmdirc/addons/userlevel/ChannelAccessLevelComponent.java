@@ -23,7 +23,6 @@
 package com.dmdirc.addons.userlevel;
 
 import com.dmdirc.interfaces.actions.ActionComponent;
-import com.dmdirc.interfaces.actions.ActionComponentArgument;
 import com.dmdirc.parser.interfaces.ChannelClientInfo;
 
 /**
@@ -35,8 +34,8 @@ public class ChannelAccessLevelComponent implements ActionComponent {
 
     /** {@inheritDoc} */
     @Override
-    public Object get(final ActionComponentArgument arg) {
-        final ChannelClientInfo ci = (ChannelClientInfo) arg.getObject();
+    public Object get(final Object arg) {
+        final ChannelClientInfo ci = (ChannelClientInfo) arg;
 
         UserLevelPlugin.doChannelLevel(ci);
 
