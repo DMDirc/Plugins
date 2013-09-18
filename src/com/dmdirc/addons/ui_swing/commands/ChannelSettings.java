@@ -39,22 +39,31 @@ import com.dmdirc.ui.input.AdditionalTabTargets;
  * Opens the channel settings window for the channel.
  */
 @CommandOptions(allowOffline = false)
-public class ChannelSettings extends Command implements
-        IntelligentCommand {
+public class ChannelSettings extends Command implements IntelligentCommand {
 
     /** A command info object for this command. */
     public static final CommandInfo INFO = new BaseCommandInfo("channelsettings",
             "channelsettings - opens the channel settings window",
             CommandType.TYPE_CHANNEL);
 
+    /** The controller to use to show the settings window. */
+    private final SwingController controller;
+
+    /**
+     * Creates a new instance of the {@link ChannelSettings} command.
+     *
+     * @param controller The controller to use to show the settings window.
+     */
+    public ChannelSettings(final SwingController controller) {
+        this.controller = controller;
+    }
+
     /** {@inheritDoc} */
     @Override
     public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
-        ((SwingController) getController().getMain().getPluginManager()
-                .getPluginInfoByName("ui_swing").getPlugin())
-                .showChannelSettingsDialog(((ChannelCommandContext) context)
-                .getChannel());
+        controller.showChannelSettingsDialog(
+                ((ChannelCommandContext) context).getChannel());
     }
 
     /** {@inheritDoc} */
