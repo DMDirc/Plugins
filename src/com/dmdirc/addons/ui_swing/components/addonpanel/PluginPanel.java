@@ -63,7 +63,7 @@ public class PluginPanel extends AddonPanel implements ActionListener {
 
         ActionManager.getActionManager().registerListener(this,
                 CoreActionType.PLUGIN_REFRESH);
-        controller.getMain().getPluginManager().refreshPlugins();
+        controller.getPluginManager().refreshPlugins();
     }
 
     /** {@inheritDoc} */
@@ -71,7 +71,7 @@ public class PluginPanel extends AddonPanel implements ActionListener {
     protected JTable populateList(final JTable table) {
         final List<PluginInfo> list = new ArrayList<PluginInfo>();
         final List<PluginInfo> sortedList = new ArrayList<PluginInfo>();
-        list.addAll(controller.getMain().getPluginManager().getPluginInfos());
+        list.addAll(controller.getPluginManager().getPluginInfos());
         Collections.sort(list);
         for (final PluginInfo plugin : list) {
             if (plugin.getMetaData().getParents().length == 0) {

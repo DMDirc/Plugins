@@ -81,8 +81,7 @@ public class LicenceLoader extends LoggingSwingWorker<Void, Void> {
                     + "no resource manager");
         } else {
             addCoreLicences(rm);
-            for (PluginInfo pi : controller.getMain().getPluginManager()
-                    .getPluginInfos()) {
+            for (PluginInfo pi : controller.getPluginManager().getPluginInfos()) {
                 addPluginLicences(pi);
             }
         }
