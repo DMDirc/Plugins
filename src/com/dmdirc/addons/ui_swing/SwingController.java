@@ -189,8 +189,8 @@ public class SwingController extends BaseCommandPlugin implements UIController {
         dialogManager = new DialogManager(this);
         setAntiAlias();
         windows = new ArrayList<java.awt.Window>();
-        registerCommand(new ServerSettings(), ServerSettings.INFO);
-        registerCommand(new ChannelSettings(), ChannelSettings.INFO);
+        registerCommand(new ServerSettings(this), ServerSettings.INFO);
+        registerCommand(new ChannelSettings(this), ChannelSettings.INFO);
         registerCommand(new Input(windowFactory), Input.INFO);
         registerCommand(new PopOutCommand(this), PopOutCommand.INFO);
         registerCommand(new PopInCommand(this), PopInCommand.INFO);

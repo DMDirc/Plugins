@@ -47,13 +47,23 @@ public class ServerSettings extends Command implements IntelligentCommand {
             "serversettings - opens the server settings window",
             CommandType.TYPE_SERVER);
 
+    /** The controller to use to show the settings window. */
+    private final SwingController controller;
+
+    /**
+     * Creates a new instance of the {@link ServerSettings} command.
+     *
+     * @param controller The controller to use to show the settings window.
+     */
+    public ServerSettings(final SwingController controller) {
+        this.controller = controller;
+    }
+
     /** {@inheritDoc} */
     @Override
     public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
-        ((SwingController) getController().getMain().getPluginManager()
-                .getPluginInfoByName("ui_swing").getPlugin())
-                .showServerSettingsDialog(context.getSource().getServer());
+        controller.showServerSettingsDialog(context.getSource().getServer());
     }
 
     /** {@inheritDoc} */
