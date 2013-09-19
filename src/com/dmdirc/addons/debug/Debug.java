@@ -26,11 +26,11 @@ import com.dmdirc.FrameContainer;
 import com.dmdirc.commandparser.BaseCommandInfo;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandInfo;
-import com.dmdirc.commandparser.CommandManager;
 import com.dmdirc.commandparser.CommandType;
 import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.IntelligentCommand;
 import com.dmdirc.commandparser.commands.context.CommandContext;
+import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 
 import java.util.Arrays;
@@ -48,15 +48,20 @@ public class Debug extends Command implements IntelligentCommand {
     /** Parent debug plugin. */
     private final DebugPlugin plugin;
 
+    /** The command controller to use to lookup command information. */
+    private final CommandController controller;
+
     /**
      * Creates a new debug command with the specified parent plugin.
      *
-     * @param plugin Parent debug plugin
+     * @param plugin Parent debug plugin.
+     * @param controller The command controller to use to lookup command information.
      */
-    public Debug(final DebugPlugin plugin) {
-        super();
+    public Debug(final DebugPlugin plugin, final CommandController controller) {
+        super(controller);
 
         this.plugin = plugin;
+        this.controller = controller;
     }
 
     /** {@inheritDoc} */
@@ -74,7 +79,7 @@ public class Debug extends Command implements IntelligentCommand {
                         "Unknown debug action.");
             } else {
                 final CommandArguments newArgs = new CommandArguments(
-                        Arrays.asList((CommandManager.getCommandManager().getCommandChar()
+                        Arrays.asList((controller.getCommandChar()
                         + command.getName() + " "
                         + args.getArgumentsAsString(1)).split(" ")));
                 command.execute(origin, newArgs, context);
