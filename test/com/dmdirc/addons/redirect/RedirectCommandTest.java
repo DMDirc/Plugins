@@ -22,42 +22,64 @@
 
 package com.dmdirc.addons.redirect;
 
-import com.dmdirc.TestMain;
+import com.dmdirc.FrameContainer;
 import com.dmdirc.MessageTarget;
+import com.dmdirc.WritableFrameContainer;
 import com.dmdirc.commandparser.CommandArguments;
-import com.dmdirc.commandparser.CommandManager;
 import com.dmdirc.commandparser.commands.context.ChatCommandContext;
 import com.dmdirc.commandparser.commands.global.Echo;
-import com.dmdirc.config.IdentityManager;
-import com.dmdirc.config.InvalidIdentityFileException;
+import com.dmdirc.commandparser.parsers.CommandParser;
+import com.dmdirc.config.ConfigManager;
+import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.ui.InputWindow;
 
-import org.junit.BeforeClass;
-import org.junit.Ignore;
+import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.stubbing.Answer;
 
 import static org.mockito.Mockito.*;
 
+@RunWith(MockitoJUnitRunner.class)
 public class RedirectCommandTest {
 
-    @BeforeClass
-    public static void setupClass() throws InvalidIdentityFileException {
-        TestMain.getTestMain();
-        CommandManager.getCommandManager().registerCommand(new Echo(), Echo.INFO);
+    @Mock private MessageTarget target;
+    @Mock private InputWindow inputWindow;
+    @Mock private CommandController commandController;
+    @Mock private WritableFrameContainer frameContainer;
+    @Mock private ConfigManager configManager;
+    @Mock private CommandParser commandParser;
+
+    @Before
+    public void setup() {
+        when(commandController.getCommandChar()).thenReturn('/');
+        when(commandController.getSilenceChar()).thenReturn('.');
+        when(inputWindow.getContainer()).thenReturn(frameContainer);
+        when(target.getConfigManager()).thenReturn(configManager);
+        when(target.getCommandParser()).thenReturn(commandParser);
+        when(configManager.hasOptionString("formatter", "commandOutput")).thenReturn(true);
+        when(configManager.getOption("formatter", "commandOutput")).thenReturn("%1$s");
+        doAnswer(new Answer<Void>() {
+            @Override
+            public Void answer(final InvocationOnMock invocation) throws Throwable {
+                new Echo(commandController).execute(
+                        ((FrameContainer) invocation.getArguments()[0]),
+                        new CommandArguments(commandController, "/echo test"),
+                        null);
+                return null;
+            }
+        }).when(commandParser).parseCommand(any(FrameContainer.class), eq("/echo test"));
     }
 
-    @Ignore
     @Test
     public void testExecute() {
         final RedirectCommand command = new RedirectCommand();
-        final MessageTarget target = mock(MessageTarget.class);
-        final InputWindow window = mock(InputWindow.class);
-        //when(window.getCommandParser()).thenReturn(parser);
-        when(window.getContainer().getConfigManager()).thenReturn(
-                IdentityManager.getIdentityManager().getGlobalConfiguration());
 
-        command.execute(target, new CommandArguments("/redirect /echo test"),
-                new ChatCommandContext(window.getContainer(), RedirectCommand.INFO, target));
+        command.execute(target, new CommandArguments(commandController, "/redirect /echo test"),
+                new ChatCommandContext(frameContainer, RedirectCommand.INFO, target));
 
         verify(target).sendLine("test");
     }
