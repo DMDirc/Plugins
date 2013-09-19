@@ -22,40 +22,38 @@
 
 package com.dmdirc.addons.urlcatcher;
 
-import com.dmdirc.TestMain;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.config.ConfigManager;
 import com.dmdirc.config.InvalidIdentityFileException;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.ui.messages.Styliser;
-import org.junit.BeforeClass;
+
+import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
+@RunWith(MockitoJUnitRunner.class)
 public class UrlCatcherPluginTest {
 
-    private static FrameContainer container;
+    @Mock private FrameContainer container;
+    @Mock private ConfigManager manager;
+    @Mock private CommandController controller;
 
-    @BeforeClass
-    public static void setupClass() {
-        container = mock(FrameContainer.class);
-
-        final ConfigManager manager = mock(ConfigManager.class);
-
+    @Before
+    public void setupClass() {
         when(container.getConfigManager()).thenReturn(manager);
-
         final Styliser styliser = new Styliser(container);
-
         when(container.getStyliser()).thenReturn(styliser);
     }
 
     @Test
     public void testURLCounting() throws InvalidIdentityFileException {
-        TestMain.getTestMain();
-
-        final UrlCatcherPlugin plugin = new UrlCatcherPlugin(mock(CommandController.class));
+        final UrlCatcherPlugin plugin = new UrlCatcherPlugin(controller);
 
         plugin.processEvent(CoreActionType.CHANNEL_MESSAGE, null,
                 container, "This is a message - http://www.google.com/ foo");
@@ -70,9 +68,7 @@ public class UrlCatcherPluginTest {
 
     @Test
     public void testURLCatching() throws InvalidIdentityFileException {
-        TestMain.getTestMain();
-
-        final UrlCatcherPlugin plugin = new UrlCatcherPlugin(mock(CommandController.class));
+        final UrlCatcherPlugin plugin = new UrlCatcherPlugin(controller);
 
         plugin.processEvent(CoreActionType.CHANNEL_MESSAGE, null,
                 container, "http://www.google.com/ www.example.com foo://bar.baz");
