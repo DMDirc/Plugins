@@ -77,8 +77,8 @@ public class DebugPlugin extends BaseCommandPlugin {
         super(commandController);
         this.identityManager = identityManager;
         this.pluginManager = pluginManager;
-        commands = new HashMap<String, DebugCommand>();
-        debugCommand = new Debug(this);
+        commands = new HashMap<>();
+        debugCommand = new Debug(this, commandController);
         registerCommand(debugCommand, Debug.INFO);
     }
 
@@ -90,10 +90,7 @@ public class DebugPlugin extends BaseCommandPlugin {
             try {
                 addCommand(type.getConstructor(DebugPlugin.class, Debug.class)
                         .newInstance(this, debugCommand));
-            } catch (LinkageError e) {
-                Logger.appError(ErrorLevel.HIGH,
-                        "Unable to load debug command", e);
-            } catch (Exception e) {
+            } catch (LinkageError | Exception e) {
                 Logger.appError(ErrorLevel.HIGH,
                         "Unable to load debug command", e);
             }
@@ -132,7 +129,7 @@ public class DebugPlugin extends BaseCommandPlugin {
      * @return List of command names
      */
     public List<String> getCommandNames() {
-        final List<String> names = new ArrayList<String>(commands.size());
+        final List<String> names = new ArrayList<>(commands.size());
 
         for (DebugCommand command : commands.values()) {
             names.add(command.getName());
