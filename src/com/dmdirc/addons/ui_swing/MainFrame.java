@@ -38,6 +38,7 @@ import com.dmdirc.addons.ui_swing.framemanager.ctrltab.CtrlTabWindowManager;
 import com.dmdirc.addons.ui_swing.framemanager.tree.TreeFrameManager;
 import com.dmdirc.interfaces.ConfigChangeListener;
 import com.dmdirc.interfaces.FrameInfoListener;
+import com.dmdirc.interfaces.LifecycleController;
 import com.dmdirc.interfaces.NotificationListener;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
@@ -88,6 +89,8 @@ public final class MainFrame extends JFrame implements WindowListener,
     private final QueuedLinkedHashSet<TextFrame> focusOrder;
     /** Swing Controller. */
     private final SwingController controller;
+    /** Controller to use to end the program. */
+    private final LifecycleController lifecycleController;
     /** Client Version. */
     private final String version;
     /** Frame manager used for ctrl tab frame switching. */
@@ -122,11 +125,15 @@ public final class MainFrame extends JFrame implements WindowListener,
      * Creates new form MainFrame.
      *
      * @param controller Swing controller
+     * @param lifecycleController Controller to use to end the application.
      */
-    public MainFrame(final SwingController controller) {
+    public MainFrame(
+            final SwingController controller,
+            final LifecycleController lifecycleController) {
         super();
 
         this.controller = controller;
+        this.lifecycleController = lifecycleController;
 
         focusOrder = new QueuedLinkedHashSet<>();
         initComponents();
@@ -272,7 +279,7 @@ public final class MainFrame extends JFrame implements WindowListener,
             /** {@inheritDoc} */
             @Override
             public void run() {
-                controller.getMain().quit(exitCode);
+                lifecycleController.quit(exitCode);
             }
         }, "Quit thread").start();
     }
