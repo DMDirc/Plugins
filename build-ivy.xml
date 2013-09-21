@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="DMDirc-plugins-ivy" basedir="." xmlns:ivy="antlib:org.apache.ivy.ant">
+    <description>Ivy utilities for DMDirc plugins</description>
+
+    <property name="ivy.cache.ttl.default" value="7d"/>
+
+    <target name="-init-ivy" depends="-init-lib-directory">
+        <path id="ivy.classpath">
+           <fileset dir="etc/ivy" includes="ivy*.jar"/>
+        </path>
+
+        <available classname="org.apache.ivy.ant.IvyConfigure"
+              property="ivy.available" classpathref="ivy.classpath" />
+    </target>
+
+    <target name="init-dependencies" depends="-init-ivy" unless="ivy.done">
+        <taskdef resource="org/apache/ivy/ant/antlib.xml" uri="antlib:org.apache.ivy.ant" classpathref="ivy.classpath"/>
+        <ivy:settings file="etc/ivy/ivysettings.xml"/>
+        <ivy:retrieve symlink="true" pattern="lib/[conf]/[artifact].[ext]" sync="true" />
+        <property name="ivy.done" value="true"/>
+    </target>
+</project>

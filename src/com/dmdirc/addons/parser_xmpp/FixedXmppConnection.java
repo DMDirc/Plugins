@@ -26,6 +26,7 @@ import java.lang.reflect.Field;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.jivesoftware.smack.Connection;
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.ConnectionCreationListener;
 import org.jivesoftware.smack.XMPPConnection;
@@ -82,7 +83,7 @@ public class FixedXmppConnection extends XMPPConnection
     /** {@inheritDoc} */
     @Override
     @SuppressWarnings("ResultOfObjectAllocationIgnored")
-    public void connectionCreated(final XMPPConnection xmppc) {
+    public void connectionCreated(final Connection xmppc) {
         // Creating this shoves itself into a static map. Other listeners
         // depend on this entry existing in the map before they're called.
         new ServiceDiscoveryManager(xmppc);

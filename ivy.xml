@@ -1,0 +1,52 @@
+<ivy-module version="2.0">
+    <info organisation="com.dmdirc" module="plugins"/>
+
+    <configurations>
+        <conf name="build" description="Everything needed to support the build process"/>
+        <conf name="main" description="Everything needed to compile the project separately"/>
+        <conf name="test" description="Everything needed to test the project"/>
+    </configurations>
+
+    <dependencies>
+        <dependency org="ant-contrib" name="ant-contrib" rev="1.0b3" conf="build->default" />
+        <dependency org="com.github.shanemcc" name="jgit-describe" rev="0.3" conf="build->default" />
+
+        <dependency org="org.slf4j" name="slf4j-api" rev="1.+" conf="main->default" />
+        <dependency org="com.github.peichhorn" name="lombok-pg" rev="latest.release" conf="main->default" />
+        <dependency org="org.igniterealtime.smack" name="smack" rev="3.+" conf="main->default" />
+        <dependency org="org.igniterealtime.smack" name="smackx" rev="3.+" conf="main->default" />
+        <dependency org="com.miglayout" name="miglayout-swing" rev="4.+" conf="main->default" />
+        <dependency org="org.swinglabs" name="jxlayer" rev="3.+" conf="main->default" />
+        <dependency org="net.java.dev.jna" name="jna" rev="3.+" conf="main->default" />
+        <dependency org="net.java.dev.jna" name="platform" rev="3.+" conf="main->default" />
+        <dependency org="com.greboid.libraries" name="cinch" rev="latest.release" conf="main->default" />
+        <dependency org="com.greboid.libraries" name="cinchsupport" rev="latest.release" conf="main->default" />
+        <dependency org="com.greboid.libraries" name="locksupport" rev="latest.release" conf="main->default" />
+        <dependency org="com.greboid.libraries" name="menuscroller" rev="latest.release" conf="main->default" />
+        <dependency org="org.mortbay.jetty" name="jetty" rev="6.+" conf="main->default" />
+        <dependency org="net.sourceforge.java-jml" name="jml" rev="1.+" conf="main->default" />
+        <dependency org="commons-lang" name="commons-lang" rev="latest.release" conf="main->default" />
+
+<!--
+        <dependency org="org.sourceforce.ant-nsis" name="ant-nsis" rev="1.3" conf="build->default" />
+        <dependency org="com.github.shanemcc" name="jgit-describe" rev="0.3" conf="build->default" />
+        <dependency org="net.sourceforge.fikin-ant-tasks" name="ant-fikin" rev="1.7.3" conf="build->default" />
+
+        <dependency org="org.slf4j" name="slf4j-api" rev="1.+" conf="main->default" />
+        <dependency org="ch.qos.logback" name="logback-classic" rev="1.+" conf="test->default" />
+
+        <dependency org="com.squareup.dagger" name="dagger" rev="1.1.+" conf="main->default" />
+        <dependency org="com.squareup.dagger" name="dagger-compiler" rev="1.1.+" conf="main->default" />
+
+        <dependency org="junit" name="junit" rev="4.+" conf="test->default" />
+        <dependency org="org.mockito" name="mockito-all" rev="1.+" conf="test->default" />
+        <dependency org="com.cenqua.clover" name="clover" rev="3.+" conf="test->default" />
+
+        <dependency org="pmd" name="pmd" rev="4.+" conf="analyse->default" />
+        <dependency org="com.puppycrawl.tools" name="checkstyle" rev="5.+" conf="analyse->default" />
+        <dependency org="net.sourceforge.findbugs" name="findbugs-ant" rev="1.+" conf="analyse->default" />
+
+        <exclude org="ant" module="ant"/>
+-->
+    </dependencies>
+</ivy-module>

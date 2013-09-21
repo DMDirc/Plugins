@@ -9,16 +9,8 @@
     <property name="plugins.dist" location="dist"/>
     <property name="plugins.lib" location="lib"/>
 
+    <import file="build-ivy.xml" />
     <import file="build-tests.xml"/>
-
-    <path id="plugins.classpath">
-       <pathelement path="${plugins.dmdirc.build.dir}"/>
-       <fileset dir="${plugins.lib}" includes="*.jar"/>
-    </path>
-
-    <condition property="plugins.dmdirc.exists">
-       <available classname="com.dmdirc.Main" classpathref="plugins.classpath"/>
-    </condition>
 
     <condition property="plugins.need.antlib">
        <not>
@@ -26,17 +18,37 @@
        </not>
     </condition>
 
-    <target name="-init-taskdefs" if="plugins.need.antlib">
-        <taskdef resource="net/sf/antcontrib/antlib.xml" classpathref="plugins.classpath"/>
+    <target name="-init-lib-directory">
+      <mkdir dir="${plugins.lib}"/>
     </target>
 
-    <taskdef name="git-describe" classname="org.mdonoughe.JGitDescribeTask" classpathref="plugins.classpath"/>
+    <target name="-init-taskdefs" depends="init-dependencies,-init-paths,-init-antlib,-init-git-describe">
+    </target>
+
+    <target name="-init-antlib" if="plugins.need.antlib">
+        <taskdef resource="net/sf/antcontrib/antlib.xml" classpathref="plugins.classpath"/>
+    </target>
+    
+    <target name="-init-git-describe">
+        <taskdef name="git-describe" classname="org.mdonoughe.JGitDescribeTask" classpathref="plugins.classpath"/>
+    </target>
+
+    <target name="-init-paths">
+      <path id="plugins.classpath">
+         <pathelement path="${plugins.dmdirc.build.dir}"/>
+         <fileset dir="${plugins.lib}" includes="**/*.jar"/>
+      </path>
+
+      <condition property="plugins.dmdirc.exists">
+         <available classname="com.dmdirc.Main" classpathref="plugins.classpath"/>
+      </condition>
+    </target>
 
     <target name="-check-dmdirc-jar" unless="plugins.dmdirc.exists">
        <fail>DMDirc class files not found. Please put DMDirc on the classpath or specify the 'plugins.dmdirc.build.dir' property.</fail>
     </target>
 
-    <target name="-init-compile" depends="-check-dmdirc-jar">
+    <target name="-init-compile" depends="init-dependencies,-init-paths,-check-dmdirc-jar">
        <mkdir dir="${plugins.build}"/>
        <mkdir dir="${plugins.build.classes}"/>
        <mkdir dir="${plugins.build.metadata}"/>
@@ -57,7 +69,7 @@
 
     <target name="jar" depends="-package,-add-libs"/>
 
-    <target name="-package" depends="-init-taskdefs, compile">
+    <target name="-package" depends="-init-taskdefs,compile">
         <for param="configfile">
             <fileset dir="${plugins.src}" includes="**/plugin.config"/>
             <sequential>
@@ -106,18 +118,18 @@ version:
 
     <target name="-add-libs">
         <jar destfile="${plugins.dist}/ui_swing.jar" update="true">
-            <zipfileset src="${plugins.lib}/miglayout-4.0-swing.jar" includes="net/miginfocom/layout/**,net/miginfocom/swing/**"/>
-            <zipfileset src="${plugins.lib}/menuscroller.jar" includes="darrylbu/util/**"/>
-            <zipfileset src="${plugins.lib}/jxlayer.jar" includes="org/jdesktop/jxlayer/**"/>
-            <zipfileset src="${plugins.lib}/cinch.jar" includes="*/**"/>
-            <zipfileset src="${plugins.lib}/cinchsupport.jar" includes="*/**"/>
+            <zipfileset src="${plugins.lib}/main/miglayout-swing.jar" includes="net/miginfocom/layout/**,net/miginfocom/swing/**"/>
+            <zipfileset src="${plugins.lib}/main/menuscroller.jar" includes="darrylbu/util/**"/>
+            <zipfileset src="${plugins.lib}/main/jxlayer.jar" includes="org/jdesktop/jxlayer/**"/>
+            <zipfileset src="${plugins.lib}/main/cinch.jar" includes="*/**"/>
+            <zipfileset src="${plugins.lib}/main/cinchsupport.jar" includes="*/**"/>
         </jar>
 
         <jar destfile="${plugins.dist}/ui_web.jar" update="true">
-            <zipfileset src="${plugins.lib}/commons-lang-2.4.jar" includes="org/apache/**" excludes="**/*.html"/>
-            <zipfileset src="${plugins.lib}/jetty-6.1.22.jar" includes="org/mortbay/**"/>
-            <zipfileset src="${plugins.lib}/jetty-util-6.1.22.jar" includes="org/mortbay/**"/>
-            <zipfileset src="${plugins.lib}/servlet-api-2.5-20081211.jar" includes="javax/servlet/**"/>
+            <zipfileset src="${plugins.lib}/main/commons-lang.jar" includes="org/apache/**" excludes="**/*.html"/>
+            <zipfileset src="${plugins.lib}/main/jetty.jar" includes="org/mortbay/**"/>
+            <zipfileset src="${plugins.lib}/main/jetty-util.jar" includes="org/mortbay/**"/>
+            <zipfileset src="${plugins.lib}/main/servlet-api.jar" includes="javax/servlet/**"/>
         </jar>
 
         <jar destfile="${plugins.dist}/parser_irc.jar" update="true">
@@ -128,32 +140,32 @@ version:
         </jar>
 
         <jar destfile="${plugins.dist}/parser_xmpp.jar" update="true">
-            <zipfileset src="${plugins.lib}/smack.jar" includes="org/**"/>
-            <zipfileset src="${plugins.lib}/smackx.jar" includes="org/** com/**"/>
+            <zipfileset src="${plugins.lib}/main/smack.jar" includes="org/**"/>
+            <zipfileset src="${plugins.lib}/main/smackx.jar" includes="org/** com/**"/>
         </jar>
 
        <jar destfile="${plugins.dist}/parser_msn.jar" update="true">
-            <zipfileset src="${plugins.lib}/jml-1.0b4-full.jar" includes="net/** org/**"/>
-            <zipfileset src="${plugins.lib}/httpcore.jar" includes="org/**"/>
+            <zipfileset src="${plugins.lib}/main/jml.jar" includes="net/** org/**"/>
+            <zipfileset src="${plugins.lib}/main/httpcore.jar" includes="org/**"/>
         </jar>
 
         <jar destfile="${plugins.dist}/windowflashing.jar" update="true">
-            <zipfileset src="${plugins.lib}/jna.jar" includes="com/**"/>
-            <zipfileset src="${plugins.lib}/platform.jar" includes="com/**"/>
+            <zipfileset src="${plugins.lib}/main/jna.jar" includes="com/**"/>
+            <zipfileset src="${plugins.lib}/main/platform.jar" includes="com/**"/>
         </jar>
 
         <jar destfile="${plugins.dist}/sessionlock.jar" update="true">
-            <zipfileset src="${plugins.lib}/jna.jar" includes="com/sun/jna/*"/>
-            <zipfileset src="${plugins.lib}/jna.jar" includes="com/sun/jna/ptr/*"/>
-            <zipfileset src="${plugins.lib}/jna.jar" includes="com/sun/jna/win32/**"/>
-            <zipfileset src="${plugins.lib}/jna.jar" includes="com/sun/jna/win32-amd64/**"/>
-            <zipfileset src="${plugins.lib}/jna.jar" includes="com/sun/jna/win32-x86/**"/>
-            <zipfileset src="${plugins.lib}/platform.jar" includes="com/sun/jna/platform/win32/**"/>
-            <zipfileset src="${plugins.lib}/JavaWindowsSessionLockSupport.jar" includes="com/greboid/**"/>
+            <zipfileset src="${plugins.lib}/main/jna.jar" includes="com/sun/jna/*"/>
+            <zipfileset src="${plugins.lib}/main/jna.jar" includes="com/sun/jna/ptr/*"/>
+            <zipfileset src="${plugins.lib}/main/jna.jar" includes="com/sun/jna/win32/**"/>
+            <zipfileset src="${plugins.lib}/main/jna.jar" includes="com/sun/jna/win32-amd64/**"/>
+            <zipfileset src="${plugins.lib}/main/jna.jar" includes="com/sun/jna/win32-x86/**"/>
+            <zipfileset src="${plugins.lib}/main/platform.jar" includes="com/sun/jna/platform/win32/**"/>
+            <zipfileset src="${plugins.lib}/main/locksupport.jar" includes="com/greboid/**"/>
         </jar>
 
         <jar destfile="${plugins.dist}/freedesktop_notifications.jar" update="true">
-            <zipfileset src="${plugins.lib}/commons-lang-2.4.jar" includes="org/apache/**" excludes="**/*.html"/>
+            <zipfileset src="${plugins.lib}/main/commons-lang.jar" includes="org/apache/**" excludes="**/*.html"/>
         </jar>
     </target>
 
