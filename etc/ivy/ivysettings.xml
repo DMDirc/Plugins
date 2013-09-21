@@ -1,0 +1,26 @@
+<ivysettings>
+    <settings defaultResolver="default"/>
+    <resolvers>
+        <ibiblio name="default" m2compatible="true"/>
+
+        <ibiblio name="jgit" root="http://download.eclipse.org/jgit/maven" m2compatible="true"/>
+        <ibiblio name="dmdirc-thirdparty" root="http://nexus.dmdirc.com/nexus/content/repositories/thirdparty/" m2compatible="true"/>
+        <ibiblio name="jml" root="http://java-jml.sourceforge.net/maven" m2compatible="true"/>
+
+        <url name="ant-nsis">
+            <artifact pattern="http://cloud.github.com/downloads/dreese/nsis-ant/nsisant-[revision].jar"/>
+        </url>
+
+        <url name="jgit-describe">
+            <ivy pattern="file:///${basedir}/etc/ivy/[module]/ivy.xml"/>
+            <artifact pattern="http://shanemcc.github.com/jgit-describe/releases/jgit-describe-[revision].jar"/>
+        </url>
+    </resolvers>
+    <modules>
+        <module organisation="org.sourceforce.ant-nsis" name="ant-nsis" resolver="ant-nsis"/>
+        <module organisation="com.github.shanemcc" name="jgit-describe" resolver="jgit-describe"/>
+        <module organisation="org.eclipse.jgit" name="*" resolver="jgit"/>
+        <module organisation="com.greboid.libraries" name="*" resolver="dmdirc-thirdparty"/>
+        <module organisation="net.sourceforge.java-jml" name="*" resolver="jml"/>
+    </modules>
+</ivysettings>
