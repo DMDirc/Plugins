@@ -56,6 +56,7 @@ import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.interfaces.CommandController;
+import com.dmdirc.interfaces.LifecycleController;
 import com.dmdirc.interfaces.ui.UIController;
 import com.dmdirc.interfaces.ui.Window;
 import com.dmdirc.logger.ErrorLevel;
@@ -159,6 +160,8 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     /** Plugin manager. */
     @Getter
     private final PluginManager pluginManager;
+    /** Controller to use to close the application. */
+    private final LifecycleController lifecycleController;
     /** Apple handler, deals with Mac specific code. */
     @Getter
     private final Apple apple;
@@ -173,6 +176,7 @@ public class SwingController extends BaseCommandPlugin implements UIController {
      * @param actionManager Action manager
      * @param commandController Command controller to register commands
      * @param serverManager Server manager to use for server information.
+     * @param lifecycleController Controller to use to close the application.
      */
     public SwingController(
             final PluginInfo pluginInfo,
@@ -181,7 +185,8 @@ public class SwingController extends BaseCommandPlugin implements UIController {
             final Main main,
             final ActionManager actionManager,
             final CommandController commandController,
-            final ServerManager serverManager) {
+            final ServerManager serverManager,
+            final LifecycleController lifecycleController) {
         super(commandController);
         this.main = main;
         this.pluginInfo = pluginInfo;
@@ -189,6 +194,8 @@ public class SwingController extends BaseCommandPlugin implements UIController {
         this.actionManager = actionManager;
         this.pluginManager = pluginManager;
         this.serverManager = serverManager;
+        this.lifecycleController = lifecycleController;
+
         globalConfig = identityManager.getGlobalConfiguration();
         globalIdentity = identityManager.getGlobalConfigIdentity();
         addonIdentity = identityManager.getGlobalAddonIdentity();
@@ -487,7 +494,7 @@ public class SwingController extends BaseCommandPlugin implements UIController {
             @Override
             public void run() {
                 initUISettings();
-                mainFrame = new MainFrame(SwingController.this);
+                mainFrame = new MainFrame(SwingController.this, lifecycleController);
                 getMainFrame().setVisible(true);
                 mainFrameCreated.set(true);
                 swingStatusBar = getMainFrame().getStatusBar();
