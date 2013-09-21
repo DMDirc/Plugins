@@ -60,8 +60,7 @@ public class StaticRequestHandler extends AbstractHandler {
 
         if (rm == null) {
             try {
-                rm = controller.getMain().getPluginManager()
-                    .getPluginInfoByName("ui_web").getResourceManager();
+                rm = controller.getPluginInfo().getResourceManager();
             } catch (IOException ex) {
                 // Die horribly
             }
