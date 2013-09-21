@@ -26,6 +26,7 @@ import com.dmdirc.Channel;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.Main;
 import com.dmdirc.Server;
+import com.dmdirc.ServerManager;
 import com.dmdirc.addons.ui_web.uicomponents.WebStatusBar;
 import com.dmdirc.interfaces.ui.UIController;
 import com.dmdirc.interfaces.ui.Window;
@@ -65,14 +66,17 @@ public class WebInterfaceUI implements UIController {
      *
      * @param domain The domain to retrieve config settings from
      */
-    public WebInterfaceUI(final Main main, final String domain) {
+    public WebInterfaceUI(
+            final Main main,
+            final String domain,
+            final ServerManager serverManager) {
         super();
 
         this.main = main;
         final SecurityHandler sh = new SecurityHandler();
         final Constraint constraint = new Constraint();
         final ConstraintMapping cm = new ConstraintMapping();
-        handler = new DynamicRequestHandler(this);
+        handler = new DynamicRequestHandler(this, serverManager);
 
         constraint.setName("DMDirc Web UI");
         constraint.setRoles(new String[]{"user"});
@@ -107,6 +111,7 @@ public class WebInterfaceUI implements UIController {
 
     /** {@inheritDoc} */
     @Override
+    @Deprecated
     public Main getMain() {
         return main;
     }

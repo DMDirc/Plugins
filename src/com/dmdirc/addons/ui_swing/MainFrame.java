@@ -128,7 +128,7 @@ public final class MainFrame extends JFrame implements WindowListener,
 
         this.controller = controller;
 
-        focusOrder = new QueuedLinkedHashSet<TextFrame>();
+        focusOrder = new QueuedLinkedHashSet<>();
         initComponents();
         if (AyatanaDesktop.isSupported()) {
             ApplicationMenu.tryInstall(this, getJMenuBar(), new UnityMenu());
@@ -527,7 +527,7 @@ public final class MainFrame extends JFrame implements WindowListener,
             protected Void doInBackground() {
                 ActionManager.getActionManager().triggerEvent(
                         CoreActionType.CLIENT_CLOSING, null);
-                controller.getMain().getServerManager().closeAll(controller
+                controller.getServerManager().closeAll(controller
                         .getGlobalConfig().getOption("general", "closemessage"));
                 controller.getGlobalIdentity().setOption("ui",
                         "frameManagerSize",
@@ -548,32 +548,37 @@ public final class MainFrame extends JFrame implements WindowListener,
     @Override
     public void configChanged(final String domain, final String key) {
         if ("ui".equals(domain)) {
-            if ("lookandfeel".equals(key)) {
-                controller.updateLookAndFeel();
-            } else if ("framemanager".equals(key)
-                    || "framemanagerPosition".equals(key)) {
-                UIUtilities.invokeLater(new Runnable() {
+            switch (key) {
+                case "lookandfeel":
+                    controller.updateLookAndFeel();
+                    break;
+                case "framemanager":
+                case "framemanagerPosition":
+                    UIUtilities.invokeLater(new Runnable() {
 
-                    /** {@inheritDoc} */
-                    @Override
-                    public void run() {
-                        setVisible(false);
-                        getContentPane().remove(mainSplitPane);
-                        initFrameManagers();
-                        getContentPane().removeAll();
-                        layoutComponents();
-                        setVisible(true);
-                    }
-                });
-            } else if ("textPaneFontName".equals(key)) {
-                final String font = controller.getGlobalConfig()
-                        .getOptionString("ui", "textPaneFontName");
-                log.debug("Changing textpane font: {}", font);
-                UIUtilities.setUIFont(new Font(font, Font.PLAIN, 12));
-                controller.updateComponentTrees();
-            } else {
-                showVersion = controller.getGlobalConfig().getOptionBool(
-                        "ui", "showversion");
+                        /** {@inheritDoc} */
+                        @Override
+                        public void run() {
+                            setVisible(false);
+                            getContentPane().remove(mainSplitPane);
+                            initFrameManagers();
+                            getContentPane().removeAll();
+                            layoutComponents();
+                            setVisible(true);
+                        }
+                    });
+                    break;
+                case "textPaneFontName":
+                    final String font = controller.getGlobalConfig()
+                            .getOptionString("ui", "textPaneFontName");
+                    log.debug("Changing textpane font: {}", font);
+                    UIUtilities.setUIFont(new Font(font, Font.PLAIN, 12));
+                    controller.updateComponentTrees();
+                    break;
+                default:
+                    showVersion = controller.getGlobalConfig().getOptionBool(
+                            "ui", "showversion");
+                    break;
             }
         } else {
             imageIcon = new ImageIcon(new IconManager(controller

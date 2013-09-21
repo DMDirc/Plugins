@@ -121,10 +121,10 @@ public class TopicBar extends JComponent implements ActionListener,
 
         topicText.getActionMap().put("paste-from-clipboard",
                 new ReplacePasteAction("(\r\n|\n|\r)", " "));
-        topicEdit = new ImageButton<Object>("edit",
+        topicEdit = new ImageButton<>("edit",
                 channelFrame.getIconManager().getIcon("edit-inactive"),
                 channelFrame.getContainer().getIconManager().getIcon("edit"));
-        topicCancel = new ImageButton<Object>("cancel",
+        topicCancel = new ImageButton<>("cancel",
                 channelFrame.getIconManager().getIcon("close"),
                 channelFrame.getIconManager().getIcon("close-active"));
 
@@ -333,7 +333,7 @@ public class TopicBar extends JComponent implements ActionListener,
             if (url.charAt(0) == '#') {
                 channel.getServer().join(new ChannelJoinRequest(url));
             } else if (url.contains("://")) {
-                controller.getURLHandler().launchApp(e.getDescription());
+                controller.getUrlHandler().launchApp(e.getDescription());
             } else {
                 controller.requestWindowFocus(controller.getWindowFactory()
                         .getSwingWindow(channel.getServer().getQuery(url)));

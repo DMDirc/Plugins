@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.serverlistdialog;
 
+import com.dmdirc.actions.wrappers.PerformWrapper;
 import com.dmdirc.addons.serverlists.ServerGroupItem;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.performpanel.PerformPanel;
@@ -51,13 +52,17 @@ public class Perform extends JPanel implements ServerListListener {
      * Creates a new perform panel backed by the specified model.
      *
      * @param controller Swing controller
+     * @param wrapper Perform wrapper to read/write performs to.
      * @param model Backing model
      */
-    public Perform(final SwingController controller, final ServerListModel model) {
+    public Perform(
+            final SwingController controller,
+            final PerformWrapper wrapper,
+            final ServerListModel model) {
         super();
 
         this.model = model;
-        performPanel = new PerformPanel(controller);
+        performPanel = new PerformPanel(controller, wrapper);
 
         addListeners();
         if (model.getSelectedItemPerformDescription() != null) {

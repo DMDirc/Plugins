@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_web;
 
 import com.dmdirc.Channel;
+import com.dmdirc.ServerManager;
 import com.dmdirc.addons.ui_web.uicomponents.WebInputHandler;
 import com.dmdirc.addons.ui_web.uicomponents.WebInputWindow;
 import com.dmdirc.addons.ui_web.uicomponents.WebWindow;
@@ -63,22 +64,28 @@ public class DynamicRequestHandler extends AbstractHandler {
     private static final long TIMEOUT = 1000 * 60 * 2; // Two minutes
 
     /** The last time each client was seen. */
-    private final Map<String, Client> clients
-            = new HashMap<String, Client>();
+    private final Map<String, Client> clients = new HashMap<>();
 
     /** The controller which owns this request handler. */
     private final WebInterfaceUI controller;
+
+    /** The server manager to use to connect to new servers. */
+    private final ServerManager serverManager;
 
     /**
      * Creates a new instance of DynamicRequestHandler. Registers object
      * convertors with the JSON serialiser.
      *
      * @param controller The controller that this request handler is for.
+     * @param serverManager The server manager to use to connect to new servers.
      */
-    public DynamicRequestHandler(final WebInterfaceUI controller) {
+    public DynamicRequestHandler(
+            final WebInterfaceUI controller,
+            final ServerManager serverManager) {
         super();
 
         this.controller = controller;
+        this.serverManager = serverManager;
 
         JSON.registerConvertor(Event.class, new JSONObjectConvertor());
         JSON.registerConvertor(WebWindow.class, new JSONObjectConvertor());
@@ -90,7 +97,7 @@ public class DynamicRequestHandler extends AbstractHandler {
             public void run() {
                 synchronized (clients) {
                     for (Map.Entry<String, Client> entry
-                            : new HashMap<String, Client>(clients).entrySet()) {
+                            : new HashMap<>(clients).entrySet()) {
                         if (entry.getValue().getTime() > TIMEOUT) {
                             clients.remove(entry.getKey());
                         }
@@ -127,44 +134,56 @@ public class DynamicRequestHandler extends AbstractHandler {
                 .getCurrentConnection().getRequest()).isHandled()) {
             return;
         }
-
-        if (target.equals("/dynamic/feed")) {
-            doFeed(request, response);
-            handled(request);
-        } else if (target.equals("/dynamic/getprofiles")) {
-            doProfiles(response);
-            handled(request);
-        } else if (target.equals("/dynamic/newserver")) {
-            doNewServer(request);
-            handled(request);
-        } else if (target.equals("/dynamic/windowrefresh")) {
-            doWindowRefresh(request, response);
-            handled(request);
-        } else if (target.equals("/dynamic/input")) {
-            doInput(request);
-            handled(request);
-        } else if (target.equals("/dynamic/nicklistrefresh")) {
-            doNicklist(request, response);
-            handled(request);
-        } else if (target.equals("/dynamic/tab")) {
-            doTab(request);
-            handled(request);
-        } else if (target.equals("/dynamic/keyup")
-                || target.equals("/dynamic/keydown")) {
-            doKeyUpDown(target.equals("/dynamic/keyup"), request);
-            handled(request);
-        } else if (target.equals("/dynamic/key")) {
-            doKey(request);
-            handled(request);
-        } else if (target.equals("/dynamic/clients")) {
-            doClients(response);
-            handled(request);
-        } else if (target.equals("/dynamic/joinchannel")) {
-            doJoinChannel(request);
-            handled(request);
-        } else if (target.equals("/dynamic/openquery")) {
-            doOpenQuery(request);
-            handled(request);
+        switch (target) {
+            case "/dynamic/feed":
+                doFeed(request, response);
+                handled(request);
+                break;
+            case "/dynamic/getprofiles":
+                doProfiles(response);
+                handled(request);
+                break;
+            case "/dynamic/newserver":
+                doNewServer(request);
+                handled(request);
+                break;
+            case "/dynamic/windowrefresh":
+                doWindowRefresh(request, response);
+                handled(request);
+                break;
+            case "/dynamic/input":
+                doInput(request);
+                handled(request);
+                break;
+            case "/dynamic/nicklistrefresh":
+                doNicklist(request, response);
+                handled(request);
+                break;
+            case "/dynamic/tab":
+                doTab(request);
+                handled(request);
+                break;
+            case "/dynamic/keyup":
+            case "/dynamic/keydown":
+                doKeyUpDown(target.equals("/dynamic/keyup"), request);
+                handled(request);
+                break;
+            case "/dynamic/key":
+                doKey(request);
+                handled(request);
+                break;
+            case "/dynamic/clients":
+                doClients(response);
+                handled(request);
+                break;
+            case "/dynamic/joinchannel":
+                doJoinChannel(request);
+                handled(request);
+                break;
+            case "/dynamic/openquery":
+                doOpenQuery(request);
+                handled(request);
+                break;
         }
     }
 
@@ -277,7 +296,7 @@ public class DynamicRequestHandler extends AbstractHandler {
     private void doNewServer(final HttpServletRequest request)
             throws IOException {
         try {
-            controller.getMain().getServerManager().connectToAddress(
+            serverManager.connectToAddress(
                     new URI("irc://" + request.getParameter("password") + "@"
                         + request.getParameter("server") + ":"
                         + request.getParameter("port")),
@@ -292,7 +311,7 @@ public class DynamicRequestHandler extends AbstractHandler {
         response.setStatus(HttpServletResponse.SC_OK);
         response.setContentType("application/json");
 
-        final List<Event> nickEvents = new ArrayList<Event>();
+        final List<Event> nickEvents = new ArrayList<>();
 
         nickEvents.add(new Event("clearnicklist", false));
 
@@ -311,7 +330,7 @@ public class DynamicRequestHandler extends AbstractHandler {
         response.setStatus(HttpServletResponse.SC_OK);
         response.setContentType("application/json");
 
-        final List<Event> profileEvents = new ArrayList<Event>();
+        final List<Event> profileEvents = new ArrayList<>();
 
         profileEvents.add(new Event("clearprofiles", null));
 
@@ -327,7 +346,7 @@ public class DynamicRequestHandler extends AbstractHandler {
         response.setStatus(HttpServletResponse.SC_OK);
         response.setContentType("application/json");
 
-        final List<Event> windowEvents = new ArrayList<Event>();
+        final List<Event> windowEvents = new ArrayList<>();
 
         final WebWindow window = controller.getWindowManager().getWindow(
                 request.getParameter("window"));

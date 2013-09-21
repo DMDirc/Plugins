@@ -96,7 +96,7 @@ public final class NewServerDialog extends StandardDialog implements
     public NewServerDialog(final SwingController controller) {
         super(controller, controller.getMainFrame(), ModalityType.MODELESS);
         identityManager = controller.getIdentityManager();
-        serverManager = controller.getMain().getServerManager();
+        serverManager = controller.getServerManager();
 
         initComponents();
         layoutComponents();

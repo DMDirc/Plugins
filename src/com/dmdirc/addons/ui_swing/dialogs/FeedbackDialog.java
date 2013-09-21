@@ -180,8 +180,7 @@ public final class FeedbackDialog extends StandardDialog implements
         final StringBuilder serverInfo = new StringBuilder();
         final StringBuilder dmdircInfo = new StringBuilder();
         if (serverCheckbox.isSelected()) {
-            for (Server server : getController().getMain().getServerManager()
-                    .getServers()) {
+            for (Server server : getController().getServerManager().getServers()) {
                 if (server.getState().isDisconnected()) {
                     continue;
                 }
@@ -238,12 +237,15 @@ public final class FeedbackDialog extends StandardDialog implements
      */
     @Override
     public void actionPerformed(final ActionEvent e) {
-        if (e.getActionCommand().equals("Send")) {
-            if (!sentReport) {
-                send();
-            }
-        } else if (e.getActionCommand().equals("Close")) {
-            dispose();
+        switch (e.getActionCommand()) {
+            case "Send":
+                if (!sentReport) {
+                    send();
+                }
+                break;
+            case "Close":
+                dispose();
+                break;
         }
     }
 

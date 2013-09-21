@@ -99,7 +99,7 @@ public class InviteLabel extends StatusbarPopupPanel<JLabel> implements
         accept.setActionCommand("acceptAll");
         accept.addActionListener(this);
 
-        for (final Server server : controller.getMain().getServerManager().getServers()) {
+        for (final Server server : controller.getServerManager().getServers()) {
             server.addInviteListener(this);
         }
 
@@ -203,10 +203,13 @@ public class InviteLabel extends StatusbarPopupPanel<JLabel> implements
      */
     @Override
     public void actionPerformed(final ActionEvent e) {
-        if ("acceptAll".equals(e.getActionCommand())) {
-            activeServer.acceptInvites();
-        } else if ("dismissAll".equals(e.getActionCommand())) {
-            activeServer.removeInvites();
+        switch (e.getActionCommand()) {
+            case "acceptAll":
+                activeServer.acceptInvites();
+                break;
+            case "dismissAll":
+                activeServer.removeInvites();
+                break;
         }
     }
 

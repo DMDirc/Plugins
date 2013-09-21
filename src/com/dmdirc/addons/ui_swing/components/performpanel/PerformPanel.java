@@ -51,9 +51,10 @@ public class PerformPanel extends JPanel {
     private static final long serialVersionUID = 1;
     /** Text area that the perform is displayed in. */
     private final JTextArea performSpace;
+    /** Perform wrapper to read/write performs to. */
+    private final PerformWrapper performWrapper;
     /** Map of performs this panel can display. */
-    private final Map<PerformDescription, String[]> performs = new
-            HashMap<PerformDescription, String[]>();
+    private final Map<PerformDescription, String[]> performs = new HashMap<>();
     /** The perform that is displayed in the text area. */
     private PerformDescription visiblePerform;
 
@@ -64,9 +65,12 @@ public class PerformPanel extends JPanel {
      * By default this panel displays a blank text area.
      *
      * @param controller Swing controller
+     * @param performWrapper Perform wrapper to read/write performs to.
      */
-    public PerformPanel(final SwingController controller) {
-        this(controller, Collections.<PerformDescription>emptyList());
+    public PerformPanel(
+            final SwingController controller,
+            final PerformWrapper performWrapper) {
+        this(controller, performWrapper, Collections.<PerformDescription>emptyList());
     }
 
     /**
@@ -76,11 +80,16 @@ public class PerformPanel extends JPanel {
      * By default this panel displays a blank text area.
      *
      * @param controller Swing controller
+     * @param performWrapper Perform wrapper to read/write performs to.
      * @param performs Collection of PerformDescriptions to initialise
      */
-    public PerformPanel(final SwingController controller,
+    public PerformPanel(
+            final SwingController controller,
+            final PerformWrapper performWrapper,
             final Collection<PerformDescription> performs) {
         super();
+
+        this.performWrapper = performWrapper;
 
         for (final PerformDescription perform : performs) {
             addPerform(perform);
@@ -98,8 +107,7 @@ public class PerformPanel extends JPanel {
      * @param perform PerformDescription to add
      */
     public void addPerform(final PerformDescription perform) {
-        performs.put(perform, PerformWrapper.getPerformWrapper()
-                .getPerform(perform));
+        performs.put(perform, performWrapper.getPerform(perform));
     }
 
     /**
@@ -120,8 +128,7 @@ public class PerformPanel extends JPanel {
         }
         for (final Entry<PerformDescription, String[]> perform
                 : performs.entrySet()) {
-            PerformWrapper.getPerformWrapper().setPerform(perform.getKey(),
-                    perform.getValue());
+            performWrapper.setPerform(perform.getKey(), perform.getValue());
         }
     }
 

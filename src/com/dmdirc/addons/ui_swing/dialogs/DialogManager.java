@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.dialogs;
 
+import com.dmdirc.actions.wrappers.PerformWrapper;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.SwingWindowFactory;
@@ -165,8 +166,9 @@ public class DialogManager {
         injector.addParameter(SwingStatusBar.class, controller.getSwingStatusBar());
         injector.addParameter(StatusBar.class, controller.getSwingStatusBar());
         injector.addParameter(SwingWindowFactory.class, controller.getWindowFactory());
-        injector.addParameter(URLHandler.class, controller.getURLHandler());
+        injector.addParameter(URLHandler.class, controller.getUrlHandler());
         injector.addParameter(DialogManager.class, this);
+        injector.addParameter(PerformWrapper.class, PerformWrapper.getPerformWrapper());
 
         for (final Object param : params) {
             injector.addParameter(param);
