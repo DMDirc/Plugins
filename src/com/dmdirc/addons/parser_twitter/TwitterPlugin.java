@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.parser_twitter;
 
+import com.dmdirc.ServerManager;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.addons.parser_twitter.actions.TwitterActionComponents;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
@@ -29,6 +30,7 @@ import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
+import com.dmdirc.interfaces.actions.ActionComponent;
 import com.dmdirc.parser.common.MyInfo;
 import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.parser.interfaces.ProtocolDescription;
@@ -47,29 +49,39 @@ public class TwitterPlugin extends BasePlugin {
     private volatile boolean unloading = false;
     /** This plugin's plugin info. */
     private final PluginInfo pluginInfo;
+    /** The server manager to use. */
+    private final ServerManager serverManager;
 
     /**
      * Creates a new instance of this plugin.
      *
      * @param pluginInfo This plugin's plugin info
+     * @param serverManager The server manager to use.
      */
-    public TwitterPlugin(final PluginInfo pluginInfo) {
+    public TwitterPlugin(
+            final PluginInfo pluginInfo,
+            final ServerManager serverManager) {
         super();
         this.pluginInfo = pluginInfo;
+        this.serverManager = serverManager;
     }
 
     /** {@inheritDoc} */
     @Override
     public void onLoad() {
         ActionManager.getActionManager().registerComponents(
-                TwitterActionComponents.values());
+                new ActionComponent[] {
+                    new TwitterActionComponents.ChannelNameStatus(serverManager),
+                    new TwitterActionComponents.StatusUser(),
+                    new TwitterActionComponents.UserScreenName(),
+                });
     }
 
     /** {@inheritDoc} */
     @Override
     public void onUnload() {
         unloading = true;
-        for (final Twitter parser : new ArrayList<Twitter>(Twitter.PARSERS)) {
+        for (final Twitter parser : new ArrayList<>(Twitter.PARSERS)) {
             parser.disconnect("");
         }
     }
