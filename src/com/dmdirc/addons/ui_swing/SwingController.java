@@ -23,8 +23,8 @@
 package com.dmdirc.addons.ui_swing;
 
 import com.dmdirc.Channel;
+import com.dmdirc.CorePluginExtractor;
 import com.dmdirc.FrameContainer;
-import com.dmdirc.Main;
 import com.dmdirc.Server;
 import com.dmdirc.ServerManager;
 import com.dmdirc.actions.ActionManager;
@@ -113,10 +113,6 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     /** Singleton instance of MainFrame. */
     @Getter
     private MainFrame mainFrame;
-    /** Instance of Main. */
-    @Getter
-    @Deprecated
-    private final Main main;
     /** Status bar. */
     @Getter
     private SwingStatusBar swingStatusBar;
@@ -162,6 +158,8 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     private final PluginManager pluginManager;
     /** Controller to use to close the application. */
     private final LifecycleController lifecycleController;
+    /** Extractor to use for core plugins. */
+    private final CorePluginExtractor corePluginExtractor;
     /** Apple handler, deals with Mac specific code. */
     @Getter
     private final Apple apple;
@@ -172,29 +170,29 @@ public class SwingController extends BaseCommandPlugin implements UIController {
      * @param pluginInfo Plugin info
      * @param identityManager Identity Manager
      * @param pluginManager Plugin manager
-     * @param main Main instance
      * @param actionManager Action manager
      * @param commandController Command controller to register commands
      * @param serverManager Server manager to use for server information.
      * @param lifecycleController Controller to use to close the application.
+     * @param corePluginExtractor Extractor to use for core plugins.
      */
     public SwingController(
             final PluginInfo pluginInfo,
             final IdentityManager identityManager,
             final PluginManager pluginManager,
-            final Main main,
             final ActionManager actionManager,
             final CommandController commandController,
             final ServerManager serverManager,
-            final LifecycleController lifecycleController) {
+            final LifecycleController lifecycleController,
+            final CorePluginExtractor corePluginExtractor) {
         super(commandController);
-        this.main = main;
         this.pluginInfo = pluginInfo;
         this.identityManager = identityManager;
         this.actionManager = actionManager;
         this.pluginManager = pluginManager;
         this.serverManager = serverManager;
         this.lifecycleController = lifecycleController;
+        this.corePluginExtractor = corePluginExtractor;
 
         globalConfig = identityManager.getGlobalConfiguration();
         globalIdentity = identityManager.getGlobalConfigIdentity();
@@ -259,7 +257,7 @@ public class SwingController extends BaseCommandPlugin implements UIController {
                     }
                 };
                 final SwingFirstRunWizard wizard = new SwingFirstRunWizard(
-                        getMainFrame(), SwingController.this);
+                        getMainFrame(), SwingController.this, corePluginExtractor);
                 wizard.getWizardDialog().addWizardListener(listener);
                 wizard.display();
             }

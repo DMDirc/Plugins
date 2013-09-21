@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_web;
 
-import com.dmdirc.Main;
 import com.dmdirc.ServerManager;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.PluginManager;
@@ -36,9 +35,6 @@ import org.mortbay.jetty.Handler;
  * The main web interface plugin.
  */
 public class WebInterfacePlugin extends BasePlugin {
-
-    /** Our instance of main. */
-    private final Main main;
 
     /** Server manager to use. */
     private final ServerManager serverManager;
@@ -56,17 +52,14 @@ public class WebInterfacePlugin extends BasePlugin {
     /**
      * Create a new WebInterfacePlugin
      *
-     * @param main The instance of main that this client uses.
      * @param serverManager Server manager to use.
      * @param pluginManager Plugin manager to use.
      * @param pluginInfo This plugin's info object.
      */
     public WebInterfacePlugin(
-            final Main main,
             final ServerManager serverManager,
             final PluginManager pluginManager,
             final PluginInfo pluginInfo) {
-        this.main = main;
         this.serverManager = serverManager;
         this.pluginManager = pluginManager;
         this.pluginInfo = pluginInfo;
@@ -76,7 +69,7 @@ public class WebInterfacePlugin extends BasePlugin {
     @Override
     public void onLoad() {
         if (controller == null) {
-            controller = new WebInterfaceUI(main, getDomain(), serverManager,
+            controller = new WebInterfaceUI(getDomain(), serverManager,
                     pluginManager, pluginInfo);
         }
     }
@@ -88,7 +81,7 @@ public class WebInterfacePlugin extends BasePlugin {
      */
     public void addWebHandler(final Handler newHandler) {
         if (controller == null) {
-            controller = new WebInterfaceUI(main, getDomain(), serverManager,
+            controller = new WebInterfaceUI(getDomain(), serverManager,
                     pluginManager, pluginInfo);
         }
 
