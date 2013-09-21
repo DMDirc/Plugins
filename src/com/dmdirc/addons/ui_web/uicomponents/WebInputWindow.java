@@ -47,8 +47,7 @@ public class WebInputWindow extends WebWindow implements InputWindow {
 
     private final WebInputHandler inputHandler;
 
-    private final Map<Client, WebInputHandler> inputHandlers
-            = new HashMap<Client, WebInputHandler>();
+    private final Map<Client, WebInputHandler> inputHandlers = new HashMap<>();
 
     private final WebInterfaceUI controller;
 
@@ -58,8 +57,8 @@ public class WebInputWindow extends WebWindow implements InputWindow {
         this.container = parent;
         this.commandparser = parent.getCommandParser();
         this.controller = controller;
-        this.inputHandler = new WebInputHandler(controller, new WebInputField(),
-                commandparser, getContainer());
+        this.inputHandler = new WebInputHandler(controller.getPluginManager(),
+                new WebInputField(), commandparser, getContainer());
     }
 
     /** {@inheritDoc} */
@@ -70,8 +69,9 @@ public class WebInputWindow extends WebWindow implements InputWindow {
 
     public WebInputHandler getInputHandler(final Client client) {
         if (!inputHandlers.containsKey(client)) {
-            final WebInputHandler ih = new WebInputHandler(controller,
-                    new WebInputField(client), commandparser, getContainer());
+            final WebInputHandler ih = new WebInputHandler(
+                    controller.getPluginManager(), new WebInputField(client),
+                    commandparser, getContainer());
             ih.setTabCompleter(inputHandler.getTabCompleter());
             inputHandlers.put(client, ih);
         }

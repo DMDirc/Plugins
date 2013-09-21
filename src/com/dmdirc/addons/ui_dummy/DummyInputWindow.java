@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_dummy;
 
+import com.dmdirc.Main;
 import com.dmdirc.WritableFrameContainer;
 import com.dmdirc.ui.input.InputHandler;
 import com.dmdirc.interfaces.ui.InputWindow;
@@ -51,7 +52,10 @@ public class DummyInputWindow implements InputWindow {
     /** {@inheritDoc} */
     @Override
     public InputHandler getInputHandler() {
-        return new DummyInputHandler(controller, new DummyInputField(), null,
+        return new DummyInputHandler(
+                Main.mainInstance.getPluginManager(),
+                new DummyInputField(),
+                null,
                 getContainer());
     }
 
