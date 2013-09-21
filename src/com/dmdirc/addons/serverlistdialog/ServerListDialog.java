@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.serverlistdialog;
 
+import com.dmdirc.actions.wrappers.PerformWrapper;
 import com.dmdirc.addons.serverlists.ServerGroupItem;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.LockedLayer;
@@ -77,36 +78,36 @@ public final class ServerListDialog extends StandardDialog implements
      * @param controller Swing controller
      * @param modalityType Desired modality
      * @param urlHandler The URL Handler to use to handle clicked links
+     * @param performWrapper The wrapper to use for the perform tab
      */
-    public ServerListDialog(final SwingController controller,
-            final URLHandler urlHandler) {
+    public ServerListDialog(
+            final SwingController controller,
+            final URLHandler urlHandler,
+            final PerformWrapper performWrapper) {
         super(controller, controller.getMainFrame(), ModalityType.MODELESS);
 
         setTitle("Server List");
-        model = new ServerListModel(controller.getPluginManager(), controller.getMain().getServerManager());
+        model = new ServerListModel(controller.getPluginManager(), controller.getServerManager());
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
         connectButton = new JButton("Connect");
 
-        profileLock = new LockedLayer<Profiles>(new BufferedImageOpEffect(
+        profileLock = new LockedLayer<>(new BufferedImageOpEffect(
                 new ColorConvertOp(ColorSpace.getInstance(ColorSpace.CS_GRAY),
                 null)));
-        performLock = new LockedLayer<Perform>(new BufferedImageOpEffect(
+        performLock = new LockedLayer<>(new BufferedImageOpEffect(
                 new ColorConvertOp(ColorSpace.getInstance(ColorSpace.CS_GRAY),
                 null)));
-        settingsLock = new LockedLayer<Settings>(new BufferedImageOpEffect(
+        settingsLock = new LockedLayer<>(new BufferedImageOpEffect(
                 new ColorConvertOp(ColorSpace.getInstance(ColorSpace.CS_GRAY),
                 null)));
-        infoLock = new LockedLayer<Info>(new BufferedImageOpEffect(
+        infoLock = new LockedLayer<>(new BufferedImageOpEffect(
                 new ColorConvertOp(ColorSpace.getInstance(ColorSpace.CS_GRAY),
                 null)));
-        profileLayer = new JXLayer<Profiles>(new Profiles(model, controller),
-                profileLock);
-        performLayer = new JXLayer<Perform>(new Perform(controller, model),
-                performLock);
-        settingsLayer = new JXLayer<Settings>(new Settings(controller, model),
-                settingsLock);
-        infoLayer = new JXLayer<Info>(new Info(model, urlHandler), infoLock);
+        profileLayer = new JXLayer<>(new Profiles(model, controller), profileLock);
+        performLayer = new JXLayer<>(new Perform(controller, performWrapper, model), performLock);
+        settingsLayer = new JXLayer<>(new Settings(controller, model), settingsLock);
+        infoLayer = new JXLayer<>(new Info(model, urlHandler), infoLock);
         help = new Help();
         lockLayers();
 

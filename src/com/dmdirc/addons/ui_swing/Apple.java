@@ -55,7 +55,7 @@ import javax.swing.UIManager;
  */
 public final class Apple implements InvocationHandler, ActionListener {
     /** Store any addresses that are opened before CLIENT_OPENED. */
-    private final List<URI> addresses = new ArrayList<URI>();
+    private final List<URI> addresses = new ArrayList<>();
 
     /** Config manager used to read settings. */
     private final ConfigManager configManager;
@@ -126,15 +126,8 @@ public final class Apple implements InvocationHandler, ActionListener {
             final Class<?> clazz = className == null ? obj.getClass() : Class.forName(className);
             final Method method = clazz.getMethod(methodName, classes == null ? new Class[0] : classes);
             return method.invoke(obj, objects == null ? new Object[0] : objects);
-        } catch (IllegalArgumentException ex) {
-            Logger.userError(ErrorLevel.LOW, "Unable to find OS X classes");
-        } catch (InvocationTargetException ex) {
-            Logger.userError(ErrorLevel.LOW, "Unable to find OS X classes");
-        } catch (final ClassNotFoundException ex) {
-            Logger.userError(ErrorLevel.LOW, "Unable to find OS X classes");
-        } catch (final NoSuchMethodException ex) {
-            Logger.userError(ErrorLevel.LOW, "Unable to find OS X classes");
-        } catch (final IllegalAccessException ex) {
+        } catch (IllegalArgumentException | InvocationTargetException |
+                ClassNotFoundException | NoSuchMethodException | IllegalAccessException ex) {
             Logger.userError(ErrorLevel.LOW, "Unable to find OS X classes");
         }
 
@@ -306,13 +299,8 @@ public final class Apple implements InvocationHandler, ActionListener {
             method.invoke(getApplication(), listener);
 
             return true;
-        } catch (final ClassNotFoundException ex) {
-            return false;
-        } catch (final NoSuchMethodException ex) {
-            return false;
-        } catch (final IllegalAccessException ex) {
-            return false;
-        } catch (final InvocationTargetException ex) {
+        } catch (ClassNotFoundException | NoSuchMethodException |
+                IllegalAccessException | InvocationTargetException ex) {
             return false;
         }
     }
@@ -444,7 +432,7 @@ public final class Apple implements InvocationHandler, ActionListener {
             synchronized (addresses) {
                 clientOpened = true;
                 for (final URI addr : addresses) {
-                    controller.getMain().getServerManager().connectToAddress(addr);
+                    controller.getServerManager().connectToAddress(addr);
                 }
                 addresses.clear();
             }
@@ -518,7 +506,7 @@ public final class Apple implements InvocationHandler, ActionListener {
                 if (Thread.currentThread().getContextClassLoader() == null) {
                     Thread.currentThread().setContextClassLoader(ClassLoader.getSystemClassLoader());
                 }
-                controller.getMain().getServerManager().connectToAddress(uri);
+                controller.getServerManager().connectToAddress(uri);
             } else {
                 addresses.add(uri);
             }

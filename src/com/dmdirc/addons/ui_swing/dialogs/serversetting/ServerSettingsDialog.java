@@ -24,6 +24,7 @@ package com.dmdirc.addons.ui_swing.dialogs.serversetting;
 
 import com.dmdirc.Server;
 import com.dmdirc.ServerState;
+import com.dmdirc.actions.wrappers.PerformWrapper;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.expandingsettings.SettingsPanel;
@@ -54,6 +55,8 @@ public final class ServerSettingsDialog extends StandardDialog implements Action
     private final Server server;
     /** Parent window. */
     private final Window parentWindow;
+    /** Perform wrapper for the perform panel. */
+    private final PerformWrapper performWrapper;
     /** User modes panel. */
     private UserModesPane modesPanel;
     /** Ignore list panel. */
@@ -69,14 +72,19 @@ public final class ServerSettingsDialog extends StandardDialog implements Action
      * Creates a new instance of ServerSettingsDialog.
      *
      * @param controller Swing controller
+     * @param performWrapper Wrapper for the perform tab.
      * @param server The server object that we're editing settings for
      * @param parentWindow Parent window
      */
-    public ServerSettingsDialog(final SwingController controller,
-            final Server server, final Window parentWindow) {
+    public ServerSettingsDialog(
+            final SwingController controller,
+            final PerformWrapper performWrapper,
+            final Server server,
+            final Window parentWindow) {
         super(controller, parentWindow, ModalityType.MODELESS);
 
         this.server = server;
+        this.performWrapper = performWrapper;
         this.parentWindow = parentWindow;
 
         setTitle("Server settings");
@@ -98,7 +106,7 @@ public final class ServerSettingsDialog extends StandardDialog implements Action
                 new IgnoreListPanel(getController(), server, parentWindow);
 
         performPanel =
-                new PerformTab(getController(), server);
+                new PerformTab(getController(), performWrapper, server);
 
         settingsPanel =
                 new SettingsPanel(getController(), "These settings are specific"

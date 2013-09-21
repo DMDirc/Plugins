@@ -92,12 +92,16 @@ public class HelpMenu extends JMenu implements ActionListener {
      */
     @Override
     public void actionPerformed(final ActionEvent e) {
-        if (e.getActionCommand().equals("About")) {
-            controller.showDialog(AboutDialog.class);
-        } else if (e.getActionCommand().equals("JoinDevChat")) {
-            controller.getMain().getServerManager().joinDevChat();
-        } else if (e.getActionCommand().equals("feedback")) {
-            controller.showDialog(FeedbackDialog.class);
+        switch (e.getActionCommand()) {
+            case "About":
+                controller.showDialog(AboutDialog.class);
+                break;
+            case "JoinDevChat":
+                controller.getServerManager().joinDevChat();
+                break;
+            case "feedback":
+                controller.showDialog(FeedbackDialog.class);
+                break;
         }
     }
 }

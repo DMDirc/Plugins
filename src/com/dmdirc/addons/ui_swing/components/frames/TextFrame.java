@@ -348,7 +348,7 @@ public abstract class TextFrame extends JPanel implements Window,
                 if (ActionManager.getActionManager().triggerEvent(
                         CoreActionType.LINK_URL_CLICKED, null, this,
                         clickType.getValue())) {
-                    controller.getURLHandler().launchApp(clickType.getValue());
+                    controller.getUrlHandler().launchApp(clickType.getValue());
                 }
                 break;
             case NICKNAME:

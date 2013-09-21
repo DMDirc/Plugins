@@ -74,9 +74,9 @@ public final class AboutDialog extends StandardDialog implements
         getOkButton().addActionListener(this);
         getCancelButton().addActionListener(this);
 
-        cp = new CreditsPanel(getController().getURLHandler());
+        cp = new CreditsPanel(getController().getUrlHandler());
 
-        tabbedPane.add("About", new AboutPanel(getController().getURLHandler()));
+        tabbedPane.add("About", new AboutPanel(getController().getUrlHandler()));
         tabbedPane.add("Credits", cp);
         tabbedPane.add("Licences", new LicencesPanel(getController()));
         tabbedPane.add("Information", new InfoPanel(getController()));

@@ -26,6 +26,7 @@ import com.dmdirc.Channel;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.Main;
 import com.dmdirc.Server;
+import com.dmdirc.ServerManager;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.addons.ui_swing.commands.ChannelSettings;
 import com.dmdirc.addons.ui_swing.commands.Input;
@@ -107,12 +108,13 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     private final AtomicBoolean mainFrameCreated = new AtomicBoolean(false);
     /** URL Handler to use. */
     @Getter
-    private final URLHandler URLHandler = new URLHandler(this);
+    private final URLHandler urlHandler;
     /** Singleton instance of MainFrame. */
     @Getter
     private MainFrame mainFrame;
     /** Instance of Main. */
     @Getter
+    @Deprecated
     private final Main main;
     /** Status bar. */
     @Getter
@@ -130,6 +132,9 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     /** Global config manager. */
     @Getter
     private final ConfigManager globalConfig;
+    /** Server manager. */
+    @Getter
+    private final ServerManager serverManager;
     /** Identity Manager. */
     @Getter
     private final IdentityManager identityManager;
@@ -167,19 +172,23 @@ public class SwingController extends BaseCommandPlugin implements UIController {
      * @param main Main instance
      * @param actionManager Action manager
      * @param commandController Command controller to register commands
+     * @param serverManager Server manager to use for server information.
      */
-    public SwingController(final PluginInfo pluginInfo,
+    public SwingController(
+            final PluginInfo pluginInfo,
             final IdentityManager identityManager,
             final PluginManager pluginManager,
             final Main main,
             final ActionManager actionManager,
-            final CommandController commandController) {
+            final CommandController commandController,
+            final ServerManager serverManager) {
         super(commandController);
         this.main = main;
         this.pluginInfo = pluginInfo;
         this.identityManager = identityManager;
         this.actionManager = actionManager;
         this.pluginManager = pluginManager;
+        this.serverManager = serverManager;
         globalConfig = identityManager.getGlobalConfiguration();
         globalIdentity = identityManager.getGlobalConfigIdentity();
         addonIdentity = identityManager.getGlobalAddonIdentity();
@@ -187,8 +196,10 @@ public class SwingController extends BaseCommandPlugin implements UIController {
         iconManager = new IconManager(globalConfig);
         prefsComponentFactory = new PrefsComponentFactory(this);
         dialogManager = new DialogManager(this);
+        urlHandler = new URLHandler(this, globalConfig, serverManager,
+                StatusBarManager.getStatusBarManager());
         setAntiAlias();
-        windows = new ArrayList<java.awt.Window>();
+        windows = new ArrayList<>();
         registerCommand(new ServerSettings(this), ServerSettings.INFO);
         registerCommand(new ChannelSettings(this), ChannelSettings.INFO);
         registerCommand(new Input(windowFactory), Input.INFO);
@@ -300,16 +311,8 @@ public class SwingController extends BaseCommandPlugin implements UIController {
             UIManager.setLookAndFeel(UIUtilities.getLookAndFeel(
                     getGlobalConfig().getOption("ui", "lookandfeel")));
             updateComponentTrees();
-        } catch (final ClassNotFoundException ex) {
-            Logger.userError(ErrorLevel.LOW,
-                    "Unable to change Look and Feel: " + ex.getMessage());
-        } catch (final InstantiationException ex) {
-            Logger.userError(ErrorLevel.LOW,
-                    "Unable to change Look and Feel: " + ex.getMessage());
-        } catch (final IllegalAccessException ex) {
-            Logger.userError(ErrorLevel.LOW,
-                    "Unable to change Look and Feel: " + ex.getMessage());
-        } catch (final UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException | InstantiationException |
+                IllegalAccessException | UnsupportedLookAndFeelException ex) {
             Logger.userError(ErrorLevel.LOW,
                     "Unable to change Look and Feel: " + ex.getMessage());
         }
@@ -383,15 +386,8 @@ public class SwingController extends BaseCommandPlugin implements UIController {
                     getGlobalConfig().getOption("ui", "lookandfeel")));
             UIUtilities.setUIFont(new Font(getGlobalConfig()
                     .getOption("ui", "textPaneFontName"), Font.PLAIN, 12));
-        } catch (final UnsupportedOperationException ex) {
-            Logger.userError(ErrorLevel.LOW, "Unable to set UI Settings");
-        } catch (final UnsupportedLookAndFeelException ex) {
-            Logger.userError(ErrorLevel.LOW, "Unable to set UI Settings");
-        } catch (final IllegalAccessException ex) {
-            Logger.userError(ErrorLevel.LOW, "Unable to set UI Settings");
-        } catch (final InstantiationException ex) {
-            Logger.userError(ErrorLevel.LOW, "Unable to set UI Settings");
-        } catch (final ClassNotFoundException ex) {
+        } catch (UnsupportedOperationException | UnsupportedLookAndFeelException |
+                IllegalAccessException | InstantiationException | ClassNotFoundException ex) {
             Logger.userError(ErrorLevel.LOW, "Unable to set UI Settings");
         }
 
@@ -409,7 +405,7 @@ public class SwingController extends BaseCommandPlugin implements UIController {
             /** {@inheritDoc} */
             @Override
             public void run() {
-                showDialog(URLDialog.class, url, getURLHandler());
+                showDialog(URLDialog.class, url, getUrlHandler());
             }
         });
     }
@@ -562,9 +558,9 @@ public class SwingController extends BaseCommandPlugin implements UIController {
                 pluginInfo, "Swing UI", "These config options apply "
                 + "only to the swing UI.", "category-gui");
 
-        final Map<String, String> lafs = new HashMap<String, String>();
-        final Map<String, String> framemanagers = new HashMap<String, String>();
-        final Map<String, String> fmpositions = new HashMap<String, String>();
+        final Map<String, String> lafs = new HashMap<>();
+        final Map<String, String> framemanagers = new HashMap<>();
+        final Map<String, String> fmpositions = new HashMap<>();
 
         framemanagers.put(
                 "com.dmdirc.addons.ui_swing.framemanager.tree.TreeFrameManager",
@@ -796,7 +792,7 @@ public class SwingController extends BaseCommandPlugin implements UIController {
      */
     public List<java.awt.Window> getTopLevelWindows() {
         synchronized (windows) {
-            return new ArrayList<java.awt.Window>(windows);
+            return new ArrayList<>(windows);
         }
     }
 
