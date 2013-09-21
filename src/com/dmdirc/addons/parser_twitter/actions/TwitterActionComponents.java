@@ -22,8 +22,8 @@
 
 package com.dmdirc.addons.parser_twitter.actions;
 
-import com.dmdirc.Main;
 import com.dmdirc.Server;
+import com.dmdirc.ServerManager;
 import com.dmdirc.interfaces.actions.ActionComponent;
 import com.dmdirc.addons.parser_twitter.Twitter;
 import com.dmdirc.addons.parser_twitter.api.TwitterStatus;
@@ -34,19 +34,30 @@ import com.dmdirc.parser.interfaces.Parser;
  * Action components which expose Twitter functionality.
  *
  * @since 0.6.4
- * @author chris
  */
-public enum TwitterActionComponents implements ActionComponent {
+public class TwitterActionComponents {
 
     /** Takes a twitter channel name (&12345) and returns the status. */
-    TWITTER_CHANNEL_NAME_STATUS {
+    public static class ChannelNameStatus implements ActionComponent {
+
+        /** Server manager to use to get servers. */
+        private final ServerManager serverManager;
+
+        /**
+         * Creates a new instance of {@link ChannelNameStatus}.
+         *
+         * @param serverManager The server manager to use to get servers.
+         */
+        public ChannelNameStatus(final ServerManager serverManager) {
+            this.serverManager = serverManager;
+        }
 
         /** {@inheritDoc} */
         @Override
         public Object get(final Object arg) {
             final long id = Long.parseLong(((String) arg).substring(1));
 
-            for (Server server : Main.mainInstance.getServerManager().getServers()) {
+            for (Server server : serverManager.getServers()) {
                 final Parser parser = server.getParser();
 
                 if (parser instanceof Twitter) {
@@ -79,10 +90,16 @@ public enum TwitterActionComponents implements ActionComponent {
             return "twitter status (if a Twitter channel link)";
         }
 
-    },
+        /** {@inheritDoc} */
+        @Override
+        public String name() {
+            return "TWITTER_CHANNEL_NAME_STATUS";
+        }
+
+    };
 
     /** Returns the user who created a tweet. */
-    TWITTER_STATUS_USER {
+    public static class StatusUser implements ActionComponent {
 
         /** {@inheritDoc} */
         @Override
@@ -108,10 +125,16 @@ public enum TwitterActionComponents implements ActionComponent {
             return "user";
         }
 
-    },
+        /** {@inheritDoc} */
+        @Override
+        public String name() {
+            return "TWITTER_STATUS_USER";
+        }
+
+    };
 
     /** Returns the screen name of a twitter user. */
-    TWITTER_USER_SCREENNAME {
+    public static class UserScreenName implements ActionComponent {
 
         /** {@inheritDoc} */
         @Override
@@ -135,6 +158,12 @@ public enum TwitterActionComponents implements ActionComponent {
         @Override
         public String getName() {
             return "screen name";
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public String name() {
+            return "TWITTER_USER_SCREENNAME";
         }
 
     };
