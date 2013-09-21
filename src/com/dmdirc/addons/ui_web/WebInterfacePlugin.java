@@ -24,6 +24,8 @@ package com.dmdirc.addons.ui_web;
 
 import com.dmdirc.Main;
 import com.dmdirc.ServerManager;
+import com.dmdirc.plugins.PluginInfo;
+import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.plugins.implementations.BasePlugin;
 
 import lombok.Getter;
@@ -41,6 +43,12 @@ public class WebInterfacePlugin extends BasePlugin {
     /** Server manager to use. */
     private final ServerManager serverManager;
 
+    /** Plugin manager to use. */
+    private final PluginManager pluginManager;
+
+    /** This plugin's information object. */
+    private final PluginInfo pluginInfo;
+
     /** The UI that we're using. */
     @Getter
     private WebInterfaceUI controller;
@@ -50,19 +58,26 @@ public class WebInterfacePlugin extends BasePlugin {
      *
      * @param main The instance of main that this client uses.
      * @param serverManager Server manager to use.
+     * @param pluginManager Plugin manager to use.
+     * @param pluginInfo This plugin's info object.
      */
     public WebInterfacePlugin(
             final Main main,
-            final ServerManager serverManager) {
+            final ServerManager serverManager,
+            final PluginManager pluginManager,
+            final PluginInfo pluginInfo) {
         this.main = main;
         this.serverManager = serverManager;
+        this.pluginManager = pluginManager;
+        this.pluginInfo = pluginInfo;
     }
 
     /** {@inheritDoc} */
     @Override
     public void onLoad() {
         if (controller == null) {
-            controller = new WebInterfaceUI(main, getDomain(), serverManager);
+            controller = new WebInterfaceUI(main, getDomain(), serverManager,
+                    pluginManager, pluginInfo);
         }
     }
 
@@ -73,7 +88,8 @@ public class WebInterfacePlugin extends BasePlugin {
      */
     public void addWebHandler(final Handler newHandler) {
         if (controller == null) {
-            controller = new WebInterfaceUI(main, getDomain(), serverManager);
+            controller = new WebInterfaceUI(main, getDomain(), serverManager,
+                    pluginManager, pluginInfo);
         }
 
         controller.addWebHandler(newHandler);

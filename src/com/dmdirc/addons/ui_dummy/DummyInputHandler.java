@@ -27,6 +27,7 @@ import com.dmdirc.commandparser.parsers.CommandParser;
 import com.dmdirc.ui.input.InputHandler;
 import com.dmdirc.interfaces.ui.InputField;
 import com.dmdirc.interfaces.ui.UIController;
+import com.dmdirc.plugins.ServiceManager;
 
 /**
  * Dummy input handler.
@@ -37,16 +38,17 @@ public class DummyInputHandler extends InputHandler {
      * Creates a new instance of InputHandler. Adds listeners to the target
      * that we need to operate.
      *
-     * @param controller The controller that owns us.
+     * @param serviceManager Manager to use to look up tab completion services.
      * @param target The text field this input handler is dealing with.
      * @param commandParser The command parser to use for this text field.
      * @param parentWindow The window that owns this input handler
      */
-    public DummyInputHandler(final UIController controller,
+    public DummyInputHandler(
+            final ServiceManager serviceManager,
             final InputField target,
             final CommandParser commandParser,
             final WritableFrameContainer parentWindow) {
-        super(controller, target, commandParser, parentWindow);
+        super(serviceManager, target, commandParser, parentWindow);
     }
 
     /** {@inheritDoc} */

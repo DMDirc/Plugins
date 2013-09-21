@@ -26,6 +26,7 @@ import com.dmdirc.WritableFrameContainer;
 import com.dmdirc.commandparser.parsers.CommandParser;
 import com.dmdirc.interfaces.ui.InputField;
 import com.dmdirc.interfaces.ui.UIController;
+import com.dmdirc.plugins.ServiceManager;
 import com.dmdirc.ui.input.InputHandler;
 import com.dmdirc.ui.input.TabCompleter;
 
@@ -34,11 +35,12 @@ import com.dmdirc.ui.input.TabCompleter;
  */
 public class WebInputHandler extends InputHandler {
 
-    public WebInputHandler(final UIController controller,
-                           final InputField thisTarget,
-                           final CommandParser thisCommandParser,
-                           final WritableFrameContainer thisParentWindow) {
-        super(controller, thisTarget, thisCommandParser, thisParentWindow);
+    public WebInputHandler(
+            final ServiceManager serviceManager,
+            final InputField thisTarget,
+            final CommandParser thisCommandParser,
+            final WritableFrameContainer thisParentWindow) {
+        super(serviceManager, thisTarget, thisCommandParser, thisParentWindow);
     }
 
     public InputField getTarget() {

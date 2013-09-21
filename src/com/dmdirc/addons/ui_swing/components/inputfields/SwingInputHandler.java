@@ -31,6 +31,7 @@ import com.dmdirc.interfaces.ui.InputField;
 import com.dmdirc.interfaces.ui.UIController;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
+import com.dmdirc.plugins.ServiceManager;
 import com.dmdirc.ui.input.InputHandler;
 
 import java.awt.event.ActionEvent;
@@ -52,16 +53,17 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
      * Creates a new instance of InputHandler. Adds listeners to the target
      * that we need to operate.
      *
-     * @param controller The UIController that owns this input handler.
+     * @param serviceManager Manager to use to look up tab completion services.
      * @param target The text field this input handler is dealing with.
      * @param commandParser The command parser to use for this text field.
      * @param parentWindow The window that owns this input handler
      */
-    public SwingInputHandler(final UIController controller,
+    public SwingInputHandler(
+            final ServiceManager serviceManager,
             final InputField target,
             final CommandParser commandParser,
             final WritableFrameContainer parentWindow) {
-        super(controller, target, commandParser, parentWindow);
+        super(serviceManager, target, commandParser, parentWindow);
     }
 
     /** {@inheritDoc} */

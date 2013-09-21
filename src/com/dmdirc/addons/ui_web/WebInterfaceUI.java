@@ -30,6 +30,9 @@ import com.dmdirc.ServerManager;
 import com.dmdirc.addons.ui_web.uicomponents.WebStatusBar;
 import com.dmdirc.interfaces.ui.UIController;
 import com.dmdirc.interfaces.ui.Window;
+import com.dmdirc.plugins.PluginInfo;
+import com.dmdirc.plugins.PluginManager;
+import com.dmdirc.plugins.ServiceManager;
 import com.dmdirc.ui.core.components.StatusBarManager;
 
 import java.net.URI;
@@ -61,18 +64,34 @@ public class WebInterfaceUI implements UIController {
     /** Instance of Main that owns us. */
     private final Main main;
 
+    /** The PluginInfo object for this plugin. */
+    @Getter
+    private final PluginInfo pluginInfo;
+
+    /** The plugin manager used to find other plugins. */
+    @Getter
+    private final PluginManager pluginManager;
+
     /**
      * Creates a new WebInterfaceUI belonging to the specified plugin.
      *
      * @param domain The domain to retrieve config settings from
+     * @param serverManager The manager to use to find and create servers
+     * @param pluginManager The manager to use to find other plugins
+     * @param pluginInfo The information object for this UI's plugin.
      */
     public WebInterfaceUI(
             final Main main,
             final String domain,
-            final ServerManager serverManager) {
+            final ServerManager serverManager,
+            final PluginManager pluginManager,
+            final PluginInfo pluginInfo) {
         super();
 
         this.main = main;
+        this.pluginManager = pluginManager;
+        this.pluginInfo = pluginInfo;
+
         final SecurityHandler sh = new SecurityHandler();
         final Constraint constraint = new Constraint();
         final ConstraintMapping cm = new ConstraintMapping();
