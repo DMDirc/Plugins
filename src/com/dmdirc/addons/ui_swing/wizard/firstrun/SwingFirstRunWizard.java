@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.wizard.firstrun;
 
+import com.dmdirc.CorePluginExtractor;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.addons.ui_swing.Apple;
@@ -52,19 +53,25 @@ public final class SwingFirstRunWizard implements WizardListener,
         FirstRunWizard {
 
     /** Wizard dialog. */
-    private WizardDialog wizardDialog;
+    private final WizardDialog wizardDialog;
     /** Swing controller. */
-    private SwingController controller;
+    private final SwingController controller;
+    /** Extractor to use for core plugins. */
+    private final CorePluginExtractor corePluginExtractor;
 
     /**
      * Instantiate the wizard.
      *
      * @param parentWindow Parent window
      * @param controller Swing controller
+     * @param pluginExtractor Plugin extractor to use.
      */
-    public SwingFirstRunWizard(final Window parentWindow,
-            final SwingController controller) {
+    public SwingFirstRunWizard(
+            final Window parentWindow,
+            final SwingController controller,
+            final CorePluginExtractor pluginExtractor) {
         this.controller = controller;
+        this.corePluginExtractor = pluginExtractor;
 
         wizardDialog = new WizardDialog("Setup wizard",
                 new ArrayList<Step>(), parentWindow,
@@ -120,7 +127,7 @@ public final class SwingFirstRunWizard implements WizardListener,
     /** {@inheritDoc} */
     @Override
     public void extractPlugins() {
-        controller.getMain().extractCorePlugins(null);
+        corePluginExtractor.extractCorePlugins(null);
     }
 
     /** {@inheritDoc} */

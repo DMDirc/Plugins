@@ -24,7 +24,6 @@ package com.dmdirc.addons.ui_web;
 
 import com.dmdirc.Channel;
 import com.dmdirc.FrameContainer;
-import com.dmdirc.Main;
 import com.dmdirc.Server;
 import com.dmdirc.ServerManager;
 import com.dmdirc.addons.ui_web.uicomponents.WebStatusBar;
@@ -60,9 +59,6 @@ public class WebInterfaceUI implements UIController {
     @Getter
     private final DynamicRequestHandler handler;
 
-    /** Instance of Main that owns us. */
-    private final Main main;
-
     /** The PluginInfo object for this plugin. */
     @Getter
     private final PluginInfo pluginInfo;
@@ -80,14 +76,12 @@ public class WebInterfaceUI implements UIController {
      * @param pluginInfo The information object for this UI's plugin.
      */
     public WebInterfaceUI(
-            final Main main,
             final String domain,
             final ServerManager serverManager,
             final PluginManager pluginManager,
             final PluginInfo pluginInfo) {
         super();
 
-        this.main = main;
         this.pluginManager = pluginManager;
         this.pluginInfo = pluginInfo;
 
@@ -125,13 +119,6 @@ public class WebInterfaceUI implements UIController {
         windowManager = new WebWindowManager(this);
 
         StatusBarManager.getStatusBarManager().registerStatusBar(new WebStatusBar(handler));
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    @Deprecated
-    public Main getMain() {
-        return main;
     }
 
     /**
