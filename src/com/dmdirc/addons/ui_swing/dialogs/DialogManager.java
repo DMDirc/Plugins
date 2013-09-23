@@ -168,7 +168,7 @@ public class DialogManager {
         injector.addParameter(SwingWindowFactory.class, controller.getWindowFactory());
         injector.addParameter(URLHandler.class, controller.getUrlHandler());
         injector.addParameter(DialogManager.class, this);
-        injector.addParameter(PerformWrapper.class, PerformWrapper.getPerformWrapper());
+        injector.addParameter(PerformWrapper.class, controller.getPerformWrapper());
 
         for (final Object param : params) {
             injector.addParameter(param);

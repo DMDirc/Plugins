@@ -28,6 +28,7 @@ import com.dmdirc.FrameContainer;
 import com.dmdirc.Server;
 import com.dmdirc.ServerManager;
 import com.dmdirc.actions.ActionManager;
+import com.dmdirc.actions.wrappers.PerformWrapper;
 import com.dmdirc.addons.ui_swing.commands.ChannelSettings;
 import com.dmdirc.addons.ui_swing.commands.Input;
 import com.dmdirc.addons.ui_swing.commands.PopInCommand;
@@ -156,6 +157,9 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     /** Plugin manager. */
     @Getter
     private final PluginManager pluginManager;
+    /** Perform wrapper. */
+    @Getter
+    private final PerformWrapper performWrapper;
     /** Controller to use to close the application. */
     private final LifecycleController lifecycleController;
     /** Extractor to use for core plugins. */
@@ -184,7 +188,8 @@ public class SwingController extends BaseCommandPlugin implements UIController {
             final CommandController commandController,
             final ServerManager serverManager,
             final LifecycleController lifecycleController,
-            final CorePluginExtractor corePluginExtractor) {
+            final CorePluginExtractor corePluginExtractor,
+            final PerformWrapper performWrapper) {
         super(commandController);
         this.pluginInfo = pluginInfo;
         this.identityManager = identityManager;
@@ -193,6 +198,7 @@ public class SwingController extends BaseCommandPlugin implements UIController {
         this.serverManager = serverManager;
         this.lifecycleController = lifecycleController;
         this.corePluginExtractor = corePluginExtractor;
+        this.performWrapper = performWrapper;
 
         globalConfig = identityManager.getGlobalConfiguration();
         globalIdentity = identityManager.getGlobalConfigIdentity();
