@@ -24,13 +24,13 @@ package com.dmdirc.addons.urlcatcher;
 
 import com.dmdirc.FrameContainer;
 import com.dmdirc.Raw;
-import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.interfaces.actions.ActionType;
-import com.dmdirc.config.IdentityManager;
+import com.dmdirc.interfaces.ActionController;
 import com.dmdirc.interfaces.ActionListener;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.ConfigChangeListener;
+import com.dmdirc.interfaces.IdentityController;
 import com.dmdirc.plugins.implementations.BaseCommandPlugin;
 import com.dmdirc.ui.messages.Styliser;
 
@@ -45,7 +45,11 @@ public class UrlCatcherPlugin extends BaseCommandPlugin implements
         ActionListener, ConfigChangeListener {
 
     /* URLs and the number of times they were mentioned. */
-    private final Map<String, Integer> urls = new HashMap<String, Integer>();
+    private final Map<String, Integer> urls = new HashMap<>();
+    /** Controller to read settings from. */
+    private final IdentityController identityController;
+    /** Controller to listen to action events from. */
+    private final ActionController actionController;
     /** Whether to capture URLs from the raw window. */
     private boolean captureRaw = false;
 
@@ -53,18 +57,24 @@ public class UrlCatcherPlugin extends BaseCommandPlugin implements
      * Creates a new instance of this plugin.
      *
      * @param commandController Command controller to register commands
+     * @param identityController Controller to load settings from.
+     * @param actionController Controller to listen to action events from.
      */
-    public UrlCatcherPlugin(final CommandController commandController) {
+    public UrlCatcherPlugin(
+            final CommandController commandController,
+            final IdentityController identityController,
+            final ActionController actionController) {
         super(commandController);
+        this.identityController = identityController;
+        this.actionController = actionController;
         registerCommand(new UrlListCommand(this), UrlListCommand.INFO);
     }
 
     /** {@inheritDoc} */
     @Override
     public void onLoad() {
-        ActionManager.getActionManager().registerListener(this,
-                CoreActionType.CLIENT_LINE_ADDED);
-        IdentityManager.getIdentityManager().getGlobalConfiguration().addChangeListener(getDomain(), this);
+        actionController.registerListener(this, CoreActionType.CLIENT_LINE_ADDED);
+        identityController.getGlobalConfiguration().addChangeListener(getDomain(), this);
         updateConfig();
         super.onLoad();
     }
@@ -72,8 +82,8 @@ public class UrlCatcherPlugin extends BaseCommandPlugin implements
     /** {@inheritDoc} */
     @Override
     public void onUnload() {
-        ActionManager.getActionManager().unregisterListener(this);
-        IdentityManager.getIdentityManager().getGlobalConfiguration().removeListener(this);
+        actionController.unregisterListener(this);
+        identityController.getGlobalConfiguration().removeListener(this);
         super.onUnload();
     }
 
@@ -81,7 +91,7 @@ public class UrlCatcherPlugin extends BaseCommandPlugin implements
      * Re-reads the configuration of the URL catcher plugin.
      */
     private void updateConfig() {
-        captureRaw = IdentityManager.getIdentityManager().getGlobalConfiguration().getOptionBool(getDomain(), "captureraw");
+        captureRaw = identityController.getGlobalConfiguration().getOptionBool(getDomain(), "captureraw");
     }
 
     /** {@inheritDoc} */

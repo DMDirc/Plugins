@@ -26,7 +26,9 @@ import com.dmdirc.FrameContainer;
 import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.config.ConfigManager;
 import com.dmdirc.config.InvalidIdentityFileException;
+import com.dmdirc.interfaces.ActionController;
 import com.dmdirc.interfaces.CommandController;
+import com.dmdirc.interfaces.IdentityController;
 import com.dmdirc.ui.messages.Styliser;
 
 import org.junit.Before;
@@ -43,18 +45,20 @@ public class UrlCatcherPluginTest {
     @Mock private FrameContainer container;
     @Mock private ConfigManager manager;
     @Mock private CommandController controller;
+    @Mock private IdentityController identityController;
+    @Mock private ActionController actionController;
+    private UrlCatcherPlugin plugin;
 
     @Before
     public void setupClass() {
         when(container.getConfigManager()).thenReturn(manager);
         final Styliser styliser = new Styliser(container);
         when(container.getStyliser()).thenReturn(styliser);
+        plugin = new UrlCatcherPlugin(controller, identityController, actionController);
     }
 
     @Test
     public void testURLCounting() throws InvalidIdentityFileException {
-        final UrlCatcherPlugin plugin = new UrlCatcherPlugin(controller);
-
         plugin.processEvent(CoreActionType.CHANNEL_MESSAGE, null,
                 container, "This is a message - http://www.google.com/ foo");
         plugin.processEvent(CoreActionType.CHANNEL_MESSAGE, null,
@@ -68,8 +72,6 @@ public class UrlCatcherPluginTest {
 
     @Test
     public void testURLCatching() throws InvalidIdentityFileException {
-        final UrlCatcherPlugin plugin = new UrlCatcherPlugin(controller);
-
         plugin.processEvent(CoreActionType.CHANNEL_MESSAGE, null,
                 container, "http://www.google.com/ www.example.com foo://bar.baz");
         plugin.processEvent(CoreActionType.CHANNEL_MESSAGE, null,
