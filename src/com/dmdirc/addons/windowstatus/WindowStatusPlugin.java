@@ -30,13 +30,13 @@ import com.dmdirc.addons.ui_swing.SelectionListener;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
-import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.interfaces.ConfigChangeListener;
+import com.dmdirc.interfaces.IdentityController;
 import com.dmdirc.parser.interfaces.ChannelClientInfo;
 import com.dmdirc.parser.interfaces.ChannelInfo;
 import com.dmdirc.parser.interfaces.ClientInfo;
@@ -57,7 +57,9 @@ public final class WindowStatusPlugin extends BasePlugin
     /** The panel we use in the status bar. */
     private final WindowStatusPanel panel;
     /** Parent Swing UI. */
-    private SwingController controller;
+    private final SwingController controller;
+    /** Identity controller to read settings from. */
+    private final IdentityController identityController;
     /** Should we show the real name in queries? */
     private boolean showname;
     /** Should we show users without modes? */
@@ -70,11 +72,18 @@ public final class WindowStatusPlugin extends BasePlugin
     /**
      * Creates a new instance of WindowStatusPlugin.
      *
-     * @param pluginInfo This plugin's plugin info
+     * @param pluginInfo This plugin's plugin info.
+     * @param controller The parent {@link SwingController}.
+     * @param identityController The controller to read settings from.
      */
-    public WindowStatusPlugin(final PluginInfo pluginInfo) {
+    public WindowStatusPlugin(
+            final PluginInfo pluginInfo,
+            final SwingController controller,
+            final IdentityController identityController) {
         super();
         this.pluginInfo = pluginInfo;
+        this.controller = controller;
+        this.identityController = identityController;
 
         panel = UIUtilities.invokeAndWait(
                 new Callable<WindowStatusPanel>() {
@@ -90,12 +99,9 @@ public final class WindowStatusPlugin extends BasePlugin
     /** {@inheritDoc} */
     @Override
     public void onLoad() {
-        controller = (SwingController) pluginInfo.getMetaData().getManager()
-                .getPluginInfoByName("ui_swing").getPlugin();
         controller.getSwingStatusBar().addComponent(panel);
         controller.getMainFrame().addSelectionListener(this);
-        IdentityManager.getIdentityManager().getGlobalConfiguration()
-                .addChangeListener(getDomain(), this);
+        identityController.getGlobalConfiguration().addChangeListener(getDomain(), this);
         updateCache();
     }
 
@@ -104,7 +110,6 @@ public final class WindowStatusPlugin extends BasePlugin
     public void onUnload() {
         controller.getMainFrame().removeSelectionListener(this);
         controller.getSwingStatusBar().removeComponent(panel);
-        controller = null;
     }
 
     /** {@inheritDoc} */
@@ -115,11 +120,11 @@ public final class WindowStatusPlugin extends BasePlugin
 
     /** Updates the cached config settings. */
     private void updateCache() {
-        showname = IdentityManager.getIdentityManager().getGlobalConfiguration()
+        showname = identityController.getGlobalConfiguration()
                 .getOptionBool(getDomain(), "client.showname");
-        shownone = IdentityManager.getIdentityManager().getGlobalConfiguration()
+        shownone = identityController.getGlobalConfiguration()
                 .getOptionBool(getDomain(), "channel.shownone");
-        nonePrefix = IdentityManager.getIdentityManager().getGlobalConfiguration()
+        nonePrefix = identityController.getGlobalConfiguration()
                 .getOption(getDomain(), "channel.noneprefix");
         updateStatus();
     }
@@ -129,7 +134,7 @@ public final class WindowStatusPlugin extends BasePlugin
         final TextFrame active = controller.getMainFrame().getActiveFrame();
 
         if (active != null) {
-            updateStatus(active == null ? null : active.getContainer());
+            updateStatus(active.getContainer());
         }
     }
 
@@ -149,8 +154,8 @@ public final class WindowStatusPlugin extends BasePlugin
             textString.append(((Server) current).getName());
         } else if (current instanceof Channel) {
             final ChannelInfo chan = ((Channel) current).getChannelInfo();
-            final Map<Integer, String> names = new HashMap<Integer, String>();
-            final Map<Integer, Integer> types = new HashMap<Integer, Integer>();
+            final Map<Integer, String> names = new HashMap<>();
+            final Map<Integer, Integer> types = new HashMap<>();
 
             textString.append(chan.getName());
             textString.append(" - Nicks: ");

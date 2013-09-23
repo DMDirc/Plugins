@@ -22,13 +22,13 @@
 
 package com.dmdirc.addons.userlevel;
 
-import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.interfaces.actions.ActionComponent;
 import com.dmdirc.interfaces.actions.ActionType;
-import com.dmdirc.config.IdentityManager;
+import com.dmdirc.interfaces.ActionController;
 import com.dmdirc.interfaces.ActionListener;
 import com.dmdirc.interfaces.ConfigChangeListener;
+import com.dmdirc.interfaces.IdentityController;
 import com.dmdirc.parser.interfaces.ChannelClientInfo;
 import com.dmdirc.parser.interfaces.ClientInfo;
 import com.dmdirc.plugins.implementations.BasePlugin;
@@ -36,38 +36,44 @@ import com.dmdirc.plugins.implementations.BasePlugin;
 import java.util.HashMap;
 import java.util.Map;
 
+import lombok.RequiredArgsConstructor;
+
 /**
  * Allows the client to assign user levels to users (based on hostname matches),
  * and for actions/plugins to check those levels.
  */
+@RequiredArgsConstructor
 public class UserLevelPlugin extends BasePlugin implements ActionListener,
         ConfigChangeListener {
 
     /** The domain used for userlevels. */
     private static final String DOMAIN = "userlevels";
     /** A map of hostmasks to associated level numbers. */
-    private static final Map<String, Integer> LEVELS = new HashMap<String, Integer>();
+    private static final Map<String, Integer> LEVELS = new HashMap<>();
+
+    /** The identity controller to use to read settings. */
+    private final IdentityController identityController;
+    /** The action controller to add components to. */
+    private final ActionController actionController;
 
     /** {@inheritDoc} */
     @Override
     public void onLoad() {
-        ActionManager.getActionManager().registerListener(this,
-                CoreActionType.CHANNEL_JOIN);
-        ActionManager.getActionManager().registerComponents(
+        actionController.registerListener(this, CoreActionType.CHANNEL_JOIN);
+        actionController.registerComponents(
                 new ActionComponent[]{
                     new AccessLevelComponent(),
                     new ChannelAccessLevelComponent()
                 });
-        IdentityManager.getIdentityManager().getGlobalConfiguration()
-                .addChangeListener(DOMAIN, this);
+        identityController.getGlobalConfiguration().addChangeListener(DOMAIN, this);
         loadLevels();
     }
 
     /** {@inheritDoc} */
     @Override
     public void onUnload() {
-        ActionManager.getActionManager().unregisterListener(this);
-        IdentityManager.getIdentityManager().getGlobalConfiguration().removeListener(this);
+        actionController.unregisterListener(this);
+        identityController.getGlobalConfiguration().removeListener(this);
     }
 
     /** {@inheritDoc} */
@@ -127,7 +133,7 @@ public class UserLevelPlugin extends BasePlugin implements ActionListener,
     private void loadLevels() {
         LEVELS.clear();
 
-        for (Map.Entry<String, String> item : IdentityManager.getIdentityManager()
+        for (Map.Entry<String, String> item : identityController
                 .getGlobalConfiguration().getOptions(DOMAIN).entrySet()) {
             try {
                 LEVELS.put(item.getKey(), Integer.parseInt(item.getValue()));
