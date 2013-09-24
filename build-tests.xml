@@ -20,6 +20,7 @@
                 <or>
                     <available file="lib/clover.license"/>
                     <available file="${clover.search.path}/clover.license"/>
+                    <available file="${clover.license.path}"/>
                 </or>
             </and>
         </condition>
