@@ -68,9 +68,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import net.miginfocom.swing.MigLayout;
 
-import org.java.ayatana.ApplicationMenu;
-import org.java.ayatana.AyatanaDesktop;
-
 /**
  * The main application frame.
  */
@@ -137,9 +134,6 @@ public final class MainFrame extends JFrame implements WindowListener,
 
         focusOrder = new QueuedLinkedHashSet<>();
         initComponents();
-        if (AyatanaDesktop.isSupported()) {
-            ApplicationMenu.tryInstall(this, getJMenuBar(), new UnityMenu());
-        }
 
         imageIcon = new ImageIcon(new IconManager(controller.getGlobalConfig())
                 .getImage("icon"));
