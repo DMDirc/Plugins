@@ -18,17 +18,13 @@
        </not>
     </condition>
 
-    <target name="-init-lib-directory">
-      <mkdir dir="${plugins.lib}"/>
-    </target>
-
     <target name="-init-taskdefs" depends="init-dependencies,-init-paths,-init-antlib,-init-git-describe">
     </target>
 
     <target name="-init-antlib" if="plugins.need.antlib">
         <taskdef resource="net/sf/antcontrib/antlib.xml" classpathref="plugins.classpath"/>
     </target>
-    
+
     <target name="-init-git-describe">
         <taskdef name="git-describe" classname="org.mdonoughe.JGitDescribeTask" classpathref="plugins.classpath"/>
     </target>
