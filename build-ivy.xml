@@ -4,7 +4,11 @@
 
     <property name="ivy.cache.ttl.default" value="7d"/>
 
-    <target name="-init-ivy" depends="-init-lib-directory">
+    <target name="-init-plugins-lib-directory">
+        <mkdir dir="${plugins.lib}"/>
+    </target>
+
+    <target name="-init-ivy" depends="-init-plugins-lib-directory">
         <path id="ivy.classpath">
            <fileset dir="etc/ivy" includes="ivy*.jar"/>
         </path>
