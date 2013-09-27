@@ -46,32 +46,49 @@ public final class AddonToggle {
     /** Whether or nor the addon update state should be toggled. */
     private boolean updateState;
     /** Listener list. */
-    private final ListenerList listeners;
+    private final ListenerList listeners = new ListenerList();
     /** Identity to change update settings in. */
     private final Identity identity;
+    /** The manager to update when toggling a theme. */
+    private final ThemeManager themeManager;
 
     /**
      * Creates a new instance of AddonToggle to wrap the specified
-     * PluginInfo or Theme.
+     * PluginInfo.
      *
-     * @param pi The PluginInfo to be wrapped can be null
-     * @param theme The Theme to be wrapped can be null
+     * @param identity Identity to change update settings in.
+     * @param pi The PluginInfo to be wrapped.
      */
-    public AddonToggle(final Identity identity, final PluginInfo pi,
-            final Theme theme) {
-        if ((pi == null) == (theme == null)) {
-            throw new IllegalArgumentException("You must wrap a plugin or "
-                    + "a theme.");
-        }
+    public AddonToggle(final Identity identity, final PluginInfo pi) {
         this.identity = identity;
         this.pi = pi;
-        this.theme = theme;
-        listeners = new ListenerList();
-        if (pi == null) {
-            state = theme.isEnabled();
-        } else {
-            state = pi.isLoaded();
+        this.theme = null;
+        this.themeManager = null;
+        state = pi.isLoaded();
+
+        for (UpdateComponent comp : UpdateChecker.getManager().getComponents()) {
+            if (comp.getName().equals("addon-" + getID())) {
+                updateState = UpdateChecker.getManager().getStatus(comp)
+                        != UpdateStatus.CHECKING_NOT_PERMITTED;
+                break;
+            }
         }
+    }
+
+    /**
+     * Creates a new instance of AddonToggle to wrap the specified
+     * Theme.
+     *
+     * @param identity Identity to change update settings in.
+     * @param themeManager The manager to update when toggling a theme.
+     * @param theme The Theme to be wrapped
+     */
+    public AddonToggle(final Identity identity, final ThemeManager themeManager, final Theme theme) {
+        this.identity = identity;
+        this.pi = null;
+        this.theme = theme;
+        this.themeManager = themeManager;
+        state = theme.isEnabled();
 
         for (UpdateComponent comp : UpdateChecker.getManager().getComponents()) {
             if (comp.getName().equals("addon-" + getID())) {
@@ -175,7 +192,7 @@ public final class AddonToggle {
                     } else {
                         theme.removeTheme();
                     }
-                    ThemeManager.updateAutoLoad(theme);
+                    themeManager.synchroniseAutoLoad(theme);
                 }
             }
         }.start();

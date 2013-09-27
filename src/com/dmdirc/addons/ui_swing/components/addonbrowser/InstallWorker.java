@@ -25,7 +25,6 @@ package com.dmdirc.addons.ui_swing.components.addonbrowser;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
-import com.dmdirc.ui.themes.ThemeManager;
 import com.dmdirc.util.io.Downloader;
 
 import java.io.File;
@@ -79,7 +78,7 @@ public class InstallWorker extends LoggingSwingWorker<String, Void> {
                     }
                     break;
                 case TYPE_THEME:
-                    if (!file.renameTo(new File(ThemeManager.getThemeDirectory()
+                    if (!file.renameTo(new File(controller.getThemeManager().getDirectory()
                             + info.getTitle() + ".zip"))) {
                         return "Unable to install addon, failed to move file: "
                                 + file.getAbsolutePath();

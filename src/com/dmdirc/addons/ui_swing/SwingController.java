@@ -69,6 +69,7 @@ import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.core.components.StatusBarManager;
 import com.dmdirc.ui.core.util.URLHandler;
+import com.dmdirc.ui.themes.ThemeManager;
 import com.dmdirc.updater.Version;
 import com.dmdirc.util.validators.NumericalValidator;
 import com.dmdirc.util.validators.OptionalValidator;
@@ -164,6 +165,9 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     private final LifecycleController lifecycleController;
     /** Extractor to use for core plugins. */
     private final CorePluginExtractor corePluginExtractor;
+    /** Theme manager to use. */
+    @Getter
+    private final ThemeManager themeManager;
     /** Apple handler, deals with Mac specific code. */
     @Getter
     private final Apple apple;
@@ -179,6 +183,8 @@ public class SwingController extends BaseCommandPlugin implements UIController {
      * @param serverManager Server manager to use for server information.
      * @param lifecycleController Controller to use to close the application.
      * @param corePluginExtractor Extractor to use for core plugins.
+     * @param performWrapper Perform wrapper to use for performs.
+     * @param themeManager Theme manager to use.
      */
     public SwingController(
             final PluginInfo pluginInfo,
@@ -189,7 +195,8 @@ public class SwingController extends BaseCommandPlugin implements UIController {
             final ServerManager serverManager,
             final LifecycleController lifecycleController,
             final CorePluginExtractor corePluginExtractor,
-            final PerformWrapper performWrapper) {
+            final PerformWrapper performWrapper,
+            final ThemeManager themeManager) {
         super(commandController);
         this.pluginInfo = pluginInfo;
         this.identityManager = identityManager;
@@ -199,6 +206,7 @@ public class SwingController extends BaseCommandPlugin implements UIController {
         this.lifecycleController = lifecycleController;
         this.corePluginExtractor = corePluginExtractor;
         this.performWrapper = performWrapper;
+        this.themeManager = themeManager;
 
         globalConfig = identityManager.getGlobalConfiguration();
         globalIdentity = identityManager.getGlobalConfigIdentity();

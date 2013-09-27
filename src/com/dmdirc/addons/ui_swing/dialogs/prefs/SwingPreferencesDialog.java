@@ -94,7 +94,7 @@ public final class SwingPreferencesDialog extends StandardDialog implements
                 try {
                     prefsManager = new PreferencesDialogModel(
                             new PluginPanel(getMainFrame(), controller),
-                            new ThemePanel(getMainFrame(), controller),
+                            new ThemePanel(getMainFrame(), controller, controller.getThemeManager()),
                             new UpdateConfigPanel(controller),
                             new URLConfigPanel(controller, getMainFrame()),
                             controller.getGlobalConfig(),
