@@ -48,22 +48,28 @@ public class ThemePanel extends AddonPanel {
      */
     private static final long serialVersionUID = 1;
 
+    /** Manager to retrieve themes from. */
+    private final ThemeManager themeManager;
+
     /**
      * Creates a new instance of ThemePanel.
      *
      * @param parentWindow Parent window
      * @param controller Swing Controller
+     * @param themeManager Manager to retrieve themes from.
      */
-    public ThemePanel(final Window parentWindow,
-            final SwingController controller) {
+    public ThemePanel(
+            final Window parentWindow,
+            final SwingController controller,
+            final ThemeManager themeManager) {
         super(parentWindow, controller);
+        this.themeManager = themeManager;
     }
 
     /** {@inheritDoc} */
     @Override
     protected JTable populateList(final JTable table) {
-        final List<Theme> list = new ArrayList<Theme>(ThemeManager.
-                getAvailableThemes().values());
+        final List<Theme> list = new ArrayList<>(themeManager.getAllThemes().values());
         Collections.sort(list);
 
         UIUtilities.invokeLater(new Runnable() {
@@ -75,7 +81,8 @@ public class ThemePanel extends AddonPanel {
                 for (final Theme theme : list) {
                     ((DefaultTableModel) addonList.getModel()).addRow(
                     new AddonCell[]{ new AddonCell(new AddonToggle(
-                            controller.getGlobalIdentity(), null, theme),
+                            controller.getGlobalIdentity(),
+                            controller.getThemeManager(), theme),
                             getIconManager()), });
                 }
 
