@@ -118,7 +118,8 @@ version:
 
     <target name="-add-libs">
         <jar destfile="${plugins.dist}/ui_swing.jar" update="true">
-            <zipfileset src="${plugins.lib}/main/miglayout-swing.jar" includes="net/miginfocom/layout/**,net/miginfocom/swing/**"/>
+            <zipfileset src="${plugins.lib}/main/miglayout-swing.jar" includes="net/miginfocom/swing/**"/>
+            <zipfileset src="${plugins.lib}/main/miglayout-core.jar" includes="net/miginfocom/layout/**"/>
             <zipfileset src="${plugins.lib}/main/menuscroller.jar" includes="darrylbu/util/**"/>
             <zipfileset src="${plugins.lib}/main/jxlayer.jar" includes="org/jdesktop/jxlayer/**"/>
             <zipfileset src="${plugins.lib}/main/cinch.jar" includes="*/**"/>
