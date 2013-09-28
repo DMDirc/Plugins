@@ -26,7 +26,6 @@ import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.dialogs.updater.SwingRestartDialog;
 import com.dmdirc.addons.ui_swing.dialogs.updater.SwingUpdaterDialog;
 import com.dmdirc.interfaces.ui.StatusBarComponent;
-import com.dmdirc.ui.IconManager;
 import com.dmdirc.updater.UpdateChecker;
 import com.dmdirc.updater.manager.UpdateManager;
 import com.dmdirc.updater.manager.UpdateManagerListener;
@@ -106,14 +105,11 @@ public class UpdaterLabel extends StatusbarPopupPanel<JLabel> implements
         }
 
         if (status == UpdateManagerStatus.WORKING) {
-            label.setIcon(new IconManager(controller.getGlobalConfig())
-                    .getIcon("hourglass"));
+            label.setIcon(controller.getIconManager().getIcon("hourglass"));
         } else if (status == UpdateManagerStatus.IDLE_UPDATE_AVAILABLE) {
-            label.setIcon(new IconManager(controller.getGlobalConfig())
-                    .getIcon("update"));
+            label.setIcon(controller.getIconManager().getIcon("update"));
         } else if (status == UpdateManagerStatus.IDLE_RESTART_NEEDED) {
-            label.setIcon(new IconManager(controller.getGlobalConfig())
-                    .getIcon("restart-needed"));
+            label.setIcon(controller.getIconManager().getIcon("restart-needed"));
         }
     }
 }

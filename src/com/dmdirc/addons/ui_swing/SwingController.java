@@ -71,6 +71,7 @@ import com.dmdirc.ui.core.components.StatusBarManager;
 import com.dmdirc.ui.core.util.URLHandler;
 import com.dmdirc.ui.themes.ThemeManager;
 import com.dmdirc.updater.Version;
+import com.dmdirc.util.URLBuilder;
 import com.dmdirc.util.validators.NumericalValidator;
 import com.dmdirc.util.validators.OptionalValidator;
 
@@ -185,6 +186,7 @@ public class SwingController extends BaseCommandPlugin implements UIController {
      * @param corePluginExtractor Extractor to use for core plugins.
      * @param performWrapper Perform wrapper to use for performs.
      * @param themeManager Theme manager to use.
+     * @param urlBuilder URL builder to use to resolve icons etc.
      */
     public SwingController(
             final PluginInfo pluginInfo,
@@ -196,7 +198,8 @@ public class SwingController extends BaseCommandPlugin implements UIController {
             final LifecycleController lifecycleController,
             final CorePluginExtractor corePluginExtractor,
             final PerformWrapper performWrapper,
-            final ThemeManager themeManager) {
+            final ThemeManager themeManager,
+            final URLBuilder urlBuilder) {
         super(commandController);
         this.pluginInfo = pluginInfo;
         this.identityManager = identityManager;
@@ -212,7 +215,7 @@ public class SwingController extends BaseCommandPlugin implements UIController {
         globalIdentity = identityManager.getGlobalConfigIdentity();
         addonIdentity = identityManager.getGlobalAddonIdentity();
         apple = new Apple(getGlobalConfig(), this);
-        iconManager = new IconManager(globalConfig);
+        iconManager = new IconManager(globalConfig, urlBuilder);
         prefsComponentFactory = new PrefsComponentFactory(this);
         dialogManager = new DialogManager(this);
         urlHandler = new URLHandler(this, globalConfig, serverManager,
@@ -271,7 +274,8 @@ public class SwingController extends BaseCommandPlugin implements UIController {
                     }
                 };
                 final SwingFirstRunWizard wizard = new SwingFirstRunWizard(
-                        getMainFrame(), SwingController.this, corePluginExtractor);
+                        getMainFrame(), SwingController.this,
+                        corePluginExtractor, iconManager);
                 wizard.getWizardDialog().addWizardListener(listener);
                 wizard.display();
             }

@@ -44,7 +44,6 @@ import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.ui.Colour;
 import com.dmdirc.ui.CoreUIUtils;
-import com.dmdirc.ui.IconManager;
 import com.dmdirc.util.collections.ListenerList;
 import com.dmdirc.util.collections.QueuedLinkedHashSet;
 
@@ -135,8 +134,7 @@ public final class MainFrame extends JFrame implements WindowListener,
         focusOrder = new QueuedLinkedHashSet<>();
         initComponents();
 
-        imageIcon = new ImageIcon(new IconManager(controller.getGlobalConfig())
-                .getImage("icon"));
+        imageIcon = new ImageIcon(controller.getIconManager().getImage("icon"));
         setIconImage(imageIcon.getImage());
 
         CoreUIUtils.centreWindow(this);
@@ -582,8 +580,7 @@ public final class MainFrame extends JFrame implements WindowListener,
                     break;
             }
         } else {
-            imageIcon = new ImageIcon(new IconManager(controller
-                        .getGlobalConfig()).getImage("icon"));
+            imageIcon = new ImageIcon(controller.getIconManager().getImage("icon"));
             UIUtilities.invokeLater(new Runnable() {
 
                 /** {@inheritDoc} */

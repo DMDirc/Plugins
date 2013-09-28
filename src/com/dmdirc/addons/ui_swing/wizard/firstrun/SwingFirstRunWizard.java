@@ -65,19 +65,20 @@ public final class SwingFirstRunWizard implements WizardListener,
      * @param parentWindow Parent window
      * @param controller Swing controller
      * @param pluginExtractor Plugin extractor to use.
+     * @param iconManager Manager to use to find icons.
      */
     public SwingFirstRunWizard(
             final Window parentWindow,
             final SwingController controller,
-            final CorePluginExtractor pluginExtractor) {
+            final CorePluginExtractor pluginExtractor,
+            final IconManager iconManager) {
         this.controller = controller;
         this.corePluginExtractor = pluginExtractor;
 
         wizardDialog = new WizardDialog("Setup wizard",
                 new ArrayList<Step>(), parentWindow,
                 ModalityType.APPLICATION_MODAL);
-        wizardDialog.setIconImage(new IconManager(controller.getGlobalConfig())
-                .getImage("icon"));
+        wizardDialog.setIconImage(iconManager.getImage("icon"));
         wizardDialog.addWizardListener(this);
         if(Apple.isAppleUI()) {
             wizardDialog.setMinimumSize(new Dimension(400, 500));

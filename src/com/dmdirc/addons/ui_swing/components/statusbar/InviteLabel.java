@@ -35,7 +35,6 @@ import com.dmdirc.interfaces.ActionListener;
 import com.dmdirc.interfaces.InviteListener;
 import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.interfaces.ui.StatusBarComponent;
-import com.dmdirc.ui.IconManager;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
@@ -88,8 +87,7 @@ public class InviteLabel extends StatusbarPopupPanel<JLabel> implements
         this.mainFrame = mainFrame;
 
         setBorder(BorderFactory.createEtchedBorder());
-        label.setIcon(new IconManager(controller.getGlobalConfig())
-                .getIcon("invite"));
+        label.setIcon(controller.getIconManager().getIcon("invite"));
 
         menu = new JPopupMenu();
         dismiss = new JMenuItem("Dismiss all invites");
