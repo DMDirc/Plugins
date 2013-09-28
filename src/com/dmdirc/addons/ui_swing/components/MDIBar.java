@@ -28,7 +28,7 @@ import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.SwingWindowListener;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.config.ConfigManager;
-import com.dmdirc.interfaces.ConfigChangeListener;
+import com.dmdirc.interfaces.config.ConfigChangeListener;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

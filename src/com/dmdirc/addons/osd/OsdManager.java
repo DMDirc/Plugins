@@ -23,7 +23,7 @@
 package com.dmdirc.addons.osd;
 
 import com.dmdirc.addons.ui_swing.UIUtilities;
-import com.dmdirc.interfaces.IdentityController;
+import com.dmdirc.interfaces.config.IdentityController;
 
 import java.util.ArrayList;
 import java.util.LinkedList;

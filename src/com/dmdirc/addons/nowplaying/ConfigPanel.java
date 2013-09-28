@@ -27,7 +27,7 @@ import com.dmdirc.addons.ui_swing.components.reorderablelist.ListReorderButtonPa
 import com.dmdirc.addons.ui_swing.components.reorderablelist.ReorderableJList;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.config.prefs.PreferencesInterface;
-import com.dmdirc.interfaces.IdentityController;
+import com.dmdirc.interfaces.config.IdentityController;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 

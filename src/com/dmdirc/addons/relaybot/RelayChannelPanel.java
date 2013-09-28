@@ -23,7 +23,7 @@
 package com.dmdirc.addons.relaybot;
 
 import com.dmdirc.config.prefs.PreferencesInterface;
-import com.dmdirc.interfaces.IdentityController;
+import com.dmdirc.interfaces.config.IdentityController;
 import com.dmdirc.plugins.Plugin;
 
 import java.awt.event.ActionEvent;

@@ -24,7 +24,7 @@ package com.dmdirc.addons.ui_swing.framemanager.tree;
 
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.config.ConfigManager;
-import com.dmdirc.interfaces.ConfigChangeListener;
+import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.ui.messages.Styliser;
 
 import java.awt.Color;

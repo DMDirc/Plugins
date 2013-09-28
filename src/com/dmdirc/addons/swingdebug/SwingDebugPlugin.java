@@ -24,7 +24,7 @@ package com.dmdirc.addons.swingdebug;
 import com.dmdirc.addons.ui_swing.DMDircEventQueue;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.CheckBoxMenuItem;
-import com.dmdirc.interfaces.IdentityController;
+import com.dmdirc.interfaces.config.IdentityController;
 import com.dmdirc.plugins.implementations.BasePlugin;
 
 import java.awt.Toolkit;

@@ -25,7 +25,7 @@ package com.dmdirc.addons.ui_swing.components;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.interfaces.AwayStateListener;
-import com.dmdirc.interfaces.ConfigChangeListener;
+import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.interfaces.FrameCloseListener;
 
 import javax.swing.JLabel;
