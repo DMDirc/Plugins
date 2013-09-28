@@ -114,7 +114,7 @@ public class Settings extends JPanel implements ServerListListener {
                 panels.put(item, new SettingsPanel(controller, "", false));
                 addSettings(panels.get(item), new ConfigManager("irc", "",
                     item.getGroup().getNetwork(), item.getName()),
-                    controller.getIdentityManager().createServerConfig(item.getName()));
+                    controller.getIdentityFactory().createServerConfig(item.getName()));
             } else if (item == null) {
                 panels.put(null, new SettingsPanel(controller, "", false));
             } else {

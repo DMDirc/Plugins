@@ -24,12 +24,12 @@ package com.dmdirc.addons.notifications;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.addons.ui_swing.UIUtilities;
-import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.interfaces.ActionListener;
 import com.dmdirc.interfaces.CommandController;
+import com.dmdirc.interfaces.IdentityController;
 import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.implementations.BaseCommandPlugin;
@@ -45,22 +45,28 @@ import java.util.concurrent.Callable;
 public class NotificationsPlugin extends BaseCommandPlugin implements ActionListener {
 
     /** The notification methods that we know of. */
-    private final List<String> methods = new ArrayList<String>();
+    private final List<String> methods = new ArrayList<>();
     /** The user's preferred order for method usage. */
     private List<String> order;
     /** This plugin's plugin info. */
     private final PluginInfo pluginInfo;
+    /** The controller to read and write settings with. */
+    private final IdentityController identityController;
 
     /**
      * Creates a new instance of this plugin.
      *
      * @param pluginInfo This plugin's plugin info
      * @param commandController Command controller to register commands
+     * @param identityController The controller to read and write settings with.
      */
-    public NotificationsPlugin(final PluginInfo pluginInfo,
-            final CommandController commandController) {
+    public NotificationsPlugin(
+            final PluginInfo pluginInfo,
+            final CommandController commandController,
+            final IdentityController identityController) {
         super(commandController);
         this.pluginInfo = pluginInfo;
+        this.identityController = identityController;
         registerCommand(new NotificationCommand(this),
                 NotificationCommand.INFO);
     }
@@ -111,12 +117,10 @@ public class NotificationsPlugin extends BaseCommandPlugin implements ActionList
 
     /** Loads the plugins settings. */
     private void loadSettings() {
-        if (IdentityManager.getIdentityManager().getGlobalConfiguration()
-                .hasOptionString(getDomain(), "methodOrder")) {
-            order = IdentityManager.getIdentityManager()
-                    .getGlobalConfiguration().getOptionList(getDomain(), "methodOrder");
+        if (identityController.getGlobalConfiguration().hasOptionString(getDomain(), "methodOrder")) {
+            order = identityController.getGlobalConfiguration().getOptionList(getDomain(), "methodOrder");
         } else {
-            order = new ArrayList<String>();
+            order = new ArrayList<>();
         }
     }
 
@@ -182,7 +186,7 @@ public class NotificationsPlugin extends BaseCommandPlugin implements ActionList
      * @return All known notification sources
      */
     public List<PluginInfo> getMethods() {
-        final List<PluginInfo> plugins = new ArrayList<PluginInfo>();
+        final List<PluginInfo> plugins = new ArrayList<>();
         for (String method : methods) {
             plugins.add(pluginInfo.getMetaData().getManager()
                     .getPluginInfoByName(method));
@@ -224,7 +228,7 @@ public class NotificationsPlugin extends BaseCommandPlugin implements ActionList
      */
     protected void saveSettings(final List<String> newOrder) {
         order = newOrder;
-        IdentityManager.getIdentityManager().getGlobalConfigIdentity()
+        identityController.getGlobalConfigIdentity()
                 .setOption(getDomain(), "methodOrder", order);
     }
 }

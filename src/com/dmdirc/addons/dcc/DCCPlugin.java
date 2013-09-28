@@ -35,7 +35,6 @@ import com.dmdirc.addons.ui_swing.SwingWindowFactory;
 import com.dmdirc.addons.ui_swing.components.frames.ComponentFrame;
 import com.dmdirc.config.ConfigManager;
 import com.dmdirc.config.Identity;
-import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
@@ -43,6 +42,7 @@ import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.interfaces.ActionListener;
 import com.dmdirc.interfaces.CommandController;
+import com.dmdirc.interfaces.IdentityController;
 import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
@@ -75,33 +75,33 @@ public final class DCCPlugin extends BaseCommandPlugin implements ActionListener
     private final ConfigManager config;
     /** Parent swing controller. */
     private final SwingController controller;
-    /** Parent identity manager. */
-    private final IdentityManager identityManager;
+    /** Identity controller to read settings from. */
+    private final IdentityController identityController;
 
     /**
      * Creates a new instance of this plugin.
      *
      * @param controller The controller to register UI implementations with
      * @param pluginInfo This plugin's plugin info
-     * @param identityManager The Identity Manager that controls the current config
+     * @param identityController The Identity controller that provides the current config
      * @param commandController Command controller to register commands
      */
     public DCCPlugin(final SwingController controller,
             final PluginInfo pluginInfo,
-            final IdentityManager identityManager,
+            final IdentityController identityController,
             final CommandController commandController) {
         super(commandController);
-        this.identityManager = identityManager;
+        this.identityController = identityController;
         this.controller = controller;
         config = controller.getGlobalConfig();
         this.pluginInfo = pluginInfo;
         registerCommand(new DCCCommand(controller.getMainFrame(), this),
                 DCCCommand.INFO);
         final SwingWindowFactory factory = controller.getWindowFactory();
-        factory.registerImplementation(new HashSet<String>(Arrays.asList(
+        factory.registerImplementation(new HashSet<>(Arrays.asList(
                 "com.dmdirc.addons.dcc.ui.PlaceholderPanel")),
                 ComponentFrame.class);
-        factory.registerImplementation(new HashSet<String>(Arrays.asList(
+        factory.registerImplementation(new HashSet<>(Arrays.asList(
                 "com.dmdirc.addons.dcc.ui.TransferPanel")),
                 ComponentFrame.class);
     }
@@ -395,7 +395,6 @@ public final class DCCPlugin extends BaseCommandPlugin implements ActionListener
                     + "Do you want to continue?",
                     "DCC Chat Request", JOptionPane.YES_OPTION,
                     type, format, arguments);
-            return;
         }
     }
 
@@ -479,7 +478,6 @@ public final class DCCPlugin extends BaseCommandPlugin implements ActionListener
         if (send == null && !dontAsk) {
             if (!token.isEmpty() && !port.equals("0")) {
                 // This is a reverse DCC Send that we no longer care about.
-                return;
             } else {
                 ActionManager.getActionManager().triggerEvent(
                         DCCActions.DCC_SEND_REQUEST, null,
@@ -490,7 +488,6 @@ public final class DCCPlugin extends BaseCommandPlugin implements ActionListener
                         + filename + "\n\nDo you want to continue?",
                         "DCC Send Request", JOptionPane.YES_OPTION, type,
                         format, arguments);
-                return;
             }
         } else {
             final boolean newSend = send == null;
@@ -639,11 +636,10 @@ public final class DCCPlugin extends BaseCommandPlugin implements ActionListener
     /** {@inheritDoc} */
     @Override
     public void domainUpdated() {
-        final Identity defaults = IdentityManager.getIdentityManager()
-                .getGlobalAddonIdentity();
+        final Identity defaults = identityController.getGlobalAddonIdentity();
 
         defaults.setOption(getDomain(), "receive.savelocation",
-                identityManager.getConfigDir() + "downloads"
+                identityController.getConfigDir() + "downloads"
                 + System.getProperty("file.separator"));
     }
 

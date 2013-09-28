@@ -23,7 +23,7 @@
 package com.dmdirc.addons.osd;
 
 import com.dmdirc.addons.ui_swing.UIUtilities;
-import com.dmdirc.config.IdentityManager;
+import com.dmdirc.interfaces.IdentityController;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -31,28 +31,24 @@ import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.Callable;
 
+import lombok.RequiredArgsConstructor;
+
 /**
  * Class to manage OSD Windows.
  *
  * @since 0.6.3
  */
+@RequiredArgsConstructor
 public class OsdManager {
 
+    /** The controller to read/write settings with. */
+    private final IdentityController identityController;
     /** The Plugin that owns this OSD Manager. */
     private final OsdPlugin plugin;
     /** List of OSD Windows. */
-    private final List<OsdWindow> windowList = new ArrayList<OsdWindow>();
+    private final List<OsdWindow> windowList = new ArrayList<>();
     /** List of messages to be queued. */
-    private final Queue<QueuedMessage> windowQueue = new LinkedList<QueuedMessage>();
-
-    /**
-     * Create a new OSD Manager.
-     *
-     * @param plugin The plugin that owns this OSD Manager.
-     */
-    public OsdManager(final OsdPlugin plugin) {
-        this.plugin = plugin;
-    }
+    private final Queue<QueuedMessage> windowQueue = new LinkedList<>();
 
     /**
      * Add messages to the queue and call displayWindows.
@@ -68,7 +64,7 @@ public class OsdManager {
      * Displays as many windows as appropriate.
      */
     private synchronized void displayWindows() {
-        final Integer maxWindows = IdentityManager.getIdentityManager().getGlobalConfiguration()
+        final Integer maxWindows = identityController.getGlobalConfiguration()
                 .getOptionInt(plugin.getDomain(), "maxWindows", false);
 
         QueuedMessage nextItem;
@@ -91,12 +87,11 @@ public class OsdManager {
      * @param message Text to display in the OSD window.
      */
     private synchronized void displayWindow(final int timeout, final String message) {
-        final OsdPolicy policy = OsdPolicy.valueOf(IdentityManager
-                .getIdentityManager().getGlobalConfiguration()
+        final OsdPolicy policy = OsdPolicy.valueOf(identityController.getGlobalConfiguration()
                 .getOption(plugin.getDomain(), "newbehaviour")
                 .toUpperCase());
-        final int startY = IdentityManager.getIdentityManager()
-                .getGlobalConfiguration().getOptionInt(plugin.getDomain(), "locationY");
+        final int startY = identityController.getGlobalConfiguration()
+                .getOptionInt(plugin.getDomain(), "locationY");
 
         windowList.add(UIUtilities.invokeAndWait(
                 new Callable<OsdWindow>() {
@@ -104,8 +99,8 @@ public class OsdManager {
             /** {@inheritDoc} */
             @Override
             public OsdWindow call() {
-                return new OsdWindow(timeout, message, false,
-                        IdentityManager.getIdentityManager().getGlobalConfiguration().getOptionInt(
+                return new OsdWindow(identityController, timeout, message, false,
+                        identityController.getGlobalConfiguration().getOptionInt(
                         plugin.getDomain(), "locationX"), policy.getYPosition(
                         OsdManager.this, startY), plugin, OsdManager.this);
             }
@@ -119,8 +114,8 @@ public class OsdManager {
      * @param window The window that we are destroying.
      */
     public synchronized void closeWindow(final OsdWindow window) {
-        final OsdPolicy policy = OsdPolicy.valueOf(IdentityManager
-                .getIdentityManager().getGlobalConfiguration()
+        final OsdPolicy policy = OsdPolicy.valueOf(
+                identityController.getGlobalConfiguration()
                 .getOption(plugin.getDomain(), "newbehaviour")
                 .toUpperCase());
 
@@ -167,7 +162,7 @@ public class OsdManager {
      * @return a List of all currently open OSDWindows.
      */
     public List<OsdWindow> getWindowList() {
-        return new ArrayList<OsdWindow>(windowList);
+        return new ArrayList<>(windowList);
     }
 
     /**

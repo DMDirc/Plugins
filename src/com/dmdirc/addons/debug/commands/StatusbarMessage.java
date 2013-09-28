@@ -64,6 +64,6 @@ public class StatusbarMessage extends DebugCommand {
             final CommandArguments args, final CommandContext context) {
         StatusBarManager.getStatusBarManager().setMessage(new StatusMessage(
                 null, "Test: " + args.getArgumentsAsString(), null, 5,
-                getPlugin().getIdentityManager().getGlobalConfiguration()));
+                getPlugin().getIdentityController().getGlobalConfiguration()));
     }
 }

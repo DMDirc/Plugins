@@ -34,7 +34,7 @@ import com.dmdirc.addons.ui_swing.components.vetoable.VetoableComboBoxSelectionL
 import com.dmdirc.addons.ui_swing.dialogs.profiles.ProfileManagerDialog;
 import com.dmdirc.config.Identity;
 import com.dmdirc.config.IdentityListener;
-import com.dmdirc.config.IdentityManager;
+import com.dmdirc.interfaces.IdentityController;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.util.validators.PortValidator;
@@ -68,7 +68,7 @@ public final class NewServerDialog extends StandardDialog implements
     /** Serial version UID. */
     private static final long serialVersionUID = 8;
     /** Identity Manager. */
-    private final IdentityManager identityManager;
+    private final IdentityController identityController;
     /** Server manager. */
     private final ServerManager serverManager;
     /** checkbox. */
@@ -95,7 +95,7 @@ public final class NewServerDialog extends StandardDialog implements
      */
     public NewServerDialog(final SwingController controller) {
         super(controller, controller.getMainFrame(), ModalityType.MODELESS);
-        identityManager = controller.getIdentityManager();
+        identityController = controller.getIdentityManager();
         serverManager = controller.getServerManager();
 
         initComponents();
@@ -103,7 +103,7 @@ public final class NewServerDialog extends StandardDialog implements
         addListeners();
         setResizable(false);
 
-        identityManager.registerIdentityListener("profile", this);
+        identityController.registerIdentityListener("profile", this);
         update();
     }
 
@@ -332,7 +332,7 @@ public final class NewServerDialog extends StandardDialog implements
     /** {@inheritDoc} */
     @Override
     public void dispose() {
-        identityManager.unregisterIdentityListener(this);
+        identityController.unregisterIdentityListener(this);
         super.dispose();
     }
 

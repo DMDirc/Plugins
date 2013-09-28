@@ -24,13 +24,13 @@ package com.dmdirc.addons.nowplaying;
 
 import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.addons.ui_swing.UIUtilities;
-import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.interfaces.ActionController;
 import com.dmdirc.interfaces.ActionListener;
 import com.dmdirc.interfaces.CommandController;
+import com.dmdirc.interfaces.IdentityController;
 import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.plugins.Plugin;
 import com.dmdirc.plugins.PluginInfo;
@@ -48,15 +48,17 @@ import java.util.concurrent.Callable;
 public class NowPlayingPlugin extends BaseCommandPlugin implements ActionListener  {
 
     /** The sources that we know of. */
-    private final List<MediaSource> sources = new ArrayList<MediaSource>();
+    private final List<MediaSource> sources = new ArrayList<>();
     /** The managers that we know of. */
-    private final List<MediaSourceManager> managers = new ArrayList<MediaSourceManager>();
+    private final List<MediaSourceManager> managers = new ArrayList<>();
     /** The user's preferred order for source usage. */
     private List<String> order;
     /** This plugin's plugin info. */
     private final PluginInfo pluginInfo;
     /** The action controller to use. */
     private final ActionController actionController;
+    /** The identity controller to use. */
+    private final IdentityController identityController;
 
     /**
      * Creates a new instance of this plugin.
@@ -64,16 +66,19 @@ public class NowPlayingPlugin extends BaseCommandPlugin implements ActionListene
      * @param pluginInfo This plugin's plugin info
      * @param actionController The action controller to register listeners with
      * @param commandController Command controller to register commands
+     * @param identityController The identity controller to use.
      */
     public NowPlayingPlugin(final PluginInfo pluginInfo,
             final ActionController actionController,
-            final CommandController commandController) {
+            final CommandController commandController,
+            final IdentityController identityController) {
         super(commandController);
 
         this.pluginInfo = pluginInfo;
         this.actionController = actionController;
+        this.identityController = identityController;
 
-        registerCommand(new NowPlayingCommand(this), NowPlayingCommand.INFO);
+        registerCommand(new NowPlayingCommand(this, identityController), NowPlayingCommand.INFO);
     }
 
     /** {@inheritDoc} */
@@ -113,7 +118,7 @@ public class NowPlayingPlugin extends BaseCommandPlugin implements ActionListene
 
             @Override
             public ConfigPanel call() {
-                return new ConfigPanel(NowPlayingPlugin.this, order);
+                return new ConfigPanel(identityController, NowPlayingPlugin.this, order);
             }
         });
 
@@ -130,18 +135,15 @@ public class NowPlayingPlugin extends BaseCommandPlugin implements ActionListene
      */
     protected void saveSettings(final List<String> newOrder) {
         order = newOrder;
-        IdentityManager.getIdentityManager().getGlobalConfigIdentity()
-                .setOption(getDomain(), "sourceOrder", order);
+        identityController.getGlobalConfigIdentity().setOption(getDomain(), "sourceOrder", order);
     }
 
     /** Loads the plugins settings. */
     private void loadSettings() {
-        if (IdentityManager.getIdentityManager().getGlobalConfiguration()
-                .hasOptionString(getDomain(), "sourceOrder")) {
-            order = IdentityManager.getIdentityManager().getGlobalConfiguration()
-                    .getOptionList(getDomain(), "sourceOrder");
+        if (identityController.getGlobalConfiguration().hasOptionString(getDomain(), "sourceOrder")) {
+            order = identityController.getGlobalConfiguration().getOptionList(getDomain(), "sourceOrder");
         } else {
-            order = new ArrayList<String>();
+            order = new ArrayList<>();
         }
     }
 
@@ -318,7 +320,7 @@ public class NowPlayingPlugin extends BaseCommandPlugin implements ActionListene
      * @return All known media sources
      */
     public List<MediaSource> getSources() {
-        final List<MediaSource> res = new ArrayList<MediaSource>(sources);
+        final List<MediaSource> res = new ArrayList<>(sources);
 
         for (MediaSourceManager manager : managers) {
             res.addAll(manager.getSources());

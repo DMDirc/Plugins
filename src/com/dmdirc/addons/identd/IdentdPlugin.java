@@ -26,7 +26,6 @@ import com.dmdirc.Server;
 import com.dmdirc.ServerManager;
 import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.config.ConfigManager;
-import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
@@ -34,6 +33,7 @@ import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.interfaces.ActionController;
 import com.dmdirc.interfaces.ActionListener;
+import com.dmdirc.interfaces.IdentityController;
 import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.plugins.implementations.BasePlugin;
 import com.dmdirc.plugins.PluginInfo;
@@ -50,7 +50,7 @@ import lombok.Getter;
 public class IdentdPlugin extends BasePlugin implements ActionListener {
 
     /** Array list to store all the servers in that need ident replies. */
-    private final List<Server> servers = new ArrayList<Server>();
+    private final List<Server> servers = new ArrayList<>();
     /** The IdentdServer that we use. */
     private IdentdServer myServer;
     /** This plugin's plugin info. */
@@ -68,19 +68,19 @@ public class IdentdPlugin extends BasePlugin implements ActionListener {
      *
      * @param pluginInfo This plugin's plugin info
      * @param actionController The action controller to register listeners with
-     * @param identityManager Identity manager to get settings from
+     * @param identityController Identity manager to get settings from
      * @param serverManager Server manager to retrieve servers from
      */
     public IdentdPlugin(final PluginInfo pluginInfo,
             final ActionController actionController,
-            final IdentityManager identityManager,
+            final IdentityController identityController,
             final ServerManager serverManager) {
         super();
 
         this.pluginInfo = pluginInfo;
         this.actionController = actionController;
         this.serverManager = serverManager;
-        config = identityManager.getGlobalConfiguration();
+        config = identityController.getGlobalConfiguration();
     }
 
     /**

@@ -26,33 +26,29 @@ import com.dmdirc.ServerManager;
 import com.dmdirc.addons.serverlists.ServerEntry;
 import com.dmdirc.addons.serverlists.ServerGroup;
 import com.dmdirc.config.Identity;
+import com.dmdirc.interfaces.IdentityController;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+
+import lombok.RequiredArgsConstructor;
 
 /**
  * Facilitates loading of a {@link ServerEntry} from a DMDirc {@link Identity}.
  *
  * @since 0.6.4
  */
+@RequiredArgsConstructor
 public class ServerEntryReader {
-
-    /** The identity to read entries from. */
-    private final Identity identity;
 
     /** ServerManager that ServerEntrys use to create servers */
     private final ServerManager serverManager;
 
-    /**
-     * Creates a new Server Entry Reader which will read from the specified
-     * identity.
-     *
-     * @param identity The identity which defines our server entries
-     */
-    public ServerEntryReader(final ServerManager serverManager, final Identity identity) {
-        this.identity = identity;
-        this.serverManager = serverManager;
-    }
+    /** The controller to read/write settings with. */
+    private final IdentityController identityController;
+
+    /** The identity to read entries from. */
+    private final Identity identity;
 
     /**
      * Attempts to read the details of the specified server from this reader's
@@ -75,7 +71,7 @@ public class ServerEntryReader {
         final String serverName = identity.getOption(name, "name");
         final URI serverURI = new URI(identity.getOption(name, "address"));
 
-        return new ServerEntry(serverManager, group, serverName, serverURI, null);
+        return new ServerEntry(identityController, serverManager, group, serverName, serverURI, null);
     }
 
 }

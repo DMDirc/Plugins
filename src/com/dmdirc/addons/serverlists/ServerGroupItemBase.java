@@ -23,15 +23,20 @@
 package com.dmdirc.addons.serverlists;
 
 import com.dmdirc.config.Identity;
-import com.dmdirc.config.IdentityManager;
+import com.dmdirc.interfaces.IdentityController;
+
+import lombok.RequiredArgsConstructor;
 
 /**
  * Abstract base class for {@link ServerGroupItem}s.
  *
- * @author chris
  * @since 0.6.4
  */
+@RequiredArgsConstructor
 public abstract class ServerGroupItemBase implements ServerGroupItem {
+
+    /** The controller to read/write settings with. */
+    private final IdentityController identityController;
 
     /** Whether or not this item has been modified. */
     private boolean modified;
@@ -105,7 +110,7 @@ public abstract class ServerGroupItemBase implements ServerGroupItem {
      */
     protected Identity getProfileIdentity() {
         if (profile != null) {
-            for (Identity identity : IdentityManager.getIdentityManager().getIdentitiesByType("profile")) {
+            for (Identity identity : identityController.getIdentitiesByType("profile")) {
                 if (profile.equals(identity.getName())) {
                     return identity;
                 }
@@ -113,7 +118,7 @@ public abstract class ServerGroupItemBase implements ServerGroupItem {
         }
 
         if (getParent() == null) {
-            return IdentityManager.getIdentityManager().getIdentitiesByType("profile").get(0);
+            return identityController.getIdentitiesByType("profile").get(0);
         } else {
             return getParent().getProfileIdentity();
         }

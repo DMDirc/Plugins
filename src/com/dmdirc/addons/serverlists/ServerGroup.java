@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.serverlists;
 
+import com.dmdirc.interfaces.IdentityController;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -34,7 +35,6 @@ import java.util.Map;
  * server groups.
  *
  * @since 0.6.4
- * @author chris
  */
 public class ServerGroup extends ServerGroupItemBase {
 
@@ -48,27 +48,34 @@ public class ServerGroup extends ServerGroupItemBase {
     private final ServerGroup parent;
 
     /** A set of links relevant to this group (e.g. homepages). */
-    private final Map<String, URI> links = new HashMap<String, URI>();
+    private final Map<String, URI> links = new HashMap<>();
 
     /** The items contained within the group. */
-    private final List<ServerGroupItem> entries = new ArrayList<ServerGroupItem>();
+    private final List<ServerGroupItem> entries = new ArrayList<>();
 
     /**
      * Creates a new server group with the specified name and no parent.
      *
+     * @param identityController The controller to read/write settings with.
      * @param name The name to be used for this group
      */
-    public ServerGroup(final String name) {
-        this(null, name);
+    public ServerGroup(final IdentityController identityController, final String name) {
+        this(identityController, null, name);
     }
 
     /**
      * Creates a new server group with the specified name.
      *
+     * @param identityController The controller to read/write settings with.
      * @param parent The parent of this group, or <code>null</code> for roots.
      * @param name The name to be used for this group
      */
-    public ServerGroup(final ServerGroup parent, final String name) {
+    public ServerGroup(
+            final IdentityController identityController,
+            final ServerGroup parent,
+            final String name) {
+        super(identityController);
+
         this.parent = parent;
         setName(name);
     }

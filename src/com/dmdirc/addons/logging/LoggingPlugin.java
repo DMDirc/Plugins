@@ -31,7 +31,6 @@ import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.config.ConfigManager;
 import com.dmdirc.config.Identity;
-import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
@@ -41,6 +40,7 @@ import com.dmdirc.interfaces.ActionController;
 import com.dmdirc.interfaces.ActionListener;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.ConfigChangeListener;
+import com.dmdirc.interfaces.IdentityController;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.parser.interfaces.ChannelClientInfo;
@@ -55,7 +55,6 @@ import com.dmdirc.util.io.StreamUtils;
 import java.awt.Color;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.math.BigInteger;
@@ -95,7 +94,7 @@ public class LoggingPlugin extends BaseCommandPlugin implements ActionListener,
     /** Addon identity. */
     private final Identity identity;
     /** Parent Identity Manager. */
-    private final IdentityManager identityManager;
+    private final IdentityController identityController;
 
     /** Timer used to close idle files. */
     protected Timer idleFileTimer;
@@ -112,20 +111,20 @@ public class LoggingPlugin extends BaseCommandPlugin implements ActionListener,
      *
      * @param pluginInfo This plugin's plugin info
      * @param actionController The action controller to register listeners with
-     * @param identityManager The Identity Manager that controls the current config
+     * @param identityController The Identity Manager that controls the current config
      * @param commandController Command controller to register commands
      */
     public LoggingPlugin(final PluginInfo pluginInfo,
             final ActionController actionController,
-            final IdentityManager identityManager,
+            final IdentityController identityController,
             final CommandController commandController) {
         super(commandController);
-        this.identityManager = identityManager;
+        this.identityController = identityController;
 
         this.pluginInfo = pluginInfo;
         this.actionController = actionController;
-        config = identityManager.getGlobalConfiguration();
-        identity = identityManager.getGlobalAddonIdentity();
+        config = identityController.getGlobalConfiguration();
+        identity = identityController.getGlobalAddonIdentity();
 
         registerCommand(new LoggingCommand(this), LoggingCommand.INFO);
     }
@@ -134,7 +133,7 @@ public class LoggingPlugin extends BaseCommandPlugin implements ActionListener,
     @Override
     public void domainUpdated() {
         identity.setOption(getDomain(), "general.directory",
-                identityManager.getConfigDir() + "logs" + System.getProperty("file.separator"));
+                identityController.getConfigDir() + "logs" + System.getProperty("file.separator"));
     }
 
     /**
@@ -201,7 +200,7 @@ public class LoggingPlugin extends BaseCommandPlugin implements ActionListener,
         final long oldestTime = System.currentTimeMillis() - 3480000;
 
         synchronized (openFiles) {
-            final Collection<String> old = new ArrayList<String>(openFiles.size());
+            final Collection<String> old = new ArrayList<>(openFiles.size());
             for (Map.Entry<String, OpenFile> entry : openFiles.entrySet()) {
                 if (entry.getValue().lastUsedTime < oldestTime) {
                     StreamUtils.close(entry.getValue().writer);
@@ -543,11 +542,7 @@ public class LoggingPlugin extends BaseCommandPlugin implements ActionListener,
                 }
                 file.close();
                 frame.addLine(getColouredString(colour, "--- End of backbuffer\n"), backbufferTimestamp);
-            } catch (FileNotFoundException e) {
-                Logger.userError(ErrorLevel.LOW, "Unable to show backbuffer (Filename: " + filename + "): " + e.getMessage());
-            } catch (IOException e) {
-                Logger.userError(ErrorLevel.LOW, "Unable to show backbuffer (Filename: " + filename + "): " + e.getMessage());
-            } catch (SecurityException e) {
+            } catch (IOException | SecurityException e) {
                 Logger.userError(ErrorLevel.LOW, "Unable to show backbuffer (Filename: " + filename + "): " + e.getMessage());
             }
         }
@@ -631,8 +626,8 @@ public class LoggingPlugin extends BaseCommandPlugin implements ActionListener,
         } else {
             finalLine.append(line);
         }
-        //System.out.println("[Adding] "+filename+" => "+finalLine);
-        BufferedWriter out = null;
+
+        BufferedWriter out;
         try {
             if (openFiles.containsKey(filename)) {
                 final OpenFile of = openFiles.get(filename);
@@ -866,11 +861,7 @@ public class LoggingPlugin extends BaseCommandPlugin implements ActionListener,
 
         try {
             reader = new ReverseFileReader(log);
-        } catch (FileNotFoundException ex) {
-            return false;
-        } catch (IOException ex) {
-            return false;
-        } catch (SecurityException ex) {
+        } catch (IOException | SecurityException ex) {
             return false;
         }
 

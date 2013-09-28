@@ -30,7 +30,7 @@ import com.dmdirc.commandparser.CommandType;
 import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.IntelligentCommand;
 import com.dmdirc.commandparser.commands.context.CommandContext;
-import com.dmdirc.config.IdentityManager;
+import com.dmdirc.interfaces.IdentityController;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 
 import java.io.File;
@@ -42,9 +42,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import lombok.RequiredArgsConstructor;
+
 /**
  * The Script Command allows controlling of the script plugin.
  */
+@RequiredArgsConstructor
 public final class ScriptCommand extends Command implements IntelligentCommand {
 
     /** A command info object for this command. */
@@ -52,17 +55,9 @@ public final class ScriptCommand extends Command implements IntelligentCommand {
             "script - Allows controlling the script plugin",
             CommandType.TYPE_GLOBAL);
     /** My Plugin. */
-    final ScriptPlugin myPlugin;
-
-    /**
-     * Creates a new instance of ScriptCommand.
-     *
-     * @param plugin Parent plugin
-     */
-    public ScriptCommand(final ScriptPlugin plugin) {
-        super();
-        myPlugin = plugin;
-    }
+    private final ScriptPlugin myPlugin;
+    /** The controller to read/write settings with. */
+    private final IdentityController identityController;
 
     /** {@inheritDoc} */
     @Override
@@ -93,8 +88,8 @@ public final class ScriptCommand extends Command implements IntelligentCommand {
                 sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Evaluating: "+script);
                 try {
                     ScriptEngineWrapper wrapper;
-                    if (IdentityManager.getIdentityManager().getGlobalConfiguration().hasOptionString(myPlugin.getDomain(), "eval.baseFile")) {
-                        final String baseFile = myPlugin.getScriptDir()+'/'+IdentityManager.getIdentityManager().getGlobalConfiguration().getOption(myPlugin.getDomain(), "eval.baseFile");
+                    if (identityController.getGlobalConfiguration().hasOptionString(myPlugin.getDomain(), "eval.baseFile")) {
+                        final String baseFile = myPlugin.getScriptDir()+'/'+identityController.getGlobalConfiguration().getOption(myPlugin.getDomain(), "eval.baseFile");
                         if (new File(baseFile).exists()) {
                             wrapper = new ScriptEngineWrapper(myPlugin, baseFile);
                         } else {
@@ -110,7 +105,7 @@ public final class ScriptCommand extends Command implements IntelligentCommand {
                 } catch (Exception e) {
                     sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Exception: "+e+" -> "+e.getMessage());
 
-                    if (IdentityManager.getIdentityManager().getGlobalConfiguration().getOptionBool(myPlugin.getDomain(), "eval.showStackTrace")) {
+                    if (identityController.getGlobalConfiguration().getOptionBool(myPlugin.getDomain(), "eval.showStackTrace")) {
                         try {
                             final Class<?> logger = Class.forName("com.dmdirc.logger.Logger");
                             if (logger != null) {
@@ -137,9 +132,9 @@ public final class ScriptCommand extends Command implements IntelligentCommand {
                 final String functionName = bits[0];
                 final String script = args.getArgumentsAsString(2);
                 sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Saving as '"+functionName+"': "+script);
-                if (IdentityManager.getIdentityManager().getGlobalConfiguration().hasOptionString(myPlugin.getDomain(), "eval.baseFile")) {
+                if (identityController.getGlobalConfiguration().hasOptionString(myPlugin.getDomain(), "eval.baseFile")) {
                     try {
-                        final String baseFile = myPlugin.getScriptDir()+'/'+IdentityManager.getIdentityManager().getGlobalConfiguration().getOption(myPlugin.getDomain(), "eval.baseFile");
+                        final String baseFile = myPlugin.getScriptDir()+'/'+identityController.getGlobalConfiguration().getOption(myPlugin.getDomain(), "eval.baseFile");
                         final FileWriter writer = new FileWriter(baseFile, true);
                         writer.write("function ");
                         writer.write(functionName);
@@ -219,9 +214,9 @@ public final class ScriptCommand extends Command implements IntelligentCommand {
      * @return A list of all installed scripts
      */
     private List<String> getPossibleScripts() {
-        final List<String> res = new LinkedList<String>();
+        final List<String> res = new LinkedList<>();
 
-        final LinkedList<File> dirs = new LinkedList<File>();
+        final LinkedList<File> dirs = new LinkedList<>();
         dirs.add(new File(myPlugin.getScriptDir()));
 
         while (!dirs.isEmpty()) {

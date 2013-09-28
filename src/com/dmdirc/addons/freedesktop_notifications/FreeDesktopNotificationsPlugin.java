@@ -24,7 +24,6 @@ package com.dmdirc.addons.freedesktop_notifications;
 
 import com.dmdirc.config.ConfigManager;
 import com.dmdirc.config.Identity;
-import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
@@ -32,6 +31,7 @@ import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.ConfigChangeListener;
+import com.dmdirc.interfaces.IdentityController;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.plugins.PluginInfo;
@@ -74,17 +74,17 @@ public final class FreeDesktopNotificationsPlugin
      * Creates a new instance of this plugin.
      *
      * @param pluginInfo This plugin's plugin info
-     * @param identityManager Identity Manager instance
+     * @param identityController Identity Manager instance
      * @param commandController Command controller to register commands
      */
     public FreeDesktopNotificationsPlugin(final PluginInfo pluginInfo,
-            final IdentityManager identityManager,
+            final IdentityController identityController,
             final CommandController commandController) {
         super(commandController);
         this.pluginInfo = pluginInfo;
         this.filesHelper = new PluginFilesHelper(pluginInfo);
-        config = identityManager.getGlobalConfiguration();
-        identity = identityManager.getGlobalAddonIdentity();
+        config = identityController.getGlobalConfiguration();
+        identity = identityController.getGlobalAddonIdentity();
         registerCommand(new FDNotifyCommand(this), FDNotifyCommand.INFO);
     }
 
@@ -100,7 +100,7 @@ public final class FreeDesktopNotificationsPlugin
             return false;
         }
 
-        final ArrayList<String> args = new ArrayList<String>();
+        final ArrayList<String> args = new ArrayList<>();
 
         args.add("/usr/bin/env");
         args.add("python");
@@ -130,8 +130,7 @@ public final class FreeDesktopNotificationsPlugin
             } catch (InterruptedException e) {
             }
             return true;
-        } catch (SecurityException e) {
-        } catch (IOException e) {
+        } catch (SecurityException | IOException e) {
         }
 
         return false;

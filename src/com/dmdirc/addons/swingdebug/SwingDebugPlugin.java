@@ -24,6 +24,7 @@ package com.dmdirc.addons.swingdebug;
 import com.dmdirc.addons.ui_swing.DMDircEventQueue;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.CheckBoxMenuItem;
+import com.dmdirc.interfaces.IdentityController;
 import com.dmdirc.plugins.implementations.BasePlugin;
 
 import java.awt.Toolkit;
@@ -33,14 +34,19 @@ import java.awt.event.ActionListener;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 
+import lombok.RequiredArgsConstructor;
+
 /**
  * Swing debug plugin. Provides long running EDT task violation detection and a
  * console for System.out and System.err.
  */
+@RequiredArgsConstructor
 public class SwingDebugPlugin extends BasePlugin implements ActionListener {
 
     /** Swing controller. */
     private final SwingController controller;
+    /** The controller to read/write settings with. */
+    private final IdentityController identityController;
     /** Debug menu. */
     private JMenu debugMenu;
     /** Debug EDT menu item. */
@@ -53,15 +59,6 @@ public class SwingDebugPlugin extends BasePlugin implements ActionListener {
     private SystemStreamContainer sysoutFrame;
     /** System error window. */
     private SystemStreamContainer syserrFrame;
-
-    /**
-     * Creates a new SwingDebugPlugin.
-     *
-     * @param controller The controller to add debug entries to
-     */
-    public SwingDebugPlugin(final SwingController controller) {
-        this.controller = controller;
-    }
 
     /** {@inheritDoc} */
     @Override
@@ -95,7 +92,7 @@ public class SwingDebugPlugin extends BasePlugin implements ActionListener {
         if (e.getSource() == debugEDT) {
             if (debugEDT.getState()) {
                 Toolkit.getDefaultToolkit().getSystemEventQueue().
-                        push(new TracingEventQueue(this, controller));
+                        push(new TracingEventQueue(this, identityController, controller));
             } else {
                 Toolkit.getDefaultToolkit().getSystemEventQueue().
                         push(new DMDircEventQueue(controller));

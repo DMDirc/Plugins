@@ -23,10 +23,10 @@
 package com.dmdirc.addons.scriptplugin;
 
 import com.dmdirc.actions.CoreActionType;
-import com.dmdirc.config.IdentityManager;
 import com.dmdirc.interfaces.ActionController;
 import com.dmdirc.interfaces.ActionListener;
 import com.dmdirc.interfaces.CommandController;
+import com.dmdirc.interfaces.IdentityController;
 import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
@@ -56,7 +56,7 @@ public final class ScriptPlugin extends BaseCommandPlugin implements ActionListe
     /** Instance of the javaScriptHelper class */
     private JavaScriptHelper jsHelper = new JavaScriptHelper();
     /** Store Script State Name,Engine */
-    private Map<String, ScriptEngineWrapper> scripts = new HashMap<String, ScriptEngineWrapper>();
+    private Map<String, ScriptEngineWrapper> scripts = new HashMap<>();
     /** Used to store permanent variables */
     protected TypedProperties globalVariables = new TypedProperties();
     /** The action controller to use. */
@@ -66,20 +66,20 @@ public final class ScriptPlugin extends BaseCommandPlugin implements ActionListe
      * Creates a new instance of the Script Plugin.
      *
      * @param actionController The action controller to register listeners with
-     * @param identityManager The Identity Manager that controls the current config
+     * @param identityController The Identity Manager that controls the current config
      * @param commandController Command controller to register commands
      */
     public ScriptPlugin(final ActionController actionController,
-            final IdentityManager identityManager,
+            final IdentityController identityController,
             final CommandController commandController) {
         super(commandController);
-        scriptDir = identityManager.getConfigDir() + "scripts/";
+        scriptDir = identityController.getConfigDir() + "scripts/";
         this.actionController = actionController;
 
         // Add the JS Helper to the scriptFactory
         getScriptFactory().put("globalHelper", getJavaScriptHelper());
         getScriptFactory().put("globalVariables", getGlobalVariables());
-        registerCommand(new ScriptCommand(this), ScriptCommand.INFO);
+        registerCommand(new ScriptCommand(this, identityController), ScriptCommand.INFO);
     }
 
     /** {@inheritDoc} */
@@ -156,7 +156,7 @@ public final class ScriptPlugin extends BaseCommandPlugin implements ActionListe
      *
      * @return a clone of the scripts map
      */
-    protected Map<String, ScriptEngineWrapper> getScripts() { return new HashMap<String, ScriptEngineWrapper>(scripts); }
+    protected Map<String, ScriptEngineWrapper> getScripts() { return new HashMap<>(scripts); }
 
     /**
      * Get a reference to the scriptFactory.
