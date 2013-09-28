@@ -30,7 +30,6 @@ import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.interfaces.FrameInfoListener;
 import com.dmdirc.interfaces.NotificationListener;
 import com.dmdirc.ui.Colour;
-import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.messages.Styliser;
 
 import java.awt.Color;
@@ -65,7 +64,7 @@ public class NodeLabel extends JPanel implements SelectionListener,
     /** Are we the selected window? */
     private boolean selected;
     /** Node icon. */
-    private final ImageButton<?> icon = new ImageButton<Object>("", null);
+    private final ImageButton<?> icon = new ImageButton<>("", null);
     /** Text label. */
     private final JTextPane text = new JTextPane(new DefaultStyledDocument());
     /** Current styled text. */
@@ -89,8 +88,6 @@ public class NodeLabel extends JPanel implements SelectionListener,
      */
     private void init() {
         if (window == null) {
-            icon.setIcon(new IconManager(window.getConfigManager())
-                    .getIcon("icon"));
             return;
         }
 

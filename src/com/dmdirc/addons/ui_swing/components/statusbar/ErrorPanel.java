@@ -28,7 +28,6 @@ import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.ErrorListener;
 import com.dmdirc.logger.ErrorManager;
 import com.dmdirc.logger.ProgramError;
-import com.dmdirc.ui.IconManager;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -86,8 +85,7 @@ public class ErrorPanel extends StatusbarPopupPanel<JLabel> implements
         this.controller = controller;
         this.mainFrame = mainFrame;
         this.statusBar = statusBar;
-        DEFAULT_ICON = new IconManager(controller.getGlobalConfig())
-                .getIcon("normal");
+        DEFAULT_ICON = controller.getIconManager().getIcon("normal");
 
         menu = new JPopupMenu();
         dismiss = new JMenuItem("Clear All");
@@ -149,9 +147,8 @@ public class ErrorPanel extends StatusbarPopupPanel<JLabel> implements
                         if (errorLevel == null ||
                                 !error.getLevel().moreImportant(errorLevel)) {
                             errorLevel = error.getLevel();
-                            label.setIcon(new IconManager(controller
-                                    .getGlobalConfig()).getIcon(errorLevel
-                                    .getIcon()));
+                            label.setIcon(controller.getIconManager()
+                                    .getIcon(errorLevel.getIcon()));
                         }
                     }
                     setVisible(true);
