@@ -31,8 +31,8 @@ import com.dmdirc.addons.ui_swing.components.expandingsettings.SettingsPanel;
 import com.dmdirc.addons.ui_swing.components.modes.UserModesPane;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
-import com.dmdirc.config.Identity;
 import com.dmdirc.config.prefs.PreferencesManager;
+import com.dmdirc.interfaces.config.ConfigProvider;
 
 import java.awt.Window;
 import java.awt.event.ActionEvent;
@@ -188,7 +188,7 @@ public final class ServerSettingsDialog extends StandardDialog implements Action
         performPanel.savePerforms();
         ignoreList.saveList();
 
-        final Identity identity = server.getNetworkIdentity();
+        final ConfigProvider identity = server.getNetworkIdentity();
         identity.setOption("dialogstate", "serversettingsdialog",
                 String.valueOf(tabbedPane.getSelectedIndex()));
 
