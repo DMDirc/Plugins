@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.osd;
 
-import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.prefs.CategoryChangeListener;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
@@ -32,6 +31,7 @@ import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.config.prefs.SettingChangeListener;
 import com.dmdirc.interfaces.CommandController;
+import com.dmdirc.interfaces.IdentityController;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.implementations.BaseCommandPlugin;
 import com.dmdirc.util.validators.NumericalValidator;
@@ -59,6 +59,8 @@ public final class OsdPlugin extends BaseCommandPlugin implements
             foregroundSetting, widthSetting, timeoutSetting, maxWindowsSetting;
     /** This plugin's plugin info. */
     private final PluginInfo pluginInfo;
+    /** The controller to read/write settings with. */
+    private final IdentityController identityController;
 
     /**
      * Creates a new instance of this plugin.
@@ -66,11 +68,14 @@ public final class OsdPlugin extends BaseCommandPlugin implements
      * @param pluginInfo This plugin's plugin info
      * @param commandController Command controller to register commands
      */
-    public OsdPlugin(final PluginInfo pluginInfo,
+    public OsdPlugin(
+            final PluginInfo pluginInfo,
+            final IdentityController identityController,
             final CommandController commandController) {
         super(commandController);
         this.pluginInfo = pluginInfo;
-        osdManager = new OsdManager(this);
+        this.identityController = identityController;
+        osdManager = new OsdManager(identityController, this);
         registerCommand(new OsdCommand(osdManager), OsdCommand.INFO);
     }
 
@@ -86,9 +91,9 @@ public final class OsdPlugin extends BaseCommandPlugin implements
     /** {@inheritDoc} */
     @Override
     public void showConfig(final PreferencesDialogModel manager) {
-        x = IdentityManager.getIdentityManager().getGlobalConfiguration()
+        x = identityController.getGlobalConfiguration()
                 .getOptionInt(getDomain(), "locationX");
-        y = IdentityManager.getIdentityManager().getGlobalConfiguration()
+        y = identityController.getGlobalConfiguration()
                 .getOptionInt(getDomain(), "locationY");
 
         final PreferencesCategory category = new PluginPreferencesCategory(
@@ -129,7 +134,7 @@ public final class OsdPlugin extends BaseCommandPlugin implements
         category.addSetting(timeoutSetting);
         category.addSetting(maxWindowsSetting);
 
-        final Map<String, String> posOptions = new HashMap<String, String>();
+        final Map<String, String> posOptions = new HashMap<>();
 
         //Populate policy MULTICHOICE
         for (OsdPolicy policy : OsdPolicy.values()) {
@@ -149,7 +154,7 @@ public final class OsdPlugin extends BaseCommandPlugin implements
     /** {@inheritDoc} */
     @Override
     public void categorySelected(final PreferencesCategory category) {
-        osdWindow = new OsdWindow(-1, "Please drag this OSD to position", true, x, y, this, osdManager);
+        osdWindow = new OsdWindow(identityController, -1, "Please drag this OSD to position", true, x, y, this, osdManager);
         osdWindow.setBackgroundColour(backgroundSetting.getValue());
         osdWindow.setForegroundColour(foregroundSetting.getValue());
         osdWindow.setFontSize(Integer.parseInt(fontSizeSetting.getValue()));
@@ -168,9 +173,9 @@ public final class OsdPlugin extends BaseCommandPlugin implements
     /** {@inheritDoc} */
     @Override
     public void save() {
-        IdentityManager.getIdentityManager().getGlobalConfigIdentity()
+        identityController.getGlobalConfigIdentity()
                 .setOption(getDomain(), "locationX", x);
-        IdentityManager.getIdentityManager().getGlobalConfigIdentity()
+        identityController.getGlobalConfigIdentity()
                 .setOption(getDomain(), "locationY", y);
     }
 

@@ -26,7 +26,6 @@ import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SwingController;
-import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
@@ -34,6 +33,7 @@ import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.interfaces.ActionController;
 import com.dmdirc.interfaces.CommandController;
+import com.dmdirc.interfaces.IdentityController;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.implementations.BaseCommandPlugin;
 import com.dmdirc.ui.IconManager;
@@ -66,20 +66,26 @@ public final class SystrayPlugin extends BaseCommandPlugin implements
     private final PluginInfo pluginInfo;
     /** The action controller to use. */
     private final ActionController actionController;
+    /** The controller to read/write settings with. */
+    private final IdentityController identityController;
 
     /**
      * Creates a new system tray plugin.
      *
      * @param pluginInfo This plugin's plugin info
      * @param actionController The action controller to use
+     * @param identityController The controller to read/write settings with.
      * @param commandController Command controller to register commands
      */
-    public SystrayPlugin(final PluginInfo pluginInfo,
+    public SystrayPlugin(
+            final PluginInfo pluginInfo,
             final ActionController actionController,
+            final IdentityController identityController,
             final CommandController commandController) {
         super(commandController);
 
         this.pluginInfo = pluginInfo;
+        this.identityController = identityController;
         this.actionController = actionController;
 
         final MenuItem show = new MenuItem("Show/hide");
@@ -92,7 +98,7 @@ public final class SystrayPlugin extends BaseCommandPlugin implements
         show.addActionListener(this);
         quit.addActionListener(this);
 
-        icon = new TrayIcon(new IconManager(IdentityManager.getIdentityManager().getGlobalConfiguration())
+        icon = new TrayIcon(new IconManager(identityController.getGlobalConfiguration())
                 .getImage("logo"), "DMDirc", menu);
         icon.setImageAutoSize(true);
         icon.addMouseListener(this);
@@ -261,8 +267,8 @@ public final class SystrayPlugin extends BaseCommandPlugin implements
     public void processEvent(final ActionType type, final StringBuffer format,
             final Object... arguments) {
         if (type == CoreActionType.CLIENT_MINIMISED
-                && IdentityManager.getIdentityManager()
-                .getGlobalConfiguration().getOptionBool(getDomain(), "autominimise")) {
+                && identityController.getGlobalConfiguration()
+                .getOptionBool(getDomain(), "autominimise")) {
             mainFrame.setVisible(false);
         }
     }

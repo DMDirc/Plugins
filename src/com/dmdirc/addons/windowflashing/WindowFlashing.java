@@ -28,7 +28,6 @@ import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.config.ConfigBinder;
 import com.dmdirc.config.ConfigBinding;
-import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
@@ -36,6 +35,7 @@ import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.interfaces.ActionListener;
 import com.dmdirc.interfaces.CommandController;
+import com.dmdirc.interfaces.IdentityController;
 import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.implementations.BaseCommandPlugin;
@@ -84,13 +84,13 @@ public class WindowFlashing extends BaseCommandPlugin implements ActionListener 
      * Creates a new instance of this plugin.
      *
      * @param pluginInfo This plugin's plugin info
-     * @param identityManager Identity Manager
+     * @param identityController Identity Manager
      * @param controller Parent swing controller
      * @param actionManager Action manager
      * @param commandController command controller to register commands
      */
     public WindowFlashing(final PluginInfo pluginInfo,
-            final IdentityManager identityManager,
+            final IdentityController identityController,
             final SwingController controller,
             final ActionManager actionManager,
             final CommandController commandController) {
@@ -98,7 +98,7 @@ public class WindowFlashing extends BaseCommandPlugin implements ActionListener 
         this.pluginInfo = pluginInfo;
         this.controller = controller;
         this.actionManager = actionManager;
-        binder = identityManager.getGlobalConfiguration().getBinder();
+        binder = identityController.getGlobalConfiguration().getBinder();
         registerCommand(new FlashWindow(this), FlashWindow.INFO);
     }
 

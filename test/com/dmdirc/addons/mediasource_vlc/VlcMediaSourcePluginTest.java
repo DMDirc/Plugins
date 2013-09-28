@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.mediasource_vlc;
 
+import com.dmdirc.interfaces.IdentityController;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.util.io.TextFile;
 import java.io.IOException;
@@ -34,7 +35,8 @@ public class VlcMediaSourcePluginTest {
     @Test
     public void testProcessInformation1() throws IOException {
         final PluginInfo pluginInfo = mock(PluginInfo.class);
-        final VlcMediaSourcePlugin plugin = new VlcMediaSourcePlugin(pluginInfo);
+        final IdentityController identityController = mock(IdentityController.class);
+        final VlcMediaSourcePlugin plugin = new VlcMediaSourcePlugin(pluginInfo, identityController);
         final TextFile index = new TextFile(getClass().getResourceAsStream("index-1.html"));
         final TextFile info = new TextFile(getClass().getResourceAsStream("info-1.html"));
 

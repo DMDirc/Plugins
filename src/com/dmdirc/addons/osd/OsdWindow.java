@@ -24,7 +24,7 @@ package com.dmdirc.addons.osd;
 
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
-import com.dmdirc.config.IdentityManager;
+import com.dmdirc.interfaces.IdentityController;
 import com.dmdirc.ui.messages.ColourManager;
 
 import java.awt.Color;
@@ -83,6 +83,7 @@ public class OsdWindow extends JDialog implements MouseListener,
     /**
      * Creates a new instance of OsdWindow.
      *
+     * @param identityController The controller to read/write settings with.
      * @param timeout Timeout period for the window. Set to -1 to use value from
      *        config
      * @param text The text to be displayed in the OSD window
@@ -93,7 +94,9 @@ public class OsdWindow extends JDialog implements MouseListener,
      * @param plugin Parent OSD Plugin
      * @param osdManager The manager that owns this OSD Window
      */
-    public OsdWindow(final int timeout, final String text, final boolean config, final int x,
+    public OsdWindow(
+            final IdentityController identityController,
+            final int timeout, final String text, final boolean config, final int x,
             final int y, final OsdPlugin plugin, final OsdManager osdManager) {
         super(((SwingController) plugin.getPluginInfo().getMetaData().getManager()
                 .getPluginInfoByName("ui_swing").getPlugin()).getMainFrame(), false);
@@ -102,8 +105,7 @@ public class OsdWindow extends JDialog implements MouseListener,
         this.osdManager = osdManager;
 
         if (timeout < 0) {
-            this.timeout = IdentityManager.getIdentityManager()
-                    .getGlobalConfiguration().getOptionInt(
+            this.timeout = identityController.getGlobalConfiguration().getOptionInt(
                     osdManager.getPlugin().getDomain(), "timeout", false);
         } else {
             this.timeout = timeout;
@@ -124,20 +126,20 @@ public class OsdWindow extends JDialog implements MouseListener,
         panel = new JPanel();
         panel.setBorder(new LineBorder(Color.BLACK));
         panel.setBackground(UIUtilities.convertColour(
-                IdentityManager.getIdentityManager().getGlobalConfiguration()
+                identityController.getGlobalConfiguration()
                 .getOptionColour(plugin.getDomain(), "bgcolour")));
 
-        final int width = IdentityManager.getIdentityManager().getGlobalConfiguration()
+        final int width = identityController.getGlobalConfiguration()
                 .getOptionInt(plugin.getDomain(), "width");
         setContentPane(panel);
         setLayout(new MigLayout("wmin " + width + ", wmax " + width + ", ins rel, fill"));
 
         label = new JLabel(text);
         label.setForeground(UIUtilities.convertColour(
-                IdentityManager.getIdentityManager().getGlobalConfiguration()
+                identityController.getGlobalConfiguration()
                 .getOptionColour(plugin.getDomain(), "fgcolour")));
         label.setFont(label.getFont().deriveFont(
-                (float) IdentityManager.getIdentityManager()
+                (float) identityController
                 .getGlobalConfiguration().getOptionInt(plugin.getDomain(), "fontSize")));
         label.setHorizontalAlignment(SwingConstants.CENTER);
         add(label, "alignx center, hmin " + label.getFont().getSize());

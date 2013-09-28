@@ -24,45 +24,38 @@ package com.dmdirc.addons.mediasource_vlc;
 
 import com.dmdirc.addons.nowplaying.MediaSource;
 import com.dmdirc.addons.nowplaying.MediaSourceState;
-import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
+import com.dmdirc.interfaces.IdentityController;
 import com.dmdirc.plugins.implementations.BasePlugin;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.util.io.Downloader;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import lombok.RequiredArgsConstructor;
 
 /**
  * Retrieves information from VLC using its HTTP interface.
  *
  * @author chris
  */
+@RequiredArgsConstructor
 public class VlcMediaSourcePlugin extends BasePlugin implements MediaSource {
 
     /** The information obtained from VLC. */
-    private final Map<String, String> information
-            = new HashMap<String, String>();
+    private final Map<String, String> information = new HashMap<>();
     /** This plugin's plugin info. */
     private final PluginInfo pluginInfo;
-
-    /**
-     * Creates a new instance of this plugin.
-     *
-     * @param pluginInfo This plugin's plugin info
-     */
-    public VlcMediaSourcePlugin(final PluginInfo pluginInfo) {
-        super();
-        this.pluginInfo = pluginInfo;
-    }
+    /** The identity controller to read settings from. */
+    private final IdentityController identityController;
 
     /** {@inheritDoc} */
     @Override
@@ -254,16 +247,12 @@ public class VlcMediaSourcePlugin extends BasePlugin implements MediaSource {
         List<String> res2;
 
         try {
-            res = Downloader.getPage("http://" + IdentityManager
-                    .getIdentityManager().getGlobalConfiguration().getOption(getDomain(),
-                    "host") + "/old/info.html");
-            res2 = Downloader.getPage("http://" + IdentityManager
-                    .getIdentityManager().getGlobalConfiguration().getOption(getDomain(),
-                    "host") + "/old/");
+            final String host = identityController.getGlobalConfiguration()
+                    .getOption(getDomain(), "host");
+            res = Downloader.getPage("http://" + host + "/old/info.html");
+            res2 = Downloader.getPage("http://" + host + "/old/");
             parseInformation(res, res2);
             return true;
-        } catch (MalformedURLException ex) {
-            return false;
         } catch (IOException ex) {
             return false;
         }

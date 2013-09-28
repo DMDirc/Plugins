@@ -62,7 +62,7 @@ public class ForceUpdate extends DebugCommand {
     @Override
     public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
-        if (getPlugin().getIdentityManager().getGlobalConfiguration()
+        if (getPlugin().getIdentityController().getGlobalConfiguration()
                 .getOptionBool("updater","enable")) {
             new Thread(new UpdateChecker(), "Forced update checker").start();
         } else {

@@ -28,8 +28,8 @@ package com.dmdirc.addons.swingdebug;
 
 import com.dmdirc.addons.ui_swing.DMDircEventQueue;
 import com.dmdirc.addons.ui_swing.SwingController;
-import com.dmdirc.config.IdentityManager;
 import com.dmdirc.interfaces.ConfigChangeListener;
+import com.dmdirc.interfaces.IdentityController;
 import com.dmdirc.plugins.Plugin;
 
 import java.awt.AWTEvent;
@@ -62,6 +62,8 @@ public class TracingEventQueue extends DMDircEventQueue implements
     private boolean running = false;
     /** Parent plugin. */
     private final Plugin parentPlugin;
+    /** The controller to read/write settings with. */
+    private final IdentityController identityController;
     /** Tracing thread. */
     private Thread tracingThread;
 
@@ -69,18 +71,21 @@ public class TracingEventQueue extends DMDircEventQueue implements
      * Instantiates a new tracing thread.
      *
      * @param parentPlugin Parent plugin
+     * @param identityController The controller to read/write settings with.
      * @param controller Swing controller
      */
-    public TracingEventQueue(final Plugin parentPlugin,
+    public TracingEventQueue(
+            final Plugin parentPlugin,
+            final IdentityController identityController,
             final SwingController controller) {
         super(controller);
         this.parentPlugin = parentPlugin;
+        this.identityController = identityController;
 
-        eventTimeMap = Collections.synchronizedMap(
-                new HashMap<AWTEvent, Long>());
-        IdentityManager.getIdentityManager().getGlobalConfiguration().addChangeListener(
+        eventTimeMap = Collections.synchronizedMap(new HashMap<AWTEvent, Long>());
+        identityController.getGlobalConfiguration().addChangeListener(
                 parentPlugin.getDomain(), "debugEDT", this);
-        IdentityManager.getIdentityManager().getGlobalConfiguration().addChangeListener(
+        identityController.getGlobalConfiguration().addChangeListener(
                 parentPlugin.getDomain(), "slowedttaskthreshold", this);
         checkTracing();
 
@@ -222,9 +227,9 @@ public class TracingEventQueue extends DMDircEventQueue implements
     }
 
     private void checkTracing() {
-        final boolean tracing = IdentityManager.getIdentityManager().getGlobalConfiguration()
+        final boolean tracing = identityController.getGlobalConfiguration()
                 .getOptionBool(parentPlugin.getDomain(), "debugEDT");
-        thresholdDelay = IdentityManager.getIdentityManager().getGlobalConfiguration()
+        thresholdDelay = identityController.getGlobalConfiguration()
                 .getOptionInt(parentPlugin.getDomain(), "slowedttaskthreshold");
         if (tracing) {
             running = true;

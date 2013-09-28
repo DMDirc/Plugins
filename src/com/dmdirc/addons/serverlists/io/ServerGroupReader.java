@@ -25,6 +25,7 @@ package com.dmdirc.addons.serverlists.io;
 import com.dmdirc.ServerManager;
 import com.dmdirc.addons.serverlists.ServerGroup;
 import com.dmdirc.config.Identity;
+import com.dmdirc.interfaces.IdentityController;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -43,15 +44,22 @@ public class ServerGroupReader {
     /** The reader we'll use for individual servers. */
     private final ServerEntryReader entryReader;
 
+    /** The controller to read/write settings with. */
+    private final IdentityController identityController;
+
     /**
      * Creates a new ServerGroupReader that will read from the specified
      * identity.
      *
      * @param identity The identity describing the server group
      */
-    public ServerGroupReader(final ServerManager serverManager, final Identity identity) {
+    public ServerGroupReader(
+            final ServerManager serverManager,
+            final IdentityController identityController,
+            final Identity identity) {
         this.identity = identity;
-        this.entryReader = new ServerEntryReader(serverManager, identity);
+        this.identityController = identityController;
+        this.entryReader = new ServerEntryReader(serverManager, identityController, identity);
     }
 
     /**
@@ -83,7 +91,7 @@ public class ServerGroupReader {
             throw new IllegalArgumentException("ServerGroup '" + name + "' not defined");
         }
 
-        final ServerGroup group = new ServerGroup(parent,
+        final ServerGroup group = new ServerGroup(identityController, parent,
                 identity.getOption(name, "name"));
 
         if (identity.hasOptionString(name, "description")) {

@@ -23,7 +23,7 @@
 package com.dmdirc.addons.ui_swing.dialogs.profiles;
 
 import com.dmdirc.config.Identity;
-import com.dmdirc.config.IdentityManager;
+import com.dmdirc.interfaces.IdentityController;
 import com.dmdirc.util.validators.FileNameValidator;
 import com.dmdirc.util.validators.IdentValidator;
 import com.dmdirc.util.validators.ValidationResponse;
@@ -42,9 +42,9 @@ import java.util.List;
 public class ProfileManagerModel extends DefaultBindableModel {
 
     /** List of known profiles. */
-    private List<Profile> profiles = new ArrayList<Profile>();
+    private List<Profile> profiles = new ArrayList<>();
     /** List of profiles to be displayed. */
-    private List<Profile> displayedProfiles = new ArrayList<Profile>();
+    private List<Profile> displayedProfiles = new ArrayList<>();
     /** Selected profile. */
     private Profile selectedProfile;
     /** Selected nickname. */
@@ -53,10 +53,10 @@ public class ProfileManagerModel extends DefaultBindableModel {
     /**
      * Creates a new model.
      *
-     * @param identityManager Identity manager to retrieve profiles from
+     * @param identityController Identity manager to retrieve profiles from
      */
-    public ProfileManagerModel(final IdentityManager identityManager) {
-        final List<Identity> identities = identityManager
+    public ProfileManagerModel(final IdentityController identityController) {
+        final List<Identity> identities = identityController
                 .getIdentitiesByType("profile");
         for (Identity identity : identities) {
             profiles.add(new Profile(identity));
@@ -95,7 +95,7 @@ public class ProfileManagerModel extends DefaultBindableModel {
      * @param profiles List of profiles to display
      */
     public void setProfiles(final List<Profile> profiles) {
-        this.profiles = new ArrayList<Profile>(profiles);
+        this.profiles = new ArrayList<>(profiles);
         updateDisplayedProfiles();
         if (!profiles.contains(selectedProfile)) {
             upadateSelectedProfile(null);

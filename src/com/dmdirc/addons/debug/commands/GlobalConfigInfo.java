@@ -61,7 +61,7 @@ public class GlobalConfigInfo extends DebugCommand {
     @Override
     public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
-        for (Identity source : getPlugin().getIdentityManager()
+        for (Identity source : getPlugin().getIdentityController()
                 .getGlobalConfiguration().getSources()) {
             sendLine(origin, args.isSilent(), FORMAT_OUTPUT, source.getTarget()
                     + " - " + source + "(" + source.getTarget().getOrder()

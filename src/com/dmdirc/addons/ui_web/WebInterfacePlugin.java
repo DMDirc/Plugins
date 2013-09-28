@@ -23,21 +23,27 @@
 package com.dmdirc.addons.ui_web;
 
 import com.dmdirc.ServerManager;
+import com.dmdirc.interfaces.IdentityController;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.plugins.implementations.BasePlugin;
 
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 import org.mortbay.jetty.Handler;
 
 /**
  * The main web interface plugin.
  */
+@RequiredArgsConstructor
 public class WebInterfacePlugin extends BasePlugin {
 
     /** Server manager to use. */
     private final ServerManager serverManager;
+
+    /** The controller to read/write settings with. */
+    private final IdentityController identityController;
 
     /** Plugin manager to use. */
     private final PluginManager pluginManager;
@@ -49,27 +55,12 @@ public class WebInterfacePlugin extends BasePlugin {
     @Getter
     private WebInterfaceUI controller;
 
-    /**
-     * Create a new WebInterfacePlugin
-     *
-     * @param serverManager Server manager to use.
-     * @param pluginManager Plugin manager to use.
-     * @param pluginInfo This plugin's info object.
-     */
-    public WebInterfacePlugin(
-            final ServerManager serverManager,
-            final PluginManager pluginManager,
-            final PluginInfo pluginInfo) {
-        this.serverManager = serverManager;
-        this.pluginManager = pluginManager;
-        this.pluginInfo = pluginInfo;
-    }
-
     /** {@inheritDoc} */
     @Override
     public void onLoad() {
         if (controller == null) {
-            controller = new WebInterfaceUI(getDomain(), serverManager,
+            controller = new WebInterfaceUI(getDomain(),
+                    identityController, serverManager,
                     pluginManager, pluginInfo);
         }
     }
@@ -81,8 +72,8 @@ public class WebInterfacePlugin extends BasePlugin {
      */
     public void addWebHandler(final Handler newHandler) {
         if (controller == null) {
-            controller = new WebInterfaceUI(getDomain(), serverManager,
-                    pluginManager, pluginInfo);
+            controller = new WebInterfaceUI(getDomain(), identityController,
+                    serverManager, pluginManager, pluginInfo);
         }
 
         controller.addWebHandler(newHandler);

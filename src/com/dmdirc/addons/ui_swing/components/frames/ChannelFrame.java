@@ -91,7 +91,7 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
         ActionManager.getActionManager().registerListener(this,
                 CoreActionType.CLIENT_CLOSING);
 
-        identity = controller.getIdentityManager().createChannelConfig(
+        identity = controller.getIdentityFactory().createChannelConfig(
                 owner.getServer().getNetwork(), owner.getChannelInfo().getName());
     }
 

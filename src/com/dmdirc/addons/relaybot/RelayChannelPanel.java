@@ -22,8 +22,8 @@
 
 package com.dmdirc.addons.relaybot;
 
-import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.prefs.PreferencesInterface;
+import com.dmdirc.interfaces.IdentityController;
 import com.dmdirc.plugins.Plugin;
 
 import java.awt.event.ActionEvent;
@@ -56,26 +56,33 @@ public class RelayChannelPanel extends JPanel implements ActionListener,
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 1;
+    /** The table headings. */
+    private static final String[] HEADERS = {"Channel", "Nickname", };
+
     /** The table used for displaying the options. */
     private final JTable table;
     /** The plugin we're associated with. */
     private final transient RelayBotPlugin plugin;
-    /** The table headings. */
-    private static final String[] HEADERS = {"Channel", "Nickname", };
     /** Delete button. */
     private final JButton deleteButton;
+    /** The controller to read/write settings with. */
+    private final IdentityController identityController;
 
     /**
      * Creates a new instance of NickColourPanel.
      *
      * @param controller The UI controller that owns this panel
      * @param plugin The plugin that owns this panel
+     * @param identityController The controller to read/write settings with.
      */
-    public RelayChannelPanel(final Plugin controller,
-            final RelayBotPlugin plugin) {
+    public RelayChannelPanel(
+            final Plugin controller,
+            final RelayBotPlugin plugin,
+            final IdentityController identityController) {
         super();
 
         this.plugin = plugin;
+        this.identityController = identityController;
 
         final Object[][] data = plugin.getData();
 
@@ -85,7 +92,7 @@ public class RelayChannelPanel extends JPanel implements ActionListener,
 
         table.getSelectionModel().addListSelectionListener(this);
         table.setFillsViewportHeight(true);
-        int height = 100;
+        int height;
         try {
             final Method getPrefsDialog = controller.getClass()
                     .getDeclaredMethod("getPrefsDialog", (Class<?>) null);
@@ -96,15 +103,8 @@ public class RelayChannelPanel extends JPanel implements ActionListener,
             final Object panelHeight = getPanelHeight.invoke(prefsDialog,
                     (Class<?>) null);
             height = (Integer) panelHeight;
-        } catch (IllegalAccessException ex) {
-            height = 100;
-        } catch (IllegalArgumentException ex) {
-            height = 100;
-        } catch (InvocationTargetException ex) {
-            height = 100;
-        } catch (NoSuchMethodException ex) {
-            height = 100;
-        } catch (SecurityException ex) {
+        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
+                | NoSuchMethodException | SecurityException ex) {
             height = 100;
         }
         setLayout(new MigLayout("ins 0, fillx, hmax " + height));
@@ -185,13 +185,13 @@ public class RelayChannelPanel extends JPanel implements ActionListener,
     public void save() {
         // Remove all old config entries
         for (String[] parts : plugin.getData()) {
-           IdentityManager.getIdentityManager().getGlobalConfigIdentity()
+           identityController.getGlobalConfigIdentity()
                    .unsetOption(plugin.getDomain(), parts[0]);
         }
 
         // And write the new ones
         for (String[] row : getData()) {
-            IdentityManager.getIdentityManager().getGlobalConfigIdentity()
+            identityController.getGlobalConfigIdentity()
                     .setOption(plugin.getDomain(), row[0], row[1]);
         }
     }

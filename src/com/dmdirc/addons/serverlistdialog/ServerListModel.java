@@ -31,6 +31,7 @@ import com.dmdirc.addons.serverlists.ServerEntry;
 import com.dmdirc.addons.serverlists.ServerGroup;
 import com.dmdirc.addons.serverlists.ServerGroupItem;
 import com.dmdirc.addons.serverlists.ServerList;
+import com.dmdirc.interfaces.IdentityController;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.util.collections.ListenerList;
 
@@ -54,16 +55,23 @@ public class ServerListModel {
     private ServerGroupItem activeItem;
     /** ServerManager that ServerEntrys use to create servers */
     private final ServerManager serverManager;
+    /** The controller to read/write settings with. */
+    private final IdentityController identityController;
 
     /**
      * Creates a new server list model.
      *
      * @param pluginManager PluginManager currently in use.
      * @param serverManager ServerManager currently in use.
+     * @param identityController The controller to read/write settings with.
      */
-    public ServerListModel(final PluginManager pluginManager, final ServerManager serverManager) {
+    public ServerListModel(
+            final PluginManager pluginManager,
+            final ServerManager serverManager,
+            final IdentityController identityController) {
         this.serverManager = serverManager;
-        list = new ServerList(pluginManager, serverManager);
+        this.identityController = identityController;
+        list = new ServerList(pluginManager, serverManager, identityController);
         listeners = new ListenerList();
     }
 
@@ -198,7 +206,7 @@ public class ServerListModel {
      */
     public void addGroup(final ServerGroup parentGroup,
             final String groupName, final String networkName) {
-        final ServerGroup sg = new ServerGroup(groupName);
+        final ServerGroup sg = new ServerGroup(identityController, groupName);
         if (networkName != null && !networkName.isEmpty()) {
             sg.setNetwork(networkName);
         }
@@ -226,8 +234,8 @@ public class ServerListModel {
      */
     public void addEntry(final ServerGroup parentGroup, final String entryName,
             final URI url) {
-        final ServerGroupItem sg = new ServerEntry(serverManager, parentGroup, entryName, url,
-                null);
+        final ServerGroupItem sg = new ServerEntry(identityController,
+                serverManager, parentGroup, entryName, url, null);
         parentGroup.addItem(sg);
         for (ServerListListener listener : listeners.get(
                 ServerListListener.class)) {
