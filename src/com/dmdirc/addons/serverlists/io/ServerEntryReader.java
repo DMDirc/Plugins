@@ -25,7 +25,7 @@ package com.dmdirc.addons.serverlists.io;
 import com.dmdirc.ServerManager;
 import com.dmdirc.addons.serverlists.ServerEntry;
 import com.dmdirc.addons.serverlists.ServerGroup;
-import com.dmdirc.config.Identity;
+import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.config.IdentityController;
 
 import java.net.URI;
@@ -48,7 +48,7 @@ public class ServerEntryReader {
     private final IdentityController identityController;
 
     /** The identity to read entries from. */
-    private final Identity identity;
+    private final ConfigProvider identity;
 
     /**
      * Attempts to read the details of the specified server from this reader's

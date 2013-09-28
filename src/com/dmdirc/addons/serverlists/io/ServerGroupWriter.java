@@ -25,7 +25,7 @@ package com.dmdirc.addons.serverlists.io;
 import com.dmdirc.addons.serverlists.ServerEntry;
 import com.dmdirc.addons.serverlists.ServerGroup;
 import com.dmdirc.addons.serverlists.ServerGroupItem;
-import com.dmdirc.config.Identity;
+import com.dmdirc.interfaces.config.ConfigProvider;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -41,14 +41,14 @@ import java.util.Set;
 public class ServerGroupWriter {
 
     /** The identity which will be written to. */
-    private final Identity identity;
+    private final ConfigProvider identity;
 
     /**
      * Creates a new writer which will write to the specified identity.
      *
      * @param identity The identity to write the server group to
      */
-    public ServerGroupWriter(final Identity identity) {
+    public ServerGroupWriter(final ConfigProvider identity) {
         this.identity = identity;
     }
 

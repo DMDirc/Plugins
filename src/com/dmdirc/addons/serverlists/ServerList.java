@@ -28,10 +28,11 @@ import com.dmdirc.addons.serverlists.io.ServerGroupReader;
 import com.dmdirc.addons.serverlists.io.ServerGroupWriter;
 import com.dmdirc.addons.serverlists.service.ServerListServiceProvider;
 import com.dmdirc.config.Identity;
-import com.dmdirc.config.IdentityListener;
+import com.dmdirc.interfaces.config.ConfigProvider;
+import com.dmdirc.interfaces.config.ConfigProviderListener;
 import com.dmdirc.interfaces.config.IdentityController;
-
 import com.dmdirc.plugins.PluginManager;
+
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
@@ -44,7 +45,7 @@ import java.util.Map;
  *
  * @since 0.6.4
  */
-public class ServerList implements IdentityListener {
+public class ServerList implements ConfigProviderListener {
 
     /** A list of all known groups. */
     private final Map<ServerGroup, ServerGroupWriter> groups = new HashMap<>();
@@ -72,7 +73,7 @@ public class ServerList implements IdentityListener {
         identityController.registerIdentityListener("servergroup", this);
 
         for (Identity identity : identityController.getIdentitiesByType("servergroup")) {
-            identityAdded(identity);
+            configProviderAdded(identity);
         }
 
         new ServerListServiceProvider(pluginManager, this).register();
@@ -151,9 +152,9 @@ public class ServerList implements IdentityListener {
 
     /** {@inheritDoc} */
     @Override
-    public void identityAdded(final Identity identity) {
+    public void configProviderAdded(final ConfigProvider configProvider) {
         try {
-            final ServerGroupReader reader = new ServerGroupReader(serverManager, identityController, identity);
+            final ServerGroupReader reader = new ServerGroupReader(serverManager, identityController, configProvider);
             addServerGroup(reader.read(), reader.getWriter());
         } catch (IllegalArgumentException ex) {
             // Silently ignore
@@ -164,7 +165,7 @@ public class ServerList implements IdentityListener {
 
     /** {@inheritDoc} */
     @Override
-    public void identityRemoved(final Identity identity) {
+    public void configProviderRemoved(final ConfigProvider configProvider) {
         // TODO: Remove server group
     }
 
