@@ -22,7 +22,7 @@
 
 package com.dmdirc.addons.mediasource_vlc;
 
-import com.dmdirc.interfaces.IdentityController;
+import com.dmdirc.interfaces.config.IdentityController;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.util.io.TextFile;
 import java.io.IOException;

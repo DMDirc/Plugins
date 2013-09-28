@@ -34,7 +34,7 @@ import com.dmdirc.addons.ui_swing.components.vetoable.VetoableComboBoxSelectionL
 import com.dmdirc.addons.ui_swing.dialogs.profiles.ProfileManagerDialog;
 import com.dmdirc.config.Identity;
 import com.dmdirc.config.IdentityListener;
-import com.dmdirc.interfaces.IdentityController;
+import com.dmdirc.interfaces.config.IdentityController;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.util.validators.PortValidator;

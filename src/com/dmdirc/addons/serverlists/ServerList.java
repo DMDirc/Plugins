@@ -29,7 +29,7 @@ import com.dmdirc.addons.serverlists.io.ServerGroupWriter;
 import com.dmdirc.addons.serverlists.service.ServerListServiceProvider;
 import com.dmdirc.config.Identity;
 import com.dmdirc.config.IdentityListener;
-import com.dmdirc.interfaces.IdentityController;
+import com.dmdirc.interfaces.config.IdentityController;
 
 import com.dmdirc.plugins.PluginManager;
 import java.io.IOException;

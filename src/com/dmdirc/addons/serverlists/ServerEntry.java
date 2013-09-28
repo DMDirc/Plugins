@@ -23,7 +23,7 @@
 package com.dmdirc.addons.serverlists;
 
 import com.dmdirc.ServerManager;
-import com.dmdirc.interfaces.IdentityController;
+import com.dmdirc.interfaces.config.IdentityController;
 
 import java.net.URI;
 

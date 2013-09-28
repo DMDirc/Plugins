@@ -23,7 +23,7 @@
 package com.dmdirc.addons.ui_web;
 
 import com.dmdirc.ServerManager;
-import com.dmdirc.interfaces.IdentityController;
+import com.dmdirc.interfaces.config.IdentityController;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.plugins.implementations.BasePlugin;

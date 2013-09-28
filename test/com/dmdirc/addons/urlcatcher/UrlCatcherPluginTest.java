@@ -28,7 +28,7 @@ import com.dmdirc.config.ConfigManager;
 import com.dmdirc.config.InvalidIdentityFileException;
 import com.dmdirc.interfaces.ActionController;
 import com.dmdirc.interfaces.CommandController;
-import com.dmdirc.interfaces.IdentityController;
+import com.dmdirc.interfaces.config.IdentityController;
 import com.dmdirc.ui.messages.Styliser;
 
 import org.junit.Before;

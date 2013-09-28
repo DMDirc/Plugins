@@ -23,7 +23,7 @@
 package com.dmdirc.addons.ui_swing.components;
 
 import com.dmdirc.config.ConfigManager;
-import com.dmdirc.interfaces.ConfigChangeListener;
+import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.parser.interfaces.ChannelClientInfo;
 
 import java.util.ArrayList;

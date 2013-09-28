@@ -29,7 +29,7 @@ import com.dmdirc.addons.ui_swing.components.renderers.ExtendedListModeCellRende
 import com.dmdirc.addons.ui_swing.components.renderers.ListModeCellRenderer;
 import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialog;
 import com.dmdirc.util.validators.NotEmptyValidator;
-import com.dmdirc.interfaces.ConfigChangeListener;
+import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.parser.common.ChannelListModeItem;
 import com.dmdirc.util.collections.MapList;
 

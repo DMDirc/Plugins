@@ -25,7 +25,7 @@ package com.dmdirc.addons.serverlists.io;
 import com.dmdirc.ServerManager;
 import com.dmdirc.addons.serverlists.ServerGroup;
 import com.dmdirc.config.Identity;
-import com.dmdirc.interfaces.IdentityController;
+import com.dmdirc.interfaces.config.IdentityController;
 
 import java.net.URI;
 import java.net.URISyntaxException;
