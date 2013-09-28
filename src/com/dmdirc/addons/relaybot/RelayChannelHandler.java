@@ -24,7 +24,7 @@ package com.dmdirc.addons.relaybot;
 
 import com.dmdirc.Channel;
 import com.dmdirc.ChannelEventHandler;
-import com.dmdirc.config.IdentityManager;
+import com.dmdirc.interfaces.IdentityController;
 import com.dmdirc.parser.common.CallbackManager;
 import com.dmdirc.parser.interfaces.ChannelClientInfo;
 import com.dmdirc.parser.interfaces.ChannelInfo;
@@ -60,8 +60,10 @@ public class RelayChannelHandler implements ChannelMessageListener {
     private final RelayBotPlugin myPlugin;
 
     /** Known ChannelClients. */
-    private final Map<String, IRCChannelClientInfo> channelClients
-            = new HashMap<String, IRCChannelClientInfo>();
+    private final Map<String, IRCChannelClientInfo> channelClients = new HashMap<>();
+
+    /** The controller to read/write settings with. */
+    private final IdentityController identityController;
 
     /**
      * Create a new RelayChannelHandler.
@@ -69,24 +71,21 @@ public class RelayChannelHandler implements ChannelMessageListener {
      * @param myPlugin Parent plugin
      * @param myChannel channel to hax!
      */
-    public RelayChannelHandler(final RelayBotPlugin myPlugin,
+    public RelayChannelHandler(
+            final RelayBotPlugin myPlugin,
+            final IdentityController identityController,
             final Channel myChannel) {
         this.myChannel = myChannel;
         this.myPlugin = myPlugin;
+        this.identityController = identityController;
+
         ChannelEventHandler ceh;
         try {
             // Get the core Channel handler.
-            final Field field = myChannel.getClass().getDeclaredField(
-                    "eventHandler");
+            final Field field = myChannel.getClass().getDeclaredField("eventHandler");
             field.setAccessible(true);
             ceh = (ChannelEventHandler) field.get(myChannel);
-        } catch (IllegalArgumentException ex) {
-            ceh = null;
-        } catch (IllegalAccessException ex) {
-            ceh = null;
-        } catch (NoSuchFieldException ex) {
-            ceh = null;
-        } catch (SecurityException ex) {
+        } catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException ex) {
             ceh = null;
         }
 
@@ -215,8 +214,8 @@ public class RelayChannelHandler implements ChannelMessageListener {
         final PluginInfo nickColour = myPlugin.getPluginManager()
                 .getPluginInfoByName("nickcolour");
 
-        final boolean fullColour = IdentityManager.getIdentityManager()
-                .getGlobalConfiguration().getOptionBool(myPlugin.getDomain(), "colourFullName");
+        final boolean fullColour = identityController.getGlobalConfiguration()
+                .getOptionBool(myPlugin.getDomain(), "colourFullName");
         final RelayClientInfo client = (RelayClientInfo) channelClient
                 .getClient();
         final boolean oldValue = client.getShowFullNickname();
@@ -234,9 +233,7 @@ public class RelayChannelHandler implements ChannelMessageListener {
                 colourClient.setAccessible(true);
                 colourClient.invoke(nickColour.getPlugin(), myChannel
                         .getServer().getNetwork(), channelClient);
-            } catch (LinkageError e) {
-                // If it can't colour then oh well.
-            } catch (Exception t) {
+            } catch (LinkageError | Exception e) {
                 // If it can't colour then oh well.
             }
         }
@@ -263,7 +260,7 @@ public class RelayChannelHandler implements ChannelMessageListener {
                 channel.getName());
         String botName;
         try {
-            botName = IdentityManager.getIdentityManager().getGlobalConfiguration()
+            botName = identityController.getGlobalConfiguration()
                     .getOption(myPlugin.getDomain(), channelName);
         } catch (IllegalArgumentException iae) {
             botName = "";
@@ -271,8 +268,8 @@ public class RelayChannelHandler implements ChannelMessageListener {
         final boolean isBot = parser.getStringConverter().equalsIgnoreCase(
                 botName, channelClient.getClient().getNickname());
 
-        final boolean joinNew = IdentityManager.getIdentityManager()
-                .getGlobalConfiguration().getOptionBool(myPlugin.getDomain(), "joinOnDiscover");
+        final boolean joinNew = identityController.getGlobalConfiguration()
+                .getOptionBool(myPlugin.getDomain(), "joinOnDiscover");
 
         // See if we need to modify this message
         if (channelClient instanceof IRCChannelClientInfo

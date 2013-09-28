@@ -28,7 +28,7 @@ import com.dmdirc.addons.ui_web.uicomponents.WebInputHandler;
 import com.dmdirc.addons.ui_web.uicomponents.WebInputWindow;
 import com.dmdirc.addons.ui_web.uicomponents.WebWindow;
 import com.dmdirc.config.Identity;
-import com.dmdirc.config.IdentityManager;
+import com.dmdirc.interfaces.IdentityController;
 import com.dmdirc.parser.common.ChannelJoinRequest;
 import com.dmdirc.parser.interfaces.ChannelClientInfo;
 
@@ -72,19 +72,25 @@ public class DynamicRequestHandler extends AbstractHandler {
     /** The server manager to use to connect to new servers. */
     private final ServerManager serverManager;
 
+    /** The controller to read/write settings with. */
+    private final IdentityController identityController;
+
     /**
      * Creates a new instance of DynamicRequestHandler. Registers object
      * convertors with the JSON serialiser.
      *
      * @param controller The controller that this request handler is for.
+     * @param identityController The controller to read/write settings with.
      * @param serverManager The server manager to use to connect to new servers.
      */
     public DynamicRequestHandler(
             final WebInterfaceUI controller,
+            final IdentityController identityController,
             final ServerManager serverManager) {
         super();
 
         this.controller = controller;
+        this.identityController = identityController;
         this.serverManager = serverManager;
 
         JSON.registerConvertor(Event.class, new JSONObjectConvertor());
@@ -334,7 +340,7 @@ public class DynamicRequestHandler extends AbstractHandler {
 
         profileEvents.add(new Event("clearprofiles", null));
 
-        for (Identity identity : IdentityManager.getIdentityManager().getIdentitiesByType("profile")) {
+        for (Identity identity : identityController.getIdentitiesByType("profile")) {
             profileEvents.add(new Event("addprofile", identity.getName()));
         }
 
@@ -384,7 +390,7 @@ public class DynamicRequestHandler extends AbstractHandler {
     }
 
     private Identity findProfile(final String parameter) {
-        for (Identity identity : IdentityManager.getIdentityManager().getIdentitiesByType("profile")) {
+        for (Identity identity : identityController.getIdentitiesByType("profile")) {
             if (identity.getName().equals(parameter)) {
                 return identity;
             }

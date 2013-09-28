@@ -26,8 +26,8 @@ import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.reorderablelist.ListReorderButtonPanel;
 import com.dmdirc.addons.ui_swing.components.reorderablelist.ReorderableJList;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
-import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.prefs.PreferencesInterface;
+import com.dmdirc.interfaces.IdentityController;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 
@@ -69,6 +69,8 @@ public class ConfigPanel extends JPanel implements PreferencesInterface,
     private final List<String> sources;
     /** The plugin that owns this panel. */
     private final NowPlayingPlugin plugin;
+    /** The controller to read/write settings with. */
+    private final IdentityController identityController;
     /** Text field for our setting. */
     private JTextField textfield;
     /** Panel that the preview is in. */
@@ -81,18 +83,23 @@ public class ConfigPanel extends JPanel implements PreferencesInterface,
     /**
      * Creates a new instance of ConfigPanel.
      *
+     * @param identityController The controller to read/write settings with.
      * @param plugin The plugin that owns this panel
      * @param sources A list of sources to be used in the panel
      */
-    public ConfigPanel(final NowPlayingPlugin plugin,
+    public ConfigPanel(
+            final IdentityController identityController,
+            final NowPlayingPlugin plugin,
             final List<String> sources) {
         super();
 
         if (sources == null) {
-            this.sources = new LinkedList<String>();
+            this.sources = new LinkedList<>();
         } else {
-            this.sources = new LinkedList<String>(sources);
+            this.sources = new LinkedList<>(sources);
         }
+
+        this.identityController = identityController;
         this.plugin = plugin;
 
         initComponents();
@@ -108,8 +115,8 @@ public class ConfigPanel extends JPanel implements PreferencesInterface,
             list.getModel().addElement(source);
         }
 
-        textfield = new JTextField(IdentityManager.getIdentityManager()
-                .getGlobalConfiguration().getOption(plugin.getDomain(), "format"));
+        textfield = new JTextField(identityController.getGlobalConfiguration()
+                .getOption(plugin.getDomain(), "format"));
         textfield.addKeyListener(this);
         preview = new TextLabel("Preview:\n");
 
@@ -185,7 +192,7 @@ public class ConfigPanel extends JPanel implements PreferencesInterface,
      * @return An ordered list of sources
      */
     public List<String> getSources() {
-        final List<String> newSources = new LinkedList<String>();
+        final List<String> newSources = new LinkedList<>();
 
         final Enumeration<?> values = list.getModel().elements();
 
@@ -200,7 +207,7 @@ public class ConfigPanel extends JPanel implements PreferencesInterface,
     @Override
     public void save() {
         plugin.saveSettings(getSources());
-        IdentityManager.getIdentityManager().getGlobalConfigIdentity()
+        identityController.getGlobalConfigIdentity()
                 .setOption(plugin.getDomain(), "format", textfield.getText());
     }
 
@@ -250,12 +257,9 @@ public class ConfigPanel extends JPanel implements PreferencesInterface,
             public void run() {
                 try {
                     updatePreview();
-                } catch (LinkageError e) {
+                } catch (LinkageError | Exception e) {
                     Logger.appError(ErrorLevel.MEDIUM,
                             "Error when updating nowplaying preview", e);
-                } catch (Exception ex) {
-                    Logger.appError(ErrorLevel.MEDIUM,
-                            "Error when updating nowplaying preview", ex);
                 }
             }
         }, 500);

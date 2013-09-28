@@ -22,8 +22,7 @@
 
 package com.dmdirc.addons.ui_web;
 
-import com.dmdirc.config.ConfigManager;
-import com.dmdirc.config.IdentityManager;
+import com.dmdirc.interfaces.IdentityController;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -46,11 +45,10 @@ import org.mortbay.jetty.security.UserRealm;
 public class WebUserRealm implements UserRealm {
 
     /** A map of known principals. */
-    private final Map<String, Principal> principals
-            = new HashMap<String, Principal>();
+    private final Map<String, Principal> principals = new HashMap<>();
 
     /** The config source to retrieve user information from. */
-    private final ConfigManager config = IdentityManager.getIdentityManager().getGlobalConfiguration();
+    private final IdentityController identityController;
 
     /** The domain to use when retrieving configuration. */
     private final String domain;
@@ -58,7 +56,7 @@ public class WebUserRealm implements UserRealm {
     /** {@inheritDoc} */
     @Override
     public String getName() {
-        if (config.hasOptionString(domain, "users")) {
+        if (identityController.getGlobalConfiguration().hasOptionString(domain, "users")) {
             return "DMDirc web UI";
         } else {
             return "DMDirc web UI first run -- "
@@ -77,14 +75,13 @@ public class WebUserRealm implements UserRealm {
     @Override
     public Principal authenticate(final String username,
             final Object credentials, final Request request) {
-        if (!config.hasOptionString(domain, "users")) {
-            final List<String> users = new ArrayList<String>();
+        if (!identityController.getGlobalConfiguration().hasOptionString(domain, "users")) {
+            final List<String> users = new ArrayList<>();
             users.add(username + ":" + getHash(username, credentials));
-            IdentityManager.getIdentityManager().getGlobalConfigIdentity()
-                    .setOption(domain, "users", users);
+            identityController.getGlobalConfigIdentity().setOption(domain, "users", users);
         }
 
-        for (String userinfo : config.getOptionList(domain, "users")) {
+        for (String userinfo : identityController.getGlobalConfiguration().getOptionList(domain, "users")) {
             if (userinfo.startsWith(username + ":")) {
                 final String pass = userinfo.substring(username.length() + 1);
 

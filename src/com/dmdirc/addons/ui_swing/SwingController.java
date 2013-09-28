@@ -50,13 +50,14 @@ import com.dmdirc.addons.ui_swing.wizard.WizardListener;
 import com.dmdirc.addons.ui_swing.wizard.firstrun.SwingFirstRunWizard;
 import com.dmdirc.config.ConfigManager;
 import com.dmdirc.config.Identity;
-import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.interfaces.CommandController;
+import com.dmdirc.interfaces.IdentityController;
+import com.dmdirc.interfaces.IdentityFactory;
 import com.dmdirc.interfaces.LifecycleController;
 import com.dmdirc.interfaces.ui.UIController;
 import com.dmdirc.interfaces.ui.Window;
@@ -137,7 +138,10 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     private final ServerManager serverManager;
     /** Identity Manager. */
     @Getter
-    private final IdentityManager identityManager;
+    private final IdentityController identityManager;
+    /** Identity factory. */
+    @Getter
+    private final IdentityFactory identityFactory;
     /** Global config identity. */
     @Getter
     private final Identity globalIdentity;
@@ -190,7 +194,8 @@ public class SwingController extends BaseCommandPlugin implements UIController {
      */
     public SwingController(
             final PluginInfo pluginInfo,
-            final IdentityManager identityManager,
+            final IdentityController identityManager,
+            final IdentityFactory identityFactory,
             final PluginManager pluginManager,
             final ActionManager actionManager,
             final CommandController commandController,
@@ -203,6 +208,7 @@ public class SwingController extends BaseCommandPlugin implements UIController {
         super(commandController);
         this.pluginInfo = pluginInfo;
         this.identityManager = identityManager;
+        this.identityFactory = identityFactory;
         this.actionManager = actionManager;
         this.pluginManager = pluginManager;
         this.serverManager = serverManager;

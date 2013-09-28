@@ -31,17 +31,20 @@ import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.IntelligentCommand;
 import com.dmdirc.commandparser.commands.context.ChatCommandContext;
 import com.dmdirc.commandparser.commands.context.CommandContext;
-import com.dmdirc.config.IdentityManager;
+import com.dmdirc.interfaces.IdentityController;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 import com.dmdirc.ui.input.TabCompleter;
 
 import java.util.Arrays;
 import java.util.List;
 
+import lombok.RequiredArgsConstructor;
+
 /**
  * The now playing command retrieves the currently playing song from a
  * variety of media players.
  */
+@RequiredArgsConstructor
 public final class NowPlayingCommand extends Command implements
         IntelligentCommand {
 
@@ -51,18 +54,9 @@ public final class NowPlayingCommand extends Command implements
                 "tells the channel the song you're currently playing",
             CommandType.TYPE_CHAT);
     /** The plugin that's using this command. */
-    final NowPlayingPlugin parent;
-
-    /**
-     * Creates a new instance of NowPlayingCommand.
-     *
-     * @param parent The plugin that's instantiating this command
-     */
-    public NowPlayingCommand(final NowPlayingPlugin parent) {
-        super();
-
-        this.parent = parent;
-    }
+    private final NowPlayingPlugin parent;
+    /** The controller to read/write settings with. */
+    private final IdentityController identityController;
 
     /** {@inheritDoc} */
     @Override
@@ -150,8 +144,8 @@ public final class NowPlayingCommand extends Command implements
      */
     private String getInformation(final MediaSource source, final String format) {
         if (format.isEmpty()) {
-            return parent.doSubstitution(IdentityManager.getIdentityManager()
-                    .getGlobalConfiguration().getOption(parent.getDomain(), "format"), source);
+            return parent.doSubstitution(identityController.getGlobalConfiguration()
+                    .getOption(parent.getDomain(), "format"), source);
         } else {
             return parent.doSubstitution(format, source);
         }

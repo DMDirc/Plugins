@@ -28,7 +28,6 @@ import com.dmdirc.ServerManager;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.addons.ui_swing.UIUtilities;
-import com.dmdirc.config.IdentityManager;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
@@ -36,6 +35,7 @@ import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.interfaces.ActionListener;
 import com.dmdirc.interfaces.ConfigChangeListener;
+import com.dmdirc.interfaces.IdentityController;
 import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.parser.interfaces.ChannelClientInfo;
 import com.dmdirc.parser.interfaces.Parser;
@@ -50,9 +50,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
+import lombok.RequiredArgsConstructor;
+
 /**
  * This plugin makes certain relay bots less obnoxious looking.
  */
+@RequiredArgsConstructor
 public class RelayBotPlugin extends BasePlugin implements ActionListener, ConfigChangeListener {
 
     /** Known RelayChannelHandlers. */
@@ -61,17 +64,8 @@ public class RelayBotPlugin extends BasePlugin implements ActionListener, Config
     private final PluginInfo pluginInfo;
     /** The server manager to use to iterate servers. */
     private final ServerManager serverManager;
-
-    /**
-     * Creates a new instance of this plugin.
-     *
-     * @param pluginInfo This plugin's plugin info
-     * @param serverManager The manager to use to iterate servers.
-     */
-    public RelayBotPlugin(final PluginInfo pluginInfo, final ServerManager serverManager) {
-        this.pluginInfo = pluginInfo;
-        this.serverManager = serverManager;
-    }
+    /** The controller to read/write settings with. */
+    private final IdentityController identityController;
 
     /** {@inheritDoc} */
     @Override
@@ -86,8 +80,7 @@ public class RelayBotPlugin extends BasePlugin implements ActionListener, Config
                 CoreActionType.SERVER_DISCONNECTED);
         ActionManager.getActionManager().registerListener(this,
                 CoreActionType.CHANNEL_QUIT);
-        IdentityManager.getIdentityManager().getGlobalConfiguration()
-                .addChangeListener(getDomain(), this);
+        identityController.getGlobalConfiguration().addChangeListener(getDomain(), this);
 
         // Add ourself to all currently known channels that we should be
         // connected with.
@@ -152,8 +145,8 @@ public class RelayBotPlugin extends BasePlugin implements ActionListener, Config
             final ChannelClientInfo cci = (ChannelClientInfo) arguments[1];
             final String channelName = parser.getStringConverter().toLowerCase(chan.getName());
 
-            if (IdentityManager.getIdentityManager().getGlobalConfiguration().hasOptionString(getDomain(), channelName)) {
-                final String botName = IdentityManager.getIdentityManager().getGlobalConfiguration().getOption(getDomain(), channelName);
+            if (identityController.getGlobalConfiguration().hasOptionString(getDomain(), channelName)) {
+                final String botName = identityController.getGlobalConfiguration().getOption(getDomain(), channelName);
                 if (parser.getStringConverter().equalsIgnoreCase(botName, cci.getClient().getNickname())) {
                     // The bot quit :(
                     final RelayChannelHandler handler = getHandler(chan);
@@ -184,7 +177,7 @@ public class RelayBotPlugin extends BasePlugin implements ActionListener, Config
     /** {@inheritDoc} */
     @Override
     public void configChanged(final String domain, final String key) {
-        final boolean wasUnset = !IdentityManager.getIdentityManager().getGlobalConfiguration().hasOptionString(domain, key);
+        final boolean wasUnset = !identityController.getGlobalConfiguration().hasOptionString(domain, key);
 
         for (Server server : serverManager.getServers()) {
             if (server.hasChannel(key)) {
@@ -227,8 +220,8 @@ public class RelayBotPlugin extends BasePlugin implements ActionListener, Config
                 return handlers.get(channel);
             } else {
                 final String channelName = channel.getServer().getParser().getStringConverter().toLowerCase(channel.getName());
-                if (IdentityManager.getIdentityManager().getGlobalConfiguration().hasOptionString(getDomain(), channelName)) {
-                    final RelayChannelHandler handler = new RelayChannelHandler(this, channel);
+                if (identityController.getGlobalConfiguration().hasOptionString(getDomain(), channelName)) {
+                    final RelayChannelHandler handler = new RelayChannelHandler(this, identityController, channel);
                     handlers.put(channel, handler);
                     return handler;
                 }
@@ -266,9 +259,8 @@ public class RelayBotPlugin extends BasePlugin implements ActionListener, Config
      * @return A multi-dimensional array of channel data.
      */
     public String[][] getData() {
-        final Map<String, String> settings
-                = IdentityManager.getIdentityManager().getGlobalConfiguration()
-                .getOptions(getDomain());
+        final Map<String, String> settings = identityController
+                .getGlobalConfiguration().getOptions(getDomain());
         int i = 0;
         for (Map.Entry<String, String> entry : settings.entrySet()) {
             if (entry.getKey().charAt(0) == '#') {
@@ -304,7 +296,7 @@ public class RelayBotPlugin extends BasePlugin implements ActionListener, Config
             public RelayChannelPanel call() {
                 return new RelayChannelPanel(getPluginManager()
                         .getPluginInfoByName("ui_swing").getPlugin(),
-                        RelayBotPlugin.this);
+                        RelayBotPlugin.this, identityController);
             }
         }));
         colours.setInline().setInlineAfter();

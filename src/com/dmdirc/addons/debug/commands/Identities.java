@@ -71,7 +71,7 @@ public class Identities extends DebugCommand {
             type = args.getArgumentsAsString();
         }
 
-        final List<Identity> identities = getPlugin().getIdentityManager()
+        final List<Identity> identities = getPlugin().getIdentityController()
                 .getIdentitiesByType(type);
         final String[][] data = new String[identities.size()][4];
 

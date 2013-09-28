@@ -23,6 +23,7 @@
 package com.dmdirc.addons.serverlists;
 
 import com.dmdirc.ServerManager;
+import com.dmdirc.interfaces.IdentityController;
 
 import java.net.URI;
 
@@ -46,14 +47,20 @@ public class ServerEntry extends ServerGroupItemBase {
     /**
      * Creates a new server entry.
      *
+     * @param identityController The controller to read/write settings with.
+     * @param serverManager The server manager to connect to servers with.
      * @param group The group that owns this entry
      * @param name The name of this server
      * @param address The address of this server
      * @param profile The name of the profile to be used by this server
      */
-    public ServerEntry(final ServerManager serverManager,
+    public ServerEntry(
+            final IdentityController identityController,
+            final ServerManager serverManager,
             final ServerGroup group, final String name,
             final URI address, final String profile) {
+        super(identityController);
+
         this.serverManager = serverManager;
         setName(name);
         setProfile(profile);

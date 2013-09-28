@@ -23,7 +23,7 @@
 package com.dmdirc.addons.ui_swing.dialogs.profiles;
 
 import com.dmdirc.config.Identity;
-import com.dmdirc.config.IdentityManager;
+import com.dmdirc.interfaces.IdentityController;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -41,11 +41,11 @@ import static org.mockito.Mockito.*;
  */
 public class ProfileManagerModelTest {
 
-    private static IdentityManager manager;
+    private static IdentityController manager;
     private static Profile defaultProfile;
 
     private Profile createProfile(final String prefix) {
-        final List<String> nicknames = new ArrayList<String>();
+        final List<String> nicknames = new ArrayList<>();
         nicknames.add(prefix + "nickname");
 
         final Identity identity = mock(Identity.class);
@@ -70,7 +70,7 @@ public class ProfileManagerModelTest {
     @SuppressWarnings("unchecked")
     public static void setUpClass() throws Exception {
         final List<Identity> identities = Collections.emptyList();
-        manager = mock(IdentityManager.class);
+        manager = mock(IdentityController.class);
         when(manager.getIdentitiesByType("profile")).thenReturn(identities);
     }
 
@@ -79,7 +79,7 @@ public class ProfileManagerModelTest {
      */
     @Test
     public void testConstructor() {
-        final List<String> nicknames = new ArrayList<String>();
+        final List<String> nicknames = new ArrayList<>();
         nicknames.add("nickname");
         final Identity identity = mock(Identity.class);
         when(identity.getName()).thenReturn("profile");
@@ -87,9 +87,9 @@ public class ProfileManagerModelTest {
         when(identity.getOptionList("profile", "nicknames")).thenReturn(nicknames);
         when(identity.getOption("profile", "realname")).thenReturn("realname");
         when(identity.getOption("profile", "ident")).thenReturn("ident");
-        final List<Identity> identities = new ArrayList<Identity>();
+        final List<Identity> identities = new ArrayList<>();
         identities.add(identity);
-        final IdentityManager im = mock(IdentityManager.class);
+        final IdentityController im = mock(IdentityController.class);
         when(im.getIdentitiesByType("profile")).thenReturn(identities);
 
         ProfileManagerModel instance = new ProfileManagerModel(im);
@@ -118,7 +118,7 @@ public class ProfileManagerModelTest {
         final Profile newProfile = createProfile("2");
         ProfileManagerModel instance = createModel();
         assertEquals(Arrays.asList(new Profile[]{defaultProfile,}), instance.getProfiles());
-        final List<Profile> newProfiles = new ArrayList<Profile>();
+        final List<Profile> newProfiles = new ArrayList<>();
         newProfiles.add(defaultProfile);
         newProfiles.add(newProfile);
         instance.addProfile(newProfile);

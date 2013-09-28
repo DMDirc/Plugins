@@ -29,7 +29,7 @@ import com.dmdirc.addons.serverlists.io.ServerGroupWriter;
 import com.dmdirc.addons.serverlists.service.ServerListServiceProvider;
 import com.dmdirc.config.Identity;
 import com.dmdirc.config.IdentityListener;
-import com.dmdirc.config.IdentityManager;
+import com.dmdirc.interfaces.IdentityController;
 
 import com.dmdirc.plugins.PluginManager;
 import java.io.IOException;
@@ -47,23 +47,31 @@ import java.util.Map;
 public class ServerList implements IdentityListener {
 
     /** A list of all known groups. */
-    private final Map<ServerGroup, ServerGroupWriter> groups
-            = new HashMap<ServerGroup, ServerGroupWriter>();
+    private final Map<ServerGroup, ServerGroupWriter> groups = new HashMap<>();
 
     /** ServerManager that ServerEntrys use to create servers */
     private final ServerManager serverManager;
+
+    /** The controller to read/write settings with. */
+    private final IdentityController identityController;
 
     /**
      * Creates a new ServerList and loads groups and servers.
      *
      * @param pluginManager Plugin Manager to use.
      * @param serverManager Server Manager to use.
+     * @param identityController The controller to read/write settings with.
      */
-    public ServerList(final PluginManager pluginManager, final ServerManager serverManager) {
+    public ServerList(
+            final PluginManager pluginManager,
+            final ServerManager serverManager,
+            final IdentityController identityController) {
         this.serverManager = serverManager;
-        IdentityManager.getIdentityManager().registerIdentityListener("servergroup", this);
+        this.identityController = identityController;
 
-        for (Identity identity : IdentityManager.getIdentityManager().getIdentitiesByType("servergroup")) {
+        identityController.registerIdentityListener("servergroup", this);
+
+        for (Identity identity : identityController.getIdentitiesByType("servergroup")) {
             identityAdded(identity);
         }
 
@@ -145,7 +153,7 @@ public class ServerList implements IdentityListener {
     @Override
     public void identityAdded(final Identity identity) {
         try {
-            final ServerGroupReader reader = new ServerGroupReader(serverManager, identity);
+            final ServerGroupReader reader = new ServerGroupReader(serverManager, identityController, identity);
             addServerGroup(reader.read(), reader.getWriter());
         } catch (IllegalArgumentException ex) {
             // Silently ignore

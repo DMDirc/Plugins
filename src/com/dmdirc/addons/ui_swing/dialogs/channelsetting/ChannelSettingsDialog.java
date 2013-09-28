@@ -82,7 +82,7 @@ public final class ChannelSettingsDialog extends StandardDialog implements
         super(controller, parentWindow, ModalityType.MODELESS);
 
         channel = newChannel;
-        identity = getController().getIdentityManager().createChannelConfig(
+        identity = getController().getIdentityFactory().createChannelConfig(
                 channel.getServer().getNetwork(),
                 channel.getChannelInfo().getName());
         this.channelWindow = (InputTextFrame) controller.getWindowFactory()

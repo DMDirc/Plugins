@@ -23,7 +23,7 @@
 package com.dmdirc.addons.nickcolours;
 
 import com.dmdirc.addons.ui_swing.SwingController;
-import com.dmdirc.config.IdentityManager;
+import com.dmdirc.config.Identity;
 import com.dmdirc.config.prefs.PreferencesInterface;
 
 import java.awt.Color;
@@ -46,8 +46,6 @@ import net.miginfocom.swing.MigLayout;
 /**
  * Panel used for the custom nick colour settings component in the plugin's
  * config dialog.
- *
- * @author Chris
  */
 public class NickColourPanel extends JPanel implements ActionListener,
         PreferencesInterface, ListSelectionListener {
@@ -62,6 +60,8 @@ public class NickColourPanel extends JPanel implements ActionListener,
     private final JTable table;
     /** The plugin we're associated with. */
     private final transient NickColourPlugin plugin;
+    /** The identity to write settings to. */
+    private final Identity configIdentity;
     /** The table headings. */
     private static final String[] HEADERS = {"Network", "Nickname",
         "Text colour", "Nicklist colour"};
@@ -75,11 +75,13 @@ public class NickColourPanel extends JPanel implements ActionListener,
      * @param controller The UI controller that owns this panel
      * @param plugin The plugin that owns this panel
      */
-    public NickColourPanel(final SwingController controller,
+    public NickColourPanel(
+            final SwingController controller,
             final NickColourPlugin plugin) {
         super();
 
         this.plugin = plugin;
+        this.configIdentity = controller.getIdentityManager().getGlobalConfigIdentity();
 
         final Object[][] data = plugin.getData();
 
@@ -217,7 +219,7 @@ public class NickColourPanel extends JPanel implements ActionListener,
      */
     @SuppressWarnings("unchecked")
     private List<Object[]> getData() {
-        final List<Object[]> res = new ArrayList<Object[]>();
+        final List<Object[]> res = new ArrayList<>();
         final DefaultTableModel model = ((DefaultTableModel) table.getModel());
 
         final List<List<?>> rows = (List<List<?>>) model.getDataVector();
@@ -234,14 +236,13 @@ public class NickColourPanel extends JPanel implements ActionListener,
     public void save() {
         // Remove all old config entries
         for (Object[] parts : plugin.getData()) {
-            IdentityManager.getIdentityManager().getGlobalConfigIdentity()
-                    .unsetOption(plugin.getDomain(), "color:" + parts[0] + ":" + parts[1]);
+            configIdentity.unsetOption(plugin.getDomain(),
+                    "color:" + parts[0] + ":" + parts[1]);
         }
 
         // And write the new ones
         for (Object[] row : getData()) {
-            IdentityManager.getIdentityManager().getGlobalConfigIdentity()
-                    .setOption(plugin.getDomain(),
+            configIdentity.setOption(plugin.getDomain(),
                     "color:" + row[0] + ":" + row[1], row[2] + ":" + row[3]);
         }
     }

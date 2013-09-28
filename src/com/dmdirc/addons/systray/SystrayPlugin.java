@@ -67,7 +67,7 @@ public final class SystrayPlugin extends BaseCommandPlugin implements
     private final PluginInfo pluginInfo;
     /** The action controller to use. */
     private final ActionController actionController;
-    /** The controller to read settings from. */
+    /** The controller to read/write settings with. */
     private final IdentityController identityController;
 
     /**
@@ -75,11 +75,12 @@ public final class SystrayPlugin extends BaseCommandPlugin implements
      *
      * @param pluginInfo This plugin's plugin info.
      * @param actionController The action controller to use.
-     * @param identityManager The identity manager to read settings from.
+     * @param identityController The identity manager to read settings from.
      * @param commandController Command controller to register commands.
      * @param urlBuilder URL builder to use to resolve icon paths.
      */
-    public SystrayPlugin(final PluginInfo pluginInfo,
+    public SystrayPlugin(
+            final PluginInfo pluginInfo,
             final ActionController actionController,
             final IdentityController identityController,
             final CommandController commandController,
