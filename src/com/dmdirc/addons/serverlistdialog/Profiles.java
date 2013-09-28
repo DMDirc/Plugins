@@ -22,13 +22,12 @@
 
 package com.dmdirc.addons.serverlistdialog;
 
+import com.dmdirc.addons.serverlists.ServerGroupItem;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.vetoable.VetoableComboBoxModel;
-import com.dmdirc.config.Identity;
-import com.dmdirc.addons.serverlists.ServerGroupItem;
+import com.dmdirc.interfaces.config.ConfigProvider;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -51,8 +50,7 @@ public class Profiles extends JPanel implements ServerListListener {
     /** Server list model. */
     private final ServerListModel model;
     /** Combo boxes. */
-    private final Map<ServerGroupItem, JComboBox> combos =
-            new HashMap<ServerGroupItem, JComboBox>();
+    private final Map<ServerGroupItem, JComboBox> combos = new HashMap<>();
     /** Info label. */
     private final JLabel label;
     /** Swing controller. */
@@ -109,11 +107,9 @@ public class Profiles extends JPanel implements ServerListListener {
         if (!combos.containsKey(item)) {
             final DefaultComboBoxModel comboModel = new VetoableComboBoxModel();
 
-            final List<Identity> profiles = controller.getIdentityManager()
-                    .getIdentitiesByType("profile");
-            Identity selectedItem = null;
+            ConfigProvider selectedItem = null;
             comboModel.addElement(null);
-            for (Identity profile : profiles) {
+            for (ConfigProvider profile : controller.getIdentityManager().getIdentitiesByType("profile")) {
                 comboModel.addElement(profile);
                 if (item != null && profile.getName().equals(
                         item.getProfile())) {
@@ -135,7 +131,7 @@ public class Profiles extends JPanel implements ServerListListener {
                     if (entry.getValue().getSelectedItem() == null) {
                         entry.getKey().setProfile(null);
                     } else {
-                        entry.getKey().setProfile(((Identity) entry.getValue().
+                        entry.getKey().setProfile(((ConfigProvider) entry.getValue().
                                 getSelectedItem()).getName());
                     }
                 }

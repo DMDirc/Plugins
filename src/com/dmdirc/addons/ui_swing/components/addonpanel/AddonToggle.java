@@ -22,7 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.components.addonpanel;
 
-import com.dmdirc.config.Identity;
+import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.ui.themes.Theme;
 import com.dmdirc.ui.themes.ThemeManager;
@@ -48,7 +48,7 @@ public final class AddonToggle {
     /** Listener list. */
     private final ListenerList listeners = new ListenerList();
     /** Identity to change update settings in. */
-    private final Identity identity;
+    private final ConfigProvider identity;
     /** The manager to update when toggling a theme. */
     private final ThemeManager themeManager;
 
@@ -59,7 +59,7 @@ public final class AddonToggle {
      * @param identity Identity to change update settings in.
      * @param pi The PluginInfo to be wrapped.
      */
-    public AddonToggle(final Identity identity, final PluginInfo pi) {
+    public AddonToggle(final ConfigProvider identity, final PluginInfo pi) {
         this.identity = identity;
         this.pi = pi;
         this.theme = null;
@@ -83,7 +83,7 @@ public final class AddonToggle {
      * @param themeManager The manager to update when toggling a theme.
      * @param theme The Theme to be wrapped
      */
-    public AddonToggle(final Identity identity, final ThemeManager themeManager, final Theme theme) {
+    public AddonToggle(final ConfigProvider identity, final ThemeManager themeManager, final Theme theme) {
         this.identity = identity;
         this.pi = null;
         this.theme = theme;

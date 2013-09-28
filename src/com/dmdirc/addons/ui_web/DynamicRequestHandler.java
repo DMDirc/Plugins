@@ -27,7 +27,7 @@ import com.dmdirc.ServerManager;
 import com.dmdirc.addons.ui_web.uicomponents.WebInputHandler;
 import com.dmdirc.addons.ui_web.uicomponents.WebInputWindow;
 import com.dmdirc.addons.ui_web.uicomponents.WebWindow;
-import com.dmdirc.config.Identity;
+import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.config.IdentityController;
 import com.dmdirc.parser.common.ChannelJoinRequest;
 import com.dmdirc.parser.interfaces.ChannelClientInfo;
@@ -46,6 +46,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import lombok.extern.slf4j.Slf4j;
+
 import org.mortbay.jetty.HttpConnection;
 import org.mortbay.jetty.Request;
 import org.mortbay.jetty.handler.AbstractHandler;
@@ -340,7 +341,7 @@ public class DynamicRequestHandler extends AbstractHandler {
 
         profileEvents.add(new Event("clearprofiles", null));
 
-        for (Identity identity : identityController.getIdentitiesByType("profile")) {
+        for (ConfigProvider identity : identityController.getIdentitiesByType("profile")) {
             profileEvents.add(new Event("addprofile", identity.getName()));
         }
 
@@ -389,8 +390,8 @@ public class DynamicRequestHandler extends AbstractHandler {
                 "target"));
     }
 
-    private Identity findProfile(final String parameter) {
-        for (Identity identity : identityController.getIdentitiesByType("profile")) {
+    private ConfigProvider findProfile(final String parameter) {
+        for (ConfigProvider identity : identityController.getIdentitiesByType("profile")) {
             if (identity.getName().equals(parameter)) {
                 return identity;
             }

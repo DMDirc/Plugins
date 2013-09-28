@@ -33,8 +33,8 @@ import com.dmdirc.addons.ui_swing.components.NickList;
 import com.dmdirc.addons.ui_swing.components.SplitPane;
 import com.dmdirc.addons.ui_swing.components.TopicBar;
 import com.dmdirc.commandparser.PopupType;
-import com.dmdirc.config.Identity;
 import com.dmdirc.interfaces.actions.ActionType;
+import com.dmdirc.interfaces.config.ConfigProvider;
 
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -59,7 +59,7 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
      */
     private static final long serialVersionUID = 10;
     /** Identity. */
-    private final Identity identity;
+    private final ConfigProvider identity;
     /** split pane. */
     private SplitPane splitPane;
     /** popup menu item. */

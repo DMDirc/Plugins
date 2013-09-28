@@ -23,7 +23,6 @@
 package com.dmdirc.addons.freedesktop_notifications;
 
 import com.dmdirc.config.ConfigManager;
-import com.dmdirc.config.Identity;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
@@ -31,6 +30,7 @@ import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
+import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.config.IdentityController;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
@@ -66,7 +66,7 @@ public final class FreeDesktopNotificationsPlugin
     /** Global config. */
     private final ConfigManager config;
     /** Addon identity. */
-    private final Identity identity;
+    private final ConfigProvider identity;
     /** Plugin files helper. */
     private final PluginFilesHelper filesHelper;
 

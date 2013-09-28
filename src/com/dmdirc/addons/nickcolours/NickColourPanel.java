@@ -23,8 +23,8 @@
 package com.dmdirc.addons.nickcolours;
 
 import com.dmdirc.addons.ui_swing.SwingController;
-import com.dmdirc.config.Identity;
 import com.dmdirc.config.prefs.PreferencesInterface;
+import com.dmdirc.interfaces.config.ConfigProvider;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
@@ -61,7 +61,7 @@ public class NickColourPanel extends JPanel implements ActionListener,
     /** The plugin we're associated with. */
     private final transient NickColourPlugin plugin;
     /** The identity to write settings to. */
-    private final Identity configIdentity;
+    private final ConfigProvider configIdentity;
     /** The table headings. */
     private static final String[] HEADERS = {"Network", "Nickname",
         "Text colour", "Nicklist colour"};

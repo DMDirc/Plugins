@@ -30,7 +30,6 @@ import com.dmdirc.Server;
 import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.config.ConfigManager;
-import com.dmdirc.config.Identity;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
@@ -40,6 +39,7 @@ import com.dmdirc.interfaces.ActionController;
 import com.dmdirc.interfaces.ActionListener;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
+import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.config.IdentityController;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
@@ -92,7 +92,7 @@ public class LoggingPlugin extends BaseCommandPlugin implements ActionListener,
     /** Global config. */
     private final ConfigManager config;
     /** Addon identity. */
-    private final Identity identity;
+    private final ConfigProvider identity;
     /** Parent Identity Manager. */
     private final IdentityController identityController;
 

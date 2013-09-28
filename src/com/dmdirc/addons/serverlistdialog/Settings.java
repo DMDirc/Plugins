@@ -22,13 +22,13 @@
 
 package com.dmdirc.addons.serverlistdialog;
 
-import com.dmdirc.addons.ui_swing.components.expandingsettings.SettingsPanel;
 import com.dmdirc.addons.serverlists.ServerGroup;
 import com.dmdirc.addons.serverlists.ServerGroupItem;
 import com.dmdirc.addons.ui_swing.SwingController;
+import com.dmdirc.addons.ui_swing.components.expandingsettings.SettingsPanel;
 import com.dmdirc.config.ConfigManager;
-import com.dmdirc.config.Identity;
 import com.dmdirc.config.prefs.PreferencesManager;
+import com.dmdirc.interfaces.config.ConfigProvider;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -51,8 +51,7 @@ public class Settings extends JPanel implements ServerListListener {
     /** Server list model. */
     private final ServerListModel model;
     /** Settings panel. */
-    private final Map<ServerGroupItem, SettingsPanel> panels =
-            new HashMap<ServerGroupItem, SettingsPanel>();
+    private final Map<ServerGroupItem, SettingsPanel> panels = new HashMap<>();
     /** Platform border. */
     private final Border border;
     /** Swing controller. */
@@ -152,9 +151,11 @@ public class Settings extends JPanel implements ServerListListener {
      * Adds the settings to the panel.
      *
      * @param settingsPanel Settings panel to add settings to
+     * @param manager The config manager to read current settings from.
+     * @param identity The provider to write settings to.
      */
     private void addSettings(final SettingsPanel settingsPanel,
-            final ConfigManager manager, final Identity identity) {
+            final ConfigManager manager, final ConfigProvider identity) {
         settingsPanel.addOption(PreferencesManager.getPreferencesManager()
                 .getServerSettings(manager, identity));
     }

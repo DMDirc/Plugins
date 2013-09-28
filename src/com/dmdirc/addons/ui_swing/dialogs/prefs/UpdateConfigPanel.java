@@ -25,9 +25,9 @@ package com.dmdirc.addons.ui_swing.dialogs.prefs;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.PackingTable;
 import com.dmdirc.config.ConfigManager;
-import com.dmdirc.config.Identity;
 import com.dmdirc.config.prefs.PreferencesInterface;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
+import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.updater.UpdateChannel;
@@ -89,7 +89,7 @@ public class UpdateConfigPanel extends JPanel implements ActionListener,
     /** {@inheritDoc} */
     @Override
     public void save() {
-        final Identity identity = controller.getGlobalIdentity();
+        final ConfigProvider identity = controller.getGlobalIdentity();
         identity.setOption("updater", "enable", enable.isSelected());
 
         identity.setOption("updater", "channel", updateChannel
