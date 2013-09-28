@@ -33,7 +33,8 @@ import com.dmdirc.addons.ui_swing.components.vetoable.VetoableComboBoxModel;
 import com.dmdirc.addons.ui_swing.components.vetoable.VetoableComboBoxSelectionListener;
 import com.dmdirc.addons.ui_swing.dialogs.profiles.ProfileManagerDialog;
 import com.dmdirc.config.Identity;
-import com.dmdirc.config.IdentityListener;
+import com.dmdirc.interfaces.config.ConfigProvider;
+import com.dmdirc.interfaces.config.ConfigProviderListener;
 import com.dmdirc.interfaces.config.IdentityController;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
@@ -63,7 +64,7 @@ import net.miginfocom.swing.MigLayout;
  * Dialog that allows the user to enter details of a new server to connect to.
  */
 public final class NewServerDialog extends StandardDialog implements
-        ActionListener, VetoableComboBoxSelectionListener, IdentityListener {
+        ActionListener, VetoableComboBoxSelectionListener, ConfigProviderListener {
 
     /** Serial version UID. */
     private static final long serialVersionUID = 8;
@@ -318,7 +319,7 @@ public final class NewServerDialog extends StandardDialog implements
 
     /** {@inheritDoc} */
     @Override
-    public void identityAdded(final Identity identity) {
+    public void configProviderAdded(final ConfigProvider configProvider) {
         UIUtilities.invokeLater(new Runnable() {
 
             /** {@inheritDoc} */
@@ -338,7 +339,7 @@ public final class NewServerDialog extends StandardDialog implements
 
     /** {@inheritDoc} */
     @Override
-    public void identityRemoved(final Identity identity) {
+    public void configProviderRemoved(final ConfigProvider configProvider) {
         UIUtilities.invokeLater(new Runnable() {
 
             /** {@inheritDoc} */

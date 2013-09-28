@@ -24,7 +24,7 @@ package com.dmdirc.addons.serverlists.io;
 
 import com.dmdirc.ServerManager;
 import com.dmdirc.addons.serverlists.ServerGroup;
-import com.dmdirc.config.Identity;
+import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.config.IdentityController;
 
 import java.net.URI;
@@ -38,8 +38,8 @@ import java.util.Map;
  */
 public class ServerGroupReader {
 
-    /** The identity this reader should read from. */
-    private final Identity identity;
+    /** The config provider this reader should read from. */
+    private final ConfigProvider identity;
 
     /** The reader we'll use for individual servers. */
     private final ServerEntryReader entryReader;
@@ -51,12 +51,14 @@ public class ServerGroupReader {
      * Creates a new ServerGroupReader that will read from the specified
      * identity.
      *
+     * @param serverManager The server manager to use to connect to servers.
+     * @param identityController The identity controller to use.
      * @param identity The identity describing the server group
      */
     public ServerGroupReader(
             final ServerManager serverManager,
             final IdentityController identityController,
-            final Identity identity) {
+            final ConfigProvider identity) {
         this.identity = identity;
         this.identityController = identityController;
         this.entryReader = new ServerEntryReader(serverManager, identityController, identity);
