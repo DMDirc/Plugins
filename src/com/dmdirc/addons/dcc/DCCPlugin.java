@@ -34,7 +34,6 @@ import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.SwingWindowFactory;
 import com.dmdirc.addons.ui_swing.components.frames.ComponentFrame;
 import com.dmdirc.config.ConfigManager;
-import com.dmdirc.config.Identity;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
@@ -42,8 +41,9 @@ import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.interfaces.ActionListener;
 import com.dmdirc.interfaces.CommandController;
-import com.dmdirc.interfaces.config.IdentityController;
 import com.dmdirc.interfaces.actions.ActionType;
+import com.dmdirc.interfaces.config.ConfigProvider;
+import com.dmdirc.interfaces.config.IdentityController;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.parser.interfaces.ClientInfo;
@@ -65,7 +65,7 @@ import javax.swing.JOptionPane;
 /**
  * This plugin adds DCC to DMDirc.
  */
-public final class DCCPlugin extends BaseCommandPlugin implements ActionListener {
+public class DCCPlugin extends BaseCommandPlugin implements ActionListener {
 
     /** Our DCC Container window. */
     private PlaceholderContainer container;
@@ -636,7 +636,7 @@ public final class DCCPlugin extends BaseCommandPlugin implements ActionListener
     /** {@inheritDoc} */
     @Override
     public void domainUpdated() {
-        final Identity defaults = identityController.getGlobalAddonIdentity();
+        final ConfigProvider defaults = identityController.getGlobalAddonIdentity();
 
         defaults.setOption(getDomain(), "receive.savelocation",
                 identityController.getConfigDir() + "downloads"

@@ -190,7 +190,7 @@ public final class NewServerDialog extends StandardDialog implements
         final List<Identity> profiles = getController().getIdentityManager()
                 .getIdentitiesByType("profile");
         ((DefaultComboBoxModel) identityField.getModel()).removeAllElements();
-        for (Identity profile : profiles) {
+        for (ConfigProvider profile : profiles) {
             ((DefaultComboBoxModel) identityField.getModel()).addElement(profile);
         }
     }
@@ -244,7 +244,7 @@ public final class NewServerDialog extends StandardDialog implements
         dispose();
         openingServer = true;
 
-        final Identity profile = (Identity) identityField.getSelectedItem();
+        final ConfigProvider profile = (ConfigProvider) identityField.getSelectedItem();
 
         try {
             final URI address = new URI("irc" + (sslCheck.isSelected() ? "s" :

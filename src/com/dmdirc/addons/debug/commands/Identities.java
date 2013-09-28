@@ -29,6 +29,7 @@ import com.dmdirc.addons.debug.DebugPlugin;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.config.Identity;
+import com.dmdirc.interfaces.config.ConfigProvider;
 
 import java.util.List;
 
@@ -76,7 +77,7 @@ public class Identities extends DebugCommand {
         final String[][] data = new String[identities.size()][4];
 
         int i = 0;
-        for (Identity source : identities) {
+        for (ConfigProvider source : identities) {
             data[i++] = new String[]{source.getName(),
             source.getTarget().getTypeName(), source.getTarget().getData(),
             String.valueOf(source.getTarget().getOrder())};

@@ -28,7 +28,7 @@ import com.dmdirc.addons.debug.DebugCommand;
 import com.dmdirc.addons.debug.DebugPlugin;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.commands.context.CommandContext;
-import com.dmdirc.config.Identity;
+import com.dmdirc.interfaces.config.ConfigProvider;
 
 /**
  * Outputs the config info related to the current context.
@@ -61,7 +61,7 @@ public class ConfigInfo extends DebugCommand {
     @Override
     public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
-        for (Identity source : origin.getConfigManager().getSources()) {
+        for (ConfigProvider source : origin.getConfigManager().getSources()) {
             sendLine(origin, args.isSilent(), FORMAT_OUTPUT, source.getTarget()
                     + " - " + source + "(" + source.getTarget().getOrder()
                     + ")");

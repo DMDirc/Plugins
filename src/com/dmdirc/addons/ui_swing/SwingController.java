@@ -49,16 +49,16 @@ import com.dmdirc.addons.ui_swing.dialogs.url.URLDialog;
 import com.dmdirc.addons.ui_swing.wizard.WizardListener;
 import com.dmdirc.addons.ui_swing.wizard.firstrun.SwingFirstRunWizard;
 import com.dmdirc.config.ConfigManager;
-import com.dmdirc.config.Identity;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.interfaces.CommandController;
+import com.dmdirc.interfaces.LifecycleController;
+import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.config.IdentityController;
 import com.dmdirc.interfaces.config.IdentityFactory;
-import com.dmdirc.interfaces.LifecycleController;
 import com.dmdirc.interfaces.ui.UIController;
 import com.dmdirc.interfaces.ui.Window;
 import com.dmdirc.logger.ErrorLevel;
@@ -144,10 +144,10 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     private final IdentityFactory identityFactory;
     /** Global config identity. */
     @Getter
-    private final Identity globalIdentity;
+    private final ConfigProvider globalIdentity;
     /** Addon config identity. */
     @Getter
-    private final Identity addonIdentity;
+    private final ConfigProvider addonIdentity;
     /** Global Swing UI Icon manager. */
     @Getter
     private final IconManager iconManager;
@@ -182,6 +182,7 @@ public class SwingController extends BaseCommandPlugin implements UIController {
      *
      * @param pluginInfo Plugin info
      * @param identityManager Identity Manager
+     * @param identityFactory Factory used to create identities.
      * @param pluginManager Plugin manager
      * @param actionManager Action manager
      * @param commandController Command controller to register commands

@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_swing.dialogs.profiles;
 
 import com.dmdirc.config.Identity;
+import com.dmdirc.interfaces.config.ConfigProvider;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -42,7 +43,7 @@ import lombok.ToString;
 public class Profile {
 
     /** Identity backing this profile. */
-    private Identity identity;
+    private ConfigProvider identity;
     /** Profile Name, must be a sanitised filename. */
     @Getter @Setter
     private String name;
@@ -69,11 +70,11 @@ public class Profile {
      *
      * @param identity Identity to create profile from
      */
-    public Profile(final Identity identity) {
+    public Profile(final ConfigProvider identity) {
         this.identity = identity;
         if (identity == null) {
             name = "New Profile";
-            nicknames = new ArrayList<String>();
+            nicknames = new ArrayList<>();
             realname = "";
             ident = "";
         } else {

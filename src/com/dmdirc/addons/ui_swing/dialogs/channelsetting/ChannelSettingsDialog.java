@@ -29,8 +29,8 @@ import com.dmdirc.addons.ui_swing.components.expandingsettings.SettingsPanel;
 import com.dmdirc.addons.ui_swing.components.frames.InputTextFrame;
 import com.dmdirc.addons.ui_swing.components.modes.ChannelModesPane;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
-import com.dmdirc.config.Identity;
 import com.dmdirc.config.prefs.PreferencesManager;
+import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.ui.InputWindow;
 
 import java.awt.Window;
@@ -55,7 +55,7 @@ public final class ChannelSettingsDialog extends StandardDialog implements
     /** The channel object that this dialog belongs to. */
     private final Channel channel;
     /** Channel identity file. */
-    private final Identity identity;
+    private final ConfigProvider identity;
     /** Channel window. */
     private final InputWindow channelWindow;
     /** Tabbed pane. */
@@ -75,7 +75,6 @@ public final class ChannelSettingsDialog extends StandardDialog implements
      * @param controller Swing controller
      * @param newChannel The channel object that we're editing settings for
      * @param parentWindow Parent window
-     * @param channelWindow Channel window
      */
     public ChannelSettingsDialog(final SwingController controller,
             final Channel newChannel, final Window parentWindow) {

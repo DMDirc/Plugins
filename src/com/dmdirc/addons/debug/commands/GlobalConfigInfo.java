@@ -28,7 +28,7 @@ import com.dmdirc.addons.debug.DebugCommand;
 import com.dmdirc.addons.debug.DebugPlugin;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.commands.context.CommandContext;
-import com.dmdirc.config.Identity;
+import com.dmdirc.interfaces.config.ConfigProvider;
 
 /**
  * Outputs information about the global config sources.
@@ -61,7 +61,7 @@ public class GlobalConfigInfo extends DebugCommand {
     @Override
     public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
-        for (Identity source : getPlugin().getIdentityController()
+        for (ConfigProvider source : getPlugin().getIdentityController()
                 .getGlobalConfiguration().getSources()) {
             sendLine(origin, args.isSilent(), FORMAT_OUTPUT, source.getTarget()
                     + " - " + source + "(" + source.getTarget().getOrder()

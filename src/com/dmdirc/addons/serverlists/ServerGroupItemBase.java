@@ -22,7 +22,7 @@
 
 package com.dmdirc.addons.serverlists;
 
-import com.dmdirc.config.Identity;
+import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.config.IdentityController;
 
 import lombok.RequiredArgsConstructor;
@@ -108,9 +108,9 @@ public abstract class ServerGroupItemBase implements ServerGroupItem {
      *
      * @return This server's profile identity
      */
-    protected Identity getProfileIdentity() {
+    protected ConfigProvider getProfileIdentity() {
         if (profile != null) {
-            for (Identity identity : identityController.getIdentitiesByType("profile")) {
+            for (ConfigProvider identity : identityController.getIdentitiesByType("profile")) {
                 if (profile.equals(identity.getName())) {
                     return identity;
                 }
