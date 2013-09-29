@@ -22,7 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.components;
 
-import com.dmdirc.config.ConfigManager;
+import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.parser.interfaces.ChannelClientInfo;
 
@@ -46,7 +46,7 @@ public final class NicklistListModel extends AbstractListModel implements
     /** stores the nicknames to be shown in this list. */
     private final List<ChannelClientInfo> nicknames;
     /** Config manager. */
-    private ConfigManager config;
+    private final AggregateConfigProvider config;
     /** Sort by mode? */
     private boolean sortByMode;
     /** Sort by case? */
@@ -57,7 +57,7 @@ public final class NicklistListModel extends AbstractListModel implements
      *
      * @param config Config manager
      */
-    public NicklistListModel(final ConfigManager config) {
+    public NicklistListModel(final AggregateConfigProvider config) {
         this(config, Collections.synchronizedList(
                 new ArrayList<ChannelClientInfo>()));
     }
@@ -68,7 +68,7 @@ public final class NicklistListModel extends AbstractListModel implements
      * @param config Config manager
      * @param newNicknames list of nicknames used for initialisation
      */
-    public NicklistListModel(final ConfigManager config,
+    public NicklistListModel(final AggregateConfigProvider config,
             final List<ChannelClientInfo> newNicknames) {
         super();
 

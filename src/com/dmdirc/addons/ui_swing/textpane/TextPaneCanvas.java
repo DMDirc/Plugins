@@ -23,7 +23,7 @@
 package com.dmdirc.addons.ui_swing.textpane;
 
 import com.dmdirc.addons.ui_swing.UIUtilities;
-import com.dmdirc.config.ConfigManager;
+import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.ui.messages.IRCDocument;
 import com.dmdirc.ui.messages.IRCTextAttribute;
@@ -91,7 +91,7 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
     /** Last visible line (from the top). */
     private int lastVisibleLine;
     /** Config Manager. */
-    private final ConfigManager manager;
+    private final AggregateConfigProvider manager;
     /** Quick copy? */
     private boolean quickCopy;
     /** Mouse click listeners. */

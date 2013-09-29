@@ -146,7 +146,7 @@ public final class SwingFirstRunWizard implements WizardListener,
         for (Entry<String, byte[]> resource : resources.entrySet()) {
             try {
                 final String resourceName =
-                        controller.getIdentityManager().getConfigDir() + "actions" +
+                        controller.getIdentityManager().getConfigurationDirectory() + "actions" +
                         resource.getKey().
                         substring(27, resource.getKey().length());
                 final File newDir =

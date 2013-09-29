@@ -28,10 +28,10 @@ import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.TreeScroller;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.addons.ui_swing.framemanager.FrameManager;
-import com.dmdirc.config.ConfigManager;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.interfaces.FrameInfoListener;
 import com.dmdirc.interfaces.NotificationListener;
+import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.ui.Colour;
@@ -76,11 +76,11 @@ public final class TreeFrameManager implements FrameManager,
     /** Tree scroller. */
     private TreeScroller scroller;
     /** Configuration manager. */
-    private ConfigManager config;
+    private AggregateConfigProvider config;
 
     /** creates a new instance of the TreeFrameManager. */
     public TreeFrameManager() {
-        nodes = new HashMap<FrameContainer, TreeViewNode>();
+        nodes = new HashMap<>();
     }
 
     /** {@inheritDoc} */

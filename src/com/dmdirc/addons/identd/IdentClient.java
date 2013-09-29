@@ -24,7 +24,7 @@ package com.dmdirc.addons.identd;
 
 import com.dmdirc.Server;
 import com.dmdirc.ServerManager;
-import com.dmdirc.config.ConfigManager;
+import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.util.io.StreamUtils;
@@ -35,11 +35,10 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-
 /**
  * The IdentClient responds to an ident request.
  */
-public final class IdentClient implements Runnable {
+public class IdentClient implements Runnable {
 
     /** The IdentdServer that owns this Client. */
     private final IdentdServer myServer;
@@ -115,7 +114,7 @@ public final class IdentClient implements Runnable {
      * @param config The config manager to use for settings
      * @return the ident response for the given line
      */
-    protected String getIdentResponse(final String input, final ConfigManager config) {
+    protected String getIdentResponse(final String input, final AggregateConfigProvider config) {
         final String unescapedInput = unescapeString(input);
         final String[] bits = unescapedInput.replaceAll("\\s+", "").split(",", 2);
         if (bits.length < 2) {

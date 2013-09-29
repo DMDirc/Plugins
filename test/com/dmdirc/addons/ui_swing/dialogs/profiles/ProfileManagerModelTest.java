@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_swing.dialogs.profiles;
 
 import com.dmdirc.config.Identity;
+import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.config.IdentityController;
 
 import java.util.ArrayList;
@@ -69,9 +70,9 @@ public class ProfileManagerModelTest {
     @BeforeClass
     @SuppressWarnings("unchecked")
     public static void setUpClass() throws Exception {
-        final List<Identity> identities = Collections.emptyList();
+        final List<ConfigProvider> identities = Collections.emptyList();
         manager = mock(IdentityController.class);
-        when(manager.getIdentitiesByType("profile")).thenReturn(identities);
+        when(manager.getProvidersByType("profile")).thenReturn(identities);
     }
 
     /**
@@ -87,10 +88,10 @@ public class ProfileManagerModelTest {
         when(identity.getOptionList("profile", "nicknames")).thenReturn(nicknames);
         when(identity.getOption("profile", "realname")).thenReturn("realname");
         when(identity.getOption("profile", "ident")).thenReturn("ident");
-        final List<Identity> identities = new ArrayList<>();
+        final List<ConfigProvider> identities = new ArrayList<>();
         identities.add(identity);
         final IdentityController im = mock(IdentityController.class);
-        when(im.getIdentitiesByType("profile")).thenReturn(identities);
+        when(im.getProvidersByType("profile")).thenReturn(identities);
 
         ProfileManagerModel instance = new ProfileManagerModel(im);
 

@@ -27,7 +27,7 @@ import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.SwingWindowFactory;
 import com.dmdirc.addons.ui_swing.components.statusbar.SwingStatusBar;
-import com.dmdirc.config.ConfigManager;
+import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.IdentityController;
 import com.dmdirc.interfaces.ui.StatusBar;
 import com.dmdirc.ui.IconManager;
@@ -160,7 +160,7 @@ public class DialogManager {
         injector.addParameter(SwingController.class, controller);
         injector.addParameter(IconManager.class, controller.getIconManager());
         injector.addParameter(IdentityController.class, controller.getIdentityManager());
-        injector.addParameter(ConfigManager.class, controller.getGlobalConfig());
+        injector.addParameter(AggregateConfigProvider.class, controller.getGlobalConfig());
         injector.addParameter(MainFrame.class, controller.getMainFrame());
         injector.addParameter(Window.class, controller.getMainFrame());
         injector.addParameter(SwingStatusBar.class, controller.getSwingStatusBar());

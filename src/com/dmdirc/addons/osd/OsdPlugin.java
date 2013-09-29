@@ -173,9 +173,9 @@ public final class OsdPlugin extends BaseCommandPlugin implements
     /** {@inheritDoc} */
     @Override
     public void save() {
-        identityController.getGlobalConfigIdentity()
+        identityController.getUserSettings()
                 .setOption(getDomain(), "locationX", x);
-        identityController.getGlobalConfigIdentity()
+        identityController.getUserSettings()
                 .setOption(getDomain(), "locationY", y);
     }
 

@@ -72,7 +72,6 @@ public class DCCCommand extends Command implements IntelligentCommand {
      * @param plugin The DCC Plugin that this command belongs to
      */
     public DCCCommand(final MainFrame mainFrame, final DCCPlugin plugin) {
-        super();
         this.mainFrame = mainFrame;
         myPlugin = plugin;
     }

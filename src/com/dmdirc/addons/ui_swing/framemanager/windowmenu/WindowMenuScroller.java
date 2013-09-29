@@ -23,12 +23,12 @@
 package com.dmdirc.addons.ui_swing.framemanager.windowmenu;
 
 import com.dmdirc.addons.ui_swing.UIUtilities;
-import com.dmdirc.config.ConfigManager;
+import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
 
-import darrylbu.util.MenuScroller;
-
 import javax.swing.JMenu;
+
+import darrylbu.util.MenuScroller;
 
 /**
  * Window menu scroller.
@@ -36,7 +36,7 @@ import javax.swing.JMenu;
 public class WindowMenuScroller implements ConfigChangeListener {
 
     /** Config manager. */
-    private final ConfigManager config;
+    private final AggregateConfigProvider config;
     /** Config domain. */
     private final String configDomain;
     /** Menu to scroll. */
@@ -54,7 +54,7 @@ public class WindowMenuScroller implements ConfigChangeListener {
      * @param configDomain Domain to check config settings in
      * @param fixedCount Number of fixed items in the menu
      */
-    public WindowMenuScroller(final JMenu menu, final ConfigManager config,
+    public WindowMenuScroller(final JMenu menu, final AggregateConfigProvider config,
             final String configDomain, final int fixedCount) {
         this.menu = menu;
         this.config = config;

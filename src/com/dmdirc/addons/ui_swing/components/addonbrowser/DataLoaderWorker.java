@@ -107,7 +107,7 @@ public class DataLoaderWorker
             loadingPanel.add(Box.createVerticalGlue(), "growy, pushy");
             try {
                 Downloader.downloadPage("http://addons.dmdirc.com/feed",
-                        controller.getIdentityManager().getConfigDir() + File.separator + "addons.feed",
+                        controller.getIdentityManager().getConfigurationDirectory() + File.separator + "addons.feed",
                         this);
             } catch (final IOException ex) {
                 loadingPanel.removeAll();
@@ -118,7 +118,7 @@ public class DataLoaderWorker
 
         loadingPanel.removeAll();
         loadingPanel.add(new TextLabel("Loading addon info, please wait."));
-        final ConfigFile data = new ConfigFile(controller.getIdentityManager().getConfigDir()
+        final ConfigFile data = new ConfigFile(controller.getIdentityManager().getConfigurationDirectory()
                 + File.separator + "addons.feed");
         try {
             data.read();

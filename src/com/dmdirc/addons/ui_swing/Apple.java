@@ -26,9 +26,9 @@ import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.addons.ui_swing.components.menubar.MenuBar;
 import com.dmdirc.commandparser.commands.global.NewServer;
-import com.dmdirc.config.ConfigManager;
 import com.dmdirc.interfaces.ActionListener;
 import com.dmdirc.interfaces.actions.ActionType;
+import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 
@@ -53,12 +53,13 @@ import javax.swing.UIManager;
 /**
  * Integrate DMDirc with OS X better.
  */
-public final class Apple implements InvocationHandler, ActionListener {
+public class Apple implements InvocationHandler, ActionListener {
+
     /** Store any addresses that are opened before CLIENT_OPENED. */
     private final List<URI> addresses = new ArrayList<>();
 
     /** Config manager used to read settings. */
-    private final ConfigManager configManager;
+    private final AggregateConfigProvider configManager;
 
     /** The "Application" object used to do stuff on OS X. */
     private Object application;
@@ -89,7 +90,7 @@ public final class Apple implements InvocationHandler, ActionListener {
      *
      * @param configManager Config manager
      */
-    public Apple(final ConfigManager configManager, final SwingController controller) {
+    public Apple(final AggregateConfigProvider configManager, final SwingController controller) {
         this.configManager = configManager;
         this.controller = controller;
         if (isApple()) {

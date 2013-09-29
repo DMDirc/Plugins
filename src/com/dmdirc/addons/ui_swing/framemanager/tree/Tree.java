@@ -26,7 +26,7 @@ import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.actions.CloseFrameContainerAction;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
-import com.dmdirc.config.ConfigManager;
+import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
 
 import java.awt.Rectangle;
@@ -65,7 +65,7 @@ public class Tree extends JTree implements MouseMotionListener,
     /** UI Controller. */
     private final SwingController controller;
     /** Config manager. */
-    private final ConfigManager config;
+    private final AggregateConfigProvider config;
     /** Drag selection enabled? */
     private boolean dragSelect;
     /** Drag button 1? */

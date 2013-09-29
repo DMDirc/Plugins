@@ -110,7 +110,7 @@ public abstract class ServerGroupItemBase implements ServerGroupItem {
      */
     protected ConfigProvider getProfileIdentity() {
         if (profile != null) {
-            for (ConfigProvider identity : identityController.getIdentitiesByType("profile")) {
+            for (ConfigProvider identity : identityController.getProvidersByType("profile")) {
                 if (profile.equals(identity.getName())) {
                     return identity;
                 }
@@ -118,7 +118,7 @@ public abstract class ServerGroupItemBase implements ServerGroupItem {
         }
 
         if (getParent() == null) {
-            return identityController.getIdentitiesByType("profile").get(0);
+            return identityController.getProvidersByType("profile").get(0);
         } else {
             return getParent().getProfileIdentity();
         }

@@ -72,7 +72,7 @@ public class ServerList implements ConfigProviderListener {
 
         identityController.registerIdentityListener("servergroup", this);
 
-        for (ConfigProvider identity : identityController.getIdentitiesByType("servergroup")) {
+        for (ConfigProvider identity : identityController.getProvidersByType("servergroup")) {
             configProviderAdded(identity);
         }
 

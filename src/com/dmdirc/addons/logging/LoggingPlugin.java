@@ -22,14 +22,11 @@
 
 package com.dmdirc.addons.logging;
 
-import com.dmdirc.util.io.ReverseFileReader;
 import com.dmdirc.Channel;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.Query;
 import com.dmdirc.Server;
 import com.dmdirc.actions.CoreActionType;
-import com.dmdirc.interfaces.actions.ActionType;
-import com.dmdirc.config.ConfigManager;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
@@ -38,6 +35,8 @@ import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.interfaces.ActionController;
 import com.dmdirc.interfaces.ActionListener;
 import com.dmdirc.interfaces.CommandController;
+import com.dmdirc.interfaces.actions.ActionType;
+import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.config.IdentityController;
@@ -50,6 +49,7 @@ import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.implementations.BaseCommandPlugin;
 import com.dmdirc.ui.messages.Styliser;
+import com.dmdirc.util.io.ReverseFileReader;
 import com.dmdirc.util.io.StreamUtils;
 
 import java.awt.Color;
@@ -90,7 +90,7 @@ public class LoggingPlugin extends BaseCommandPlugin implements ActionListener,
     /** The action controller to use. */
     private final ActionController actionController;
     /** Global config. */
-    private final ConfigManager config;
+    private final AggregateConfigProvider config;
     /** Addon identity. */
     private final ConfigProvider identity;
     /** Parent Identity Manager. */
@@ -124,7 +124,7 @@ public class LoggingPlugin extends BaseCommandPlugin implements ActionListener,
         this.pluginInfo = pluginInfo;
         this.actionController = actionController;
         config = identityController.getGlobalConfiguration();
-        identity = identityController.getGlobalAddonIdentity();
+        identity = identityController.getAddonSettings();
 
         registerCommand(new LoggingCommand(this), LoggingCommand.INFO);
     }
@@ -133,7 +133,7 @@ public class LoggingPlugin extends BaseCommandPlugin implements ActionListener,
     @Override
     public void domainUpdated() {
         identity.setOption(getDomain(), "general.directory",
-                identityController.getConfigDir() + "logs" + System.getProperty("file.separator"));
+                identityController.getConfigurationDirectory() + "logs" + System.getProperty("file.separator"));
     }
 
     /**

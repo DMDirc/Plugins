@@ -28,7 +28,6 @@ import com.dmdirc.addons.debug.DebugCommand;
 import com.dmdirc.addons.debug.DebugPlugin;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.commands.context.CommandContext;
-import com.dmdirc.config.Identity;
 import com.dmdirc.interfaces.config.ConfigProvider;
 
 import java.util.List;
@@ -72,8 +71,8 @@ public class Identities extends DebugCommand {
             type = args.getArgumentsAsString();
         }
 
-        final List<Identity> identities = getPlugin().getIdentityController()
-                .getIdentitiesByType(type);
+        final List<ConfigProvider> identities = getPlugin().getIdentityController()
+                .getProvidersByType(type);
         final String[][] data = new String[identities.size()][4];
 
         int i = 0;

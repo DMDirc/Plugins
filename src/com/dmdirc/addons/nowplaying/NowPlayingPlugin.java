@@ -135,7 +135,7 @@ public class NowPlayingPlugin extends BaseCommandPlugin implements ActionListene
      */
     protected void saveSettings(final List<String> newOrder) {
         order = newOrder;
-        identityController.getGlobalConfigIdentity().setOption(getDomain(), "sourceOrder", order);
+        identityController.getUserSettings().setOption(getDomain(), "sourceOrder", order);
     }
 
     /** Loads the plugins settings. */

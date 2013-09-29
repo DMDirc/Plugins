@@ -51,9 +51,9 @@ import com.dmdirc.commandparser.PopupMenuItem;
 import com.dmdirc.commandparser.PopupType;
 import com.dmdirc.commandparser.parsers.CommandParser;
 import com.dmdirc.commandparser.parsers.GlobalCommandParser;
-import com.dmdirc.config.ConfigManager;
-import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.interfaces.FrameCloseListener;
+import com.dmdirc.interfaces.config.AggregateConfigProvider;
+import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.interfaces.ui.InputWindow;
 import com.dmdirc.interfaces.ui.Window;
 import com.dmdirc.parser.common.ChannelJoinRequest;
@@ -118,7 +118,7 @@ public abstract class TextFrame extends JPanel implements Window,
         this.controller = controller;
         frameParent = owner;
 
-        final ConfigManager config = owner.getConfigManager();
+        final AggregateConfigProvider config = owner.getConfigManager();
 
         owner.addCloseListener(this);
         owner.setTitle(frameParent.getTitle());

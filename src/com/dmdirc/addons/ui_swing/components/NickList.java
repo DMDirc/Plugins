@@ -28,9 +28,9 @@ import com.dmdirc.addons.ui_swing.components.frames.ChannelFrame;
 import com.dmdirc.addons.ui_swing.components.renderers.NicklistRenderer;
 import com.dmdirc.addons.ui_swing.textpane.ClickType;
 import com.dmdirc.addons.ui_swing.textpane.ClickTypeValue;
-import com.dmdirc.config.ConfigManager;
-import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.interfaces.NicklistListener;
+import com.dmdirc.interfaces.config.AggregateConfigProvider;
+import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.parser.interfaces.ChannelClientInfo;
 
 import java.awt.Dimension;
@@ -62,7 +62,7 @@ public class NickList extends JScrollPane implements ConfigChangeListener,
     /** Parent frame. */
     private final ChannelFrame frame;
     /** Config. */
-    private final ConfigManager config;
+    private final AggregateConfigProvider config;
     /** Nick list model. */
     private final NicklistListModel nicklistModel;
 
@@ -72,7 +72,7 @@ public class NickList extends JScrollPane implements ConfigChangeListener,
      * @param frame Frame
      * @param config Config
      */
-    public NickList(final ChannelFrame frame, final ConfigManager config) {
+    public NickList(final ChannelFrame frame, final AggregateConfigProvider config) {
         super();
         this.frame = frame;
         this.config = config;

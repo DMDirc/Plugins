@@ -28,21 +28,21 @@ import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
-import com.dmdirc.config.ConfigManager;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.interfaces.ActionListener;
+import com.dmdirc.interfaces.actions.ActionType;
+import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.interfaces.config.IdentityController;
-import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.parser.interfaces.ChannelClientInfo;
 import com.dmdirc.parser.interfaces.ChannelInfo;
 import com.dmdirc.parser.interfaces.ClientInfo;
-import com.dmdirc.plugins.implementations.BasePlugin;
 import com.dmdirc.plugins.PluginInfo;
+import com.dmdirc.plugins.implementations.BasePlugin;
 import com.dmdirc.ui.Colour;
 import com.dmdirc.ui.messages.ColourManager;
 
@@ -58,8 +58,7 @@ import lombok.RequiredArgsConstructor;
  * Provides various features related to nickname colouring.
  */
 @RequiredArgsConstructor
-public final class NickColourPlugin extends BasePlugin implements ActionListener,
-        ConfigChangeListener {
+public class NickColourPlugin extends BasePlugin implements ActionListener, ConfigChangeListener {
 
     /** "Random" colours to use to colour nicknames. */
     private String[] randColours = new String[]{
@@ -308,7 +307,7 @@ public final class NickColourPlugin extends BasePlugin implements ActionListener
      * Updates cached settings.
      */
     private void setCachedSettings() {
-        final ConfigManager config = identityController.getGlobalConfiguration();
+        final AggregateConfigProvider config = identityController.getGlobalConfiguration();
         useowncolour = config.getOptionBool(getDomain(), "useowncolour");
         owncolour = config.getOption(getDomain(), "owncolour");
         userandomcolour = config.getOptionBool(getDomain(), "userandomcolour");

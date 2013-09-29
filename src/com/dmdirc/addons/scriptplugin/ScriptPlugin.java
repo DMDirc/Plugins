@@ -73,7 +73,7 @@ public final class ScriptPlugin extends BaseCommandPlugin implements ActionListe
             final IdentityController identityController,
             final CommandController commandController) {
         super(commandController);
-        scriptDir = identityController.getConfigDir() + "scripts/";
+        scriptDir = identityController.getConfigurationDirectory() + "scripts/";
         this.actionController = actionController;
 
         // Add the JS Helper to the scriptFactory

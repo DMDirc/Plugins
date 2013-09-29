@@ -207,7 +207,7 @@ public class ConfigPanel extends JPanel implements PreferencesInterface,
     @Override
     public void save() {
         plugin.saveSettings(getSources());
-        identityController.getGlobalConfigIdentity()
+        identityController.getUserSettings()
                 .setOption(plugin.getDomain(), "format", textfield.getText());
     }
 

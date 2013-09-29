@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.profiles;
 
-import com.dmdirc.config.Identity;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.config.IdentityController;
 import com.dmdirc.util.validators.FileNameValidator;
@@ -57,8 +56,7 @@ public class ProfileManagerModel extends DefaultBindableModel {
      * @param identityController Identity manager to retrieve profiles from
      */
     public ProfileManagerModel(final IdentityController identityController) {
-        final List<Identity> identities = identityController
-                .getIdentitiesByType("profile");
+        final List<ConfigProvider> identities = identityController.getProvidersByType("profile");
         for (ConfigProvider identity : identities) {
             profiles.add(new Profile(identity));
         }
