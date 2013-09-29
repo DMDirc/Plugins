@@ -109,7 +109,7 @@ public class Profiles extends JPanel implements ServerListListener {
 
             ConfigProvider selectedItem = null;
             comboModel.addElement(null);
-            for (ConfigProvider profile : controller.getIdentityManager().getIdentitiesByType("profile")) {
+            for (ConfigProvider profile : controller.getIdentityManager().getProvidersByType("profile")) {
                 comboModel.addElement(profile);
                 if (item != null && profile.getName().equals(
                         item.getProfile())) {

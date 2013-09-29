@@ -341,7 +341,7 @@ public class DynamicRequestHandler extends AbstractHandler {
 
         profileEvents.add(new Event("clearprofiles", null));
 
-        for (ConfigProvider identity : identityController.getIdentitiesByType("profile")) {
+        for (ConfigProvider identity : identityController.getProvidersByType("profile")) {
             profileEvents.add(new Event("addprofile", identity.getName()));
         }
 
@@ -391,7 +391,7 @@ public class DynamicRequestHandler extends AbstractHandler {
     }
 
     private ConfigProvider findProfile(final String parameter) {
-        for (ConfigProvider identity : identityController.getIdentitiesByType("profile")) {
+        for (ConfigProvider identity : identityController.getProvidersByType("profile")) {
             if (identity.getName().equals(parameter)) {
                 return identity;
             }

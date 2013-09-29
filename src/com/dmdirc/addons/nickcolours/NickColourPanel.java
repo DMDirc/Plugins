@@ -81,7 +81,7 @@ public class NickColourPanel extends JPanel implements ActionListener,
         super();
 
         this.plugin = plugin;
-        this.configIdentity = controller.getIdentityManager().getGlobalConfigIdentity();
+        this.configIdentity = controller.getIdentityManager().getUserSettings();
 
         final Object[][] data = plugin.getData();
 

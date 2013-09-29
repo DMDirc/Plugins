@@ -24,8 +24,8 @@ package com.dmdirc.addons.ui_swing.dialogs.prefs;
 
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.PackingTable;
-import com.dmdirc.config.ConfigManager;
 import com.dmdirc.config.prefs.PreferencesInterface;
+import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.logger.ErrorLevel;
@@ -109,7 +109,7 @@ public class UpdateConfigPanel extends JPanel implements ActionListener,
      * Initialises the components.
      */
     private void initComponents() {
-        final ConfigManager config = controller.getGlobalConfig();
+        final AggregateConfigProvider config = controller.getGlobalConfig();
         enable = new JCheckBox();
         scrollPane = new JScrollPane();
         tableModel = new UpdateTableModel(UpdateChecker.getManager().getComponents());

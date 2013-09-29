@@ -25,7 +25,7 @@ package com.dmdirc.addons.dcc;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.addons.dcc.actions.DCCActions;
 import com.dmdirc.addons.dcc.io.DCCChat;
-import com.dmdirc.config.ConfigManager;
+import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.core.components.WindowComponent;
 
@@ -54,7 +54,7 @@ public class ChatContainer extends DCCFrameContainer implements DCCChatHandler {
      * @param targetNick Nickname of target
      */
     public ChatContainer(final DCCPlugin plugin, final DCCChat dcc,
-            final ConfigManager configManager, final String title,
+            final AggregateConfigProvider configManager, final String title,
             final String nick, final String targetNick) {
         super(title, "dcc-chat-inactive", configManager,
                 DCCCommandParser.getDCCCommandParser(configManager),

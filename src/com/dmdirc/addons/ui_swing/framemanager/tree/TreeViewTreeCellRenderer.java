@@ -23,7 +23,7 @@
 package com.dmdirc.addons.ui_swing.framemanager.tree;
 
 import com.dmdirc.addons.ui_swing.UIUtilities;
-import com.dmdirc.config.ConfigManager;
+import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.ui.messages.Styliser;
 
@@ -46,7 +46,7 @@ public class TreeViewTreeCellRenderer implements TreeCellRenderer,
     /** Parent frame manager. */
     private final TreeFrameManager manager;
     /** Config manager. */
-    private final ConfigManager config;
+    private final AggregateConfigProvider config;
     /** Styliser to use. */
     private final Styliser styliser;
     /** Rollover colours. */
@@ -63,7 +63,7 @@ public class TreeViewTreeCellRenderer implements TreeCellRenderer,
      *
      * @param manager Parent TreeFrameManager
      */
-    public TreeViewTreeCellRenderer(final ConfigManager config,
+    public TreeViewTreeCellRenderer(final AggregateConfigProvider config,
             final TreeFrameManager manager) {
         this.manager = manager;
 

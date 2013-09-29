@@ -24,7 +24,7 @@ package com.dmdirc.addons.swingdebug;
 
 import com.dmdirc.FrameContainer;
 import com.dmdirc.Server;
-import com.dmdirc.config.ConfigManager;
+import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.core.components.WindowComponent;
 
@@ -49,7 +49,7 @@ public class SystemStreamContainer extends FrameContainer {
      * @param plugin Parent plugin
      */
     public SystemStreamContainer(final SystemStreamType stream,
-            final ConfigManager config,
+            final AggregateConfigProvider config,
             final SwingDebugPlugin plugin) {
         super("dmdirc", stream.toString(), stream.toString(), config,
                 Arrays.asList(WindowComponent.TEXTAREA.getIdentifier()));

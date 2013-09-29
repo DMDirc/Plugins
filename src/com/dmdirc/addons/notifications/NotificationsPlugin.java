@@ -228,7 +228,7 @@ public class NotificationsPlugin extends BaseCommandPlugin implements ActionList
      */
     protected void saveSettings(final List<String> newOrder) {
         order = newOrder;
-        identityController.getGlobalConfigIdentity()
+        identityController.getUserSettings()
                 .setOption(getDomain(), "methodOrder", order);
     }
 }

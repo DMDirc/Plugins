@@ -22,8 +22,8 @@
 
 package com.dmdirc.addons.ui_swing.components.addonbrowser;
 
-import com.dmdirc.config.ConfigManager;
 import com.dmdirc.interfaces.actions.ActionType;
+import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.updater.UpdateChannel;
 import com.dmdirc.updater.UpdateChecker;
 import com.dmdirc.updater.UpdateComponent;
@@ -95,7 +95,7 @@ public class AddonInfo {
      *
      * @param entry List of entries
      */
-    public AddonInfo(final ConfigManager configManager,
+    public AddonInfo(final AggregateConfigProvider configManager,
             final Map<String, String> entry) {
         id = Integer.parseInt(entry.get("id"));
         title = entry.get("title");

@@ -26,7 +26,7 @@ import com.dmdirc.addons.ui_swing.BackgroundOption;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
 import com.dmdirc.config.ConfigBinding;
-import com.dmdirc.config.ConfigManager;
+import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.util.URLBuilder;
 
 import java.awt.Graphics;
@@ -79,7 +79,7 @@ public class BackgroundPainter extends LayerUI<JComponent> {
     /**
      * Config manager to bind to and retrieve settings from.
      */
-    private final ConfigManager configManager;
+    private final AggregateConfigProvider configManager;
 
     /**
      * Background image.
@@ -99,7 +99,7 @@ public class BackgroundPainter extends LayerUI<JComponent> {
      * @param imageKey Key for background image
      * @param optionKey Key for background type
      */
-    public BackgroundPainter(final ConfigManager configManager,
+    public BackgroundPainter(final AggregateConfigProvider configManager,
             final String domain, final String imageKey,
             final String optionKey) {
         this.configManager = configManager;

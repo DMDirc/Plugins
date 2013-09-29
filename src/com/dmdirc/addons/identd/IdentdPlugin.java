@@ -25,7 +25,6 @@ package com.dmdirc.addons.identd;
 import com.dmdirc.Server;
 import com.dmdirc.ServerManager;
 import com.dmdirc.actions.CoreActionType;
-import com.dmdirc.config.ConfigManager;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
@@ -33,10 +32,11 @@ import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.interfaces.ActionController;
 import com.dmdirc.interfaces.ActionListener;
-import com.dmdirc.interfaces.config.IdentityController;
 import com.dmdirc.interfaces.actions.ActionType;
-import com.dmdirc.plugins.implementations.BasePlugin;
+import com.dmdirc.interfaces.config.AggregateConfigProvider;
+import com.dmdirc.interfaces.config.IdentityController;
 import com.dmdirc.plugins.PluginInfo;
+import com.dmdirc.plugins.implementations.BasePlugin;
 import com.dmdirc.util.validators.PortValidator;
 
 import java.util.ArrayList;
@@ -61,7 +61,7 @@ public class IdentdPlugin extends BasePlugin implements ActionListener {
     private final ServerManager serverManager;
     /** Global config. */
     @Getter
-    private ConfigManager config;
+    private AggregateConfigProvider config;
 
     /**
      * Creates a new instance of this plugin.

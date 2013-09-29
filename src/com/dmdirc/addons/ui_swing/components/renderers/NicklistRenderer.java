@@ -24,11 +24,11 @@ package com.dmdirc.addons.ui_swing.components.renderers;
 
 import com.dmdirc.ChannelClientProperty;
 import com.dmdirc.addons.ui_swing.UIUtilities;
-import com.dmdirc.config.ConfigManager;
+import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.parser.interfaces.ChannelClientInfo;
-
 import com.dmdirc.ui.Colour;
+
 import java.awt.Color;
 import java.awt.Component;
 import java.util.Map;
@@ -47,7 +47,7 @@ public final class NicklistRenderer extends DefaultListCellRenderer implements
      */
     private static final long serialVersionUID = 5;
     /** Config manager. */
-    private final ConfigManager config;
+    private final AggregateConfigProvider config;
     /** Nicklist alternate background colour. */
     private Color altBackgroundColour;
     /** Show nick colours. */
@@ -61,7 +61,7 @@ public final class NicklistRenderer extends DefaultListCellRenderer implements
      * @param config ConfigManager for the associated channel
      * @param nicklist The nicklist that we're rendering for.
      */
-    public NicklistRenderer(final ConfigManager config, final JList nicklist) {
+    public NicklistRenderer(final AggregateConfigProvider config, final JList nicklist) {
         super();
 
         this.config = config;

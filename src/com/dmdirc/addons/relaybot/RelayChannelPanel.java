@@ -185,13 +185,13 @@ public class RelayChannelPanel extends JPanel implements ActionListener,
     public void save() {
         // Remove all old config entries
         for (String[] parts : plugin.getData()) {
-           identityController.getGlobalConfigIdentity()
+           identityController.getUserSettings()
                    .unsetOption(plugin.getDomain(), parts[0]);
         }
 
         // And write the new ones
         for (String[] row : getData()) {
-            identityController.getGlobalConfigIdentity()
+            identityController.getUserSettings()
                     .setOption(plugin.getDomain(), row[0], row[1]);
         }
     }

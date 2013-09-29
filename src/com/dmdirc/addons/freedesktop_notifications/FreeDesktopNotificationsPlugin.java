@@ -22,13 +22,13 @@
 
 package com.dmdirc.addons.freedesktop_notifications;
 
-import com.dmdirc.config.ConfigManager;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.interfaces.CommandController;
+import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.config.IdentityController;
@@ -48,8 +48,7 @@ import org.apache.commons.lang.StringEscapeUtils;
 /**
  * This plugin adds freedesktop Style Notifications to dmdirc.
  */
-public final class FreeDesktopNotificationsPlugin
-        extends BaseCommandPlugin implements ConfigChangeListener {
+public class FreeDesktopNotificationsPlugin extends BaseCommandPlugin implements ConfigChangeListener {
 
     /** notification timeout. */
     private int timeout;
@@ -64,7 +63,7 @@ public final class FreeDesktopNotificationsPlugin
     /** This plugin's plugin info. */
     private final PluginInfo pluginInfo;
     /** Global config. */
-    private final ConfigManager config;
+    private final AggregateConfigProvider config;
     /** Addon identity. */
     private final ConfigProvider identity;
     /** Plugin files helper. */
@@ -84,7 +83,7 @@ public final class FreeDesktopNotificationsPlugin
         this.pluginInfo = pluginInfo;
         this.filesHelper = new PluginFilesHelper(pluginInfo);
         config = identityController.getGlobalConfiguration();
-        identity = identityController.getGlobalAddonIdentity();
+        identity = identityController.getAddonSettings();
         registerCommand(new FDNotifyCommand(this), FDNotifyCommand.INFO);
     }
 

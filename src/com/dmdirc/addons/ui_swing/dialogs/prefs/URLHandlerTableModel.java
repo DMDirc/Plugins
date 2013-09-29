@@ -22,7 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.prefs;
 
-import com.dmdirc.config.ConfigManager;
+import com.dmdirc.interfaces.config.AggregateConfigProvider;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -40,7 +40,7 @@ public class URLHandlerTableModel extends AbstractTableModel {
     /** Serial version UID. */
     private static final long serialVersionUID = 3;
     /** Config Manager. */
-    private final ConfigManager configManager;
+    private final AggregateConfigProvider configManager;
     /** Data list. */
     private List<URI> uris;
     /** Handlers list. */
@@ -51,7 +51,7 @@ public class URLHandlerTableModel extends AbstractTableModel {
      *
      * @param configManager Config manager
      */
-    public URLHandlerTableModel(final ConfigManager configManager) {
+    public URLHandlerTableModel(final AggregateConfigProvider configManager) {
         this(configManager, new ArrayList<URI>(), new ArrayList<String>());
     }
 
@@ -62,7 +62,7 @@ public class URLHandlerTableModel extends AbstractTableModel {
      * @param uris URIs to show
      * @param handlers Handlers to show
      */
-    public URLHandlerTableModel(final ConfigManager configManager,
+    public URLHandlerTableModel(final AggregateConfigProvider configManager,
             final List<URI> uris, final List<String> handlers) {
         super();
 

@@ -27,20 +27,20 @@ import com.dmdirc.Server;
 import com.dmdirc.ServerState;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionType;
-import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.addons.ui_swing.SelectionListener;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
-import com.dmdirc.config.ConfigManager;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.interfaces.ActionListener;
+import com.dmdirc.interfaces.actions.ActionType;
+import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
-import com.dmdirc.plugins.implementations.BasePlugin;
 import com.dmdirc.plugins.PluginInfo;
+import com.dmdirc.plugins.implementations.BasePlugin;
 import com.dmdirc.util.collections.RollingList;
 
 import java.util.Date;
@@ -57,10 +57,9 @@ public final class LagDisplayPlugin extends BasePlugin implements
     /** The panel we use in the status bar. */
     private final LagDisplayPanel panel;
     /** A cache of ping times. */
-    private final Map<Server, String> pings = new WeakHashMap<Server, String>();
+    private final Map<Server, String> pings = new WeakHashMap<>();
     /** Ping history. */
-    private final Map<Server, RollingList<Long>> history
-            = new HashMap<Server, RollingList<Long>>();
+    private final Map<Server, RollingList<Long>> history = new HashMap<>();
     /** Parent Swing UI. */
     private final SwingController controller;
     /** Whether or not to show a graph in the info popup. */
@@ -72,7 +71,7 @@ public final class LagDisplayPlugin extends BasePlugin implements
     /** This plugin's plugin info. */
     private final PluginInfo pluginInfo;
     /** Global config. */
-    private ConfigManager config;
+    private AggregateConfigProvider config;
 
     /**
      * Creates a new LagDisplayPlugin.

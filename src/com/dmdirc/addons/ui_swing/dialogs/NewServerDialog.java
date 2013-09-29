@@ -32,7 +32,6 @@ import com.dmdirc.addons.ui_swing.components.vetoable.VetoableChangeEvent;
 import com.dmdirc.addons.ui_swing.components.vetoable.VetoableComboBoxModel;
 import com.dmdirc.addons.ui_swing.components.vetoable.VetoableComboBoxSelectionListener;
 import com.dmdirc.addons.ui_swing.dialogs.profiles.ProfileManagerDialog;
-import com.dmdirc.config.Identity;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProviderListener;
 import com.dmdirc.interfaces.config.IdentityController;
@@ -187,8 +186,8 @@ public final class NewServerDialog extends StandardDialog implements
 
     /** Populates the profiles list. */
     public void populateProfiles() {
-        final List<Identity> profiles = getController().getIdentityManager()
-                .getIdentitiesByType("profile");
+        final List<ConfigProvider> profiles = getController().getIdentityManager()
+                .getProvidersByType("profile");
         ((DefaultComboBoxModel) identityField.getModel()).removeAllElements();
         for (ConfigProvider profile : profiles) {
             ((DefaultComboBoxModel) identityField.getModel()).addElement(profile);

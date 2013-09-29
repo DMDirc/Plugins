@@ -33,7 +33,6 @@ import com.dmdirc.addons.dcc.kde.KFileChooser;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.SwingWindowFactory;
 import com.dmdirc.addons.ui_swing.components.frames.ComponentFrame;
-import com.dmdirc.config.ConfigManager;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
@@ -42,6 +41,7 @@ import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.interfaces.ActionListener;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.actions.ActionType;
+import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.config.IdentityController;
 import com.dmdirc.logger.ErrorLevel;
@@ -72,7 +72,7 @@ public class DCCPlugin extends BaseCommandPlugin implements ActionListener {
     /** This plugin's plugin info. */
     private final PluginInfo pluginInfo;
     /** Config manager to read settings from. */
-    private final ConfigManager config;
+    private final AggregateConfigProvider config;
     /** Parent swing controller. */
     private final SwingController controller;
     /** Identity controller to read settings from. */
@@ -636,10 +636,10 @@ public class DCCPlugin extends BaseCommandPlugin implements ActionListener {
     /** {@inheritDoc} */
     @Override
     public void domainUpdated() {
-        final ConfigProvider defaults = identityController.getGlobalAddonIdentity();
+        final ConfigProvider defaults = identityController.getAddonSettings();
 
         defaults.setOption(getDomain(), "receive.savelocation",
-                identityController.getConfigDir() + "downloads"
+                identityController.getConfigurationDirectory() + "downloads"
                 + System.getProperty("file.separator"));
     }
 

@@ -27,7 +27,7 @@ import com.dmdirc.addons.ui_swing.SelectionListener;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.SwingWindowListener;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
-import com.dmdirc.config.ConfigManager;
+import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
 
 import java.awt.event.ActionEvent;
@@ -57,7 +57,7 @@ public class MDIBar extends JPanel implements SwingWindowListener,
     /** Main frame component bieng shown in. */
     private final MainFrame mainFrame;
     /** Config manager to get settings from. */
-    private final ConfigManager config;
+    private final AggregateConfigProvider config;
     /** Option domain. */
     private final String configDomain;
     /** Are we meant to be visible? */

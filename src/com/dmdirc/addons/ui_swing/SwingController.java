@@ -48,7 +48,6 @@ import com.dmdirc.addons.ui_swing.dialogs.serversetting.ServerSettingsDialog;
 import com.dmdirc.addons.ui_swing.dialogs.url.URLDialog;
 import com.dmdirc.addons.ui_swing.wizard.WizardListener;
 import com.dmdirc.addons.ui_swing.wizard.firstrun.SwingFirstRunWizard;
-import com.dmdirc.config.ConfigManager;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
@@ -56,6 +55,7 @@ import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.LifecycleController;
+import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.config.IdentityController;
 import com.dmdirc.interfaces.config.IdentityFactory;
@@ -132,7 +132,7 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     private final PluginInfo pluginInfo;
     /** Global config manager. */
     @Getter
-    private final ConfigManager globalConfig;
+    private final AggregateConfigProvider globalConfig;
     /** Server manager. */
     @Getter
     private final ServerManager serverManager;
@@ -219,8 +219,8 @@ public class SwingController extends BaseCommandPlugin implements UIController {
         this.themeManager = themeManager;
 
         globalConfig = identityManager.getGlobalConfiguration();
-        globalIdentity = identityManager.getGlobalConfigIdentity();
-        addonIdentity = identityManager.getGlobalAddonIdentity();
+        globalIdentity = identityManager.getUserSettings();
+        addonIdentity = identityManager.getAddonSettings();
         apple = new Apple(getGlobalConfig(), this);
         iconManager = new IconManager(globalConfig, urlBuilder);
         prefsComponentFactory = new PrefsComponentFactory(this);

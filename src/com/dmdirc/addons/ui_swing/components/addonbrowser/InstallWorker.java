@@ -56,7 +56,7 @@ public class InstallWorker extends LoggingSwingWorker<String, Void> {
     @Override
     protected String doInBackground() {
         try {
-            final File file = new File(controller.getIdentityManager().getConfigDir(),
+            final File file = new File(controller.getIdentityManager().getConfigurationDirectory(),
                     "." + info.getId());
             Downloader.downloadPage("http://addons.dmdirc.com/addondownload/"
                     + info.getDownload(), file.getAbsolutePath());

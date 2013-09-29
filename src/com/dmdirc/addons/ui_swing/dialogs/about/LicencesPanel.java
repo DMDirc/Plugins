@@ -25,7 +25,7 @@ package com.dmdirc.addons.ui_swing.dialogs.about;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.TreeScroller;
-import com.dmdirc.config.ConfigManager;
+import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.plugins.PluginInfo;
 
 import java.awt.Font;
@@ -51,13 +51,12 @@ import net.miginfocom.swing.MigLayout;
 /**
  * Licences panel.
  */
-public final class LicencesPanel extends JPanel implements
-        TreeSelectionListener {
+public class LicencesPanel extends JPanel implements TreeSelectionListener {
 
     /** Serial version UID. */
     private static final long serialVersionUID = 3;
     /** Config manager. */
-    private final ConfigManager config;
+    private final AggregateConfigProvider config;
     /** Licence scroll pane. */
     private JScrollPane scrollPane;
     /** Licence list model */

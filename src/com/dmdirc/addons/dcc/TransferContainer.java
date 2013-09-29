@@ -29,7 +29,7 @@ import com.dmdirc.actions.ActionManager;
 import com.dmdirc.addons.dcc.actions.DCCActions;
 import com.dmdirc.addons.dcc.io.DCC;
 import com.dmdirc.addons.dcc.io.DCCTransfer;
-import com.dmdirc.config.ConfigManager;
+import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.parser.interfaces.callbacks.SocketCloseListener;
 import com.dmdirc.ui.WindowManager;
@@ -51,7 +51,7 @@ public class TransferContainer extends FrameContainer implements
     protected final DCCPlugin plugin;
 
     /** Config manager. */
-    private final ConfigManager config;
+    private final AggregateConfigProvider config;
 
     /** The Window we're using. */
     private boolean windowClosing = false;
@@ -87,13 +87,13 @@ public class TransferContainer extends FrameContainer implements
      *
      * @param plugin the DCC Plugin responsible for this window
      * @param dcc The DCCTransfer object this window wraps around
-     * @param configManager Config manager
+     * @param config Config manager
      * @param title The title of this window
      * @param targetNick Nickname of target
      * @param server The server that initiated this send
      */
     public TransferContainer(final DCCPlugin plugin, final DCCTransfer dcc,
-            final ConfigManager config, final String title,
+            final AggregateConfigProvider config, final String title,
             final String targetNick, final Server server) {
         super(dcc.getType() == DCCTransfer.TransferType.SEND
                 ? "dcc-send-inactive" : "dcc-receive-inactive",

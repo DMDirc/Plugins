@@ -23,7 +23,7 @@
 package com.dmdirc.addons.ui_swing.components;
 
 import com.dmdirc.addons.ui_swing.UIUtilities;
-import com.dmdirc.config.ConfigManager;
+import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
 
 import java.awt.Component;
@@ -45,7 +45,7 @@ public class SplitPane extends JSplitPane implements ConfigChangeListener {
     /** use one touch expandable? */
     private boolean useOneTouchExpandable;
     /** Global config manager. */
-    private ConfigManager config;
+    private AggregateConfigProvider config;
 
     /** Orientation type . */
     public enum Orientation {
@@ -61,7 +61,7 @@ public class SplitPane extends JSplitPane implements ConfigChangeListener {
      *
      * @param manager Config manager to read values from
      */
-    public SplitPane(final ConfigManager manager) {
+    public SplitPane(final AggregateConfigProvider manager) {
         this(manager, Orientation.HORIZONTAL, null, null);
     }
 
@@ -72,7 +72,7 @@ public class SplitPane extends JSplitPane implements ConfigChangeListener {
      * @param manager Config manager to read values from
      * @param orientation Split pane orientation
      */
-    public SplitPane(final ConfigManager manager, final Orientation orientation) {
+    public SplitPane(final AggregateConfigProvider manager, final Orientation orientation) {
         this(manager, orientation, null, null);
     }
 
@@ -87,7 +87,7 @@ public class SplitPane extends JSplitPane implements ConfigChangeListener {
      * @param leftComponent left component
      * @param rightComponent right component
      */
-    public SplitPane(final ConfigManager manager, final Orientation orientation,
+    public SplitPane(final AggregateConfigProvider manager, final Orientation orientation,
             final Component leftComponent, final Component rightComponent) {
         super((orientation.equals(Orientation.HORIZONTAL))
                 ? HORIZONTAL_SPLIT : VERTICAL_SPLIT,

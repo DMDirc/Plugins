@@ -208,7 +208,7 @@ public final class FeedbackDialog extends StandardDialog implements
             dmdircInfo.append("DMDirc version: ").append(
                     Info.getDMDircVersion()).append("\n");
             dmdircInfo.append("Profile directory: ").append(
-                    controller.getIdentityManager().getConfigDir()).append("\n");
+                    controller.getIdentityManager().getConfigurationDirectory()).append("\n");
             dmdircInfo.append("Java version: ").append(
                     Info.getJavaVersion()).append("\n");
             dmdircInfo.append("OS Version: ").append(

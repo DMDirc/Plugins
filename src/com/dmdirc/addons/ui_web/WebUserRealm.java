@@ -78,7 +78,7 @@ public class WebUserRealm implements UserRealm {
         if (!identityController.getGlobalConfiguration().hasOptionString(domain, "users")) {
             final List<String> users = new ArrayList<>();
             users.add(username + ":" + getHash(username, credentials));
-            identityController.getGlobalConfigIdentity().setOption(domain, "users", users);
+            identityController.getUserSettings().setOption(domain, "users", users);
         }
 
         for (String userinfo : identityController.getGlobalConfiguration().getOptionList(domain, "users")) {
