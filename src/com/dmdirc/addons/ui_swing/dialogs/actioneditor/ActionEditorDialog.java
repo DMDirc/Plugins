@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_swing.dialogs.actioneditor;
 
 import com.dmdirc.actions.Action;
+import com.dmdirc.actions.ActionFactory;
 import com.dmdirc.actions.ActionStatus;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
@@ -38,6 +39,7 @@ import javax.swing.JButton;
 import javax.swing.SwingUtilities;
 
 import lombok.extern.slf4j.Slf4j;
+
 import net.miginfocom.swing.MigLayout;
 
 /**
@@ -76,6 +78,8 @@ public class ActionEditorDialog extends StandardDialog implements
     private final Action action;
     /** Action group. */
     private final String group;
+    /** Factory to use to create new actions. */
+    private final ActionFactory actionFactory;
 
     /**
      * Instantiates the panel.
@@ -92,6 +96,7 @@ public class ActionEditorDialog extends StandardDialog implements
 
         this.group = group;
         this.action = null;
+        this.actionFactory = controller.getActionFactory();
 
         initComponents();
         addListeners();
@@ -117,6 +122,7 @@ public class ActionEditorDialog extends StandardDialog implements
 
         this.group = action.getGroup();
         this.action = action;
+        this.actionFactory = controller.getActionFactory();
 
         initComponents();
         addListeners();
@@ -245,7 +251,7 @@ public class ActionEditorDialog extends StandardDialog implements
         conditions.getConditions();
         conditions.getConditionTree();
         if (action == null) {
-            final Action newAction = new Action(group, name.getActionName(),
+            final Action newAction = actionFactory.create(group, name.getActionName(),
                     triggers.getTriggers(), response.getResponse(),
                     conditions.getConditions(), conditions.getConditionTree(),
                     response.getFormatter());
