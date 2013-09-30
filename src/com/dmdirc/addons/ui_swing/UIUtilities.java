@@ -28,7 +28,6 @@ import com.dmdirc.addons.ui_swing.components.DMDircUndoableEditListener;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.ui.Colour;
-import com.dmdirc.util.ReturnableThread;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -250,39 +249,13 @@ public final class UIUtilities {
             if (SwingUtilities.isEventDispatchThread()) {
                 return returnable.call();
             } else {
-                final FutureTask<T> task = new FutureTask<T>(returnable);
+                final FutureTask<T> task = new FutureTask<>(returnable);
                 SwingUtilities.invokeAndWait(task);
                 return task.get();
             }
         } catch (Exception ex) {
             throw ex;
         }
-    }
-
-    /**
-     * Invokes and waits for the specified runnable, executed on the EDT.
-     *
-     * @param <T> The return type of the returnable thread
-     * @param returnable Thread to be executed
-     * @return Result from the compelted thread
-     *
-     * @deprecated In favour of {@link #invokeAndWait(java.util.concurrent.Callable) }
-     */
-    @Deprecated
-    public static <T> T invokeAndWait(final ReturnableThread<T> returnable) {
-        if (SwingUtilities.isEventDispatchThread()) {
-            returnable.run();
-        } else {
-            try {
-                SwingUtilities.invokeAndWait(returnable);
-            } catch (InterruptedException ex) {
-                //Ignore
-            } catch (InvocationTargetException ex) {
-                Logger.appError(ErrorLevel.HIGH, "Unable to execute thread.", ex);
-            }
-        }
-
-        return returnable.getObject();
     }
 
     /**
