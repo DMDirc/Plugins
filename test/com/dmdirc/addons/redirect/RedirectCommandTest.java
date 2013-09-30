@@ -29,8 +29,8 @@ import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.commands.context.ChatCommandContext;
 import com.dmdirc.commandparser.commands.global.Echo;
 import com.dmdirc.commandparser.parsers.CommandParser;
-import com.dmdirc.config.ConfigManager;
 import com.dmdirc.interfaces.CommandController;
+import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.ui.InputWindow;
 
 import org.junit.Before;
@@ -50,7 +50,7 @@ public class RedirectCommandTest {
     @Mock private InputWindow inputWindow;
     @Mock private CommandController commandController;
     @Mock private WritableFrameContainer frameContainer;
-    @Mock private ConfigManager configManager;
+    @Mock private AggregateConfigProvider configProvider;
     @Mock private CommandParser commandParser;
 
     @Before
@@ -58,10 +58,10 @@ public class RedirectCommandTest {
         when(commandController.getCommandChar()).thenReturn('/');
         when(commandController.getSilenceChar()).thenReturn('.');
         when(inputWindow.getContainer()).thenReturn(frameContainer);
-        when(target.getConfigManager()).thenReturn(configManager);
+        when(target.getConfigManager()).thenReturn(configProvider);
         when(target.getCommandParser()).thenReturn(commandParser);
-        when(configManager.hasOptionString("formatter", "commandOutput")).thenReturn(true);
-        when(configManager.getOption("formatter", "commandOutput")).thenReturn("%1$s");
+        when(configProvider.hasOptionString("formatter", "commandOutput")).thenReturn(true);
+        when(configProvider.getOption("formatter", "commandOutput")).thenReturn("%1$s");
         doAnswer(new Answer<Void>() {
             @Override
             public Void answer(final InvocationOnMock invocation) throws Throwable {

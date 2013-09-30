@@ -28,6 +28,7 @@ import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.expandingsettings.SettingsPanel;
 import com.dmdirc.config.ConfigManager;
 import com.dmdirc.config.prefs.PreferencesManager;
+import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
 
 import java.util.HashMap;
@@ -155,7 +156,7 @@ public class Settings extends JPanel implements ServerListListener {
      * @param identity The provider to write settings to.
      */
     private void addSettings(final SettingsPanel settingsPanel,
-            final ConfigManager manager, final ConfigProvider identity) {
+            final AggregateConfigProvider manager, final ConfigProvider identity) {
         settingsPanel.addOption(PreferencesManager.getPreferencesManager()
                 .getServerSettings(manager, identity));
     }

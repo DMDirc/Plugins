@@ -24,10 +24,10 @@ package com.dmdirc.addons.urlcatcher;
 
 import com.dmdirc.FrameContainer;
 import com.dmdirc.actions.CoreActionType;
-import com.dmdirc.config.ConfigManager;
 import com.dmdirc.config.InvalidIdentityFileException;
 import com.dmdirc.interfaces.ActionController;
 import com.dmdirc.interfaces.CommandController;
+import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.IdentityController;
 import com.dmdirc.ui.messages.Styliser;
 
@@ -43,7 +43,7 @@ import static org.mockito.Mockito.*;
 public class UrlCatcherPluginTest {
 
     @Mock private FrameContainer container;
-    @Mock private ConfigManager manager;
+    @Mock private AggregateConfigProvider configProvider;
     @Mock private CommandController controller;
     @Mock private IdentityController identityController;
     @Mock private ActionController actionController;
@@ -51,7 +51,7 @@ public class UrlCatcherPluginTest {
 
     @Before
     public void setupClass() {
-        when(container.getConfigManager()).thenReturn(manager);
+        when(container.getConfigManager()).thenReturn(configProvider);
         final Styliser styliser = new Styliser(container);
         when(container.getStyliser()).thenReturn(styliser);
         plugin = new UrlCatcherPlugin(controller, identityController, actionController);
