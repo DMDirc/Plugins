@@ -74,6 +74,8 @@ public class NickColourPlugin extends BasePlugin implements ActionListener, Conf
     private final PluginInfo pluginInfo;
     /** Controller to read settings from. */
     private final IdentityController identityController;
+    /** Manager to parse colours with. */
+    private final ColourManager colourManager;
 
     /** {@inheritDoc} */
     @Override
@@ -115,7 +117,7 @@ public class NickColourPlugin extends BasePlugin implements ActionListener, Conf
                 toLowerCase("*:" + client.getClient().getNickname());
 
         if (useowncolour && client.getClient().equals(myself)) {
-            final Colour color = ColourManager.parseColour(owncolour);
+            final Colour color = colourManager.getColourFromString(owncolour, null);
             putColour(map, color, color);
         } else if (userandomcolour) {
             putColour(map, getColour(client.getClient().getNickname()), getColour(client.
@@ -136,10 +138,10 @@ public class NickColourPlugin extends BasePlugin implements ActionListener, Conf
             Colour nickColor = null;
 
             if (parts[0] != null) {
-                textColor = ColourManager.parseColour(parts[0], null);
+                textColor = colourManager.getColourFromString(parts[0], null);
             }
             if (parts[1] != null) {
-                nickColor = ColourManager.parseColour(parts[1], null);
+                nickColor = colourManager.getColourFromString(parts[1], null);
             }
 
             putColour(map, textColor, nickColor);
@@ -180,7 +182,7 @@ public class NickColourPlugin extends BasePlugin implements ActionListener, Conf
 
         count %= randColours.length;
 
-        return ColourManager.parseColour(randColours[count]);
+        return colourManager.getColourFromString(randColours[count], null);
     }
 
     /**
