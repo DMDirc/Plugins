@@ -129,8 +129,8 @@ public class ProfileManagerDialog extends StandardDialog {
      */
     public ProfileManagerDialog(final SwingController controller) {
         super(controller, ModalityType.MODELESS);
-        this.model = new ProfileManagerModel(controller.getIdentityManager());
-        this.controller = new ProfileManagerController(this, model);
+        this.model = new ProfileManagerModel(controller.getIdentityManager(), controller.getIdentityFactory());
+        this.controller = new ProfileManagerController(this, model, controller.getIdentityFactory());
         final Bindings bindings = SwingUIBindings.extendedBindings();
         realname = new ValidatableJTextField(controller.getIconManager());
         ident = new ValidatableJTextField(controller.getIconManager());

@@ -24,6 +24,7 @@ package com.dmdirc.addons.ui_swing.dialogs.profiles;
 
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.config.IdentityController;
+import com.dmdirc.interfaces.config.IdentityFactory;
 import com.dmdirc.util.validators.FileNameValidator;
 import com.dmdirc.util.validators.IdentValidator;
 import com.dmdirc.util.validators.ValidationResponse;
@@ -53,12 +54,15 @@ public class ProfileManagerModel extends DefaultBindableModel {
     /**
      * Creates a new model.
      *
-     * @param identityController Identity manager to retrieve profiles from
+     * @param identityController Identity manager to retrieve profiles from.
+     * @param identityFactory Factory to use when creating new profiles.
      */
-    public ProfileManagerModel(final IdentityController identityController) {
+    public ProfileManagerModel(
+            final IdentityController identityController,
+            final IdentityFactory identityFactory) {
         final List<ConfigProvider> identities = identityController.getProvidersByType("profile");
         for (ConfigProvider identity : identities) {
-            profiles.add(new Profile(identity));
+            profiles.add(new Profile(identityFactory, identity));
         }
         updateDisplayedProfiles();
         if (!profiles.isEmpty()) {

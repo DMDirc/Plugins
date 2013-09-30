@@ -22,31 +22,26 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.profiles;
 
+import com.dmdirc.interfaces.config.IdentityFactory;
+
+import lombok.RequiredArgsConstructor;
+
 /**
  * This controller reacts to all actions in the profile manager dialog.
  */
+@RequiredArgsConstructor
 public class ProfileManagerController {
 
     /** Dialog shown to user. */
-    private ProfileManagerDialog dialog;
+    private final ProfileManagerDialog dialog;
     /** Model used to store state. */
-    private ProfileManagerModel model;
-
-    /**
-     * Creates a new profile manager controller.
-     *
-     * @param dialog Dialog show to user
-     * @param model Model user to store state
-     */
-    public ProfileManagerController(final ProfileManagerDialog dialog,
-            final ProfileManagerModel model) {
-        this.dialog = dialog;
-        this.model = model;
-    }
+    private final ProfileManagerModel model;
+    /** Factory to use when creating new profiles. */
+    private final IdentityFactory identityFactory;
 
     /** Adds a new profile. */
     public void addProfile() {
-        model.addProfile(new Profile());
+        model.addProfile(new Profile(identityFactory));
     }
 
     /** Deletes the active profile. */
