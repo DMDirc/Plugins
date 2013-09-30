@@ -22,12 +22,16 @@
 package com.dmdirc.addons.ui_swing.dialogs.profiles;
 
 import com.dmdirc.interfaces.config.ConfigProvider;
+import com.dmdirc.interfaces.config.IdentityFactory;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -35,7 +39,10 @@ import static org.mockito.Mockito.*;
 /**
  * Test profile class.
  */
+@RunWith(MockitoJUnitRunner.class)
 public class ProfileTest {
+
+    @Mock private IdentityFactory identityFactory;
 
     private Profile createProfile() {
         final List<String> nicknames = new ArrayList<>();
@@ -48,7 +55,7 @@ public class ProfileTest {
         when(configProvider.getOption("profile", "realname")).thenReturn("realname");
         when(configProvider.getOption("profile", "ident")).thenReturn("ident");
 
-        return new Profile(configProvider);
+        return new Profile(identityFactory, configProvider);
     }
 
     /**
@@ -56,7 +63,7 @@ public class ProfileTest {
      */
     @Test
     public void testEmptyConstructor() {
-        Profile instance = new Profile();
+        Profile instance = new Profile(identityFactory);
         assertEquals("", instance.getIdent());
         assertEquals("New Profile", instance.getName());
         assertEquals(new ArrayList<String>(), instance.getNicknames());
@@ -146,7 +153,7 @@ public class ProfileTest {
         when(configProvider.getOption("profile", "realname")).thenReturn("realname");
         when(configProvider.getOption("profile", "ident")).thenReturn("ident");
 
-        Profile instance = new Profile(configProvider);
+        Profile instance = new Profile(identityFactory, configProvider);
         instance.save();
         verify(configProvider).setOption("identity", "name", "profile");
         verify(configProvider).setOption("profile", "nicknames", nicknames);
@@ -213,7 +220,7 @@ public class ProfileTest {
         when(configProvider.getOption("profile", "realname")).thenReturn("realname");
         when(configProvider.getOption("profile", "ident")).thenReturn("ident");
 
-        Profile instance = new Profile(configProvider);
+        Profile instance = new Profile(identityFactory, configProvider);
         instance.delete();
         verify(configProvider).delete();
     }

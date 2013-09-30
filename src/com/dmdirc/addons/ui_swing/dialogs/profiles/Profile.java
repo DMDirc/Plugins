@@ -22,11 +22,13 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.profiles;
 
-import com.dmdirc.config.IdentityManager;
 import com.dmdirc.interfaces.config.ConfigProvider;
+import com.dmdirc.interfaces.config.IdentityFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.annotation.Nullable;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -36,13 +38,13 @@ import lombok.ToString;
 /**
  * Profile wrapper class.
  */
-@EqualsAndHashCode(exclude = {"identity", "deleted"})
-@ToString(exclude = "identity")
+@EqualsAndHashCode(exclude = {"identityFactory", "configProvider", "deleted"})
+@ToString(exclude = {"configProvider", "identityFactory"})
 @SuppressWarnings("unused")
 public class Profile {
 
     /** Identity backing this profile. */
-    private ConfigProvider identity;
+    private ConfigProvider configProvider;
     /** Profile Name, must be a sanitised filename. */
     @Getter @Setter
     private String name;
@@ -58,29 +60,38 @@ public class Profile {
     /** Has this profile been marked deleted? */
     @Getter @Setter
     private boolean deleted = false;
+    /** Factory to use to create profiles when saving. */
+    private final IdentityFactory identityFactory;
 
-    /** Creates a new profile. */
-    public Profile() {
-        this(null);
+    /**
+     * Creates a new profile.
+     *
+     * @param identityFactory The factory to use to create the profile's config file when saving.
+     */
+    public Profile(final IdentityFactory identityFactory) {
+        this(identityFactory, null);
     }
 
     /**
      * Creates a new profile based off the specified Identity.
      *
-     * @param identity Identity to create profile from
+     * @param identityFactory The factory to use to create the profile's config file when saving.
+     * @param configProvider Provider to read existing profile from. If null, a blank profile is created.
      */
-    public Profile(final ConfigProvider identity) {
-        this.identity = identity;
-        if (identity == null) {
+    public Profile(final IdentityFactory identityFactory, @Nullable final ConfigProvider configProvider) {
+        this.identityFactory = identityFactory;
+        this.configProvider = configProvider;
+
+        if (configProvider == null) {
             name = "New Profile";
             nicknames = new ArrayList<>();
             realname = "";
             ident = "";
         } else {
-            name = identity.getOption("identity", "name");
-            nicknames = identity.getOptionList("profile", "nicknames");
-            realname = identity.getOption("profile", "realname");
-            ident = identity.getOption("profile", "ident");
+            name = configProvider.getOption("identity", "name");
+            nicknames = configProvider.getOptionList("profile", "nicknames");
+            realname = configProvider.getOption("profile", "realname");
+            ident = configProvider.getOption("profile", "ident");
         }
     }
 
@@ -135,23 +146,23 @@ public class Profile {
 
     /** Saves this profile. */
     public void save() {
-        if (identity == null) {
-            identity = IdentityManager.getIdentityManager().createProfileConfig(name);
+        if (configProvider == null) {
+            configProvider = identityFactory.createProfileConfig(name);
         }
 
-        identity.setOption("identity", "name", name);
-        identity.setOption("profile", "nicknames", nicknames);
-        identity.setOption("profile", "realname", realname);
-        identity.setOption("profile", "ident", ident);
+        configProvider.setOption("identity", "name", name);
+        configProvider.setOption("profile", "nicknames", nicknames);
+        configProvider.setOption("profile", "realname", realname);
+        configProvider.setOption("profile", "ident", ident);
     }
 
     /**
      * Deletes the profile.
      */
     public void delete() {
-        if (identity == null) {
+        if (configProvider == null) {
             return;
         }
-        identity.delete();
+        configProvider.delete();
     }
 }

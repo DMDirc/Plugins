@@ -21,26 +21,40 @@
  */
 package com.dmdirc.addons.ui_swing.dialogs.profiles;
 
-import org.junit.Test;
+import com.dmdirc.interfaces.config.IdentityFactory;
 
-import static org.junit.Assert.*;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+
 import static org.mockito.Mockito.*;
 
 /**
  * Tests for ProfileManagerController.
  */
+@RunWith(MockitoJUnitRunner.class)
 public class ProfileManagerControllerTest {
+
+    @Mock private ProfileManagerDialog dialog;
+    @Mock private ProfileManagerModel model;
+    @Mock private IdentityFactory identityFactory;
+
+    private ProfileManagerController instance;
+
+    @Before
+    public void setup() {
+        instance = new ProfileManagerController(dialog, model, identityFactory);
+    }
 
     /**
      * Test of addProfile method, of class ProfileManagerController.
      */
     @Test
     public void testAddProfile() {
-        final ProfileManagerDialog dialog = mock(ProfileManagerDialog.class);
-        final ProfileManagerModel model = mock(ProfileManagerModel.class);
-        ProfileManagerController instance = new ProfileManagerController(dialog, model);
         instance.addProfile();
-        verify(model).addProfile(new Profile());
+        verify(model).addProfile(new Profile(identityFactory));
     }
 
     /**
@@ -48,11 +62,8 @@ public class ProfileManagerControllerTest {
      */
     @Test
     public void testDeleteProfile() {
-        final ProfileManagerDialog dialog = mock(ProfileManagerDialog.class);
-        final ProfileManagerModel model = mock(ProfileManagerModel.class);
         final Profile selectedProfile = mock(Profile.class);
         when(model.getSelectedProfile()).thenReturn(selectedProfile);
-        ProfileManagerController instance = new ProfileManagerController(dialog, model);
         instance.deleteProfile();
         verify(model).deleteProfile(selectedProfile);
     }
@@ -62,9 +73,6 @@ public class ProfileManagerControllerTest {
      */
     @Test
     public void testAddNickname() {
-        final ProfileManagerDialog dialog = mock(ProfileManagerDialog.class);
-        final ProfileManagerModel model = mock(ProfileManagerModel.class);
-        ProfileManagerController instance = new ProfileManagerController(dialog, model);
         instance.addNickname("test");
         verify(model).addNickname("test");
     }
@@ -74,10 +82,7 @@ public class ProfileManagerControllerTest {
      */
     @Test
     public void testEditNickname() {
-        final ProfileManagerDialog dialog = mock(ProfileManagerDialog.class);
-        final ProfileManagerModel model = mock(ProfileManagerModel.class);
         when(model.getSelectedNickname()).thenReturn("test");
-        ProfileManagerController instance = new ProfileManagerController(dialog, model);
         instance.editNickname("test2");
         verify(model).editNickname("test", "test2");
     }
@@ -87,10 +92,7 @@ public class ProfileManagerControllerTest {
      */
     @Test
     public void testDeleteNickname() {
-        final ProfileManagerDialog dialog = mock(ProfileManagerDialog.class);
-        final ProfileManagerModel model = mock(ProfileManagerModel.class);
         when(model.getSelectedNickname()).thenReturn("test");
-        ProfileManagerController instance = new ProfileManagerController(dialog, model);
         instance.deleteNickname();
         verify(model).deleteNickname((Object) "test");
     }
@@ -100,9 +102,6 @@ public class ProfileManagerControllerTest {
      */
     @Test
     public void testCloseDialog() {
-        final ProfileManagerDialog dialog = mock(ProfileManagerDialog.class);
-        final ProfileManagerModel model = mock(ProfileManagerModel.class);
-        ProfileManagerController instance = new ProfileManagerController(dialog, model);
         instance.closeDialog();
         verify(dialog).dispose();
     }
@@ -112,9 +111,6 @@ public class ProfileManagerControllerTest {
      */
     @Test
     public void testSaveAndCloseDialog() {
-        final ProfileManagerDialog dialog = mock(ProfileManagerDialog.class);
-        final ProfileManagerModel model = mock(ProfileManagerModel.class);
-        ProfileManagerController instance = new ProfileManagerController(dialog, model);
         instance.saveAndCloseDialog();
         verify(model).save();
         verify(dialog).dispose();
