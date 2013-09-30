@@ -175,8 +175,6 @@ public final class MainFrame extends JFrame implements WindowListener,
             public void windowLostFocus(final WindowEvent e) {
                 ActionManager.getActionManager().triggerEvent(
                         CoreActionType.CLIENT_FOCUS_LOST, null);
-                //TODO: Remove me when we switch to java7
-                MenuSelectionManager.defaultManager().clearSelectedPath();
             }
         });
 
