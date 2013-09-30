@@ -21,7 +21,7 @@
  */
 package com.dmdirc.addons.ui_swing.dialogs.profiles;
 
-import com.dmdirc.config.Identity;
+import com.dmdirc.interfaces.config.ConfigProvider;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -38,17 +38,17 @@ import static org.mockito.Mockito.*;
 public class ProfileTest {
 
     private Profile createProfile() {
-        final List<String> nicknames = new ArrayList<String>();
+        final List<String> nicknames = new ArrayList<>();
         nicknames.add("nickname1");
         nicknames.add("nickname2");
-        final Identity identity = mock(Identity.class);
-        when(identity.getName()).thenReturn("profile");
-        when(identity.getOption("identity", "name")).thenReturn("profile");
-        when(identity.getOptionList("profile", "nicknames")).thenReturn(nicknames);
-        when(identity.getOption("profile", "realname")).thenReturn("realname");
-        when(identity.getOption("profile", "ident")).thenReturn("ident");
+        final ConfigProvider configProvider = mock(ConfigProvider.class);
+        when(configProvider.getName()).thenReturn("profile");
+        when(configProvider.getOption("identity", "name")).thenReturn("profile");
+        when(configProvider.getOptionList("profile", "nicknames")).thenReturn(nicknames);
+        when(configProvider.getOption("profile", "realname")).thenReturn("realname");
+        when(configProvider.getOption("profile", "ident")).thenReturn("ident");
 
-        return new Profile(identity);
+        return new Profile(configProvider);
     }
 
     /**
@@ -136,22 +136,22 @@ public class ProfileTest {
      */
     @Test
     public void testSave() {
-        final List<String> nicknames = new ArrayList<String>();
+        final List<String> nicknames = new ArrayList<>();
         nicknames.add("nickname1");
         nicknames.add("nickname2");
-        final Identity identity = mock(Identity.class);
-        when(identity.getName()).thenReturn("profile");
-        when(identity.getOption("identity", "name")).thenReturn("profile");
-        when(identity.getOptionList("profile", "nicknames")).thenReturn(nicknames);
-        when(identity.getOption("profile", "realname")).thenReturn("realname");
-        when(identity.getOption("profile", "ident")).thenReturn("ident");
+        final ConfigProvider configProvider = mock(ConfigProvider.class);
+        when(configProvider.getName()).thenReturn("profile");
+        when(configProvider.getOption("identity", "name")).thenReturn("profile");
+        when(configProvider.getOptionList("profile", "nicknames")).thenReturn(nicknames);
+        when(configProvider.getOption("profile", "realname")).thenReturn("realname");
+        when(configProvider.getOption("profile", "ident")).thenReturn("ident");
 
-        Profile instance = new Profile(identity);
+        Profile instance = new Profile(configProvider);
         instance.save();
-        verify(identity).setOption("identity", "name", "profile");
-        verify(identity).setOption("profile", "nicknames", nicknames);
-        verify(identity).setOption("profile", "realname", "realname");
-        verify(identity).setOption("profile", "ident", "ident");
+        verify(configProvider).setOption("identity", "name", "profile");
+        verify(configProvider).setOption("profile", "nicknames", nicknames);
+        verify(configProvider).setOption("profile", "realname", "realname");
+        verify(configProvider).setOption("profile", "ident", "ident");
     }
 
     /**
@@ -203,19 +203,19 @@ public class ProfileTest {
      */
     @Test
     public void testDelete() {
-        final List<String> nicknames = new ArrayList<String>();
+        final List<String> nicknames = new ArrayList<>();
         nicknames.add("nickname1");
         nicknames.add("nickname2");
-        final Identity identity = mock(Identity.class);
-        when(identity.getName()).thenReturn("profile");
-        when(identity.getOption("identity", "name")).thenReturn("profile");
-        when(identity.getOptionList("profile", "nicknames")).thenReturn(nicknames);
-        when(identity.getOption("profile", "realname")).thenReturn("realname");
-        when(identity.getOption("profile", "ident")).thenReturn("ident");
+        final ConfigProvider configProvider = mock(ConfigProvider.class);
+        when(configProvider.getName()).thenReturn("profile");
+        when(configProvider.getOption("identity", "name")).thenReturn("profile");
+        when(configProvider.getOptionList("profile", "nicknames")).thenReturn(nicknames);
+        when(configProvider.getOption("profile", "realname")).thenReturn("realname");
+        when(configProvider.getOption("profile", "ident")).thenReturn("ident");
 
-        Profile instance = new Profile(identity);
+        Profile instance = new Profile(configProvider);
         instance.delete();
-        verify(identity).delete();
+        verify(configProvider).delete();
     }
 
     /**

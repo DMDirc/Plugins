@@ -27,10 +27,10 @@ import com.dmdirc.ServerManager;
 import com.dmdirc.addons.serverlists.io.ServerGroupReader;
 import com.dmdirc.addons.serverlists.io.ServerGroupWriter;
 import com.dmdirc.addons.serverlists.service.ServerListServiceProvider;
-import com.dmdirc.config.Identity;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProviderListener;
 import com.dmdirc.interfaces.config.IdentityController;
+import com.dmdirc.interfaces.config.IdentityFactory;
 import com.dmdirc.plugins.PluginManager;
 
 import java.io.IOException;
@@ -56,19 +56,25 @@ public class ServerList implements ConfigProviderListener {
     /** The controller to read/write settings with. */
     private final IdentityController identityController;
 
+    /** The factory to create new identities with. */
+    private final IdentityFactory identityFactory;
+
     /**
      * Creates a new ServerList and loads groups and servers.
      *
      * @param pluginManager Plugin Manager to use.
      * @param serverManager Server Manager to use.
      * @param identityController The controller to read/write settings with.
+     * @param identityFactory The factory to create new identities with.
      */
     public ServerList(
             final PluginManager pluginManager,
             final ServerManager serverManager,
-            final IdentityController identityController) {
+            final IdentityController identityController,
+            final IdentityFactory identityFactory) {
         this.serverManager = serverManager;
         this.identityController = identityController;
+        this.identityFactory = identityFactory;
 
         identityController.registerIdentityListener("servergroup", this);
 
@@ -98,7 +104,7 @@ public class ServerList implements ConfigProviderListener {
      */
     public void addServerGroup(final ServerGroup group) throws IOException {
         final ServerGroupWriter writer = new ServerGroupWriter(
-                Identity.buildIdentity(group.getName(), "servergroup"));
+                identityFactory.createCustomConfig(group.getName(), "servergroup"));
         group.setModified(true);
         addServerGroup(group, writer);
     }

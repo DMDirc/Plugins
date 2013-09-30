@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.profiles;
 
-import com.dmdirc.config.Identity;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.config.IdentityController;
 
@@ -49,14 +48,14 @@ public class ProfileManagerModelTest {
         final List<String> nicknames = new ArrayList<>();
         nicknames.add(prefix + "nickname");
 
-        final Identity identity = mock(Identity.class);
-        when(identity.getName()).thenReturn(prefix + "profile");
-        when(identity.getOption("identity", "name")).thenReturn(prefix + "profile");
-        when(identity.getOptionList("profile", "nicknames")).thenReturn(nicknames);
-        when(identity.getOption("profile", "realname")).thenReturn(prefix + "realname");
-        when(identity.getOption("profile", "ident")).thenReturn(prefix + "ident");
+        final ConfigProvider configProvider = mock(ConfigProvider.class);
+        when(configProvider.getName()).thenReturn(prefix + "profile");
+        when(configProvider.getOption("identity", "name")).thenReturn(prefix + "profile");
+        when(configProvider.getOptionList("profile", "nicknames")).thenReturn(nicknames);
+        when(configProvider.getOption("profile", "realname")).thenReturn(prefix + "realname");
+        when(configProvider.getOption("profile", "ident")).thenReturn(prefix + "ident");
 
-        final Profile profile = new Profile(identity);
+        final Profile profile = new Profile(configProvider);
         return profile;
     }
 
@@ -82,20 +81,20 @@ public class ProfileManagerModelTest {
     public void testConstructor() {
         final List<String> nicknames = new ArrayList<>();
         nicknames.add("nickname");
-        final Identity identity = mock(Identity.class);
-        when(identity.getName()).thenReturn("profile");
-        when(identity.getOption("identity", "name")).thenReturn("profile");
-        when(identity.getOptionList("profile", "nicknames")).thenReturn(nicknames);
-        when(identity.getOption("profile", "realname")).thenReturn("realname");
-        when(identity.getOption("profile", "ident")).thenReturn("ident");
+        final ConfigProvider configProvider = mock(ConfigProvider.class);
+        when(configProvider.getName()).thenReturn("profile");
+        when(configProvider.getOption("identity", "name")).thenReturn("profile");
+        when(configProvider.getOptionList("profile", "nicknames")).thenReturn(nicknames);
+        when(configProvider.getOption("profile", "realname")).thenReturn("realname");
+        when(configProvider.getOption("profile", "ident")).thenReturn("ident");
         final List<ConfigProvider> identities = new ArrayList<>();
-        identities.add(identity);
+        identities.add(configProvider);
         final IdentityController im = mock(IdentityController.class);
         when(im.getProvidersByType("profile")).thenReturn(identities);
 
         ProfileManagerModel instance = new ProfileManagerModel(im);
 
-        assertEquals(Arrays.asList(new Profile[]{new Profile(identity), }), instance.getProfiles());
+        assertEquals(Arrays.asList(new Profile[]{new Profile(configProvider), }), instance.getProfiles());
     }
 
     /**
@@ -261,7 +260,7 @@ public class ProfileManagerModelTest {
         String nickname = "foo";
         ProfileManagerModel instance = createModel();
         assertEquals(defaultProfile.getNicknames(), instance.getNicknames());
-        final List<String> nicknames = new ArrayList<String>(defaultProfile.getNicknames());
+        final List<String> nicknames = new ArrayList<>(defaultProfile.getNicknames());
         instance.addNickname(nickname);
         nicknames.add(nickname);
         assertEquals(nicknames, instance.getNicknames());
@@ -273,7 +272,7 @@ public class ProfileManagerModelTest {
     @Test
     public void testDeleteNicknameObject() {
         ProfileManagerModel instance = createModel();
-        final List<String> nicknames = new ArrayList<String>(instance.getNicknames());
+        final List<String> nicknames = new ArrayList<>(instance.getNicknames());
         Object nickname = (Object) "";
         assertEquals(nicknames, instance.getNicknames());
         instance.deleteNickname(nickname);
@@ -421,7 +420,7 @@ public class ProfileManagerModelTest {
     @Test
     public void testEditNickname() {
         ProfileManagerModel instance = createModel();
-        final List<String> nicknames = new ArrayList<String>(instance.getNicknames());
+        final List<String> nicknames = new ArrayList<>(instance.getNicknames());
         final String nickname = nicknames.get(0);
         assertEquals(nicknames, instance.getNicknames());
         instance.editNickname(nickname, "foo");
