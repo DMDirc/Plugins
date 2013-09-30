@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.actioneditor;
 
+import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.ActionSubstitutor;
 import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.addons.ui_swing.components.substitutions.Substitution;
@@ -71,10 +72,10 @@ public class ActionSubstitutionsPanel extends SubstitutionsPanel<ActionType> {
             /** {@inheritDoc} */
             @Override
             public void run() {
-                substitutions = new ArrayList<SubstitutionLabel>();
+                substitutions = new ArrayList<>();
 
                 if (type != null) {
-                    final ActionSubstitutor sub = new ActionSubstitutor(type);
+                    final ActionSubstitutor sub = new ActionSubstitutor(ActionManager.getActionManager(), type);
 
                     for (final Entry<String, String> entry : sub.getComponentSubstitutions().
                             entrySet()) {

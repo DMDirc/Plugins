@@ -265,7 +265,7 @@ public class URLConfigPanel extends JPanel implements
             new StandardInputDialog(controller, parentWindow,
                     ModalityType.MODELESS, "New URL handler",
                     "Please enter the name of the new protocol.",
-                    new URLProtocolValidator()) {
+                    new URLProtocolValidator(controller.getGlobalConfig())) {
 
                 /** Serial version UID. */
                 private static final long serialVersionUID = 1;
