@@ -32,6 +32,7 @@ import com.dmdirc.addons.serverlists.ServerGroup;
 import com.dmdirc.addons.serverlists.ServerGroupItem;
 import com.dmdirc.addons.serverlists.ServerList;
 import com.dmdirc.interfaces.config.IdentityController;
+import com.dmdirc.interfaces.config.IdentityFactory;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.util.collections.ListenerList;
 
@@ -64,14 +65,16 @@ public class ServerListModel {
      * @param pluginManager PluginManager currently in use.
      * @param serverManager ServerManager currently in use.
      * @param identityController The controller to read/write settings with.
+     * @param identityFactory The factory to create identities with.
      */
     public ServerListModel(
             final PluginManager pluginManager,
             final ServerManager serverManager,
-            final IdentityController identityController) {
+            final IdentityController identityController,
+            final IdentityFactory identityFactory) {
         this.serverManager = serverManager;
         this.identityController = identityController;
-        list = new ServerList(pluginManager, serverManager, identityController);
+        list = new ServerList(pluginManager, serverManager, identityController, identityFactory);
         listeners = new ListenerList();
     }
 

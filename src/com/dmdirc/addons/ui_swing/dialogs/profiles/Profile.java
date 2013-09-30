@@ -22,10 +22,9 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.profiles;
 
-import com.dmdirc.config.Identity;
+import com.dmdirc.config.IdentityManager;
 import com.dmdirc.interfaces.config.ConfigProvider;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -137,11 +136,7 @@ public class Profile {
     /** Saves this profile. */
     public void save() {
         if (identity == null) {
-            try {
-                identity = Identity.buildProfile(name);
-            } catch (IOException ex) {
-                return;
-            }
+            identity = IdentityManager.getIdentityManager().createProfileConfig(name);
         }
 
         identity.setOption("identity", "name", name);
