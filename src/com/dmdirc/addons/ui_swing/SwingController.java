@@ -27,6 +27,7 @@ import com.dmdirc.CorePluginExtractor;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.Server;
 import com.dmdirc.ServerManager;
+import com.dmdirc.actions.ActionFactory;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.wrappers.PerformWrapper;
 import com.dmdirc.addons.ui_swing.commands.ChannelSettings;
@@ -160,6 +161,9 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     /** Action manager. */
     @Getter
     private final ActionManager actionManager;
+    /** Action factory. */
+    @Getter
+    private final ActionFactory actionFactory;
     /** Plugin manager. */
     @Getter
     private final PluginManager pluginManager;
@@ -185,6 +189,7 @@ public class SwingController extends BaseCommandPlugin implements UIController {
      * @param identityFactory Factory used to create identities.
      * @param pluginManager Plugin manager
      * @param actionManager Action manager
+     * @param actionFactory The factory to use to create actions.
      * @param commandController Command controller to register commands
      * @param serverManager Server manager to use for server information.
      * @param lifecycleController Controller to use to close the application.
@@ -199,6 +204,7 @@ public class SwingController extends BaseCommandPlugin implements UIController {
             final IdentityFactory identityFactory,
             final PluginManager pluginManager,
             final ActionManager actionManager,
+            final ActionFactory actionFactory,
             final CommandController commandController,
             final ServerManager serverManager,
             final LifecycleController lifecycleController,
@@ -211,6 +217,7 @@ public class SwingController extends BaseCommandPlugin implements UIController {
         this.identityManager = identityManager;
         this.identityFactory = identityFactory;
         this.actionManager = actionManager;
+        this.actionFactory = actionFactory;
         this.pluginManager = pluginManager;
         this.serverManager = serverManager;
         this.lifecycleController = lifecycleController;
