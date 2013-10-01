@@ -29,6 +29,7 @@ import com.dmdirc.Server;
 import com.dmdirc.ServerManager;
 import com.dmdirc.actions.ActionFactory;
 import com.dmdirc.actions.ActionManager;
+import com.dmdirc.actions.wrappers.AliasWrapper;
 import com.dmdirc.actions.wrappers.PerformWrapper;
 import com.dmdirc.addons.ui_swing.commands.ChannelSettings;
 import com.dmdirc.addons.ui_swing.commands.Input;
@@ -170,6 +171,9 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     /** Perform wrapper. */
     @Getter
     private final PerformWrapper performWrapper;
+    /** Alias wrapper. */
+    @Getter
+    private final AliasWrapper aliasWrapper;
     /** Controller to use to close the application. */
     private final LifecycleController lifecycleController;
     /** Extractor to use for core plugins. */
@@ -195,6 +199,7 @@ public class SwingController extends BaseCommandPlugin implements UIController {
      * @param lifecycleController Controller to use to close the application.
      * @param corePluginExtractor Extractor to use for core plugins.
      * @param performWrapper Perform wrapper to use for performs.
+     * @param aliasWrapper Alias wrapper to use for aliases.
      * @param themeManager Theme manager to use.
      * @param urlBuilder URL builder to use to resolve icons etc.
      */
@@ -210,6 +215,7 @@ public class SwingController extends BaseCommandPlugin implements UIController {
             final LifecycleController lifecycleController,
             final CorePluginExtractor corePluginExtractor,
             final PerformWrapper performWrapper,
+            final AliasWrapper aliasWrapper,
             final ThemeManager themeManager,
             final URLBuilder urlBuilder) {
         super(commandController);
@@ -223,6 +229,7 @@ public class SwingController extends BaseCommandPlugin implements UIController {
         this.lifecycleController = lifecycleController;
         this.corePluginExtractor = corePluginExtractor;
         this.performWrapper = performWrapper;
+        this.aliasWrapper = aliasWrapper;
         this.themeManager = themeManager;
 
         globalConfig = identityManager.getGlobalConfiguration();
