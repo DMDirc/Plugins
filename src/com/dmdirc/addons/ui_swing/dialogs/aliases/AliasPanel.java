@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_swing.dialogs.aliases;
 
 import com.dmdirc.actions.ActionCondition;
+import com.dmdirc.actions.ActionFactory;
 import com.dmdirc.actions.CoreActionComparison;
 import com.dmdirc.actions.CoreActionComponent;
 import com.dmdirc.actions.wrappers.Alias;
@@ -52,7 +53,7 @@ import net.miginfocom.swing.MigLayout;
 /**
  * Panel to display an alias.
  */
-public final class AliasPanel extends JPanel implements ActionListener {
+public class AliasPanel extends JPanel implements ActionListener {
 
     /**
      * A version number for this class. It should be changed whenever the class
@@ -60,6 +61,8 @@ public final class AliasPanel extends JPanel implements ActionListener {
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 2;
+    /** Factory to use when creating aliases. */
+    private final ActionFactory actionFactory;
     /** Name field. */
     private final ValidatingTextFieldInputField command;
     /** argument component combo box. */
@@ -80,8 +83,10 @@ public final class AliasPanel extends JPanel implements ActionListener {
     public AliasPanel(final SwingController controller) {
         super();
 
+        actionFactory = controller.getActionFactory();
+
         command = new ValidatingTextFieldInputField(controller,
-                new ValidatorChain<String>(new CommandNameValidator(),
+                new ValidatorChain<>(new CommandNameValidator(),
                 new FileNameValidator()));
         command.setEnabled(false);
         //new SwingInputHandler(command, GlobalCommandParser
@@ -272,15 +277,14 @@ public final class AliasPanel extends JPanel implements ActionListener {
      * @return New alias reflecting the edited alias.
      */
     protected Alias getNewAlias() {
-        final List<ActionCondition> conditions =
-                new ArrayList<ActionCondition>();
+        final List<ActionCondition> conditions = new ArrayList<>();
         conditions.add(new ActionCondition(1,
                 CoreActionComponent.STRING_STRING,
                 CoreActionComparison.STRING_EQUALS, getCommand()));
         if (getArguments() != null) {
             conditions.add(getArguments());
         }
-        return new Alias(getCommand(), conditions, getResponse());
+        return new Alias(actionFactory, getCommand(), conditions, getResponse());
     }
 
     /** Focuses the command field. */
