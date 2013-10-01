@@ -24,6 +24,7 @@ package com.dmdirc.addons.ui_swing.dialogs.aliases;
 
 import com.dmdirc.actions.Action;
 import com.dmdirc.actions.ActionCondition;
+import com.dmdirc.actions.ActionFactory;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionComparison;
 import com.dmdirc.actions.wrappers.Alias;
@@ -59,11 +60,13 @@ import net.miginfocom.swing.MigLayout;
 /**
  * Alias manager dialog.
  */
-public final class AliasManagerDialog extends StandardDialog implements
-        ActionListener, ListSelectionListener {
+public class AliasManagerDialog extends StandardDialog implements ActionListener,
+        ListSelectionListener {
 
     /** Serial version UID. */
     private static final long serialVersionUID = 3;
+    /** Factory to use when creating aliases. */
+    private final ActionFactory actionFactory;
     /** Table scrollpane. */
     private JScrollPane scrollPane;
     /** Error table. */
@@ -87,10 +90,11 @@ public final class AliasManagerDialog extends StandardDialog implements
      * Creates a new instance of ErrorListDialog.
      *
      * @param controller Swing controller
-     * @param parentWindow Parent window
      */
     public AliasManagerDialog(final SwingController controller) {
         super(controller, ModalityType.MODELESS);
+
+        this.actionFactory = controller.getActionFactory();
 
         setTitle("Alias manager");
 
@@ -144,8 +148,7 @@ public final class AliasManagerDialog extends StandardDialog implements
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         table.getTableHeader().setReorderingAllowed(false);
 
-        final TableRowSorter<AliasTableModel> sorter =
-                new TableRowSorter<AliasTableModel>(tableModel);
+        final TableRowSorter<AliasTableModel> sorter = new TableRowSorter<>(tableModel);
         sorter.setComparator(2, new StringArrayComparator());
         table.setRowSorter(sorter);
         table.getRowSorter().toggleSortOrder(0);
@@ -171,7 +174,7 @@ public final class AliasManagerDialog extends StandardDialog implements
      * @return Alias list
      */
     private List<Alias> getTableData() {
-        final List<Alias> aliases = new ArrayList<Alias>();
+        final List<Alias> aliases = new ArrayList<>();
 
         for (Action loopAction : AliasWrapper.getAliasWrapper()) {
             final List<ActionCondition> arguments = loopAction.getConditions();
@@ -184,7 +187,7 @@ public final class AliasManagerDialog extends StandardDialog implements
                 argument = arguments.get(1);
             }
 
-            aliases.add(new Alias(argument.getTarget(),
+            aliases.add(new Alias(actionFactory, argument.getTarget(),
                     arguments, loopAction.getResponse()));
         }
 
@@ -324,7 +327,7 @@ public final class AliasManagerDialog extends StandardDialog implements
 
     /** Adds an alias. */
     private void add() {
-        final Alias alias = new Alias("");
+        final Alias alias = new Alias(actionFactory, "");
         tableModel.addRow(alias);
         final int newRow = table.getRowSorter().
                 convertRowIndexToView(tableModel.indexOf(alias));
@@ -346,8 +349,8 @@ public final class AliasManagerDialog extends StandardDialog implements
                 AliasWrapper.getAliasWrapper().getActions();
         final List<Alias> aliases = tableModel.getAliases();
 
-        final List<Alias> newAliases = new ArrayList<Alias>();
-        final List<Alias> modifiedAliases = new ArrayList<Alias>();
+        final List<Alias> newAliases = new ArrayList<>();
+        final List<Alias> modifiedAliases = new ArrayList<>();
 
         for (Alias alias : aliases) {
             final Action action = getAction(alias);
