@@ -67,6 +67,8 @@ public class AliasManagerDialog extends StandardDialog implements ActionListener
     private static final long serialVersionUID = 3;
     /** Factory to use when creating aliases. */
     private final ActionFactory actionFactory;
+    /** Alias wrapper to retrieve aliases from. */
+    private final AliasWrapper aliasWrapper;
     /** Table scrollpane. */
     private JScrollPane scrollPane;
     /** Error table. */
@@ -94,6 +96,7 @@ public class AliasManagerDialog extends StandardDialog implements ActionListener
     public AliasManagerDialog(final SwingController controller) {
         super(controller, ModalityType.MODELESS);
 
+        this.aliasWrapper = controller.getAliasWrapper();
         this.actionFactory = controller.getActionFactory();
 
         setTitle("Alias manager");
@@ -176,7 +179,7 @@ public class AliasManagerDialog extends StandardDialog implements ActionListener
     private List<Alias> getTableData() {
         final List<Alias> aliases = new ArrayList<>();
 
-        for (Action loopAction : AliasWrapper.getAliasWrapper()) {
+        for (Action loopAction : aliasWrapper) {
             final List<ActionCondition> arguments = loopAction.getConditions();
 
             ActionCondition argument;
@@ -345,8 +348,7 @@ public class AliasManagerDialog extends StandardDialog implements ActionListener
 
     /** Saves the aliases. */
     private void save() {
-        final List<Action> actions =
-                AliasWrapper.getAliasWrapper().getActions();
+        final List<Action> actions = aliasWrapper.getActions();
         final List<Alias> aliases = tableModel.getAliases();
 
         final List<Alias> newAliases = new ArrayList<>();
@@ -415,8 +417,7 @@ public class AliasManagerDialog extends StandardDialog implements ActionListener
      * @return Corresponding action or null if none found
      */
     private Action getAction(final Alias alias) {
-        final List<Action> actions =
-                AliasWrapper.getAliasWrapper().getActions();
+        final List<Action> actions = aliasWrapper.getActions();
         Action action = null;
 
         for (Action loopAction : actions) {
