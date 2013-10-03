@@ -41,12 +41,11 @@ import com.dmdirc.updater.retrieving.BaseRetrievalResult;
 import com.dmdirc.updater.retrieving.TypeSensitiveRetrievalStrategy;
 import com.dmdirc.updater.retrieving.UpdateRetrievalListener;
 import com.dmdirc.updater.retrieving.UpdateRetrievalResult;
+import com.dmdirc.util.collections.ListenerList;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-
-import lombok.ListenerSupport;
 
 /**
  * Generates some fake updates.
@@ -125,19 +124,38 @@ public class FakeUpdates extends DebugCommand {
 
     }
 
-    /**
-     * Fake update retriever which spits out {@link FakeRetrievalResult}s.
-     * Fakes progress on updates and fakes around 1 in 4 failing to download.
-     */
-    @ListenerSupport(UpdateRetrievalListener.class)
     private static class FakeUpdateRetriever
             extends TypeSensitiveRetrievalStrategy<FakeUpdateCheckResult> {
+
+        private final ListenerList listeners = new ListenerList();
 
         /**
          * Creates a new {@link FakeUpdateRetriever}.
          */
         public FakeUpdateRetriever() {
             super(FakeUpdateCheckResult.class);
+        }
+
+        protected void fireRetrievalProgressChanged(final UpdateComponent component, final double progress) {
+            listeners.getCallable(UpdateRetrievalListener.class).retrievalProgressChanged(component, progress);
+        }
+
+        protected void fireRetrievalFailed(final UpdateComponent component) {
+            listeners.getCallable(UpdateRetrievalListener.class).retrievalFailed(component);
+        }
+
+        protected void fireRetrievalCompleted(final UpdateComponent component) {
+            listeners.getCallable(UpdateRetrievalListener.class).retrievalCompleted(component);
+        }
+
+        @Override
+        public void addUpdateRetrievalListener(final UpdateRetrievalListener listener) {
+            listeners.add(UpdateRetrievalListener.class, listener);
+        }
+
+        @Override
+        public void removeUpdateRetrievalListener(final UpdateRetrievalListener listener) {
+            listeners.remove(UpdateRetrievalListener.class, listener);
         }
 
         /** {@inheritDoc} */
@@ -192,16 +210,38 @@ public class FakeUpdates extends DebugCommand {
     /**
      * A fake update installer.
      */
-    @ListenerSupport(UpdateInstallationListener.class)
     private static class FakeUpdateInstaller
-            extends TypeSensitiveInstallationStrategy
-            <UpdateComponent, FakeRetrievalResult> {
+            extends TypeSensitiveInstallationStrategy<UpdateComponent, FakeRetrievalResult> {
+
+        private final ListenerList listeners = new ListenerList();
 
         /**
          * Creates a new {@link FakeUpdateInstaller}.
          */
         public FakeUpdateInstaller() {
             super(UpdateComponent.class, FakeRetrievalResult.class);
+        }
+
+        protected void fireInstallCompleted(final UpdateComponent component) {
+            listeners.getCallable(UpdateInstallationListener.class).installCompleted(component);
+        }
+
+        protected void fireInstallFailed(final UpdateComponent component) {
+            listeners.getCallable(UpdateInstallationListener.class).installFailed(component);
+        }
+
+        protected void fireInstallProgressChanged(final UpdateComponent component, final double progress) {
+            listeners.getCallable(UpdateInstallationListener.class).installProgressChanged(component, progress);
+        }
+
+        @Override
+        public void addUpdateInstallationListener(final UpdateInstallationListener listener) {
+            listeners.add(UpdateInstallationListener.class, listener);
+        }
+
+        @Override
+        public void removeUpdateInstallationListener(final UpdateInstallationListener listener) {
+            listeners.remove(UpdateInstallationListener.class, listener);
         }
 
         /** {@inheritDoc} */
