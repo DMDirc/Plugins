@@ -22,5 +22,6 @@
         <module organisation="org.eclipse.jgit" name="*" resolver="jgit"/>
         <module organisation="com.greboid.libraries" name="*" resolver="dmdirc-thirdparty"/>
         <module organisation="net.sourceforge.java-jml" name="*" resolver="jml"/>
+        <module organisation="org.projectlombok" name="*" resolver="dmdirc-thirdparty"/>
     </modules>
 </ivysettings>

@@ -12,7 +12,7 @@
         <dependency org="com.github.shanemcc" name="jgit-describe" rev="0.3" conf="build->default" />
 
         <dependency org="org.slf4j" name="slf4j-api" rev="1.+" conf="main->default" />
-        <dependency org="com.github.peichhorn" name="lombok-pg" rev="latest.release" conf="main->default" />
+        <dependency org="com.github.peichhorn" name="lombok-pg" rev="latest.integration" conf="main->default" />
         <dependency org="org.igniterealtime.smack" name="smack" rev="3.+" conf="main->default" />
         <dependency org="org.igniterealtime.smack" name="smackx" rev="3.+" conf="main->default" />
         <dependency org="com.miglayout" name="miglayout-swing" rev="4.+" conf="main->default" />
