@@ -33,7 +33,7 @@ import lombok.RequiredArgsConstructor;
  * Simplifies implementing a cell renderer, works around oddities in look and
  * feels.
  */
-@RequiredArgsConstructor(callSuper = false)
+@RequiredArgsConstructor
 public abstract class DMDircListCellRenderer implements ListCellRenderer {
 
     /**
