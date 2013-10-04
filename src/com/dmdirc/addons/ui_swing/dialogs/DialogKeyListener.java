@@ -45,6 +45,7 @@ public class DialogKeyListener implements KeyEventDispatcher {
                     getCurrentKeyboardFocusManager().getFocusedWindow();
             if (e.getKeyCode() == KeyEvent.VK_ENTER && e.getModifiers()
                     == UIUtilities.getCtrlMask()) {
+                e.consume();
                 dialog.ctrlEnterPressed();
             }
             if (e.getKeyCode() == KeyEvent.VK_ENTER && e.getModifiers()
@@ -52,10 +53,12 @@ public class DialogKeyListener implements KeyEventDispatcher {
                 if (dialog.getFocusOwner() instanceof JButton) {
                     dialog.executeAction(((JButton) dialog.getFocusOwner()));
                 } else {
+                    e.consume();
                     return dialog.enterPressed();
                 }
             }
             if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                e.consume();
                 return dialog.escapePressed();
             }
         }
