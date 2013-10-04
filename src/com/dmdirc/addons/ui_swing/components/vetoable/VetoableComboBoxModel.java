@@ -29,7 +29,7 @@ import javax.swing.DefaultComboBoxModel;
 /**
  * Vetoable combo box model.
  */
-public class VetoableComboBoxModel extends DefaultComboBoxModel {
+public class VetoableComboBoxModel<T> extends DefaultComboBoxModel<T> {
 
     /**
      * A version number for this class. It should be changed whenever the class
@@ -38,7 +38,7 @@ public class VetoableComboBoxModel extends DefaultComboBoxModel {
      */
     private static final long serialVersionUID = 1;
     /** Listener list. */
-    private ListenerList listeners = new ListenerList();
+    private final ListenerList listeners = new ListenerList();
 
     /**
      * Constructs an empty DefaultComboBoxModel object.
@@ -53,7 +53,7 @@ public class VetoableComboBoxModel extends DefaultComboBoxModel {
      *
      * @param items  an array of Object objects
      */
-    public VetoableComboBoxModel(final Object[] items) {
+    public VetoableComboBoxModel(final T[] items) {
         super(items);
     }
 
@@ -96,11 +96,11 @@ public class VetoableComboBoxModel extends DefaultComboBoxModel {
 
     /** {@inheritDoc} */
     @Override
-    public void setSelectedItem(final Object anItem) {
+    public void setSelectedItem(final Object anObject) {
         final Object oldItem = getSelectedItem();
 
-        super.setSelectedItem(anItem);
-        if (!fireVetoableSelectionChange(anItem)) {
+        super.setSelectedItem(anObject);
+        if (!fireVetoableSelectionChange(anObject)) {
             super.setSelectedItem(oldItem);
         }
     }
