@@ -55,6 +55,7 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+import javax.swing.MutableComboBoxModel;
 import javax.swing.WindowConstants;
 
 import net.miginfocom.swing.MigLayout;
@@ -82,7 +83,7 @@ public final class NewServerDialog extends StandardDialog implements
     /** text field. */
     private JTextField passwordField;
     /** combo box. */
-    private JComboBox identityField;
+    private JComboBox<ConfigProvider> identityField;
     /** button. */
     private JButton editProfileButton;
     /**  Opening new server? */
@@ -91,7 +92,7 @@ public final class NewServerDialog extends StandardDialog implements
     /**
      * Creates a new instance of the dialog.
      *
-     * @param mainFrame Main frame
+     * @param controller Swing controller
      */
     public NewServerDialog(final SwingController controller) {
         super(controller, controller.getMainFrame(), ModalityType.MODELESS);
@@ -163,7 +164,7 @@ public final class NewServerDialog extends StandardDialog implements
         newServerWindowCheck = new JCheckBox();
         newServerWindowCheck.setSelected(true);
         sslCheck = new JCheckBox();
-        identityField = new JComboBox(new VetoableComboBoxModel());
+        identityField = new JComboBox<>(new VetoableComboBoxModel<ConfigProvider>());
         editProfileButton = new JButton();
 
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
@@ -190,7 +191,7 @@ public final class NewServerDialog extends StandardDialog implements
                 .getProvidersByType("profile");
         ((DefaultComboBoxModel) identityField.getModel()).removeAllElements();
         for (ConfigProvider profile : profiles) {
-            ((DefaultComboBoxModel) identityField.getModel()).addElement(profile);
+            ((MutableComboBoxModel<ConfigProvider>) identityField.getModel()).addElement(profile);
         }
     }
 
@@ -310,10 +311,7 @@ public final class NewServerDialog extends StandardDialog implements
     /** {@inheritDoc} */
     @Override
     public boolean selectionChanged(final VetoableChangeEvent e) {
-        if (e.getNewValue() == null) {
-            return false;
-        }
-        return true;
+        return e.getNewValue() != null;
     }
 
     /** {@inheritDoc} */
