@@ -57,7 +57,7 @@ import net.miginfocom.swing.MigLayout;
  * The updater dialog informs the user of the new update that is available,
  * and walks them through the process of downloading the update.
  */
-public final class SwingUpdaterDialog extends StandardDialog implements
+public class SwingUpdaterDialog extends StandardDialog implements
         ActionListener, UpdateManagerListener {
 
     /** Serial version UID. */
@@ -111,7 +111,7 @@ public final class SwingUpdaterDialog extends StandardDialog implements
         header = new TextLabel("An update is available for one or more "
                 + "components of DMDirc:");
 
-        final List<UpdateComponent> updates = new ArrayList<UpdateComponent>();
+        final List<UpdateComponent> updates = new ArrayList<>();
         for (UpdateComponent component : updateManager.getComponents()) {
             if (updateManager.getStatus(component) != UpdateStatus.IDLE
                     && updateManager.getStatus(component) != UpdateStatus.CHECKING_NOT_PERMITTED) {
@@ -222,6 +222,9 @@ public final class SwingUpdaterDialog extends StandardDialog implements
                 getOkButton().setEnabled(status != UpdateManagerStatus.WORKING);
 
                 if (status == UpdateManagerStatus.IDLE_RESTART_NEEDED) {
+                    if (isVisible()) {
+                        getController().showDialog(SwingRestartDialog.class);
+                    }
                     dispose();
                 } else {
                     getCancelButton().setVisible(true);
