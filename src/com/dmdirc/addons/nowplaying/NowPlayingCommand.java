@@ -31,6 +31,7 @@ import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.IntelligentCommand;
 import com.dmdirc.commandparser.commands.context.ChatCommandContext;
 import com.dmdirc.commandparser.commands.context.CommandContext;
+import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.config.IdentityController;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 import com.dmdirc.ui.input.TabCompleter;
@@ -38,15 +39,11 @@ import com.dmdirc.ui.input.TabCompleter;
 import java.util.Arrays;
 import java.util.List;
 
-import lombok.RequiredArgsConstructor;
-
 /**
  * The now playing command retrieves the currently playing song from a
  * variety of media players.
  */
-@RequiredArgsConstructor
-public final class NowPlayingCommand extends Command implements
-        IntelligentCommand {
+public class NowPlayingCommand extends Command implements IntelligentCommand {
 
     /** A command info object for this command. */
     public static final BaseCommandInfo INFO = new BaseCommandInfo("nowplaying",
@@ -57,6 +54,22 @@ public final class NowPlayingCommand extends Command implements
     private final NowPlayingPlugin parent;
     /** The controller to read/write settings with. */
     private final IdentityController identityController;
+
+    /**
+     * Creates a new instance of this command.
+     *
+     * @param controller The controller to use for command information.
+     * @param parent The plugin that owns this command.
+     * @param identityController The controller to use to read/write settings.
+     */
+    public NowPlayingCommand(
+            final CommandController controller,
+            final NowPlayingPlugin parent,
+            final IdentityController identityController) {
+        super(controller);
+        this.parent = parent;
+        this.identityController = identityController;
+    }
 
     /** {@inheritDoc} */
     @Override

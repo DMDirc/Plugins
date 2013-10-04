@@ -76,7 +76,7 @@ public final class OsdPlugin extends BaseCommandPlugin implements
         this.pluginInfo = pluginInfo;
         this.identityController = identityController;
         osdManager = new OsdManager(identityController, this);
-        registerCommand(new OsdCommand(osdManager), OsdCommand.INFO);
+        registerCommand(new OsdCommand(commandController, osdManager), OsdCommand.INFO);
     }
 
     /**

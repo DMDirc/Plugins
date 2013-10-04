@@ -61,7 +61,7 @@ public final class DebugPlugin extends BaseCommandPlugin implements
 
         this.actionController = actionController;
 
-        registerCommand(new ParserDebugCommand(this), ParserDebugCommand.INFO);
+        registerCommand(new ParserDebugCommand(commandController, this), ParserDebugCommand.INFO);
     }
 
     /** {@inheritDoc} */

@@ -41,7 +41,7 @@ public class OsxIntegrationPlugin extends BaseCommandPlugin {
     public OsxIntegrationPlugin(final SwingController controller,
             final CommandController commandController) {
         super(commandController);
-        registerCommand(new DockBounceCommand(controller.getApple()),
+        registerCommand(new DockBounceCommand(commandController, controller.getApple()),
                 DockBounceCommand.INFO);
     }
 }

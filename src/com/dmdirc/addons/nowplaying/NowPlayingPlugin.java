@@ -78,7 +78,7 @@ public class NowPlayingPlugin extends BaseCommandPlugin implements ActionListene
         this.actionController = actionController;
         this.identityController = identityController;
 
-        registerCommand(new NowPlayingCommand(this, identityController), NowPlayingCommand.INFO);
+        registerCommand(new NowPlayingCommand(commandController, this, identityController), NowPlayingCommand.INFO);
     }
 
     /** {@inheritDoc} */

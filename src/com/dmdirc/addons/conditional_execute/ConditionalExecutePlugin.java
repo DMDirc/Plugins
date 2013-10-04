@@ -38,6 +38,6 @@ public final class ConditionalExecutePlugin extends BaseCommandPlugin {
      */
     public ConditionalExecutePlugin(final CommandController commandController) {
         super(commandController);
-        registerCommand(new ConditionalExecuteCommand(), ConditionalExecuteCommand.INFO);
+        registerCommand(new ConditionalExecuteCommand(commandController), ConditionalExecuteCommand.INFO);
     }
 }

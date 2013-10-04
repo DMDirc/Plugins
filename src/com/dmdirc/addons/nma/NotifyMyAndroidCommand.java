@@ -28,6 +28,7 @@ import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandType;
 import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.context.CommandContext;
+import com.dmdirc.interfaces.CommandController;
 
 import java.io.IOException;
 
@@ -51,12 +52,21 @@ public class NotifyMyAndroidCommand extends Command {
     @Setter
     private String configDomain;
 
+    /**
+     * Creates a new instance of this command.
+     *
+     * @param controller The controller to use for command information.
+     */
+    public NotifyMyAndroidCommand(final CommandController controller) {
+        super(controller);
+    }
+
     /** {@inheritDoc} */
     @Override
     public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
         final String[] parts = args.getArgumentsAsString().split("\\s+--\\s+", 2);
-        log.trace("Split input: {}", parts);
+        log.trace("Split input: {}", (Object[]) parts);
 
         if (parts.length != 2) {
             showUsage(origin, args.isSilent(), INFO.getName(), INFO.getHelp());

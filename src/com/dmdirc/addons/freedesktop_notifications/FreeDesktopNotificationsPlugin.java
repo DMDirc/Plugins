@@ -84,7 +84,7 @@ public class FreeDesktopNotificationsPlugin extends BaseCommandPlugin implements
         this.filesHelper = new PluginFilesHelper(pluginInfo);
         config = identityController.getGlobalConfiguration();
         identity = identityController.getAddonSettings();
-        registerCommand(new FDNotifyCommand(this), FDNotifyCommand.INFO);
+        registerCommand(new FDNotifyCommand(commandController, this), FDNotifyCommand.INFO);
     }
 
     /**

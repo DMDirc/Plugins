@@ -43,7 +43,7 @@ public final class DcopPlugin extends BaseCommandPlugin {
      */
     public DcopPlugin(final CommandController commandController) {
         super(commandController);
-        registerCommand(new DcopCommand(), DcopCommand.INFO);
+        registerCommand(new DcopCommand(commandController), DcopCommand.INFO);
     }
 
     /**

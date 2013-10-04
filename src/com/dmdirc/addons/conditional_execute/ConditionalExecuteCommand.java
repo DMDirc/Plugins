@@ -29,6 +29,8 @@ import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandType;
 import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.context.CommandContext;
+import com.dmdirc.interfaces.CommandController;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -38,11 +40,21 @@ import java.util.Map;
  */
 public class ConditionalExecuteCommand extends Command {
 
-    /** Store details about current namespaces. */
-    private final Map<String, ConditionalExecuteNamespace> namespaces = new HashMap<String, ConditionalExecuteNamespace>();
-
     /** A command info object for this command. */
-    public static final BaseCommandInfo INFO = new BaseCommandInfo("conditionalexecute", "conditionalexecute <args> - Conditionally execute a command", CommandType.TYPE_GLOBAL);
+    public static final BaseCommandInfo INFO = new BaseCommandInfo("conditionalexecute",
+            "conditionalexecute <args> - Conditionally execute a command", CommandType.TYPE_GLOBAL);
+
+    /** Store details about current namespaces. */
+    private final Map<String, ConditionalExecuteNamespace> namespaces = new HashMap<>();
+
+    /**
+     * Creates a new instance of this command.
+     *
+     * @param controller The controller to use for command information.
+     */
+    public ConditionalExecuteCommand(final CommandController controller) {
+        super(controller);
+    }
 
     /** {@inheritDoc} */
     @Override

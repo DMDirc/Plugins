@@ -29,6 +29,7 @@ import com.dmdirc.commandparser.CommandInfo;
 import com.dmdirc.commandparser.CommandType;
 import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.context.CommandContext;
+import com.dmdirc.interfaces.CommandController;
 
 import java.text.ParseException;
 
@@ -42,6 +43,15 @@ public class CalcCommand extends Command {
     public static final CommandInfo INFO = new BaseCommandInfo("calc",
             "calc [--showexpr] <expr> - evaluate mathematical expression",
             CommandType.TYPE_GLOBAL) ;
+
+    /**
+     * Creates a new instance of this command.
+     *
+     * @param controller The controller to use for command information.
+     */
+    public CalcCommand(final CommandController controller) {
+        super(controller);
+    }
 
     /** {@inheritDoc} */
     @Override

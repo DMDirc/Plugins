@@ -76,7 +76,7 @@ public class RedirectCommandTest {
 
     @Test
     public void testExecute() {
-        final RedirectCommand command = new RedirectCommand();
+        final RedirectCommand command = new RedirectCommand(commandController);
 
         command.execute(target, new CommandArguments(commandController, "/redirect /echo test"),
                 new ChatCommandContext(frameContainer, RedirectCommand.INFO, target));

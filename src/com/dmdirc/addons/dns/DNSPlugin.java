@@ -43,7 +43,7 @@ public final class DNSPlugin extends BaseCommandPlugin {
      */
     public DNSPlugin(final CommandController commandController) {
         super(commandController);
-        registerCommand(new DNSCommand(), DNSCommand.INFO);
+        registerCommand(new DNSCommand(commandController), DNSCommand.INFO);
     }
 
     /**

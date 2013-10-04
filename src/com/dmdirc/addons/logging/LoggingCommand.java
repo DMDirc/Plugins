@@ -29,16 +29,13 @@ import com.dmdirc.commandparser.CommandType;
 import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.IntelligentCommand;
 import com.dmdirc.commandparser.commands.context.CommandContext;
+import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.ui.input.AdditionalTabTargets;
-
-import lombok.AllArgsConstructor;
 
 /**
  * The dcop command retrieves information from a dcop application.
  */
-@AllArgsConstructor
-public final class LoggingCommand extends Command implements
-        IntelligentCommand {
+public class LoggingCommand extends Command implements IntelligentCommand {
 
     /** Command name. */
     private static final String LOGGING = "logging";
@@ -48,6 +45,17 @@ public final class LoggingCommand extends Command implements
             CommandType.TYPE_SERVER);
     /** Logging plugin. */
     private final LoggingPlugin plugin;
+
+    /**
+     * Creates a new instance of this command.
+     *
+     * @param controller The controller to use for command information.
+     * @param plugin The plugin providing logging services.
+     */
+    public LoggingCommand(final CommandController controller, final LoggingPlugin plugin) {
+        super(controller);
+        this.plugin = plugin;
+    }
 
     /** {@inheritDoc} */
     @Override
