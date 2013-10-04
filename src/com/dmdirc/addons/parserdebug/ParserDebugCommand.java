@@ -30,6 +30,7 @@ import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.CommandOptions;
 import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.commandparser.commands.context.ServerCommandContext;
+import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.parser.interfaces.callbacks.DebugInfoListener;
 
@@ -50,10 +51,11 @@ public final class ParserDebugCommand extends Command {
     /**
      * Creates a new instance of ParserDebugCommand.
      *
+     * @param controller The controller to use for command information.
      * @param plugin Plugin that owns this command
      */
-    public ParserDebugCommand(final DebugPlugin plugin) {
-        super();
+    public ParserDebugCommand(final CommandController controller, final DebugPlugin plugin) {
+        super(controller);
         myPlugin = plugin;
     }
 

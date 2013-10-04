@@ -37,6 +37,6 @@ public final class ContactListPlugin extends BaseCommandPlugin {
      */
     public ContactListPlugin(final CommandController commandController) {
         super(commandController);
-        registerCommand(new ContactListCommand(), ContactListCommand.INFO);
+        registerCommand(new ContactListCommand(commandController), ContactListCommand.INFO);
     }
 }

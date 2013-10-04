@@ -67,7 +67,7 @@ public class NotificationsPlugin extends BaseCommandPlugin implements ActionList
         super(commandController);
         this.pluginInfo = pluginInfo;
         this.identityController = identityController;
-        registerCommand(new NotificationCommand(this),
+        registerCommand(new NotificationCommand(commandController, this),
                 NotificationCommand.INFO);
     }
 

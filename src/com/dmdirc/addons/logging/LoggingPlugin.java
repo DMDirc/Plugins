@@ -126,7 +126,7 @@ public class LoggingPlugin extends BaseCommandPlugin implements ActionListener,
         config = identityController.getGlobalConfiguration();
         identity = identityController.getAddonSettings();
 
-        registerCommand(new LoggingCommand(this), LoggingCommand.INFO);
+        registerCommand(new LoggingCommand(commandController, this), LoggingCommand.INFO);
     }
 
     /** {@inheritDoc} */

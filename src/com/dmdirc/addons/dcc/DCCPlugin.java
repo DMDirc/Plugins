@@ -95,7 +95,7 @@ public class DCCPlugin extends BaseCommandPlugin implements ActionListener {
         this.controller = controller;
         config = controller.getGlobalConfig();
         this.pluginInfo = pluginInfo;
-        registerCommand(new DCCCommand(controller.getMainFrame(), this),
+        registerCommand(new DCCCommand(commandController, controller.getMainFrame(), this),
                 DCCCommand.INFO);
         final SwingWindowFactory factory = controller.getWindowFactory();
         factory.registerImplementation(new HashSet<>(Arrays.asList(

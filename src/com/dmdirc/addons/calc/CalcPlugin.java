@@ -37,6 +37,6 @@ public class CalcPlugin extends BaseCommandPlugin {
      */
     public CalcPlugin(final CommandController commandController) {
         super(commandController);
-        registerCommand(new CalcCommand(), CalcCommand.INFO);
+        registerCommand(new CalcCommand(commandController), CalcCommand.INFO);
     }
 }

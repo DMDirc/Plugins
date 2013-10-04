@@ -45,7 +45,7 @@ public final class ActiveWindowPlugin extends BaseCommandPlugin {
 
         sink = new ActiveWindowMessageSink(controller.getMainFrame());
 
-        registerCommand(new ActiveCommand(controller.getMainFrame()),
+        registerCommand(new ActiveCommand(commandController, controller.getMainFrame()),
                 ActiveCommand.INFO);
     }
 

@@ -28,6 +28,7 @@ import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandType;
 import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.context.CommandContext;
+import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.util.CommandUtils;
@@ -47,6 +48,15 @@ public class ExecCommand extends Command {
     public static final BaseCommandInfo INFO = new BaseCommandInfo("exec",
             "exec <command> [<parameters>] - executes an external program "
             + "and displays the output", CommandType.TYPE_GLOBAL);
+
+    /**
+     * Creates a new instance of this command.
+     *
+     * @param controller The controller to use for command information.
+     */
+    public ExecCommand(final CommandController controller) {
+        super(controller);
+    }
 
     /** {@inheritDoc} */
     @Override

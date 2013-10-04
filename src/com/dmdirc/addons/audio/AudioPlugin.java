@@ -37,7 +37,7 @@ public final class AudioPlugin extends BaseCommandPlugin {
      */
     public AudioPlugin(final CommandController commandController) {
         super(commandController);
-        registerCommand(new AudioCommand(), AudioCommand.INFO);
-        registerCommand(new BeepCommand(), BeepCommand.INFO);
+        registerCommand(new AudioCommand(commandController), AudioCommand.INFO);
+        registerCommand(new BeepCommand(commandController), BeepCommand.INFO);
     }
 }

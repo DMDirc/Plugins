@@ -38,6 +38,6 @@ public final class RedirectPlugin extends BaseCommandPlugin {
      */
     public RedirectPlugin(final CommandController commandController) {
         super(commandController);
-        registerCommand(new RedirectCommand(), RedirectCommand.INFO);
+        registerCommand(new RedirectCommand(commandController), RedirectCommand.INFO);
     }
 }

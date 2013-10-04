@@ -32,6 +32,7 @@ import com.dmdirc.commandparser.CommandType;
 import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.IntelligentCommand;
 import com.dmdirc.commandparser.commands.context.CommandContext;
+import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 import com.dmdirc.ui.input.TabCompleter;
 
@@ -51,10 +52,12 @@ public class ActiveCommand extends Command implements IntelligentCommand {
     /**
      * Creates a new active command.
      *
+     * @param controller The controller to use for command information.
      * @param mainFrame Parent MainFrame
      */
-    public ActiveCommand(final MainFrame mainFrame) {
-        super();
+    public ActiveCommand(final CommandController controller, final MainFrame mainFrame) {
+        super(controller);
+
         this.mainFrame = mainFrame;
     }
 

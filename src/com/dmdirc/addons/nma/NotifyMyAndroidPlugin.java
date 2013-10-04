@@ -37,7 +37,7 @@ import com.dmdirc.plugins.implementations.BaseCommandPlugin;
 public class NotifyMyAndroidPlugin extends BaseCommandPlugin {
 
     /** The command to register. */
-    private final NotifyMyAndroidCommand command = new NotifyMyAndroidCommand();
+    private final NotifyMyAndroidCommand command;
 
     /** Our info object. */
     private final PluginInfo pluginInfo;
@@ -51,6 +51,8 @@ public class NotifyMyAndroidPlugin extends BaseCommandPlugin {
     public NotifyMyAndroidPlugin(final PluginInfo pluginInfo,
             final CommandController commandController) {
         super(commandController);
+
+        command = new NotifyMyAndroidCommand(commandController);
         registerCommand(command, NotifyMyAndroidCommand.INFO);
 
         this.pluginInfo = pluginInfo;

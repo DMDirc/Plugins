@@ -37,6 +37,6 @@ public class ExecPlugin extends BaseCommandPlugin {
      */
     public ExecPlugin(final CommandController commandController) {
         super(commandController);
-        registerCommand(new ExecCommand(), ExecCommand.INFO);
+        registerCommand(new ExecCommand(commandController), ExecCommand.INFO);
     }
 }
