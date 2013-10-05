@@ -44,11 +44,16 @@ public class ColourRenderer extends DefaultTableCellRenderer {
      */
     private static final long serialVersionUID = 1;
 
+    /** The colour manager to use to parse colours. */
+    private final ColourManager colourManager;
+
     /**
      * Creates a new instance of ColourRenderer.
+     *
+     * @param colourManager The colour manager to use to parse colours.
      */
-    public ColourRenderer() {
-        super();
+    public ColourRenderer(final ColourManager colourManager) {
+        this.colourManager = colourManager;
 
         setOpaque(true);
     }
@@ -60,7 +65,7 @@ public class ColourRenderer extends DefaultTableCellRenderer {
             final boolean hasFocus, final int row, final int column) {
         Color colour = null;
         if (value != null && !((String) value).isEmpty()) {
-            colour = UIUtilities.convertColour(ColourManager.parseColour((String) value, null));
+            colour = UIUtilities.convertColour(colourManager.getColourFromString((String) value, null));
         }
 
         setHorizontalAlignment(CENTER);
