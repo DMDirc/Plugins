@@ -28,20 +28,28 @@ import com.dmdirc.messages.MessageSinkManager;
 import com.dmdirc.plugins.implementations.BaseCommandPlugin;
 
 /** Plugin to provide an active window command to the Swing UI. */
-public final class ActiveWindowPlugin extends BaseCommandPlugin {
+public class ActiveWindowPlugin extends BaseCommandPlugin {
 
     /** The message sink to register and unregister. */
     private final ActiveWindowMessageSink sink;
+
+    /** The manager to add and remove the sink from. */
+    private final MessageSinkManager sinkManager;
 
     /**
      * Creates a new instance of this plugin.
      *
      * @param controller The controller to use to find active windows
      * @param commandController Command controller to register commands
+     * @param sinkManager The manager to add sinks to
      */
-    public ActiveWindowPlugin(final SwingController controller,
-            final CommandController commandController) {
+    public ActiveWindowPlugin(
+            final SwingController controller,
+            final CommandController commandController,
+            final MessageSinkManager sinkManager) {
         super(commandController);
+
+        this.sinkManager = sinkManager;
 
         sink = new ActiveWindowMessageSink(controller.getMainFrame());
 
@@ -54,7 +62,7 @@ public final class ActiveWindowPlugin extends BaseCommandPlugin {
     public void onLoad() {
         super.onLoad();
 
-        MessageSinkManager.getManager().addSink(sink);
+        sinkManager.addSink(sink);
     }
 
     /** {@inheritDoc} */
@@ -62,6 +70,6 @@ public final class ActiveWindowPlugin extends BaseCommandPlugin {
     public void onUnload() {
         super.onUnload();
 
-        MessageSinkManager.getManager().removeSink(sink);
+        sinkManager.removeSink(sink);
     }
 }
