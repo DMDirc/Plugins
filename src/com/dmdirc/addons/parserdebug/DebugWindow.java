@@ -50,15 +50,16 @@ public class DebugWindow extends FrameContainer {
      * @param title The title of this window
      * @param parser The parser this plugin is debugging
      * @param server The Server window this is a child of
+     * @param windowManager Window management
      */
-    public DebugWindow(final DebugPlugin plugin, final String title, final Parser parser, final Server server) {
+    public DebugWindow(final DebugPlugin plugin, final String title, final Parser parser, final Server server, final WindowManager windowManager) {
         super("raw", "Parser Debug", title, server.getConfigManager(),
-                Arrays.asList(WindowComponent.TEXTAREA.getIdentifier()));
+                Arrays.asList(WindowComponent.TEXTAREA.getIdentifier()), windowManager);
         this.plugin = plugin;
         this.parser = parser;
         this.server = server;
 
-        WindowManager.getWindowManager().addWindow(server, this);
+        windowManager.addWindow(server, this);
     }
 
     /**

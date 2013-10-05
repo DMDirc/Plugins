@@ -32,6 +32,7 @@ import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.commandparser.commands.context.ServerCommandContext;
 import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.parser.interfaces.callbacks.DebugInfoListener;
+import com.dmdirc.ui.WindowManager;
 
 /**
  * The ParserDebug Command allows controlling of which parsers spam debug info.
@@ -46,15 +47,19 @@ public final class ParserDebugCommand extends Command {
             CommandType.TYPE_SERVER);
     /** My Plugin */
     final DebugPlugin myPlugin;
+    /** Window management. */
+    private final WindowManager windowManager;
 
     /**
      * Creates a new instance of ParserDebugCommand.
      *
      * @param plugin Plugin that owns this command
+     * @param windowManager Window management
      */
-    public ParserDebugCommand(final DebugPlugin plugin) {
+    public ParserDebugCommand(final DebugPlugin plugin, final WindowManager windowManager) {
         super();
         myPlugin = plugin;
+        this.windowManager = windowManager;
     }
 
     /**
@@ -91,7 +96,7 @@ public final class ParserDebugCommand extends Command {
             try {
                 parser.getCallbackManager().addCallback(DebugInfoListener.class, myPlugin);
                 final DebugWindow window = new DebugWindow(myPlugin,
-                        "Parser Debug", parser, origin.getServer());
+                        "Parser Debug", parser, origin.getServer(), windowManager);
                 myPlugin.registeredParsers.put(parser, window);
                 sendLine(origin, isSilent, FORMAT_OUTPUT, "Adding callback ok");
                 window.addLine("======================", true);

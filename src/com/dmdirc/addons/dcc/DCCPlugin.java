@@ -77,6 +77,8 @@ public class DCCPlugin extends BaseCommandPlugin implements ActionListener {
     private final SwingController controller;
     /** Identity controller to read settings from. */
     private final IdentityController identityController;
+    /** Window Management. */
+    private final WindowManager windowManager;
 
     /**
      * Creates a new instance of this plugin.
@@ -85,17 +87,20 @@ public class DCCPlugin extends BaseCommandPlugin implements ActionListener {
      * @param pluginInfo This plugin's plugin info
      * @param identityController The Identity controller that provides the current config
      * @param commandController Command controller to register commands
+     * @param windowManager Window Management
      */
     public DCCPlugin(final SwingController controller,
             final PluginInfo pluginInfo,
             final IdentityController identityController,
-            final CommandController commandController) {
+            final CommandController commandController,
+            final WindowManager windowManager) {
         super(commandController);
         this.identityController = identityController;
         this.controller = controller;
+        this.windowManager = windowManager;
         config = controller.getGlobalConfig();
         this.pluginInfo = pluginInfo;
-        registerCommand(new DCCCommand(controller.getMainFrame(), this),
+        registerCommand(new DCCCommand(controller.getMainFrame(), this, windowManager),
                 DCCCommand.INFO);
         final SwingWindowFactory factory = controller.getWindowFactory();
         factory.registerImplementation(new HashSet<>(Arrays.asList(
@@ -172,7 +177,7 @@ public class DCCPlugin extends BaseCommandPlugin implements ActionListener {
                 final boolean resume = handleResume(jc);
                 if (reverse && !token.isEmpty()) {
                     new TransferContainer(DCCPlugin.this, send, config,
-                            "*Receive: " + nickname, nickname, null);
+                            "*Receive: " + nickname, nickname, null, windowManager);
                     send.setToken(token);
                     if (resume) {
                         if (config.getOptionBool(getDomain(),
@@ -197,7 +202,7 @@ public class DCCPlugin extends BaseCommandPlugin implements ActionListener {
                     }
                 } else {
                     new TransferContainer(DCCPlugin.this, send, config,
-                            "Receive: " + nickname, nickname, null);
+                            "Receive: " + nickname, nickname, null, windowManager);
                     if (resume) {
                         parser.sendCTCP(nickname, "DCC", "RESUME "
                                 + send.getShortFileName() + " "
@@ -381,7 +386,7 @@ public class DCCPlugin extends BaseCommandPlugin implements ActionListener {
             final String myNickname = ((Server) arguments[0]).getParser()
                     .getLocalClient().getNickname();
             final DCCFrameContainer f = new ChatContainer(this, chat, config,
-                    "Chat: " + nickname, myNickname, nickname);
+                    "Chat: " + nickname, myNickname, nickname, windowManager);
             f.addLine("DCCChatStarting", nickname, chat.getHost(),
                     chat.getPort());
             chat.connect();
@@ -629,8 +634,8 @@ public class DCCPlugin extends BaseCommandPlugin implements ActionListener {
      * Create the container window.
      */
     protected void createContainer() {
-        container = new PlaceholderContainer(this, config, controller);
-        WindowManager.getWindowManager().addWindow(container);
+        container = new PlaceholderContainer(this, config, controller, windowManager);
+        windowManager.addWindow(container);
     }
 
     /** {@inheritDoc} */

@@ -26,6 +26,7 @@ import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.CheckBoxMenuItem;
 import com.dmdirc.interfaces.config.IdentityController;
 import com.dmdirc.plugins.implementations.BasePlugin;
+import com.dmdirc.ui.WindowManager;
 
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -43,10 +44,12 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SwingDebugPlugin extends BasePlugin implements ActionListener {
 
-    /** Swing controller. */
-    private final SwingController controller;
     /** The controller to read/write settings with. */
     private final IdentityController identityController;
+    /** Swing controller. */
+    private final SwingController controller;
+    /** Window Management. */
+    private final WindowManager windowManager;
     /** Debug menu. */
     private JMenu debugMenu;
     /** Debug EDT menu item. */
@@ -101,7 +104,7 @@ public class SwingDebugPlugin extends BasePlugin implements ActionListener {
         if (e.getSource() == showSysOut) {
             if (showSysOut.isSelected()) {
                 sysoutFrame = new SystemStreamContainer(SystemStreamType.Out,
-                        controller.getGlobalConfig(), this);
+                        controller.getGlobalConfig(), this, windowManager);
             } else {
                 sysoutFrame.close();
             }
@@ -110,7 +113,7 @@ public class SwingDebugPlugin extends BasePlugin implements ActionListener {
         if (e.getSource() == showSysErr) {
             if (showSysErr.isSelected()) {
                 syserrFrame = new SystemStreamContainer(SystemStreamType.Error,
-                        controller.getGlobalConfig(), this);
+                        controller.getGlobalConfig(), this, windowManager);
             } else {
                 syserrFrame.close();
             }

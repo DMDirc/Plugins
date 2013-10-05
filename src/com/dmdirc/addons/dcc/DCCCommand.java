@@ -41,6 +41,7 @@ import com.dmdirc.commandparser.commands.IntelligentCommand;
 import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.commandparser.commands.context.ServerCommandContext;
 import com.dmdirc.parser.interfaces.Parser;
+import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 import com.dmdirc.ui.input.TabCompletionType;
 
@@ -64,16 +65,21 @@ public class DCCCommand extends Command implements IntelligentCommand {
     private final DCCPlugin myPlugin;
     /** Main frame instance used as the parent for dialogs. */
     private final MainFrame mainFrame;
+    /** Window management. */
+    private final WindowManager windowManager;
 
     /**
      * Creates a new instance of DCCCommand.
      *
      * @param mainFrame mainFrame instance to use
      * @param plugin The DCC Plugin that this command belongs to
+     * @param windowManager Window management
      */
-    public DCCCommand(final MainFrame mainFrame, final DCCPlugin plugin) {
+    public DCCCommand(final MainFrame mainFrame, final DCCPlugin plugin,
+            final WindowManager windowManager) {
         this.mainFrame = mainFrame;
         myPlugin = plugin;
+        this.windowManager = windowManager;
     }
 
     /** {@inheritDoc} */
@@ -141,7 +147,7 @@ public class DCCCommand extends Command implements IntelligentCommand {
         if (myPlugin.listen(chat)) {
             final ChatContainer window = new ChatContainer(myPlugin, chat,
                     origin.getConfigManager(),
-                    "*Chat: " + target, myNickname, target);
+                    "*Chat: " + target, myNickname, target, windowManager);
             parser.sendCTCP(target, "DCC", "CHAT chat " + DCC.ipToLong(
                     myPlugin.getListenIP(parser)) + " " + chat.getPort());
             ActionManager.getActionManager().triggerEvent(
@@ -219,7 +225,7 @@ public class DCCCommand extends Command implements IntelligentCommand {
                     final Parser parser = server.getParser();
                     new TransferContainer(myPlugin, send,
                             origin.getConfigManager(), "Send: " + target,
-                            target, server);
+                            target, server, windowManager);
                     parser.sendCTCP(target, "DCC", "SEND \""
                             + selectedFile.getName() + "\" "
                             + DCC.ipToLong(myPlugin.getListenIP(parser))
@@ -231,7 +237,7 @@ public class DCCCommand extends Command implements IntelligentCommand {
                     if (myPlugin.listen(send)) {
                         new TransferContainer(myPlugin, send,
                                 origin.getConfigManager(), "*Send: "
-                                + target, target, server);
+                                + target, target, server, windowManager);
                         parser.sendCTCP(target, "DCC", "SEND \""
                                 + selectedFile.getName() + "\" "
                                 + DCC.ipToLong(myPlugin.getListenIP(parser))
