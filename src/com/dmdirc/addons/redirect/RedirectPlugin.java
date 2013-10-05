@@ -23,21 +23,26 @@
 package com.dmdirc.addons.redirect;
 
 import com.dmdirc.interfaces.CommandController;
+import com.dmdirc.messages.MessageSinkManager;
 import com.dmdirc.plugins.implementations.BaseCommandPlugin;
 
 /**
  * The redirect plugin allows the suer to redirect the output of commands that
  * would normally echo their results locally to a channel or chat window instead.
  */
-public final class RedirectPlugin extends BaseCommandPlugin {
+public class RedirectPlugin extends BaseCommandPlugin {
 
     /**
      * Creates a new instance of this plugin.
      *
      * @param commandController Command controller to register commands
+     * @param messageSinkManager The sink manager to use to despatch messages.
      */
-    public RedirectPlugin(final CommandController commandController) {
+    public RedirectPlugin(
+            final CommandController commandController,
+            final MessageSinkManager messageSinkManager) {
         super(commandController);
-        registerCommand(new RedirectCommand(commandController), RedirectCommand.INFO);
+        registerCommand(new RedirectCommand(commandController, messageSinkManager),
+                RedirectCommand.INFO);
     }
 }

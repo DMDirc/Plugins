@@ -46,6 +46,7 @@ import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.config.IdentityController;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
+import com.dmdirc.messages.MessageSinkManager;
 import com.dmdirc.parser.interfaces.ClientInfo;
 import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.plugins.PluginInfo;
@@ -77,6 +78,8 @@ public class DCCPlugin extends BaseCommandPlugin implements ActionListener {
     private final SwingController controller;
     /** Identity controller to read settings from. */
     private final IdentityController identityController;
+    /** The sink manager to use to despatch messages. */
+    private final MessageSinkManager messageSinkManager;
     /** Window Management. */
     private final WindowManager windowManager;
 
@@ -87,21 +90,26 @@ public class DCCPlugin extends BaseCommandPlugin implements ActionListener {
      * @param pluginInfo This plugin's plugin info
      * @param identityController The Identity controller that provides the current config
      * @param commandController Command controller to register commands
+     * @param messageSinkManager The sink manager to use to despatch messages.
      * @param windowManager Window Management
      */
-    public DCCPlugin(final SwingController controller,
+    public DCCPlugin(
+            final SwingController controller,
             final PluginInfo pluginInfo,
             final IdentityController identityController,
             final CommandController commandController,
+            final MessageSinkManager messageSinkManager,
             final WindowManager windowManager) {
         super(commandController);
         this.identityController = identityController;
         this.controller = controller;
+        this.messageSinkManager = messageSinkManager;
         this.windowManager = windowManager;
         config = controller.getGlobalConfig();
         this.pluginInfo = pluginInfo;
-        registerCommand(new DCCCommand(commandController, controller.getMainFrame(), this,
-                windowManager), DCCCommand.INFO);
+        registerCommand(new DCCCommand(
+                commandController, controller.getMainFrame(), this,
+                messageSinkManager, windowManager), DCCCommand.INFO);
         final SwingWindowFactory factory = controller.getWindowFactory();
         factory.registerImplementation(new HashSet<>(Arrays.asList(
                 "com.dmdirc.addons.dcc.ui.PlaceholderPanel")),
@@ -386,7 +394,7 @@ public class DCCPlugin extends BaseCommandPlugin implements ActionListener {
             final String myNickname = ((Server) arguments[0]).getParser()
                     .getLocalClient().getNickname();
             final DCCFrameContainer f = new ChatContainer(this, chat, config,
-                    "Chat: " + nickname, myNickname, nickname, windowManager);
+                    "Chat: " + nickname, myNickname, nickname, messageSinkManager, windowManager);
             f.addLine("DCCChatStarting", nickname, chat.getHost(),
                     chat.getPort());
             chat.connect();

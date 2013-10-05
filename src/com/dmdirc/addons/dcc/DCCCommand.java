@@ -41,6 +41,7 @@ import com.dmdirc.commandparser.commands.IntelligentCommand;
 import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.commandparser.commands.context.ServerCommandContext;
 import com.dmdirc.interfaces.CommandController;
+import com.dmdirc.messages.MessageSinkManager;
 import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.input.AdditionalTabTargets;
@@ -68,6 +69,8 @@ public class DCCCommand extends Command implements IntelligentCommand {
     private final MainFrame mainFrame;
     /** Window management. */
     private final WindowManager windowManager;
+    /** The sink manager to use to despatch messages. */
+    private final MessageSinkManager messageSinkManager;
 
     /**
      * Creates a new instance of DCCCommand.
@@ -75,13 +78,19 @@ public class DCCCommand extends Command implements IntelligentCommand {
      * @param controller The controller to use for command information.
      * @param mainFrame mainFrame instance to use
      * @param plugin The DCC Plugin that this command belongs to
+     * @param messageSinkManager The sink manager to use to despatch messages.
      * @param windowManager Window management
      */
-    public DCCCommand(final CommandController controller, final MainFrame mainFrame,
-            final DCCPlugin plugin, final WindowManager windowManager) {
+    public DCCCommand(
+            final CommandController controller,
+            final MainFrame mainFrame,
+            final DCCPlugin plugin,
+            final MessageSinkManager messageSinkManager,
+            final WindowManager windowManager) {
         super(controller);
         this.mainFrame = mainFrame;
         myPlugin = plugin;
+        this.messageSinkManager = messageSinkManager;
         this.windowManager = windowManager;
     }
 
@@ -150,7 +159,7 @@ public class DCCCommand extends Command implements IntelligentCommand {
         if (myPlugin.listen(chat)) {
             final ChatContainer window = new ChatContainer(myPlugin, chat,
                     origin.getConfigManager(),
-                    "*Chat: " + target, myNickname, target, windowManager);
+                    "*Chat: " + target, myNickname, target, messageSinkManager, windowManager);
             parser.sendCTCP(target, "DCC", "CHAT chat " + DCC.ipToLong(
                     myPlugin.getListenIP(parser)) + " " + chat.getPort());
             ActionManager.getActionManager().triggerEvent(

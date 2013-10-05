@@ -32,6 +32,7 @@ import com.dmdirc.commandparser.commands.IntelligentCommand;
 import com.dmdirc.commandparser.commands.context.ChatCommandContext;
 import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.interfaces.CommandController;
+import com.dmdirc.messages.MessageSinkManager;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 import com.dmdirc.ui.input.TabCompleter;
 
@@ -48,13 +49,20 @@ public class RedirectCommand extends Command implements IntelligentCommand {
                 + "channel or query window",
             CommandType.TYPE_CHAT);
 
+    /** The sink manager to use to despatch messages. */
+    private final MessageSinkManager messageSinkManager;
+
     /**
      * Creates a new instance of this command.
      *
      * @param controller The controller to use for command information.
+     * @param messageSinkManager The sink manager to use to despatch messages.
      */
-    public RedirectCommand(final CommandController controller) {
+    public RedirectCommand(
+            final CommandController controller,
+            final MessageSinkManager messageSinkManager) {
         super(controller);
+        this.messageSinkManager = messageSinkManager;
     }
 
     /** {@inheritDoc} */
@@ -64,7 +72,7 @@ public class RedirectCommand extends Command implements IntelligentCommand {
         final MessageTarget target = ((ChatCommandContext) context)
                 .getChat();
         target.getCommandParser().parseCommand(new FakeWriteableFrameContainer(
-                target), args.getArgumentsAsString());
+                target, messageSinkManager), args.getArgumentsAsString());
     }
 
     /** {@inheritDoc} */

@@ -26,6 +26,7 @@ import com.dmdirc.Server;
 import com.dmdirc.WritableFrameContainer;
 import com.dmdirc.commandparser.parsers.CommandParser;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
+import com.dmdirc.messages.MessageSinkManager;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.input.TabCompleter;
 
@@ -46,13 +47,15 @@ public abstract class DCCFrameContainer extends WritableFrameContainer {
      * @param icon The icon to use
      * @param configManager Config manager
      * @param parser Command parser to use for this window
-     * @param components The UI components that this frame requires
+     * @param messageSinkManager The sink manager to use to despatch messages.
      * @param windowManager Window management
+     * @param components The UI components that this frame requires
      */
     public DCCFrameContainer(final String title, final String icon,
             final AggregateConfigProvider configManager, final CommandParser parser,
-            final Collection<String> components, final WindowManager windowManager) {
-        super(icon, title, title, configManager, parser, components, windowManager);
+            final MessageSinkManager messageSinkManager, final WindowManager windowManager,
+            final Collection<String> components) {
+        super(icon, title, title, configManager, parser, messageSinkManager, windowManager, components);
     }
 
     /** {@inheritDoc} */
