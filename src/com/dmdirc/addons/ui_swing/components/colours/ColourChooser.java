@@ -43,7 +43,7 @@ import net.miginfocom.swing.MigLayout;
 /**
  * Colour chooser widget.
  */
-public final class ColourChooser extends JPanel implements ActionListener {
+public class ColourChooser extends JPanel implements ActionListener {
 
     /** Serial version UID. */
     private static final long serialVersionUID = 1;
@@ -55,6 +55,8 @@ public final class ColourChooser extends JPanel implements ActionListener {
     private final EventListenerList listeners;
     /** Icon manager. */
     private final IconManager iconManager;
+    /** The colour manager to use to parse colours. */
+    private final ColourManager colourManager;
     /** Colours picking dialog. */
     private ColourPickerDialog cpd;
     /** show irc colours. */
@@ -71,56 +73,22 @@ public final class ColourChooser extends JPanel implements ActionListener {
     /**
      * Creates a new instance of ColourChooser.
      *
-     * @param iconManager Icon manager
-     * */
-    public ColourChooser(final IconManager iconManager) {
-        this(iconManager, "ffffff", true, true);
-    }
-
-    /**
-     * Creates a new instance of ColourChooser.
-     *
-     * @param iconManager Icon Manager
-     * @param window Parent window
-     *
-     * @since 0.6
-     */
-    public ColourChooser(final IconManager iconManager, final Window window) {
-        this(iconManager, "ffffff", true, true, window);
-    }
-
-    /**
-     * Creates a new instance of ColourChooser.
-     *
-     * @param iconManager Icon manager
-     * @param initialColour Snitial colour
-     * @param ircColours Show irc colours
-     * @param hexColours Show hex colours
-     */
-    public ColourChooser(final IconManager iconManager,
-            final String initialColour, final boolean ircColours,
-            final boolean hexColours) {
-        this(iconManager, initialColour, ircColours, hexColours, null);
-    }
-
-    /**
-     * Creates a new instance of ColourChooser.
-     *
+     * @param colourManager The colour manager to use to parse colours.
      * @param iconManager Icon manager
      * @param initialColour initial colour
      * @param ircColours show irc colours
      * @param hexColours show hex colours
-     * @param window Parent window
      *
      * @since 0.6
      */
-    public ColourChooser(final IconManager iconManager,
+    public ColourChooser(
+            final ColourManager colourManager, final IconManager iconManager,
             final String initialColour, final boolean ircColours,
-            final boolean hexColours, final Window window) {
+            final boolean hexColours) {
         super();
 
+        this.colourManager = colourManager;
         this.iconManager = iconManager;
-        this.window = window;
         showIRC = ircColours;
         showHex = hexColours;
         value = initialColour;
@@ -199,7 +167,7 @@ public final class ColourChooser extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(final ActionEvent e) {
         if (e.getSource() == editButton) {
-            cpd = new ColourPickerDialog(iconManager, showIRC, showHex, window);
+            cpd = new ColourPickerDialog(colourManager, iconManager, showIRC, showHex, window);
             cpd.addActionListener(this);
             cpd.display(editButton);
         } else {

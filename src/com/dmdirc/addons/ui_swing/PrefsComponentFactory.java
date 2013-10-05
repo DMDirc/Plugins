@@ -362,7 +362,9 @@ public final class PrefsComponentFactory {
     private JComponent getColourOption(
             final PreferencesSetting setting) {
         final OptionalColourChooser option = new OptionalColourChooser(
-                controller.getIconManager(), setting.getValue(), true, true, true);
+                controller.getIconManager(),
+                controller.getColourManager(),
+                setting.getValue(), true, true, true);
 
         option.addActionListener(new ActionListener() {
 
@@ -394,7 +396,8 @@ public final class PrefsComponentFactory {
                 .getValue().substring(1 + setting.getValue().indexOf(':'));
 
         final OptionalColourChooser option = new OptionalColourChooser(
-                controller.getIconManager(), colour, state, true, true);
+                controller.getIconManager(), controller.getColourManager(),
+                colour, state, true, true);
 
         option.addActionListener(new ActionListener() {
 
