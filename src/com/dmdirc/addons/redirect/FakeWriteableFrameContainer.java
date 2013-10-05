@@ -25,6 +25,7 @@ package com.dmdirc.addons.redirect;
 import com.dmdirc.MessageTarget;
 import com.dmdirc.Server;
 import com.dmdirc.WritableFrameContainer;
+import com.dmdirc.messages.MessageSinkManager;
 import com.dmdirc.ui.input.TabCompleter;
 import com.dmdirc.ui.messages.Formatter;
 
@@ -44,11 +45,14 @@ public class FakeWriteableFrameContainer extends WritableFrameContainer {
      * Creates a new instance of FakeInputWindow.
      *
      * @param target The message target that output gets sent to
+     * @param messageSinkManager The sink manager to use to despatch messages.
      */
-    public FakeWriteableFrameContainer(final MessageTarget target) {
+    public FakeWriteableFrameContainer(
+            final MessageTarget target,
+            final MessageSinkManager messageSinkManager) {
         super(target.getIcon(), target.getName(), target.getTitle(),
                 target.getConfigManager(), target.getCommandParser(),
-                Collections.<String>emptyList(), target.getWindowManager());
+                messageSinkManager, target.getWindowManager(), Collections.<String>emptyList());
         this.target = target;
     }
 

@@ -26,6 +26,7 @@ import com.dmdirc.actions.ActionManager;
 import com.dmdirc.addons.dcc.actions.DCCActions;
 import com.dmdirc.addons.dcc.io.DCCChat;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
+import com.dmdirc.messages.MessageSinkManager;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.core.components.WindowComponent;
 
@@ -52,15 +53,19 @@ public class ChatContainer extends DCCFrameContainer implements DCCChatHandler {
      * @param title The title of this window
      * @param nick My Current Nickname
      * @param targetNick Nickname of target
+     * @param messageSinkManager The sink manager to use to despatch messages.
      * @param windowManager Window Management
      */
     public ChatContainer(final DCCPlugin plugin, final DCCChat dcc,
             final AggregateConfigProvider configManager, final String title,
-            final String nick, final String targetNick, final WindowManager windowManager) {
+            final String nick, final String targetNick, final MessageSinkManager messageSinkManager,
+            final WindowManager windowManager) {
         super(title, "dcc-chat-inactive", configManager,
                 DCCCommandParser.getDCCCommandParser(configManager),
-                Arrays.asList(WindowComponent.TEXTAREA.getIdentifier(),
-                        WindowComponent.INPUTFIELD.getIdentifier()), windowManager);
+                messageSinkManager, windowManager,
+                Arrays.asList(
+                    WindowComponent.TEXTAREA.getIdentifier(),
+                    WindowComponent.INPUTFIELD.getIdentifier()));
         dccChat = dcc;
         dcc.setHandler(this);
         nickname = nick;

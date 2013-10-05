@@ -32,6 +32,7 @@ import com.dmdirc.commandparser.parsers.CommandParser;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.ui.InputWindow;
+import com.dmdirc.messages.MessageSinkManager;
 import com.dmdirc.ui.WindowManager;
 
 import org.junit.Before;
@@ -53,6 +54,7 @@ public class RedirectCommandTest {
     @Mock private WritableFrameContainer frameContainer;
     @Mock private AggregateConfigProvider configProvider;
     @Mock private CommandParser commandParser;
+    @Mock private MessageSinkManager messageSinkManager;
     @Mock private WindowManager windowManager;
 
     @Before
@@ -78,7 +80,7 @@ public class RedirectCommandTest {
 
     @Test
     public void testExecute() {
-        final RedirectCommand command = new RedirectCommand(commandController);
+        final RedirectCommand command = new RedirectCommand(commandController, messageSinkManager);
 
         command.execute(target, new CommandArguments(commandController, "/redirect /echo test"),
                 new ChatCommandContext(frameContainer, RedirectCommand.INFO, target));
