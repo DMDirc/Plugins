@@ -48,7 +48,7 @@ public class FakeWriteableFrameContainer extends WritableFrameContainer {
     public FakeWriteableFrameContainer(final MessageTarget target) {
         super(target.getIcon(), target.getName(), target.getTitle(),
                 target.getConfigManager(), target.getCommandParser(),
-                Collections.<String>emptyList());
+                Collections.<String>emptyList(), target.getWindowManager());
         this.target = target;
     }
 

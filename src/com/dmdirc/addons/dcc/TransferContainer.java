@@ -91,14 +91,16 @@ public class TransferContainer extends FrameContainer implements
      * @param title The title of this window
      * @param targetNick Nickname of target
      * @param server The server that initiated this send
+     * @param windowManager Window Management
      */
     public TransferContainer(final DCCPlugin plugin, final DCCTransfer dcc,
             final AggregateConfigProvider config, final String title,
-            final String targetNick, final Server server) {
+            final String targetNick, final Server server,
+            final WindowManager windowManager) {
         super(dcc.getType() == DCCTransfer.TransferType.SEND
                 ? "dcc-send-inactive" : "dcc-receive-inactive",
                 title, title, config,
-                Arrays.asList("com.dmdirc.addons.dcc.ui.TransferPanel"));
+                Arrays.asList("com.dmdirc.addons.dcc.ui.TransferPanel"), windowManager);
         this.plugin = plugin;
         this.dcc = dcc;
         this.server = server;
@@ -114,7 +116,7 @@ public class TransferContainer extends FrameContainer implements
 
         otherNickname = targetNick;
 
-        WindowManager.getWindowManager().addWindow(plugin.getContainer(), this);
+        windowManager.addWindow(plugin.getContainer(), this);
     }
 
     /** {@inheritDoc} */

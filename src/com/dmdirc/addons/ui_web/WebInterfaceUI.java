@@ -32,6 +32,7 @@ import com.dmdirc.interfaces.ui.UIController;
 import com.dmdirc.interfaces.ui.Window;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.PluginManager;
+import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.core.components.StatusBarManager;
 
 import java.net.URI;
@@ -76,13 +77,15 @@ public class WebInterfaceUI implements UIController {
      * @param serverManager The manager to use to find and create servers
      * @param pluginManager The manager to use to find other plugins
      * @param pluginInfo The information object for this UI's plugin.
+     * @param coreWindowManager Window management
      */
     public WebInterfaceUI(
             final String domain,
             final IdentityController identityController,
             final ServerManager serverManager,
             final PluginManager pluginManager,
-            final PluginInfo pluginInfo) {
+            final PluginInfo pluginInfo,
+            final WindowManager coreWindowManager) {
         super();
 
         this.pluginManager = pluginManager;
@@ -119,7 +122,7 @@ public class WebInterfaceUI implements UIController {
             // Break horribly!
         }
 
-        windowManager = new WebWindowManager(this);
+        windowManager = new WebWindowManager(this, coreWindowManager);
 
         StatusBarManager.getStatusBarManager().registerStatusBar(new WebStatusBar(handler));
     }

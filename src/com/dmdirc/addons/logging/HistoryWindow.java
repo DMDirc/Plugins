@@ -22,11 +22,10 @@
 
 package com.dmdirc.addons.logging;
 
-import com.dmdirc.util.io.ReverseFileReader;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.Server;
-import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.core.components.WindowComponent;
+import com.dmdirc.util.io.ReverseFileReader;
 
 import java.util.Arrays;
 
@@ -46,9 +45,9 @@ public class HistoryWindow extends FrameContainer {
     public HistoryWindow(final String title, final ReverseFileReader reader,
                          final FrameContainer parent, final int numLines) {
         super("raw", title, title, parent.getConfigManager(),
-                Arrays.asList(WindowComponent.TEXTAREA.getIdentifier()));
+                Arrays.asList(WindowComponent.TEXTAREA.getIdentifier()), parent.getWindowManager());
 
-        WindowManager.getWindowManager().addWindow(parent, this);
+        parent.getWindowManager().addWindow(parent, this);
 
         final int frameBufferSize = parent.getConfigManager().getOptionInt(
                 "ui", "frameBufferSize");
