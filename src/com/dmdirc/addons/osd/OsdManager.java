@@ -24,6 +24,7 @@ package com.dmdirc.addons.osd;
 
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.interfaces.config.IdentityController;
+import com.dmdirc.ui.messages.ColourManager;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -45,6 +46,8 @@ public class OsdManager {
     private final IdentityController identityController;
     /** The Plugin that owns this OSD Manager. */
     private final OsdPlugin plugin;
+    /** The colour manager to use to parse colours. */
+    private final ColourManager colourManager;
     /** List of OSD Windows. */
     private final List<OsdWindow> windowList = new ArrayList<>();
     /** List of messages to be queued. */
@@ -99,10 +102,11 @@ public class OsdManager {
             /** {@inheritDoc} */
             @Override
             public OsdWindow call() {
-                return new OsdWindow(identityController, timeout, message, false,
+                return new OsdWindow(identityController, plugin, OsdManager.this, colourManager,
+                        timeout, message, false,
                         identityController.getGlobalConfiguration().getOptionInt(
                         plugin.getDomain(), "locationX"), policy.getYPosition(
-                        OsdManager.this, startY), plugin, OsdManager.this);
+                        OsdManager.this, startY));
             }
         }));
     }

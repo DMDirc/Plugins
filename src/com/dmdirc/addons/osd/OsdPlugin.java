@@ -25,8 +25,8 @@ package com.dmdirc.addons.osd;
 import com.dmdirc.config.prefs.CategoryChangeListener;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
-import com.dmdirc.config.prefs.PreferencesInterface;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
+import com.dmdirc.config.prefs.PreferencesInterface;
 import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.config.prefs.SettingChangeListener;
@@ -34,6 +34,7 @@ import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.config.IdentityController;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.implementations.BaseCommandPlugin;
+import com.dmdirc.ui.messages.ColourManager;
 import com.dmdirc.util.validators.NumericalValidator;
 import com.dmdirc.util.validators.OptionalValidator;
 
@@ -43,7 +44,7 @@ import java.util.Map;
 /**
  * Allows the user to display on-screen-display messages.
  */
-public final class OsdPlugin extends BaseCommandPlugin implements
+public class OsdPlugin extends BaseCommandPlugin implements
         CategoryChangeListener, PreferencesInterface, SettingChangeListener {
 
     /** Config OSD Window. */
@@ -61,21 +62,27 @@ public final class OsdPlugin extends BaseCommandPlugin implements
     private final PluginInfo pluginInfo;
     /** The controller to read/write settings with. */
     private final IdentityController identityController;
+    /** The manager to use to parse colours. */
+    private final ColourManager colourManager;
 
     /**
      * Creates a new instance of this plugin.
      *
      * @param pluginInfo This plugin's plugin info
+     * @param identityController The controller to use to read and write settings.
      * @param commandController Command controller to register commands
+     * @param colourManager The manager to use to parse colours.
      */
     public OsdPlugin(
             final PluginInfo pluginInfo,
             final IdentityController identityController,
-            final CommandController commandController) {
+            final CommandController commandController,
+            final ColourManager colourManager) {
         super(commandController);
         this.pluginInfo = pluginInfo;
         this.identityController = identityController;
-        osdManager = new OsdManager(identityController, this);
+        this.colourManager = colourManager;
+        osdManager = new OsdManager(identityController, this, colourManager);
         registerCommand(new OsdCommand(commandController, osdManager), OsdCommand.INFO);
     }
 
@@ -154,7 +161,8 @@ public final class OsdPlugin extends BaseCommandPlugin implements
     /** {@inheritDoc} */
     @Override
     public void categorySelected(final PreferencesCategory category) {
-        osdWindow = new OsdWindow(identityController, -1, "Please drag this OSD to position", true, x, y, this, osdManager);
+        osdWindow = new OsdWindow(identityController, this, osdManager, colourManager, -1,
+                "Please drag this OSD to position", true, x, y);
         osdWindow.setBackgroundColour(backgroundSetting.getValue());
         osdWindow.setForegroundColour(foregroundSetting.getValue());
         osdWindow.setFontSize(Integer.parseInt(fontSizeSetting.getValue()));
