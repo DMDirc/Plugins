@@ -25,6 +25,7 @@ package com.dmdirc.addons.osd;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.interfaces.config.IdentityController;
+import com.dmdirc.ui.Colour;
 import com.dmdirc.ui.messages.ColourManager;
 
 import java.awt.Color;
@@ -62,6 +63,9 @@ public class OsdWindow extends JDialog implements MouseListener,
     /** The OSD Manager that owns this window. */
     private final OsdManager osdManager;
 
+    /** The manager to use to parse colours. */
+    private final ColourManager colourManager;
+
     /** OSD Label. */
     private final JLabel label;
 
@@ -84,6 +88,7 @@ public class OsdWindow extends JDialog implements MouseListener,
      * Creates a new instance of OsdWindow.
      *
      * @param identityController The controller to read/write settings with.
+     * @param colourManager The manager to use to parse colours.
      * @param timeout Timeout period for the window. Set to -1 to use value from
      *        config
      * @param text The text to be displayed in the OSD window
@@ -95,12 +100,14 @@ public class OsdWindow extends JDialog implements MouseListener,
      * @param osdManager The manager that owns this OSD Window
      */
     public OsdWindow(
-            final IdentityController identityController,
+            final IdentityController identityController, final OsdPlugin plugin,
+            final OsdManager osdManager, final ColourManager colourManager,
             final int timeout, final String text, final boolean config, final int x,
-            final int y, final OsdPlugin plugin, final OsdManager osdManager) {
+            final int y) {
         super(((SwingController) plugin.getPluginInfo().getMetaData().getManager()
                 .getPluginInfoByName("ui_swing").getPlugin()).getMainFrame(), false);
 
+        this.colourManager = colourManager;
         this.config = config;
         this.osdManager = osdManager;
 
@@ -258,7 +265,7 @@ public class OsdWindow extends JDialog implements MouseListener,
      * @param colour The background colour to use
      */
     public void setBackgroundColour(final String colour) {
-        panel.setBackground(UIUtilities.convertColour(ColourManager.parseColour(colour)));
+        panel.setBackground(UIUtilities.convertColour(colourManager.getColourFromString(colour, Colour.WHITE)));
     }
 
     /**
@@ -267,7 +274,7 @@ public class OsdWindow extends JDialog implements MouseListener,
      * @param colour The foreground colour to use
      */
     public void setForegroundColour(final String colour) {
-        label.setForeground(UIUtilities.convertColour(ColourManager.parseColour(colour)));
+        label.setForeground(UIUtilities.convertColour(colourManager.getColourFromString(colour, Colour.WHITE)));
     }
 
     /** {@inheritDoc} */
