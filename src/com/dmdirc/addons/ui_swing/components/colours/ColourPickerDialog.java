@@ -24,6 +24,7 @@ package com.dmdirc.addons.ui_swing.components.colours;
 
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.ui.IconManager;
+import com.dmdirc.ui.messages.ColourManager;
 
 import java.awt.Window;
 import java.awt.event.ActionListener;
@@ -35,7 +36,7 @@ import javax.swing.JDialog;
 /**
  * Colour picker dialog.
  */
-public final class ColourPickerDialog extends StandardDialog {
+public class ColourPickerDialog extends StandardDialog {
 
     /** Serial version UID. */
     private static final long serialVersionUID = 1;
@@ -45,42 +46,22 @@ public final class ColourPickerDialog extends StandardDialog {
     /**
      * Creates a new instance of ColourPickerDialog.
      *
-     * @param iconManager Icon manager
-     *
-     * @since 0.6
-     */
-    public ColourPickerDialog(final IconManager iconManager) {
-        this(iconManager, true, true);
-    }
-
-    /**
-     * Creates a new instance of ColourPickerDialog.
-     *
-     * @param iconManager Icon manager
-     * @param window Parent window
-     *
-     * @since 0.6
-     */
-    public ColourPickerDialog(final IconManager iconManager,
-            final Window window) {
-        this(iconManager, true, true, window);
-    }
-
-    /**
-     * Creates a new instance of ColourPickerDialog.
-     *
+     * @param colourManager The colour manager to use to parse colours.
      * @param iconManager Icon manager
      * @param showIRC show irc colours
      * @param showHex show hex colours
      */
-    public ColourPickerDialog(final IconManager iconManager,
+    public ColourPickerDialog(
+            final ColourManager colourManager,
+            final IconManager iconManager,
             final boolean showIRC, final boolean showHex) {
-        this(iconManager, showIRC, showHex, null);
+        this(colourManager, iconManager, showIRC, showHex, null);
     }
 
     /**
      * Creates a new instance of ColourPickerDialog.
      *
+     * @param colourManager The colour manager to use to parse colours.
      * @param iconManager Icon manager
      * @param showIRC show irc colours
      * @param showHex show hex colours
@@ -88,12 +69,13 @@ public final class ColourPickerDialog extends StandardDialog {
      *
      * @since 0.6
      */
-    public ColourPickerDialog(final IconManager iconManager,
+    public ColourPickerDialog(
+            final ColourManager colourManager, final IconManager iconManager,
             final boolean showIRC, final boolean showHex, final Window window) {
         super(null, window, ModalityType.MODELESS);
         setIconImage(iconManager.getImage("icon"));
 
-        colourChooser = new ColourPickerPanel(showIRC, showHex);
+        colourChooser = new ColourPickerPanel(colourManager, showIRC, showHex);
 
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         add(colourChooser);

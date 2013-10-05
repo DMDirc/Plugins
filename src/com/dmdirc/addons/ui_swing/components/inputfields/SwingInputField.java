@@ -152,8 +152,8 @@ public class SwingInputField extends JComponent implements InputField,
             public void run() {
                 if (controller.getGlobalConfig().getOptionBool("general",
                         "showcolourdialog")) {
-                    colourPicker = new ColourPickerDialog(controller
-                            .getIconManager(), irc, hex, parentWindow);
+                    colourPicker = new ColourPickerDialog(controller.getColourManager(),
+                            controller.getIconManager(), irc, hex, parentWindow);
                     colourPicker.addActionListener(new ActionListener() {
 
                         @Override
