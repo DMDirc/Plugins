@@ -267,7 +267,7 @@ public class NickColourPlugin extends BasePlugin implements ActionListener, Conf
                         return new NickColourPanel(
                                 (SwingController) pluginInfo.getMetaData().getManager()
                                 .getPluginInfoByName("ui_swing").getPlugin(),
-                                NickColourPlugin.this);
+                                NickColourPlugin.this, colourManager);
                     }
                 }));
 

@@ -25,6 +25,7 @@ package com.dmdirc.addons.nickcolours;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.config.prefs.PreferencesInterface;
 import com.dmdirc.interfaces.config.ConfigProvider;
+import com.dmdirc.ui.messages.ColourManager;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
@@ -74,12 +75,12 @@ public class NickColourPanel extends JPanel implements ActionListener,
      *
      * @param controller The UI controller that owns this panel
      * @param plugin The plugin that owns this panel
+     * @param colourManager The colour manager to use to parse colours.
      */
     public NickColourPanel(
             final SwingController controller,
-            final NickColourPlugin plugin) {
-        super();
-
+            final NickColourPlugin plugin,
+            final ColourManager colourManager) {
         this.plugin = plugin;
         this.configIdentity = controller.getIdentityManager().getUserSettings();
 
@@ -95,7 +96,7 @@ public class NickColourPanel extends JPanel implements ActionListener,
              */
             private static final long serialVersionUID = 1;
             /** The colour renderer we're using for colour cells. */
-            private final ColourRenderer colourRenderer = new ColourRenderer();
+            private final ColourRenderer colourRenderer = new ColourRenderer(colourManager);
 
             /** {@inheritDoc} */
             @Override
@@ -119,7 +120,7 @@ public class NickColourPanel extends JPanel implements ActionListener,
 
         table.getSelectionModel().addListSelectionListener(this);
         table.setFillsViewportHeight(true);
-        table.setDefaultRenderer(Color.class, new ColourRenderer());
+        table.setDefaultRenderer(Color.class, new ColourRenderer(colourManager));
 
         setLayout(new MigLayout("ins 0, fillx, hmax "
                 + controller.getPrefsDialog().getPanelHeight()));
