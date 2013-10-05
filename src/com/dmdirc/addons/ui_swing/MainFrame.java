@@ -53,7 +53,6 @@ import java.awt.Font;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
 import java.awt.event.WindowListener;
-import java.lang.reflect.InvocationTargetException;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -337,30 +336,9 @@ public class MainFrame extends JFrame implements WindowListener,
                         .getOption("ui", "framemanager");
                 try {
                     mainFrameManager = (FrameManager) Class.forName(manager)
-                            .getConstructor().newInstance();
-                } catch (final InvocationTargetException ex) {
+                            .getConstructor(WindowManager.class).newInstance(windowManager);
+                } catch (final ReflectiveOperationException | SecurityException | LinkageError ex) {
                     Logger.appError(ErrorLevel.MEDIUM, "Unable to load frame "
-                            + "manager, falling back to default.", ex);
-                } catch (final InstantiationException ex) {
-                    Logger.userError(ErrorLevel.MEDIUM, "Unable to load frame "
-                            + "manager, falling back to default.", ex);
-                } catch (final NoSuchMethodException ex) {
-                    Logger.userError(ErrorLevel.MEDIUM, "Unable to load frame "
-                            + "manager, falling back to default.", ex);
-                } catch (final SecurityException ex) {
-                    Logger.userError(ErrorLevel.MEDIUM, "Unable to load frame "
-                            + "manager, falling back to default.", ex);
-                } catch (final IllegalAccessException ex) {
-                    Logger.userError(ErrorLevel.MEDIUM, "Unable to load frame "
-                            + "manager, falling back to default.", ex);
-                } catch (final IllegalArgumentException ex) {
-                    Logger.userError(ErrorLevel.MEDIUM, "Unable to load frame "
-                            + "manager, falling back to default.", ex);
-                } catch (final ClassNotFoundException ex) {
-                    Logger.userError(ErrorLevel.MEDIUM, "Unable to load frame "
-                            + "manager, falling back to default.", ex);
-                } catch (final LinkageError ex) {
-                    Logger.userError(ErrorLevel.MEDIUM, "Unable to load frame "
                             + "manager, falling back to default.", ex);
                 } finally {
                     if (mainFrameManager == null) {
