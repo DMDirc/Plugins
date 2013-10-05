@@ -36,14 +36,15 @@ import com.dmdirc.addons.ui_swing.framemanager.FrameManager;
 import com.dmdirc.addons.ui_swing.framemanager.FramemanagerPosition;
 import com.dmdirc.addons.ui_swing.framemanager.ctrltab.CtrlTabWindowManager;
 import com.dmdirc.addons.ui_swing.framemanager.tree.TreeFrameManager;
-import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.interfaces.FrameInfoListener;
 import com.dmdirc.interfaces.LifecycleController;
 import com.dmdirc.interfaces.NotificationListener;
+import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.ui.Colour;
 import com.dmdirc.ui.CoreUIUtils;
+import com.dmdirc.ui.WindowManager;
 import com.dmdirc.util.collections.ListenerList;
 import com.dmdirc.util.collections.QueuedLinkedHashSet;
 
@@ -58,7 +59,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
-import javax.swing.MenuSelectionManager;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 
@@ -71,7 +71,7 @@ import net.miginfocom.swing.MigLayout;
  * The main application frame.
  */
 @Slf4j
-public final class MainFrame extends JFrame implements WindowListener,
+public class MainFrame extends JFrame implements WindowListener,
         ConfigChangeListener, SwingWindowListener, FrameInfoListener,
         NotificationListener {
 
@@ -93,6 +93,8 @@ public final class MainFrame extends JFrame implements WindowListener,
     private final CtrlTabWindowManager frameManager;
     /** The listeners registered with this class. */
     private final ListenerList listeners = new ListenerList();
+    /** Window management. */
+    private final WindowManager windowManager;
     /** The main application icon. */
     private ImageIcon imageIcon;
     /** The frame manager that's being used. */
@@ -122,14 +124,17 @@ public final class MainFrame extends JFrame implements WindowListener,
      *
      * @param controller Swing controller
      * @param lifecycleController Controller to use to end the application.
+     * @param windowManager Window management
      */
     public MainFrame(
             final SwingController controller,
-            final LifecycleController lifecycleController) {
+            final LifecycleController lifecycleController,
+            final WindowManager windowManager) {
         super();
 
         this.controller = controller;
         this.lifecycleController = lifecycleController;
+        this.windowManager = windowManager;
 
         focusOrder = new QueuedLinkedHashSet<>();
         initComponents();
@@ -359,7 +364,7 @@ public final class MainFrame extends JFrame implements WindowListener,
                             + "manager, falling back to default.", ex);
                 } finally {
                     if (mainFrameManager == null) {
-                        mainFrameManager = new TreeFrameManager();
+                        mainFrameManager = new TreeFrameManager(windowManager);
                     }
                 }
                 mainFrameManager.setController(controller);

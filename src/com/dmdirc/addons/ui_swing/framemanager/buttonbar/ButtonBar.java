@@ -31,9 +31,9 @@ import com.dmdirc.addons.ui_swing.actions.CloseFrameContainerAction;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.addons.ui_swing.framemanager.FrameManager;
 import com.dmdirc.addons.ui_swing.framemanager.FramemanagerPosition;
-import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.interfaces.FrameInfoListener;
 import com.dmdirc.interfaces.NotificationListener;
+import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.interfaces.ui.Window;
 import com.dmdirc.ui.Colour;
 import com.dmdirc.ui.WindowManager;
@@ -102,9 +102,16 @@ public final class ButtonBar implements FrameManager, ActionListener,
     private SwingWindowFactory windowFactory;
     /** UI Controller. */
     private SwingController controller;
+    /** Window management. */
+    private final WindowManager windowManager;
 
-    /** Creates a new instance of ButtonBar. */
-    public ButtonBar() {
+    /**
+     * Creates a new instance of ButtonBar.
+     *
+     * @param windowManager Window management
+     */
+    public ButtonBar(final WindowManager windowManager) {
+        this.windowManager = windowManager;
         scrollPane = new JScrollPane();
         scrollPane.setBorder(null);
         scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants
@@ -153,7 +160,7 @@ public final class ButtonBar implements FrameManager, ActionListener,
                 parent.addComponentListener(ButtonBar.this);
                 ButtonBar.this.buttonWidth = position.isHorizontal()
                         ? 150 : (parent.getWidth() / NUM_CELLS);
-                initButtons(WindowManager.getWindowManager().getRootWindows());
+                initButtons(windowManager.getRootWindows());
                 if (controller.getMainFrame().getActiveFrame() != null) {
                     selectionChanged(controller.getMainFrame()
                             .getActiveFrame());
@@ -283,7 +290,7 @@ public final class ButtonBar implements FrameManager, ActionListener,
         buttonPanel.removeAll();
 
         final ArrayList<FrameContainer> windowList = new
-                ArrayList<FrameContainer>(WindowManager.getWindowManager().getRootWindows());
+ ArrayList<FrameContainer>(windowManager.getRootWindows());
         if (sortRootWindows) {
             Collections.sort(windowList, new FrameContainerComparator());
         }

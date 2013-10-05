@@ -88,10 +88,10 @@ public class WebWindowManager implements FrameListener {
      *
      * @param controller The Web UI controller that owns this manager
      */
-    public WebWindowManager(final WebInterfaceUI controller) {
+    public WebWindowManager(final WebInterfaceUI controller, final WindowManager windowManager) {
         this.controller = controller;
 
-        WindowManager.getWindowManager().addListenerAndSync(this);
+        windowManager.addListenerAndSync(this);
     }
 
     /**

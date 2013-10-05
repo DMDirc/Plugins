@@ -184,6 +184,8 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     /** Apple handler, deals with Mac specific code. */
     @Getter
     private final Apple apple;
+    /** Window Management. */
+    private final WindowManager windowManager;
 
     /**
      * Instantiates a new SwingController.
@@ -202,6 +204,7 @@ public class SwingController extends BaseCommandPlugin implements UIController {
      * @param aliasWrapper Alias wrapper to use for aliases.
      * @param themeManager Theme manager to use.
      * @param urlBuilder URL builder to use to resolve icons etc.
+     * @param windowManager Window management
      */
     public SwingController(
             final PluginInfo pluginInfo,
@@ -217,7 +220,8 @@ public class SwingController extends BaseCommandPlugin implements UIController {
             final PerformWrapper performWrapper,
             final AliasWrapper aliasWrapper,
             final ThemeManager themeManager,
-            final URLBuilder urlBuilder) {
+            final URLBuilder urlBuilder,
+            final WindowManager windowManager) {
         super(commandController);
         this.pluginInfo = pluginInfo;
         this.identityManager = identityManager;
@@ -231,6 +235,7 @@ public class SwingController extends BaseCommandPlugin implements UIController {
         this.performWrapper = performWrapper;
         this.aliasWrapper = aliasWrapper;
         this.themeManager = themeManager;
+        this.windowManager = windowManager;
 
         globalConfig = identityManager.getGlobalConfiguration();
         globalIdentity = identityManager.getUserSettings();
@@ -531,7 +536,7 @@ public class SwingController extends BaseCommandPlugin implements UIController {
             @Override
             public void run() {
                 initUISettings();
-                mainFrame = new MainFrame(SwingController.this, lifecycleController);
+                mainFrame = new MainFrame(SwingController.this, lifecycleController, windowManager);
                 getMainFrame().setVisible(true);
                 mainFrameCreated.set(true);
                 swingStatusBar = getMainFrame().getStatusBar();
@@ -545,7 +550,7 @@ public class SwingController extends BaseCommandPlugin implements UIController {
             throw new IllegalStateException(
                     "Main frame not created. Unable to continue.");
         }
-        WindowManager.getWindowManager().addListenerAndSync(windowFactory);
+        windowManager.addListenerAndSync(windowFactory);
         super.onLoad();
     }
 
@@ -553,7 +558,7 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     @Override
     public void onUnload() {
         errorDialog.dispose();
-        WindowManager.getWindowManager().removeListener(windowFactory);
+        windowManager.removeListener(windowFactory);
         mainFrameCreated.set(false);
         getMainFrame().dispose();
         windowFactory.dispose();

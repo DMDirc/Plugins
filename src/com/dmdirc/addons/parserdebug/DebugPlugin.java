@@ -31,6 +31,7 @@ import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.parser.interfaces.callbacks.DebugInfoListener;
 import com.dmdirc.plugins.implementations.BaseCommandPlugin;
+import com.dmdirc.ui.WindowManager;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -54,14 +55,16 @@ public final class DebugPlugin extends BaseCommandPlugin implements
      *
      * @param actionController The action controller to register listeners with
      * @param commandController Command controller to register commands
+     * @param windowManager Window Manager
      */
     public DebugPlugin(final ActionController actionController,
-            final CommandController commandController) {
+            final CommandController commandController,
+            final WindowManager windowManager) {
         super(commandController);
 
         this.actionController = actionController;
 
-        registerCommand(new ParserDebugCommand(commandController, this), ParserDebugCommand.INFO);
+        registerCommand(new ParserDebugCommand(commandController, this, windowManager), ParserDebugCommand.INFO);
     }
 
     /** {@inheritDoc} */

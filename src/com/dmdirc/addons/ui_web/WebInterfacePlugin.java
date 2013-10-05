@@ -27,6 +27,7 @@ import com.dmdirc.interfaces.config.IdentityController;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.plugins.implementations.BasePlugin;
+import com.dmdirc.ui.WindowManager;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -51,6 +52,9 @@ public class WebInterfacePlugin extends BasePlugin {
     /** This plugin's information object. */
     private final PluginInfo pluginInfo;
 
+    /** Window management. */
+    private final WindowManager windowManager;
+
     /** The UI that we're using. */
     @Getter
     private WebInterfaceUI controller;
@@ -61,7 +65,7 @@ public class WebInterfacePlugin extends BasePlugin {
         if (controller == null) {
             controller = new WebInterfaceUI(getDomain(),
                     identityController, serverManager,
-                    pluginManager, pluginInfo);
+                    pluginManager, pluginInfo, windowManager);
         }
     }
 
@@ -73,7 +77,7 @@ public class WebInterfacePlugin extends BasePlugin {
     public void addWebHandler(final Handler newHandler) {
         if (controller == null) {
             controller = new WebInterfaceUI(getDomain(), identityController,
-                    serverManager, pluginManager, pluginInfo);
+                    serverManager, pluginManager, pluginInfo, windowManager);
         }
 
         controller.addWebHandler(newHandler);

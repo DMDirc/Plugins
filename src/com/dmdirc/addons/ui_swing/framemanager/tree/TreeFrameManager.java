@@ -28,10 +28,10 @@ import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.TreeScroller;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.addons.ui_swing.framemanager.FrameManager;
-import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.interfaces.FrameInfoListener;
 import com.dmdirc.interfaces.NotificationListener;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
+import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.ui.Colour;
@@ -59,7 +59,7 @@ import net.miginfocom.swing.MigLayout;
 /**
  * Manages open windows in the application in a tree style view.
  */
-public final class TreeFrameManager implements FrameManager,
+public class TreeFrameManager implements FrameManager,
         Serializable, ConfigChangeListener, NotificationListener,
         FrameInfoListener {
 
@@ -77,9 +77,16 @@ public final class TreeFrameManager implements FrameManager,
     private TreeScroller scroller;
     /** Configuration manager. */
     private AggregateConfigProvider config;
+    /** Window manage. */
+    private final WindowManager windowManager;
 
-    /** creates a new instance of the TreeFrameManager. */
-    public TreeFrameManager() {
+    /**
+     * Creates a new instance of the TreeFrameManager.
+     *
+     * @param windowManager Window Management
+     */
+    public TreeFrameManager(final WindowManager windowManager) {
+        this.windowManager = windowManager;
         nodes = new HashMap<>();
     }
 
@@ -310,8 +317,7 @@ public final class TreeFrameManager implements FrameManager,
                 }
                 scroller = new TreeTreeScroller(controller, tree);
 
-                for (FrameContainer window
-                        : WindowManager.getWindowManager().getRootWindows()) {
+                for (FrameContainer window : windowManager.getRootWindows()) {
                     addWindow(null, window);
                     final Collection<FrameContainer> childWindows = window
                             .getChildren();

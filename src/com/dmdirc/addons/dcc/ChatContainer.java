@@ -52,20 +52,21 @@ public class ChatContainer extends DCCFrameContainer implements DCCChatHandler {
      * @param title The title of this window
      * @param nick My Current Nickname
      * @param targetNick Nickname of target
+     * @param windowManager Window Management
      */
     public ChatContainer(final DCCPlugin plugin, final DCCChat dcc,
             final AggregateConfigProvider configManager, final String title,
-            final String nick, final String targetNick) {
+            final String nick, final String targetNick, final WindowManager windowManager) {
         super(title, "dcc-chat-inactive", configManager,
                 DCCCommandParser.getDCCCommandParser(configManager),
                 Arrays.asList(WindowComponent.TEXTAREA.getIdentifier(),
-                WindowComponent.INPUTFIELD.getIdentifier()));
+                        WindowComponent.INPUTFIELD.getIdentifier()), windowManager);
         dccChat = dcc;
         dcc.setHandler(this);
         nickname = nick;
         otherNickname = targetNick;
 
-        WindowManager.getWindowManager().addWindow(plugin.getContainer(), this);
+        windowManager.addWindow(plugin.getContainer(), this);
     }
 
     /**

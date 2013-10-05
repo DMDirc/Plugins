@@ -47,19 +47,20 @@ public class SystemStreamContainer extends FrameContainer {
      * @param stream Stream to wrap
      * @param config Config to wrap
      * @param plugin Parent plugin
+     * @param windowManager Window management
      */
     public SystemStreamContainer(final SystemStreamType stream,
             final AggregateConfigProvider config,
-            final SwingDebugPlugin plugin) {
+            final SwingDebugPlugin plugin, final WindowManager windowManager) {
         super("dmdirc", stream.toString(), stream.toString(), config,
-                Arrays.asList(WindowComponent.TEXTAREA.getIdentifier()));
+                Arrays.asList(WindowComponent.TEXTAREA.getIdentifier()), windowManager);
         this.plugin = plugin;
         try {
             thread = new SystemStreamRedirectThread(stream, getDocument());
             thread.start();
         } catch (IOException ex) {
         }
-        WindowManager.getWindowManager().addWindow(this);
+        windowManager.addWindow(this);
     }
 
     /** {@inheritDoc} */

@@ -32,6 +32,7 @@ import com.dmdirc.commandparser.parsers.CommandParser;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.ui.InputWindow;
+import com.dmdirc.ui.WindowManager;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -52,6 +53,7 @@ public class RedirectCommandTest {
     @Mock private WritableFrameContainer frameContainer;
     @Mock private AggregateConfigProvider configProvider;
     @Mock private CommandParser commandParser;
+    @Mock private WindowManager windowManager;
 
     @Before
     public void setup() {
@@ -65,7 +67,7 @@ public class RedirectCommandTest {
         doAnswer(new Answer<Void>() {
             @Override
             public Void answer(final InvocationOnMock invocation) throws Throwable {
-                new Echo(commandController).execute(
+                new Echo(commandController, windowManager).execute(
                         ((FrameContainer) invocation.getArguments()[0]),
                         new CommandArguments(commandController, "/echo test"),
                         null);
