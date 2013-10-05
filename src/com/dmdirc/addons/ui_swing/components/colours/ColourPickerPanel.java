@@ -86,18 +86,23 @@ public final class ColourPickerPanel extends JPanel implements MouseListener,
     /** Rectangle we use to indicate that only the preview should be drawn. */
     private Rectangle previewRect;
     /** A list of registered actionlisteners. */
-    private final List<ActionListener> listeners =
-            new ArrayList<ActionListener>();
+    private final List<ActionListener> listeners = new ArrayList<>();
+    /** The colour manager to use to parse colours. */
+    private final ColourManager colourManager;
 
     /**
      * Creates a new instance of ColourPickerPanel.
+     *
+     * @param colourManager The colour manager to use to parse colours.
      * @param newShowIrc Whether to show IRC colours or not
      * @param newShowHex Whether to show hex colours or not
      */
-    public ColourPickerPanel(final boolean newShowIrc,
+    public ColourPickerPanel(
+            final ColourManager colourManager,
+            final boolean newShowIrc,
             final boolean newShowHex) {
-        super();
 
+        this.colourManager = colourManager;
         showIrc = newShowIrc;
         showHex = newShowHex;
 
@@ -108,14 +113,6 @@ public final class ColourPickerPanel extends JPanel implements MouseListener,
         addMouseListener(this);
         addMouseMotionListener(this);
         addMouseWheelListener(this);
-    }
-
-    /**
-     * Creates a new instance of ColourPickerPanel, showing both IRC and Hex
-     * colours.
-     */
-    public ColourPickerPanel() {
-        this(true, true);
     }
 
     /** {@inheritDoc} */
@@ -138,7 +135,7 @@ public final class ColourPickerPanel extends JPanel implements MouseListener,
                 ircOffset = offset;
 
                 for (int i = 0; i < 16; i++) {
-                    g.setColor(UIUtilities.convertColour(ColourManager.getColour(i)));
+                    g.setColor(UIUtilities.convertColour(colourManager.getColourFromIrcCode(i)));
                     g.fillRect(i * IRC_WIDTH + BORDER_SIZE, offset, IRC_WIDTH,
                             IRC_HEIGHT);
                     g.setColor(Color.BLACK);
@@ -244,10 +241,10 @@ public final class ColourPickerPanel extends JPanel implements MouseListener,
      * @param e The mouse event that triggered this call
      * @return A colour object representing the colour beneath the mouse
      */
-    private static Color getIrcColour(final MouseEvent e) {
+    private Color getIrcColour(final MouseEvent e) {
         final int i = (e.getX() - BORDER_SIZE) / IRC_WIDTH;
 
-        return UIUtilities.convertColour(ColourManager.getColour(i));
+        return UIUtilities.convertColour(colourManager.getColourFromIrcCode(i));
     }
 
     /**

@@ -72,6 +72,7 @@ import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.core.components.StatusBarManager;
 import com.dmdirc.ui.core.util.URLHandler;
+import com.dmdirc.ui.messages.ColourManager;
 import com.dmdirc.ui.themes.ThemeManager;
 import com.dmdirc.updater.Version;
 import com.dmdirc.util.URLBuilder;
@@ -186,6 +187,9 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     private final Apple apple;
     /** Window Management. */
     private final WindowManager windowManager;
+    /** The colour manager to use to parse colours. */
+    @Getter
+    private final ColourManager colourManager;
 
     /**
      * Instantiates a new SwingController.
@@ -205,6 +209,7 @@ public class SwingController extends BaseCommandPlugin implements UIController {
      * @param themeManager Theme manager to use.
      * @param urlBuilder URL builder to use to resolve icons etc.
      * @param windowManager Window management
+     * @param colourManager The colour manager to use to parse colours.
      */
     public SwingController(
             final PluginInfo pluginInfo,
@@ -221,7 +226,8 @@ public class SwingController extends BaseCommandPlugin implements UIController {
             final AliasWrapper aliasWrapper,
             final ThemeManager themeManager,
             final URLBuilder urlBuilder,
-            final WindowManager windowManager) {
+            final WindowManager windowManager,
+            final ColourManager colourManager) {
         super(commandController);
         this.pluginInfo = pluginInfo;
         this.identityManager = identityManager;
@@ -236,6 +242,7 @@ public class SwingController extends BaseCommandPlugin implements UIController {
         this.aliasWrapper = aliasWrapper;
         this.themeManager = themeManager;
         this.windowManager = windowManager;
+        this.colourManager = colourManager;
 
         globalConfig = identityManager.getGlobalConfiguration();
         globalIdentity = identityManager.getUserSettings();
