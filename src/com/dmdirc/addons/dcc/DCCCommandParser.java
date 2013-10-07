@@ -32,10 +32,7 @@ import com.dmdirc.interfaces.config.AggregateConfigProvider;
 /**
  * DCC CommandParser.
  */
-public final class DCCCommandParser extends GlobalCommandParser {
-
-    /** The singleton instance of the DCC command parser. */
-    private static DCCCommandParser me;
+public class DCCCommandParser extends GlobalCommandParser {
 
     /** A version number for this class. */
     private static final long serialVersionUID = 2009290901;
@@ -45,21 +42,8 @@ public final class DCCCommandParser extends GlobalCommandParser {
      *
      * @param configManager Config manager
      */
-    private DCCCommandParser(final AggregateConfigProvider configManager) {
+    public DCCCommandParser(final AggregateConfigProvider configManager) {
         super(configManager, CommandManager.getCommandManager());
-    }
-
-    /**
-     * Retrieves the singleton dcc command parser.
-     *
-     * @return The singleton DCCCommandParser
-     */
-    public static synchronized DCCCommandParser getDCCCommandParser(final AggregateConfigProvider configManager) {
-        if (me == null) {
-            me = new DCCCommandParser(configManager);
-        }
-
-        return me;
     }
 
     /** Loads the relevant commands into the parser. */
@@ -77,8 +61,7 @@ public final class DCCCommandParser extends GlobalCommandParser {
      * @param line The line input by the user
      */
     @Override
-    protected void handleNonCommand(final FrameContainer origin,
-            final String line) {
+    protected void handleNonCommand(final FrameContainer origin, final String line) {
         ((WritableFrameContainer) origin).sendLine(line);
     }
 
