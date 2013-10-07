@@ -35,13 +35,19 @@ import javax.swing.text.html.ImageView;
  */
 public class DMDircImageView extends ImageView {
 
+    /** The URL builder to use to construct image URLs. */
+    private final URLBuilder urlBuilder;
+
     /**
      * Creates a new DMDirc image view.
      *
      * @param elem element to view
+     * @param urlBuilder The URL builder to use to construct image URLs.
      */
-    public DMDircImageView(final Element elem) {
+    public DMDircImageView(final URLBuilder urlBuilder, final Element elem) {
         super(elem);
+
+        this.urlBuilder = urlBuilder;
     }
 
     /**
@@ -54,6 +60,6 @@ public class DMDircImageView extends ImageView {
         final String src = (String) getElement().getAttributes().
                 getAttribute(HTML.Attribute.SRC);
 
-        return src == null ? null : URLBuilder.buildURL(src);
+        return src == null ? null : urlBuilder.getUrl(src);
     }
 }

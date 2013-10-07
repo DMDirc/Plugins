@@ -22,6 +22,8 @@
 
 package com.dmdirc.addons.ui_swing.components.text;
 
+import com.dmdirc.util.URLBuilder;
+
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Insets;
@@ -83,7 +85,7 @@ public class TextLabel extends JTextPane {
      */
     public TextLabel(final String text, final boolean justified) {
         super(new DefaultStyledDocument());
-        setEditorKit(new DMDircHTMLEditorKit());
+        setEditorKit(new DMDircHTMLEditorKit(URLBuilder.getInstance()));
         setUI(new BasicTextPaneUI());
 
         final StyleSheet styleSheet = ((HTMLDocument) getDocument()).
