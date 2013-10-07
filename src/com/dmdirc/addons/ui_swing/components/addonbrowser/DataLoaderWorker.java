@@ -122,15 +122,13 @@ public class DataLoaderWorker
                 + File.separator + "addons.feed");
         try {
             data.read();
-        } catch (final IOException ex) {
-            return Collections.<AddonInfo>emptyList();
-        } catch (final InvalidConfigFileException ex) {
+        } catch (final IOException | InvalidConfigFileException ex) {
             return Collections.<AddonInfo>emptyList();
         }
 
-        final List<AddonInfo> list = new ArrayList<AddonInfo>();
+        final List<AddonInfo> list = new ArrayList<>();
         for (final Map<String, String> entry : data.getKeyDomains().values()) {
-            list.add(new AddonInfo(controller.getGlobalConfig(), entry));
+            list.add(new AddonInfo(controller.getGlobalConfig(), controller.getUrlBuilder(), entry));
         }
         return list;
     }

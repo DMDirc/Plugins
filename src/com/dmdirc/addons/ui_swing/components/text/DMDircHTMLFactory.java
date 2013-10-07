@@ -22,22 +22,30 @@
 
 package com.dmdirc.addons.ui_swing.components.text;
 
+import com.dmdirc.util.URLBuilder;
+
 import javax.swing.text.Element;
 import javax.swing.text.View;
 import javax.swing.text.html.HTMLEditorKit.HTMLFactory;
 import javax.swing.text.html.ImageView;
 
+import lombok.RequiredArgsConstructor;
+
 /**
  * DMDircHTML factory extends HTMLFactory to use DMDircImageView.
  */
+@RequiredArgsConstructor
 public class DMDircHTMLFactory extends HTMLFactory {
+
+    /** The URL builder to use to construct image URLs. */
+    private final URLBuilder urlBuilder;
 
     /** {@inheritDoc} */
     @Override
     public View create(final Element elem) {
         final View view = super.create(elem);
         if (view instanceof ImageView) {
-            return new DMDircImageView(elem);
+            return new DMDircImageView(urlBuilder, elem);
         }
         return view;
     }

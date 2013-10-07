@@ -22,6 +22,8 @@
 
 package com.dmdirc.addons.ui_swing.components.text;
 
+import com.dmdirc.util.URLBuilder;
+
 import javax.swing.text.ViewFactory;
 import javax.swing.text.html.HTMLEditorKit;
 
@@ -31,7 +33,16 @@ import javax.swing.text.html.HTMLEditorKit;
 public class DMDircHTMLEditorKit extends HTMLEditorKit {
 
     private static final long serialVersionUID = 1;
-    private final ViewFactory defaultFactory = new DMDircHTMLFactory();
+    private final ViewFactory defaultFactory;
+
+    /**
+     * Creates a new instance of {@link DMDircHTMLEditorKit}.
+     *
+     * @param urlBuilder The URL builder to use to construct image URLs.
+     */
+    public DMDircHTMLEditorKit(final URLBuilder urlBuilder) {
+        defaultFactory = new DMDircHTMLFactory(urlBuilder);
+    }
 
     /** {@inheritDoc} */
     @Override

@@ -190,6 +190,9 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     /** The colour manager to use to parse colours. */
     @Getter
     private final ColourManager colourManager;
+    /** The URL builder to use. */
+    @Getter
+    private final URLBuilder urlBuilder;
 
     /**
      * Instantiates a new SwingController.
@@ -243,6 +246,7 @@ public class SwingController extends BaseCommandPlugin implements UIController {
         this.themeManager = themeManager;
         this.windowManager = windowManager;
         this.colourManager = colourManager;
+        this.urlBuilder = urlBuilder;
 
         globalConfig = identityManager.getGlobalConfiguration();
         globalIdentity = identityManager.getUserSettings();

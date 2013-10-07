@@ -76,6 +76,9 @@ public class BackgroundPainter extends LayerUI<JComponent> {
     @Getter(value = AccessLevel.PROTECTED)
     private final String optionKey;
 
+    /** The URL builder to use to find icons. */
+    private final URLBuilder urlBuilder;
+
     /**
      * Config manager to bind to and retrieve settings from.
      */
@@ -99,10 +102,13 @@ public class BackgroundPainter extends LayerUI<JComponent> {
      * @param imageKey Key for background image
      * @param optionKey Key for background type
      */
-    public BackgroundPainter(final AggregateConfigProvider configManager,
+    public BackgroundPainter(
+            final AggregateConfigProvider configManager,
+            final URLBuilder urlBuilder,
             final String domain, final String imageKey,
             final String optionKey) {
         this.configManager = configManager;
+        this.urlBuilder = urlBuilder;
         this.domain = domain;
         this.imageKey = imageKey;
         this.optionKey = optionKey;
@@ -119,7 +125,7 @@ public class BackgroundPainter extends LayerUI<JComponent> {
         if (value == null || value.isEmpty()) {
             backgroundImage = null;
         } else {
-            new ImageLoader(URLBuilder.buildURL(value)).executeInExecutor();
+            new ImageLoader(urlBuilder.getUrl(value)).executeInExecutor();
         }
     }
 

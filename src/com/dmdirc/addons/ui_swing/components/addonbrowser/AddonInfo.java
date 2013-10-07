@@ -93,9 +93,13 @@ public class AddonInfo {
     /**
      * Creates a new addon info class with the specified entries.
      *
+     * @param configManager The config provider to use to find settings.
+     * @param urlBuilder The URL builder to use to retrieve image URLs.
      * @param entry List of entries
      */
-    public AddonInfo(final AggregateConfigProvider configManager,
+    public AddonInfo(
+            final AggregateConfigProvider configManager,
+            final URLBuilder urlBuilder,
             final Map<String, String> entry) {
         id = Integer.parseInt(entry.get("id"));
         title = entry.get("title");
@@ -113,12 +117,12 @@ public class AddonInfo {
         verified = entry.get("verified").equals("yes");
         date = Integer.parseInt(entry.get("date"));
         if (entry.get("screenshot").equals("yes")) {
-            screenshot = new ImageIcon(URLBuilder.buildURL(
+            screenshot = new ImageIcon(urlBuilder.getUrl(
                     "http://addons.dmdirc.com/addonimg/" + id));
             screenshot.setImage(screenshot.getImage().
                     getScaledInstance(150, 150, Image.SCALE_SMOOTH));
         } else {
-            screenshot = new ImageIcon(URLBuilder.buildURL(
+            screenshot = new ImageIcon(urlBuilder.getUrl(
                     "dmdirc://com/dmdirc/res/logo.png"));
         }
         try {

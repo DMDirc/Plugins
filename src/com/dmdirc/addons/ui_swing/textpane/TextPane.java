@@ -102,8 +102,8 @@ public final class TextPane extends JComponent implements MouseWheelListener,
         newLineIndicator.setVisible(false);
 
         setLayout(new MigLayout("fill, hidemode 3"));
-        backgroundPainter = new BackgroundPainter(frame.getContainer()
-                .getConfigManager(), "plugin-ui_swing", "textpanebackground",
+        backgroundPainter = new BackgroundPainter(frame.getContainer().getConfigManager(),
+                controller.getUrlBuilder(), "plugin-ui_swing", "textpanebackground",
                 "textpanebackgroundoption");
         canvas = new TextPaneCanvas(this, document);
         final JXLayer<JComponent> layer = new JXLayer<JComponent>(canvas);
