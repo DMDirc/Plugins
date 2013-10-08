@@ -123,7 +123,7 @@ public class TopicBar extends JComponent implements ActionListener,
                 new ReplacePasteAction("(\r\n|\n|\r)", " "));
         topicEdit = new ImageButton<>("edit",
                 channelFrame.getIconManager().getIcon("edit-inactive"),
-                channelFrame.getContainer().getIconManager().getIcon("edit"));
+                channelFrame.getIconManager().getIcon("edit"));
         topicCancel = new ImageButton<>("cancel",
                 channelFrame.getIconManager().getIcon("close"),
                 channelFrame.getIconManager().getIcon("close-active"));

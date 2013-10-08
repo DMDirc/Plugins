@@ -109,7 +109,7 @@ public class DesktopWindowFrame extends JFrame implements FrameInfoListener,
             /** {@inheritDoc} */
             @Override
             public void run() {
-                setIconImage(window.getIconManager().getImage(icon));
+                setIconImage(windowWindow.getIconManager().getImage(icon));
             }
         });
     }
