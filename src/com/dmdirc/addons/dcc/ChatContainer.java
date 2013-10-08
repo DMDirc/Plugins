@@ -27,7 +27,6 @@ import com.dmdirc.addons.dcc.actions.DCCActions;
 import com.dmdirc.addons.dcc.io.DCCChat;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.messages.MessageSinkManager;
-import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.core.components.WindowComponent;
 
 import java.util.Arrays;
@@ -47,22 +46,20 @@ public class ChatContainer extends DCCFrameContainer implements DCCChatHandler {
     /**
      * Creates a new instance of DCCChatWindow with a given DCCChat object.
      *
-     * @param plugin the DCC Plugin responsible for this window
      * @param dcc The DCCChat object this window wraps around
      * @param configManager Config manager
      * @param title The title of this window
      * @param nick My Current Nickname
      * @param targetNick Nickname of target
      * @param messageSinkManager The sink manager to use to despatch messages.
-     * @param windowManager Window Management
      */
-    public ChatContainer(final DCCPlugin plugin, final DCCChat dcc,
+    public ChatContainer(final DCCChat dcc,
             final AggregateConfigProvider configManager, final String title,
-            final String nick, final String targetNick, final MessageSinkManager messageSinkManager,
-            final WindowManager windowManager) {
+            final String nick, final String targetNick,
+            final MessageSinkManager messageSinkManager) {
         super(title, "dcc-chat-inactive", configManager,
                 new DCCCommandParser(configManager),
-                messageSinkManager, windowManager,
+                messageSinkManager,
                 Arrays.asList(
                     WindowComponent.TEXTAREA.getIdentifier(),
                     WindowComponent.INPUTFIELD.getIdentifier()));
@@ -70,8 +67,6 @@ public class ChatContainer extends DCCFrameContainer implements DCCChatHandler {
         dcc.setHandler(this);
         nickname = nick;
         otherNickname = targetNick;
-
-        windowManager.addWindow(plugin.getContainer(), this);
     }
 
     /**

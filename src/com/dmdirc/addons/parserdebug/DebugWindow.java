@@ -26,7 +26,6 @@ import com.dmdirc.FrameContainer;
 import com.dmdirc.Server;
 import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.parser.interfaces.callbacks.DebugInfoListener;
-import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.core.components.WindowComponent;
 
 import java.util.Arrays;
@@ -52,14 +51,12 @@ public class DebugWindow extends FrameContainer {
      * @param server The Server window this is a child of
      * @param windowManager Window management
      */
-    public DebugWindow(final DebugPlugin plugin, final String title, final Parser parser, final Server server, final WindowManager windowManager) {
+    public DebugWindow(final DebugPlugin plugin, final String title, final Parser parser, final Server server) {
         super("raw", "Parser Debug", title, server.getConfigManager(),
-                Arrays.asList(WindowComponent.TEXTAREA.getIdentifier()), windowManager);
+                Arrays.asList(WindowComponent.TEXTAREA.getIdentifier()));
         this.plugin = plugin;
         this.parser = parser;
         this.server = server;
-
-        windowManager.addWindow(server, this);
     }
 
     /**

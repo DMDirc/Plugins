@@ -25,7 +25,6 @@ package com.dmdirc.addons.swingdebug;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.Server;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
-import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.core.components.WindowComponent;
 
 import java.io.IOException;
@@ -47,20 +46,18 @@ public class SystemStreamContainer extends FrameContainer {
      * @param stream Stream to wrap
      * @param config Config to wrap
      * @param plugin Parent plugin
-     * @param windowManager Window management
      */
     public SystemStreamContainer(final SystemStreamType stream,
             final AggregateConfigProvider config,
-            final SwingDebugPlugin plugin, final WindowManager windowManager) {
+            final SwingDebugPlugin plugin) {
         super("dmdirc", stream.toString(), stream.toString(), config,
-                Arrays.asList(WindowComponent.TEXTAREA.getIdentifier()), windowManager);
+                Arrays.asList(WindowComponent.TEXTAREA.getIdentifier()));
         this.plugin = plugin;
         try {
             thread = new SystemStreamRedirectThread(stream, getDocument());
             thread.start();
         } catch (IOException ex) {
         }
-        windowManager.addWindow(this);
     }
 
     /** {@inheritDoc} */

@@ -98,7 +98,8 @@ public final class ParserDebugCommand extends Command {
             try {
                 parser.getCallbackManager().addCallback(DebugInfoListener.class, myPlugin);
                 final DebugWindow window = new DebugWindow(myPlugin,
-                        "Parser Debug", parser, origin.getServer(), windowManager);
+                        "Parser Debug", parser, origin.getServer());
+                windowManager.addWindow(origin.getServer(), window);
                 myPlugin.registeredParsers.put(parser, window);
                 sendLine(origin, isSilent, FORMAT_OUTPUT, "Adding callback ok");
                 window.addLine("======================", true);

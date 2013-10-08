@@ -157,9 +157,9 @@ public class DCCCommand extends Command implements IntelligentCommand {
             final String target, final boolean isSilent) {
         final DCCChat chat = new DCCChat();
         if (myPlugin.listen(chat)) {
-            final ChatContainer window = new ChatContainer(myPlugin, chat,
-                    origin.getConfigManager(),
-                    "*Chat: " + target, myNickname, target, messageSinkManager, windowManager);
+            final ChatContainer window = new ChatContainer(chat, origin.getConfigManager(),
+                    "*Chat: " + target, myNickname, target, messageSinkManager);
+            windowManager.addWindow(myPlugin.getContainer(), window);
             parser.sendCTCP(target, "DCC", "CHAT chat " + DCC.ipToLong(
                     myPlugin.getListenIP(parser)) + " " + chat.getPort());
             ActionManager.getActionManager().triggerEvent(
@@ -235,9 +235,10 @@ public class DCCCommand extends Command implements IntelligentCommand {
                 if (origin.getConfigManager().getOptionBool(
                         myPlugin.getDomain(), "send.reverse")) {
                     final Parser parser = server.getParser();
-                    new TransferContainer(myPlugin, send,
+                    final TransferContainer container = new TransferContainer(myPlugin, send,
                             origin.getConfigManager(), "Send: " + target,
-                            target, server, windowManager);
+                            target, server);
+                    windowManager.addWindow(myPlugin.getContainer(), container);
                     parser.sendCTCP(target, "DCC", "SEND \""
                             + selectedFile.getName() + "\" "
                             + DCC.ipToLong(myPlugin.getListenIP(parser))
@@ -247,9 +248,10 @@ public class DCCCommand extends Command implements IntelligentCommand {
                 } else {
                     final Parser parser = server.getParser();
                     if (myPlugin.listen(send)) {
-                        new TransferContainer(myPlugin, send,
+                        final TransferContainer container = new TransferContainer(myPlugin, send,
                                 origin.getConfigManager(), "*Send: "
-                                + target, target, server, windowManager);
+                                + target, target, server);
+                        windowManager.addWindow(myPlugin.getContainer(), container);
                         parser.sendCTCP(target, "DCC", "SEND \""
                                 + selectedFile.getName() + "\" "
                                 + DCC.ipToLong(myPlugin.getListenIP(parser))
