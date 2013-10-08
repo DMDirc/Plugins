@@ -24,9 +24,9 @@ package com.dmdirc.addons.time;
 
 import com.dmdirc.FrameContainer;
 import com.dmdirc.WritableFrameContainer;
-import com.dmdirc.commandparser.CommandManager;
 import com.dmdirc.commandparser.parsers.CommandParser;
 import com.dmdirc.commandparser.parsers.GlobalCommandParser;
+import com.dmdirc.interfaces.CommandController;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -34,7 +34,7 @@ import java.util.TimerTask;
 /**
  * Timed command represents a command that has been scheduled by the user.
  */
-public final class TimedCommand extends TimerTask {
+public class TimedCommand extends TimerTask {
 
     /** The number of repetitions remaining. */
     private int repetitions;
@@ -48,26 +48,35 @@ public final class TimedCommand extends TimerTask {
     /** The timer we're using for scheduling this command. */
     private final Timer timer;
 
-    /** The key for this timer in the Timer Manager */
+    /** The key for this timer in the Timer Manager. */
     private final int timerKey;
 
     /** The manager for this timer. */
     private final TimerManager manager;
 
+    /** The command controller to use when executing global commands. */
+    private final CommandController commandController;
+
     /**
      * Creates a new instance of TimedCommand.
      *
+     * @param manager The manager that is controlling this command.
+     * @param commandController The command controller to use when executing global commands.
+     * @param timerKey The key for this timer in the Timer Manager.
      * @param repetitions The number of times this command will be executed
      * @param delay The number of seconds between each execution
      * @param command The command to be executed
      * @param origin The frame container to use for the execution
-     * @param window The window the command came from
      */
-    public TimedCommand(final TimerManager manager, final int timerKey,
-            final int repetitions, final int delay, final String command,
+    public TimedCommand(
+            final TimerManager manager,
+            final CommandController commandController,
+            final int timerKey,
+            final int repetitions,
+            final int delay,
+            final String command,
             final FrameContainer origin) {
-        super();
-
+        this.commandController = commandController;
         this.timerKey = timerKey;
         this.repetitions = repetitions;
         this.command = command;
@@ -103,8 +112,7 @@ public final class TimedCommand extends TimerTask {
     public void run() {
         CommandParser parser;
         if (origin == null) {
-            parser = new GlobalCommandParser(origin.getConfigManager(),
-                    CommandManager.getCommandManager());
+            parser = new GlobalCommandParser(origin.getConfigManager(), commandController);
         } else {
             parser = ((WritableFrameContainer) origin).getCommandParser();
         }
