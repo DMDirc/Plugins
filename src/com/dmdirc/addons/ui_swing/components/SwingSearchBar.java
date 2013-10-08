@@ -120,7 +120,7 @@ public final class SwingSearchBar extends JPanel implements ActionListener,
         searchBox = new ValidatingJTextField(parent.getController()
                 .getIconManager(), validator);
         wrapIndicator = new JLabel("Search wrapped",
-                parent.getContainer().getIconManager().getIcon("linewrap"),
+                parent.getIconManager().getIcon("linewrap"),
                 JLabel.LEFT);
 
         nextButton.setText("Later");

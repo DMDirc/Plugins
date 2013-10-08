@@ -559,7 +559,7 @@ public abstract class TextFrame extends JPanel implements Window,
      * @return This frame's IconManager
      */
     public IconManager getIconManager() {
-        return getContainer().getIconManager();
+        return getContainer().getIconManager(controller.getUrlBuilder());
     }
 
     /**
