@@ -33,7 +33,7 @@ import java.util.TimerTask;
 /**
  * Provides various time-related features.
  */
-public final class TimePlugin extends BaseCommandPlugin {
+public class TimePlugin extends BaseCommandPlugin {
 
     /** Have we registered our types already? */
     private static boolean registered;
@@ -50,12 +50,13 @@ public final class TimePlugin extends BaseCommandPlugin {
      * @param actionController The action controller to register listeners with
      * @param commandController Command controller to register commands
      */
-    public TimePlugin(final ActionController actionController,
+    public TimePlugin(
+            final ActionController actionController,
             final CommandController commandController) {
         super(commandController);
 
         this.actionController = actionController;
-        manager = new TimerManager();
+        manager = new TimerManager(commandController);
         registerCommand(new TimerCommand(manager), TimerCommand.INFO);
     }
 

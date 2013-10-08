@@ -22,26 +22,28 @@
 package com.dmdirc.addons.time;
 
 import com.dmdirc.FrameContainer;
+import com.dmdirc.interfaces.CommandController;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import lombok.RequiredArgsConstructor;
+
 /**
  * Class to manage Timers.
  *
  * @since 0.6.5
  */
+@RequiredArgsConstructor
 public class TimerManager {
 
     /** Map of all the timers that are running. */
-    private final Map<Integer, TimedCommand> timerList;
+    private final Map<Integer, TimedCommand> timerList = new HashMap<>();
 
-    /** Creates a new instance of TimeManager. */
-    public TimerManager() {
-        timerList = new HashMap<Integer, TimedCommand>();
-    }
+    /** The command controller to use when executing global commands. */
+    private final CommandController commandController;
 
     /**
      * Adds a timer to the internal list and starts the timer.
@@ -56,7 +58,7 @@ public class TimerManager {
 
         synchronized (this) {
             final int timerKey = findFreeKey();
-            timerList.put(timerKey, new TimedCommand(this, timerKey,
+            timerList.put(timerKey, new TimedCommand(this, commandController, timerKey,
                     repetitions, interval, command, origin));
         }
     }
