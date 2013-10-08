@@ -27,7 +27,6 @@ import com.dmdirc.Server;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
-import com.dmdirc.ui.WindowManager;
 
 import java.awt.Dialog.ModalityType;
 import java.util.Arrays;
@@ -48,13 +47,11 @@ public class PlaceholderContainer extends FrameContainer {
      * @param plugin The plugin which owns this placeholder
      * @param config Config manager
      * @param controller Swing controller
-     * @param windowManager Window manager
      */
     public PlaceholderContainer(final DCCPlugin plugin,
-            final AggregateConfigProvider config, final SwingController controller,
-            final WindowManager windowManager) {
+            final AggregateConfigProvider config, final SwingController controller) {
         super("dcc", "DCCs", "DCCs", config, Arrays.asList(
-                "com.dmdirc.addons.dcc.ui.PlaceholderPanel"), windowManager);
+                "com.dmdirc.addons.dcc.ui.PlaceholderPanel"));
         this.plugin = plugin;
         this.controller = controller;
     }

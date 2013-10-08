@@ -54,15 +54,14 @@ public class ChatContainer extends DCCFrameContainer implements DCCChatHandler {
      * @param nick My Current Nickname
      * @param targetNick Nickname of target
      * @param messageSinkManager The sink manager to use to despatch messages.
-     * @param windowManager Window Management
      */
     public ChatContainer(final DCCPlugin plugin, final DCCChat dcc,
             final AggregateConfigProvider configManager, final String title,
-            final String nick, final String targetNick, final MessageSinkManager messageSinkManager,
-            final WindowManager windowManager) {
+            final String nick, final String targetNick,
+            final MessageSinkManager messageSinkManager) {
         super(title, "dcc-chat-inactive", configManager,
                 new DCCCommandParser(configManager),
-                messageSinkManager, windowManager,
+                messageSinkManager,
                 Arrays.asList(
                     WindowComponent.TEXTAREA.getIdentifier(),
                     WindowComponent.INPUTFIELD.getIdentifier()));
@@ -70,8 +69,6 @@ public class ChatContainer extends DCCFrameContainer implements DCCChatHandler {
         dcc.setHandler(this);
         nickname = nick;
         otherNickname = targetNick;
-
-        windowManager.addWindow(plugin.getContainer(), this);
     }
 
     /**

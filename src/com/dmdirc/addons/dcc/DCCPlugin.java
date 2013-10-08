@@ -184,8 +184,9 @@ public class DCCPlugin extends BaseCommandPlugin implements ActionListener {
                 }
                 final boolean resume = handleResume(jc);
                 if (reverse && !token.isEmpty()) {
-                    new TransferContainer(DCCPlugin.this, send, config,
-                            "*Receive: " + nickname, nickname, null, windowManager);
+                    TransferContainer container = new TransferContainer(DCCPlugin.this, send,
+                            config, "*Receive: " + nickname, nickname, null);
+                    windowManager.addWindow(getContainer(), container);
                     send.setToken(token);
                     if (resume) {
                         if (config.getOptionBool(getDomain(),
@@ -209,8 +210,9 @@ public class DCCPlugin extends BaseCommandPlugin implements ActionListener {
                         }
                     }
                 } else {
-                    new TransferContainer(DCCPlugin.this, send, config,
-                            "Receive: " + nickname, nickname, null, windowManager);
+                    TransferContainer container = new TransferContainer(DCCPlugin.this, send,
+                            config, "Receive: " + nickname, nickname, null);
+                    windowManager.addWindow(getContainer(), container);
                     if (resume) {
                         parser.sendCTCP(nickname, "DCC", "RESUME "
                                 + send.getShortFileName() + " "
@@ -394,7 +396,8 @@ public class DCCPlugin extends BaseCommandPlugin implements ActionListener {
             final String myNickname = ((Server) arguments[0]).getParser()
                     .getLocalClient().getNickname();
             final DCCFrameContainer f = new ChatContainer(this, chat, config,
-                    "Chat: " + nickname, myNickname, nickname, messageSinkManager, windowManager);
+                    "Chat: " + nickname, myNickname, nickname, messageSinkManager);
+            windowManager.addWindow(getContainer(), f);
             f.addLine("DCCChatStarting", nickname, chat.getHost(),
                     chat.getPort());
             chat.connect();
@@ -642,7 +645,7 @@ public class DCCPlugin extends BaseCommandPlugin implements ActionListener {
      * Create the container window.
      */
     protected void createContainer() {
-        container = new PlaceholderContainer(this, config, controller, windowManager);
+        container = new PlaceholderContainer(this, config, controller);
         windowManager.addWindow(container);
     }
 
