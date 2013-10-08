@@ -104,7 +104,8 @@ public class SwingDebugPlugin extends BasePlugin implements ActionListener {
         if (e.getSource() == showSysOut) {
             if (showSysOut.isSelected()) {
                 sysoutFrame = new SystemStreamContainer(SystemStreamType.Out,
-                        controller.getGlobalConfig(), this, windowManager);
+                        controller.getGlobalConfig(), this);
+                windowManager.addWindow(sysoutFrame);
             } else {
                 sysoutFrame.close();
             }
@@ -113,7 +114,8 @@ public class SwingDebugPlugin extends BasePlugin implements ActionListener {
         if (e.getSource() == showSysErr) {
             if (showSysErr.isSelected()) {
                 syserrFrame = new SystemStreamContainer(SystemStreamType.Error,
-                        controller.getGlobalConfig(), this, windowManager);
+                        controller.getGlobalConfig(), this);
+                windowManager.addWindow(syserrFrame);
             } else {
                 syserrFrame.close();
             }

@@ -48,6 +48,7 @@ import com.dmdirc.parser.interfaces.ClientInfo;
 import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.implementations.BaseCommandPlugin;
+import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.messages.Styliser;
 import com.dmdirc.util.io.ReverseFileReader;
 import com.dmdirc.util.io.StreamUtils;
@@ -95,6 +96,8 @@ public class LoggingPlugin extends BaseCommandPlugin implements ActionListener,
     private final ConfigProvider identity;
     /** Parent Identity Manager. */
     private final IdentityController identityController;
+    /** The manager to add history windows to. */
+    private final WindowManager windowManager;
 
     /** Timer used to close idle files. */
     protected Timer idleFileTimer;
@@ -113,13 +116,16 @@ public class LoggingPlugin extends BaseCommandPlugin implements ActionListener,
      * @param actionController The action controller to register listeners with
      * @param identityController The Identity Manager that controls the current config
      * @param commandController Command controller to register commands
+     * @param windowManager The manager to add history windows to.
      */
     public LoggingPlugin(final PluginInfo pluginInfo,
             final ActionController actionController,
             final IdentityController identityController,
-            final CommandController commandController) {
+            final CommandController commandController,
+            final WindowManager windowManager) {
         super(commandController);
         this.identityController = identityController;
+        this.windowManager = windowManager;
 
         this.pluginInfo = pluginInfo;
         this.actionController = actionController;
@@ -865,7 +871,8 @@ public class LoggingPlugin extends BaseCommandPlugin implements ActionListener,
             return false;
         }
 
-        new HistoryWindow("History", reader, target, historyLines);
+        HistoryWindow window = new HistoryWindow("History", reader, target, historyLines);
+        windowManager.addWindow(target, window);
 
         return true;
     }

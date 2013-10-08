@@ -52,7 +52,7 @@ public class FakeWriteableFrameContainer extends WritableFrameContainer {
             final MessageSinkManager messageSinkManager) {
         super(target.getIcon(), target.getName(), target.getTitle(),
                 target.getConfigManager(), target.getCommandParser(),
-                messageSinkManager, target.getWindowManager(), Collections.<String>emptyList());
+                messageSinkManager, Collections.<String>emptyList());
         this.target = target;
     }
 

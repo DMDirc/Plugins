@@ -32,7 +32,6 @@ import com.dmdirc.addons.dcc.io.DCCTransfer;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.parser.interfaces.callbacks.SocketCloseListener;
-import com.dmdirc.ui.WindowManager;
 
 import java.awt.Desktop;
 import java.io.File;
@@ -91,16 +90,14 @@ public class TransferContainer extends FrameContainer implements
      * @param title The title of this window
      * @param targetNick Nickname of target
      * @param server The server that initiated this send
-     * @param windowManager Window Management
      */
     public TransferContainer(final DCCPlugin plugin, final DCCTransfer dcc,
             final AggregateConfigProvider config, final String title,
-            final String targetNick, final Server server,
-            final WindowManager windowManager) {
+            final String targetNick, final Server server) {
         super(dcc.getType() == DCCTransfer.TransferType.SEND
                 ? "dcc-send-inactive" : "dcc-receive-inactive",
                 title, title, config,
-                Arrays.asList("com.dmdirc.addons.dcc.ui.TransferPanel"), windowManager);
+                Arrays.asList("com.dmdirc.addons.dcc.ui.TransferPanel"));
         this.plugin = plugin;
         this.dcc = dcc;
         this.server = server;
@@ -115,8 +112,6 @@ public class TransferContainer extends FrameContainer implements
         dcc.addHandler(this);
 
         otherNickname = targetNick;
-
-        windowManager.addWindow(plugin.getContainer(), this);
     }
 
     /** {@inheritDoc} */
