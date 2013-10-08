@@ -900,4 +900,15 @@ public class SwingController extends BaseCommandPlugin implements UIController {
         return pluginInfo.getMetaData().getVersion();
     }
 
+    /**
+     * Retrieves the command controller to use.
+     *
+     * @return The command controller to use.
+     * @deprecated Should be injected where needed.
+     */
+    @Override
+    @Deprecated
+    public CommandController getCommandController() {
+        return super.getCommandController();
+    }
 }

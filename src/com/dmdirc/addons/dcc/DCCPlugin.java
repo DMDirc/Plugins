@@ -395,7 +395,7 @@ public class DCCPlugin extends BaseCommandPlugin implements ActionListener {
             }
             final String myNickname = ((Server) arguments[0]).getParser()
                     .getLocalClient().getNickname();
-            final DCCFrameContainer f = new ChatContainer(chat, config,
+            final DCCFrameContainer f = new ChatContainer(chat, config, getCommandController(),
                     "Chat: " + nickname, myNickname, nickname, messageSinkManager);
             windowManager.addWindow(getContainer(), f);
             f.addLine("DCCChatStarting", nickname, chat.getHost(),

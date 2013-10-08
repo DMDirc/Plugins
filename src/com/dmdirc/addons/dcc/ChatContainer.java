@@ -25,6 +25,7 @@ package com.dmdirc.addons.dcc;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.addons.dcc.actions.DCCActions;
 import com.dmdirc.addons.dcc.io.DCCChat;
+import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.messages.MessageSinkManager;
 import com.dmdirc.ui.core.components.WindowComponent;
@@ -48,17 +49,19 @@ public class ChatContainer extends DCCFrameContainer implements DCCChatHandler {
      *
      * @param dcc The DCCChat object this window wraps around
      * @param configManager Config manager
+     * @param commandController The controller to use in the command parser.
      * @param title The title of this window
      * @param nick My Current Nickname
      * @param targetNick Nickname of target
      * @param messageSinkManager The sink manager to use to despatch messages.
      */
     public ChatContainer(final DCCChat dcc,
-            final AggregateConfigProvider configManager, final String title,
-            final String nick, final String targetNick,
+            final AggregateConfigProvider configManager,
+            final CommandController commandController,
+            final String title, final String nick, final String targetNick,
             final MessageSinkManager messageSinkManager) {
         super(title, "dcc-chat-inactive", configManager,
-                new DCCCommandParser(configManager),
+                new DCCCommandParser(configManager, commandController),
                 messageSinkManager,
                 Arrays.asList(
                     WindowComponent.TEXTAREA.getIdentifier(),

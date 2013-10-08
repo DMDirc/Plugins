@@ -158,7 +158,7 @@ public abstract class TextFrame extends JPanel implements Window,
 
         if (localParser == null) {
             localParser = new GlobalCommandParser(frameParent.getConfigManager(),
-                    CommandManager.getCommandManager());
+                    controller.getCommandController());
         }
 
         return localParser;

@@ -27,6 +27,7 @@ import com.dmdirc.WritableFrameContainer;
 import com.dmdirc.commandparser.CommandManager;
 import com.dmdirc.commandparser.CommandType;
 import com.dmdirc.commandparser.parsers.GlobalCommandParser;
+import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 
 /**
@@ -41,15 +42,18 @@ public class DCCCommandParser extends GlobalCommandParser {
      * Creates a new instance of the GlobalCommandParser.
      *
      * @param configManager Config manager
+     * @param commandController The controller to load commands and command info from.
      */
-    public DCCCommandParser(final AggregateConfigProvider configManager) {
-        super(configManager, CommandManager.getCommandManager());
+    public DCCCommandParser(
+            final AggregateConfigProvider configManager,
+            final CommandController commandController) {
+        super(configManager, commandController);
     }
 
     /** Loads the relevant commands into the parser. */
     @Override
     protected void loadCommands() {
-        CommandManager.getCommandManager().loadCommands(this, CommandType.TYPE_GLOBAL);
+        getCommandManager().loadCommands(this, CommandType.TYPE_GLOBAL);
     }
 
     /**
