@@ -96,8 +96,7 @@ public class AddonCell extends JPanel implements AddonToggleListener {
         status.setForeground(foreground);
 
         final int initialPadding;
-        if (info.getTheme()!= null || info.getPluginInfo().getMetaData()
-                .getParents().length == 0) {
+        if (info.getTheme()!= null || info.getPluginInfo().getMetaData().getParent() == null) {
             initialPadding = 20;
         } else {
             initialPadding = 30;

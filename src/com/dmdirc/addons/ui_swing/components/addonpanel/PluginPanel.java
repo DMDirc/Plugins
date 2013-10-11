@@ -69,13 +69,13 @@ public class PluginPanel extends AddonPanel implements ActionListener {
     /** {@inheritDoc} */
     @Override
     protected JTable populateList(final JTable table) {
-        final List<PluginInfo> list = new ArrayList<PluginInfo>();
-        final List<PluginInfo> sortedList = new ArrayList<PluginInfo>();
+        final List<PluginInfo> list = new ArrayList<>();
+        final List<PluginInfo> sortedList = new ArrayList<>();
         list.addAll(controller.getPluginManager().getPluginInfos());
         Collections.sort(list);
         for (final PluginInfo plugin : list) {
-            if (plugin.getMetaData().getParents().length == 0) {
-                final List<PluginInfo> childList = new ArrayList<PluginInfo>();
+            if (plugin.getMetaData().getParent() == null) {
+                final List<PluginInfo> childList = new ArrayList<>();
                 sortedList.add(plugin);
                 for (final PluginInfo child : plugin.getChildren()) {
                     if (!childList.contains(child)) {
