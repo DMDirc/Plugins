@@ -103,6 +103,8 @@ import lombok.Getter;
 
 import net.miginfocom.layout.PlatformDefaults;
 
+import dagger.ObjectGraph;
+
 /**
  * Controls the main swing UI.
  */
@@ -511,6 +513,14 @@ public class SwingController extends BaseCommandPlugin implements UIController {
      */
     public static String getLookAndFeel() {
         return UIManager.getLookAndFeel().getName();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void load(final PluginInfo pluginInfo, final ObjectGraph graph) {
+        super.load(pluginInfo, graph);
+
+        setObjectGraph(graph.plus(new SwingModule(this)));
     }
 
     /** {@inheritDoc} */
