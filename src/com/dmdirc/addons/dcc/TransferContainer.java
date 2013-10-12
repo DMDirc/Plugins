@@ -47,7 +47,7 @@ public class TransferContainer extends FrameContainer implements
         DCCTransferHandler, SocketCloseListener {
 
     /** The dcc plugin that owns this frame */
-    protected final DCCPlugin plugin;
+    protected final DCCManager plugin;
 
     /** Config manager. */
     private final AggregateConfigProvider config;
@@ -68,7 +68,7 @@ public class TransferContainer extends FrameContainer implements
     private long timeStarted = 0;
 
     /** Plugin that this send belongs to. */
-    private final DCCPlugin myPlugin;
+    private final DCCManager myPlugin;
 
     /** IRC Parser that caused this send */
     private Parser parser = null;
@@ -91,7 +91,7 @@ public class TransferContainer extends FrameContainer implements
      * @param targetNick Nickname of target
      * @param server The server that initiated this send
      */
-    public TransferContainer(final DCCPlugin plugin, final DCCTransfer dcc,
+    public TransferContainer(final DCCManager plugin, final DCCTransfer dcc,
             final AggregateConfigProvider config, final String title,
             final String targetNick, final Server server) {
         super(dcc.getType() == DCCTransfer.TransferType.SEND

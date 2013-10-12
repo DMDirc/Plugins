@@ -22,47 +22,28 @@
 
 package com.dmdirc.addons.dcc;
 
-import com.dmdirc.config.prefs.PreferencesDialogModel;
+import com.dmdirc.addons.ui_swing.SwingModule;
 import com.dmdirc.plugins.PluginInfo;
-import com.dmdirc.plugins.implementations.BaseCommandPlugin;
 
-import dagger.ObjectGraph;
+import dagger.Module;
+import dagger.Provides;
 
 /**
- * Adds support for DCC transfers and chats.
+ * DI module for the DCC plugin.
  */
-public class DCCPlugin extends BaseCommandPlugin {
+@Module(injects = {DCCManager.class, DCCCommand.class}, addsTo = SwingModule.class)
+public class DCCPluginModule {
 
-    private DCCManager dccManager;
+    /** The DCC plugin's plugin info. */
+    private final PluginInfo pluginInfo;
 
-    /** {@inheritDoc} */
-    @Override
-    public void load(final PluginInfo pluginInfo, final ObjectGraph graph) {
-        super.load(pluginInfo, graph);
-
-        setObjectGraph(graph.plus(new DCCPluginModule(pluginInfo)));
-        dccManager = getObjectGraph().get(DCCManager.class);
-        registerCommand(DCCCommand.class, DCCCommand.INFO);
+    public DCCPluginModule(final PluginInfo pluginInfo) {
+        this.pluginInfo = pluginInfo;
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void onLoad() {
-        super.onLoad();
-        dccManager.onLoad();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onUnload() {
-        super.onUnload();
-        dccManager.onUnload();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void showConfig(final PreferencesDialogModel manager) {
-        dccManager.showConfig(manager);
+    @Provides
+    public PluginInfo getPluginInfo() {
+        return pluginInfo;
     }
 
 }
