@@ -45,6 +45,7 @@ import com.dmdirc.messages.MessageSinkManager;
 import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.input.AdditionalTabTargets;
+import com.dmdirc.ui.input.TabCompleterFactory;
 import com.dmdirc.ui.input.TabCompletionType;
 
 import java.io.File;
@@ -72,6 +73,8 @@ public class DCCCommand extends Command implements IntelligentCommand {
     private final WindowManager windowManager;
     /** The sink manager to use to despatch messages. */
     private final MessageSinkManager messageSinkManager;
+    /** The factory to use for tab completers. */
+    private final TabCompleterFactory tabCompleterFactory;
 
     /**
      * Creates a new instance of DCCCommand.
@@ -81,6 +84,7 @@ public class DCCCommand extends Command implements IntelligentCommand {
      * @param plugin The DCC Plugin that this command belongs to
      * @param messageSinkManager The sink manager to use to despatch messages.
      * @param windowManager Window management
+     * @param tabCompleterFactory The factory to use for tab completers.
      */
     @Inject
     public DCCCommand(
@@ -88,12 +92,14 @@ public class DCCCommand extends Command implements IntelligentCommand {
             final MainFrame mainFrame,
             final DCCManager plugin,
             final MessageSinkManager messageSinkManager,
-            final WindowManager windowManager) {
+            final WindowManager windowManager,
+            final TabCompleterFactory tabCompleterFactory) {
         super(controller);
         this.mainFrame = mainFrame;
         myPlugin = plugin;
         this.messageSinkManager = messageSinkManager;
         this.windowManager = windowManager;
+        this.tabCompleterFactory = tabCompleterFactory;
     }
 
     /** {@inheritDoc} */
@@ -160,7 +166,8 @@ public class DCCCommand extends Command implements IntelligentCommand {
         final DCCChat chat = new DCCChat();
         if (myPlugin.listen(chat)) {
             final ChatContainer window = new ChatContainer(chat, origin.getConfigManager(),
-                    getController(), "*Chat: " + target, myNickname, target, messageSinkManager);
+                    getController(), "*Chat: " + target, myNickname, target, tabCompleterFactory,
+                    messageSinkManager);
             windowManager.addWindow(myPlugin.getContainer(), window);
             parser.sendCTCP(target, "DCC", "CHAT chat " + DCC.ipToLong(
                     myPlugin.getListenIP(parser)) + " " + chat.getPort());

@@ -86,7 +86,8 @@ public class AliasPanel extends JPanel implements ActionListener {
         actionFactory = controller.getActionFactory();
 
         command = new ValidatingTextFieldInputField(controller,
-                new ValidatorChain<>(new CommandNameValidator(),
+                new ValidatorChain<>(
+                new CommandNameValidator(controller.getCommandController().getCommandChar()),
                 new FileNameValidator()));
         command.setEnabled(false);
         //new SwingInputHandler(command, GlobalCommandParser
