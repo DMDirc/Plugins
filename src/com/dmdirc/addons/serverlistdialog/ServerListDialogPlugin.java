@@ -46,16 +46,17 @@ public class ServerListDialogPlugin extends BasePlugin implements ActionListener
     /**
      * Creates a new server list dialog plugin.
      *
+     * @param swingController The controller that will own the dialog.
      * @param pluginManager The plugin manager to use to find the Swing UI.
      * @param performWrapper The wrapper to use for modifying performs.
      */
     public ServerListDialogPlugin(
+            final SwingController swingController,
             final PluginManager pluginManager,
             final PerformWrapper performWrapper) {
         this.performWrapper = performWrapper;
 
-        controller = (SwingController) pluginManager.getPluginInfoByName(
-                "ui_swing").getPlugin();
+        controller = swingController;
         final JMenuItem item = new JMenuItem("Server lists");
         item.setMnemonic('l');
         item.addActionListener(this);

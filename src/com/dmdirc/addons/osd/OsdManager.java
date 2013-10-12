@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.osd;
 
+import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.interfaces.config.IdentityController;
 import com.dmdirc.ui.messages.ColourManager;
@@ -42,6 +43,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class OsdManager {
 
+    /** The window the OSD will be associated with. */
+    private final MainFrame mainFrame;
     /** The controller to read/write settings with. */
     private final IdentityController identityController;
     /** The Plugin that owns this OSD Manager. */
@@ -102,7 +105,9 @@ public class OsdManager {
             /** {@inheritDoc} */
             @Override
             public OsdWindow call() {
-                return new OsdWindow(identityController, plugin, OsdManager.this, colourManager,
+                return new OsdWindow(
+                        mainFrame,
+                        identityController, plugin, OsdManager.this, colourManager,
                         timeout, message, false,
                         identityController.getGlobalConfiguration().getOptionInt(
                         plugin.getDomain(), "locationX"), policy.getYPosition(

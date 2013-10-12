@@ -57,15 +57,19 @@ public class NickColourPanel extends JPanel implements ActionListener,
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 1;
+
+    /** The table headings. */
+    private static final String[] HEADERS =
+            {"Network", "Nickname", "Text colour", "Nicklist colour"};
+
     /** The table used for displaying the options. */
     private final JTable table;
     /** The plugin we're associated with. */
     private final transient NickColourPlugin plugin;
     /** The identity to write settings to. */
     private final ConfigProvider configIdentity;
-    /** The table headings. */
-    private static final String[] HEADERS = {"Network", "Nickname",
-        "Text colour", "Nicklist colour"};
+    /** The controller that owns this dialog. */
+    private final SwingController swingController;
 
     /** Edit and delete buttons. */
     private final JButton editButton, deleteButton;
@@ -83,6 +87,7 @@ public class NickColourPanel extends JPanel implements ActionListener,
             final ColourManager colourManager) {
         this.plugin = plugin;
         this.configIdentity = controller.getIdentityManager().getUserSettings();
+        this.swingController = controller;
 
         final Object[][] data = plugin.getData();
 
@@ -159,7 +164,7 @@ public class NickColourPanel extends JPanel implements ActionListener,
     @Override
     public void actionPerformed(final ActionEvent e) {
         if (e.getActionCommand().equals("Add")) {
-            new NickColourInputDialog(this);
+            new NickColourInputDialog(swingController, this);
         } else if (e.getActionCommand().equals("Edit")) {
             final DefaultTableModel model
                     = ((DefaultTableModel) table.getModel());
@@ -179,7 +184,7 @@ public class NickColourPanel extends JPanel implements ActionListener,
                 nickcolour = "";
             }
 
-            new NickColourInputDialog(this, row, nickname, network, textcolour,
+            new NickColourInputDialog(swingController, this, row, nickname, network, textcolour,
                     nickcolour);
         } else if (e.getActionCommand().equals("Delete")) {
             final int row = table.getSelectedRow();
