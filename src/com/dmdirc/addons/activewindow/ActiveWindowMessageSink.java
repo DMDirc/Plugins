@@ -31,6 +31,8 @@ import com.dmdirc.messages.MessageSinkManager;
 import java.util.Date;
 import java.util.regex.Pattern;
 
+import javax.inject.Inject;
+
 /**
  * A message sink which passes messages onto the active swing window.
  */
@@ -47,6 +49,7 @@ public class ActiveWindowMessageSink implements MessageSink {
      *
      * @param mainFrame The mainframe to use to retrieve active windows
      */
+    @Inject
     public ActiveWindowMessageSink(final MainFrame mainFrame) {
         this.mainFrame = mainFrame;
     }

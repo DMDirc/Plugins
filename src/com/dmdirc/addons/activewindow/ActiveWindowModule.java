@@ -22,40 +22,14 @@
 
 package com.dmdirc.addons.activewindow;
 
-import com.dmdirc.plugins.PluginInfo;
-import com.dmdirc.plugins.implementations.BaseCommandPlugin;
+import com.dmdirc.addons.ui_swing.SwingModule;
 
-import dagger.ObjectGraph;
+import dagger.Module;
 
-/** Plugin to provide an active window command to the Swing UI. */
-public class ActiveWindowPlugin extends BaseCommandPlugin {
-
-    /** Manager to use for the active window sink. */
-    private ActiveWindowManager activeWindowManager;
-
-    /** {@inheritDoc} */
-    @Override
-    public void load(final PluginInfo pluginInfo, final ObjectGraph graph) {
-        super.load(pluginInfo, graph);
-
-        setObjectGraph(graph.plus(new ActiveWindowModule()));
-        registerCommand(ActiveCommand.class, ActiveCommand.INFO);
-
-        activeWindowManager = getObjectGraph().get(ActiveWindowManager.class);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onLoad() {
-        super.onLoad();
-        activeWindowManager.register();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onUnload() {
-        super.onUnload();
-        activeWindowManager.unregister();
-    }
+/**
+ * DI module for the active window plugin.
+ */
+@Module(injects={ActiveWindowManager.class, ActiveCommand.class}, addsTo = SwingModule.class)
+public class ActiveWindowModule {
 
 }

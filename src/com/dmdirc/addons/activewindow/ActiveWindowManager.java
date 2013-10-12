@@ -22,40 +22,47 @@
 
 package com.dmdirc.addons.activewindow;
 
-import com.dmdirc.plugins.PluginInfo;
-import com.dmdirc.plugins.implementations.BaseCommandPlugin;
+import com.dmdirc.messages.MessageSinkManager;
 
-import dagger.ObjectGraph;
+import javax.inject.Inject;
 
-/** Plugin to provide an active window command to the Swing UI. */
-public class ActiveWindowPlugin extends BaseCommandPlugin {
+/**
+ * Manages the active window sink.
+ */
+public class ActiveWindowManager {
 
-    /** Manager to use for the active window sink. */
-    private ActiveWindowManager activeWindowManager;
+    /** The message sink to register and unregister. */
+    private final ActiveWindowMessageSink sink;
 
-    /** {@inheritDoc} */
-    @Override
-    public void load(final PluginInfo pluginInfo, final ObjectGraph graph) {
-        super.load(pluginInfo, graph);
+    /** The manager to add and remove the sink from. */
+    private final MessageSinkManager sinkManager;
 
-        setObjectGraph(graph.plus(new ActiveWindowModule()));
-        registerCommand(ActiveCommand.class, ActiveCommand.INFO);
-
-        activeWindowManager = getObjectGraph().get(ActiveWindowManager.class);
+    /**
+     * Creates a new instance of {@link ActiveWindowManager}.
+     *
+     * @param sinkManager The manager to add and remove sinks from.
+     * @param sink The sink to be added and removed.
+     */
+    @Inject
+    public ActiveWindowManager(
+            final MessageSinkManager sinkManager,
+            final ActiveWindowMessageSink sink) {
+        this.sink = sink;
+        this.sinkManager = sinkManager;
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void onLoad() {
-        super.onLoad();
-        activeWindowManager.register();
+    /**
+     * Registers the sink with the manager.
+     */
+    public void register() {
+        sinkManager.addSink(sink);
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void onUnload() {
-        super.onUnload();
-        activeWindowManager.unregister();
+    /**
+     * Unregisters the sink from the manager.
+     */
+    public void unregister() {
+        sinkManager.removeSink(sink);
     }
 
 }
