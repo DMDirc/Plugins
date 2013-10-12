@@ -25,10 +25,10 @@ package com.dmdirc.addons.urlcatcher;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.Raw;
 import com.dmdirc.actions.CoreActionType;
-import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.interfaces.ActionController;
 import com.dmdirc.interfaces.ActionListener;
 import com.dmdirc.interfaces.CommandController;
+import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.interfaces.config.IdentityController;
 import com.dmdirc.plugins.implementations.BaseCommandPlugin;
@@ -64,10 +64,9 @@ public class UrlCatcherPlugin extends BaseCommandPlugin implements
             final CommandController commandController,
             final IdentityController identityController,
             final ActionController actionController) {
-        super(commandController);
         this.identityController = identityController;
         this.actionController = actionController;
-        registerCommand(new UrlListCommand(this), UrlListCommand.INFO);
+        registerCommand(new UrlListCommand(this, commandController), UrlListCommand.INFO);
     }
 
     /** {@inheritDoc} */

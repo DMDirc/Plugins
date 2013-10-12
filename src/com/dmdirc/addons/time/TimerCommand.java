@@ -29,6 +29,7 @@ import com.dmdirc.commandparser.CommandType;
 import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.IntelligentCommand;
 import com.dmdirc.commandparser.commands.context.CommandContext;
+import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 
 import java.util.Map.Entry;
@@ -38,7 +39,7 @@ import java.util.Set;
  * The timer command allows users to schedule commands to occur after a certain
  * interval, or to repeatedly occur with a specified delay.
  */
-public final class TimerCommand extends Command implements IntelligentCommand {
+public class TimerCommand extends Command implements IntelligentCommand {
 
     /** A command info object for this command. */
     public static final BaseCommandInfo INFO = new BaseCommandInfo("timer",
@@ -54,9 +55,10 @@ public final class TimerCommand extends Command implements IntelligentCommand {
      * Creates a new instance of TimerCommand.
      *
      * @param manager The instance of TimerManager associated with this command
+     * @param commandController The controller to use for command information.
      */
-    public TimerCommand(final TimerManager manager) {
-        super();
+    public TimerCommand(final TimerManager manager, final CommandController commandController) {
+        super(commandController);
 
         this.manager = manager;
     }

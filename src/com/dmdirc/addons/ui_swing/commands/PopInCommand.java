@@ -52,7 +52,7 @@ public class PopInCommand extends Command {
      * @param controller SwingWindowController associated with this command
      */
     public PopInCommand(final SwingController controller) {
-        super();
+        super(controller.getCommandController());
         this.controller = controller;
     }
 

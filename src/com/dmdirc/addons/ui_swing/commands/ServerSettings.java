@@ -56,6 +56,7 @@ public class ServerSettings extends Command implements IntelligentCommand {
      * @param controller The controller to use to show the settings window.
      */
     public ServerSettings(final SwingController controller) {
+        super(controller.getCommandController());
         this.controller = controller;
     }
 

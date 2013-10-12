@@ -52,7 +52,7 @@ public class PopOutCommand extends Command {
      * @param controller SwingWindowController associated with this command
      */
     public PopOutCommand(final SwingController controller) {
-        super();
+        super(controller.getCommandController());
         this.controller = controller;
     }
 

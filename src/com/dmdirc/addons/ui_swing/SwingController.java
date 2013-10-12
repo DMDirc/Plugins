@@ -263,7 +263,7 @@ public class SwingController extends BaseCommandPlugin implements UIController {
         windows = new ArrayList<>();
         registerCommand(new ServerSettings(this), ServerSettings.INFO);
         registerCommand(new ChannelSettings(this), ChannelSettings.INFO);
-        registerCommand(new Input(windowFactory), Input.INFO);
+        registerCommand(new Input(windowFactory, commandController), Input.INFO);
         registerCommand(new PopOutCommand(this), PopOutCommand.INFO);
         registerCommand(new PopInCommand(this), PopInCommand.INFO);
     }

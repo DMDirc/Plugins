@@ -28,12 +28,13 @@ import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandType;
 import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.context.CommandContext;
+import com.dmdirc.interfaces.CommandController;
 
 /**
  * The /popup command allows the user to show a popup message from the system
  * tray icon.
  */
-public final class PopupCommand extends Command {
+public class PopupCommand extends Command {
 
     /** A command info object for this command. */
     public static final BaseCommandInfo INFO = new BaseCommandInfo("popup",
@@ -44,10 +45,12 @@ public final class PopupCommand extends Command {
 
     /**
      * Creates a new instance of PopupCommand.
+     *
      * @param newParent The plugin that this command belongs to
+     * @param commandController The controller to use for command information.
      */
-    public PopupCommand(final SystrayPlugin newParent) {
-        super();
+    public PopupCommand(final SystrayPlugin newParent, final CommandController commandController) {
+        super(commandController);
 
         this.parent = newParent;
     }
