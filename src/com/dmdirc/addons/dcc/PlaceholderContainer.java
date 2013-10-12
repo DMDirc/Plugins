@@ -37,7 +37,7 @@ import java.util.Arrays;
 public class PlaceholderContainer extends FrameContainer {
 
     /** The plugin which owns this placeholder. */
-    private final DCCPlugin plugin;
+    private final DCCManager plugin;
     /** Parent swing controller. */
     private final SwingController controller;
 
@@ -48,7 +48,7 @@ public class PlaceholderContainer extends FrameContainer {
      * @param config Config manager
      * @param controller Swing controller
      */
-    public PlaceholderContainer(final DCCPlugin plugin,
+    public PlaceholderContainer(final DCCManager plugin,
             final AggregateConfigProvider config, final SwingController controller) {
         super("dcc", "DCCs", "DCCs", config, Arrays.asList(
                 "com.dmdirc.addons.dcc.ui.PlaceholderPanel"));

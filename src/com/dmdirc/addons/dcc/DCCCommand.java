@@ -50,6 +50,7 @@ import com.dmdirc.ui.input.TabCompletionType;
 import java.io.File;
 import java.util.concurrent.Callable;
 
+import javax.inject.Inject;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
@@ -64,7 +65,7 @@ public class DCCCommand extends Command implements IntelligentCommand {
             CommandType.TYPE_SERVER);
 
     /** My Plugin. */
-    private final DCCPlugin myPlugin;
+    private final DCCManager myPlugin;
     /** Main frame instance used as the parent for dialogs. */
     private final MainFrame mainFrame;
     /** Window management. */
@@ -81,10 +82,11 @@ public class DCCCommand extends Command implements IntelligentCommand {
      * @param messageSinkManager The sink manager to use to despatch messages.
      * @param windowManager Window management
      */
+    @Inject
     public DCCCommand(
             final CommandController controller,
             final MainFrame mainFrame,
-            final DCCPlugin plugin,
+            final DCCManager plugin,
             final MessageSinkManager messageSinkManager,
             final WindowManager windowManager) {
         super(controller);
