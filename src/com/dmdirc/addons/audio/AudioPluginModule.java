@@ -22,43 +22,14 @@
 
 package com.dmdirc.addons.audio;
 
-import com.dmdirc.FrameContainer;
-import com.dmdirc.commandparser.BaseCommandInfo;
-import com.dmdirc.commandparser.CommandArguments;
-import com.dmdirc.commandparser.CommandInfo;
-import com.dmdirc.commandparser.CommandType;
-import com.dmdirc.commandparser.commands.Command;
-import com.dmdirc.commandparser.commands.context.CommandContext;
-import com.dmdirc.interfaces.CommandController;
+import com.dmdirc.ClientModule;
 
-import java.awt.Toolkit;
-
-import javax.inject.Inject;
+import dagger.Module;
 
 /**
- * The Beep Command emits a beep
+ * Dependency injection module for the audio plugin.
  */
-public class BeepCommand extends Command {
-
-    /** A command info object for this command. */
-    public static final CommandInfo INFO = new BaseCommandInfo("beep",
-            "beep - emits a beep", CommandType.TYPE_GLOBAL);
-
-    /**
-     * Creates a new instance of this command.
-     *
-     * @param controller The controller to use for command information.
-     */
-    @Inject
-    public BeepCommand(final CommandController controller) {
-        super(controller);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void execute(final FrameContainer origin,
-            final CommandArguments args, final CommandContext context) {
-        Toolkit.getDefaultToolkit().beep();
-    }
+@Module(injects = {AudioCommand.class, BeepCommand.class}, addsTo = ClientModule.class)
+public class AudioPluginModule {
 
 }
