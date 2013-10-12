@@ -33,6 +33,8 @@ import com.dmdirc.interfaces.CommandController;
 
 import java.awt.Toolkit;
 
+import javax.inject.Inject;
+
 /**
  * The Beep Command emits a beep
  */
@@ -47,6 +49,7 @@ public class BeepCommand extends Command {
      *
      * @param controller The controller to use for command information.
      */
+    @Inject
     public BeepCommand(final CommandController controller) {
         super(controller);
     }

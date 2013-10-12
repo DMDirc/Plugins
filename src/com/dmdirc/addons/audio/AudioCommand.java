@@ -33,6 +33,8 @@ import com.dmdirc.interfaces.CommandController;
 
 import java.io.File;
 
+import javax.inject.Inject;
+
 /**
  * The Audio Command allows playing of audio files.
  */
@@ -47,6 +49,7 @@ public class AudioCommand extends Command {
      *
      * @param controller The controller to use for command information.
      */
+    @Inject
     public AudioCommand(final CommandController controller) {
         super(controller);
     }
