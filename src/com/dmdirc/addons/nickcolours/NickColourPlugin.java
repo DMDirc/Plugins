@@ -76,6 +76,8 @@ public class NickColourPlugin extends BasePlugin implements ActionListener, Conf
     private final IdentityController identityController;
     /** Manager to parse colours with. */
     private final ColourManager colourManager;
+    /** The swing controller to use. */
+    private final SwingController swingController;
 
     /** {@inheritDoc} */
     @Override
@@ -264,10 +266,8 @@ public class NickColourPlugin extends BasePlugin implements ActionListener, Conf
                     /** {@inheritDoc} */
                     @Override
                     public NickColourPanel call() {
-                        return new NickColourPanel(
-                                (SwingController) pluginInfo.getMetaData().getManager()
-                                .getPluginInfoByName("ui_swing").getPlugin(),
-                                NickColourPlugin.this, colourManager);
+                        return new NickColourPanel(swingController, NickColourPlugin.this,
+                                colourManager);
                     }
                 }));
 

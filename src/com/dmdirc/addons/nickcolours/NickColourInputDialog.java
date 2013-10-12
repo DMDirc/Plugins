@@ -66,6 +66,7 @@ public class NickColourInputDialog extends StandardDialog
     /**
      * Creates a new instance of NickColourInputDialog.
      *
+     * @param swingController The controller that owns this dialog.
      * @param panel The panel that's opening this dialog
      * @param row The row of the table we're editing
      * @param nickname The nickname that's currently set
@@ -73,11 +74,12 @@ public class NickColourInputDialog extends StandardDialog
      * @param textcolour The text colour that's currently set
      * @param nickcolour The nicklist colour that's currently set
      */
-    public NickColourInputDialog(final NickColourPanel panel, final int row,
+    public NickColourInputDialog(
+            final SwingController swingController,
+            final NickColourPanel panel, final int row,
             final String nickname, final String network,
             final String textcolour, final String nickcolour) {
-        super(((SwingController) panel.getPlugin().getPluginInfo().getMetaData().getManager()
-                .getPluginInfoByName("ui_swing").getPlugin()), false);
+        super(swingController, false);
 
         this.panel = panel;
         this.row = row;
@@ -95,10 +97,13 @@ public class NickColourInputDialog extends StandardDialog
     /**
      * Creates a new instance of NickColourInputDialog.
      *
+     * @param swingController The controller that owns this dialog.
      * @param panel The panel that's opening this dialog
      */
-    public NickColourInputDialog(final NickColourPanel panel) {
-        this(panel, -1, "", "", "", "");
+    public NickColourInputDialog(
+            final SwingController swingController,
+            final NickColourPanel panel) {
+        this(swingController, panel, -1, "", "", "", "");
 
         isnew = true;
     }

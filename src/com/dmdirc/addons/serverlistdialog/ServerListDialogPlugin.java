@@ -24,7 +24,6 @@ package com.dmdirc.addons.serverlistdialog;
 
 import com.dmdirc.actions.wrappers.PerformWrapper;
 import com.dmdirc.addons.ui_swing.SwingController;
-import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.plugins.implementations.BasePlugin;
 
 import java.awt.event.ActionEvent;
@@ -46,16 +45,15 @@ public class ServerListDialogPlugin extends BasePlugin implements ActionListener
     /**
      * Creates a new server list dialog plugin.
      *
-     * @param pluginManager The plugin manager to use to find the Swing UI.
+     * @param swingController The controller that will own the dialog.
      * @param performWrapper The wrapper to use for modifying performs.
      */
     public ServerListDialogPlugin(
-            final PluginManager pluginManager,
+            final SwingController swingController,
             final PerformWrapper performWrapper) {
         this.performWrapper = performWrapper;
 
-        controller = (SwingController) pluginManager.getPluginInfoByName(
-                "ui_swing").getPlugin();
+        controller = swingController;
         final JMenuItem item = new JMenuItem("Server lists");
         item.setMnemonic('l');
         item.addActionListener(this);

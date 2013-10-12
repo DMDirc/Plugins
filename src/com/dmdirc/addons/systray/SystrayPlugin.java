@@ -23,7 +23,6 @@
 package com.dmdirc.addons.systray;
 
 import com.dmdirc.actions.CoreActionType;
-import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
@@ -32,7 +31,7 @@ import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.interfaces.ActionController;
-import com.dmdirc.interfaces.CommandController;
+import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.interfaces.config.IdentityController;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.implementations.BaseCommandPlugin;
@@ -56,13 +55,13 @@ import java.awt.event.MouseListener;
  * The Systray plugin shows DMDirc in the user's system tray, and allows
  * notifications to be disabled.
  */
-public final class SystrayPlugin extends BaseCommandPlugin implements
+public class SystrayPlugin extends BaseCommandPlugin implements
         ActionListener, MouseListener, com.dmdirc.interfaces.ActionListener {
 
     /** The tray icon we're currently using. */
     private final TrayIcon icon;
     /** Main frame instance. */
-    private MainFrame mainFrame;
+    private final MainFrame mainFrame;
     /** This plugin's plugin info. */
     private final PluginInfo pluginInfo;
     /** The action controller to use. */
@@ -73,23 +72,22 @@ public final class SystrayPlugin extends BaseCommandPlugin implements
     /**
      * Creates a new system tray plugin.
      *
+     * @param swingController The controller that owns this plugin.
      * @param pluginInfo This plugin's plugin info.
      * @param actionController The action controller to use.
      * @param identityController The identity manager to read settings from.
-     * @param commandController Command controller to register commands.
      * @param urlBuilder URL builder to use to resolve icon paths.
      */
     public SystrayPlugin(
+            final SwingController swingController,
             final PluginInfo pluginInfo,
             final ActionController actionController,
             final IdentityController identityController,
-            final CommandController commandController,
             final URLBuilder urlBuilder) {
-        super(commandController);
-
         this.pluginInfo = pluginInfo;
         this.actionController = actionController;
         this.identityController = identityController;
+        this.mainFrame = swingController.getMainFrame();
 
         final MenuItem show = new MenuItem("Show/hide");
         final MenuItem quit = new MenuItem("Quit");
@@ -171,9 +169,6 @@ public final class SystrayPlugin extends BaseCommandPlugin implements
         boolean continueLoading = true;
         try {
             SystemTray.getSystemTray().add(icon);
-            mainFrame = ((SwingController) pluginInfo.getMetaData().getManager()
-                    .getPluginInfoByName("ui_swing").getPlugin())
-                    .getMainFrame();
             actionController.registerListener(this, CoreActionType.CLIENT_MINIMISED);
         } catch (AWTException ex) {
             continueLoading = false;
