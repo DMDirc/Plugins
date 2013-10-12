@@ -53,11 +53,9 @@ public class TimePlugin extends BaseCommandPlugin {
     public TimePlugin(
             final ActionController actionController,
             final CommandController commandController) {
-        super(commandController);
-
         this.actionController = actionController;
         manager = new TimerManager(commandController);
-        registerCommand(new TimerCommand(manager), TimerCommand.INFO);
+        registerCommand(new TimerCommand(manager, commandController), TimerCommand.INFO);
     }
 
     /** {@inheritDoc} */

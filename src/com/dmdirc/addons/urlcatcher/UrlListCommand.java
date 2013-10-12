@@ -29,6 +29,7 @@ import com.dmdirc.commandparser.CommandType;
 import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.IntelligentCommand;
 import com.dmdirc.commandparser.commands.context.CommandContext;
+import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 
 import java.util.Map;
@@ -50,8 +51,10 @@ public class UrlListCommand extends Command implements IntelligentCommand {
      * catcher plugin to the active window.
      *
      * @param plugin Parent plugin
+     * @param commandController The controller to use for command information.
      */
-    public UrlListCommand(final UrlCatcherPlugin plugin) {
+    public UrlListCommand(final UrlCatcherPlugin plugin, final CommandController commandController) {
+        super(commandController);
         this.plugin = plugin;
     }
 

@@ -31,6 +31,7 @@ import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.interfaces.ActionController;
+import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.interfaces.config.IdentityController;
 import com.dmdirc.plugins.PluginInfo;
@@ -76,6 +77,7 @@ public class SystrayPlugin extends BaseCommandPlugin implements
      * @param pluginInfo This plugin's plugin info.
      * @param actionController The action controller to use.
      * @param identityController The identity manager to read settings from.
+     * @param commandController The controller to use for command information.
      * @param urlBuilder URL builder to use to resolve icon paths.
      */
     public SystrayPlugin(
@@ -83,6 +85,7 @@ public class SystrayPlugin extends BaseCommandPlugin implements
             final PluginInfo pluginInfo,
             final ActionController actionController,
             final IdentityController identityController,
+            final CommandController commandController,
             final URLBuilder urlBuilder) {
         this.pluginInfo = pluginInfo;
         this.actionController = actionController;
@@ -104,7 +107,7 @@ public class SystrayPlugin extends BaseCommandPlugin implements
                 .getImage("logo"), "DMDirc", menu);
         icon.setImageAutoSize(true);
         icon.addMouseListener(this);
-        registerCommand(new PopupCommand(this), PopupCommand.INFO);
+        registerCommand(new PopupCommand(this, commandController), PopupCommand.INFO);
     }
 
     /**

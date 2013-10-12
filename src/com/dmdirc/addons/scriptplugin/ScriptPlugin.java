@@ -26,8 +26,8 @@ import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.interfaces.ActionController;
 import com.dmdirc.interfaces.ActionListener;
 import com.dmdirc.interfaces.CommandController;
-import com.dmdirc.interfaces.config.IdentityController;
 import com.dmdirc.interfaces.actions.ActionType;
+import com.dmdirc.interfaces.config.IdentityController;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.plugins.implementations.BaseCommandPlugin;
@@ -47,7 +47,7 @@ import javax.script.ScriptEngineManager;
 /**
  * This allows javascript scripts to be used in DMDirc.
  */
-public final class ScriptPlugin extends BaseCommandPlugin implements ActionListener {
+public class ScriptPlugin extends BaseCommandPlugin implements ActionListener {
 
     /** Script Directory */
     private final String scriptDir;
@@ -79,7 +79,8 @@ public final class ScriptPlugin extends BaseCommandPlugin implements ActionListe
         // Add the JS Helper to the scriptFactory
         getScriptFactory().put("globalHelper", getJavaScriptHelper());
         getScriptFactory().put("globalVariables", getGlobalVariables());
-        registerCommand(new ScriptCommand(this, identityController), ScriptCommand.INFO);
+        registerCommand(new ScriptCommand(this, identityController, commandController),
+                ScriptCommand.INFO);
     }
 
     /** {@inheritDoc} */

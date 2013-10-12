@@ -30,6 +30,7 @@ import com.dmdirc.commandparser.CommandType;
 import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.IntelligentCommand;
 import com.dmdirc.commandparser.commands.context.CommandContext;
+import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.config.IdentityController;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 
@@ -42,13 +43,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import lombok.RequiredArgsConstructor;
-
 /**
  * The Script Command allows controlling of the script plugin.
  */
-@RequiredArgsConstructor
-public final class ScriptCommand extends Command implements IntelligentCommand {
+public class ScriptCommand extends Command implements IntelligentCommand {
 
     /** A command info object for this command. */
     public static final CommandInfo INFO = new BaseCommandInfo("script",
@@ -58,6 +56,22 @@ public final class ScriptCommand extends Command implements IntelligentCommand {
     private final ScriptPlugin myPlugin;
     /** The controller to read/write settings with. */
     private final IdentityController identityController;
+
+    /**
+     * Creates a new instance of this command.
+     *
+     * @param myPlugin The plugin that owns the command.
+     * @param identityController The controller to read and write settings from.
+     * @param commandController The controller to use for command information.
+     */
+    public ScriptCommand(
+            final ScriptPlugin myPlugin,
+            final IdentityController identityController,
+            final CommandController commandController) {
+        super(commandController);
+        this.myPlugin = myPlugin;
+        this.identityController = identityController;
+    }
 
     /** {@inheritDoc} */
     @Override

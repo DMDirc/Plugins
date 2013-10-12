@@ -55,6 +55,7 @@ public class ChannelSettings extends Command implements IntelligentCommand {
      * @param controller The controller to use to show the settings window.
      */
     public ChannelSettings(final SwingController controller) {
+        super(controller.getCommandController());
         this.controller = controller;
     }
 
