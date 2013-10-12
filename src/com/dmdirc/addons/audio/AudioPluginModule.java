@@ -22,35 +22,14 @@
 
 package com.dmdirc.addons.audio;
 
-import com.dmdirc.interfaces.CommandController;
-import com.dmdirc.plugins.PluginInfo;
-import com.dmdirc.plugins.implementations.BaseCommandPlugin;
+import com.dmdirc.ClientModule;
 
-import dagger.ObjectGraph;
+import dagger.Module;
 
 /**
- * Adds Audio playing facility to client.
+ * Dependency injection module for the audio plugin.
  */
-public class AudioPlugin extends BaseCommandPlugin {
-
-    /**
-     * Creates a new instance of this plugin.
-     *
-     * @param commandController Command controller to register commands
-     */
-    public AudioPlugin(final CommandController commandController) {
-        super(commandController);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void load(final PluginInfo pluginInfo, final ObjectGraph graph) {
-        super.load(pluginInfo, graph);
-
-        final ObjectGraph myGraph = graph.plus(new AudioPluginModule());
-        registerCommand(myGraph.get(AudioCommand.class), AudioCommand.INFO);
-        registerCommand(myGraph.get(BeepCommand.class), BeepCommand.INFO);
-        setObjectGraph(myGraph);
-    }
+@Module(injects = {AudioCommand.class, BeepCommand.class}, addsTo = ClientModule.class)
+public class AudioPluginModule {
 
 }
