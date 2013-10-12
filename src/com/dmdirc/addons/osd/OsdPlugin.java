@@ -22,6 +22,8 @@
 
 package com.dmdirc.addons.osd;
 
+import com.dmdirc.addons.ui_swing.MainFrame;
+import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.config.prefs.CategoryChangeListener;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
@@ -64,25 +66,29 @@ public class OsdPlugin extends BaseCommandPlugin implements
     private final IdentityController identityController;
     /** The manager to use to parse colours. */
     private final ColourManager colourManager;
+    /** The window that the OSDs will be associated with. */
+    private final MainFrame mainFrame;
 
     /**
      * Creates a new instance of this plugin.
      *
+     * @param swingController The controller that owns this plugin.
      * @param pluginInfo This plugin's plugin info
      * @param identityController The controller to use to read and write settings.
      * @param commandController Command controller to register commands
      * @param colourManager The manager to use to parse colours.
      */
     public OsdPlugin(
+            final SwingController swingController,
             final PluginInfo pluginInfo,
             final IdentityController identityController,
             final CommandController commandController,
             final ColourManager colourManager) {
-        super(commandController);
         this.pluginInfo = pluginInfo;
         this.identityController = identityController;
         this.colourManager = colourManager;
-        osdManager = new OsdManager(identityController, this, colourManager);
+        this.mainFrame = swingController.getMainFrame();
+        osdManager = new OsdManager(mainFrame, identityController, this, colourManager);
         registerCommand(new OsdCommand(commandController, osdManager), OsdCommand.INFO);
     }
 
@@ -161,7 +167,9 @@ public class OsdPlugin extends BaseCommandPlugin implements
     /** {@inheritDoc} */
     @Override
     public void categorySelected(final PreferencesCategory category) {
-        osdWindow = new OsdWindow(identityController, this, osdManager, colourManager, -1,
+        osdWindow = new OsdWindow(
+                mainFrame,
+                identityController, this, osdManager, colourManager, -1,
                 "Please drag this OSD to position", true, x, y);
         osdWindow.setBackgroundColour(backgroundSetting.getValue());
         osdWindow.setForegroundColour(foregroundSetting.getValue());

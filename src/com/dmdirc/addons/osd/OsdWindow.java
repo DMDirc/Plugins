@@ -22,7 +22,7 @@
 
 package com.dmdirc.addons.osd;
 
-import com.dmdirc.addons.ui_swing.SwingController;
+import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.interfaces.config.IdentityController;
 import com.dmdirc.ui.Colour;
@@ -87,6 +87,7 @@ public class OsdWindow extends JDialog implements MouseListener,
     /**
      * Creates a new instance of OsdWindow.
      *
+     * @param mainFrame The window to associate with.
      * @param identityController The controller to read/write settings with.
      * @param colourManager The manager to use to parse colours.
      * @param timeout Timeout period for the window. Set to -1 to use value from
@@ -100,12 +101,12 @@ public class OsdWindow extends JDialog implements MouseListener,
      * @param osdManager The manager that owns this OSD Window
      */
     public OsdWindow(
+            final MainFrame mainFrame,
             final IdentityController identityController, final OsdPlugin plugin,
             final OsdManager osdManager, final ColourManager colourManager,
             final int timeout, final String text, final boolean config, final int x,
             final int y) {
-        super(((SwingController) plugin.getPluginInfo().getMetaData().getManager()
-                .getPluginInfoByName("ui_swing").getPlugin()).getMainFrame(), false);
+        super(mainFrame, false);
 
         this.colourManager = colourManager;
         this.config = config;
