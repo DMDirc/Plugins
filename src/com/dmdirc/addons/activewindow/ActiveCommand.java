@@ -36,6 +36,8 @@ import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 import com.dmdirc.ui.input.TabCompleter;
 
+import javax.inject.Inject;
+
 /**
  * Executes another command as if it were executed in the active window.
  */
@@ -55,6 +57,7 @@ public class ActiveCommand extends Command implements IntelligentCommand {
      * @param controller The controller to use for command information.
      * @param mainFrame Parent MainFrame
      */
+    @Inject
     public ActiveCommand(final CommandController controller, final MainFrame mainFrame) {
         super(controller);
 
