@@ -28,6 +28,7 @@ import com.dmdirc.commandparser.parsers.CommandParser;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.messages.MessageSinkManager;
 import com.dmdirc.ui.input.TabCompleter;
+import com.dmdirc.ui.input.TabCompleterFactory;
 
 import java.util.Collection;
 
@@ -35,6 +36,9 @@ import java.util.Collection;
  * This class links DCC objects to a window.
  */
 public abstract class DCCFrameContainer extends WritableFrameContainer {
+
+    /** The factory to use to create tab completers. */
+    private final TabCompleterFactory tabCompleterFactory;
 
     /** The Window we're using. */
     private boolean windowClosing = false;
@@ -47,13 +51,17 @@ public abstract class DCCFrameContainer extends WritableFrameContainer {
      * @param configManager Config manager
      * @param parser Command parser to use for this window
      * @param messageSinkManager The sink manager to use to despatch messages.
+     * @param tabCompleterFactory The factory to use to create tab completers.
      * @param components The UI components that this frame requires
      */
-    public DCCFrameContainer(final String title, final String icon,
+    public DCCFrameContainer(
+            final String title, final String icon,
             final AggregateConfigProvider configManager, final CommandParser parser,
             final MessageSinkManager messageSinkManager,
+            final TabCompleterFactory tabCompleterFactory,
             final Collection<String> components) {
         super(icon, title, title, configManager, parser, messageSinkManager, components);
+        this.tabCompleterFactory = tabCompleterFactory;
     }
 
     /** {@inheritDoc} */
@@ -71,7 +79,7 @@ public abstract class DCCFrameContainer extends WritableFrameContainer {
     /** {@inheritDoc} */
     @Override
     public TabCompleter getTabCompleter() {
-        return new TabCompleter();
+        return tabCompleterFactory.getTabCompleter(getConfigManager());
     }
 
     /**
@@ -79,7 +87,7 @@ public abstract class DCCFrameContainer extends WritableFrameContainer {
      *
      * @return True if windowClosing has been called.
      */
-    public final boolean isWindowClosing() {
+    public boolean isWindowClosing() {
         return windowClosing;
     }
 

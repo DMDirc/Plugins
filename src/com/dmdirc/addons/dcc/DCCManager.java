@@ -51,6 +51,7 @@ import com.dmdirc.parser.interfaces.ClientInfo;
 import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.ui.WindowManager;
+import com.dmdirc.ui.input.TabCompleterFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -88,6 +89,8 @@ public class DCCManager implements ActionListener {
     private final WindowManager windowManager;
     /** The command controller to use. */
     private final CommandController commandController;
+    /** The factory to use for tab completers. */
+    private final TabCompleterFactory tabCompleterFactory;
     /** The configuration domain to use. */
     @Getter
     private final String domain;
@@ -101,6 +104,7 @@ public class DCCManager implements ActionListener {
      * @param commandController Command controller to register commands
      * @param messageSinkManager The sink manager to use to despatch messages.
      * @param windowManager Window Management
+     * @param tabCompleterFactory The factory to use for tab completers.
      */
     @Inject
     public DCCManager(
@@ -109,12 +113,14 @@ public class DCCManager implements ActionListener {
             final IdentityController identityController,
             final CommandController commandController,
             final MessageSinkManager messageSinkManager,
-            final WindowManager windowManager) {
+            final WindowManager windowManager,
+            final TabCompleterFactory tabCompleterFactory) {
         this.identityController = identityController;
         this.controller = controller;
         this.messageSinkManager = messageSinkManager;
         this.windowManager = windowManager;
         this.commandController = commandController;
+        this.tabCompleterFactory = tabCompleterFactory;
         this.domain = pluginInfo.getDomain();
         config = controller.getGlobalConfig();
         this.pluginInfo = pluginInfo;
@@ -409,7 +415,8 @@ public class DCCManager implements ActionListener {
             final String myNickname = ((Server) arguments[0]).getParser()
                     .getLocalClient().getNickname();
             final DCCFrameContainer f = new ChatContainer(chat, config, commandController,
-                    "Chat: " + nickname, myNickname, nickname, messageSinkManager);
+                    "Chat: " + nickname, myNickname, nickname, tabCompleterFactory,
+                    messageSinkManager);
             windowManager.addWindow(getContainer(), f);
             f.addLine("DCCChatStarting", nickname, chat.getHost(),
                     chat.getPort());
