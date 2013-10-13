@@ -24,7 +24,6 @@ package com.dmdirc.addons.ui_swing;
 
 import com.dmdirc.Channel;
 import com.dmdirc.CorePluginExtractor;
-import com.dmdirc.FrameContainer;
 import com.dmdirc.Server;
 import com.dmdirc.ServerManager;
 import com.dmdirc.actions.ActionFactory;
@@ -42,7 +41,6 @@ import com.dmdirc.addons.ui_swing.components.statusbar.SwingStatusBar;
 import com.dmdirc.addons.ui_swing.dialogs.DialogKeyListener;
 import com.dmdirc.addons.ui_swing.dialogs.DialogManager;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
-import com.dmdirc.addons.ui_swing.dialogs.StandardMessageDialog;
 import com.dmdirc.addons.ui_swing.dialogs.channelsetting.ChannelSettingsDialog;
 import com.dmdirc.addons.ui_swing.dialogs.error.ErrorListDialog;
 import com.dmdirc.addons.ui_swing.dialogs.prefs.SwingPreferencesDialog;
@@ -79,7 +77,6 @@ import com.dmdirc.util.URLBuilder;
 import com.dmdirc.util.validators.NumericalValidator;
 import com.dmdirc.util.validators.OptionalValidator;
 
-import java.awt.Dialog.ModalityType;
 import java.awt.Font;
 import java.awt.GraphicsEnvironment;
 import java.awt.KeyboardFocusManager;
@@ -486,20 +483,6 @@ public class SwingController extends BaseCommandPlugin implements UIController {
         });
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void showMessageDialog(final String title, final String message) {
-        UIUtilities.invokeLater(new Runnable() {
-
-            /** {@inheritDoc} */
-            @Override
-            public void run() {
-                new StandardMessageDialog(SwingController.this, getMainFrame(),
-                        ModalityType.MODELESS, title, message).display();
-            }
-        });
-    }
-
     /**
      * Shows the error dialog.
      */
@@ -894,12 +877,6 @@ public class SwingController extends BaseCommandPlugin implements UIController {
         if (window instanceof TextFrame) {
             getMainFrame().setActiveFrame((TextFrame) window);
         }
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void requestWindowFocus(final FrameContainer container) {
-        requestWindowFocus(getWindowFactory().getSwingWindow(container));
     }
 
     /**

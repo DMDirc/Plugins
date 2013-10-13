@@ -23,7 +23,6 @@
 package com.dmdirc.addons.ui_web;
 
 import com.dmdirc.Channel;
-import com.dmdirc.FrameContainer;
 import com.dmdirc.Server;
 import com.dmdirc.ServerManager;
 import com.dmdirc.addons.ui_web.uicomponents.WebStatusBar;
@@ -168,19 +167,7 @@ public class WebInterfaceUI implements UIController {
 
     /** {@inheritDoc} */
     @Override
-    public void showMessageDialog(final String title, final String message) {
-        // Do nothing
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public void requestWindowFocus(final Window window) {
-        // TODO: Tell clients to focus
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void requestWindowFocus(final FrameContainer container) {
         // TODO: Tell clients to focus
     }
 
