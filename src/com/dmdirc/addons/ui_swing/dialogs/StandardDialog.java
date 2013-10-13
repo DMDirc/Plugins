@@ -62,8 +62,6 @@ public class StandardDialog extends JDialog {
     /** Parent window. */
     private Window owner;
 
-
-
     /**
      * Creates a new instance of StandardDialog.
      *
