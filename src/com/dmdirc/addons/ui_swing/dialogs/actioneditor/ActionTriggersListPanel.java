@@ -77,7 +77,7 @@ public class ActionTriggersListPanel extends JPanel {
         super();
 
         this.iconManager = iconManager;
-        this.triggers = new ArrayList<ActionType>(triggers);
+        this.triggers = new ArrayList<>(triggers);
 
         initComponents();
         layoutComponents();
@@ -101,7 +101,7 @@ public class ActionTriggersListPanel extends JPanel {
             removeAll();
 
             for (final ActionType trigger : triggers) {
-                final ImageButton<?> button = new ImageButton<Object>(
+                final ImageButton<?> button = new ImageButton<>(
                         "delete", iconManager.getIcon("close-inactive"),
                         iconManager.getIcon("close-active"));
                 button.addActionListener(new ActionListener() {

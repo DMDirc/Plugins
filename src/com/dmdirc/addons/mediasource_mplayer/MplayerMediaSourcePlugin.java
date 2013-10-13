@@ -102,7 +102,7 @@ public class MplayerMediaSourcePlugin extends BasePlugin implements MediaSource 
      * @return Information about the currently playing track
      */
     public static List<String> getInfo() {
-        final ArrayList<String> result = new ArrayList<String>();
+        final ArrayList<String> result = new ArrayList<>();
 
         InputStreamReader reader;
         BufferedReader input;

@@ -181,7 +181,7 @@ public final class IgnoreListPanel extends JPanel implements ActionListener,
             new StandardInputDialog(controller, parentWindow,
                     ModalityType.MODELESS, "New ignore list entry",
                     "Please enter the new ignore list entry",
-                    viewToggle.isSelected() ? new ValidatorChain<String>(
+                    viewToggle.isSelected() ? new ValidatorChain<>(
                     new NotEmptyValidator(), new RegexValidator())
                     : new NotEmptyValidator()) {
 

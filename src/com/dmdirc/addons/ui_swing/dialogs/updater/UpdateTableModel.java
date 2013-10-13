@@ -51,11 +51,11 @@ public class UpdateTableModel extends AbstractTableModel implements UpdateStatus
     /** The update manager to use. */
     private final CachingUpdateManager updateManager;
     /** Data list. */
-    private final List<UpdateComponent> updates = new ArrayList<UpdateComponent>();
+    private final List<UpdateComponent> updates = new ArrayList<>();
     /** Enabled list. */
-    private final List<UpdateComponent> enabled = new ArrayList<UpdateComponent>();
+    private final List<UpdateComponent> enabled = new ArrayList<>();
     /** Cached progress for each component. */
-    private final Map<UpdateComponent, Double> progress = new HashMap<UpdateComponent, Double>();
+    private final Map<UpdateComponent, Double> progress = new HashMap<>();
     /** Number formatter. */
     private NumberFormat formatter;
 

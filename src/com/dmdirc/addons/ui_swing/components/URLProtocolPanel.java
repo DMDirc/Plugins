@@ -211,17 +211,21 @@ public class URLProtocolPanel extends JPanel implements ActionListener,
             final String option =
                     controller.getGlobalConfig().getOption("protocol",
                             uri.getScheme());
-
-            if ("DMDIRC".equals(option)) {
-                optionType.setSelected(dmdirc.getModel(), true);
-            } else if ("BROWSER".equals(option)) {
-                optionType.setSelected(browser.getModel(), true);
-            } else if ("MAIL".equals(option)) {
-                optionType.setSelected(mail.getModel(), true);
-            } else {
-                optionType.setSelected(custom.getModel(), true);
-                commandPath.setText(option);
-                actionPerformed(null);
+            switch (option) {
+                case "DMDIRC":
+                    optionType.setSelected(dmdirc.getModel(), true);
+                    break;
+                case "BROWSER":
+                    optionType.setSelected(browser.getModel(), true);
+                    break;
+                case "MAIL":
+                    optionType.setSelected(mail.getModel(), true);
+                    break;
+                default:
+                    optionType.setSelected(custom.getModel(), true);
+                    commandPath.setText(option);
+                    actionPerformed(null);
+                    break;
             }
         } else {
             optionType.clearSelection();

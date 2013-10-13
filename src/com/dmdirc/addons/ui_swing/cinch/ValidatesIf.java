@@ -77,7 +77,7 @@ public @interface ValidatesIf {
                 final String to = action.to();
                 try {
                     bindings.addAll(wire(to, field, context));
-                } catch (final Exception e) {
+                } catch (IntrospectionException | NoSuchMethodException e) {
                     throw new BindingException("could not wire up @ValidatesIf on " + field.getName(), e);
                 }
             }
@@ -124,7 +124,7 @@ public @interface ValidatesIf {
                     try {
                         ValidationResponse validation = (ValidationResponse) getter.getMethod().invoke(getter.getObject());
                         callMethod.invoke(setValidationObject, validation);
-                    } catch (final Exception e) {
+                    } catch (ReflectiveOperationException e) {
                         Throwables.throwUncheckedException(e);
                     }
                 }

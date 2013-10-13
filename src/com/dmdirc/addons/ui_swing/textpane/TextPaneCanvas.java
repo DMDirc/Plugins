@@ -111,8 +111,8 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
         startLine = 0;
         setDoubleBuffered(true);
         setOpaque(true);
-        textLayouts = new HashMap<TextLayout, LineInfo>();
-        positions = new HashMap<Rectangle, TextLayout>();
+        textLayouts = new HashMap<>();
+        positions = new HashMap<>();
         selection = new LinePosition(-1, -1, -1, -1);
         addMouseListener(this);
         addMouseMotionListener(this);

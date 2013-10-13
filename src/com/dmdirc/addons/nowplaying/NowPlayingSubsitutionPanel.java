@@ -67,7 +67,7 @@ public class NowPlayingSubsitutionPanel extends SubstitutionsPanel<List<String>>
             /** {@inheritDoc} */
             @Override
             public void run() {
-                substitutions = new ArrayList<SubstitutionLabel>();
+                substitutions = new ArrayList<>();
 
                 if (type != null) {
                     for (String sub : type) {

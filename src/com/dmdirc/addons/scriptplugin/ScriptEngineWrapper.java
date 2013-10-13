@@ -132,7 +132,7 @@ public class ScriptEngineWrapper {
             // There is no "methodExists" function, so we catch NoSuchMethodException
             // and do nothing rather that add an erropr every time a method is called
             // that doesn't exist (such as the action_* methods)
-        } catch (Exception e) {
+        } catch (ScriptException e) {
             Logger.userError(ErrorLevel.LOW, "Error calling '"+functionName+"' in '"+file.getPath()+"': "+e.getMessage(), e);
         }
     }
@@ -151,7 +151,7 @@ public class ScriptEngineWrapper {
             engine = createEngine();
             // Tell it that it has been rehashed
             callFunction("onRehashSucess");
-        } catch (Exception e) {
+        } catch (FileNotFoundException | ScriptException e) {
             Logger.userError(ErrorLevel.LOW, "Reloading '"+file.getPath()+"' failed: "+e.getMessage(), e);
             // Tell it that its rehash failed
             callFunction("onRehashFailed", e);

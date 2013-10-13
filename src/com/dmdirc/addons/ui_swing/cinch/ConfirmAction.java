@@ -103,7 +103,7 @@ public @interface ConfirmAction {
                         ConfirmAction.class);
                 try {
                     wire(action.call(), action.message(), field, context);
-                } catch (Exception e) {
+                } catch (ReflectiveOperationException e) {
                     throw new BindingException("could not wire up "
                             + "@ConfirmAction on " + field.getName(), e);
                 }
@@ -159,7 +159,7 @@ public @interface ConfirmAction {
                             } catch (InvocationTargetException itex) {
                                 LOGGER.error("exception during action firing",
                                         itex.getCause());
-                            } catch (Exception ex) {
+                            } catch (ReflectiveOperationException ex) {
                                 LOGGER.error("exception during action firing", ex);
                             }
                             return true;

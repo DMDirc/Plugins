@@ -63,9 +63,9 @@ public abstract class ModesPane extends JPanel {
         setLayout(new MigLayout("fill, wmax 100%, wrap 1"));
         booleanModesPanel = new JPanel(new MigLayout("wrap 2"));
         paramModesPanel = new JPanel(new MigLayout("wrap 2"));
-        modes = new TreeSet<String>(new ModesComparator());
-        modeCheckBoxes = new HashMap<String, JCheckBox>();
-        modeInputs = new HashMap<String, ParamModePanel>();
+        modes = new TreeSet<>(new ModesComparator());
+        modeCheckBoxes = new HashMap<>();
+        modeInputs = new HashMap<>();
         this.setOpaque(UIUtilities.getTabbedPaneOpaque());
     }
 

@@ -56,8 +56,7 @@ public class MSNParser extends BaseParser {
     /** MSN Connection. */
     private MsnMessenger msn;
     /** A cache of known clients. */
-    private final Map<String, MSNClientInfo> clients
-            = new HashMap<String, MSNClientInfo>();
+    private final Map<String, MSNClientInfo> clients = new HashMap<>();
     /** Whether or not to use a channel for contact lists. */
     private final boolean useFakeChannel;
     /** The fake channel to use is useFakeChannel is enabled. */
@@ -130,10 +129,8 @@ public class MSNParser extends BaseParser {
     /** {@inheritDoc} */
     @Override
     public LocalClientInfo getLocalClient() {
-        final String[] parts = parseHostmask(msn.getOwner().getEmail()
-                .getEmailAddress());
-        return new MSNLocalClientInfo(msn.getOwner(), this, parts[0], parts[2],
-                parts[1]);
+        final String[] parts = parseHostmask(msn.getOwner().getEmail().getEmailAddress());
+        return new MSNLocalClientInfo(msn.getOwner(), this, parts[0], parts[2], parts[1]);
     }
 
     /** {@inheritDoc} */
@@ -163,8 +160,7 @@ public class MSNParser extends BaseParser {
 
     /** {@inheritDoc} */
     @Override
-    public void sendRawMessage(final String message,
-            final QueuePriority priority) {
+    public void sendRawMessage(final String message, final QueuePriority priority) {
         //Ignore
     }
 
@@ -188,8 +184,7 @@ public class MSNParser extends BaseParser {
 
     /** {@inheritDoc} */
     @Override
-    public Collection<? extends ChannelJoinRequest> extractChannels(
-            final URI uri) {
+    public Collection<? extends ChannelJoinRequest> extractChannels(final URI uri) {
         return Collections.<ChannelJoinRequest>emptyList();
     }
 
@@ -291,15 +286,13 @@ public class MSNParser extends BaseParser {
 
     /** {@inheritDoc} */
     @Override
-    public void sendCTCP(final String target, final String type,
-            final String message) {
+    public void sendCTCP(final String target, final String type, final String message) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     /** {@inheritDoc} */
     @Override
-    public void sendCTCPReply(final String target, final String type,
-            final String message) {
+    public void sendCTCPReply(final String target, final String type, final String message) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -361,8 +354,7 @@ public class MSNParser extends BaseParser {
             removeMSNParser();
         }
         final String[] userInfoParts = getURI().getUserInfo().split(":", 2);
-        msn = MsnMessengerFactory.createMsnMessenger(
-                userInfoParts[0], userInfoParts[1]);
+        msn = MsnMessengerFactory.createMsnMessenger(userInfoParts[0], userInfoParts[1]);
         listener = new MSNListener(this);
         msn.addListener(listener);
     }
@@ -383,8 +375,7 @@ public class MSNParser extends BaseParser {
      * @param channel Channel to update
      * @param clients Clients to use in the channel
      */
-    public void updateClients(final ChannelInfo channel,
-            final Collection<ClientInfo> clients) {
+    public void updateClients(final ChannelInfo channel, final Collection<ClientInfo> clients) {
         if (channel == fakeChannel) {
             fakeChannel.replaceContacts(clients);
         }
@@ -396,8 +387,7 @@ public class MSNParser extends BaseParser {
      * @param channel Channel to update
      * @param clients Clients to add in the channel
      */
-    public void addClients(final ChannelInfo channel,
-            final Collection<ClientInfo> clients) {
+    public void addClients(final ChannelInfo channel, final Collection<ClientInfo> clients) {
         if (channel == fakeChannel) {
             fakeChannel.addContacts(clients);
         }
@@ -409,8 +399,7 @@ public class MSNParser extends BaseParser {
      * @param channel Channel to update
      * @param clients Clients to add in the channel
      */
-    public void removeClients(final ChannelInfo channel,
-            final Collection<ClientInfo> clients) {
+    public void removeClients(final ChannelInfo channel, final Collection<ClientInfo> clients) {
         if (channel == fakeChannel) {
             fakeChannel.removeContacts(clients);
         }
@@ -452,8 +441,7 @@ public class MSNParser extends BaseParser {
     public void addClient(final MsnContact contact) {
         final String email = contact.getEmail().getEmailAddress();
         final String[] parts = parseHostmask(email);
-        clients.put(email, new MSNClientInfo(contact, this, parts[0], parts[1],
-                parts[2]));
+        clients.put(email, new MSNClientInfo(contact, this, parts[0], parts[1], parts[2]));
     }
 
     /**

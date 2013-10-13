@@ -43,7 +43,7 @@ public class ProfileNameValidatorTest {
         when(other.getName()).thenReturn("other");
         final Profile selected = mock(Profile.class);
         when(selected.getName()).thenReturn("selected");
-        final List<Profile> profiles = new ArrayList<Profile>();
+        final List<Profile> profiles = new ArrayList<>();
         profiles.add(selected);
         profiles.add(other);
         ProfileNameValidator instance = new ProfileNameValidator(profiles, selected);
@@ -59,7 +59,7 @@ public class ProfileNameValidatorTest {
         when(other.getName()).thenReturn("other");
         final Profile selected = mock(Profile.class);
         when(selected.getName()).thenReturn("selected");
-        final List<Profile> profiles = new ArrayList<Profile>();
+        final List<Profile> profiles = new ArrayList<>();
         profiles.add(selected);
         profiles.add(other);
         ProfileNameValidator instance = new ProfileNameValidator(profiles, selected);
@@ -75,7 +75,7 @@ public class ProfileNameValidatorTest {
         when(other.getName()).thenReturn("other");
         final Profile selected = mock(Profile.class);
         when(selected.getName()).thenReturn("selected");
-        final List<Profile> profiles = new ArrayList<Profile>();
+        final List<Profile> profiles = new ArrayList<>();
         profiles.add(selected);
         profiles.add(other);
         ProfileNameValidator instance = new ProfileNameValidator(profiles, selected);

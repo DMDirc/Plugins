@@ -101,7 +101,7 @@ public final class ActionGroupSettingsPanel extends JPanel implements ActionList
      * Initialises the components.
      */
     private void initComponents() {
-        settingMap = new HashMap<JButton, PreferencesSetting>();
+        settingMap = new HashMap<>();
     }
 
     /**
@@ -147,7 +147,7 @@ public final class ActionGroupSettingsPanel extends JPanel implements ActionList
      */
     public void setActionGroup(final ActionGroup group) {
         if (group == null || group.getSettings().isEmpty()) {
-            this.settings = new ArrayList<PreferencesSetting>();
+            this.settings = new ArrayList<>();
         } else {
             this.settings = group.getSettings().values();
         }
