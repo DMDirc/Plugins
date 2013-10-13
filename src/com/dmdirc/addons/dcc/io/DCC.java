@@ -124,9 +124,7 @@ public abstract class DCC implements Runnable {
                 serverSocket = new ServerSocket(i, 1);
                 // Found a socket we can use!
                 break;
-            } catch (IOException ioe) {
-                // Try next socket.
-            } catch (SecurityException se) {
+            } catch (    IOException | SecurityException ioe) {
                 // Try next socket.
             } finally {
                 serverSocketSem.release();

@@ -43,7 +43,7 @@ public class FixedXmppConnection extends XMPPConnection
 
     /** A set of listeners that were registered with the XMPP Parser. */
     private final Set<ConnectionCreationListener> oldListeners
-            = new HashSet<ConnectionCreationListener>();
+            = new HashSet<>();
 
     /**
      * Creates a new fixed XMPP connection with the specified config.
@@ -109,10 +109,10 @@ public class FixedXmppConnection extends XMPPConnection
             final Field field = XMPPConnection.class.getDeclaredField("connectionEstablishedListeners");
             field.setAccessible(true);
             return (Set<ConnectionCreationListener>) field.get(null);
-        } catch (Exception ex) {
+        } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException ex) {
             // Throws a bunch of exceptions... Try to carry on anyway, the
             // horrible concurrency bugs might not bite.
-            return new HashSet<ConnectionCreationListener>();
+            return new HashSet<>();
         }
     }
 

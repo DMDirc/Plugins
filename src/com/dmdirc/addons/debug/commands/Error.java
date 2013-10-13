@@ -93,16 +93,22 @@ public class Error extends DebugCommand implements IntelligentCommand {
     private ErrorLevel getLevel(final String... args) {
         if (args.length >= 2) {
             final String level = args[1];
-            if ("low".equals(level)) {
-                el = ErrorLevel.LOW;
-            } else if ("medium".equals(level)) {
-                el = ErrorLevel.MEDIUM;
-            } else if ("fatal".equals(level)) {
-                el = ErrorLevel.FATAL;
-            } else if ("unknown".equals(level)) {
-                el = ErrorLevel.UNKNOWN;
-            } else {
-                el = ErrorLevel.HIGH;
+            switch (level) {
+                case "low":
+                    el = ErrorLevel.LOW;
+                    break;
+                case "medium":
+                    el = ErrorLevel.MEDIUM;
+                    break;
+                case "fatal":
+                    el = ErrorLevel.FATAL;
+                    break;
+                case "unknown":
+                    el = ErrorLevel.UNKNOWN;
+                    break;
+                default:
+                    el = ErrorLevel.HIGH;
+                    break;
             }
         } else {
             el = ErrorLevel.HIGH;

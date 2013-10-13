@@ -43,7 +43,7 @@ import java.util.List;
 public class DCCTransfer extends DCC {
 
     /** List of active sends. */
-    private static final List<DCCTransfer> TRANSFERS = new ArrayList<DCCTransfer>();
+    private static final List<DCCTransfer> TRANSFERS = new ArrayList<>();
 
     /** File Transfer Types. */
     public enum TransferType {
@@ -133,7 +133,7 @@ public class DCCTransfer extends DCC {
      */
     public static List<DCCTransfer> getTransfers() {
         synchronized (TRANSFERS) {
-            return new ArrayList<DCCTransfer>(TRANSFERS);
+            return new ArrayList<>(TRANSFERS);
         }
     }
 
@@ -158,9 +158,7 @@ public class DCCTransfer extends DCC {
             try {
                 fileIn = new DataInputStream(new FileInputStream(
                         transferFile.getAbsolutePath()));
-            } catch (FileNotFoundException e) {
-                fileIn = null;
-            } catch (SecurityException e) {
+            } catch (    FileNotFoundException | SecurityException e) {
                 fileIn = null;
             }
         }

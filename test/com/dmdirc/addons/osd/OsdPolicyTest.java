@@ -34,7 +34,7 @@ public class OsdPolicyTest {
 
     @Before
     public void setup() {
-        final ArrayList<OsdWindow> windows = new ArrayList<OsdWindow>();
+        final ArrayList<OsdWindow> windows = new ArrayList<>();
 
         OsdWindow window = mock(OsdWindow.class);
         when(window.getY()).thenReturn(75);

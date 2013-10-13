@@ -93,7 +93,7 @@ public class SendWorker extends LoggingSwingWorker<Object, Void> {
     @Override
     protected Object doInBackground() {
         final Map<String, String> postData =
-                new HashMap<String, String>();
+                new HashMap<>();
 
         if (!name.isEmpty()) {
             postData.put("name", name);

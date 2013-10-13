@@ -36,6 +36,7 @@ import com.dmdirc.util.validators.ValidationResponse;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
@@ -43,6 +44,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
 
 /**
  * This allows javascript scripts to be used in DMDirc.
@@ -235,7 +237,7 @@ public class ScriptPlugin extends BaseCommandPlugin implements ActionListener {
             try {
                 final ScriptEngineWrapper wrapper = new ScriptEngineWrapper(this, scriptFilename);
                 scripts.put(scriptFilename, wrapper);
-            } catch (Exception e) {
+            } catch (FileNotFoundException | ScriptException e) {
                 Logger.userError(ErrorLevel.LOW, "Error loading '"+scriptFilename+"': "+e.getMessage(), e);
                 return false;
             }

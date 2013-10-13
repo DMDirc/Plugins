@@ -129,17 +129,17 @@ public class RelayChannelPanel extends JPanel implements ActionListener,
     @Override
     public void actionPerformed(final ActionEvent e) {
         final DefaultTableModel model = ((DefaultTableModel) table.getModel());
-
-        if (e.getActionCommand().equals("Add")) {
-            addRow("#changeme", "changeme");
-        } else if (e.getActionCommand().equals("Delete")) {
-            final int row = table.getSelectedRow();
-            if (table.isEditing()) {
-                table.getCellEditor().stopCellEditing();
-            }
-            if (row > -1) {
+        switch (e.getActionCommand()) {
+            case "Add":
+                addRow("#changeme", "changeme");
+                break;
+            case "Delete":
+                final int row = table.getSelectedRow();
+                if (table.isEditing()) {
+                    table.getCellEditor().stopCellEditing();
+                }   if (row > -1) {
                 model.removeRow(row);
-            }
+            }   break;
         }
     }
 
@@ -169,7 +169,7 @@ public class RelayChannelPanel extends JPanel implements ActionListener,
      * @return This panel's current data.
      */
     public List<String[]> getData() {
-        final List<String[]> res = new ArrayList<String[]>();
+        final List<String[]> res = new ArrayList<>();
         final DefaultTableModel model = ((DefaultTableModel) table.getModel());
 
         for (int i = 0; i < model.getRowCount(); i++) {

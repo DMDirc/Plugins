@@ -69,9 +69,9 @@ public class ErrorPopup extends StatusbarPopupWindow {
         final List<ProgramError> errors = ErrorManager.getErrorManager()
                 .getErrors();
         final MapList<ErrorLevel, ProgramError> buckets
-                = new MapList<ErrorLevel, ProgramError>();
+                = new MapList<>();
         final MapList<ErrorReportStatus, ProgramError> statuses
-                = new MapList<ErrorReportStatus, ProgramError>();
+                = new MapList<>();
 
         for (final ProgramError error : errors) {
             buckets.add(error.getLevel(), error);

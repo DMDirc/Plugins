@@ -108,7 +108,7 @@ public class ActionNamePanel extends JPanel implements PropertyChangeListener {
         } else {
             this.existingName = newName;
         }
-        name.setValidator(new ValidatorChain<String>(new FileNameValidator(),
+        name.setValidator(new ValidatorChain<>(new FileNameValidator(),
                 new ActionNameValidator(group, existingName)));
         this.name.setText(newName);
     }
@@ -123,7 +123,7 @@ public class ActionNamePanel extends JPanel implements PropertyChangeListener {
     private void initComponents() {
         name = new ValidatingJTextField(iconManager,
                 new JTextField(existingName),
-                new ValidatorChain<String>(new FileNameValidator(),
+                new ValidatorChain<>(new FileNameValidator(),
                 new ActionNameValidator(group, existingName)));
     }
 

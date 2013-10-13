@@ -54,7 +54,7 @@ public final class DNSPlugin extends BaseCommandPlugin {
      * @return Resolved IP(s)
      */
     public static String getIPs(final String hostname) {
-        List<String> results = new ArrayList<String>();
+        List<String> results = new ArrayList<>();
 
         try {
             final InetAddress[] ips = InetAddress.getAllByName(hostname);
@@ -64,7 +64,7 @@ public final class DNSPlugin extends BaseCommandPlugin {
             }
 
         } catch (UnknownHostException ex) {
-            results = new ArrayList<String>();
+            results = new ArrayList<>();
         }
 
         return results.toString();

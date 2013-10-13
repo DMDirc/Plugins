@@ -163,12 +163,15 @@ public class Tree extends JTree implements MouseMotionListener,
     /** {@inheritDoc} */
     @Override
     public void configChanged(final String domain, final String key) {
-        if ("dragSelection".equals(key)) {
-            dragSelect = config.getOptionBool("treeview", "dragSelection");
-        } else if ("showtreeexpands".equals(key)) {
-            config.getOptionBool(controller.getDomain(), "showtreeexpands");
-            setShowsRootHandles(showHandles);
-            putClientProperty("showHandles", showHandles);
+        switch (key) {
+            case "dragSelection":
+                dragSelect = config.getOptionBool("treeview", "dragSelection");
+                break;
+            case "showtreeexpands":
+                config.getOptionBool(controller.getDomain(), "showtreeexpands");
+                setShowsRootHandles(showHandles);
+                putClientProperty("showHandles", showHandles);
+                break;
         }
     }
 
@@ -322,24 +325,27 @@ public class Tree extends JTree implements MouseMotionListener,
         final TreeViewNode node = ((TreeViewNodeMenuItem) e.getSource()).
                 getTreeNode();
         int index = getModel().getIndexOfChild(node.getParent(), node);
-        if ("Up".equals(e.getActionCommand())) {
-            if (index == 0) {
-                index = node.getSiblingCount() - 1;
-            } else {
-                index--;
-            }
-        } else if ("Down".equals(e.getActionCommand())) {
-            if (index == (node.getSiblingCount() - 1)) {
-                index = 0;
-            } else {
-                index++;
-            }
-        } else if ("popout".equals(e.getActionCommand())) {
-            controller.getWindowFactory().getSwingWindow(node.getWindow())
-                    .setPopout(true);
-        } else if ("popin".equals(e.getActionCommand())) {
-            controller.getWindowFactory().getSwingWindow(node.getWindow())
-                    .setPopout(false);
+        switch (e.getActionCommand()) {
+            case "Up":
+                if (index == 0) {
+                    index = node.getSiblingCount() - 1;
+                } else {
+                    index--;
+                }   break;
+            case "Down":
+                if (index == (node.getSiblingCount() - 1)) {
+                    index = 0;
+                } else {
+                    index++;
+                }   break;
+            case "popout":
+                controller.getWindowFactory().getSwingWindow(node.getWindow())
+                        .setPopout(true);
+                break;
+            case "popin":
+                controller.getWindowFactory().getSwingWindow(node.getWindow())
+                        .setPopout(false);
+                break;
         }
         final TreeViewNode parentNode = (TreeViewNode) node.getParent();
         final TreePath nodePath = new TreePath(node.getPath());

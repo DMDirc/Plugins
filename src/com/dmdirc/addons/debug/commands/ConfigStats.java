@@ -173,7 +173,7 @@ public class ConfigStats extends DebugCommand {
      */
     private static SortedSet<Entry<String, Integer>> getSortedStats() {
         final SortedSet<Entry<String, Integer>> sortedStats =
-                new TreeSet<Entry<String, Integer>>(new ValueComparator());
+                new TreeSet<>(new ValueComparator());
         sortedStats.addAll(ConfigManager.getStats().entrySet());
         return sortedStats;
     }

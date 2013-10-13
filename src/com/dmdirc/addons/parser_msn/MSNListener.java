@@ -88,7 +88,7 @@ public class MSNListener extends MsnAdapter {
     public void contactListSyncCompleted(final MsnMessenger mm) {
         final Collection<MsnContact> contacts = Arrays.asList(
                 mm.getContactList().getContacts());
-        final List<ClientInfo> clients = new ArrayList<ClientInfo>();
+        final List<ClientInfo> clients = new ArrayList<>();
         for (MsnContact contact : contacts) {
             parser.addClient(contact);
             clients.add(parser.getClient(contact));

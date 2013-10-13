@@ -55,7 +55,7 @@ public class ComponentCreator {
             final FrameContainer owner) {
         final SimpleInjector injector = new SimpleInjector();
         final Set<String> names = owner.getComponents();
-        final Set<JComponent> components = new HashSet<JComponent>();
+        final Set<JComponent> components = new HashSet<>();
 
         injector.addParameter(frame);
         injector.addParameter(owner);
@@ -75,11 +75,7 @@ public class ComponentCreator {
                     clazz = Class.forName(string);
                 }
                 object = injector.createInstance(clazz);
-            } catch(ClassNotFoundException ex) {
-                object = null;
-                Logger.userError(ErrorLevel.HIGH, "Unable to create component: "
-                        + ex.getMessage());
-            } catch (IllegalArgumentException ex) {
+            } catch(     ClassNotFoundException | IllegalArgumentException ex) {
                 object = null;
                 Logger.userError(ErrorLevel.HIGH, "Unable to create component: "
                         + ex.getMessage());

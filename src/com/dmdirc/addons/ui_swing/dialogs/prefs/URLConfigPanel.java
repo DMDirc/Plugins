@@ -135,7 +135,7 @@ public class URLConfigPanel extends JPanel implements
         table.setRowSelectionAllowed(true);
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         table.getRowSorter().toggleSortOrder(0);
-        details = new HashMap<URI, URLProtocolPanel>();
+        details = new HashMap<>();
         empty = new URLProtocolPanel(controller, null, true);
         activeComponent = empty;
         add = new JButton("Add");

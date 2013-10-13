@@ -35,13 +35,17 @@ import com.dmdirc.interfaces.config.IdentityController;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
+import javax.script.ScriptException;
 
 /**
  * The Script Command allows controlling of the script plugin.
@@ -116,7 +120,7 @@ public class ScriptCommand extends Command implements IntelligentCommand {
                     wrapper.getScriptEngine().put("cmd_isSilent", args.isSilent());
                     wrapper.getScriptEngine().put("cmd_args", sargs);
                     sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Result: "+wrapper.getScriptEngine().eval(script));
-                } catch (Exception e) {
+                } catch (FileNotFoundException | ScriptException e) {
                     sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Exception: "+e+" -> "+e.getMessage());
 
                     if (identityController.getGlobalConfiguration().getOptionBool(myPlugin.getDomain(), "eval.showStackTrace")) {
@@ -131,7 +135,7 @@ public class ScriptCommand extends Command implements IntelligentCommand {
                                     sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Stack trace: "+line);
                                 }
                             }
-                        } catch (Exception ex) {
+                        } catch (ClassNotFoundException | NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
                             sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Stack trace: Exception showing stack trace: "+ex+" -> "+ex.getMessage());
                         }
                     }
@@ -149,19 +153,19 @@ public class ScriptCommand extends Command implements IntelligentCommand {
                 if (identityController.getGlobalConfiguration().hasOptionString(myPlugin.getDomain(), "eval.baseFile")) {
                     try {
                         final String baseFile = myPlugin.getScriptDir()+'/'+identityController.getGlobalConfiguration().getOption(myPlugin.getDomain(), "eval.baseFile");
-                        final FileWriter writer = new FileWriter(baseFile, true);
-                        writer.write("function ");
-                        writer.write(functionName);
-                        writer.write("(");
-                        for (int i = 1; i < bits.length; i++) {
-                            writer.write(bits[i]);
-                            writer.write(" ");
+                        try (FileWriter writer = new FileWriter(baseFile, true)) {
+                            writer.write("function ");
+                            writer.write(functionName);
+                            writer.write("(");
+                            for (int i = 1; i < bits.length; i++) {
+                                writer.write(bits[i]);
+                                writer.write(" ");
+                            }
+                            writer.write(") {\n");
+                            writer.write(script);
+                            writer.write("\n}\n");
+                            writer.flush();
                         }
-                        writer.write(") {\n");
-                        writer.write(script);
-                        writer.write("\n}\n");
-                        writer.flush();
-                        writer.close();
                     } catch (IOException ioe) {
                         sendLine(origin, args.isSilent(), FORMAT_ERROR, "IOException: "+ioe.getMessage());
                     }

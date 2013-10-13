@@ -42,7 +42,7 @@ public class JavaScriptHelper {
 
     /** Hashtable for storing stuff. */
     private static final Map<String, Object> SETTINGS
-            = new HashMap<String, Object>();
+            = new HashMap<>();
 
     /**
      * Method to set Stuff.

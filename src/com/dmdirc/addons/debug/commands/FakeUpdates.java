@@ -96,7 +96,7 @@ public class FakeUpdates extends DebugCommand {
         public Map<UpdateComponent, UpdateCheckResult> checkForUpdates(
                 final Collection<UpdateComponent> components) {
             final Map<UpdateComponent, UpdateCheckResult> res
-                    = new HashMap<UpdateComponent, UpdateCheckResult>();
+                    = new HashMap<>();
 
             for (UpdateComponent component : components) {
                 if (Math.random() * components.size() < 10) {

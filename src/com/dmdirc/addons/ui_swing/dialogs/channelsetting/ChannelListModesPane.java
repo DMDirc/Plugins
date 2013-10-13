@@ -126,10 +126,10 @@ public final class ChannelListModesPane extends JPanel implements ActionListener
             renderer = new ListModeCellRenderer(nativeRenderer);
         }
         listModesPanel = new JScrollPane();
-        listModesPanels = new ArrayList<JList>();
+        listModesPanels = new ArrayList<>();
         listModesArray = channel.getServer().getParser().getListChannelModes().
                 toCharArray();
-        existingListItems = new MapList<Character, ChannelListModeItem>();
+        existingListItems = new MapList<>();
         listModesMenu = new JComboBox(new DefaultComboBoxModel());
         addListModeButton = new JButton("Add");
         removeListModeButton = new JButton("Remove");
@@ -158,7 +158,7 @@ public final class ChannelListModesPane extends JPanel implements ActionListener
             if (listItems == null) {
                 continue;
             }
-            existingListItems.add(mode, new ArrayList<ChannelListModeItem>(listItems));
+            existingListItems.add(mode, new ArrayList<>(listItems));
             final DefaultListModel model =
                     (DefaultListModel) listModesPanels.get(i).getModel();
 
@@ -238,9 +238,9 @@ public final class ChannelListModesPane extends JPanel implements ActionListener
     /** Sends the list modes to the server. */
     public void save() {
         final Map<ChannelListModeItem, Character> currentModes =
-                new HashMap<ChannelListModeItem, Character>();
+                new HashMap<>();
         final Map<ChannelListModeItem, Character> newModes =
-                new HashMap<ChannelListModeItem, Character>();
+                new HashMap<>();
 
         for (int i = 0; i < listModesArray.length;
                 i++) {

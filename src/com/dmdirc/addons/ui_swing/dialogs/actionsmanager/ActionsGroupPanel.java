@@ -173,7 +173,7 @@ public final class ActionsGroupPanel extends JPanel implements ActionListener,
 
 
         final TableRowSorter<ActionTableModel> sorter
-                = new TableRowSorter<ActionTableModel>(model);
+                = new TableRowSorter<>(model);
         sorter.setComparator(1, new ActionTypeComparator());
         sorter.setComparator(2, new StringArrayComparator());
 

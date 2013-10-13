@@ -83,7 +83,7 @@ public class ActionResponsePanel extends JPanel {
         ((DefaultComboBoxModel) formatter.getModel()).addElement("No change");
         ((DefaultComboBoxModel) formatter.getModel()).addElement("No response");
 
-        final TreeSet<String> formatters = new TreeSet<String>(
+        final TreeSet<String> formatters = new TreeSet<>(
                 String.CASE_INSENSITIVE_ORDER);
         formatters.addAll(controller.getGlobalConfig().getOptions("formatter")
                 .keySet());
@@ -163,12 +163,13 @@ public class ActionResponsePanel extends JPanel {
      */
     public String getFormatter() {
         final String newFormat = (String) formatter.getSelectedItem();
-        if ("No change".equals(newFormat)) {
-            return null;
-        } else if ("No response".equals(newFormat)) {
-            return "";
-        } else {
-            return newFormat;
+        switch (newFormat) {
+            case "No change":
+                return null;
+            case "No response":
+                return "";
+            default:
+                return newFormat;
         }
     }
 

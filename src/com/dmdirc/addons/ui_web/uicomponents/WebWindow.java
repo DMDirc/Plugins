@@ -98,7 +98,7 @@ public class WebWindow implements Window, IRCDocumentListener,
             return Collections.<String>emptyList();
         }
 
-        final List<String> messages = new ArrayList<String>(document.getNumLines());
+        final List<String> messages = new ArrayList<>(document.getNumLines());
 
         for (int i = 0; i < document.getNumLines(); i++) {
             messages.add(style(document.getStyledLine(i)));

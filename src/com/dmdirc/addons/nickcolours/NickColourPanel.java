@@ -163,35 +163,34 @@ public class NickColourPanel extends JPanel implements ActionListener,
      */
     @Override
     public void actionPerformed(final ActionEvent e) {
-        if (e.getActionCommand().equals("Add")) {
-            new NickColourInputDialog(swingController, this);
-        } else if (e.getActionCommand().equals("Edit")) {
-            final DefaultTableModel model
-                    = ((DefaultTableModel) table.getModel());
-            final int row = table.getSelectedRow();
-
-            final String network = (String) model.getValueAt(row, 0);
-            final String nickname = (String) model.getValueAt(row, 1);
-
-            String textcolour = (String) model.getValueAt(row, 2);
-            String nickcolour = (String) model.getValueAt(row, 3);
-
-            if (textcolour == null) {
-                textcolour = "";
-            }
-
-            if (nickcolour == null) {
+        switch (e.getActionCommand()) {
+            case "Add":
+                new NickColourInputDialog(swingController, this);
+                break;
+            case "Edit":
+                {
+                    final DefaultTableModel model
+                            = ((DefaultTableModel) table.getModel());
+                    final int row = table.getSelectedRow();
+                    final String network = (String) model.getValueAt(row, 0);
+                    final String nickname = (String) model.getValueAt(row, 1);
+                    String textcolour = (String) model.getValueAt(row, 2);
+                    String nickcolour = (String) model.getValueAt(row, 3);
+                    if (textcolour == null) {
+                        textcolour = "";
+                    }       if (nickcolour == null) {
                 nickcolour = "";
-            }
-
-            new NickColourInputDialog(swingController, this, row, nickname, network, textcolour,
+            }       new NickColourInputDialog(swingController, this, row, nickname, network, textcolour,
                     nickcolour);
-        } else if (e.getActionCommand().equals("Delete")) {
-            final int row = table.getSelectedRow();
-
-            if (row > -1) {
-                ((DefaultTableModel) table.getModel()).removeRow(row);
-            }
+                    break;
+                }
+            case "Delete":
+                {
+                    final int row = table.getSelectedRow();
+                    if (row > -1) {
+                        ((DefaultTableModel) table.getModel()).removeRow(row);
+                    }       break;
+                }
         }
     }
 

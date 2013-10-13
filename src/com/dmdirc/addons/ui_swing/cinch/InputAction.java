@@ -120,7 +120,7 @@ public @interface InputAction {
                 try {
                     wire(action.call(), action.message(), action.content(),
                             action.validator(), field, context);
-                } catch (final Exception e) {
+                } catch (final SecurityException | NoSuchMethodException | IllegalArgumentException | IllegalAccessException | InvocationTargetException | ClassNotFoundException | InstantiationException e) {
                     Throwables.throwUncheckedException(e);
                     throw new BindingException("could not wire up "
                             + "@InputAction on " + field.getName(), e);
@@ -210,7 +210,7 @@ public @interface InputAction {
                             } catch (final InvocationTargetException itex) {
                                 LOGGER.error("exception during action firing",
                                         itex.getCause());
-                            } catch (final Exception ex) {
+                            } catch (final SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
                                 LOGGER.error("exception during action firing", ex);
                             }
                             return true;
@@ -231,7 +231,7 @@ public @interface InputAction {
                                             .invoke(existingMethod.getObject());
                                     existingMethod.getMethod()
                                             .setAccessible(accessible);
-                                } catch (final Exception e) {
+                                } catch (final SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
                                     content = "";
                                 }
                             } else {

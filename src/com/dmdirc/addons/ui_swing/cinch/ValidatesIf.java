@@ -42,6 +42,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Collections;
@@ -77,7 +78,7 @@ public @interface ValidatesIf {
                 final String to = action.to();
                 try {
                     bindings.addAll(wire(to, field, context));
-                } catch (final Exception e) {
+                } catch (final SecurityException | NoSuchMethodException | IllegalArgumentException | IntrospectionException e) {
                     throw new BindingException("could not wire up @ValidatesIf on " + field.getName(), e);
                 }
             }
@@ -124,7 +125,7 @@ public @interface ValidatesIf {
                     try {
                         ValidationResponse validation = (ValidationResponse) getter.getMethod().invoke(getter.getObject());
                         callMethod.invoke(setValidationObject, validation);
-                    } catch (final Exception e) {
+                    } catch (final IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
                         Throwables.throwUncheckedException(e);
                     }
                 }

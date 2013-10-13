@@ -85,7 +85,7 @@ public class SettingsPanel extends JPanel {
 
         this.controller = controller;
 
-        settings = new DoubleMap<PreferencesSetting, JComponent>();
+        settings = new DoubleMap<>();
 
         setOpaque(UIUtilities.getTabbedPaneOpaque());
         this.padding = padding;

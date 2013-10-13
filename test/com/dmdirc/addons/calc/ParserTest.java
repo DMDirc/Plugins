@@ -42,7 +42,7 @@ public class ParserTest {
 
     @Test
     public void testFindTokenType() {
-        final List<TreeToken> tokens = new ArrayList<TreeToken>();
+        final List<TreeToken> tokens = new ArrayList<>();
         tokens.add(new TreeToken(new Token(TokenType.BRACKET_CLOSE, null)));
         tokens.add(new TreeToken(new Token(TokenType.BRACKET_CLOSE, null)));
         tokens.add(new TreeToken(new Token(TokenType.BRACKET_OPEN, null)));
@@ -62,7 +62,7 @@ public class ParserTest {
     public void testParseBracket() throws ParseException {
         final Parser parser = new Parser(null);
 
-        final List<TreeToken> tokens = new ArrayList<TreeToken>();
+        final List<TreeToken> tokens = new ArrayList<>();
         tokens.add(new TreeToken(new Token(TokenType.START, null)));
         tokens.add(new TreeToken(new Token(TokenType.BRACKET_OPEN, null)));
         tokens.add(new TreeToken(new Token(TokenType.NUMBER_INT, null)));
@@ -80,7 +80,7 @@ public class ParserTest {
     public void testParseBracket2() throws ParseException {
         final Parser parser = new Parser(null);
 
-        final List<TreeToken> tokens = new ArrayList<TreeToken>();
+        final List<TreeToken> tokens = new ArrayList<>();
         tokens.add(new TreeToken(new Token(TokenType.START, null)));
         tokens.add(new TreeToken(new Token(TokenType.BRACKET_OPEN, null)));
         tokens.add(new TreeToken(new Token(TokenType.NUMBER_INT, null)));
@@ -104,7 +104,7 @@ public class ParserTest {
     public void testUnmatchedBracket() throws ParseException {
         final Parser parser = new Parser(null);
 
-        final List<TreeToken> tokens = new ArrayList<TreeToken>();
+        final List<TreeToken> tokens = new ArrayList<>();
         tokens.add(new TreeToken(new Token(TokenType.START, null)));
         tokens.add(new TreeToken(new Token(TokenType.NUMBER_INT, null)));
         tokens.add(new TreeToken(new Token(TokenType.BRACKET_CLOSE, null)));
@@ -117,7 +117,7 @@ public class ParserTest {
     public void testParseNumber() {
         final Parser parser = new Parser(null);
 
-        final List<TreeToken> tokens = new ArrayList<TreeToken>();
+        final List<TreeToken> tokens = new ArrayList<>();
         tokens.add(new TreeToken(new Token(TokenType.START, null)));
         tokens.add(new TreeToken(new Token(TokenType.BRACKET_OPEN, null)));
         tokens.add(new TreeToken(new Token(TokenType.NUMBER_INT, null)));
@@ -133,7 +133,7 @@ public class ParserTest {
     public void testParseHidden() {
         final Parser parser = new Parser(null);
 
-        final List<TreeToken> tokens = new ArrayList<TreeToken>();
+        final List<TreeToken> tokens = new ArrayList<>();
         tokens.add(new TreeToken(new Token(TokenType.START, null)));
         tokens.add(new TreeToken(new Token(TokenType.BRACKET_OPEN, null)));
         tokens.add(new TreeToken(new Token(TokenType.NUMBER_INT, null)));
@@ -153,7 +153,7 @@ public class ParserTest {
     public void testParseUnaryOps() {
         final Parser parser = new Parser(null);
 
-        final List<TreeToken> tokens = new ArrayList<TreeToken>();
+        final List<TreeToken> tokens = new ArrayList<>();
         tokens.add(new TreeToken(new Token(TokenType.START, null)));
         tokens.add(new TreeToken(new Token(TokenType.MOD_NEGATIVE, null)));
         tokens.add(new TreeToken(new Token(TokenType.NUMBER_INT, null)));
@@ -174,7 +174,7 @@ public class ParserTest {
     public void testParseBinaryOps() {
         final Parser parser = new Parser(null);
 
-        final List<TreeToken> tokens = new ArrayList<TreeToken>();
+        final List<TreeToken> tokens = new ArrayList<>();
         tokens.add(new TreeToken(new Token(TokenType.START, null)));
         tokens.add(new TreeToken(new Token(TokenType.NUMBER_INT, "15")));
         tokens.add(new TreeToken(new Token(TokenType.OP_MINUS, null)));

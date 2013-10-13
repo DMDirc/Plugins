@@ -92,14 +92,19 @@ public class SettingsMenu extends JMenu implements ActionListener {
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(final ActionEvent e) {
-        if ("Preferences".equals(e.getActionCommand())) {
-            controller.showDialog(SwingPreferencesDialog.class);
-        } else if (e.getActionCommand().equals("Profile")) {
-            controller.showDialog(ProfileManagerDialog.class);
-        }  else if (e.getActionCommand().equals("Actions")) {
-            controller.showDialog(ActionsManagerDialog.class);
-        } else if (e.getActionCommand().equals("Aliases")) {
-            controller.showDialog(AliasManagerDialog.class);
+        switch (e.getActionCommand()) {
+            case "Preferences":
+                controller.showDialog(SwingPreferencesDialog.class);
+                break;
+            case "Profile":
+                controller.showDialog(ProfileManagerDialog.class);
+                break;
+            case "Actions":
+                controller.showDialog(ActionsManagerDialog.class);
+                break;
+            case "Aliases":
+                controller.showDialog(AliasManagerDialog.class);
+                break;
         }
     }
 }

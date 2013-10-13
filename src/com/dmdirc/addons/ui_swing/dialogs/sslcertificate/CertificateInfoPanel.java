@@ -69,7 +69,7 @@ public class CertificateInfoPanel extends JScrollPane {
 
     private void initComponents() {
         content = new JPanel();
-        certificateInfo = new ArrayList<List<CertificateInformationEntry>>();
+        certificateInfo = new ArrayList<>();
     }
 
     private void layoutComponents() {
@@ -121,7 +121,7 @@ public class CertificateInfoPanel extends JScrollPane {
 
         if (certificateInfo == null) {
             this.certificateInfo =
-                    new ArrayList<List<CertificateInformationEntry>>();
+                    new ArrayList<>();
         }
         layoutComponents();
     }

@@ -45,7 +45,7 @@ public class XmppClientInfo extends BaseClientInfo {
 
     /** A map of known endpoints for this client. */
     private final Map<String, XmppEndpoint> endpoints
-            = new HashMap<String, XmppEndpoint>();
+            = new HashMap<>();
 
     /**
      * Creates a new XMPP Client Info object with the specified details.
@@ -132,11 +132,11 @@ public class XmppClientInfo extends BaseClientInfo {
      */
     public Mode getAggregatePresence() {
         final List<XmppEndpoint> sortedEndpoints
-                = new ArrayList<XmppEndpoint>(endpoints.values());
+                = new ArrayList<>(endpoints.values());
         Collections.sort(sortedEndpoints);
 
         // Get the set of the highest priority endpoints
-        final Set<XmppEndpoint> bestEndpoints = new HashSet<XmppEndpoint>(sortedEndpoints.size());
+        final Set<XmppEndpoint> bestEndpoints = new HashSet<>(sortedEndpoints.size());
         int best = 0;
         for (XmppEndpoint endpoint : sortedEndpoints) {
             if (endpoint.getType() != Type.available) {

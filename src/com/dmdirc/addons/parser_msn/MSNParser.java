@@ -57,7 +57,7 @@ public class MSNParser extends BaseParser {
     private MsnMessenger msn;
     /** A cache of known clients. */
     private final Map<String, MSNClientInfo> clients
-            = new HashMap<String, MSNClientInfo>();
+            = new HashMap<>();
     /** Whether or not to use a channel for contact lists. */
     private final boolean useFakeChannel;
     /** The fake channel to use is useFakeChannel is enabled. */
