@@ -25,6 +25,7 @@ package com.dmdirc.addons.parser_msn;
 import com.dmdirc.parser.common.MyInfo;
 import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.parser.interfaces.ProtocolDescription;
+import com.dmdirc.plugins.Exported;
 import com.dmdirc.plugins.implementations.BasePlugin;
 
 import java.net.URI;
@@ -58,6 +59,7 @@ public class MSNPlugin extends BasePlugin {
      *
      * @return An appropriately configured parser
      */
+    @Exported
     public Parser getParser(final MyInfo myInfo, final URI address) {
         return new MSNParser(address);
     }
@@ -67,6 +69,7 @@ public class MSNPlugin extends BasePlugin {
      *
      * @return A relevant protocol description object
      */
+    @Exported
     public ProtocolDescription getDescription() {
         return protocol;
     }

@@ -25,6 +25,7 @@ package com.dmdirc.addons.parser_xmpp;
 import com.dmdirc.parser.common.MyInfo;
 import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.parser.interfaces.ProtocolDescription;
+import com.dmdirc.plugins.Exported;
 import com.dmdirc.plugins.implementations.BasePlugin;
 
 import java.net.URI;
@@ -41,6 +42,7 @@ public class XmppPlugin extends BasePlugin {
      * @param address The address to connect to
      * @return An appropriately configured parser
      */
+    @Exported
     public Parser getParser(final MyInfo myInfo, final URI address) {
         return new XmppParser(address);
     }
@@ -50,6 +52,7 @@ public class XmppPlugin extends BasePlugin {
      *
      * @return A relevant protocol description object
      */
+    @Exported
     public ProtocolDescription getDescription() {
         return new XmppProtocolDescription();
     }

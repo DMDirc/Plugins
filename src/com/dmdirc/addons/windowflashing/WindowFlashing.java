@@ -37,6 +37,7 @@ import com.dmdirc.interfaces.ActionListener;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.interfaces.config.IdentityController;
+import com.dmdirc.plugins.Exported;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.implementations.BaseCommandPlugin;
 
@@ -117,6 +118,7 @@ public class WindowFlashing extends BaseCommandPlugin implements ActionListener 
      * @param title Unused
      * @param message Unused
      */
+    @Exported
     public void flashNotification(final String title, final String message) {
         flashWindow();
     }

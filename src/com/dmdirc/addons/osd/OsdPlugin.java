@@ -34,6 +34,7 @@ import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.config.prefs.SettingChangeListener;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.config.IdentityController;
+import com.dmdirc.plugins.Exported;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.implementations.BaseCommandPlugin;
 import com.dmdirc.ui.messages.ColourManager;
@@ -219,6 +220,7 @@ public class OsdPlugin extends BaseCommandPlugin implements
      * @param title Ignored
      * @param message Message to show
      */
+    @Exported
     public void showOSD(final String title, final String message) {
         osdManager.showWindow(-1, message);
     }

@@ -63,6 +63,7 @@ import com.dmdirc.interfaces.ui.UIController;
 import com.dmdirc.interfaces.ui.Window;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
+import com.dmdirc.plugins.Exported;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.plugins.implementations.BaseCommandPlugin;
@@ -856,6 +857,7 @@ public class SwingController extends BaseCommandPlugin implements UIController {
      *
      * @return A reference to this SwingController.
      */
+    @Exported
     public UIController getController() {
         return this;
     }
