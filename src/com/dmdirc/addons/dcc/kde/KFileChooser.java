@@ -33,7 +33,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JFileChooser;
-import javax.swing.filechooser.FileSystemView;
 
 /**
  * JFileChooser that uses KDialog to show the actual chooser.
@@ -63,9 +62,6 @@ public class KFileChooser extends JFileChooser {
      * class).
      */
     private static final long serialVersionUID = 200806141;
-
-    /** File Filter */
-    private String fileFilter = null;
 
     /** The plugin that this file chooser is for. */
     private final DCCManager plugin;
@@ -98,33 +94,6 @@ public class KFileChooser extends JFileChooser {
     }
 
     /**
-     * Constructs a FileChooser using the given current directory and FileSystemView.
-     *
-     * @param plugin The plugin that owns this KFileChooser
-     * @param currentDirectory Directory to use as the base directory
-     * @param fsv The FileSystemView to use
-     */
-    private KFileChooser(final AggregateConfigProvider config, final DCCManager plugin, final File currentDirectory, final FileSystemView fsv) {
-        super(currentDirectory, fsv);
-
-        this.plugin = plugin;
-        this.config = config;
-    }
-
-    /**
-     * Constructs a FileChooser using the given FileSystemView.
-     *
-     * @param plugin The plugin that owns this KFileChooser
-     * @param fsv The FileSystemView to use
-     */
-    private KFileChooser(final AggregateConfigProvider config, final DCCManager plugin, final FileSystemView fsv) {
-        super(fsv);
-
-        this.plugin = plugin;
-        this.config = config;
-    }
-
-    /**
      * Constructs a FileChooser using the given path.
      *
      * @param plugin The plugin that owns this KFileChooser
@@ -132,20 +101,6 @@ public class KFileChooser extends JFileChooser {
      */
     private KFileChooser(final AggregateConfigProvider config, final DCCManager plugin, final String currentDirectoryPath) {
         super(currentDirectoryPath);
-
-        this.plugin = plugin;
-        this.config = config;
-    }
-
-    /**
-     * Constructs a FileChooser using the given current directory path and FileSystemView.
-     *
-     * @param plugin The plugin that owns this KFileChooser
-     * @param currentDirectoryPath Directory to use as the base directory
-     * @param fsv The FileSystemView to use
-     */
-    private KFileChooser(final AggregateConfigProvider config, final DCCManager plugin, final String currentDirectoryPath, final FileSystemView fsv) {
-        super(currentDirectoryPath, fsv);
 
         this.plugin = plugin;
         this.config = config;
@@ -187,31 +142,6 @@ public class KFileChooser extends JFileChooser {
     }
 
     /**
-     * Constructs a FileChooser using the given current directory and FileSystemView.
-     *
-     * @param config Config provider used to retrieve settings
-     * @param plugin The DCC Plugin that is requesting a chooser
-     * @param currentDirectory Directory to use as the base directory
-     * @param fsv The FileSystemView to use
-     * @return The relevant FileChooser
-     */
-    public static JFileChooser getFileChooser(final AggregateConfigProvider config, final DCCManager plugin, final File currentDirectory, final FileSystemView fsv) {
-        return useKFileChooser(config, plugin) ? new KFileChooser(config, plugin, currentDirectory, fsv) : new JFileChooser(currentDirectory, fsv);
-    }
-
-    /**
-     * Constructs a FileChooser using the given FileSystemView.
-     *
-     * @param config Config provider used to retrieve settings
-     * @param plugin The DCC Plugin that is requesting a chooser
-     * @param fsv The FileSystemView to use
-     * @return The relevant FileChooser
-     */
-    public static JFileChooser getFileChooser(final AggregateConfigProvider config, final DCCManager plugin, final FileSystemView fsv) {
-        return useKFileChooser(config, plugin) ? new KFileChooser(config, plugin, fsv) : new JFileChooser(fsv);
-    }
-
-    /**
      * Constructs a FileChooser using the given path.
      *
      * @param config Config provider used to retrieve settings
@@ -221,37 +151,6 @@ public class KFileChooser extends JFileChooser {
      */
     public static JFileChooser getFileChooser(final AggregateConfigProvider config, final DCCManager plugin, final String currentDirectoryPath) {
         return useKFileChooser(config, plugin) ? new KFileChooser(config, plugin, currentDirectoryPath) : new JFileChooser(currentDirectoryPath);
-    }
-
-    /**
-     * Constructs a FileChooser using the given current directory path and FileSystemView.
-     *
-     * @param config Config provider used to retrieve settings
-     * @param plugin The DCC Plugin that is requesting a chooser
-     * @param currentDirectoryPath Directory to use as the base directory
-     * @param fsv The FileSystemView to use
-     * @return The relevant FileChooser
-     */
-    public static JFileChooser getFileChooser(final AggregateConfigProvider config, final DCCManager plugin, final String currentDirectoryPath, final FileSystemView fsv) {
-        return useKFileChooser(config, plugin) ? new KFileChooser(config, plugin, currentDirectoryPath, fsv) : new JFileChooser(currentDirectoryPath, fsv);
-    }
-
-    /**
-     * Set the file filter.
-     *
-     * @param fileFilter File filter (eg "*.php *.jpg" or null for no filter)
-     */
-    public void setKDEFileFilter(final String fileFilter) {
-        this.fileFilter = fileFilter;
-    }
-
-    /**
-     * Get the file filter.
-     *
-     * @return File filter (eg "*.php *.jpg" or null for no filter)
-     */
-    public String getKDEFileFilter() {
-        return fileFilter;
     }
 
     /** {@inheritDoc} */
@@ -286,10 +185,6 @@ public class KFileChooser extends JFileChooser {
             }
         } else if (getCurrentDirectory() != null) {
             params.add(getCurrentDirectory().getPath());
-        }
-
-        if (getFileSelectionMode() != DIRECTORIES_ONLY && fileFilter != null && !fileFilter.isEmpty()) {
-            params.add(fileFilter);
         }
 
         KDialogProcess kdp;

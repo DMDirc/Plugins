@@ -708,15 +708,6 @@ public class DCCManager implements ActionListener {
     /**
      * Get the IP Address we should send as our listening IP.
      *
-     * @return The IP Address we should send as our listening IP.
-     */
-    public String getListenIP() {
-        return getListenIP(null);
-    }
-
-    /**
-     * Get the IP Address we should send as our listening IP.
-     *
      * @param parser Parser the IRC Parser where this dcc is initiated
      * @return The IP Address we should send as our listening IP.
      */
