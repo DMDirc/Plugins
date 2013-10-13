@@ -51,25 +51,26 @@ public class PreferencesListCellRenderer extends JLabel implements ListCellRende
     /** Number of categories shown. */
     private final int numCats;
     /** Icon manager. */
-    private IconManager iconManager;
+    private final IconManager iconManager;
     /** Label map. */
-    private Map<PreferencesCategory, JLabel> labelMap;
+    private final Map<PreferencesCategory, JLabel> labelMap;
 
     /**
      * Instantiates a new prefs list cell renderer.
      *
+     * @param iconManager Icon manager to load icons
      * @param numCats Number of categories in the list
      */
     public PreferencesListCellRenderer(final IconManager iconManager,
             final int numCats) {
-        labelMap = new HashMap<PreferencesCategory, JLabel>();
+        labelMap = new HashMap<>();
         this.numCats = numCats;
         this.iconManager = iconManager;
     }
 
     /** {@inheritDoc} */
     @Override
-    public final Component getListCellRendererComponent(final JList list,
+    public Component getListCellRendererComponent(final JList list,
             final Object value, final int index, final boolean isSelected,
             final boolean cellHasFocus) {
         final PreferencesCategory cat = (PreferencesCategory) value;

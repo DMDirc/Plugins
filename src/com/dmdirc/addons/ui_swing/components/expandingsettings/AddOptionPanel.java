@@ -119,7 +119,7 @@ public class AddOptionPanel extends JPanel implements ActionListener {
     /**
      * Adds an addable option.
      *
-     * @param optionName Option name
+     * @param setting Setting to add
      */
     protected void addOption(final JComponent setting) {
         ((DefaultComboBoxModel) addOptionComboBox.getModel())
@@ -131,7 +131,7 @@ public class AddOptionPanel extends JPanel implements ActionListener {
     /**
      * Removes an addable option.
      *
-     * @param optionName Option name
+     * @param setting Setting to add
      */
     protected void delOption(final JComponent setting) {
         ((DefaultComboBoxModel) addOptionComboBox.getModel())

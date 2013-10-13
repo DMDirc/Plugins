@@ -52,31 +52,31 @@ import org.jdesktop.jxlayer.plaf.effect.LayerEffect;
  * This allows temporarily blocking a part of the interface
  * with all it subcomponents, it is also useful when some kind of action
  * is in progress, e.g. reading data from a database.
- * <p/>
+ * <p>
  * When {@code true} is passed to the {@link #setLocked(boolean)},
  * the {@code JXLayer} of this {@code LockableLayerUI} becomes "locked".
  * It sets the "wait" mouse cursor and stops reacting
  * on mouse, keyboard and focus events.
- * <p/>
+ * <p>
  * If {@code setLocked(boolean)} is called with {@code false} parameter
  * after that, the {@code JXLayer}, together with all its subcomponents,
  * gets back to live.
- * <p/>
+ * <p>
  * Subclasses usually override {@link #paintLayer(Graphics2D,JXLayer)} or
  * {@link #getLayerEffects(JXLayer)} to implement some visual effects
  * when {@code JXLayer} is in locked state.
- * <p/>
+ * <p>
  * Here is an example of using {@code LockableLayerUI}:
  * <pre>
  * JComponent myComponent = getMyComponent(); // just any component
- * <p/>
+ *
  * LockableLayerUI lockableUI = new LockableLayerUI();
  * JXLayer&lt;JComponent&gt; layer = new JXLayer&lt;JComponent&gt;(myComponent,
  * lockableUI);
- * <p/>
+ *
  * // locking the layer, use lockableUI.setLocked(false) to unlock
  * lockableUI.setLocked(true);
- * <p/>
+ *
  * // add the layer to a frame or a panel, like any other component
  * frame.add(layer);
  * </pre>
@@ -301,8 +301,9 @@ public class LockedLayer<T extends JComponent> extends
 
     /**
      * This method returns the array of {@code LayerEffect}s
-     * set using {@link #setLayerEffects(LayerEffect...)}
-     * <p/>
+     * set using
+     * {@link #setLockedEffects(LayerEffect...)}
+     * <p>
      * If a {@code LockableUI} provides more extensive API
      * to support different {@code Effect}s depending on its state
      * or on the state of the passed {@code JXLayer},

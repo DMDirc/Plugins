@@ -57,6 +57,9 @@ public final class IdentdServer implements Runnable {
 
     /**
      * Create the IdentdServer.
+     *
+     * @param plugin Parent ident plugin
+     * @param serverManager Server manager to iterate over servers
      */
     public IdentdServer(final IdentdPlugin plugin, final ServerManager serverManager) {
         super();

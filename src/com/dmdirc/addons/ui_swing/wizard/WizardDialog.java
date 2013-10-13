@@ -37,14 +37,14 @@ import javax.swing.JButton;
 /**
  * Basic wizard container.
  */
-public final class WizardDialog extends StandardDialog implements ActionListener {
+public class WizardDialog extends StandardDialog implements ActionListener {
 
     /** Serial version UID. */
     private static final long serialVersionUID = 2;
     /** Wizard. */
     private final WizardPanel wizard;
     /** Parent container. */
-    private Window parentWindow;
+    private final Window parentWindow;
 
     /**
      * Creates a new instance of WizardFrame that requires a mainframe.
@@ -165,7 +165,7 @@ public final class WizardDialog extends StandardDialog implements ActionListener
     /**
      * Adds a step listener to the list.
      *
-     * @param listener
+     * @param listener Listener to add
      */
     public void addStepListener(final StepListener listener) {
         wizard.addStepListener(listener);
@@ -174,7 +174,7 @@ public final class WizardDialog extends StandardDialog implements ActionListener
     /**
      * Removes a step listener from the list.
      *
-     * @param listener
+     * @param listener Listener to remove
      */
     public void removeStepListener(final StepListener listener) {
         wizard.removeStepListener(listener);
@@ -183,7 +183,7 @@ public final class WizardDialog extends StandardDialog implements ActionListener
     /**
      * Adds a wizard listener to the list.
      *
-     * @param listener
+     * @param listener Listener to add
      */
     public void addWizardListener(final WizardListener listener) {
         wizard.addWizardListener(listener);
@@ -192,7 +192,7 @@ public final class WizardDialog extends StandardDialog implements ActionListener
     /**
      * Removes a wizard listener from the list.
      *
-     * @param listener
+     * @param listener Listener to remove
      */
     public void removeWizardListener(final WizardListener listener) {
         wizard.removeWizardListener(listener);

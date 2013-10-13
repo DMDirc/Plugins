@@ -101,6 +101,9 @@ public final class ActionsManagerDialog extends StandardDialog implements
 
     /**
      * Creates a new instance of ActionsManagerDialog.
+     *
+     * @param parentWindow Parent window
+     * @param controller Parent controller
      */
     @SuppressWarnings("unchecked")
     public ActionsManagerDialog(final Window parentWindow,
@@ -110,7 +113,7 @@ public final class ActionsManagerDialog extends StandardDialog implements
                 controller) : null, ModalityType.MODELESS);
 
         initComponents();
-        validator = new ValidatorChain<String>(
+        validator = new ValidatorChain<>(
                 new ActionGroupNoDuplicatesInListValidator(groups,
                 (DefaultListModel) groups.getModel()), new FileNameValidator());
         addListeners();
@@ -131,11 +134,11 @@ public final class ActionsManagerDialog extends StandardDialog implements
                 + " intelligently respond to various events.  Action groups are"
                 + " there for you to organise groups, add or remove them"
                 + " to suit your needs.");
-        groups = new JList(new SortedListModel<ActionGroup>(
+        groups = new JList(new SortedListModel<>(
                 new ActionGroupNameComparator()));
         actions = new ActionsGroupPanel(getController(), this, null);
         info = new ActionGroupInformationPanel(null);
-        settings = new HashMap<ActionGroup, ActionGroupSettingsPanel>();
+        settings = new HashMap<>();
         activeSettings = new ActionGroupSettingsPanel(getController()
                 .getPrefsComponentFactory(), null, this);
         settings.put(null, activeSettings);

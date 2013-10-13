@@ -45,23 +45,22 @@ import java.util.Map;
 public class WebWindowManager implements FrameListener {
 
     /** A map of known implementations of window interfaces. */
-    private static final Map<Collection<String>, Class<? extends Window>> IMPLEMENTATIONS
-            = new HashMap<Collection<String>, Class<? extends Window>>();
+    private static final Map<Collection<String>, Class<? extends Window>> IMPLEMENTATIONS = new HashMap<>();
 
     static {
-        IMPLEMENTATIONS.put(new HashSet<String>(
+        IMPLEMENTATIONS.put(new HashSet<>(
                 Arrays.asList(WindowComponent.TEXTAREA.getIdentifier())),
                 WebWindow.class);
-        IMPLEMENTATIONS.put(new HashSet<String>(
+        IMPLEMENTATIONS.put(new HashSet<>(
                 Arrays.asList(WindowComponent.TEXTAREA.getIdentifier(),
                 WindowComponent.INPUTFIELD.getIdentifier())),
                 WebInputWindow.class);
-        IMPLEMENTATIONS.put(new HashSet<String>(
+        IMPLEMENTATIONS.put(new HashSet<>(
                 Arrays.asList(WindowComponent.TEXTAREA.getIdentifier(),
                 WindowComponent.INPUTFIELD.getIdentifier(),
                 WindowComponent.CERTIFICATE_VIEWER.getIdentifier())),
                 WebInputWindow.class);
-        IMPLEMENTATIONS.put(new HashSet<String>(
+        IMPLEMENTATIONS.put(new HashSet<>(
                 Arrays.asList(WindowComponent.TEXTAREA.getIdentifier(),
                 WindowComponent.INPUTFIELD.getIdentifier(),
                 WindowComponent.TOPICBAR.getIdentifier(),
@@ -76,17 +75,16 @@ public class WebWindowManager implements FrameListener {
     private long nextId = 0l;
 
     /** Map of known windows. */
-    private final Map<FrameContainer, WebWindow> windows
-            = new HashMap<FrameContainer, WebWindow>();
+    private final Map<FrameContainer, WebWindow> windows = new HashMap<>();
 
     /** A map of window IDs to their windows. */
-    private final Map<String, WebWindow> windowsById
-            = new HashMap<String, WebWindow>();
+    private final Map<String, WebWindow> windowsById = new HashMap<>();
 
     /**
      * Creates a new window manager for the specified controller.
      *
      * @param controller The Web UI controller that owns this manager
+     * @param windowManager Window manager to add/remove windows
      */
     public WebWindowManager(final WebInterfaceUI controller, final WindowManager windowManager) {
         this.controller = controller;
@@ -181,7 +179,7 @@ public class WebWindowManager implements FrameListener {
 
             windows.put(window, frame);
             windowsById.put(id, frame);
-        } catch (Exception ex) {
+        } catch (ReflectiveOperationException ex) {
             Logger.appError(ErrorLevel.MEDIUM, "Unable to create window of type "
                     + clazz.getCanonicalName() + " for web ui", ex);
         }

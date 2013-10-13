@@ -136,7 +136,7 @@ public class ValidatingJTextField extends JComponent implements DocumentListener
     /**
      * Checks if the text validates.
      *
-     * @see com.dmdirc.ui.swing.components.validating.Validator#validate(Object)
+     * @see com.dmdirc.util.validators.Validator#validate(Object)
      *
      * @return true iif the text validates
      */
@@ -308,7 +308,7 @@ public class ValidatingJTextField extends JComponent implements DocumentListener
      *
      * @return Specified textfield content
      *
-     * @throws javax.swing.text.BadLocationException
+     * @throws javax.swing.text.BadLocationException if the bounds are wrong
      */
     public String getText(final int offs, final int len) throws BadLocationException {
         return textField.getText(offs, len);

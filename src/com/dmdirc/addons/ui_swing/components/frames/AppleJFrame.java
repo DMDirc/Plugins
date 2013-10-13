@@ -41,6 +41,7 @@ public class AppleJFrame extends JFrame {
      * Create a new Apple JFrame
      *
      * @param parentWindow Main Window
+     * @param controller Parent swing controller
      */
     public AppleJFrame(final MainFrame parentWindow,
             final SwingController controller) {

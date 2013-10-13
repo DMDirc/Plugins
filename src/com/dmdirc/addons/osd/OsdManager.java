@@ -59,6 +59,7 @@ public class OsdManager {
     /**
      * Add messages to the queue and call displayWindows.
      *
+     * @param timeout Time message will be displayed
      * @param message Message to be displayed.
      */
     public void showWindow(final int timeout, final String message) {

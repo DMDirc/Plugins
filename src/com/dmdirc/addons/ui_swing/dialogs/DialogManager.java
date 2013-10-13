@@ -69,6 +69,8 @@ public class DialogManager {
      * this dialog to the user. For more details on what parameters might be
      * required see {@link DialogManager#getDialog(Class, Object...)}
      *
+     * @param <T> Dialog type
+     *
      * @see DialogManager#getDialog(Class, Object...) getDialog
      *
      * @param klass The class of the dialog to show
@@ -107,6 +109,8 @@ public class DialogManager {
      *   <li>URLHandler</li>
      *   <li>DialogManager</li>
      * </ul>
+     *
+     * @param <T> Dialog type
      *
      * @param klass The class of the dialog to show
      * @param params Any non standard parameters required
@@ -209,10 +213,9 @@ public class DialogManager {
      * Removes a previously created instance of a dialog from the dialog
      * manager.
      *
-     * @param klass The class of the dialog to show
+     * @param dialog Dialog to dispose of
      *
-     * @return Instance of the dialog that has been removed or null if there
-     * was no dialog created
+     * @return Instance of the dialog that has been removed or null if there was no dialog created
      */
     public StandardDialog dispose(final StandardDialog dialog) {
         if (dialogs.containsKey(dialog.getClass())) {
