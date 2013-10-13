@@ -24,12 +24,13 @@ package com.dmdirc.addons.ui_web;
 
 import com.dmdirc.ServerManager;
 import com.dmdirc.interfaces.config.IdentityController;
+import com.dmdirc.interfaces.ui.UIController;
+import com.dmdirc.plugins.Exported;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.plugins.implementations.BasePlugin;
 import com.dmdirc.ui.WindowManager;
 
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import org.mortbay.jetty.Handler;
@@ -56,7 +57,6 @@ public class WebInterfacePlugin extends BasePlugin {
     private final WindowManager windowManager;
 
     /** The UI that we're using. */
-    @Getter
     private WebInterfaceUI controller;
 
     /** {@inheritDoc} */
@@ -81,5 +81,15 @@ public class WebInterfacePlugin extends BasePlugin {
         }
 
         controller.addWebHandler(newHandler);
+    }
+
+    /**
+     * Exported version of the controller.
+     *
+     * @return The controller, exported for use in the client.
+     */
+    @Exported
+    public UIController getController() {
+        return controller;
     }
 }

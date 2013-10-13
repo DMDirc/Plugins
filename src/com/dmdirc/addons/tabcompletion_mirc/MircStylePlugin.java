@@ -23,6 +23,7 @@
 package com.dmdirc.addons.tabcompletion_mirc;
 
 import com.dmdirc.WritableFrameContainer;
+import com.dmdirc.plugins.Exported;
 import com.dmdirc.plugins.implementations.BasePlugin;
 import com.dmdirc.ui.input.TabCompleter;
 import com.dmdirc.ui.input.tabstyles.TabCompletionStyle;
@@ -39,6 +40,7 @@ public class MircStylePlugin extends BasePlugin {
      * @param window The window the instance is for
      * @return A relevant TabCompletionStyle
      */
+    @Exported
     public TabCompletionStyle getCompletionStyle(final TabCompleter completer,
             final WritableFrameContainer window) {
         return new MircStyle(completer, window);

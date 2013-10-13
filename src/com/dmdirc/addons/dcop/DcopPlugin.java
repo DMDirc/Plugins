@@ -23,6 +23,7 @@
 package com.dmdirc.addons.dcop;
 
 import com.dmdirc.interfaces.CommandController;
+import com.dmdirc.plugins.Exported;
 import com.dmdirc.plugins.implementations.BaseCommandPlugin;
 
 import java.io.BufferedReader;
@@ -52,6 +53,7 @@ public final class DcopPlugin extends BaseCommandPlugin {
      * @param command The command to be executed
      * @return The output of the specified command
      */
+    @Exported
     public static List<String> getDcopResult(final String command) {
         final ArrayList<String> result = new ArrayList<>();
 

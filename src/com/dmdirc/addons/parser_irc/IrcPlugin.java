@@ -27,6 +27,7 @@ import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.parser.interfaces.ProtocolDescription;
 import com.dmdirc.parser.irc.IRCParser;
 import com.dmdirc.parser.irc.IRCProtocolDescription;
+import com.dmdirc.plugins.Exported;
 import com.dmdirc.plugins.implementations.BasePlugin;
 
 import java.net.URI;
@@ -45,6 +46,7 @@ public class IrcPlugin extends BasePlugin {
      * @param address The address of the server to connect to
      * @return An appropriately configured parser
      */
+    @Exported
     public Parser getParser(final MyInfo myInfo, final URI address) {
         return new IRCParser(myInfo, address);
     }
@@ -54,6 +56,7 @@ public class IrcPlugin extends BasePlugin {
      *
      * @return An appropriate protocol description object
      */
+    @Exported
     public ProtocolDescription getDescription() {
         return new IRCProtocolDescription();
     }

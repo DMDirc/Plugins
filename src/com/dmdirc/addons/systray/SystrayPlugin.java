@@ -34,6 +34,7 @@ import com.dmdirc.interfaces.ActionController;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.interfaces.config.IdentityController;
+import com.dmdirc.plugins.Exported;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.implementations.BaseCommandPlugin;
 import com.dmdirc.ui.IconManager;
@@ -137,6 +138,7 @@ public class SystrayPlugin extends BaseCommandPlugin implements
      * @param title Title for the notification
      * @param message Text for the notification
      */
+    @Exported
     public void showPopup(final String title, final String message) {
         notify(title, message);
     }

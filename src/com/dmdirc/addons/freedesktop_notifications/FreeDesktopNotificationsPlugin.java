@@ -34,6 +34,7 @@ import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.config.IdentityController;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
+import com.dmdirc.plugins.Exported;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.implementations.BaseCommandPlugin;
 import com.dmdirc.plugins.implementations.PluginFilesHelper;
@@ -94,6 +95,7 @@ public class FreeDesktopNotificationsPlugin extends BaseCommandPlugin implements
      * @param message Message to show
      * @return True if the notification was shown.
      */
+    @Exported
     public boolean showNotification(final String title, final String message) {
         if (filesHelper.getFilesDir() == null) {
             return false;
