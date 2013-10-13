@@ -139,7 +139,7 @@ public final class PrefsComponentFactory {
         option.setPreferredSize(new Dimension(Short.MAX_VALUE, option.getFont().
                 getSize()));
 
-        return new JXLayer<JComponent>(option);
+        return new JXLayer<>(option);
     }
 
     /**

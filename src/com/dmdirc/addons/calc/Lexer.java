@@ -52,7 +52,7 @@ public class Lexer {
      * @throws ParseException If an expected token is not found
      */
     public List<Token> tokenise() throws ParseException {
-        final List<Token> res = new ArrayList<Token>();
+        final List<Token> res = new ArrayList<>();
         List<TokenType> possibles = Arrays.asList(TokenType.values());
 
         boolean cont = true;

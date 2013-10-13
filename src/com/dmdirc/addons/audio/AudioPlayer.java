@@ -101,9 +101,7 @@ public final class AudioPlayer implements Runnable {
         try {
             AudioSystem.getAudioInputStream(file);
             type = AudioType.WAV;
-        } catch (UnsupportedAudioFileException e) {
-            type = AudioType.INVALID;
-        } catch (IOException e) {
+        } catch (UnsupportedAudioFileException | IOException e) {
             type = AudioType.INVALID;
         }
         return type;

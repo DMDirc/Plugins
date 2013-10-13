@@ -28,7 +28,6 @@ import com.dmdirc.plugins.Plugin;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -96,15 +95,12 @@ public class RelayChannelPanel extends JPanel implements ActionListener,
         try {
             final Method getPrefsDialog = controller.getClass()
                     .getDeclaredMethod("getPrefsDialog", (Class<?>) null);
-            final Object prefsDialog = getPrefsDialog.invoke(controller,
-                    (Class<?>) null);
+            final Object prefsDialog = getPrefsDialog.invoke(controller, (Class<?>) null);
             final Method getPanelHeight = prefsDialog.getClass()
                     .getDeclaredMethod("getPanelHeight", (Class<?>) null);
-            final Object panelHeight = getPanelHeight.invoke(prefsDialog,
-                    (Class<?>) null);
+            final Object panelHeight = getPanelHeight.invoke(prefsDialog, (Class<?>) null);
             height = (Integer) panelHeight;
-        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
-                | NoSuchMethodException | SecurityException ex) {
+        } catch (ReflectiveOperationException ex) {
             height = 100;
         }
         setLayout(new MigLayout("ins 0, fillx, hmax " + height));
@@ -129,17 +125,19 @@ public class RelayChannelPanel extends JPanel implements ActionListener,
     @Override
     public void actionPerformed(final ActionEvent e) {
         final DefaultTableModel model = ((DefaultTableModel) table.getModel());
-
-        if (e.getActionCommand().equals("Add")) {
-            addRow("#changeme", "changeme");
-        } else if (e.getActionCommand().equals("Delete")) {
-            final int row = table.getSelectedRow();
-            if (table.isEditing()) {
-                table.getCellEditor().stopCellEditing();
-            }
-            if (row > -1) {
-                model.removeRow(row);
-            }
+        switch (e.getActionCommand()) {
+            case "Add":
+                addRow("#changeme", "changeme");
+                break;
+            case "Delete":
+                final int row = table.getSelectedRow();
+                if (table.isEditing()) {
+                    table.getCellEditor().stopCellEditing();
+                }
+                if (row > -1) {
+                    model.removeRow(row);
+                }
+                break;
         }
     }
 
@@ -169,7 +167,7 @@ public class RelayChannelPanel extends JPanel implements ActionListener,
      * @return This panel's current data.
      */
     public List<String[]> getData() {
-        final List<String[]> res = new ArrayList<String[]>();
+        final List<String[]> res = new ArrayList<>();
         final DefaultTableModel model = ((DefaultTableModel) table.getModel());
 
         for (int i = 0; i < model.getRowCount(); i++) {

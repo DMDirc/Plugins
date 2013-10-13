@@ -72,7 +72,7 @@ public class NotifyMyAndroidClient {
      * @throws IOException If the NMA service couldn't be reached
      */
     public void notify(final String event, final String description) throws IOException {
-        final Map<String, String> arguments = new HashMap<String, String>();
+        final Map<String, String> arguments = new HashMap<>();
         arguments.put("apikey", getApiKeys());
         arguments.put("application", application);
         arguments.put("event", event);

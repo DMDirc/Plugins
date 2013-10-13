@@ -129,7 +129,7 @@ public class ActionConditionDisplayPanel extends JPanel implements
         label = new TextLabel("", false);
         editButton = new ImageToggleButton("edit", iconManager.
                 getIcon("edit-inactive"), iconManager.getIcon("edit"));
-        deleteButton = new ImageButton<Object>("delete", iconManager.
+        deleteButton = new ImageButton<>("delete", iconManager.
                 getIcon("close-inactive"), iconManager.
                 getIcon("close-inactive"), iconManager.getIcon("close-active"));
 

@@ -69,66 +69,64 @@ public class TimerCommand extends Command implements IntelligentCommand {
             final CommandArguments args, final CommandContext context) {
 
         if (args.getArguments().length > 0) {
-            if ("--cancel".equals(args.getArguments()[0])) {
-                int timerKey = 0;
-
-                try {
-                    timerKey = Integer.parseInt(args.getArgumentsAsString(1));
-                } catch (NumberFormatException ex) {
-                    doUsage(origin, args.isSilent());
-                    return;
-                }
-
-                if (manager.hasTimerWithID(timerKey)) {
-                    manager.getTimerByID(timerKey).cancelTimer();
-                    sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Timer cancelled");
-                } else {
-                    sendLine(origin, args.isSilent(), FORMAT_ERROR, "There is currently" +
-                            " no timer with that ID");
-                    return;
-                }
-            } else if ("--list".equals(args.getArguments()[0])) {
-                final Set<Entry<Integer, TimedCommand>> timerList
-                        = manager.listTimers();
-
-                if (!timerList.isEmpty()) {
-                    for (Entry<Integer, TimedCommand> entry : timerList) {
-                        sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Timer"
-                                + " ID: " + entry.getKey() + " - " +
-                                entry.getValue().getCommand());
-                    }
-                } else {
-                    sendLine(origin, args.isSilent(), FORMAT_ERROR, "There are " +
-                                "currently no active timers");
-                }
-            } else {
-                if (args.getArguments().length < 3) {
-                    doUsage(origin, args.isSilent());
-                } else {
-                    int repetitions = 0;
-                    int interval = 0;
-
-                    final String command = args.getArgumentsAsString(2);
-
+            switch (args.getArguments()[0]) {
+                case "--cancel":
+                    int timerKey = 0;
                     try {
-                        repetitions = Integer.parseInt(args.getArguments()[0]);
-                        interval = Integer.parseInt(args.getArguments()[1]);
+                        timerKey = Integer.parseInt(args.getArgumentsAsString(1));
                     } catch (NumberFormatException ex) {
                         doUsage(origin, args.isSilent());
                         return;
                     }
-
-                    if (interval < 1) {
-                        sendLine(origin, args.isSilent(), FORMAT_ERROR, "Cannot use" +
-                                " intervals below 1");
+                    if (manager.hasTimerWithID(timerKey)) {
+                        manager.getTimerByID(timerKey).cancelTimer();
+                        sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Timer cancelled");
+                    } else {
+                        sendLine(origin, args.isSilent(), FORMAT_ERROR, "There is currently"
+                                + " no timer with that ID");
                         return;
                     }
+                    break;
+                case "--list":
+                    final Set<Entry<Integer, TimedCommand>> timerList = manager.listTimers();
+                    if (!timerList.isEmpty()) {
+                        for (Entry<Integer, TimedCommand> entry : timerList) {
+                            sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Timer ID: "
+                                    + entry.getKey() + " - " + entry.getValue().getCommand());
+                        }
+                    } else {
+                        sendLine(origin, args.isSilent(), FORMAT_ERROR, "There are " +
+                                "currently no active timers");
+                    }
+                    break;
+                default:
+                    if (args.getArguments().length < 3) {
+                        doUsage(origin, args.isSilent());
+                    } else {
+                        int repetitions = 0;
+                        int interval = 0;
 
-                    manager.addTimer(repetitions, interval, command,
-                            origin);
+                        final String command = args.getArgumentsAsString(2);
 
-                    sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Command scheduled.");
-                }
+                        try {
+                            repetitions = Integer.parseInt(args.getArguments()[0]);
+                            interval = Integer.parseInt(args.getArguments()[1]);
+                        } catch (NumberFormatException ex) {
+                            doUsage(origin, args.isSilent());
+                            return;
+                        }
+
+                        if (interval < 1) {
+                            sendLine(origin, args.isSilent(), FORMAT_ERROR, "Cannot use" +
+                                    " intervals below 1");
+                            return;
+                        }
+
+                        manager.addTimer(repetitions, interval, command,
+                                origin);
+
+                        sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Command scheduled.");
+                    }   break;
             }
         } else {
             doUsage(origin, args.isSilent());

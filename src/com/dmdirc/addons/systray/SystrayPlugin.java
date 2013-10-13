@@ -148,10 +148,13 @@ public class SystrayPlugin extends BaseCommandPlugin implements
      */
     @Override
     public void actionPerformed(final ActionEvent e) {
-        if (e.getActionCommand().equals("Show/hide")) {
-            mainFrame.setVisible(!mainFrame.isVisible());
-        } else if (e.getActionCommand().equals("Quit")) {
-            mainFrame.quit();
+        switch (e.getActionCommand()) {
+            case "Show/hide":
+                mainFrame.setVisible(!mainFrame.isVisible());
+                break;
+            case "Quit":
+                mainFrame.quit();
+                break;
         }
     }
 

@@ -52,16 +52,22 @@ public class URIHandlerCellRenderer extends DefaultTableCellRenderer {
         }
 
         String handler = (String) value;
-        if ("DMDIRC".equals(handler)) {
-            handler = "Handle internally (irc links only).";
-        } else if ("BROWSER".equals(handler)) {
-            handler = "Use browser (or system registered handler).";
-        } else if ("MAIL".equals(handler)) {
-            handler = "Use mail client.";
-        } else if ("".equals(handler)) {
-            handler = "No handler.";
-        } else {
-            handler = "Custom command: " + handler;
+        switch (handler) {
+            case "DMDIRC":
+                handler = "Handle internally (irc links only).";
+                break;
+            case "BROWSER":
+                handler = "Use browser (or system registered handler).";
+                break;
+            case "MAIL":
+                handler = "Use mail client.";
+                break;
+            case "":
+                handler = "No handler.";
+                break;
+            default:
+                handler = "Custom command: " + handler;
+                break;
         }
 
         setValue(handler);

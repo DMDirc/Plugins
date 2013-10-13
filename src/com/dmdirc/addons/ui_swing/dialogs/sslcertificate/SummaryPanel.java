@@ -53,7 +53,7 @@ public class SummaryPanel extends JPanel {
      */
     public SummaryPanel(final IconManager iconManager) {
         this.iconManager = iconManager;
-        summary = new ArrayList<CertificateSummaryEntry>();
+        summary = new ArrayList<>();
         layoutComponents();
     }
 

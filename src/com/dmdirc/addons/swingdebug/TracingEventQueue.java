@@ -33,6 +33,7 @@ import com.dmdirc.interfaces.config.IdentityController;
 import com.dmdirc.plugins.Plugin;
 
 import java.awt.AWTEvent;
+import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadInfo;
 import java.lang.management.ThreadMXBean;
@@ -42,6 +43,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.management.MBeanServer;
+import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 
 /**
@@ -100,7 +102,7 @@ public class TracingEventQueue extends DMDircEventQueue implements
                 threadBean = ManagementFactory.newPlatformMXBeanProxy(
                         mbeanServer, name.toString(), ThreadMXBean.class);
             }
-        } catch (final Exception e) {
+        } catch (final MalformedObjectNameException | IOException e) {
             e.printStackTrace();
         }
     }

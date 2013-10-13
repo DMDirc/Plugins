@@ -92,8 +92,7 @@ public class SendWorker extends LoggingSwingWorker<Object, Void> {
     /** {@inheritDoc} */
     @Override
     protected Object doInBackground() {
-        final Map<String, String> postData =
-                new HashMap<String, String>();
+        final Map<String, String> postData = new HashMap<>();
 
         if (!name.isEmpty()) {
             postData.put("name", name);
@@ -126,8 +125,7 @@ public class SendWorker extends LoggingSwingWorker<Object, Void> {
      */
     private void sendData(final Map<String, String> postData) {
         try {
-            final List<String> response =
-                    Downloader.getPage("http://www.dmdirc.com/feedback.php",
+            final List<String> response = Downloader.getPage("http://www.dmdirc.com/feedback.php",
                     postData);
             if (response.size() >= 1) {
                 for (final String responseLine : response) {

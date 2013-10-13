@@ -368,22 +368,25 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
 
         if ("ui".equals(domain) && getContainer().getConfigManager() != null
                 && getInputField() != null && !UIUtilities.isGTKUI()) {
-            if ("inputbackgroundcolour".equals(key)
-                    || "backgroundcolour".equals(key)) {
-                getInputField().setBackground(UIUtilities.convertColour(
-                        getContainer().getConfigManager().
-                        getOptionColour("ui", "inputbackgroundcolour",
-                        "ui", "backgroundcolour")));
-            } else if ("inputforegroundcolour".equals(key)
-                    || "foregroundcolour".equals(key)) {
-                getInputField().setForeground(UIUtilities.convertColour(
-                        getContainer().getConfigManager()
-                        .getOptionColour("ui", "inputforegroundcolour",
-                        "ui", "foregroundcolour")));
-                getInputField().setCaretColor(UIUtilities.convertColour(
-                        getContainer().getConfigManager()
-                        .getOptionColour("ui", "inputforegroundcolour",
-                        "ui", "foregroundcolour")));
+            switch (key) {
+                case "inputbackgroundcolour":
+                case "backgroundcolour":
+                    getInputField().setBackground(UIUtilities.convertColour(
+                            getContainer().getConfigManager().
+                                    getOptionColour("ui", "inputbackgroundcolour",
+                                            "ui", "backgroundcolour")));
+                    break;
+                case "inputforegroundcolour":
+                case "foregroundcolour":
+                    getInputField().setForeground(UIUtilities.convertColour(
+                            getContainer().getConfigManager()
+                                    .getOptionColour("ui", "inputforegroundcolour",
+                                            "ui", "foregroundcolour")));
+                    getInputField().setCaretColor(UIUtilities.convertColour(
+                            getContainer().getConfigManager()
+                                    .getOptionColour("ui", "inputforegroundcolour",
+                                            "ui", "foregroundcolour")));
+                    break;
             }
         }
     }

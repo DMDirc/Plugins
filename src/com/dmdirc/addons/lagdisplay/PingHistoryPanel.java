@@ -102,7 +102,7 @@ public class PingHistoryPanel extends JPanel {
 
         long last1 = -1, last2 = -1;
         final List<Long> list = history.getList();
-        final List<Rectangle> rects = new ArrayList<Rectangle>();
+        final List<Rectangle> rects = new ArrayList<>();
 
         for (int i = 0; i < list.size(); i++) {
             final Long value = list.get(i);

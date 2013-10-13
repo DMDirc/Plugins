@@ -44,7 +44,7 @@ public final class IdentdServer implements Runnable {
     private ServerSocket serverSocket;
 
     /** Arraylist of all the clients we have */
-    private final List<IdentClient> clientList = new ArrayList<IdentClient>();
+    private final List<IdentClient> clientList = new ArrayList<>();
 
     /** The plugin that owns us. */
     private final IdentdPlugin myPlugin;

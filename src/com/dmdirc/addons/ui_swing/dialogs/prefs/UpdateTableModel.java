@@ -65,8 +65,8 @@ public class UpdateTableModel extends AbstractTableModel {
     public UpdateTableModel(final Collection<UpdateComponent> updates) {
         super();
 
-        this.updates = new ArrayList<UpdateComponent>(updates);
-        this.enabled = new HashMap<UpdateComponent, Boolean>();
+        this.updates = new ArrayList<>(updates);
+        this.enabled = new HashMap<>();
 
         for (UpdateComponent update : this.updates) {
             enabled.put(update,

@@ -85,7 +85,7 @@ public class ServerGroupWriter {
     protected void writeGroup(final ServerGroup group, final Set<String> sections) {
         final String domain = group.getName() + " servergroup";
 
-        final List<String> children = new ArrayList<String>();
+        final List<String> children = new ArrayList<>();
 
         for (ServerGroupItem item : group.getItems()) {
             if (item instanceof ServerGroup) {

@@ -73,7 +73,7 @@ public class ToolTipPanel extends JPanel implements MouseListener {
         super(new MigLayout("hidemode 3"));
 
         defaultHelp = helpText;
-        tooltips = new HashMap<JComponent, String>();
+        tooltips = new HashMap<>();
         icon = new JLabel(iconManager.getIcon("warning"));
 
         setBackground(Color.WHITE);
