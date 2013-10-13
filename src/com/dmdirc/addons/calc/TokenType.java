@@ -184,7 +184,7 @@ public enum TokenType {
      */
     public synchronized List<TokenType> getFollowers() {
         if (follows == null) {
-            follows = new ArrayList<TokenType>();
+            follows = new ArrayList<>();
 
             for (int i = 0; i < strfollows.length; i++) {
                 follows.addAll(searchValueOf(strfollows[i]));
@@ -230,7 +230,7 @@ public enum TokenType {
      * @return A list of matching tokens
      */
     protected static List<TokenType> searchValueOf(final String name) {
-        final List<TokenType> res = new ArrayList<TokenType>();
+        final List<TokenType> res = new ArrayList<>();
 
         for (TokenType token : values()) {
             if ((name.endsWith("*") && token.name().startsWith(name.substring(0,

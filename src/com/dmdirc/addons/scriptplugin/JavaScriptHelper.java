@@ -41,8 +41,7 @@ public class JavaScriptHelper {
     private static final int VERSION = 2;
 
     /** Hashtable for storing stuff. */
-    private static final Map<String, Object> SETTINGS
-            = new HashMap<String, Object>();
+    private static final Map<String, Object> SETTINGS = new HashMap<>();
 
     /**
      * Method to set Stuff.

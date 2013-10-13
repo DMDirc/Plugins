@@ -46,14 +46,14 @@ public class DBusMediaSource extends BasePlugin implements MediaSourceManager {
     private List<MediaSource> sources;
     /** A map of discovered mpris sources. */
     private final Map<String, MediaSource> mprisSources
-            = new HashMap<String, MediaSource>();
+            = new HashMap<>();
     /** The path to qdbus. */
     private String qdbus;
 
     /** {@inheritDoc} */
     @Override
     public void onLoad() {
-        sources = new ArrayList<MediaSource>();
+        sources = new ArrayList<>();
 
         if (new File("/usr/bin/qdbus").exists()) {
             qdbus = "/usr/bin/qdbus";
@@ -118,7 +118,7 @@ public class DBusMediaSource extends BasePlugin implements MediaSourceManager {
      * @return The output of the specified command
      */
     protected static List<String> getInfo(final String[] args) {
-        final ArrayList<String> result = new ArrayList<String>();
+        final ArrayList<String> result = new ArrayList<>();
 
         InputStreamReader reader;
         BufferedReader input;
@@ -154,7 +154,7 @@ public class DBusMediaSource extends BasePlugin implements MediaSourceManager {
      */
     protected static Map<String, String> parseDictionary(
             final List<String> lines) {
-        final Map<String, String> res = new HashMap<String, String>();
+        final Map<String, String> res = new HashMap<>();
 
         for (String line : lines) {
             final int index = line.indexOf(':', line.indexOf(':') + 1);

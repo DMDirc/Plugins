@@ -66,7 +66,7 @@ public final class CurrentOptionsPanel extends JPanel implements
         this.parent = parent;
 
         setOpaque(UIUtilities.getTabbedPaneOpaque());
-        settings = new ArrayList<JComponent>();
+        settings = new ArrayList<>();
     }
 
     /** Clears all the current options. */
@@ -106,7 +106,7 @@ public final class CurrentOptionsPanel extends JPanel implements
      */
     private void addCurrentOption(final JComponent component) {
         final JLabel label = new JLabel();
-        final ImageButton<JComponent> button = new ImageButton<JComponent>(
+        final ImageButton<JComponent> button = new ImageButton<>(
                 component.getName(), iconManager.getIcon("close-inactive"),
                 iconManager.getIcon("close-active"));
         button.setObject(component);

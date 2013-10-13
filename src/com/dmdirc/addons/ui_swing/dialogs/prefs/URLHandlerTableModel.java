@@ -211,7 +211,7 @@ public class URLHandlerTableModel extends AbstractTableModel {
      * @return URL Handler map
      */
     public Map<URI, String> getURLHandlers() {
-        final Map<URI, String> urlHandlers = new HashMap<URI, String>();
+        final Map<URI, String> urlHandlers = new HashMap<>();
 
         for (int i = 0; i < uris.size(); i++) {
             urlHandlers.put(uris.get(i), handlers.get(i));

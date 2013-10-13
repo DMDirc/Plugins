@@ -45,7 +45,7 @@ public class Parser {
     protected final Lexer lexer;
 
     static {
-        TOKENS_BY_PRECEDENCE = new ArrayList<TokenType>(Arrays.asList(
+        TOKENS_BY_PRECEDENCE = new ArrayList<>(Arrays.asList(
                 TokenType.values()));
         Collections.sort(TOKENS_BY_PRECEDENCE,
                 new TokenTypePrecedenceComparator());
@@ -61,7 +61,7 @@ public class Parser {
      * formula such as one involving a mis-matched bracket).
      */
     public TreeToken parse() throws ParseException {
-        final List<TreeToken> tokens = new ArrayList<TreeToken>();
+        final List<TreeToken> tokens = new ArrayList<>();
 
         for (Token token : lexer.tokenise()) {
             tokens.add(new TreeToken(token));
@@ -138,7 +138,7 @@ public class Parser {
      */
     protected void parseBracket(final List<TreeToken> tokens, final int offset)
             throws ParseException {
-        final List<TreeToken> stack = new ArrayList<TreeToken>();
+        final List<TreeToken> stack = new ArrayList<>();
 
         for (int i = offset - 1; i > 0; i--) {
             if (tokens.get(i).getToken().getType() == TokenType.BRACKET_OPEN

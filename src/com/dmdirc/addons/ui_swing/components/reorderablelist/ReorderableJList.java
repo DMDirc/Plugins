@@ -258,9 +258,7 @@ public class ReorderableJList extends JList implements DragSourceListener,
         Object dragged;
         try {
             dragged = dtde.getTransferable().getTransferData(dataFlavor);
-        } catch (UnsupportedFlavorException e) {
-            return;
-        } catch (IOException e) {
+        } catch (UnsupportedFlavorException | IOException e) {
             return;
         }
 
@@ -293,7 +291,7 @@ public class ReorderableJList extends JList implements DragSourceListener,
         //get the list object
         final Object target = getModel().getElementAt(index);
         //create the trasnferable object
-        final ArrayList<Object> transferObject = new ArrayList<Object>();
+        final ArrayList<Object> transferObject = new ArrayList<>();
         transferObject.add(target);
         final Transferable trans = new ArrayListTransferable(transferObject);
         //start drag

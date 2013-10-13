@@ -66,12 +66,9 @@ public class ErrorPopup extends StatusbarPopupWindow {
     /** {@inheritDoc} */
     @Override
     protected void initContent(final JPanel panel) {
-        final List<ProgramError> errors = ErrorManager.getErrorManager()
-                .getErrors();
-        final MapList<ErrorLevel, ProgramError> buckets
-                = new MapList<ErrorLevel, ProgramError>();
-        final MapList<ErrorReportStatus, ProgramError> statuses
-                = new MapList<ErrorReportStatus, ProgramError>();
+        final List<ProgramError> errors = ErrorManager.getErrorManager().getErrors();
+        final MapList<ErrorLevel, ProgramError> buckets = new MapList<>();
+        final MapList<ErrorReportStatus, ProgramError> statuses = new MapList<>();
 
         for (final ProgramError error : errors) {
             buckets.add(error.getLevel(), error);

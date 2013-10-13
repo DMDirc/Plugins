@@ -67,9 +67,9 @@ public class NotificationConfig extends JPanel implements PreferencesInterface {
         super();
 
         if (methods == null) {
-            this.methods = new LinkedList<String>();
+            this.methods = new LinkedList<>();
         } else {
-            this.methods = new LinkedList<String>(methods);
+            this.methods = new LinkedList<>(methods);
         }
         this.plugin = plugin;
 
@@ -115,7 +115,7 @@ public class NotificationConfig extends JPanel implements PreferencesInterface {
      * @return An ordered list of methods
      */
     public List<String> getMethods() {
-        final List<String> newMethods = new LinkedList<String>();
+        final List<String> newMethods = new LinkedList<>();
 
         final Enumeration<?> values = list.getModel().elements();
 

@@ -53,7 +53,7 @@ public final class DcopPlugin extends BaseCommandPlugin {
      * @return The output of the specified command
      */
     public static List<String> getDcopResult(final String command) {
-        final ArrayList<String> result = new ArrayList<String>();
+        final ArrayList<String> result = new ArrayList<>();
 
         InputStreamReader reader;
         BufferedReader input;

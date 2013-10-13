@@ -112,16 +112,21 @@ public class ServerMenu extends JMenu implements ActionListener,
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(final ActionEvent e) {
-        if ("NewServer".equals(e.getActionCommand())) {
-            controller.showDialog(NewServerDialog.class);
-        } else if (e.getActionCommand().equals("Exit")) {
-            mainFrame.quit();
-        } else if (e.getActionCommand().equals("ServerSettings")) {
-            controller.showServerSettingsDialog(controller.getMainFrame()
-                    .getActiveFrame().getContainer().getServer());
-        } else if (e.getActionCommand().equals("Disconnect")) {
-            controller.getMainFrame().getActiveFrame().getContainer()
-                    .getServer().disconnect();
+        switch (e.getActionCommand()) {
+            case "NewServer":
+                controller.showDialog(NewServerDialog.class);
+                break;
+            case "Exit":
+                mainFrame.quit();
+                break;
+            case "ServerSettings":
+                controller.showServerSettingsDialog(controller.getMainFrame()
+                        .getActiveFrame().getContainer().getServer());
+                break;
+            case "Disconnect":
+                controller.getMainFrame().getActiveFrame().getContainer()
+                        .getServer().disconnect();
+                break;
         }
     }
 

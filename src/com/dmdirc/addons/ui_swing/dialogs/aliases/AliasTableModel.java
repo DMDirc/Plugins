@@ -58,7 +58,7 @@ public final class AliasTableModel extends AbstractTableModel {
     public AliasTableModel(final List<Alias> aliases) {
         super();
 
-        this.aliases = new ArrayList<Alias>(aliases);
+        this.aliases = new ArrayList<>(aliases);
     }
 
     /**
@@ -67,7 +67,7 @@ public final class AliasTableModel extends AbstractTableModel {
      * @param aliases List of aliases
      */
     public void setAliases(final List<Alias> aliases) {
-        this.aliases = new ArrayList<Alias>(aliases);
+        this.aliases = new ArrayList<>(aliases);
 
         fireTableDataChanged();
     }
@@ -181,7 +181,7 @@ public final class AliasTableModel extends AbstractTableModel {
      * @return Complete alias list
      */
     public List<Alias> getAliases() {
-        return new ArrayList<Alias>(aliases);
+        return new ArrayList<>(aliases);
     }
 
     /**

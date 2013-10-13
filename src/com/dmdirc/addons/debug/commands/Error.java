@@ -19,7 +19,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 package com.dmdirc.addons.debug.commands;
 
 import com.dmdirc.FrameContainer;
@@ -38,7 +37,9 @@ import com.dmdirc.ui.input.AdditionalTabTargets;
  */
 public class Error extends DebugCommand implements IntelligentCommand {
 
-    /** Error level to create. */
+    /**
+     * Error level to create.
+     */
     private ErrorLevel el = ErrorLevel.HIGH;
 
     /**
@@ -51,33 +52,38 @@ public class Error extends DebugCommand implements IntelligentCommand {
         super(plugin, command);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getName() {
         return "error";
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getUsage() {
         return "<user|app> [<low|medium|high|fatal|unknown>] - Creates an error"
                 + " with the specified parameters, defaults to high priority.";
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
         if ((args.getArguments().length == 1
                 || args.getArguments().length == 2)
                 && args.getArguments()[0].equals("user")) {
-            Logger.userError(getLevel(args.getArguments()),
-                    "Debug error message");
+            Logger.userError(getLevel(args.getArguments()), "Debug error message");
         } else if ((args.getArguments().length == 1
                 || args.getArguments().length == 2)
                 && args.getArguments()[0].equals("app")) {
-            Logger.appError(getLevel(args.getArguments()),
-                    "Debug error message", new IllegalArgumentException());
+            Logger.appError(getLevel(args.getArguments()), "Debug error message",
+                    new IllegalArgumentException());
         } else {
             showUsage(origin, args.isSilent(), getName(), getUsage());
         }
@@ -91,26 +97,16 @@ public class Error extends DebugCommand implements IntelligentCommand {
      * @return Error level
      */
     private ErrorLevel getLevel(final String... args) {
-        if (args.length >= 2) {
-            final String level = args[1];
-            if ("low".equals(level)) {
-                el = ErrorLevel.LOW;
-            } else if ("medium".equals(level)) {
-                el = ErrorLevel.MEDIUM;
-            } else if ("fatal".equals(level)) {
-                el = ErrorLevel.FATAL;
-            } else if ("unknown".equals(level)) {
-                el = ErrorLevel.UNKNOWN;
-            } else {
-                el = ErrorLevel.HIGH;
-            }
-        } else {
-            el = ErrorLevel.HIGH;
+        try {
+            return ErrorLevel.valueOf(args[1].toUpperCase());
+        } catch (IllegalArgumentException ex) {
+            return ErrorLevel.HIGH;
         }
-        return el;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public AdditionalTabTargets getSuggestions(final int arg,
             final IntelligentCommandContext context) {

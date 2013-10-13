@@ -301,8 +301,7 @@ public final class WindowMenuFrameManager extends JMenu implements
     /** {@inheritDoc} */
     @Override
     public void selectionChanged(final TextFrame window) {
-        final Collection<SelectionListener> values =
-                new ArrayList<SelectionListener>();
+        final Collection<SelectionListener> values = new ArrayList<>();
         synchronized (menus) {
             synchronized (items) {
                 synchronized (menuItems) {
