@@ -98,10 +98,10 @@ public class XmppParser extends BaseSocketAwareParser {
     private ChatStateManager stateManager;
 
     /** A cache of known chats. */
-    private final Map<String, Chat> chats = new HashMap<String, Chat>();
+    private final Map<String, Chat> chats = new HashMap<>();
 
     /** A cache of known clients. */
-    private final Map<String, XmppClientInfo> contacts = new HashMap<String, XmppClientInfo>();
+    private final Map<String, XmppClientInfo> contacts = new HashMap<>();
 
     /** Whether or not to use a fake local channel for a buddy list replacement. */
     private final boolean useFakeChannel;

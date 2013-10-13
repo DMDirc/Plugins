@@ -33,8 +33,8 @@ import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
 import com.dmdirc.addons.ui_swing.dialogs.StringArrayComparator;
 import com.dmdirc.addons.ui_swing.dialogs.actioneditor.ActionEditorDialog;
 
-import java.awt.Window;
 import java.awt.Dialog.ModalityType;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -138,8 +138,7 @@ public final class ActionsGroupPanel extends JPanel implements ActionListener,
      */
     private void initComponents() {
         scrollPane = new JScrollPane();
-        model = new ActionTableModel(group == null ? new ArrayList<Action>()
-                : group.getActions());
+        model = new ActionTableModel(group == null ? new ArrayList<Action>() : group.getActions());
         table = new PackingTable(model, scrollPane, false) {
 
             /**
@@ -150,16 +149,13 @@ public final class ActionsGroupPanel extends JPanel implements ActionListener,
              */
             private static final long serialVersionUID = 1;
             /** Action type renderer. */
-            private final ActionTypeTableCellRenderer typeRenderer =
-                    new ActionTypeTableCellRenderer();
+            private final ActionTypeTableCellRenderer typeRenderer = new ActionTypeTableCellRenderer();
             /** Action response renrderer. */
-            private final ArrayCellRenderer arrayRenderer =
-                    new ArrayCellRenderer();
+            private final ArrayCellRenderer arrayRenderer = new ArrayCellRenderer();
 
             /** {@inheritDoc} */
             @Override
-            public TableCellRenderer getCellRenderer(final int row,
-                    final int column) {
+            public TableCellRenderer getCellRenderer(final int row, final int column) {
                 switch (column) {
                     case 1:
                         return typeRenderer;
@@ -173,7 +169,7 @@ public final class ActionsGroupPanel extends JPanel implements ActionListener,
 
 
         final TableRowSorter<ActionTableModel> sorter
-                = new TableRowSorter<ActionTableModel>(model);
+                = new TableRowSorter<>(model);
         sorter.setComparator(1, new ActionTypeComparator());
         sorter.setComparator(2, new StringArrayComparator());
 

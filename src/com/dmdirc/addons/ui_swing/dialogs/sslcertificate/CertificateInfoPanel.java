@@ -69,13 +69,12 @@ public class CertificateInfoPanel extends JScrollPane {
 
     private void initComponents() {
         content = new JPanel();
-        certificateInfo = new ArrayList<List<CertificateInformationEntry>>();
+        certificateInfo = new ArrayList<>();
     }
 
     private void layoutComponents() {
         setBorder(BorderFactory.createTitledBorder(UIManager.getBorder(
-                "TitledBorder.border"), "Information for " +
-                certificateName));
+                "TitledBorder.border"), "Information for " + certificateName));
         content.setVisible(false);
         content.removeAll();
         content.setLayout(new MigLayout("fillx, wmax 100%, wrap 2, pack"));
@@ -83,8 +82,7 @@ public class CertificateInfoPanel extends JScrollPane {
         int i = 1;
         for (List<CertificateInformationEntry> entry : certificateInfo) {
             for (CertificateInformationEntry info : entry) {
-                content.add(new TextLabel(info.getTitle() + ": "),
-                        "alignx right");
+                content.add(new TextLabel(info.getTitle() + ": "), "alignx right");
                 final TextLabel text = new TextLabel(info.getValue(), false);
                 if (info.isInvalid()) {
                     final SimpleAttributeSet sas = new SimpleAttributeSet();
@@ -120,8 +118,7 @@ public class CertificateInfoPanel extends JScrollPane {
         this.certificateName = certificateName;
 
         if (certificateInfo == null) {
-            this.certificateInfo =
-                    new ArrayList<List<CertificateInformationEntry>>();
+            this.certificateInfo = new ArrayList<>();
         }
         layoutComponents();
     }

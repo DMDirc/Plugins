@@ -61,7 +61,7 @@ public class ActionTableModel extends AbstractTableModel {
         super();
 
         if (actions == null) {
-            this.actions = new ArrayList<Action>();
+            this.actions = new ArrayList<>();
         } else {
             this.actions = actions;
         }
@@ -165,7 +165,7 @@ public class ActionTableModel extends AbstractTableModel {
     public void setActionGroup(final ActionGroup group) {
         synchronized (actions) {
             if (group == null) {
-                actions = new ArrayList<Action>();
+                actions = new ArrayList<>();
             } else {
                 actions = group.getActions();
             }

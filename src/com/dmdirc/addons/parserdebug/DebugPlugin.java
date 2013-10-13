@@ -45,8 +45,7 @@ public final class DebugPlugin extends BaseCommandPlugin implements
         DebugInfoListener, ActionListener {
 
     /** Map of parsers registered. */
-    protected final Map<Parser, DebugWindow> registeredParsers
-            = new HashMap<Parser, DebugWindow>();
+    protected final Map<Parser, DebugWindow> registeredParsers = new HashMap<>();
     /** The action controller to use. */
     private final ActionController actionController;
 
@@ -79,7 +78,7 @@ public final class DebugPlugin extends BaseCommandPlugin implements
     public void onUnload() {
         actionController.unregisterListener(this);
 
-        final ArrayList<DebugWindow> windowList = new ArrayList<DebugWindow>();
+        final ArrayList<DebugWindow> windowList = new ArrayList<>();
         for (Parser parser : registeredParsers.keySet()) {
             try {
                 parser.getCallbackManager().delCallback(DebugInfoListener.class, this);

@@ -110,7 +110,7 @@ public final class SwingSearchBar extends JPanel implements ActionListener,
 
     /** Initialises components. */
     private void initComponents() {
-        closeButton = new ImageButton<Object>("close",
+        closeButton = new ImageButton<>("close",
                 parent.getIconManager().getIcon("close-inactive"),
                 parent.getIconManager().getIcon("close-active"));
         nextButton = new JButton();

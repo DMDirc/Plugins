@@ -221,7 +221,7 @@ public final class ArrayListTransferHandler extends TransferHandler {
                 return null;
             }
 
-            final ArrayList<Object> alist = new ArrayList<Object>(values.length);
+            final ArrayList<Object> alist = new ArrayList<>(values.length);
 
             for (int i = 0; i < values.length; i++) {
                 final Object o = values[i];

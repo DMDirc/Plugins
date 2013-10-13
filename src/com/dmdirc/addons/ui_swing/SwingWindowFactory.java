@@ -28,11 +28,11 @@ import com.dmdirc.addons.ui_swing.components.frames.CustomFrame;
 import com.dmdirc.addons.ui_swing.components.frames.CustomInputFrame;
 import com.dmdirc.addons.ui_swing.components.frames.ServerFrame;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
+import com.dmdirc.interfaces.ui.FrameListener;
+import com.dmdirc.interfaces.ui.Window;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.ui.core.components.WindowComponent;
-import com.dmdirc.interfaces.ui.FrameListener;
-import com.dmdirc.interfaces.ui.Window;
 import com.dmdirc.util.collections.ListenerList;
 
 import java.util.Arrays;
@@ -50,12 +50,9 @@ import java.util.Set;
 public class SwingWindowFactory implements FrameListener {
 
     /** A map of known implementations of window interfaces. */
-    private final Map<Collection<String>, Class<? extends Window>>
-            implementations = new HashMap<Collection<String>,
-            Class<? extends Window>>();
+    private final Map<Collection<String>, Class<? extends Window>> implementations = new HashMap<>();
     /** A map of frame containers to their Swing windows. */
-    private final Map<FrameContainer, TextFrame> windows
-            = new HashMap<FrameContainer, TextFrame>();
+    private final Map<FrameContainer, TextFrame> windows = new HashMap<>();
     /** The controller that owns this window factory. */
     private final SwingController controller;
     /** Our list of listeners. */
@@ -69,19 +66,19 @@ public class SwingWindowFactory implements FrameListener {
     public SwingWindowFactory(final SwingController controller) {
         this.controller = controller;
 
-        registerImplementation(new HashSet<String>(
+        registerImplementation(new HashSet<>(
                 Arrays.asList(WindowComponent.TEXTAREA.getIdentifier())),
                 CustomFrame.class);
-        registerImplementation(new HashSet<String>(
+        registerImplementation(new HashSet<>(
                 Arrays.asList(WindowComponent.TEXTAREA.getIdentifier(),
                 WindowComponent.INPUTFIELD.getIdentifier())),
                 CustomInputFrame.class);
-        registerImplementation(new HashSet<String>(
+        registerImplementation(new HashSet<>(
                 Arrays.asList(WindowComponent.TEXTAREA.getIdentifier(),
                 WindowComponent.INPUTFIELD.getIdentifier(),
                 WindowComponent.CERTIFICATE_VIEWER.getIdentifier())),
                 ServerFrame.class);
-        registerImplementation(new HashSet<String>(
+        registerImplementation(new HashSet<>(
                 Arrays.asList(WindowComponent.TEXTAREA.getIdentifier(),
                 WindowComponent.INPUTFIELD.getIdentifier(),
                 WindowComponent.TOPICBAR.getIdentifier(),
@@ -134,8 +131,7 @@ public class SwingWindowFactory implements FrameListener {
         if (implementations.containsKey(window.getComponents())) {
             clazz = implementations.get(window.getComponents());
         } else {
-            Logger.userError(ErrorLevel.HIGH,
-                    "Unable to create window: Unknown type");
+            Logger.userError(ErrorLevel.HIGH, "Unable to create window: Unknown type");
             return null;
         }
 
@@ -145,7 +141,7 @@ public class SwingWindowFactory implements FrameListener {
             windows.put(window, frame);
 
             return frame;
-        } catch (Exception ex) {
+        } catch (ReflectiveOperationException ex) {
             Logger.appError(ErrorLevel.HIGH, "Unable to create window", ex);
             return null;
         }
