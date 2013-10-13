@@ -254,7 +254,7 @@ public class ActionEditorDialog extends StandardDialog implements
         conditions.getConditions();
         conditions.getConditionTree();
         if (action == null) {
-            final Action newAction = actionFactory.create(group, name.getActionName(),
+            final Action newAction = actionFactory.getAction(group, name.getActionName(),
                     triggers.getTriggers(), response.getResponse(),
                     conditions.getConditions(), conditions.getConditionTree(),
                     response.getFormatter());
