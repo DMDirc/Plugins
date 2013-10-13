@@ -250,7 +250,7 @@ public final class FeedbackDialog extends StandardDialog implements
     }
 
     /**
-     * @{inheritDoc}
+     * {@inheritDoc}
      *
      * @param e Document event
      */

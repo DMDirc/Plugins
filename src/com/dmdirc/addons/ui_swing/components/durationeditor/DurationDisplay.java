@@ -65,6 +65,8 @@ public class DurationDisplay extends JPanel implements ActionListener,
 
     /**
      * Initialises a new duration display of 0 milliseconds.
+     *
+     * @param controller Controller for dialog creation
      */
     public DurationDisplay(final SwingController controller) {
         this(controller, 0);
@@ -73,6 +75,7 @@ public class DurationDisplay extends JPanel implements ActionListener,
     /**
      * Instantiates a new duration display.
      *
+     * @param controller Controller for dialog creation
      * @param window Parent window.
      *
      * @since 0.6
@@ -85,6 +88,7 @@ public class DurationDisplay extends JPanel implements ActionListener,
     /**
      * Instantiates a new duration display.
      *
+     * @param controller Controller for dialog creation
      * @param duration Starting duration
      */
     public DurationDisplay(final SwingController controller,
@@ -95,6 +99,7 @@ public class DurationDisplay extends JPanel implements ActionListener,
     /**
      * Initialises a new duration display showing the specified millisecond duration.
      *
+     * @param controller Controller for dialog creation
      * @param window Parent window.
      * @param duration Duration to display in milliseconds
      *

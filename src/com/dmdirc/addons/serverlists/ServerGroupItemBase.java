@@ -103,8 +103,7 @@ public abstract class ServerGroupItemBase implements ServerGroupItem {
     protected abstract ServerGroup getParent();
 
     /**
-     * Returns the {@link Identity} which corresponds to this server's desired
-     * profile.
+     * Returns the {@link ConfigProvider} which corresponds to this server's desired profile.
      *
      * @return This server's profile identity
      */

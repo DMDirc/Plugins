@@ -89,6 +89,7 @@ public class Apple implements InvocationHandler, ActionListener {
      * </ul>
      *
      * @param configManager Config manager
+     * @param controller Parent swing controller
      */
     public Apple(final AggregateConfigProvider configManager, final SwingController controller) {
         this.configManager = configManager;
@@ -125,7 +126,7 @@ public class Apple implements InvocationHandler, ActionListener {
     private Object reflectMethod(final Object obj, final String className, final String methodName, final Class[] classes, final Object[] objects) {
         try {
             final Class<?> clazz = className == null ? obj.getClass() : Class.forName(className);
-            final Method method = clazz.getMethod(methodName, classes == null ? new Class[0] : classes);
+            final Method method = clazz.getMethod(methodName, classes == null ? new Class<?>[0] : classes);
             return method.invoke(obj, objects == null ? new Object[0] : objects);
         } catch (IllegalArgumentException | InvocationTargetException |
                 ClassNotFoundException | NoSuchMethodException | IllegalAccessException ex) {
@@ -209,7 +210,7 @@ public class Apple implements InvocationHandler, ActionListener {
      *                   the foreground, or only the foremost one
      */
     public void requestForeground(final boolean allWindows) {
-        doAppleMethod("requestForeground", new Class[]{Boolean.TYPE}, new Object[]{allWindows});
+        doAppleMethod("requestForeground", new Class<?>[]{Boolean.TYPE}, new Object[]{allWindows});
     }
 
     /**
@@ -222,7 +223,7 @@ public class Apple implements InvocationHandler, ActionListener {
      *            otherwise it will bounce until clicked on.
      */
     public void requestUserAttention(final boolean isCritical) {
-        doAppleMethod("requestUserAttention", new Class[]{Boolean.TYPE}, new Object[]{isCritical});
+        doAppleMethod("requestUserAttention", new Class<?>[]{Boolean.TYPE}, new Object[]{isCritical});
     }
 
     /**
@@ -231,7 +232,7 @@ public class Apple implements InvocationHandler, ActionListener {
      * @param menu the PopupMenu to attach to this application's Dock icon
      */
     public void setDockMenu(final PopupMenu menu) {
-        doAppleMethod("setDockMenu", new Class[]{PopupMenu.class}, new Object[]{menu});
+        doAppleMethod("setDockMenu", new Class<?>[]{PopupMenu.class}, new Object[]{menu});
     }
 
     /**
@@ -250,7 +251,7 @@ public class Apple implements InvocationHandler, ActionListener {
      * @param image The image to use
      */
     public void setDockIconImage(final Image image) {
-        doAppleMethod("setDockIconImage", new Class[]{Image.class}, new Object[]{image});
+        doAppleMethod("setDockIconImage", new Class<?>[]{Image.class}, new Object[]{image});
     }
 
     /**
@@ -270,7 +271,7 @@ public class Apple implements InvocationHandler, ActionListener {
      * @param badge textual label to affix to the Dock icon
      */
     public void setDockIconBadge(final String badge) {
-        doAppleMethod("setDockIconBadge", new Class[]{String.class}, new Object[]{badge});
+        doAppleMethod("setDockIconBadge", new Class<?>[]{String.class}, new Object[]{badge});
     }
 
     /**
@@ -281,7 +282,7 @@ public class Apple implements InvocationHandler, ActionListener {
      * @param menuBar to use when no other frames are active
      */
     public void setDefaultMenuBar(final JMenuBar menuBar) {
-        doAppleMethod("setDefaultMenuBar", new Class[]{JMenuBar.class}, new Object[]{menuBar});
+        doAppleMethod("setDefaultMenuBar", new Class<?>[]{JMenuBar.class}, new Object[]{menuBar});
     }
 
     /**
@@ -294,9 +295,9 @@ public class Apple implements InvocationHandler, ActionListener {
     private boolean addHandler(final String handlerClass, final String handlerMethod) {
         try {
             final Class<?> listenerClass = Class.forName(handlerClass);
-            final Object listener = Proxy.newProxyInstance(getClass().getClassLoader(), new Class[]{listenerClass}, this);
+            final Object listener = Proxy.newProxyInstance(getClass().getClassLoader(), new Class<?>[]{listenerClass}, this);
 
-            final Method method = getApplication().getClass().getMethod(handlerMethod, new Class[]{listenerClass});
+            final Method method = getApplication().getClass().getMethod(handlerMethod, new Class<?>[]{listenerClass});
             method.invoke(getApplication(), listener);
 
             return true;
@@ -337,13 +338,13 @@ public class Apple implements InvocationHandler, ActionListener {
         }
 
         try {
-            final Class[] classes = new Class[args.length];
+            final Class<?>[] classes = new Class<?>[args.length];
 
             for (int i = 0; i < args.length; i++) {
                 if (EventObject.class.isInstance(args[i])) {
                     classes[i] = EventObject.class;
                 } else {
-                    final Class c = args[i].getClass();
+                    final Class<?> c = args[i].getClass();
                     if (c.getCanonicalName().equals("com.apple.eawt.QuitResponse")) {
                         classes[i] = Object.class;
                     } else {

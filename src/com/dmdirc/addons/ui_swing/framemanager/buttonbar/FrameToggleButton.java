@@ -23,6 +23,7 @@ package com.dmdirc.addons.ui_swing.framemanager.buttonbar;
 
 import com.dmdirc.FrameContainer;
 import com.dmdirc.interfaces.ui.Window;
+
 import javax.swing.Icon;
 import javax.swing.JToggleButton;
 
@@ -43,7 +44,13 @@ public class FrameToggleButton extends JToggleButton {
     /** Contains the window associated with this button. */
     private final Window window;
 
-    /** Create a new instance of FrameToggleButton. */
+    /**
+     * Create a new instance of FrameToggleButton.
+     *
+     * @param text Text to show
+     * @param icon Icon to show
+     * @param window Parent window
+     */
     public FrameToggleButton(final String text, final Icon icon, final Window window) {
         super(text, icon);
         this.window = window;

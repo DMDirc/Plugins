@@ -73,7 +73,7 @@ public final class WindowMenuFrameManager extends JMenu implements
     private final AtomicBoolean enabledMenuItems = new AtomicBoolean(false);
     /** Swing controller. */
     private final SwingController controller;
-    /** Window -> menu map. */
+    /** Window to menu map. */
     private final Map<FrameContainer, FrameContainerMenu> menus;
     private final Map<FrameContainer, FrameContainerMenuItem> items;
     private final Map<FrameContainer, FrameContainerMenuItem> menuItems;

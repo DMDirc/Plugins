@@ -47,7 +47,7 @@ public class ScriptEngineWrapper {
     private final File file;
 
     /** Script-Local JS Helper */
-    private JavaScriptHelper localHelper = new JavaScriptHelper();
+    private final JavaScriptHelper localHelper = new JavaScriptHelper();
 
     /** The script plugin that owns this wrapper. */
     private final ScriptPlugin plugin;
@@ -57,6 +57,9 @@ public class ScriptEngineWrapper {
      *
      * @param plugin The script plugin that owns this wrapper
      * @param filename Filename of script
+     *
+     * @throws java.io.FileNotFoundException If file is not found
+     * @throws javax.script.ScriptException If there was an error during creation
      */
     protected ScriptEngineWrapper(final ScriptPlugin plugin, final String filename) throws FileNotFoundException, ScriptException {
         this.plugin = plugin;
@@ -90,6 +93,11 @@ public class ScriptEngineWrapper {
 
     /**
      * Create a new engine for this script
+     *
+     * @return Created script engine
+     *
+     * @throws java.io.FileNotFoundException If file is not found
+     * @throws javax.script.ScriptException If there was an error during creation
      */
     protected ScriptEngine createEngine() throws FileNotFoundException, ScriptException {
         final ScriptEngine result = plugin.getScriptFactory().getEngineByName("JavaScript");
@@ -131,6 +139,8 @@ public class ScriptEngineWrapper {
 
     /**
      * Try to reload this script.
+     *
+     * @return True if script was reloaded
      */
     protected boolean reload() {
         // Tell the current engine that its about to be obliterated.

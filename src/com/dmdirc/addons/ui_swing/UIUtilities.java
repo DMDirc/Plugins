@@ -126,16 +126,7 @@ public final class UIUtilities {
     public static void initUISettings() {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (InstantiationException ex) {
-            throw new UnsupportedOperationException("Unable to switch to the " +
-                    "system look and feel", ex);
-        } catch (ClassNotFoundException ex) {
-            throw new UnsupportedOperationException("Unable to switch to the " +
-                    "system look and feel", ex);
-        } catch (UnsupportedLookAndFeelException ex) {
-            throw new UnsupportedOperationException("Unable to switch to the " +
-                    "system look and feel", ex);
-        } catch (IllegalAccessException ex) {
+        } catch (InstantiationException | ClassNotFoundException | UnsupportedLookAndFeelException | IllegalAccessException ex) {
             throw new UnsupportedOperationException("Unable to switch to the " +
                     "system look and feel", ex);
         }
@@ -167,7 +158,7 @@ public final class UIUtilities {
      * @param font New font
      */
     public static void setUIFont(final Font font) {
-        final Enumeration keys = UIManager.getDefaults().keys();
+        final Enumeration<?> keys = UIManager.getDefaults().keys();
         while (keys.hasMoreElements()) {
             final Object key = keys.nextElement();
             final Object value = UIManager.get(key);
@@ -238,9 +229,6 @@ public final class UIUtilities {
      * @param returnable Thread to be executed
      *
      * @return Result from the completed thread or null if an exception occurred
-     *
-     * @throws Exception This method will re throw any exception thrown in the
-     * executed code
      */
     @SneakyThrows
     @SuppressWarnings("PMD.AvoidThrowingRawExceptionTypes")
@@ -371,7 +359,7 @@ public final class UIUtilities {
      */
     public static String clipStringifNeeded(final JComponent component,
             final String string, final int avaiableWidth) {
-        if ((string == null) || (string.equals(""))) {
+        if ((string == null) || (string.isEmpty())) {
             return "";
         }
         final FontMetrics fm = component.getFontMetrics(component.getFont());
@@ -393,7 +381,7 @@ public final class UIUtilities {
      */
     public static String clipString(final JComponent component,
             final String string, final int avaiableWidth) {
-        if ((string == null) || (string.equals(""))) {
+        if ((string == null) || (string.isEmpty())) {
             return "";
         }
         final FontMetrics fm = component.getFontMetrics(component.getFont());
@@ -434,9 +422,9 @@ public final class UIUtilities {
      * colour of the textpane.
      *
      * @param g Graphics object to draw onto
-     * @param bounds
-     * @param backgroundImage
-     * @param backgroundOption
+     * @param bounds Bounds to paint within
+     * @param backgroundImage background image
+     * @param backgroundOption How to draw the background
      */
     public static void paintBackground(final Graphics2D g,
             final Rectangle bounds,

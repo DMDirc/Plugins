@@ -35,12 +35,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.Map.Entry;
+import java.util.TreeMap;
 
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.MutableTreeNode;
+import javax.swing.tree.TreeNode;
 
 /**
  * Background loader of licences into a list.
@@ -57,6 +59,7 @@ public class LicenceLoader extends LoggingSwingWorker<Void, Void> {
     /**
      * Instantiates a new licence loader.
      *
+     * @param controller to get plugin manager from to get plugin list from to read licenses
      * @param tree Tree
      * @param model Model to load licences into
      */
@@ -105,8 +108,7 @@ public class LicenceLoader extends LoggingSwingWorker<Void, Void> {
 
     private void addCoreLicences(final ResourceManager rm) {
         final DefaultMutableTreeNode root = new DefaultMutableTreeNode("DMDirc");
-        final Map<String, InputStream> licences =
-                new TreeMap<String, InputStream>(String.CASE_INSENSITIVE_ORDER);
+        final Map<String, InputStream> licences = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
         licences.putAll(rm.getResourcesStartingWithAsInputStreams(
                 "com/dmdirc/licences/"));
         addLicensesToNode(licences, root);
@@ -130,7 +132,7 @@ public class LicenceLoader extends LoggingSwingWorker<Void, Void> {
             /** {@inheritDoc} */
             @Override
             public void run() {
-                model.insertNodeInto(root, (DefaultMutableTreeNode) model.
+                model.insertNodeInto(root, (MutableTreeNode) model.
                         getRoot(), model.getChildCount(model.getRoot()));
             }
         });
@@ -154,7 +156,7 @@ public class LicenceLoader extends LoggingSwingWorker<Void, Void> {
     /** {@inheritDoc} */
     @Override
     protected void done() {
-        model.nodeStructureChanged((DefaultMutableTreeNode) model.getRoot());
+        model.nodeStructureChanged((TreeNode) model.getRoot());
         for (int i = 0; i < tree.getRowCount(); i++) {
             tree.expandRow(i);
         }

@@ -82,7 +82,7 @@ public class WizardPanel extends JPanel implements ActionListener {
         super();
 
         stepListeners = new ListenerList();
-        this.steps = new ArrayList<Step>(steps);
+        this.steps = new ArrayList<>(steps);
 
         this.title = title;
 
@@ -190,22 +190,25 @@ public class WizardPanel extends JPanel implements ActionListener {
 
     /** Moves to the next step. */
     protected void nextStep() {
-        if ("Next \u00BB".equals(next.getText())) {
-            prev.setEnabled(true);
-            fireStepAboutToBeDisplayed(steps.get(currentStep + 1));
-            stepsPanel.setVisible(false);
-            stepsPanel.removeAll();
-            stepsPanel.add(steps.get(currentStep + 1));
-            stepsPanel.setVisible(true);
-            fireStepHidden(steps.get(currentStep));
-            currentStep++;
-            if (currentStep == steps.size() - 1) {
-                next.setText("Finish");
-            }
-            titleLabel.setText(steps.get(currentStep).getTitle());
+        switch (next.getText()) {
+            case "Next \u00BB":
+                prev.setEnabled(true);
+                fireStepAboutToBeDisplayed(steps.get(currentStep + 1));
+                stepsPanel.setVisible(false);
+                stepsPanel.removeAll();
+                stepsPanel.add(steps.get(currentStep + 1));
+                stepsPanel.setVisible(true);
+                fireStepHidden(steps.get(currentStep));
+                currentStep++;
+                if (currentStep == steps.size() - 1) {
+                    next.setText("Finish");
+                }
+                titleLabel.setText(steps.get(currentStep).getTitle());
             updateProgressLabel();
-        } else if ("Finish".equals(next.getText())) {
-            fireWizardFinished();
+                break;
+            case "Finish":
+                fireWizardFinished();
+                break;
         }
     }
 
@@ -255,7 +258,7 @@ public class WizardPanel extends JPanel implements ActionListener {
     /**
      * Adds a step listener to the list.
      *
-     * @param listener
+     * @param listener Listener to add
      */
     public void addStepListener(final StepListener listener) {
         stepListeners.add(StepListener.class, listener);
@@ -264,7 +267,7 @@ public class WizardPanel extends JPanel implements ActionListener {
     /**
      * Removes a step listener from the list.
      *
-     * @param listener
+     * @param listener Listener to remove
      */
     public void removeStepListener(final StepListener listener) {
         stepListeners.remove(StepListener.class, listener);
@@ -273,7 +276,7 @@ public class WizardPanel extends JPanel implements ActionListener {
     /**
      * Adds a wizard listener to the list.
      *
-     * @param listener
+     * @param listener Listener to add
      */
     public void addWizardListener(final WizardListener listener) {
         stepListeners.add(WizardListener.class, listener);
@@ -282,7 +285,7 @@ public class WizardPanel extends JPanel implements ActionListener {
     /**
      * Removes a wizard listener from the list.
      *
-     * @param listener
+     * @param listener Listener to remove
      */
     public void removeWizardListener(final WizardListener listener) {
         stepListeners.remove(WizardListener.class, listener);

@@ -32,7 +32,7 @@ import javax.swing.JButton;
 /**
  * Image button, also has the ability to hold an object.
  *
- * <T> Type of object the button holds.
+ * @param <T> Type of object the button holds.
  */
 public class ImageButton<T> extends JButton {
 

@@ -89,6 +89,7 @@ public class ActionConditionsListPanel extends JPanel implements
     /**
      * Instantiates the panel.
      *
+     * @param iconManager Icon manager to retrieve icons
      * @param trigger Action trigger
      * @param conditions List of existing conditions;
      * @param treePanel Condition tree panel.
@@ -99,11 +100,11 @@ public class ActionConditionsListPanel extends JPanel implements
             final ActionConditionsTreePanel treePanel) {
         super();
 
-        validations = new HashMap<ActionConditionDisplayPanel, Boolean>();
+        validations = new HashMap<>();
 
         this.iconManager = iconManager;
         this.trigger = trigger;
-        this.conditions = new ArrayList<ActionConditionDisplayPanel>(conditions);
+        this.conditions = new ArrayList<>(conditions);
         this.treePanel = treePanel;
 
         initComponents();
@@ -215,7 +216,7 @@ public class ActionConditionsListPanel extends JPanel implements
      */
     public List<ActionCondition> getConditions() {
         final List<ActionCondition> conditionList =
-                new ArrayList<ActionCondition>();
+                new ArrayList<>();
 
         synchronized (conditions) {
             for (final ActionConditionDisplayPanel condition : conditions) {

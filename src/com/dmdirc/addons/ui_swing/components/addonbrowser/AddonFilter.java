@@ -44,14 +44,14 @@ public class AddonFilter extends RowFilter<DefaultTableModel, Integer> {
     /**
      * Creates a new addon filter.
      *
-     * @param verifiedBox
-     * @param unverifiedBox
-     * @param installedBox
-     * @param notinstalledBox
-     * @param pluginsBox
-     * @param themesBox
-     * @param actionsBox
-     * @param searchBox
+     * @param verifiedBox Verified checkbox
+     * @param unverifiedBox Unverified checkbox
+     * @param installedBox Installed checkbox
+     * @param notinstalledBox Not installed checkbox
+     * @param pluginsBox Plugins checkbox
+     * @param themesBox Themes checkbox
+     * @param actionsBox Actions checkbox
+     * @param searchBox Search field
      */
     public AddonFilter(final ButtonModel verifiedBox,
             final ButtonModel unverifiedBox, final ButtonModel installedBox,

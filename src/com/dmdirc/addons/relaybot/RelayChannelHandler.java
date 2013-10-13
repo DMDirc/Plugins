@@ -69,6 +69,7 @@ public class RelayChannelHandler implements ChannelMessageListener {
      * Create a new RelayChannelHandler.
      *
      * @param myPlugin Parent plugin
+     * @param identityController Identity controller to read settings from
      * @param myChannel channel to hax!
      */
     public RelayChannelHandler(

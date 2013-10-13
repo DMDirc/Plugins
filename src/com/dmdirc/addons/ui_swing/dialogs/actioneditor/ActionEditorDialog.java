@@ -85,6 +85,7 @@ public class ActionEditorDialog extends StandardDialog implements
      * Instantiates the panel.
      *
      * @param controller Swing controller
+     * @param parentWindow Parent window
      * @param group Action's group
      */
     public ActionEditorDialog(final SwingController controller,
@@ -110,8 +111,8 @@ public class ActionEditorDialog extends StandardDialog implements
      * Instantiates the panel.
      *
      * @param controller Swing controller
+     * @param parentWindow Parent window
      * @param action Action to be edited
-     * @param group Action's group
      */
     public ActionEditorDialog(final SwingController controller,
             final Window parentWindow, final Action action) {
@@ -203,7 +204,7 @@ public class ActionEditorDialog extends StandardDialog implements
     }
 
     /**
-     * @{inheritDoc
+     * {@inheritDoc}
      *
      * @param e Action event
      */
@@ -227,7 +228,9 @@ public class ActionEditorDialog extends StandardDialog implements
         }
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void validate() {
         super.validate();
@@ -272,7 +275,9 @@ public class ActionEditorDialog extends StandardDialog implements
         }
     }
 
-    /** @{inheritDoc */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void propertyChange(final PropertyChangeEvent evt) {
         if (evt.getSource().equals(name)) {

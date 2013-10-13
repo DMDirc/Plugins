@@ -44,7 +44,7 @@ import org.jdesktop.jxlayer.plaf.effect.BufferedImageOpEffect;
 /**
  * Dialog to show and edit server lists.
  */
-public final class ServerListDialog extends StandardDialog implements
+public class ServerListDialog extends StandardDialog implements
         ActionListener, ServerListListener {
 
     /** Serial version UID. */
@@ -76,7 +76,6 @@ public final class ServerListDialog extends StandardDialog implements
      * Creates a new server list dialog.
      *
      * @param controller Swing controller
-     * @param modalityType Desired modality
      * @param urlHandler The URL Handler to use to handle clicked links
      * @param performWrapper The wrapper to use for the perform tab
      */

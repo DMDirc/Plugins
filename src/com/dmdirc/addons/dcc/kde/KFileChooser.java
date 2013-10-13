@@ -53,7 +53,7 @@ import javax.swing.filechooser.FileSystemView;
  *   and kdialog is in either /usr/bin or /bin
  * - Selection mode FILES_AND_DIRECTORIES can not be used
  */
-public final class KFileChooser extends JFileChooser {
+public class KFileChooser extends JFileChooser {
 
     /**
      * A version number for this class.
@@ -165,6 +165,7 @@ public final class KFileChooser extends JFileChooser {
     /**
      * Constructs a FileChooser pointing to the user's default directory.
      *
+     * @param config Config provider used to retrieve settings
      * @param plugin The DCC Plugin that is requesting a chooser
      * @return The relevant FileChooser
      */
@@ -175,6 +176,7 @@ public final class KFileChooser extends JFileChooser {
     /**
      * Constructs a FileChooser using the given File as the path.
      *
+     * @param config Config provider used to retrieve settings
      * @param plugin The DCC Plugin that is requesting a chooser
      * @param currentDirectory Directory to use as the base directory
      * @return The relevant FileChooser
@@ -186,6 +188,7 @@ public final class KFileChooser extends JFileChooser {
     /**
      * Constructs a FileChooser using the given current directory and FileSystemView.
      *
+     * @param config Config provider used to retrieve settings
      * @param plugin The DCC Plugin that is requesting a chooser
      * @param currentDirectory Directory to use as the base directory
      * @param fsv The FileSystemView to use
@@ -198,6 +201,7 @@ public final class KFileChooser extends JFileChooser {
     /**
      * Constructs a FileChooser using the given FileSystemView.
      *
+     * @param config Config provider used to retrieve settings
      * @param plugin The DCC Plugin that is requesting a chooser
      * @param fsv The FileSystemView to use
      * @return The relevant FileChooser
@@ -209,6 +213,7 @@ public final class KFileChooser extends JFileChooser {
     /**
      * Constructs a FileChooser using the given path.
      *
+     * @param config Config provider used to retrieve settings
      * @param plugin The DCC Plugin that is requesting a chooser
      * @param currentDirectoryPath Directory to use as the base directory
      * @return The relevant FileChooser
@@ -220,6 +225,7 @@ public final class KFileChooser extends JFileChooser {
     /**
      * Constructs a FileChooser using the given current directory path and FileSystemView.
      *
+     * @param config Config provider used to retrieve settings
      * @param plugin The DCC Plugin that is requesting a chooser
      * @param currentDirectoryPath Directory to use as the base directory
      * @param fsv The FileSystemView to use
@@ -254,7 +260,7 @@ public final class KFileChooser extends JFileChooser {
             return super.showOpenDialog(parent);
         }
 
-        final ArrayList<String> params = new ArrayList<String>();
+        final ArrayList<String> params = new ArrayList<>();
         if (isMultiSelectionEnabled()) {
             params.add("--multiple");
             params.add("--separate-output");
@@ -317,7 +323,7 @@ public final class KFileChooser extends JFileChooser {
             return super.showSaveDialog(parent);
         }
 
-        final ArrayList<String> params = new ArrayList<String>();
+        final ArrayList<String> params = new ArrayList<>();
         if (getDialogTitle() != null && !getDialogTitle().isEmpty()) {
             params.add("--caption");
             params.add(getDialogTitle());

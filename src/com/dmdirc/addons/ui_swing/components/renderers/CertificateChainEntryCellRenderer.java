@@ -47,6 +47,7 @@ public class CertificateChainEntryCellRenderer extends DMDircListCellRenderer {
      * Creates a new renderer.
      *
      * @param iconManager Icon manager
+     * @param renderer Parent renderer
      */
     public CertificateChainEntryCellRenderer(final IconManager iconManager,
             final ListCellRenderer renderer) {
@@ -60,7 +61,7 @@ public class CertificateChainEntryCellRenderer extends DMDircListCellRenderer {
     @Override
     protected void renderValue(final JLabel label, final Object value,
             final int index, final boolean isSelected,
-            final boolean cellHasFocus) {
+            final boolean hasFocus) {
         if (value instanceof CertificateChainEntry) {
             final CertificateChainEntry entry = (CertificateChainEntry) value;
 

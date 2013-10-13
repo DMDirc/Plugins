@@ -32,7 +32,7 @@ import java.net.URISyntaxException;
 import java.util.Map;
 
 /**
- * Facilitates loading of a {@link ServerGroup} from a DMDirc {@link Identity}.
+ * Facilitates loading of a {@link ServerGroup} from a DMDirc {@link ConfigProvider}.
  *
  * @since 0.6.4
  */
@@ -67,7 +67,7 @@ public class ServerGroupReader {
     /**
      * Reads the default server group from this reader's identity.
      *
-     * @see #read(java.lang.String)
+     * @see #read(ServerGroup, java.lang.String)
      * @return A ServerGroup corresponding to the identity's default group
      * @throws IllegalArgumentException If the identity doesn't define a group
      */
@@ -114,15 +114,10 @@ public class ServerGroupReader {
             } else if (item.endsWith(" server")) {
                 try {
                     group.addItem(entryReader.read(group, item));
-                } catch (URISyntaxException ex) {
-                    // TODO: Raise an error about malformed server
-                } catch (IllegalArgumentException ex) {
+                } catch (URISyntaxException | IllegalArgumentException ex) {
                     // TODO: Raise an error about malformed server
                 }
-            }
-
-            // TODO: Raise an error about unknown content?
-        }
+            }        }
 
         return group;
     }

@@ -61,6 +61,7 @@ public class TreeViewTreeCellRenderer implements TreeCellRenderer,
     /**
      * Creates a new instance of TreeViewTreeCellRenderer.
      *
+     * @param config Config manager to retrieve settings from
      * @param manager Parent TreeFrameManager
      */
     public TreeViewTreeCellRenderer(final AggregateConfigProvider config,
@@ -90,7 +91,7 @@ public class TreeViewTreeCellRenderer implements TreeCellRenderer,
      * @return RendererComponent for this node.
      */
     @Override
-    public final Component getTreeCellRendererComponent(final JTree tree,
+    public Component getTreeCellRendererComponent(final JTree tree,
             final Object value, final boolean sel, final boolean expanded,
             final boolean leaf, final int row, final boolean hasFocus) {
 
@@ -101,7 +102,7 @@ public class TreeViewTreeCellRenderer implements TreeCellRenderer,
         if (label == null) {
             return new JLabel("Label == null");
         }
-        boolean bold = false;
+        boolean bold;
         Color background = tree.getBackground();
         Color foreground = tree.getForeground();
 

@@ -71,7 +71,7 @@ public class LicencesPanel extends JPanel implements TreeSelectionListener {
     /**
      * Creates a new instance of LicencesPanel.
      *
-     * @param config Config manager
+     * @param controller Controller to pass to LicenseLoader (should be PluginManager)
      */
     public LicencesPanel(final SwingController controller) {
         super();
