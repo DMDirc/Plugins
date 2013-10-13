@@ -28,6 +28,7 @@ import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import java.awt.Component;
 import java.awt.HeadlessException;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -295,7 +296,7 @@ public class KFileChooser extends JFileChooser {
         try {
             kdp = new KDialogProcess(params.toArray(new String[params.size()]));
             kdp.waitFor();
-        } catch (Exception e) {
+        } catch (IOException | InterruptedException e) {
             return JFileChooser.ERROR_OPTION;
         }
 
@@ -344,7 +345,7 @@ public class KFileChooser extends JFileChooser {
         try {
             kdp = new KDialogProcess(params.toArray(new String[params.size()]));
             kdp.waitFor();
-        } catch (Exception e) {
+        } catch (IOException | InterruptedException e) {
             return JFileChooser.ERROR_OPTION;
         }
 

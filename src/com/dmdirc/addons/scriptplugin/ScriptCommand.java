@@ -35,6 +35,7 @@ import com.dmdirc.interfaces.config.IdentityController;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -43,6 +44,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import javax.script.ScriptException;
+
 /**
  * The Script Command allows controlling of the script plugin.
  */
@@ -50,8 +53,7 @@ public class ScriptCommand extends Command implements IntelligentCommand {
 
     /** A command info object for this command. */
     public static final CommandInfo INFO = new BaseCommandInfo("script",
-            "script - Allows controlling the script plugin",
-            CommandType.TYPE_GLOBAL);
+            "script - Allows controlling the script plugin", CommandType.TYPE_GLOBAL);
     /** My Plugin. */
     private final ScriptPlugin myPlugin;
     /** The controller to read/write settings with. */
@@ -64,9 +66,7 @@ public class ScriptCommand extends Command implements IntelligentCommand {
      * @param identityController The controller to read and write settings from.
      * @param commandController The controller to use for command information.
      */
-    public ScriptCommand(
-            final ScriptPlugin myPlugin,
-            final IdentityController identityController,
+    public ScriptCommand(final ScriptPlugin myPlugin, final IdentityController identityController,
             final CommandController commandController) {
         super(commandController);
         this.myPlugin = myPlugin;
@@ -75,8 +75,8 @@ public class ScriptCommand extends Command implements IntelligentCommand {
 
     /** {@inheritDoc} */
     @Override
-    public void execute(final FrameContainer origin,
-            final CommandArguments args, final CommandContext context) {
+    public void execute(final FrameContainer origin, final CommandArguments args,
+            final CommandContext context) {
         final String[] sargs = args.getArguments();
 
         if (sargs.length > 0 && (sargs[0].equalsIgnoreCase("rehash") || sargs[0].equalsIgnoreCase("reload"))) {
@@ -116,7 +116,7 @@ public class ScriptCommand extends Command implements IntelligentCommand {
                     wrapper.getScriptEngine().put("cmd_isSilent", args.isSilent());
                     wrapper.getScriptEngine().put("cmd_args", sargs);
                     sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Result: "+wrapper.getScriptEngine().eval(script));
-                } catch (Exception e) {
+                } catch (FileNotFoundException | ScriptException e) {
                     sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Exception: "+e+" -> "+e.getMessage());
 
                     if (identityController.getGlobalConfiguration().getOptionBool(myPlugin.getDomain(), "eval.showStackTrace")) {
@@ -131,7 +131,7 @@ public class ScriptCommand extends Command implements IntelligentCommand {
                                     sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Stack trace: "+line);
                                 }
                             }
-                        } catch (Exception ex) {
+                        } catch (ReflectiveOperationException ex) {
                             sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Stack trace: Exception showing stack trace: "+ex+" -> "+ex.getMessage());
                         }
                     }
@@ -149,19 +149,19 @@ public class ScriptCommand extends Command implements IntelligentCommand {
                 if (identityController.getGlobalConfiguration().hasOptionString(myPlugin.getDomain(), "eval.baseFile")) {
                     try {
                         final String baseFile = myPlugin.getScriptDir()+'/'+identityController.getGlobalConfiguration().getOption(myPlugin.getDomain(), "eval.baseFile");
-                        final FileWriter writer = new FileWriter(baseFile, true);
-                        writer.write("function ");
-                        writer.write(functionName);
-                        writer.write("(");
-                        for (int i = 1; i < bits.length; i++) {
-                            writer.write(bits[i]);
-                            writer.write(" ");
+                        try (FileWriter writer = new FileWriter(baseFile, true)) {
+                            writer.write("function ");
+                            writer.write(functionName);
+                            writer.write("(");
+                            for (int i = 1; i < bits.length; i++) {
+                                writer.write(bits[i]);
+                                writer.write(" ");
+                            }
+                            writer.write(") {\n");
+                            writer.write(script);
+                            writer.write("\n}\n");
+                            writer.flush();
                         }
-                        writer.write(") {\n");
-                        writer.write(script);
-                        writer.write("\n}\n");
-                        writer.flush();
-                        writer.close();
                     } catch (IOException ioe) {
                         sendLine(origin, args.isSilent(), FORMAT_ERROR, "IOException: "+ioe.getMessage());
                     }

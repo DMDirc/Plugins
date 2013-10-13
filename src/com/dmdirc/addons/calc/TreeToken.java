@@ -39,7 +39,7 @@ public class TreeToken {
 
     /** The children of this node. */
     @Getter
-    private final List<TreeToken> children = new ArrayList<TreeToken>();
+    private final List<TreeToken> children = new ArrayList<>();
 
     /** The token at the root of the tree. */
     @Getter

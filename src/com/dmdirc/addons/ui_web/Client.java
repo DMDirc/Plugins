@@ -48,7 +48,7 @@ public class Client {
     private final String ip;
 
     /** An ordered list of events to be sent to the client */
-    private final List<Event> events = new LinkedList<Event>();
+    private final List<Event> events = new LinkedList<>();
 
     /**
      * Creates a new client for the specified controller.
@@ -62,7 +62,7 @@ public class Client {
 
         this.ip = ip;
 
-        final List<Window> added = new LinkedList<Window>();
+        final List<Window> added = new LinkedList<>();
         final List<Window> queued
                 = new LinkedList<Window>(controller.getWindowManager().getWindows());
 
@@ -142,7 +142,7 @@ public class Client {
      */
     public List<Event> retrieveEvents() {
         synchronized (events) {
-            final List<Event> res = new LinkedList<Event>(events);
+            final List<Event> res = new LinkedList<>(events);
             events.clear();
             return res;
         }

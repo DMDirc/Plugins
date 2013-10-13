@@ -41,7 +41,7 @@ public class TitleMediaSourcePlugin extends BasePlugin implements MediaSourceMan
     /** {@inheritDoc} */
     @Override
     public void onLoad() {
-        sources = new ArrayList<MediaSource>(2);
+        sources = new ArrayList<>(2);
         sources.add(new TitleMediaSource("grep -E '\\(\"last\\.?fm\" \"Last\\.?fm\"\\)'" +
                     "| grep -vE '(\"Last.fm " +
                     "Options\"|\"Diagnostics\"|\"last\\.?fm\"|\"Share\"|\\(has no " +

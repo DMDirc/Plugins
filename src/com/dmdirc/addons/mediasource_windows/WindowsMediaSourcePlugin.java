@@ -54,7 +54,7 @@ public class WindowsMediaSourcePlugin extends BasePlugin
     public WindowsMediaSourcePlugin(final PluginInfo pluginInfo) {
         super();
         this.filesHelper = new PluginFilesHelper(pluginInfo);
-        sources = new ArrayList<MediaSource>();
+        sources = new ArrayList<>();
         sources.add(new DllSource(this, "Winamp", true));
         sources.add(new DllSource(this, "iTunes", false));
     }
@@ -87,8 +87,7 @@ public class WindowsMediaSourcePlugin extends BasePlugin
             }
 
             return new MediaInfoOutput(myProcess.exitValue(), data.toString());
-        } catch (SecurityException e) {
-        } catch (IOException e) {
+        } catch (SecurityException | IOException e) {
         }
 
         return new MediaInfoOutput(-1, "Error executing GetMediaInfo.exe");

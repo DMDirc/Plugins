@@ -337,8 +337,7 @@ public class TreeFrameManager implements FrameManager,
     @Override
     public void selectionChanged(final TextFrame window) {
         synchronized (nodes) {
-            final Collection<TreeViewNode> collection =
-                    new ArrayList<TreeViewNode>(nodes.values());
+            final Collection<TreeViewNode> collection = new ArrayList<>(nodes.values());
             for (TreeViewNode treeNode : collection) {
                 final NodeLabel label = treeNode.getLabel();
                 label.selectionChanged(window);

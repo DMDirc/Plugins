@@ -76,8 +76,7 @@ public class MSNListener extends MsnAdapter {
 
     /** {@inheritDoc} */
     @Override
-    public void contactAddCompleted(final MsnMessenger mm, final MsnContact mc,
-            final MsnList ml) {
+    public void contactAddCompleted(final MsnMessenger mm, final MsnContact mc, final MsnList ml) {
         parser.addClient(mc);
         parser.addClients(parser.getFakeChannel(), Arrays.asList(
                 new ClientInfo[]{ parser.getClient(mc), }));
@@ -86,9 +85,8 @@ public class MSNListener extends MsnAdapter {
     /** {@inheritDoc} */
     @Override
     public void contactListSyncCompleted(final MsnMessenger mm) {
-        final Collection<MsnContact> contacts = Arrays.asList(
-                mm.getContactList().getContacts());
-        final List<ClientInfo> clients = new ArrayList<ClientInfo>();
+        final Collection<MsnContact> contacts = Arrays.asList(mm.getContactList().getContacts());
+        final List<ClientInfo> clients = new ArrayList<>();
         for (MsnContact contact : contacts) {
             parser.addClient(contact);
             clients.add(parser.getClient(contact));
@@ -97,8 +95,7 @@ public class MSNListener extends MsnAdapter {
 
     /** {@inheritDoc} */
     @Override
-    public void contactStatusChanged(final MsnMessenger mm,
-            final MsnContact mc) {
+    public void contactStatusChanged(final MsnMessenger mm, final MsnContact mc) {
         if (mc.getStatus() != MsnUserStatus.OFFLINE) {
             parser.addClients(parser.getFakeChannel(), Arrays.asList(
                     new ClientInfo[]{ parser.getClient(mc), }));

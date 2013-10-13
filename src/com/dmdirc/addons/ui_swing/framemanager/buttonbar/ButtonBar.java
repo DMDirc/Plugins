@@ -193,7 +193,7 @@ public final class ButtonBar implements FrameManager, ActionListener,
 
             if (!frame.getChildren().isEmpty()) {
                 final ArrayList<FrameContainer> childList = new ArrayList
-                        <FrameContainer>(frame.getChildren());
+                        <>(frame.getChildren());
                 initButtons(childList);
             }
         }
@@ -271,7 +271,7 @@ public final class ButtonBar implements FrameManager, ActionListener,
                 buttonPanel.add(button);
                 if (!window.getChildren().isEmpty()) {
                     final ArrayList<FrameContainer> childList = new ArrayList
-                            <FrameContainer>(window.getChildren());
+                            <>(window.getChildren());
                     if (sortChildWindows) {
                          Collections.sort(childList,
                                  new FrameContainerComparator());
@@ -290,7 +290,7 @@ public final class ButtonBar implements FrameManager, ActionListener,
         buttonPanel.removeAll();
 
         final ArrayList<FrameContainer> windowList = new
- ArrayList<FrameContainer>(windowManager.getRootWindows());
+ ArrayList<>(windowManager.getRootWindows());
         if (sortRootWindows) {
             Collections.sort(windowList, new FrameContainerComparator());
         }
@@ -595,12 +595,15 @@ public final class ButtonBar implements FrameManager, ActionListener,
     /** {@inheritDoc} */
     @Override
     public void configChanged(final String domain, final String key) {
-        if ("sortrootwindows".equals(key)) {
-            sortRootWindows = controller.getGlobalConfig()
-                    .getOptionBool("ui", "sortrootwindows");
-        } else if ("sortchildwindows".equals(key)) {
-            sortChildWindows = controller.getGlobalConfig()
-                    .getOptionBool("ui", "sortrootwindows");
+        switch (key) {
+            case "sortrootwindows":
+                sortRootWindows = controller.getGlobalConfig()
+                        .getOptionBool("ui", "sortrootwindows");
+                break;
+            case "sortchildwindows":
+                sortChildWindows = controller.getGlobalConfig()
+                        .getOptionBool("ui", "sortrootwindows");
+                break;
         }
         relayout();
     }

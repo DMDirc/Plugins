@@ -50,12 +50,11 @@ public class ComponentCreator {
      *
      * @return Set of initialised components
      */
-    public Set<JComponent> initFrameComponents(final Object frame,
-            final SwingController controller,
+    public Set<JComponent> initFrameComponents(final Object frame, final SwingController controller,
             final FrameContainer owner) {
         final SimpleInjector injector = new SimpleInjector();
         final Set<String> names = owner.getComponents();
-        final Set<JComponent> components = new HashSet<JComponent>();
+        final Set<JComponent> components = new HashSet<>();
 
         injector.addParameter(frame);
         injector.addParameter(owner);
@@ -68,21 +67,15 @@ public class ComponentCreator {
                 Class<?> clazz = null;
                 if (string.equals(WindowComponent.INPUTFIELD.getIdentifier())) {
                     clazz = SwingInputField.class;
-                } else if (string.equals(WindowComponent.TEXTAREA
-                        .getIdentifier())) {
+                } else if (string.equals(WindowComponent.TEXTAREA.getIdentifier())) {
                     clazz = TextPane.class;
                 } else {
                     clazz = Class.forName(string);
                 }
                 object = injector.createInstance(clazz);
-            } catch(ClassNotFoundException ex) {
+            } catch(ClassNotFoundException | IllegalArgumentException ex) {
                 object = null;
-                Logger.userError(ErrorLevel.HIGH, "Unable to create component: "
-                        + ex.getMessage());
-            } catch (IllegalArgumentException ex) {
-                object = null;
-                Logger.userError(ErrorLevel.HIGH, "Unable to create component: "
-                        + ex.getMessage());
+                Logger.userError(ErrorLevel.HIGH, "Unable to create component: " + ex.getMessage());
             }
             if (object instanceof JComponent) {
                 components.add((JComponent) object);

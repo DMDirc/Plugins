@@ -79,7 +79,7 @@ public class ActionTriggersPanel extends JPanel implements ActionListener,
     public ActionTriggersPanel(final IconManager iconManager) {
         super();
 
-        compatibleTriggers = new ArrayList<ActionType>();
+        compatibleTriggers = new ArrayList<>();
 
         initComponents(iconManager);
         addListeners();

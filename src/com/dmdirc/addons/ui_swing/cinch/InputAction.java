@@ -27,6 +27,7 @@ import com.dmdirc.util.validators.PermissiveValidator;
 import com.dmdirc.util.validators.Validator;
 
 import com.google.common.collect.ImmutableList;
+
 import com.palantir.ptoss.cinch.core.Bindable;
 import com.palantir.ptoss.cinch.core.BindableModel;
 import com.palantir.ptoss.cinch.core.Binding;
@@ -120,7 +121,7 @@ public @interface InputAction {
                 try {
                     wire(action.call(), action.message(), action.content(),
                             action.validator(), field, context);
-                } catch (final Exception e) {
+                } catch (ReflectiveOperationException e) {
                     Throwables.throwUncheckedException(e);
                     throw new BindingException("could not wire up "
                             + "@InputAction on " + field.getName(), e);
@@ -210,7 +211,7 @@ public @interface InputAction {
                             } catch (final InvocationTargetException itex) {
                                 LOGGER.error("exception during action firing",
                                         itex.getCause());
-                            } catch (final Exception ex) {
+                            } catch (ReflectiveOperationException ex) {
                                 LOGGER.error("exception during action firing", ex);
                             }
                             return true;
@@ -231,7 +232,7 @@ public @interface InputAction {
                                             .invoke(existingMethod.getObject());
                                     existingMethod.getMethod()
                                             .setAccessible(accessible);
-                                } catch (final Exception e) {
+                                } catch (ReflectiveOperationException e) {
                                     content = "";
                                 }
                             } else {

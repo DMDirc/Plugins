@@ -118,8 +118,7 @@ public class ConfigStats extends DebugCommand {
             }
         }
         if (!found) {
-            sendLine(origin, isSilent, FORMAT_ERROR,
-                    "Unable to locate option.");
+            sendLine(origin, isSilent, FORMAT_ERROR, "Unable to locate option.");
         }
     }
 
@@ -140,8 +139,7 @@ public class ConfigStats extends DebugCommand {
                 break;
             }
             i++;
-            sendLine(origin, isSilent, FORMAT_OUTPUT,
-                    entry.getKey() + " - " + entry.getValue());
+            sendLine(origin, isSilent, FORMAT_OUTPUT, entry.getKey() + " - " + entry.getValue());
         }
     }
 
@@ -160,8 +158,7 @@ public class ConfigStats extends DebugCommand {
             if (entry.getValue() <= cutoff) {
                 break;
             }
-            sendLine(origin, isSilent, FORMAT_OUTPUT,
-                    entry.getKey() + " - " + entry.getValue());
+            sendLine(origin, isSilent, FORMAT_OUTPUT, entry.getKey() + " - " + entry.getValue());
         }
     }
 
@@ -172,15 +169,13 @@ public class ConfigStats extends DebugCommand {
      * @return Sorted set of config options and usages
      */
     private static SortedSet<Entry<String, Integer>> getSortedStats() {
-        final SortedSet<Entry<String, Integer>> sortedStats =
-                new TreeSet<Entry<String, Integer>>(new ValueComparator());
+        final SortedSet<Entry<String, Integer>> sortedStats = new TreeSet<>(new ValueComparator());
         sortedStats.addAll(ConfigManager.getStats().entrySet());
         return sortedStats;
     }
 
     /** Reverse value comparator for a map entry. */
-    private static class ValueComparator implements
-            Comparator<Entry<String, Integer>>, Serializable {
+    private static class ValueComparator implements Comparator<Entry<String, Integer>>, Serializable {
 
         /**
          * A version number for this class. It should be changed whenever the
@@ -191,8 +186,7 @@ public class ConfigStats extends DebugCommand {
 
         /** {@inheritDoc} */
         @Override
-        public int compare(final Entry<String, Integer> o1,
-                final Entry<String, Integer> o2) {
+        public int compare(final Entry<String, Integer> o1, final Entry<String, Integer> o2) {
             int returnValue = o1.getValue().compareTo(o2.getValue()) * -1;
 
             if (returnValue == 0) {

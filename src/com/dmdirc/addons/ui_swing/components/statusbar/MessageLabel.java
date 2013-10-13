@@ -78,7 +78,7 @@ public class MessageLabel extends JPanel implements StatusBarComponent,
             final Window parentWindow) {
         super(new MigLayout("fill, ins 0, gap 0  0"));
         this.controller = controller;
-        queue = new ConcurrentLinkedQueue<StatusMessage>();
+        queue = new ConcurrentLinkedQueue<>();
         defaultMessage = new StatusMessage(null, "Ready.", null, -1,
                 controller.getGlobalConfig());
         currentMessage = defaultMessage;

@@ -73,7 +73,7 @@ class MessagePopup extends StatusbarTogglePanel<JLabel> {
         this.parentWindow = parentWindow;
         this.parent = parent;
         this.controller = controller;
-        messages = new RollingList<StatusMessage>(5);
+        messages = new RollingList<>(5);
     }
 
     /* {@inheritDoc} */
