@@ -128,7 +128,7 @@ public class TypedProperties extends Properties {
      *
      * @param in
      *            InputStream to load from.
-     * @throws java.io.IOException
+     * @throws java.io.IOException if an error occurs loading the XML
      */
     @Override
     public synchronized void loadFromXML(final InputStream in) throws IOException {
@@ -447,7 +447,7 @@ public class TypedProperties extends Properties {
             return fallback;
         } else {
             final String[] bits = res.split("\n");
-            final ArrayList<String> result = new ArrayList<String>();
+            final ArrayList<String> result = new ArrayList<>();
             for (final String bit : bits) {
                 result.add(bit);
             }

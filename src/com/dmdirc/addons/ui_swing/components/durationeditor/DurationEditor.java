@@ -75,6 +75,8 @@ public class DurationEditor extends StandardDialog implements ActionListener {
 
     /**
      * Instantiates a new duration editor.
+     *
+     * @param controller Controller for dialog creation
      */
     public DurationEditor(final SwingController controller) {
         this(controller, 0);
@@ -82,6 +84,8 @@ public class DurationEditor extends StandardDialog implements ActionListener {
 
     /**
      * Instantiates a new duration editor.
+     *
+     * @param controller Controller for dialog creation
      *
      * @param window Parent window.
      *
@@ -95,6 +99,8 @@ public class DurationEditor extends StandardDialog implements ActionListener {
     /**
      * Instantiates a new duration editor.
      *
+     * @param controller Controller for dialog creation
+     *
      * @param duration Starting duration
      */
     public DurationEditor(final SwingController controller,
@@ -105,7 +111,7 @@ public class DurationEditor extends StandardDialog implements ActionListener {
     /**
      * Instantiates a new duration editor.
      *
-     * @param controller Swing controller
+     * @param controller Controller for dialog creation
      * @param window Parent window.
      * @param duration Starting duration
      *

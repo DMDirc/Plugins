@@ -57,7 +57,7 @@ public final class ActionGroupSettingsPanel extends JPanel implements ActionList
     private static final long serialVersionUID = 1;
     /** Settings list. */
     private Collection<PreferencesSetting> settings;
-    /** Button -> Component map. */
+    /** Button to Component map. */
     private Map<JButton, PreferencesSetting> settingMap;
     /** Parent dialog. */
     private Window window;

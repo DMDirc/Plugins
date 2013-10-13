@@ -42,12 +42,12 @@ public class AddonSorter extends TableRowSorter<DefaultTableModel> implements
     /**
      * Creates a new addon sorter.
      *
-     * @param model
-     * @param sortByDate
-     * @param sortByName
-     * @param sortByRating
-     * @param sortByStatus
-     * @param filter
+     * @param model Table model to sort
+     * @param sortByDate Sort by date
+     * @param sortByName Sort by name
+     * @param sortByRating Sort by rating
+     * @param sortByStatus Sort by status
+     * @param filter Addon filter
      */
     public AddonSorter(final DefaultTableModel model, final ButtonModel sortByDate,
             final ButtonModel sortByName, final ButtonModel sortByRating,

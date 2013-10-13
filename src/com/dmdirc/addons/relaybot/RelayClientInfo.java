@@ -48,7 +48,7 @@ public class RelayClientInfo extends IRCClientInfo {
     /**
      * Should the full nickname (nick@server) be used by getNickname?
      *
-     * @param value
+     * @param value Should we colour name?
      */
     public void setShowFullNickname(final boolean value) {
         showFullNickname = value;

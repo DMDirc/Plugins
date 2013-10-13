@@ -51,7 +51,8 @@ public class ListScroller implements MouseWheelListener {
     /**
      * Creates a new instance of ListScroller. You will need to manually need
      * to add a listener to trigger the scrolling behaviour either by adding a
-     * mouse wheel listener or by triggering {@link changeFocus(boolean)}.
+     * mouse wheel listener or by triggering
+     * {@link #changeFocus(boolean)}.
      *
      * @param model List model to scroll over
      * @param selectionModel List selection model to scroll over
@@ -79,7 +80,7 @@ public class ListScroller implements MouseWheelListener {
      * Creates a new instance of ListScroller and attaches it to the specified
      * model and selection model.  You will need to manually need to add a
      * listener to trigger the scrolling behaviour either by adding a mouse
-     * wheel listener or by triggering {@link changeFocus(boolean)}.
+     * wheel listener or by triggering {@link #changeFocus(boolean)}.
      *
      * @param model List model to scroll over
      * @param selectionModel List selection model to scroll over

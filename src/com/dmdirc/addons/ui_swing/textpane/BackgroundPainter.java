@@ -98,6 +98,7 @@ public class BackgroundPainter extends LayerUI<JComponent> {
      * Creates a new background painter.
      *
      * @param configManager Config manager to retrieve settings from
+     * @param urlBuilder URL Builder
      * @param domain Domain to retrieve settings from
      * @param imageKey Key for background image
      * @param optionKey Key for background type

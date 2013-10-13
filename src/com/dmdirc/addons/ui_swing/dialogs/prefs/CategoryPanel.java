@@ -249,7 +249,7 @@ public class CategoryPanel extends JPanel {
     /**
      * Sets this panel to a waiting to load state.
      *
-     * @param b
+     * @param b Loading state
      */
     public void setWaiting(final boolean b) {
         UIUtilities.invokeLater(new Runnable() {

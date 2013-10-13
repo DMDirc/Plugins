@@ -44,7 +44,7 @@ public class SettingsRevertButton extends JButton implements SettingChangeListen
     /**
      * Instantiates a new settings revert button.
      *
-     * @param setting
+     * @param setting Setting to revert
      */
     public SettingsRevertButton(final PreferencesSetting setting) {
         super("Revert");

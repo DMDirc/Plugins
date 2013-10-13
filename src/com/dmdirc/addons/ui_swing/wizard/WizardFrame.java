@@ -32,7 +32,7 @@ import javax.swing.JFrame;
 /**
  * Basic wizard container.
  */
-public final class WizardFrame extends JFrame {
+public class WizardFrame extends JFrame {
 
     /**
      * A version number for this class. It should be changed whenever the class
@@ -128,7 +128,7 @@ public final class WizardFrame extends JFrame {
     /**
      * Adds a step listener to the list.
      *
-     * @param listener
+     * @param listener Listener to add
      */
     public void addStepListener(final StepListener listener) {
         wizard.addStepListener(listener);
@@ -137,7 +137,7 @@ public final class WizardFrame extends JFrame {
     /**
      * Removes a step listener from the list.
      *
-     * @param listener
+     * @param listener Listener to remove
      */
     public void removeStepListener(final StepListener listener) {
         wizard.removeStepListener(listener);
@@ -146,7 +146,7 @@ public final class WizardFrame extends JFrame {
     /**
      * Adds a wizard listener to the list.
      *
-     * @param listener
+     * @param listener Listener to add
      */
     public void addWizardListener(final WizardListener listener) {
         wizard.addWizardListener(listener);
@@ -155,7 +155,7 @@ public final class WizardFrame extends JFrame {
     /**
      * Removes a wizard listener from the list.
      *
-     * @param listener
+     * @param listener Listener to remove
      */
     public void removeWizardListener(final WizardListener listener) {
         wizard.removeWizardListener(listener);

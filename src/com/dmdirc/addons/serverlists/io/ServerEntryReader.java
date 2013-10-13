@@ -34,7 +34,8 @@ import java.net.URISyntaxException;
 import lombok.RequiredArgsConstructor;
 
 /**
- * Facilitates loading of a {@link ServerEntry} from a DMDirc {@link Identity}.
+ * Facilitates loading of a {@link com.dmdirc.addons.serverlists.ServerEntry} from a DMDirc
+ * {@link com.dmdirc.interfaces.config.ConfigProvider}.
  *
  * @since 0.6.4
  */

@@ -355,6 +355,7 @@ public class SwingController extends BaseCommandPlugin implements UIController {
      * For more details on what parameters might be required see
      * {@link DialogManager#getDialog(Class, Object...)}
      *
+     * @param <T> Dialog type
      * @see DialogManager#getDialog(Class, Object...) getDialog
      *
      * @param klass The class of the dialog to show

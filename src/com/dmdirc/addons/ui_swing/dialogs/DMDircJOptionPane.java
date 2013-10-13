@@ -60,7 +60,7 @@ public class DMDircJOptionPane extends JOptionPane {
     /**
      * Set the maximum number of characters per line.
      *
-     * @param maxCharactersPerLineCount
+     * @param maxCharactersPerLineCount Maximum characters per line
      */
     public void setMaxCharactersPerLineCount(final int maxCharactersPerLineCount) {
         this.maxCharactersPerLineCount = maxCharactersPerLineCount;
