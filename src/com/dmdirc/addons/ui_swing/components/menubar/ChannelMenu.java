@@ -35,6 +35,8 @@ import java.awt.Dialog.ModalityType;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.event.MenuEvent;
@@ -43,6 +45,7 @@ import javax.swing.event.MenuListener;
 /**
  * A menu to provide channel related commands in the menu bar.
  */
+@Singleton
 public class ChannelMenu extends JMenu implements ActionListener,
         MenuListener {
 
@@ -65,7 +68,9 @@ public class ChannelMenu extends JMenu implements ActionListener,
      * @param controller Parent swing controller.
      * @param mainFrame Parent mainframe
      */
-    public ChannelMenu(final SwingController controller,
+    @Inject
+    public ChannelMenu(
+            final SwingController controller,
             final MainFrame mainFrame) {
         super("Channel");
         this.controller = controller;
@@ -112,8 +117,7 @@ public class ChannelMenu extends JMenu implements ActionListener,
                         .display();
                 break;
             case "ChannelSettings":
-                final FrameContainer activeWindow = controller.getMainFrame()
-                        .getActiveFrame().getContainer();
+                final FrameContainer activeWindow = mainFrame.getActiveFrame().getContainer();
                 if (activeWindow instanceof Channel) {
                     controller.showChannelSettingsDialog(((Channel) activeWindow));
                 }   break;

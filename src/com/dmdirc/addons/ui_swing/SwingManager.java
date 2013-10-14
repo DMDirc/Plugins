@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_swing;
 
+import com.dmdirc.addons.ui_swing.components.menubar.MenuBar;
 import com.dmdirc.ui.WindowManager;
 
 import java.awt.Toolkit;
@@ -54,17 +55,21 @@ public class SwingManager {
      * @param windowFactory The window factory in use.
      * @param windowManager The window manager to listen on for events.
      * @param mainFrame The main frame of the Swing UI.
+     * @param menuBar The menu bar to use for the main frame.
      */
     @Inject
     public SwingManager(
             final DMDircEventQueue eventQueue,
             final SwingWindowFactory windowFactory,
             final WindowManager windowManager,
-            final MainFrame mainFrame) {
+            final MainFrame mainFrame,
+            final MenuBar menuBar) {
         this.eventQueue = eventQueue;
         this.windowFactory = windowFactory;
         this.windowManager = windowManager;
+
         this.mainFrame = mainFrame;
+        this.mainFrame.setMenuBar(menuBar);
     }
 
     /**
