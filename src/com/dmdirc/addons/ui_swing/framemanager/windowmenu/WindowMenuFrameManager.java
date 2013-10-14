@@ -27,6 +27,7 @@ import com.dmdirc.FrameContainerComparator;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SelectionListener;
 import com.dmdirc.addons.ui_swing.SwingController;
+import com.dmdirc.addons.ui_swing.SwingWindowFactory;
 import com.dmdirc.addons.ui_swing.SwingWindowListener;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
@@ -82,9 +83,12 @@ public final class WindowMenuFrameManager extends JMenu implements
      * Creates a new instance of WindowMenuFrameManager.
      *
      * @param controller Swing controller
+     * @param windowFactory The window factory to use to create and listen for windows.
      * @param mainFrame The frame that owns this manager
      */
-    public WindowMenuFrameManager(final SwingController controller,
+    public WindowMenuFrameManager(
+            final SwingController controller,
+            final SwingWindowFactory windowFactory,
             final MainFrame mainFrame) {
         super();
         this.controller = controller;
@@ -98,7 +102,7 @@ public final class WindowMenuFrameManager extends JMenu implements
 
         setText("Window");
         setMnemonic('w');
-        controller.getWindowFactory().addWindowListener(this);
+        windowFactory.addWindowListener(this);
 
         closeMenuItem = new JMenuItem(controller
                 .getIconManager().getIcon("close"));

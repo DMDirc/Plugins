@@ -25,6 +25,7 @@ package com.dmdirc.addons.ui_swing.components;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SelectionListener;
 import com.dmdirc.addons.ui_swing.SwingController;
+import com.dmdirc.addons.ui_swing.SwingWindowFactory;
 import com.dmdirc.addons.ui_swing.SwingWindowListener;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
@@ -67,9 +68,13 @@ public class MDIBar extends JPanel implements SwingWindowListener,
      * Instantiates a new MDI bar.
      *
      * @param controller The controller that owns this MDI bar
+     * @param windowFactory The window factory to use to create and listen for windows.
      * @param mainFrame Main frame instance
      */
-    public MDIBar(final SwingController controller, final MainFrame mainFrame) {
+    public MDIBar(
+            final SwingController controller,
+            final SwingWindowFactory windowFactory,
+            final MainFrame mainFrame) {
         super();
 
         this.mainFrame = mainFrame;
@@ -84,7 +89,7 @@ public class MDIBar extends JPanel implements SwingWindowListener,
         setLayout(new MigLayout("hmax 17, ins 1 0 0 0, fill"));
         add(closeButton, "w 17!, h 17!, right");
 
-        controller.getWindowFactory().addWindowListener(this);
+        windowFactory.addWindowListener(this);
 
         mainFrame.addSelectionListener(this);
         closeButton.addActionListener(this);

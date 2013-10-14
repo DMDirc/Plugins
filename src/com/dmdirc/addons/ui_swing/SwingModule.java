@@ -23,6 +23,17 @@
 package com.dmdirc.addons.ui_swing;
 
 import com.dmdirc.ClientModule;
+import com.dmdirc.addons.ui_swing.commands.ChannelSettings;
+import com.dmdirc.addons.ui_swing.commands.Input;
+import com.dmdirc.addons.ui_swing.commands.PopInCommand;
+import com.dmdirc.addons.ui_swing.commands.PopOutCommand;
+import com.dmdirc.addons.ui_swing.commands.ServerSettings;
+import com.dmdirc.interfaces.LifecycleController;
+import com.dmdirc.ui.WindowManager;
+
+import java.util.concurrent.Callable;
+
+import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
@@ -30,7 +41,18 @@ import dagger.Provides;
 /**
  * Dagger module that provides Swing-specific dependencies.
  */
-@Module(addsTo = ClientModule.class, library = true)
+@Module(
+        addsTo = ClientModule.class,
+        injects = {
+            SwingManager.class,
+            PopInCommand.class,
+            PopOutCommand.class,
+            Input.class,
+            ServerSettings.class,
+            ChannelSettings.class,
+        },
+        library = true
+)
 public class SwingModule {
 
     /** The controller to return to clients. */
@@ -59,11 +81,30 @@ public class SwingModule {
     /**
      * Gets the main DMDirc window.
      *
+     * @param swingController The controller that will own the frame.
+     * @param windowFactory The window factory to use to create and listen for windows.
+     * @param lifecycleController The controller to use to quit the application.
+     * @param windowManager The core window manager to use to find windows.
      * @return The main window.
      */
     @Provides
-    public MainFrame getMainFrame() {
-        return controller.getMainFrame();
+    @Singleton
+    public MainFrame getMainFrame(
+            final SwingController swingController,
+            final SwingWindowFactory windowFactory,
+            final LifecycleController lifecycleController,
+            final WindowManager windowManager) {
+        return UIUtilities.invokeAndWait(new Callable<MainFrame>() {
+            /** {@inheritDoc} */
+            @Override
+            public MainFrame call() throws Exception {
+                return new MainFrame(
+                        swingController,
+                        windowFactory,
+                        lifecycleController,
+                        windowManager);
+            }
+        });
     }
 
 }

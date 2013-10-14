@@ -70,10 +70,13 @@ public class CtrlTabWindowManager implements SwingWindowListener,
      * Creates a new ctrl tab window manager.
      *
      * @param controller Parent controller
+     * @param windowFactory The window factory to use to create and listen for windows.
      * @param mainFrame The main frame that owns this window manager
      * @param component Component to add listen to events on
      */
-    public CtrlTabWindowManager(final SwingController controller,
+    public CtrlTabWindowManager(
+            final SwingController controller,
+            final SwingWindowFactory windowFactory,
             final MainFrame mainFrame,
             final JComponent component) {
         nodes = new HashMap<>();
@@ -85,13 +88,12 @@ public class CtrlTabWindowManager implements SwingWindowListener,
             @Override
             protected void setPath(final TreePath path) {
                 super.setPath(path);
-                controller.getMainFrame().setActiveFrame(
-                        controller.getWindowFactory().getSwingWindow(
+                mainFrame.setActiveFrame(windowFactory.getSwingWindow(
                         ((TreeViewNode) path.getLastPathComponent()).getWindow()));
             }
         };
 
-        windowFactory = controller.getWindowFactory();
+        this.windowFactory = windowFactory;
         windowFactory.addWindowListener(this);
 
         mainFrame.addSelectionListener(this);
