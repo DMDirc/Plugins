@@ -375,10 +375,6 @@ public class MainFrame extends JFrame implements WindowListener,
         initFrameManagers();
         mainSplitPane = initSplitPane();
 
-        final MenuBar menu = new MenuBar(controller, windowFactory, this);
-        controller.getApple().setMenuBar(menu);
-        setJMenuBar(menu);
-
         setPreferredSize(new Dimension(800, 600));
 
         getContentPane().setLayout(new MigLayout(
@@ -388,6 +384,22 @@ public class MainFrame extends JFrame implements WindowListener,
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
         pack();
+    }
+
+    /**
+     * Sets the menu bar that this frame will use.
+     *
+     * @param menuBar The menu bar to use.
+     */
+    public void setMenuBar(final MenuBar menuBar) {
+        UIUtilities.invokeAndWait(new Runnable() {
+            /** {@inheritDoc} */
+            @Override
+            public void run() {
+                controller.getApple().setMenuBar(menuBar);
+                setJMenuBar(menuBar);
+            }
+        });
     }
 
     /**

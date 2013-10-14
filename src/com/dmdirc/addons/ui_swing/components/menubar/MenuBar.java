@@ -22,14 +22,13 @@
 
 package com.dmdirc.addons.ui_swing.components.menubar;
 
-import com.dmdirc.addons.ui_swing.MainFrame;
-import com.dmdirc.addons.ui_swing.SwingController;
-import com.dmdirc.addons.ui_swing.SwingWindowFactory;
 import com.dmdirc.addons.ui_swing.components.MDIBar;
 import com.dmdirc.addons.ui_swing.framemanager.windowmenu.WindowMenuFrameManager;
 
 import java.awt.Component;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.swing.Box;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -41,6 +40,7 @@ import net.miginfocom.swing.MigLayout;
 /**
  * DMDirc menu bar.
  */
+@Singleton
 public class MenuBar extends JMenuBar {
 
     /**
@@ -55,26 +55,33 @@ public class MenuBar extends JMenuBar {
     /**
      * Instantiates a new menu bar.
      *
-     * @param controller Swing controller
-     * @param windowFactory The window factory to use to create and listen for windows.
-     * @param mainFrame Main frame
+     * @param serverMenu The server menu to use.
+     * @param channelMenu The channel menu to use.
+     * @param settingsMenu The settings menu to use.
+     * @param windowMenu The window menu to use.
+     * @param helpMenu The help menu to use.
+     * @param mdiBar The MDI bar to use.
      */
+    @Inject
     public MenuBar(
-            final SwingController controller,
-            final SwingWindowFactory windowFactory,
-            final MainFrame mainFrame) {
+            final ServerMenu serverMenu,
+            final ChannelMenu channelMenu,
+            final SettingsMenu settingsMenu,
+            final WindowMenuFrameManager windowMenu,
+            final HelpMenu helpMenu,
+            final MDIBar mdiBar) {
         super();
 
         setLayout(new MigLayout("ins 0, fillx"));
 
-        add(new ServerMenu(controller, mainFrame));
-        add(new ChannelMenu(controller, mainFrame));
-        add(new SettingsMenu(controller));
-        add(new WindowMenuFrameManager(controller, windowFactory, mainFrame));
-        add(new HelpMenu(controller));
+        add(serverMenu);
+        add(channelMenu);
+        add(settingsMenu);
+        add(windowMenu);
+        add(helpMenu);
         final int tempCount = getComponentCount();
         add(Box.createHorizontalGlue(), "growx, pushx");
-        add(new MDIBar(controller, windowFactory, mainFrame));
+        add(mdiBar);
         add(Box.createHorizontalStrut(PlatformDefaults.getPanelInsets(1)
                 .getUnit()));
         menuItemCount = getComponentCount() - tempCount;

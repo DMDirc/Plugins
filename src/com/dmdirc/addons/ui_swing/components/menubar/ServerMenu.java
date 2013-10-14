@@ -33,6 +33,8 @@ import com.dmdirc.addons.ui_swing.dialogs.NewServerDialog;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.event.MenuEvent;
@@ -41,6 +43,7 @@ import javax.swing.event.MenuListener;
 /**
  * A menu providing server related commands to the menu bar.
  */
+@Singleton
 public class ServerMenu extends JMenu implements ActionListener,
         MenuListener {
 
@@ -63,7 +66,9 @@ public class ServerMenu extends JMenu implements ActionListener,
      * @param controller Parent swing controller
      * @param mainFrame Parent main frame
      */
-    public ServerMenu(final SwingController controller,
+    @Inject
+    public ServerMenu(
+            final SwingController controller,
             final MainFrame mainFrame) {
         super("Server");
         this.controller = controller;
@@ -120,12 +125,11 @@ public class ServerMenu extends JMenu implements ActionListener,
                 mainFrame.quit();
                 break;
             case "ServerSettings":
-                controller.showServerSettingsDialog(controller.getMainFrame()
-                        .getActiveFrame().getContainer().getServer());
+                controller.showServerSettingsDialog(
+                        mainFrame.getActiveFrame().getContainer().getServer());
                 break;
             case "Disconnect":
-                controller.getMainFrame().getActiveFrame().getContainer()
-                        .getServer().disconnect();
+                mainFrame.getActiveFrame().getContainer().getServer().disconnect();
                 break;
         }
     }

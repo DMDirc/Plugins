@@ -108,9 +108,9 @@ public final class ActionsManagerDialog extends StandardDialog implements
     @SuppressWarnings("unchecked")
     public ActionsManagerDialog(final Window parentWindow,
             final SwingController controller) {
-        super(controller, Apple.isAppleUI() ?
-                new AppleJFrame((MainFrame) parentWindow,
-                controller.getWindowFactory(), controller) : null, ModalityType.MODELESS);
+        super(controller, Apple.isAppleUI()
+                ? new AppleJFrame((MainFrame) parentWindow, controller)
+                : null, ModalityType.MODELESS);
 
         initComponents();
         validator = new ValidatorChain<>(

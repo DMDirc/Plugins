@@ -43,6 +43,8 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.swing.AbstractButton;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -52,7 +54,8 @@ import javax.swing.JSeparator;
 /**
  * Manages the window menu window list.
  */
-public final class WindowMenuFrameManager extends JMenu implements
+@Singleton
+public class WindowMenuFrameManager extends JMenu implements
         SwingWindowListener, ActionListener, SelectionListener {
 
     /**
@@ -86,6 +89,7 @@ public final class WindowMenuFrameManager extends JMenu implements
      * @param windowFactory The window factory to use to create and listen for windows.
      * @param mainFrame The frame that owns this manager
      */
+    @Inject
     public WindowMenuFrameManager(
             final SwingController controller,
             final SwingWindowFactory windowFactory,

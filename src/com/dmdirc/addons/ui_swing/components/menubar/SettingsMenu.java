@@ -32,12 +32,15 @@ import com.dmdirc.addons.ui_swing.dialogs.profiles.ProfileManagerDialog;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
 /**
  * A menu to add settings related commands to the menu bar.
  */
+@Singleton
 public class SettingsMenu extends JMenu implements ActionListener {
 
     /** Serial version UID. */
@@ -45,6 +48,7 @@ public class SettingsMenu extends JMenu implements ActionListener {
     /** Swing controller. */
     private final SwingController controller;
 
+    @Inject
     public SettingsMenu(final SwingController controller) {
         super("Settings");
         this.controller = controller;
