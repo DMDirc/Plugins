@@ -482,7 +482,7 @@ public abstract class TextFrame extends JPanel implements Window,
 
         if (type != null) {
             popupMenu = (JPopupMenu) populatePopupMenu(popupMenu,
-                    PopupManager.getMenu(type, getContainer()
+                    new PopupManager(controller.getCommandController()).getMenu(type, getContainer()
                     .getConfigManager()), arguments);
         }
 
