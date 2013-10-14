@@ -28,6 +28,7 @@ import com.dmdirc.Server;
 import com.dmdirc.ServerManager;
 import com.dmdirc.actions.ActionFactory;
 import com.dmdirc.actions.ActionManager;
+import com.dmdirc.actions.ActionSubstitutorFactory;
 import com.dmdirc.actions.wrappers.AliasWrapper;
 import com.dmdirc.actions.wrappers.PerformWrapper;
 import com.dmdirc.addons.ui_swing.commands.ChannelSettings;
@@ -193,6 +194,9 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     /** The URL builder to use. */
     @Getter
     private final URLBuilder urlBuilder;
+    /** Factory to use to create action substitutors. */
+    @Getter
+    private final ActionSubstitutorFactory actionSubstitutorFactory;
 
     /**
      * Instantiates a new SwingController.
@@ -213,6 +217,7 @@ public class SwingController extends BaseCommandPlugin implements UIController {
      * @param urlBuilder URL builder to use to resolve icons etc.
      * @param windowManager Window management
      * @param colourManager The colour manager to use to parse colours.
+     * @param actionSubstitutorFactory Factory to use to create action substitutors.
      */
     public SwingController(
             final PluginInfo pluginInfo,
@@ -230,7 +235,8 @@ public class SwingController extends BaseCommandPlugin implements UIController {
             final ThemeManager themeManager,
             final URLBuilder urlBuilder,
             final WindowManager windowManager,
-            final ColourManager colourManager) {
+            final ColourManager colourManager,
+            final ActionSubstitutorFactory actionSubstitutorFactory) {
         super(commandController);
         this.pluginInfo = pluginInfo;
         this.identityManager = identityManager;
@@ -247,6 +253,7 @@ public class SwingController extends BaseCommandPlugin implements UIController {
         this.windowManager = windowManager;
         this.colourManager = colourManager;
         this.urlBuilder = urlBuilder;
+        this.actionSubstitutorFactory = actionSubstitutorFactory;
 
         globalConfig = identityManager.getGlobalConfiguration();
         globalIdentity = identityManager.getUserSettings();

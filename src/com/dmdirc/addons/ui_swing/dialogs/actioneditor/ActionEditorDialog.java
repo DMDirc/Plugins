@@ -167,7 +167,7 @@ public class ActionEditorDialog extends StandardDialog implements
         triggers = new ActionTriggersPanel(getIconManager());
         response = new ActionResponsePanel(getController());
         conditions = new ActionConditionsPanel(getIconManager());
-        substitutions = new ActionSubstitutionsPanel();
+        substitutions = new ActionSubstitutionsPanel(getController().getActionSubstitutorFactory());
         advanced = new ActionAdvancedPanel();
         showSubstitutions = new JButton("Show Substitutions");
         showAdvanced = new JButton("Show Advanced Options");
