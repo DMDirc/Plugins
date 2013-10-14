@@ -42,11 +42,15 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 /**
  * Handles creation of windows in the Swing UI.
  *
  * @since 0.6.4
  */
+@Singleton
 public class SwingWindowFactory implements FrameListener {
 
     /** A map of known implementations of window interfaces. */
@@ -63,6 +67,7 @@ public class SwingWindowFactory implements FrameListener {
      *
      * @param controller The controller this factory is for
      */
+    @Inject
     public SwingWindowFactory(final SwingController controller) {
         this.controller = controller;
 
@@ -215,8 +220,7 @@ public class SwingWindowFactory implements FrameListener {
 
     /** Disposes of this window factory, removing all listeners. */
     public void dispose() {
-        for (SwingWindowListener listener : listeners.get(
-                SwingWindowListener.class)) {
+        for (SwingWindowListener listener : listeners.get(SwingWindowListener.class)) {
             listeners.remove(SwingWindowListener.class, listener);
         }
         for (TextFrame frame : windows.values()) {
