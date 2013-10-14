@@ -23,16 +23,21 @@
 package com.dmdirc.addons.ui_swing;
 
 import com.dmdirc.ClientModule;
+import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.addons.ui_swing.commands.ChannelSettings;
 import com.dmdirc.addons.ui_swing.commands.Input;
 import com.dmdirc.addons.ui_swing.commands.PopInCommand;
 import com.dmdirc.addons.ui_swing.commands.PopOutCommand;
 import com.dmdirc.addons.ui_swing.commands.ServerSettings;
 import com.dmdirc.interfaces.LifecycleController;
+import com.dmdirc.interfaces.config.AggregateConfigProvider;
+import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.WindowManager;
+import com.dmdirc.util.URLBuilder;
 
 import java.util.concurrent.Callable;
 
+import javax.inject.Provider;
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -50,8 +55,7 @@ import dagger.Provides;
             Input.class,
             ServerSettings.class,
             ChannelSettings.class,
-        },
-        library = true
+        }
 )
 public class SwingModule {
 
@@ -84,6 +88,9 @@ public class SwingModule {
      * @param swingController The controller that will own the frame.
      * @param windowFactory The window factory to use to create and listen for windows.
      * @param lifecycleController The controller to use to quit the application.
+     * @param globalConfig The config to read settings from.
+     * @param quitWorker The worker to use when quitting the application.
+     * @param urlBuilder The URL builder to use to find icons.
      * @param windowManager The core window manager to use to find windows.
      * @return The main window.
      */
@@ -93,6 +100,9 @@ public class SwingModule {
             final SwingController swingController,
             final SwingWindowFactory windowFactory,
             final LifecycleController lifecycleController,
+            @GlobalConfig final AggregateConfigProvider globalConfig,
+            final Provider<QuitWorker> quitWorker,
+            final URLBuilder urlBuilder,
             final WindowManager windowManager) {
         return UIUtilities.invokeAndWait(new Callable<MainFrame>() {
             /** {@inheritDoc} */
@@ -102,6 +112,9 @@ public class SwingModule {
                         swingController,
                         windowFactory,
                         lifecycleController,
+                        globalConfig,
+                        quitWorker,
+                        new IconManager(globalConfig, urlBuilder),
                         windowManager);
             }
         });

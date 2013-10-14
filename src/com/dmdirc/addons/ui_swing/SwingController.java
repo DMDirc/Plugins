@@ -507,6 +507,7 @@ public class SwingController extends BaseCommandPlugin implements UIController {
         initUISettings();
 
         setObjectGraph(graph.plus(new SwingModule(this)));
+        getObjectGraph().validate();
         swingManager = getObjectGraph().get(SwingManager.class);
 
         registerCommand(ServerSettings.class, ServerSettings.INFO);

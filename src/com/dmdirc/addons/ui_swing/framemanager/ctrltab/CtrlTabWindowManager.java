@@ -61,8 +61,6 @@ public class CtrlTabWindowManager implements SwingWindowListener,
     private final TreeViewModel model;
     /** Tree Scroller. */
     private final TreeScroller treeScroller;
-    /** Window factory. */
-    private final SwingWindowFactory windowFactory;
     /** Selection model for the tree scroller. */
     private final TreeSelectionModel selectionModel;
 
@@ -93,9 +91,7 @@ public class CtrlTabWindowManager implements SwingWindowListener,
             }
         };
 
-        this.windowFactory = windowFactory;
         windowFactory.addWindowListener(this);
-
         mainFrame.addSelectionListener(this);
 
         component.getActionMap().put("prevFrameAction",
