@@ -25,7 +25,6 @@ package com.dmdirc.addons.ui_swing;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionType;
-import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
 import com.dmdirc.addons.ui_swing.components.SplitPane;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.addons.ui_swing.components.menubar.MenuBar;
@@ -39,11 +38,13 @@ import com.dmdirc.addons.ui_swing.framemanager.tree.TreeFrameManager;
 import com.dmdirc.interfaces.FrameInfoListener;
 import com.dmdirc.interfaces.LifecycleController;
 import com.dmdirc.interfaces.NotificationListener;
+import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.ui.Colour;
 import com.dmdirc.ui.CoreUIUtils;
+import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.util.collections.ListenerList;
 import com.dmdirc.util.collections.QueuedLinkedHashSet;
@@ -54,6 +55,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
 import java.awt.event.WindowListener;
 
+import javax.inject.Provider;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -88,6 +90,12 @@ public class MainFrame extends JFrame implements WindowListener,
     private final LifecycleController lifecycleController;
     /** The window factory to use to create and listen for windows. */
     private final SwingWindowFactory windowFactory;
+    /** The global config to read settings from. */
+    private final AggregateConfigProvider globalConfig;
+    /** The icon manager to use to get icons. */
+    private final IconManager iconManager;
+    /** The quit worker to use when quitting the app. */
+    private final Provider<QuitWorker> quitWorker;
     /** Client Version. */
     private final String version;
     /** Frame manager used for ctrl tab frame switching. */
@@ -126,47 +134,47 @@ public class MainFrame extends JFrame implements WindowListener,
      * @param controller Swing controller
      * @param windowFactory The window factory to use to create and listen for windows.
      * @param lifecycleController Controller to use to end the application.
+     * @param globalConfig The config to read settings from.
+     * @param quitWorker The quit worker to use when quitting the app.
+     * @param iconManager The icon manager to use to get icons.
      * @param windowManager Window management
      */
     public MainFrame(
             final SwingController controller,
             final SwingWindowFactory windowFactory,
             final LifecycleController lifecycleController,
+            final AggregateConfigProvider globalConfig,
+            final Provider<QuitWorker> quitWorker,
+            final IconManager iconManager,
             final WindowManager windowManager) {
         super();
 
         this.controller = controller;
         this.windowFactory = windowFactory;
         this.lifecycleController = lifecycleController;
+        this.globalConfig = globalConfig;
+        this.quitWorker = quitWorker;
+        this.iconManager = iconManager;
         this.windowManager = windowManager;
 
         focusOrder = new QueuedLinkedHashSet<>();
         initComponents();
 
-        imageIcon = new ImageIcon(controller.getIconManager().getImage("icon"));
+        imageIcon = new ImageIcon(iconManager.getImage("icon"));
         setIconImage(imageIcon.getImage());
 
         CoreUIUtils.centreWindow(this);
 
         addWindowListener(this);
 
-        showVersion = controller.getGlobalConfig().getOptionBool("ui",
-                "showversion");
-        version = controller.getGlobalConfig().getOption("version",
-                "version");
-        controller.getGlobalConfig().addChangeListener("ui", "lookandfeel",
-                this);
-        controller.getGlobalConfig().addChangeListener("ui", "showversion",
-                this);
-        controller.getGlobalConfig().addChangeListener("ui",
-                "framemanager", this);
-        controller.getGlobalConfig().addChangeListener("ui",
-                "framemanagerPosition", this);
-        controller.getGlobalConfig().addChangeListener("ui",
-                "textPaneFontName", this);
-        controller.getGlobalConfig().addChangeListener("icon", "icon",
-                this);
-
+        showVersion = globalConfig.getOptionBool("ui", "showversion");
+        version = globalConfig.getOption("version", "version");
+        globalConfig.addChangeListener("ui", "lookandfeel", this);
+        globalConfig.addChangeListener("ui", "showversion", this);
+        globalConfig.addChangeListener("ui", "framemanager", this);
+        globalConfig.addChangeListener("ui", "framemanagerPosition", this);
+        globalConfig.addChangeListener("ui", "textPaneFontName", this);
+        globalConfig.addChangeListener("icon", "icon", this);
 
         addWindowFocusListener(new WindowFocusListener() {
 
@@ -220,7 +228,7 @@ public class MainFrame extends JFrame implements WindowListener,
         return (MenuBar) super.getJMenuBar();
     }
 
-    /** {@inheritDoc}. */
+    /** {@inheritDoc} */
     @Override
     public void setTitle(final String title) {
         UIUtilities.invokeLater(new Runnable() {
@@ -247,7 +255,7 @@ public class MainFrame extends JFrame implements WindowListener,
     }
 
     /**
-     * {@inheritDoc}.
+     * {@inheritDoc}
      *
      * @param windowEvent Window event
      */
@@ -257,7 +265,7 @@ public class MainFrame extends JFrame implements WindowListener,
     }
 
     /**
-     * {@inheritDoc}.
+     * {@inheritDoc}
      *
      * @param windowEvent Window event
      */
@@ -267,7 +275,7 @@ public class MainFrame extends JFrame implements WindowListener,
     }
 
     /**
-     * {@inheritDoc}.
+     * {@inheritDoc}
      *
      * @param windowEvent Window event
      */
@@ -284,7 +292,7 @@ public class MainFrame extends JFrame implements WindowListener,
     }
 
     /**
-     * {@inheritDoc}.
+     * {@inheritDoc}
      *
      * @param windowEvent Window event
      */
@@ -336,8 +344,7 @@ public class MainFrame extends JFrame implements WindowListener,
                 if (mainFrameManager != null) {
                     windowFactory.removeWindowListener(mainFrameManager);
                 }
-                final String manager = controller.getGlobalConfig()
-                        .getOption("ui", "framemanager");
+                final String manager = globalConfig.getOption("ui", "framemanager");
                 try {
                     mainFrameManager = (FrameManager) Class.forName(manager)
                             .getConstructor(WindowManager.class).newInstance(windowManager);
@@ -398,10 +405,9 @@ public class MainFrame extends JFrame implements WindowListener,
      * @return Returns the initialised split pane
      */
     private SplitPane initSplitPane() {
-        final SplitPane splitPane = new SplitPane(controller.getGlobalConfig(),
-                SplitPane.Orientation.HORIZONTAL);
-        position = FramemanagerPosition.getPosition(controller
-                .getGlobalConfig().getOption("ui", "framemanagerPosition"));
+        final SplitPane splitPane = new SplitPane(globalConfig, SplitPane.Orientation.HORIZONTAL);
+        position = FramemanagerPosition.getPosition(
+                globalConfig.getOption("ui", "framemanagerPosition"));
 
         if (position == FramemanagerPosition.UNKNOWN) {
             position = FramemanagerPosition.LEFT;
@@ -425,8 +431,7 @@ public class MainFrame extends JFrame implements WindowListener,
                 splitPane.setResizeWeight(0.0);
                 splitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
                 frameManagerPanel.setPreferredSize(new Dimension(
-                        Integer.MAX_VALUE, controller.getGlobalConfig().
-                        getOptionInt("ui", "frameManagerSize")));
+                        Integer.MAX_VALUE, globalConfig.getOptionInt("ui", "frameManagerSize")));
                 break;
             case LEFT:
                 splitPane.setLeftComponent(frameManagerPanel);
@@ -434,8 +439,7 @@ public class MainFrame extends JFrame implements WindowListener,
                 splitPane.setResizeWeight(0.0);
                 splitPane.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
                 frameManagerPanel.setPreferredSize(new Dimension(
-                        controller.getGlobalConfig().getOptionInt("ui",
-                        "frameManagerSize"), Integer.MAX_VALUE));
+                        globalConfig.getOptionInt("ui", "frameManagerSize"), Integer.MAX_VALUE));
                 break;
             case BOTTOM:
                 splitPane.setTopComponent(framePanel);
@@ -443,8 +447,7 @@ public class MainFrame extends JFrame implements WindowListener,
                 splitPane.setResizeWeight(1.0);
                 splitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
                 frameManagerPanel.setPreferredSize(new Dimension(
-                        Integer.MAX_VALUE, controller.getGlobalConfig().
-                        getOptionInt("ui", "frameManagerSize")));
+                        Integer.MAX_VALUE, globalConfig.getOptionInt("ui", "frameManagerSize")));
                 break;
             case RIGHT:
                 splitPane.setLeftComponent(framePanel);
@@ -452,8 +455,7 @@ public class MainFrame extends JFrame implements WindowListener,
                 splitPane.setResizeWeight(1.0);
                 splitPane.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
                 frameManagerPanel.setPreferredSize(new Dimension(
-                        controller.getGlobalConfig().getOptionInt("ui",
-                        "frameManagerSize"), Integer.MAX_VALUE));
+                        globalConfig.getOptionInt("ui", "frameManagerSize"), Integer.MAX_VALUE));
                 break;
             default:
                 break;
@@ -475,8 +477,7 @@ public class MainFrame extends JFrame implements WindowListener,
      * @param exitCode Exit code
      */
     public void quit(final int exitCode) {
-        if (exitCode == 0 && controller.getGlobalConfig().getOptionBool(
-                "ui", "confirmQuit")) {
+        if (exitCode == 0 && globalConfig.getOptionBool("ui", "confirmQuit")) {
             final StandardQuestionDialog dialog = new ConfirmQuitDialog(controller) {
 
                 /** Serial version UID. */
@@ -503,28 +504,7 @@ public class MainFrame extends JFrame implements WindowListener,
         this.exitCode = exitCode;
         quitting = true;
 
-        new LoggingSwingWorker<Void, Void>() {
-
-            /** {@inheritDoc} */
-            @Override
-            protected Void doInBackground() {
-                ActionManager.getActionManager().triggerEvent(
-                        CoreActionType.CLIENT_CLOSING, null);
-                controller.getServerManager().closeAll(controller
-                        .getGlobalConfig().getOption("general", "closemessage"));
-                controller.getGlobalIdentity().setOption("ui",
-                        "frameManagerSize",
-                        String.valueOf(getFrameManagerSize()));
-                return null;
-            }
-
-            /** {@inheritDoc} */
-            @Override
-            protected void done() {
-                super.done();
-                dispose();
-            }
-        }.executeInExecutor();
+        quitWorker.get().executeInExecutor();
     }
 
     /** {@inheritDoc} */
@@ -552,19 +532,17 @@ public class MainFrame extends JFrame implements WindowListener,
                     });
                     break;
                 case "textPaneFontName":
-                    final String font = controller.getGlobalConfig()
-                            .getOptionString("ui", "textPaneFontName");
+                    final String font = globalConfig.getOptionString("ui", "textPaneFontName");
                     log.debug("Changing textpane font: {}", font);
                     UIUtilities.setUIFont(new Font(font, Font.PLAIN, 12));
                     controller.updateComponentTrees();
                     break;
                 default:
-                    showVersion = controller.getGlobalConfig().getOptionBool(
-                            "ui", "showversion");
+                    showVersion = globalConfig.getOptionBool("ui", "showversion");
                     break;
             }
         } else {
-            imageIcon = new ImageIcon(controller.getIconManager().getImage("icon"));
+            imageIcon = new ImageIcon(iconManager.getImage("icon"));
             UIUtilities.invokeLater(new Runnable() {
 
                 /** {@inheritDoc} */
@@ -721,7 +699,8 @@ public class MainFrame extends JFrame implements WindowListener,
         if (!quitting) {
             removeWindowListener(this);
         }
-        controller.getGlobalConfig().removeListener(this);
+
+        globalConfig.removeListener(this);
         super.dispose();
     }
 }
