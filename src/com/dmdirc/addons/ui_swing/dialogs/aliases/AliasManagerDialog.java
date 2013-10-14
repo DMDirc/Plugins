@@ -159,7 +159,7 @@ public class AliasManagerDialog extends StandardDialog implements ActionListener
         scrollPane.setViewportView(table);
 
         aliasDetails = new AliasPanel(getController());
-        subsPanel = new AliasSubstitutionsPanel();
+        subsPanel = new AliasSubstitutionsPanel(getController().getActionSubstitutorFactory());
         subsPanel.setVisible(false);
         showSubs = new JButton("Show Substitutions");
     }

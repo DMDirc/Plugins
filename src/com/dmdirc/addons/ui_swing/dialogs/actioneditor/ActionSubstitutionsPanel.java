@@ -22,12 +22,12 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.actioneditor;
 
-import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.ActionSubstitutor;
-import com.dmdirc.interfaces.actions.ActionType;
+import com.dmdirc.actions.ActionSubstitutorFactory;
 import com.dmdirc.addons.ui_swing.components.substitutions.Substitution;
 import com.dmdirc.addons.ui_swing.components.substitutions.SubstitutionLabel;
 import com.dmdirc.addons.ui_swing.components.substitutions.SubstitutionsPanel;
+import com.dmdirc.interfaces.actions.ActionType;
 
 import java.util.ArrayList;
 import java.util.Map.Entry;
@@ -46,18 +46,20 @@ public class ActionSubstitutionsPanel extends SubstitutionsPanel<ActionType> {
      */
     private static final long serialVersionUID = 1;
 
-    /** Instantiates the panel. */
-    public ActionSubstitutionsPanel() {
-        super("Substitutions may be used in the response and target fields", SubstitutionsPanel.Alignment.VERTICAL, null);
-    }
+    /** Factory to use to create {@link ActionSubstitutor}s. */
+    private final ActionSubstitutorFactory substitutorFactory;
 
     /**
      * Instantiates the panel.
      *
-     * @param type Action type
+     * @param substitutorFactory Factory to use to create {@link ActionSubstitutor}s.
      */
-    public ActionSubstitutionsPanel(final ActionType type) {
-        super("Substitutions may be used in the response and target fields", type);
+    public ActionSubstitutionsPanel(final ActionSubstitutorFactory substitutorFactory) {
+        super("Substitutions may be used in the response and target fields",
+                SubstitutionsPanel.Alignment.VERTICAL,
+                null);
+
+        this.substitutorFactory = substitutorFactory;
     }
 
     /**
@@ -75,7 +77,7 @@ public class ActionSubstitutionsPanel extends SubstitutionsPanel<ActionType> {
                 substitutions = new ArrayList<>();
 
                 if (type != null) {
-                    final ActionSubstitutor sub = new ActionSubstitutor(ActionManager.getActionManager(), type);
+                    final ActionSubstitutor sub = substitutorFactory.getActionSubstitutor(type);
 
                     for (final Entry<String, String> entry : sub.getComponentSubstitutions().
                             entrySet()) {
