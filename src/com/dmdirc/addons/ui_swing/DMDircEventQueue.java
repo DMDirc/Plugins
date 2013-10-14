@@ -37,6 +37,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowEvent;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.swing.JPopupMenu;
 import javax.swing.KeyStroke;
 import javax.swing.MenuSelectionManager;
@@ -46,6 +48,7 @@ import javax.swing.text.JTextComponent;
 /**
  * Custom event queue to add common functionality to certain components.
  */
+@Singleton
 public class DMDircEventQueue extends EventQueue {
 
     /** Swing Controller. */
@@ -56,6 +59,7 @@ public class DMDircEventQueue extends EventQueue {
      *
      * @param controller Swing controller
      */
+    @Inject
     public DMDircEventQueue(final SwingController controller) {
         super();
 

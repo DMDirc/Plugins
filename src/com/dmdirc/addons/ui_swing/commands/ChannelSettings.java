@@ -33,7 +33,10 @@ import com.dmdirc.commandparser.commands.CommandOptions;
 import com.dmdirc.commandparser.commands.IntelligentCommand;
 import com.dmdirc.commandparser.commands.context.ChannelCommandContext;
 import com.dmdirc.commandparser.commands.context.CommandContext;
+import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.ui.input.AdditionalTabTargets;
+
+import javax.inject.Inject;
 
 /**
  * Opens the channel settings window for the channel.
@@ -53,9 +56,13 @@ public class ChannelSettings extends Command implements IntelligentCommand {
      * Creates a new instance of the {@link ChannelSettings} command.
      *
      * @param controller The controller to use to show the settings window.
+     * @param commandController The command controller to use for command info.
      */
-    public ChannelSettings(final SwingController controller) {
-        super(controller.getCommandController());
+    @Inject
+    public ChannelSettings(
+            final SwingController controller,
+            final CommandController commandController) {
+        super(commandController);
         this.controller = controller;
     }
 

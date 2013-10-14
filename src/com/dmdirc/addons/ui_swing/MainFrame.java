@@ -86,6 +86,8 @@ public class MainFrame extends JFrame implements WindowListener,
     private final SwingController controller;
     /** Controller to use to end the program. */
     private final LifecycleController lifecycleController;
+    /** The window factory to use to create and listen for windows. */
+    private final SwingWindowFactory windowFactory;
     /** Client Version. */
     private final String version;
     /** Frame manager used for ctrl tab frame switching. */
@@ -122,16 +124,19 @@ public class MainFrame extends JFrame implements WindowListener,
      * Creates new form MainFrame.
      *
      * @param controller Swing controller
+     * @param windowFactory The window factory to use to create and listen for windows.
      * @param lifecycleController Controller to use to end the application.
      * @param windowManager Window management
      */
     public MainFrame(
             final SwingController controller,
+            final SwingWindowFactory windowFactory,
             final LifecycleController lifecycleController,
             final WindowManager windowManager) {
         super();
 
         this.controller = controller;
+        this.windowFactory = windowFactory;
         this.lifecycleController = lifecycleController;
         this.windowManager = windowManager;
 
@@ -180,10 +185,10 @@ public class MainFrame extends JFrame implements WindowListener,
             }
         });
 
-        controller.getWindowFactory().addWindowListener(this);
+        windowFactory.addWindowListener(this);
 
         setTitle(getTitlePrefix());
-        frameManager = new CtrlTabWindowManager(controller, this, rootPane);
+        frameManager = new CtrlTabWindowManager(controller, windowFactory, this, rootPane);
     }
 
     /**
@@ -329,8 +334,7 @@ public class MainFrame extends JFrame implements WindowListener,
             public void run() {
                 frameManagerPanel.removeAll();
                 if (mainFrameManager != null) {
-                    controller.getWindowFactory().removeWindowListener(
-                            mainFrameManager);
+                    windowFactory.removeWindowListener(mainFrameManager);
                 }
                 final String manager = controller.getGlobalConfig()
                         .getOption("ui", "framemanager");
@@ -348,8 +352,7 @@ public class MainFrame extends JFrame implements WindowListener,
                 mainFrameManager.setController(controller);
                 mainFrameManager.setParent(frameManagerPanel);
                 addSelectionListener(mainFrameManager);
-                controller.getWindowFactory().addWindowListener(
-                        mainFrameManager);
+                windowFactory.addWindowListener(mainFrameManager);
             }
         });
     }
@@ -365,7 +368,7 @@ public class MainFrame extends JFrame implements WindowListener,
         initFrameManagers();
         mainSplitPane = initSplitPane();
 
-        final MenuBar menu = new MenuBar(controller, this);
+        final MenuBar menu = new MenuBar(controller, windowFactory, this);
         controller.getApple().setMenuBar(menu);
         setJMenuBar(menu);
 

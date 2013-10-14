@@ -82,7 +82,6 @@ import com.dmdirc.util.validators.OptionalValidator;
 import java.awt.Font;
 import java.awt.GraphicsEnvironment;
 import java.awt.KeyboardFocusManager;
-import java.awt.Toolkit;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -109,18 +108,10 @@ import dagger.ObjectGraph;
  */
 @SuppressWarnings("PMD.UnusedPrivateField")
 public class SwingController extends BaseCommandPlugin implements UIController {
-    /** Window factory. */
-    @Getter
-    private final SwingWindowFactory windowFactory =
-            new SwingWindowFactory(this);
-    /** Waiting on mainframe creation. */
-    private final AtomicBoolean mainFrameCreated = new AtomicBoolean(false);
+
     /** URL Handler to use. */
     @Getter
     private final URLHandler urlHandler;
-    /** Singleton instance of MainFrame. */
-    @Getter
-    private MainFrame mainFrame;
     /** Status bar. */
     @Getter
     private SwingStatusBar swingStatusBar;
@@ -128,8 +119,6 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     private final List<java.awt.Window> windows;
     /** Error dialog. */
     private ErrorListDialog errorDialog;
-    /** DMDirc event queue. */
-    private DMDircEventQueue eventQueue;
     /** Key listener to handle dialog key events. */
     private DialogKeyListener keyListener;
     /** This plugin's plugin info object. */
@@ -198,6 +187,9 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     @Getter
     private final ActionSubstitutorFactory actionSubstitutorFactory;
 
+    /** The manager we're using for dependencies. */
+    private SwingManager swingManager;
+
     /**
      * Instantiates a new SwingController.
      *
@@ -207,7 +199,6 @@ public class SwingController extends BaseCommandPlugin implements UIController {
      * @param pluginManager Plugin manager
      * @param actionManager Action manager
      * @param actionFactory The factory to use to create actions.
-     * @param commandController Command controller to register commands
      * @param serverManager Server manager to use for server information.
      * @param lifecycleController Controller to use to close the application.
      * @param corePluginExtractor Extractor to use for core plugins.
@@ -226,7 +217,6 @@ public class SwingController extends BaseCommandPlugin implements UIController {
             final PluginManager pluginManager,
             final ActionManager actionManager,
             final ActionFactory actionFactory,
-            final CommandController commandController,
             final ServerManager serverManager,
             final LifecycleController lifecycleController,
             final CorePluginExtractor corePluginExtractor,
@@ -237,7 +227,6 @@ public class SwingController extends BaseCommandPlugin implements UIController {
             final WindowManager windowManager,
             final ColourManager colourManager,
             final ActionSubstitutorFactory actionSubstitutorFactory) {
-        super(commandController);
         this.pluginInfo = pluginInfo;
         this.identityManager = identityManager;
         this.identityFactory = identityFactory;
@@ -266,11 +255,6 @@ public class SwingController extends BaseCommandPlugin implements UIController {
                 StatusBarManager.getStatusBarManager());
         setAntiAlias();
         windows = new ArrayList<>();
-        registerCommand(new ServerSettings(this), ServerSettings.INFO);
-        registerCommand(new ChannelSettings(this), ChannelSettings.INFO);
-        registerCommand(new Input(windowFactory, commandController), Input.INFO);
-        registerCommand(new PopOutCommand(this), PopOutCommand.INFO);
-        registerCommand(new PopInCommand(this), PopInCommand.INFO);
     }
 
     /**
@@ -291,7 +275,7 @@ public class SwingController extends BaseCommandPlugin implements UIController {
      * @return true iif mainframe exists
      */
     protected boolean hasMainFrame() {
-        return mainFrameCreated.get();
+        return swingManager != null;
     }
 
     /** {@inheritDoc} */
@@ -434,35 +418,42 @@ public class SwingController extends BaseCommandPlugin implements UIController {
      * Initialises the global UI settings for the Swing UI.
      */
     private void initUISettings() {
-        // This will do nothing on non OS X Systems
-        if (Apple.isApple()) {
-            apple.setUISettings();
-            apple.setListener();
-        }
+        UIUtilities.invokeAndWait(new Runnable() {
 
-        final Font defaultFont = new Font(Font.DIALOG, Font.TRUETYPE_FONT, 12);
-        if (UIManager.getFont("TextField.font") == null) {
-            UIManager.put("TextField.font", defaultFont);
-        }
-        if (UIManager.getFont("TextPane.font") == null) {
-            UIManager.put("TextPane.font", defaultFont);
-        }
+            /** {@inheritDoc} */
+            @Override
+            public void run() {
+                // This will do nothing on non OS X Systems
+                if (Apple.isApple()) {
+                    apple.setUISettings();
+                    apple.setListener();
+                }
 
-        try {
-            UIUtilities.initUISettings();
-            UIManager.setLookAndFeel(UIUtilities.getLookAndFeel(
-                    getGlobalConfig().getOption("ui", "lookandfeel")));
-            UIUtilities.setUIFont(new Font(getGlobalConfig()
-                    .getOption("ui", "textPaneFontName"), Font.PLAIN, 12));
-        } catch (UnsupportedOperationException | UnsupportedLookAndFeelException |
-                IllegalAccessException | InstantiationException | ClassNotFoundException ex) {
-            Logger.userError(ErrorLevel.LOW, "Unable to set UI Settings");
-        }
+                final Font defaultFont = new Font(Font.DIALOG, Font.TRUETYPE_FONT, 12);
+                if (UIManager.getFont("TextField.font") == null) {
+                    UIManager.put("TextField.font", defaultFont);
+                }
+                if (UIManager.getFont("TextPane.font") == null) {
+                    UIManager.put("TextPane.font", defaultFont);
+                }
 
-        if ("Metal".equals(UIManager.getLookAndFeel().getName())
-                || Apple.isAppleUI()) {
-            PlatformDefaults.setPlatform(PlatformDefaults.WINDOWS_XP);
-        }
+                try {
+                    UIUtilities.initUISettings();
+                    UIManager.setLookAndFeel(UIUtilities.getLookAndFeel(
+                            getGlobalConfig().getOption("ui", "lookandfeel")));
+                    UIUtilities.setUIFont(new Font(getGlobalConfig()
+                            .getOption("ui", "textPaneFontName"), Font.PLAIN, 12));
+                } catch (UnsupportedOperationException | UnsupportedLookAndFeelException |
+                        IllegalAccessException | InstantiationException | ClassNotFoundException ex) {
+                    Logger.userError(ErrorLevel.LOW, "Unable to set UI Settings");
+                }
+
+                if ("Metal".equals(UIManager.getLookAndFeel().getName())
+                        || Apple.isAppleUI()) {
+                    PlatformDefaults.setPlatform(PlatformDefaults.WINDOWS_XP);
+                }
+            }
+        });
     }
 
     /** {@inheritDoc} */
@@ -512,7 +503,17 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     public void load(final PluginInfo pluginInfo, final ObjectGraph graph) {
         super.load(pluginInfo, graph);
 
+        // Init the UI settings before we start any DI, as we might create frames etc.
+        initUISettings();
+
         setObjectGraph(graph.plus(new SwingModule(this)));
+        swingManager = getObjectGraph().get(SwingManager.class);
+
+        registerCommand(ServerSettings.class, ServerSettings.INFO);
+        registerCommand(ChannelSettings.class, ChannelSettings.INFO);
+        registerCommand(Input.class, Input.INFO);
+        registerCommand(PopOutCommand.class, PopOutCommand.INFO);
+        registerCommand(PopInCommand.class, PopInCommand.INFO);
     }
 
     /** {@inheritDoc} */
@@ -522,17 +523,9 @@ public class SwingController extends BaseCommandPlugin implements UIController {
             throw new IllegalStateException(
                     "Swing UI can't be run in a headless environment");
         }
-        eventQueue = new DMDircEventQueue(this);
-        keyListener = new DialogKeyListener();
-        UIUtilities.invokeAndWait(new Runnable() {
 
-            /** {@inheritDoc} */
-            @Override
-            public void run() {
-                Toolkit.getDefaultToolkit().getSystemEventQueue()
-                        .push(eventQueue);
-            }
-        });
+        swingManager.load();
+        keyListener = new DialogKeyListener();
         UIUtilities.invokeAndWait(new Runnable() {
 
             /** {@inheritDoc} */
@@ -548,10 +541,7 @@ public class SwingController extends BaseCommandPlugin implements UIController {
             /** {@inheritDoc} */
             @Override
             public void run() {
-                initUISettings();
-                mainFrame = new MainFrame(SwingController.this, lifecycleController, windowManager);
                 getMainFrame().setVisible(true);
-                mainFrameCreated.set(true);
                 swingStatusBar = getMainFrame().getStatusBar();
                 errorDialog = new ErrorListDialog(SwingController.this);
                 StatusBarManager.getStatusBarManager().registerStatusBar(
@@ -559,25 +549,17 @@ public class SwingController extends BaseCommandPlugin implements UIController {
             }
         });
 
-        if (!mainFrameCreated.get()) {
-            throw new IllegalStateException(
-                    "Main frame not created. Unable to continue.");
-        }
-        windowManager.addListenerAndSync(windowFactory);
         super.onLoad();
     }
 
     /** {@inheritDoc} */
     @Override
     public void onUnload() {
+        swingManager.unload();
+
         errorDialog.dispose();
-        windowManager.removeListener(windowFactory);
-        mainFrameCreated.set(false);
-        getMainFrame().dispose();
-        windowFactory.dispose();
         StatusBarManager.getStatusBarManager()
                 .registerStatusBar(getSwingStatusBar());
-        eventQueue.pop();
         KeyboardFocusManager.getCurrentKeyboardFocusManager().
                 removeKeyEventDispatcher(keyListener);
         for (final java.awt.Window window : getTopLevelWindows()) {
@@ -907,5 +889,27 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     @Deprecated
     public CommandController getCommandController() {
         return super.getCommandController();
+    }
+
+    /**
+     * Retrieves the window factory to use.
+     *
+     * @return The window factory to use.
+     * @deprecated Should be injected where needed.
+     */
+    @Deprecated
+    public SwingWindowFactory getWindowFactory() {
+        return swingManager.getWindowFactory();
+    }
+
+    /**
+     * Retrieves the main frame to use.
+     *
+     * @return The main frame to use.
+     * @deprecated Should be injected where needed.
+     */
+    @Deprecated
+    public MainFrame getMainFrame() {
+        return swingManager.getMainFrame();
     }
 }

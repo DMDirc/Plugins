@@ -24,6 +24,7 @@ package com.dmdirc.addons.ui_swing.components.menubar;
 
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SwingController;
+import com.dmdirc.addons.ui_swing.SwingWindowFactory;
 import com.dmdirc.addons.ui_swing.components.MDIBar;
 import com.dmdirc.addons.ui_swing.framemanager.windowmenu.WindowMenuFrameManager;
 
@@ -55,9 +56,12 @@ public class MenuBar extends JMenuBar {
      * Instantiates a new menu bar.
      *
      * @param controller Swing controller
+     * @param windowFactory The window factory to use to create and listen for windows.
      * @param mainFrame Main frame
      */
-    public MenuBar(final SwingController controller,
+    public MenuBar(
+            final SwingController controller,
+            final SwingWindowFactory windowFactory,
             final MainFrame mainFrame) {
         super();
 
@@ -66,11 +70,11 @@ public class MenuBar extends JMenuBar {
         add(new ServerMenu(controller, mainFrame));
         add(new ChannelMenu(controller, mainFrame));
         add(new SettingsMenu(controller));
-        add(new WindowMenuFrameManager(controller, mainFrame));
+        add(new WindowMenuFrameManager(controller, windowFactory, mainFrame));
         add(new HelpMenu(controller));
         final int tempCount = getComponentCount();
         add(Box.createHorizontalGlue(), "growx, pushx");
-        add(new MDIBar(controller, mainFrame));
+        add(new MDIBar(controller, windowFactory, mainFrame));
         add(Box.createHorizontalStrut(PlatformDefaults.getPanelInsets(1)
                 .getUnit()));
         menuItemCount = getComponentCount() - tempCount;

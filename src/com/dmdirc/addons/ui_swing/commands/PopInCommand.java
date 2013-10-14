@@ -32,6 +32,9 @@ import com.dmdirc.commandparser.CommandInfo;
 import com.dmdirc.commandparser.CommandType;
 import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.context.CommandContext;
+import com.dmdirc.interfaces.CommandController;
+
+import javax.inject.Inject;
 
 /**
  * Command to pop in windows.
@@ -50,9 +53,13 @@ public class PopInCommand extends Command {
      * Create a new instance of PopInCommand.
      *
      * @param controller SwingWindowController associated with this command
+     * @param commandController The command controller to use for command info.
      */
-    public PopInCommand(final SwingController controller) {
-        super(controller.getCommandController());
+    @Inject
+    public PopInCommand(
+            final SwingController controller,
+            final CommandController commandController) {
+        super(commandController);
         this.controller = controller;
     }
 
