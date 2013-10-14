@@ -30,12 +30,15 @@ import com.dmdirc.addons.ui_swing.dialogs.about.AboutDialog;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
 /**
  * A menu providing help commands to the menu bar.
  */
+@Singleton
 public class HelpMenu extends JMenu implements ActionListener {
 
     /** Serial version UID. */
@@ -48,6 +51,7 @@ public class HelpMenu extends JMenu implements ActionListener {
      *
      * @param controller Swing controller
      */
+    @Inject
     public HelpMenu(final SwingController controller) {
         super("Help");
         this.controller = controller;

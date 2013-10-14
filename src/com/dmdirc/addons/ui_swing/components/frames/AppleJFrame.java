@@ -25,7 +25,6 @@ package com.dmdirc.addons.ui_swing.components.frames;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.SwingWindowFactory;
-import com.dmdirc.addons.ui_swing.components.menubar.MenuBar;
 
 import javax.swing.JFrame;
 
@@ -50,8 +49,7 @@ public class AppleJFrame extends JFrame {
             final SwingWindowFactory windowFactory,
             final SwingController controller) {
         super();
-        final MenuBar menu = new MenuBar(controller, windowFactory, parentWindow);
-        controller.getApple().setMenuBar(menu);
-        setJMenuBar(menu);
+        controller.getApple().setMenuBar(parentWindow.getJMenuBar());
+        setJMenuBar(parentWindow.getJMenuBar());
     }
 }

@@ -34,6 +34,8 @@ import com.dmdirc.interfaces.config.ConfigChangeListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
@@ -42,6 +44,7 @@ import net.miginfocom.swing.MigLayout;
 /**
  * Provides an MDI style bar for closing frames.
  */
+@Singleton
 public class MDIBar extends JPanel implements SwingWindowListener,
         SelectionListener, ActionListener, ConfigChangeListener {
 
@@ -71,6 +74,7 @@ public class MDIBar extends JPanel implements SwingWindowListener,
      * @param windowFactory The window factory to use to create and listen for windows.
      * @param mainFrame Main frame instance
      */
+    @Inject
     public MDIBar(
             final SwingController controller,
             final SwingWindowFactory windowFactory,
