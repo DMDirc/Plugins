@@ -35,6 +35,8 @@ import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.ui.InputWindow;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 
+import javax.inject.Inject;
+
 /**
  * The input command allows you to manipulate text in a windows inputField.
  *
@@ -56,6 +58,7 @@ public class Input extends Command implements IntelligentCommand {
      * @param windowFactory Window factory to get windows from
      * @param commandController The controller to use for command information.
      */
+    @Inject
     public Input(final SwingWindowFactory windowFactory, final CommandController commandController) {
         super(commandController);
         this.windowFactory = windowFactory;

@@ -32,7 +32,10 @@ import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.CommandOptions;
 import com.dmdirc.commandparser.commands.IntelligentCommand;
 import com.dmdirc.commandparser.commands.context.CommandContext;
+import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.ui.input.AdditionalTabTargets;
+
+import javax.inject.Inject;
 
 /**
  * Opens the server settings window for the server.
@@ -54,9 +57,13 @@ public class ServerSettings extends Command implements IntelligentCommand {
      * Creates a new instance of the {@link ServerSettings} command.
      *
      * @param controller The controller to use to show the settings window.
+     * @param commandController The command controller to use for command info.
      */
-    public ServerSettings(final SwingController controller) {
-        super(controller.getCommandController());
+    @Inject
+    public ServerSettings(
+            final SwingController controller,
+            final CommandController commandController) {
+        super(commandController);
         this.controller = controller;
     }
 
