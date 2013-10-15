@@ -49,8 +49,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 /** First run wizard, used to initially setup the client for the user. */
-public final class SwingFirstRunWizard implements WizardListener,
-        FirstRunWizard {
+public class SwingFirstRunWizard implements WizardListener, FirstRunWizard {
 
     /** Wizard dialog. */
     private final WizardDialog wizardDialog;

@@ -99,7 +99,7 @@ public class MainFrame extends JFrame implements WindowListener,
     /** Client Version. */
     private final String version;
     /** Frame manager used for ctrl tab frame switching. */
-    private final CtrlTabWindowManager frameManager;
+    private CtrlTabWindowManager frameManager;
     /** The listeners registered with this class. */
     private final ListenerList listeners = new ListenerList();
     /** Window management. */
@@ -158,8 +158,6 @@ public class MainFrame extends JFrame implements WindowListener,
         this.windowManager = windowManager;
 
         focusOrder = new QueuedLinkedHashSet<>();
-        initComponents();
-
         imageIcon = new ImageIcon(iconManager.getImage("icon"));
         setIconImage(imageIcon.getImage());
 
@@ -196,7 +194,6 @@ public class MainFrame extends JFrame implements WindowListener,
         windowFactory.addWindowListener(this);
 
         setTitle(getTitlePrefix());
-        frameManager = new CtrlTabWindowManager(controller, windowFactory, this, rootPane);
     }
 
     /**
@@ -367,27 +364,35 @@ public class MainFrame extends JFrame implements WindowListener,
     /**
      * Initialises the components for this frame.
      */
-    private void initComponents() {
-        statusBar = new SwingStatusBar(controller, this);
-        frameManagerPanel = new JPanel();
-        activeFrame = null;
-        framePanel = new JPanel(new MigLayout("fill, ins 0"));
-        initFrameManagers();
-        mainSplitPane = initSplitPane();
+    public void initComponents() {
+        UIUtilities.invokeAndWait(new Runnable() {
 
-        setPreferredSize(new Dimension(800, 600));
+            /** {@inheritDoc} */
+            @Override
+            public void run() {
+                frameManagerPanel = new JPanel();
+                activeFrame = null;
+                framePanel = new JPanel(new MigLayout("fill, ins 0"));
+                initFrameManagers();
+                mainSplitPane = initSplitPane();
 
-        getContentPane().setLayout(new MigLayout(
-                "fill, ins rel, wrap 1, hidemode 2"));
-        layoutComponents();
+                setPreferredSize(new Dimension(800, 600));
 
-        setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+                getContentPane().setLayout(new MigLayout(
+                        "fill, ins rel, wrap 1, hidemode 2"));
+                layoutComponents();
 
-        pack();
+                setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+
+                pack();
+            }
+        });
     }
 
     /**
      * Sets the menu bar that this frame will use.
+     *
+     * <p>Must be called prior to {@link #initComponents()}.
      *
      * @param menuBar The menu bar to use.
      */
@@ -400,6 +405,28 @@ public class MainFrame extends JFrame implements WindowListener,
                 setJMenuBar(menuBar);
             }
         });
+    }
+
+    /**
+     * Sets the window manager that this frame will use.
+     *
+     * <p>Must be called prior to {@link #initComponents()}.
+     *
+     * @param windowManager The window manager to use.
+     */
+    public void setWindowManager(final CtrlTabWindowManager windowManager) {
+        this.frameManager = windowManager;
+    }
+
+    /**
+     * Sets the status bar that will be used.
+     *
+     * <p>Must be called prior to {@link #initComponents()}.
+     *
+     * @param statusBar The status bar to be used.
+     */
+    public void setStatusBar(final SwingStatusBar statusBar) {
+        this.statusBar = statusBar;
     }
 
     /**

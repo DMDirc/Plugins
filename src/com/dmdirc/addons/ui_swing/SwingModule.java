@@ -24,15 +24,20 @@ package com.dmdirc.addons.ui_swing;
 
 import com.dmdirc.ClientModule;
 import com.dmdirc.ClientModule.GlobalConfig;
+import com.dmdirc.CorePluginExtractor;
+import com.dmdirc.ServerManager;
 import com.dmdirc.addons.ui_swing.commands.ChannelSettings;
 import com.dmdirc.addons.ui_swing.commands.Input;
 import com.dmdirc.addons.ui_swing.commands.PopInCommand;
 import com.dmdirc.addons.ui_swing.commands.PopOutCommand;
 import com.dmdirc.addons.ui_swing.commands.ServerSettings;
+import com.dmdirc.addons.ui_swing.wizard.firstrun.SwingFirstRunWizard;
 import com.dmdirc.interfaces.LifecycleController;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.WindowManager;
+import com.dmdirc.ui.core.components.StatusBarManager;
+import com.dmdirc.ui.core.util.URLHandler;
 import com.dmdirc.util.URLBuilder;
 
 import java.util.concurrent.Callable;
@@ -118,6 +123,48 @@ public class SwingModule {
                         windowManager);
             }
         });
+    }
+
+    /**
+     * Provides an URL handler for use in the swing UI.
+     *
+     * @param swingController The controller that will own the handler.
+     * @param globalConfig The global configuration to read settings from.
+     * @param serverManager The server manager to use to connect to servers.
+     * @param statusBarManager The status bar manager to add messages to.
+     * @return The URL handler to use.
+     */
+    @Provides
+    @Singleton
+    public URLHandler getURLHandler(
+            final SwingController swingController,
+            @GlobalConfig final AggregateConfigProvider globalConfig,
+            final ServerManager serverManager,
+            final StatusBarManager statusBarManager) {
+        return new URLHandler(swingController, globalConfig, serverManager, statusBarManager);
+    }
+
+    /**
+     * Gets a first run wizard to display.
+     *
+     * @param mainFrame The main frame, which will be the parent window.
+     * @param swingController The controller that owns the wizard.
+     * @param pluginExtractor The extractor to use to extract plugins.
+     * @param globalConfig The config to read settings from.
+     * @param urlBuilder The URL builder to use to build icons.
+     * @return
+     */
+    @Provides
+    public SwingFirstRunWizard getFirstRunWizard(
+            final MainFrame mainFrame,
+            final SwingController swingController,
+            final CorePluginExtractor pluginExtractor,
+            @GlobalConfig final AggregateConfigProvider globalConfig,
+            final URLBuilder urlBuilder) {
+        return new SwingFirstRunWizard(
+                mainFrame, swingController, pluginExtractor,
+                // TODO: Allow global icon manager to be injected.
+                new IconManager(globalConfig, urlBuilder));
     }
 
 }

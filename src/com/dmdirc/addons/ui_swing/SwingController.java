@@ -23,7 +23,6 @@
 package com.dmdirc.addons.ui_swing;
 
 import com.dmdirc.Channel;
-import com.dmdirc.CorePluginExtractor;
 import com.dmdirc.Server;
 import com.dmdirc.ServerManager;
 import com.dmdirc.actions.ActionFactory;
@@ -39,7 +38,6 @@ import com.dmdirc.addons.ui_swing.commands.ServerSettings;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.addons.ui_swing.components.statusbar.FeedbackNag;
 import com.dmdirc.addons.ui_swing.components.statusbar.SwingStatusBar;
-import com.dmdirc.addons.ui_swing.dialogs.DialogKeyListener;
 import com.dmdirc.addons.ui_swing.dialogs.DialogManager;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.addons.ui_swing.dialogs.channelsetting.ChannelSettingsDialog;
@@ -47,15 +45,12 @@ import com.dmdirc.addons.ui_swing.dialogs.error.ErrorListDialog;
 import com.dmdirc.addons.ui_swing.dialogs.prefs.SwingPreferencesDialog;
 import com.dmdirc.addons.ui_swing.dialogs.serversetting.ServerSettingsDialog;
 import com.dmdirc.addons.ui_swing.dialogs.url.URLDialog;
-import com.dmdirc.addons.ui_swing.wizard.WizardListener;
-import com.dmdirc.addons.ui_swing.wizard.firstrun.SwingFirstRunWizard;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.interfaces.CommandController;
-import com.dmdirc.interfaces.LifecycleController;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.config.IdentityController;
@@ -69,8 +64,6 @@ import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.plugins.implementations.BaseCommandPlugin;
 import com.dmdirc.ui.IconManager;
-import com.dmdirc.ui.WindowManager;
-import com.dmdirc.ui.core.components.StatusBarManager;
 import com.dmdirc.ui.core.util.URLHandler;
 import com.dmdirc.ui.messages.ColourManager;
 import com.dmdirc.ui.themes.ThemeManager;
@@ -81,15 +74,12 @@ import com.dmdirc.util.validators.OptionalValidator;
 
 import java.awt.Font;
 import java.awt.GraphicsEnvironment;
-import java.awt.KeyboardFocusManager;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
-import java.util.concurrent.Semaphore;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.swing.JMenuItem;
 import javax.swing.SwingUtilities;
@@ -109,18 +99,10 @@ import dagger.ObjectGraph;
 @SuppressWarnings("PMD.UnusedPrivateField")
 public class SwingController extends BaseCommandPlugin implements UIController {
 
-    /** URL Handler to use. */
-    @Getter
-    private final URLHandler urlHandler;
-    /** Status bar. */
-    @Getter
-    private SwingStatusBar swingStatusBar;
     /** Top level window list. */
     private final List<java.awt.Window> windows;
     /** Error dialog. */
     private ErrorListDialog errorDialog;
-    /** Key listener to handle dialog key events. */
-    private DialogKeyListener keyListener;
     /** This plugin's plugin info object. */
     private final PluginInfo pluginInfo;
     /** Global config manager. */
@@ -165,18 +147,12 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     /** Alias wrapper. */
     @Getter
     private final AliasWrapper aliasWrapper;
-    /** Controller to use to close the application. */
-    private final LifecycleController lifecycleController;
-    /** Extractor to use for core plugins. */
-    private final CorePluginExtractor corePluginExtractor;
     /** Theme manager to use. */
     @Getter
     private final ThemeManager themeManager;
     /** Apple handler, deals with Mac specific code. */
     @Getter
     private final Apple apple;
-    /** Window Management. */
-    private final WindowManager windowManager;
     /** The colour manager to use to parse colours. */
     @Getter
     private final ColourManager colourManager;
@@ -200,13 +176,10 @@ public class SwingController extends BaseCommandPlugin implements UIController {
      * @param actionManager Action manager
      * @param actionFactory The factory to use to create actions.
      * @param serverManager Server manager to use for server information.
-     * @param lifecycleController Controller to use to close the application.
-     * @param corePluginExtractor Extractor to use for core plugins.
      * @param performWrapper Perform wrapper to use for performs.
      * @param aliasWrapper Alias wrapper to use for aliases.
      * @param themeManager Theme manager to use.
      * @param urlBuilder URL builder to use to resolve icons etc.
-     * @param windowManager Window management
      * @param colourManager The colour manager to use to parse colours.
      * @param actionSubstitutorFactory Factory to use to create action substitutors.
      */
@@ -218,13 +191,10 @@ public class SwingController extends BaseCommandPlugin implements UIController {
             final ActionManager actionManager,
             final ActionFactory actionFactory,
             final ServerManager serverManager,
-            final LifecycleController lifecycleController,
-            final CorePluginExtractor corePluginExtractor,
             final PerformWrapper performWrapper,
             final AliasWrapper aliasWrapper,
             final ThemeManager themeManager,
             final URLBuilder urlBuilder,
-            final WindowManager windowManager,
             final ColourManager colourManager,
             final ActionSubstitutorFactory actionSubstitutorFactory) {
         this.pluginInfo = pluginInfo;
@@ -234,12 +204,9 @@ public class SwingController extends BaseCommandPlugin implements UIController {
         this.actionFactory = actionFactory;
         this.pluginManager = pluginManager;
         this.serverManager = serverManager;
-        this.lifecycleController = lifecycleController;
-        this.corePluginExtractor = corePluginExtractor;
         this.performWrapper = performWrapper;
         this.aliasWrapper = aliasWrapper;
         this.themeManager = themeManager;
-        this.windowManager = windowManager;
         this.colourManager = colourManager;
         this.urlBuilder = urlBuilder;
         this.actionSubstitutorFactory = actionSubstitutorFactory;
@@ -251,8 +218,6 @@ public class SwingController extends BaseCommandPlugin implements UIController {
         iconManager = new IconManager(globalConfig, urlBuilder);
         prefsComponentFactory = new PrefsComponentFactory(this);
         dialogManager = new DialogManager(this);
-        urlHandler = new URLHandler(this, globalConfig, serverManager,
-                StatusBarManager.getStatusBarManager());
         setAntiAlias();
         windows = new ArrayList<>();
     }
@@ -281,34 +246,7 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     /** {@inheritDoc} */
     @Override
     public void showFirstRunWizard() {
-        final Semaphore semaphore = new Semaphore(0);
-        UIUtilities.invokeLater(new Runnable() {
-
-            /** {@inheritDoc} */
-            @Override
-            public void run() {
-                final WizardListener listener = new WizardListener() {
-
-                    /** {@inheritDoc} */
-                    @Override
-                    public void wizardFinished() {
-                        semaphore.release();
-                    }
-
-                    /** {@inheritDoc} */
-                    @Override
-                    public void wizardCancelled() {
-                        semaphore.release();
-                    }
-                };
-                final SwingFirstRunWizard wizard = new SwingFirstRunWizard(
-                        getMainFrame(), SwingController.this,
-                        corePluginExtractor, iconManager);
-                wizard.getWizardDialog().addWizardListener(listener);
-                wizard.display();
-            }
-        });
-        semaphore.acquireUninterruptibly();
+        swingManager.getFirstRunExecutor().showWizardAndWait();
     }
 
     /** {@inheritDoc} */
@@ -526,16 +464,6 @@ public class SwingController extends BaseCommandPlugin implements UIController {
         }
 
         swingManager.load();
-        keyListener = new DialogKeyListener();
-        UIUtilities.invokeAndWait(new Runnable() {
-
-            /** {@inheritDoc} */
-            @Override
-            public void run() {
-                KeyboardFocusManager.getCurrentKeyboardFocusManager()
-                        .addKeyEventDispatcher(keyListener);
-            }
-        });
 
         UIUtilities.invokeAndWait(new Runnable() {
 
@@ -543,10 +471,7 @@ public class SwingController extends BaseCommandPlugin implements UIController {
             @Override
             public void run() {
                 getMainFrame().setVisible(true);
-                swingStatusBar = getMainFrame().getStatusBar();
                 errorDialog = new ErrorListDialog(SwingController.this);
-                StatusBarManager.getStatusBarManager().registerStatusBar(
-                        getSwingStatusBar());
             }
         });
 
@@ -559,10 +484,7 @@ public class SwingController extends BaseCommandPlugin implements UIController {
         swingManager.unload();
 
         errorDialog.dispose();
-        StatusBarManager.getStatusBarManager()
-                .registerStatusBar(getSwingStatusBar());
-        KeyboardFocusManager.getCurrentKeyboardFocusManager().
-                removeKeyEventDispatcher(keyListener);
+
         for (final java.awt.Window window : getTopLevelWindows()) {
             window.dispose();
         }
@@ -913,4 +835,27 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     public MainFrame getMainFrame() {
         return swingManager.getMainFrame();
     }
+
+    /**
+     * Retrieves the status bar that's in use.
+     *
+     * @return The status bar that's in use.
+     * @deprecated Should be injected where needed.
+     */
+    @Deprecated
+    public SwingStatusBar getSwingStatusBar() {
+        return swingManager.getMainFrame().getStatusBar();
+    }
+
+    /**
+     * Gets the URL handler to use.
+     *
+     * @return The URL handler to use.
+     * @deprecated Should be injected.
+     */
+    @Deprecated
+    public URLHandler getUrlHandler() {
+        return swingManager.getUrlHandler();
+    }
+
 }

@@ -23,11 +23,19 @@
 package com.dmdirc.addons.ui_swing;
 
 import com.dmdirc.addons.ui_swing.components.menubar.MenuBar;
+import com.dmdirc.addons.ui_swing.components.statusbar.SwingStatusBar;
+import com.dmdirc.addons.ui_swing.dialogs.DialogKeyListener;
+import com.dmdirc.addons.ui_swing.framemanager.ctrltab.CtrlTabWindowManager;
+import com.dmdirc.addons.ui_swing.wizard.firstrun.FirstRunWizardExecutor;
 import com.dmdirc.ui.WindowManager;
+import com.dmdirc.ui.core.components.StatusBarManager;
+import com.dmdirc.ui.core.util.URLHandler;
 
+import java.awt.KeyboardFocusManager;
 import java.awt.Toolkit;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 
 /**
@@ -42,11 +50,26 @@ public class SwingManager {
     /** The window factory in use. */
     private final SwingWindowFactory windowFactory;
 
+    /** The status bar manager to register our status bar with. */
+    private final StatusBarManager statusBarManager;
+
+    /** The status bar in use. */
+    private final SwingStatusBar statusBar;
+
     /** The window manager to listen on for events. */
     private final WindowManager windowManager;
 
     /** The main frame of the Swing UI. */
     private final MainFrame mainFrame;
+
+    /** The URL handler to use. */
+    private final URLHandler urlHandler;
+
+    /** The key listener that supports dialogs. */
+    private final DialogKeyListener dialogKeyListener;
+
+    /** Provider of first run executors. */
+    private final Provider<FirstRunWizardExecutor> firstRunExecutor;
 
     /**
      * Creates a new instance of {@link SwingManager}.
@@ -54,22 +77,42 @@ public class SwingManager {
      * @param eventQueue The event queue to use.
      * @param windowFactory The window factory in use.
      * @param windowManager The window manager to listen on for events.
+     * @param statusBarManager The core status bar manager to register our status bar with.
      * @param mainFrame The main frame of the Swing UI.
      * @param menuBar The menu bar to use for the main frame.
+     * @param statusBar The status bar to use in the main frame.
+     * @param ctrlTabManager The window manager that handles ctrl+tab behaviour.
+     * @param urlHandler The URL handler to use.
+     * @param dialogKeyListener The key listener that supports dialogs.
+     * @param firstRunExecutor A provider of first run executors.
      */
     @Inject
     public SwingManager(
             final DMDircEventQueue eventQueue,
             final SwingWindowFactory windowFactory,
             final WindowManager windowManager,
+            final StatusBarManager statusBarManager,
             final MainFrame mainFrame,
-            final MenuBar menuBar) {
+            final MenuBar menuBar,
+            final SwingStatusBar statusBar,
+            final CtrlTabWindowManager ctrlTabManager,
+            final URLHandler urlHandler,
+            final DialogKeyListener dialogKeyListener,
+            final Provider<FirstRunWizardExecutor> firstRunExecutor) {
         this.eventQueue = eventQueue;
         this.windowFactory = windowFactory;
         this.windowManager = windowManager;
+        this.statusBar = statusBar;
+        this.statusBarManager = statusBarManager;
+        this.urlHandler = urlHandler;
+        this.dialogKeyListener = dialogKeyListener;
+        this.firstRunExecutor = firstRunExecutor;
 
         this.mainFrame = mainFrame;
         this.mainFrame.setMenuBar(menuBar);
+        this.mainFrame.setWindowManager(ctrlTabManager);
+        this.mainFrame.setStatusBar(statusBar);
+        this.mainFrame.initComponents();
     }
 
     /**
@@ -77,7 +120,10 @@ public class SwingManager {
      */
     public void load() {
         installEventQueue();
+        installKeyListener();
+
         windowManager.addListenerAndSync(windowFactory);
+        statusBarManager.registerStatusBar(statusBar);
     }
 
     /**
@@ -85,9 +131,21 @@ public class SwingManager {
      */
     public void unload() {
         uninstallEventQueue();
+        uninstallKeyListener();
+
         windowManager.removeListener(windowFactory);
         windowFactory.dispose();
         mainFrame.dispose();
+        statusBarManager.unregisterStatusBar(statusBar);
+    }
+
+    /**
+     * Gets a first run wizard executor to use.
+     *
+     * @return A first run wizard executor.
+     */
+    public FirstRunWizardExecutor getFirstRunExecutor() {
+        return firstRunExecutor.get();
     }
 
     /**
@@ -113,6 +171,17 @@ public class SwingManager {
     }
 
     /**
+     * Gets the URL handler to use.
+     *
+     * @return The URL handler to use.
+     * @deprecated Should be injected.
+     */
+    @Deprecated
+    public URLHandler getUrlHandler() {
+        return urlHandler;
+    }
+
+    /**
      * Installs the DMDirc event queue.
      */
     private void installEventQueue() {
@@ -130,6 +199,28 @@ public class SwingManager {
      */
     private void uninstallEventQueue() {
         eventQueue.pop();
+    }
+
+    /**
+     * Installs the dialog key listener.
+     */
+    private void installKeyListener() {
+        UIUtilities.invokeAndWait(new Runnable() {
+            /** {@inheritDoc} */
+            @Override
+            public void run() {
+                KeyboardFocusManager.getCurrentKeyboardFocusManager()
+                        .addKeyEventDispatcher(dialogKeyListener);
+            }
+        });
+    }
+
+    /**
+     * Removes the dialog key listener.
+     */
+    private void uninstallKeyListener() {
+        KeyboardFocusManager.getCurrentKeyboardFocusManager()
+                .removeKeyEventDispatcher(dialogKeyListener);
     }
 
 }

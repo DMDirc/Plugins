@@ -34,14 +34,16 @@ import com.dmdirc.addons.ui_swing.components.TreeScroller;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.addons.ui_swing.framemanager.tree.TreeViewModel;
 import com.dmdirc.addons.ui_swing.framemanager.tree.TreeViewNode;
+import com.dmdirc.interfaces.ui.Window;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
-import com.dmdirc.interfaces.ui.Window;
 
 import java.awt.event.KeyEvent;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.swing.JComponent;
 import javax.swing.KeyStroke;
 import javax.swing.tree.DefaultTreeSelectionModel;
@@ -52,6 +54,7 @@ import javax.swing.tree.TreeSelectionModel;
 /**
  * A Window manager to handle ctrl[+shift]+tab switching between windows.
  */
+@Singleton
 public class CtrlTabWindowManager implements SwingWindowListener,
         SelectionListener {
 
@@ -70,13 +73,12 @@ public class CtrlTabWindowManager implements SwingWindowListener,
      * @param controller Parent controller
      * @param windowFactory The window factory to use to create and listen for windows.
      * @param mainFrame The main frame that owns this window manager
-     * @param component Component to add listen to events on
      */
+    @Inject
     public CtrlTabWindowManager(
             final SwingController controller,
             final SwingWindowFactory windowFactory,
-            final MainFrame mainFrame,
-            final JComponent component) {
+            final MainFrame mainFrame) {
         nodes = new HashMap<>();
         model = new TreeViewModel(controller, new TreeViewNode(null, null));
         selectionModel = new DefaultTreeSelectionModel();
@@ -94,15 +96,15 @@ public class CtrlTabWindowManager implements SwingWindowListener,
         windowFactory.addWindowListener(this);
         mainFrame.addSelectionListener(this);
 
-        component.getActionMap().put("prevFrameAction",
+        mainFrame.getRootPane().getActionMap().put("prevFrameAction",
                 new PreviousFrameAction(treeScroller));
-        component.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
+        mainFrame.getRootPane().getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
                 .put(KeyStroke.getKeyStroke(KeyEvent.VK_TAB,
                 KeyEvent.CTRL_DOWN_MASK | KeyEvent.SHIFT_DOWN_MASK),
                 "prevFrameAction");
-        component.getActionMap().put(
+        mainFrame.getRootPane().getActionMap().put(
                 "nextFrameAction", new NextFrameAction(treeScroller));
-        component.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
+        mainFrame.getRootPane().getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
                 .put(KeyStroke.getKeyStroke(KeyEvent.VK_TAB,
                 KeyEvent.CTRL_DOWN_MASK), "nextFrameAction");
     }

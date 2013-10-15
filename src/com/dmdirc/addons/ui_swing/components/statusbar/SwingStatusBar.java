@@ -33,6 +33,8 @@ import com.dmdirc.ui.StatusMessage;
 import java.awt.Component;
 import java.util.Arrays;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
@@ -41,7 +43,8 @@ import net.miginfocom.layout.PlatformDefaults;
 import net.miginfocom.swing.MigLayout;
 
 /** Status bar, shows message and info on the GUI. */
-public final class SwingStatusBar extends JPanel implements StatusBar {
+@Singleton
+public class SwingStatusBar extends JPanel implements StatusBar {
 
     /**
      * A version number for this class. It should be changed whenever the class
@@ -68,7 +71,9 @@ public final class SwingStatusBar extends JPanel implements StatusBar {
      * @param controller Swing controller
      * @param mainFrame Main frame
      */
-    public SwingStatusBar(final SwingController controller,
+    @Inject
+    public SwingStatusBar(
+            final SwingController controller,
             final MainFrame mainFrame) {
         super();
 
