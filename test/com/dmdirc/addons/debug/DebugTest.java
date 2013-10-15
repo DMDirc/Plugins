@@ -27,6 +27,7 @@ import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.interfaces.CommandController;
 
+import java.util.HashSet;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -50,12 +51,13 @@ public class DebugTest {
     @Before
     public void setup() {
         when(controller.getCommandChar()).thenReturn('/');
-        debug = new Debug(plugin, controller);
+        when(debugCommand.getName()).thenReturn("test");
     }
 
     /** Checks the debug command with no arguments shows usage. */
     @Test
     public void testNoArgs() {
+        debug = new Debug(controller, new HashSet<DebugCommand>());
         when(arguments.isCommand()).thenReturn(true);
         when(arguments.getArguments()).thenReturn(new String[0]);
         debug.execute(container, arguments, null);
@@ -66,7 +68,7 @@ public class DebugTest {
     /** Checks the debug command with an invalid subcommand shows an error. */
     @Test
     public void testInvalidArg() {
-        when(plugin.getCommand("test")).thenReturn(null);
+        debug = new Debug(controller, new HashSet<DebugCommand>());
         when(arguments.isCommand()).thenReturn(true);
         when(arguments.getArguments()).thenReturn(new String[]{"test"});
 
@@ -77,7 +79,7 @@ public class DebugTest {
     /** Checks the debug command executes a subcommand with no args. */
     @Test
     public void testCommandNoArgs() {
-        when(plugin.getCommand("test")).thenReturn(debugCommand);
+        debug = new Debug(controller, new HashSet<DebugCommand>() {{ add(debugCommand); }});
         when(arguments.isCommand()).thenReturn(true);
         when(arguments.getArguments()).thenReturn(new String[]{"test"});
         when(arguments.getArgumentsAsString(1)).thenReturn("");
@@ -92,7 +94,7 @@ public class DebugTest {
     /** Checks the debug command executes a subcommand with args. */
     @Test
     public void testCommandWithArgs() {
-        when(plugin.getCommand("test")).thenReturn(debugCommand);
+        debug = new Debug(controller, new HashSet<DebugCommand>() {{ add(debugCommand); }});
         when(arguments.isCommand()).thenReturn(true);
         when(arguments.getArguments()).thenReturn(new String[]{"test", "1", "2", "3"});
         when(arguments.getArgumentsAsString(1)).thenReturn("1 2 3");

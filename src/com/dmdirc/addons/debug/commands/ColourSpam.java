@@ -25,9 +25,11 @@ package com.dmdirc.addons.debug.commands;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.debug.Debug;
 import com.dmdirc.addons.debug.DebugCommand;
-import com.dmdirc.addons.debug.DebugPlugin;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.commands.context.CommandContext;
+
+import javax.inject.Inject;
+import javax.inject.Provider;
 
 /**
  * Outputs a large number of coloured lines.
@@ -37,11 +39,11 @@ public class ColourSpam extends DebugCommand {
     /**
      * Creates a new instance of the command.
      *
-     * @param plugin Parent debug plugin
-     * @param command Parent command
+     * @param commandProvider The provider to use to access the main debug command.
      */
-    public ColourSpam(final DebugPlugin plugin, final Debug command) {
-        super(plugin, command);
+    @Inject
+    public ColourSpam(final Provider<Debug> commandProvider) {
+        super(commandProvider);
     }
 
     /** {@inheritDoc} */

@@ -22,28 +22,46 @@
 
 package com.dmdirc.addons.debug.commands;
 
+import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.debug.Debug;
 import com.dmdirc.addons.debug.DebugCommand;
-import com.dmdirc.addons.debug.DebugPlugin;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.commands.context.CommandContext;
+import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.ui.StatusMessage;
 import com.dmdirc.ui.core.components.StatusBarManager;
+
+import javax.inject.Inject;
+import javax.inject.Provider;
 
 /**
  * Outputs a test message to the status bar.
  */
 public class StatusbarMessage extends DebugCommand {
 
+    /** The status bar manager to show messages in. */
+    private final StatusBarManager statusBarManager;
+
+    /** The global configuration. */
+    private final AggregateConfigProvider globalConfig;
+
     /**
      * Creates a new instance of the command.
      *
-     * @param plugin Parent debug plugin
-     * @param command Parent command
+     * @param commandProvider The provider to use to access the main debug command.
+     * @param statusBarManager The status bar manager to show messages in.
+     * @param globalConfig The global configuration to use.
      */
-    public StatusbarMessage(final DebugPlugin plugin, final Debug command) {
-        super(plugin, command);
+    @Inject
+    public StatusbarMessage(
+            final Provider<Debug> commandProvider,
+            final StatusBarManager statusBarManager,
+            @GlobalConfig final AggregateConfigProvider globalConfig) {
+        super(commandProvider);
+
+        this.statusBarManager = statusBarManager;
+        this.globalConfig = globalConfig;
     }
 
     /** {@inheritDoc} */
@@ -62,8 +80,7 @@ public class StatusbarMessage extends DebugCommand {
     @Override
     public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
-        StatusBarManager.getStatusBarManager().setMessage(new StatusMessage(
-                null, "Test: " + args.getArgumentsAsString(), null, 5,
-                getPlugin().getIdentityController().getGlobalConfiguration()));
+        statusBarManager.setMessage(new StatusMessage(null,
+                "Test: " + args.getArgumentsAsString(), null, 5, globalConfig));
     }
 }

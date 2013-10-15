@@ -26,22 +26,31 @@ import com.dmdirc.FrameContainer;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.commands.context.CommandContext;
 
-import lombok.Getter;
+import javax.inject.Provider;
 
 /**
  * Debug command, serves as a proxy between debug commands and normal commands.
  */
 @SuppressWarnings("unused")
 public abstract class DebugCommand {
+
     /** The format name used for command output. */
     public static final String FORMAT_OUTPUT = "commandOutput";
+
     /** The format name used for command errors. */
     public static final String FORMAT_ERROR = "commandError";
+
     /** Parent debug command. */
-    private final Debug command;
-    /** Parent debug plugin. */
-    @Getter
-    private final DebugPlugin plugin;
+    private final Provider<Debug> commandProvider;
+
+    /**
+     * Creates a new debug command.
+     *
+     * @param commandProvider Provider of the {@link Debug} command which owns this subcommand.
+     */
+    public DebugCommand(final Provider<Debug> commandProvider) {
+        this.commandProvider = commandProvider;
+    }
 
     /**
      * Returns this command's name.
@@ -70,7 +79,6 @@ public abstract class DebugCommand {
      */
     public abstract String getUsage();
 
-
     /**
      * Executes this command.
      *
@@ -82,18 +90,6 @@ public abstract class DebugCommand {
             final CommandArguments args, final CommandContext context);
 
     /**
-     * Creates a new debug command.
-     *
-     * @param plugin Parent plugin
-     * @param command Parent debug command
-     */
-    public DebugCommand(final DebugPlugin plugin, final Debug command) {
-        this.command = command;
-        this.plugin = plugin;
-    }
-
-
-    /**
      * Sends a line, if appropriate, to the specified target.
      *
      * @param target The command window to send the line to
@@ -103,9 +99,7 @@ public abstract class DebugCommand {
      */
     public void sendLine(final FrameContainer target,
             final boolean isSilent, final String type, final Object ... args) {
-        if (command != null) {
-            command.proxySendLine(target, isSilent, type, args);
-        }
+        commandProvider.get().proxySendLine(target, isSilent, type, args);
     }
 
     /**
@@ -118,9 +112,7 @@ public abstract class DebugCommand {
      */
     public void showUsage(final FrameContainer target,
             final boolean isSilent, final String name, final String args) {
-        if (command != null) {
-            command.proxyShowUsage(target, isSilent, name, args);
-        }
+        commandProvider.get().proxyShowUsage(target, isSilent, name, args);
     }
 
     /**
@@ -133,9 +125,6 @@ public abstract class DebugCommand {
      * @return A string containing an ASCII table
      */
     public String doTable(final String[] headers, final String[][] data) {
-        if (command != null) {
-            return command.proxyDoTable(headers, data);
-        }
-        return "";
+        return commandProvider.get().proxyDoTable(headers, data);
     }
 }

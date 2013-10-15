@@ -25,10 +25,8 @@ package com.dmdirc.addons.debug.commands;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.debug.Debug;
 import com.dmdirc.addons.debug.DebugCommand;
-import com.dmdirc.addons.debug.DebugPlugin;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.commands.context.CommandContext;
-import com.dmdirc.updater.UpdateChecker;
 import com.dmdirc.updater.UpdateComponent;
 import com.dmdirc.updater.Version;
 import com.dmdirc.updater.checking.BaseCheckResult;
@@ -47,19 +45,30 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
+
 /**
  * Generates some fake updates.
  */
 public class FakeUpdates extends DebugCommand {
 
+    /** The update manager to add fake updates to. */
+    private final UpdateManager updateManager;
+
     /**
      * Creates a new instance of the command.
      *
-     * @param plugin Parent debug plugin
-     * @param command Parent command
+     * @param commandProvider The provider to use to access the main debug command.
+     * @param updateManager The update manager to add fake updates to.
      */
-    public FakeUpdates(final DebugPlugin plugin, final Debug command) {
-        super(plugin, command);
+    @Inject
+    public FakeUpdates(
+            final Provider<Debug> commandProvider,
+            final UpdateManager updateManager) {
+        super(commandProvider);
+
+        this.updateManager = updateManager;
     }
 
     /** {@inheritDoc} */
@@ -78,11 +87,9 @@ public class FakeUpdates extends DebugCommand {
     @Override
     public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
-        final UpdateManager manager = UpdateChecker.getManager();
-
-        manager.addCheckStrategy(new FakeUpdateCheckStrategy());
-        manager.addRetrievalStrategy(new FakeUpdateRetriever());
-        manager.addInstallationStrategy(new FakeUpdateInstaller());
+        updateManager.addCheckStrategy(new FakeUpdateCheckStrategy());
+        updateManager.addRetrievalStrategy(new FakeUpdateRetriever());
+        updateManager.addInstallationStrategy(new FakeUpdateInstaller());
     }
 
     /**
