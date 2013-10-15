@@ -36,6 +36,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
@@ -52,7 +53,7 @@ public class UrlCatcherPluginTest {
     @Before
     public void setupClass() {
         when(container.getConfigManager()).thenReturn(configProvider);
-        final Styliser styliser = new Styliser(container);
+        final Styliser styliser = new Styliser(null, configProvider);
         when(container.getStyliser()).thenReturn(styliser);
         plugin = new UrlCatcherPlugin(controller, identityController, actionController);
     }
