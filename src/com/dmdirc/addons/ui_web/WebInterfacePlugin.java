@@ -30,6 +30,7 @@ import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.plugins.implementations.BasePlugin;
 import com.dmdirc.ui.WindowManager;
+import com.dmdirc.ui.core.components.StatusBarManager;
 
 import lombok.RequiredArgsConstructor;
 
@@ -56,6 +57,9 @@ public class WebInterfacePlugin extends BasePlugin {
     /** Window management. */
     private final WindowManager windowManager;
 
+    /** The status bar manager to use. */
+    private final StatusBarManager statusBarManager;
+
     /** The UI that we're using. */
     private WebInterfaceUI controller;
 
@@ -65,7 +69,8 @@ public class WebInterfacePlugin extends BasePlugin {
         if (controller == null) {
             controller = new WebInterfaceUI(getDomain(),
                     identityController, serverManager,
-                    pluginManager, pluginInfo, windowManager);
+                    pluginManager, pluginInfo, windowManager,
+                    statusBarManager);
         }
     }
 
@@ -76,8 +81,10 @@ public class WebInterfacePlugin extends BasePlugin {
      */
     public void addWebHandler(final Handler newHandler) {
         if (controller == null) {
-            controller = new WebInterfaceUI(getDomain(), identityController,
-                    serverManager, pluginManager, pluginInfo, windowManager);
+            controller = new WebInterfaceUI(getDomain(),
+                    identityController, serverManager,
+                    pluginManager, pluginInfo, windowManager,
+                    statusBarManager);
         }
 
         controller.addWebHandler(newHandler);

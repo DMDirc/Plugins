@@ -77,6 +77,7 @@ public class WebInterfaceUI implements UIController {
      * @param pluginManager The manager to use to find other plugins
      * @param pluginInfo The information object for this UI's plugin.
      * @param coreWindowManager Window management
+     * @param statusBarManager The status bar manager.
      */
     public WebInterfaceUI(
             final String domain,
@@ -84,7 +85,8 @@ public class WebInterfaceUI implements UIController {
             final ServerManager serverManager,
             final PluginManager pluginManager,
             final PluginInfo pluginInfo,
-            final WindowManager coreWindowManager) {
+            final WindowManager coreWindowManager,
+            final StatusBarManager statusBarManager) {
         super();
 
         this.pluginManager = pluginManager;
@@ -123,7 +125,7 @@ public class WebInterfaceUI implements UIController {
 
         windowManager = new WebWindowManager(this, coreWindowManager);
 
-        StatusBarManager.getStatusBarManager().registerStatusBar(new WebStatusBar(handler));
+        statusBarManager.registerStatusBar(new WebStatusBar(handler));
     }
 
     /**
