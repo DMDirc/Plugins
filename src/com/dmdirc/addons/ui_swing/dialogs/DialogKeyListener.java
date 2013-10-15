@@ -28,12 +28,22 @@ import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.KeyEvent;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.swing.JButton;
 
 /**
  * Dialog key listener.
  */
+@Singleton
 public class DialogKeyListener implements KeyEventDispatcher {
+
+    /**
+     * Creates a new instance of {@link DialogKeyListener}.
+     */
+    @Inject
+    public DialogKeyListener() {
+    }
 
     /** {@inheritDoc} */
     @Override
