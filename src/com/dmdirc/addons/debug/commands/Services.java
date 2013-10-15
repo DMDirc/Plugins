@@ -25,27 +25,36 @@ package com.dmdirc.addons.debug.commands;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.debug.Debug;
 import com.dmdirc.addons.debug.DebugCommand;
-import com.dmdirc.addons.debug.DebugPlugin;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.commands.IntelligentCommand;
 import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.plugins.Service;
+import com.dmdirc.plugins.ServiceManager;
 import com.dmdirc.plugins.ServiceProvider;
 import com.dmdirc.ui.input.AdditionalTabTargets;
+
+import javax.inject.Inject;
+import javax.inject.Provider;
 
 /**
  * Outputs information regarding available services.
  */
 public class Services extends DebugCommand implements IntelligentCommand {
 
+    /** The service manager to get services from. */
+    private final ServiceManager serviceManager;
+
     /**
      * Creates a new instance of the command.
      *
-     * @param plugin Parent debug plugin
-     * @param command Parent command
+     * @param commandProvider The provider to use to access the main debug command.
+     * @param serviceManager The service manager to get services from.
      */
-    public Services(final DebugPlugin plugin, final Debug command) {
-        super(plugin, command);
+    @Inject
+    public Services(final Provider<Debug> commandProvider, final ServiceManager serviceManager) {
+        super(commandProvider);
+
+        this.serviceManager = serviceManager;
     }
 
     /** {@inheritDoc} */
@@ -66,7 +75,7 @@ public class Services extends DebugCommand implements IntelligentCommand {
     public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
         sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Available Services:");
-        for (Service service : getPlugin().getPluginManager().getAllServices()) {
+        for (Service service : serviceManager.getAllServices()) {
             sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "    "
                     + service.toString());
             if (args.getArguments().length > 0

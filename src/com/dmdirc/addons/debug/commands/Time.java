@@ -26,12 +26,14 @@ import com.dmdirc.FrameContainer;
 import com.dmdirc.WritableFrameContainer;
 import com.dmdirc.addons.debug.Debug;
 import com.dmdirc.addons.debug.DebugCommand;
-import com.dmdirc.addons.debug.DebugPlugin;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.commands.IntelligentCommand;
 import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 import com.dmdirc.ui.input.TabCompletionType;
+
+import javax.inject.Inject;
+import javax.inject.Provider;
 
 /**
  * Times how long it takes to execute commands.
@@ -41,11 +43,11 @@ public class Time extends DebugCommand implements IntelligentCommand {
     /**
      * Creates a new instance of the command.
      *
-     * @param plugin Parent debug plugin
-     * @param command Parent command
+     * @param commandProvider The provider to use to access the main debug command.
      */
-    public Time(final DebugPlugin plugin, final Debug command) {
-        super(plugin, command);
+    @Inject
+    public Time(final Provider<Debug> commandProvider) {
+        super(commandProvider);
     }
 
     /** {@inheritDoc} */

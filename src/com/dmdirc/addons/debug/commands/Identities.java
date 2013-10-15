@@ -25,26 +25,35 @@ package com.dmdirc.addons.debug.commands;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.debug.Debug;
 import com.dmdirc.addons.debug.DebugCommand;
-import com.dmdirc.addons.debug.DebugPlugin;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.interfaces.config.ConfigProvider;
+import com.dmdirc.interfaces.config.IdentityController;
 
 import java.util.List;
+
+import javax.inject.Inject;
+import javax.inject.Provider;
 
 /**
  * Outputs a table of all known identities.
  */
 public class Identities extends DebugCommand {
 
+    /** The controller to read identities from. */
+    private final IdentityController identityController;
+
     /**
      * Creates a new instance of the command.
      *
-     * @param plugin Parent debug plugin
-     * @param command Parent command
+     * @param commandProvider The provider to use to access the main debug command.
+     * @param controller The controller to read identities from.
      */
-    public Identities(final DebugPlugin plugin, final Debug command) {
-        super(plugin, command);
+    @Inject
+    public Identities(final Provider<Debug> commandProvider, final IdentityController controller) {
+        super(commandProvider);
+
+        this.identityController = controller;
     }
 
     /** {@inheritDoc} */
@@ -71,8 +80,7 @@ public class Identities extends DebugCommand {
             type = args.getArgumentsAsString();
         }
 
-        final List<ConfigProvider> identities = getPlugin().getIdentityController()
-                .getProvidersByType(type);
+        final List<ConfigProvider> identities = identityController.getProvidersByType(type);
         final String[][] data = new String[identities.size()][4];
 
         int i = 0;

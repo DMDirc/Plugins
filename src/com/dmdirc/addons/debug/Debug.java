@@ -33,11 +33,20 @@ import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * Provides various handy ways to test or debug the client.
  */
+@Singleton
 public class Debug extends Command implements IntelligentCommand {
 
     /** A command info object for this command. */
@@ -45,23 +54,30 @@ public class Debug extends Command implements IntelligentCommand {
             "debug <command> [args] - facilitates debugging of DMDirc",
             CommandType.TYPE_GLOBAL);
 
-    /** Parent debug plugin. */
-    private final DebugPlugin plugin;
-
     /** The command controller to use to lookup command information. */
     private final CommandController controller;
 
+    /** List of registered debug commands. */
+    private final Map<String, DebugCommand> commands;
+
     /**
-     * Creates a new debug command with the specified parent plugin.
+     * Creates a new debug command.
      *
-     * @param plugin Parent debug plugin.
      * @param controller The command controller to use to lookup command information.
+     * @param subcommands The subcommands to be loaded.
      */
-    public Debug(final DebugPlugin plugin, final CommandController controller) {
+    @Inject
+    public Debug(
+            final CommandController controller,
+            final Set<DebugCommand> subcommands) {
         super(controller);
 
-        this.plugin = plugin;
         this.controller = controller;
+        this.commands = new HashMap<>(subcommands.size());
+
+        for (DebugCommand command : subcommands) {
+            commands.put(command.getName(), command);
+        }
     }
 
     /** {@inheritDoc} */
@@ -72,8 +88,7 @@ public class Debug extends Command implements IntelligentCommand {
             showUsage(origin, args.isSilent(), "debug",
                     "<debug command> [options]");
         } else {
-            final DebugCommand command = plugin.getCommand(
-                    args.getArguments()[0]);
+            final DebugCommand command = commands.get(args.getArguments()[0]);
             if (command == null) {
                 sendLine(origin, args.isSilent(), FORMAT_ERROR,
                         "Unknown debug action.");
@@ -127,6 +142,21 @@ public class Debug extends Command implements IntelligentCommand {
         return doTable(headers, data);
     }
 
+    /**
+     * Returns a list of command names.
+     *
+     * @return List of command names
+     */
+    public List<String> getCommandNames() {
+        final List<String> names = new ArrayList<>(commands.size());
+
+        for (DebugCommand command : commands.values()) {
+            names.add(command.getName());
+        }
+
+        return names;
+    }
+
     /** {@inheritDoc} */
     @Override
     public AdditionalTabTargets getSuggestions(final int arg,
@@ -136,10 +166,9 @@ public class Debug extends Command implements IntelligentCommand {
         res.excludeAll();
 
         if (arg == 0) {
-            res.addAll(plugin.getCommandNames());
+            res.addAll(getCommandNames());
         } else {
-            final DebugCommand command = plugin.getCommand(
-                    context.getPreviousArgs().get(0));
+            final DebugCommand command = commands.get(context.getPreviousArgs().get(0));
             if (command instanceof IntelligentCommand) {
                 final IntelligentCommandContext newContext =
                         new IntelligentCommandContext(context.getWindow(),

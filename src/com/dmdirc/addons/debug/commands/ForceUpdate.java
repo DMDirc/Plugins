@@ -22,28 +22,40 @@
 
 package com.dmdirc.addons.debug.commands;
 
+import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.debug.Debug;
 import com.dmdirc.addons.debug.DebugCommand;
-import com.dmdirc.addons.debug.DebugPlugin;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.commands.context.CommandContext;
+import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.ui.messages.Styliser;
 import com.dmdirc.updater.UpdateChecker;
+
+import javax.inject.Inject;
+import javax.inject.Provider;
 
 /**
  * Forces the client to check for an update.
  */
 public class ForceUpdate extends DebugCommand {
 
+    /** The global configuration used to check if updates are enabled. */
+    private final AggregateConfigProvider globalConfig;
+
     /**
      * Creates a new instance of the command.
      *
-     * @param plugin Parent debug plugin
-     * @param command Parent command
+     * @param commandProvider The provider to use to access the main debug command.
+     * @param globalConfig The global config to use to check if updates are enabled.
      */
-    public ForceUpdate(final DebugPlugin plugin, final Debug command) {
-        super(plugin, command);
+    @Inject
+    public ForceUpdate(
+            final Provider<Debug> commandProvider,
+            @GlobalConfig final AggregateConfigProvider globalConfig) {
+        super(commandProvider);
+
+        this.globalConfig = globalConfig;
     }
 
     /** {@inheritDoc} */
@@ -62,8 +74,7 @@ public class ForceUpdate extends DebugCommand {
     @Override
     public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
-        if (getPlugin().getIdentityController().getGlobalConfiguration()
-                .getOptionBool("updater","enable")) {
+        if (globalConfig.getOptionBool("updater","enable")) {
             new Thread(new UpdateChecker(), "Forced update checker").start();
         } else {
             sendLine(origin, args.isSilent(), FORMAT_ERROR, "Update checking is "

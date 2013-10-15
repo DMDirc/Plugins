@@ -22,27 +22,39 @@
 
 package com.dmdirc.addons.debug.commands;
 
+import com.dmdirc.ClientModule;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.debug.Debug;
 import com.dmdirc.addons.debug.DebugCommand;
-import com.dmdirc.addons.debug.DebugPlugin;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.commands.context.CommandContext;
+import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
+
+import javax.inject.Inject;
+import javax.inject.Provider;
 
 /**
  * Outputs information about the global config sources.
  */
 public class GlobalConfigInfo extends DebugCommand {
 
+    /** The global configuration to retrieve sources for. */
+    private final AggregateConfigProvider globalConfig;
+
     /**
      * Creates a new instance of the command.
      *
-     * @param plugin Parent debug plugin
-     * @param command Parent command
+     * @param commandProvider The provider to use to access the main debug command.
+     * @param globalConfig The global config to retrieve sources for.
      */
-    public GlobalConfigInfo(final DebugPlugin plugin, final Debug command) {
-        super(plugin, command);
+    @Inject
+    public GlobalConfigInfo(
+            final Provider<Debug> commandProvider,
+            @ClientModule.GlobalConfig final AggregateConfigProvider globalConfig) {
+        super(commandProvider);
+
+        this.globalConfig = globalConfig;
     }
 
     /** {@inheritDoc} */
@@ -61,8 +73,7 @@ public class GlobalConfigInfo extends DebugCommand {
     @Override
     public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
-        for (ConfigProvider source : getPlugin().getIdentityController()
-                .getGlobalConfiguration().getSources()) {
+        for (ConfigProvider source : globalConfig.getSources()) {
             sendLine(origin, args.isSilent(), FORMAT_OUTPUT, source.getTarget()
                     + " - " + source + "(" + source.getTarget().getOrder()
                     + ")");

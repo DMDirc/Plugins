@@ -25,24 +25,33 @@ package com.dmdirc.addons.debug.commands;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.debug.Debug;
 import com.dmdirc.addons.debug.DebugCommand;
-import com.dmdirc.addons.debug.DebugPlugin;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.commands.context.CommandContext;
+import com.dmdirc.plugins.PluginManager;
+
+import javax.inject.Inject;
+import javax.inject.Provider;
 
 /**
  * Opens the DMDirc first run wizard.
  */
 public class FirstRun extends DebugCommand {
 
+    /** The plugin manager used to hackily poke the Swing UI. */
+    private final PluginManager pluginManager;
+
     /**
      * Creates a new instance of the command.
      *
-     * @param plugin Parent debug plugin
-     * @param command Parent command
+     * @param commandProvider The provider to use to access the main debug command.
+     * @param pluginManager The plugin manager to use to hackily poke the Swing UI.
      */
-    public FirstRun(final DebugPlugin plugin, final Debug command) {
-        super(plugin, command);
+    @Inject
+    public FirstRun(final Provider<Debug> commandProvider, final PluginManager pluginManager) {
+        super(commandProvider);
+
+        this.pluginManager = pluginManager;
     }
 
     /** {@inheritDoc} */
@@ -61,8 +70,7 @@ public class FirstRun extends DebugCommand {
     @Override
     public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
-        ((SwingController) getPlugin().getPluginManager()
-                .getPluginInfoByName("ui_swing").getPlugin())
+        ((SwingController) pluginManager.getPluginInfoByName("ui_swing").getPlugin())
                 .showFirstRunWizard();
     }
 

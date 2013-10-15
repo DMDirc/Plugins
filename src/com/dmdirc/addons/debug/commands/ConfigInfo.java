@@ -25,10 +25,12 @@ package com.dmdirc.addons.debug.commands;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.debug.Debug;
 import com.dmdirc.addons.debug.DebugCommand;
-import com.dmdirc.addons.debug.DebugPlugin;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.interfaces.config.ConfigProvider;
+
+import javax.inject.Inject;
+import javax.inject.Provider;
 
 /**
  * Outputs the config info related to the current context.
@@ -38,11 +40,11 @@ public class ConfigInfo extends DebugCommand {
     /**
      * Creates a new instance of the command.
      *
-     * @param plugin Parent debug plugin
-     * @param command Parent command
+     * @param commandProvider The provider to use to access the main debug command.
      */
-    public ConfigInfo(final DebugPlugin plugin, final Debug command) {
-        super(plugin, command);
+    @Inject
+    public ConfigInfo(final Provider<Debug> commandProvider) {
+        super(commandProvider);
     }
 
     /** {@inheritDoc} */
