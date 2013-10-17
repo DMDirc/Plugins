@@ -23,7 +23,6 @@
 package com.dmdirc.addons.lagdisplay;
 
 import com.dmdirc.FrameContainer;
-import com.dmdirc.Server;
 import com.dmdirc.ServerState;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionType;
@@ -36,6 +35,7 @@ import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.interfaces.ActionListener;
+import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
@@ -57,9 +57,9 @@ public final class LagDisplayPlugin extends BasePlugin implements
     /** The panel we use in the status bar. */
     private final LagDisplayPanel panel;
     /** A cache of ping times. */
-    private final Map<Server, String> pings = new WeakHashMap<>();
+    private final Map<Connection, String> pings = new WeakHashMap<>();
     /** Ping history. */
-    private final Map<Server, RollingList<Long>> history = new HashMap<>();
+    private final Map<Connection, RollingList<Long>> history = new HashMap<>();
     /** Parent Swing UI. */
     private final SwingController controller;
     /** Whether or not to show a graph in the info popup. */
@@ -121,14 +121,14 @@ public final class LagDisplayPlugin extends BasePlugin implements
      * Retrieves the history of the specified server. If there is no history,
      * a new list is added to the history map and returned.
      *
-     * @param server The server whose history is being requested
+     * @param connection The connection whose history is being requested
      * @return The history for the specified server
      */
-    protected RollingList<Long> getHistory(final Server server) {
-        if (!history.containsKey(server)) {
-            history.put(server, new RollingList<Long>(historySize));
+    protected RollingList<Long> getHistory(final Connection connection) {
+        if (!history.containsKey(connection)) {
+            history.put(connection, new RollingList<Long>(historySize));
         }
-        return history.get(server);
+        return history.get(connection);
     }
 
     /**
@@ -183,14 +183,17 @@ public final class LagDisplayPlugin extends BasePlugin implements
         final TextFrame activeFrame = controller.getMainFrame().getActiveFrame();
         final FrameContainer active = activeFrame == null ? null
                 : activeFrame.getContainer();
+        final boolean isActive = active != null
+                && arguments[0] instanceof Connection
+                && ((Connection) arguments[0]).equals(active.getServer());
 
         if (!useAlternate && type.equals(CoreActionType.SERVER_GOTPING)) {
             final String value = formatTime(arguments[1]);
 
-            getHistory(((Server) arguments[0])).add((Long) arguments[1]);
-            pings.put(((Server) arguments[0]), value);
+            getHistory(((Connection) arguments[0])).add((Long) arguments[1]);
+            pings.put(((Connection) arguments[0]), value);
 
-            if (((Server) arguments[0]).isChild(active) || arguments[0] == active) {
+            if (isActive) {
                 panel.getComponent().setText(value);
             }
 
@@ -198,22 +201,22 @@ public final class LagDisplayPlugin extends BasePlugin implements
         } else if (!useAlternate && type.equals(CoreActionType.SERVER_NOPING)) {
             final String value = formatTime(arguments[1]) + "+";
 
-            pings.put(((Server) arguments[0]), value);
+            pings.put(((Connection) arguments[0]), value);
 
-            if (((Server) arguments[0]).isChild(active) || arguments[0] == active) {
+            if (isActive) {
                 panel.getComponent().setText(value);
             }
 
             panel.refreshDialog();
         } else if (type.equals(CoreActionType.SERVER_DISCONNECTED)) {
-            if (((Server) arguments[0]).isChild(active) || arguments[0] == active) {
+            if (isActive) {
                 panel.getComponent().setText("Not connected");
                 pings.remove(arguments[0]);
             }
 
             panel.refreshDialog();
         } else if (useAlternate && type.equals(CoreActionType.SERVER_PINGSENT)) {
-            ((Server) arguments[0]).getParser().sendRawMessage("LAGCHECK_" + new Date().getTime());
+            ((Connection) arguments[0]).getParser().sendRawMessage("LAGCHECK_" + new Date().getTime());
         } else if (useAlternate && type.equals(CoreActionType.SERVER_NUMERIC)
                 && ((Integer) arguments[1]).intValue() == 421
                 && ((String[]) arguments[2])[3].startsWith("LAGCHECK_")) {
@@ -222,10 +225,10 @@ public final class LagDisplayPlugin extends BasePlugin implements
                 final Long duration = Long.valueOf(new Date().getTime() - sent);
                 final String value = formatTime(duration);
 
-                pings.put((Server) arguments[0], value);
-                getHistory(((Server) arguments[0])).add(duration);
+                pings.put((Connection) arguments[0], value);
+                getHistory(((Connection) arguments[0])).add(duration);
 
-                if (((Server) arguments[0]).isChild(active) || arguments[0] == active) {
+                if (isActive) {
                     panel.getComponent().setText(value);
                 }
             } catch (NumberFormatException ex) {
@@ -241,13 +244,13 @@ public final class LagDisplayPlugin extends BasePlugin implements
     }
 
     /**
-     * Retrieves the ping time for the specified server.
+     * Retrieves the ping time for the specified connection.
      *
-     * @param server The server whose ping time is being requested
+     * @param connection The connection whose ping time is being requested
      * @return A String representation of the current lag, or "Unknown"
      */
-    public String getTime(final Server server) {
-        return pings.get(server) == null ? "Unknown" : pings.get(server);
+    public String getTime(final Connection connection) {
+        return pings.get(connection) == null ? "Unknown" : pings.get(connection);
     }
 
     /**

@@ -22,8 +22,8 @@
 
 package com.dmdirc.addons.identd;
 
-import com.dmdirc.Server;
 import com.dmdirc.ServerManager;
+import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
@@ -133,8 +133,8 @@ public class IdentClient implements Runnable {
             return String.format("%d , %d : ERROR : INVALID-PORT", myPort, theirPort);
         }
 
-        final Server server = getServerByPort(myPort);
-        if (!config.getOptionBool(myPlugin.getDomain(), "advanced.alwaysOn") && (server == null || config.getOptionBool(myPlugin.getDomain(), "advanced.isNoUser"))) {
+        final Connection connection = getConnectionByPort(myPort);
+        if (!config.getOptionBool(myPlugin.getDomain(), "advanced.alwaysOn") && (connection == null || config.getOptionBool(myPlugin.getDomain(), "advanced.isNoUser"))) {
             return String.format("%d , %d : ERROR : NO-USER", myPort, theirPort);
         }
 
@@ -175,10 +175,10 @@ public class IdentClient implements Runnable {
         final String customName = config.getOption(myPlugin.getDomain(), "general.customName");
         if (config.getOptionBool(myPlugin.getDomain(), "general.useCustomName") && customName != null && customName.length() > 0 && customName.length() < 513) {
             username = customName;
-        } else if (server != null && config.getOptionBool(myPlugin.getDomain(), "general.useNickname")) {
-            username = server.getParser().getLocalClient().getNickname();
-        } else if (server != null && config.getOptionBool(myPlugin.getDomain(), "general.useUsername")) {
-            username = server.getParser().getLocalClient().getUsername();
+        } else if (connection != null && config.getOptionBool(myPlugin.getDomain(), "general.useNickname")) {
+            username = connection.getParser().getLocalClient().getNickname();
+        } else if (connection != null && config.getOptionBool(myPlugin.getDomain(), "general.useUsername")) {
+            username = connection.getParser().getLocalClient().getUsername();
         } else {
             username = System.getProperty("user.name");
         }
@@ -226,10 +226,10 @@ public class IdentClient implements Runnable {
      * @param port Port to check for
      * @return The server instance listening on the given port
      */
-    protected Server getServerByPort(final int port) {
-        for (Server server : serverManager.getServers()) {
-            if (server.getParser().getLocalPort() == port) {
-                return server;
+    protected Connection getConnectionByPort(final int port) {
+        for (Connection connection : serverManager.getServers()) {
+            if (connection.getParser().getLocalPort() == port) {
+                return connection;
             }
         }
         return null;

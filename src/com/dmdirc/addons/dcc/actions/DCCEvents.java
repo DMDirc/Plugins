@@ -22,25 +22,22 @@
 
 package com.dmdirc.addons.dcc.actions;
 
-import com.dmdirc.Server;
-import com.dmdirc.interfaces.actions.ActionMetaType;
-
 import com.dmdirc.addons.dcc.ChatContainer;
 import com.dmdirc.addons.dcc.TransferContainer;
+import com.dmdirc.interfaces.Connection;
+import com.dmdirc.interfaces.actions.ActionMetaType;
 
 import java.io.File;
 
 /**
  * Defines DCC-related events.
- *
- * @author Chris
  */
 public enum DCCEvents implements ActionMetaType {
 
     /** DCC Chat Request. */
-    DCC_CHAT_REQUEST(new String[]{"server", "client"}, Server.class, String.class),
+    DCC_CHAT_REQUEST(new String[]{"connection", "client"}, Connection.class, String.class),
     /** DCC Chat Request Sent. */
-    DCC_CHAT_REQUEST_SENT(new String[]{"server", "client"}, Server.class, String.class),
+    DCC_CHAT_REQUEST_SENT(new String[]{"connection", "client"}, Connection.class, String.class),
     /** DCC Message from another person. */
     DCC_CHAT_MESSAGE(new String[]{"DCCChatWindow", "Nickname", "Message"}, ChatContainer.class, String.class, String.class),
     /** DCC Message to another person. */
@@ -56,9 +53,9 @@ public enum DCCEvents implements ActionMetaType {
     /** DCC Send Data Transfered */
     DCC_SEND_DATATRANSFERED(new String[]{"DCCSendWindow", "Bytes Transfered"}, TransferContainer.class, int.class),
     /** DCC Send Request. */
-    DCC_SEND_REQUEST(new String[]{"server", "client", "file"}, Server.class, String.class, String.class),
+    DCC_SEND_REQUEST(new String[]{"connection", "client", "file"}, Connection.class, String.class, String.class),
     /** DCC Send Request Sent. */
-    DCC_SEND_REQUEST_SENT(new String[]{"server", "client", "file"}, Server.class, String.class, File.class);
+    DCC_SEND_REQUEST_SENT(new String[]{"connection", "client", "file"}, Connection.class, String.class, File.class);
 
     /** The names of the arguments for this meta type. */
     private String[] argNames;

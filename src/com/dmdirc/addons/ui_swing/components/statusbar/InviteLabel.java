@@ -32,6 +32,7 @@ import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.interfaces.ActionListener;
+import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.InviteListener;
 import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.interfaces.ui.StatusBarComponent;
@@ -170,12 +171,12 @@ public class InviteLabel extends StatusbarPopupPanel<JLabel> implements
     public void processEvent(final ActionType type, final StringBuffer format,
             final Object... arguments) {
         if (type == CoreActionType.SERVER_CONNECTED) {
-            if (arguments[0] instanceof Server) {
-                ((Server) arguments[0]).addInviteListener(this);
+            if (arguments[0] instanceof Connection) {
+                ((Connection) arguments[0]).addInviteListener(this);
             }
         } else {
-            if (arguments[0] instanceof Server) {
-                ((Server) arguments[0]).removeInviteListener(this);
+            if (arguments[0] instanceof Connection) {
+                ((Connection) arguments[0]).removeInviteListener(this);
             }
         }
     }

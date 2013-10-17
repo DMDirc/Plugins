@@ -29,6 +29,7 @@ import com.dmdirc.actions.ActionManager;
 import com.dmdirc.addons.dcc.actions.DCCActions;
 import com.dmdirc.addons.dcc.io.DCC;
 import com.dmdirc.addons.dcc.io.DCCTransfer;
+import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.parser.interfaces.callbacks.SocketCloseListener;
@@ -73,8 +74,8 @@ public class TransferContainer extends FrameContainer implements
     /** IRC Parser that caused this send */
     private Parser parser = null;
 
-    /** Server that caused this send */
-    private Server server = null;
+    /** Connection the send was initiated on. */
+    private Connection connection = null;
 
     /** Show open button. */
     private boolean showOpen = Desktop.isDesktopSupported() &&
@@ -89,20 +90,20 @@ public class TransferContainer extends FrameContainer implements
      * @param config Config manager
      * @param title The title of this window
      * @param targetNick Nickname of target
-     * @param server The server that initiated this send
+     * @param connection The connection that the send was that initiated on
      */
     public TransferContainer(final DCCManager plugin, final DCCTransfer dcc,
             final AggregateConfigProvider config, final String title,
-            final String targetNick, final Server server) {
+            final String targetNick, final Connection connection) {
         super(dcc.getType() == DCCTransfer.TransferType.SEND
                 ? "dcc-send-inactive" : "dcc-receive-inactive",
                 title, title, config,
                 Arrays.asList("com.dmdirc.addons.dcc.ui.TransferPanel"));
         this.plugin = plugin;
         this.dcc = dcc;
-        this.server = server;
+        this.connection = connection;
         this.config = config;
-        parser = server == null ? null : server.getParser();
+        parser = connection == null ? null : connection.getParser();
         myPlugin = plugin;
 
         if (parser != null) {
@@ -308,12 +309,12 @@ public class TransferContainer extends FrameContainer implements
         }
         dcc.reset();
 
-        if (server != null && server.getState() == ServerState.CONNECTED) {
-            final String myNickname = server.getParser().getLocalClient()
+        if (connection != null && connection.getState() == ServerState.CONNECTED) {
+            final String myNickname = connection.getParser().getLocalClient()
                     .getNickname();
             // Check again incase we have changed nickname to the same nickname
             //that this send is for.
-            if (server.getParser().getStringConverter().equalsIgnoreCase(
+            if (connection.getParser().getStringConverter().equalsIgnoreCase(
                     otherNickname, myNickname)) {
                 final Thread errorThread = new Thread(new Runnable() {
 
@@ -371,8 +372,8 @@ public class TransferContainer extends FrameContainer implements
     }
 
     public void addSocketCloseCallback(final SocketCloseListener listener) {
-        if (server != null && server.getParser() != null) {
-            server.getParser().getCallbackManager()
+        if (connection != null && connection.getParser() != null) {
+            connection.getParser().getCallbackManager()
                     .addNonCriticalCallback(SocketCloseListener.class,
                     listener);
         }

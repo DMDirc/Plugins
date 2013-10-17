@@ -22,11 +22,11 @@
 
 package com.dmdirc.addons.parserdebug;
 
-import com.dmdirc.Server;
 import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.interfaces.ActionController;
 import com.dmdirc.interfaces.ActionListener;
 import com.dmdirc.interfaces.CommandController;
+import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.parser.interfaces.callbacks.DebugInfoListener;
@@ -106,8 +106,8 @@ public final class DebugPlugin extends BaseCommandPlugin implements
     @Override
     public void processEvent(final ActionType type, final StringBuffer format, final Object... arguments) {
         if (type == CoreActionType.SERVER_DISCONNECTED) {
-            final Server thisServer = (Server) arguments[0];
-            final Parser parser = thisServer.getParser();
+            final Connection connection = (Connection) arguments[0];
+            final Parser parser = connection.getParser();
             if (registeredParsers.containsKey(parser)) {
                 try {
                     final DebugWindow window = registeredParsers.get(parser);

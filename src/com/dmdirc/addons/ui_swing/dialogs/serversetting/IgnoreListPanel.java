@@ -22,11 +22,11 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.serversetting;
 
-import com.dmdirc.Server;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialog;
 import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
+import com.dmdirc.interfaces.Connection;
 import com.dmdirc.parser.common.IgnoreList;
 import com.dmdirc.util.validators.NotEmptyValidator;
 import com.dmdirc.util.validators.RegexValidator;
@@ -57,8 +57,8 @@ public final class IgnoreListPanel extends JPanel implements ActionListener,
 
     /** Serial version UID. */
     private static final long serialVersionUID = 2;
-    /** Parent server. */
-    private final Server server;
+    /** Parent connection. */
+    private final Connection connection;
     /** Parent window. */
     private final Window parentWindow;
     /** Swing controller. */
@@ -82,15 +82,15 @@ public final class IgnoreListPanel extends JPanel implements ActionListener,
      * Creates a new instance of IgnoreList.
      *
      * @param controller Swing controller
-     * @param server Parent server
+     * @param connection The connection whose ignore list should be displayed.
      * @param parentWindow Parent window
      */
     public IgnoreListPanel(final SwingController controller,
-            final Server server, final Window parentWindow) {
+            final Connection connection, final Window parentWindow) {
         super();
 
         this.controller = controller;
-        this.server = server;
+        this.connection = connection;
         this.parentWindow = parentWindow;
 
         this.setOpaque(UIUtilities.getTabbedPaneOpaque());
@@ -101,7 +101,7 @@ public final class IgnoreListPanel extends JPanel implements ActionListener,
 
     /** Initialises the components. */
     private void initComponents() {
-        cachedIgnoreList = new IgnoreList(server.getIgnoreList().getRegexList());
+        cachedIgnoreList = new IgnoreList(connection.getIgnoreList().getRegexList());
 
         listModel = new IgnoreListModel(cachedIgnoreList);
         list = new JList(listModel);
@@ -164,9 +164,9 @@ public final class IgnoreListPanel extends JPanel implements ActionListener,
 
     /** Saves the ignore list. */
     public void saveList() {
-        server.getIgnoreList().clear();
-        server.getIgnoreList().addAll(cachedIgnoreList.getRegexList());
-        server.saveIgnoreList();
+        connection.getIgnoreList().clear();
+        connection.getIgnoreList().addAll(cachedIgnoreList.getRegexList());
+        connection.saveIgnoreList();
     }
 
     /**

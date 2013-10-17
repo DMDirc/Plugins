@@ -23,7 +23,6 @@
 package com.dmdirc.addons.dcc;
 
 import com.dmdirc.FrameContainer;
-import com.dmdirc.Server;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.addons.dcc.actions.DCCActions;
 import com.dmdirc.addons.dcc.io.DCC;
@@ -41,6 +40,7 @@ import com.dmdirc.commandparser.commands.IntelligentCommand;
 import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.commandparser.commands.context.ServerCommandContext;
 import com.dmdirc.interfaces.CommandController;
+import com.dmdirc.interfaces.Connection;
 import com.dmdirc.messages.MessageSinkManager;
 import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.ui.WindowManager;
@@ -108,8 +108,8 @@ public class DCCCommand extends Command implements IntelligentCommand {
             final CommandArguments args, final CommandContext context) {
         if (args.getArguments().length > 1) {
             final String target = args.getArguments()[1];
-            final Server server = ((ServerCommandContext) context).getServer();
-            final Parser parser = server.getParser();
+            final Connection connection = ((ServerCommandContext) context).getServer();
+            final Parser parser = connection.getParser();
             final String myNickname = parser.getLocalClient().getNickname();
 
             if (parser.isValidChannelName(target)
@@ -137,9 +137,9 @@ public class DCCCommand extends Command implements IntelligentCommand {
             }
             final String type = args.getArguments()[0];
             if (type.equalsIgnoreCase("chat")) {
-                startChat(parser, server, origin, myNickname, target, true);
+                startChat(parser, connection, origin, myNickname, target, true);
             } else if (type.equalsIgnoreCase("send")) {
-                sendFile(target, origin, server, true,
+                sendFile(target, origin, connection, true,
                         args.getArgumentsAsString(2));
             } else {
                 sendLine(origin, args.isSilent(), FORMAT_ERROR,
@@ -154,13 +154,13 @@ public class DCCCommand extends Command implements IntelligentCommand {
      * Starts a DCC Chat.
      *
      * @param parser Parser from which command originated
-     * @param server Server from which command originated
+     * @param connection Server from which command originated
      * @param origin Frame container from which command originated
      * @param myNickname My current nickname
      * @param target Target of the command
      * @param isSilent Is this a silent command
      */
-    private void startChat(final Parser parser, final Server server,
+    private void startChat(final Parser parser, final Connection connection,
             final FrameContainer origin, final String myNickname,
             final String target, final boolean isSilent) {
         final DCCChat chat = new DCCChat();
@@ -172,7 +172,7 @@ public class DCCCommand extends Command implements IntelligentCommand {
             parser.sendCTCP(target, "DCC", "CHAT chat " + DCC.ipToLong(
                     myPlugin.getListenIP(parser)) + " " + chat.getPort());
             ActionManager.getActionManager().triggerEvent(
-                    DCCActions.DCC_CHAT_REQUEST_SENT, null, server, target);
+                    DCCActions.DCC_CHAT_REQUEST_SENT, null, connection, target);
             sendLine(origin, isSilent, "DCCChatStarting", target,
                     chat.getHost(), chat.getPort());
             window.addLine("DCCChatStarting", target, chat.getHost(),
@@ -189,13 +189,13 @@ public class DCCCommand extends Command implements IntelligentCommand {
      *
      * @param target Person this dcc is to.
      * @param origin The InputWindow this command was issued on
-     * @param server The server instance that this command is being executed on
+     * @param connection The server instance that this command is being executed on
      * @param isSilent Whether this command is silenced or not
      * @param filename The file to send
      * @since 0.6.3m1
      */
     public void sendFile(final String target, final FrameContainer origin,
-            final Server server, final boolean isSilent, final String filename) {
+            final Connection connection, final boolean isSilent, final String filename) {
         // New thread to ask the user what file to send
         final File givenFile = new File(filename);
         final File selectedFile = UIUtilities.invokeAndWait(new Callable<File>() {
@@ -233,7 +233,7 @@ public class DCCCommand extends Command implements IntelligentCommand {
 
                 ActionManager.getActionManager().triggerEvent(
                         DCCActions.DCC_SEND_REQUEST_SENT,
-                        null, server, target, selectedFile);
+                        null, connection, target, selectedFile);
 
                 sendLine(origin, isSilent, FORMAT_OUTPUT,
                         "Starting DCC Send with: " + target);
@@ -243,10 +243,10 @@ public class DCCCommand extends Command implements IntelligentCommand {
 
                 if (origin.getConfigManager().getOptionBool(
                         myPlugin.getDomain(), "send.reverse")) {
-                    final Parser parser = server.getParser();
+                    final Parser parser = connection.getParser();
                     final TransferContainer container = new TransferContainer(myPlugin, send,
                             origin.getConfigManager(), "Send: " + target,
-                            target, server);
+                            target, connection);
                     windowManager.addWindow(myPlugin.getContainer(), container);
                     parser.sendCTCP(target, "DCC", "SEND \""
                             + selectedFile.getName() + "\" "
@@ -255,11 +255,11 @@ public class DCCCommand extends Command implements IntelligentCommand {
                             + send.makeToken()
                             + (send.isTurbo() ? " T" : ""));
                 } else {
-                    final Parser parser = server.getParser();
+                    final Parser parser = connection.getParser();
                     if (myPlugin.listen(send)) {
                         final TransferContainer container = new TransferContainer(myPlugin, send,
                                 origin.getConfigManager(), "*Send: "
-                                + target, target, server);
+                                + target, target, connection);
                         windowManager.addWindow(myPlugin.getContainer(), container);
                         parser.sendCTCP(target, "DCC", "SEND \""
                                 + selectedFile.getName() + "\" "
