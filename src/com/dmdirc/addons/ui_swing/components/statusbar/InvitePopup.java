@@ -23,8 +23,8 @@
 package com.dmdirc.addons.ui_swing.components.statusbar;
 
 import com.dmdirc.Invite;
-import com.dmdirc.Server;
 import com.dmdirc.addons.ui_swing.SwingController;
+import com.dmdirc.interfaces.Connection;
 import com.dmdirc.util.DateUtils;
 
 import java.awt.Window;
@@ -45,27 +45,27 @@ public class InvitePopup extends StatusbarPopupWindow {
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 1;
-    /** The server to show invites for. */
-    private final Server server;
+    /** The connection to show invites for. */
+    private final Connection connection;
 
     /**
-     * Creates a new InvitePopup for the specified panel and server.
+     * Creates a new InvitePopup for the specified panel and connection.
      *
      * @param controller Swing controller
      * @param parent The parent of this popup
-     * @param server The server to show invites for
+     * @param connection The connection to show invites for
      * @param parentWindow Parent window
      */
     public InvitePopup(final SwingController controller, final JPanel parent,
-            final Server server, final Window parentWindow) {
+            final Connection connection, final Window parentWindow) {
         super(controller, parent, parentWindow);
-        this.server = server;
+        this.connection = connection;
     }
 
     /** {@inheritDoc} */
     @Override
     protected void initContent(final JPanel panel) {
-        for (final Invite invite : server.getInvites()) {
+        for (final Invite invite : connection.getInvites()) {
             panel.add(new JLabel(invite.getChannel()), "growx, pushx");
             panel.add(new JLabel(invite.getSource()[0], JLabel.CENTER),
                     "growx, pushx, al center");

@@ -29,6 +29,7 @@ import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.dialogs.serversetting.ServerSettingsDialog;
 import com.dmdirc.addons.ui_swing.dialogs.sslcertificate.SSLCertificateDialog;
 import com.dmdirc.commandparser.PopupType;
+import com.dmdirc.interfaces.Connection;
 import com.dmdirc.tls.CertificateManager;
 import com.dmdirc.tls.CertificateProblemListener;
 import com.dmdirc.ui.core.dialogs.sslcertificate.SSLCertificateDialogModel;
@@ -167,7 +168,7 @@ public final class ServerFrame extends InputTextFrame implements
     /** {@inheritDoc} */
     @Override
     public void dispose() {
-        ((Server) frameParent).removeCertificateProblemListener(this);
+        ((Connection) frameParent).removeCertificateProblemListener(this);
         super.dispose();
     }
 }

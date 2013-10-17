@@ -23,11 +23,11 @@
 package com.dmdirc.addons.debug.commands;
 
 import com.dmdirc.FrameContainer;
-import com.dmdirc.Server;
 import com.dmdirc.addons.debug.Debug;
 import com.dmdirc.addons.debug.DebugCommand;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.commands.context.CommandContext;
+import com.dmdirc.interfaces.Connection;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -67,9 +67,9 @@ public class ServerInfo extends DebugCommand {
             sendLine(origin, args.isSilent(), FORMAT_ERROR,
                     "This window isn't connected to a server");
         } else {
-            final Server server = origin.getServer();
+            final Connection server = origin.getServer();
             sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Server name: "
-                    + server.getName());
+                    + server.getAddress());
             sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Actual name: "
                     + server.getParser().getServerName());
             sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Network: "

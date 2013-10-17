@@ -121,7 +121,6 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     @Getter
     private final ConfigProvider globalIdentity;
     /** Addon config identity. */
-    @Getter
     private final ConfigProvider addonIdentity;
     /** Global Swing UI Icon manager. */
     @Getter
@@ -494,9 +493,9 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     /** {@inheritDoc} */
     @Override
     public void domainUpdated() {
-        getAddonIdentity().setOption("ui", "textPaneFontName",
+        addonIdentity.setOption("ui", "textPaneFontName",
                 UIManager.getFont("TextPane.font").getFamily());
-        getAddonIdentity().setOption("ui", "textPaneFontSize",
+        addonIdentity.setOption("ui", "textPaneFontSize",
                 UIManager.getFont("TextPane.font").getSize());
     }
 

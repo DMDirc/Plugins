@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.dcc;
 
-import com.dmdirc.Server;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.addons.dcc.actions.DCCActions;
@@ -40,6 +39,7 @@ import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.interfaces.ActionListener;
 import com.dmdirc.interfaces.CommandController;
+import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
@@ -412,7 +412,7 @@ public class DCCManager implements ActionListener {
             } catch (NumberFormatException nfe) {
                 return;
             }
-            final String myNickname = ((Server) arguments[0]).getParser()
+            final String myNickname = ((Connection) arguments[0]).getParser()
                     .getLocalClient().getNickname();
             final DCCFrameContainer f = new ChatContainer(chat, config, commandController,
                     "Chat: " + nickname, myNickname, nickname, tabCompleterFactory,
@@ -426,7 +426,7 @@ public class DCCManager implements ActionListener {
                     DCCActions.DCC_CHAT_REQUEST, null, arguments[0],
                     nickname);
             askQuestion("User " + nickname + " on "
-                    + ((Server) arguments[0]).getName()
+                    + ((Connection) arguments[0]).getAddress()
                     + " would like to start a DCC Chat with you.\n\n"
                     + "Do you want to continue?",
                     "DCC Chat Request", JOptionPane.YES_OPTION,
@@ -519,7 +519,7 @@ public class DCCManager implements ActionListener {
                         DCCActions.DCC_SEND_REQUEST, null,
                         arguments[0], nickname, filename);
                 askQuestion("User " + nickname + " on "
-                        + ((Server) arguments[0]).getName()
+                        + ((Connection) arguments[0]).getAddress()
                         + " would like to send you a file over DCC.\n\nFile: "
                         + filename + "\n\nDo you want to continue?",
                         "DCC Send Request", JOptionPane.YES_OPTION, type,
@@ -540,7 +540,7 @@ public class DCCManager implements ActionListener {
             if (newSend) {
                 send.setFileName(filename);
                 send.setFileSize(size);
-                saveFile(nickname, send, ((Server) arguments[0]).getParser(),
+                saveFile(nickname, send, ((Connection) arguments[0]).getParser(),
                         "0".equals(port), token);
             } else {
                 send.connect();
@@ -600,7 +600,7 @@ public class DCCManager implements ActionListener {
                         && (!token.equals(send.getToken()))) {
                     continue;
                 }
-                final Parser parser = ((Server) arguments[0]).getParser();
+                final Parser parser = ((Connection) arguments[0]).getParser();
                 final String nick = ((ClientInfo) arguments[1]).getNickname();
                 if (ctcpData[0].equalsIgnoreCase("resume")) {
                     parser.sendCTCP(nick, "DCC", "ACCEPT "+ ((quoted) ? "\""

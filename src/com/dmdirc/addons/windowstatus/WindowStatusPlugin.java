@@ -25,7 +25,6 @@ package com.dmdirc.addons.windowstatus;
 import com.dmdirc.Channel;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.Query;
-import com.dmdirc.Server;
 import com.dmdirc.addons.ui_swing.SelectionListener;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
@@ -35,13 +34,14 @@ import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
+import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.interfaces.config.IdentityController;
 import com.dmdirc.parser.interfaces.ChannelClientInfo;
 import com.dmdirc.parser.interfaces.ChannelInfo;
 import com.dmdirc.parser.interfaces.ClientInfo;
-import com.dmdirc.plugins.implementations.BasePlugin;
 import com.dmdirc.plugins.PluginInfo;
+import com.dmdirc.plugins.implementations.BasePlugin;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -150,8 +150,8 @@ public final class WindowStatusPlugin extends BasePlugin
         }
         final StringBuffer textString = new StringBuffer();
 
-        if (current instanceof Server) {
-            textString.append(((Server) current).getName());
+        if (current instanceof Connection) {
+            textString.append(((Connection) current).getAddress());
         } else if (current instanceof Channel) {
             final ChannelInfo chan = ((Channel) current).getChannelInfo();
             final Map<Integer, String> names = new HashMap<>();

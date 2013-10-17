@@ -35,6 +35,7 @@ import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.interfaces.ActionController;
 import com.dmdirc.interfaces.ActionListener;
 import com.dmdirc.interfaces.CommandController;
+import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
@@ -849,8 +850,8 @@ public class LoggingPlugin extends BaseCommandPlugin implements ActionListener,
         } else if (target instanceof Query) {
             final Parser parser = ((Query) target).getServer().getParser();
             component = parser.getClient(((Query) target).getHost());
-        } else if (target instanceof Server) {
-            component = ((Server) target).getParser();
+        } else if (target instanceof Connection) {
+            component = ((Connection) target).getParser();
         } else {
             // Unknown component
             return false;
