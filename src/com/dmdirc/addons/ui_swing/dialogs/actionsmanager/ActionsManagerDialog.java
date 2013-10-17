@@ -110,7 +110,7 @@ public final class ActionsManagerDialog extends StandardDialog implements
             final SwingController controller) {
         super(controller, Apple.isAppleUI()
                 ? new AppleJFrame((MainFrame) parentWindow, controller)
-                : null, ModalityType.MODELESS);
+                : parentWindow, ModalityType.MODELESS);
 
         initComponents();
         validator = new ValidatorChain<>(
