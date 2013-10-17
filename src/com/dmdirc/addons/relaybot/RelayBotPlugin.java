@@ -34,6 +34,7 @@ import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.interfaces.ActionListener;
+import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.interfaces.config.IdentityController;
 import com.dmdirc.interfaces.actions.ActionType;
@@ -156,20 +157,20 @@ public class RelayBotPlugin extends BasePlugin implements ActionListener, Config
                 }
             }
         } else if (type == CoreActionType.SERVER_CONNECTED) {
-            final Server server = (Server) arguments[0];
+            final Connection connection = (Connection) arguments[0];
 
-            final Parser parser = server.getParser();
+            final Parser parser = connection.getParser();
             if (parser instanceof IRCParser && !(parser.getCallbackManager() instanceof RelayCallbackManager)) {
                 new RelayCallbackManager(this, (IRCParser) parser);
             }
         } else if (type == CoreActionType.SERVER_DISCONNECTED) {
-            final Server server = (Server) arguments[0];
+            final Connection connection = (Connection) arguments[0];
 
             // RelayCallbackManager will revert itself when this happens.
 
             // Unset any listeners for channels of this server
-            for (String channel : server.getChannels()) {
-                removeHandler(server.getChannel(channel));
+            for (String channel : connection.getChannels()) {
+                removeHandler(connection.getChannel(channel));
             }
         }
     }

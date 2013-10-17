@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.serversetting;
 
-import com.dmdirc.Server;
 import com.dmdirc.actions.wrappers.PerformType;
 import com.dmdirc.actions.wrappers.PerformWrapper;
 import com.dmdirc.actions.wrappers.PerformWrapper.PerformDescription;
@@ -30,6 +29,7 @@ import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.performpanel.PerformPanel;
 import com.dmdirc.addons.ui_swing.components.renderers.PerformRenderer;
+import com.dmdirc.interfaces.Connection;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -45,12 +45,12 @@ import net.miginfocom.swing.MigLayout;
 /**
  * Perform panel.
  */
-public final class PerformTab extends JPanel implements ActionListener {
+public class PerformTab extends JPanel implements ActionListener {
 
     /** Serial version UID. */
     private static final long serialVersionUID = 1;
-    /** Parent server. */
-    private final Server server;
+    /** Parent connection. */
+    private final Connection connection;
     /** Swing controller. */
     private final SwingController controller;
     /** Perform wrapper to read/write performs to. */
@@ -65,17 +65,17 @@ public final class PerformTab extends JPanel implements ActionListener {
      *
      * @param controller Swing controller
      * @param wrapper Perform wrapper to read/write performs to.
-     * @param server Parent server
+     * @param connection Connection whose perform should be displayed.
      */
     public PerformTab(
             final SwingController controller,
             final PerformWrapper wrapper,
-            final Server server) {
+            final Connection connection) {
         super();
 
         this.controller = controller;
         this.wrapper = wrapper;
-        this.server = server;
+        this.connection = connection;
 
         setOpaque(UIUtilities.getTabbedPaneOpaque());
         initComponents();
@@ -94,13 +94,13 @@ public final class PerformTab extends JPanel implements ActionListener {
         final Collection<PerformDescription> performList = new ArrayList<>();
 
         final PerformDescription networkPerform = new PerformDescription(
-                PerformType.NETWORK, server.getNetwork());
+                PerformType.NETWORK, connection.getNetwork());
         final PerformDescription networkProfilePerform = new PerformDescription(
-                PerformType.NETWORK, server.getNetwork() ,server.getProfile().getName());
+                PerformType.NETWORK, connection.getNetwork() ,connection.getProfile().getName());
         final PerformDescription serverPerform = new PerformDescription(
-                PerformType.SERVER, server.getAddress());
+                PerformType.SERVER, connection.getAddress());
         final PerformDescription serverProfilePerform = new PerformDescription(
-                PerformType.SERVER, server.getAddress() ,server.getProfile().getName());
+                PerformType.SERVER, connection.getAddress() ,connection.getProfile().getName());
 
         model.addElement(networkPerform);
         model.addElement(networkProfilePerform);

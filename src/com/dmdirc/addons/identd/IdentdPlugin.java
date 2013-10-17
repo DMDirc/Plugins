@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.identd;
 
-import com.dmdirc.Server;
 import com.dmdirc.ServerManager;
 import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
@@ -32,6 +31,7 @@ import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.interfaces.ActionController;
 import com.dmdirc.interfaces.ActionListener;
+import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.IdentityController;
@@ -49,8 +49,8 @@ import lombok.Getter;
  */
 public class IdentdPlugin extends BasePlugin implements ActionListener {
 
-    /** Array list to store all the servers in that need ident replies. */
-    private final List<Server> servers = new ArrayList<>();
+    /** List of all the connections that need ident replies. */
+    private final List<Connection> connections = new ArrayList<>();
     /** The IdentdServer that we use. */
     private IdentdServer myServer;
     /** This plugin's plugin info. */
@@ -106,7 +106,7 @@ public class IdentdPlugin extends BasePlugin implements ActionListener {
     @Override
     public void onUnload() {
         myServer.stopServer();
-        servers.clear();
+        connections.clear();
         actionController.unregisterListener(this);
     }
 
@@ -121,18 +121,18 @@ public class IdentdPlugin extends BasePlugin implements ActionListener {
     public void processEvent(final ActionType type, final StringBuffer format,
             final Object... arguments) {
         if (type == CoreActionType.SERVER_CONNECTING) {
-            synchronized (servers) {
-                if (servers.isEmpty()) {
+            synchronized (connections) {
+                if (connections.isEmpty()) {
                     myServer.startServer();
                 }
-                servers.add((Server) arguments[0]);
+                connections.add((Connection) arguments[0]);
             }
         } else if (type == CoreActionType.SERVER_CONNECTED
                 || type == CoreActionType.SERVER_CONNECTERROR) {
-            synchronized (servers) {
-                servers.remove(arguments[0]);
+            synchronized (connections) {
+                connections.remove(arguments[0]);
 
-                if (servers.isEmpty() && !config.getOptionBool(getDomain(),
+                if (connections.isEmpty() && !config.getOptionBool(getDomain(),
                         "advanced.alwaysOn")) {
                     myServer.stopServer();
                 }

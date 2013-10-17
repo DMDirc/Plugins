@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.dialogs;
 
-import com.dmdirc.Server;
 import com.dmdirc.ServerManager;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
@@ -32,6 +31,7 @@ import com.dmdirc.addons.ui_swing.components.vetoable.VetoableChangeEvent;
 import com.dmdirc.addons.ui_swing.components.vetoable.VetoableComboBoxModel;
 import com.dmdirc.addons.ui_swing.components.vetoable.VetoableComboBoxSelectionListener;
 import com.dmdirc.addons.ui_swing.dialogs.profiles.ProfileManagerDialog;
+import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProviderListener;
 import com.dmdirc.interfaces.config.IdentityController;
@@ -263,7 +263,7 @@ public final class NewServerDialog extends StandardDialog implements
                     }
                 }.executeInExecutor();
             } else {
-                final Server server = getController().getMainFrame()
+                final Connection connection = getController().getMainFrame()
                         .getActiveFrame().getContainer().getServer();
 
                 new LoggingSwingWorker<Void, Void>() {
@@ -271,10 +271,10 @@ public final class NewServerDialog extends StandardDialog implements
                     /** {@inheritDoc} */
                     @Override
                     protected Void doInBackground() {
-                        if (server == null) {
+                        if (connection == null) {
                             serverManager.connectToAddress(address, profile);
                         } else {
-                            server.connect(address, profile);
+                            connection.connect(address, profile);
                         }
                         return null;
                     }
