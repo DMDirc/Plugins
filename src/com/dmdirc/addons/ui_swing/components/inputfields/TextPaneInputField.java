@@ -74,7 +74,7 @@ public class TextPaneInputField extends JEditorPane implements InputField,
     public void showColourPicker(final boolean irc, final boolean hex) {
         if (controller.getGlobalConfig().getOptionBool("general",
                 "showcolourdialog")) {
-            colourPicker = new ColourPickerDialog(controller.getColourManager(),
+            colourPicker = new ColourPickerDialog(this, controller.getColourManager(),
                     controller.getIconManager(), irc, hex, parentWindow);
             colourPicker.addActionListener(new ActionListener() {
 
@@ -90,7 +90,7 @@ public class TextPaneInputField extends JEditorPane implements InputField,
                     colourPicker = null;
                 }
             });
-            colourPicker.display();
+            colourPicker.setVisible(true);
             colourPicker.setLocation((int) getLocationOnScreen().getX(),
                     (int) getLocationOnScreen().getY()
                     - colourPicker.getHeight());

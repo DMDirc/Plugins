@@ -23,13 +23,17 @@
 package com.dmdirc.addons.ui_swing.dialogs;
 
 import com.dmdirc.Server;
+import com.dmdirc.ServerManager;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.SendWorker;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
+import com.dmdirc.interfaces.config.AggregateConfigProvider;
+import com.dmdirc.interfaces.config.IdentityController;
 import com.dmdirc.ui.core.util.Info;
 
 import java.awt.Insets;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -46,11 +50,16 @@ import javax.swing.event.DocumentListener;
 import net.miginfocom.swing.MigLayout;
 
 /** Feedback form. */
-public final class FeedbackDialog extends StandardDialog implements
-        ActionListener, DocumentListener {
+public class FeedbackDialog extends StandardDialog implements ActionListener, DocumentListener {
 
     /** Serial version UID. */
     private static final long serialVersionUID = 1;
+    /** Server manager. */
+    private final ServerManager serverManager;
+    /** Config. */
+    private final AggregateConfigProvider config;
+    /** Config directory. */
+    private final String configDirectory;
     /** Information label. */
     private TextLabel info;
     /** Name field. */
@@ -65,18 +74,26 @@ public final class FeedbackDialog extends StandardDialog implements
     private JCheckBox dmdircCheckbox;
     /** Sent. */
     private boolean sentReport = false;
-    /** My Controller. */
-    private SwingController controller;
 
     /**
      * Instantiates the feedback dialog.
      *
-     * @param controller Swing controller
+     * @param dialogManager Dialog manager
+     * @param parentWindow Parent window
+     * @param identityController Identity controller (needs to be a config directory)
+     * @param serverManager Server manager
+     * @param config Config
      */
-    public FeedbackDialog(final SwingController controller) {
-        super(controller, ModalityType.MODELESS);
+    public FeedbackDialog(final DialogManager dialogManager, final Window parentWindow,
+            final IdentityController identityController,
+            final ServerManager serverManager,
+            final AggregateConfigProvider config) {
+        super(dialogManager, parentWindow, ModalityType.MODELESS);
 
-        this.controller = controller;
+        this.serverManager = serverManager;
+        this.config = config;
+        this.configDirectory = identityController.getConfigurationDirectory();
+
         initComponents();
         layoutComponents();
         addListeners();
@@ -180,7 +197,7 @@ public final class FeedbackDialog extends StandardDialog implements
         final StringBuilder serverInfo = new StringBuilder();
         final StringBuilder dmdircInfo = new StringBuilder();
         if (serverCheckbox.isSelected()) {
-            for (Server server : getController().getServerManager().getServers()) {
+            for (Server server : serverManager.getServers()) {
                 if (server.getState().isDisconnected()) {
                     continue;
                 }
@@ -205,18 +222,13 @@ public final class FeedbackDialog extends StandardDialog implements
             }
         }
         if (dmdircCheckbox.isSelected()) {
-            dmdircInfo.append("DMDirc version: ").append(
-                    Info.getDMDircVersion()).append("\n");
-            dmdircInfo.append("Profile directory: ").append(
-                    controller.getIdentityManager().getConfigurationDirectory()).append("\n");
-            dmdircInfo.append("Java version: ").append(
-                    Info.getJavaVersion()).append("\n");
-            dmdircInfo.append("OS Version: ").append(
-                    Info.getOSVersion()).append("\n");
-            dmdircInfo.append("Look & Feel: ").append(
-                    SwingController.getLookAndFeel());
+            dmdircInfo.append("DMDirc version: ").append(Info.getDMDircVersion()).append("\n");
+            dmdircInfo.append("Profile directory: ").append(configDirectory).append("\n");
+            dmdircInfo.append("Java version: ").append(Info.getJavaVersion()).append("\n");
+            dmdircInfo.append("OS Version: ").append(Info.getOSVersion()).append("\n");
+            dmdircInfo.append("Look & Feel: ").append(SwingController.getLookAndFeel());
         }
-        new SendWorker(this, name.getText().trim(), email.getText().trim(),
+        new SendWorker(this, config, name.getText().trim(), email.getText().trim(),
                 feedback.getText().trim(), serverInfo.toString().trim(),
                 dmdircInfo.toString().trim()).executeInExecutor();
     }

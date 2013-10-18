@@ -28,6 +28,7 @@ import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.addons.ui_swing.components.validating.ValidatingJTextField;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialog;
+import com.dmdirc.ui.IconManager;
 import com.dmdirc.util.validators.NotEmptyValidator;
 import com.dmdirc.util.validators.Validator;
 
@@ -90,7 +91,7 @@ public class AddGroupInputDialog extends StandardDialog {
         setTitle("Add new server group");
         setDefaultCloseOperation(StandardInputDialog.DISPOSE_ON_CLOSE);
 
-        initComponents();
+        initComponents(controller.getIconManager());
         addListeners();
         layoutComponents();
     }
@@ -127,9 +128,9 @@ public class AddGroupInputDialog extends StandardDialog {
     /**
      * Initialises the components.
      */
-    private void initComponents() {
+    private void initComponents(final IconManager iconManager) {
         orderButtons(new JButton(), new JButton());
-        groupName = new ValidatingJTextField(getIconManager(), validator);
+        groupName = new ValidatingJTextField(iconManager, validator);
         networkName = new JTextField();
         blurb = new TextLabel(message);
         validateText();

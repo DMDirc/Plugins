@@ -29,6 +29,7 @@ import com.dmdirc.addons.ui_swing.components.TitlePanel;
 import com.dmdirc.addons.ui_swing.components.ToolTipPanel;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.config.prefs.PreferencesCategory;
+import com.dmdirc.ui.IconManager;
 
 import java.awt.Component;
 import java.awt.Window;
@@ -80,11 +81,13 @@ public class CategoryPanel extends JPanel {
      * Instantiates a new category panel.
      *
      * @param factory Prefs component factory instance
+     * @param iconManager Icon manager
      * @param parent Parent window
      */
     public CategoryPanel(final PrefsComponentFactory factory,
+            final IconManager iconManager,
             final SwingPreferencesDialog parent) {
-        this(factory, parent, null);
+        this(factory, parent, iconManager, null);
     }
 
     /**
@@ -92,10 +95,12 @@ public class CategoryPanel extends JPanel {
      *
      * @param factory Prefs component factory instance
      * @param parent Parent window
+     * @param iconManager Icon manager
      * @param category Initial category
      */
     public CategoryPanel(final PrefsComponentFactory factory,
             final SwingPreferencesDialog parent,
+            final IconManager iconManager,
             final PreferencesCategory category) {
         super(new MigLayout("fillx, wrap, ins 0"));
         this.parent = parent;
@@ -120,7 +125,7 @@ public class CategoryPanel extends JPanel {
 
         title = new TitlePanel(BorderFactory.createEtchedBorder(),
                 "Preferences");
-        tooltip = new ToolTipPanel(parent.getIconManager(),
+        tooltip = new ToolTipPanel(iconManager,
                 "Hover over a setting to see a description, if available.");
 
         add(title, "pushx, growx, h 45!");

@@ -86,7 +86,7 @@ public class NickColourInputDialog extends StandardDialog
 
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
-        initComponents(nickname, network, textcolour, nickcolour);
+        initComponents(swingController, nickname, network, textcolour, nickcolour);
         initListeners();
         layoutComponents();
 
@@ -116,18 +116,20 @@ public class NickColourInputDialog extends StandardDialog
      * @param defaultTextColour The default value for the text colour option
      * @param defaultNickColour The default value for the nick colour option
      */
-    private void initComponents(final String defaultNickname,
+    private void initComponents(final SwingController swingController, final String defaultNickname,
             final String defaultNetwork, final String defaultTextColour,
             final String defaultNickColour) {
         orderButtons(new JButton(), new JButton());
 
         nickname = new JTextField(defaultNickname);
         network = new JTextField(defaultNetwork);
-        textColour = new ColourChooser(getController().getColourManager(),
-                getController().getIconManager(),
+        textColour = new ColourChooser(
+                swingController.getColourManager(),
+                swingController.getIconManager(),
                 defaultTextColour, true, true);
-        nicklistColour = new ColourChooser(getController().getColourManager(),
-                getController().getIconManager(),
+        nicklistColour = new ColourChooser(
+                swingController.getColourManager(),
+                swingController.getIconManager(),
                 defaultNickColour, true, true);
     }
 

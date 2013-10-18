@@ -22,15 +22,16 @@
 
 package com.dmdirc.addons.serverlistdialog;
 
+import com.dmdirc.addons.serverlists.ServerGroup;
+import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.addons.ui_swing.components.validating.ValidatingJTextField;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialog;
+import com.dmdirc.ui.IconManager;
 import com.dmdirc.util.validators.NotEmptyValidator;
 import com.dmdirc.util.validators.URIValidator;
 import com.dmdirc.util.validators.Validator;
-import com.dmdirc.addons.serverlists.ServerGroup;
-import com.dmdirc.addons.ui_swing.SwingController;
 
 import java.awt.Window;
 import java.awt.event.ActionEvent;
@@ -94,7 +95,7 @@ public class AddEntryInputDialog extends StandardDialog {
         setTitle("Add new server entry");
         setDefaultCloseOperation(StandardInputDialog.DISPOSE_ON_CLOSE);
 
-        initComponents();
+        initComponents(controller.getIconManager());
         addListeners();
         layoutComponents();
     }
@@ -118,10 +119,10 @@ public class AddEntryInputDialog extends StandardDialog {
     /**
      * Initialises the components.
      */
-    private void initComponents() {
+    private void initComponents(final IconManager iconManager) {
         orderButtons(new JButton(), new JButton());
-        entryName = new ValidatingJTextField(getIconManager(), entryValidator);
-        uri = new ValidatingJTextField(getIconManager(), new URIJTextField(), uriValidator);
+        entryName = new ValidatingJTextField(iconManager, entryValidator);
+        uri = new ValidatingJTextField(iconManager, new URIJTextField(), uriValidator);
         blurb = new TextLabel(message);
         validateText();
     }

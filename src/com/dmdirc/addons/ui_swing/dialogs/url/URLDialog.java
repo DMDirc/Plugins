@@ -22,10 +22,11 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.url;
 
-import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.URLProtocolPanel;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
+import com.dmdirc.addons.ui_swing.dialogs.DialogManager;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
+import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.ui.core.util.URLHandler;
 
 import java.awt.Window;
@@ -38,7 +39,7 @@ import javax.swing.JButton;
 import net.miginfocom.swing.MigLayout;
 
 /** URL Protocol dialog. */
-public final class URLDialog extends StandardDialog implements ActionListener {
+public class URLDialog extends StandardDialog implements ActionListener {
 
     /** Serial version UID. */
     private static final long serialVersionUID = 1;
@@ -56,20 +57,21 @@ public final class URLDialog extends StandardDialog implements ActionListener {
     /**
      * Instantiates the URLDialog.
      *
-     * @param controller Swing controller
+     * @param dialogManager Dialog manager
      * @param url URL to open once added
+     * @param config Config
      * @param parentWindow Parent window
      * @param urlHandler The URL Handler to use to handle clicked links
      */
-    public URLDialog(final SwingController controller, final URI url,
-            final Window parentWindow, final URLHandler urlHandler) {
-        super(controller, parentWindow, ModalityType.MODELESS);
+    public URLDialog(final DialogManager dialogManager, final URI url,
+            final ConfigProvider config, final Window parentWindow, final URLHandler urlHandler) {
+        super(dialogManager, parentWindow, ModalityType.MODELESS);
 
         this.url = url;
         this.parentWindow = parentWindow;
         this.urlHandler = urlHandler;
 
-        initComponents();
+        initComponents(config);
         layoutComponents();
         addListeners();
 
@@ -77,12 +79,12 @@ public final class URLDialog extends StandardDialog implements ActionListener {
     }
 
     /** Initialises the components. */
-    private void initComponents() {
+    private void initComponents(final ConfigProvider config) {
         orderButtons(new JButton(), new JButton());
         blurb = new TextLabel("Please select the appropriate action to " +
                 "handle " + url.getScheme() + ":// URLs from the list " +
                 "below.");
-        panel = new URLProtocolPanel(getController(), url, false);
+        panel = new URLProtocolPanel(config, url, false);
     }
 
     /** Lays out the components. */

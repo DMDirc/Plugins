@@ -30,7 +30,10 @@ import com.dmdirc.addons.ui_swing.actions.TopicEnterAction;
 import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputHandler;
 import com.dmdirc.addons.ui_swing.components.inputfields.TextAreaInputField;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
+import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.ui.InputWindow;
+import com.dmdirc.plugins.ServiceManager;
+import com.dmdirc.ui.IconManager;
 
 import java.awt.Color;
 import java.awt.event.KeyEvent;
@@ -74,11 +77,14 @@ public class TopicDisplayPane extends JPanel implements DocumentListener {
      * length of the new input.
      *
      * @param channel Associated channel
+     * @param iconManager Icon manager
+     * @param serviceManager Service manager
      * @param parent Parent channel settings dialog
      * @param channelWindow Channel window
      */
-    public TopicDisplayPane(final Channel channel,
-            final ChannelSettingsDialog parent, final InputWindow channelWindow) {
+    public TopicDisplayPane(final Channel channel, final IconManager iconManager,
+            final ServiceManager serviceManager, final ChannelSettingsDialog parent,
+            final InputWindow channelWindow) {
         super();
 
         this.channel = channel;
@@ -86,7 +92,7 @@ public class TopicDisplayPane extends JPanel implements DocumentListener {
         topicLengthMax = channel.getServer().getParser().getMaxTopicLength();
         this.channelWindow = channelWindow;
 
-        initComponents();
+        initComponents(iconManager, channel.getConfigManager(), serviceManager);
         addListeners();
         layoutComponents();
 
@@ -94,9 +100,10 @@ public class TopicDisplayPane extends JPanel implements DocumentListener {
     }
 
     /** Initialises the components. */
-    private void initComponents() {
+    private void initComponents(final IconManager iconManager,
+            final AggregateConfigProvider config, final ServiceManager serviceManager) {
         topicLengthLabel = new JLabel();
-        topicText = new TextAreaInputField(parent.getController(), 100, 4);
+        topicText = new TextAreaInputField(iconManager, config, 100, 4);
         topicWho = new TextLabel();
         topicWho.setOpaque(false);
 
@@ -104,8 +111,7 @@ public class TopicDisplayPane extends JPanel implements DocumentListener {
         topicText.setWrapStyleWord(true);
         topicText.setRows(5);
         topicText.setColumns(30);
-        final SwingInputHandler handler = new SwingInputHandler(
-                parent.getController().getPluginManager(), topicText,
+        final SwingInputHandler handler = new SwingInputHandler(serviceManager, topicText,
                 channel.getCommandParser(), channelWindow.getContainer());
         handler.setTypes(true, false, true, false);
         handler.setTabCompleter(channel.getTabCompleter());

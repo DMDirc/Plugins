@@ -22,11 +22,12 @@
 
 package com.dmdirc.addons.ui_swing.components.expandingsettings;
 
-import com.dmdirc.addons.ui_swing.SwingController;
+import com.dmdirc.addons.ui_swing.PrefsComponentFactory;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesSetting;
+import com.dmdirc.ui.IconManager;
 import com.dmdirc.util.collections.DoubleMap;
 
 import javax.swing.BorderFactory;
@@ -44,6 +45,10 @@ public class SettingsPanel extends JPanel {
 
     /** Serial version UID. */
     private static final long serialVersionUID = 3;
+    /** Preference setting component factory. */
+    private final PrefsComponentFactory compFactory;
+    /** Use external padding. */
+    private final boolean padding;
     /** Current Settings. */
     private final DoubleMap<PreferencesSetting, JComponent> settings;
     /** Info label. */
@@ -54,58 +59,56 @@ public class SettingsPanel extends JPanel {
     private AddOptionPanel addOptionPanel;
     /** Current options scroll pane. */
     private JScrollPane scrollPane;
-    /** Use external padding. */
-    private final boolean padding;
     /** Preferences Category. */
     private PreferencesCategory category;
-    /** Swing controller. */
-    private final SwingController controller;
 
     /**
      * Creates a new instance of SettingsPanel.
      *
-     * @param controller Swing controller
+     * @param iconManager Icon manager
+     * @param compFactory Preferences setting component factory
      * @param infoText Info blurb.
      */
-    public SettingsPanel(final SwingController controller,
+    public SettingsPanel(final IconManager iconManager, final PrefsComponentFactory compFactory,
             final String infoText) {
-        this(controller, infoText, true);
+        this(iconManager, compFactory, infoText, true);
     }
 
     /**
      * Creates a new instance of SettingsPanel.
      *
-     * @param controller Swing controller
+     * @param iconManager Icon manager
+     * @param compFactory Preferences setting component factory
      * @param infoText Info blurb.
      * @param padding Should we add padding to the panel?
      */
-    public SettingsPanel(final SwingController controller,
+    public SettingsPanel(final IconManager iconManager, final PrefsComponentFactory compFactory,
             final String infoText, final boolean padding) {
         super();
 
-        this.controller = controller;
+        this.compFactory = compFactory;
 
         settings = new DoubleMap<>();
 
         setOpaque(UIUtilities.getTabbedPaneOpaque());
         this.padding = padding;
 
-        initComponents(infoText);
+        initComponents(iconManager, infoText);
         layoutComponents();
     }
 
     /**
      * Initialises the components.
      *
+     * @param iconManager Icon manager
      * @param infoText Info blurb.
      */
-    private void initComponents(final String infoText) {
+    private void initComponents(final IconManager iconManager, final String infoText) {
         infoLabel = new TextLabel(infoText);
         infoLabel.setVisible(!infoText.isEmpty());
 
         addOptionPanel = new AddOptionPanel(this);
-        currentOptionsPanel = new CurrentOptionsPanel(controller
-                .getIconManager(), this);
+        currentOptionsPanel = new CurrentOptionsPanel(iconManager, this);
         scrollPane = new JScrollPane(currentOptionsPanel);
 
         scrollPane.setBorder(BorderFactory.createTitledBorder(UIManager.
@@ -139,8 +142,7 @@ public class SettingsPanel extends JPanel {
 
         for (final PreferencesSetting setting : category.getSettings()) {
             if (settings.get(setting) == null) {
-                final JComponent component = controller
-                        .getPrefsComponentFactory().getComponent(setting);
+                final JComponent component = compFactory.getComponent(setting);
                 component.setName(setting.getTitle());
                 settings.put(setting, component);
             }
