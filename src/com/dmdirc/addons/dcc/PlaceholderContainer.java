@@ -70,7 +70,7 @@ public class PlaceholderContainer extends FrameContainer {
         }
 
         if (dccs > 0) {
-            new StandardQuestionDialog(controller, ModalityType.MODELESS,
+            new StandardQuestionDialog(controller.getDialogManager(), controller.getMainFrame(), ModalityType.MODELESS,
                     "Close confirmation",
                     "Closing this window will cause all existing DCCs "
                     + "to terminate, are you sure you want to do this?") {

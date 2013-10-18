@@ -27,6 +27,7 @@ import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.logger.ErrorManager;
 import com.dmdirc.logger.ErrorReportStatus;
 import com.dmdirc.logger.ProgramError;
+import com.dmdirc.ui.IconManager;
 
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -85,7 +86,7 @@ public final class ErrorListDialog extends StandardDialog implements
 
         tableModel = new ErrorTableModel();
 
-        initComponents();
+        initComponents(controller.getIconManager());
         layoutComponents();
         initListeners();
 
@@ -93,13 +94,12 @@ public final class ErrorListDialog extends StandardDialog implements
     }
 
     /** Initialises the components. */
-    private void initComponents() {
+    private void initComponents(final IconManager iconManager) {
         initButtons();
 
         scrollPane = new JScrollPane();
 
-        table = new ErrorTable(getController().getIconManager(), tableModel,
-                scrollPane);
+        table = new ErrorTable(iconManager, tableModel, scrollPane);
 
         table.setPreferredScrollableViewportSize(new Dimension(600, 150));
         scrollPane.setMinimumSize(new Dimension(150, 100));

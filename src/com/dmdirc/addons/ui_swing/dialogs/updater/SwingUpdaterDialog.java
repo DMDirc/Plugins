@@ -22,13 +22,13 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.updater;
 
-import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
 import com.dmdirc.addons.ui_swing.components.PackingTable;
 import com.dmdirc.addons.ui_swing.components.renderers.UpdateComponentTableCellRenderer;
 import com.dmdirc.addons.ui_swing.components.renderers.UpdateStatusTableCellRenderer;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
+import com.dmdirc.addons.ui_swing.dialogs.DialogManager;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.updater.UpdateChecker;
 import com.dmdirc.updater.UpdateComponent;
@@ -39,6 +39,7 @@ import com.dmdirc.updater.manager.UpdateManagerStatus;
 import com.dmdirc.updater.manager.UpdateStatus;
 
 import java.awt.Dimension;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -62,6 +63,8 @@ public class SwingUpdaterDialog extends StandardDialog implements
 
     /** Serial version UID. */
     private static final long serialVersionUID = 3;
+    /** Dialog manager. */
+    private final DialogManager dialogManager;
     /** The update manager to use. */
     private final CachingUpdateManager updateManager;
     /** Update table. */
@@ -79,12 +82,14 @@ public class SwingUpdaterDialog extends StandardDialog implements
      * Creates a new instance of the updater dialog.
      *
      * @param updateManager The update manager to use for information
-     * @param controller Swing controller
+     * @param dialogManager Dialog manager
+     * @param parentWindow Parent window
      */
     public SwingUpdaterDialog(final CachingUpdateManager updateManager,
-            final SwingController controller) {
-        super(controller, ModalityType.MODELESS);
+            final DialogManager dialogManager, final Window parentWindow) {
+        super(dialogManager, parentWindow, ModalityType.MODELESS);
 
+        this.dialogManager = dialogManager;
         this.updateManager = updateManager;
 
         initComponents();
@@ -195,7 +200,7 @@ public class SwingUpdaterDialog extends StandardDialog implements
             }.executeInExecutor();
 
             if (UpdateChecker.getManager().getManagerStatus() == UpdateManagerStatus.IDLE_RESTART_NEEDED) {
-                getController().showDialog(SwingRestartDialog.class);
+                dialogManager.showDialog(SwingRestartDialog.class);
                 dispose();
             }
         } else if (e.getSource().equals(getCancelButton())) {
@@ -223,7 +228,7 @@ public class SwingUpdaterDialog extends StandardDialog implements
 
                 if (status == UpdateManagerStatus.IDLE_RESTART_NEEDED) {
                     if (isVisible()) {
-                        getController().showDialog(SwingRestartDialog.class);
+                        dialogManager.showDialog(SwingRestartDialog.class);
                     }
                     dispose();
                 } else {

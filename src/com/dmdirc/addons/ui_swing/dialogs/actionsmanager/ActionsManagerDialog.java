@@ -28,16 +28,19 @@ import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.addons.ui_swing.Apple;
 import com.dmdirc.addons.ui_swing.MainFrame;
+import com.dmdirc.addons.ui_swing.PrefsComponentFactory;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.ListScroller;
 import com.dmdirc.addons.ui_swing.components.SortedListModel;
 import com.dmdirc.addons.ui_swing.components.frames.AppleJFrame;
 import com.dmdirc.addons.ui_swing.components.renderers.ActionGroupListCellRenderer;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
+import com.dmdirc.addons.ui_swing.dialogs.DialogManager;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialog;
 import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
 import com.dmdirc.interfaces.actions.ActionType;
+import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.util.validators.FileNameValidator;
 import com.dmdirc.util.validators.ValidatorChain;
 
@@ -64,7 +67,7 @@ import net.miginfocom.swing.MigLayout;
 /**
  * Allows the user to manage actions.
  */
-public final class ActionsManagerDialog extends StandardDialog implements
+public class ActionsManagerDialog extends StandardDialog implements
         ActionListener, com.dmdirc.interfaces.ActionListener,
         ListSelectionListener {
 
@@ -74,6 +77,14 @@ public final class ActionsManagerDialog extends StandardDialog implements
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 1;
+    /** Swing controller. */
+    private final SwingController controller;
+    /** Dialog manager. */
+    private final DialogManager dialogManager;
+    /** Config instance. */
+    private final ConfigProvider config;
+    /** Preferences setting component factory. */
+    private final PrefsComponentFactory compFactory;
     /** Are we saving? */
     private final AtomicBoolean saving = new AtomicBoolean(false);
     /** Duplicate action group validator. */
@@ -104,13 +115,23 @@ public final class ActionsManagerDialog extends StandardDialog implements
      *
      * @param parentWindow Parent window
      * @param controller Parent controller
+     * @param dialogManager Dialog manager
+     * @param config Config to save dialog state to
+     * @param compFactory Prefs setting component factory
      */
     @SuppressWarnings("unchecked")
     public ActionsManagerDialog(final Window parentWindow,
-            final SwingController controller) {
-        super(controller, Apple.isAppleUI()
+            final SwingController controller,
+            final DialogManager dialogManager,
+            final ConfigProvider config,
+            final PrefsComponentFactory compFactory) {
+        super(dialogManager, Apple.isAppleUI()
                 ? new AppleJFrame((MainFrame) parentWindow, controller)
                 : parentWindow, ModalityType.MODELESS);
+        this.controller = controller;
+        this.dialogManager = dialogManager;
+        this.config = config;
+        this.compFactory = compFactory;
 
         initComponents();
         validator = new ValidatorChain<>(
@@ -134,12 +155,11 @@ public final class ActionsManagerDialog extends StandardDialog implements
                 + " intelligently respond to various events.  Action groups are"
                 + " there for you to organise groups, add or remove them"
                 + " to suit your needs.");
-        groups = new JList(new SortedListModel<>(
-                new ActionGroupNameComparator()));
-        actions = new ActionsGroupPanel(getController(), this, null);
+        groups = new JList(new SortedListModel<>(new ActionGroupNameComparator()));
+        actions = new ActionsGroupPanel(dialogManager, this, null);
         info = new ActionGroupInformationPanel(null);
         settings = new HashMap<>();
-        activeSettings = new ActionGroupSettingsPanel(getController()
+        activeSettings = new ActionGroupSettingsPanel(controller
                 .getPrefsComponentFactory(), null, this);
         settings.put(null, activeSettings);
         add = new JButton("Add");
@@ -155,8 +175,7 @@ public final class ActionsManagerDialog extends StandardDialog implements
         actions.setBorder(BorderFactory.createTitledBorder(UIManager.getBorder(
                 "TitledBorder.border"), "Actions"));
 
-        groups.setCellRenderer(new ActionGroupListCellRenderer(
-                groups.getCellRenderer()));
+        groups.setCellRenderer(new ActionGroupListCellRenderer(groups.getCellRenderer()));
         groups.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         edit.setEnabled(false);
         delete.setEnabled(false);
@@ -179,12 +198,9 @@ public final class ActionsManagerDialog extends StandardDialog implements
         edit.addActionListener(this);
         delete.addActionListener(this);
         groups.getSelectionModel().addListSelectionListener(this);
-        ActionManager.getActionManager().registerListener(this,
-                CoreActionType.ACTION_CREATED);
-        ActionManager.getActionManager().registerListener(this,
-                CoreActionType.ACTION_UPDATED);
-        ActionManager.getActionManager().registerListener(this,
-                CoreActionType.ACTION_DELETED);
+        ActionManager.getActionManager().registerListener(this, CoreActionType.ACTION_CREATED);
+        ActionManager.getActionManager().registerListener(this, CoreActionType.ACTION_UPDATED);
+        ActionManager.getActionManager().registerListener(this, CoreActionType.ACTION_DELETED);
     }
 
     /**
@@ -235,8 +251,7 @@ public final class ActionsManagerDialog extends StandardDialog implements
      */
     private void reloadGroups(final ActionGroup selectedGroup) {
         ((DefaultListModel) groups.getModel()).clear();
-        for (ActionGroup group : ActionManager.getActionManager()
-                .getGroupsMap().values()) {
+        for (ActionGroup group : ActionManager.getActionManager().getGroupsMap().values()) {
             ((DefaultListModel) groups.getModel()).addElement(group);
         }
         groups.setSelectedValue(selectedGroup, true);
@@ -251,9 +266,8 @@ public final class ActionsManagerDialog extends StandardDialog implements
         info.setActionGroup(group);
         actions.setActionGroup(group);
         if (!settings.containsKey(group)) {
-            final ActionGroupSettingsPanel currentSettings =
-                    new ActionGroupSettingsPanel(getController()
-                    .getPrefsComponentFactory(), group, this);
+            final ActionGroupSettingsPanel currentSettings = new ActionGroupSettingsPanel(
+                    compFactory, group, this);
             settings.put(group, currentSettings);
             currentSettings.setBorder(BorderFactory.createTitledBorder(
                     UIManager.getBorder("TitledBorder.border"), "Settings"));
@@ -289,8 +303,7 @@ public final class ActionsManagerDialog extends StandardDialog implements
             for (ActionGroupSettingsPanel loopSettings : settings.values()) {
                 loopSettings.save();
             }
-            getController().getGlobalIdentity().setOption("dialogstate",
-                    "actionsmanagerdialog", groups.getSelectedIndex());
+            config.setOption("dialogstate", "actionsmanagerdialog", groups.getSelectedIndex());
             dispose();
         }
     }
@@ -301,11 +314,11 @@ public final class ActionsManagerDialog extends StandardDialog implements
     private void addGroup() {
         final int index = groups.getSelectedIndex();
         groups.getSelectionModel().clearSelection();
-        new StandardInputDialog(getController(), this,
+        new StandardInputDialog(dialogManager, this,
                 ModalityType.DOCUMENT_MODAL, "New action group",
                 "Please enter the name of the new action group", validator) {
 
-            /** Java Serialisation verion ID. */
+            /** Java Serialisation version ID. */
             private static final long serialVersionUID = 1;
 
             /** {@inheritDoc} */
@@ -342,7 +355,7 @@ public final class ActionsManagerDialog extends StandardDialog implements
         final String oldName =
                 ((ActionGroup) groups.getSelectedValue()).getName();
         final StandardInputDialog inputDialog = new StandardInputDialog(
-                getController(), this, ModalityType.DOCUMENT_MODAL,
+                dialogManager, this, ModalityType.DOCUMENT_MODAL,
                 "Edit action group",
                 "Please enter the new name of the action group", validator) {
 
@@ -381,13 +394,13 @@ public final class ActionsManagerDialog extends StandardDialog implements
     private void delGroup() {
         final String group =
                 ((ActionGroup) groups.getSelectedValue()).getName();
-        new StandardQuestionDialog(getController(), this,
+        new StandardQuestionDialog(dialogManager, this,
                 ModalityType.APPLICATION_MODAL,
                 "Confirm deletion",
                 "Are you sure you wish to delete the '" + group
                 + "' group and all actions within it?") {
 
-            /** Java Serialisation verion ID. */
+            /** Java Serialisation version ID. */
             private static final long serialVersionUID = 1;
 
             /** {@inheritDoc} */

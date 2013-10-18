@@ -22,8 +22,8 @@
 
 package com.dmdirc.addons.ui_swing.components;
 
-import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.dialogs.url.URLSubsitutionsPanel;
+import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.ui.core.util.URLHandler;
 
 import java.awt.event.ActionEvent;
@@ -53,8 +53,8 @@ public class URLProtocolPanel extends JPanel implements ActionListener,
 
     /** Serial version UID. */
     private static final long serialVersionUID = 1;
-    /** Swing controller. */
-    private final SwingController controller;
+    /** Config. */
+    private final ConfigProvider config;
     /** URL. */
     private final URI uri;
     /** Show insets? */
@@ -83,15 +83,15 @@ public class URLProtocolPanel extends JPanel implements ActionListener,
     /**
      * Instantiates the URLDialog.
      *
-     * @param controller Swing controller
+     * @param config Configuration
      * @param url URL to open once added
      * @param useInsets Show insets?
      */
-    public URLProtocolPanel(final SwingController controller, final URI url,
+    public URLProtocolPanel(final ConfigProvider config, final URI url,
             final boolean useInsets) {
         super();
 
-        this.controller = controller;
+        this.config = config;
         uri = url;
         this.useInsets = useInsets;
 
@@ -107,8 +107,7 @@ public class URLProtocolPanel extends JPanel implements ActionListener,
         commandPath = new JTextField();
         optionType = new ButtonGroup();
         dmdirc = new JRadioButton("Use DMDirc");
-        browser = new JRadioButton(
-                "Use browser (or system registered handler)");
+        browser = new JRadioButton("Use browser (or system registered handler)");
         mail = new JRadioButton("Use mail client");
         custom = new JRadioButton("Custom command");
         subsLabel = new JLabel();
@@ -166,8 +165,7 @@ public class URLProtocolPanel extends JPanel implements ActionListener,
 
     /** Saves the settings. */
     public void save() {
-        controller.getGlobalIdentity().setOption("protocol",
-                uri.getScheme().toLowerCase(), getSelection());
+        config.setOption("protocol", uri.getScheme().toLowerCase(), getSelection());
     }
 
     /**
@@ -206,11 +204,8 @@ public class URLProtocolPanel extends JPanel implements ActionListener,
      * Updates the selection.
      */
     public void updateSelection() {
-        if (uri != null && controller.getGlobalConfig().hasOptionString(
-                "protocol", uri.getScheme())) {
-            final String option =
-                    controller.getGlobalConfig().getOption("protocol",
-                            uri.getScheme());
+        if (uri != null && config.hasOptionString("protocol", uri.getScheme())) {
+            final String option = config.getOption("protocol", uri.getScheme());
             switch (option) {
                 case "DMDIRC":
                     optionType.setSelected(dmdirc.getModel(), true);

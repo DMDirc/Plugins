@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.wizard;
 
+import com.dmdirc.addons.ui_swing.dialogs.DialogManager;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.ui.CoreUIUtils;
 
@@ -51,12 +52,14 @@ public class WizardDialog extends StandardDialog implements ActionListener {
      *
      * @param title Title for the wizard
      * @param steps Steps for the wizard
+     * @param dialogManager Dialog manager
      * @param parentWindow Parent component
      * @param modality Modality
      */
     public WizardDialog(final String title, final List<Step> steps,
-            final Window parentWindow, final ModalityType modality) {
-        super(null, parentWindow, modality);
+            final DialogManager dialogManager, final Window parentWindow,
+            final ModalityType modality) {
+        super(dialogManager, parentWindow, modality);
 
         setTitle(title);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);

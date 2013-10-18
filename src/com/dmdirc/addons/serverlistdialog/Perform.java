@@ -62,7 +62,7 @@ public class Perform extends JPanel implements ServerListListener {
         super();
 
         this.model = model;
-        performPanel = new PerformPanel(controller, wrapper);
+        performPanel = new PerformPanel(controller.getIconManager(), controller.getGlobalConfig(), wrapper);
 
         addListeners();
         if (model.getSelectedItemPerformDescription() != null) {

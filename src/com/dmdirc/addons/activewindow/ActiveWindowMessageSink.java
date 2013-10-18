@@ -67,8 +67,7 @@ public class ActiveWindowMessageSink implements MessageSink {
             final Date date, final String messageType, final Object... args) {
         final TextFrame frame = mainFrame.getActiveFrame();
         if (frame.getContainer() instanceof WritableFrameContainer) {
-            ((WritableFrameContainer) frame.getContainer())
-                    .addLine(messageType, date, args);
+            frame.getContainer().addLine(messageType, date, args);
         }
     }
 

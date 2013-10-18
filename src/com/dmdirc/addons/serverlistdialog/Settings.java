@@ -111,14 +111,14 @@ public class Settings extends JPanel implements ServerListListener {
     private SettingsPanel getSettingsPanel(final ServerGroupItem item) {
         if (!panels.containsKey(item)) {
             if (item instanceof ServerGroup) {
-                panels.put(item, new SettingsPanel(controller, "", false));
+                panels.put(item, new SettingsPanel(controller.getIconManager(), controller.getPrefsComponentFactory(), "", false));
                 addSettings(panels.get(item), new ConfigManager("irc", "",
                     item.getGroup().getNetwork(), item.getName()),
                     controller.getIdentityFactory().createServerConfig(item.getName()));
             } else if (item == null) {
-                panels.put(null, new SettingsPanel(controller, "", false));
+                panels.put(null, new SettingsPanel(controller.getIconManager(), controller.getPrefsComponentFactory(), "", false));
             } else {
-                panels.put(item, new SettingsPanel(controller, "", false));
+                panels.put(item, new SettingsPanel(controller.getIconManager(), controller.getPrefsComponentFactory(), "", false));
             }
         }
         return panels.get(item);

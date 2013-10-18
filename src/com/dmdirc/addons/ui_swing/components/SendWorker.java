@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_swing.components;
 
 import com.dmdirc.addons.ui_swing.dialogs.FeedbackDialog;
+import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.util.io.Downloader;
 
 import java.io.IOException;
@@ -38,6 +39,8 @@ public class SendWorker extends LoggingSwingWorker<Object, Void> {
 
     /** Parent feedback dialog. */
     private final FeedbackDialog dialog;
+    /** Config file. */
+    private final AggregateConfigProvider config;
     /** Name. */
     private final String name;
     /** Email. */
@@ -55,31 +58,34 @@ public class SendWorker extends LoggingSwingWorker<Object, Void> {
      * Creates a new send worker to send feedback.
      *
      * @param dialog Parent feedback dialog
+     * @param config Config
      * @param name Name
      * @param email Email
      * @param feedback Feedback
      */
-    public SendWorker(final FeedbackDialog dialog, final String name,
-            final String email, final String feedback) {
-        this(dialog, name, email, feedback, "", "");
+    public SendWorker(final FeedbackDialog dialog, final AggregateConfigProvider config,
+            final String name, final String email, final String feedback) {
+        this(dialog, config, name, email, feedback, "", "");
     }
 
     /**
      * Creates a new send worker to send feedback.
      *
      * @param dialog Parent feedback dialog
+     * @param config Config
      * @param name Name
      * @param email Email
      * @param feedback Feedback
      * @param serverInfo serverInfo
      * @param dmdircInfo DMDirc info
      */
-    public SendWorker(final FeedbackDialog dialog, final String name,
-            final String email, final String feedback,
+    public SendWorker(final FeedbackDialog dialog, final AggregateConfigProvider config,
+            final String name, final String email, final String feedback,
             final String serverInfo, final String dmdircInfo) {
         super();
 
         this.dialog = dialog;
+        this.config = config;
         this.name = name;
         this.email = email;
         this.feedback = feedback;
@@ -103,8 +109,7 @@ public class SendWorker extends LoggingSwingWorker<Object, Void> {
         if (!feedback.isEmpty()) {
             postData.put("feedback", feedback);
         }
-        postData.put("version", dialog.getController().getGlobalConfig()
-                .getOption("version", "version"));
+        postData.put("version", config.getOption("version", "version"));
         if (!serverInfo.isEmpty()) {
             postData.put("serverInfo", serverInfo);
         }

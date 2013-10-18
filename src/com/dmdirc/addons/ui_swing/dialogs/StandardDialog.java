@@ -22,13 +22,10 @@
 
 package com.dmdirc.addons.ui_swing.dialogs;
 
-import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.ui.CoreUIUtils;
-import com.dmdirc.ui.IconManager;
 
 import java.awt.Component;
-import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.Window;
@@ -40,8 +37,6 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.SwingUtilities;
 
-import lombok.Getter;
-
 /**
  * Provides common methods for dialogs.
  */
@@ -52,128 +47,63 @@ public class StandardDialog extends JDialog {
     private static final long serialVersionUID = 1;
     /** Dialog manager. */
     private final DialogManager dialogManager;
-    /** Swing controller. */
-    @Getter
-    private SwingController controller;
+    /** Parent window. */
+    private final Window owner;
     /** The OK button for this frame. */
     private JButton okButton;
     /** The cancel button for this frame. */
     private JButton cancelButton;
-    /** Parent window. */
-    private Window owner;
 
-    /**
-     * Creates a new instance of StandardDialog.
-     *
-     * @param controller Parent swing controller
-     * @param modal Whether to display modally or not
-     */
-    public StandardDialog(final SwingController controller,
-            final ModalityType modal) {
-        super(controller.getMainFrame(), modal);
-        this.owner = controller.getMainFrame();
-        this.controller = controller;
-        dialogManager = controller.getDialogManager();
+    @Deprecated
+    public StandardDialog(final SwingController controller, final boolean modal) {
+        this(controller.getDialogManager(), controller.getMainFrame(), modal);
+    }
 
-        if (owner != null) {
-            setIconImages(owner.getIconImages());
-        }
-        orderButtons(new JButton(), new JButton());
-        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+    @Deprecated
+    public StandardDialog(final SwingController controller, final ModalityType modal) {
+        this(controller.getDialogManager(), controller.getMainFrame(), modal);
+    }
+
+    @Deprecated
+    public StandardDialog(final SwingController controller, Window parentWindow, final ModalityType modal) {
+        this(controller.getDialogManager(), parentWindow, modal);
+    }
+
+    @Deprecated
+    public StandardDialog(final SwingController controller, Frame parentWindow, final boolean modal) {
+        this(controller.getDialogManager(), parentWindow, modal);
     }
 
     /**
      * Creates a new instance of StandardDialog.
      *
-     * @param controller Parent swing controller
-     * @param modal Whether to display modally or not
-     */
-    public StandardDialog(final SwingController controller,
-            final boolean modal) {
-        super(controller.getMainFrame(), modal);
-        this.owner = controller.getMainFrame();
-        this.controller = controller;
-        dialogManager = controller.getDialogManager();
-
-        if (owner != null) {
-            setIconImages(owner.getIconImages());
-        }
-        orderButtons(new JButton(), new JButton());
-        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-    }
-
-    /**
-     * Creates a new instance of StandardDialog.
-     *
-     * @param controller Parent swing controller
+     * @param dialogManager Dialog Manager used for disposal
      * @param owner The frame that owns this dialog
      * @param modal Whether to display modally or not
      */
-    public StandardDialog(final SwingController controller, final Frame owner,
-            final boolean modal) {
+    public StandardDialog(final DialogManager dialogManager,
+            final Frame owner, final boolean modal) {
+        this(dialogManager, owner, modal ? ModalityType.APPLICATION_MODAL : ModalityType.MODELESS);
+    }
+
+    /**
+     * Creates a new instance of StandardDialog.
+     *
+     * @param dialogManager Dialog Manager used for disposal
+     * @param owner The frame that owns this dialog
+     * @param modal Whether to display modally or not
+     */
+    public StandardDialog(final DialogManager dialogManager,
+            final Window owner, final ModalityType modal) {
         super(owner, modal);
         this.owner = owner;
-        this.controller = controller;
-        if (controller != null) {
-            dialogManager = controller.getDialogManager();
-        } else {
-            dialogManager = null;
-        }
+        this.dialogManager = dialogManager;
 
         if (owner != null) {
             setIconImages(owner.getIconImages());
         }
         orderButtons(new JButton(), new JButton());
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-    }
-
-    /**
-     * Creates a new instance of StandardDialog.
-     *
-     * @param controller Parent swing controller
-     * @param owner The frame that owns this dialog
-     * @param modal Whether to display modally or not
-     */
-    public StandardDialog(final SwingController controller, final Window owner,
-            final ModalityType modal) {
-        super(owner, modal);
-        this.owner = owner;
-        this.controller = controller;
-        if (controller != null) {
-            dialogManager = controller.getDialogManager();
-        } else {
-            dialogManager = null;
-        }
-
-        if (owner != null) {
-            setIconImages(owner.getIconImages());
-        }
-        orderButtons(new JButton(), new JButton());
-        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-    }
-
-    /**
-     * Creates a new instance of StandardDialog.
-     *
-     * @param controller Parent swing controller
-     * @param owner The frame that owns this dialog
-     * @param modal Whether to display modally or not
-     */
-    public StandardDialog(final SwingController controller, final Dialog owner,
-            final boolean modal) {
-        super(owner, modal);
-        this.owner = owner;
-        this.controller = controller;
-        if (controller != null) {
-            dialogManager = controller.getDialogManager();
-        } else {
-            dialogManager = null;
-        }
-
-        if (owner != null) {
-            setIconImages(owner.getIconImages());
-        }
-        orderButtons(new JButton(), new JButton());
     }
 
     /** {@inheritDoc} */
@@ -305,7 +235,7 @@ public class StandardDialog extends JDialog {
      * Gets the left hand button for a dialog.
      * @return left JButton
      */
-    protected final JButton getLeftButton() {
+    protected JButton getLeftButton() {
         if (System.getProperty("os.name").toLowerCase().startsWith("win")) {
             return getOkButton();
         } else {
@@ -317,7 +247,7 @@ public class StandardDialog extends JDialog {
      * Gets the right hand button for a dialog.
      * @return right JButton
      */
-    protected final JButton getRightButton() {
+    protected JButton getRightButton() {
         if (System.getProperty("os.name").toLowerCase().startsWith("win")) {
             return getCancelButton();
         } else {
@@ -331,7 +261,7 @@ public class StandardDialog extends JDialog {
      * @param leftButton The left-most button
      * @param rightButton The right-most button
      */
-    protected final void orderButtons(final JButton leftButton,
+    protected void orderButtons(final JButton leftButton,
             final JButton rightButton) {
         if (System.getProperty("os.name").toLowerCase().startsWith("win")) {
             // Windows - put the OK button on the left
@@ -353,7 +283,7 @@ public class StandardDialog extends JDialog {
      * Retrieves the OK button for this form.
      * @return The form's OK button
      */
-    public final JButton getOkButton() {
+    public JButton getOkButton() {
         return okButton;
     }
 
@@ -361,7 +291,7 @@ public class StandardDialog extends JDialog {
      * Retrieves the Cancel button for this form.
      * @return The form's cancel button
      */
-    public final JButton getCancelButton() {
+    public JButton getCancelButton() {
         return cancelButton;
     }
 
@@ -369,7 +299,7 @@ public class StandardDialog extends JDialog {
      * Simulates the user clicking on the specified target button.
      * @param target The button to use
      */
-    public final void executeAction(final JButton target) {
+    public void executeAction(final JButton target) {
         if (target != null && target.isEnabled()) {
             target.doClick();
         }
@@ -408,23 +338,5 @@ public class StandardDialog extends JDialog {
     public boolean escapePressed() {
         executeAction(getCancelButton());
         return true;
-    }
-
-    /**
-     * Returns the Swing main frame.
-     *
-     * @return Main frame
-     */
-    public MainFrame getMainFrame() {
-        return getController().getMainFrame();
-    }
-
-    /**
-     * Returns the icon manager.
-     *
-     * @return Icon manager
-     */
-    public IconManager getIconManager() {
-        return getController().getIconManager();
     }
 }
