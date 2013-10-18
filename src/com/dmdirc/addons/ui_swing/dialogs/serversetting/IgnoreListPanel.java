@@ -178,7 +178,7 @@ public final class IgnoreListPanel extends JPanel implements ActionListener,
     @Override
     public void actionPerformed(final ActionEvent e) {
         if (e.getSource() == addButton) {
-            new StandardInputDialog(controller, parentWindow,
+            new StandardInputDialog(controller.getDialogManager(), parentWindow,
                     ModalityType.MODELESS, "New ignore list entry",
                     "Please enter the new ignore list entry",
                     viewToggle.isSelected() ? new ValidatorChain<>(
@@ -214,7 +214,7 @@ public final class IgnoreListPanel extends JPanel implements ActionListener,
             }.display();
         } else if (e.getSource() == delButton && list.getSelectedIndex()
                 != -1) {
-            new StandardQuestionDialog(controller, parentWindow,
+            new StandardQuestionDialog(controller.getDialogManager(), parentWindow,
                     ModalityType.APPLICATION_MODAL,
                     "Confirm deletion",
                     "Are you sure you want to delete this item?") {

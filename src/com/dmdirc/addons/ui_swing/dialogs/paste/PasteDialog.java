@@ -66,6 +66,9 @@ public final class PasteDialog extends StandardDialog implements ActionListener,
     private JButton editButton;
     /** Parent window. */
     private final Window parentWindow;
+    /** Swing controller. */
+    @Deprecated
+    private final SwingController controller;
 
     /**
      * Creates a new instance of PreferencesDialog.
@@ -82,6 +85,7 @@ public final class PasteDialog extends StandardDialog implements ActionListener,
 
         parent = newParent;
         this.parentWindow = parentWindow;
+        this.controller = controller;
 
         initComponents(text);
         initListeners();
@@ -101,7 +105,7 @@ public final class PasteDialog extends StandardDialog implements ActionListener,
      */
     private void initComponents(final String text) {
         scrollPane = new JScrollPane();
-        textField = new TextAreaInputField(getController(), text);
+        textField = new TextAreaInputField(controller.getIconManager(), controller.getGlobalConfig(), text);
         editButton = new JButton("Edit");
         infoLabel = new TextLabel();
 
@@ -121,7 +125,7 @@ public final class PasteDialog extends StandardDialog implements ActionListener,
         textField.setColumns(50);
         textField.setRows(10);
 
-        new SwingInputHandler(getController().getPluginManager(), textField,
+        new SwingInputHandler(controller.getPluginManager(), textField,
                 parent.getContainer().getCommandParser(), parent.getContainer())
                 .setTypes(false, false, true,false);
 

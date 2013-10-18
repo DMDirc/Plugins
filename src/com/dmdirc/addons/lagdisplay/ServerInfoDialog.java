@@ -28,6 +28,7 @@ import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.statusbar.StatusbarPanel;
 import com.dmdirc.addons.ui_swing.components.statusbar.StatusbarPopupWindow;
+
 import java.util.List;
 
 import javax.swing.JLabel;
@@ -53,6 +54,9 @@ public class ServerInfoDialog extends StatusbarPopupWindow {
     protected final LagDisplayPlugin plugin;
     /** Swing main frame. */
     private final MainFrame mainFrame;
+    /** Swing Controller. */
+    @Deprecated
+    private final SwingController controller;
 
     /**
      * Creates a new ServerInfoDialog.
@@ -68,12 +72,13 @@ public class ServerInfoDialog extends StatusbarPopupWindow {
 
         plugin = ldp;
         mainFrame = controller.getMainFrame();
+        this.controller = controller;
     }
 
     /** {@inheritDoc} */
     @Override
     protected void initContent(final JPanel panel) {
-        final List<Server> servers = getController().getServerManager().getServers();
+        final List<Server> servers = controller.getServerManager().getServers();
 
         if (servers.isEmpty()) {
             panel.add(new JLabel("No open servers."));

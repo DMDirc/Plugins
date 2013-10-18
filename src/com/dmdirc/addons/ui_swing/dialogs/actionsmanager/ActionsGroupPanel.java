@@ -25,10 +25,10 @@ package com.dmdirc.addons.ui_swing.dialogs.actionsmanager;
 import com.dmdirc.actions.Action;
 import com.dmdirc.actions.ActionGroup;
 import com.dmdirc.actions.ActionTypeComparator;
-import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.PackingTable;
 import com.dmdirc.addons.ui_swing.components.renderers.ActionTypeTableCellRenderer;
 import com.dmdirc.addons.ui_swing.components.renderers.ArrayCellRenderer;
+import com.dmdirc.addons.ui_swing.dialogs.DialogManager;
 import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
 import com.dmdirc.addons.ui_swing.dialogs.StringArrayComparator;
 import com.dmdirc.addons.ui_swing.dialogs.actioneditor.ActionEditorDialog;
@@ -57,7 +57,7 @@ import net.miginfocom.swing.MigLayout;
  * of the actions manager dialog. It shows the user all actions belonging to
  * a particular group.
  */
-public final class ActionsGroupPanel extends JPanel implements ActionListener,
+public class ActionsGroupPanel extends JPanel implements ActionListener,
         ListSelectionListener {
 
     /**
@@ -66,6 +66,8 @@ public final class ActionsGroupPanel extends JPanel implements ActionListener,
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 1;
+    /** Dialog Manager */
+    private final DialogManager dialogManager;
     /** Parent dialog. */
     private final Window parent;
     /** Table scrollpane. */
@@ -82,21 +84,19 @@ public final class ActionsGroupPanel extends JPanel implements ActionListener,
     private JButton delete;
     /** Action group. */
     private ActionGroup group;
-    /** Swing controller. */
-    private SwingController controller;
 
     /**
      * Creates a new instance of ActionsManagerDialog.
      *
-     * @param controller Swing controller
+     * @param dialogManager Dialog Manager
      * @param parent Parent window
      * @param group Action group to display
      */
-    public ActionsGroupPanel(final SwingController controller,
+    public ActionsGroupPanel(final DialogManager dialogManager,
             final Window parent, final ActionGroup group) {
         super();
 
-        this.controller = controller;
+        this.dialogManager = dialogManager;
         this.parent = parent;
         this.group = group;
 
@@ -245,10 +245,10 @@ public final class ActionsGroupPanel extends JPanel implements ActionListener,
     @Override
     public void actionPerformed(final ActionEvent e) {
         if (e.getSource() == add) {
-            controller.showDialog(ActionEditorDialog.class, this, parent,
+            dialogManager.showDialog(ActionEditorDialog.class, this, parent,
                     group.getName());
         } else if (e.getSource() == edit) {
-            controller.showDialog(ActionEditorDialog.class, this, parent,
+            dialogManager.showDialog(ActionEditorDialog.class, this, parent,
                     model.getAction(
                     table.getRowSorter().convertRowIndexToModel(table.
                     getSelectedRow())));
@@ -257,7 +257,7 @@ public final class ActionsGroupPanel extends JPanel implements ActionListener,
                     model.getAction(
                     table.getRowSorter().convertRowIndexToModel(table.
                     getSelectedRow()));
-            new StandardQuestionDialog(controller, parent,
+            new StandardQuestionDialog(dialogManager, parent,
                     ModalityType.APPLICATION_MODAL, "Confirm deletion",
                     "Are you sure you wish to delete the action '" + action.
                     getName() + "'?") {

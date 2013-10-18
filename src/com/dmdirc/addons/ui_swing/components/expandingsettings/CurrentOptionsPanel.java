@@ -40,7 +40,7 @@ import net.miginfocom.swing.MigLayout;
 /**
  * Current options panel.
  */
-public final class CurrentOptionsPanel extends JPanel implements
+public class CurrentOptionsPanel extends JPanel implements
         ActionListener {
 
     /** Serial version UID. */
@@ -58,8 +58,7 @@ public final class CurrentOptionsPanel extends JPanel implements
      * @param iconManager IconManager
      * @param parent Parent settings panel.
      */
-    protected CurrentOptionsPanel(final IconManager iconManager,
-            final SettingsPanel parent) {
+    protected CurrentOptionsPanel(final IconManager iconManager, final SettingsPanel parent) {
         super();
 
         this.iconManager = iconManager;

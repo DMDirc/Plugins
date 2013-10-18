@@ -22,9 +22,11 @@
 
 package com.dmdirc.addons.ui_swing.components.inputfields;
 
-import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.colours.ColourPickerDialog;
+import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.ui.InputField;
+import com.dmdirc.ui.IconManager;
+import com.dmdirc.ui.messages.ColourManager;
 
 import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
@@ -45,20 +47,24 @@ public class TextAreaInputField extends JTextArea implements InputField,
     private static final long serialVersionUID = 2;
     /** Colour picker. */
     protected ColourPickerDialog colourPicker;
-    /** Swing controller. */
-    private final SwingController controller;
+    /** Icon manager. */
+    private final IconManager iconManager;
+    /** Global config. */
+    private final AggregateConfigProvider config;
 
     /**
      * Creates a new text area with the specified number of rows and columns.
      *
-     * @param controller Swing controller
+     * @param iconManager Icon manager
+     * @param config Config to read settings from
      * @param rows The number of rows to use
      * @param columns The number of columns to use
      */
-    public TextAreaInputField(final SwingController controller, final int rows,
-            final int columns) {
+    public TextAreaInputField(final IconManager iconManager,
+            final AggregateConfigProvider config, final int rows, final int columns) {
         super(rows, columns);
-        this.controller = controller;
+        this.iconManager = iconManager;
+        this.config = config;
         KeyboardFocusManager.getCurrentKeyboardFocusManager()
                 .addPropertyChangeListener(this);
     }
@@ -66,13 +72,15 @@ public class TextAreaInputField extends JTextArea implements InputField,
     /**
      * Creates a new text area containing the specified text.
      *
-     * @param controller Swing controller
+     * @param iconManager Icon manager
+     * @param config Config to read settings from
      * @param text The text to contain initially
      */
-    public TextAreaInputField(final SwingController controller,
-            final String text) {
+    public TextAreaInputField(final IconManager iconManager,
+            final AggregateConfigProvider config, final String text) {
         super(text);
-        this.controller = controller;
+        this.iconManager = iconManager;
+        this.config = config;
         KeyboardFocusManager.getCurrentKeyboardFocusManager()
                 .addPropertyChangeListener(this);
     }
@@ -92,10 +100,9 @@ public class TextAreaInputField extends JTextArea implements InputField,
     /** {@inheritDoc} */
     @Override
     public void showColourPicker(final boolean irc, final boolean hex) {
-        if (controller.getGlobalConfig().getOptionBool("general",
-                "showcolourdialog")) {
-            colourPicker = new ColourPickerDialog(controller.getColourManager(),
-                    controller.getIconManager(), irc, hex);
+        if (config.getOptionBool("general", "showcolourdialog")) {
+            colourPicker = new ColourPickerDialog(TextAreaInputField.this,
+                    new ColourManager(config), iconManager, irc, hex);
             colourPicker.addActionListener(new ActionListener() {
 
                 @Override
@@ -110,7 +117,7 @@ public class TextAreaInputField extends JTextArea implements InputField,
                     colourPicker = null;
                 }
             });
-            colourPicker.display();
+            colourPicker.setVisible(true);
             colourPicker.setLocation((int) getLocationOnScreen().getX(),
                     (int) getLocationOnScreen().getY() -
                     colourPicker.getHeight());

@@ -73,6 +73,9 @@ public final class SwingPreferencesDialog extends StandardDialog implements
     private LoggingSwingWorker<PreferencesDialogModel, Void> worker;
     /** Panel size. */
     private int panelSize = 500;
+    /** Swing controller. */
+    @Deprecated
+    private final SwingController controller;
 
     /**
      * Creates a new instance of SwingPreferencesDialog.
@@ -81,6 +84,8 @@ public final class SwingPreferencesDialog extends StandardDialog implements
      */
     public SwingPreferencesDialog(final SwingController controller) {
         super(controller, ModalityType.MODELESS);
+
+        this.controller = controller;
 
         initComponents();
 
@@ -93,10 +98,10 @@ public final class SwingPreferencesDialog extends StandardDialog implements
                 PreferencesDialogModel prefsManager = null;
                 try {
                     prefsManager = new PreferencesDialogModel(
-                            new PluginPanel(getMainFrame(), controller),
-                            new ThemePanel(getMainFrame(), controller, controller.getThemeManager()),
+                            new PluginPanel(controller.getMainFrame(), controller),
+                            new ThemePanel(controller.getMainFrame(), controller, controller.getThemeManager()),
                             new UpdateConfigPanel(controller),
-                            new URLConfigPanel(controller, getMainFrame()),
+                            new URLConfigPanel(controller, controller.getMainFrame()),
                             controller.getGlobalConfig(),
                             controller.getGlobalIdentity(),
                             controller.getActionManager(),
@@ -137,7 +142,7 @@ public final class SwingPreferencesDialog extends StandardDialog implements
 
         final int count = countCategories(manager.getCategories());
         tabList.setCellRenderer(new PreferencesListCellRenderer(
-                getIconManager(), count));
+                controller.getIconManager(), count));
 
         addCategories(manager.getCategories());
     }
@@ -146,8 +151,8 @@ public final class SwingPreferencesDialog extends StandardDialog implements
      * Initialises GUI components.
      */
     private void initComponents() {
-        mainPanel = new CategoryPanel(getController()
-                .getPrefsComponentFactory(), this);
+        mainPanel = new CategoryPanel(controller.getPrefsComponentFactory(),
+                controller.getIconManager(), this);
 
         tabList = new JList(new DefaultListModel());
         tabList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -238,7 +243,7 @@ public final class SwingPreferencesDialog extends StandardDialog implements
             if (tabList.getSelectedIndex() > -1) {
                 final PreferencesCategory node = (PreferencesCategory) tabList.
                         getSelectedValue();
-                getController().getGlobalIdentity().setOption("dialogstate",
+                controller.getGlobalIdentity().setOption("dialogstate",
                         "preferences", node.getPath());
             }
             saveOptions();
@@ -307,13 +312,13 @@ public final class SwingPreferencesDialog extends StandardDialog implements
     public void saveOptions() {
         if (manager != null && manager.save()) {
             dispose();
-            getController().showDialog(SwingRestartDialog.class,
+            controller.showDialog(SwingRestartDialog.class,
                     ModalityType.APPLICATION_MODAL, "apply settings");
         }
     }
 
     private void restoreActiveCategory() {
-        final String oldCategoryPath = getController().getGlobalConfig().
+        final String oldCategoryPath = controller.getGlobalConfig().
                 getOption("dialogstate", "preferences");
         final DefaultListModel model = (DefaultListModel) tabList.getModel();
         int indexToSelect = 0;

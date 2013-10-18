@@ -25,8 +25,11 @@ package com.dmdirc.addons.ui_swing.dialogs.actioneditor;
 import com.dmdirc.actions.Action;
 import com.dmdirc.actions.ActionFactory;
 import com.dmdirc.actions.ActionStatus;
-import com.dmdirc.addons.ui_swing.SwingController;
+import com.dmdirc.actions.ActionSubstitutorFactory;
+import com.dmdirc.addons.ui_swing.dialogs.DialogManager;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
+import com.dmdirc.interfaces.config.AggregateConfigProvider;
+import com.dmdirc.ui.IconManager;
 
 import java.awt.Dimension;
 import java.awt.Window;
@@ -84,22 +87,27 @@ public class ActionEditorDialog extends StandardDialog implements
     /**
      * Instantiates the panel.
      *
-     * @param controller Swing controller
+     * @param dialogManager Dialog manager
+     * @param iconManager Icon manager
+     * @param config Config
+     * @param subsFactory Actions substitution factory
+     * @param actionFactory Actions factory
      * @param parentWindow Parent window
      * @param group Action's group
      */
-    public ActionEditorDialog(final SwingController controller,
-            final Window parentWindow, final String group) {
-        super(controller, parentWindow, ModalityType.DOCUMENT_MODAL);
+    public ActionEditorDialog(final DialogManager dialogManager, final IconManager iconManager,
+            final AggregateConfigProvider config, final ActionSubstitutorFactory subsFactory,
+            final ActionFactory actionFactory, final Window parentWindow, final String group) {
+        super(dialogManager, parentWindow, ModalityType.DOCUMENT_MODAL);
         log.debug("loading with group: " + group);
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         setTitle("Action Editor");
 
         this.group = group;
         this.action = null;
-        this.actionFactory = controller.getActionFactory();
+        this.actionFactory = actionFactory;
 
-        initComponents();
+        initComponents(iconManager, config, subsFactory);
         addListeners();
         doComponents();
         layoutComponents();
@@ -110,22 +118,27 @@ public class ActionEditorDialog extends StandardDialog implements
     /**
      * Instantiates the panel.
      *
-     * @param controller Swing controller
+     * @param dialogManager Dialog manager
+     * @param iconManager Icon manager
+     * @param config Config
+     * @param subsFactory Actions substitution factory
+     * @param actionFactory Actions factory
      * @param parentWindow Parent window
      * @param action Action to be edited
      */
-    public ActionEditorDialog(final SwingController controller,
-            final Window parentWindow, final Action action) {
-        super(controller, parentWindow, ModalityType.DOCUMENT_MODAL);
+    public ActionEditorDialog(final DialogManager dialogManager, final IconManager iconManager,
+            final AggregateConfigProvider config, final ActionSubstitutorFactory subsFactory,
+            final ActionFactory actionFactory, final Window parentWindow, final Action action) {
+        super(dialogManager, parentWindow, ModalityType.DOCUMENT_MODAL);
         log.debug("loading with action: " + action);
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         setTitle("Action Editor");
 
         this.group = action.getGroup();
         this.action = action;
-        this.actionFactory = controller.getActionFactory();
+        this.actionFactory = actionFactory;
 
-        initComponents();
+        initComponents(iconManager, config, subsFactory);
         addListeners();
         doComponents();
         layoutComponents();
@@ -161,13 +174,14 @@ public class ActionEditorDialog extends StandardDialog implements
     }
 
     /** Initialises the components. */
-    private void initComponents() {
+    private void initComponents(final IconManager iconManager,
+            final AggregateConfigProvider config, final ActionSubstitutorFactory subsFactory) {
         orderButtons(new JButton(), new JButton());
-        name = new ActionNamePanel(getIconManager(), "", group);
-        triggers = new ActionTriggersPanel(getIconManager());
-        response = new ActionResponsePanel(getController());
-        conditions = new ActionConditionsPanel(getIconManager());
-        substitutions = new ActionSubstitutionsPanel(getController().getActionSubstitutorFactory());
+        name = new ActionNamePanel(iconManager, "", group);
+        triggers = new ActionTriggersPanel(iconManager);
+        response = new ActionResponsePanel(iconManager, config);
+        conditions = new ActionConditionsPanel(iconManager);
+        substitutions = new ActionSubstitutionsPanel(subsFactory);
         advanced = new ActionAdvancedPanel();
         showSubstitutions = new JButton("Show Substitutions");
         showAdvanced = new JButton("Show Advanced Options");

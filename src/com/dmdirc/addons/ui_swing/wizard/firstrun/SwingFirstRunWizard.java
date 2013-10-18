@@ -26,13 +26,14 @@ import com.dmdirc.CorePluginExtractor;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.addons.ui_swing.Apple;
-import com.dmdirc.addons.ui_swing.SwingController;
+import com.dmdirc.addons.ui_swing.dialogs.DialogManager;
 import com.dmdirc.addons.ui_swing.dialogs.profiles.ProfileManagerDialog;
 import com.dmdirc.addons.ui_swing.wizard.Step;
 import com.dmdirc.addons.ui_swing.wizard.WizardDialog;
 import com.dmdirc.addons.ui_swing.wizard.WizardListener;
 import com.dmdirc.interfaces.ActionListener;
 import com.dmdirc.interfaces.actions.ActionType;
+import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.ui.FirstRunWizard;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
@@ -53,30 +54,39 @@ public class SwingFirstRunWizard implements WizardListener, FirstRunWizard {
 
     /** Wizard dialog. */
     private final WizardDialog wizardDialog;
-    /** Swing controller. */
-    private final SwingController controller;
+    /** Global config. */
+    private final ConfigProvider config;
     /** Extractor to use for core plugins. */
     private final CorePluginExtractor corePluginExtractor;
+    /** Dialog manager. */
+    private final DialogManager dialogManager;
+    /** Actions directory. */
+    private final String actionsDirectory;
 
     /**
      * Instantiate the wizard.
      *
      * @param parentWindow Parent window
-     * @param controller Swing controller
+     * @param config Global config
+     * @param dialogManager Dialog manager
+     * @param actionsDirectory Actions directory
      * @param pluginExtractor Plugin extractor to use.
      * @param iconManager Manager to use to find icons.
      */
     public SwingFirstRunWizard(
             final Window parentWindow,
-            final SwingController controller,
+            final ConfigProvider config,
+            final DialogManager dialogManager,
+            final String actionsDirectory,
             final CorePluginExtractor pluginExtractor,
             final IconManager iconManager) {
-        this.controller = controller;
         this.corePluginExtractor = pluginExtractor;
+        this.config = config;
+        this.dialogManager = dialogManager;
+        this.actionsDirectory = actionsDirectory;
 
-        wizardDialog = new WizardDialog("Setup wizard",
-                new ArrayList<Step>(), parentWindow,
-                ModalityType.APPLICATION_MODAL);
+        wizardDialog = new WizardDialog("Setup wizard", new ArrayList<Step>(),
+                dialogManager, parentWindow, ModalityType.APPLICATION_MODAL);
         wizardDialog.setIconImage(iconManager.getImage("icon"));
         wizardDialog.addWizardListener(this);
         if(Apple.isAppleUI()) {
@@ -99,9 +109,9 @@ public class SwingFirstRunWizard implements WizardListener, FirstRunWizard {
             extractActions();
         }
 
-        controller.getGlobalIdentity().setOption("updater", "enable",
+        config.setOption("updater", "enable",
                 ((CommunicationStep) wizardDialog.getStep(1)).checkUpdates());
-        controller.getGlobalIdentity().setOption("general", "submitErrors",
+        config.setOption("general", "submitErrors",
                 ((CommunicationStep) wizardDialog.getStep(1)).checkErrors());
 
         if (((ProfileStep) wizardDialog.getStep(2)).getProfileManagerState()) {
@@ -110,7 +120,7 @@ public class SwingFirstRunWizard implements WizardListener, FirstRunWizard {
                 @Override
                 public void processEvent(final ActionType type,
                         final StringBuffer format, final Object... arguments) {
-                    controller.showDialog(ProfileManagerDialog.class);
+                    dialogManager.showDialog(ProfileManagerDialog.class);
                 }
             }, CoreActionType.CLIENT_OPENED);
 
@@ -144,10 +154,8 @@ public class SwingFirstRunWizard implements WizardListener, FirstRunWizard {
                 getResourcesStartingWithAsBytes("com/dmdirc/actions/defaults");
         for (Entry<String, byte[]> resource : resources.entrySet()) {
             try {
-                final String resourceName =
-                        controller.getIdentityManager().getConfigurationDirectory() + "actions" +
-                        resource.getKey().
-                        substring(27, resource.getKey().length());
+                final String resourceName = actionsDirectory + resource.getKey()
+                        .substring(27, resource.getKey().length());
                 final File newDir =
                         new File(resourceName.substring(0,
                         resourceName.lastIndexOf('/')) + "/");

@@ -45,7 +45,7 @@ import net.miginfocom.swing.MigLayout;
 /**
  * Colour chooser widget.
  */
-public final class OptionalColourChooser extends JPanel implements
+public class OptionalColourChooser extends JPanel implements
         ActionListener {
 
     /** Serial version UID. */
@@ -65,7 +65,7 @@ public final class OptionalColourChooser extends JPanel implements
     private final JPanel previewPanel;
     /** Colours picking dialog. */
     private ColourPickerDialog cpd;
-    /** show irc colours. */
+    /** show IRC colours. */
     private final boolean showIRC;
     /** show hex colours. */
     private final boolean showHex;
@@ -77,9 +77,9 @@ public final class OptionalColourChooser extends JPanel implements
      *
      * @param iconManager Icon manager
      * @param colourManager The colour manager to use to parse colours.
-     * @param initialColour Snitial colour
+     * @param initialColour Initial colour
      * @param initialState Initial state
-     * @param ircColours Show irc colours
+     * @param ircColours Show IRC colours
      * @param hexColours Show hex colours
      *
      * @since 0.6
@@ -176,9 +176,10 @@ public final class OptionalColourChooser extends JPanel implements
     @Override
     public void actionPerformed(final ActionEvent e) {
         if (e.getSource() == editButton) {
-            cpd = new ColourPickerDialog(colourManager, iconManager, showIRC, showHex, window);
+            cpd = new ColourPickerDialog(editButton, colourManager, iconManager, showIRC,
+                    showHex, window);
             cpd.addActionListener(this);
-            cpd.display(editButton);
+            cpd.setVisible(true);
         } else if (e.getSource() == enabled) {
             editButton.setEnabled(enabled.isSelected());
             fireActionEvent();
@@ -201,7 +202,7 @@ public final class OptionalColourChooser extends JPanel implements
     }
 
     /**
-     * Informs all action listeners that an action has occured.
+     * Informs all action listeners that an action has occurred.
      */
     protected void fireActionEvent() {
         for (final ActionListener listener : listeners
