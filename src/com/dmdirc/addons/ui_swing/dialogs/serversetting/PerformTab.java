@@ -25,11 +25,12 @@ package com.dmdirc.addons.ui_swing.dialogs.serversetting;
 import com.dmdirc.actions.wrappers.PerformType;
 import com.dmdirc.actions.wrappers.PerformWrapper;
 import com.dmdirc.actions.wrappers.PerformWrapper.PerformDescription;
-import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.performpanel.PerformPanel;
 import com.dmdirc.addons.ui_swing.components.renderers.PerformRenderer;
 import com.dmdirc.interfaces.Connection;
+import com.dmdirc.interfaces.config.AggregateConfigProvider;
+import com.dmdirc.ui.IconManager;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -51,8 +52,6 @@ public class PerformTab extends JPanel implements ActionListener {
     private static final long serialVersionUID = 1;
     /** Parent connection. */
     private final Connection connection;
-    /** Swing controller. */
-    private final SwingController controller;
     /** Perform wrapper to read/write performs to. */
     private final PerformWrapper wrapper;
     /** Network/server combo box. */
@@ -63,27 +62,34 @@ public class PerformTab extends JPanel implements ActionListener {
     /**
      * Creates a new instance of IgnoreList.
      *
-     * @param controller Swing controller
+     * @param iconManager Icon manager
+     * @param config Config to read settings from
      * @param wrapper Perform wrapper to read/write performs to.
      * @param connection Connection whose perform should be displayed.
      */
     public PerformTab(
-            final SwingController controller,
+            final IconManager iconManager,
+            final AggregateConfigProvider config,
             final PerformWrapper wrapper,
             final Connection connection) {
         super();
 
-        this.controller = controller;
         this.wrapper = wrapper;
         this.connection = connection;
 
         setOpaque(UIUtilities.getTabbedPaneOpaque());
-        initComponents();
+        initComponents(iconManager, config);
         addListeners();
     }
 
-    /** Initialises the components. */
-    private void initComponents() {
+    /**
+     * Initialises the components.
+     *
+     * @param iconManager Icon manager
+     * @param config Config to read settings from
+     */
+    private void initComponents(final IconManager iconManager,
+            final AggregateConfigProvider config) {
         setLayout(new MigLayout("fill"));
 
         final DefaultComboBoxModel model = new DefaultComboBoxModel();
@@ -114,7 +120,7 @@ public class PerformTab extends JPanel implements ActionListener {
         performList.add(serverPerform);
         performList.add(serverProfilePerform);
 
-        performPanel = new PerformPanel(controller, wrapper, performList);
+        performPanel = new PerformPanel(iconManager, config, wrapper, performList);
         performPanel.switchPerform(networkPerform);
         add(performPanel, "grow, push");
 

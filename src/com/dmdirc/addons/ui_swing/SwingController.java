@@ -51,6 +51,7 @@ import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.interfaces.CommandController;
+import com.dmdirc.interfaces.LifecycleController;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.config.IdentityController;
@@ -128,9 +129,6 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     /** Prefs component factory instance. */
     @Getter
     private final PrefsComponentFactory prefsComponentFactory;
-    /** Dialog manager. */
-    @Getter
-    private final DialogManager dialogManager;
     /** Action manager. */
     @Getter
     private final ActionManager actionManager;
@@ -161,6 +159,9 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     /** Factory to use to create action substitutors. */
     @Getter
     private final ActionSubstitutorFactory actionSubstitutorFactory;
+    /** Lifecycle controller. */
+    @Getter
+    private final LifecycleController lifecycleController;
 
     /** The manager we're using for dependencies. */
     private SwingManager swingManager;
@@ -181,6 +182,7 @@ public class SwingController extends BaseCommandPlugin implements UIController {
      * @param urlBuilder URL builder to use to resolve icons etc.
      * @param colourManager The colour manager to use to parse colours.
      * @param actionSubstitutorFactory Factory to use to create action substitutors.
+     * @param lifecycleController Lifecyle controller to quit and restart DMDirc.
      */
     public SwingController(
             final PluginInfo pluginInfo,
@@ -195,7 +197,8 @@ public class SwingController extends BaseCommandPlugin implements UIController {
             final ThemeManager themeManager,
             final URLBuilder urlBuilder,
             final ColourManager colourManager,
-            final ActionSubstitutorFactory actionSubstitutorFactory) {
+            final ActionSubstitutorFactory actionSubstitutorFactory,
+            final LifecycleController lifecycleController) {
         this.pluginInfo = pluginInfo;
         this.identityManager = identityManager;
         this.identityFactory = identityFactory;
@@ -209,6 +212,7 @@ public class SwingController extends BaseCommandPlugin implements UIController {
         this.colourManager = colourManager;
         this.urlBuilder = urlBuilder;
         this.actionSubstitutorFactory = actionSubstitutorFactory;
+        this.lifecycleController = lifecycleController;
 
         globalConfig = identityManager.getGlobalConfiguration();
         globalIdentity = identityManager.getUserSettings();
@@ -216,7 +220,6 @@ public class SwingController extends BaseCommandPlugin implements UIController {
         apple = new Apple(getGlobalConfig(), this);
         iconManager = new IconManager(globalConfig, urlBuilder);
         prefsComponentFactory = new PrefsComponentFactory(this);
-        dialogManager = new DialogManager(this);
         setAntiAlias();
         windows = new ArrayList<>();
     }
@@ -289,7 +292,7 @@ public class SwingController extends BaseCommandPlugin implements UIController {
      */
     public <T extends StandardDialog> void showDialog(final Class<T> klass,
             final Object... params) {
-        dialogManager.showDialog(klass, params);
+        getDialogManager().showDialog(klass, params);
     }
 
     /**
@@ -855,6 +858,17 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     @Deprecated
     public URLHandler getUrlHandler() {
         return swingManager.getUrlHandler();
+    }
+
+    /**
+     * Gets the Dialog manager.
+     *
+     * @return The Dialog manager to use
+     * @deprecated Should be injected
+     */
+    @Deprecated
+    public DialogManager getDialogManager() {
+        return swingManager.getDialogManager();
     }
 
 }

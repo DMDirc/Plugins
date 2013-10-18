@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_swing.components.colours;
 
 import com.dmdirc.addons.ui_swing.UIUtilities;
+import com.dmdirc.addons.ui_swing.dialogs.DialogManager;
 import com.dmdirc.ui.Colour;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.messages.ColourManager;
@@ -58,6 +59,8 @@ public class ColourChooser extends JPanel implements ActionListener {
     private final IconManager iconManager;
     /** The colour manager to use to parse colours. */
     private final ColourManager colourManager;
+    /** Dialog manager. */
+    private final DialogManager dialogManager;
     /** Colours picking dialog. */
     private ColourPickerDialog cpd;
     /** show irc colours. */
@@ -74,6 +77,7 @@ public class ColourChooser extends JPanel implements ActionListener {
     /**
      * Creates a new instance of ColourChooser.
      *
+     * @param dialogManager Dialog manager
      * @param colourManager The colour manager to use to parse colours.
      * @param iconManager Icon manager
      * @param initialColour initial colour
@@ -82,12 +86,13 @@ public class ColourChooser extends JPanel implements ActionListener {
      *
      * @since 0.6
      */
-    public ColourChooser(
+    public ColourChooser(final DialogManager dialogManager,
             final ColourManager colourManager, final IconManager iconManager,
             final String initialColour, final boolean ircColours,
             final boolean hexColours) {
         super();
 
+        this.dialogManager = dialogManager;
         this.colourManager = colourManager;
         this.iconManager = iconManager;
         showIRC = ircColours;
@@ -168,9 +173,10 @@ public class ColourChooser extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(final ActionEvent e) {
         if (e.getSource() == editButton) {
-            cpd = new ColourPickerDialog(colourManager, iconManager, showIRC, showHex, window);
+            cpd = new ColourPickerDialog(editButton, colourManager, iconManager, showIRC,
+                    showHex, window);
             cpd.addActionListener(this);
-            cpd.display(editButton);
+            cpd.setVisible(true);
         } else {
             value = e.getActionCommand();
             updateColour(e.getActionCommand());

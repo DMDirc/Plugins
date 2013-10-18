@@ -136,7 +136,7 @@ public class URLConfigPanel extends JPanel implements
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         table.getRowSorter().toggleSortOrder(0);
         details = new HashMap<>();
-        empty = new URLProtocolPanel(controller, null, true);
+        empty = new URLProtocolPanel(controller.getGlobalIdentity(), null, true);
         activeComponent = empty;
         add = new JButton("Add");
         remove = new JButton("Remove");
@@ -151,7 +151,7 @@ public class URLConfigPanel extends JPanel implements
             try {
                 final URI uri = new URI(option + "://example.test.com");
                 model.addURI(uri);
-                details.put(uri, new URLProtocolPanel(controller, uri, true));
+                details.put(uri, new URLProtocolPanel(controller.getGlobalIdentity(), uri, true));
             } catch (final URISyntaxException ex) {
                 //Ignore wont happen
             }
@@ -262,7 +262,7 @@ public class URLConfigPanel extends JPanel implements
     @Override
     public void actionPerformed(final ActionEvent e) {
         if (e.getSource() == add) {
-            new StandardInputDialog(controller, parentWindow,
+            new StandardInputDialog(controller.getDialogManager(), parentWindow,
                     ModalityType.MODELESS, "New URL handler",
                     "Please enter the name of the new protocol.",
                     new URLProtocolValidator(controller.getGlobalConfig())) {
@@ -277,7 +277,7 @@ public class URLConfigPanel extends JPanel implements
                         final URI uri = new URI(getText() +
                                 "://example.test.com");
                         model.addURI(uri);
-                        details.put(uri, new URLProtocolPanel(controller, uri,
+                        details.put(uri, new URLProtocolPanel(controller.getGlobalIdentity(), uri,
                                 true));
                         return true;
                     } catch (final URISyntaxException ex) {

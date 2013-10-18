@@ -25,14 +25,18 @@ package com.dmdirc.addons.ui_swing.dialogs.serversetting;
 import com.dmdirc.Server;
 import com.dmdirc.ServerState;
 import com.dmdirc.actions.wrappers.PerformWrapper;
+import com.dmdirc.addons.ui_swing.PrefsComponentFactory;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.expandingsettings.SettingsPanel;
 import com.dmdirc.addons.ui_swing.components.modes.UserModesPane;
+import com.dmdirc.addons.ui_swing.dialogs.DialogManager;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
 import com.dmdirc.config.prefs.PreferencesManager;
+import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
+import com.dmdirc.ui.IconManager;
 
 import java.awt.Window;
 import java.awt.event.ActionEvent;
@@ -47,14 +51,14 @@ import net.miginfocom.swing.MigLayout;
 /**
  * Allows the user to modify server settings and the ignore list.
  */
-public final class ServerSettingsDialog extends StandardDialog implements ActionListener {
+public class ServerSettingsDialog extends StandardDialog implements ActionListener {
 
     /** Serial version UID. */
     private static final long serialVersionUID = 2;
+    /** Dialog Manager. */
+    private final DialogManager dialogManager;
     /** Parent server. */
     private final Server server;
-    /** Parent window. */
-    private final Window parentWindow;
     /** Perform wrapper for the perform panel. */
     private final PerformWrapper performWrapper;
     /** User modes panel. */
@@ -72,46 +76,56 @@ public final class ServerSettingsDialog extends StandardDialog implements Action
      * Creates a new instance of ServerSettingsDialog.
      *
      * @param controller Swing controller
+     * @param dialogManager Dialog manager
+     * @param iconManager Icon manager
+     * @param compFactory Preferences setting component factory
      * @param performWrapper Wrapper for the perform tab.
      * @param server The server object that we're editing settings for
      * @param parentWindow Parent window
      */
     public ServerSettingsDialog(
             final SwingController controller,
+            final DialogManager dialogManager,
+            final IconManager iconManager,
+            final PrefsComponentFactory compFactory,
             final PerformWrapper performWrapper,
             final Server server,
             final Window parentWindow) {
-        super(controller, parentWindow, ModalityType.MODELESS);
+        super(dialogManager, parentWindow, ModalityType.MODELESS);
 
+        this.dialogManager = dialogManager;
         this.server = server;
         this.performWrapper = performWrapper;
-        this.parentWindow = parentWindow;
 
         setTitle("Server settings");
         setResizable(false);
 
-        initComponents();
+        initComponents(controller, iconManager, server.getConfigManager(), compFactory);
         initListeners();
     }
 
-    /** Initialises the main UI components. */
-    private void initComponents() {
+    /**
+     * Initialises the main UI components.
+     *
+     * @param controller Swing controller
+     * @param iconManager Icon manager
+     * @config Config to read from
+     * @param compFactory Preferences setting component factory
+     */
+    private void initComponents(final SwingController controller, final IconManager iconManager,
+            final AggregateConfigProvider config, final PrefsComponentFactory compFactory) {
         orderButtons(new JButton(), new JButton());
 
         tabbedPane = new JTabbedPane();
 
-        modesPanel = new UserModesPane(getController(), server);
+        modesPanel = new UserModesPane(controller, server);
 
-        ignoreList =
-                new IgnoreListPanel(getController(), server, parentWindow);
+        ignoreList = new IgnoreListPanel(controller, server, controller.getMainFrame());
 
-        performPanel =
-                new PerformTab(getController(), performWrapper, server);
+        performPanel = new PerformTab(iconManager, config, performWrapper, server);
 
-        settingsPanel =
-                new SettingsPanel(getController(), "These settings are specific"
-                        + " to this network, any settings specified here will "
-                        + "overwrite global settings");
+        settingsPanel = new SettingsPanel(iconManager, compFactory, "These settings are specific"
+                + " to this network, any settings specified here will overwrite global settings");
 
         if (settingsPanel != null) {
             addSettings();
@@ -155,7 +169,7 @@ public final class ServerSettingsDialog extends StandardDialog implements Action
     /** Saves the settings from this dialog. */
     public void saveSettings() {
         if (server.getState() != ServerState.CONNECTED) {
-            new StandardQuestionDialog(getController(), parentWindow,
+            new StandardQuestionDialog(dialogManager, getOwner(),
                     ModalityType.MODELESS,
                     "Server has been disconnected.", "Any changes you have " +
                     "made will be lost, are you sure you want to close this " +
@@ -175,7 +189,7 @@ public final class ServerSettingsDialog extends StandardDialog implements Action
                 public void cancelled() {
                     //Ignore
                 }
-            }.display(parentWindow);
+                    }.display(getOwner());
         } else {
             closeAndSave();
         }

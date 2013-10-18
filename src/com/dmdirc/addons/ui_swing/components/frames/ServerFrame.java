@@ -145,7 +145,7 @@ public final class ServerFrame extends InputTextFrame implements
     public void certificateProblemEncountered(final X509Certificate[] chain,
             final Collection<CertificateException> problems,
             final CertificateManager certificateManager) {
-        sslDialog = new SSLCertificateDialog(getController(), getController().getMainFrame(),
+        sslDialog = new SSLCertificateDialog(getController().getDialogManager(), getController().getIconManager(), getController().getMainFrame(),
                 new SSLCertificateDialogModel(chain, problems, certificateManager));
         sslDialog.display();
     }

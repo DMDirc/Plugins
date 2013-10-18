@@ -25,6 +25,7 @@ package com.dmdirc.addons.ui_swing;
 import com.dmdirc.addons.ui_swing.components.menubar.MenuBar;
 import com.dmdirc.addons.ui_swing.components.statusbar.SwingStatusBar;
 import com.dmdirc.addons.ui_swing.dialogs.DialogKeyListener;
+import com.dmdirc.addons.ui_swing.dialogs.DialogManager;
 import com.dmdirc.addons.ui_swing.framemanager.ctrltab.CtrlTabWindowManager;
 import com.dmdirc.addons.ui_swing.wizard.firstrun.FirstRunWizardExecutor;
 import com.dmdirc.ui.WindowManager;
@@ -43,6 +44,9 @@ import javax.inject.Singleton;
  */
 @Singleton
 public class SwingManager {
+
+    /** The dialog manager to use. */
+    private final DialogManager dialogManager;
 
     /** The event queue to use. */
     private final DMDircEventQueue eventQueue;
@@ -74,6 +78,7 @@ public class SwingManager {
     /**
      * Creates a new instance of {@link SwingManager}.
      *
+     * @param dialogManager Dialog manager to use
      * @param eventQueue The event queue to use.
      * @param windowFactory The window factory in use.
      * @param windowManager The window manager to listen on for events.
@@ -88,6 +93,7 @@ public class SwingManager {
      */
     @Inject
     public SwingManager(
+            final DialogManager dialogManager,
             final DMDircEventQueue eventQueue,
             final SwingWindowFactory windowFactory,
             final WindowManager windowManager,
@@ -99,6 +105,7 @@ public class SwingManager {
             final URLHandler urlHandler,
             final DialogKeyListener dialogKeyListener,
             final Provider<FirstRunWizardExecutor> firstRunExecutor) {
+        this.dialogManager = dialogManager;
         this.eventQueue = eventQueue;
         this.windowFactory = windowFactory;
         this.windowManager = windowManager;
@@ -146,6 +153,18 @@ public class SwingManager {
      */
     public FirstRunWizardExecutor getFirstRunExecutor() {
         return firstRunExecutor.get();
+    }
+
+    /**
+     * Retrieves the dialog manager to use.
+     *
+     * @return The dialog manager to use
+     *
+     * @deprecated Should be injected
+     */
+    @Deprecated
+    public DialogManager getDialogManager() {
+        return dialogManager;
     }
 
     /**

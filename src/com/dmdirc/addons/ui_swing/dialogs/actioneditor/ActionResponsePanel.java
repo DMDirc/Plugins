@@ -22,9 +22,10 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.actioneditor;
 
-import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.inputfields.TextAreaInputField;
+import com.dmdirc.interfaces.config.AggregateConfigProvider;
+import com.dmdirc.ui.IconManager;
 
 import java.util.TreeSet;
 
@@ -56,12 +57,13 @@ public class ActionResponsePanel extends JPanel {
     /**
      * Instantiates the panel.
      *
-     * @param controller Swing controller
+     * @param iconManager Icon manager
+     * @param config Config
      */
-    public ActionResponsePanel(final SwingController controller) {
+    public ActionResponsePanel(final IconManager iconManager, final AggregateConfigProvider config) {
         super();
 
-        initComponents(controller);
+        initComponents(iconManager, config);
         addListeners();
         layoutComponents();
     }
@@ -71,8 +73,8 @@ public class ActionResponsePanel extends JPanel {
      *
      * @param controller Swing controller
      */
-    private void initComponents(final SwingController controller) {
-        response = new TextAreaInputField(controller, "");
+    private void initComponents(final IconManager iconManager, final AggregateConfigProvider config) {
+        response = new TextAreaInputField(iconManager, config, "");
         scrollPane = new JScrollPane(response);
         response.setRows(4);
         //new SwingInputHandler(response, GlobalCommandParser
@@ -85,8 +87,7 @@ public class ActionResponsePanel extends JPanel {
 
         final TreeSet<String> formatters = new TreeSet<>(
                 String.CASE_INSENSITIVE_ORDER);
-        formatters.addAll(controller.getGlobalConfig().getOptions("formatter")
-                .keySet());
+        formatters.addAll(config.getOptions("formatter").keySet());
 
         for (final String format : formatters) {
             ((DefaultComboBoxModel) formatter.getModel()).addElement(format);
