@@ -23,7 +23,7 @@
 package com.dmdirc.addons.ui_swing.dialogs;
 
 import com.dmdirc.ServerManager;
-import com.dmdirc.addons.ui_swing.SwingController;
+import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
 import com.dmdirc.addons.ui_swing.components.validating.ValidatingJTextField;
@@ -32,11 +32,13 @@ import com.dmdirc.addons.ui_swing.components.vetoable.VetoableComboBoxModel;
 import com.dmdirc.addons.ui_swing.components.vetoable.VetoableComboBoxSelectionListener;
 import com.dmdirc.addons.ui_swing.dialogs.profiles.ProfileManagerDialog;
 import com.dmdirc.interfaces.Connection;
+import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProviderListener;
 import com.dmdirc.interfaces.config.IdentityController;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
+import com.dmdirc.ui.IconManager;
 import com.dmdirc.util.validators.PortValidator;
 import com.dmdirc.util.validators.ServerNameValidator;
 
@@ -63,7 +65,7 @@ import net.miginfocom.swing.MigLayout;
 /**
  * Dialog that allows the user to enter details of a new server to connect to.
  */
-public final class NewServerDialog extends StandardDialog implements
+public class NewServerDialog extends StandardDialog implements
         ActionListener, VetoableComboBoxSelectionListener, ConfigProviderListener {
 
     /** Serial version UID. */
@@ -72,6 +74,14 @@ public final class NewServerDialog extends StandardDialog implements
     private final IdentityController identityController;
     /** Server manager. */
     private final ServerManager serverManager;
+    /** Dialog manager. */
+    private final DialogManager dialogManager;
+    /** Icon manager. */
+    private final IconManager iconManager;
+    /** Config. */
+    private final AggregateConfigProvider config;
+    /** Main frame. */
+    private final MainFrame mainFrame;
     /** checkbox. */
     private JCheckBox newServerWindowCheck;
     /** checkbox. */
@@ -92,12 +102,23 @@ public final class NewServerDialog extends StandardDialog implements
     /**
      * Creates a new instance of the dialog.
      *
-     * @param controller Swing controller
+     * @param dialogManager Dialog manager
+     * @param mainFrame Main frame
+     * @param config Config
+     * @param iconManager Icon manager
+     * @param identityController Identity controller
+     * @param serverManager Server manager
      */
-    public NewServerDialog(final SwingController controller) {
-        super(controller, controller.getMainFrame(), ModalityType.MODELESS);
-        identityController = controller.getIdentityManager();
-        serverManager = controller.getServerManager();
+    public NewServerDialog(final DialogManager dialogManager, final MainFrame mainFrame,
+            final AggregateConfigProvider config, final IconManager iconManager,
+            final IdentityController identityController, final ServerManager serverManager) {
+        super(dialogManager, mainFrame, ModalityType.MODELESS);
+        this.identityController = identityController;
+        this.serverManager = serverManager;
+        this.mainFrame = mainFrame;
+        this.iconManager = iconManager;
+        this.dialogManager = dialogManager;
+        this.config = config;
 
         initComponents();
         layoutComponents();
@@ -119,19 +140,15 @@ public final class NewServerDialog extends StandardDialog implements
 
     /** Updates the values to defaults. */
     private void update() {
-        serverField.setText(getController().getGlobalConfig().getOption("general",
-                "server"));
-        portField.setText(getController().getGlobalConfig().getOption("general",
-                "port"));
-        passwordField.setText(getController().getGlobalConfig().getOption("general",
-                "password"));
+        serverField.setText(config.getOption("general", "server"));
+        portField.setText(config.getOption("general", "port"));
+        passwordField.setText(config.getOption("general", "password"));
         sslCheck.setSelected(false);
         newServerWindowCheck.setEnabled(false);
 
         serverField.requestFocusInWindow();
 
-        if (serverManager.numServers() == 0 ||
-                getController().getMainFrame().getActiveFrame() == null) {
+        if (serverManager.numServers() == 0 || mainFrame.getActiveFrame() == null) {
             newServerWindowCheck.setSelected(true);
             newServerWindowCheck.setEnabled(false);
         } else {
@@ -148,18 +165,15 @@ public final class NewServerDialog extends StandardDialog implements
         getCancelButton().addActionListener(this);
         getOkButton().addActionListener(this);
         editProfileButton.addActionListener(this);
-        ((VetoableComboBoxModel) identityField.getModel()).
-                addVetoableSelectionListener(this);
+        ((VetoableComboBoxModel) identityField.getModel()).addVetoableSelectionListener(this);
     }
 
     /**
      * Initialises the components in this dialog.
      */
     private void initComponents() {
-        serverField = new ValidatingJTextField(getController().getIconManager(),
-                new ServerNameValidator());
-        portField = new ValidatingJTextField(getController().getIconManager(),
-                new PortValidator());
+        serverField = new ValidatingJTextField(iconManager, new ServerNameValidator());
+        portField = new ValidatingJTextField(iconManager, new PortValidator());
         passwordField = new JPasswordField();
         newServerWindowCheck = new JCheckBox();
         newServerWindowCheck.setSelected(true);
@@ -187,8 +201,7 @@ public final class NewServerDialog extends StandardDialog implements
 
     /** Populates the profiles list. */
     public void populateProfiles() {
-        final List<ConfigProvider> profiles = getController().getIdentityManager()
-                .getProvidersByType("profile");
+        final List<ConfigProvider> profiles = identityController.getProvidersByType("profile");
         ((DefaultComboBoxModel) identityField.getModel()).removeAllElements();
         for (ConfigProvider profile : profiles) {
             ((MutableComboBoxModel<ConfigProvider>) identityField.getModel()).addElement(profile);
@@ -253,7 +266,7 @@ public final class NewServerDialog extends StandardDialog implements
             // Open in a new window?
             if (newServerWindowCheck.isSelected()
                     || serverManager.numServers() == 0
-                    || getController().getMainFrame().getActiveFrame() == null) {
+                    || mainFrame.getActiveFrame() == null) {
 
                 new LoggingSwingWorker<Void, Void>() {
                     @Override
@@ -263,8 +276,7 @@ public final class NewServerDialog extends StandardDialog implements
                     }
                 }.executeInExecutor();
             } else {
-                final Connection connection = getController().getMainFrame()
-                        .getActiveFrame().getContainer().getServer();
+                final Connection connection = mainFrame.getActiveFrame().getContainer().getServer();
 
                 new LoggingSwingWorker<Void, Void>() {
 
@@ -295,7 +307,7 @@ public final class NewServerDialog extends StandardDialog implements
         if (e.getSource() == getOkButton()) {
             save();
         } else if (e.getSource() == editProfileButton) {
-            getController().showDialog(ProfileManagerDialog.class);
+            dialogManager.showDialog(ProfileManagerDialog.class);
         } else if (e.getSource() == getCancelButton()) {
             dispose();
         }

@@ -23,15 +23,20 @@
 package com.dmdirc.addons.ui_swing.dialogs.channelsetting;
 
 import com.dmdirc.Channel;
+import com.dmdirc.addons.ui_swing.PrefsComponentFactory;
 import com.dmdirc.addons.ui_swing.SwingController;
+import com.dmdirc.addons.ui_swing.SwingWindowFactory;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.expandingsettings.SettingsPanel;
-import com.dmdirc.addons.ui_swing.components.frames.InputTextFrame;
 import com.dmdirc.addons.ui_swing.components.modes.ChannelModesPane;
+import com.dmdirc.addons.ui_swing.dialogs.DialogManager;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.config.prefs.PreferencesManager;
 import com.dmdirc.interfaces.config.ConfigProvider;
+import com.dmdirc.interfaces.config.IdentityFactory;
 import com.dmdirc.interfaces.ui.InputWindow;
+import com.dmdirc.plugins.ServiceManager;
+import com.dmdirc.ui.IconManager;
 
 import java.awt.Window;
 import java.awt.event.ActionEvent;
@@ -47,8 +52,7 @@ import net.miginfocom.swing.MigLayout;
 /**
  * Allows the user to modify channel settings (modes, topics, etc).
  */
-public final class ChannelSettingsDialog extends StandardDialog implements
-        ActionListener {
+public class ChannelSettingsDialog extends StandardDialog implements ActionListener {
 
     /** Serial version UID. */
     private static final long serialVersionUID = 8;
@@ -68,24 +72,52 @@ public final class ChannelSettingsDialog extends StandardDialog implements
     private TopicPane topicModesPane;
     /** List modes panel. */
     private ChannelListModesPane channelListModesPane;
+    /** Swing controller. */
+    private final SwingController controller;
+    /** Service manager. */
+    private final ServiceManager serviceManager;
+    /** Icon manager. */
+    private final IconManager iconManager;
+    /** Preferences Manager. */
+    private final PreferencesManager preferencesManager;
+    /** Preferences setting component factory. */
+    private final PrefsComponentFactory compFactory;
 
     /**
      * Creates a new instance of ChannelSettingsDialog.
      *
      * @param controller Swing controller
+     * @param dialogManager Dialog manager
+     * @param identityFactory Identity factory
+     * @param windowFactory Swing window factory
+     * @param iconManager Icon manager
+     * @param serviceManager Service manager
+     * @param preferencesManager Preferences Manager
+     * @param compFactory Preferences setting component factory
      * @param newChannel The channel object that we're editing settings for
      * @param parentWindow Parent window
      */
     public ChannelSettingsDialog(final SwingController controller,
+            final DialogManager dialogManager,
+            final IdentityFactory identityFactory,
+            final SwingWindowFactory windowFactory,
+            final IconManager iconManager,
+            final ServiceManager serviceManager,
+            final PreferencesManager preferencesManager,
+            final PrefsComponentFactory compFactory,
             final Channel newChannel, final Window parentWindow) {
-        super(controller, parentWindow, ModalityType.MODELESS);
+        super(dialogManager, parentWindow, ModalityType.MODELESS);
+
+        this.controller = controller;
+        this.iconManager = iconManager;
+        this.serviceManager = serviceManager;
+        this.preferencesManager = preferencesManager;
+        this.compFactory = compFactory;
 
         channel = newChannel;
-        identity = getController().getIdentityFactory().createChannelConfig(
-                channel.getServer().getNetwork(),
+        identity = identityFactory.createChannelConfig(channel.getServer().getNetwork(),
                 channel.getChannelInfo().getName());
-        this.channelWindow = (InputTextFrame) controller.getWindowFactory()
-                .getSwingWindow(newChannel);
+        this.channelWindow = (InputWindow) windowFactory.getSwingWindow(newChannel);
 
         initComponents();
         initListeners();
@@ -121,17 +153,16 @@ public final class ChannelSettingsDialog extends StandardDialog implements
 
     /** Initialises the Topic tab. */
     private void initTopicTab() {
-        topicModesPane = new TopicPane(channel, this, channelWindow);
+        topicModesPane = new TopicPane(channel, iconManager, serviceManager, this, channelWindow);
         tabbedPane.addTab("Topic", topicModesPane);
     }
 
     /** Initialises the IRC Settings tab. */
     private void initIrcTab() {
-        channelModesPane = new ChannelModesPane(getController(), channel);
+        channelModesPane = new ChannelModesPane(controller, channel);
 
         final JScrollPane channelModesSP = new JScrollPane(channelModesPane);
-        channelModesSP.setHorizontalScrollBarPolicy(
-                JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        channelModesSP.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         channelModesSP.setOpaque(UIUtilities.getTabbedPaneOpaque());
         channelModesSP.getViewport().setOpaque(UIUtilities.getTabbedPaneOpaque());
         channelModesSP.setBorder(null);
@@ -141,8 +172,7 @@ public final class ChannelSettingsDialog extends StandardDialog implements
 
     /** Initialises the IRC Settings tab. */
     private void initListModesTab() {
-        channelListModesPane = new ChannelListModesPane(getController(),
-                channel, this);
+        channelListModesPane = new ChannelListModesPane(controller, channel, this);
         tabbedPane.addTab("List Modes", channelListModesPane);
     }
 
@@ -155,11 +185,10 @@ public final class ChannelSettingsDialog extends StandardDialog implements
 
     /** Initialises the channel settings. */
     private void initSettingsPanel() {
-        channelSettingsPane = new SettingsPanel(getController(),
+        channelSettingsPane = new SettingsPanel(iconManager, compFactory,
                 "These settings are specific to this channel on this network,"
                 + " any settings specified here will overwrite global settings");
-        channelSettingsPane.addOption(PreferencesManager
-                .getPreferencesManager().getChannelSettings(
+        channelSettingsPane.addOption(preferencesManager.getChannelSettings(
                 channel.getConfigManager(), identity));
     }
 

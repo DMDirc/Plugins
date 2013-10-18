@@ -25,6 +25,8 @@ package com.dmdirc.addons.ui_swing.dialogs.channelsetting;
 import com.dmdirc.Channel;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.interfaces.ui.InputWindow;
+import com.dmdirc.plugins.ServiceManager;
+import com.dmdirc.ui.IconManager;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -34,7 +36,7 @@ import javax.swing.JPanel;
 import net.miginfocom.swing.MigLayout;
 
 /** Topic panel. */
-public final class TopicPane extends JPanel implements ActionListener {
+public class TopicPane extends JPanel implements ActionListener {
 
     /**
      * A version number for this class. It should be changed whenever the class
@@ -44,24 +46,27 @@ public final class TopicPane extends JPanel implements ActionListener {
     private static final long serialVersionUID = 2;
     /** Parent channel. */
     private final Channel channel;
+    /** Channel window. */
+    private final InputWindow channelWindow;
     /** Parent dialog. */
     private final ChannelSettingsDialog parent;
     /** Topic history panel. */
     private TopicHistoryPane topicHistoryPane;
     /** Topic display pane. */
     private TopicDisplayPane topicDisplayPane;
-    /** Channel window. */
-    private InputWindow channelWindow;
 
     /**
      * Creates a new instance of TopicModesPane.
      *
      * @param channel Parent channel
+     * @param iconManager Icon manager
+     * @param serviceManager Service manager
      * @param parent Parent dialog
      * @param channelWindow Channel window
      */
-    public TopicPane(final Channel channel,
-            final ChannelSettingsDialog parent, final InputWindow channelWindow) {
+    public TopicPane(final Channel channel, final IconManager iconManager,
+            final ServiceManager serviceManager, final ChannelSettingsDialog parent,
+            final InputWindow channelWindow) {
         super();
 
         this.setOpaque(UIUtilities.getTabbedPaneOpaque());
@@ -69,15 +74,15 @@ public final class TopicPane extends JPanel implements ActionListener {
         this.parent = parent;
         this.channelWindow = channelWindow;
 
-        update();
+        update(iconManager, serviceManager);
     }
 
     /** Updates the panel. */
-    public void update() {
+    private void update(final IconManager iconManager, final ServiceManager serviceManager) {
         setVisible(false);
 
         removeAll();
-        initTopicsPanel();
+        initTopicsPanel(iconManager, serviceManager);
         layoutComponents();
 
         topicHistoryPane.addActionListener(this);
@@ -86,8 +91,10 @@ public final class TopicPane extends JPanel implements ActionListener {
     }
 
     /** Initialises the topic panel. */
-    private void initTopicsPanel() {
-        topicDisplayPane = new TopicDisplayPane(channel, parent, channelWindow);
+    private void initTopicsPanel(final IconManager iconManager,
+            final ServiceManager serviceManager) {
+        topicDisplayPane = new TopicDisplayPane(channel, iconManager, serviceManager, parent,
+                channelWindow);
         topicHistoryPane = new TopicHistoryPane(channel);
     }
 

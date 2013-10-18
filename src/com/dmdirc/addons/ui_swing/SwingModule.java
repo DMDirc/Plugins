@@ -31,9 +31,12 @@ import com.dmdirc.addons.ui_swing.commands.Input;
 import com.dmdirc.addons.ui_swing.commands.PopInCommand;
 import com.dmdirc.addons.ui_swing.commands.PopOutCommand;
 import com.dmdirc.addons.ui_swing.commands.ServerSettings;
+import com.dmdirc.addons.ui_swing.dialogs.DialogManager;
 import com.dmdirc.addons.ui_swing.wizard.firstrun.SwingFirstRunWizard;
+import com.dmdirc.commandline.CommandLineOptionsModule;
 import com.dmdirc.interfaces.LifecycleController;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
+import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.core.components.StatusBarManager;
@@ -90,6 +93,7 @@ public class SwingModule {
     /**
      * Gets the main DMDirc window.
      *
+     * @param dialogManager Dialog manager
      * @param swingController The controller that will own the frame.
      * @param windowFactory The window factory to use to create and listen for windows.
      * @param lifecycleController The controller to use to quit the application.
@@ -102,6 +106,7 @@ public class SwingModule {
     @Provides
     @Singleton
     public MainFrame getMainFrame(
+            final DialogManager dialogManager,
             final SwingController swingController,
             final SwingWindowFactory windowFactory,
             final LifecycleController lifecycleController,
@@ -113,7 +118,7 @@ public class SwingModule {
             /** {@inheritDoc} */
             @Override
             public MainFrame call() {
-                return new MainFrame(
+                return new MainFrame(dialogManager,
                         swingController,
                         windowFactory,
                         lifecycleController,
@@ -148,7 +153,9 @@ public class SwingModule {
      * Gets a first run wizard to display.
      *
      * @param mainFrame The main frame, which will be the parent window.
-     * @param swingController The controller that owns the wizard.
+     * @param directory Actions directory
+     * @param config Config
+     * @param dialogManager Dialog manager
      * @param pluginExtractor The extractor to use to extract plugins.
      * @param globalConfig The config to read settings from.
      * @param urlBuilder The URL builder to use to build icons.
@@ -157,14 +164,21 @@ public class SwingModule {
     @Provides
     public SwingFirstRunWizard getFirstRunWizard(
             final MainFrame mainFrame,
-            final SwingController swingController,
+            @CommandLineOptionsModule.Directory(CommandLineOptionsModule.DirectoryType.ACTIONS) final String directory,
+            @ClientModule.UserConfig final ConfigProvider config,
+            final DialogManager dialogManager,
             final CorePluginExtractor pluginExtractor,
             @GlobalConfig final AggregateConfigProvider globalConfig,
             final URLBuilder urlBuilder) {
         return new SwingFirstRunWizard(
-                mainFrame, swingController, pluginExtractor,
+                mainFrame, config, dialogManager, directory, pluginExtractor,
                 // TODO: Allow global icon manager to be injected.
                 new IconManager(globalConfig, urlBuilder));
+    }
+
+    @Provides
+    public DialogManager getDialogManager(final SwingController controller) {
+        return new DialogManager(controller);
     }
 
 }

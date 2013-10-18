@@ -22,10 +22,10 @@
 
 package com.dmdirc.addons.ui_swing.components.colours;
 
-import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.messages.ColourManager;
 
+import java.awt.Component;
 import java.awt.Window;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -36,31 +36,35 @@ import javax.swing.JDialog;
 /**
  * Colour picker dialog.
  */
-public class ColourPickerDialog extends StandardDialog {
+public class ColourPickerDialog extends JDialog {
 
     /** Serial version UID. */
     private static final long serialVersionUID = 1;
     /** Colour chooser panel. */
     private final ColourPickerPanel colourChooser;
+    /** Object to center dialog on. */
+    private final Component centerObject;
 
     /**
      * Creates a new instance of ColourPickerDialog.
      *
+     * @param centerObject Object to center dialog on
      * @param colourManager The colour manager to use to parse colours.
      * @param iconManager Icon manager
      * @param showIRC show irc colours
      * @param showHex show hex colours
      */
-    public ColourPickerDialog(
+    public ColourPickerDialog(final Component centerObject,
             final ColourManager colourManager,
             final IconManager iconManager,
             final boolean showIRC, final boolean showHex) {
-        this(colourManager, iconManager, showIRC, showHex, null);
+        this(centerObject, colourManager, iconManager, showIRC, showHex, null);
     }
 
     /**
      * Creates a new instance of ColourPickerDialog.
      *
+     * @param centerObject Object to center dialog on
      * @param colourManager The colour manager to use to parse colours.
      * @param iconManager Icon manager
      * @param showIRC show irc colours
@@ -69,10 +73,11 @@ public class ColourPickerDialog extends StandardDialog {
      *
      * @since 0.6
      */
-    public ColourPickerDialog(
+    public ColourPickerDialog(final Component centerObject,
             final ColourManager colourManager, final IconManager iconManager,
             final boolean showIRC, final boolean showHex, final Window window) {
-        super(null, window, ModalityType.MODELESS);
+        super(window, ModalityType.MODELESS);
+        this.centerObject = centerObject;
         setIconImage(iconManager.getImage("icon"));
 
         colourChooser = new ColourPickerPanel(colourManager, showIRC, showHex);
@@ -114,8 +119,11 @@ public class ColourPickerDialog extends StandardDialog {
 
     /** {@inheritDoc} */
     @Override
-    public void display() {
-        super.display();
-        setSize(colourChooser.getPreferredSize());
+    public void setVisible(final boolean visible) {
+        super.setVisible(visible);
+        if (visible) {
+            setSize(colourChooser.getPreferredSize());
+            setLocationRelativeTo(centerObject);
+        }
     }
 }

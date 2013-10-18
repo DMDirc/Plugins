@@ -22,12 +22,14 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.updater;
 
-import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
+import com.dmdirc.addons.ui_swing.dialogs.DialogManager;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
+import com.dmdirc.interfaces.LifecycleController;
 import com.dmdirc.updater.components.LauncherComponent;
 
 import java.awt.Dialog.ModalityType;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -42,6 +44,8 @@ public class SwingRestartDialog extends StandardDialog implements ActionListener
 
     /** Serial version UID. */
     private static final long serialVersionUID = -7446499281414990074L;
+    /** Life cycle controller. */
+    private final LifecycleController lifecycleController;
     /** Informational label. */
     private TextLabel info;
     /** Info text. */
@@ -50,22 +54,28 @@ public class SwingRestartDialog extends StandardDialog implements ActionListener
     /**
      * Dialog to restart the client.
      *
-     * @param controller Swing controller
+     * @param dialogManager Dialog manager
+     * @param parentWindow Parent window
+     * @param lifecycleController Life cycle controller, for restarting client
      */
-    public SwingRestartDialog(final SwingController controller) {
-        this(controller, "finish updating");
+    public SwingRestartDialog(final DialogManager dialogManager, final Window parentWindow,
+            final LifecycleController lifecycleController) {
+        this(dialogManager, parentWindow, lifecycleController, "finish updating");
     }
 
     /**
      * Dialog to restart the client.
      *
-     * @param controller Swing controller
+     * @param dialogManager Dialog manager
+     * @param parentWindow Parent window
+     * @param lifecycleController Life cycle controller, for restarting client
      * @param cause Reason for restart
      */
-    public SwingRestartDialog(final SwingController controller,
-            final String cause) {
-        super(controller, ModalityType.APPLICATION_MODAL);
+    public SwingRestartDialog(final DialogManager dialogManager, final Window parentWindow,
+            final LifecycleController lifecycleController, final String cause) {
+        super(dialogManager, parentWindow, ModalityType.APPLICATION_MODAL);
         this.cause = cause;
+        this.lifecycleController = lifecycleController;
 
         setTitle("Restart needed");
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -96,9 +106,8 @@ public class SwingRestartDialog extends StandardDialog implements ActionListener
     }
 
     /** Layout Components. */
-    public void layoutComponents() {
-        setLayout(new MigLayout("fill, wrap 2, wmax " +
-                getMainFrame().getSize().getWidth() + ", pack"));
+    private void layoutComponents() {
+        setLayout(new MigLayout("fill, wrap 2, wmax " + getOwner().getSize().getWidth() + ", pack"));
 
         add(info, "grow, pushx, span 2");
         add(getLeftButton(), "split, right");
@@ -109,7 +118,7 @@ public class SwingRestartDialog extends StandardDialog implements ActionListener
     @Override
     public void validate() {
         super.validate();
-        setLocationRelativeTo(getMainFrame());
+        setLocationRelativeTo(getOwner());
     }
 
     /**
@@ -120,7 +129,7 @@ public class SwingRestartDialog extends StandardDialog implements ActionListener
     @Override
     public void actionPerformed(final ActionEvent e) {
         if (getOkButton().equals(e.getSource())) {
-            getMainFrame().quit(42);
+            lifecycleController.quit(42);
         }
         dispose();
     }

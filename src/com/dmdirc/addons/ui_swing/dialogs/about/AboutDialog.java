@@ -23,8 +23,10 @@
 package com.dmdirc.addons.ui_swing.dialogs.about;
 
 import com.dmdirc.addons.ui_swing.SwingController;
+import com.dmdirc.addons.ui_swing.dialogs.DialogManager;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -39,8 +41,7 @@ import net.miginfocom.swing.MigLayout;
 /**
  * About dialog.
  */
-public final class AboutDialog extends StandardDialog implements
-        ActionListener, ChangeListener {
+public class AboutDialog extends StandardDialog implements ActionListener, ChangeListener {
 
     /** Serial version UID. */
     private static final long serialVersionUID = 5;
@@ -53,16 +54,19 @@ public final class AboutDialog extends StandardDialog implements
     /**
      * Creates a new instance of AboutDialog.
      *
-     * @param controller Parent controller
+     * @param controller Swing controller
+     * @param dialogManager Dialog manager
+     * @param parentWindow Parent window
      */
-    public AboutDialog(final SwingController controller) {
-        super(controller, ModalityType.MODELESS);
+    public AboutDialog(final DialogManager dialogManager, final Window parentWindow,
+            final SwingController controller) {
+        super(dialogManager, parentWindow, ModalityType.MODELESS);
 
-        initComponents();
+        initComponents(controller);
     }
 
     /** Initialises the main UI components. */
-    private void initComponents() {
+    private void initComponents(final SwingController controller) {
         tabbedPane = new JTabbedPane();
 
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
@@ -74,12 +78,12 @@ public final class AboutDialog extends StandardDialog implements
         getOkButton().addActionListener(this);
         getCancelButton().addActionListener(this);
 
-        cp = new CreditsPanel(getController().getUrlHandler());
+        cp = new CreditsPanel(controller.getUrlHandler());
 
-        tabbedPane.add("About", new AboutPanel(getController().getUrlHandler()));
+        tabbedPane.add("About", new AboutPanel(controller.getUrlHandler()));
         tabbedPane.add("Credits", cp);
-        tabbedPane.add("Licences", new LicencesPanel(getController()));
-        tabbedPane.add("Information", new InfoPanel(getController()));
+        tabbedPane.add("Licences", new LicencesPanel(controller));
+        tabbedPane.add("Information", new InfoPanel(controller));
         tabbedPane.addChangeListener(this);
 
         getContentPane().setLayout(new MigLayout("ins rel, wrap 1, fill, " +

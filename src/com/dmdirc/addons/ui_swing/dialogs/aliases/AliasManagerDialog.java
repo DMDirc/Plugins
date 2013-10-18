@@ -26,6 +26,7 @@ import com.dmdirc.actions.Action;
 import com.dmdirc.actions.ActionCondition;
 import com.dmdirc.actions.ActionFactory;
 import com.dmdirc.actions.ActionManager;
+import com.dmdirc.actions.ActionSubstitutorFactory;
 import com.dmdirc.actions.CoreActionComparison;
 import com.dmdirc.actions.wrappers.Alias;
 import com.dmdirc.actions.wrappers.AliasWrapper;
@@ -33,11 +34,13 @@ import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.PackingTable;
 import com.dmdirc.addons.ui_swing.components.renderers.ActionConditionCellRenderer;
 import com.dmdirc.addons.ui_swing.components.renderers.ArrayCellRenderer;
+import com.dmdirc.addons.ui_swing.dialogs.DialogManager;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
 import com.dmdirc.addons.ui_swing.dialogs.StringArrayComparator;
 
 import java.awt.Dimension;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -69,6 +72,12 @@ public class AliasManagerDialog extends StandardDialog implements ActionListener
     private final ActionFactory actionFactory;
     /** Alias wrapper to retrieve aliases from. */
     private final AliasWrapper aliasWrapper;
+    /** Swing controller. */
+    private final SwingController controller;
+    /** Actions substitutor factory. */
+    private final ActionSubstitutorFactory substitutorFactory;
+    /** Dialog manager. */
+    private final DialogManager dialogManager;
     /** Table scrollpane. */
     private JScrollPane scrollPane;
     /** Error table. */
@@ -92,10 +101,17 @@ public class AliasManagerDialog extends StandardDialog implements ActionListener
      * Creates a new instance of ErrorListDialog.
      *
      * @param controller Swing controller
+     * @param parentWindow Parent window
+     * @param dialogManager Dialog manager
+     * @param substitutorFactory Actions substitution factory
      */
-    public AliasManagerDialog(final SwingController controller) {
-        super(controller, ModalityType.MODELESS);
+    public AliasManagerDialog(final SwingController controller, final Window parentWindow,
+            final DialogManager dialogManager, final ActionSubstitutorFactory substitutorFactory) {
+        super(dialogManager, parentWindow, ModalityType.MODELESS);
 
+        this.controller = controller;
+        this.substitutorFactory = substitutorFactory;
+        this.dialogManager = dialogManager;
         this.aliasWrapper = controller.getAliasWrapper();
         this.actionFactory = controller.getActionFactory();
 
@@ -158,8 +174,8 @@ public class AliasManagerDialog extends StandardDialog implements ActionListener
 
         scrollPane.setViewportView(table);
 
-        aliasDetails = new AliasPanel(getController());
-        subsPanel = new AliasSubstitutionsPanel(getController().getActionSubstitutorFactory());
+        aliasDetails = new AliasPanel(controller);
+        subsPanel = new AliasSubstitutionsPanel(substitutorFactory);
         subsPanel.setVisible(false);
         showSubs = new JButton("Show Substitutions");
     }
@@ -281,7 +297,7 @@ public class AliasManagerDialog extends StandardDialog implements ActionListener
             }
             if (checkForDuplicates()) {
                 final StandardQuestionDialog dialog = new StandardQuestionDialog(
-                        getController(), this, ModalityType.APPLICATION_MODAL,
+                        dialogManager, this, ModalityType.APPLICATION_MODAL,
                         "Duplicate Aliases", "There are duplicate aliases in "
                         + "the table, these need to be removed before saving") {
 

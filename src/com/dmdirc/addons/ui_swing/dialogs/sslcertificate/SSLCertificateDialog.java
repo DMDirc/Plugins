@@ -22,8 +22,8 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.sslcertificate;
 
-import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
+import com.dmdirc.addons.ui_swing.dialogs.DialogManager;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.core.dialogs.sslcertificate.SSLCertificateDialogModel;
@@ -50,7 +50,7 @@ public class SSLCertificateDialog extends StandardDialog implements ActionListen
     /** Icon manager. */
     private final IconManager iconManager;
     /** SSL Certificate dialog model. */
-    private SSLCertificateDialogModel model;
+    private final SSLCertificateDialogModel model;
     /** Panel listing actions that can be taken on a certificate. */
     private ActionsPanel actions;
     /** Panel showing the certificate chain of a certificate. */
@@ -67,16 +67,17 @@ public class SSLCertificateDialog extends StandardDialog implements ActionListen
     /**
      * Creates a new instance of ActionsManagerDialog.
      *
-     * @param controller Swing controller
+     * @param dialogManager Dialog manager
+     * @param iconManager Icon manager
      * @param parent Parent window for the dialog
      * @param model dialog model
      */
-    public SSLCertificateDialog(final SwingController controller,
+    public SSLCertificateDialog(final DialogManager dialogManager, final IconManager iconManager,
             final Window parent, final SSLCertificateDialogModel model) {
-        super(controller, parent, ModalityType.MODELESS);
+        super(dialogManager, parent, ModalityType.MODELESS);
 
         this.model = model;
-        this.iconManager = controller.getIconManager();
+        this.iconManager = iconManager;
         this.selectedIndex = 0;
 
         initComponents();

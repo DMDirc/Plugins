@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.dialogs;
 
-import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.addons.ui_swing.components.validating.ValidatingJTextField;
 import com.dmdirc.config.ConfigManager;
@@ -65,16 +64,16 @@ public abstract class StandardInputDialog extends StandardDialog {
     /**
      * Instantiates a new standard input dialog.
      *
-     * @param controller Swing controller
+     * @param dialogManager Dialog manager
      * @param owner Dialog owner
      * @param modal modality type
      * @param title Dialog title
      * @param message Dialog message
      */
-    public StandardInputDialog(final SwingController controller,
+    public StandardInputDialog(final DialogManager dialogManager,
             final Window owner, final ModalityType modal,
             final String title, final String message) {
-        this(controller, owner, modal, title, message, new Validator<String>() {
+        this(dialogManager, owner, modal, title, message, new Validator<String>() {
 
             /** {@inheritDoc} */
             @Override
@@ -87,18 +86,18 @@ public abstract class StandardInputDialog extends StandardDialog {
     /**
      * Instantiates a new standard input dialog.
      *
-     * @param controller Swing controller
+     * @param dialogManager Dialog manager
      * @param owner Dialog owner
      * @param modal modality type
      * @param validator Textfield validator
      * @param title Dialog title
      * @param message Dialog message
      */
-    public StandardInputDialog(final SwingController controller,
+    public StandardInputDialog(final DialogManager dialogManager,
             final Window owner, final ModalityType modal,
             final String title, final String message,
             final Validator<String> validator) {
-        super(controller, owner, modal);
+        super(dialogManager, owner, modal);
 
         this.validator = validator;
         this.message = message;
@@ -128,11 +127,7 @@ public abstract class StandardInputDialog extends StandardDialog {
      */
     private void initComponents() {
         orderButtons(new JButton(), new JButton());
-        if (getController() == null) {
-            textField = new ValidatingJTextField(new IconManager(new ConfigManager("", "", "", ""), URLBuilder.getInstance()), validator);
-        } else {
-            textField = new ValidatingJTextField(getController().getIconManager(), validator);
-        }
+        textField = new ValidatingJTextField(new IconManager(new ConfigManager("", "", "", ""), URLBuilder.getInstance()), validator);
         blurb = new TextLabel(message);
         validateText();
     }

@@ -24,8 +24,9 @@ package com.dmdirc.addons.ui_swing.components.performpanel;
 
 import com.dmdirc.actions.wrappers.PerformWrapper;
 import com.dmdirc.actions.wrappers.PerformWrapper.PerformDescription;
-import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.inputfields.TextAreaInputField;
+import com.dmdirc.interfaces.config.AggregateConfigProvider;
+import com.dmdirc.ui.IconManager;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -64,13 +65,15 @@ public class PerformPanel extends JPanel {
      *
      * By default this panel displays a blank text area.
      *
-     * @param controller Swing controller
+     * @param iconManager Icon manager
+     * @param config Config to read settings from
      * @param performWrapper Perform wrapper to read/write performs to.
      */
     public PerformPanel(
-            final SwingController controller,
+            final IconManager iconManager,
+            final AggregateConfigProvider config,
             final PerformWrapper performWrapper) {
-        this(controller, performWrapper, Collections.<PerformDescription>emptyList());
+        this(iconManager, config, performWrapper, Collections.<PerformDescription>emptyList());
     }
 
     /**
@@ -79,12 +82,14 @@ public class PerformPanel extends JPanel {
      *
      * By default this panel displays a blank text area.
      *
-     * @param controller Swing controller
+     * @param iconManager Icon manager
+     * @param config Config to read settings from
      * @param performWrapper Perform wrapper to read/write performs to.
      * @param performs Collection of PerformDescriptions to initialise
      */
     public PerformPanel(
-            final SwingController controller,
+            final IconManager iconManager,
+            final AggregateConfigProvider config,
             final PerformWrapper performWrapper,
             final Collection<PerformDescription> performs) {
         super();
@@ -95,7 +100,7 @@ public class PerformPanel extends JPanel {
             addPerform(perform);
         }
         setLayout(new MigLayout("ins 0, fill"));
-        performSpace = new TextAreaInputField(controller, "");
+        performSpace = new TextAreaInputField(iconManager, config, "");
         add(new JScrollPane(performSpace), "grow, push");
     }
 
