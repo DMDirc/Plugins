@@ -561,7 +561,7 @@ public class MainFrame extends JFrame implements WindowListener,
                     break;
                 case "framemanager":
                 case "framemanagerPosition":
-                    UIUtilities.invokeLater(new Runnable() {
+                    UIUtilities.invokeAndWait(new Runnable() {
 
                         /** {@inheritDoc} */
                         @Override
