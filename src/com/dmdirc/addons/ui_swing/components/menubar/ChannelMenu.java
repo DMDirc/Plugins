@@ -134,14 +134,14 @@ public class ChannelMenu extends JMenu implements ActionListener,
         final FrameContainer activeWindow = activeFrame == null ? null
                 : activeFrame.getContainer();
 
-        join.setEnabled(activeWindow != null && activeWindow.getServer()
-                != null && activeWindow.getServer().getState()
+        join.setEnabled(activeWindow != null && activeWindow.getConnection()
+                != null && activeWindow.getConnection().getState()
                 == ServerState.CONNECTED);
         csd.setEnabled(activeWindow instanceof Channel && activeWindow
-                .getServer() != null && activeWindow.getServer().getState()
+                .getConnection() != null && activeWindow.getConnection().getState()
                 == ServerState.CONNECTED);
-        list.setEnabled(activeWindow != null && activeWindow.getServer() != null
-                && activeWindow.getServer().getState() == ServerState.CONNECTED);
+        list.setEnabled(activeWindow != null && activeWindow.getConnection() != null
+                && activeWindow.getConnection().getState() == ServerState.CONNECTED);
     }
 
     /** {@inheritDoc} */

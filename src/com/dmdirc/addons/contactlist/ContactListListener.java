@@ -27,10 +27,10 @@ import com.dmdirc.FrameContainer;
 import com.dmdirc.Query;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionType;
-import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.interfaces.ActionListener;
 import com.dmdirc.interfaces.FrameCloseListener;
 import com.dmdirc.interfaces.NicklistListener;
+import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.parser.interfaces.ChannelClientInfo;
 
 import java.util.Collection;
@@ -88,7 +88,7 @@ public class ContactListListener implements NicklistListener,
     /** {@inheritDoc} */
     @Override
     public void clientAdded(final ChannelClientInfo client) {
-        final Query query = channel.getServer().getQuery(client.getClient().getNickname(), false);
+        final Query query = channel.getConnection().getQuery(client.getClient().getNickname(), false);
 
         query.setIcon("query-" + client.getClient().getAwayState().name().toLowerCase());
     }

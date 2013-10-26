@@ -22,9 +22,9 @@
 
 package com.dmdirc.addons.dcc;
 
-import com.dmdirc.Server;
 import com.dmdirc.WritableFrameContainer;
 import com.dmdirc.commandparser.parsers.CommandParser;
+import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.messages.MessageSinkManager;
 import com.dmdirc.ui.input.TabCompleter;
@@ -72,7 +72,7 @@ public abstract class DCCFrameContainer extends WritableFrameContainer {
 
     /** {@inheritDoc} */
     @Override
-    public Server getServer() { //NOPMD - server will always be null
+    public Connection getConnection() { //NOPMD - server will always be null
         return null;
     }
 

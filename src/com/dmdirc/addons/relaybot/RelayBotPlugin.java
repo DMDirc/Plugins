@@ -142,7 +142,7 @@ public class RelayBotPlugin extends BasePlugin implements ActionListener, Config
             removeHandler((Channel) arguments[0]);
         } else if (type == CoreActionType.CHANNEL_QUIT) {
             final Channel chan = (Channel) arguments[0];
-            final Parser parser = chan.getServer().getParser();
+            final Parser parser = chan.getConnection().getParser();
             final ChannelClientInfo cci = (ChannelClientInfo) arguments[1];
             final String channelName = parser.getStringConverter().toLowerCase(chan.getName());
 
@@ -220,7 +220,7 @@ public class RelayBotPlugin extends BasePlugin implements ActionListener, Config
             if (handlers.containsKey(channel)) {
                 return handlers.get(channel);
             } else {
-                final String channelName = channel.getServer().getParser().getStringConverter().toLowerCase(channel.getName());
+                final String channelName = channel.getConnection().getParser().getStringConverter().toLowerCase(channel.getName());
                 if (identityController.getGlobalConfiguration().hasOptionString(getDomain(), channelName)) {
                     final RelayChannelHandler handler = new RelayChannelHandler(this, identityController, channel);
                     handlers.put(channel, handler);

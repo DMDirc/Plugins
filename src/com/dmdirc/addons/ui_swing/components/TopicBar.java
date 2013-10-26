@@ -332,12 +332,12 @@ public class TopicBar extends JComponent implements ActionListener,
                 return;
             }
             if (url.charAt(0) == '#') {
-                channel.getServer().join(new ChannelJoinRequest(url));
+                channel.getConnection().join(new ChannelJoinRequest(url));
             } else if (url.contains("://")) {
                 controller.getUrlHandler().launchApp(e.getDescription());
             } else {
                 controller.requestWindowFocus(controller.getWindowFactory()
-                        .getSwingWindow(channel.getServer().getQuery(url)));
+                        .getSwingWindow(channel.getConnection().getQuery(url)));
             }
         }
     }

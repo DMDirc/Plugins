@@ -23,7 +23,7 @@
 package com.dmdirc.addons.logging;
 
 import com.dmdirc.FrameContainer;
-import com.dmdirc.Server;
+import com.dmdirc.interfaces.Connection;
 import com.dmdirc.ui.core.components.WindowComponent;
 import com.dmdirc.util.io.ReverseFileReader;
 
@@ -69,8 +69,8 @@ public class HistoryWindow extends FrameContainer {
 
     /** {@inheritDoc} */
     @Override
-    public Server getServer() {
-        return getParent() == null ? null : getParent().getServer();
+    public Connection getConnection() {
+        return getParent() == null ? null : getParent().getConnection();
     }
 
 }

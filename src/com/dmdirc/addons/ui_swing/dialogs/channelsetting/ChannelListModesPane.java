@@ -126,7 +126,7 @@ public final class ChannelListModesPane extends JPanel implements ActionListener
         }
         listModesPanel = new JScrollPane();
         listModesPanels = new ArrayList<>();
-        listModesArray = channel.getServer().getParser().getListChannelModes().
+        listModesArray = channel.getConnection().getParser().getListChannelModes().
                 toCharArray();
         existingListItems = new MapList<>();
         listModesMenu = new JComboBox(new DefaultComboBoxModel());
@@ -375,7 +375,7 @@ public final class ChannelListModesPane extends JPanel implements ActionListener
 
         final int selected = listModesMenu.getSelectedIndex();
         final int current = listModesPanels.get(selected).getModel().getSize();
-        final int maxModes = channel.getServer().getParser().
+        final int maxModes = channel.getConnection().getParser().
                 getMaxListModes(listModesArray[selected]);
 
         if (maxModes == -1) {

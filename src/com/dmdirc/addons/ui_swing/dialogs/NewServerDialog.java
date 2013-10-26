@@ -276,7 +276,7 @@ public class NewServerDialog extends StandardDialog implements
                     }
                 }.executeInExecutor();
             } else {
-                final Connection connection = mainFrame.getActiveFrame().getContainer().getServer();
+                final Connection connection = mainFrame.getActiveFrame().getContainer().getConnection();
 
                 new LoggingSwingWorker<Void, Void>() {
 

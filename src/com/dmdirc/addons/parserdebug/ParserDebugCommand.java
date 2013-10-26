@@ -23,6 +23,7 @@
 package com.dmdirc.addons.parserdebug;
 
 import com.dmdirc.FrameContainer;
+import com.dmdirc.Server;
 import com.dmdirc.commandparser.BaseCommandInfo;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandType;
@@ -98,8 +99,8 @@ public final class ParserDebugCommand extends Command {
             try {
                 parser.getCallbackManager().addCallback(DebugInfoListener.class, myPlugin);
                 final DebugWindow window = new DebugWindow(myPlugin,
-                        "Parser Debug", parser, origin.getServer());
-                windowManager.addWindow(origin.getServer(), window);
+                        "Parser Debug", parser, (Server) origin.getConnection());
+                windowManager.addWindow((Server) origin.getConnection(), window);
                 myPlugin.registeredParsers.put(parser, window);
                 sendLine(origin, isSilent, FORMAT_OUTPUT, "Adding callback ok");
                 window.addLine("======================", true);

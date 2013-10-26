@@ -63,13 +63,13 @@ public class ServerState extends DebugCommand {
     @Override
     public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
-        if (origin.getServer() == null) {
+        if (origin.getConnection() == null) {
             sendLine(origin, args.isSilent(), FORMAT_ERROR,
                     "This window isn't connected to a server");
         } else {
-            final Connection server = origin.getServer();
+            final Connection connection = origin.getConnection();
             sendLine(origin, args.isSilent(), FORMAT_OUTPUT,
-                    server.getStatus().getTransitionHistory());
+                    connection.getStatus().getTransitionHistory());
         }
     }
 

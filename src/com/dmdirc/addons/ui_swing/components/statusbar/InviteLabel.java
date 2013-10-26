@@ -215,7 +215,7 @@ public class InviteLabel extends StatusbarPopupPanel<JLabel> implements
     /** {@inheritDoc} */
     @Override
     public void selectionChanged(final TextFrame window) {
-        activeServer = window == null ? null : window.getContainer().getServer();
+        activeServer = window == null ? null : (Server) window.getContainer().getConnection();
         update();
     }
 }

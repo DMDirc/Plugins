@@ -61,11 +61,11 @@ public class ShowRaw extends DebugCommand {
     @Override
     public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
-        if (origin == null || origin.getServer() == null) {
+        if (origin == null || origin.getConnection() == null) {
             sendLine(origin, args.isSilent(), FORMAT_ERROR,
                     "Cannot show raw window here.");
         } else {
-            origin.getServer().addRaw();
+            origin.getConnection().addRaw();
         }
     }
 

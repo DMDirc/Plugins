@@ -205,8 +205,8 @@ public final class WindowStatusPlugin extends BasePlugin
             final Query frame = (Query) current;
 
             textString.append(frame.getHost());
-            if (showname && frame.getServer().getParser() != null) {
-                final ClientInfo client = frame.getServer().getParser()
+            if (showname && frame.getConnection().getParser() != null) {
+                final ClientInfo client = frame.getConnection().getParser()
                         .getClient(frame.getHost());
                 final String realname = client.getRealname();
                 if (realname != null && !realname.isEmpty()) {

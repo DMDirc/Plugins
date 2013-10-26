@@ -86,14 +86,14 @@ public class NickColourPlugin extends BasePlugin implements ActionListener, Conf
         if (type.equals(CoreActionType.CHANNEL_GOTNAMES)) {
             final ChannelInfo chanInfo =
                     ((Channel) arguments[0]).getChannelInfo();
-            final String network = ((Channel) arguments[0]).getServer().
+            final String network = ((Channel) arguments[0]).getConnection().
                     getNetwork();
 
             for (ChannelClientInfo client : chanInfo.getChannelClients()) {
                 colourClient(network, client);
             }
         } else if (type.equals(CoreActionType.CHANNEL_JOIN)) {
-            final String network = ((Channel) arguments[0]).getServer().
+            final String network = ((Channel) arguments[0]).getConnection().
                     getNetwork();
 
             colourClient(network, (ChannelClientInfo) arguments[1]);
