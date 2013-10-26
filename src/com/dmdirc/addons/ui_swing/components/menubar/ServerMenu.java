@@ -142,12 +142,12 @@ public class ServerMenu extends JMenu implements ActionListener,
         final FrameContainer activeWindow = activeFrame == null ? null
                 : activeFrame.getContainer();
 
-        ssd.setEnabled(activeWindow != null && activeWindow
-                .getConnection() != null && activeWindow.getConnection().getState()
-                == ServerState.CONNECTED);
-        disconnect.setEnabled(activeWindow != null && activeWindow
-                .getConnection() != null && activeWindow.getConnection().getState()
-                == ServerState.CONNECTED);
+        final boolean connected = activeWindow != null
+                && activeWindow.getConnection() != null
+                && activeWindow.getConnection().getState() == ServerState.CONNECTED;
+
+        ssd.setEnabled(connected);
+        disconnect.setEnabled(connected);
     }
 
     /** {@inheritDoc} */
