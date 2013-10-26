@@ -23,8 +23,8 @@
 package com.dmdirc.addons.redirect;
 
 import com.dmdirc.MessageTarget;
-import com.dmdirc.Server;
 import com.dmdirc.WritableFrameContainer;
+import com.dmdirc.interfaces.Connection;
 import com.dmdirc.messages.MessageSinkManager;
 import com.dmdirc.ui.input.TabCompleter;
 import com.dmdirc.ui.messages.Formatter;
@@ -112,8 +112,8 @@ public class FakeWriteableFrameContainer extends WritableFrameContainer {
 
     /** {@inheritDoc} */
     @Override
-    public Server getServer() {
-        return target.getServer();
+    public Connection getConnection() {
+        return target.getConnection();
     }
 
     /** {@inheritDoc} */

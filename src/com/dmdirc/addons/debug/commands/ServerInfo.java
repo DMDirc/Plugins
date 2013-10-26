@@ -63,25 +63,25 @@ public class ServerInfo extends DebugCommand {
     @Override
     public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
-        if (origin.getServer() == null) {
+        if (origin.getConnection() == null) {
             sendLine(origin, args.isSilent(), FORMAT_ERROR,
                     "This window isn't connected to a server");
         } else {
-            final Connection server = origin.getServer();
+            final Connection connection = origin.getConnection();
             sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Server name: "
-                    + server.getAddress());
+                    + connection.getAddress());
             sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Actual name: "
-                    + server.getParser().getServerName());
+                    + connection.getParser().getServerName());
             sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Network: "
-                    + server.getNetwork());
+                    + connection.getNetwork());
             sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "IRCd: "
-                    + server.getParser().getServerSoftware() + " - "
-                    + server.getParser().getServerSoftwareType());
+                    + connection.getParser().getServerSoftware() + " - "
+                    + connection.getParser().getServerSoftwareType());
             sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Modes: "
-                    + server.getParser().getBooleanChannelModes() + " "
-                    + server.getParser().getListChannelModes() + " "
-                    + server.getParser().getParameterChannelModes() + " "
-                    + server.getParser().getDoubleParameterChannelModes());
+                    + connection.getParser().getBooleanChannelModes() + " "
+                    + connection.getParser().getListChannelModes() + " "
+                    + connection.getParser().getParameterChannelModes() + " "
+                    + connection.getParser().getDoubleParameterChannelModes());
         }
     }
 

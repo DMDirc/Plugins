@@ -155,12 +155,12 @@ public final class LagDisplayPlugin extends BasePlugin implements
     @Override
     public void selectionChanged(final TextFrame window) {
         final FrameContainer source = window.getContainer();
-        if (source == null || source.getServer() == null) {
+        if (source == null || source.getConnection() == null) {
             panel.getComponent().setText("Unknown");
-        } else if (source.getServer().getState() != ServerState.CONNECTED) {
+        } else if (source.getConnection().getState() != ServerState.CONNECTED) {
             panel.getComponent().setText("Not connected");
         } else {
-            panel.getComponent().setText(getTime(source.getServer()));
+            panel.getComponent().setText(getTime(source.getConnection()));
         }
         panel.refreshDialog();
     }
@@ -185,7 +185,7 @@ public final class LagDisplayPlugin extends BasePlugin implements
                 : activeFrame.getContainer();
         final boolean isActive = active != null
                 && arguments[0] instanceof Connection
-                && ((Connection) arguments[0]).equals(active.getServer());
+                && ((Connection) arguments[0]).equals(active.getConnection());
 
         if (!useAlternate && type.equals(CoreActionType.SERVER_GOTPING)) {
             final String value = formatTime(arguments[1]);

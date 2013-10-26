@@ -93,7 +93,7 @@ public class RelayChannelHandler implements ChannelMessageListener {
         coreChannelHandler = ceh;
 
         if (coreChannelHandler != null) {
-            final CallbackManager cbm = myChannel.getServer().getParser()
+            final CallbackManager cbm = myChannel.getConnection().getParser()
                     .getCallbackManager();
             cbm.delCallback(ChannelMessageListener.class, coreChannelHandler);
             cbm.addCallback(ChannelMessageListener.class, this,
@@ -180,7 +180,7 @@ public class RelayChannelHandler implements ChannelMessageListener {
      */
     public void restoreCoreChannelHandler() {
         if (coreChannelHandler != null) {
-            final CallbackManager cbm = myChannel.getServer().getParser()
+            final CallbackManager cbm = myChannel.getConnection().getParser()
                     .getCallbackManager();
 
             // Force adding this callback to the CBM.
@@ -201,7 +201,7 @@ public class RelayChannelHandler implements ChannelMessageListener {
      * Remove channel message handling from this ChannelHandler.
      */
     public void unset() {
-        myChannel.getServer().getParser().getCallbackManager().delCallback(
+        myChannel.getConnection().getParser().getCallbackManager().delCallback(
                 ChannelMessageListener.class, this);
     }
 
@@ -233,7 +233,7 @@ public class RelayChannelHandler implements ChannelMessageListener {
                         new Class<?>[]{String.class, ChannelClientInfo.class});
                 colourClient.setAccessible(true);
                 colourClient.invoke(nickColour.getPlugin(), myChannel
-                        .getServer().getNetwork(), channelClient);
+                        .getConnection().getNetwork(), channelClient);
             } catch (LinkageError | Exception e) {
                 // If it can't colour then oh well.
             }
@@ -397,7 +397,7 @@ public class RelayChannelHandler implements ChannelMessageListener {
      * This will cause all remote clients to vanish from the nicklist.
      */
     public void updateNames() {
-        coreChannelHandler.onChannelGotNames(myChannel.getServer().getParser(),
+        coreChannelHandler.onChannelGotNames(myChannel.getConnection().getParser(),
                 new Date(), myChannel.getChannelInfo());
     }
 }

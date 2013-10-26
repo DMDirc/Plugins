@@ -92,7 +92,7 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
                 CoreActionType.CLIENT_CLOSING);
 
         identity = controller.getIdentityFactory().createChannelConfig(
-                owner.getServer().getNetwork(), owner.getChannelInfo().getName());
+                owner.getConnection().getNetwork(), owner.getChannelInfo().getName());
     }
 
     /**
@@ -241,7 +241,7 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
     /** {@inheritDoc} */
     @Override
     public void addCustomPopupItems(final JPopupMenu popupMenu) {
-        if (getContainer().getServer().getState().equals(ServerState.CONNECTED)) {
+        if (getContainer().getConnection().getState().equals(ServerState.CONNECTED)) {
             settingsMI.setEnabled(true);
         } else {
             settingsMI.setEnabled(false);

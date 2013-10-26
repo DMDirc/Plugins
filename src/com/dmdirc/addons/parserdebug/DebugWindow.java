@@ -24,6 +24,7 @@ package com.dmdirc.addons.parserdebug;
 
 import com.dmdirc.FrameContainer;
 import com.dmdirc.Server;
+import com.dmdirc.interfaces.Connection;
 import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.parser.interfaces.callbacks.DebugInfoListener;
 import com.dmdirc.ui.core.components.WindowComponent;
@@ -39,8 +40,8 @@ public class DebugWindow extends FrameContainer {
     protected DebugPlugin plugin;
     /** The parser this window is debugging */
     protected Parser parser;
-    /** The Server window we are a child of */
-    protected Server server;
+    /** The connection we're operating on */
+    protected Connection connection;
 
     /**
      * Creates a new instance of DebugWindow.
@@ -55,7 +56,7 @@ public class DebugWindow extends FrameContainer {
                 Arrays.asList(WindowComponent.TEXTAREA.getIdentifier()));
         this.plugin = plugin;
         this.parser = parser;
-        this.server = server;
+        this.connection = server;
     }
 
     /**
@@ -64,8 +65,8 @@ public class DebugWindow extends FrameContainer {
      * @return the associated server connection
      */
     @Override
-    public Server getServer() {
-        return server;
+    public Connection getConnection() {
+        return connection;
     }
 
     /**
@@ -99,7 +100,7 @@ public class DebugWindow extends FrameContainer {
     public void windowClosed() {
         // 7: Remove any references to the window and parents
         this.parser = null;
-        this.server = null;
+        this.connection = null;
         this.plugin = null;
     }
 }

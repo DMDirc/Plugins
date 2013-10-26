@@ -73,7 +73,7 @@ public class PingHistoryPanel extends JPanel {
 
         this.plugin = plugin;
         history = plugin.getHistory(mainFrame.getActiveFrame().getContainer()
-                .getServer());
+                .getConnection());
 
         for (Long value : history.getList()) {
             maximum = Math.max(value, maximum);

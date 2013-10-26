@@ -96,7 +96,7 @@ public final class ServerFrame extends InputTextFrame implements
     @Override
     public void actionPerformed(final ActionEvent actionEvent) {
         if (actionEvent.getSource() == settingsMI) {
-            controller.showServerSettingsDialog(getContainer().getServer());
+            controller.showServerSettingsDialog((Server) getContainer().getConnection());
         }
     }
 
@@ -127,7 +127,7 @@ public final class ServerFrame extends InputTextFrame implements
     /** {@inheritDoc} */
     @Override
     public void addCustomPopupItems(final JPopupMenu popupMenu) {
-        if (getContainer().getServer().getState()
+        if (getContainer().getConnection().getState()
                 .equals(ServerState.CONNECTED)) {
             settingsMI.setEnabled(true);
         } else {

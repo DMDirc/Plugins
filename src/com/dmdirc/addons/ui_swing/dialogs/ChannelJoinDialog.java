@@ -57,7 +57,7 @@ public class ChannelJoinDialog extends StandardInputDialog {
     /** {@inheritDoc} */
     @Override
     public boolean save() {
-        mainFrame.getActiveFrame().getContainer().getServer()
+        mainFrame.getActiveFrame().getContainer().getConnection()
                 .join(new ChannelJoinRequest(getText()));
         return true;
     }

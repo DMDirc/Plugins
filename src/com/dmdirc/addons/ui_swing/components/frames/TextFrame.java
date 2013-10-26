@@ -335,11 +335,11 @@ public abstract class TextFrame extends JPanel implements Window,
     private void handleLinkClick(final ClickTypeValue clickType) {
         switch (clickType.getType()) {
             case CHANNEL:
-                if (frameParent.getServer() != null && ActionManager
+                if (frameParent.getConnection() != null && ActionManager
                         .getActionManager().triggerEvent(
                         CoreActionType.LINK_CHANNEL_CLICKED, null, this,
                         clickType.getValue())) {
-                    frameParent.getServer().join(
+                    frameParent.getConnection().join(
                             new ChannelJoinRequest(clickType.getValue()));
                 }
                 break;
@@ -351,13 +351,13 @@ public abstract class TextFrame extends JPanel implements Window,
                 }
                 break;
             case NICKNAME:
-                if (frameParent.getServer() != null && ActionManager
+                if (frameParent.getConnection() != null && ActionManager
                         .getActionManager().triggerEvent(
                         CoreActionType.LINK_NICKNAME_CLICKED, null, this,
                         clickType.getValue())) {
                     getController().requestWindowFocus(getController()
                             .getWindowFactory().getSwingWindow(getContainer()
-                            .getServer().getQuery(clickType.getValue())));
+                            .getConnection().getQuery(clickType.getValue())));
                 }
                 break;
             default:

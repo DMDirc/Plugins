@@ -23,7 +23,7 @@
 package com.dmdirc.addons.swingdebug;
 
 import com.dmdirc.FrameContainer;
-import com.dmdirc.Server;
+import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.ui.core.components.WindowComponent;
 
@@ -62,8 +62,8 @@ public class SystemStreamContainer extends FrameContainer {
 
     /** {@inheritDoc} */
     @Override
-    public Server getServer() {
-        return getParent() == null ? null : getParent().getServer();
+    public Connection getConnection() {
+        return getParent() == null ? null : getParent().getConnection();
     }
 
     /** {@inheritDoc} */

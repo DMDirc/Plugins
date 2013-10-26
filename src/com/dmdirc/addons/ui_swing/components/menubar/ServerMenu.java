@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_swing.components.menubar;
 
 import com.dmdirc.FrameContainer;
+import com.dmdirc.Server;
 import com.dmdirc.ServerState;
 import com.dmdirc.addons.ui_swing.Apple;
 import com.dmdirc.addons.ui_swing.MainFrame;
@@ -126,10 +127,10 @@ public class ServerMenu extends JMenu implements ActionListener,
                 break;
             case "ServerSettings":
                 controller.showServerSettingsDialog(
-                        mainFrame.getActiveFrame().getContainer().getServer());
+                        (Server) mainFrame.getActiveFrame().getContainer().getConnection());
                 break;
             case "Disconnect":
-                mainFrame.getActiveFrame().getContainer().getServer().disconnect();
+                mainFrame.getActiveFrame().getContainer().getConnection().disconnect();
                 break;
         }
     }
@@ -142,10 +143,10 @@ public class ServerMenu extends JMenu implements ActionListener,
                 : activeFrame.getContainer();
 
         ssd.setEnabled(activeWindow != null && activeWindow
-                .getServer() != null && activeWindow.getServer().getState()
+                .getConnection() != null && activeWindow.getConnection().getState()
                 == ServerState.CONNECTED);
         disconnect.setEnabled(activeWindow != null && activeWindow
-                .getServer() != null && activeWindow.getServer().getState()
+                .getConnection() != null && activeWindow.getConnection().getState()
                 == ServerState.CONNECTED);
     }
 

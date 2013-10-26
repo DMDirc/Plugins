@@ -25,7 +25,6 @@ package com.dmdirc.addons.logging;
 import com.dmdirc.Channel;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.Query;
-import com.dmdirc.Server;
 import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
@@ -326,12 +325,12 @@ public class LoggingPlugin extends BaseCommandPlugin implements ActionListener,
      */
     protected void handleQueryEvent(final CoreActionType type, final StringBuffer format, final Object... arguments) {
         final Query query = (Query) arguments[0];
-        if (query.getServer() == null) {
+        if (query.getConnection() == null) {
             Logger.appError(ErrorLevel.MEDIUM, "Query object has no server (" + type.toString() + ")", new Exception("Query object has no server (" + type.toString() + ")"));
             return;
         }
 
-        final Parser parser = query.getServer().getParser();
+        final Parser parser = query.getConnection().getParser();
         ClientInfo client;
 
         if (parser == null) {
@@ -848,7 +847,7 @@ public class LoggingPlugin extends BaseCommandPlugin implements ActionListener,
         if (target instanceof Channel) {
             component = ((Channel) target).getChannelInfo();
         } else if (target instanceof Query) {
-            final Parser parser = ((Query) target).getServer().getParser();
+            final Parser parser = ((Query) target).getConnection().getParser();
             component = parser.getClient(((Query) target).getHost());
         } else if (target instanceof Connection) {
             component = ((Connection) target).getParser();

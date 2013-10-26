@@ -378,7 +378,7 @@ public class DynamicRequestHandler extends AbstractHandler {
             throws IOException {
         final String windowID = request.getParameter("source");
         final WebWindow window = controller.getWindowManager().getWindow(windowID);
-        window.getContainer().getServer().join(new ChannelJoinRequest(request.
+        window.getContainer().getConnection().join(new ChannelJoinRequest(request.
                 getParameter("channel")));
     }
 
@@ -386,7 +386,7 @@ public class DynamicRequestHandler extends AbstractHandler {
             throws IOException {
         final String windowID = request.getParameter("source");
         final WebWindow window = controller.getWindowManager().getWindow(windowID);
-        window.getContainer().getServer().getQuery(request.getParameter(
+        window.getContainer().getConnection().getQuery(request.getParameter(
                 "target"));
     }
 

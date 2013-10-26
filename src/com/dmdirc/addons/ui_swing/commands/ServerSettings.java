@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_swing.commands;
 
 import com.dmdirc.FrameContainer;
+import com.dmdirc.Server;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.commandparser.BaseCommandInfo;
 import com.dmdirc.commandparser.CommandArguments;
@@ -71,7 +72,7 @@ public class ServerSettings extends Command implements IntelligentCommand {
     @Override
     public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
-        controller.showServerSettingsDialog(context.getSource().getServer());
+        controller.showServerSettingsDialog((Server) context.getSource().getConnection());
     }
 
     /** {@inheritDoc} */

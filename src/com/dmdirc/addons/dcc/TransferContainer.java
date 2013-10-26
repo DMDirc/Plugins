@@ -23,7 +23,6 @@
 package com.dmdirc.addons.dcc;
 
 import com.dmdirc.FrameContainer;
-import com.dmdirc.Server;
 import com.dmdirc.ServerState;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.addons.dcc.actions.DCCActions;
@@ -381,7 +380,7 @@ public class TransferContainer extends FrameContainer implements
 
     /** {@inheritDoc} */
     @Override
-    public Server getServer() {
+    public Connection getConnection() {
         return null;
     }
 
