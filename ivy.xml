@@ -23,7 +23,7 @@
         <dependency org="net.java.dev.jna" name="jna" rev="3.+" conf="main->default" />
         <dependency org="net.java.dev.jna" name="platform" rev="3.+" conf="main->default" />
         <dependency org="com.greboid.libraries" name="cinch" rev="latest.release" conf="main->default" />
-        <dependency org="com.greboid.libraries" name="cinchsupport" rev="latest.release" conf="main->default" />
+        <dependency org="com.greboid.libraries" name="cinchsupport" rev="[0.1)" conf="main->default" />
         <dependency org="com.greboid.libraries" name="locksupport" rev="latest.release" conf="main->default" />
         <dependency org="com.greboid.libraries" name="menuscroller" rev="latest.release" conf="main->default" />
         <dependency org="org.mortbay.jetty" name="jetty" rev="6.+" conf="main->default" />
