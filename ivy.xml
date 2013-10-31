@@ -14,6 +14,8 @@
         <dependency org="com.squareup.dagger" name="dagger" rev="1.1.+" conf="main->default" />
         <dependency org="com.squareup.dagger" name="dagger-compiler" rev="1.1.+" conf="build->default" />
 
+        <dependency org="com.google.guava" name="guava" rev="15.+" conf="build->default" />
+
         <dependency org="org.slf4j" name="slf4j-api" rev="1.+" conf="main->default" />
         <dependency org="org.projectlombok" name="lombok" rev="latest.integration" conf="main->default" />
         <dependency org="org.igniterealtime.smack" name="smack" rev="3.+" conf="main->default" />

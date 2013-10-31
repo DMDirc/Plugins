@@ -73,6 +73,8 @@ import com.dmdirc.util.URLBuilder;
 import com.dmdirc.util.validators.NumericalValidator;
 import com.dmdirc.util.validators.OptionalValidator;
 
+import com.google.common.eventbus.EventBus;
+
 import java.awt.Font;
 import java.awt.GraphicsEnvironment;
 import java.net.URI;
@@ -183,6 +185,7 @@ public class SwingController extends BaseCommandPlugin implements UIController {
      * @param colourManager The colour manager to use to parse colours.
      * @param actionSubstitutorFactory Factory to use to create action substitutors.
      * @param lifecycleController Lifecyle controller to quit and restart DMDirc.
+     * @param eventBus The bus to publish and subscribe to events on.
      */
     public SwingController(
             final PluginInfo pluginInfo,
@@ -198,7 +201,8 @@ public class SwingController extends BaseCommandPlugin implements UIController {
             final URLBuilder urlBuilder,
             final ColourManager colourManager,
             final ActionSubstitutorFactory actionSubstitutorFactory,
-            final LifecycleController lifecycleController) {
+            final LifecycleController lifecycleController,
+            final EventBus eventBus) {
         this.pluginInfo = pluginInfo;
         this.identityManager = identityManager;
         this.identityFactory = identityFactory;
@@ -217,7 +221,7 @@ public class SwingController extends BaseCommandPlugin implements UIController {
         globalConfig = identityManager.getGlobalConfiguration();
         globalIdentity = identityManager.getUserSettings();
         addonIdentity = identityManager.getAddonSettings();
-        apple = new Apple(globalConfig, serverManager);
+        apple = new Apple(globalConfig, serverManager, eventBus);
         iconManager = new IconManager(globalConfig, urlBuilder);
         prefsComponentFactory = new PrefsComponentFactory(this);
         setAntiAlias();

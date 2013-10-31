@@ -23,15 +23,15 @@
 package com.dmdirc.addons.ui_swing;
 
 import com.dmdirc.ServerManager;
-import com.dmdirc.actions.ActionManager;
-import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.addons.ui_swing.components.menubar.MenuBar;
 import com.dmdirc.commandparser.commands.global.NewServer;
-import com.dmdirc.interfaces.ActionListener;
-import com.dmdirc.interfaces.actions.ActionType;
+import com.dmdirc.events.ClientOpenedEvent;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
+
+import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
 
 import java.awt.Image;
 import java.awt.PopupMenu;
@@ -54,7 +54,7 @@ import javax.swing.UIManager;
 /**
  * Integrate DMDirc with OS X better.
  */
-public class Apple implements InvocationHandler, ActionListener {
+public class Apple implements InvocationHandler {
 
     /** Store any addresses that are opened before CLIENT_OPENED. */
     private final List<URI> addresses = new ArrayList<>();
@@ -84,8 +84,12 @@ public class Apple implements InvocationHandler, ActionListener {
      *
      * @param configManager Config manager
      * @param serverManager The server manager to use to connect to URLs.
+     * @param eventBus The bus to listen for events on.
      */
-    public Apple(final AggregateConfigProvider configManager, final ServerManager serverManager) {
+    public Apple(
+            final AggregateConfigProvider configManager,
+            final ServerManager serverManager,
+            final EventBus eventBus) {
         this.configManager = configManager;
         this.serverManager = serverManager;
 
@@ -93,7 +97,7 @@ public class Apple implements InvocationHandler, ActionListener {
             try {
                 System.loadLibrary("DMDirc-Apple"); // NOPMD
                 registerOpenURLCallback();
-                ActionManager.getActionManager().registerListener(this, CoreActionType.CLIENT_OPENED);
+                eventBus.register(this);
             } catch (UnsatisfiedLinkError ule) {
                 Logger.appError(ErrorLevel.MEDIUM, "Unable to load JNI library.", ule);
             }
@@ -422,17 +426,19 @@ public class Apple implements InvocationHandler, ActionListener {
         handleMenuBarEvent("Preferences");
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void processEvent(final ActionType type, final StringBuffer format, final Object... arguments) {
-        if (type == CoreActionType.CLIENT_OPENED) {
-            synchronized (addresses) {
-                clientOpened = true;
-                for (final URI addr : addresses) {
-                    serverManager.connectToAddress(addr);
-                }
-                addresses.clear();
+    /**
+     * Called when the client is opened for the first time.
+     *
+     * @param event The event describing the client opening.
+     */
+    @Subscribe
+    public void handleClientOpened(final ClientOpenedEvent event) {
+        synchronized (addresses) {
+            clientOpened = true;
+            for (final URI addr : addresses) {
+                serverManager.connectToAddress(addr);
             }
+            addresses.clear();
         }
     }
 
