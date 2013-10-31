@@ -217,7 +217,7 @@ public class SwingController extends BaseCommandPlugin implements UIController {
         globalConfig = identityManager.getGlobalConfiguration();
         globalIdentity = identityManager.getUserSettings();
         addonIdentity = identityManager.getAddonSettings();
-        apple = new Apple(getGlobalConfig(), this);
+        apple = new Apple(globalConfig, serverManager);
         iconManager = new IconManager(globalConfig, urlBuilder);
         prefsComponentFactory = new PrefsComponentFactory(this);
         setAntiAlias();

@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_swing;
 
+import com.dmdirc.ServerManager;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.addons.ui_swing.components.menubar.MenuBar;
@@ -64,36 +65,30 @@ public class Apple implements InvocationHandler, ActionListener {
     /** The "Application" object used to do stuff on OS X. */
     private Object application;
 
-    /** Are we listening? */
+    /** Whether we're listening or not. */
     private boolean isListener = false;
 
     /** The MenuBar for the application. */
     private MenuBar menuBar = null;
 
-    /** Has the CLIENT_OPENED action been called? */
+    /** Whether the CLIENT_OPENED action has been called or not. */
     private boolean clientOpened = false;
 
-    /** Our swing controller. */
-    private final SwingController controller;
+    /** The server manager to use to connect to URLs. */
+    private final ServerManager serverManager;
 
     /**
-     * Create the Apple class.
-     * <p>
-     * This attempts to:
-     * </p>
+     * Creates a new instance of {@link Apple}.
      *
-     * <ul>
-     * <li>load the JNI library</li>
-     * <li>register the callback</li>
-     * <li>register a CLIENT_OPENED listener</li>
-     * </ul>
+     * <p>This will attempt to load the native library and register the URL open callback.
      *
      * @param configManager Config manager
-     * @param controller Parent swing controller
+     * @param serverManager The server manager to use to connect to URLs.
      */
-    public Apple(final AggregateConfigProvider configManager, final SwingController controller) {
+    public Apple(final AggregateConfigProvider configManager, final ServerManager serverManager) {
         this.configManager = configManager;
-        this.controller = controller;
+        this.serverManager = serverManager;
+
         if (isApple()) {
             try {
                 System.loadLibrary("DMDirc-Apple"); // NOPMD
@@ -117,7 +112,7 @@ public class Apple implements InvocationHandler, ActionListener {
      * Call a method on the given object.
      *
      * @param obj Object to call method on.
-     * @oaram className Name of class that object really is.
+     * @param className Name of class that object really is.
      * @param methodName Method to call
      * @param classes Array of classes to pass when calling getMethod
      * @param objects Array of objects to pass when invoking.
@@ -128,8 +123,7 @@ public class Apple implements InvocationHandler, ActionListener {
             final Class<?> clazz = className == null ? obj.getClass() : Class.forName(className);
             final Method method = clazz.getMethod(methodName, classes == null ? new Class<?>[0] : classes);
             return method.invoke(obj, objects == null ? new Object[0] : objects);
-        } catch (IllegalArgumentException | InvocationTargetException |
-                ClassNotFoundException | NoSuchMethodException | IllegalAccessException ex) {
+        } catch (ReflectiveOperationException ex) {
             Logger.userError(ErrorLevel.LOW, "Unable to find OS X classes");
         }
 
@@ -329,10 +323,11 @@ public class Apple implements InvocationHandler, ActionListener {
     /**
      * {@inheritDoc}
      *
-     * @throws Throwable Throws stuff on errors
+     * @throws ReflectiveOperationException if attempting to invoke the method fails.
      */
     @Override
-    public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
+    public Object invoke(final Object proxy, final Method method, final Object[] args)
+            throws ReflectiveOperationException {
         if (!isApple()) {
             return null;
         }
@@ -357,7 +352,7 @@ public class Apple implements InvocationHandler, ActionListener {
             return thisMethod.invoke(this, args);
         } catch (final NoSuchMethodException e) {
             if (method.getName().equals("equals") && args.length == 1) {
-                return Boolean.valueOf(proxy == args[0]);
+                return proxy == args[0];
             }
         }
 
@@ -434,7 +429,7 @@ public class Apple implements InvocationHandler, ActionListener {
             synchronized (addresses) {
                 clientOpened = true;
                 for (final URI addr : addresses) {
-                    controller.getServerManager().connectToAddress(addr);
+                    serverManager.connectToAddress(addr);
                 }
                 addresses.clear();
             }
@@ -466,8 +461,7 @@ public class Apple implements InvocationHandler, ActionListener {
      */
     public void handleOpenURL(final String url) {
         try {
-            final URI addr = NewServer.getURI(url);
-            handleURI(addr);
+            handleURI(NewServer.getURI(url));
         } catch (final URISyntaxException use) { }
     }
 
@@ -485,8 +479,7 @@ public class Apple implements InvocationHandler, ActionListener {
 
         final Object obj = reflectMethod(event, null, "getURI", null, null);
         if (obj instanceof URI) {
-            final URI uri = (URI)obj;
-            handleURI(uri);
+            handleURI((URI) obj);
         }
     }
 
@@ -508,7 +501,8 @@ public class Apple implements InvocationHandler, ActionListener {
                 if (Thread.currentThread().getContextClassLoader() == null) {
                     Thread.currentThread().setContextClassLoader(ClassLoader.getSystemClassLoader());
                 }
-                controller.getServerManager().connectToAddress(uri);
+
+                serverManager.connectToAddress(uri);
             } else {
                 addresses.add(uri);
             }
