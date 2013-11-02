@@ -134,7 +134,7 @@ public class ScriptPlugin extends BaseCommandPlugin implements ActionListener {
      * This will unregister all the actions first.
      */
     private void registerAll() {
-        actionController.registerListener(this);
+        actionController.unregisterListener(this);
         for (Map.Entry<String, List<ActionType>> entry
                 : actionController.getGroupedTypes().entrySet()) {
             final List<ActionType> types = entry.getValue();
