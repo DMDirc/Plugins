@@ -726,7 +726,7 @@ public class MainFrame extends JFrame implements WindowListener,
     @Override
     public void notificationSet(final FrameContainer window,
             final Colour colour) {
-        if (activeFrame.getContainer().equals(window)) {
+        if (activeFrame != null && activeFrame.getContainer().equals(window)) {
             window.clearNotification();
         }
     }
