@@ -126,7 +126,7 @@ public final class UIUtilities {
     public static void initUISettings() {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (InstantiationException | ClassNotFoundException | 
+        } catch (InstantiationException | ClassNotFoundException |
                   UnsupportedLookAndFeelException | IllegalAccessException ex) {
             throw new UnsupportedOperationException("Unable to switch to the " +
                     "system look and feel", ex);

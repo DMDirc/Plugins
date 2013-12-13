@@ -34,7 +34,7 @@ import javax.swing.AbstractListModel;
  *
  * @param <T> Generic type of the list
  */
-public class GenericListModel<T> extends AbstractListModel {
+public class GenericListModel<T> extends AbstractListModel<T> {
 
     /**
      * A version number for this class. It should be changed whenever the class
@@ -239,7 +239,7 @@ public class GenericListModel<T> extends AbstractListModel {
 
     /** {@inheritDoc} */
     @Override
-    public Object getElementAt(final int index) {
+    public T getElementAt(final int index) {
         return get(index);
     }
 }

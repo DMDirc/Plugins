@@ -35,6 +35,7 @@ import com.dmdirc.interfaces.LifecycleController;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.config.IdentityController;
+import com.dmdirc.interfaces.config.IdentityFactory;
 import com.dmdirc.interfaces.ui.StatusBar;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.core.util.URLHandler;
@@ -185,6 +186,7 @@ public class DialogManager {
         injector.addParameter(ServerManager.class, controller.getServerManager());
         injector.addParameter(PrefsComponentFactory.class, controller.getPrefsComponentFactory());
         injector.addParameter(ActionFactory.class, controller.getActionFactory());
+        injector.addParameter(IdentityFactory.class, controller.getIdentityFactory());
 
         for (final Object param : params) {
             injector.addParameter(param);

@@ -30,7 +30,7 @@ import javax.swing.ComboBoxModel;
  * @param <T> Model holds this type of object
  */
 public class GenericComboBoxModel<T> extends GenericListModel<T> implements
-        ComboBoxModel {
+        ComboBoxModel<T> {
 
     /**
      * A version number for this class. It should be changed whenever the class

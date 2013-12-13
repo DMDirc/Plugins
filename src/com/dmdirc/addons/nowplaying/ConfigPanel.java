@@ -34,7 +34,6 @@ import com.dmdirc.logger.Logger;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.Arrays;
-import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Timer;
@@ -64,7 +63,7 @@ public class ConfigPanel extends JPanel implements PreferencesInterface,
      */
     private static final long serialVersionUID = 1;
     /** Media source order list. */
-    private ReorderableJList list;
+    private ReorderableJList<String> list;
     /** Media sources. */
     private final List<String> sources;
     /** The plugin that owns this panel. */
@@ -109,10 +108,10 @@ public class ConfigPanel extends JPanel implements PreferencesInterface,
      * Initialises the components.
      */
     private void initComponents() {
-        list = new ReorderableJList();
+        list = new ReorderableJList<>();
 
         for (String source : sources) {
-            list.getModel().addElement(source);
+            list.getModel().add(source);
         }
 
         textfield = new JTextField(identityController.getGlobalConfiguration()
@@ -194,10 +193,8 @@ public class ConfigPanel extends JPanel implements PreferencesInterface,
     public List<String> getSources() {
         final List<String> newSources = new LinkedList<>();
 
-        final Enumeration<?> values = list.getModel().elements();
-
-        while (values.hasMoreElements()) {
-            newSources.add((String) values.nextElement());
+        for (int i = 0; i < list.getModel().getSize(); i++) {
+            newSources.add(list.getModel().get(i));
         }
 
         return newSources;

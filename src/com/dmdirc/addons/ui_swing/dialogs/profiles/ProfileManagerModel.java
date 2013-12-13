@@ -31,8 +31,8 @@ import com.dmdirc.util.validators.ValidationResponse;
 
 import com.google.common.collect.ImmutableList;
 
-import com.palantir.ptoss.cinch.core.DefaultBindableModel;
-
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -40,16 +40,18 @@ import java.util.List;
 /**
  * Model used to store state for the profile manager dialog.
  */
-public class ProfileManagerModel extends DefaultBindableModel {
+public class ProfileManagerModel {
 
     /** List of known profiles. */
     private List<Profile> profiles = new ArrayList<>();
     /** List of profiles to be displayed. */
-    private List<Profile> displayedProfiles = new ArrayList<>();
+    private final List<Profile> displayedProfiles = new ArrayList<>();
     /** Selected profile. */
     private Profile selectedProfile;
     /** Selected nickname. */
     private String selectedNickname;
+    /** Property change support helper. */
+    private PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
     /**
      * Creates a new model.
@@ -98,16 +100,16 @@ public class ProfileManagerModel extends DefaultBindableModel {
      * @param profiles List of profiles to display
      */
     public void setProfiles(final List<Profile> profiles) {
+        final List<Profile> oldValue = new ArrayList<>(this.profiles);
         this.profiles = new ArrayList<>(profiles);
         updateDisplayedProfiles();
         if (!profiles.contains(selectedProfile)) {
             upadateSelectedProfile(null);
         }
-        update();
         if (selectedProfile == null && !profiles.isEmpty()) {
             upadateSelectedProfile(profiles.get(0));
         }
-        update();
+        pcs.firePropertyChange("profiles", oldValue, new ArrayList<>(profiles));
     }
 
     /**
@@ -118,9 +120,8 @@ public class ProfileManagerModel extends DefaultBindableModel {
     public void addProfile(final Profile profile) {
         profiles.add(profile);
         updateDisplayedProfiles();
-        update();
         upadateSelectedProfile(profile);
-        update();
+        pcs.firePropertyChange("profile", null, profile);
     }
 
     /**
@@ -146,9 +147,8 @@ public class ProfileManagerModel extends DefaultBindableModel {
         } else if (selected - 1 >= 0 && size != 0) {
             newSelectedProfile = displayedProfiles.get(selected - 1);
         }
-        update();
         upadateSelectedProfile(newSelectedProfile);
-        update();
+        pcs.firePropertyChange("profile", profile, null);
     }
 
     /**
@@ -168,12 +168,15 @@ public class ProfileManagerModel extends DefaultBindableModel {
      * @param selectedProfile Profile to select, null ignored
      */
     public void setSelectedProfile(final Object selectedProfile) {
+        final String oldNickname = this.selectedNickname;
+        final String oldProfile = this.selectedProfile.getName();
         if (selectedProfile != null
                 && !profiles.isEmpty()
                 && profiles.contains((Profile) selectedProfile)) {
             upadateSelectedProfile((Profile) selectedProfile);
         }
-        update();
+        pcs.firePropertyChange("selectedProfile", oldProfile, this.selectedProfile.getName());
+        pcs.firePropertyChange("selectedNickname", oldNickname, selectedNickname);
     }
 
     /**
@@ -205,11 +208,12 @@ public class ProfileManagerModel extends DefaultBindableModel {
      * @param nicknames List of nicknames
      */
     public void setNicknames(final List<String> nicknames) {
+        final List<String> oldNicknames = new ArrayList<>(nicknames);
         if (selectedProfile == null) {
             return;
         }
         selectedProfile.setNicknames(nicknames);
-        update();
+        pcs.firePropertyChange("nicknames", oldNicknames, new ArrayList<>(nicknames));
     }
 
     /**
@@ -223,9 +227,8 @@ public class ProfileManagerModel extends DefaultBindableModel {
             return;
         }
         selectedProfile.addNickname(nickname);
-        update();
         selectedNickname = nickname;
-        update();
+        pcs.firePropertyChange("nickname", null, nickname);
     }
 
     /**
@@ -264,9 +267,8 @@ public class ProfileManagerModel extends DefaultBindableModel {
         } else if (selected - 1 >= 0 && size != 0) {
             newSelectedNickname = selectedProfile.getNicknames().get(selected - 1);
         }
-        update();
         selectedNickname = newSelectedNickname;
-        update();
+        pcs.firePropertyChange("nickname", nickname, null);
     }
 
     /**
@@ -278,9 +280,9 @@ public class ProfileManagerModel extends DefaultBindableModel {
     public void editNickname(final String nickname, final String edited) {
         selectedNickname = edited;
         selectedProfile.editNickname(nickname, edited);
-        update();
+        pcs.firePropertyChange("editNickname", nickname, edited);
         selectedNickname = edited;
-        update();
+        pcs.firePropertyChange("selectedNickname", nickname, edited);
     }
 
     /**
@@ -295,8 +297,9 @@ public class ProfileManagerModel extends DefaultBindableModel {
         if (selectedProfile != null
                 && selectedNickname instanceof String
                 && selectedProfile.getNicknames().contains((String) selectedNickname)) {
+            final int oldIndex = selectedProfile.getNicknames().indexOf(this.selectedNickname);
             this.selectedNickname = (String) selectedNickname;
-            update();
+            pcs.firePropertyChange("selectedNickname", oldIndex, selectedProfile.getNicknames().indexOf(this.selectedNickname));
         }
     }
 
@@ -334,9 +337,11 @@ public class ProfileManagerModel extends DefaultBindableModel {
      */
     public void setName(final String name) {
         if (selectedProfile != null) {
+            final String oldValue = selectedProfile.getName();
             selectedProfile.setName(name);
-            update();
+            pcs.firePropertyChange("name", oldValue, name);
         }
+
     }
 
     /**
@@ -360,8 +365,9 @@ public class ProfileManagerModel extends DefaultBindableModel {
      */
     public void setRealname(final String realname) {
         if (selectedProfile != null) {
+            final String oldValue = selectedProfile.getRealname();
             selectedProfile.setRealname(realname);
-            update();
+            pcs.firePropertyChange("realname", oldValue, selectedProfile.getRealname());
         }
     }
 
@@ -387,8 +393,9 @@ public class ProfileManagerModel extends DefaultBindableModel {
      */
     public void setIdent(final String ident) {
         if (selectedProfile != null) {
+            final String oldValue = selectedProfile.getIdent();
             selectedProfile.setIdent(ident);
-            update();
+            pcs.firePropertyChange("ident", oldValue, selectedProfile.getRealname());
         }
     }
 
@@ -499,5 +506,13 @@ public class ProfileManagerModel extends DefaultBindableModel {
                 profile.save();
             }
         }
+    }
+
+    public void addPropertyChangeListener(final PropertyChangeListener listener) {
+        pcs.addPropertyChangeListener(listener);
+    }
+
+    public void addPropertyChangeListener(final String property, final PropertyChangeListener listener) {
+        pcs.addPropertyChangeListener(property, listener);
     }
 }

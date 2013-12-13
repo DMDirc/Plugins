@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.components.reorderablelist;
 
+import com.dmdirc.addons.ui_swing.components.GenericListModel;
 import com.dmdirc.addons.ui_swing.components.renderers.ReorderableJListCellRenderer;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
@@ -48,14 +49,15 @@ import java.awt.dnd.DropTargetListener;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import javax.swing.ListSelectionModel;
 
 /**
  * Reorderable JList.
+ *
+ * @param <T> Type this list holds
  */
-public class ReorderableJList extends JList implements DragSourceListener,
+public class ReorderableJList<T> extends JList<T> implements DragSourceListener,
         DropTargetListener, DragGestureListener {
 
     /**
@@ -80,7 +82,7 @@ public class ReorderableJList extends JList implements DragSourceListener,
 
     /** Instantiate new ReorderableJList. */
     public ReorderableJList() {
-        this(new DefaultListModel());
+        this(new GenericListModel<T>());
     }
 
     /**
@@ -88,7 +90,7 @@ public class ReorderableJList extends JList implements DragSourceListener,
      *
      * @param model Model
      */
-    public ReorderableJList(final DefaultListModel model) {
+    public ReorderableJList(final GenericListModel<T> model) {
         super(model);
 
         setCellRenderer(new ReorderableJListCellRenderer(this));
@@ -113,8 +115,8 @@ public class ReorderableJList extends JList implements DragSourceListener,
 
     /** {@inheritDoc} */
     @Override
-    public DefaultListModel getModel() {
-        return (DefaultListModel) super.getModel();
+    public GenericListModel<T> getModel() {
+        return (GenericListModel) super.getModel();
     }
 
     /**
@@ -122,7 +124,7 @@ public class ReorderableJList extends JList implements DragSourceListener,
      *
      * @param model Model for the list
      */
-    public void setModel(final DefaultListModel model) { //NOPMD stupid
+    public void setModel(final GenericListModel<T> model) { //NOPMD stupid
         super.setModel(model);
     }
 
@@ -207,12 +209,8 @@ public class ReorderableJList extends JList implements DragSourceListener,
             dropTargetCell = getModel().getElementAt(index);
             //check whether the drop point is after the last index
             final Rectangle bounds = getCellBounds(index, index);
-            if (index == getModel().getSize() - 1
-                    && dragPoint.y > bounds.y + bounds.height) {
-                belowTarget = true;
-            } else {
-                belowTarget = false;
-            }
+            belowTarget = index == getModel().getSize() - 1
+                    && dragPoint.y > bounds.y + bounds.height;
         }
 
         repaint();
@@ -264,11 +262,11 @@ public class ReorderableJList extends JList implements DragSourceListener,
 
         //move items
         final boolean sourceBeforeTarget = draggedIndex < index;
-        final DefaultListModel mod = getModel();
+        final GenericListModel<T> mod = getModel();
         final int newIndex = sourceBeforeTarget ? index - 1 : index;
         mod.remove(draggedIndex);
         for (Object item : (ArrayList<?>) dragged) {
-            mod.add(newIndex, item);
+            mod.add(newIndex, (T) item);
         }
 
         getSelectionModel().setSelectionInterval(newIndex, newIndex);

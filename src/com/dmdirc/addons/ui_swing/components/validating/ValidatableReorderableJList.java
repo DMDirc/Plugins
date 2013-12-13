@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.components.validating;
 
+import com.dmdirc.addons.ui_swing.components.GenericListModel;
 import com.dmdirc.addons.ui_swing.components.reorderablelist.ReorderableJList;
 import com.dmdirc.util.validators.Validatable;
 import com.dmdirc.util.validators.ValidationResponse;
@@ -33,16 +34,33 @@ import javax.swing.border.Border;
 
 /**
  * A re-orderable list with a setErorr method to add a visual distinction when
- * there is an error state.
+ * there is an error
+ * state.
+ *
+ * @param <T> Type this list holds
  */
-public class ValidatableReorderableJList extends ReorderableJList implements Validatable {
+public class ValidatableReorderableJList<T> extends ReorderableJList<T> implements Validatable {
     /** Serial version UID. */
     private static final long serialVersionUID = 1L;
     /** Normal component border, used for non error state. */
     private final Border passBorder = getBorder();
     /** Error border, used when in an error state. */
     private final Border failBorder = BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(Color.RED, 2), getBorder());
+            BorderFactory.createLineBorder(Color.RED, 2), getBorder());
+
+    /** Instantiate new ReorderableJList. */
+    public ValidatableReorderableJList() {
+        this(new GenericListModel<T>());
+    }
+
+    /**
+     * Instantiate new ReorderableJList.
+     *
+     * @param model Model
+     */
+    public ValidatableReorderableJList(final GenericListModel<T> model) {
+        super(model);
+    }
 
     /** {@inheritDoc} */
     @Override

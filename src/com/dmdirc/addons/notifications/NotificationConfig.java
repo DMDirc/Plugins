@@ -26,7 +26,6 @@ import com.dmdirc.addons.ui_swing.components.reorderablelist.ListReorderButtonPa
 import com.dmdirc.addons.ui_swing.components.reorderablelist.ReorderableJList;
 import com.dmdirc.config.prefs.PreferencesInterface;
 
-import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -50,7 +49,7 @@ public class NotificationConfig extends JPanel implements PreferencesInterface {
      */
     private static final long serialVersionUID = 1;
     /** Notification method order list. */
-    private ReorderableJList list;
+    private ReorderableJList<String> list;
     /** Notification methods. */
     private final List<String> methods;
     /** The plugin that owns this panel. */
@@ -80,10 +79,10 @@ public class NotificationConfig extends JPanel implements PreferencesInterface {
      * Initialises the components.
      */
     private void initComponents() {
-        list = new ReorderableJList();
+        list = new ReorderableJList<>();
 
         for (String method : methods) {
-            list.getModel().addElement(method);
+            list.getModel().add(method);
         }
 
         setLayout(new MigLayout("fillx, ins 0"));
@@ -117,10 +116,8 @@ public class NotificationConfig extends JPanel implements PreferencesInterface {
     public List<String> getMethods() {
         final List<String> newMethods = new LinkedList<>();
 
-        final Enumeration<?> values = list.getModel().elements();
-
-        while (values.hasMoreElements()) {
-            newMethods.add((String) values.nextElement());
+        for (int i = 0; i < list.getModel().getSize(); i++) {
+            newMethods.add(list.getModel().get(i));
         }
 
         return newMethods;
