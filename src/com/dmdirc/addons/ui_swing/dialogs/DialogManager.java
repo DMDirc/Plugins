@@ -31,11 +31,14 @@ import com.dmdirc.addons.ui_swing.PrefsComponentFactory;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.SwingWindowFactory;
 import com.dmdirc.addons.ui_swing.components.statusbar.SwingStatusBar;
+import com.dmdirc.config.prefs.PreferencesManager;
 import com.dmdirc.interfaces.LifecycleController;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.config.IdentityController;
+import com.dmdirc.interfaces.config.IdentityFactory;
 import com.dmdirc.interfaces.ui.StatusBar;
+import com.dmdirc.plugins.ServiceManager;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.core.util.URLHandler;
 import com.dmdirc.util.SimpleInjector;
@@ -185,6 +188,9 @@ public class DialogManager {
         injector.addParameter(ServerManager.class, controller.getServerManager());
         injector.addParameter(PrefsComponentFactory.class, controller.getPrefsComponentFactory());
         injector.addParameter(ActionFactory.class, controller.getActionFactory());
+        injector.addParameter(IdentityFactory.class, controller.getIdentityFactory());
+        injector.addParameter(ServiceManager.class, controller.getPluginManager());
+        injector.addParameter(PreferencesManager.class, PreferencesManager.getPreferencesManager());
 
         for (final Object param : params) {
             injector.addParameter(param);
