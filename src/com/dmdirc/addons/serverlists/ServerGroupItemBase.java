@@ -25,14 +25,11 @@ package com.dmdirc.addons.serverlists;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.config.IdentityController;
 
-import lombok.RequiredArgsConstructor;
-
 /**
  * Abstract base class for {@link ServerGroupItem}s.
  *
  * @since 0.6.4
  */
-@RequiredArgsConstructor
 public abstract class ServerGroupItemBase implements ServerGroupItem {
 
     /** The controller to read/write settings with. */
@@ -46,6 +43,10 @@ public abstract class ServerGroupItemBase implements ServerGroupItem {
 
     /** The name of the profile to use. */
     private String profile;
+
+    public ServerGroupItemBase(final IdentityController identityController) {
+        this.identityController = identityController;
+    }
 
     /** {@inheritDoc} */
     @Override

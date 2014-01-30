@@ -31,15 +31,12 @@ import com.dmdirc.interfaces.config.IdentityController;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import lombok.RequiredArgsConstructor;
-
 /**
  * Facilitates loading of a {@link com.dmdirc.addons.serverlists.ServerEntry} from a DMDirc
  * {@link com.dmdirc.interfaces.config.ConfigProvider}.
  *
  * @since 0.6.4
  */
-@RequiredArgsConstructor
 public class ServerEntryReader {
 
     /** ServerManager that ServerEntrys use to create servers */
@@ -50,6 +47,13 @@ public class ServerEntryReader {
 
     /** The identity to read entries from. */
     private final ConfigProvider identity;
+
+    public ServerEntryReader(final ServerManager serverManager,
+            final IdentityController identityController, final ConfigProvider identity) {
+        this.serverManager = serverManager;
+        this.identityController = identityController;
+        this.identity = identity;
+    }
 
     /**
      * Attempts to read the details of the specified server from this reader's
