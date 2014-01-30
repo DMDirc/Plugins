@@ -18,6 +18,26 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *//*
+ * Copyright (c) 2006-2014 DMDirc Developers
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
  */
 
 package com.dmdirc.addons.nma;
@@ -31,15 +51,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.LoggerFactory;
 
 /**
  * Simple client for sending events to NotifyMyAndroid.
  */
-@Slf4j
-@RequiredArgsConstructor
 public class NotifyMyAndroidClient {
+
+    private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(NotifyMyAndroidClient.class);
 
     /** The base URL for the NMA API. */
     private static final String BASE_URL = "https://www.notifymyandroid.com";
@@ -51,6 +70,11 @@ public class NotifyMyAndroidClient {
 
     /** The application to report ourselves as. */
     private final String application;
+
+    public NotifyMyAndroidClient(Collection<String> apiKeys, String application) {
+        this.apiKeys = apiKeys;
+        this.application = application;
+    }
 
     /**
      * Creates a new instance of {@link NotifyMyAndroidClient} with a single
@@ -78,11 +102,11 @@ public class NotifyMyAndroidClient {
         arguments.put("event", event);
         arguments.put("description", description);
 
-        log.info("Sending notification to NMA for event '{}'", event);
-        log.debug("Arguments: {}", arguments);
+        LOG.info("Sending notification to NMA for event '{}'", event);
+        LOG.debug("Arguments: {}", arguments);
 
         final List<String> response = Downloader.getPage(BASE_URL + NOTIFY_PATH, arguments);
-        log.debug("Response: {}", response);
+        LOG.debug("Response: {}", response);
     }
 
     /**

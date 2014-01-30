@@ -32,14 +32,14 @@ import com.dmdirc.interfaces.CommandController;
 
 import java.io.IOException;
 
-import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.LoggerFactory;
 
 /**
  * Command to raise notifications with NotifyMyAndroid.
  */
-@Slf4j
 public class NotifyMyAndroidCommand extends Command {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(NotifyMyAndroidCommand.class);
 
     /** A command info object for this command. */
     public static final BaseCommandInfo INFO = new BaseCommandInfo(
@@ -49,7 +49,6 @@ public class NotifyMyAndroidCommand extends Command {
             CommandType.TYPE_GLOBAL);
 
     /** The configuration domain to retrieve settings from. */
-    @Setter
     private String configDomain;
 
     /**
@@ -59,6 +58,10 @@ public class NotifyMyAndroidCommand extends Command {
      */
     public NotifyMyAndroidCommand(final CommandController controller) {
         super(controller);
+    }
+
+    public void setConfigDomain(final String configDomain) {
+        this.configDomain = configDomain;
     }
 
     /** {@inheritDoc} */
