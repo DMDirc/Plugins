@@ -27,14 +27,11 @@ import com.dmdirc.interfaces.ui.Window;
 import java.util.LinkedList;
 import java.util.List;
 
-import lombok.Getter;
-
 import org.mortbay.util.ajax.Continuation;
 
 /**
  * Represents a single connected client.
  */
-@SuppressWarnings("PMD.UnusedPrivateField")
 public class Client {
 
     /** The timestamp that the client was last seen. */
@@ -44,7 +41,6 @@ public class Client {
     private Continuation continuation;
 
     /** The IP address of the client. */
-    @Getter
     private final String ip;
 
     /** An ordered list of events to be sent to the client */
@@ -82,6 +78,10 @@ public class Client {
                 queued.add(window);
             }
         }
+    }
+
+    public String getIp() {
+        return ip;
     }
 
     /**

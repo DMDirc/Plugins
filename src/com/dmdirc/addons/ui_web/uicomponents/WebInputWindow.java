@@ -32,15 +32,11 @@ import com.dmdirc.ui.input.InputHandler;
 import java.util.HashMap;
 import java.util.Map;
 
-import lombok.Getter;
-
 /**
  * A Web-UI specific input window.
  */
-@SuppressWarnings("PMD.UnusedPrivateField")
 public class WebInputWindow extends WebWindow implements InputWindow {
 
-    @Getter
     private final WritableFrameContainer container;
 
     private final CommandParser commandparser;
@@ -59,6 +55,10 @@ public class WebInputWindow extends WebWindow implements InputWindow {
         this.controller = controller;
         this.inputHandler = new WebInputHandler(controller.getPluginManager(),
                 new WebInputField(), commandparser, getContainer());
+    }
+
+    public WritableFrameContainer getContainer() {
+        return container;
     }
 
     /** {@inheritDoc} */

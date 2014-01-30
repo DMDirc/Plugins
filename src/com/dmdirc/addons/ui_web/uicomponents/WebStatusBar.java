@@ -28,16 +28,17 @@ import com.dmdirc.interfaces.ui.StatusBar;
 import com.dmdirc.interfaces.ui.StatusBarComponent;
 import com.dmdirc.ui.StatusMessage;
 
-import lombok.RequiredArgsConstructor;
-
 /**
  * A status bar handler for the web UI.
  */
-@RequiredArgsConstructor
 public class WebStatusBar implements StatusBar {
 
     /** The request handler to pass global events to. */
     private final DynamicRequestHandler handler;
+
+    public WebStatusBar(final DynamicRequestHandler handler) {
+        this.handler = handler;
+    }
 
     /** {@inheritDoc} */
     @Override

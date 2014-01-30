@@ -24,21 +24,24 @@ package com.dmdirc.addons.ui_web;
 
 import com.dmdirc.addons.ui_web.uicomponents.WebWindow;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-
 /**
  * A DTO for describing a line added to a window.
  */
-@RequiredArgsConstructor
-@SuppressWarnings("PMD.UnusedPrivateField")
 public class Message {
 
     /** The line that was added. */
-    @Getter
     private final String message;
     /** The window the line was added to. */
     private final WebWindow window;
+
+    public Message(final String message, final WebWindow window) {
+        this.message = message;
+        this.window = window;
+    }
+
+    public String getMessage() {
+        return message;
+    }
 
     /**
      * Gets the ID of the window the message was sent to.

@@ -32,14 +32,11 @@ import com.dmdirc.plugins.implementations.BasePlugin;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.core.components.StatusBarManager;
 
-import lombok.RequiredArgsConstructor;
-
 import org.mortbay.jetty.Handler;
 
 /**
  * The main web interface plugin.
  */
-@RequiredArgsConstructor
 public class WebInterfacePlugin extends BasePlugin {
 
     /** Server manager to use. */
@@ -62,6 +59,18 @@ public class WebInterfacePlugin extends BasePlugin {
 
     /** The UI that we're using. */
     private WebInterfaceUI controller;
+
+    public WebInterfacePlugin(final ServerManager serverManager,
+            final IdentityController identityController, final PluginManager pluginManager,
+            final PluginInfo pluginInfo, final WindowManager windowManager,
+            final StatusBarManager statusBarManager) {
+        this.serverManager = serverManager;
+        this.identityController = identityController;
+        this.pluginManager = pluginManager;
+        this.pluginInfo = pluginInfo;
+        this.windowManager = windowManager;
+        this.statusBarManager = statusBarManager;
+    }
 
     /** {@inheritDoc} */
     @Override
