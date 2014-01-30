@@ -65,8 +65,6 @@ import javax.inject.Singleton;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
-import lombok.Getter;
-
 /**
  * This plugin adds DCC to DMDirc.
  */
@@ -92,7 +90,6 @@ public class DCCManager implements ActionListener {
     /** The factory to use for tab completers. */
     private final TabCompleterFactory tabCompleterFactory;
     /** The configuration domain to use. */
-    @Getter
     private final String domain;
 
     /**
@@ -136,6 +133,10 @@ public class DCCManager implements ActionListener {
         defaults.setOption(getDomain(), "receive.savelocation",
                 identityController.getConfigurationDirectory() + "downloads"
                 + System.getProperty("file.separator"));
+    }
+
+    public String getDomain() {
+        return domain;
     }
 
     /**

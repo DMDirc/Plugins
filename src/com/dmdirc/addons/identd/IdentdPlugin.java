@@ -42,8 +42,6 @@ import com.dmdirc.util.validators.PortValidator;
 import java.util.ArrayList;
 import java.util.List;
 
-import lombok.Getter;
-
 /**
  * The Identd plugin answers ident requests from IRC servers.
  */
@@ -60,8 +58,7 @@ public class IdentdPlugin extends BasePlugin implements ActionListener {
     /** Server manager. */
     private final ServerManager serverManager;
     /** Global config. */
-    @Getter
-    private AggregateConfigProvider config;
+    AggregateConfigProvider config;
 
     /**
      * Creates a new instance of this plugin.
@@ -81,6 +78,10 @@ public class IdentdPlugin extends BasePlugin implements ActionListener {
         this.actionController = actionController;
         this.serverManager = serverManager;
         config = identityController.getGlobalConfiguration();
+    }
+
+    AggregateConfigProvider getConfig() {
+        return config;
     }
 
     /**
