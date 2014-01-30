@@ -40,14 +40,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import lombok.RequiredArgsConstructor;
-
 /**
  * Retrieves information from VLC using its HTTP interface.
  *
  * @author chris
  */
-@RequiredArgsConstructor
 public class VlcMediaSourcePlugin extends BasePlugin implements MediaSource {
 
     /** The information obtained from VLC. */
@@ -56,6 +53,12 @@ public class VlcMediaSourcePlugin extends BasePlugin implements MediaSource {
     private final PluginInfo pluginInfo;
     /** The identity controller to read settings from. */
     private final IdentityController identityController;
+
+    public VlcMediaSourcePlugin(final PluginInfo pluginInfo,
+            final IdentityController identityController) {
+        this.pluginInfo = pluginInfo;
+        this.identityController = identityController;
+    }
 
     /** {@inheritDoc} */
     @Override
