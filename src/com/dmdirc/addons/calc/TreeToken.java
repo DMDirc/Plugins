@@ -25,29 +25,35 @@ package com.dmdirc.addons.calc;
 import java.util.ArrayList;
 import java.util.List;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.ToString;
-
 /**
  * Describes a tree of {@link Token}s.
  */
-@ToString
-@RequiredArgsConstructor
-@SuppressWarnings("PMD.UnusedPrivateField")
 public class TreeToken {
 
     /** The children of this node. */
-    @Getter
     private final List<TreeToken> children = new ArrayList<>();
 
     /** The token at the root of the tree. */
-    @Getter
     private final Token token;
 
     /** Whether or not this tree has been processed. */
-    @Getter
     private boolean processed = false;
+
+    public TreeToken(final Token token) {
+        this.token = token;
+    }
+
+    public List<TreeToken> getChildren() {
+        return children;
+    }
+
+    public Token getToken() {
+        return token;
+    }
+
+    public boolean isProcessed() {
+        return processed;
+    }
 
     /**
      * Adds the specified child to this tree.
@@ -72,6 +78,13 @@ public class TreeToken {
      */
     public Number evaluate() {
         return token.getType().evaluate(this);
+    }
+
+    @Override
+    public String toString() {
+        return "TreeToken{" + "children=" + children
+                + ", token=" + token
+                + ", processed=" + processed + '}';
     }
 
 }

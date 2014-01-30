@@ -27,13 +27,10 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import lombok.Getter;
-
 /**
  * Describes the different types of possible token, their arities, precedence,
  * and the types of token that may follow them.
  */
-@SuppressWarnings("PMD.UnusedPrivateField")
 public enum TokenType {
 
     /** The start of an input string. */
@@ -151,14 +148,12 @@ public enum TokenType {
     /** The string representation of tokens that may follow this one. */
     private final String[] strfollows;
     /** The precedence of this token. */
-    @Getter
     private final int precedence;
     /** The list of tokens that may follow this one. */
     private List<TokenType> follows;
     /** The regular expression used to match this token. */
     private final Pattern regex;
     /** The arity of this token. */
-    @Getter
     private final TokenTypeArity arity;
 
     /**
@@ -175,6 +170,14 @@ public enum TokenType {
         this.strfollows = follows;
         this.precedence = precedence;
         this.regex = Pattern.compile(regex);
+    }
+
+    public int getPrecedence() {
+        return precedence;
+    }
+
+    public TokenTypeArity getArity() {
+        return arity;
     }
 
     /**
