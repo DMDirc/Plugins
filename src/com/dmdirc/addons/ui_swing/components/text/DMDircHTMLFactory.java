@@ -29,16 +29,17 @@ import javax.swing.text.View;
 import javax.swing.text.html.HTMLEditorKit.HTMLFactory;
 import javax.swing.text.html.ImageView;
 
-import lombok.RequiredArgsConstructor;
-
 /**
  * DMDircHTML factory extends HTMLFactory to use DMDircImageView.
  */
-@RequiredArgsConstructor
 public class DMDircHTMLFactory extends HTMLFactory {
 
     /** The URL builder to use to construct image URLs. */
     private final URLBuilder urlBuilder;
+
+    public DMDircHTMLFactory(final URLBuilder urlBuilder) {
+        this.urlBuilder = urlBuilder;
+    }
 
     /** {@inheritDoc} */
     @Override

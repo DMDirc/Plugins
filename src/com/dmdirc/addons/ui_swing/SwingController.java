@@ -90,8 +90,6 @@ import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.UnsupportedLookAndFeelException;
 
-import lombok.Getter;
-
 import net.miginfocom.layout.PlatformDefaults;
 
 import dagger.ObjectGraph;
@@ -99,7 +97,6 @@ import dagger.ObjectGraph;
 /**
  * Controls the main swing UI.
  */
-@SuppressWarnings("PMD.UnusedPrivateField")
 public class SwingController extends BaseCommandPlugin implements UIController {
 
     /** Top level window list. */
@@ -109,60 +106,42 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     /** This plugin's plugin info object. */
     private final PluginInfo pluginInfo;
     /** Global config manager. */
-    @Getter
     private final AggregateConfigProvider globalConfig;
     /** Server manager. */
-    @Getter
     private final ServerManager serverManager;
     /** Identity Manager. */
-    @Getter
     private final IdentityController identityManager;
     /** Identity factory. */
-    @Getter
     private final IdentityFactory identityFactory;
     /** Global config identity. */
-    @Getter
     private final ConfigProvider globalIdentity;
     /** Addon config identity. */
     private final ConfigProvider addonIdentity;
     /** Global Swing UI Icon manager. */
-    @Getter
     private final IconManager iconManager;
     /** Prefs component factory instance. */
-    @Getter
     private final PrefsComponentFactory prefsComponentFactory;
     /** Action manager. */
-    @Getter
     private final ActionManager actionManager;
     /** Action factory. */
-    @Getter
     private final ActionFactory actionFactory;
     /** Plugin manager. */
-    @Getter
     private final PluginManager pluginManager;
     /** Perform wrapper. */
-    @Getter
     private final PerformWrapper performWrapper;
     /** Alias wrapper. */
-    @Getter
     private final AliasWrapper aliasWrapper;
     /** Theme manager to use. */
-    @Getter
     private final ThemeManager themeManager;
     /** Apple handler, deals with Mac specific code. */
-    @Getter
     private final Apple apple;
     /** The colour manager to use to parse colours. */
-    @Getter
     private final ColourManager colourManager;
     /** The URL builder to use. */
-    @Getter
     private final URLBuilder urlBuilder;
     /** Factory to use to create action substitutors. */
-    @Getter
     private final ActionSubstitutorFactory actionSubstitutorFactory;
     /** Lifecycle controller. */
-    @Getter
     private final LifecycleController lifecycleController;
 
     /** The manager we're using for dependencies. */
@@ -226,6 +205,78 @@ public class SwingController extends BaseCommandPlugin implements UIController {
         prefsComponentFactory = new PrefsComponentFactory(this);
         setAntiAlias();
         windows = new ArrayList<>();
+    }
+
+    public AggregateConfigProvider getGlobalConfig() {
+        return globalConfig;
+    }
+
+    public ServerManager getServerManager() {
+        return serverManager;
+    }
+
+    public IdentityController getIdentityManager() {
+        return identityManager;
+    }
+
+    public IdentityFactory getIdentityFactory() {
+        return identityFactory;
+    }
+
+    public ConfigProvider getGlobalIdentity() {
+        return globalIdentity;
+    }
+
+    public IconManager getIconManager() {
+        return iconManager;
+    }
+
+    public PrefsComponentFactory getPrefsComponentFactory() {
+        return prefsComponentFactory;
+    }
+
+    public ActionManager getActionManager() {
+        return actionManager;
+    }
+
+    public ActionFactory getActionFactory() {
+        return actionFactory;
+    }
+
+    public PluginManager getPluginManager() {
+        return pluginManager;
+    }
+
+    public PerformWrapper getPerformWrapper() {
+        return performWrapper;
+    }
+
+    public AliasWrapper getAliasWrapper() {
+        return aliasWrapper;
+    }
+
+    public ThemeManager getThemeManager() {
+        return themeManager;
+    }
+
+    public Apple getApple() {
+        return apple;
+    }
+
+    public ColourManager getColourManager() {
+        return colourManager;
+    }
+
+    public URLBuilder getUrlBuilder() {
+        return urlBuilder;
+    }
+
+    public ActionSubstitutorFactory getActionSubstitutorFactory() {
+        return actionSubstitutorFactory;
+    }
+
+    public LifecycleController getLifecycleController() {
+        return lifecycleController;
     }
 
     /**

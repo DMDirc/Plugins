@@ -64,18 +64,18 @@ import javax.swing.JSplitPane;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 
-import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
-
 import net.miginfocom.swing.MigLayout;
+
+import org.slf4j.LoggerFactory;
 
 /**
  * The main application frame.
  */
-@Slf4j
 public class MainFrame extends JFrame implements WindowListener,
         ConfigChangeListener, SwingWindowListener, FrameInfoListener,
         NotificationListener {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(MainFrame.class);
 
     /**
      * A version number for this class. It should be changed whenever the class
@@ -124,7 +124,6 @@ public class MainFrame extends JFrame implements WindowListener,
     /** Exit code. */
     private int exitCode = 0;
     /** Status bar. */
-    @Getter
     private SwingStatusBar statusBar;
     /** Main split pane. */
     private SplitPane mainSplitPane;
@@ -199,6 +198,10 @@ public class MainFrame extends JFrame implements WindowListener,
         windowFactory.addWindowListener(this);
 
         setTitle(getTitlePrefix());
+    }
+
+    public SwingStatusBar getStatusBar() {
+        return statusBar;
     }
 
     /**

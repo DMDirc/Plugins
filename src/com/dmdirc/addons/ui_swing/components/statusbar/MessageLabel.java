@@ -40,16 +40,17 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
-import lombok.extern.slf4j.Slf4j;
-
 import net.miginfocom.swing.MigLayout;
+
+import org.slf4j.LoggerFactory;
 
 /**
  * Message label handles showing messages in the status bar.
  */
-@Slf4j
 public class MessageLabel extends JPanel implements StatusBarComponent,
         MouseListener {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(MessageLabel.class);
 
     /** Serial version UID. */
     private static final long serialVersionUID = 1;
