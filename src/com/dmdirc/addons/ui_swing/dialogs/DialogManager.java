@@ -48,14 +48,15 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.LoggerFactory;
 
 /**
  * Manages the DMDirc dialogs, creates and disposes as required to ensure only
  * the required number exist at any one time.
  */
-@Slf4j
 public class DialogManager {
+
+    private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(DialogManager.class);
 
     /** Controller used for standard parameters for dependency injection. */
     private final SwingController controller;
@@ -91,10 +92,10 @@ public class DialogManager {
             final Object... params) {
         final T dialog = getDialog(klass, params);
         if (dialog.isVisible()) {
-            log.trace("Requesting focus for dialog: {}", klass);
+            LOG.trace("Requesting focus for dialog: {}", klass);
             dialog.requestFocus();
         } else {
-            log.trace("Display new dialog: {}", klass);
+            LOG.trace("Display new dialog: {}", klass);
             dialog.display();
         }
         return dialog;
@@ -131,10 +132,10 @@ public class DialogManager {
             final Object... params) {
         final T instance;
         if (dialogs.containsKey(klass)) {
-            log.trace("Getting pre-existing dialog: {}", klass);
+            LOG.trace("Getting pre-existing dialog: {}", klass);
             instance = (T) dialogs.get(klass);
         } else {
-            log.trace("Creating new dialog: {}", klass);
+            LOG.trace("Creating new dialog: {}", klass);
             final SimpleInjector injector = getInjector(params);
             instance = injector.createInstance(klass);
 
@@ -237,10 +238,10 @@ public class DialogManager {
      */
     public StandardDialog dispose(final StandardDialog dialog) {
         if (dialogs.containsKey(dialog.getClass())) {
-            log.trace("Disposing of known dialog: {}", dialog);
+            LOG.trace("Disposing of known dialog: {}", dialog);
             return dispose(dialog.getClass());
         }
-        log.trace("Unknown dialog, not disposing: {}", dialog);
+        LOG.trace("Unknown dialog, not disposing: {}", dialog);
         return null;
     }
 }

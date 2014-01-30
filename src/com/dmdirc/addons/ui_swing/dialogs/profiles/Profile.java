@@ -27,38 +27,26 @@ import com.dmdirc.interfaces.config.IdentityFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import javax.annotation.Nullable;
-
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
 
 /**
  * Profile wrapper class.
  */
-@EqualsAndHashCode(exclude = {"identityFactory", "configProvider", "deleted"})
-@ToString(exclude = {"configProvider", "identityFactory"})
-@SuppressWarnings("unused")
 public class Profile {
 
     /** Identity backing this profile. */
     private ConfigProvider configProvider;
     /** Profile Name, must be a sanitised filename. */
-    @Getter @Setter
     private String name;
     /** Real name. */
-    @Getter @Setter
     private String realname;
     /** Ident. */
-    @Getter @Setter
     private String ident;
     /** Nicknames. */
-    @Getter @Setter
     private List<String> nicknames;
     /** Has this profile been marked deleted? */
-    @Getter @Setter
     private boolean deleted = false;
     /** Factory to use to create profiles when saving. */
     private final IdentityFactory identityFactory;
@@ -93,6 +81,46 @@ public class Profile {
             realname = configProvider.getOption("profile", "realname");
             ident = configProvider.getOption("profile", "ident");
         }
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(final String name) {
+        this.name = name;
+    }
+
+    public String getRealname() {
+        return realname;
+    }
+
+    public void setRealname(final String realname) {
+        this.realname = realname;
+    }
+
+    public String getIdent() {
+        return ident;
+    }
+
+    public void setIdent(final String ident) {
+        this.ident = ident;
+    }
+
+    public List<String> getNicknames() {
+        return nicknames;
+    }
+
+    public void setNicknames(final List<String> nicknames) {
+        this.nicknames = nicknames;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(final boolean deleted) {
+        this.deleted = deleted;
     }
 
     /**
@@ -164,5 +192,45 @@ public class Profile {
             return;
         }
         configProvider.delete();
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 59 * hash + Objects.hashCode(this.name);
+        hash = 59 * hash + Objects.hashCode(this.realname);
+        hash = 59 * hash + Objects.hashCode(this.ident);
+        hash = 59 * hash + Objects.hashCode(this.nicknames);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Profile other = (Profile) obj;
+        if (!Objects.equals(this.name, other.name)) {
+            return false;
+        }
+        if (!Objects.equals(this.realname, other.realname)) {
+            return false;
+        }
+        if (!Objects.equals(this.ident, other.ident)) {
+            return false;
+        }
+        if (!Objects.equals(this.nicknames, other.nicknames)) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "Profile{" + "name=" + name + ", realname=" + realname
+                + ", ident=" + ident + ", nicknames=" + nicknames + ", deleted=" + deleted + '}';
     }
 }
