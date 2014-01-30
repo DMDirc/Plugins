@@ -51,13 +51,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-
 /**
  * Provides various features related to nickname colouring.
  */
-@RequiredArgsConstructor
 public class NickColourPlugin extends BasePlugin implements ActionListener, ConfigChangeListener {
 
     /** "Random" colours to use to colour nicknames. */
@@ -70,7 +66,6 @@ public class NickColourPlugin extends BasePlugin implements ActionListener, Conf
     private boolean settext;
     private boolean setnicklist;
     /** This plugin's plugin info. */
-    @Getter
     private final PluginInfo pluginInfo;
     /** Controller to read settings from. */
     private final IdentityController identityController;
@@ -78,6 +73,15 @@ public class NickColourPlugin extends BasePlugin implements ActionListener, Conf
     private final ColourManager colourManager;
     /** The swing controller to use. */
     private final SwingController swingController;
+
+    public NickColourPlugin(final PluginInfo pluginInfo,
+            final IdentityController identityController, final ColourManager colourManager,
+            final SwingController swingController) {
+        this.pluginInfo = pluginInfo;
+        this.identityController = identityController;
+        this.colourManager = colourManager;
+        this.swingController = swingController;
+    }
 
     /** {@inheritDoc} */
     @Override
