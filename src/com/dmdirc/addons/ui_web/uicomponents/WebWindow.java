@@ -43,30 +43,24 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import lombok.Getter;
-
 import org.apache.commons.lang.StringEscapeUtils;
 
 /**
  * A server-side representation of a "window" in the Web UI.
  */
-@SuppressWarnings("PMD.UnusedPrivateField")
 public class WebWindow implements Window, IRCDocumentListener,
         FrameInfoListener, FrameCloseListener {
 
     /** The unique ID of this window, used by clients to address the window. */
-    @Getter
     private final String id;
 
     /** The container that this window corresponds to. */
-    @Getter
     private final FrameContainer container;
 
     /** The handler to pass global events to. */
     private final DynamicRequestHandler handler;
 
     /** The controller that owns this window. */
-    @Getter
     private final WebInterfaceUI controller;
 
     public WebWindow(final WebInterfaceUI controller,
@@ -89,6 +83,18 @@ public class WebWindow implements Window, IRCDocumentListener,
                     new Object[]{controller.getWindowManager().getWindow(
                             parent.getParent()), this}));
         }
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public FrameContainer getContainer() {
+        return container;
+    }
+
+    public WebInterfaceUI getController() {
+        return controller;
     }
 
     public List<String> getMessages() {
