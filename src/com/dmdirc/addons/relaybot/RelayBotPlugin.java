@@ -51,12 +51,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
-import lombok.RequiredArgsConstructor;
-
 /**
  * This plugin makes certain relay bots less obnoxious looking.
  */
-@RequiredArgsConstructor
 public class RelayBotPlugin extends BasePlugin implements ActionListener, ConfigChangeListener {
 
     /** Known RelayChannelHandlers. */
@@ -67,6 +64,13 @@ public class RelayBotPlugin extends BasePlugin implements ActionListener, Config
     private final ServerManager serverManager;
     /** The controller to read/write settings with. */
     private final IdentityController identityController;
+
+    public RelayBotPlugin(final PluginInfo pluginInfo, final ServerManager serverManager,
+            final IdentityController identityController) {
+        this.pluginInfo = pluginInfo;
+        this.serverManager = serverManager;
+        this.identityController = identityController;
+    }
 
     /** {@inheritDoc} */
     @Override
