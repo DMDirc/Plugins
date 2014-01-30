@@ -11,8 +11,8 @@
         <dependency org="ant-contrib" name="ant-contrib" rev="1.0b3" conf="build->default" />
         <dependency org="com.github.shanemcc" name="jgit-describe" rev="0.3" conf="build->default" />
 
-        <dependency org="com.squareup.dagger" name="dagger" rev="1.1.+" conf="main->default" />
-        <dependency org="com.squareup.dagger" name="dagger-compiler" rev="1.1.+" conf="build->default" />
+        <dependency org="com.squareup.dagger" name="dagger" rev="1.2.+" conf="main->default" />
+        <dependency org="com.squareup.dagger" name="dagger-compiler" rev="1.2.+" conf="build->default" />
 
         <dependency org="com.google.guava" name="guava" rev="15.+" conf="build->default" />
         <dependency org="com.google.code.findbugs" name="jsr305" rev="2.+" conf="main->default" />
