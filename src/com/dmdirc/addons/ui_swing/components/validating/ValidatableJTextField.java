@@ -26,12 +26,23 @@ import com.dmdirc.ui.IconManager;
 import com.dmdirc.util.validators.Validatable;
 import com.dmdirc.util.validators.ValidationResponse;
 
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Insets;
+import java.awt.event.ActionListener;
+import java.awt.event.FocusListener;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import javax.swing.Icon;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
-
-import lombok.Delegate;
+import javax.swing.border.Border;
+import javax.swing.event.CaretListener;
+import javax.swing.plaf.TextUI;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -43,7 +54,6 @@ public class ValidatableJTextField extends JComponent implements Validatable {
     /** Serial Version UID. */
     private static final long serialVersionUID = 1;
     /** TextField. */
-    @Delegate
     private final JTextField textField;
     /** Error icon. */
     private final JLabel errorIcon;
@@ -107,5 +117,176 @@ public class ValidatableJTextField extends JComponent implements Validatable {
      */
     public JTextField getTextField() {
         return textField;
+    }
+
+    @Override
+    public void setFont(final Font f) {
+        textField.setFont(f);
+    }
+
+    public synchronized void addActionListener(final ActionListener l) {
+        textField.addActionListener(l);
+    }
+
+    public void setUI(final TextUI ui) {
+        textField.setUI(ui);
+    }
+
+    public void addCaretListener(final CaretListener listener) {
+        textField.addCaretListener(listener);
+    }
+
+    public Document getDocument() {
+        return textField.getDocument();
+    }
+
+    public void setMargin(final Insets m) {
+        textField.setMargin(m);
+    }
+
+    public void setCaretColor(final Color c) {
+        textField.setCaretColor(c);
+    }
+
+    public void setSelectionColor(final Color c) {
+        textField.setSelectionColor(c);
+    }
+
+    public void setSelectedTextColor(final Color c) {
+        textField.setSelectedTextColor(c);
+    }
+
+    public void setDisabledTextColor(final Color c) {
+        textField.setDisabledTextColor(c);
+    }
+
+    public void replaceSelection(final String content) {
+        textField.replaceSelection(content);
+    }
+
+    public String getText(final int offs, final int len) throws BadLocationException {
+        return textField.getText(offs, len);
+    }
+
+    public void cut() {
+        textField.cut();
+    }
+
+    public void copy() {
+        textField.copy();
+    }
+
+    public void paste() {
+        textField.paste();
+    }
+
+    public void setCaretPosition(final int position) {
+        textField.setCaretPosition(position);
+    }
+
+    public void setText(final String t) {
+        textField.setText(t);
+    }
+
+    public String getText() {
+        return textField.getText();
+    }
+
+    public String getSelectedText() {
+        return textField.getSelectedText();
+    }
+
+    public boolean isEditable() {
+        return textField.isEditable();
+    }
+
+    public void setEditable(final boolean b) {
+        textField.setEditable(b);
+    }
+
+    public void setSelectionStart(final int selectionStart) {
+        textField.setSelectionStart(selectionStart);
+    }
+
+    public void setSelectionEnd(final int selectionEnd) {
+        textField.setSelectionEnd(selectionEnd);
+    }
+
+    public void select(final int selectionStart, final int selectionEnd) {
+        textField.select(selectionStart, selectionEnd);
+    }
+
+    public void selectAll() {
+        textField.selectAll();
+    }
+
+    @Override
+    public void requestFocus() {
+        textField.requestFocus();
+    }
+
+    @Override
+    public boolean requestFocus(final boolean temporary) {
+        return textField.requestFocus(temporary);
+    }
+
+    @Override
+    public boolean requestFocusInWindow() {
+        return textField.requestFocusInWindow();
+    }
+
+    @Override
+    public void setBorder(final Border border) {
+        textField.setBorder(border);
+    }
+
+    @Override
+    public void setEnabled(final boolean enabled) {
+        textField.setEnabled(enabled);
+    }
+
+    @Override
+    public void setForeground(final Color fg) {
+        textField.setForeground(fg);
+    }
+
+    @Override
+    public void setBackground(final Color bg) {
+        textField.setBackground(bg);
+    }
+
+    @Override
+    public Color getForeground() {
+        return textField.getForeground();
+    }
+
+    @Override
+    public Color getBackground() {
+        return textField.getBackground();
+    }
+
+    @Override
+    public Font getFont() {
+        return textField.getFont();
+    }
+
+    @Override
+    public synchronized void addFocusListener(final FocusListener l) {
+        textField.addFocusListener(l);
+    }
+
+    @Override
+    public synchronized void addKeyListener(final KeyListener l) {
+        textField.addKeyListener(l);
+    }
+
+    @Override
+    public synchronized void addMouseListener(final MouseListener l) {
+        textField.addMouseListener(l);
+    }
+
+    @Override
+    public synchronized void addMouseMotionListener(final MouseMotionListener l) {
+        textField.addMouseMotionListener(l);
     }
 }
