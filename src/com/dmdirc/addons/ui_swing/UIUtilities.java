@@ -55,8 +55,6 @@ import javax.swing.plaf.FontUIResource;
 import javax.swing.text.JTextComponent;
 import javax.swing.undo.UndoManager;
 
-import lombok.SneakyThrows;
-
 import net.miginfocom.layout.PlatformDefaults;
 
 /**
@@ -126,7 +124,7 @@ public final class UIUtilities {
     public static void initUISettings() {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (InstantiationException | ClassNotFoundException | 
+        } catch (InstantiationException | ClassNotFoundException |
                   UnsupportedLookAndFeelException | IllegalAccessException ex) {
             throw new UnsupportedOperationException("Unable to switch to the " +
                     "system look and feel", ex);
@@ -231,8 +229,6 @@ public final class UIUtilities {
      *
      * @return Result from the completed thread or null if an exception occurred
      */
-    @SneakyThrows
-    @SuppressWarnings("PMD.AvoidThrowingRawExceptionTypes")
     public static <T> T invokeAndWait(final Callable<T> returnable) {
         try {
             if (SwingUtilities.isEventDispatchThread()) {
@@ -243,7 +239,7 @@ public final class UIUtilities {
                 return task.get();
             }
         } catch (Exception ex) {
-            throw ex;
+            throw new RuntimeException(ex);
         }
     }
 

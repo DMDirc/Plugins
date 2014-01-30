@@ -27,18 +27,20 @@ import com.dmdirc.util.validators.Validator;
 
 import java.util.List;
 
-import lombok.RequiredArgsConstructor;
-
 /**
  * Ensures profile names are unique.
  */
-@RequiredArgsConstructor
 class ProfileNameValidator implements Validator<String> {
 
     /** List of profiles to validate. */
     private final List<Profile> profiles;
     /** Currently selected profile. */
     private final Profile selectedProfile;
+
+    public ProfileNameValidator(final List<Profile> profiles, final Profile selectedProfile) {
+        this.profiles = profiles;
+        this.selectedProfile = selectedProfile;
+    }
 
     /** {@inheritDoc} */
     @Override

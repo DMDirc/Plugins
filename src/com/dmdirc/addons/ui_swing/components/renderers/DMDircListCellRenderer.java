@@ -27,13 +27,10 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 
-import lombok.RequiredArgsConstructor;
-
 /**
  * Simplifies implementing a cell renderer, works around oddities in look and
  * feels.
  */
-@RequiredArgsConstructor
 public abstract class DMDircListCellRenderer implements ListCellRenderer {
 
     /**
@@ -48,6 +45,10 @@ public abstract class DMDircListCellRenderer implements ListCellRenderer {
      * Label to use if parent doesn't supply one.
      */
     private JLabel label;
+
+    public DMDircListCellRenderer(final ListCellRenderer parentRenderer) {
+        this.parentRenderer = parentRenderer;
+    }
 
     /**
      * Renders the cell on the given label.

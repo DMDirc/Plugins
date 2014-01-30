@@ -24,12 +24,9 @@ package com.dmdirc.addons.ui_swing.dialogs.profiles;
 
 import com.dmdirc.interfaces.config.IdentityFactory;
 
-import lombok.RequiredArgsConstructor;
-
 /**
  * This controller reacts to all actions in the profile manager dialog.
  */
-@RequiredArgsConstructor
 public class ProfileManagerController {
 
     /** Dialog shown to user. */
@@ -38,6 +35,13 @@ public class ProfileManagerController {
     private final ProfileManagerModel model;
     /** Factory to use when creating new profiles. */
     private final IdentityFactory identityFactory;
+
+    public ProfileManagerController(final ProfileManagerDialog dialog,
+            final ProfileManagerModel model, final IdentityFactory identityFactory) {
+        this.dialog = dialog;
+        this.model = model;
+        this.identityFactory = identityFactory;
+    }
 
     /** Adds a new profile. */
     public void addProfile() {
