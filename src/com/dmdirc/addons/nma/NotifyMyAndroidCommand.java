@@ -32,14 +32,14 @@ import com.dmdirc.interfaces.CommandController;
 
 import java.io.IOException;
 
-import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.LoggerFactory;
 
 /**
  * Command to raise notifications with NotifyMyAndroid.
  */
-@Slf4j
 public class NotifyMyAndroidCommand extends Command {
+
+    private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(NotifyMyAndroidCommand.class);
 
     /** A command info object for this command. */
     public static final BaseCommandInfo INFO = new BaseCommandInfo(
@@ -49,7 +49,6 @@ public class NotifyMyAndroidCommand extends Command {
             CommandType.TYPE_GLOBAL);
 
     /** The configuration domain to retrieve settings from. */
-    @Setter
     private String configDomain;
 
     /**
@@ -61,18 +60,22 @@ public class NotifyMyAndroidCommand extends Command {
         super(controller);
     }
 
+    public void setConfigDomain(final String configDomain) {
+        this.configDomain = configDomain;
+    }
+
     /** {@inheritDoc} */
     @Override
     public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
         final String[] parts = args.getArgumentsAsString().split("\\s+--\\s+", 2);
-        log.trace("Split input: {}", (Object[]) parts);
+        LOG.trace("Split input: {}", (Object[]) parts);
 
         if (parts.length != 2) {
             showUsage(origin, args.isSilent(), INFO.getName(), INFO.getHelp());
         }
 
-        log.trace("Retrieving settings from domain '{}'", configDomain);
+        LOG.trace("Retrieving settings from domain '{}'", configDomain);
         final NotifyMyAndroidClient client = new NotifyMyAndroidClient(
                 origin.getConfigManager().getOption(configDomain, "apikey"),
                 origin.getConfigManager().getOption(configDomain, "application"));
@@ -85,7 +88,7 @@ public class NotifyMyAndroidCommand extends Command {
                     client.notify(parts[0], parts[1]);
                     sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Notification sent");
                 } catch (IOException ex) {
-                    log.info("Exception when trying to notify NMA", ex);
+                    LOG.info("Exception when trying to notify NMA", ex);
                     sendLine(origin, args.isSilent(), FORMAT_ERROR, "Unable to send: " + ex.getMessage());
                 }
             }

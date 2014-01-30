@@ -33,14 +33,11 @@ import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.Callable;
 
-import lombok.RequiredArgsConstructor;
-
 /**
  * Class to manage OSD Windows.
  *
  * @since 0.6.3
  */
-@RequiredArgsConstructor
 public class OsdManager {
 
     /** The window the OSD will be associated with. */
@@ -55,6 +52,14 @@ public class OsdManager {
     private final List<OsdWindow> windowList = new ArrayList<>();
     /** List of messages to be queued. */
     private final Queue<QueuedMessage> windowQueue = new LinkedList<>();
+
+    public OsdManager(final MainFrame mainFrame, final IdentityController identityController,
+            final OsdPlugin plugin, final ColourManager colourManager) {
+        this.mainFrame = mainFrame;
+        this.identityController = identityController;
+        this.plugin = plugin;
+        this.colourManager = colourManager;
+    }
 
     /**
      * Add messages to the queue and call displayWindows.

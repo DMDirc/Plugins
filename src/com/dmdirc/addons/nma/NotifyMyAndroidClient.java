@@ -31,15 +31,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.LoggerFactory;
 
 /**
  * Simple client for sending events to NotifyMyAndroid.
  */
-@Slf4j
-@RequiredArgsConstructor
 public class NotifyMyAndroidClient {
+
+    private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(NotifyMyAndroidClient.class);
 
     /** The base URL for the NMA API. */
     private static final String BASE_URL = "https://www.notifymyandroid.com";
@@ -51,6 +50,11 @@ public class NotifyMyAndroidClient {
 
     /** The application to report ourselves as. */
     private final String application;
+
+    public NotifyMyAndroidClient(Collection<String> apiKeys, String application) {
+        this.apiKeys = apiKeys;
+        this.application = application;
+    }
 
     /**
      * Creates a new instance of {@link NotifyMyAndroidClient} with a single
@@ -78,11 +82,11 @@ public class NotifyMyAndroidClient {
         arguments.put("event", event);
         arguments.put("description", description);
 
-        log.info("Sending notification to NMA for event '{}'", event);
-        log.debug("Arguments: {}", arguments);
+        LOG.info("Sending notification to NMA for event '{}'", event);
+        LOG.debug("Arguments: {}", arguments);
 
         final List<String> response = Downloader.getPage(BASE_URL + NOTIFY_PATH, arguments);
-        log.debug("Response: {}", response);
+        LOG.debug("Response: {}", response);
     }
 
     /**
