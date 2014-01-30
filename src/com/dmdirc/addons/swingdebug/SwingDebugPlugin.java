@@ -35,13 +35,10 @@ import java.awt.event.ActionListener;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 
-import lombok.RequiredArgsConstructor;
-
 /**
  * Swing debug plugin. Provides long running EDT task violation detection and a
  * console for System.out and System.err.
  */
-@RequiredArgsConstructor
 public class SwingDebugPlugin extends BasePlugin implements ActionListener {
 
     /** The controller to read/write settings with. */
@@ -62,6 +59,13 @@ public class SwingDebugPlugin extends BasePlugin implements ActionListener {
     private SystemStreamContainer sysoutFrame;
     /** System error window. */
     private SystemStreamContainer syserrFrame;
+
+    public SwingDebugPlugin(final IdentityController identityController,
+            final SwingController controller, final WindowManager windowManager) {
+        this.identityController = identityController;
+        this.controller = controller;
+        this.windowManager = windowManager;
+    }
 
     /** {@inheritDoc} */
     @Override

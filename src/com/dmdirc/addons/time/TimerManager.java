@@ -29,14 +29,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import lombok.RequiredArgsConstructor;
-
 /**
  * Class to manage Timers.
  *
  * @since 0.6.5
  */
-@RequiredArgsConstructor
 public class TimerManager {
 
     /** Map of all the timers that are running. */
@@ -44,6 +41,10 @@ public class TimerManager {
 
     /** The command controller to use when executing global commands. */
     private final CommandController commandController;
+
+    public TimerManager(final CommandController commandController) {
+        this.commandController = commandController;
+    }
 
     /**
      * Adds a timer to the internal list and starts the timer.
