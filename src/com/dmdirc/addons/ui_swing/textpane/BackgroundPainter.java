@@ -24,7 +24,6 @@ package com.dmdirc.addons.ui_swing.textpane;
 
 import com.dmdirc.addons.ui_swing.BackgroundOption;
 import com.dmdirc.addons.ui_swing.UIUtilities;
-import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
 import com.dmdirc.config.ConfigBinding;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.util.URLBuilder;
@@ -32,18 +31,9 @@ import com.dmdirc.util.URLBuilder;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.io.IOException;
-import java.net.URL;
-import java.util.concurrent.ExecutionException;
-
-import javax.imageio.ImageIO;
 import javax.swing.JComponent;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.NonNull;
-import lombok.extern.slf4j.Slf4j;
 
 import org.jdesktop.jxlayer.plaf.LayerUI;
 
@@ -51,14 +41,11 @@ import org.jdesktop.jxlayer.plaf.LayerUI;
  * Background painting layer UI. Paints a opaque background then paints the
  * specified image onto the background layer.
  */
-@Slf4j
-@SuppressWarnings("unused")
 public class BackgroundPainter extends LayerUI<JComponent> {
 
     /**
      * Domain to retrieve settings from.
      */
-    @Getter(value = AccessLevel.PROTECTED)
     @NonNull
     private final String domain;
 
@@ -66,14 +53,12 @@ public class BackgroundPainter extends LayerUI<JComponent> {
      * Key in domain to get image URL from.
      */
     @NonNull
-    @Getter(value = AccessLevel.PROTECTED)
     private final String imageKey;
 
     /**
      * Key in domain to get image background type from.
      */
     @NonNull
-    @Getter(value = AccessLevel.PROTECTED)
     private final String optionKey;
 
     /** The URL builder to use to find icons. */
@@ -116,6 +101,22 @@ public class BackgroundPainter extends LayerUI<JComponent> {
         configManager.getBinder().bind(this, BackgroundPainter.class);
     }
 
+    protected String getDomain() {
+        return domain;
+    }
+
+    protected String getImageKey() {
+        return imageKey;
+    }
+
+    protected String getOptionKey() {
+        return optionKey;
+    }
+
+    protected void setBackgroundImage(final Image backgroundImage) {
+        this.backgroundImage = backgroundImage;
+    }
+
     /**
      * Called to update the value of the image URL.
      *
@@ -126,7 +127,7 @@ public class BackgroundPainter extends LayerUI<JComponent> {
         if (value == null || value.isEmpty()) {
             backgroundImage = null;
         } else {
-            new ImageLoader(urlBuilder.getUrl(value)).executeInExecutor();
+            new ImageLoader(urlBuilder.getUrl(value), this).executeInExecutor();
         }
     }
 
@@ -164,52 +165,4 @@ public class BackgroundPainter extends LayerUI<JComponent> {
         configManager.getBinder().unbind(this);
     }
 
-    /**
-     * Loads image URLs in the background.
-     */
-    @AllArgsConstructor
-    private class ImageLoader extends LoggingSwingWorker<Image, Void> {
-
-        /**
-         * URL of image file to load.
-         */
-        private final URL imageURL;
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        protected Image doInBackground() {
-            try {
-                log.trace("Loading image: {}", imageURL);
-                if (imageURL != null) {
-                    return ImageIO.read(imageURL);
-                }
-                return null;
-            } catch (IOException ex) {
-                log.trace("Background loading IOException: {}", ex.getMessage());
-                return null;
-            }
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        protected void done() {
-            try {
-                if (isCancelled()) {
-                    log.trace("Background loading cancelled.");
-                    return;
-                }
-                log.trace("Background loading complete: {}", get());
-                backgroundImage = get();
-            } catch (InterruptedException ex) {
-                log.debug("Interrupted whilst loading image: {}", imageURL);
-            } catch (ExecutionException ex) {
-                log.debug("Exception whilst loading image: {}. "
-                        + "Exception message:", imageURL, ex.getMessage());
-            }
-        }
-    }
 }
