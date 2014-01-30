@@ -31,9 +31,9 @@ import com.dmdirc.util.URLBuilder;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
-import javax.swing.JComponent;
 
-import lombok.NonNull;
+import javax.annotation.Nonnull;
+import javax.swing.JComponent;
 
 import org.jdesktop.jxlayer.plaf.LayerUI;
 
@@ -46,19 +46,19 @@ public class BackgroundPainter extends LayerUI<JComponent> {
     /**
      * Domain to retrieve settings from.
      */
-    @NonNull
+    @Nonnull
     private final String domain;
 
     /**
      * Key in domain to get image URL from.
      */
-    @NonNull
+    @Nonnull
     private final String imageKey;
 
     /**
      * Key in domain to get image background type from.
      */
-    @NonNull
+    @Nonnull
     private final String optionKey;
 
     /** The URL builder to use to find icons. */
