@@ -32,9 +32,6 @@ import lombok.ToString;
 /**
  * Describes a tree of {@link Token}s.
  */
-@ToString
-@RequiredArgsConstructor
-@SuppressWarnings("PMD.UnusedPrivateField")
 public class TreeToken {
 
     /** The children of this node. */
@@ -48,6 +45,10 @@ public class TreeToken {
     /** Whether or not this tree has been processed. */
     @Getter
     private boolean processed = false;
+
+    public TreeToken(final Token token) {
+        this.token = token;
+    }
 
     /**
      * Adds the specified child to this tree.
@@ -72,6 +73,13 @@ public class TreeToken {
      */
     public Number evaluate() {
         return token.getType().evaluate(this);
+    }
+
+    @Override
+    public String toString() {
+        return "TreeToken{" + "children=" + children
+                + ", token=" + token
+                + ", processed=" + processed + '}';
     }
 
 }
