@@ -34,60 +34,44 @@ import java.util.Map;
 
 import javax.swing.ImageIcon;
 
-import lombok.Getter;
-
 /**
  * Describes an addon.
  */
-@SuppressWarnings("PMD.UnusedPrivateField")
 public class AddonInfo {
     /** Addon site ID. */
-    @Getter
     private final int id;
     /**
      * Stable download name. This should be prepended with
      * http://addons.dmdirc.com/addondownload/ to get a full URL.
      */
-    @Getter
     private final String stableDownload;
     /**
      * Stable download name. This should be prepended with
      * http://addons.dmdirc.com/addondownload/ to get a full URL.
      */
-    @Getter
     private final String unstableDownload;
     /**
      * Stable download name. This should be prepended with
      * http://addons.dmdirc.com/addondownload/ to get a full URL.
      */
-    @Getter
     private final String nightlyDownload;
     /** Addon title. */
-    @Getter
     private final String title;
     /** Addon author and email. */
-    @Getter
     private final String author;
     /** Addon rating from 0-10. */
-    @Getter
     private final int rating;
     /** Full text description. */
-    @Getter
     private final String description;
     /** Addon type, {@link ActionType}. */
-    @Getter
     private final AddonType type;
     /** Has this addon been verified by the developers? */
-    @Getter
     private final boolean verified;
     /** Date this addon was updated. */
-    @Getter
     private final int date;
     /** Screenshot image. */
-    @Getter
     private final ImageIcon screenshot;
     /** Current client update channel. */
-    @Getter
     private UpdateChannel channel;
 
     /**
@@ -131,6 +115,58 @@ public class AddonInfo {
         } catch (final IllegalArgumentException ex) {
             channel = UpdateChannel.NONE;
         }
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getStableDownload() {
+        return stableDownload;
+    }
+
+    public String getUnstableDownload() {
+        return unstableDownload;
+    }
+
+    public String getNightlyDownload() {
+        return nightlyDownload;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public int getRating() {
+        return rating;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public AddonType getType() {
+        return type;
+    }
+
+    public boolean isVerified() {
+        return verified;
+    }
+
+    public int getDate() {
+        return date;
+    }
+
+    public ImageIcon getScreenshot() {
+        return screenshot;
+    }
+
+    public UpdateChannel getChannel() {
+        return channel;
     }
 
     /**

@@ -41,17 +41,18 @@ import java.beans.PropertyChangeListener;
 import javax.swing.JButton;
 import javax.swing.SwingUtilities;
 
-import lombok.extern.slf4j.Slf4j;
 
 import net.miginfocom.swing.MigLayout;
+
+import org.slf4j.LoggerFactory;
 
 /**
  * Action editor dialog.
  */
-@Slf4j
-public class ActionEditorDialog extends StandardDialog implements
-        ActionListener,
+public class ActionEditorDialog extends StandardDialog implements ActionListener,
         PropertyChangeListener {
+
+    private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(ActionEditorDialog.class);
 
     /** Serial version UID. */
     private static final long serialVersionUID = 1;
@@ -99,7 +100,7 @@ public class ActionEditorDialog extends StandardDialog implements
             final AggregateConfigProvider config, final ActionSubstitutorFactory subsFactory,
             final ActionFactory actionFactory, final Window parentWindow, final String group) {
         super(dialogManager, parentWindow, ModalityType.DOCUMENT_MODAL);
-        log.debug("loading with group: " + group);
+        LOG.debug("loading with group: " + group);
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         setTitle("Action Editor");
 
@@ -130,7 +131,7 @@ public class ActionEditorDialog extends StandardDialog implements
             final AggregateConfigProvider config, final ActionSubstitutorFactory subsFactory,
             final ActionFactory actionFactory, final Window parentWindow, final Action action) {
         super(dialogManager, parentWindow, ModalityType.DOCUMENT_MODAL);
-        log.debug("loading with action: " + action);
+        LOG.debug("loading with action: " + action);
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         setTitle("Action Editor");
 
