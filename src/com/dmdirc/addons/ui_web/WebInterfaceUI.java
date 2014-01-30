@@ -36,8 +36,6 @@ import com.dmdirc.ui.core.components.StatusBarManager;
 
 import java.net.URI;
 
-import lombok.Getter;
-
 import org.mortbay.jetty.Handler;
 import org.mortbay.jetty.security.Constraint;
 import org.mortbay.jetty.security.ConstraintMapping;
@@ -53,19 +51,15 @@ public class WebInterfaceUI implements UIController {
     private final org.mortbay.jetty.Server webServer;
 
     /** The window manager for this UI. */
-    @Getter
     private final WebWindowManager windowManager;
 
     /** The dynamic request handler in use. */
-    @Getter
     private final DynamicRequestHandler handler;
 
     /** The PluginInfo object for this plugin. */
-    @Getter
     private final PluginInfo pluginInfo;
 
     /** The plugin manager used to find other plugins. */
-    @Getter
     private final PluginManager pluginManager;
 
     /**
@@ -126,6 +120,22 @@ public class WebInterfaceUI implements UIController {
         windowManager = new WebWindowManager(this, coreWindowManager);
 
         statusBarManager.registerStatusBar(new WebStatusBar(handler));
+    }
+
+    public WebWindowManager getWindowManager() {
+        return windowManager;
+    }
+
+    public DynamicRequestHandler getHandler() {
+        return handler;
+    }
+
+    public PluginInfo getPluginInfo() {
+        return pluginInfo;
+    }
+
+    public PluginManager getPluginManager() {
+        return pluginManager;
     }
 
     /**

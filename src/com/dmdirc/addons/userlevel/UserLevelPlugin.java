@@ -36,13 +36,10 @@ import com.dmdirc.plugins.implementations.BasePlugin;
 import java.util.HashMap;
 import java.util.Map;
 
-import lombok.RequiredArgsConstructor;
-
 /**
  * Allows the client to assign user levels to users (based on hostname matches),
  * and for actions/plugins to check those levels.
  */
-@RequiredArgsConstructor
 public class UserLevelPlugin extends BasePlugin implements ActionListener,
         ConfigChangeListener {
 
@@ -55,6 +52,12 @@ public class UserLevelPlugin extends BasePlugin implements ActionListener,
     private final IdentityController identityController;
     /** The action controller to add components to. */
     private final ActionController actionController;
+
+    public UserLevelPlugin(final IdentityController identityController,
+            final ActionController actionController) {
+        this.identityController = identityController;
+        this.actionController = actionController;
+    }
 
     /** {@inheritDoc} */
     @Override

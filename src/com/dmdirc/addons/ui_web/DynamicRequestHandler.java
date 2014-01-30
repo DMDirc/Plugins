@@ -45,8 +45,6 @@ import java.util.TimerTask;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import lombok.extern.slf4j.Slf4j;
-
 import org.mortbay.jetty.HttpConnection;
 import org.mortbay.jetty.Request;
 import org.mortbay.jetty.handler.AbstractHandler;
@@ -54,12 +52,14 @@ import org.mortbay.util.ajax.Continuation;
 import org.mortbay.util.ajax.ContinuationSupport;
 import org.mortbay.util.ajax.JSON;
 import org.mortbay.util.ajax.JSONObjectConvertor;
+import org.slf4j.LoggerFactory;
 
 /**
  * Handles requests for dynamic resources (prefixed with /dynamic/).
  */
-@Slf4j
 public class DynamicRequestHandler extends AbstractHandler {
+
+    private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(DynamicRequestHandler.class);
 
     /** Number of milliseconds before a client is timed out. */
     private static final long TIMEOUT = 1000 * 60 * 2; // Two minutes
@@ -77,8 +77,8 @@ public class DynamicRequestHandler extends AbstractHandler {
     private final IdentityController identityController;
 
     /**
-     * Creates a new instance of DynamicRequestHandler. Registers object
-     * convertors with the JSON serialiser.
+     * Creates a new instance of DynamicRequestHandler. Registers object convertors with the JSON
+     * serialiser.
      *
      * @param controller The controller that this request handler is for.
      * @param identityController The controller to read/write settings with.
@@ -253,10 +253,10 @@ public class DynamicRequestHandler extends AbstractHandler {
                         request.getParameter("input"),
                         request.getParameter("selstart"),
                         request.getParameter("selend")).handleKeyPressed(
-                        request.getParameter("input"),
-                        Integer.parseInt(request.getParameter("key")), 0,
-                        Boolean.parseBoolean(request.getParameter("shift")),
-                        Boolean.parseBoolean(request.getParameter("ctrl")));
+                                request.getParameter("input"),
+                                Integer.parseInt(request.getParameter("key")), 0,
+                                Boolean.parseBoolean(request.getParameter("shift")),
+                                Boolean.parseBoolean(request.getParameter("ctrl")));
             } catch (NumberFormatException ex) {
                 // Do nothing
             }
@@ -273,7 +273,7 @@ public class DynamicRequestHandler extends AbstractHandler {
 
             wiw.getInputHandler(client,
                     request.getParameter("input"), request.getParameter(
-                    "selstart"),
+                            "selstart"),
                     request.getParameter("selend")).doTabCompletion(false);
         }
     }
@@ -305,8 +305,8 @@ public class DynamicRequestHandler extends AbstractHandler {
         try {
             serverManager.connectToAddress(
                     new URI("irc://" + request.getParameter("password") + "@"
-                        + request.getParameter("server") + ":"
-                        + request.getParameter("port")),
+                            + request.getParameter("server") + ":"
+                            + request.getParameter("port")),
                     findProfile(request.getParameter("profile")));
         } catch (URISyntaxException ex) {
             // Ugh.
@@ -415,9 +415,9 @@ public class DynamicRequestHandler extends AbstractHandler {
     }
 
     /**
-     * Utility method to convert an object into a JSON string. Performs the
-     * conversion using {@link JSON#toString(java.lang.Object)}, and then
-     * post-processes the output to encode certain control characters.
+     * Utility method to convert an object into a JSON string. Performs the conversion using
+     * {@link JSON#toString(java.lang.Object)}, and then post-processes the output to encode certain
+     * control characters.
      *
      * @param object The object to be JSON-ified.
      * @return A JSON representation of the specified object.
@@ -426,7 +426,7 @@ public class DynamicRequestHandler extends AbstractHandler {
         try {
             return JSON.toString(object).replace("\001", "\\u0001");
         } catch (RuntimeException ex) {
-            log.error("Unable to encode JSON: {}", object, ex);
+            LOG.error("Unable to encode JSON: {}", object, ex);
             throw ex;
         }
     }
