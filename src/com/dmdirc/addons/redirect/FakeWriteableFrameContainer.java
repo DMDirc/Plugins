@@ -116,15 +116,4 @@ public class FakeWriteableFrameContainer extends WritableFrameContainer {
         return target.getConnection();
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void windowClosing() {
-        // Do nothing
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void windowClosed() {
-        // Do nothing
-    }
 }

@@ -364,12 +364,6 @@ public class TransferContainer extends FrameContainer implements
         // 5: Inform any parents that the window is closing
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void windowClosed() {
-        // 7: Remove any references to the window and parents
-    }
-
     public void addSocketCloseCallback(final SocketCloseListener listener) {
         if (connection != null && connection.getParser() != null) {
             connection.getParser().getCallbackManager()

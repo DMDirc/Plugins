@@ -102,10 +102,4 @@ public abstract class DCCFrameContainer extends WritableFrameContainer {
         // 5: Inform any parents that the window is closing
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void windowClosed() {
-        // 7: Remove any references to the window and parents
-    }
-
 }
