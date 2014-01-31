@@ -83,15 +83,13 @@ public class DebugWindow extends FrameContainer {
      * Closes this container (and its associated frame).
      */
     @Override
-    public void windowClosing() {
-        // 2: Remove any callbacks or listeners
+    public void close() {
+        super.close();
+
+        // Remove any callbacks or listeners
         if (parser != null) {
             parser.getCallbackManager().delCallback(DebugInfoListener.class, plugin);
         }
-
-        // 3: Trigger any actions neccessary
-        // 4: Trigger action for the window closing
-        // 5: Inform any parents that the window is closing
     }
 
 }

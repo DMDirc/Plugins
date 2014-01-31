@@ -353,15 +353,12 @@ public class TransferContainer extends FrameContainer implements
      * Closes this container (and it's associated frame).
      */
     @Override
-    public void windowClosing() {
+    public void close() {
         windowClosing = true;
 
-        // 2: Remove any callbacks or listeners
-        // 3: Trigger any actions neccessary
-        dcc.removeFromTransfers();
+        super.close();
 
-        // 4: Trigger action for the window closing
-        // 5: Inform any parents that the window is closing
+        dcc.removeFromTransfers();
     }
 
     public void addSocketCloseCallback(final SocketCloseListener listener) {

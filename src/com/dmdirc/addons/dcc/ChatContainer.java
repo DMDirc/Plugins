@@ -133,8 +133,8 @@ public class ChatContainer extends DCCFrameContainer implements DCCChatHandler {
 
     /** {@inheritDoc} */
     @Override
-    public void windowClosing() {
-        super.windowClosing();
+    public void close() {
+        super.close();
         dccChat.close();
     }
 

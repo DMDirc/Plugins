@@ -86,6 +86,7 @@ public class PlaceholderContainer extends FrameContainer {
                 @Override
                 public boolean save() {
                     PlaceholderContainer.super.close();
+                    plugin.removeContainer();
                     return true;
                 }
 
@@ -97,6 +98,7 @@ public class PlaceholderContainer extends FrameContainer {
             }.display();
         } else {
             super.close();
+            plugin.removeContainer();
         }
     }
 
@@ -104,16 +106,6 @@ public class PlaceholderContainer extends FrameContainer {
     @Override
     public Connection getConnection() {
         return null;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void windowClosing() {
-        // 2: Remove any callbacks or listeners
-        // 3: Trigger any actions neccessary
-        // 4: Trigger action for the window closing
-        // 5: Inform any parents that the window is closing
-        plugin.removeContainer();
     }
 
     /** {@inheritDoc} */
