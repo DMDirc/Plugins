@@ -68,13 +68,11 @@ public class SystemStreamContainer extends FrameContainer {
 
     /** {@inheritDoc} */
     @Override
-    protected void windowClosing() {
+    public void close() {
+        super.close();
+
         thread.cancel();
         plugin.windowClosing(this);
-        // 2: Remove any callbacks or listeners
-        // 3: Trigger any actions neccessary
-        // 4: Trigger action for the window closing
-        // 5: Inform any parents that the window is closing
     }
 
 }
