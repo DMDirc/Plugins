@@ -37,11 +37,11 @@ import java.util.Arrays;
 public class DebugWindow extends FrameContainer {
 
     /** The plugin that owns this window */
-    protected DebugPlugin plugin;
+    protected final DebugPlugin plugin;
     /** The parser this window is debugging */
     protected Parser parser;
     /** The connection we're operating on */
-    protected Connection connection;
+    protected final Connection connection;
 
     /**
      * Creates a new instance of DebugWindow.
@@ -79,9 +79,8 @@ public class DebugWindow extends FrameContainer {
         parser = null;
     }
 
-
     /**
-     * Closes this container (and it's associated frame).
+     * Closes this container (and its associated frame).
      */
     @Override
     public void windowClosing() {
@@ -95,12 +94,4 @@ public class DebugWindow extends FrameContainer {
         // 5: Inform any parents that the window is closing
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void windowClosed() {
-        // 7: Remove any references to the window and parents
-        this.parser = null;
-        this.connection = null;
-        this.plugin = null;
-    }
 }
