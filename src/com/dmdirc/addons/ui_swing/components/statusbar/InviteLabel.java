@@ -31,6 +31,7 @@ import com.dmdirc.addons.ui_swing.SelectionListener;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
+import com.dmdirc.addons.ui_swing.dialogs.DialogManager;
 import com.dmdirc.interfaces.ActionListener;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.InviteListener;
@@ -69,8 +70,8 @@ public class InviteLabel extends StatusbarPopupPanel<JLabel> implements
     private final JMenuItem accept;
     /** Main frame. */
     private final MainFrame mainFrame;
-    /** Swing controller. */
-    private final SwingController controller;
+    /** The dialog manager to register dialogs with. */
+    private final DialogManager dialogManager;
     /** Active server. */
     private Server activeServer;
 
@@ -80,11 +81,10 @@ public class InviteLabel extends StatusbarPopupPanel<JLabel> implements
      * @param controller Swing controller
      * @param mainFrame Main frame
      */
-    public InviteLabel(final SwingController controller,
-            final MainFrame mainFrame) {
+    public InviteLabel(final SwingController controller, final MainFrame mainFrame) {
         super(new JLabel());
 
-        this.controller = controller;
+        this.dialogManager = controller.getDialogManager();
         this.mainFrame = mainFrame;
 
         setBorder(BorderFactory.createEtchedBorder());
@@ -116,7 +116,7 @@ public class InviteLabel extends StatusbarPopupPanel<JLabel> implements
     /** {@inheritDoc} */
     @Override
     protected StatusbarPopupWindow getWindow() {
-        return new InvitePopup(controller, this, activeServer, mainFrame);
+        return new InvitePopup(dialogManager, this, activeServer, mainFrame);
     }
 
     /**
