@@ -59,7 +59,7 @@ public class ErrorPopup extends StatusbarPopupWindow {
      */
     public ErrorPopup(final SwingController controller, final JPanel parent,
             final Window parentWindow) {
-        super(controller, parent, parentWindow);
+        super(controller.getDialogManager(), parent, parentWindow);
         iconManager = controller.getIconManager();
     }
 

@@ -68,7 +68,7 @@ public class ServerInfoDialog extends StatusbarPopupWindow {
     public ServerInfoDialog(final LagDisplayPlugin ldp,
             final StatusbarPanel parent,
             final SwingController controller) {
-        super(controller, parent, controller.getMainFrame());
+        super(controller.getDialogManager(), parent, controller.getMainFrame());
 
         plugin = ldp;
         mainFrame = controller.getMainFrame();

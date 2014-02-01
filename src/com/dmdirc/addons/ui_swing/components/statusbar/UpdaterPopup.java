@@ -58,7 +58,7 @@ public class UpdaterPopup extends StatusbarPopupWindow {
      */
     public UpdaterPopup(final SwingController controller, final JPanel parent,
             final Window parentWindow) {
-        super(controller, parent, parentWindow);
+        super(controller.getDialogManager(), parent, parentWindow);
 
         updateManager = controller.getCachingUpdateManager();
     }

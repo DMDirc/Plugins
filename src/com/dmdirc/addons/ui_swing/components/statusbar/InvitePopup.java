@@ -23,7 +23,7 @@
 package com.dmdirc.addons.ui_swing.components.statusbar;
 
 import com.dmdirc.Invite;
-import com.dmdirc.addons.ui_swing.SwingController;
+import com.dmdirc.addons.ui_swing.dialogs.DialogManager;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.util.DateUtils;
 
@@ -51,14 +51,14 @@ public class InvitePopup extends StatusbarPopupWindow {
     /**
      * Creates a new InvitePopup for the specified panel and connection.
      *
-     * @param controller Swing controller
+     * @param dialogManager The dialog manager to register this dialog with.
      * @param parent The parent of this popup
      * @param connection The connection to show invites for
      * @param parentWindow Parent window
      */
-    public InvitePopup(final SwingController controller, final JPanel parent,
+    public InvitePopup(final DialogManager dialogManager, final JPanel parent,
             final Connection connection, final Window parentWindow) {
-        super(controller, parent, parentWindow);
+        super(dialogManager, parent, parentWindow);
         this.connection = connection;
     }
 

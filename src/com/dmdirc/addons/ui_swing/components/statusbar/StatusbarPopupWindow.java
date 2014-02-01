@@ -22,7 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.components.statusbar;
 
-import com.dmdirc.addons.ui_swing.SwingController;
+import com.dmdirc.addons.ui_swing.dialogs.DialogManager;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 
 import java.awt.Point;
@@ -56,13 +56,15 @@ public abstract class StatusbarPopupWindow extends StandardDialog {
     /**
      * Creates a new status bar popup window.
      *
-     * @param controller Swing controller
+     * @param dialogManager The dialog manager to register this dialog with.
      * @param parent The {@link JPanel} to use for positioning
      * @param parentWindow Parent window
      */
-    public StatusbarPopupWindow(final SwingController controller,
-            final JPanel parent, final Window parentWindow) {
-        super(controller.getDialogManager(), parentWindow, ModalityType.MODELESS);
+    public StatusbarPopupWindow(
+            final DialogManager dialogManager,
+            final JPanel parent,
+            final Window parentWindow) {
+        super(dialogManager, parentWindow, ModalityType.MODELESS);
 
         this.parent = parent;
         this.parentWindow = parentWindow;
