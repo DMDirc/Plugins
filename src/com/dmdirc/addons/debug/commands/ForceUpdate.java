@@ -29,8 +29,10 @@ import com.dmdirc.addons.debug.DebugCommand;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
+import com.dmdirc.interfaces.config.IdentityController;
 import com.dmdirc.ui.messages.Styliser;
 import com.dmdirc.updater.UpdateChecker;
+import com.dmdirc.updater.manager.CachingUpdateManager;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -42,20 +44,30 @@ public class ForceUpdate extends DebugCommand {
 
     /** The global configuration used to check if updates are enabled. */
     private final AggregateConfigProvider globalConfig;
+    /** The controller to use to read/write settings for the updater. */
+    private final IdentityController identityController;
+    /** The update manager to use when forcing an update. */
+    private final CachingUpdateManager updateManager;
 
     /**
      * Creates a new instance of the command.
      *
      * @param commandProvider The provider to use to access the main debug command.
      * @param globalConfig The global config to use to check if updates are enabled.
+     * @param identityController The controller to use to read/write settings for the updater.
+     * @param updateManager The update manager to use when forcing an update.
      */
     @Inject
     public ForceUpdate(
             final Provider<Debug> commandProvider,
-            @GlobalConfig final AggregateConfigProvider globalConfig) {
+            @GlobalConfig final AggregateConfigProvider globalConfig,
+            final IdentityController identityController,
+            final CachingUpdateManager updateManager) {
         super(commandProvider);
 
         this.globalConfig = globalConfig;
+        this.identityController = identityController;
+        this.updateManager = updateManager;
     }
 
     /** {@inheritDoc} */
@@ -74,8 +86,8 @@ public class ForceUpdate extends DebugCommand {
     @Override
     public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
-        if (globalConfig.getOptionBool("updater","enable")) {
-            new Thread(new UpdateChecker(), "Forced update checker").start();
+        if (globalConfig.getOptionBool("updater", "enable")) {
+            UpdateChecker.checkNow(updateManager, identityController, "Forced update checker");
         } else {
             sendLine(origin, args.isSilent(), FORMAT_ERROR, "Update checking is "
                     + "currenty disabled.  You can enable it by typing:");
