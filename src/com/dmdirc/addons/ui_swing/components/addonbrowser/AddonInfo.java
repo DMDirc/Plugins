@@ -27,6 +27,7 @@ import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.updater.UpdateChannel;
 import com.dmdirc.updater.UpdateChecker;
 import com.dmdirc.updater.UpdateComponent;
+import com.dmdirc.updater.manager.UpdateManager;
 import com.dmdirc.util.URLBuilder;
 
 import java.awt.Image;
@@ -72,17 +73,19 @@ public class AddonInfo {
     /** Screenshot image. */
     private final ImageIcon screenshot;
     /** Current client update channel. */
-    private UpdateChannel channel;
+    private final UpdateChannel channel;
 
     /**
      * Creates a new addon info class with the specified entries.
      *
      * @param configManager The config provider to use to find settings.
+     * @param updateManager The manager to use to check for update information.
      * @param urlBuilder The URL builder to use to retrieve image URLs.
      * @param entry List of entries
      */
     public AddonInfo(
             final AggregateConfigProvider configManager,
+            final UpdateManager updateManager,
             final URLBuilder urlBuilder,
             final Map<String, String> entry) {
         id = Integer.parseInt(entry.get("id"));
@@ -109,12 +112,15 @@ public class AddonInfo {
             screenshot = new ImageIcon(urlBuilder.getUrl(
                     "dmdirc://com/dmdirc/res/logo.png"));
         }
+
+        UpdateChannel tempChannel;
         try {
-            channel = UpdateChannel.valueOf(configManager.getOption(
+            tempChannel = UpdateChannel.valueOf(configManager.getOption(
                     "updater", "channel"));
         } catch (final IllegalArgumentException ex) {
-            channel = UpdateChannel.NONE;
+            tempChannel = UpdateChannel.NONE;
         }
+        channel = tempChannel;
     }
 
     public int getId() {
@@ -231,8 +237,8 @@ public class AddonInfo {
      * @return true iff the plugin matches
      */
     public boolean matches(final String text) {
-        return title.toLowerCase().indexOf(text.toLowerCase()) > -1
-                || description.toLowerCase().indexOf(text.toLowerCase()) > -1;
+        return title.toLowerCase().contains(text.toLowerCase())
+                || description.toLowerCase().contains(text.toLowerCase());
     }
 
 }

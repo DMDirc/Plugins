@@ -28,6 +28,7 @@ import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
+import com.dmdirc.updater.UpdateChecker;
 import com.dmdirc.util.io.ConfigFile;
 import com.dmdirc.util.io.DownloadListener;
 import com.dmdirc.util.io.Downloader;
@@ -128,7 +129,8 @@ public class DataLoaderWorker
 
         final List<AddonInfo> list = new ArrayList<>();
         for (final Map<String, String> entry : data.getKeyDomains().values()) {
-            list.add(new AddonInfo(controller.getGlobalConfig(), controller.getUrlBuilder(), entry));
+            list.add(new AddonInfo(controller.getGlobalConfig(), UpdateChecker.getManager(),
+                    controller.getUrlBuilder(), entry));
         }
         return list;
     }
