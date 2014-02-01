@@ -61,6 +61,7 @@ public class LagDisplayPanel extends StatusbarPopupPanel<JLabel> {
     /** {@inheritDoc} */
     @Override
     protected StatusbarPopupWindow getWindow() {
-        return new ServerInfoDialog(plugin, this, controller);
+        return new ServerInfoDialog(plugin, this, controller.getDialogManager(),
+                controller.getMainFrame(), controller.getServerManager());
     }
 }

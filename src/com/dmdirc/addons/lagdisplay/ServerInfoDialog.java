@@ -23,11 +23,12 @@
 package com.dmdirc.addons.lagdisplay;
 
 import com.dmdirc.Server;
+import com.dmdirc.ServerManager;
 import com.dmdirc.ServerState;
 import com.dmdirc.addons.ui_swing.MainFrame;
-import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.statusbar.StatusbarPanel;
 import com.dmdirc.addons.ui_swing.components.statusbar.StatusbarPopupWindow;
+import com.dmdirc.addons.ui_swing.dialogs.DialogManager;
 
 import java.util.List;
 
@@ -35,11 +36,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
 
-
 /**
  * Shows information about all connected servers.
- *
- * @author chris
  */
 public class ServerInfoDialog extends StatusbarPopupWindow {
 
@@ -54,31 +52,35 @@ public class ServerInfoDialog extends StatusbarPopupWindow {
     protected final LagDisplayPlugin plugin;
     /** Swing main frame. */
     private final MainFrame mainFrame;
-    /** Swing Controller. */
-    @Deprecated
-    private final SwingController controller;
+    /** Server manager to retrieve servers from. */
+    private final ServerManager serverManager;
 
     /**
      * Creates a new ServerInfoDialog.
      *
-     * @param ldp The {@link LagDisplayPlugin} we're using for info
+     * @param plugin The {@link LagDisplayPlugin} we're using for info
      * @param parent The {@link JPanel} to use for positioning
-     * @param controller Parent Swing controller
+     * @param dialogManager The manager to register this dialog with.
+     * @param mainFrame The frame that will own this dialog.
+     * @param serverManager The manager to use to iterate servers.
      */
-    public ServerInfoDialog(final LagDisplayPlugin ldp,
+    public ServerInfoDialog(
+            final LagDisplayPlugin plugin,
             final StatusbarPanel parent,
-            final SwingController controller) {
-        super(controller.getDialogManager(), parent, controller.getMainFrame());
+            final DialogManager dialogManager,
+            final MainFrame mainFrame,
+            final ServerManager serverManager) {
+        super(dialogManager, parent, mainFrame);
 
-        plugin = ldp;
-        mainFrame = controller.getMainFrame();
-        this.controller = controller;
+        this.plugin = plugin;
+        this.mainFrame = mainFrame;
+        this.serverManager = serverManager;
     }
 
     /** {@inheritDoc} */
     @Override
     protected void initContent(final JPanel panel) {
-        final List<Server> servers = controller.getServerManager().getServers();
+        final List<Server> servers = serverManager.getServers();
 
         if (servers.isEmpty()) {
             panel.add(new JLabel("No open servers."));

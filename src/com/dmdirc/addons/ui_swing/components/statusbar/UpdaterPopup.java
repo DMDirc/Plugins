@@ -22,7 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.components.statusbar;
 
-import com.dmdirc.addons.ui_swing.SwingController;
+import com.dmdirc.addons.ui_swing.dialogs.DialogManager;
 import com.dmdirc.updater.UpdateComponent;
 import com.dmdirc.updater.manager.CachingUpdateManager;
 import com.dmdirc.updater.manager.UpdateStatus;
@@ -52,15 +52,19 @@ public class UpdaterPopup extends StatusbarPopupWindow {
     /**
      * Creates a new popup window for the specified panel and window.
      *
-     * @param controller Swing controller
+     * @param dialogManager The manager to register this popup with.
+     * @param updateManager The manager to use to get update information.
      * @param parent The panel that owns this popup
      * @param parentWindow The Window that owns this popup
      */
-    public UpdaterPopup(final SwingController controller, final JPanel parent,
+    public UpdaterPopup(
+            final DialogManager dialogManager,
+            final CachingUpdateManager updateManager,
+            final JPanel parent,
             final Window parentWindow) {
-        super(controller.getDialogManager(), parent, parentWindow);
+        super(dialogManager, parent, parentWindow);
 
-        updateManager = controller.getCachingUpdateManager();
+        this.updateManager = updateManager;
     }
 
     /** {@inheritDoc} */
