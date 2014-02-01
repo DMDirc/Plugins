@@ -23,8 +23,8 @@
 package com.dmdirc.addons.ui_swing.components.statusbar;
 
 import com.dmdirc.addons.ui_swing.SwingController;
-import com.dmdirc.updater.UpdateChecker;
 import com.dmdirc.updater.UpdateComponent;
+import com.dmdirc.updater.manager.CachingUpdateManager;
 import com.dmdirc.updater.manager.UpdateStatus;
 
 import java.awt.Window;
@@ -46,6 +46,9 @@ public class UpdaterPopup extends StatusbarPopupWindow {
      */
     private static final long serialVersionUID = 1;
 
+    /** The update manager to use to retrieve update status. */
+    private final CachingUpdateManager updateManager;
+
     /**
      * Creates a new popup window for the specified panel and window.
      *
@@ -56,13 +59,15 @@ public class UpdaterPopup extends StatusbarPopupWindow {
     public UpdaterPopup(final SwingController controller, final JPanel parent,
             final Window parentWindow) {
         super(controller, parent, parentWindow);
+
+        updateManager = controller.getCachingUpdateManager();
     }
 
     /** {@inheritDoc} */
     @Override
     protected void initContent(final JPanel panel) {
-        for (UpdateComponent component : UpdateChecker.getManager().getComponents()) {
-            final UpdateStatus status = UpdateChecker.getManager().getStatus(component);
+        for (UpdateComponent component : updateManager.getComponents()) {
+            final UpdateStatus status = updateManager.getStatus(component);
 
             if (status != UpdateStatus.IDLE && status != UpdateStatus.CHECKING_NOT_PERMITTED) {
                 panel.add(new JLabel(component.getFriendlyName()),

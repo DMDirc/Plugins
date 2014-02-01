@@ -71,7 +71,7 @@ public class UpdateConfigPanel extends JPanel implements ActionListener,
     /** Update channel. */
     private JComboBox updateChannel;
     /** Swing controller. */
-    private SwingController controller;
+    private final SwingController controller;
 
     /**
      * Instantiates a new update config panel.
@@ -112,7 +112,9 @@ public class UpdateConfigPanel extends JPanel implements ActionListener,
         final AggregateConfigProvider config = controller.getGlobalConfig();
         enable = new JCheckBox();
         scrollPane = new JScrollPane();
-        tableModel = new UpdateTableModel(UpdateChecker.getManager().getComponents());
+        tableModel = new UpdateTableModel(
+                controller.getCachingUpdateManager(),
+                controller.getCachingUpdateManager().getComponents());
         table = new PackingTable(tableModel, scrollPane);
         checkNow = new JButton("Check now");
         checkNow.setEnabled(config.getOptionBool("updater", "enable"));

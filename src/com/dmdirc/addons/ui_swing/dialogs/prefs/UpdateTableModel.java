@@ -22,8 +22,8 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.prefs;
 
-import com.dmdirc.updater.UpdateChecker;
 import com.dmdirc.updater.UpdateComponent;
+import com.dmdirc.updater.manager.CachingUpdateManager;
 import com.dmdirc.updater.manager.UpdateStatus;
 
 import java.util.ArrayList;
@@ -48,21 +48,17 @@ public class UpdateTableModel extends AbstractTableModel {
     /** Update component list. */
     private final List<UpdateComponent> updates;
     /** Enabled list. */
-    private Map<UpdateComponent, Boolean> enabled;
-
-    /**
-     * Instantiates a new table model.
-     */
-    public UpdateTableModel() {
-        this(new ArrayList<UpdateComponent>());
-    }
+    private final Map<UpdateComponent, Boolean> enabled;
 
     /**
      * Instantiates a new table model.
      *
+     * @param updateManager The update manager to use to retrieve component status.
      * @param updates Update components to show
      */
-    public UpdateTableModel(final Collection<UpdateComponent> updates) {
+    public UpdateTableModel(
+            final CachingUpdateManager updateManager,
+            final Collection<UpdateComponent> updates) {
         super();
 
         this.updates = new ArrayList<>(updates);
@@ -70,8 +66,7 @@ public class UpdateTableModel extends AbstractTableModel {
 
         for (UpdateComponent update : this.updates) {
             enabled.put(update,
-                    UpdateChecker.getManager().getStatus(update)
-                    != UpdateStatus.CHECKING_NOT_PERMITTED);
+                    updateManager.getStatus(update) != UpdateStatus.CHECKING_NOT_PERMITTED);
         }
     }
 
