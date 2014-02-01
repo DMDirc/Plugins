@@ -26,9 +26,13 @@ import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
+import com.dmdirc.commandline.CommandLineOptionsModule.Directory;
+import com.dmdirc.commandline.CommandLineOptionsModule.DirectoryType;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.updater.UpdateChecker;
+import com.dmdirc.util.annotations.factory.Factory;
+import com.dmdirc.util.annotations.factory.Unbound;
 import com.dmdirc.util.io.ConfigFile;
 import com.dmdirc.util.io.DownloadListener;
 import com.dmdirc.util.io.Downloader;
@@ -53,6 +57,7 @@ import net.miginfocom.swing.MigLayout;
 /**
  * Loads the addon data feed into the addon browser.
  */
+@Factory(inject = true)
 public class DataLoaderWorker
         extends LoggingSwingWorker<Collection<AddonInfo>, Object>
         implements DownloadListener {
@@ -71,24 +76,30 @@ public class DataLoaderWorker
     private final SwingController controller;
     /** Directory to store temporary files in. */
     private final String tempDirectory;
+    /** Factory to use to produce install workers. */
+    private final InstallWorkerFactory workerFactory;
 
     /**
      * Creates a new data loader worker.
      *
      * @param controller Swing controller
+     * @param workerFactory Factory to use to produce install workers.
+     * @param tempDirectory The directory to store temporary items in, such as the addons feed.
      * @param table Table to load data into
      * @param download Download new addons feed?
-     * @param tempDirectory The directory to store temporary items in, such as the addons feed.
      * @param browserWindow Browser window to pass to table objects
      * @param scrollPane Table's parent scrollpane
      */
-    public DataLoaderWorker(final SwingController controller,
-            final AddonTable table, final boolean download,
-            final String tempDirectory,
-            final BrowserWindow browserWindow, final JScrollPane scrollPane) {
-        super();
-
+    public DataLoaderWorker(
+            final SwingController controller,
+            final InstallWorkerFactory workerFactory,
+            @Directory(DirectoryType.TEMPORARY) final String tempDirectory,
+            @Unbound final AddonTable table,
+            @Unbound final boolean download,
+            @Unbound final BrowserWindow browserWindow,
+            @Unbound final JScrollPane scrollPane) {
         this.controller = controller;
+        this.workerFactory = workerFactory;
         this.download = download;
         this.table = table;
         this.tempDirectory = tempDirectory;
@@ -162,7 +173,7 @@ public class DataLoaderWorker
         table.getModel().setRowCount(0);
         for (final AddonInfo info : data) {
             table.getModel().addRow(new Object[]{
-                new AddonInfoLabel(controller, info, browserWindow),
+                new AddonInfoLabel(controller.getDialogManager(), info, browserWindow, workerFactory),
             });
         }
         table.getSelectionModel().setSelectionInterval(selectedRow, selectedRow);
