@@ -21,16 +21,18 @@
  */
 package com.dmdirc.addons.lagdisplay;
 
-import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.statusbar.StatusbarPopupPanel;
 import com.dmdirc.addons.ui_swing.components.statusbar.StatusbarPopupWindow;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.swing.JLabel;
 
 /**
  * Shows the user's lag in the status bar, and reveals details of all servers
  * when the user hovers over it.
  */
+@Singleton
 public class LagDisplayPanel extends StatusbarPopupPanel<JLabel> {
 
     /**
@@ -39,29 +41,23 @@ public class LagDisplayPanel extends StatusbarPopupPanel<JLabel> {
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 2;
-    /** Lag display plugin. */
-    private final LagDisplayPlugin plugin;
-    /** Swing controller. */
-    private final SwingController controller;
+    /** Factory of dialogs. */
+    private final ServerInfoDialogFactory dialogFactory;
 
     /**
-     * Creates a new {@link LagDisplayPanel} for the specified plugin.
+     * Creates a new instace of {@link LagDisplayPanel}.
      *
-     * @param plugin The plugin that owns this panel
-     * @param controller Parent Swing controller
+     * @param dialogFactory The factory to use to create dialogs.
      */
-    public LagDisplayPanel(final LagDisplayPlugin plugin,
-            final SwingController controller) {
+    @Inject
+    public LagDisplayPanel(final ServerInfoDialogFactory dialogFactory) {
         super(new JLabel());
-
-        this.plugin = plugin;
-        this.controller = controller;
+        this.dialogFactory = dialogFactory;
     }
 
     /** {@inheritDoc} */
     @Override
     protected StatusbarPopupWindow getWindow() {
-        return new ServerInfoDialog(plugin, this, controller.getDialogManager(),
-                controller.getMainFrame(), controller.getServerManager());
+        return dialogFactory.getServerInfoDialog(this);
     }
 }
