@@ -195,7 +195,9 @@ public class BrowserWindow extends JDialog implements ActionListener {
      * @param download Download new addon feed?
      */
     public final void loadData(final boolean download) {
-        new DataLoaderWorker(controller, list, download, this, scrollPane)
+        new DataLoaderWorker(controller, list, download,
+                controller.getIdentityManager().getConfigurationDirectory(),
+                this, scrollPane)
                 .executeInExecutor();
     }
 

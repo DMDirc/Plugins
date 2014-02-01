@@ -28,12 +28,12 @@ import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
+import com.dmdirc.updater.UpdateChecker;
 import com.dmdirc.util.io.ConfigFile;
 import com.dmdirc.util.io.DownloadListener;
 import com.dmdirc.util.io.Downloader;
 import com.dmdirc.util.io.InvalidConfigFileException;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -69,6 +69,8 @@ public class DataLoaderWorker
     private final boolean download;
     /** Swing controller. */
     private final SwingController controller;
+    /** Directory to store temporary files in. */
+    private final String tempDirectory;
 
     /**
      * Creates a new data loader worker.
@@ -76,17 +78,20 @@ public class DataLoaderWorker
      * @param controller Swing controller
      * @param table Table to load data into
      * @param download Download new addons feed?
+     * @param tempDirectory The directory to store temporary items in, such as the addons feed.
      * @param browserWindow Browser window to pass to table objects
      * @param scrollPane Table's parent scrollpane
      */
     public DataLoaderWorker(final SwingController controller,
             final AddonTable table, final boolean download,
+            final String tempDirectory,
             final BrowserWindow browserWindow, final JScrollPane scrollPane) {
         super();
 
         this.controller = controller;
         this.download = download;
         this.table = table;
+        this.tempDirectory = tempDirectory;
         this.browserWindow = browserWindow;
         this.scrollPane = scrollPane;
     }
@@ -107,8 +112,7 @@ public class DataLoaderWorker
             loadingPanel.add(Box.createVerticalGlue(), "growy, pushy");
             try {
                 Downloader.downloadPage("http://addons.dmdirc.com/feed",
-                        controller.getIdentityManager().getConfigurationDirectory() + File.separator + "addons.feed",
-                        this);
+                        tempDirectory + "addons.feed", this);
             } catch (final IOException ex) {
                 loadingPanel.removeAll();
                 loadingPanel.add(new TextLabel("Unable to download feeds."));
@@ -118,8 +122,7 @@ public class DataLoaderWorker
 
         loadingPanel.removeAll();
         loadingPanel.add(new TextLabel("Loading addon info, please wait."));
-        final ConfigFile data = new ConfigFile(controller.getIdentityManager().getConfigurationDirectory()
-                + File.separator + "addons.feed");
+        final ConfigFile data = new ConfigFile(tempDirectory + "addons.feed");
         try {
             data.read();
         } catch (final IOException | InvalidConfigFileException ex) {
@@ -128,7 +131,8 @@ public class DataLoaderWorker
 
         final List<AddonInfo> list = new ArrayList<>();
         for (final Map<String, String> entry : data.getKeyDomains().values()) {
-            list.add(new AddonInfo(controller.getGlobalConfig(), controller.getUrlBuilder(), entry));
+            list.add(new AddonInfo(controller.getGlobalConfig(), UpdateChecker.getManager(),
+                    controller.getUrlBuilder(), entry));
         }
         return list;
     }
