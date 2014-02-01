@@ -157,8 +157,7 @@ public class SwingModule {
      * @param config Config
      * @param dialogManager Dialog manager
      * @param pluginExtractor The extractor to use to extract plugins.
-     * @param globalConfig The config to read settings from.
-     * @param urlBuilder The URL builder to use to build icons.
+     * @param iconManager An icon manager backed by the global configuration.
      * @return
      */
     @Provides
@@ -168,12 +167,9 @@ public class SwingModule {
             @ClientModule.UserConfig final ConfigProvider config,
             final DialogManager dialogManager,
             final CorePluginExtractor pluginExtractor,
-            @GlobalConfig final AggregateConfigProvider globalConfig,
-            final URLBuilder urlBuilder) {
+            @GlobalConfig final IconManager iconManager) {
         return new SwingFirstRunWizard(
-                mainFrame, config, dialogManager, directory, pluginExtractor,
-                // TODO: Allow global icon manager to be injected.
-                new IconManager(globalConfig, urlBuilder));
+                mainFrame, config, dialogManager, directory, pluginExtractor, iconManager);
     }
 
     @Provides
