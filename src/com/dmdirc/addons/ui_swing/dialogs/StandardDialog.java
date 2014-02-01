@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.dialogs;
 
-import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.ui.CoreUIUtils;
 
 import java.awt.Component;
@@ -53,28 +52,6 @@ public class StandardDialog extends JDialog {
     private JButton okButton;
     /** The cancel button for this frame. */
     private JButton cancelButton;
-
-    @Deprecated
-    public StandardDialog(final SwingController controller, final boolean modal) {
-        this(controller.getDialogManager(), controller.getMainFrame(), modal);
-    }
-
-    @Deprecated
-    public StandardDialog(final SwingController controller, final ModalityType modal) {
-        this(controller.getDialogManager(), controller.getMainFrame(), modal);
-    }
-
-    @Deprecated
-    public StandardDialog(final SwingController controller, final Window parentWindow,
-            final ModalityType modal) {
-        this(controller.getDialogManager(), parentWindow, modal);
-    }
-
-    @Deprecated
-    public StandardDialog(final SwingController controller, final Frame parentWindow,
-            final boolean modal) {
-        this(controller.getDialogManager(), parentWindow, modal);
-    }
 
     /**
      * Creates a new instance of StandardDialog.

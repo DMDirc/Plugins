@@ -79,7 +79,7 @@ public final class ErrorListDialog extends StandardDialog implements
      * @param controller Swing controller
      */
     public ErrorListDialog(final SwingController controller) {
-        super(controller, ModalityType.MODELESS);
+        super(controller.getDialogManager(), controller.getMainFrame(), ModalityType.MODELESS);
 
         setTitle("Error list");
         setMinimumSize(new Dimension(600, 550));

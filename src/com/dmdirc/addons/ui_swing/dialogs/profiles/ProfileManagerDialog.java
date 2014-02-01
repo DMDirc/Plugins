@@ -128,7 +128,7 @@ public class ProfileManagerDialog extends StandardDialog {
      * @param controller Swing controller
      */
     public ProfileManagerDialog(final SwingController controller) {
-        super(controller, ModalityType.MODELESS);
+        super(controller.getDialogManager(), controller.getMainFrame(), ModalityType.MODELESS);
         this.model = new ProfileManagerModel(controller.getIdentityManager(), controller.getIdentityFactory());
         this.controller = new ProfileManagerController(this, model, controller.getIdentityFactory());
         final Bindings bindings = SwingUIBindings.extendedBindings();

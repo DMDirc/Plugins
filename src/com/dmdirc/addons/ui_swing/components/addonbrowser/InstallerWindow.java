@@ -63,7 +63,7 @@ public class InstallerWindow extends StandardDialog implements ActionListener {
      */
     public InstallerWindow(final SwingController controller,
             final BrowserWindow parentWindow, final AddonInfo info) {
-        super(controller, parentWindow, ModalityType.MODELESS);
+        super(controller.getDialogManager(), parentWindow, ModalityType.MODELESS);
         this.info = info;
         this.parentWindow = parentWindow;
         setTitle("Installing addon...");

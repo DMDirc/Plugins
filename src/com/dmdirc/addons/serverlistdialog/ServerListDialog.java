@@ -83,7 +83,7 @@ public class ServerListDialog extends StandardDialog implements
             final SwingController controller,
             final URLHandler urlHandler,
             final PerformWrapper performWrapper) {
-        super(controller, controller.getMainFrame(), ModalityType.MODELESS);
+        super(controller.getDialogManager(), controller.getMainFrame(), ModalityType.MODELESS);
 
         setTitle("Server List");
         model = new ServerListModel(controller.getPluginManager(),

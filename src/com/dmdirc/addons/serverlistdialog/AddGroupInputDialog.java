@@ -81,7 +81,7 @@ public class AddGroupInputDialog extends StandardDialog {
     public AddGroupInputDialog(final SwingController controller,
             final Window owner, final JTree items,
             final ServerListModel model) {
-        super(controller, owner, ModalityType.MODELESS);
+        super(controller.getDialogManager(), owner, ModalityType.MODELESS);
 
         this.tree = items;
         this.serverListModel = model;
