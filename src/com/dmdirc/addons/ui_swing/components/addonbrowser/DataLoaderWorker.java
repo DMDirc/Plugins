@@ -31,6 +31,7 @@ import com.dmdirc.commandline.CommandLineOptionsModule.DirectoryType;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.updater.UpdateChecker;
+import com.dmdirc.updater.manager.UpdateManager;
 import com.dmdirc.util.annotations.factory.Factory;
 import com.dmdirc.util.annotations.factory.Unbound;
 import com.dmdirc.util.io.ConfigFile;
@@ -78,12 +79,15 @@ public class DataLoaderWorker
     private final String tempDirectory;
     /** Factory to use to produce install workers. */
     private final InstallWorkerFactory workerFactory;
+    /** The manager to use to retrieve update information. */
+    private final UpdateManager updateManager;
 
     /**
      * Creates a new data loader worker.
      *
      * @param controller Swing controller
      * @param workerFactory Factory to use to produce install workers.
+     * @param updateManager Manager to use to retrieve update information.
      * @param tempDirectory The directory to store temporary items in, such as the addons feed.
      * @param table Table to load data into
      * @param download Download new addons feed?
@@ -93,6 +97,7 @@ public class DataLoaderWorker
     public DataLoaderWorker(
             final SwingController controller,
             final InstallWorkerFactory workerFactory,
+            final UpdateManager updateManager,
             @Directory(DirectoryType.TEMPORARY) final String tempDirectory,
             @Unbound final AddonTable table,
             @Unbound final boolean download,
@@ -102,6 +107,7 @@ public class DataLoaderWorker
         this.workerFactory = workerFactory;
         this.download = download;
         this.table = table;
+        this.updateManager = updateManager;
         this.tempDirectory = tempDirectory;
         this.browserWindow = browserWindow;
         this.scrollPane = scrollPane;
@@ -142,7 +148,7 @@ public class DataLoaderWorker
 
         final List<AddonInfo> list = new ArrayList<>();
         for (final Map<String, String> entry : data.getKeyDomains().values()) {
-            list.add(new AddonInfo(controller.getGlobalConfig(), UpdateChecker.getManager(),
+            list.add(new AddonInfo(controller.getGlobalConfig(), updateManager,
                     controller.getUrlBuilder(), entry));
         }
         return list;
