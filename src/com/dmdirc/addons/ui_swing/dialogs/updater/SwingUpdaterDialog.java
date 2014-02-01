@@ -30,7 +30,6 @@ import com.dmdirc.addons.ui_swing.components.renderers.UpdateStatusTableCellRend
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.addons.ui_swing.dialogs.DialogManager;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
-import com.dmdirc.updater.UpdateChecker;
 import com.dmdirc.updater.UpdateComponent;
 import com.dmdirc.updater.manager.CachingUpdateManager;
 import com.dmdirc.updater.manager.UpdateManager;
@@ -199,7 +198,7 @@ public class SwingUpdaterDialog extends StandardDialog implements
                 }
             }.executeInExecutor();
 
-            if (UpdateChecker.getManager().getManagerStatus() == UpdateManagerStatus.IDLE_RESTART_NEEDED) {
+            if (updateManager.getManagerStatus() == UpdateManagerStatus.IDLE_RESTART_NEEDED) {
                 dialogManager.showDialog(SwingRestartDialog.class);
                 dispose();
             }

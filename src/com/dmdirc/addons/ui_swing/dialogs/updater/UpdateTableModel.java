@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.updater;
 
-import com.dmdirc.updater.UpdateChecker;
 import com.dmdirc.updater.UpdateComponent;
 import com.dmdirc.updater.manager.CachingUpdateManager;
 import com.dmdirc.updater.manager.UpdateStatus;
@@ -57,12 +56,7 @@ public class UpdateTableModel extends AbstractTableModel implements UpdateStatus
     /** Cached progress for each component. */
     private final Map<UpdateComponent, Double> progress = new HashMap<>();
     /** Number formatter. */
-    private NumberFormat formatter;
-
-    /** Creates a new instance of UpdateTableModel. */
-    public UpdateTableModel() {
-        this(UpdateChecker.getManager(), Collections.<UpdateComponent>emptyList());
-    }
+    private final NumberFormat formatter;
 
     /**
      * Creates a new instance of UpdateTableModel.

@@ -26,7 +26,6 @@ import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.dialogs.updater.SwingRestartDialog;
 import com.dmdirc.addons.ui_swing.dialogs.updater.SwingUpdaterDialog;
 import com.dmdirc.interfaces.ui.StatusBarComponent;
-import com.dmdirc.updater.UpdateChecker;
 import com.dmdirc.updater.manager.UpdateManager;
 import com.dmdirc.updater.manager.UpdateManagerListener;
 import com.dmdirc.updater.manager.UpdateManagerStatus;
@@ -63,7 +62,7 @@ public class UpdaterLabel extends StatusbarPopupPanel<JLabel> implements
 
         this.controller = controller;
         setBorder(BorderFactory.createEtchedBorder());
-        UpdateChecker.getManager().addUpdateManagerListener(this);
+        controller.getCachingUpdateManager().addUpdateManagerListener(this);
         setVisible(false);
         label.setText(null);
     }
@@ -77,13 +76,13 @@ public class UpdaterLabel extends StatusbarPopupPanel<JLabel> implements
     public void mouseReleased(final MouseEvent mouseEvent) {
         super.mouseReleased(mouseEvent);
         if (mouseEvent.getButton() == MouseEvent.BUTTON1) {
-            if (UpdateChecker.getManager().getManagerStatus()
+            if (controller.getCachingUpdateManager().getManagerStatus()
                     == UpdateManagerStatus.IDLE_RESTART_NEEDED) {
                 closeDialog();
                 controller.showDialog(SwingRestartDialog.class);
             } else {
                 controller.showDialog(SwingUpdaterDialog.class,
-                        UpdateChecker.getManager());
+                        controller.getCachingUpdateManager());
             }
         }
     }
