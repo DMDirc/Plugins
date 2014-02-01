@@ -90,7 +90,8 @@ public class UpdaterLabel extends StatusbarPopupPanel<JLabel> implements
     /** {@inheritDoc} */
     @Override
     protected StatusbarPopupWindow getWindow() {
-        return new UpdaterPopup(controller, this, controller.getMainFrame());
+        return new UpdaterPopup(controller.getDialogManager(), controller.getCachingUpdateManager(),
+                this, controller.getMainFrame());
     }
 
     /** {@inheritDoc} */
