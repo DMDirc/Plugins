@@ -48,6 +48,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.WeakHashMap;
 
+import dagger.ObjectGraph;
+
 /**
  * Displays the current server's lag in the status bar.
  */
@@ -55,7 +57,7 @@ public final class LagDisplayPlugin extends BasePlugin implements
         ActionListener, ConfigChangeListener, SelectionListener {
 
     /** The panel we use in the status bar. */
-    private final LagDisplayPanel panel;
+    private LagDisplayPanel panel;
     /** A cache of ping times. */
     private final Map<Connection, String> pings = new WeakHashMap<>();
     /** Ping history. */
@@ -84,8 +86,14 @@ public final class LagDisplayPlugin extends BasePlugin implements
         super();
         this.controller = controller;
         this.pluginInfo = pluginInfo;
-        config = controller.getGlobalConfig();
-        panel = new LagDisplayPanel(this, controller);
+        config = controller.getGlobalConfig();    }
+
+    @Override
+    public void load(final PluginInfo pluginInfo, final ObjectGraph graph) {
+        super.load(pluginInfo, graph);
+
+        setObjectGraph(graph.plus(new LagDisplayModule(this)));
+        panel = getObjectGraph().get(LagDisplayPanel.class);
     }
 
     /** {@inheritDoc} */
