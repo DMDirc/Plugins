@@ -51,7 +51,7 @@ import java.util.List;
  * Performs validation on a component implementing the Validatable interface.
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.FIELD})
+@Target(ElementType.FIELD)
 public @interface ValidatesIf {
 
     /**

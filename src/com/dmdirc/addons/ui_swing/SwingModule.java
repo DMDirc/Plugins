@@ -62,7 +62,7 @@ import dagger.Provides;
             PopOutCommand.class,
             Input.class,
             ServerSettings.class,
-            ChannelSettings.class,
+            ChannelSettings.class
         }
 )
 public class SwingModule {

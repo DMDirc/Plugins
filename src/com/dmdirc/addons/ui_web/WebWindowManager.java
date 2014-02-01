@@ -72,7 +72,7 @@ public class WebWindowManager implements FrameListener {
     private final WebInterfaceUI controller;
 
     /** The ID of the next window to be created. */
-    private long nextId = 0l;
+    private long nextId = 0L;
 
     /** Map of known windows. */
     private final Map<FrameContainer, WebWindow> windows = new HashMap<>();

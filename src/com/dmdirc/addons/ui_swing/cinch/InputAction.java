@@ -64,7 +64,7 @@ import org.apache.log4j.Logger;
  * a information before performing the action.
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.FIELD})
+@Target(ElementType.FIELD)
 public @interface InputAction {
 
     /**

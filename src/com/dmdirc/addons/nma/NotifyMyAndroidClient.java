@@ -51,7 +51,7 @@ public class NotifyMyAndroidClient {
     /** The application to report ourselves as. */
     private final String application;
 
-    public NotifyMyAndroidClient(Collection<String> apiKeys, String application) {
+    public NotifyMyAndroidClient(final Collection<String> apiKeys, final String application) {
         this.apiKeys = apiKeys;
         this.application = application;
     }
