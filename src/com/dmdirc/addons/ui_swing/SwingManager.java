@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_swing;
 
+import com.dmdirc.addons.ui_swing.components.addonbrowser.DataLoaderWorkerFactory;
 import com.dmdirc.addons.ui_swing.components.menubar.MenuBar;
 import com.dmdirc.addons.ui_swing.components.statusbar.SwingStatusBar;
 import com.dmdirc.addons.ui_swing.dialogs.DialogKeyListener;
@@ -72,6 +73,9 @@ public class SwingManager {
     /** The key listener that supports dialogs. */
     private final DialogKeyListener dialogKeyListener;
 
+    /** Factory used to create data loader workers. */
+    private final DataLoaderWorkerFactory dataLoaderWorkerFactory;
+
     /** Provider of first run executors. */
     private final Provider<FirstRunWizardExecutor> firstRunExecutor;
 
@@ -89,6 +93,7 @@ public class SwingManager {
      * @param ctrlTabManager The window manager that handles ctrl+tab behaviour.
      * @param urlHandler The URL handler to use.
      * @param dialogKeyListener The key listener that supports dialogs.
+     * @param dataLoaderWorkerFactory Factory used to create data loader workers.
      * @param firstRunExecutor A provider of first run executors.
      */
     @Inject
@@ -104,6 +109,7 @@ public class SwingManager {
             final CtrlTabWindowManager ctrlTabManager,
             final URLHandler urlHandler,
             final DialogKeyListener dialogKeyListener,
+            final DataLoaderWorkerFactory dataLoaderWorkerFactory,
             final Provider<FirstRunWizardExecutor> firstRunExecutor) {
         this.dialogManager = dialogManager;
         this.eventQueue = eventQueue;
@@ -113,6 +119,7 @@ public class SwingManager {
         this.statusBarManager = statusBarManager;
         this.urlHandler = urlHandler;
         this.dialogKeyListener = dialogKeyListener;
+        this.dataLoaderWorkerFactory = dataLoaderWorkerFactory;
         this.firstRunExecutor = firstRunExecutor;
 
         this.mainFrame = mainFrame;
@@ -165,6 +172,11 @@ public class SwingManager {
     @Deprecated
     public DialogManager getDialogManager() {
         return dialogManager;
+    }
+
+    @Deprecated
+    public DataLoaderWorkerFactory getDataLoaderWorkerFactory() {
+        return dataLoaderWorkerFactory;
     }
 
     /**

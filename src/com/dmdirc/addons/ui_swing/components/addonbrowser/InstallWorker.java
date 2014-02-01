@@ -23,8 +23,12 @@
 package com.dmdirc.addons.ui_swing.components.addonbrowser;
 
 import com.dmdirc.actions.ActionManager;
-import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
+import com.dmdirc.commandline.CommandLineOptionsModule.Directory;
+import com.dmdirc.commandline.CommandLineOptionsModule.DirectoryType;
+import com.dmdirc.plugins.PluginManager;
+import com.dmdirc.util.annotations.factory.Factory;
+import com.dmdirc.util.annotations.factory.Unbound;
 import com.dmdirc.util.io.Downloader;
 
 import java.io.File;
@@ -34,30 +38,44 @@ import java.util.concurrent.ExecutionException;
 /**
  * Downloads a given addon from the addon site and loads it into the client.
  */
+@Factory(inject = true)
 public class InstallWorker extends LoggingSwingWorker<String, Void> {
 
     /** Addon info. */
     private final AddonInfo info;
     /** Window to show installer progress. */
     private final InstallerWindow installer;
-    /** */
-    private final SwingController controller;
+    /** Temporary directory to download files to. */
+    private final String tempDirectory;
+    /** Directory to install plugins in. */
+    private final String pluginDirectory;
+    /** Directory to install themes in. */
+    private final String themeDirectory;
+    /** Plugin manager to inform of new plugins. */
+    private final PluginManager pluginManager;
 
-    public InstallWorker(final AddonInfo info, final InstallerWindow window,
-            final SwingController controller) {
+    public InstallWorker(
+            @Directory(DirectoryType.TEMPORARY) final String tempDirectory,
+            @Directory(DirectoryType.PLUGINS) final String pluginDirectory,
+            @Directory(DirectoryType.THEMES) final String themeDirectory,
+            final PluginManager pluginManager,
+            @Unbound final AddonInfo info,
+            @Unbound final InstallerWindow window) {
         super();
 
         this.info = info;
         this.installer = window;
-        this.controller = controller;
+        this.tempDirectory = tempDirectory;
+        this.pluginDirectory = pluginDirectory;
+        this.themeDirectory = themeDirectory;
+        this.pluginManager = pluginManager;
     }
 
     /** {@inheritDoc} */
     @Override
     protected String doInBackground() {
         try {
-            final File file = new File(controller.getIdentityManager().getConfigurationDirectory(),
-                    "." + info.getId());
+            final File file = new File(tempDirectory, "." + info.getId());
             Downloader.downloadPage("http://addons.dmdirc.com/addondownload/"
                     + info.getDownload(), file.getAbsolutePath());
 
@@ -66,20 +84,16 @@ public class InstallWorker extends LoggingSwingWorker<String, Void> {
                     ActionManager.installActionPack(file.getAbsolutePath());
                     break;
                 case TYPE_PLUGIN:
-                    final File newFile = new File(
-                            controller.getPluginManager().getDirectory(),
-                            info.getTitle() + ".jar");
+                    final File newFile = new File(pluginDirectory, info.getTitle() + ".jar");
                     if (file.renameTo(newFile)) {
-                        controller.getPluginManager().addPlugin(
-                                newFile.getName());
+                        pluginManager.addPlugin(newFile.getName());
                     } else {
                         return "Unable to install addon, failed to move file: "
                                 + file.getAbsolutePath();
                     }
                     break;
                 case TYPE_THEME:
-                    if (!file.renameTo(new File(controller.getThemeManager().getDirectory()
-                            + info.getTitle() + ".zip"))) {
+                    if (!file.renameTo(new File(themeDirectory, info.getTitle() + ".zip"))) {
                         return "Unable to install addon, failed to move file: "
                                 + file.getAbsolutePath();
                     }

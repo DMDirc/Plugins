@@ -35,6 +35,7 @@ import com.dmdirc.addons.ui_swing.commands.Input;
 import com.dmdirc.addons.ui_swing.commands.PopInCommand;
 import com.dmdirc.addons.ui_swing.commands.PopOutCommand;
 import com.dmdirc.addons.ui_swing.commands.ServerSettings;
+import com.dmdirc.addons.ui_swing.components.addonbrowser.DataLoaderWorkerFactory;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.addons.ui_swing.components.statusbar.FeedbackNag;
 import com.dmdirc.addons.ui_swing.components.statusbar.SwingStatusBar;
@@ -924,6 +925,11 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     @Deprecated
     public DialogManager getDialogManager() {
         return swingManager.getDialogManager();
+    }
+
+    @Deprecated
+    public DataLoaderWorkerFactory getDataLoaderWorkerFactory() {
+        return swingManager.getDataLoaderWorkerFactory();
     }
 
 }

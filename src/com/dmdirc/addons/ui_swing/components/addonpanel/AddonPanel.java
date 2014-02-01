@@ -207,7 +207,7 @@ public abstract class AddonPanel extends JPanel implements AddonToggleListener,
     @Override
     public void hyperlinkUpdate(final HyperlinkEvent e) {
         if (e.getEventType() == EventType.ACTIVATED) {
-            new BrowserWindow(controller, parentWindow);
+            new BrowserWindow(controller.getDataLoaderWorkerFactory(), parentWindow);
         }
     }
 
