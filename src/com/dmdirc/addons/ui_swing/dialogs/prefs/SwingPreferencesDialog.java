@@ -83,7 +83,7 @@ public final class SwingPreferencesDialog extends StandardDialog implements
      * @param controller The controller which owns this preferences window.
      */
     public SwingPreferencesDialog(final SwingController controller) {
-        super(controller, ModalityType.MODELESS);
+        super(controller.getDialogManager(), controller.getMainFrame(), ModalityType.MODELESS);
 
         this.controller = controller;
 

@@ -62,7 +62,7 @@ public abstract class StatusbarPopupWindow extends StandardDialog {
      */
     public StatusbarPopupWindow(final SwingController controller,
             final JPanel parent, final Window parentWindow) {
-        super(controller, parentWindow, ModalityType.MODELESS);
+        super(controller.getDialogManager(), parentWindow, ModalityType.MODELESS);
 
         this.parent = parent;
         this.parentWindow = parentWindow;

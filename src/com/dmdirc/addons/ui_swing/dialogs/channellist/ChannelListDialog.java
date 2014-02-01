@@ -47,7 +47,7 @@ public class ChannelListDialog extends StandardDialog implements
     private JLabel total;
 
     public ChannelListDialog(final SwingController controller) {
-        super(controller, ModalityType.MODELESS);
+        super(controller.getDialogManager(), controller.getMainFrame(), ModalityType.MODELESS);
         setTitle("Channel List");
         total = new JLabel("No results.");
         list = new ChannelListPanel((Server) controller.getMainFrame().getActiveFrame()
