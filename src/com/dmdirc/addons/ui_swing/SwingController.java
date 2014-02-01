@@ -70,6 +70,7 @@ import com.dmdirc.ui.core.util.URLHandler;
 import com.dmdirc.ui.messages.ColourManager;
 import com.dmdirc.ui.themes.ThemeManager;
 import com.dmdirc.updater.Version;
+import com.dmdirc.updater.manager.CachingUpdateManager;
 import com.dmdirc.util.URLBuilder;
 import com.dmdirc.util.validators.NumericalValidator;
 import com.dmdirc.util.validators.OptionalValidator;
@@ -930,6 +931,11 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     @Deprecated
     public DataLoaderWorkerFactory getDataLoaderWorkerFactory() {
         return swingManager.getDataLoaderWorkerFactory();
+    }
+
+    @Deprecated
+    public CachingUpdateManager getCachingUpdateManager() {
+        return swingManager.getCachingUpdateManager();
     }
 
 }

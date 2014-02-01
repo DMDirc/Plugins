@@ -80,10 +80,15 @@ public class ThemePanel extends AddonPanel {
                 ((DefaultTableModel) addonList.getModel()).setRowCount(0);
                 for (final Theme theme : list) {
                     ((DefaultTableModel) addonList.getModel()).addRow(
-                    new AddonCell[]{ new AddonCell(new AddonToggle(
-                            controller.getGlobalIdentity(),
-                            controller.getThemeManager(), theme),
-                            getIconManager()), });
+                            new AddonCell[]{
+                                new AddonCell(
+                                        new AddonToggle(
+                                                controller.getCachingUpdateManager(),
+                                                controller.getGlobalIdentity(),
+                                                controller.getThemeManager(),
+                                                theme),
+                                        getIconManager()),
+                            });
                 }
 
                 addonList.repaint();

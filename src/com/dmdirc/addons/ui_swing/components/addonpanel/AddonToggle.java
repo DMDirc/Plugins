@@ -26,8 +26,8 @@ import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.ui.themes.Theme;
 import com.dmdirc.ui.themes.ThemeManager;
-import com.dmdirc.updater.UpdateChecker;
 import com.dmdirc.updater.UpdateComponent;
+import com.dmdirc.updater.manager.CachingUpdateManager;
 import com.dmdirc.updater.manager.UpdateStatus;
 import com.dmdirc.util.collections.ListenerList;
 
@@ -56,44 +56,54 @@ public final class AddonToggle {
      * Creates a new instance of AddonToggle to wrap the specified
      * PluginInfo.
      *
+     * @param updateManager The update manager to use to retrieve component info.
      * @param identity Identity to change update settings in.
      * @param pi The PluginInfo to be wrapped.
      */
-    public AddonToggle(final ConfigProvider identity, final PluginInfo pi) {
+    public AddonToggle(
+            final CachingUpdateManager updateManager,
+            final ConfigProvider identity,
+            final PluginInfo pi) {
         this.identity = identity;
         this.pi = pi;
         this.theme = null;
         this.themeManager = null;
         state = pi.isLoaded();
 
-        for (UpdateComponent comp : UpdateChecker.getManager().getComponents()) {
-            if (comp.getName().equals("addon-" + getID())) {
-                updateState = UpdateChecker.getManager().getStatus(comp)
-                        != UpdateStatus.CHECKING_NOT_PERMITTED;
-                break;
-            }
-        }
+        checkUpdateState(updateManager);
     }
 
     /**
-     * Creates a new instance of AddonToggle to wrap the specified
-     * Theme.
+     * Creates a new instance of AddonToggle to wrap the specified Theme.
      *
+     * @param updateManager The update manager to use to retrieve component info.
      * @param identity Identity to change update settings in.
      * @param themeManager The manager to update when toggling a theme.
      * @param theme The Theme to be wrapped
      */
-    public AddonToggle(final ConfigProvider identity, final ThemeManager themeManager, final Theme theme) {
+    public AddonToggle(
+            final CachingUpdateManager updateManager,
+            final ConfigProvider identity,
+            final ThemeManager themeManager,
+            final Theme theme) {
         this.identity = identity;
         this.pi = null;
         this.theme = theme;
         this.themeManager = themeManager;
         state = theme.isEnabled();
 
-        for (UpdateComponent comp : UpdateChecker.getManager().getComponents()) {
+        checkUpdateState(updateManager);
+    }
+
+    /**
+     * Checks whether or not the component that is controlled by this toggle is enabled.
+     *
+     * @param updateManager The update manager to use to retrieve component info.
+     */
+    private void checkUpdateState(final CachingUpdateManager updateManager) {
+        for (UpdateComponent comp : updateManager.getComponents()) {
             if (comp.getName().equals("addon-" + getID())) {
-                updateState = UpdateChecker.getManager().getStatus(comp)
-                        != UpdateStatus.CHECKING_NOT_PERMITTED;
+                updateState = updateManager.getStatus(comp) != UpdateStatus.CHECKING_NOT_PERMITTED;
                 break;
             }
         }
