@@ -32,6 +32,7 @@ import com.dmdirc.addons.ui_swing.wizard.firstrun.FirstRunWizardExecutor;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.core.components.StatusBarManager;
 import com.dmdirc.ui.core.util.URLHandler;
+import com.dmdirc.updater.manager.CachingUpdateManager;
 
 import java.awt.KeyboardFocusManager;
 import java.awt.Toolkit;
@@ -76,6 +77,9 @@ public class SwingManager {
     /** Factory used to create data loader workers. */
     private final DataLoaderWorkerFactory dataLoaderWorkerFactory;
 
+    /** The update manager to use. */
+    private final CachingUpdateManager cachingUpdateManager;
+
     /** Provider of first run executors. */
     private final Provider<FirstRunWizardExecutor> firstRunExecutor;
 
@@ -94,6 +98,7 @@ public class SwingManager {
      * @param urlHandler The URL handler to use.
      * @param dialogKeyListener The key listener that supports dialogs.
      * @param dataLoaderWorkerFactory Factory used to create data loader workers.
+     * @param cachingUpdateManager Update manager to use.
      * @param firstRunExecutor A provider of first run executors.
      */
     @Inject
@@ -110,6 +115,7 @@ public class SwingManager {
             final URLHandler urlHandler,
             final DialogKeyListener dialogKeyListener,
             final DataLoaderWorkerFactory dataLoaderWorkerFactory,
+            final CachingUpdateManager cachingUpdateManager,
             final Provider<FirstRunWizardExecutor> firstRunExecutor) {
         this.dialogManager = dialogManager;
         this.eventQueue = eventQueue;
@@ -120,6 +126,7 @@ public class SwingManager {
         this.urlHandler = urlHandler;
         this.dialogKeyListener = dialogKeyListener;
         this.dataLoaderWorkerFactory = dataLoaderWorkerFactory;
+        this.cachingUpdateManager = cachingUpdateManager;
         this.firstRunExecutor = firstRunExecutor;
 
         this.mainFrame = mainFrame;
@@ -177,6 +184,11 @@ public class SwingManager {
     @Deprecated
     public DataLoaderWorkerFactory getDataLoaderWorkerFactory() {
         return dataLoaderWorkerFactory;
+    }
+
+    @Deprecated
+    public CachingUpdateManager getCachingUpdateManager() {
+        return cachingUpdateManager;
     }
 
     /**
