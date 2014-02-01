@@ -79,8 +79,6 @@ public class DCCManager implements ActionListener {
     private final AggregateConfigProvider config;
     /** Parent swing controller. */
     private final SwingController controller;
-    /** Identity controller to read settings from. */
-    private final IdentityController identityController;
     /** The sink manager to use to despatch messages. */
     private final MessageSinkManager messageSinkManager;
     /** Window Management. */
@@ -112,7 +110,6 @@ public class DCCManager implements ActionListener {
             final MessageSinkManager messageSinkManager,
             final WindowManager windowManager,
             final TabCompleterFactory tabCompleterFactory) {
-        this.identityController = identityController;
         this.controller = controller;
         this.messageSinkManager = messageSinkManager;
         this.windowManager = windowManager;
@@ -666,7 +663,8 @@ public class DCCManager implements ActionListener {
      * Create the container window.
      */
     protected void createContainer() {
-        container = new PlaceholderContainer(this, config, controller);
+        container = new PlaceholderContainer(this, config, controller.getDialogManager(),
+                controller.getMainFrame());
         windowManager.addWindow(container);
     }
 
