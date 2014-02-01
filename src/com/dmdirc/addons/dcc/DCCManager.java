@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.dcc;
 
+import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.addons.dcc.actions.DCCActions;
@@ -29,9 +30,12 @@ import com.dmdirc.addons.dcc.io.DCC;
 import com.dmdirc.addons.dcc.io.DCCChat;
 import com.dmdirc.addons.dcc.io.DCCTransfer;
 import com.dmdirc.addons.dcc.kde.KFileChooser;
-import com.dmdirc.addons.ui_swing.SwingController;
+import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SwingWindowFactory;
 import com.dmdirc.addons.ui_swing.components.frames.ComponentFrame;
+import com.dmdirc.addons.ui_swing.dialogs.DialogManager;
+import com.dmdirc.commandline.CommandLineOptionsModule.Directory;
+import com.dmdirc.commandline.CommandLineOptionsModule.DirectoryType;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
@@ -77,8 +81,6 @@ public class DCCManager implements ActionListener {
     private final PluginInfo pluginInfo;
     /** Config manager to read settings from. */
     private final AggregateConfigProvider config;
-    /** Parent swing controller. */
-    private final SwingController controller;
     /** The sink manager to use to despatch messages. */
     private final MessageSinkManager messageSinkManager;
     /** Window Management. */
@@ -87,49 +89,60 @@ public class DCCManager implements ActionListener {
     private final CommandController commandController;
     /** The factory to use for tab completers. */
     private final TabCompleterFactory tabCompleterFactory;
+    /** The dialog manager to register popups with. */
+    private final DialogManager dialogManager;
+    /** The main frame that will own any new windows. */
+    private final MainFrame mainFrame;
     /** The configuration domain to use. */
     private final String domain;
 
     /**
      * Creates a new instance of this plugin.
      *
-     * @param controller The controller to register UI implementations with
+     * @param dialogManager The dialog manager to register popups with.
+     * @param mainFrame The main frame that will own any new windows.
      * @param pluginInfo This plugin's plugin info
      * @param identityController The Identity controller that provides the current config
+     * @param globalConfig The configuration to read settings from.
      * @param commandController Command controller to register commands
      * @param messageSinkManager The sink manager to use to despatch messages.
      * @param windowManager Window Management
      * @param tabCompleterFactory The factory to use for tab completers.
+     * @param windowFactory The window factory to register the DCC implementations with.
+     * @param baseDirectory The directory to create a downloads directory within.
      */
     @Inject
     public DCCManager(
-            final SwingController controller,
+            final DialogManager dialogManager,
+            final MainFrame mainFrame,
             final PluginInfo pluginInfo,
             final IdentityController identityController,
+            @GlobalConfig final AggregateConfigProvider globalConfig,
             final CommandController commandController,
             final MessageSinkManager messageSinkManager,
             final WindowManager windowManager,
-            final TabCompleterFactory tabCompleterFactory) {
-        this.controller = controller;
+            final TabCompleterFactory tabCompleterFactory,
+            final SwingWindowFactory windowFactory,
+            @Directory(DirectoryType.BASE) final String baseDirectory) {
+        this.dialogManager = dialogManager;
+        this.mainFrame = mainFrame;
         this.messageSinkManager = messageSinkManager;
         this.windowManager = windowManager;
         this.commandController = commandController;
         this.tabCompleterFactory = tabCompleterFactory;
         this.domain = pluginInfo.getDomain();
-        config = controller.getGlobalConfig();
+        this.config = globalConfig;
         this.pluginInfo = pluginInfo;
-        final SwingWindowFactory factory = controller.getWindowFactory();
-        factory.registerImplementation(new HashSet<>(Arrays.asList(
+        windowFactory.registerImplementation(new HashSet<>(Arrays.asList(
                 "com.dmdirc.addons.dcc.ui.PlaceholderPanel")),
                 ComponentFrame.class);
-        factory.registerImplementation(new HashSet<>(Arrays.asList(
+        windowFactory.registerImplementation(new HashSet<>(Arrays.asList(
                 "com.dmdirc.addons.dcc.ui.TransferPanel")),
                 ComponentFrame.class);
 
         final ConfigProvider defaults = identityController.getAddonSettings();
-        defaults.setOption(getDomain(), "receive.savelocation",
-                identityController.getConfigurationDirectory() + "downloads"
-                + System.getProperty("file.separator"));
+        defaults.setOption(domain, "receive.savelocation",
+                baseDirectory + "downloads" + File.separator);
     }
 
     public String getDomain() {
@@ -264,7 +277,8 @@ public class DCCManager implements ActionListener {
             if (config.getOptionBool(getDomain(), "receive.autoaccept")) {
                 return false;
             } else {
-                JOptionPane.showMessageDialog(controller.getMainFrame(),
+                JOptionPane.showMessageDialog(
+                        mainFrame,
                         "This file has already "
                         + "been completed, or is longer than the file you are "
                         + "receiving.\nPlease choose a different file.",
@@ -290,7 +304,7 @@ public class DCCManager implements ActionListener {
                 return true;
             } else {
                 final int result = JOptionPane.showConfirmDialog(
-                        controller.getMainFrame(), "This file exists already"
+                        mainFrame, "This file exists already"
                         + ", do you want to resume an exisiting download?",
                         "Resume Download?", JOptionPane.YES_NO_OPTION);
                 return (result == JOptionPane.YES_OPTION);
@@ -318,7 +332,7 @@ public class DCCManager implements ActionListener {
                 jc.setFileSelectionMode(JFileChooser.FILES_ONLY);
                 jc.setMultiSelectionEnabled(false);
                 jc.setSelectedFile(new File(send.getFileName()));
-        return jc.showSaveDialog(controller.getMainFrame());
+        return jc.showSaveDialog(mainFrame);
     }
 
     /** {@inheritDoc} */
@@ -663,8 +677,7 @@ public class DCCManager implements ActionListener {
      * Create the container window.
      */
     protected void createContainer() {
-        container = new PlaceholderContainer(this, config, controller.getDialogManager(),
-                controller.getMainFrame());
+        container = new PlaceholderContainer(this, config, dialogManager, mainFrame);
         windowManager.addWindow(container);
     }
 

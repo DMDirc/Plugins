@@ -209,74 +209,92 @@ public class SwingController extends BaseCommandPlugin implements UIController {
         windows = new ArrayList<>();
     }
 
+    @Deprecated
     public AggregateConfigProvider getGlobalConfig() {
         return globalConfig;
     }
 
+    @Deprecated
     public ServerManager getServerManager() {
         return serverManager;
     }
 
+    @Deprecated
     public IdentityController getIdentityManager() {
         return identityManager;
     }
 
+    @Deprecated
     public IdentityFactory getIdentityFactory() {
         return identityFactory;
     }
 
+    @Deprecated
     public ConfigProvider getGlobalIdentity() {
         return globalIdentity;
     }
 
+    @Deprecated
     public IconManager getIconManager() {
         return iconManager;
     }
 
+    @Deprecated
     public PrefsComponentFactory getPrefsComponentFactory() {
         return prefsComponentFactory;
     }
 
+    @Deprecated
     public ActionManager getActionManager() {
         return actionManager;
     }
 
+    @Deprecated
     public ActionFactory getActionFactory() {
         return actionFactory;
     }
 
+    @Deprecated
     public PluginManager getPluginManager() {
         return pluginManager;
     }
 
+    @Deprecated
     public PerformWrapper getPerformWrapper() {
         return performWrapper;
     }
 
+    @Deprecated
     public AliasWrapper getAliasWrapper() {
         return aliasWrapper;
     }
 
+    @Deprecated
     public ThemeManager getThemeManager() {
         return themeManager;
     }
 
+    @Deprecated
     public Apple getApple() {
         return apple;
     }
 
+    @Deprecated
     public ColourManager getColourManager() {
         return colourManager;
     }
 
+    @Deprecated
     public URLBuilder getUrlBuilder() {
         return urlBuilder;
     }
 
+    @Deprecated
     public ActionSubstitutorFactory getActionSubstitutorFactory() {
         return actionSubstitutorFactory;
     }
 
+    @Deprecated
     public LifecycleController getLifecycleController() {
         return lifecycleController;
     }
