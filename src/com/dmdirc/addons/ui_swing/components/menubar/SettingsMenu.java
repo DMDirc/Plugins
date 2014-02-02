@@ -33,6 +33,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -47,11 +48,17 @@ public class SettingsMenu extends JMenu implements ActionListener {
     private static final long serialVersionUID = 1;
     /** Swing controller. */
     private final SwingController controller;
+    /** Provider of profile manager dialogs. */
+    private final Provider<ProfileManagerDialog> profileDialogProvider;
 
     @Inject
-    public SettingsMenu(final SwingController controller) {
+    public SettingsMenu(
+            final SwingController controller,
+            final Provider<ProfileManagerDialog> profileDialogProvider) {
         super("Settings");
         this.controller = controller;
+        this.profileDialogProvider = profileDialogProvider;
+
         setMnemonic('e');
         initSettingsMenu();
     }
@@ -101,7 +108,7 @@ public class SettingsMenu extends JMenu implements ActionListener {
                 controller.showDialog(SwingPreferencesDialog.class);
                 break;
             case "Profile":
-                controller.showDialog(ProfileManagerDialog.class);
+                profileDialogProvider.get().displayOrRequestFocus();
                 break;
             case "Actions":
                 controller.showDialog(ActionsManagerDialog.class);

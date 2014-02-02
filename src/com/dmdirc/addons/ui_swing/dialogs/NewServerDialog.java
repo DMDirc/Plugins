@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.dialogs;
 
+import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.ServerManager;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.UIUtilities;
@@ -49,6 +50,9 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
+import javax.inject.Singleton;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -65,6 +69,7 @@ import net.miginfocom.swing.MigLayout;
 /**
  * Dialog that allows the user to enter details of a new server to connect to.
  */
+@Singleton
 public class NewServerDialog extends StandardDialog implements
         ActionListener, VetoableComboBoxSelectionListener, ConfigProviderListener {
 
@@ -74,8 +79,6 @@ public class NewServerDialog extends StandardDialog implements
     private final IdentityController identityController;
     /** Server manager. */
     private final ServerManager serverManager;
-    /** Dialog manager. */
-    private final DialogManager dialogManager;
     /** Icon manager. */
     private final IconManager iconManager;
     /** Config. */
@@ -98,6 +101,8 @@ public class NewServerDialog extends StandardDialog implements
     private JButton editProfileButton;
     /**  Opening new server? */
     private boolean openingServer = false;
+    /** Provider to use to retrieve PMDs. */
+    private final Provider<ProfileManagerDialog> profileDialogProvider;
 
     /**
      * Creates a new instance of the dialog.
@@ -108,17 +113,24 @@ public class NewServerDialog extends StandardDialog implements
      * @param iconManager Icon manager
      * @param identityController Identity controller
      * @param serverManager Server manager
+     * @param profileDialogProvider Provider to use to retrieve PMDs.
      */
-    public NewServerDialog(final DialogManager dialogManager, final MainFrame mainFrame,
-            final AggregateConfigProvider config, final IconManager iconManager,
-            final IdentityController identityController, final ServerManager serverManager) {
+    @Inject
+    public NewServerDialog(
+            final DialogManager dialogManager,
+            final MainFrame mainFrame,
+            @GlobalConfig final AggregateConfigProvider config,
+            @GlobalConfig final IconManager iconManager,
+            final IdentityController identityController,
+            final ServerManager serverManager,
+            final Provider<ProfileManagerDialog> profileDialogProvider) {
         super(dialogManager, mainFrame, ModalityType.MODELESS);
         this.identityController = identityController;
         this.serverManager = serverManager;
         this.mainFrame = mainFrame;
         this.iconManager = iconManager;
-        this.dialogManager = dialogManager;
         this.config = config;
+        this.profileDialogProvider = profileDialogProvider;
 
         initComponents();
         layoutComponents();
@@ -307,7 +319,7 @@ public class NewServerDialog extends StandardDialog implements
         if (e.getSource() == getOkButton()) {
             save();
         } else if (e.getSource() == editProfileButton) {
-            dialogManager.showDialog(ProfileManagerDialog.class);
+            profileDialogProvider.get().displayOrRequestFocus();
         } else if (e.getSource() == getCancelButton()) {
             dispose();
         }

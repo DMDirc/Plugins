@@ -149,29 +149,6 @@ public class SwingModule {
         return new URLHandler(swingController, globalConfig, serverManager, statusBarManager);
     }
 
-    /**
-     * Gets a first run wizard to display.
-     *
-     * @param mainFrame The main frame, which will be the parent window.
-     * @param directory Actions directory
-     * @param config Config
-     * @param dialogManager Dialog manager
-     * @param pluginExtractor The extractor to use to extract plugins.
-     * @param iconManager An icon manager backed by the global configuration.
-     * @return
-     */
-    @Provides
-    public SwingFirstRunWizard getFirstRunWizard(
-            final MainFrame mainFrame,
-            @CommandLineOptionsModule.Directory(CommandLineOptionsModule.DirectoryType.ACTIONS) final String directory,
-            @ClientModule.UserConfig final ConfigProvider config,
-            final DialogManager dialogManager,
-            final CorePluginExtractor pluginExtractor,
-            @GlobalConfig final IconManager iconManager) {
-        return new SwingFirstRunWizard(
-                mainFrame, config, dialogManager, directory, pluginExtractor, iconManager);
-    }
-
     @Provides
     public DialogManager getDialogManager(final SwingController controller) {
         return new DialogManager(controller);

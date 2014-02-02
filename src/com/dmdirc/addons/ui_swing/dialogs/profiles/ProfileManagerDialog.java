@@ -40,6 +40,8 @@ import com.palantir.ptoss.cinch.swing.Bound;
 import com.palantir.ptoss.cinch.swing.BoundSelection;
 import com.palantir.ptoss.cinch.swing.EnabledIf;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -50,13 +52,12 @@ import javax.swing.ListSelectionModel;
 import net.miginfocom.swing.MigLayout;
 
 /** Profile editing dialog. */
+@Singleton
 @SuppressWarnings("unused")
 public class ProfileManagerDialog extends StandardDialog {
 
     /** Serial version UID. */
     private static final long serialVersionUID = 3;
-    /** Previously created instance of ProfileEditorDialog. */
-    private static volatile ProfileManagerDialog me;
     /** Model used to store state. */
     private final ProfileManagerModel model;
     /** Dialog controller, used to perform actions. */
@@ -127,6 +128,7 @@ public class ProfileManagerDialog extends StandardDialog {
      *
      * @param controller Swing controller
      */
+    @Inject
     public ProfileManagerDialog(final SwingController controller) {
         super(controller.getDialogManager(), controller.getMainFrame(), ModalityType.MODELESS);
         this.model = new ProfileManagerModel(controller.getIdentityManager(), controller.getIdentityFactory());

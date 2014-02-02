@@ -22,15 +22,20 @@
 
 package com.dmdirc.addons.ui_swing.wizard.firstrun;
 
+import com.dmdirc.ClientModule.GlobalConfig;
+import com.dmdirc.ClientModule.UserConfig;
 import com.dmdirc.CorePluginExtractor;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.addons.ui_swing.Apple;
+import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.dialogs.DialogManager;
 import com.dmdirc.addons.ui_swing.dialogs.profiles.ProfileManagerDialog;
 import com.dmdirc.addons.ui_swing.wizard.Step;
 import com.dmdirc.addons.ui_swing.wizard.WizardDialog;
 import com.dmdirc.addons.ui_swing.wizard.WizardListener;
+import com.dmdirc.commandline.CommandLineOptionsModule.Directory;
+import com.dmdirc.commandline.CommandLineOptionsModule.DirectoryType;
 import com.dmdirc.interfaces.ActionListener;
 import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.interfaces.config.ConfigProvider;
@@ -42,12 +47,14 @@ import com.dmdirc.util.resourcemanager.ResourceManager;
 
 import java.awt.Dialog.ModalityType;
 import java.awt.Dimension;
-import java.awt.Window;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import javax.inject.Inject;
+import javax.inject.Provider;
 
 /** First run wizard, used to initially setup the client for the user. */
 public class SwingFirstRunWizard implements WizardListener, FirstRunWizard {
@@ -58,10 +65,10 @@ public class SwingFirstRunWizard implements WizardListener, FirstRunWizard {
     private final ConfigProvider config;
     /** Extractor to use for core plugins. */
     private final CorePluginExtractor corePluginExtractor;
-    /** Dialog manager. */
-    private final DialogManager dialogManager;
     /** Actions directory. */
     private final String actionsDirectory;
+    /** Provider to use to obtain PMDs. */
+    private final Provider<ProfileManagerDialog> profileDialogProvider;
 
     /**
      * Instantiate the wizard.
@@ -72,18 +79,21 @@ public class SwingFirstRunWizard implements WizardListener, FirstRunWizard {
      * @param actionsDirectory Actions directory
      * @param pluginExtractor Plugin extractor to use.
      * @param iconManager Manager to use to find icons.
+     * @param profileDialogProvider Provider to use to obtain PMDs.
      */
+    @Inject
     public SwingFirstRunWizard(
-            final Window parentWindow,
-            final ConfigProvider config,
+            final MainFrame parentWindow,
+            @UserConfig final ConfigProvider config,
             final DialogManager dialogManager,
-            final String actionsDirectory,
+            @Directory(DirectoryType.ACTIONS) final String actionsDirectory,
             final CorePluginExtractor pluginExtractor,
-            final IconManager iconManager) {
+            @GlobalConfig final IconManager iconManager,
+            final Provider<ProfileManagerDialog> profileDialogProvider) {
         this.corePluginExtractor = pluginExtractor;
         this.config = config;
-        this.dialogManager = dialogManager;
         this.actionsDirectory = actionsDirectory;
+        this.profileDialogProvider = profileDialogProvider;
 
         wizardDialog = new WizardDialog("Setup wizard", new ArrayList<Step>(),
                 dialogManager, parentWindow, ModalityType.APPLICATION_MODAL);
@@ -120,7 +130,7 @@ public class SwingFirstRunWizard implements WizardListener, FirstRunWizard {
                 @Override
                 public void processEvent(final ActionType type,
                         final StringBuffer format, final Object... arguments) {
-                    dialogManager.showDialog(ProfileManagerDialog.class);
+                    profileDialogProvider.get().displayOrRequestFocus();
                 }
             }, CoreActionType.CLIENT_OPENED);
 
