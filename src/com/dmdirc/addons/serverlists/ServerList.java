@@ -39,6 +39,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 /**
  * Maintains a list of top level {@link ServerGroup}s and handles reading and
  * writing of the lists to disk.
@@ -67,6 +69,7 @@ public class ServerList implements ConfigProviderListener {
      * @param identityController The controller to read/write settings with.
      * @param identityFactory The factory to create new identities with.
      */
+    @Inject
     public ServerList(
             final PluginManager pluginManager,
             final ServerManager serverManager,
