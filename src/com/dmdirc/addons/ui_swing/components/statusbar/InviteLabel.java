@@ -22,13 +22,14 @@
 
 package com.dmdirc.addons.ui_swing.components.statusbar;
 
+import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.Invite;
 import com.dmdirc.Server;
+import com.dmdirc.ServerManager;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SelectionListener;
-import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.addons.ui_swing.dialogs.DialogManager;
@@ -37,11 +38,13 @@ import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.InviteListener;
 import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.interfaces.ui.StatusBarComponent;
+import com.dmdirc.ui.IconManager;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.util.Collection;
 
+import javax.inject.Inject;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
@@ -78,17 +81,24 @@ public class InviteLabel extends StatusbarPopupPanel<JLabel> implements
     /**
      * Instantiates a new invite label.
      *
-     * @param controller Swing controller
+     * @param dialogManager The manager to register dialogs with.
+     * @param iconManager The manager to retrieve the invite icon from.
+     * @param serverManager The manager to use to iterate servers.
      * @param mainFrame Main frame
      */
-    public InviteLabel(final SwingController controller, final MainFrame mainFrame) {
+    @Inject
+    public InviteLabel(
+            final DialogManager dialogManager,
+            @GlobalConfig final IconManager iconManager,
+            final ServerManager serverManager,
+            final MainFrame mainFrame) {
         super(new JLabel());
 
-        this.dialogManager = controller.getDialogManager();
+        this.dialogManager = dialogManager;
         this.mainFrame = mainFrame;
 
         setBorder(BorderFactory.createEtchedBorder());
-        label.setIcon(controller.getIconManager().getIcon("invite"));
+        label.setIcon(iconManager.getIcon("invite"));
 
         menu = new JPopupMenu();
         dismiss = new JMenuItem("Dismiss all invites");
@@ -98,7 +108,7 @@ public class InviteLabel extends StatusbarPopupPanel<JLabel> implements
         accept.setActionCommand("acceptAll");
         accept.addActionListener(this);
 
-        for (final Server server : controller.getServerManager().getServers()) {
+        for (final Server server : serverManager.getServers()) {
             server.addInviteListener(this);
         }
 
