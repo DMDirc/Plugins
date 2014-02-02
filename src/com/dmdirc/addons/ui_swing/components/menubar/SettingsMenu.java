@@ -50,14 +50,18 @@ public class SettingsMenu extends JMenu implements ActionListener {
     private final SwingController controller;
     /** Provider of profile manager dialogs. */
     private final Provider<ProfileManagerDialog> profileDialogProvider;
+    /** Provider of action manager dialogs. */
+    private final Provider<ActionsManagerDialog> actionsDialogProvider;
 
     @Inject
     public SettingsMenu(
             final SwingController controller,
-            final Provider<ProfileManagerDialog> profileDialogProvider) {
+            final Provider<ProfileManagerDialog> profileDialogProvider,
+            final Provider<ActionsManagerDialog> actionsDialogProvider) {
         super("Settings");
         this.controller = controller;
         this.profileDialogProvider = profileDialogProvider;
+        this.actionsDialogProvider = actionsDialogProvider;
 
         setMnemonic('e');
         initSettingsMenu();
@@ -111,7 +115,7 @@ public class SettingsMenu extends JMenu implements ActionListener {
                 profileDialogProvider.get().displayOrRequestFocus();
                 break;
             case "Actions":
-                controller.showDialog(ActionsManagerDialog.class);
+                actionsDialogProvider.get().displayOrRequestFocus();
                 break;
             case "Aliases":
                 controller.showDialog(AliasManagerDialog.class);
