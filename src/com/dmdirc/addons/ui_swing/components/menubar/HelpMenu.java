@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.components.menubar;
 
+import com.dmdirc.ServerManager;
 import com.dmdirc.addons.ui_swing.Apple;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.dialogs.FeedbackDialog;
@@ -45,16 +46,22 @@ public class HelpMenu extends JMenu implements ActionListener {
     private static final long serialVersionUID = 1;
     /** Swing controller. */
     private final SwingController controller;
+    /** Server manager to use to join dev chat. */
+    private final ServerManager serverManager;
 
     /**
      * Instantiates a new help menu.
      *
      * @param controller Swing controller
+     * @param serverManager The manager to use to join dev chat.
      */
     @Inject
-    public HelpMenu(final SwingController controller) {
+    public HelpMenu(
+            final SwingController controller,
+            final ServerManager serverManager) {
         super("Help");
         this.controller = controller;
+        this.serverManager = serverManager;
         setMnemonic('h');
         initHelpMenu();
     }
@@ -101,7 +108,7 @@ public class HelpMenu extends JMenu implements ActionListener {
                 controller.showDialog(AboutDialog.class);
                 break;
             case "JoinDevChat":
-                controller.getServerManager().joinDevChat();
+                serverManager.joinDevChat();
                 break;
             case "feedback":
                 controller.showDialog(FeedbackDialog.class);
