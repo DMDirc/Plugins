@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.actionsmanager;
 
+import com.dmdirc.ClientModule.UserConfig;
 import com.dmdirc.actions.Action;
 import com.dmdirc.actions.ActionGroup;
 import com.dmdirc.actions.ActionManager;
@@ -51,6 +52,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -67,6 +70,7 @@ import net.miginfocom.swing.MigLayout;
 /**
  * Allows the user to manage actions.
  */
+@Singleton
 public class ActionsManagerDialog extends StandardDialog implements
         ActionListener, com.dmdirc.interfaces.ActionListener,
         ListSelectionListener {
@@ -119,14 +123,15 @@ public class ActionsManagerDialog extends StandardDialog implements
      * @param config Config to save dialog state to
      * @param compFactory Prefs setting component factory
      */
-    @SuppressWarnings("unchecked")
-    public ActionsManagerDialog(final Window parentWindow,
+    @Inject
+    public ActionsManagerDialog(
+            final MainFrame parentWindow,
             final SwingController controller,
             final DialogManager dialogManager,
-            final ConfigProvider config,
+            @UserConfig final ConfigProvider config,
             final PrefsComponentFactory compFactory) {
         super(dialogManager, Apple.isAppleUI()
-                ? new AppleJFrame((MainFrame) parentWindow, controller)
+                ? new AppleJFrame(parentWindow, controller)
                 : parentWindow, ModalityType.MODELESS);
         this.controller = controller;
         this.dialogManager = dialogManager;
@@ -159,8 +164,7 @@ public class ActionsManagerDialog extends StandardDialog implements
         actions = new ActionsGroupPanel(dialogManager, this, null);
         info = new ActionGroupInformationPanel(null);
         settings = new HashMap<>();
-        activeSettings = new ActionGroupSettingsPanel(controller
-                .getPrefsComponentFactory(), null, this);
+        activeSettings = new ActionGroupSettingsPanel(compFactory, null, this);
         settings.put(null, activeSettings);
         add = new JButton("Add");
         edit = new JButton("Edit");

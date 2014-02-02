@@ -121,8 +121,6 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     private final ConfigProvider addonIdentity;
     /** Global Swing UI Icon manager. */
     private final IconManager iconManager;
-    /** Prefs component factory instance. */
-    private final PrefsComponentFactory prefsComponentFactory;
     /** Action manager. */
     private final ActionManager actionManager;
     /** Action factory. */
@@ -204,7 +202,6 @@ public class SwingController extends BaseCommandPlugin implements UIController {
         addonIdentity = identityManager.getAddonSettings();
         apple = new Apple(globalConfig, serverManager, eventBus);
         iconManager = new IconManager(globalConfig, urlBuilder);
-        prefsComponentFactory = new PrefsComponentFactory(this);
         setAntiAlias();
         windows = new ArrayList<>();
     }
@@ -241,7 +238,7 @@ public class SwingController extends BaseCommandPlugin implements UIController {
 
     @Deprecated
     public PrefsComponentFactory getPrefsComponentFactory() {
-        return prefsComponentFactory;
+        return swingManager.getPrefsComponentFactory();
     }
 
     @Deprecated

@@ -83,6 +83,9 @@ public class SwingManager {
     /** Provider of first run executors. */
     private final Provider<FirstRunWizardExecutor> firstRunExecutor;
 
+    /** The factory to use to create prefs components. */
+    private final PrefsComponentFactory prefsComponentFactory;
+
     /**
      * Creates a new instance of {@link SwingManager}.
      *
@@ -100,6 +103,7 @@ public class SwingManager {
      * @param dataLoaderWorkerFactory Factory used to create data loader workers.
      * @param cachingUpdateManager Update manager to use.
      * @param firstRunExecutor A provider of first run executors.
+     * @param prefsComponentFactory The factory to use to create prefs components.
      */
     @Inject
     public SwingManager(
@@ -116,7 +120,8 @@ public class SwingManager {
             final DialogKeyListener dialogKeyListener,
             final DataLoaderWorkerFactory dataLoaderWorkerFactory,
             final CachingUpdateManager cachingUpdateManager,
-            final Provider<FirstRunWizardExecutor> firstRunExecutor) {
+            final Provider<FirstRunWizardExecutor> firstRunExecutor,
+            final PrefsComponentFactory prefsComponentFactory) {
         this.dialogManager = dialogManager;
         this.eventQueue = eventQueue;
         this.windowFactory = windowFactory;
@@ -128,6 +133,7 @@ public class SwingManager {
         this.dataLoaderWorkerFactory = dataLoaderWorkerFactory;
         this.cachingUpdateManager = cachingUpdateManager;
         this.firstRunExecutor = firstRunExecutor;
+        this.prefsComponentFactory = prefsComponentFactory;
 
         this.mainFrame = mainFrame;
         this.mainFrame.setMenuBar(menuBar);
@@ -189,6 +195,11 @@ public class SwingManager {
     @Deprecated
     public CachingUpdateManager getCachingUpdateManager() {
         return cachingUpdateManager;
+    }
+
+    @Deprecated
+    public PrefsComponentFactory getPrefsComponentFactory() {
+        return prefsComponentFactory;
     }
 
     /**

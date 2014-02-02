@@ -44,6 +44,8 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.Map;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.swing.BorderFactory;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -63,6 +65,7 @@ import org.jdesktop.jxlayer.JXLayer;
 /**
  * Provides methods for constructing a JComponent from a PreferencesSetting.
  */
+@Singleton
 public final class PrefsComponentFactory {
 
     /** Swing Controller. */
@@ -73,9 +76,9 @@ public final class PrefsComponentFactory {
      *
      * @param controller Swing Controller
      */
-    protected PrefsComponentFactory(final SwingController controller) {
+    @Inject
+    public PrefsComponentFactory(final SwingController controller) {
         this.controller = controller;
-
     }
 
     /**
