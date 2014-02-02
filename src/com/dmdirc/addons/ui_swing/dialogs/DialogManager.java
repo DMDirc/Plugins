@@ -87,7 +87,9 @@ public class DialogManager {
      * @param params Any non standard parameters required
      *
      * @return Dialog instance
+     * @deprecated Use dagger instead.
      */
+    @Deprecated
     public <T extends StandardDialog> T showDialog(final Class<T> klass,
             final Object... params) {
         final T dialog = getDialog(klass, params);
@@ -126,7 +128,9 @@ public class DialogManager {
      * @param params Any non standard parameters required
      *
      * @return Dialog instance
+     * @deprecated Use dagger instead.
      */
+    @Deprecated
     @SuppressWarnings("unchecked")
     public <T extends StandardDialog> T getDialog(final Class<T> klass,
             final Object... params) {
@@ -204,7 +208,9 @@ public class DialogManager {
      * Closes the previously created instance of a dialog.
      *
      * @param klass The class of the dialog to show
+     * @deprecated Use dagger instead.
      */
+    @Deprecated
     public void close(final Class<? extends StandardDialog> klass) {
         final StandardDialog dialog = dispose(klass);
         if (dialog != null) {

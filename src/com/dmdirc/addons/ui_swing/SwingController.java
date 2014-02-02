@@ -364,7 +364,9 @@ public class SwingController extends BaseCommandPlugin implements UIController {
      *
      * @param klass The class of the dialog to show
      * @param params Any non standard parameters required
+     * @deprecated Use dagger instead.
      */
+    @Deprecated
     public <T extends StandardDialog> void showDialog(final Class<T> klass,
             final Object... params) {
         getDialogManager().showDialog(klass, params);
