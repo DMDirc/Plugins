@@ -22,34 +22,14 @@
 
 package com.dmdirc.addons.serverlistdialog;
 
-import com.dmdirc.plugins.PluginInfo;
-import com.dmdirc.plugins.implementations.BasePlugin;
+import com.dmdirc.addons.ui_swing.SwingModule;
 
-import dagger.ObjectGraph;
+import dagger.Module;
 
 /**
- * Server list dialog plugin.
+ * DI module for the server list plugin.
  */
-public class ServerListDialogPlugin extends BasePlugin {
-
-    /** Controller that manages the server list. */
-    private ServerListController controller;
-
-    @Override
-    public void onUnload() {
-        super.onUnload();
-
-        controller.removeMenu();
-        controller = null;
-    }
-
-    @Override
-    public void load(final PluginInfo pluginInfo, final ObjectGraph graph) {
-        super.load(pluginInfo, graph);
-        setObjectGraph(graph.plus(new ServerListModule()));
-
-        controller = getObjectGraph().get(ServerListController.class);
-        controller.addMenu();
-    }
+@Module(injects = {ServerListController.class}, addsTo = SwingModule.class)
+public class ServerListModule {
 
 }

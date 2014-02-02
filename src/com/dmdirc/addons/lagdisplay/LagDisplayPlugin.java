@@ -227,11 +227,11 @@ public final class LagDisplayPlugin extends BasePlugin implements
         } else if (useAlternate && type.equals(CoreActionType.SERVER_PINGSENT)) {
             ((Connection) arguments[0]).getParser().sendRawMessage("LAGCHECK_" + new Date().getTime());
         } else if (useAlternate && type.equals(CoreActionType.SERVER_NUMERIC)
-                && ((Integer) arguments[1]).intValue() == 421
+                && ((Integer) arguments[1]) == 421
                 && ((String[]) arguments[2])[3].startsWith("LAGCHECK_")) {
             try {
                 final long sent = Long.parseLong(((String[]) arguments[2])[3].substring(9));
-                final Long duration = Long.valueOf(new Date().getTime() - sent);
+                final Long duration = new Date().getTime() - sent;
                 final String value = formatTime(duration);
 
                 pings.put((Connection) arguments[0], value);
