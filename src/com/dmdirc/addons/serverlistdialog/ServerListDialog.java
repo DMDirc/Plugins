@@ -22,10 +22,13 @@
 
 package com.dmdirc.addons.serverlistdialog;
 
+import com.dmdirc.ServerManager;
 import com.dmdirc.actions.wrappers.PerformWrapper;
 import com.dmdirc.addons.serverlists.ServerGroupItem;
+import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.LockedLayer;
+import com.dmdirc.addons.ui_swing.dialogs.DialogManager;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.ui.core.util.URLHandler;
 
@@ -34,6 +37,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.ColorConvertOp;
 
+import javax.inject.Inject;
 import javax.swing.JButton;
 
 import net.miginfocom.swing.MigLayout;
@@ -78,17 +82,22 @@ public class ServerListDialog extends StandardDialog implements
      * @param controller Swing controller
      * @param urlHandler The URL Handler to use to handle clicked links
      * @param performWrapper The wrapper to use for the perform tab
+     * @param serverListModel The model to use for the dialog.
+     * @param dialogManager The manager to register the dialog with.
+     * @param mainFrame The main frame that owns the dialog.
      */
+    @Inject
     public ServerListDialog(
             final SwingController controller,
             final URLHandler urlHandler,
-            final PerformWrapper performWrapper) {
-        super(controller.getDialogManager(), controller.getMainFrame(), ModalityType.MODELESS);
+            final PerformWrapper performWrapper,
+            final ServerListModel serverListModel,
+            final DialogManager dialogManager,
+            final MainFrame mainFrame) {
+        super(dialogManager, mainFrame, ModalityType.MODELESS);
 
         setTitle("Server List");
-        model = new ServerListModel(controller.getPluginManager(),
-                controller.getServerManager(), controller.getIdentityManager(),
-                controller.getIdentityFactory());
+        model = serverListModel;
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
         connectButton = new JButton("Connect");

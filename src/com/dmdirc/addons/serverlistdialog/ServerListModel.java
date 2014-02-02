@@ -32,14 +32,13 @@ import com.dmdirc.addons.serverlists.ServerGroup;
 import com.dmdirc.addons.serverlists.ServerGroupItem;
 import com.dmdirc.addons.serverlists.ServerList;
 import com.dmdirc.interfaces.config.IdentityController;
-import com.dmdirc.interfaces.config.IdentityFactory;
-import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.util.collections.ListenerList;
 
 import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 
+import javax.inject.Inject;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
@@ -62,19 +61,18 @@ public class ServerListModel {
     /**
      * Creates a new server list model.
      *
-     * @param pluginManager PluginManager currently in use.
      * @param serverManager ServerManager currently in use.
      * @param identityController The controller to read/write settings with.
-     * @param identityFactory The factory to create identities with.
+     * @param serverList The server list to use for the top-level entries.
      */
+    @Inject
     public ServerListModel(
-            final PluginManager pluginManager,
             final ServerManager serverManager,
             final IdentityController identityController,
-            final IdentityFactory identityFactory) {
+            final ServerList serverList) {
         this.serverManager = serverManager;
         this.identityController = identityController;
-        list = new ServerList(pluginManager, serverManager, identityController, identityFactory);
+        list = serverList;
         listeners = new ListenerList();
     }
 
