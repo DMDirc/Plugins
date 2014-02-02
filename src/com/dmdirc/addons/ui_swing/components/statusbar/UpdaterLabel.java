@@ -26,12 +26,14 @@ import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.dialogs.updater.SwingRestartDialog;
 import com.dmdirc.addons.ui_swing.dialogs.updater.SwingUpdaterDialog;
 import com.dmdirc.interfaces.ui.StatusBarComponent;
+import com.dmdirc.updater.manager.CachingUpdateManager;
 import com.dmdirc.updater.manager.UpdateManager;
 import com.dmdirc.updater.manager.UpdateManagerListener;
 import com.dmdirc.updater.manager.UpdateManagerStatus;
 
 import java.awt.event.MouseEvent;
 
+import javax.inject.Inject;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 
@@ -50,19 +52,26 @@ public class UpdaterLabel extends StatusbarPopupPanel<JLabel> implements
     private static final long serialVersionUID = 1;
     /** Swing controller. */
     private final SwingController controller;
+    /** The update manager to use to retrieve information. */
+    private final CachingUpdateManager updateManager;
 
     /**
      * Instantiates a new updater label, handles showing updates on the status
      * bar.
      *
      * @param controller Swing controller
+     * @param updateManager The manager to use to retrieve information.
      */
-    public UpdaterLabel(final SwingController controller) {
+    @Inject
+    public UpdaterLabel(
+            final SwingController controller,
+            final CachingUpdateManager updateManager) {
         super(new JLabel());
 
         this.controller = controller;
+        this.updateManager = updateManager;
         setBorder(BorderFactory.createEtchedBorder());
-        controller.getCachingUpdateManager().addUpdateManagerListener(this);
+        updateManager.addUpdateManagerListener(this);
         setVisible(false);
         label.setText(null);
     }
@@ -76,13 +85,11 @@ public class UpdaterLabel extends StatusbarPopupPanel<JLabel> implements
     public void mouseReleased(final MouseEvent mouseEvent) {
         super.mouseReleased(mouseEvent);
         if (mouseEvent.getButton() == MouseEvent.BUTTON1) {
-            if (controller.getCachingUpdateManager().getManagerStatus()
-                    == UpdateManagerStatus.IDLE_RESTART_NEEDED) {
+            if (updateManager.getManagerStatus() == UpdateManagerStatus.IDLE_RESTART_NEEDED) {
                 closeDialog();
                 controller.showDialog(SwingRestartDialog.class);
             } else {
-                controller.showDialog(SwingUpdaterDialog.class,
-                        controller.getCachingUpdateManager());
+                controller.showDialog(SwingUpdaterDialog.class, updateManager);
             }
         }
     }
@@ -90,7 +97,7 @@ public class UpdaterLabel extends StatusbarPopupPanel<JLabel> implements
     /** {@inheritDoc} */
     @Override
     protected StatusbarPopupWindow getWindow() {
-        return new UpdaterPopup(controller.getDialogManager(), controller.getCachingUpdateManager(),
+        return new UpdaterPopup(controller.getDialogManager(), updateManager,
                 this, controller.getMainFrame());
     }
 
