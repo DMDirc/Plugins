@@ -24,7 +24,6 @@ package com.dmdirc.addons.ui_swing;
 
 import com.dmdirc.ClientModule;
 import com.dmdirc.ClientModule.GlobalConfig;
-import com.dmdirc.CorePluginExtractor;
 import com.dmdirc.ServerManager;
 import com.dmdirc.addons.ui_swing.commands.ChannelSettings;
 import com.dmdirc.addons.ui_swing.commands.Input;
@@ -32,11 +31,8 @@ import com.dmdirc.addons.ui_swing.commands.PopInCommand;
 import com.dmdirc.addons.ui_swing.commands.PopOutCommand;
 import com.dmdirc.addons.ui_swing.commands.ServerSettings;
 import com.dmdirc.addons.ui_swing.dialogs.DialogManager;
-import com.dmdirc.addons.ui_swing.wizard.firstrun.SwingFirstRunWizard;
-import com.dmdirc.commandline.CommandLineOptionsModule;
 import com.dmdirc.interfaces.LifecycleController;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
-import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.core.components.StatusBarManager;
@@ -147,29 +143,6 @@ public class SwingModule {
             final ServerManager serverManager,
             final StatusBarManager statusBarManager) {
         return new URLHandler(swingController, globalConfig, serverManager, statusBarManager);
-    }
-
-    /**
-     * Gets a first run wizard to display.
-     *
-     * @param mainFrame The main frame, which will be the parent window.
-     * @param directory Actions directory
-     * @param config Config
-     * @param dialogManager Dialog manager
-     * @param pluginExtractor The extractor to use to extract plugins.
-     * @param iconManager An icon manager backed by the global configuration.
-     * @return
-     */
-    @Provides
-    public SwingFirstRunWizard getFirstRunWizard(
-            final MainFrame mainFrame,
-            @CommandLineOptionsModule.Directory(CommandLineOptionsModule.DirectoryType.ACTIONS) final String directory,
-            @ClientModule.UserConfig final ConfigProvider config,
-            final DialogManager dialogManager,
-            final CorePluginExtractor pluginExtractor,
-            @GlobalConfig final IconManager iconManager) {
-        return new SwingFirstRunWizard(
-                mainFrame, config, dialogManager, directory, pluginExtractor, iconManager);
     }
 
     @Provides

@@ -108,6 +108,17 @@ public class StandardDialog extends JDialog {
     }
 
     /**
+     * Displays the dialog if it is not visible, otherwise requests focus.
+     */
+    public void displayOrRequestFocus() {
+        if (isVisible()) {
+            requestFocus();
+        } else {
+            display();
+        }
+    }
+
+    /**
      * Displays the dialog centering on the specified window.
      *
      * @param owner Window to center on

@@ -35,6 +35,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -60,20 +61,26 @@ public class ServerMenu extends JMenu implements ActionListener,
     private final MainFrame mainFrame;
     /** Menu items which can be enabled/disabled. */
     private JMenuItem ssd, disconnect;
+    /** Provider to use to retrieve NSD instances. */
+    private final Provider<NewServerDialog> newServerProvider;
 
     /**
      * Creates a new Server menu.
      *
      * @param controller Parent swing controller
      * @param mainFrame Parent main frame
+     * @param newServerProvider Provider to use to retrieve NSD instances.
      */
     @Inject
     public ServerMenu(
             final SwingController controller,
-            final MainFrame mainFrame) {
+            final MainFrame mainFrame,
+            final Provider<NewServerDialog> newServerProvider) {
         super("Server");
         this.controller = controller;
         this.mainFrame = mainFrame;
+        this.newServerProvider = newServerProvider;
+
         setMnemonic('s');
         addMenuListener(this);
         initServerMenu();
@@ -120,7 +127,7 @@ public class ServerMenu extends JMenu implements ActionListener,
     public void actionPerformed(final ActionEvent e) {
         switch (e.getActionCommand()) {
             case "NewServer":
-                controller.showDialog(NewServerDialog.class);
+                newServerProvider.get().displayOrRequestFocus();
                 break;
             case "Exit":
                 mainFrame.quit();
