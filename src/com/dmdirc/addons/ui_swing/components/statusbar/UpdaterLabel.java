@@ -34,6 +34,7 @@ import com.dmdirc.updater.manager.UpdateManagerStatus;
 import java.awt.event.MouseEvent;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 
@@ -54,6 +55,10 @@ public class UpdaterLabel extends StatusbarPopupPanel<JLabel> implements
     private final SwingController controller;
     /** The update manager to use to retrieve information. */
     private final CachingUpdateManager updateManager;
+    /** Provider of updater dialogs. */
+    private final Provider<SwingUpdaterDialog> updaterDialogProvider;
+    /** Provider of restart dialogs. */
+    private final Provider<SwingRestartDialog> restartDialogProvider;
 
     /**
      * Instantiates a new updater label, handles showing updates on the status
@@ -61,15 +66,21 @@ public class UpdaterLabel extends StatusbarPopupPanel<JLabel> implements
      *
      * @param controller Swing controller
      * @param updateManager The manager to use to retrieve information.
+     * @param updaterDialogProvider Provider of updater dialogs.
+     * @param restartDialogProvider Provider of restart dialogs.
      */
     @Inject
     public UpdaterLabel(
             final SwingController controller,
-            final CachingUpdateManager updateManager) {
+            final CachingUpdateManager updateManager,
+            final Provider<SwingUpdaterDialog> updaterDialogProvider,
+            final Provider<SwingRestartDialog> restartDialogProvider) {
         super(new JLabel());
 
         this.controller = controller;
         this.updateManager = updateManager;
+        this.updaterDialogProvider = updaterDialogProvider;
+        this.restartDialogProvider = restartDialogProvider;
         setBorder(BorderFactory.createEtchedBorder());
         updateManager.addUpdateManagerListener(this);
         setVisible(false);
@@ -87,9 +98,9 @@ public class UpdaterLabel extends StatusbarPopupPanel<JLabel> implements
         if (mouseEvent.getButton() == MouseEvent.BUTTON1) {
             if (updateManager.getManagerStatus() == UpdateManagerStatus.IDLE_RESTART_NEEDED) {
                 closeDialog();
-                controller.showDialog(SwingRestartDialog.class);
+                restartDialogProvider.get().displayOrRequestFocus();
             } else {
-                controller.showDialog(SwingUpdaterDialog.class, updateManager);
+                updaterDialogProvider.get().displayOrRequestFocus();
             }
         }
     }

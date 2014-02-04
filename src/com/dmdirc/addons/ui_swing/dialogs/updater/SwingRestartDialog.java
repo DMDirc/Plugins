@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.updater;
 
+import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.addons.ui_swing.dialogs.DialogManager;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
@@ -33,6 +34,7 @@ import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.inject.Inject;
 import javax.swing.JButton;
 
 import net.miginfocom.swing.MigLayout;
@@ -58,7 +60,10 @@ public class SwingRestartDialog extends StandardDialog implements ActionListener
      * @param parentWindow Parent window
      * @param lifecycleController Life cycle controller, for restarting client
      */
-    public SwingRestartDialog(final DialogManager dialogManager, final Window parentWindow,
+    @Inject
+    public SwingRestartDialog(
+            final DialogManager dialogManager,
+            final MainFrame parentWindow,
             final LifecycleController lifecycleController) {
         this(dialogManager, parentWindow, lifecycleController, "finish updating");
     }
