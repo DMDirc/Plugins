@@ -20,11 +20,17 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.ui_swing;
+package com.dmdirc.addons.ui_swing.injection;
 
 import com.dmdirc.ClientModule;
 import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.ServerManager;
+import com.dmdirc.addons.ui_swing.MainFrame;
+import com.dmdirc.addons.ui_swing.QuitWorker;
+import com.dmdirc.addons.ui_swing.SwingController;
+import com.dmdirc.addons.ui_swing.SwingManager;
+import com.dmdirc.addons.ui_swing.SwingWindowFactory;
+import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.commands.ChannelSettings;
 import com.dmdirc.addons.ui_swing.commands.Input;
 import com.dmdirc.addons.ui_swing.commands.PopInCommand;
