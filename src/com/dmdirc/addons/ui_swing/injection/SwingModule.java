@@ -58,6 +58,7 @@ import dagger.Provides;
  */
 @Module(
         addsTo = ClientModule.class,
+        includes = DialogModule.class,
         injects = {
             SwingManager.class,
             PopInCommand.class,
