@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_swing.injection;
 
 import com.dmdirc.addons.ui_swing.dialogs.NewServerDialog;
+import com.dmdirc.addons.ui_swing.dialogs.profiles.ProfileManagerDialog;
 
 import javax.inject.Provider;
 import javax.inject.Singleton;
@@ -40,6 +41,13 @@ public class DialogModule {
     @Singleton
     public DialogProvider<NewServerDialog> getNewServerDialogProvider(
             final Provider<NewServerDialog> provider) {
+        return new DialogProvider<>(provider);
+    }
+
+    @Provides
+    @Singleton
+    public DialogProvider<ProfileManagerDialog> getProfileManagerDialogProvider(
+            final Provider<ProfileManagerDialog> provider) {
         return new DialogProvider<>(provider);
     }
 
