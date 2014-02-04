@@ -32,6 +32,7 @@ import com.dmdirc.addons.ui_swing.components.vetoable.VetoableChangeEvent;
 import com.dmdirc.addons.ui_swing.components.vetoable.VetoableComboBoxModel;
 import com.dmdirc.addons.ui_swing.components.vetoable.VetoableComboBoxSelectionListener;
 import com.dmdirc.addons.ui_swing.dialogs.profiles.ProfileManagerDialog;
+import com.dmdirc.addons.ui_swing.injection.DialogProvider;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
@@ -51,7 +52,6 @@ import java.net.URISyntaxException;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -100,7 +100,7 @@ public class NewServerDialog extends StandardDialog implements
     /**  Opening new server? */
     private boolean openingServer = false;
     /** Provider to use to retrieve PMDs. */
-    private final Provider<ProfileManagerDialog> profileDialogProvider;
+    private final DialogProvider<ProfileManagerDialog> profileDialogProvider;
 
     /**
      * Creates a new instance of the dialog.
@@ -121,7 +121,7 @@ public class NewServerDialog extends StandardDialog implements
             @GlobalConfig final IconManager iconManager,
             final IdentityController identityController,
             final ServerManager serverManager,
-            final Provider<ProfileManagerDialog> profileDialogProvider) {
+            final DialogProvider<ProfileManagerDialog> profileDialogProvider) {
         super(dialogManager, mainFrame, ModalityType.MODELESS);
         this.identityController = identityController;
         this.serverManager = serverManager;
@@ -317,7 +317,7 @@ public class NewServerDialog extends StandardDialog implements
         if (e.getSource() == getOkButton()) {
             save();
         } else if (e.getSource() == editProfileButton) {
-            profileDialogProvider.get().displayOrRequestFocus();
+            profileDialogProvider.displayOrRequestFocus();
         } else if (e.getSource() == getCancelButton()) {
             dispose();
         }

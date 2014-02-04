@@ -28,6 +28,7 @@ import com.dmdirc.addons.ui_swing.dialogs.actionsmanager.ActionsManagerDialog;
 import com.dmdirc.addons.ui_swing.dialogs.aliases.AliasManagerDialog;
 import com.dmdirc.addons.ui_swing.dialogs.prefs.SwingPreferencesDialog;
 import com.dmdirc.addons.ui_swing.dialogs.profiles.ProfileManagerDialog;
+import com.dmdirc.addons.ui_swing.injection.DialogProvider;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -49,14 +50,14 @@ public class SettingsMenu extends JMenu implements ActionListener {
     /** Swing controller. */
     private final SwingController controller;
     /** Provider of profile manager dialogs. */
-    private final Provider<ProfileManagerDialog> profileDialogProvider;
+    private final DialogProvider<ProfileManagerDialog> profileDialogProvider;
     /** Provider of action manager dialogs. */
     private final Provider<ActionsManagerDialog> actionsDialogProvider;
 
     @Inject
     public SettingsMenu(
             final SwingController controller,
-            final Provider<ProfileManagerDialog> profileDialogProvider,
+            final DialogProvider<ProfileManagerDialog> profileDialogProvider,
             final Provider<ActionsManagerDialog> actionsDialogProvider) {
         super("Settings");
         this.controller = controller;
@@ -112,7 +113,7 @@ public class SettingsMenu extends JMenu implements ActionListener {
                 controller.showDialog(SwingPreferencesDialog.class);
                 break;
             case "Profile":
-                profileDialogProvider.get().displayOrRequestFocus();
+                profileDialogProvider.displayOrRequestFocus();
                 break;
             case "Actions":
                 actionsDialogProvider.get().displayOrRequestFocus();

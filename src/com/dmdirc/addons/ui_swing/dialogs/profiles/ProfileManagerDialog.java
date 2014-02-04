@@ -41,7 +41,6 @@ import com.palantir.ptoss.cinch.swing.BoundSelection;
 import com.palantir.ptoss.cinch.swing.EnabledIf;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -52,7 +51,6 @@ import javax.swing.ListSelectionModel;
 import net.miginfocom.swing.MigLayout;
 
 /** Profile editing dialog. */
-@Singleton
 @SuppressWarnings("unused")
 public class ProfileManagerDialog extends StandardDialog {
 

@@ -31,6 +31,7 @@ import com.dmdirc.addons.ui_swing.Apple;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.dialogs.DialogManager;
 import com.dmdirc.addons.ui_swing.dialogs.profiles.ProfileManagerDialog;
+import com.dmdirc.addons.ui_swing.injection.DialogProvider;
 import com.dmdirc.addons.ui_swing.wizard.Step;
 import com.dmdirc.addons.ui_swing.wizard.WizardDialog;
 import com.dmdirc.addons.ui_swing.wizard.WizardListener;
@@ -54,7 +55,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
 import javax.inject.Singleton;
 
 /** First run wizard, used to initially setup the client for the user. */
@@ -70,7 +70,7 @@ public class SwingFirstRunWizard implements WizardListener, FirstRunWizard {
     /** Actions directory. */
     private final String actionsDirectory;
     /** Provider to use to obtain PMDs. */
-    private final Provider<ProfileManagerDialog> profileDialogProvider;
+    private final DialogProvider<ProfileManagerDialog> profileDialogProvider;
 
     /**
      * Instantiate the wizard.
@@ -91,7 +91,7 @@ public class SwingFirstRunWizard implements WizardListener, FirstRunWizard {
             @Directory(DirectoryType.ACTIONS) final String actionsDirectory,
             final CorePluginExtractor pluginExtractor,
             @GlobalConfig final IconManager iconManager,
-            final Provider<ProfileManagerDialog> profileDialogProvider) {
+            final DialogProvider<ProfileManagerDialog> profileDialogProvider) {
         this.corePluginExtractor = pluginExtractor;
         this.config = config;
         this.actionsDirectory = actionsDirectory;
@@ -132,7 +132,7 @@ public class SwingFirstRunWizard implements WizardListener, FirstRunWizard {
                 @Override
                 public void processEvent(final ActionType type,
                         final StringBuffer format, final Object... arguments) {
-                    profileDialogProvider.get().displayOrRequestFocus();
+                    profileDialogProvider.displayOrRequestFocus();
                 }
             }, CoreActionType.CLIENT_OPENED);
 
