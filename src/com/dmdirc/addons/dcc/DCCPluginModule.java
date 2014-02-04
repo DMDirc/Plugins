@@ -22,7 +22,7 @@
 
 package com.dmdirc.addons.dcc;
 
-import com.dmdirc.addons.ui_swing.SwingModule;
+import com.dmdirc.addons.ui_swing.injection.SwingModule;
 import com.dmdirc.plugins.PluginInfo;
 
 import dagger.Module;

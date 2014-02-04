@@ -22,7 +22,7 @@
 
 package com.dmdirc.addons.serverlistdialog;
 
-import com.dmdirc.addons.ui_swing.SwingModule;
+import com.dmdirc.addons.ui_swing.injection.SwingModule;
 
 import dagger.Module;
 

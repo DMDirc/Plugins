@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_swing;
 
+import com.dmdirc.addons.ui_swing.injection.SwingModule;
 import com.dmdirc.Channel;
 import com.dmdirc.Server;
 import com.dmdirc.ServerManager;
