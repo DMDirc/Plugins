@@ -34,7 +34,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
 import javax.inject.Singleton;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -52,13 +51,13 @@ public class SettingsMenu extends JMenu implements ActionListener {
     /** Provider of profile manager dialogs. */
     private final DialogProvider<ProfileManagerDialog> profileDialogProvider;
     /** Provider of action manager dialogs. */
-    private final Provider<ActionsManagerDialog> actionsDialogProvider;
+    private final DialogProvider<ActionsManagerDialog> actionsDialogProvider;
 
     @Inject
     public SettingsMenu(
             final SwingController controller,
             final DialogProvider<ProfileManagerDialog> profileDialogProvider,
-            final Provider<ActionsManagerDialog> actionsDialogProvider) {
+            final DialogProvider<ActionsManagerDialog> actionsDialogProvider) {
         super("Settings");
         this.controller = controller;
         this.profileDialogProvider = profileDialogProvider;
@@ -116,7 +115,7 @@ public class SettingsMenu extends JMenu implements ActionListener {
                 profileDialogProvider.displayOrRequestFocus();
                 break;
             case "Actions":
-                actionsDialogProvider.get().displayOrRequestFocus();
+                actionsDialogProvider.displayOrRequestFocus();
                 break;
             case "Aliases":
                 controller.showDialog(AliasManagerDialog.class);
