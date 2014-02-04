@@ -30,6 +30,7 @@ import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.addons.ui_swing.dialogs.NewServerDialog;
+import com.dmdirc.addons.ui_swing.injection.DialogProvider;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -62,7 +63,7 @@ public class ServerMenu extends JMenu implements ActionListener,
     /** Menu items which can be enabled/disabled. */
     private JMenuItem ssd, disconnect;
     /** Provider to use to retrieve NSD instances. */
-    private final Provider<NewServerDialog> newServerProvider;
+    private final DialogProvider<NewServerDialog> newServerProvider;
 
     /**
      * Creates a new Server menu.
@@ -75,7 +76,7 @@ public class ServerMenu extends JMenu implements ActionListener,
     public ServerMenu(
             final SwingController controller,
             final MainFrame mainFrame,
-            final Provider<NewServerDialog> newServerProvider) {
+            final DialogProvider<NewServerDialog> newServerProvider) {
         super("Server");
         this.controller = controller;
         this.mainFrame = mainFrame;
@@ -127,7 +128,7 @@ public class ServerMenu extends JMenu implements ActionListener,
     public void actionPerformed(final ActionEvent e) {
         switch (e.getActionCommand()) {
             case "NewServer":
-                newServerProvider.get().displayOrRequestFocus();
+                newServerProvider.displayOrRequestFocus();
                 break;
             case "Exit":
                 mainFrame.quit();
