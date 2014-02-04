@@ -52,7 +52,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
-import javax.inject.Singleton;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -69,7 +68,6 @@ import net.miginfocom.swing.MigLayout;
 /**
  * Dialog that allows the user to enter details of a new server to connect to.
  */
-@Singleton
 public class NewServerDialog extends StandardDialog implements
         ActionListener, VetoableComboBoxSelectionListener, ConfigProviderListener {
 
