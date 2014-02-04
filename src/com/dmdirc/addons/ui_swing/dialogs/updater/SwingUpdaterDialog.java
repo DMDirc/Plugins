@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.updater;
 
+import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
 import com.dmdirc.addons.ui_swing.components.PackingTable;
@@ -44,6 +45,8 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.swing.JButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -76,6 +79,8 @@ public class SwingUpdaterDialog extends StandardDialog implements
     private UpdateComponentTableCellRenderer updateComponentRenderer;
     /** Update.Status renderer. */
     private UpdateStatusTableCellRenderer updateStatusRenderer;
+    /** Provider of restart dialogs. */
+    private final Provider<SwingRestartDialog> restartDialogProvider;
 
     /**
      * Creates a new instance of the updater dialog.
@@ -83,13 +88,19 @@ public class SwingUpdaterDialog extends StandardDialog implements
      * @param updateManager The update manager to use for information
      * @param dialogManager Dialog manager
      * @param parentWindow Parent window
+     * @param restartDialogProvider Provider of restart dialogs.
      */
-    public SwingUpdaterDialog(final CachingUpdateManager updateManager,
-            final DialogManager dialogManager, final Window parentWindow) {
+    @Inject
+    public SwingUpdaterDialog(
+            final CachingUpdateManager updateManager,
+            final DialogManager dialogManager,
+            final MainFrame parentWindow,
+            final Provider<SwingRestartDialog> restartDialogProvider) {
         super(dialogManager, parentWindow, ModalityType.MODELESS);
 
         this.dialogManager = dialogManager;
         this.updateManager = updateManager;
+        this.restartDialogProvider = restartDialogProvider;
 
         initComponents();
         layoutComponents();
@@ -199,7 +210,7 @@ public class SwingUpdaterDialog extends StandardDialog implements
             }.executeInExecutor();
 
             if (updateManager.getManagerStatus() == UpdateManagerStatus.IDLE_RESTART_NEEDED) {
-                dialogManager.showDialog(SwingRestartDialog.class);
+                restartDialogProvider.get().displayOrRequestFocus();
                 dispose();
             }
         } else if (e.getSource().equals(getCancelButton())) {
@@ -227,7 +238,7 @@ public class SwingUpdaterDialog extends StandardDialog implements
 
                 if (status == UpdateManagerStatus.IDLE_RESTART_NEEDED) {
                     if (isVisible()) {
-                        dialogManager.showDialog(SwingRestartDialog.class);
+                        restartDialogProvider.get().displayOrRequestFocus();
                     }
                     dispose();
                 } else {

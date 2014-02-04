@@ -33,6 +33,7 @@ import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.inject.Inject;
 import javax.swing.JButton;
 
 import net.miginfocom.swing.MigLayout;
@@ -58,7 +59,10 @@ public class SwingRestartDialog extends StandardDialog implements ActionListener
      * @param parentWindow Parent window
      * @param lifecycleController Life cycle controller, for restarting client
      */
-    public SwingRestartDialog(final DialogManager dialogManager, final Window parentWindow,
+    @Inject
+    public SwingRestartDialog(
+            final DialogManager dialogManager,
+            final Window parentWindow,
             final LifecycleController lifecycleController) {
         this(dialogManager, parentWindow, lifecycleController, "finish updating");
     }
