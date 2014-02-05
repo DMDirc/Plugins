@@ -46,22 +46,26 @@ public class SettingsMenu extends JMenu implements ActionListener {
 
     /** Serial version UID. */
     private static final long serialVersionUID = 1;
-    /** Swing controller. */
-    private final SwingController controller;
     /** Provider of profile manager dialogs. */
     private final DialogProvider<ProfileManagerDialog> profileDialogProvider;
     /** Provider of action manager dialogs. */
     private final DialogProvider<ActionsManagerDialog> actionsDialogProvider;
+    /** Provider of preferences dialogs. */
+    private final DialogProvider<SwingPreferencesDialog> prefsDialogProvider;
+    /** Provider of alias manager dialogs. */
+    private final DialogProvider<AliasManagerDialog> aliasDialogProvider;
 
     @Inject
     public SettingsMenu(
-            final SwingController controller,
             final DialogProvider<ProfileManagerDialog> profileDialogProvider,
-            final DialogProvider<ActionsManagerDialog> actionsDialogProvider) {
+            final DialogProvider<ActionsManagerDialog> actionsDialogProvider,
+            final DialogProvider<SwingPreferencesDialog> prefsDialogProvider,
+            final DialogProvider<AliasManagerDialog> aliasDialogProvider) {
         super("Settings");
-        this.controller = controller;
         this.profileDialogProvider = profileDialogProvider;
         this.actionsDialogProvider = actionsDialogProvider;
+        this.prefsDialogProvider = prefsDialogProvider;
+        this.aliasDialogProvider = aliasDialogProvider;
 
         setMnemonic('e');
         initSettingsMenu();
@@ -109,7 +113,7 @@ public class SettingsMenu extends JMenu implements ActionListener {
     public void actionPerformed(final ActionEvent e) {
         switch (e.getActionCommand()) {
             case "Preferences":
-                controller.showDialog(SwingPreferencesDialog.class);
+                prefsDialogProvider.displayOrRequestFocus();
                 break;
             case "Profile":
                 profileDialogProvider.displayOrRequestFocus();
@@ -118,7 +122,7 @@ public class SettingsMenu extends JMenu implements ActionListener {
                 actionsDialogProvider.displayOrRequestFocus();
                 break;
             case "Aliases":
-                controller.showDialog(AliasManagerDialog.class);
+                aliasDialogProvider.displayOrRequestFocus();
                 break;
         }
     }

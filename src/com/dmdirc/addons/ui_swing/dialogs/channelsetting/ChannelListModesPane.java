@@ -277,7 +277,7 @@ public final class ChannelListModesPane extends JPanel implements ActionListener
             modeText = channel.getConfigManager().
                     getOption("server", "mode" + listModesArray[selectedIndex]);
         }
-        new StandardInputDialog(controller.getDialogManager(), parentWindow,
+        new StandardInputDialog(parentWindow,
                 ModalityType.DOCUMENT_MODAL, "Add new " + modeText,
                 "Please enter the hostmask for the new " + modeText,
                 new NotEmptyValidator()) {

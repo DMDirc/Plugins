@@ -30,11 +30,11 @@ import com.dmdirc.actions.ActionSubstitutorFactory;
 import com.dmdirc.actions.CoreActionComparison;
 import com.dmdirc.actions.wrappers.Alias;
 import com.dmdirc.actions.wrappers.AliasWrapper;
+import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.PackingTable;
 import com.dmdirc.addons.ui_swing.components.renderers.ActionConditionCellRenderer;
 import com.dmdirc.addons.ui_swing.components.renderers.ArrayCellRenderer;
-import com.dmdirc.addons.ui_swing.dialogs.DialogManager;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
 import com.dmdirc.addons.ui_swing.dialogs.StringArrayComparator;
@@ -47,6 +47,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.inject.Inject;
 import javax.swing.JButton;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
@@ -76,8 +77,6 @@ public class AliasManagerDialog extends StandardDialog implements ActionListener
     private final SwingController controller;
     /** Actions substitutor factory. */
     private final ActionSubstitutorFactory substitutorFactory;
-    /** Dialog manager. */
-    private final DialogManager dialogManager;
     /** Table scrollpane. */
     private JScrollPane scrollPane;
     /** Error table. */
@@ -102,16 +101,15 @@ public class AliasManagerDialog extends StandardDialog implements ActionListener
      *
      * @param controller Swing controller
      * @param parentWindow Parent window
-     * @param dialogManager Dialog manager
      * @param substitutorFactory Actions substitution factory
      */
-    public AliasManagerDialog(final SwingController controller, final Window parentWindow,
-            final DialogManager dialogManager, final ActionSubstitutorFactory substitutorFactory) {
-        super(dialogManager, parentWindow, ModalityType.MODELESS);
+    @Inject
+    public AliasManagerDialog(final SwingController controller, final MainFrame parentWindow,
+            final ActionSubstitutorFactory substitutorFactory) {
+        super(parentWindow, ModalityType.MODELESS);
 
         this.controller = controller;
         this.substitutorFactory = substitutorFactory;
-        this.dialogManager = dialogManager;
         this.aliasWrapper = controller.getAliasWrapper();
         this.actionFactory = controller.getActionFactory();
 
@@ -297,7 +295,7 @@ public class AliasManagerDialog extends StandardDialog implements ActionListener
             }
             if (checkForDuplicates()) {
                 final StandardQuestionDialog dialog = new StandardQuestionDialog(
-                        dialogManager, this, ModalityType.APPLICATION_MODAL,
+                        this, ModalityType.APPLICATION_MODAL,
                         "Duplicate Aliases", "There are duplicate aliases in "
                         + "the table, these need to be removed before saving") {
 

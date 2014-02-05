@@ -24,6 +24,7 @@ package com.dmdirc.addons.ui_swing.components.statusbar;
 
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.dialogs.FeedbackDialog;
+import com.dmdirc.addons.ui_swing.injection.DialogProvider;
 import com.dmdirc.interfaces.ui.StatusBarComponent;
 
 import java.awt.event.ActionEvent;
@@ -31,6 +32,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
+import javax.inject.Inject;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
@@ -54,15 +56,23 @@ public class FeedbackNag extends JLabel implements StatusBarComponent,
     private final JMenuItem show;
     /** Swing Controller. */
     private final SwingController controller;
+    /** Provider of feedback dialogs. */
+    private final DialogProvider<FeedbackDialog> feedbackDialogProvider;
 
     /**
      * Creates a new feedback nag.
      *
      * @param controller Swing controller
+     * @param feedbackDialogProvider Provider of feedback dialogs.
      */
-    public FeedbackNag(final SwingController controller) {
+    @Inject
+    public FeedbackNag(
+            final SwingController controller,
+            final DialogProvider<FeedbackDialog> feedbackDialogProvider) {
         super();
         this.controller = controller;
+        this.feedbackDialogProvider = feedbackDialogProvider;
+
         menu = new JPopupMenu();
         show = new JMenuItem("Open");
         final JMenuItem dismiss = new JMenuItem("Dismiss");
@@ -109,7 +119,7 @@ public class FeedbackNag extends JLabel implements StatusBarComponent,
     @Override
     public void mouseReleased(final MouseEvent e) {
         if (e.getButton() == 1) {
-            controller.showDialog(FeedbackDialog.class);
+            feedbackDialogProvider.displayOrRequestFocus();
             controller.getSwingStatusBar().removeComponent(this);
         }
         checkMouseEvent(e);
@@ -154,7 +164,7 @@ public class FeedbackNag extends JLabel implements StatusBarComponent,
     @Override
     public void actionPerformed(final ActionEvent e) {
         if (e.getSource() == show) {
-            controller.showDialog(FeedbackDialog.class);
+            feedbackDialogProvider.displayOrRequestFocus();
         }
         controller.getSwingStatusBar().removeComponent(this);
     }

@@ -27,6 +27,7 @@ import com.dmdirc.addons.ui_swing.Apple;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.dialogs.FeedbackDialog;
 import com.dmdirc.addons.ui_swing.dialogs.about.AboutDialog;
+import com.dmdirc.addons.ui_swing.injection.DialogProvider;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -44,24 +45,29 @@ public class HelpMenu extends JMenu implements ActionListener {
 
     /** Serial version UID. */
     private static final long serialVersionUID = 1;
-    /** Swing controller. */
-    private final SwingController controller;
     /** Server manager to use to join dev chat. */
     private final ServerManager serverManager;
+    /** Provider of feedback dialogs. */
+    private final DialogProvider<FeedbackDialog> feedbackDialogProvider;
+    /** Provider of about dialogs. */
+    private final DialogProvider<AboutDialog> aboutDialogProvider;
 
     /**
      * Instantiates a new help menu.
      *
-     * @param controller Swing controller
      * @param serverManager The manager to use to join dev chat.
+     * @param feedbackDialogProvider Provider of feedback dialogs.
+     * @param aboutDialogProvider Provider of about dialogs.
      */
     @Inject
     public HelpMenu(
-            final SwingController controller,
-            final ServerManager serverManager) {
+            final ServerManager serverManager,
+            final DialogProvider<FeedbackDialog> feedbackDialogProvider,
+            final DialogProvider<AboutDialog> aboutDialogProvider) {
         super("Help");
-        this.controller = controller;
         this.serverManager = serverManager;
+        this.feedbackDialogProvider = feedbackDialogProvider;
+        this.aboutDialogProvider = aboutDialogProvider;
         setMnemonic('h');
         initHelpMenu();
     }
@@ -105,13 +111,13 @@ public class HelpMenu extends JMenu implements ActionListener {
     public void actionPerformed(final ActionEvent e) {
         switch (e.getActionCommand()) {
             case "About":
-                controller.showDialog(AboutDialog.class);
+                aboutDialogProvider.displayOrRequestFocus();
                 break;
             case "JoinDevChat":
                 serverManager.joinDevChat();
                 break;
             case "feedback":
-                controller.showDialog(FeedbackDialog.class);
+                feedbackDialogProvider.displayOrRequestFocus();
                 break;
         }
     }

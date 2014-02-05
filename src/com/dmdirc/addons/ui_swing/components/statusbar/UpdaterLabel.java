@@ -25,6 +25,8 @@ package com.dmdirc.addons.ui_swing.components.statusbar;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.dialogs.updater.SwingRestartDialog;
 import com.dmdirc.addons.ui_swing.dialogs.updater.SwingUpdaterDialog;
+import com.dmdirc.addons.ui_swing.injection.DialogModule.ForUpdates;
+import com.dmdirc.addons.ui_swing.injection.DialogProvider;
 import com.dmdirc.interfaces.ui.StatusBarComponent;
 import com.dmdirc.updater.manager.CachingUpdateManager;
 import com.dmdirc.updater.manager.UpdateManager;
@@ -56,9 +58,9 @@ public class UpdaterLabel extends StatusbarPopupPanel<JLabel> implements
     /** The update manager to use to retrieve information. */
     private final CachingUpdateManager updateManager;
     /** Provider of updater dialogs. */
-    private final Provider<SwingUpdaterDialog> updaterDialogProvider;
+    private final DialogProvider<SwingUpdaterDialog> updaterDialogProvider;
     /** Provider of restart dialogs. */
-    private final Provider<SwingRestartDialog> restartDialogProvider;
+    private final DialogProvider<SwingRestartDialog> restartDialogProvider;
 
     /**
      * Instantiates a new updater label, handles showing updates on the status
@@ -73,8 +75,8 @@ public class UpdaterLabel extends StatusbarPopupPanel<JLabel> implements
     public UpdaterLabel(
             final SwingController controller,
             final CachingUpdateManager updateManager,
-            final Provider<SwingUpdaterDialog> updaterDialogProvider,
-            final Provider<SwingRestartDialog> restartDialogProvider) {
+            final DialogProvider<SwingUpdaterDialog> updaterDialogProvider,
+            @ForUpdates final DialogProvider<SwingRestartDialog> restartDialogProvider) {
         super(new JLabel());
 
         this.controller = controller;
@@ -98,9 +100,9 @@ public class UpdaterLabel extends StatusbarPopupPanel<JLabel> implements
         if (mouseEvent.getButton() == MouseEvent.BUTTON1) {
             if (updateManager.getManagerStatus() == UpdateManagerStatus.IDLE_RESTART_NEEDED) {
                 closeDialog();
-                restartDialogProvider.get().displayOrRequestFocus();
+                restartDialogProvider.displayOrRequestFocus();
             } else {
-                updaterDialogProvider.get().displayOrRequestFocus();
+                updaterDialogProvider.displayOrRequestFocus();
             }
         }
     }
@@ -108,8 +110,7 @@ public class UpdaterLabel extends StatusbarPopupPanel<JLabel> implements
     /** {@inheritDoc} */
     @Override
     protected StatusbarPopupWindow getWindow() {
-        return new UpdaterPopup(controller.getDialogManager(), updateManager,
-                this, controller.getMainFrame());
+        return new UpdaterPopup(updateManager, this, controller.getMainFrame());
     }
 
     /** {@inheritDoc} */

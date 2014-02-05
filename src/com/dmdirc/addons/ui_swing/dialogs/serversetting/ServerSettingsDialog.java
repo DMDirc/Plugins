@@ -22,23 +22,25 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.serversetting;
 
+import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.Server;
 import com.dmdirc.ServerState;
 import com.dmdirc.actions.wrappers.PerformWrapper;
+import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.PrefsComponentFactory;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.expandingsettings.SettingsPanel;
 import com.dmdirc.addons.ui_swing.components.modes.UserModesPane;
-import com.dmdirc.addons.ui_swing.dialogs.DialogManager;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
 import com.dmdirc.config.prefs.PreferencesManager;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.ui.IconManager;
+import com.dmdirc.util.annotations.factory.Factory;
+import com.dmdirc.util.annotations.factory.Unbound;
 
-import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -51,12 +53,11 @@ import net.miginfocom.swing.MigLayout;
 /**
  * Allows the user to modify server settings and the ignore list.
  */
+@Factory(inject=true, singleton=true)
 public class ServerSettingsDialog extends StandardDialog implements ActionListener {
 
     /** Serial version UID. */
     private static final long serialVersionUID = 2;
-    /** Dialog Manager. */
-    private final DialogManager dialogManager;
     /** Parent server. */
     private final Server server;
     /** Perform wrapper for the perform panel. */
@@ -76,7 +77,6 @@ public class ServerSettingsDialog extends StandardDialog implements ActionListen
      * Creates a new instance of ServerSettingsDialog.
      *
      * @param controller Swing controller
-     * @param dialogManager Dialog manager
      * @param iconManager Icon manager
      * @param compFactory Preferences setting component factory
      * @param performWrapper Wrapper for the perform tab.
@@ -85,15 +85,12 @@ public class ServerSettingsDialog extends StandardDialog implements ActionListen
      */
     public ServerSettingsDialog(
             final SwingController controller,
-            final DialogManager dialogManager,
-            final IconManager iconManager,
+            @GlobalConfig final IconManager iconManager,
             final PrefsComponentFactory compFactory,
             final PerformWrapper performWrapper,
-            final Server server,
-            final Window parentWindow) {
-        super(dialogManager, parentWindow, ModalityType.MODELESS);
-
-        this.dialogManager = dialogManager;
+            @Unbound final Server server,
+            final MainFrame parentWindow) {
+        super(parentWindow, ModalityType.MODELESS);
         this.server = server;
         this.performWrapper = performWrapper;
 
@@ -169,7 +166,7 @@ public class ServerSettingsDialog extends StandardDialog implements ActionListen
     /** Saves the settings from this dialog. */
     public void saveSettings() {
         if (server.getState() != ServerState.CONNECTED) {
-            new StandardQuestionDialog(dialogManager, getOwner(),
+            new StandardQuestionDialog(getOwner(),
                     ModalityType.MODELESS,
                     "Server has been disconnected.", "Any changes you have " +
                     "made will be lost, are you sure you want to close this " +

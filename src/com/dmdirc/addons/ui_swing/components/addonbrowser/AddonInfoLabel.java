@@ -23,7 +23,6 @@
 package com.dmdirc.addons.ui_swing.components.addonbrowser;
 
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
-import com.dmdirc.addons.ui_swing.dialogs.DialogManager;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -51,25 +50,20 @@ public class AddonInfoLabel extends JPanel {
     private final AddonInfo addonInfo;
     /** Parent window. */
     private final BrowserWindow parentWindow;
-    /** The manager that will be used for installer dialogs. */
-    private final DialogManager dialogManager;
     /** Factory to use to create install workers. */
     private final InstallWorkerFactory workerFactory;
 
     /**
      * Creates a new addon info label to describe the specified addon info.
      *
-     * @param dialogManager The manager that will be used for installer dialogs.
      * @param addonInfo Addon to describe
      * @param parentWindow Parent window
      * @param workerFactory
      */
     public AddonInfoLabel(
-            final DialogManager dialogManager,
             final AddonInfo addonInfo,
             final BrowserWindow parentWindow,
             final InstallWorkerFactory workerFactory) {
-        this.dialogManager = dialogManager;
         this.addonInfo = addonInfo;
         this.parentWindow = parentWindow;
         this.workerFactory = workerFactory;
@@ -100,7 +94,7 @@ public class AddonInfoLabel extends JPanel {
                 "wmax 100%-170, hmax 150, growy, wrap, pushy, gapleft 5");
 
         final JButton button = new JButton("Install");
-        button.addActionListener(new InstallListener(dialogManager, workerFactory, addonInfo,
+        button.addActionListener(new InstallListener(workerFactory, addonInfo,
                 parentWindow));
         final boolean installed = addonInfo.isInstalled();
         add(button, "split, gapleft 5");

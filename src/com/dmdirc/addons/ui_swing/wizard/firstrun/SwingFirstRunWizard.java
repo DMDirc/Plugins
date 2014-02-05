@@ -29,7 +29,6 @@ import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.addons.ui_swing.Apple;
 import com.dmdirc.addons.ui_swing.MainFrame;
-import com.dmdirc.addons.ui_swing.dialogs.DialogManager;
 import com.dmdirc.addons.ui_swing.dialogs.profiles.ProfileManagerDialog;
 import com.dmdirc.addons.ui_swing.injection.DialogProvider;
 import com.dmdirc.addons.ui_swing.wizard.Step;
@@ -77,7 +76,6 @@ public class SwingFirstRunWizard implements WizardListener, FirstRunWizard {
      *
      * @param parentWindow Parent window
      * @param config Global config
-     * @param dialogManager Dialog manager
      * @param actionsDirectory Actions directory
      * @param pluginExtractor Plugin extractor to use.
      * @param iconManager Manager to use to find icons.
@@ -87,7 +85,6 @@ public class SwingFirstRunWizard implements WizardListener, FirstRunWizard {
     public SwingFirstRunWizard(
             final MainFrame parentWindow,
             @UserConfig final ConfigProvider config,
-            final DialogManager dialogManager,
             @Directory(DirectoryType.ACTIONS) final String actionsDirectory,
             final CorePluginExtractor pluginExtractor,
             @GlobalConfig final IconManager iconManager,
@@ -98,7 +95,7 @@ public class SwingFirstRunWizard implements WizardListener, FirstRunWizard {
         this.profileDialogProvider = profileDialogProvider;
 
         wizardDialog = new WizardDialog("Setup wizard", new ArrayList<Step>(),
-                dialogManager, parentWindow, ModalityType.APPLICATION_MODAL);
+                parentWindow, ModalityType.APPLICATION_MODAL);
         wizardDialog.setIconImage(iconManager.getImage("icon"));
         wizardDialog.addWizardListener(this);
         if(Apple.isAppleUI()) {

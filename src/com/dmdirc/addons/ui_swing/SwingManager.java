@@ -22,12 +22,20 @@
 
 package com.dmdirc.addons.ui_swing;
 
+import com.dmdirc.Channel;
+import com.dmdirc.Server;
 import com.dmdirc.addons.ui_swing.components.addonbrowser.DataLoaderWorkerFactory;
 import com.dmdirc.addons.ui_swing.components.menubar.MenuBar;
+import com.dmdirc.addons.ui_swing.components.statusbar.FeedbackNag;
 import com.dmdirc.addons.ui_swing.components.statusbar.SwingStatusBar;
 import com.dmdirc.addons.ui_swing.dialogs.DialogKeyListener;
-import com.dmdirc.addons.ui_swing.dialogs.DialogManager;
+import com.dmdirc.addons.ui_swing.dialogs.channelsetting.ChannelSettingsDialog;
+import com.dmdirc.addons.ui_swing.dialogs.prefs.SwingPreferencesDialog;
+import com.dmdirc.addons.ui_swing.dialogs.serversetting.ServerSettingsDialog;
+import com.dmdirc.addons.ui_swing.dialogs.url.URLDialogFactory;
 import com.dmdirc.addons.ui_swing.framemanager.ctrltab.CtrlTabWindowManager;
+import com.dmdirc.addons.ui_swing.injection.DialogProvider;
+import com.dmdirc.addons.ui_swing.injection.KeyedDialogProvider;
 import com.dmdirc.addons.ui_swing.wizard.firstrun.FirstRunWizardExecutor;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.core.components.StatusBarManager;
@@ -46,9 +54,6 @@ import javax.inject.Singleton;
  */
 @Singleton
 public class SwingManager {
-
-    /** The dialog manager to use. */
-    private final DialogManager dialogManager;
 
     /** The event queue to use. */
     private final DMDircEventQueue eventQueue;
@@ -86,10 +91,22 @@ public class SwingManager {
     /** The factory to use to create prefs components. */
     private final PrefsComponentFactory prefsComponentFactory;
 
+    /** Provider of prefs dialogs. */
+    private final DialogProvider<SwingPreferencesDialog> prefsDialogProvider;
+    /** Provider of server settings dialogs. */
+    private final KeyedDialogProvider<Server, ServerSettingsDialog> serverSettingsDialogProvider;
+    /** Provider of channel settings dialogs. */
+    private final KeyedDialogProvider<Channel, ChannelSettingsDialog> channelSettingsDialogProvider;
+
+    /** Provider of feedback nags. */
+    private final Provider<FeedbackNag> feedbackNagProvider;
+
+    /** Factory to use to create URL dialogs. */
+    private final URLDialogFactory urlDialogFactory;
+
     /**
      * Creates a new instance of {@link SwingManager}.
      *
-     * @param dialogManager Dialog manager to use
      * @param eventQueue The event queue to use.
      * @param windowFactory The window factory in use.
      * @param windowManager The window manager to listen on for events.
@@ -104,10 +121,14 @@ public class SwingManager {
      * @param cachingUpdateManager Update manager to use.
      * @param firstRunExecutor A provider of first run executors.
      * @param prefsComponentFactory The factory to use to create prefs components.
+     * @param prefsDialogProvider Provider of prefs dialogs.
+     * @param serverSettingsDialogProvider Provider of server settings dialogs.
+     * @param channelSettingsDialogProvider Provider of channel settings dialogs.
+     * @param feedbackNagProvider Provider of feedback nags.
+     * @param urlDialogFactory Factory to use to create URL dialogs.
      */
     @Inject
     public SwingManager(
-            final DialogManager dialogManager,
             final DMDircEventQueue eventQueue,
             final SwingWindowFactory windowFactory,
             final WindowManager windowManager,
@@ -121,8 +142,12 @@ public class SwingManager {
             final DataLoaderWorkerFactory dataLoaderWorkerFactory,
             final CachingUpdateManager cachingUpdateManager,
             final Provider<FirstRunWizardExecutor> firstRunExecutor,
-            final PrefsComponentFactory prefsComponentFactory) {
-        this.dialogManager = dialogManager;
+            final PrefsComponentFactory prefsComponentFactory,
+            final DialogProvider<SwingPreferencesDialog> prefsDialogProvider,
+            final KeyedDialogProvider<Server, ServerSettingsDialog> serverSettingsDialogProvider,
+            final KeyedDialogProvider<Channel, ChannelSettingsDialog> channelSettingsDialogProvider,
+            final Provider<FeedbackNag> feedbackNagProvider,
+            final URLDialogFactory urlDialogFactory) {
         this.eventQueue = eventQueue;
         this.windowFactory = windowFactory;
         this.windowManager = windowManager;
@@ -134,6 +159,11 @@ public class SwingManager {
         this.cachingUpdateManager = cachingUpdateManager;
         this.firstRunExecutor = firstRunExecutor;
         this.prefsComponentFactory = prefsComponentFactory;
+        this.prefsDialogProvider = prefsDialogProvider;
+        this.serverSettingsDialogProvider = serverSettingsDialogProvider;
+        this.channelSettingsDialogProvider = channelSettingsDialogProvider;
+        this.feedbackNagProvider = feedbackNagProvider;
+        this.urlDialogFactory = urlDialogFactory;
 
         this.mainFrame = mainFrame;
         this.mainFrame.setMenuBar(menuBar);
@@ -175,18 +205,6 @@ public class SwingManager {
         return firstRunExecutor.get();
     }
 
-    /**
-     * Retrieves the dialog manager to use.
-     *
-     * @return The dialog manager to use
-     *
-     * @deprecated Should be injected
-     */
-    @Deprecated
-    public DialogManager getDialogManager() {
-        return dialogManager;
-    }
-
     @Deprecated
     public DataLoaderWorkerFactory getDataLoaderWorkerFactory() {
         return dataLoaderWorkerFactory;
@@ -200,6 +218,31 @@ public class SwingManager {
     @Deprecated
     public PrefsComponentFactory getPrefsComponentFactory() {
         return prefsComponentFactory;
+    }
+
+    @Deprecated
+    public DialogProvider<SwingPreferencesDialog> getPrefsDialogProvider() {
+        return prefsDialogProvider;
+    }
+
+    @Deprecated
+    public KeyedDialogProvider<Server, ServerSettingsDialog> getServerSettingsDialogProvider() {
+        return serverSettingsDialogProvider;
+    }
+
+    @Deprecated
+    public KeyedDialogProvider<Channel, ChannelSettingsDialog> getChannelSettingsDialogProvider() {
+        return channelSettingsDialogProvider;
+    }
+
+    @Deprecated
+    public Provider<FeedbackNag> getFeedbackNagProvider() {
+        return feedbackNagProvider;
+    }
+
+    @Deprecated
+    public URLDialogFactory getUrlDialogFactory() {
+        return urlDialogFactory;
     }
 
     /**
