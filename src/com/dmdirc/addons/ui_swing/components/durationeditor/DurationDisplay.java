@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.components.durationeditor;
 
-import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.util.DateUtils;
 import com.dmdirc.util.collections.ListenerList;
@@ -52,8 +51,6 @@ public class DurationDisplay extends JPanel implements ActionListener,
     private static final long serialVersionUID = 1;
     /** Listener list. */
     private final ListenerList listeners;
-    /** Swing controller. */
-    private final SwingController controller;
     /** Current duration. */
     private int duration;
     /** Duration label. */
@@ -65,51 +62,42 @@ public class DurationDisplay extends JPanel implements ActionListener,
 
     /**
      * Initialises a new duration display of 0 milliseconds.
-     *
-     * @param controller Controller for dialog creation
      */
-    public DurationDisplay(final SwingController controller) {
-        this(controller, 0);
+    public DurationDisplay() {
+        this(0);
     }
 
     /**
      * Instantiates a new duration display.
      *
-     * @param controller Controller for dialog creation
      * @param window Parent window.
      *
      * @since 0.6
      */
-    public DurationDisplay(final SwingController controller,
-            final Window window) {
-        this(controller, window, 0);
+    public DurationDisplay(final Window window) {
+        this(window, 0);
     }
 
     /**
      * Instantiates a new duration display.
      *
-     * @param controller Controller for dialog creation
      * @param duration Starting duration
      */
-    public DurationDisplay(final SwingController controller,
-            final long duration) {
-        this(controller, null, duration);
+    public DurationDisplay(final long duration) {
+        this(null, duration);
     }
 
     /**
      * Initialises a new duration display showing the specified millisecond duration.
      *
-     * @param controller Controller for dialog creation
      * @param window Parent window.
      * @param duration Duration to display in milliseconds
      *
      * @since 0.6
      */
-    public DurationDisplay(final SwingController controller,
-            final Window window, final long duration) {
+    public DurationDisplay(final Window window, final long duration) {
         super();
 
-        this.controller = controller;
         this.window = window;
         this.duration = (int) (duration / 1000);
         listeners = new ListenerList();
@@ -162,8 +150,7 @@ public class DurationDisplay extends JPanel implements ActionListener,
      */
     @Override
     public void actionPerformed(final ActionEvent e) {
-        final DurationEditor editor = new DurationEditor(controller, window,
-                duration);
+        final DurationEditor editor = new DurationEditor(window, duration);
         editor.display(this);
         editor.addDurationListener(this);
     }

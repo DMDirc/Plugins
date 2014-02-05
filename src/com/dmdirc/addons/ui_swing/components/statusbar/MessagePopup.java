@@ -23,7 +23,6 @@
 package com.dmdirc.addons.ui_swing.components.statusbar;
 
 import com.dmdirc.addons.ui_swing.SwingController;
-import com.dmdirc.addons.ui_swing.dialogs.DialogManager;
 import com.dmdirc.ui.StatusMessage;
 import com.dmdirc.util.collections.RollingList;
 
@@ -80,7 +79,7 @@ class MessagePopup extends StatusbarTogglePanel<JLabel> {
     /* {@inheritDoc} */
     @Override
     protected StatusbarPopupWindow getWindow() {
-        return new MessageHistoryPanel(controller.getDialogManager(), this);
+        return new MessageHistoryPanel(this);
     }
 
     /* {@inheritDoc} */
@@ -141,11 +140,10 @@ class MessagePopup extends StatusbarTogglePanel<JLabel> {
         /**
          * Creates a new message history window.
          *
-         * @param dialogManager The dialog manager to register this window with.
          * @param window Parent window
          */
-        public MessageHistoryPanel(final DialogManager dialogManager, final JPanel parent) {
-            super(dialogManager, parent, parentWindow);
+        public MessageHistoryPanel(final JPanel parent) {
+            super(parent, parentWindow);
         }
 
         /* {@inheritDoc} */

@@ -24,6 +24,7 @@ package com.dmdirc.addons.ui_swing.components.addonpanel;
 
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
+import com.dmdirc.addons.ui_swing.dialogs.prefs.SwingPreferencesDialog;
 import com.dmdirc.ui.themes.Theme;
 import com.dmdirc.ui.themes.ThemeManager;
 
@@ -57,12 +58,14 @@ public class ThemePanel extends AddonPanel {
      * @param parentWindow Parent window
      * @param controller Swing Controller
      * @param themeManager Manager to retrieve themes from.
+     * @param prefsDialog The prefs dialog that contains this panel
      */
     public ThemePanel(
             final Window parentWindow,
             final SwingController controller,
-            final ThemeManager themeManager) {
-        super(parentWindow, controller);
+            final ThemeManager themeManager,
+            final SwingPreferencesDialog prefsDialog) {
+        super(parentWindow, controller, prefsDialog);
         this.themeManager = themeManager;
     }
 

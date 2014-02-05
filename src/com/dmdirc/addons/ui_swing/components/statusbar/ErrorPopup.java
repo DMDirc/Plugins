@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.components.statusbar;
 
-import com.dmdirc.addons.ui_swing.dialogs.DialogManager;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.ErrorManager;
 import com.dmdirc.logger.ErrorReportStatus;
@@ -53,17 +52,15 @@ public class ErrorPopup extends StatusbarPopupWindow {
     /**
      * Creates a new error popup.
      *
-     * @param dialogManager The manager to register the popup with.
      * @param iconManager The manager to use to retrieve icons.
      * @param parent Parent panel
      * @param parentWindow Parent window
      */
     public ErrorPopup(
-            final DialogManager dialogManager,
             final IconManager iconManager,
             final JPanel parent,
             final Window parentWindow) {
-        super(dialogManager, parent, parentWindow);
+        super(parent, parentWindow);
 
         this.iconManager = iconManager;
     }

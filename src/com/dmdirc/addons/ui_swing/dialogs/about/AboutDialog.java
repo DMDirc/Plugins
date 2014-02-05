@@ -22,14 +22,14 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.about;
 
+import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SwingController;
-import com.dmdirc.addons.ui_swing.dialogs.DialogManager;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 
-import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.inject.Inject;
 import javax.swing.JButton;
 import javax.swing.JTabbedPane;
 import javax.swing.WindowConstants;
@@ -51,16 +51,18 @@ public class AboutDialog extends StandardDialog implements ActionListener, Chang
     private CreditsPanel cp;
     /** Tab history. */
     private int history = 0;
+
     /**
      * Creates a new instance of AboutDialog.
      *
      * @param controller Swing controller
-     * @param dialogManager Dialog manager
      * @param parentWindow Parent window
      */
-    public AboutDialog(final DialogManager dialogManager, final Window parentWindow,
+    @Inject
+    public AboutDialog(
+            final MainFrame parentWindow,
             final SwingController controller) {
-        super(dialogManager, parentWindow, ModalityType.MODELESS);
+        super(parentWindow, ModalityType.MODELESS);
 
         initComponents(controller);
     }

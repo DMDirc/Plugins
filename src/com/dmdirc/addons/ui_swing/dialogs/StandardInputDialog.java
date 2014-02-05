@@ -64,16 +64,15 @@ public abstract class StandardInputDialog extends StandardDialog {
     /**
      * Instantiates a new standard input dialog.
      *
-     * @param dialogManager Dialog manager
      * @param owner Dialog owner
      * @param modal modality type
      * @param title Dialog title
      * @param message Dialog message
      */
-    public StandardInputDialog(final DialogManager dialogManager,
+    public StandardInputDialog(
             final Window owner, final ModalityType modal,
             final String title, final String message) {
-        this(dialogManager, owner, modal, title, message, new Validator<String>() {
+        this(owner, modal, title, message, new Validator<String>() {
 
             /** {@inheritDoc} */
             @Override
@@ -86,18 +85,17 @@ public abstract class StandardInputDialog extends StandardDialog {
     /**
      * Instantiates a new standard input dialog.
      *
-     * @param dialogManager Dialog manager
      * @param owner Dialog owner
      * @param modal modality type
      * @param validator Textfield validator
      * @param title Dialog title
      * @param message Dialog message
      */
-    public StandardInputDialog(final DialogManager dialogManager,
+    public StandardInputDialog(
             final Window owner, final ModalityType modal,
             final String title, final String message,
             final Validator<String> validator) {
-        super(dialogManager, owner, modal);
+        super(owner, modal);
 
         this.validator = validator;
         this.message = message;

@@ -28,7 +28,6 @@ import com.dmdirc.ServerState;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.components.statusbar.StatusbarPanel;
 import com.dmdirc.addons.ui_swing.components.statusbar.StatusbarPopupWindow;
-import com.dmdirc.addons.ui_swing.dialogs.DialogManager;
 import com.dmdirc.util.annotations.factory.Factory;
 import com.dmdirc.util.annotations.factory.Unbound;
 
@@ -62,17 +61,15 @@ public class ServerInfoDialog extends StatusbarPopupWindow {
      *
      * @param plugin The {@link LagDisplayPlugin} we're using for info
      * @param parent The {@link JPanel} to use for positioning
-     * @param dialogManager The manager to register this dialog with.
      * @param mainFrame The frame that will own this dialog.
      * @param serverManager The manager to use to iterate servers.
      */
     public ServerInfoDialog(
             final LagDisplayPlugin plugin,
             @Unbound final StatusbarPanel parent,
-            final DialogManager dialogManager,
             final MainFrame mainFrame,
             final ServerManager serverManager) {
-        super(dialogManager, parent, mainFrame);
+        super(parent, mainFrame);
 
         this.plugin = plugin;
         this.mainFrame = mainFrame;

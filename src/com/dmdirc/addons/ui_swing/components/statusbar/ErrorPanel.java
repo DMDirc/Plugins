@@ -103,8 +103,7 @@ public class ErrorPanel extends StatusbarPopupPanel<JLabel> implements
     /** {@inheritDoc} */
     @Override
     protected StatusbarPopupWindow getWindow() {
-        return new ErrorPopup(controller.getDialogManager(), controller.getIconManager(),
-                this, mainFrame);
+        return new ErrorPopup(controller.getIconManager(), this, mainFrame);
     }
 
     /** Clears the error. */

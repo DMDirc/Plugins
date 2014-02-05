@@ -22,12 +22,15 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.url;
 
+import com.dmdirc.ClientModule.UserConfig;
+import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.components.URLProtocolPanel;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
-import com.dmdirc.addons.ui_swing.dialogs.DialogManager;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.ui.core.util.URLHandler;
+import com.dmdirc.util.annotations.factory.Factory;
+import com.dmdirc.util.annotations.factory.Unbound;
 
 import java.awt.Window;
 import java.awt.event.ActionEvent;
@@ -39,6 +42,7 @@ import javax.swing.JButton;
 import net.miginfocom.swing.MigLayout;
 
 /** URL Protocol dialog. */
+@Factory(inject=true, singleton=true)
 public class URLDialog extends StandardDialog implements ActionListener {
 
     /** Serial version UID. */
@@ -57,15 +61,17 @@ public class URLDialog extends StandardDialog implements ActionListener {
     /**
      * Instantiates the URLDialog.
      *
-     * @param dialogManager Dialog manager
      * @param url URL to open once added
      * @param config Config
      * @param parentWindow Parent window
      * @param urlHandler The URL Handler to use to handle clicked links
      */
-    public URLDialog(final DialogManager dialogManager, final URI url,
-            final ConfigProvider config, final Window parentWindow, final URLHandler urlHandler) {
-        super(dialogManager, parentWindow, ModalityType.MODELESS);
+    public URLDialog(
+            @Unbound final URI url,
+            @SuppressWarnings("qualifiers") @UserConfig final ConfigProvider config,
+            final MainFrame parentWindow,
+            final URLHandler urlHandler) {
+        super(parentWindow, ModalityType.MODELESS);
 
         this.url = url;
         this.parentWindow = parentWindow;

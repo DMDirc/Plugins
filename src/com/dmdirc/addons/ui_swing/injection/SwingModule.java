@@ -36,7 +36,6 @@ import com.dmdirc.addons.ui_swing.commands.Input;
 import com.dmdirc.addons.ui_swing.commands.PopInCommand;
 import com.dmdirc.addons.ui_swing.commands.PopOutCommand;
 import com.dmdirc.addons.ui_swing.commands.ServerSettings;
-import com.dmdirc.addons.ui_swing.dialogs.DialogManager;
 import com.dmdirc.interfaces.LifecycleController;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.ui.IconManager;
@@ -96,7 +95,6 @@ public class SwingModule {
     /**
      * Gets the main DMDirc window.
      *
-     * @param dialogManager Dialog manager
      * @param swingController The controller that will own the frame.
      * @param windowFactory The window factory to use to create and listen for windows.
      * @param lifecycleController The controller to use to quit the application.
@@ -109,7 +107,6 @@ public class SwingModule {
     @Provides
     @Singleton
     public MainFrame getMainFrame(
-            final DialogManager dialogManager,
             final SwingController swingController,
             final SwingWindowFactory windowFactory,
             final LifecycleController lifecycleController,
@@ -121,7 +118,7 @@ public class SwingModule {
             /** {@inheritDoc} */
             @Override
             public MainFrame call() {
-                return new MainFrame(dialogManager,
+                return new MainFrame(
                         swingController,
                         windowFactory,
                         lifecycleController,
@@ -150,11 +147,6 @@ public class SwingModule {
             final ServerManager serverManager,
             final StatusBarManager statusBarManager) {
         return new URLHandler(swingController, globalConfig, serverManager, statusBarManager);
-    }
-
-    @Provides
-    public DialogManager getDialogManager(final SwingController controller) {
-        return new DialogManager(controller);
     }
 
 }

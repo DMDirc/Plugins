@@ -30,7 +30,6 @@ import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.addons.ui_swing.components.menubar.MenuBar;
 import com.dmdirc.addons.ui_swing.components.statusbar.SwingStatusBar;
 import com.dmdirc.addons.ui_swing.dialogs.ConfirmQuitDialog;
-import com.dmdirc.addons.ui_swing.dialogs.DialogManager;
 import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
 import com.dmdirc.addons.ui_swing.framemanager.FrameManager;
 import com.dmdirc.addons.ui_swing.framemanager.FramemanagerPosition;
@@ -83,8 +82,6 @@ public class MainFrame extends JFrame implements WindowListener,
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 9;
-    /** Dialog manager. */
-    private final DialogManager dialogManager;
     /** Focus queue. */
     private final QueuedLinkedHashSet<TextFrame> focusOrder;
     /** Swing Controller. */
@@ -133,7 +130,6 @@ public class MainFrame extends JFrame implements WindowListener,
     /**
      * Creates new form MainFrame.
      *
-     * @param dialogManager Dialog manager
      * @param controller Swing controller
      * @param windowFactory The window factory to use to create and listen for windows.
      * @param lifecycleController Controller to use to end the application.
@@ -142,7 +138,7 @@ public class MainFrame extends JFrame implements WindowListener,
      * @param iconManager The icon manager to use to get icons.
      * @param windowManager Window management
      */
-    public MainFrame(final DialogManager dialogManager,
+    public MainFrame(
             final SwingController controller,
             final SwingWindowFactory windowFactory,
             final LifecycleController lifecycleController,
@@ -152,7 +148,6 @@ public class MainFrame extends JFrame implements WindowListener,
             final WindowManager windowManager) {
         super();
 
-        this.dialogManager = dialogManager;
         this.controller = controller;
         this.windowFactory = windowFactory;
         this.lifecycleController = lifecycleController;
@@ -525,7 +520,7 @@ public class MainFrame extends JFrame implements WindowListener,
      */
     public void quit(final int exitCode) {
         if (exitCode == 0 && globalConfig.getOptionBool("ui", "confirmQuit")) {
-            final StandardQuestionDialog dialog = new ConfirmQuitDialog(dialogManager, this) {
+            final StandardQuestionDialog dialog = new ConfirmQuitDialog(this) {
 
                 /** Serial version UID. */
                 private static final long serialVersionUID = 9;

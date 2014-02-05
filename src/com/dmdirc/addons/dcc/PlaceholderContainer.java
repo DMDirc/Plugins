@@ -24,7 +24,6 @@ package com.dmdirc.addons.dcc;
 
 import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.ui_swing.MainFrame;
-import com.dmdirc.addons.ui_swing.dialogs.DialogManager;
 import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
@@ -39,8 +38,6 @@ public class PlaceholderContainer extends FrameContainer {
 
     /** The plugin which owns this placeholder. */
     private final DCCManager plugin;
-    /** Manager to register new dialogs with. */
-    private final DialogManager dialogManager;
     /** Frame that will own new dialogs. */
     private final MainFrame mainFrame;
 
@@ -49,18 +46,15 @@ public class PlaceholderContainer extends FrameContainer {
      *
      * @param plugin The plugin which owns this placeholder
      * @param config Config manager
-     * @param dialogManager Manager to register new dialogs with.
      * @param mainFrame Frame that will own new dialogs.
      */
     public PlaceholderContainer(
             final DCCManager plugin,
             final AggregateConfigProvider config,
-            final DialogManager dialogManager,
             final MainFrame mainFrame) {
         super("dcc", "DCCs", "DCCs", config, Arrays.asList(
                 "com.dmdirc.addons.dcc.ui.PlaceholderPanel"));
         this.plugin = plugin;
-        this.dialogManager = dialogManager;
         this.mainFrame = mainFrame;
     }
 
@@ -78,7 +72,7 @@ public class PlaceholderContainer extends FrameContainer {
         }
 
         if (dccs > 0) {
-            new StandardQuestionDialog(dialogManager, mainFrame, ModalityType.MODELESS,
+            new StandardQuestionDialog(mainFrame, ModalityType.MODELESS,
                     "Close confirmation",
                     "Closing this window will cause all existing DCCs "
                     + "to terminate, are you sure you want to do this?") {
