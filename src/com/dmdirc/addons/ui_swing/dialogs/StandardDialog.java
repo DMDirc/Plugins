@@ -39,13 +39,10 @@ import javax.swing.SwingUtilities;
 /**
  * Provides common methods for dialogs.
  */
-@SuppressWarnings("unused")
 public class StandardDialog extends JDialog {
 
     /** Serial version UID. */
     private static final long serialVersionUID = 1;
-    /** Dialog manager. */
-    private final DialogManager dialogManager;
     /** Parent window. */
     private final Window owner;
     /** The OK button for this frame. */
@@ -56,27 +53,22 @@ public class StandardDialog extends JDialog {
     /**
      * Creates a new instance of StandardDialog.
      *
-     * @param dialogManager Dialog Manager used for disposal
      * @param owner The frame that owns this dialog
      * @param modal Whether to display modally or not
      */
-    public StandardDialog(final DialogManager dialogManager,
-            final Frame owner, final boolean modal) {
-        this(dialogManager, owner, modal ? ModalityType.APPLICATION_MODAL : ModalityType.MODELESS);
+    public StandardDialog(final Frame owner, final boolean modal) {
+        this(owner, modal ? ModalityType.APPLICATION_MODAL : ModalityType.MODELESS);
     }
 
     /**
      * Creates a new instance of StandardDialog.
      *
-     * @param dialogManager Dialog Manager used for disposal
      * @param owner The frame that owns this dialog
      * @param modal Whether to display modally or not
      */
-    public StandardDialog(final DialogManager dialogManager,
-            final Window owner, final ModalityType modal) {
+    public StandardDialog(final Window owner, final ModalityType modal) {
         super(owner, modal);
         this.owner = owner;
-        this.dialogManager = dialogManager;
 
         if (owner != null) {
             setIconImages(owner.getIconImages());
@@ -89,15 +81,6 @@ public class StandardDialog extends JDialog {
     @Override
     public void setTitle(final String title) {
         super.setTitle("DMDirc: " + title);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void dispose() {
-        if (dialogManager != null) {
-            dialogManager.dispose(this);
-        }
-        super.dispose();
     }
 
     /**

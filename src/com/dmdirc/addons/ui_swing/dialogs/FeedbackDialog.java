@@ -22,8 +22,10 @@
 
 package com.dmdirc.addons.ui_swing.dialogs;
 
+import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.Server;
 import com.dmdirc.ServerManager;
+import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.SendWorker;
@@ -33,10 +35,10 @@ import com.dmdirc.interfaces.config.IdentityController;
 import com.dmdirc.ui.core.util.Info;
 
 import java.awt.Insets;
-import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.inject.Inject;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -78,17 +80,18 @@ public class FeedbackDialog extends StandardDialog implements ActionListener, Do
     /**
      * Instantiates the feedback dialog.
      *
-     * @param dialogManager Dialog manager
      * @param parentWindow Parent window
      * @param identityController Identity controller (needs to be a config directory)
      * @param serverManager Server manager
      * @param config Config
      */
-    public FeedbackDialog(final DialogManager dialogManager, final Window parentWindow,
+    @Inject
+    public FeedbackDialog(
+            final MainFrame parentWindow,
             final IdentityController identityController,
             final ServerManager serverManager,
-            final AggregateConfigProvider config) {
-        super(dialogManager, parentWindow, ModalityType.MODELESS);
+            @GlobalConfig final AggregateConfigProvider config) {
+        super(parentWindow, ModalityType.MODELESS);
 
         this.serverManager = serverManager;
         this.config = config;

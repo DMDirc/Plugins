@@ -29,8 +29,9 @@ import com.dmdirc.addons.ui_swing.components.PackingTable;
 import com.dmdirc.addons.ui_swing.components.renderers.UpdateComponentTableCellRenderer;
 import com.dmdirc.addons.ui_swing.components.renderers.UpdateStatusTableCellRenderer;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
-import com.dmdirc.addons.ui_swing.dialogs.DialogManager;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
+import com.dmdirc.addons.ui_swing.injection.DialogModule.ForUpdates;
+import com.dmdirc.addons.ui_swing.injection.DialogProvider;
 import com.dmdirc.updater.UpdateComponent;
 import com.dmdirc.updater.manager.CachingUpdateManager;
 import com.dmdirc.updater.manager.UpdateManager;
@@ -39,14 +40,12 @@ import com.dmdirc.updater.manager.UpdateManagerStatus;
 import com.dmdirc.updater.manager.UpdateStatus;
 
 import java.awt.Dimension;
-import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
 import javax.swing.JButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -65,8 +64,6 @@ public class SwingUpdaterDialog extends StandardDialog implements
 
     /** Serial version UID. */
     private static final long serialVersionUID = 3;
-    /** Dialog manager. */
-    private final DialogManager dialogManager;
     /** The update manager to use. */
     private final CachingUpdateManager updateManager;
     /** Update table. */
@@ -80,25 +77,22 @@ public class SwingUpdaterDialog extends StandardDialog implements
     /** Update.Status renderer. */
     private UpdateStatusTableCellRenderer updateStatusRenderer;
     /** Provider of restart dialogs. */
-    private final Provider<SwingRestartDialog> restartDialogProvider;
+    private final DialogProvider<SwingRestartDialog> restartDialogProvider;
 
     /**
      * Creates a new instance of the updater dialog.
      *
      * @param updateManager The update manager to use for information
-     * @param dialogManager Dialog manager
      * @param parentWindow Parent window
      * @param restartDialogProvider Provider of restart dialogs.
      */
     @Inject
     public SwingUpdaterDialog(
             final CachingUpdateManager updateManager,
-            final DialogManager dialogManager,
             final MainFrame parentWindow,
-            final Provider<SwingRestartDialog> restartDialogProvider) {
-        super(dialogManager, parentWindow, ModalityType.MODELESS);
+            @ForUpdates final DialogProvider<SwingRestartDialog> restartDialogProvider) {
+        super(parentWindow, ModalityType.MODELESS);
 
-        this.dialogManager = dialogManager;
         this.updateManager = updateManager;
         this.restartDialogProvider = restartDialogProvider;
 
@@ -210,7 +204,7 @@ public class SwingUpdaterDialog extends StandardDialog implements
             }.executeInExecutor();
 
             if (updateManager.getManagerStatus() == UpdateManagerStatus.IDLE_RESTART_NEEDED) {
-                restartDialogProvider.get().displayOrRequestFocus();
+                restartDialogProvider.displayOrRequestFocus();
                 dispose();
             }
         } else if (e.getSource().equals(getCancelButton())) {
@@ -238,7 +232,7 @@ public class SwingUpdaterDialog extends StandardDialog implements
 
                 if (status == UpdateManagerStatus.IDLE_RESTART_NEEDED) {
                     if (isVisible()) {
-                        restartDialogProvider.get().displayOrRequestFocus();
+                        restartDialogProvider.displayOrRequestFocus();
                     }
                     dispose();
                 } else {

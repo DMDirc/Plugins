@@ -23,7 +23,6 @@
 package com.dmdirc.addons.ui_swing.dialogs.sslcertificate;
 
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
-import com.dmdirc.addons.ui_swing.dialogs.DialogManager;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.core.dialogs.sslcertificate.SSLCertificateDialogModel;
@@ -67,14 +66,13 @@ public class SSLCertificateDialog extends StandardDialog implements ActionListen
     /**
      * Creates a new instance of ActionsManagerDialog.
      *
-     * @param dialogManager Dialog manager
      * @param iconManager Icon manager
      * @param parent Parent window for the dialog
      * @param model dialog model
      */
-    public SSLCertificateDialog(final DialogManager dialogManager, final IconManager iconManager,
+    public SSLCertificateDialog(final IconManager iconManager,
             final Window parent, final SSLCertificateDialogModel model) {
-        super(dialogManager, parent, ModalityType.MODELESS);
+        super(parent, ModalityType.MODELESS);
 
         this.model = model;
         this.iconManager = iconManager;

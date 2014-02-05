@@ -22,13 +22,11 @@
 
 package com.dmdirc.addons.serverlistdialog;
 
-import com.dmdirc.ServerManager;
 import com.dmdirc.actions.wrappers.PerformWrapper;
 import com.dmdirc.addons.serverlists.ServerGroupItem;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.LockedLayer;
-import com.dmdirc.addons.ui_swing.dialogs.DialogManager;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.ui.core.util.URLHandler;
 
@@ -83,7 +81,6 @@ public class ServerListDialog extends StandardDialog implements
      * @param urlHandler The URL Handler to use to handle clicked links
      * @param performWrapper The wrapper to use for the perform tab
      * @param serverListModel The model to use for the dialog.
-     * @param dialogManager The manager to register the dialog with.
      * @param mainFrame The main frame that owns the dialog.
      */
     @Inject
@@ -92,9 +89,8 @@ public class ServerListDialog extends StandardDialog implements
             final URLHandler urlHandler,
             final PerformWrapper performWrapper,
             final ServerListModel serverListModel,
-            final DialogManager dialogManager,
             final MainFrame mainFrame) {
-        super(dialogManager, mainFrame, ModalityType.MODELESS);
+        super(mainFrame, ModalityType.MODELESS);
 
         setTitle("Server List");
         model = serverListModel;

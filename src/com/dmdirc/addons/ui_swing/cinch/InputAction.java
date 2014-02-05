@@ -187,7 +187,7 @@ public @interface InputAction {
                 /** {@inheritDoc} */
                 @Override
                 public void actionPerformed(final ActionEvent e) {
-                    new StandardInputDialog(null,
+                    new StandardInputDialog(
                             (Window) ((AbstractButton) actionObject)
                             .getTopLevelAncestor(), ModalityType.DOCUMENT_MODAL,
                             "Input", message, validatorInstance) {

@@ -33,7 +33,6 @@ import com.dmdirc.addons.dcc.kde.KFileChooser;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SwingWindowFactory;
 import com.dmdirc.addons.ui_swing.components.frames.ComponentFrame;
-import com.dmdirc.addons.ui_swing.dialogs.DialogManager;
 import com.dmdirc.commandline.CommandLineOptionsModule.Directory;
 import com.dmdirc.commandline.CommandLineOptionsModule.DirectoryType;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
@@ -89,8 +88,6 @@ public class DCCManager implements ActionListener {
     private final CommandController commandController;
     /** The factory to use for tab completers. */
     private final TabCompleterFactory tabCompleterFactory;
-    /** The dialog manager to register popups with. */
-    private final DialogManager dialogManager;
     /** The main frame that will own any new windows. */
     private final MainFrame mainFrame;
     /** The configuration domain to use. */
@@ -99,7 +96,6 @@ public class DCCManager implements ActionListener {
     /**
      * Creates a new instance of this plugin.
      *
-     * @param dialogManager The dialog manager to register popups with.
      * @param mainFrame The main frame that will own any new windows.
      * @param pluginInfo This plugin's plugin info
      * @param identityController The Identity controller that provides the current config
@@ -113,7 +109,6 @@ public class DCCManager implements ActionListener {
      */
     @Inject
     public DCCManager(
-            final DialogManager dialogManager,
             final MainFrame mainFrame,
             final PluginInfo pluginInfo,
             final IdentityController identityController,
@@ -124,7 +119,6 @@ public class DCCManager implements ActionListener {
             final TabCompleterFactory tabCompleterFactory,
             final SwingWindowFactory windowFactory,
             @Directory(DirectoryType.BASE) final String baseDirectory) {
-        this.dialogManager = dialogManager;
         this.mainFrame = mainFrame;
         this.messageSinkManager = messageSinkManager;
         this.windowManager = windowManager;
@@ -677,7 +671,7 @@ public class DCCManager implements ActionListener {
      * Create the container window.
      */
     protected void createContainer() {
-        container = new PlaceholderContainer(this, config, dialogManager, mainFrame);
+        container = new PlaceholderContainer(this, config, mainFrame);
         windowManager.addWindow(container);
     }
 

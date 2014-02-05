@@ -59,7 +59,7 @@ public class StandardMessageDialog extends StandardDialog {
     public StandardMessageDialog(final SwingController controller,
             final Window owner, final ModalityType modal, final String title,
             final String message) {
-        super(controller.getDialogManager(), owner, modal);
+        super(owner, modal);
 
         this.message = message;
 
