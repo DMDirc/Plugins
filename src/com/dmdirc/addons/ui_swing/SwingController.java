@@ -25,11 +25,6 @@ package com.dmdirc.addons.ui_swing;
 import com.dmdirc.Channel;
 import com.dmdirc.Server;
 import com.dmdirc.ServerManager;
-import com.dmdirc.actions.ActionFactory;
-import com.dmdirc.actions.ActionManager;
-import com.dmdirc.actions.ActionSubstitutorFactory;
-import com.dmdirc.actions.wrappers.AliasWrapper;
-import com.dmdirc.actions.wrappers.PerformWrapper;
 import com.dmdirc.addons.ui_swing.commands.ChannelSettings;
 import com.dmdirc.addons.ui_swing.commands.Input;
 import com.dmdirc.addons.ui_swing.commands.PopInCommand;
@@ -47,7 +42,6 @@ import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.interfaces.CommandController;
-import com.dmdirc.interfaces.LifecycleController;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.config.IdentityController;
@@ -104,8 +98,6 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     private final PluginInfo pluginInfo;
     /** Global config manager. */
     private final AggregateConfigProvider globalConfig;
-    /** Server manager. */
-    private final ServerManager serverManager;
     /** Identity Manager. */
     private final IdentityController identityManager;
     /** Identity factory. */
@@ -116,16 +108,8 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     private final ConfigProvider addonIdentity;
     /** Global Swing UI Icon manager. */
     private final IconManager iconManager;
-    /** Action manager. */
-    private final ActionManager actionManager;
-    /** Action factory. */
-    private final ActionFactory actionFactory;
     /** Plugin manager. */
     private final PluginManager pluginManager;
-    /** Perform wrapper. */
-    private final PerformWrapper performWrapper;
-    /** Alias wrapper. */
-    private final AliasWrapper aliasWrapper;
     /** Theme manager to use. */
     private final ThemeManager themeManager;
     /** Apple handler, deals with Mac specific code. */
@@ -134,10 +118,6 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     private final ColourManager colourManager;
     /** The URL builder to use. */
     private final URLBuilder urlBuilder;
-    /** Factory to use to create action substitutors. */
-    private final ActionSubstitutorFactory actionSubstitutorFactory;
-    /** Lifecycle controller. */
-    private final LifecycleController lifecycleController;
 
     /** The manager we're using for dependencies. */
     private SwingManager swingManager;
@@ -149,16 +129,10 @@ public class SwingController extends BaseCommandPlugin implements UIController {
      * @param identityManager Identity Manager
      * @param identityFactory Factory used to create identities.
      * @param pluginManager Plugin manager
-     * @param actionManager Action manager
-     * @param actionFactory The factory to use to create actions.
      * @param serverManager Server manager to use for server information.
-     * @param performWrapper Perform wrapper to use for performs.
-     * @param aliasWrapper Alias wrapper to use for aliases.
      * @param themeManager Theme manager to use.
      * @param urlBuilder URL builder to use to resolve icons etc.
      * @param colourManager The colour manager to use to parse colours.
-     * @param actionSubstitutorFactory Factory to use to create action substitutors.
-     * @param lifecycleController Lifecyle controller to quit and restart DMDirc.
      * @param eventBus The bus to publish and subscribe to events on.
      */
     public SwingController(
@@ -166,31 +140,18 @@ public class SwingController extends BaseCommandPlugin implements UIController {
             final IdentityController identityManager,
             final IdentityFactory identityFactory,
             final PluginManager pluginManager,
-            final ActionManager actionManager,
-            final ActionFactory actionFactory,
             final ServerManager serverManager,
-            final PerformWrapper performWrapper,
-            final AliasWrapper aliasWrapper,
             final ThemeManager themeManager,
             final URLBuilder urlBuilder,
             final ColourManager colourManager,
-            final ActionSubstitutorFactory actionSubstitutorFactory,
-            final LifecycleController lifecycleController,
             final EventBus eventBus) {
         this.pluginInfo = pluginInfo;
         this.identityManager = identityManager;
         this.identityFactory = identityFactory;
-        this.actionManager = actionManager;
-        this.actionFactory = actionFactory;
         this.pluginManager = pluginManager;
-        this.serverManager = serverManager;
-        this.performWrapper = performWrapper;
-        this.aliasWrapper = aliasWrapper;
         this.themeManager = themeManager;
         this.colourManager = colourManager;
         this.urlBuilder = urlBuilder;
-        this.actionSubstitutorFactory = actionSubstitutorFactory;
-        this.lifecycleController = lifecycleController;
 
         globalConfig = identityManager.getGlobalConfiguration();
         globalIdentity = identityManager.getUserSettings();
@@ -204,11 +165,6 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     @Deprecated
     public AggregateConfigProvider getGlobalConfig() {
         return globalConfig;
-    }
-
-    @Deprecated
-    public ServerManager getServerManager() {
-        return serverManager;
     }
 
     @Deprecated
@@ -237,28 +193,8 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     }
 
     @Deprecated
-    public ActionManager getActionManager() {
-        return actionManager;
-    }
-
-    @Deprecated
-    public ActionFactory getActionFactory() {
-        return actionFactory;
-    }
-
-    @Deprecated
     public PluginManager getPluginManager() {
         return pluginManager;
-    }
-
-    @Deprecated
-    public PerformWrapper getPerformWrapper() {
-        return performWrapper;
-    }
-
-    @Deprecated
-    public AliasWrapper getAliasWrapper() {
-        return aliasWrapper;
     }
 
     @Deprecated
@@ -279,16 +215,6 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     @Deprecated
     public URLBuilder getUrlBuilder() {
         return urlBuilder;
-    }
-
-    @Deprecated
-    public ActionSubstitutorFactory getActionSubstitutorFactory() {
-        return actionSubstitutorFactory;
-    }
-
-    @Deprecated
-    public LifecycleController getLifecycleController() {
-        return lifecycleController;
     }
 
     /**

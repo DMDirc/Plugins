@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.prefs;
 
+import com.dmdirc.actions.ActionManager;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.ListScroller;
@@ -87,11 +88,13 @@ public final class SwingPreferencesDialog extends StandardDialog implements
      *
      * @param controller The controller which owns this preferences window.
      * @param restartDialogProvider The provider to use for restart dialogs.
+     * @param actionsManager Actions manager to use.
      */
     @Inject
     public SwingPreferencesDialog(
             final SwingController controller,
-            @ForSettings final DialogProvider<SwingRestartDialog> restartDialogProvider) {
+            @ForSettings final DialogProvider<SwingRestartDialog> restartDialogProvider,
+            final ActionManager actionsManager) {
         super(controller.getMainFrame(), ModalityType.MODELESS);
 
         this.controller = controller;
@@ -116,7 +119,7 @@ public final class SwingPreferencesDialog extends StandardDialog implements
                             new URLConfigPanel(controller, controller.getMainFrame()),
                             controller.getGlobalConfig(),
                             controller.getGlobalIdentity(),
-                            controller.getActionManager(),
+                            actionsManager,
                             controller.getPluginManager());
                 } catch (IllegalArgumentException ex) {
                     mainPanel.setError(ex.getMessage());
