@@ -37,15 +37,9 @@ import com.dmdirc.addons.ui_swing.commands.PopOutCommand;
 import com.dmdirc.addons.ui_swing.commands.ServerSettings;
 import com.dmdirc.addons.ui_swing.components.addonbrowser.DataLoaderWorkerFactory;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
-import com.dmdirc.addons.ui_swing.components.statusbar.FeedbackNag;
 import com.dmdirc.addons.ui_swing.components.statusbar.SwingStatusBar;
-import com.dmdirc.addons.ui_swing.dialogs.DialogManager;
-import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
-import com.dmdirc.addons.ui_swing.dialogs.channelsetting.ChannelSettingsDialog;
 import com.dmdirc.addons.ui_swing.dialogs.error.ErrorListDialog;
 import com.dmdirc.addons.ui_swing.dialogs.prefs.SwingPreferencesDialog;
-import com.dmdirc.addons.ui_swing.dialogs.serversetting.ServerSettingsDialog;
-import com.dmdirc.addons.ui_swing.dialogs.url.URLDialog;
 import com.dmdirc.addons.ui_swing.injection.SwingModule;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
@@ -332,8 +326,7 @@ public class SwingController extends BaseCommandPlugin implements UIController {
             /** {@inheritDoc} */
             @Override
             public void run() {
-                showDialog(ChannelSettingsDialog.class, channel,
-                        getWindowFactory().getSwingWindow(channel));
+                swingManager.getChannelSettingsDialogProvider().displayOrRequestFocus(channel);
             }
         });
     }
@@ -346,28 +339,24 @@ public class SwingController extends BaseCommandPlugin implements UIController {
             /** {@inheritDoc} */
             @Override
             public void run() {
-                showDialog(ServerSettingsDialog.class,
-                        server, getWindowFactory().getSwingWindow(server));
+                swingManager.getServerSettingsDialogProvider().displayOrRequestFocus(server);
             }
         });
     }
 
     /**
-     * Proxy method to {@link DialogManager} that shows a dialog in the client.
-     * For more details on what parameters might be required see
-     * {@link DialogManager#getDialog(Class, Object...)}
-     *
-     * @param <T> Dialog type
-     * @see DialogManager#getDialog(Class, Object...) getDialog
-     *
-     * @param klass The class of the dialog to show
-     * @param params Any non standard parameters required
-     * @deprecated Use dagger instead.
+     * @deprecated Callers should be given access to the provider.
      */
     @Deprecated
-    public <T extends StandardDialog> void showDialog(final Class<T> klass,
-            final Object... params) {
-        getDialogManager().showDialog(klass, params);
+    public void closeServerSettingsDialog(final Server server) {
+        UIUtilities.invokeLater(new Runnable() {
+
+            /** {@inheritDoc} */
+            @Override
+            public void run() {
+                swingManager.getServerSettingsDialogProvider().dispose(server);
+            }
+        });
     }
 
     /**
@@ -479,7 +468,7 @@ public class SwingController extends BaseCommandPlugin implements UIController {
             /** {@inheritDoc} */
             @Override
             public void run() {
-                showDialog(URLDialog.class, url, getUrlHandler());
+                swingManager.getUrlDialogFactory().getURLDialog(url).display();
             }
         });
     }
@@ -492,7 +481,7 @@ public class SwingController extends BaseCommandPlugin implements UIController {
             /** {@inheritDoc} */
             @Override
             public void run() {
-                new FeedbackNag(SwingController.this);
+                swingManager.getFeedbackNagProvider().get();
             }
         });
     }
@@ -581,9 +570,11 @@ public class SwingController extends BaseCommandPlugin implements UIController {
      * Returns the preferences dialog instance creating if required.
      *
      * @return Swing prefs dialog
+     * @deprecated Inject the relevant dialog manager instead.
      */
+    @Deprecated
     public SwingPreferencesDialog getPrefsDialog() {
-        return getDialogManager().getDialog(SwingPreferencesDialog.class);
+        return swingManager.getPrefsDialogProvider().get();
     }
 
     /** {@inheritDoc} */
@@ -933,17 +924,6 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     @Deprecated
     public URLHandler getUrlHandler() {
         return swingManager.getUrlHandler();
-    }
-
-    /**
-     * Gets the Dialog manager.
-     *
-     * @return The Dialog manager to use
-     * @deprecated Should be injected
-     */
-    @Deprecated
-    public DialogManager getDialogManager() {
-        return swingManager.getDialogManager();
     }
 
     @Deprecated

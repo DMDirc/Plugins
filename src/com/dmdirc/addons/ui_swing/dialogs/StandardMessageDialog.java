@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.dialogs;
 
-import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 
 import java.awt.Window;
@@ -50,16 +49,15 @@ public class StandardMessageDialog extends StandardDialog {
     /**
      * Instantiates a new standard input dialog.
      *
-     * @param controller Swing controller
      * @param owner Dialog owner
      * @param modal modality type
      * @param title Dialog title
      * @param message Dialog message
      */
-    public StandardMessageDialog(final SwingController controller,
+    public StandardMessageDialog(
             final Window owner, final ModalityType modal, final String title,
             final String message) {
-        super(controller.getDialogManager(), owner, modal);
+        super(owner, modal);
 
         this.message = message;
 

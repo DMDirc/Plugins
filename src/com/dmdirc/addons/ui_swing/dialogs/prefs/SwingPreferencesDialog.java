@@ -30,6 +30,8 @@ import com.dmdirc.addons.ui_swing.components.addonpanel.PluginPanel;
 import com.dmdirc.addons.ui_swing.components.addonpanel.ThemePanel;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.addons.ui_swing.dialogs.updater.SwingRestartDialog;
+import com.dmdirc.addons.ui_swing.injection.DialogModule.ForSettings;
+import com.dmdirc.addons.ui_swing.injection.DialogProvider;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.logger.ErrorLevel;
@@ -41,6 +43,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import javax.inject.Inject;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -70,22 +73,29 @@ public final class SwingPreferencesDialog extends StandardDialog implements
     /** Preferences Manager. */
     private PreferencesDialogModel manager;
     /** Manager loading swing worker. */
-    private LoggingSwingWorker<PreferencesDialogModel, Void> worker;
+    private final LoggingSwingWorker<PreferencesDialogModel, Void> worker;
     /** Panel size. */
     private int panelSize = 500;
     /** Swing controller. */
     @Deprecated
     private final SwingController controller;
+    /** The provider to use for restart dialogs. */
+    private final DialogProvider<SwingRestartDialog> restartDialogProvider;
 
     /**
      * Creates a new instance of SwingPreferencesDialog.
      *
      * @param controller The controller which owns this preferences window.
+     * @param restartDialogProvider The provider to use for restart dialogs.
      */
-    public SwingPreferencesDialog(final SwingController controller) {
-        super(controller.getDialogManager(), controller.getMainFrame(), ModalityType.MODELESS);
+    @Inject
+    public SwingPreferencesDialog(
+            final SwingController controller,
+            @ForSettings final DialogProvider<SwingRestartDialog> restartDialogProvider) {
+        super(controller.getMainFrame(), ModalityType.MODELESS);
 
         this.controller = controller;
+        this.restartDialogProvider = restartDialogProvider;
 
         initComponents();
 
@@ -98,8 +108,10 @@ public final class SwingPreferencesDialog extends StandardDialog implements
                 PreferencesDialogModel prefsManager = null;
                 try {
                     prefsManager = new PreferencesDialogModel(
-                            new PluginPanel(controller.getMainFrame(), controller),
-                            new ThemePanel(controller.getMainFrame(), controller, controller.getThemeManager()),
+                            new PluginPanel(controller.getMainFrame(), controller,
+                                    SwingPreferencesDialog.this),
+                            new ThemePanel(controller.getMainFrame(), controller,
+                                    controller.getThemeManager(), SwingPreferencesDialog.this),
                             new UpdateConfigPanel(controller),
                             new URLConfigPanel(controller, controller.getMainFrame()),
                             controller.getGlobalConfig(),
@@ -312,8 +324,7 @@ public final class SwingPreferencesDialog extends StandardDialog implements
     public void saveOptions() {
         if (manager != null && manager.save()) {
             dispose();
-            controller.showDialog(SwingRestartDialog.class,
-                    ModalityType.APPLICATION_MODAL, "apply settings");
+            restartDialogProvider.displayOrRequestFocus();
         }
     }
 

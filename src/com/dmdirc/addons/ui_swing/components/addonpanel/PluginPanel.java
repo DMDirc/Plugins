@@ -26,6 +26,7 @@ import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
+import com.dmdirc.addons.ui_swing.dialogs.prefs.SwingPreferencesDialog;
 import com.dmdirc.interfaces.ActionListener;
 import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.plugins.PluginInfo;
@@ -56,10 +57,13 @@ public class PluginPanel extends AddonPanel implements ActionListener {
      *
      * @param parentWindow Parent window
      * @param controller Swing Controller
+     * @param prefsDialog The prefs dialog that contains this panel
      */
-    public PluginPanel(final Window parentWindow,
-            final SwingController controller) {
-        super(parentWindow, controller);
+    public PluginPanel(
+            final Window parentWindow,
+            final SwingController controller,
+            final SwingPreferencesDialog prefsDialog) {
+        super(parentWindow, controller, prefsDialog);
 
         ActionManager.getActionManager().registerListener(this,
                 CoreActionType.PLUGIN_REFRESH);

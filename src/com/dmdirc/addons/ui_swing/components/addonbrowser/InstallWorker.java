@@ -55,9 +55,9 @@ public class InstallWorker extends LoggingSwingWorker<String, Void> {
     private final PluginManager pluginManager;
 
     public InstallWorker(
-            @Directory(DirectoryType.TEMPORARY) final String tempDirectory,
-            @Directory(DirectoryType.PLUGINS) final String pluginDirectory,
-            @Directory(DirectoryType.THEMES) final String themeDirectory,
+            @SuppressWarnings("qualifiers") @Directory(DirectoryType.TEMPORARY) final String tempDirectory,
+            @SuppressWarnings("qualifiers") @Directory(DirectoryType.PLUGINS) final String pluginDirectory,
+            @SuppressWarnings("qualifiers") @Directory(DirectoryType.THEMES) final String themeDirectory,
             final PluginManager pluginManager,
             @Unbound final AddonInfo info,
             @Unbound final InstallerWindow window) {

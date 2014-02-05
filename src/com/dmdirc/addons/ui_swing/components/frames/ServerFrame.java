@@ -26,7 +26,6 @@ import com.dmdirc.FrameContainer;
 import com.dmdirc.Server;
 import com.dmdirc.ServerState;
 import com.dmdirc.addons.ui_swing.SwingController;
-import com.dmdirc.addons.ui_swing.dialogs.serversetting.ServerSettingsDialog;
 import com.dmdirc.addons.ui_swing.dialogs.sslcertificate.SSLCertificateDialog;
 import com.dmdirc.commandparser.PopupType;
 import com.dmdirc.interfaces.Connection;
@@ -145,7 +144,7 @@ public final class ServerFrame extends InputTextFrame implements
     public void certificateProblemEncountered(final X509Certificate[] chain,
             final Collection<CertificateException> problems,
             final CertificateManager certificateManager) {
-        sslDialog = new SSLCertificateDialog(getController().getDialogManager(), getController().getIconManager(), getController().getMainFrame(),
+        sslDialog = new SSLCertificateDialog(getController().getIconManager(), getController().getMainFrame(),
                 new SSLCertificateDialogModel(chain, problems, certificateManager));
         sslDialog.display();
     }
@@ -161,7 +160,7 @@ public final class ServerFrame extends InputTextFrame implements
     /** {@inheritDoc} */
     @Override
     public void windowClosing(final FrameContainer window) {
-        controller.getDialogManager().dispose(ServerSettingsDialog.class);
+        controller.closeServerSettingsDialog((Server) window.getConnection());
         super.windowClosing(window);
     }
 

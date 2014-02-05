@@ -28,6 +28,7 @@ import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
 import com.dmdirc.addons.ui_swing.components.addonbrowser.BrowserWindow;
 import com.dmdirc.addons.ui_swing.components.renderers.AddonCellRenderer;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
+import com.dmdirc.addons.ui_swing.dialogs.prefs.SwingPreferencesDialog;
 import com.dmdirc.config.prefs.PreferencesInterface;
 import com.dmdirc.ui.IconManager;
 
@@ -53,12 +54,14 @@ import net.miginfocom.swing.MigLayout;
 public abstract class AddonPanel extends JPanel implements AddonToggleListener,
         ListSelectionListener, PreferencesInterface, HyperlinkListener {
 
+    /** Serial version UID. */
+    private static final long serialVersionUID = 3;
     /** List of addons. */
     protected JTable addonList;
     /** Swing Controller. */
     protected final SwingController controller;
-    /** Serial version UID. */
-    private static final long serialVersionUID = 3;
+    /** The prefs dialog that contains this panel. */
+    private final SwingPreferencesDialog prefsDialog;
     /** Parent Window. */
     private final Window parentWindow;
     /** The icon manager used to retrieve icons. */
@@ -79,13 +82,17 @@ public abstract class AddonPanel extends JPanel implements AddonToggleListener,
      *
      * @param parentWindow Parent window
      * @param controller Swing Controller
+     * @param prefsDialog The prefs dialog that contains this panel
      */
-    public AddonPanel(final Window parentWindow,
-            final SwingController controller) {
+    public AddonPanel(
+            final Window parentWindow,
+            final SwingController controller,
+            final SwingPreferencesDialog prefsDialog) {
         super();
 
         this.parentWindow = parentWindow;
         this.controller = controller;
+        this.prefsDialog = prefsDialog;
         iconManager = controller.getIconManager();
 
         initComponents();
@@ -161,13 +168,7 @@ public abstract class AddonPanel extends JPanel implements AddonToggleListener,
 
     /** Lays out the dialog. */
     private void layoutComponents() {
-        if (controller == null) {
-            setLayout(new MigLayout("ins 0, fill, hmax " + 500));
-        } else {
-            setLayout(new MigLayout("ins 0, fill, hmax "
-                    + controller.getPrefsDialog().getPanelHeight()));
-        }
-
+        setLayout(new MigLayout("ins 0, fill, hmax " + prefsDialog.getPanelHeight()));
         add(blurbLabel, "wrap 5, growx, pushx");
         add(getMoreLabel, "wrap 5, right");
         add(scrollPane, "wrap 5, grow, push");

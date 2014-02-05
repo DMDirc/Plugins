@@ -36,7 +36,6 @@ import com.dmdirc.addons.ui_swing.components.SortedListModel;
 import com.dmdirc.addons.ui_swing.components.frames.AppleJFrame;
 import com.dmdirc.addons.ui_swing.components.renderers.ActionGroupListCellRenderer;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
-import com.dmdirc.addons.ui_swing.dialogs.DialogManager;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialog;
 import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
@@ -78,8 +77,6 @@ public class ActionsManagerDialog extends StandardDialog implements
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 1;
-    /** Dialog manager. */
-    private final DialogManager dialogManager;
     /** Config instance. */
     private final ConfigProvider config;
     /** Preferences setting component factory. */
@@ -108,29 +105,31 @@ public class ActionsManagerDialog extends StandardDialog implements
     private ActionGroupSettingsPanel activeSettings;
     /** Group panel. */
     private JPanel groupPanel;
+    /** Factory to use to create group panels. */
+    private final ActionsGroupPanelFactory groupPanelFactory;
 
     /**
      * Creates a new instance of ActionsManagerDialog.
      *
      * @param parentWindow Parent window
      * @param controller Parent controller
-     * @param dialogManager Dialog manager
      * @param config Config to save dialog state to
      * @param compFactory Prefs setting component factory
+     * @param groupPanelFactory Factory to use to create group panels.
      */
     @Inject
     public ActionsManagerDialog(
             final MainFrame parentWindow,
             final SwingController controller,
-            final DialogManager dialogManager,
             @UserConfig final ConfigProvider config,
-            final PrefsComponentFactory compFactory) {
-        super(dialogManager, Apple.isAppleUI()
+            final PrefsComponentFactory compFactory,
+            final ActionsGroupPanelFactory groupPanelFactory) {
+        super(Apple.isAppleUI()
                 ? new AppleJFrame(parentWindow, controller)
                 : parentWindow, ModalityType.MODELESS);
-        this.dialogManager = dialogManager;
         this.config = config;
         this.compFactory = compFactory;
+        this.groupPanelFactory = groupPanelFactory;
 
         initComponents();
         validator = new ValidatorChain<>(
@@ -155,7 +154,7 @@ public class ActionsManagerDialog extends StandardDialog implements
                 + " there for you to organise groups, add or remove them"
                 + " to suit your needs.");
         groups = new JList(new SortedListModel<>(new ActionGroupNameComparator()));
-        actions = new ActionsGroupPanel(dialogManager, this, null);
+        actions = groupPanelFactory.getActionsGroupPanel(this, null);
         info = new ActionGroupInformationPanel(null);
         settings = new HashMap<>();
         activeSettings = new ActionGroupSettingsPanel(compFactory, null, this);
@@ -312,7 +311,7 @@ public class ActionsManagerDialog extends StandardDialog implements
     private void addGroup() {
         final int index = groups.getSelectedIndex();
         groups.getSelectionModel().clearSelection();
-        new StandardInputDialog(dialogManager, this,
+        new StandardInputDialog(this,
                 ModalityType.DOCUMENT_MODAL, "New action group",
                 "Please enter the name of the new action group", validator) {
 
@@ -353,7 +352,7 @@ public class ActionsManagerDialog extends StandardDialog implements
         final String oldName =
                 ((ActionGroup) groups.getSelectedValue()).getName();
         final StandardInputDialog inputDialog = new StandardInputDialog(
-                dialogManager, this, ModalityType.DOCUMENT_MODAL,
+                this, ModalityType.DOCUMENT_MODAL,
                 "Edit action group",
                 "Please enter the new name of the action group", validator) {
 
@@ -392,7 +391,7 @@ public class ActionsManagerDialog extends StandardDialog implements
     private void delGroup() {
         final String group =
                 ((ActionGroup) groups.getSelectedValue()).getName();
-        new StandardQuestionDialog(dialogManager, this,
+        new StandardQuestionDialog(this,
                 ModalityType.APPLICATION_MODAL,
                 "Confirm deletion",
                 "Are you sure you wish to delete the '" + group

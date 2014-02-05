@@ -22,8 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.components.addonbrowser;
 
-import com.dmdirc.addons.ui_swing.dialogs.DialogManager;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -38,23 +36,18 @@ public class InstallListener implements ActionListener {
     private final InstallWorkerFactory workerFactory;
     /** Parent window. */
     private final BrowserWindow parentWindow;
-    /** Swing controller. */
-    private final DialogManager dialogManager;
 
     /**
      * Instantiates a new install listener.
      *
-     * @param dialogManager Manager to use for installer dialogs.
      * @param workerFactory Factory to use to construct install workers.
      * @param info Addoninfo to install
      * @param parentWindow Parent window
      */
     public InstallListener(
-            final DialogManager dialogManager,
             final InstallWorkerFactory workerFactory,
             final AddonInfo info,
             final BrowserWindow parentWindow) {
-        this.dialogManager = dialogManager;
         this.workerFactory = workerFactory;
         this.info = info;
         this.parentWindow = parentWindow;
@@ -67,8 +60,7 @@ public class InstallListener implements ActionListener {
      */
     @Override
     public void actionPerformed(final ActionEvent e) {
-        final InstallerWindow installer = new InstallerWindow(dialogManager,
-                parentWindow, info);
+        final InstallerWindow installer = new InstallerWindow(parentWindow, info);
         installer.display(parentWindow);
         workerFactory.getInstallWorker(info, installer).executeInExecutor();
     }

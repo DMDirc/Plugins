@@ -81,7 +81,7 @@ public final class PasteDialog extends StandardDialog implements ActionListener,
     public PasteDialog(final SwingController controller,
             final InputTextFrame newParent, final String text,
             final Window parentWindow) {
-        super(controller.getDialogManager(), parentWindow, ModalityType.MODELESS);
+        super(parentWindow, ModalityType.MODELESS);
 
         parent = newParent;
         this.parentWindow = parentWindow;

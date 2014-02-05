@@ -98,7 +98,7 @@ public class DataLoaderWorker
             final SwingController controller,
             final InstallWorkerFactory workerFactory,
             final UpdateManager updateManager,
-            @Directory(DirectoryType.TEMPORARY) final String tempDirectory,
+            @SuppressWarnings("qualifiers") @Directory(DirectoryType.TEMPORARY) final String tempDirectory,
             @Unbound final AddonTable table,
             @Unbound final boolean download,
             @Unbound final BrowserWindow browserWindow,
@@ -179,7 +179,7 @@ public class DataLoaderWorker
         table.getModel().setRowCount(0);
         for (final AddonInfo info : data) {
             table.getModel().addRow(new Object[]{
-                new AddonInfoLabel(controller.getDialogManager(), info, browserWindow, workerFactory),
+                new AddonInfoLabel(info, browserWindow, workerFactory),
             });
         }
         table.getSelectionModel().setSelectionInterval(selectedRow, selectedRow);
