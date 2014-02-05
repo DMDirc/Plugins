@@ -270,8 +270,11 @@ public class NickColourPlugin extends BasePlugin implements ActionListener, Conf
                     /** {@inheritDoc} */
                     @Override
                     public NickColourPanel call() {
-                        return new NickColourPanel(swingController, NickColourPlugin.this,
-                                colourManager);
+                        return new NickColourPanel(
+                                swingController,
+                                NickColourPlugin.this,
+                                colourManager,
+                                swingController.getGlobalIdentity());
                     }
                 }));
 

@@ -32,6 +32,8 @@ import com.dmdirc.addons.ui_swing.components.renderers.MapEntryRenderer;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.addons.ui_swing.components.validating.ValidatingJTextField;
 import com.dmdirc.config.prefs.PreferencesSetting;
+import com.dmdirc.ui.IconManager;
+import com.dmdirc.ui.messages.ColourManager;
 import com.dmdirc.util.validators.NumericalValidator;
 import com.dmdirc.util.validators.OptionalValidator;
 import com.dmdirc.util.validators.Validator;
@@ -68,17 +70,21 @@ import org.jdesktop.jxlayer.JXLayer;
 @Singleton
 public final class PrefsComponentFactory {
 
-    /** Swing Controller. */
-    private final SwingController controller;
+    /** The icon manager to use for dialog and error icons. */
+    private final IconManager iconManager;
+    /** The colour manager to use for colour preferences. */
+    private final ColourManager colourManager;
 
     /**
      * Creates a new instance of PrefsComponentFactory.
      *
-     * @param controller Swing Controller
+     * @param iconManager The icon manager to use for dialog and error icons.
+     * @param colourManager The colour manager to use for colour preferences.
      */
     @Inject
-    public PrefsComponentFactory(final SwingController controller) {
-        this.controller = controller;
+    public PrefsComponentFactory(final IconManager iconManager, final ColourManager colourManager) {
+        this.iconManager = iconManager;
+        this.colourManager = colourManager;
     }
 
     /**
@@ -153,7 +159,7 @@ public final class PrefsComponentFactory {
      */
     private JComponent getTextOption(final PreferencesSetting setting) {
         final ValidatingJTextField option = new ValidatingJTextField(
-                controller.getIconManager(), setting.getValidator());
+                iconManager, setting.getValidator());
         option.setText(setting.getValue());
 
         option.addKeyListener(new KeyAdapter() {
@@ -364,9 +370,7 @@ public final class PrefsComponentFactory {
     private JComponent getColourOption(
             final PreferencesSetting setting) {
         final OptionalColourChooser option = new OptionalColourChooser(
-                controller.getIconManager(),
-                controller.getColourManager(),
-                setting.getValue(), true, true, true);
+                iconManager, colourManager, setting.getValue(), true, true, true);
 
         option.addActionListener(new ActionListener() {
 
@@ -398,8 +402,7 @@ public final class PrefsComponentFactory {
                 .getValue().substring(1 + setting.getValue().indexOf(':'));
 
         final OptionalColourChooser option = new OptionalColourChooser(
-                controller.getIconManager(), controller.getColourManager(),
-                colour, state, true, true);
+                iconManager, colourManager, colour, state, true, true);
 
         option.addActionListener(new ActionListener() {
 
@@ -454,8 +457,7 @@ public final class PrefsComponentFactory {
      */
     private JComponent getFileBrowseOption(
             final PreferencesSetting setting, final int type) {
-        final FileBrowser option = new FileBrowser(controller.getIconManager(),
-                setting, type);
+        final FileBrowser option = new FileBrowser(iconManager, setting, type);
 
         option.addActionListener(new ActionListener() {
             /** {@inheritDoc} */
