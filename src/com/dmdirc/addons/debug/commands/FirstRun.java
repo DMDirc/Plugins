@@ -25,10 +25,11 @@ package com.dmdirc.addons.debug.commands;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.debug.Debug;
 import com.dmdirc.addons.debug.DebugCommand;
-import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.commands.context.CommandContext;
+import com.dmdirc.interfaces.ui.UIController;
 import com.dmdirc.plugins.PluginManager;
+import com.dmdirc.plugins.Service;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -70,8 +71,12 @@ public class FirstRun extends DebugCommand {
     @Override
     public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
-        ((SwingController) pluginManager.getPluginInfoByName("ui_swing").getPlugin())
-                .showFirstRunWizard();
+        for (Service service : pluginManager.getServicesByType("ui")) {
+            if (service.isActive()) {
+                ((UIController) service.getActiveProvider().getExportedService("getController")
+                        .execute()).showFirstRunWizard();
+            }
+        }
     }
 
 }
