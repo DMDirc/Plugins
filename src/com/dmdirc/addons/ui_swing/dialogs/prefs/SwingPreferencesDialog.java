@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.prefs;
 
+import com.dmdirc.actions.ActionManager;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.ListScroller;
@@ -29,6 +30,7 @@ import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
 import com.dmdirc.addons.ui_swing.components.addonpanel.PluginPanel;
 import com.dmdirc.addons.ui_swing.components.addonpanel.ThemePanel;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
+import com.dmdirc.addons.ui_swing.dialogs.actionsmanager.ActionsManagerDialog;
 import com.dmdirc.addons.ui_swing.dialogs.updater.SwingRestartDialog;
 import com.dmdirc.addons.ui_swing.injection.DialogModule.ForSettings;
 import com.dmdirc.addons.ui_swing.injection.DialogProvider;
@@ -87,11 +89,13 @@ public final class SwingPreferencesDialog extends StandardDialog implements
      *
      * @param controller The controller which owns this preferences window.
      * @param restartDialogProvider The provider to use for restart dialogs.
+     * @param actionsManager Actions manager to use.
      */
     @Inject
     public SwingPreferencesDialog(
             final SwingController controller,
-            @ForSettings final DialogProvider<SwingRestartDialog> restartDialogProvider) {
+            @ForSettings final DialogProvider<SwingRestartDialog> restartDialogProvider,
+            final ActionManager actionsManager) {
         super(controller.getMainFrame(), ModalityType.MODELESS);
 
         this.controller = controller;
@@ -116,7 +120,7 @@ public final class SwingPreferencesDialog extends StandardDialog implements
                             new URLConfigPanel(controller, controller.getMainFrame()),
                             controller.getGlobalConfig(),
                             controller.getGlobalIdentity(),
-                            controller.getActionManager(),
+                            actionsManager,
                             controller.getPluginManager());
                 } catch (IllegalArgumentException ex) {
                     mainPanel.setError(ex.getMessage());
