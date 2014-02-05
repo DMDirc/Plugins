@@ -84,7 +84,7 @@ public class AddEntryInputDialog extends StandardDialog {
     public AddEntryInputDialog(final SwingController controller,
             final Window owner, final JTree items,
             final ServerListModel model) {
-        super(controller.getDialogManager(), owner, ModalityType.MODELESS);
+        super(owner, ModalityType.MODELESS);
 
         this.items = items;
         this.model = model;

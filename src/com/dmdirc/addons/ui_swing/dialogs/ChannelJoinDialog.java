@@ -40,16 +40,15 @@ public class ChannelJoinDialog extends StandardInputDialog {
      * Creates a new dialog which prompts a user and then joins the channel
      * they specify.
      *
-     * @param dialogManager Dialog manager
      * @param mainFrame Main frame
      * @param modality Window modality
      * @param title Window title
      * @param message Window message
      */
-    public ChannelJoinDialog(final DialogManager dialogManager, final MainFrame mainFrame,
+    public ChannelJoinDialog(final MainFrame mainFrame,
             final ModalityType modality, final String title,
             final String message) {
-        super(dialogManager, mainFrame, modality, title, message);
+        super(mainFrame, modality, title, message);
 
         this.mainFrame = mainFrame;
     }

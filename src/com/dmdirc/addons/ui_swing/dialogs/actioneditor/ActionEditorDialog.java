@@ -22,17 +22,19 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.actioneditor;
 
+import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.actions.Action;
 import com.dmdirc.actions.ActionFactory;
 import com.dmdirc.actions.ActionStatus;
 import com.dmdirc.actions.ActionSubstitutorFactory;
-import com.dmdirc.addons.ui_swing.dialogs.DialogManager;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
+import com.dmdirc.addons.ui_swing.dialogs.actionsmanager.ActionsManagerDialog;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.ui.IconManager;
+import com.dmdirc.util.annotations.factory.Factory;
+import com.dmdirc.util.annotations.factory.Unbound;
 
 import java.awt.Dimension;
-import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
@@ -41,7 +43,6 @@ import java.beans.PropertyChangeListener;
 import javax.swing.JButton;
 import javax.swing.SwingUtilities;
 
-
 import net.miginfocom.swing.MigLayout;
 
 import org.slf4j.LoggerFactory;
@@ -49,6 +50,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Action editor dialog.
  */
+@Factory(inject=true, singleton=true)
 public class ActionEditorDialog extends StandardDialog implements ActionListener,
         PropertyChangeListener {
 
@@ -88,7 +90,6 @@ public class ActionEditorDialog extends StandardDialog implements ActionListener
     /**
      * Instantiates the panel.
      *
-     * @param dialogManager Dialog manager
      * @param iconManager Icon manager
      * @param config Config
      * @param subsFactory Actions substitution factory
@@ -96,10 +97,14 @@ public class ActionEditorDialog extends StandardDialog implements ActionListener
      * @param parentWindow Parent window
      * @param group Action's group
      */
-    public ActionEditorDialog(final DialogManager dialogManager, final IconManager iconManager,
-            final AggregateConfigProvider config, final ActionSubstitutorFactory subsFactory,
-            final ActionFactory actionFactory, final Window parentWindow, final String group) {
-        super(dialogManager, parentWindow, ModalityType.DOCUMENT_MODAL);
+    public ActionEditorDialog(
+            @GlobalConfig final IconManager iconManager,
+            @GlobalConfig final AggregateConfigProvider config,
+            final ActionSubstitutorFactory subsFactory,
+            final ActionFactory actionFactory,
+            @Unbound final ActionsManagerDialog parentWindow,
+            @Unbound final String group) {
+        super(parentWindow, ModalityType.DOCUMENT_MODAL);
         LOG.debug("loading with group: " + group);
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         setTitle("Action Editor");
@@ -119,7 +124,6 @@ public class ActionEditorDialog extends StandardDialog implements ActionListener
     /**
      * Instantiates the panel.
      *
-     * @param dialogManager Dialog manager
      * @param iconManager Icon manager
      * @param config Config
      * @param subsFactory Actions substitution factory
@@ -127,10 +131,14 @@ public class ActionEditorDialog extends StandardDialog implements ActionListener
      * @param parentWindow Parent window
      * @param action Action to be edited
      */
-    public ActionEditorDialog(final DialogManager dialogManager, final IconManager iconManager,
-            final AggregateConfigProvider config, final ActionSubstitutorFactory subsFactory,
-            final ActionFactory actionFactory, final Window parentWindow, final Action action) {
-        super(dialogManager, parentWindow, ModalityType.DOCUMENT_MODAL);
+    public ActionEditorDialog(
+            @GlobalConfig final IconManager iconManager,
+            @GlobalConfig final AggregateConfigProvider config,
+            final ActionSubstitutorFactory subsFactory,
+            final ActionFactory actionFactory,
+            @Unbound final ActionsManagerDialog parentWindow,
+            @Unbound final Action action) {
+        super(parentWindow, ModalityType.DOCUMENT_MODAL);
         LOG.debug("loading with action: " + action);
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         setTitle("Action Editor");

@@ -39,11 +39,10 @@ public abstract class ConfirmQuitDialog extends StandardQuestionDialog {
     /**
      * Creates a new client quit confirmation dialog.
      *
-     * @param dialogManager Dialog manager
      * @param parentWindow Parent window
      */
-    public ConfirmQuitDialog(final DialogManager dialogManager, final Window parentWindow) {
-        super(dialogManager, parentWindow, ModalityType.APPLICATION_MODAL, "Quit confirm",
+    public ConfirmQuitDialog(final Window parentWindow) {
+        super(parentWindow, ModalityType.APPLICATION_MODAL, "Quit confirm",
                 "You are about to quit DMDirc, are you sure?");
     }
 

@@ -51,16 +51,15 @@ public abstract class StandardQuestionDialog extends StandardDialog {
     /**
      * Instantiates a new standard input dialog.
      *
-     * @param dialogManager Dialog manager
      * @param owner Dialog owner
      * @param modal modality type
      * @param title Dialog title
      * @param message Dialog message
      */
-    public StandardQuestionDialog(final DialogManager dialogManager,
+    public StandardQuestionDialog(
             final Window owner, final ModalityType modal, final String title,
             final String message) {
-        super(dialogManager, owner, modal);
+        super(owner, modal);
 
         this.message = message;
 

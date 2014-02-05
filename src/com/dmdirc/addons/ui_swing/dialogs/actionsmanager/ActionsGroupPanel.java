@@ -28,13 +28,13 @@ import com.dmdirc.actions.ActionTypeComparator;
 import com.dmdirc.addons.ui_swing.components.PackingTable;
 import com.dmdirc.addons.ui_swing.components.renderers.ActionTypeTableCellRenderer;
 import com.dmdirc.addons.ui_swing.components.renderers.ArrayCellRenderer;
-import com.dmdirc.addons.ui_swing.dialogs.DialogManager;
 import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
 import com.dmdirc.addons.ui_swing.dialogs.StringArrayComparator;
-import com.dmdirc.addons.ui_swing.dialogs.actioneditor.ActionEditorDialog;
+import com.dmdirc.addons.ui_swing.dialogs.actioneditor.ActionEditorDialogFactory;
+import com.dmdirc.util.annotations.factory.Factory;
+import com.dmdirc.util.annotations.factory.Unbound;
 
 import java.awt.Dialog.ModalityType;
-import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -57,6 +57,7 @@ import net.miginfocom.swing.MigLayout;
  * of the actions manager dialog. It shows the user all actions belonging to
  * a particular group.
  */
+@Factory(inject=true, singleton=true)
 public class ActionsGroupPanel extends JPanel implements ActionListener,
         ListSelectionListener {
 
@@ -66,10 +67,10 @@ public class ActionsGroupPanel extends JPanel implements ActionListener,
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 1;
-    /** Dialog Manager */
-    private final DialogManager dialogManager;
+    /** Factory to use to create editor dialogs. */
+    private final ActionEditorDialogFactory editorDialogFactory;
     /** Parent dialog. */
-    private final Window parent;
+    private final ActionsManagerDialog parent;
     /** Table scrollpane. */
     private JScrollPane scrollPane;
     /** Actions table. */
@@ -88,15 +89,17 @@ public class ActionsGroupPanel extends JPanel implements ActionListener,
     /**
      * Creates a new instance of ActionsManagerDialog.
      *
-     * @param dialogManager Dialog Manager
+     * @param editorDialogFactory Factory to use to create editor dialogs.
      * @param parent Parent window
      * @param group Action group to display
      */
-    public ActionsGroupPanel(final DialogManager dialogManager,
-            final Window parent, final ActionGroup group) {
+    public ActionsGroupPanel(
+            final ActionEditorDialogFactory editorDialogFactory,
+            @Unbound final ActionsManagerDialog parent,
+            @Unbound final ActionGroup group) {
         super();
 
-        this.dialogManager = dialogManager;
+        this.editorDialogFactory = editorDialogFactory;
         this.parent = parent;
         this.group = group;
 
@@ -245,19 +248,17 @@ public class ActionsGroupPanel extends JPanel implements ActionListener,
     @Override
     public void actionPerformed(final ActionEvent e) {
         if (e.getSource() == add) {
-            dialogManager.showDialog(ActionEditorDialog.class, this, parent,
-                    group.getName());
+            editorDialogFactory.getActionEditorDialog(parent, group.getName()).display();
         } else if (e.getSource() == edit) {
-            dialogManager.showDialog(ActionEditorDialog.class, this, parent,
-                    model.getAction(
-                    table.getRowSorter().convertRowIndexToModel(table.
-                    getSelectedRow())));
+            editorDialogFactory.getActionEditorDialog(parent,
+                    model.getAction(table.getRowSorter().convertRowIndexToModel(
+                            table.getSelectedRow()))).display();
         } else if (e.getSource() == delete) {
             final Action action =
                     model.getAction(
                     table.getRowSorter().convertRowIndexToModel(table.
                     getSelectedRow()));
-            new StandardQuestionDialog(dialogManager, parent,
+            new StandardQuestionDialog(parent,
                     ModalityType.APPLICATION_MODAL, "Confirm deletion",
                     "Are you sure you wish to delete the action '" + action.
                     getName() + "'?") {

@@ -23,13 +23,14 @@
 package com.dmdirc.addons.ui_swing.dialogs.channelsetting;
 
 import com.dmdirc.Channel;
+import com.dmdirc.ClientModule.GlobalConfig;
+import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.PrefsComponentFactory;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.SwingWindowFactory;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.expandingsettings.SettingsPanel;
 import com.dmdirc.addons.ui_swing.components.modes.ChannelModesPane;
-import com.dmdirc.addons.ui_swing.dialogs.DialogManager;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.config.prefs.PreferencesManager;
 import com.dmdirc.interfaces.config.ConfigProvider;
@@ -37,8 +38,9 @@ import com.dmdirc.interfaces.config.IdentityFactory;
 import com.dmdirc.interfaces.ui.InputWindow;
 import com.dmdirc.plugins.ServiceManager;
 import com.dmdirc.ui.IconManager;
+import com.dmdirc.util.annotations.factory.Factory;
+import com.dmdirc.util.annotations.factory.Unbound;
 
-import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -52,6 +54,7 @@ import net.miginfocom.swing.MigLayout;
 /**
  * Allows the user to modify channel settings (modes, topics, etc).
  */
+@Factory(inject=true, singleton=true)
 public class ChannelSettingsDialog extends StandardDialog implements ActionListener {
 
     /** Serial version UID. */
@@ -87,7 +90,6 @@ public class ChannelSettingsDialog extends StandardDialog implements ActionListe
      * Creates a new instance of ChannelSettingsDialog.
      *
      * @param controller Swing controller
-     * @param dialogManager Dialog manager
      * @param identityFactory Identity factory
      * @param windowFactory Swing window factory
      * @param iconManager Icon manager
@@ -97,16 +99,17 @@ public class ChannelSettingsDialog extends StandardDialog implements ActionListe
      * @param newChannel The channel object that we're editing settings for
      * @param parentWindow Parent window
      */
-    public ChannelSettingsDialog(final SwingController controller,
-            final DialogManager dialogManager,
+    public ChannelSettingsDialog(
+            final SwingController controller,
             final IdentityFactory identityFactory,
             final SwingWindowFactory windowFactory,
-            final IconManager iconManager,
+            @GlobalConfig final IconManager iconManager,
             final ServiceManager serviceManager,
             final PreferencesManager preferencesManager,
             final PrefsComponentFactory compFactory,
-            final Channel newChannel, final Window parentWindow) {
-        super(dialogManager, parentWindow, ModalityType.MODELESS);
+            @Unbound final Channel newChannel,
+            final MainFrame parentWindow) {
+        super(parentWindow, ModalityType.MODELESS);
 
         this.controller = controller;
         this.iconManager = iconManager;

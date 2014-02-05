@@ -22,11 +22,26 @@
 
 package com.dmdirc.addons.ui_swing.injection;
 
+import com.dmdirc.Channel;
+import com.dmdirc.Server;
+import com.dmdirc.addons.ui_swing.MainFrame;
+import com.dmdirc.addons.ui_swing.dialogs.FeedbackDialog;
 import com.dmdirc.addons.ui_swing.dialogs.NewServerDialog;
+import com.dmdirc.addons.ui_swing.dialogs.about.AboutDialog;
 import com.dmdirc.addons.ui_swing.dialogs.actionsmanager.ActionsManagerDialog;
+import com.dmdirc.addons.ui_swing.dialogs.aliases.AliasManagerDialog;
+import com.dmdirc.addons.ui_swing.dialogs.channelsetting.ChannelSettingsDialog;
+import com.dmdirc.addons.ui_swing.dialogs.channelsetting.ChannelSettingsDialogFactory;
+import com.dmdirc.addons.ui_swing.dialogs.prefs.SwingPreferencesDialog;
 import com.dmdirc.addons.ui_swing.dialogs.profiles.ProfileManagerDialog;
+import com.dmdirc.addons.ui_swing.dialogs.serversetting.ServerSettingsDialog;
+import com.dmdirc.addons.ui_swing.dialogs.serversetting.ServerSettingsDialogFactory;
+import com.dmdirc.addons.ui_swing.dialogs.updater.SwingRestartDialog;
+import com.dmdirc.addons.ui_swing.dialogs.updater.SwingUpdaterDialog;
+import com.dmdirc.interfaces.LifecycleController;
 
 import javax.inject.Provider;
+import javax.inject.Qualifier;
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -37,6 +52,18 @@ import dagger.Provides;
  */
 @Module(library = true, complete = false)
 public class DialogModule {
+
+    /**
+     * Qualifier that indicates a restart dialog is needed for updates to be applied.
+     */
+    @Qualifier
+    public static @interface ForUpdates {}
+
+    /**
+     * Qualifier that indicates a restart dialog is needed for settings to be applied.
+     */
+    @Qualifier
+    public static @interface ForSettings {}
 
     @Provides
     @Singleton
@@ -57,6 +84,97 @@ public class DialogModule {
     public DialogProvider<ActionsManagerDialog> getActionsManagerDialogProvider(
             final Provider<ActionsManagerDialog> provider) {
         return new DialogProvider<>(provider);
+    }
+
+    @Provides
+    @Singleton
+    public DialogProvider<AliasManagerDialog> getAliasManagerDialogProvider(
+            final Provider<AliasManagerDialog> provider) {
+        return new DialogProvider<>(provider);
+    }
+
+    @Provides
+    @Singleton
+    public DialogProvider<FeedbackDialog> getFeedbackDialogProvider(
+            final Provider<FeedbackDialog> provider) {
+        return new DialogProvider<>(provider);
+    }
+
+    @Provides
+    @Singleton
+    public DialogProvider<AboutDialog> getAboutDialogProvider(
+            final Provider<AboutDialog> provider) {
+        return new DialogProvider<>(provider);
+    }
+
+    @Provides
+    @Singleton
+    public KeyedDialogProvider<Server, ServerSettingsDialog> getServerSettingsDialogProvider(
+            final ServerSettingsDialogFactory factory) {
+        return new KeyedDialogProvider<Server, ServerSettingsDialog>() {
+            @Override
+            protected ServerSettingsDialog getInstance(final Server key) {
+                return factory.getServerSettingsDialog(key);
+            }
+        };
+    }
+
+    @Provides
+    @Singleton
+    public KeyedDialogProvider<Channel, ChannelSettingsDialog> getChannelSettingsDialogProvider(
+            final ChannelSettingsDialogFactory factory) {
+        return new KeyedDialogProvider<Channel, ChannelSettingsDialog>() {
+            @Override
+            protected ChannelSettingsDialog getInstance(final Channel key) {
+                return factory.getChannelSettingsDialog(key);
+            }
+        };
+    }
+
+    @Provides
+    @Singleton
+    public DialogProvider<SwingPreferencesDialog> getSwingPreferencesDialogProvider(
+            final Provider<SwingPreferencesDialog> provider) {
+        return new DialogProvider<>(provider);
+    }
+
+    @Provides
+    @Singleton
+    public DialogProvider<SwingUpdaterDialog> getSwingUpdaterDialogProvider(
+            final Provider<SwingUpdaterDialog> provider) {
+        return new DialogProvider<>(provider);
+    }
+
+    @Provides
+    @Singleton
+    @ForUpdates
+    public DialogProvider<SwingRestartDialog> getSwingRestartDialogProviderForUpdates(
+            @ForUpdates final Provider<SwingRestartDialog> provider) {
+        return new DialogProvider<>(provider);
+    }
+
+    @Provides
+    @Singleton
+    @ForSettings
+    public DialogProvider<SwingRestartDialog> getSwingRestartDialogProviderForSettings(
+            @ForSettings final Provider<SwingRestartDialog> provider) {
+        return new DialogProvider<>(provider);
+    }
+
+    @Provides
+    @ForUpdates
+    public SwingRestartDialog getRestartDialogForUpdates(
+            final MainFrame mainFrame,
+            final LifecycleController lifecycleController) {
+        return new SwingRestartDialog(mainFrame, lifecycleController, "finish updating");
+    }
+
+    @Provides
+    @ForSettings
+    public SwingRestartDialog getRestartDialogForSettings(
+            final MainFrame mainFrame,
+            final LifecycleController lifecycleController) {
+        return new SwingRestartDialog(mainFrame, lifecycleController, "apply settings");
     }
 
 }

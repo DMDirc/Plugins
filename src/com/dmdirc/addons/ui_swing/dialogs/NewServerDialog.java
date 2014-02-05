@@ -105,7 +105,6 @@ public class NewServerDialog extends StandardDialog implements
     /**
      * Creates a new instance of the dialog.
      *
-     * @param dialogManager Dialog manager
      * @param mainFrame Main frame
      * @param config Config
      * @param iconManager Icon manager
@@ -115,14 +114,13 @@ public class NewServerDialog extends StandardDialog implements
      */
     @Inject
     public NewServerDialog(
-            final DialogManager dialogManager,
             final MainFrame mainFrame,
             @GlobalConfig final AggregateConfigProvider config,
             @GlobalConfig final IconManager iconManager,
             final IdentityController identityController,
             final ServerManager serverManager,
             final DialogProvider<ProfileManagerDialog> profileDialogProvider) {
-        super(dialogManager, mainFrame, ModalityType.MODELESS);
+        super(mainFrame, ModalityType.MODELESS);
         this.identityController = identityController;
         this.serverManager = serverManager;
         this.mainFrame = mainFrame;

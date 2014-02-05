@@ -179,7 +179,7 @@ public class DataLoaderWorker
         table.getModel().setRowCount(0);
         for (final AddonInfo info : data) {
             table.getModel().addRow(new Object[]{
-                new AddonInfoLabel(controller.getDialogManager(), info, browserWindow, workerFactory),
+                new AddonInfoLabel(info, browserWindow, workerFactory),
             });
         }
         table.getSelectionModel().setSelectionInterval(selectedRow, selectedRow);

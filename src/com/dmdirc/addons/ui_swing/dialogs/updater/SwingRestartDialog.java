@@ -22,9 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.updater;
 
-import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
-import com.dmdirc.addons.ui_swing.dialogs.DialogManager;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.interfaces.LifecycleController;
 import com.dmdirc.updater.components.LauncherComponent;
@@ -34,7 +32,6 @@ import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.inject.Inject;
 import javax.swing.JButton;
 
 import net.miginfocom.swing.MigLayout;
@@ -51,34 +48,18 @@ public class SwingRestartDialog extends StandardDialog implements ActionListener
     /** Informational label. */
     private TextLabel info;
     /** Info text. */
-    private String cause;
+    private final String cause;
 
     /**
      * Dialog to restart the client.
      *
-     * @param dialogManager Dialog manager
-     * @param parentWindow Parent window
-     * @param lifecycleController Life cycle controller, for restarting client
-     */
-    @Inject
-    public SwingRestartDialog(
-            final DialogManager dialogManager,
-            final MainFrame parentWindow,
-            final LifecycleController lifecycleController) {
-        this(dialogManager, parentWindow, lifecycleController, "finish updating");
-    }
-
-    /**
-     * Dialog to restart the client.
-     *
-     * @param dialogManager Dialog manager
      * @param parentWindow Parent window
      * @param lifecycleController Life cycle controller, for restarting client
      * @param cause Reason for restart
      */
-    public SwingRestartDialog(final DialogManager dialogManager, final Window parentWindow,
+    public SwingRestartDialog(final Window parentWindow,
             final LifecycleController lifecycleController, final String cause) {
-        super(dialogManager, parentWindow, ModalityType.APPLICATION_MODAL);
+        super(parentWindow, ModalityType.APPLICATION_MODAL);
         this.cause = cause;
         this.lifecycleController = lifecycleController;
 
