@@ -40,7 +40,6 @@ import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
 import com.dmdirc.addons.ui_swing.dialogs.StringArrayComparator;
 
 import java.awt.Dimension;
-import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -102,16 +101,22 @@ public class AliasManagerDialog extends StandardDialog implements ActionListener
      * @param controller Swing controller
      * @param parentWindow Parent window
      * @param substitutorFactory Actions substitution factory
+     * @param aliasWrapper The alias wrapper to read aliases from.
+     * @param actionFactory The factory to use to create new actions.
      */
     @Inject
-    public AliasManagerDialog(final SwingController controller, final MainFrame parentWindow,
-            final ActionSubstitutorFactory substitutorFactory) {
+    public AliasManagerDialog(
+            final SwingController controller,
+            final MainFrame parentWindow,
+            final ActionSubstitutorFactory substitutorFactory,
+            final AliasWrapper aliasWrapper,
+            final ActionFactory actionFactory) {
         super(parentWindow, ModalityType.MODELESS);
 
         this.controller = controller;
         this.substitutorFactory = substitutorFactory;
-        this.aliasWrapper = controller.getAliasWrapper();
-        this.actionFactory = controller.getActionFactory();
+        this.aliasWrapper = aliasWrapper;
+        this.actionFactory = actionFactory;
 
         setTitle("Alias manager");
 
@@ -172,7 +177,7 @@ public class AliasManagerDialog extends StandardDialog implements ActionListener
 
         scrollPane.setViewportView(table);
 
-        aliasDetails = new AliasPanel(controller);
+        aliasDetails = new AliasPanel(controller, actionFactory);
         subsPanel = new AliasSubstitutionsPanel(substitutorFactory);
         subsPanel.setVisible(false);
         showSubs = new JButton("Show Substitutions");

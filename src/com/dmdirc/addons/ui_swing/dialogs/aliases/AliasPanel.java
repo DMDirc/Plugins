@@ -78,12 +78,15 @@ public class AliasPanel extends JPanel implements ActionListener {
      * Creates a new instance of AliasPanel.
      *
      * @param controller Swing controller
+     * @param actionFactory The factory to use to create new actions.
      */
     @SuppressWarnings("unchecked")
-    public AliasPanel(final SwingController controller) {
+    public AliasPanel(
+            final SwingController controller,
+            final ActionFactory actionFactory) {
         super();
 
-        actionFactory = controller.getActionFactory();
+        this.actionFactory = actionFactory;
 
         command = new ValidatingTextFieldInputField(controller,
                 new ValidatorChain<>(
