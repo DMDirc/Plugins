@@ -22,9 +22,11 @@
 
 package com.dmdirc.addons.nickcolours;
 
-import com.dmdirc.addons.ui_swing.SwingController;
+import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.components.colours.ColourChooser;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
+import com.dmdirc.ui.IconManager;
+import com.dmdirc.ui.messages.ColourManager;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -66,7 +68,9 @@ public class NickColourInputDialog extends StandardDialog
     /**
      * Creates a new instance of NickColourInputDialog.
      *
-     * @param swingController The controller that owns this dialog.
+     * @param owner The window that owns this dialog.
+     * @param colourManager The colour manager to use to retrieve colours.
+     * @param iconManager The icon manager to use for the dialog icon.
      * @param panel The panel that's opening this dialog
      * @param row The row of the table we're editing
      * @param nickname The nickname that's currently set
@@ -75,18 +79,20 @@ public class NickColourInputDialog extends StandardDialog
      * @param nickcolour The nicklist colour that's currently set
      */
     public NickColourInputDialog(
-            final SwingController swingController,
+            final MainFrame owner,
+            final ColourManager colourManager,
+            final IconManager iconManager,
             final NickColourPanel panel, final int row,
             final String nickname, final String network,
             final String textcolour, final String nickcolour) {
-        super(swingController.getMainFrame(), false);
+        super(owner, false);
 
         this.panel = panel;
         this.row = row;
 
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
-        initComponents(swingController, nickname, network, textcolour, nickcolour);
+        initComponents(colourManager, iconManager, nickname, network, textcolour, nickcolour);
         initListeners();
         layoutComponents();
 
@@ -97,13 +103,17 @@ public class NickColourInputDialog extends StandardDialog
     /**
      * Creates a new instance of NickColourInputDialog.
      *
-     * @param swingController The controller that owns this dialog.
+     * @param owner The window that owns this dialog.
+     * @param colourManager The colour manager to use to retrieve colours.
+     * @param iconManager The icon manager to use for the dialog icon.
      * @param panel The panel that's opening this dialog
      */
     public NickColourInputDialog(
-            final SwingController swingController,
+            final MainFrame owner,
+            final ColourManager colourManager,
+            final IconManager iconManager,
             final NickColourPanel panel) {
-        this(swingController, panel, -1, "", "", "", "");
+        this(owner, colourManager, iconManager, panel, -1, "", "", "", "");
 
         isnew = true;
     }
@@ -116,21 +126,19 @@ public class NickColourInputDialog extends StandardDialog
      * @param defaultTextColour The default value for the text colour option
      * @param defaultNickColour The default value for the nick colour option
      */
-    private void initComponents(final SwingController swingController, final String defaultNickname,
+    private void initComponents(
+            final ColourManager colourManager,
+            final IconManager iconManager,
+            final String defaultNickname,
             final String defaultNetwork, final String defaultTextColour,
             final String defaultNickColour) {
         orderButtons(new JButton(), new JButton());
 
         nickname = new JTextField(defaultNickname);
         network = new JTextField(defaultNetwork);
-        textColour = new ColourChooser(
-                swingController.getColourManager(),
-                swingController.getIconManager(),
-                defaultTextColour, true, true);
-        nicklistColour = new ColourChooser(
-                swingController.getColourManager(),
-                swingController.getIconManager(),
-                defaultNickColour, true, true);
+        textColour = new ColourChooser(colourManager, iconManager, defaultTextColour, true, true);
+        nicklistColour = new ColourChooser(colourManager, iconManager, defaultNickColour,
+                true, true);
     }
 
     /** Initialises the listeners. */

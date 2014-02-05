@@ -79,13 +79,15 @@ public class NickColourPanel extends JPanel implements ActionListener,
      * @param controller The UI controller that owns this panel
      * @param plugin The plugin that owns this panel
      * @param colourManager The colour manager to use to parse colours.
+     * @param userSettings The provider to write user settings to.
      */
     public NickColourPanel(
             final SwingController controller,
             final NickColourPlugin plugin,
-            final ColourManager colourManager) {
+            final ColourManager colourManager,
+            final ConfigProvider userSettings) {
         this.plugin = plugin;
-        this.configIdentity = controller.getIdentityManager().getUserSettings();
+        this.configIdentity = userSettings;
         this.swingController = controller;
 
         final Object[][] data = plugin.getData();
@@ -164,7 +166,11 @@ public class NickColourPanel extends JPanel implements ActionListener,
         final int row = table.getSelectedRow();
         switch (e.getActionCommand()) {
             case "Add":
-                new NickColourInputDialog(swingController, this);
+                new NickColourInputDialog(
+                        swingController.getMainFrame(),
+                        swingController.getColourManager(),
+                        swingController.getIconManager(),
+                        this);
                 break;
             case "Edit":
                 final DefaultTableModel model = ((DefaultTableModel) table.getModel());
@@ -178,7 +184,11 @@ public class NickColourPanel extends JPanel implements ActionListener,
                 if (nickcolour == null) {
                     nickcolour = "";
                 }
-                new NickColourInputDialog(swingController, this, row, nickname, network,
+                new NickColourInputDialog(
+                        swingController.getMainFrame(),
+                        swingController.getColourManager(),
+                        swingController.getIconManager(),
+                        this, row, nickname, network,
                         textcolour, nickcolour);
                 break;
             case "Delete":
