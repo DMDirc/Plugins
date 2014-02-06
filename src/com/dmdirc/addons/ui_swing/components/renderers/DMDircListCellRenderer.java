@@ -19,6 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 package com.dmdirc.addons.ui_swing.components.renderers;
 
 import java.awt.Component;
@@ -28,10 +29,11 @@ import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 
 /**
- * Simplifies implementing a cell renderer, works around oddities in look and
- * feels.
+ * Simplifies implementing a cell renderer, works around oddities in look and feels.
+ *
+ * @param <E> the type of values this renderer can be used for
  */
-public abstract class DMDircListCellRenderer implements ListCellRenderer {
+public abstract class DMDircListCellRenderer<E> implements ListCellRenderer<E> {
 
     /**
      * A version number for this class.
@@ -40,13 +42,13 @@ public abstract class DMDircListCellRenderer implements ListCellRenderer {
     /**
      * Parent cell renderer.
      */
-    private final ListCellRenderer parentRenderer;
+    private final ListCellRenderer<? super E> parentRenderer;
     /**
      * Label to use if parent doesn't supply one.
      */
     private JLabel label;
 
-    public DMDircListCellRenderer(final ListCellRenderer parentRenderer) {
+    public DMDircListCellRenderer(final ListCellRenderer<? super E> parentRenderer) {
         this.parentRenderer = parentRenderer;
     }
 
@@ -62,16 +64,11 @@ public abstract class DMDircListCellRenderer implements ListCellRenderer {
     protected abstract void renderValue(final JLabel label, final Object value,
             final int index, final boolean isSelected, final boolean hasFocus);
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public Component getListCellRendererComponent(final JList list,
-            final Object value, final int index, final boolean isSelected,
-            final boolean cellHasFocus) {
-        final Component component = parentRenderer.getListCellRendererComponent(
-                list, value, index, isSelected,
-                cellHasFocus);
+    public Component getListCellRendererComponent(final JList<? extends E> list,
+            final E value, final int index, final boolean isSelected, final boolean cellHasFocus) {
+        final Component component = parentRenderer.getListCellRendererComponent(list, value,
+                index, isSelected, cellHasFocus);
         if (component instanceof JLabel) {
             renderValue((JLabel) component, value, index, isSelected, cellHasFocus);
             return component;
