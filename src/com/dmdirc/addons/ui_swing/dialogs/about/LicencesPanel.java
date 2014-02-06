@@ -22,15 +22,17 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.about;
 
-import com.dmdirc.addons.ui_swing.SwingController;
+import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.TreeScroller;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.plugins.PluginInfo;
+import com.dmdirc.plugins.PluginManager;
 
 import java.awt.Font;
 import java.awt.Rectangle;
 
+import javax.inject.Inject;
 import javax.swing.BorderFactory;
 import javax.swing.JEditorPane;
 import javax.swing.JPanel;
@@ -65,20 +67,21 @@ public class LicencesPanel extends JPanel implements TreeSelectionListener {
     private JEditorPane licence;
     /** Licence list. */
     private JTree list;
-    /** Swing Controller. */
-    private final SwingController controller;
 
     /**
      * Creates a new instance of LicencesPanel.
      *
-     * @param controller Controller to pass to LicenseLoader (should be PluginManager)
+     * @param globalConfig The config to read settings from.
+     * @param pluginManager The manager to use to find plugins (to display their licenses).
      */
-    public LicencesPanel(final SwingController controller) {
+    @Inject
+    public LicencesPanel(
+            @GlobalConfig final AggregateConfigProvider globalConfig,
+            final PluginManager pluginManager) {
         super();
 
-        this.controller = controller;
-        this.config = controller.getGlobalConfig();
-        initComponents();
+        this.config = globalConfig;
+        initComponents(new LicenceLoader(pluginManager, list, listModel));
         addListeners();
         layoutComponents();
     }
@@ -100,7 +103,7 @@ public class LicencesPanel extends JPanel implements TreeSelectionListener {
     }
 
     /** Initialises the components. */
-    private void initComponents() {
+    private void initComponents(final LicenceLoader licenceLoader) {
         setOpaque(UIUtilities.getTabbedPaneOpaque());
         listModel = new DefaultTreeModel(new DefaultMutableTreeNode());
         list = new JTree(listModel) {
@@ -133,7 +136,7 @@ public class LicencesPanel extends JPanel implements TreeSelectionListener {
         list.getSelectionModel().setSelectionMode(TreeSelectionModel.
                 SINGLE_TREE_SELECTION);
         new TreeScroller(list);
-        new LicenceLoader(controller, list, listModel).executeInExecutor();
+        licenceLoader.executeInExecutor();
         licence = new JEditorPane();
         licence.setEditorKit(new HTMLEditorKit());
         final Font font = UIManager.getFont("Label.font");

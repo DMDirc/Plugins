@@ -436,7 +436,7 @@ public class SwingController extends BaseCommandPlugin implements UIController {
         // Init the UI settings before we start any DI, as we might create frames etc.
         initUISettings();
 
-        setObjectGraph(graph.plus(new SwingModule(this)));
+        setObjectGraph(graph.plus(new SwingModule(this, pluginInfo.getDomain())));
         getObjectGraph().validate();
         swingManager = getObjectGraph().get(SwingManager.class);
 

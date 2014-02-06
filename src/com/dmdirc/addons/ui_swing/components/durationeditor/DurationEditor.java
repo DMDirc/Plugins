@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.components.durationeditor;
 
-import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.util.collections.ListenerList;
 
@@ -76,33 +75,12 @@ public class DurationEditor extends StandardDialog implements ActionListener {
     /**
      * Instantiates a new duration editor.
      *
-     * @param controller Controller for dialog creation
-     */
-    public DurationEditor(final SwingController controller) {
-        this(controller, 0);
-    }
-
-    /**
-     * Instantiates a new duration editor.
-     *
      * @param window Parent window.
      *
      * @since 0.6
      */
     public DurationEditor(final Window window) {
         this(window, 0);
-    }
-
-    /**
-     * Instantiates a new duration editor.
-     *
-     * @param controller Controller for dialog creation
-     *
-     * @param duration Starting duration
-     */
-    public DurationEditor(final SwingController controller,
-            final long duration) {
-        this(controller.getMainFrame(), duration);
     }
 
     /**

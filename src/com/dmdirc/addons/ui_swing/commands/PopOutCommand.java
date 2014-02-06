@@ -23,7 +23,7 @@
 package com.dmdirc.addons.ui_swing.commands;
 
 import com.dmdirc.FrameContainer;
-import com.dmdirc.addons.ui_swing.SwingController;
+import com.dmdirc.addons.ui_swing.SwingWindowFactory;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.commandparser.BaseCommandInfo;
@@ -46,21 +46,21 @@ public class PopOutCommand extends Command {
             "popout - Makes the current window pop out of the client as a "
                 + "free floating window on your desktop.",
             CommandType.TYPE_GLOBAL);
-    /** SwingController associated with this popout Command. */
-    private final SwingController controller;
+    /** Factory to use to locate windows. */
+    private final SwingWindowFactory windowFactory;
 
     /**
      * Create a new instance of PopOutCommand.
      *
-     * @param controller SwingWindowController associated with this command
+     * @param windowFactory Factory to use to locate windows.
      * @param commandController The command controller to use for command info.
      */
     @Inject
     public PopOutCommand(
-            final SwingController controller,
+            final SwingWindowFactory windowFactory,
             final CommandController commandController) {
         super(commandController);
-        this.controller = controller;
+        this.windowFactory = windowFactory;
     }
 
     /** {@inheritDoc} */
@@ -71,8 +71,7 @@ public class PopOutCommand extends Command {
             /** {@inheritDoc} */
             @Override
             public void run() {
-                final TextFrame swingWindow = controller.getWindowFactory()
-                        .getSwingWindow(origin);
+                final TextFrame swingWindow = windowFactory.getSwingWindow(origin);
                 if (swingWindow == null) {
                     sendLine(origin, args.isSilent(), FORMAT_ERROR, "There is"
                             + " currently no window to pop out.");
