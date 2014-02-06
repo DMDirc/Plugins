@@ -22,16 +22,17 @@
 
 package com.dmdirc.addons.ui_swing.components.addonbrowser;
 
-import com.dmdirc.addons.ui_swing.SwingController;
+import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.commandline.CommandLineOptionsModule.Directory;
 import com.dmdirc.commandline.CommandLineOptionsModule.DirectoryType;
+import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
-import com.dmdirc.updater.UpdateChecker;
 import com.dmdirc.updater.manager.UpdateManager;
+import com.dmdirc.util.URLBuilder;
 import com.dmdirc.util.annotations.factory.Factory;
 import com.dmdirc.util.annotations.factory.Unbound;
 import com.dmdirc.util.io.ConfigFile;
@@ -73,19 +74,22 @@ public class DataLoaderWorker
     private final JProgressBar jpb = new JProgressBar(0, 100);
     /** Refresh addons feed? */
     private final boolean download;
-    /** Swing controller. */
-    private final SwingController controller;
     /** Directory to store temporary files in. */
     private final String tempDirectory;
+    /** URL Builder to use when loading addon resources. */
+    private final URLBuilder urlBuilder;
     /** Factory to use to produce install workers. */
     private final InstallWorkerFactory workerFactory;
     /** The manager to use to retrieve update information. */
     private final UpdateManager updateManager;
+    /** Configuration to read settings from. */
+    private final AggregateConfigProvider globalConfig;
 
     /**
      * Creates a new data loader worker.
      *
-     * @param controller Swing controller
+     * @param globalConfig Configuration to read settings from.
+     * @param urlBuilder URL Builder to use when loading addon resources.
      * @param workerFactory Factory to use to produce install workers.
      * @param updateManager Manager to use to retrieve update information.
      * @param tempDirectory The directory to store temporary items in, such as the addons feed.
@@ -95,7 +99,8 @@ public class DataLoaderWorker
      * @param scrollPane Table's parent scrollpane
      */
     public DataLoaderWorker(
-            final SwingController controller,
+            @SuppressWarnings("qualifiers") @GlobalConfig final AggregateConfigProvider globalConfig,
+            final URLBuilder urlBuilder,
             final InstallWorkerFactory workerFactory,
             final UpdateManager updateManager,
             @SuppressWarnings("qualifiers") @Directory(DirectoryType.TEMPORARY) final String tempDirectory,
@@ -103,7 +108,8 @@ public class DataLoaderWorker
             @Unbound final boolean download,
             @Unbound final BrowserWindow browserWindow,
             @Unbound final JScrollPane scrollPane) {
-        this.controller = controller;
+        this.globalConfig = globalConfig;
+        this.urlBuilder = urlBuilder;
         this.workerFactory = workerFactory;
         this.download = download;
         this.table = table;
@@ -148,8 +154,7 @@ public class DataLoaderWorker
 
         final List<AddonInfo> list = new ArrayList<>();
         for (final Map<String, String> entry : data.getKeyDomains().values()) {
-            list.add(new AddonInfo(controller.getGlobalConfig(), updateManager,
-                    controller.getUrlBuilder(), entry));
+            list.add(new AddonInfo(globalConfig, updateManager, urlBuilder, entry));
         }
         return list;
     }

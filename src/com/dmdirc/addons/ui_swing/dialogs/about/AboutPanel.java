@@ -26,6 +26,7 @@ import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.ui.core.util.URLHandler;
 
+import javax.inject.Inject;
 import javax.swing.JPanel;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkEvent.EventType;
@@ -53,6 +54,7 @@ public final class AboutPanel extends JPanel implements HyperlinkListener {
      *
      * @param urlHandler The URL Handler to use to handle clicked links
      */
+    @Inject
     public AboutPanel(final URLHandler urlHandler) {
         super();
 

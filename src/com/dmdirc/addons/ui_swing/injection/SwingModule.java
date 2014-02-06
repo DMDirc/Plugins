@@ -47,6 +47,7 @@ import com.dmdirc.util.URLBuilder;
 import java.util.concurrent.Callable;
 
 import javax.inject.Provider;
+import javax.inject.Qualifier;
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -69,17 +70,36 @@ import dagger.Provides;
 )
 public class SwingModule {
 
+    @Qualifier
+    public static @interface SwingSettingsDomain {}
+
     /** The controller to return to clients. */
     private final SwingController controller;
+
+    /** The domain for plugin settings. */
+    private final String domain;
 
     /**
      * Creates a new instance of {@link SwingModule}.
      *
      * @param controller The controller to return. This should be removed when SwingController
      * is separated from the plugin implementation.
+     * @param domain The domain for plugin settings.
      */
-    public SwingModule(final SwingController controller) {
+    public SwingModule(final SwingController controller, final String domain) {
         this.controller = controller;
+        this.domain = domain;
+    }
+
+    /**
+     * Provides the domain that the swing settings should be stored under.
+     *
+     * @return The settings domain for the swing plugin.
+     */
+    @Provides
+    @SwingSettingsDomain
+    public String getSettingsDomain() {
+        return domain;
     }
 
     /**

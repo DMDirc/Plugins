@@ -22,14 +22,16 @@
 
 package com.dmdirc.addons.ui_swing.components;
 
+import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SelectionListener;
-import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.SwingWindowFactory;
 import com.dmdirc.addons.ui_swing.SwingWindowListener;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
+import com.dmdirc.addons.ui_swing.injection.SwingModule.SwingSettingsDomain;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
+import com.dmdirc.ui.IconManager;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -70,24 +72,27 @@ public class MDIBar extends JPanel implements SwingWindowListener,
     /**
      * Instantiates a new MDI bar.
      *
-     * @param controller The controller that owns this MDI bar
+     * @param globalConfig The config to read settings from.
+     * @param iconManager The manager to use to retrieve icons.
+     * @param domain The domain to read settings from under.
      * @param windowFactory The window factory to use to create and listen for windows.
      * @param mainFrame Main frame instance
      */
     @Inject
     public MDIBar(
-            final SwingController controller,
+            @GlobalConfig final AggregateConfigProvider globalConfig,
+            @GlobalConfig final IconManager iconManager,
+            @SwingSettingsDomain final String domain,
             final SwingWindowFactory windowFactory,
             final MainFrame mainFrame) {
         super();
 
         this.mainFrame = mainFrame;
-        config = controller.getGlobalConfig();
-        configDomain = controller.getDomain();
+        this.config = globalConfig;
+        this.configDomain = domain;
         visibility = config.getOptionBool(configDomain, "mdiBarVisibility");
 
-        closeButton = new NoFocusButton(controller.getIconManager()
-                .getScaledIcon("close-12", ICON_SIZE,ICON_SIZE));
+        closeButton = new NoFocusButton(iconManager.getScaledIcon("close-12", ICON_SIZE,ICON_SIZE));
 
         setOpaque(false);
         setLayout(new MigLayout("hmax 17, ins 1 0 0 0, fill"));

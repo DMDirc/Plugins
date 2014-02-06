@@ -26,6 +26,7 @@ import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.ui.core.util.URLHandler;
 
+import javax.inject.Inject;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.event.HyperlinkEvent;
@@ -57,6 +58,7 @@ public final class CreditsPanel extends JPanel implements HyperlinkListener {
      *
      * @param urlHandler The URL handler to use to open clicked links
      */
+    @Inject
     public CreditsPanel(final URLHandler urlHandler) {
         super();
 

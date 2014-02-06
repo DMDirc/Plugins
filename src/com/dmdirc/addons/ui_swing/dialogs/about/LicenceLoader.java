@@ -22,12 +22,12 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.about;
 
-import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.plugins.PluginInfo;
+import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.util.resourcemanager.ResourceManager;
 
 import java.io.BufferedReader;
@@ -53,20 +53,23 @@ public class LicenceLoader extends LoggingSwingWorker<Void, Void> {
     private final JTree tree;
     /** Model to load licences into. */
     private final DefaultTreeModel model;
-    /** Swing Controller */
-    final SwingController controller;
+    /** Manager to use to get plugin information from */
+    private final PluginManager pluginManager;
 
     /**
      * Instantiates a new licence loader.
      *
-     * @param controller to get plugin manager from to get plugin list from to read licenses
+     * @param pluginManager to get plugin manager from to get plugin list from to read licenses
      * @param tree Tree
      * @param model Model to load licences into
      */
-    public LicenceLoader(final SwingController controller, final JTree tree, final DefaultTreeModel model) {
+    public LicenceLoader(
+            final PluginManager pluginManager,
+            final JTree tree,
+            final DefaultTreeModel model) {
         super();
 
-        this.controller = controller;
+        this.pluginManager = pluginManager;
         this.tree = tree;
         this.model = model;
     }
@@ -84,7 +87,7 @@ public class LicenceLoader extends LoggingSwingWorker<Void, Void> {
                     + "no resource manager");
         } else {
             addCoreLicences(rm);
-            for (PluginInfo pi : controller.getPluginManager().getPluginInfos()) {
+            for (PluginInfo pi : pluginManager.getPluginInfos()) {
                 addPluginLicences(pi);
             }
         }

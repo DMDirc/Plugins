@@ -30,6 +30,7 @@ import com.dmdirc.util.DateUtils;
 import java.awt.Font;
 import java.nio.charset.Charset;
 
+import javax.inject.Inject;
 import javax.swing.JEditorPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -53,6 +54,7 @@ public final class InfoPanel extends JPanel {
      *
      * @param controller Parent swing controller
      */
+    @Inject
     public InfoPanel(final SwingController controller) {
         super();
 
