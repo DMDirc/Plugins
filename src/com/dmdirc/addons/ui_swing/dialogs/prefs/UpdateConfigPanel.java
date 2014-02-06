@@ -36,6 +36,7 @@ import com.dmdirc.updater.UpdateChecker;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.inject.Inject;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -72,14 +73,21 @@ public class UpdateConfigPanel extends JPanel implements ActionListener,
     private JComboBox updateChannel;
     /** Swing controller. */
     private final SwingController controller;
+    /** The prefs dialog that will be hosting the panel. */
+    private final SwingPreferencesDialog prefsDialog;
 
     /**
      * Instantiates a new update config panel.
      *
      * @param controller Swing controller
+     * @param prefsDialog The prefs dialog that will be hosting the panel.
      */
-    public UpdateConfigPanel(final SwingController controller) {
+    @Inject
+    public UpdateConfigPanel(
+            final SwingController controller,
+            final SwingPreferencesDialog prefsDialog) {
         this.controller = controller;
+        this.prefsDialog = prefsDialog;
 
         initComponents();
         addListeners();
@@ -148,8 +156,7 @@ public class UpdateConfigPanel extends JPanel implements ActionListener,
      * Lays out the components.
      */
     private void layoutComponents() {
-        setLayout(new MigLayout("fill, ins 0, hmax " + controller.getPrefsDialog().
-                getPanelHeight()));
+        setLayout(new MigLayout("fill, ins 0, hmax " + prefsDialog.getPanelHeight()));
 
         add(new JLabel("Update checking:"), "split");
         add(enable, "growx");

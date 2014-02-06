@@ -24,7 +24,9 @@ package com.dmdirc.addons.ui_swing.injection;
 
 import com.dmdirc.ClientModule;
 import com.dmdirc.ClientModule.GlobalConfig;
+import com.dmdirc.ClientModule.UserConfig;
 import com.dmdirc.ServerManager;
+import com.dmdirc.actions.ActionManager;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.QuitWorker;
 import com.dmdirc.addons.ui_swing.SwingController;
@@ -36,8 +38,15 @@ import com.dmdirc.addons.ui_swing.commands.Input;
 import com.dmdirc.addons.ui_swing.commands.PopInCommand;
 import com.dmdirc.addons.ui_swing.commands.PopOutCommand;
 import com.dmdirc.addons.ui_swing.commands.ServerSettings;
+import com.dmdirc.addons.ui_swing.components.addonpanel.PluginPanel;
+import com.dmdirc.addons.ui_swing.components.addonpanel.ThemePanel;
+import com.dmdirc.addons.ui_swing.dialogs.prefs.URLConfigPanel;
+import com.dmdirc.addons.ui_swing.dialogs.prefs.UpdateConfigPanel;
+import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.interfaces.LifecycleController;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
+import com.dmdirc.interfaces.config.ConfigProvider;
+import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.core.components.StatusBarManager;
@@ -167,6 +176,20 @@ public class SwingModule {
             final ServerManager serverManager,
             final StatusBarManager statusBarManager) {
         return new URLHandler(swingController, globalConfig, serverManager, statusBarManager);
+    }
+
+    @Provides
+    public PreferencesDialogModel getPrefsDialogModel(
+            final PluginPanel pluginPanel,
+            final ThemePanel themePanel,
+            final UpdateConfigPanel updatePanel,
+            final URLConfigPanel urlPanel,
+            @GlobalConfig final AggregateConfigProvider configManager,
+            @UserConfig final ConfigProvider identity,
+            final ActionManager actionManager,
+            final PluginManager pluginManager) {
+        return new PreferencesDialogModel(pluginPanel, themePanel, updatePanel, urlPanel,
+                configManager, identity, actionManager, pluginManager);
     }
 
 }
