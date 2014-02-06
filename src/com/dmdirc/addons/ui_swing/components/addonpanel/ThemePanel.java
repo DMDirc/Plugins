@@ -22,17 +22,18 @@
 
 package com.dmdirc.addons.ui_swing.components.addonpanel;
 
+import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.dialogs.prefs.SwingPreferencesDialog;
 import com.dmdirc.ui.themes.Theme;
 import com.dmdirc.ui.themes.ThemeManager;
 
-import java.awt.Window;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javax.inject.Inject;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
@@ -60,8 +61,9 @@ public class ThemePanel extends AddonPanel {
      * @param themeManager Manager to retrieve themes from.
      * @param prefsDialog The prefs dialog that contains this panel
      */
+    @Inject
     public ThemePanel(
-            final Window parentWindow,
+            final MainFrame parentWindow,
             final SwingController controller,
             final ThemeManager themeManager,
             final SwingPreferencesDialog prefsDialog) {

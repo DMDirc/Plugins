@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.prefs;
 
+import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.PackingTable;
 import com.dmdirc.addons.ui_swing.components.URLProtocolPanel;
@@ -42,6 +43,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import javax.inject.Inject;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -90,8 +92,10 @@ public class URLConfigPanel extends JPanel implements
      * @param controller Swing controller
      * @param parentWindow Parent window
      */
-    public URLConfigPanel(final SwingController controller,
-            final Window parentWindow) {
+    @Inject
+    public URLConfigPanel(
+            final SwingController controller,
+            final MainFrame parentWindow) {
         super();
 
         this.controller = controller;
