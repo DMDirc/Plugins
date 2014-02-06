@@ -22,15 +22,14 @@
 
 package com.dmdirc.addons.ui_swing.components.addonpanel;
 
-import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
 import com.dmdirc.addons.ui_swing.components.addonbrowser.BrowserWindow;
+import com.dmdirc.addons.ui_swing.components.addonbrowser.DataLoaderWorkerFactory;
 import com.dmdirc.addons.ui_swing.components.renderers.AddonCellRenderer;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.addons.ui_swing.dialogs.prefs.SwingPreferencesDialog;
 import com.dmdirc.config.prefs.PreferencesInterface;
-import com.dmdirc.ui.IconManager;
 
 import java.awt.Window;
 
@@ -58,14 +57,12 @@ public abstract class AddonPanel extends JPanel implements AddonToggleListener,
     private static final long serialVersionUID = 3;
     /** List of addons. */
     protected JTable addonList;
-    /** Swing Controller. */
-    protected final SwingController controller;
     /** The prefs dialog that contains this panel. */
     private final SwingPreferencesDialog prefsDialog;
     /** Parent Window. */
     private final Window parentWindow;
-    /** The icon manager used to retrieve icons. */
-    private final IconManager iconManager;
+    /** The factory to use to produce data loader workers. */
+    private final DataLoaderWorkerFactory workerFactory;
     /** Addon list scroll pane. */
     private JScrollPane scrollPane;
     /** Blurb label. */
@@ -81,19 +78,18 @@ public abstract class AddonPanel extends JPanel implements AddonToggleListener,
      * Creates a new instance of AddonPanel
      *
      * @param parentWindow Parent window
-     * @param controller Swing Controller
      * @param prefsDialog The prefs dialog that contains this panel
+     * @param workerFactory The factory to use to produce data loader workers.
      */
     public AddonPanel(
             final Window parentWindow,
-            final SwingController controller,
-            final SwingPreferencesDialog prefsDialog) {
+            final SwingPreferencesDialog prefsDialog,
+            final DataLoaderWorkerFactory workerFactory) {
         super();
 
         this.parentWindow = parentWindow;
-        this.controller = controller;
         this.prefsDialog = prefsDialog;
-        iconManager = controller.getIconManager();
+        this.workerFactory = workerFactory;
 
         initComponents();
         layoutComponents();
@@ -208,7 +204,7 @@ public abstract class AddonPanel extends JPanel implements AddonToggleListener,
     @Override
     public void hyperlinkUpdate(final HyperlinkEvent e) {
         if (e.getEventType() == EventType.ACTIVATED) {
-            new BrowserWindow(controller.getDataLoaderWorkerFactory(), parentWindow);
+            new BrowserWindow(workerFactory, parentWindow);
         }
     }
 
@@ -231,12 +227,4 @@ public abstract class AddonPanel extends JPanel implements AddonToggleListener,
         addonList.repaint();
     }
 
-    /**
-     * Returns the icon manager for this panel.
-     *
-     * @return Icon manager instance
-     */
-    public IconManager getIconManager() {
-        return iconManager;
-    }
 }
