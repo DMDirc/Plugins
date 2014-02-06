@@ -22,15 +22,21 @@
 
 package com.dmdirc.addons.ui_swing.components.addonpanel;
 
+import com.dmdirc.ClientModule.GlobalConfig;
+import com.dmdirc.ClientModule.UserConfig;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.addons.ui_swing.MainFrame;
-import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
+import com.dmdirc.addons.ui_swing.components.addonbrowser.DataLoaderWorkerFactory;
 import com.dmdirc.addons.ui_swing.dialogs.prefs.SwingPreferencesDialog;
 import com.dmdirc.interfaces.ActionListener;
 import com.dmdirc.interfaces.actions.ActionType;
+import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.plugins.PluginInfo;
+import com.dmdirc.plugins.PluginManager;
+import com.dmdirc.ui.IconManager;
+import com.dmdirc.updater.manager.CachingUpdateManager;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -53,23 +59,43 @@ public class PluginPanel extends AddonPanel implements ActionListener {
      */
     private static final long serialVersionUID = 1;
 
+    /** Manager to retrieve plugin information from. */
+    private final PluginManager pluginManager;
+    /** Manager to use to retrieve addon-related icons. */
+    private final IconManager iconManager;
+    /** Manager to use to retrieve update information. */
+    private final CachingUpdateManager updateManager;
+    /** Configuration to write update-related settings to. */
+    private final ConfigProvider userConfig;
+
     /**
      * Creates a new instance of PluginPanel.
      *
      * @param parentWindow Parent window
-     * @param controller Swing Controller
+     * @param pluginManager Manager to retrieve plugins from.
      * @param prefsDialog The prefs dialog that contains this panel
+     * @param workerFactory Factory to use to create data workers.
+     * @param iconManager Manager to use to retrieve addon-related icons.
+     * @param updateManager Manager to use to retrieve update information.
+     * @param userConfig Configuration to write update-related settings to.
      */
     @Inject
     public PluginPanel(
             final MainFrame parentWindow,
-            final SwingController controller,
-            final SwingPreferencesDialog prefsDialog) {
-        super(parentWindow, controller, prefsDialog);
-
+            final PluginManager pluginManager,
+            final SwingPreferencesDialog prefsDialog,
+            final DataLoaderWorkerFactory workerFactory,
+            @GlobalConfig final IconManager iconManager,
+            final CachingUpdateManager updateManager,
+            @UserConfig final ConfigProvider userConfig) {
+        super(parentWindow, prefsDialog, workerFactory);
+        this.pluginManager = pluginManager;
+        this.iconManager = iconManager;
+        this.updateManager = updateManager;
+        this.userConfig = userConfig;
         ActionManager.getActionManager().registerListener(this,
                 CoreActionType.PLUGIN_REFRESH);
-        controller.getPluginManager().refreshPlugins();
+        pluginManager.refreshPlugins();
     }
 
     /** {@inheritDoc} */
@@ -77,7 +103,7 @@ public class PluginPanel extends AddonPanel implements ActionListener {
     protected JTable populateList(final JTable table) {
         final List<PluginInfo> list = new ArrayList<>();
         final List<PluginInfo> sortedList = new ArrayList<>();
-        list.addAll(controller.getPluginManager().getPluginInfos());
+        list.addAll(pluginManager.getPluginInfos());
         Collections.sort(list);
         for (final PluginInfo plugin : list) {
             if (plugin.getMetaData().getParent() == null) {
@@ -105,10 +131,10 @@ public class PluginPanel extends AddonPanel implements ActionListener {
                             new AddonCell[]{
                                 new AddonCell(
                                         new AddonToggle(
-                                                controller.getCachingUpdateManager(),
-                                                controller.getGlobalIdentity(),
+                                                updateManager,
+                                                userConfig,
                                                 plugin),
-                                        getIconManager()),
+                                        iconManager),
                             });
                 }
                 table.repaint();
