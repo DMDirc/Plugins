@@ -27,8 +27,6 @@ import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.ListScroller;
 import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
-import com.dmdirc.addons.ui_swing.components.addonpanel.PluginPanel;
-import com.dmdirc.addons.ui_swing.components.addonpanel.ThemePanel;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.addons.ui_swing.dialogs.updater.SwingRestartDialog;
 import com.dmdirc.addons.ui_swing.injection.DialogModule.ForSettings;
@@ -45,6 +43,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -89,12 +88,14 @@ public final class SwingPreferencesDialog extends StandardDialog implements
      * @param controller The controller which owns this preferences window.
      * @param restartDialogProvider The provider to use for restart dialogs.
      * @param actionsManager Actions manager to use.
+     * @param dialogModelProvider The provider to use to get a dialog model.
      */
     @Inject
     public SwingPreferencesDialog(
             final SwingController controller,
             @ForSettings final DialogProvider<SwingRestartDialog> restartDialogProvider,
-            final ActionManager actionsManager) {
+            final ActionManager actionsManager,
+            final Provider<PreferencesDialogModel> dialogModelProvider) {
         super(controller.getMainFrame(), ModalityType.MODELESS);
 
         this.controller = controller;
@@ -110,17 +111,7 @@ public final class SwingPreferencesDialog extends StandardDialog implements
                 mainPanel.setWaiting(true);
                 PreferencesDialogModel prefsManager = null;
                 try {
-                    prefsManager = new PreferencesDialogModel(
-                            new PluginPanel(controller.getMainFrame(), controller,
-                                    SwingPreferencesDialog.this),
-                            new ThemePanel(controller.getMainFrame(), controller,
-                                    controller.getThemeManager(), SwingPreferencesDialog.this),
-                            new UpdateConfigPanel(controller),
-                            new URLConfigPanel(controller, controller.getMainFrame()),
-                            controller.getGlobalConfig(),
-                            controller.getGlobalIdentity(),
-                            actionsManager,
-                            controller.getPluginManager());
+                    prefsManager = dialogModelProvider.get();
                 } catch (IllegalArgumentException ex) {
                     mainPanel.setError(ex.getMessage());
                     Logger.appError(ErrorLevel.HIGH, "Unable to load the" +

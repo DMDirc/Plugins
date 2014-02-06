@@ -24,6 +24,7 @@ package com.dmdirc.addons.ui_swing.components.addonpanel;
 
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionType;
+import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.dialogs.prefs.SwingPreferencesDialog;
@@ -31,11 +32,11 @@ import com.dmdirc.interfaces.ActionListener;
 import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.plugins.PluginInfo;
 
-import java.awt.Window;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javax.inject.Inject;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
@@ -59,8 +60,9 @@ public class PluginPanel extends AddonPanel implements ActionListener {
      * @param controller Swing Controller
      * @param prefsDialog The prefs dialog that contains this panel
      */
+    @Inject
     public PluginPanel(
-            final Window parentWindow,
+            final MainFrame parentWindow,
             final SwingController controller,
             final SwingPreferencesDialog prefsDialog) {
         super(parentWindow, controller, prefsDialog);
