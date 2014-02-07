@@ -25,6 +25,7 @@ package com.dmdirc.addons.ui_swing.components.frames;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionType;
+import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.actions.ChannelCopyAction;
@@ -40,6 +41,7 @@ import com.dmdirc.addons.ui_swing.textpane.TextPane;
 import com.dmdirc.addons.ui_swing.textpane.TextPaneControlCodeCopyAction;
 import com.dmdirc.addons.ui_swing.textpane.TextPaneCopyAction;
 import com.dmdirc.addons.ui_swing.textpane.TextPaneEndAction;
+import com.dmdirc.addons.ui_swing.textpane.TextPaneFactory;
 import com.dmdirc.addons.ui_swing.textpane.TextPaneHomeAction;
 import com.dmdirc.addons.ui_swing.textpane.TextPaneListener;
 import com.dmdirc.addons.ui_swing.textpane.TextPanePageDownAction;
@@ -50,6 +52,7 @@ import com.dmdirc.commandparser.PopupMenuItem;
 import com.dmdirc.commandparser.PopupType;
 import com.dmdirc.commandparser.parsers.CommandParser;
 import com.dmdirc.commandparser.parsers.GlobalCommandParser;
+import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.FrameCloseListener;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
@@ -57,11 +60,15 @@ import com.dmdirc.interfaces.ui.InputWindow;
 import com.dmdirc.interfaces.ui.Window;
 import com.dmdirc.parser.common.ChannelJoinRequest;
 import com.dmdirc.ui.IconManager;
+import com.dmdirc.ui.core.util.URLHandler;
+import com.dmdirc.util.URLBuilder;
 
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.swing.JComponent;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -95,6 +102,16 @@ public abstract class TextFrame extends JPanel implements Window,
     private final CommandParser commandParser;
     /** Swing controller. */
     private final SwingController controller;
+    /** Main frame to use to activate/deactivate windows. */
+    private final Provider<MainFrame> mainFrame;
+    /** Manager to use for building popups. */
+    private final PopupManager popupManager;
+    /** Handler to use to open URLs. */
+    private final URLHandler urlHandler;
+    /** Builder to use to construct URLs. */
+    private final URLBuilder urlBuilder;
+    /** Controller to use for commands. */
+    private final CommandController commandController;
     /** Boolean to determine if this frame should be popped out of main client. */
     private boolean popout;
     /**
@@ -109,13 +126,20 @@ public abstract class TextFrame extends JPanel implements Window,
      * Creates a new instance of Frame.
      *
      * @param owner FrameContainer owning this frame.
-     * @param controller Swing controller
+     * @param deps Collection of TextPane dependencies.
      */
-    public TextFrame(final FrameContainer owner,
-            final SwingController controller) {
+    public TextFrame(
+            final FrameContainer owner,
+            final TextFrameDependencies deps) {
         super();
-        this.controller = controller;
-        frameParent = owner;
+
+        this.controller = deps.controller;
+        this.mainFrame = deps.mainFrame;
+        this.popupManager = deps.popupManager;
+        this.urlBuilder = deps.urlBuilder;
+        this.urlHandler = deps.urlHandler;
+        this.commandController = deps.commandController;
+        this.frameParent = owner;
 
         final AggregateConfigProvider config = owner.getConfigManager();
 
@@ -124,7 +148,7 @@ public abstract class TextFrame extends JPanel implements Window,
 
         commandParser = findCommandParser();
 
-        initComponents();
+        initComponents(deps.textPaneFactory);
         setFocusable(true);
 
         getTextPane().addTextPaneListener(this);
@@ -157,7 +181,7 @@ public abstract class TextFrame extends JPanel implements Window,
 
         if (localParser == null) {
             localParser = new GlobalCommandParser(frameParent.getConfigManager(),
-                    controller.getCommandController());
+                    commandController);
         }
 
         return localParser;
@@ -177,18 +201,16 @@ public abstract class TextFrame extends JPanel implements Window,
         this.popout = popout;
         if (popout) {
             popoutPlaceholder = new DesktopPlaceHolderFrame();
-            popoutFrame = new DesktopWindowFrame(this)  ;
+            popoutFrame = new DesktopWindowFrame(this);
             popoutFrame.display();
         } else if (popoutFrame != null) {
             popoutPlaceholder = null;
             popoutFrame.dispose();
             popoutFrame = null;
         }
-        // Call setActiveFrame again so the contents of the frame manager
-        // are updated.
-        if (equals(controller.getMainFrame()
-                .getActiveFrame())) {
-            controller.getMainFrame().setActiveFrame(this);
+        // Call setActiveFrame again so the contents of the frame manager are updated.
+        if (equals(mainFrame.get().getActiveFrame())) {
+            mainFrame.get().setActiveFrame(this);
         }
     }
 
@@ -233,8 +255,8 @@ public abstract class TextFrame extends JPanel implements Window,
     /**
      * Initialises the components for this frame.
      */
-    private void initComponents() {
-        setTextPane(new TextPane(getController().getDomain(), getController().getUrlBuilder(), this));
+    private void initComponents(final TextPaneFactory textPaneFactory) {
+        setTextPane(textPaneFactory.getTextPane(this));
 
         searchBar = new SwingSearchBar(this);
         searchBar.setVisible(false);
@@ -347,7 +369,7 @@ public abstract class TextFrame extends JPanel implements Window,
                 if (ActionManager.getActionManager().triggerEvent(
                         CoreActionType.LINK_URL_CLICKED, null, this,
                         clickType.getValue())) {
-                    controller.getUrlHandler().launchApp(clickType.getValue());
+                    urlHandler.launchApp(clickType.getValue());
                 }
                 break;
             case NICKNAME:
@@ -482,8 +504,7 @@ public abstract class TextFrame extends JPanel implements Window,
 
         if (type != null) {
             popupMenu = (JPopupMenu) populatePopupMenu(popupMenu,
-                    new PopupManager(controller.getCommandController()).getMenu(type, getContainer()
-                    .getConfigManager()), arguments);
+                    popupManager.getMenu(type, getContainer().getConfigManager()), arguments);
         }
 
         return popupMenu;
@@ -528,8 +549,7 @@ public abstract class TextFrame extends JPanel implements Window,
     /** {@inheritDoc} */
     @Override
     public void configChanged(final String domain, final String key) {
-        if (getContainer().getConfigManager() == null
-                || getTextPane() == null) {
+        if (getContainer().getConfigManager() == null || getTextPane() == null) {
             return;
         }
 
@@ -548,6 +568,7 @@ public abstract class TextFrame extends JPanel implements Window,
 
     /** {@inheritDoc} */
     @Override
+    @Deprecated
     public SwingController getController() {
         return controller;
     }
@@ -558,7 +579,7 @@ public abstract class TextFrame extends JPanel implements Window,
      * @return This frame's IconManager
      */
     public IconManager getIconManager() {
-        return getContainer().getIconManager(controller.getUrlBuilder());
+        return getContainer().getIconManager(urlBuilder);
     }
 
     /**
@@ -577,5 +598,41 @@ public abstract class TextFrame extends JPanel implements Window,
     public void dispose() {
         frameParent.getConfigManager().removeListener(this);
         frameParent.removeCloseListener(this);
+    }
+
+    /**
+     * Bundle of dependencies required by {@link TextFrame}.
+     *
+     * <p>Because of the number of dependencies and the amount of subclassing, collect the
+     * dependencies together here so they can be easily modified without having to modify all
+     * subclasses.
+     */
+    public static class TextFrameDependencies {
+
+        private final TextPaneFactory textPaneFactory;
+        private final SwingController controller;
+        private final Provider<MainFrame> mainFrame;
+        private final PopupManager popupManager;
+        private final URLHandler urlHandler;
+        private final URLBuilder urlBuilder;
+        private final CommandController commandController;
+
+        @Inject
+        public TextFrameDependencies(
+                final TextPaneFactory textPaneFactory,
+                final SwingController controller,
+                final Provider<MainFrame> mainFrame,
+                final PopupManager popupManager,
+                final URLHandler urlHandler,
+                final URLBuilder urlBuilder,
+                final CommandController commandController) {
+            this.textPaneFactory = textPaneFactory;
+            this.controller = controller;
+            this.mainFrame = mainFrame;
+            this.popupManager = popupManager;
+            this.urlHandler = urlHandler;
+            this.urlBuilder = urlBuilder;
+            this.commandController = commandController;
+        }
     }
 }

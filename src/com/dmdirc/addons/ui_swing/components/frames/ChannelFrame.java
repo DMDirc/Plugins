@@ -78,12 +78,12 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
      * Creates a new instance of ChannelFrame. Sets up callbacks and handlers,
      * and default options for the form.
      *
+     * @param deps The dependencies required by text frames.
      * @param owner The Channel object that owns this frame
-     * @param controller Swing controller
      */
-    public ChannelFrame(final SwingController controller, @Unbound final Channel owner) {
-        super(controller, owner);
-        this.controller = controller;
+    public ChannelFrame(final TextFrameDependencies deps, @Unbound final Channel owner) {
+        super(deps, owner);
+        this.controller = getController();
 
         initComponents();
 
