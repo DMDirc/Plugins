@@ -23,7 +23,6 @@
 package com.dmdirc.addons.ui_swing.components.frames;
 
 import com.dmdirc.WritableFrameContainer;
-import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.commandparser.PopupType;
 import com.dmdirc.util.annotations.factory.Factory;
 import com.dmdirc.util.annotations.factory.Unbound;
@@ -49,13 +48,13 @@ public class CustomInputFrame extends InputTextFrame {
     /**
      * Creates a new instance of CustomInputFrame.
      *
+     * @param deps The dependencies required by text frames.
      * @param owner The frame container that owns this frame
-     * @param controller Swing controller
      */
     public CustomInputFrame(
-            final SwingController controller,
+            final TextFrameDependencies deps,
             @Unbound final WritableFrameContainer owner) {
-        super(controller, owner);
+        super(deps, owner);
 
         initComponents();
     }

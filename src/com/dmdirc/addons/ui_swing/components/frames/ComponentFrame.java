@@ -52,14 +52,14 @@ public class ComponentFrame extends TextFrame {
     /**
      * Creates a new instance of CustomFrame.
      *
+     * @param deps The dependencies required by text frames.
      * @param owner The frame container that owns this frame
-     * @param controller Swing controller
      */
     public ComponentFrame(
-            final SwingController controller,
+            final TextFrameDependencies deps,
             @Unbound final FrameContainer owner) {
-        super(owner, controller);
-        this.controller = controller;
+        super(owner, deps);
+        this.controller = getController();
         this.owner = owner;
         initComponents();
     }
