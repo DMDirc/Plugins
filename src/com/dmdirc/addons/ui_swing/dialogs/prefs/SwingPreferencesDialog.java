@@ -80,24 +80,28 @@ public final class SwingPreferencesDialog extends StandardDialog implements
     private final SwingController controller;
     /** The provider to use for restart dialogs. */
     private final DialogProvider<SwingRestartDialog> restartDialogProvider;
+    /** The provider to use to produce a category panel. */
+    private final Provider<CategoryPanel> categoryPanelProvider;
 
     /**
      * Creates a new instance of SwingPreferencesDialog.
      *
      * @param controller The controller which owns this preferences window.
      * @param restartDialogProvider The provider to use for restart dialogs.
-     * @param actionsManager Actions manager to use.
      * @param dialogModelProvider The provider to use to get a dialog model.
+     * @param categoryPanelProvider The provider to use to produce a category panel.
      */
     @Inject
     public SwingPreferencesDialog(
             final SwingController controller,
             @ForSettings final DialogProvider<SwingRestartDialog> restartDialogProvider,
-            final Provider<PreferencesDialogModel> dialogModelProvider) {
+            final Provider<PreferencesDialogModel> dialogModelProvider,
+            final Provider<CategoryPanel> categoryPanelProvider) {
         super(controller.getMainFrame(), ModalityType.MODELESS);
 
         this.controller = controller;
         this.restartDialogProvider = restartDialogProvider;
+        this.categoryPanelProvider = categoryPanelProvider;
 
         initComponents();
 
@@ -155,8 +159,7 @@ public final class SwingPreferencesDialog extends StandardDialog implements
      * Initialises GUI components.
      */
     private void initComponents() {
-        mainPanel = new CategoryPanel(controller.getPrefsComponentFactory(),
-                controller.getIconManager(), this);
+        mainPanel = categoryPanelProvider.get();
 
         tabList = new JList(new DefaultListModel());
         tabList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
