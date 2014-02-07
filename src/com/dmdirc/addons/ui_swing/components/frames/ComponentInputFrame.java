@@ -52,13 +52,13 @@ public class ComponentInputFrame extends InputTextFrame {
     /**
      * Creates a new instance of CustomInputFrame.
      *
+     * @param deps The dependencies required by text frames.
      * @param owner The frame container that owns this frame
-     * @param controller Swing controller
      */
-    public ComponentInputFrame(final SwingController controller,
+    public ComponentInputFrame(final TextFrameDependencies deps,
             final WritableFrameContainer owner) {
-        super(controller, owner);
-        this.controller = controller;
+        super(deps, owner);
+        this.controller = getController();
         this.owner = owner;
         initComponents();
     }

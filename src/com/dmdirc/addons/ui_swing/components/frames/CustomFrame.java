@@ -22,7 +22,6 @@
 package com.dmdirc.addons.ui_swing.components.frames;
 
 import com.dmdirc.FrameContainer;
-import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.commandparser.PopupType;
 import com.dmdirc.util.annotations.factory.Factory;
 import com.dmdirc.util.annotations.factory.Unbound;
@@ -47,13 +46,13 @@ public class CustomFrame extends TextFrame {
     /**
      * Creates a new instance of CustomFrame.
      *
+     * @param deps The dependencies required by text frames.
      * @param owner The frame container that owns this frame
-     * @param controller Swing controller
      */
     public CustomFrame(
-            final SwingController controller,
+            final TextFrameDependencies deps,
             @Unbound final FrameContainer owner) {
-        super(owner, controller);
+        super(owner, deps);
 
         initComponents();
     }

@@ -65,13 +65,13 @@ public final class ServerFrame extends InputTextFrame implements
     /**
      * Creates a new ServerFrame.
      *
+     * @param deps The dependencies required by text frames.
      * @param owner Parent Frame container
-     * @param controller Swing controller
      */
-    public ServerFrame(final SwingController controller, @Unbound final Server owner) {
-        super(controller, owner);
+    public ServerFrame(final TextFrameDependencies deps, @Unbound final Server owner) {
+        super(deps, owner);
 
-        this.controller = controller;
+        this.controller = getController();
         initComponents();
 
         owner.addCertificateProblemListener(this);

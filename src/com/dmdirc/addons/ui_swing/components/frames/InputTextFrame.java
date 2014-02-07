@@ -84,14 +84,15 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
     /**
      * Creates a new instance of InputFrame.
      *
-     * @param controller Swing controller
+     * @param deps The dependencies required by text frames.
      * @param owner WritableFrameContainer owning this frame.
      */
-    public InputTextFrame(final SwingController controller,
+    public InputTextFrame(
+            final TextFrameDependencies deps,
             final WritableFrameContainer owner) {
-        super(owner, controller);
+        super(owner, deps);
 
-        this.controller = controller;
+        this.controller = getController();
         initComponents();
 
         final AggregateConfigProvider config = owner.getConfigManager();
