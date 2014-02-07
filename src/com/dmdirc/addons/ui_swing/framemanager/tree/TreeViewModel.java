@@ -24,7 +24,7 @@ package com.dmdirc.addons.ui_swing.framemanager.tree;
 
 import com.dmdirc.FrameContainerComparator;
 import com.dmdirc.GlobalWindow;
-import com.dmdirc.addons.ui_swing.SwingController;
+import com.dmdirc.interfaces.config.AggregateConfigProvider;
 
 import javax.swing.tree.DefaultTreeModel;
 
@@ -41,20 +41,21 @@ public class TreeViewModel extends DefaultTreeModel {
     private static final long serialVersionUID = 1;
     /** Frame container comparator. */
     private final FrameContainerComparator comparator;
-    /** Parent UI Controller. */
-    private SwingController controller;
+    /** Configuration provider to read settings from. */
+    private final AggregateConfigProvider globalConfig;
 
     /**
      * Creates a tree in which any node can have children.
      *
-     * @param controller Parent UI
+     * @param globalConfig The configuration provider to read settings from.
      * @param root a TreeNode object that is the root of the tree.
      */
-    public TreeViewModel(final SwingController controller,
+    public TreeViewModel(
+            final AggregateConfigProvider globalConfig,
             final TreeViewNode root) {
         super(root, false);
 
-        this.controller = controller;
+        this.globalConfig = globalConfig;
         comparator = new FrameContainerComparator();
     }
 
@@ -97,13 +98,11 @@ public class TreeViewModel extends DefaultTreeModel {
             return 0;
         }
 
-        if (parent.equals(root) && !controller.getGlobalConfig().
-                getOptionBool("ui", "sortrootwindows")) {
+        if (parent.equals(root) && !globalConfig.getOptionBool("ui", "sortrootwindows")) {
             return parent.getChildCount();
         }
 
-        if (controller.getGlobalConfig().getOptionBool("ui",
-                "sortchildwindows")) {
+        if (globalConfig.getOptionBool("ui", "sortchildwindows")) {
             for (int i = 0; i < parent.getChildCount(); i++) {
                 final TreeViewNode child = (TreeViewNode) parent.getChildAt(i);
                 if (sortBefore(newChild, child)) {

@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.textpane;
 
-import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
@@ -31,6 +30,7 @@ import com.dmdirc.ui.messages.IRCDocument;
 import com.dmdirc.ui.messages.IRCDocumentListener;
 import com.dmdirc.ui.messages.LinePosition;
 import com.dmdirc.ui.messages.Styliser;
+import com.dmdirc.util.URLBuilder;
 
 import java.awt.Color;
 import java.awt.Point;
@@ -78,6 +78,8 @@ public final class TextPane extends JComponent implements MouseWheelListener,
     private final JLabel newLineIndicator;
     /** Background painter. */
     private final BackgroundPainter backgroundPainter;
+    /** The domain to read configuration from. */
+    private final String configDomain;
     /** Last seen line. */
     private int lastSeenLine = 0;
     /** Show new line notifications. */
@@ -86,12 +88,14 @@ public final class TextPane extends JComponent implements MouseWheelListener,
     /**
      * Creates a new instance of TextPane.
      *
-     * @param controller Parent swing controller
+     * @param configDomain The domain to read configuration from.
+     * @param urlBuilder The builder to use to construct URLs for resources.
      * @param frame Parent Frame
      */
-    public TextPane(final SwingController controller, final TextFrame frame) {
+    public TextPane(final String configDomain, final URLBuilder urlBuilder, final TextFrame frame) {
         super();
         this.frame = frame;
+        this.configDomain = configDomain;
 
         setUI(new TextPaneUI());
         document = frame.getContainer().getDocument();
@@ -103,8 +107,7 @@ public final class TextPane extends JComponent implements MouseWheelListener,
 
         setLayout(new MigLayout("fill, hidemode 3"));
         backgroundPainter = new BackgroundPainter(frame.getContainer().getConfigManager(),
-                controller.getUrlBuilder(), "plugin-ui_swing", "textpanebackground",
-                "textpanebackgroundoption");
+                urlBuilder, configDomain, "textpanebackground", "textpanebackgroundoption");
         canvas = new TextPaneCanvas(this, document);
         final JXLayer<JComponent> layer = new JXLayer<JComponent>(canvas);
         layer.setUI(backgroundPainter);
@@ -117,8 +120,8 @@ public final class TextPane extends JComponent implements MouseWheelListener,
         add(scrollBar, "dock east");
         scrollBar.addAdjustmentListener(this);
         scrollBar.addAdjustmentListener(canvas);
-        frame.getContainer().getConfigManager().addChangeListener(controller
-                .getDomain(), "textpanelinenotification", this);
+        frame.getContainer().getConfigManager().addChangeListener(configDomain,
+                "textpanelinenotification", this);
         configChanged("", "textpanelinenotification");
 
         addMouseWheelListener(this);
@@ -581,8 +584,7 @@ public final class TextPane extends JComponent implements MouseWheelListener,
     @Override
     public void configChanged(final String domain, final String key) {
         showNotification = frame.getContainer().getConfigManager()
-                .getOptionBool(((SwingController) frame.getController())
-                .getDomain(), "textpanelinenotification");
+                .getOptionBool(configDomain, "textpanelinenotification");
         if (!showNotification) {
             UIUtilities.invokeLater(new Runnable() {
 
