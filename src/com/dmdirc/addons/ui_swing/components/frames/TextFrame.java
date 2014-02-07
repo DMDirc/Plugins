@@ -234,7 +234,7 @@ public abstract class TextFrame extends JPanel implements Window,
      * Initialises the components for this frame.
      */
     private void initComponents() {
-        setTextPane(new TextPane(getController(), this));
+        setTextPane(new TextPane(getController().getDomain(), getController().getUrlBuilder(), this));
 
         searchBar = new SwingSearchBar(this);
         searchBar.setVisible(false);

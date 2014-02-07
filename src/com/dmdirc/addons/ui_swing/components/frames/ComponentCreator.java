@@ -39,6 +39,7 @@ import javax.swing.JComponent;
 /**
  * Utility class to create frame components.
  */
+@Deprecated
 public class ComponentCreator {
 
     /**
@@ -50,6 +51,7 @@ public class ComponentCreator {
      *
      * @return Set of initialised components
      */
+    @Deprecated
     public Set<JComponent> initFrameComponents(final Object frame, final SwingController controller,
             final FrameContainer owner) {
         final SimpleInjector injector = new SimpleInjector();
@@ -60,6 +62,8 @@ public class ComponentCreator {
         injector.addParameter(owner);
         injector.addParameter(controller);
         injector.addParameter(controller.getMainFrame());
+        injector.addParameter(controller.getUrlBuilder());
+        injector.addParameter(controller.getDomain());
 
         for (String string : names) {
             Object object;

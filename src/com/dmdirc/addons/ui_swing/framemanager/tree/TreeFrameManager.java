@@ -139,8 +139,7 @@ public class TreeFrameManager implements FrameManager,
 
             @Override
             public void run() {
-                model = new TreeViewModel(controller, new TreeViewNode(null,
-                        null));
+                model = new TreeViewModel(config, new TreeViewNode(null, null));
                 tree = new Tree(TreeFrameManager.this, model,
                         TreeFrameManager.this.controller);
                 tree.setCellRenderer(new TreeViewTreeCellRenderer(config,
@@ -355,10 +354,8 @@ public class TreeFrameManager implements FrameManager,
                             nodes.get(window.getContainer()));
                     if (treePath != null && treePath.length > 0) {
                         final TreePath path = new TreePath(treePath);
-                        if (path != null) {
-                            tree.setTreePath(path);
-                            tree.scrollPathToVisible(path);
-                        }
+                        tree.setTreePath(path);
+                        tree.scrollPathToVisible(path);
                     }
                 }
             });

@@ -22,9 +22,9 @@
 
 package com.dmdirc.addons.ui_swing.framemanager.ctrltab;
 
+import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SelectionListener;
-import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.SwingWindowFactory;
 import com.dmdirc.addons.ui_swing.SwingWindowListener;
 import com.dmdirc.addons.ui_swing.UIUtilities;
@@ -34,6 +34,7 @@ import com.dmdirc.addons.ui_swing.components.TreeScroller;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.addons.ui_swing.framemanager.tree.TreeViewModel;
 import com.dmdirc.addons.ui_swing.framemanager.tree.TreeViewNode;
+import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.ui.Window;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
@@ -70,17 +71,17 @@ public class CtrlTabWindowManager implements SwingWindowListener,
     /**
      * Creates a new ctrl tab window manager.
      *
-     * @param controller Parent controller
+     * @param globalConfig The configuration to read settings from.
      * @param windowFactory The window factory to use to create and listen for windows.
      * @param mainFrame The main frame that owns this window manager
      */
     @Inject
     public CtrlTabWindowManager(
-            final SwingController controller,
+            @GlobalConfig final AggregateConfigProvider globalConfig,
             final SwingWindowFactory windowFactory,
             final MainFrame mainFrame) {
         nodes = new HashMap<>();
-        model = new TreeViewModel(controller, new TreeViewNode(null, null));
+        model = new TreeViewModel(globalConfig, new TreeViewNode(null, null));
         selectionModel = new DefaultTreeSelectionModel();
         treeScroller = new TreeScroller(model, selectionModel, false) {
 
