@@ -29,7 +29,6 @@ import com.dmdirc.addons.ui_swing.components.frames.CustomInputFrame;
 import com.dmdirc.addons.ui_swing.components.frames.ServerFrame;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.interfaces.ui.FrameListener;
-import com.dmdirc.interfaces.ui.Window;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.ui.core.components.WindowComponent;
@@ -54,7 +53,7 @@ import javax.inject.Singleton;
 public class SwingWindowFactory implements FrameListener {
 
     /** A map of known implementations of window interfaces. */
-    private final Map<Collection<String>, Class<? extends Window>> implementations = new HashMap<>();
+    private final Map<Collection<String>, WindowProvider> implementations = new HashMap<>();
     /** A map of frame containers to their Swing windows. */
     private final Map<FrameContainer, TextFrame> windows = new HashMap<>();
     /** The controller that owns this window factory. */
@@ -91,9 +90,24 @@ public class SwingWindowFactory implements FrameListener {
                 ChannelFrame.class);
     }
 
+    @Deprecated
     public final void registerImplementation(final Set<String> components,
-            final Class<? extends Window> clazz) {
-        implementations.put(components, clazz);
+            final Class<? extends TextFrame> clazz) {
+        implementations.put(components, new ReflectionWindowProvider(clazz));
+    }
+
+    /**
+     * Registers a new provider that will be used to create certain window implementations.
+     *
+     * <p>If a previous provider exists for the same configuration, it will be replaced.
+     *
+     * @param components The component configuration that is provided by the implementation.
+     * @param provider The provider to use to generate new windows.
+     */
+    public void registerImplementation(
+            final Set<String> components,
+            final WindowProvider provider) {
+        implementations.put(components, provider);
     }
 
     /**
@@ -129,27 +143,18 @@ public class SwingWindowFactory implements FrameListener {
      * @param focus Whether the window should be focused initially
      * @return The created window or null on error
      */
-    protected TextFrame doAddWindow(final FrameContainer window,
-            final boolean focus) {
-        final Class<? extends Window> clazz;
-
-        if (implementations.containsKey(window.getComponents())) {
-            clazz = implementations.get(window.getComponents());
-        } else {
+    protected TextFrame doAddWindow(final FrameContainer window, final boolean focus) {
+        if (!implementations.containsKey(window.getComponents())) {
             Logger.userError(ErrorLevel.HIGH, "Unable to create window: Unknown type");
             return null;
         }
 
-        try {
-            final TextFrame frame = (TextFrame) clazz.getConstructors()[0]
-                    .newInstance(controller, window);
+        final WindowProvider provider = implementations.get(window.getComponents());
+        final TextFrame frame = provider.getWindow(window);
+        if (frame != null) {
             windows.put(window, frame);
-
-            return frame;
-        } catch (ReflectiveOperationException ex) {
-            Logger.appError(ErrorLevel.HIGH, "Unable to create window", ex);
-            return null;
         }
+        return frame;
     }
 
     /**
@@ -227,4 +232,50 @@ public class SwingWindowFactory implements FrameListener {
             frame.dispose();
         }
     }
+
+    /**
+     * Provides a new window instance for a container.
+     */
+    public static interface WindowProvider {
+
+        /**
+         * Gets a new window for the specified container.
+         *
+         * @param container The container to create a new window for.
+         * @return A new window for the given container.
+         */
+        TextFrame getWindow(FrameContainer container);
+
+    }
+
+    /**
+     * Provides a window by using reflection to call a hard-coded constructor.
+     *
+     * <p>This mimics the previous behaviour of {@link SwingWindowFactory}, allowing old
+     * implementations to continue working.
+     *
+     * <p>The target class must have exactly one constructor, which should take a
+     * {@link SwingController} and a {@link FrameContainer} as formal arguments.
+     */
+    private class ReflectionWindowProvider implements WindowProvider {
+
+        private final Class<? extends TextFrame> target;
+
+        public ReflectionWindowProvider(final Class<? extends TextFrame> target) {
+            this.target = target;
+        }
+
+        @Override
+        public TextFrame getWindow(final FrameContainer container) {
+            try {
+                return (TextFrame) target.getConstructors()[0].newInstance(controller, container);
+            } catch (ReflectiveOperationException ex) {
+                Logger.appError(ErrorLevel.HIGH, "Unable to create window for "
+                        + container.getClass().getSimpleName(), ex);
+                return null;
+            }
+        }
+
+    }
+
 }
