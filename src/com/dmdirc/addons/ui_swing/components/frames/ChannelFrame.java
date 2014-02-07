@@ -35,6 +35,8 @@ import com.dmdirc.addons.ui_swing.components.TopicBar;
 import com.dmdirc.commandparser.PopupType;
 import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.interfaces.config.ConfigProvider;
+import com.dmdirc.util.annotations.factory.Factory;
+import com.dmdirc.util.annotations.factory.Unbound;
 
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -49,6 +51,7 @@ import net.miginfocom.swing.MigLayout;
 /**
  * The channel frame is the GUI component that represents a channel to the user.
  */
+@Factory(inject = true, singleton = true)
 public final class ChannelFrame extends InputTextFrame implements ActionListener,
         com.dmdirc.interfaces.ActionListener {
 
@@ -78,7 +81,7 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
      * @param owner The Channel object that owns this frame
      * @param controller Swing controller
      */
-    public ChannelFrame(final SwingController controller, final Channel owner) {
+    public ChannelFrame(final SwingController controller, @Unbound final Channel owner) {
         super(controller, owner);
         this.controller = controller;
 

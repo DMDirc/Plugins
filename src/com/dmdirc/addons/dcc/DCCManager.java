@@ -23,6 +23,7 @@
 package com.dmdirc.addons.dcc;
 
 import com.dmdirc.ClientModule.GlobalConfig;
+import com.dmdirc.FrameContainer;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.addons.dcc.actions.DCCActions;
@@ -32,7 +33,8 @@ import com.dmdirc.addons.dcc.io.DCCTransfer;
 import com.dmdirc.addons.dcc.kde.KFileChooser;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SwingWindowFactory;
-import com.dmdirc.addons.ui_swing.components.frames.ComponentFrame;
+import com.dmdirc.addons.ui_swing.components.frames.ComponentFrameFactory;
+import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.commandline.CommandLineOptionsModule.Directory;
 import com.dmdirc.commandline.CommandLineOptionsModule.DirectoryType;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
@@ -105,6 +107,7 @@ public class DCCManager implements ActionListener {
      * @param windowManager Window Management
      * @param tabCompleterFactory The factory to use for tab completers.
      * @param windowFactory The window factory to register the DCC implementations with.
+     * @param componentFrameFactory Factory to use to create new component frames for DCC windows.
      * @param baseDirectory The directory to create a downloads directory within.
      */
     @Inject
@@ -118,6 +121,7 @@ public class DCCManager implements ActionListener {
             final WindowManager windowManager,
             final TabCompleterFactory tabCompleterFactory,
             final SwingWindowFactory windowFactory,
+            final ComponentFrameFactory componentFrameFactory,
             @Directory(DirectoryType.BASE) final String baseDirectory) {
         this.mainFrame = mainFrame;
         this.messageSinkManager = messageSinkManager;
@@ -127,12 +131,23 @@ public class DCCManager implements ActionListener {
         this.domain = pluginInfo.getDomain();
         this.config = globalConfig;
         this.pluginInfo = pluginInfo;
-        windowFactory.registerImplementation(new HashSet<>(Arrays.asList(
-                "com.dmdirc.addons.dcc.ui.PlaceholderPanel")),
-                ComponentFrame.class);
-        windowFactory.registerImplementation(new HashSet<>(Arrays.asList(
-                "com.dmdirc.addons.dcc.ui.TransferPanel")),
-                ComponentFrame.class);
+
+        windowFactory.registerImplementation(
+                new HashSet<>(Arrays.asList("com.dmdirc.addons.dcc.ui.PlaceholderPanel")),
+                new SwingWindowFactory.WindowProvider() {
+                    @Override
+                    public TextFrame getWindow(final FrameContainer container) {
+                        return componentFrameFactory.getComponentFrame(container);
+                    }
+                });
+        windowFactory.registerImplementation(
+                new HashSet<>(Arrays.asList("com.dmdirc.addons.dcc.ui.TransferPanel")),
+                new SwingWindowFactory.WindowProvider() {
+                    @Override
+                    public TextFrame getWindow(final FrameContainer container) {
+                        return componentFrameFactory.getComponentFrame(container);
+                    }
+                });
 
         final ConfigProvider defaults = identityController.getAddonSettings();
         defaults.setOption(domain, "receive.savelocation",
