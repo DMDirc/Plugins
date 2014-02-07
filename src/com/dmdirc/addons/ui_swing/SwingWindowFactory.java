@@ -22,11 +22,14 @@
 
 package com.dmdirc.addons.ui_swing;
 
+import com.dmdirc.Channel;
 import com.dmdirc.FrameContainer;
-import com.dmdirc.addons.ui_swing.components.frames.ChannelFrame;
-import com.dmdirc.addons.ui_swing.components.frames.CustomFrame;
-import com.dmdirc.addons.ui_swing.components.frames.CustomInputFrame;
-import com.dmdirc.addons.ui_swing.components.frames.ServerFrame;
+import com.dmdirc.Server;
+import com.dmdirc.WritableFrameContainer;
+import com.dmdirc.addons.ui_swing.components.frames.ChannelFrameFactory;
+import com.dmdirc.addons.ui_swing.components.frames.CustomFrameFactory;
+import com.dmdirc.addons.ui_swing.components.frames.CustomInputFrameFactory;
+import com.dmdirc.addons.ui_swing.components.frames.ServerFrameFactory;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.interfaces.ui.FrameListener;
 import com.dmdirc.logger.ErrorLevel;
@@ -65,35 +68,64 @@ public class SwingWindowFactory implements FrameListener {
      * Creates a new window factory for the specified controller.
      *
      * @param controller The controller this factory is for
+     * @param customFrameFactory The factory to use to produce custom frames.
+     * @param customInputFrameFactory The factory to use to produce custom input frames.
+     * @param serverFrameFactory The factory to use to produce server frames.
+     * @param channelFrameFactory The factory to use to produce channel frames.
      */
     @Inject
-    public SwingWindowFactory(final SwingController controller) {
+    public SwingWindowFactory(
+            final SwingController controller,
+            final CustomFrameFactory customFrameFactory,
+            final CustomInputFrameFactory customInputFrameFactory,
+            final ServerFrameFactory serverFrameFactory,
+            final ChannelFrameFactory channelFrameFactory) {
         this.controller = controller;
 
-        registerImplementation(new HashSet<>(
-                Arrays.asList(WindowComponent.TEXTAREA.getIdentifier())),
-                CustomFrame.class);
-        registerImplementation(new HashSet<>(
-                Arrays.asList(WindowComponent.TEXTAREA.getIdentifier(),
-                WindowComponent.INPUTFIELD.getIdentifier())),
-                CustomInputFrame.class);
-        registerImplementation(new HashSet<>(
-                Arrays.asList(WindowComponent.TEXTAREA.getIdentifier(),
-                WindowComponent.INPUTFIELD.getIdentifier(),
-                WindowComponent.CERTIFICATE_VIEWER.getIdentifier())),
-                ServerFrame.class);
-        registerImplementation(new HashSet<>(
-                Arrays.asList(WindowComponent.TEXTAREA.getIdentifier(),
-                WindowComponent.INPUTFIELD.getIdentifier(),
-                WindowComponent.TOPICBAR.getIdentifier(),
-                WindowComponent.USERLIST.getIdentifier())),
-                ChannelFrame.class);
-    }
-
-    @Deprecated
-    public final void registerImplementation(final Set<String> components,
-            final Class<? extends TextFrame> clazz) {
-        implementations.put(components, new ReflectionWindowProvider(clazz));
+        // TODO: Allow auto-factories to implement an interface and simplify this a bit.
+        registerImplementation(
+                new HashSet<>(Arrays.asList(
+                        WindowComponent.TEXTAREA.getIdentifier())),
+                new WindowProvider() {
+                    @Override
+                    public TextFrame getWindow(final FrameContainer container) {
+                        return customFrameFactory.getCustomFrame(container);
+                    }
+                });
+        registerImplementation(
+                new HashSet<>(Arrays.asList(
+                        WindowComponent.TEXTAREA.getIdentifier(),
+                        WindowComponent.INPUTFIELD.getIdentifier())),
+                new WindowProvider() {
+                    @Override
+                    public TextFrame getWindow(final FrameContainer container) {
+                        return customInputFrameFactory.getCustomInputFrame(
+                                (WritableFrameContainer) container);
+                    }
+                });
+        registerImplementation(
+                new HashSet<>(Arrays.asList(
+                        WindowComponent.TEXTAREA.getIdentifier(),
+                        WindowComponent.INPUTFIELD.getIdentifier(),
+                        WindowComponent.CERTIFICATE_VIEWER.getIdentifier())),
+                new WindowProvider() {
+                    @Override
+                    public TextFrame getWindow(final FrameContainer container) {
+                        return serverFrameFactory.getServerFrame((Server) container);
+                    }
+                });
+        registerImplementation(
+                new HashSet<>(Arrays.asList(
+                        WindowComponent.TEXTAREA.getIdentifier(),
+                        WindowComponent.INPUTFIELD.getIdentifier(),
+                        WindowComponent.TOPICBAR.getIdentifier(),
+                        WindowComponent.USERLIST.getIdentifier())),
+                new WindowProvider() {
+                    @Override
+                    public TextFrame getWindow(final FrameContainer container) {
+                        return channelFrameFactory.getChannelFrame((Channel) container);
+                    }
+                });
     }
 
     /**
@@ -104,7 +136,7 @@ public class SwingWindowFactory implements FrameListener {
      * @param components The component configuration that is provided by the implementation.
      * @param provider The provider to use to generate new windows.
      */
-    public void registerImplementation(
+    public final void registerImplementation(
             final Set<String> components,
             final WindowProvider provider) {
         implementations.put(components, provider);
@@ -190,8 +222,7 @@ public class SwingWindowFactory implements FrameListener {
                     return;
                 }
 
-                for (SwingWindowListener listener : listeners.get(
-                        SwingWindowListener.class)) {
+                for (SwingWindowListener listener : listeners.get(SwingWindowListener.class)) {
                     listener.windowAdded(parentWindow, childWindow);
                 }
 
@@ -213,8 +244,7 @@ public class SwingWindowFactory implements FrameListener {
                 final TextFrame parentWindow = getSwingWindow(parent);
                 final TextFrame childWindow = getSwingWindow(window);
 
-                for (SwingWindowListener listener : listeners.get(
-                        SwingWindowListener.class)) {
+                for (SwingWindowListener listener : listeners.get(SwingWindowListener.class)) {
                     listener.windowDeleted(parentWindow, childWindow);
                 }
 
@@ -245,36 +275,6 @@ public class SwingWindowFactory implements FrameListener {
          * @return A new window for the given container.
          */
         TextFrame getWindow(FrameContainer container);
-
-    }
-
-    /**
-     * Provides a window by using reflection to call a hard-coded constructor.
-     *
-     * <p>This mimics the previous behaviour of {@link SwingWindowFactory}, allowing old
-     * implementations to continue working.
-     *
-     * <p>The target class must have exactly one constructor, which should take a
-     * {@link SwingController} and a {@link FrameContainer} as formal arguments.
-     */
-    private class ReflectionWindowProvider implements WindowProvider {
-
-        private final Class<? extends TextFrame> target;
-
-        public ReflectionWindowProvider(final Class<? extends TextFrame> target) {
-            this.target = target;
-        }
-
-        @Override
-        public TextFrame getWindow(final FrameContainer container) {
-            try {
-                return (TextFrame) target.getConstructors()[0].newInstance(controller, container);
-            } catch (ReflectiveOperationException ex) {
-                Logger.appError(ErrorLevel.HIGH, "Unable to create window for "
-                        + container.getClass().getSimpleName(), ex);
-                return null;
-            }
-        }
 
     }
 

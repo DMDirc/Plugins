@@ -24,6 +24,8 @@ package com.dmdirc.addons.ui_swing.components.frames;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.commandparser.PopupType;
+import com.dmdirc.util.annotations.factory.Factory;
+import com.dmdirc.util.annotations.factory.Unbound;
 
 import javax.swing.JComponent;
 import javax.swing.JPopupMenu;
@@ -33,6 +35,7 @@ import net.miginfocom.swing.MigLayout;
 /**
  * A very basic frame that adds components from a frame container.
  */
+@Factory(inject = true, singleton = true)
 public class ComponentFrame extends TextFrame {
 
     /**
@@ -52,8 +55,9 @@ public class ComponentFrame extends TextFrame {
      * @param owner The frame container that owns this frame
      * @param controller Swing controller
      */
-    public ComponentFrame(final SwingController controller,
-            final FrameContainer owner) {
+    public ComponentFrame(
+            final SwingController controller,
+            @Unbound final FrameContainer owner) {
         super(owner, controller);
         this.controller = controller;
         this.owner = owner;
