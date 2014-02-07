@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.prefs;
 
+import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.addons.ui_swing.PrefsComponentFactory;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
@@ -37,6 +38,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.inject.Inject;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -84,8 +86,10 @@ public class CategoryPanel extends JPanel {
      * @param iconManager Icon manager
      * @param parent Parent window
      */
-    public CategoryPanel(final PrefsComponentFactory factory,
-            final IconManager iconManager,
+    @Inject
+    public CategoryPanel(
+            final PrefsComponentFactory factory,
+            @GlobalConfig final IconManager iconManager,
             final SwingPreferencesDialog parent) {
         this(factory, parent, iconManager, null);
     }

@@ -82,6 +82,7 @@ public class ServerListDialog extends StandardDialog implements
      * @param performWrapper The wrapper to use for the perform tab
      * @param serverListModel The model to use for the dialog.
      * @param mainFrame The main frame that owns the dialog.
+     * @param settingsPanel The panel to use for settings.
      */
     @Inject
     public ServerListDialog(
@@ -89,7 +90,8 @@ public class ServerListDialog extends StandardDialog implements
             final URLHandler urlHandler,
             final PerformWrapper performWrapper,
             final ServerListModel serverListModel,
-            final MainFrame mainFrame) {
+            final MainFrame mainFrame,
+            final Settings settingsPanel) {
         super(mainFrame, ModalityType.MODELESS);
 
         setTitle("Server List");
@@ -112,7 +114,7 @@ public class ServerListDialog extends StandardDialog implements
                 null)));
         profileLayer = new JXLayer<>(new Profiles(model, controller), profileLock);
         performLayer = new JXLayer<>(new Perform(controller, performWrapper, model), performLock);
-        settingsLayer = new JXLayer<>(new Settings(controller, model), settingsLock);
+        settingsLayer = new JXLayer<>(settingsPanel, settingsLock);
         infoLayer = new JXLayer<>(new Info(model, urlHandler), infoLock);
         help = new Help();
         lockLayers();

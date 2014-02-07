@@ -22,19 +22,23 @@
 
 package com.dmdirc.addons.serverlistdialog;
 
+import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.addons.serverlists.ServerGroup;
 import com.dmdirc.addons.serverlists.ServerGroupItem;
-import com.dmdirc.addons.ui_swing.SwingController;
+import com.dmdirc.addons.ui_swing.PrefsComponentFactory;
 import com.dmdirc.addons.ui_swing.components.expandingsettings.SettingsPanel;
 import com.dmdirc.config.ConfigManager;
 import com.dmdirc.config.prefs.PreferencesManager;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
+import com.dmdirc.interfaces.config.IdentityFactory;
+import com.dmdirc.ui.IconManager;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.inject.Inject;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
@@ -55,19 +59,32 @@ public class Settings extends JPanel implements ServerListListener {
     private final Map<ServerGroupItem, SettingsPanel> panels = new HashMap<>();
     /** Platform border. */
     private final Border border;
-    /** Swing controller. */
-    private final SwingController controller;
+    /** Manager to use to retrieve icons. */
+    private final IconManager iconManager;
+    /** Factory to use to produce preference components. */
+    private final PrefsComponentFactory componentFactory;
+    /** Factory to use to produce identities. */
+    private final IdentityFactory identityFactory;
 
     /**
      * Instantiates a new settings panel.
      *
-     * @param controller Swing controller
      * @param model Backing model
+     * @param iconManager Manager to use to retrieve icons.
+     * @param componentFactory Factory to use to produce preference components.
+     * @param identityFactory Factory to use to produce identities.
      */
-    public Settings(final SwingController controller, final ServerListModel model) {
+    @Inject
+    public Settings(
+            final ServerListModel model,
+            @GlobalConfig final IconManager iconManager,
+            final PrefsComponentFactory componentFactory,
+            final IdentityFactory identityFactory) {
         super();
-        this.controller = controller;
         this.model = model;
+        this.iconManager = iconManager;
+        this.componentFactory = componentFactory;
+        this.identityFactory = identityFactory;
         addListeners();
         border = UIManager.getBorder("TitledBorder.border");
         setBorder(BorderFactory.createTitledBorder(border, "Network Settings"));
@@ -111,14 +128,12 @@ public class Settings extends JPanel implements ServerListListener {
     private SettingsPanel getSettingsPanel(final ServerGroupItem item) {
         if (!panels.containsKey(item)) {
             if (item instanceof ServerGroup) {
-                panels.put(item, new SettingsPanel(controller.getIconManager(), controller.getPrefsComponentFactory(), "", false));
+                panels.put(item, new SettingsPanel(iconManager, componentFactory, "", false));
                 addSettings(panels.get(item), new ConfigManager("irc", "",
                     item.getGroup().getNetwork(), item.getName()),
-                    controller.getIdentityFactory().createServerConfig(item.getName()));
-            } else if (item == null) {
-                panels.put(null, new SettingsPanel(controller.getIconManager(), controller.getPrefsComponentFactory(), "", false));
+                    identityFactory.createServerConfig(item.getName()));
             } else {
-                panels.put(item, new SettingsPanel(controller.getIconManager(), controller.getPrefsComponentFactory(), "", false));
+                panels.put(item, new SettingsPanel(iconManager, componentFactory, "", false));
             }
         }
         return panels.get(item);
