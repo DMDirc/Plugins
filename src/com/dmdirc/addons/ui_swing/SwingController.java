@@ -30,7 +30,6 @@ import com.dmdirc.addons.ui_swing.commands.Input;
 import com.dmdirc.addons.ui_swing.commands.PopInCommand;
 import com.dmdirc.addons.ui_swing.commands.PopOutCommand;
 import com.dmdirc.addons.ui_swing.commands.ServerSettings;
-import com.dmdirc.addons.ui_swing.components.addonbrowser.DataLoaderWorkerFactory;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.addons.ui_swing.components.statusbar.SwingStatusBar;
 import com.dmdirc.addons.ui_swing.dialogs.error.ErrorListDialog;
@@ -57,9 +56,7 @@ import com.dmdirc.plugins.implementations.BaseCommandPlugin;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.core.util.URLHandler;
 import com.dmdirc.ui.messages.ColourManager;
-import com.dmdirc.ui.themes.ThemeManager;
 import com.dmdirc.updater.Version;
-import com.dmdirc.updater.manager.CachingUpdateManager;
 import com.dmdirc.util.URLBuilder;
 import com.dmdirc.util.validators.NumericalValidator;
 import com.dmdirc.util.validators.OptionalValidator;
@@ -110,8 +107,6 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     private final IconManager iconManager;
     /** Plugin manager. */
     private final PluginManager pluginManager;
-    /** Theme manager to use. */
-    private final ThemeManager themeManager;
     /** Apple handler, deals with Mac specific code. */
     private final Apple apple;
     /** The colour manager to use to parse colours. */
@@ -141,7 +136,6 @@ public class SwingController extends BaseCommandPlugin implements UIController {
             final IdentityFactory identityFactory,
             final PluginManager pluginManager,
             final ServerManager serverManager,
-            final ThemeManager themeManager,
             final URLBuilder urlBuilder,
             final ColourManager colourManager,
             final EventBus eventBus) {
@@ -149,7 +143,6 @@ public class SwingController extends BaseCommandPlugin implements UIController {
         this.identityManager = identityManager;
         this.identityFactory = identityFactory;
         this.pluginManager = pluginManager;
-        this.themeManager = themeManager;
         this.colourManager = colourManager;
         this.urlBuilder = urlBuilder;
 
@@ -195,11 +188,6 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     @Deprecated
     public PluginManager getPluginManager() {
         return pluginManager;
-    }
-
-    @Deprecated
-    public ThemeManager getThemeManager() {
-        return themeManager;
     }
 
     @Deprecated
@@ -463,7 +451,7 @@ public class SwingController extends BaseCommandPlugin implements UIController {
             @Override
             public void run() {
                 getMainFrame().setVisible(true);
-                errorDialog = new ErrorListDialog(SwingController.this);
+                errorDialog = new ErrorListDialog(getMainFrame(), getIconManager());
             }
         });
 
@@ -850,16 +838,6 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     @Deprecated
     public URLHandler getUrlHandler() {
         return swingManager.getUrlHandler();
-    }
-
-    @Deprecated
-    public DataLoaderWorkerFactory getDataLoaderWorkerFactory() {
-        return swingManager.getDataLoaderWorkerFactory();
-    }
-
-    @Deprecated
-    public CachingUpdateManager getCachingUpdateManager() {
-        return swingManager.getCachingUpdateManager();
     }
 
 }

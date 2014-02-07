@@ -24,7 +24,6 @@ package com.dmdirc.addons.ui_swing;
 
 import com.dmdirc.Channel;
 import com.dmdirc.Server;
-import com.dmdirc.addons.ui_swing.components.addonbrowser.DataLoaderWorkerFactory;
 import com.dmdirc.addons.ui_swing.components.menubar.MenuBar;
 import com.dmdirc.addons.ui_swing.components.statusbar.FeedbackNag;
 import com.dmdirc.addons.ui_swing.components.statusbar.SwingStatusBar;
@@ -40,7 +39,6 @@ import com.dmdirc.addons.ui_swing.wizard.firstrun.FirstRunWizardExecutor;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.core.components.StatusBarManager;
 import com.dmdirc.ui.core.util.URLHandler;
-import com.dmdirc.updater.manager.CachingUpdateManager;
 
 import java.awt.KeyboardFocusManager;
 import java.awt.Toolkit;
@@ -79,12 +77,6 @@ public class SwingManager {
     /** The key listener that supports dialogs. */
     private final DialogKeyListener dialogKeyListener;
 
-    /** Factory used to create data loader workers. */
-    private final DataLoaderWorkerFactory dataLoaderWorkerFactory;
-
-    /** The update manager to use. */
-    private final CachingUpdateManager cachingUpdateManager;
-
     /** Provider of first run executors. */
     private final Provider<FirstRunWizardExecutor> firstRunExecutor;
 
@@ -117,8 +109,6 @@ public class SwingManager {
      * @param ctrlTabManager The window manager that handles ctrl+tab behaviour.
      * @param urlHandler The URL handler to use.
      * @param dialogKeyListener The key listener that supports dialogs.
-     * @param dataLoaderWorkerFactory Factory used to create data loader workers.
-     * @param cachingUpdateManager Update manager to use.
      * @param firstRunExecutor A provider of first run executors.
      * @param prefsComponentFactory The factory to use to create prefs components.
      * @param prefsDialogProvider Provider of prefs dialogs.
@@ -139,8 +129,6 @@ public class SwingManager {
             final CtrlTabWindowManager ctrlTabManager,
             final URLHandler urlHandler,
             final DialogKeyListener dialogKeyListener,
-            final DataLoaderWorkerFactory dataLoaderWorkerFactory,
-            final CachingUpdateManager cachingUpdateManager,
             final Provider<FirstRunWizardExecutor> firstRunExecutor,
             final PrefsComponentFactory prefsComponentFactory,
             final DialogProvider<SwingPreferencesDialog> prefsDialogProvider,
@@ -155,8 +143,6 @@ public class SwingManager {
         this.statusBarManager = statusBarManager;
         this.urlHandler = urlHandler;
         this.dialogKeyListener = dialogKeyListener;
-        this.dataLoaderWorkerFactory = dataLoaderWorkerFactory;
-        this.cachingUpdateManager = cachingUpdateManager;
         this.firstRunExecutor = firstRunExecutor;
         this.prefsComponentFactory = prefsComponentFactory;
         this.prefsDialogProvider = prefsDialogProvider;
@@ -203,16 +189,6 @@ public class SwingManager {
      */
     public FirstRunWizardExecutor getFirstRunExecutor() {
         return firstRunExecutor.get();
-    }
-
-    @Deprecated
-    public DataLoaderWorkerFactory getDataLoaderWorkerFactory() {
-        return dataLoaderWorkerFactory;
-    }
-
-    @Deprecated
-    public CachingUpdateManager getCachingUpdateManager() {
-        return cachingUpdateManager;
     }
 
     @Deprecated
