@@ -80,9 +80,6 @@ public class SwingManager {
     /** Provider of first run executors. */
     private final Provider<FirstRunWizardExecutor> firstRunExecutor;
 
-    /** The factory to use to create prefs components. */
-    private final PrefsComponentFactory prefsComponentFactory;
-
     /** Provider of prefs dialogs. */
     private final DialogProvider<SwingPreferencesDialog> prefsDialogProvider;
     /** Provider of server settings dialogs. */
@@ -110,7 +107,6 @@ public class SwingManager {
      * @param urlHandler The URL handler to use.
      * @param dialogKeyListener The key listener that supports dialogs.
      * @param firstRunExecutor A provider of first run executors.
-     * @param prefsComponentFactory The factory to use to create prefs components.
      * @param prefsDialogProvider Provider of prefs dialogs.
      * @param serverSettingsDialogProvider Provider of server settings dialogs.
      * @param channelSettingsDialogProvider Provider of channel settings dialogs.
@@ -130,7 +126,6 @@ public class SwingManager {
             final URLHandler urlHandler,
             final DialogKeyListener dialogKeyListener,
             final Provider<FirstRunWizardExecutor> firstRunExecutor,
-            final PrefsComponentFactory prefsComponentFactory,
             final DialogProvider<SwingPreferencesDialog> prefsDialogProvider,
             final KeyedDialogProvider<Server, ServerSettingsDialog> serverSettingsDialogProvider,
             final KeyedDialogProvider<Channel, ChannelSettingsDialog> channelSettingsDialogProvider,
@@ -144,7 +139,6 @@ public class SwingManager {
         this.urlHandler = urlHandler;
         this.dialogKeyListener = dialogKeyListener;
         this.firstRunExecutor = firstRunExecutor;
-        this.prefsComponentFactory = prefsComponentFactory;
         this.prefsDialogProvider = prefsDialogProvider;
         this.serverSettingsDialogProvider = serverSettingsDialogProvider;
         this.channelSettingsDialogProvider = channelSettingsDialogProvider;
@@ -189,11 +183,6 @@ public class SwingManager {
      */
     public FirstRunWizardExecutor getFirstRunExecutor() {
         return firstRunExecutor.get();
-    }
-
-    @Deprecated
-    public PrefsComponentFactory getPrefsComponentFactory() {
-        return prefsComponentFactory;
     }
 
     @Deprecated

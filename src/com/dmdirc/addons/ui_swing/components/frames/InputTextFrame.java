@@ -86,7 +86,6 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
      *
      * @param controller Swing controller
      * @param owner WritableFrameContainer owning this frame.
-     * @param controller Swing controller
      */
     public InputTextFrame(final SwingController controller,
             final WritableFrameContainer owner) {
@@ -286,8 +285,6 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
 
     /** Checks and pastes text. */
     public void doPaste() {
-        String clipboard = null;
-
         try {
             if (!Toolkit.getDefaultToolkit().getSystemClipboard().
                     isDataFlavorAvailable(DataFlavor.stringFlavor)) {
@@ -301,9 +298,8 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
         try {
             //get the contents of the input field and combine it with the
             //clipboard
-            clipboard = (String) Toolkit.getDefaultToolkit().
-                    getSystemClipboard().getData(DataFlavor.stringFlavor);
-            doPaste(clipboard);
+            doPaste((String) Toolkit.getDefaultToolkit()
+                    .getSystemClipboard().getData(DataFlavor.stringFlavor));
         } catch (final IOException ex) {
             Logger.userError(ErrorLevel.LOW,
                     "Unable to get clipboard contents: " + ex.getMessage());

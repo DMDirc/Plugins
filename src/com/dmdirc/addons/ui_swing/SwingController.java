@@ -181,11 +181,6 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     }
 
     @Deprecated
-    public PrefsComponentFactory getPrefsComponentFactory() {
-        return swingManager.getPrefsComponentFactory();
-    }
-
-    @Deprecated
     public PluginManager getPluginManager() {
         return pluginManager;
     }
