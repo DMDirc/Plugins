@@ -22,7 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.error;
 
-import com.dmdirc.addons.ui_swing.SwingController;
+import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.logger.ErrorManager;
 import com.dmdirc.logger.ErrorReportStatus;
@@ -76,17 +76,18 @@ public final class ErrorListDialog extends StandardDialog implements
     /**
      * Creates a new instance of ErrorListDialog.
      *
-     * @param controller Swing controller
+     * @param mainFrame The parent window.
+     * @param iconManager The manager to use to load icons.
      */
-    public ErrorListDialog(final SwingController controller) {
-        super(controller.getMainFrame(), ModalityType.MODELESS);
+    public ErrorListDialog(final MainFrame mainFrame, final IconManager iconManager) {
+        super(mainFrame, ModalityType.MODELESS);
 
         setTitle("Error list");
         setMinimumSize(new Dimension(600, 550));
 
         tableModel = new ErrorTableModel();
 
-        initComponents(controller.getIconManager());
+        initComponents(iconManager);
         layoutComponents();
         initListeners();
 
