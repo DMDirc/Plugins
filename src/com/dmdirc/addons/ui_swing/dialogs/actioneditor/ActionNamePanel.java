@@ -122,7 +122,7 @@ public class ActionNamePanel extends JPanel implements PropertyChangeListener {
     @SuppressWarnings("unchecked")
     private void initComponents() {
         name = new ValidatingJTextField(iconManager,
-                new JTextField(existingName),
+                existingName,
                 new ValidatorChain<>(new FileNameValidator(),
                 new ActionNameValidator(group, existingName)));
     }

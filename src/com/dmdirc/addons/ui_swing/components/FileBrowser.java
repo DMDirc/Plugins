@@ -34,7 +34,6 @@ import java.awt.event.KeyListener;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -45,11 +44,7 @@ import net.miginfocom.swing.MigLayout;
  */
 public class FileBrowser extends JPanel implements ActionListener {
 
-    /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
-     */
+    /** A version number for this class. */
     private static final long serialVersionUID = 1;
     /** Text field to show path of chosen file. */
     private final ValidatingJTextField pathField;
@@ -74,8 +69,7 @@ public class FileBrowser extends JPanel implements ActionListener {
         final JButton browseButton = new JButton("Browse");
         browseButton.addActionListener(this);
 
-        pathField = new ValidatingJTextField(iconManager,
-                new JTextField(setting.getValue()), setting.getValidator());
+        pathField = new ValidatingJTextField(iconManager, setting.getValue(), setting.getValidator());
 
         setLayout(new MigLayout("ins 0, fill"));
         add(pathField, "growx, pushx, sgy all");
