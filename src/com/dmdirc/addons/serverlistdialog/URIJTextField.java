@@ -21,23 +21,24 @@
  */
 package com.dmdirc.addons.serverlistdialog;
 
-import javax.swing.JTextField;
+import com.dmdirc.addons.ui_swing.components.validating.ValidatingJTextField;
+import com.dmdirc.ui.IconManager;
+import com.dmdirc.util.validators.Validator;
 
 /**
  * Simple extention of JTextField to return an URI usable string (defaulting to
  * an irc scheme if none specified).
  */
-public class URIJTextField extends JTextField {
+public class URIJTextField extends ValidatingJTextField {
 
-    /**
-     * A version number for this class. It should be changed whenever
-     * the class structure is changed (or anything else that would
-     * prevent serialized objects being unserialized with the new
-     * class).
-     */
+    /** A version number for this class. */
     private static final long serialVersionUID = 1;
 
-    /** {@inheritDoc} */
+    public URIJTextField(final IconManager iconManager, final String text,
+            final Validator<String> validator) {
+        super(iconManager, text, validator);
+    }
+
     @Override
     public String getText() {
         final String hostname = super.getText();
