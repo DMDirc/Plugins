@@ -122,7 +122,7 @@ public class AddEntryInputDialog extends StandardDialog {
     private void initComponents(final IconManager iconManager) {
         orderButtons(new JButton(), new JButton());
         entryName = new ValidatingJTextField(iconManager, entryValidator);
-        uri = new ValidatingJTextField(iconManager, new URIJTextField(), uriValidator);
+        uri = new URIJTextField(iconManager, "", uriValidator);
         blurb = new TextLabel(message);
         validateText();
     }
