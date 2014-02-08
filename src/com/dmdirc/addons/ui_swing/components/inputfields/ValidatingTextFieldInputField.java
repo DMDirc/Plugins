@@ -31,7 +31,6 @@ import com.dmdirc.util.validators.Validator;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JTextField;
 import javax.swing.text.BadLocationException;
 
 /**
@@ -55,7 +54,7 @@ public class ValidatingTextFieldInputField extends ValidatingJTextField
      */
     public ValidatingTextFieldInputField(final SwingController controller,
             final Validator<String> validator) {
-        this(controller, new JTextField(), validator);
+        this(controller, "", validator);
     }
 
     /**
@@ -63,11 +62,11 @@ public class ValidatingTextFieldInputField extends ValidatingJTextField
      *
      * @param controller Swing controller
      * @param validator Validator for this textfield
-     * @param textField Textfield to use as a base
+     * @param text Text to use
      */
     public ValidatingTextFieldInputField(final SwingController controller,
-            final JTextField textField, final Validator<String> validator) {
-        super(controller.getIconManager(), textField, validator);
+            final String text, final Validator<String> validator) {
+        super(controller.getIconManager(), text, validator);
         this.controller = controller;
     }
 
@@ -119,17 +118,4 @@ public class ValidatingTextFieldInputField extends ValidatingJTextField
             colourPicker = null;
         }
     }
-
-    /** {@inheritDoc} */
-    @Override
-    public int getCaretPosition() {
-        return getTextField().getCaretPosition();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void setCaretPosition(final int position) {
-        getTextField().setCaretPosition(position);
-    }
-
 }
