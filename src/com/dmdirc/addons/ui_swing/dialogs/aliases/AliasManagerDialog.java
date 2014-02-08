@@ -103,6 +103,7 @@ public class AliasManagerDialog extends StandardDialog implements ActionListener
      * @param substitutorFactory Actions substitution factory
      * @param aliasWrapper The alias wrapper to read aliases from.
      * @param actionFactory The factory to use to create new actions.
+     * @param aliasPanel The alias panel to use.
      */
     @Inject
     public AliasManagerDialog(
@@ -110,7 +111,8 @@ public class AliasManagerDialog extends StandardDialog implements ActionListener
             final MainFrame parentWindow,
             final ActionSubstitutorFactory substitutorFactory,
             final AliasWrapper aliasWrapper,
-            final ActionFactory actionFactory) {
+            final ActionFactory actionFactory,
+            final AliasPanel aliasPanel) {
         super(parentWindow, ModalityType.MODELESS);
 
         this.controller = controller;
@@ -122,13 +124,13 @@ public class AliasManagerDialog extends StandardDialog implements ActionListener
 
         selectedRow = -1;
 
-        initComponents();
+        initComponents(aliasPanel);
         layoutComponents();
         initListeners();
     }
 
     /** Initialises the components. */
-    private void initComponents() {
+    private void initComponents(final AliasPanel aliasPanel) {
         final TableCellRenderer arrayRenderer = new ArrayCellRenderer();
         final TableCellRenderer conditionRenderer =
                 new ActionConditionCellRenderer();
@@ -177,7 +179,7 @@ public class AliasManagerDialog extends StandardDialog implements ActionListener
 
         scrollPane.setViewportView(table);
 
-        aliasDetails = new AliasPanel(controller, actionFactory);
+        aliasDetails = aliasPanel;
         subsPanel = new AliasSubstitutionsPanel(substitutorFactory);
         subsPanel.setVisible(false);
         showSubs = new JButton("Show Substitutions");

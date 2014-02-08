@@ -22,9 +22,12 @@
 
 package com.dmdirc.addons.ui_swing.components.inputfields;
 
-import com.dmdirc.addons.ui_swing.SwingController;
+import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.components.colours.ColourPickerDialog;
+import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.ui.InputField;
+import com.dmdirc.ui.IconManager;
+import com.dmdirc.ui.messages.ColourManager;
 
 import java.awt.KeyboardFocusManager;
 import java.awt.Window;
@@ -51,31 +54,40 @@ public class TextPaneInputField extends JEditorPane implements InputField,
     private final Window parentWindow;
     /** Colour picker. */
     protected ColourPickerDialog colourPicker;
-    /** Swing controller. */
-    private final SwingController controller;
+    /** The config to read settings from. */
+    private final AggregateConfigProvider globalConfig;
+    /** The colour manager to use when picking colours. */
+    private final ColourManager colourManager;
+    /** The manager to use to retrieve icons. */
+    private final IconManager iconManager;
 
     /**
      * Creates a new text pane input field.
      *
-     * @param controller Swing controller
      * @param parentWindow Parent window, can be null
+     * @param globalConfig The config to read settings from.
+     * @param colourManager The colour manager to use when picking colours.
+     * @param iconManager The manager to use to retrieve icons.
      */
-    public TextPaneInputField(final SwingController controller,
-            final Window parentWindow) {
+    public TextPaneInputField(
+            final MainFrame parentWindow,
+            final AggregateConfigProvider globalConfig,
+            final ColourManager colourManager,
+            final IconManager iconManager) {
         super();
-        this.controller = controller;
-        KeyboardFocusManager.getCurrentKeyboardFocusManager()
-                .addPropertyChangeListener(this);
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener(this);
         this.parentWindow = parentWindow;
+        this.globalConfig = globalConfig;
+        this.colourManager = colourManager;
+        this.iconManager = iconManager;
     }
 
     /** {@inheritDoc} */
     @Override
     public void showColourPicker(final boolean irc, final boolean hex) {
-        if (controller.getGlobalConfig().getOptionBool("general",
-                "showcolourdialog")) {
-            colourPicker = new ColourPickerDialog(this, controller.getColourManager(),
-                    controller.getIconManager(), irc, hex, parentWindow);
+        if (globalConfig.getOptionBool("general", "showcolourdialog")) {
+            colourPicker = new ColourPickerDialog(this, colourManager,
+                    iconManager, irc, hex, parentWindow);
             colourPicker.addActionListener(new ActionListener() {
 
                 @Override
