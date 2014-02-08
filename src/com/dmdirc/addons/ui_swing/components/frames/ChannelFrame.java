@@ -32,9 +32,11 @@ import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.NickList;
 import com.dmdirc.addons.ui_swing.components.SplitPane;
 import com.dmdirc.addons.ui_swing.components.TopicBar;
+import com.dmdirc.addons.ui_swing.components.TopicBarFactory;
 import com.dmdirc.commandparser.PopupType;
 import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.interfaces.config.ConfigProvider;
+import com.dmdirc.util.URLBuilder;
 import com.dmdirc.util.annotations.factory.Factory;
 import com.dmdirc.util.annotations.factory.Unbound;
 
@@ -51,7 +53,7 @@ import net.miginfocom.swing.MigLayout;
 /**
  * The channel frame is the GUI component that represents a channel to the user.
  */
-@Factory(inject = true, singleton = true)
+@Factory(inject = true, singleton = true, providers = true)
 public final class ChannelFrame extends InputTextFrame implements ActionListener,
         com.dmdirc.interfaces.ActionListener {
 
@@ -79,13 +81,19 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
      * and default options for the form.
      *
      * @param deps The dependencies required by text frames.
+     * @param topicBarFactory The factory to use to create topic bars.
+     * @param urlBuilder The URL Builder to use for constructing icons paths.
      * @param owner The Channel object that owns this frame
      */
-    public ChannelFrame(final TextFrameDependencies deps, @Unbound final Channel owner) {
+    public ChannelFrame(
+            final TextFrameDependencies deps,
+            final TopicBarFactory topicBarFactory,
+            final URLBuilder urlBuilder,
+            @Unbound final Channel owner) {
         super(deps, owner);
         this.controller = getController();
 
-        initComponents();
+        initComponents(topicBarFactory, urlBuilder);
 
         controller.getGlobalConfig().addChangeListener("ui",
                 "channelSplitPanePosition", this);
@@ -119,8 +127,11 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
     /**
      * Initialises the compoents in this frame.
      */
-    private void initComponents() {
-        topicBar = new TopicBar(controller.getMainFrame(), this);
+    private void initComponents(
+            final TopicBarFactory topicBarFactory,
+            final URLBuilder urlBuilder) {
+        topicBar = topicBarFactory.getTopicBar((Channel) getContainer(),
+                getContainer().getIconManager(urlBuilder));
 
         nicklist = new NickList(this, getContainer().getConfigManager());
         settingsMI = new JMenuItem("Settings");

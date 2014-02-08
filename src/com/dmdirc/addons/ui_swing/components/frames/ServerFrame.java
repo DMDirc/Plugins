@@ -49,7 +49,7 @@ import net.miginfocom.swing.MigLayout;
 /**
  * The ServerFrame is the MDI window that shows server messages to the user.
  */
-@Factory(inject = true, singleton = true)
+@Factory(inject = true, singleton = true, providers = true)
 public final class ServerFrame extends InputTextFrame implements
         ActionListener, CertificateProblemListener {
 
