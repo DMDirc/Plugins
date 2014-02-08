@@ -113,7 +113,6 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     private final ColourManager colourManager;
     /** The URL builder to use. */
     private final URLBuilder urlBuilder;
-
     /** The manager we're using for dependencies. */
     private SwingManager swingManager;
 
@@ -125,7 +124,6 @@ public class SwingController extends BaseCommandPlugin implements UIController {
      * @param identityFactory Factory used to create identities.
      * @param pluginManager Plugin manager
      * @param serverManager Server manager to use for server information.
-     * @param themeManager Theme manager to use.
      * @param urlBuilder URL builder to use to resolve icons etc.
      * @param colourManager The colour manager to use to parse colours.
      * @param eventBus The bus to publish and subscribe to events on.
@@ -780,18 +778,6 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     }
 
     /**
-     * Retrieves the command controller to use.
-     *
-     * @return The command controller to use.
-     * @deprecated Should be injected where needed.
-     */
-    @Override
-    @Deprecated
-    public CommandController getCommandController() {
-        return super.getCommandController();
-    }
-
-    /**
      * Retrieves the window factory to use.
      *
      * @return The window factory to use.
@@ -822,17 +808,6 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     @Deprecated
     public SwingStatusBar getSwingStatusBar() {
         return swingManager.getMainFrame().getStatusBar();
-    }
-
-    /**
-     * Gets the URL handler to use.
-     *
-     * @return The URL handler to use.
-     * @deprecated Should be injected.
-     */
-    @Deprecated
-    public URLHandler getUrlHandler() {
-        return swingManager.getUrlHandler();
     }
 
 }

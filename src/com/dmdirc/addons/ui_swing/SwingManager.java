@@ -38,7 +38,6 @@ import com.dmdirc.addons.ui_swing.injection.KeyedDialogProvider;
 import com.dmdirc.addons.ui_swing.wizard.firstrun.FirstRunWizardExecutor;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.core.components.StatusBarManager;
-import com.dmdirc.ui.core.util.URLHandler;
 
 import java.awt.KeyboardFocusManager;
 import java.awt.Toolkit;
@@ -71,9 +70,6 @@ public class SwingManager {
     /** The main frame of the Swing UI. */
     private final MainFrame mainFrame;
 
-    /** The URL handler to use. */
-    private final URLHandler urlHandler;
-
     /** The key listener that supports dialogs. */
     private final DialogKeyListener dialogKeyListener;
 
@@ -104,7 +100,6 @@ public class SwingManager {
      * @param menuBar The menu bar to use for the main frame.
      * @param statusBar The status bar to use in the main frame.
      * @param ctrlTabManager The window manager that handles ctrl+tab behaviour.
-     * @param urlHandler The URL handler to use.
      * @param dialogKeyListener The key listener that supports dialogs.
      * @param firstRunExecutor A provider of first run executors.
      * @param prefsDialogProvider Provider of prefs dialogs.
@@ -123,7 +118,6 @@ public class SwingManager {
             final MenuBar menuBar,
             final SwingStatusBar statusBar,
             final CtrlTabWindowManager ctrlTabManager,
-            final URLHandler urlHandler,
             final DialogKeyListener dialogKeyListener,
             final Provider<FirstRunWizardExecutor> firstRunExecutor,
             final DialogProvider<SwingPreferencesDialog> prefsDialogProvider,
@@ -136,7 +130,6 @@ public class SwingManager {
         this.windowManager = windowManager;
         this.statusBar = statusBar;
         this.statusBarManager = statusBarManager;
-        this.urlHandler = urlHandler;
         this.dialogKeyListener = dialogKeyListener;
         this.firstRunExecutor = firstRunExecutor;
         this.prefsDialogProvider = prefsDialogProvider;
@@ -230,17 +223,6 @@ public class SwingManager {
     @Deprecated
     public MainFrame getMainFrame() {
         return mainFrame;
-    }
-
-    /**
-     * Gets the URL handler to use.
-     *
-     * @return The URL handler to use.
-     * @deprecated Should be injected.
-     */
-    @Deprecated
-    public URLHandler getUrlHandler() {
-        return urlHandler;
     }
 
     /**

@@ -23,21 +23,31 @@
 package com.dmdirc.addons.ui_swing.components;
 
 import com.dmdirc.Channel;
+import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.Topic;
+import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SwingController;
+import com.dmdirc.addons.ui_swing.SwingWindowFactory;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.actions.ReplacePasteAction;
 import com.dmdirc.addons.ui_swing.components.frames.ChannelFrame;
 import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputHandler;
 import com.dmdirc.addons.ui_swing.components.inputfields.TextPaneInputField;
 import com.dmdirc.addons.ui_swing.components.text.WrapEditorKit;
-import com.dmdirc.interfaces.config.ConfigChangeListener;
+import com.dmdirc.addons.ui_swing.injection.SwingModule.SwingSettingsDomain;
 import com.dmdirc.interfaces.TopicChangeListener;
+import com.dmdirc.interfaces.config.AggregateConfigProvider;
+import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.parser.common.ChannelJoinRequest;
+import com.dmdirc.plugins.PluginManager;
+import com.dmdirc.ui.IconManager;
+import com.dmdirc.ui.core.util.URLHandler;
+import com.dmdirc.ui.messages.ColourManager;
 import com.dmdirc.ui.messages.Styliser;
+import com.dmdirc.util.annotations.factory.Factory;
+import com.dmdirc.util.annotations.factory.Unbound;
 
 import java.awt.Color;
-import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -64,6 +74,7 @@ import net.miginfocom.swing.MigLayout;
 /**
  * Component to show and edit topics for a channel.
  */
+@Factory(inject = true, singleton = true)
 public class TopicBar extends JComponent implements ActionListener,
         ConfigChangeListener, HyperlinkListener, MouseListener,
         DocumentListener, TopicChangeListener {
@@ -76,12 +87,18 @@ public class TopicBar extends JComponent implements ActionListener,
     private final JButton topicEdit;
     /** Cancel button. */
     private final JButton topicCancel;
+    /** The factory to use to retrieve windows. */
+    private final SwingWindowFactory windowFactory;
+    /** The URL handler to use to launch URLs. */
+    private final URLHandler urlHandler;
+    /** The controller to use to manage window focus. */
+    private final SwingController swingController;
     /** Associated channel. */
     private final Channel channel;
-    /** Controller. */
-    private final SwingController controller;
     /** the maximum length allowed for a topic. */
     private final int topicLengthMax;
+    /** The config domain to read settings from. */
+    private final String domain;
     /** Empty Attribute set. */
     private SimpleAttributeSet as;
     /** Foreground Colour. */
@@ -98,23 +115,41 @@ public class TopicBar extends JComponent implements ActionListener,
     private boolean hideEmpty;
 
     /**
-     * Instantiates a new topic bar.
+     * Creates a new instance of {@link TopicBar}.
      *
-     * @param parentWindow Parent window
-     * @param channelFrame Parent channel frame
+     * @param parentWindow The window that ultimately contains this topic bar.
+     * @param globalConfig The config provider to read settings from.
+     * @param domain The domain that settings are stored in.
+     * @param colourManager The colour manager to use for colour input.
+     * @param pluginManager The plugin manager to use for plugin information.
+     * @param windowFactory The factory to use to find and create windows.
+     * @param urlHandler The URL handler to use to open URLs.
+     * @param swingController The controller to use to manage window focus.
+     * @param channel The channel that this topic bar is for.
+     * @param iconManager The icon manager to use for this bar's icons.
      */
-    public TopicBar(final Window parentWindow,
-            final ChannelFrame channelFrame) {
+    public TopicBar(
+            final MainFrame parentWindow,
+            @SuppressWarnings("qualifiers") @GlobalConfig final AggregateConfigProvider globalConfig,
+            @SuppressWarnings("qualifiers") @SwingSettingsDomain final String domain,
+            final ColourManager colourManager,
+            final PluginManager pluginManager,
+            final SwingWindowFactory windowFactory,
+            final URLHandler urlHandler,
+            final SwingController swingController,
+            @Unbound final Channel channel,
+            @Unbound final IconManager iconManager) {
         super();
 
-        channel = (Channel) channelFrame.getContainer();
-        controller = channelFrame.getController();
-        topicText = new TextPaneInputField(channelFrame.getController(),
-                parentWindow);
+        this.channel = channel;
+        this.domain = domain;
+        this.windowFactory = windowFactory;
+        this.urlHandler = urlHandler;
+        this.swingController = swingController;
+        topicText = new TextPaneInputField(parentWindow, globalConfig, colourManager, iconManager);
         topicLengthMax = channel.getMaxTopicLength();
         updateOptions();
-        errorIcon = new JLabel(channelFrame.getIconManager()
-                .getIcon("input-error"));
+        errorIcon = new JLabel(iconManager.getIcon("input-error"));
         topicText.setEditorKit(new WrapEditorKit(showFull));
         ((DefaultStyledDocument) topicText.getDocument()).setDocumentFilter(
                 new NewlinesDocumentFilter());
@@ -122,16 +157,14 @@ public class TopicBar extends JComponent implements ActionListener,
         topicText.getActionMap().put("paste-from-clipboard",
                 new ReplacePasteAction("(\r\n|\n|\r)", " "));
         topicEdit = new ImageButton<>("edit",
-                channelFrame.getIconManager().getIcon("edit-inactive"),
-                channelFrame.getIconManager().getIcon("edit"));
+                iconManager.getIcon("edit-inactive"),
+                iconManager.getIcon("edit"));
         topicCancel = new ImageButton<>("cancel",
-                channelFrame.getIconManager().getIcon("close"),
-                channelFrame.getIconManager().getIcon("close-active"));
+                iconManager.getIcon("close"),
+                iconManager.getIcon("close-active"));
 
         final SwingInputHandler handler = new SwingInputHandler(
-                controller.getPluginManager(), topicText,
-                channelFrame.getContainer().getCommandParser(),
-                channelFrame.getContainer());
+                pluginManager, topicText, channel.getCommandParser(), channel);
         handler.setTypes(true, false, true, false);
         handler.setTabCompleter(channel.getTabCompleter());
 
@@ -185,20 +218,14 @@ public class TopicBar extends JComponent implements ActionListener,
         topicText.addHyperlinkListener(this);
         topicText.addMouseListener(this);
         topicText.getDocument().addDocumentListener(this);
-        controller.getGlobalConfig().addChangeListener(
-                "ui", "backgroundcolour", this);
-        controller.getGlobalConfig().addChangeListener(
-                "ui", "foregroundcolour", this);
-        controller.getGlobalConfig().addChangeListener(
-                "ui", "inputbackgroundcolour", this);
-        controller.getGlobalConfig().addChangeListener(
-                "ui", "inputforegroundcolour", this);
-        controller.getGlobalConfig().addChangeListener(
-                controller.getDomain(), "showfulltopic", this);
-        controller.getGlobalConfig().addChangeListener(
-                controller.getDomain(), "hideEmptyTopicBar", this);
-        controller.getGlobalConfig().addChangeListener(
-                controller.getDomain(), "showtopicbar", this);
+
+        globalConfig.addChangeListener("ui", "backgroundcolour", this);
+        globalConfig.addChangeListener("ui", "foregroundcolour", this);
+        globalConfig.addChangeListener("ui", "inputbackgroundcolour", this);
+        globalConfig.addChangeListener("ui", "inputforegroundcolour", this);
+        globalConfig.addChangeListener(domain, "showfulltopic", this);
+        globalConfig.addChangeListener(domain, "hideEmptyTopicBar", this);
+        globalConfig.addChangeListener(domain, "showtopicbar", this);
 
         setVisible(true);
         topicText.setFocusable(false);
@@ -281,7 +308,7 @@ public class TopicBar extends JComponent implements ActionListener,
                 .equals(topicText.getText()))) {
             channel.setTopic(topicText.getText());
         }
-        ((ChannelFrame) controller.getWindowFactory().getSwingWindow(channel))
+        ((ChannelFrame) windowFactory.getSwingWindow(channel))
                 .getInputField().requestFocusInWindow();
         if (channel.getCurrentTopic() == null) {
             topicText.setText("");
@@ -318,7 +345,7 @@ public class TopicBar extends JComponent implements ActionListener,
         topicText.setFocusable(false);
         topicText.setEditable(false);
         topicCancel.setVisible(false);
-        ((ChannelFrame) controller.getWindowFactory().getSwingWindow(channel))
+        ((ChannelFrame) windowFactory.getSwingWindow(channel))
                 .getInputField().requestFocusInWindow();
         topicChanged(channel, null);
     }
@@ -334,10 +361,10 @@ public class TopicBar extends JComponent implements ActionListener,
             if (url.charAt(0) == '#') {
                 channel.getConnection().join(new ChannelJoinRequest(url));
             } else if (url.contains("://")) {
-                controller.getUrlHandler().launchApp(e.getDescription());
+                urlHandler.launchApp(e.getDescription());
             } else {
-                controller.requestWindowFocus(controller.getWindowFactory()
-                        .getSwingWindow(channel.getConnection().getQuery(url)));
+                swingController.requestWindowFocus(
+                        windowFactory.getSwingWindow(channel.getConnection().getQuery(url)));
             }
         }
     }
@@ -474,12 +501,9 @@ public class TopicBar extends JComponent implements ActionListener,
     }
 
     private void updateOptions() {
-        showFull = channel.getConfigManager()
-                .getOptionBool(controller.getDomain(), "showfulltopic");
-        hideEmpty = channel.getConfigManager()
-                .getOptionBool(controller.getDomain(), "hideEmptyTopicBar");
-        showBar = channel.getConfigManager()
-                .getOptionBool(controller.getDomain(), "showtopicbar");
+        showFull = channel.getConfigManager().getOptionBool(domain, "showfulltopic");
+        hideEmpty = channel.getConfigManager().getOptionBool(domain, "hideEmptyTopicBar");
+        showBar = channel.getConfigManager().getOptionBool(domain, "showtopicbar");
     }
 
     /**

@@ -35,7 +35,7 @@ import net.miginfocom.swing.MigLayout;
  * A custom frame that includes an input field (for use with writable
  * containers).
  */
-@Factory(inject = true, singleton = true)
+@Factory(inject = true, singleton = true, providers = true)
 public class CustomInputFrame extends InputTextFrame {
 
     /**

@@ -32,6 +32,7 @@ import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.inputfields.ValidatingTextFieldInputField;
 import com.dmdirc.addons.ui_swing.components.renderers.ActionComparisonCellRenderer;
 import com.dmdirc.commandparser.validators.CommandNameValidator;
+import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.util.validators.FileNameValidator;
 import com.dmdirc.util.validators.ValidatorChain;
 
@@ -40,6 +41,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -79,23 +81,22 @@ public class AliasPanel extends JPanel implements ActionListener {
      *
      * @param controller Swing controller
      * @param actionFactory The factory to use to create new actions.
+     * @param commandController The controller to use to retrieve command information.
      */
-    @SuppressWarnings("unchecked")
+    @Inject
     public AliasPanel(
             final SwingController controller,
-            final ActionFactory actionFactory) {
+            final ActionFactory actionFactory,
+            final CommandController commandController) {
         super();
 
         this.actionFactory = actionFactory;
 
         command = new ValidatingTextFieldInputField(controller,
                 new ValidatorChain<>(
-                new CommandNameValidator(controller.getCommandController().getCommandChar()),
+                new CommandNameValidator(commandController.getCommandChar()),
                 new FileNameValidator()));
         command.setEnabled(false);
-        //new SwingInputHandler(command, GlobalCommandParser
-        //        .getGlobalCommandParser(), inputWindow)
-        //        .setTypes(false, false, true,false);
 
         argumentComponent = new JComboBox(new CoreActionComparison[]{null,
             CoreActionComparison.INT_GREATER, CoreActionComparison.INT_EQUALS,

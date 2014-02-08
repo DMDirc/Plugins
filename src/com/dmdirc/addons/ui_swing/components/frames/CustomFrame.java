@@ -33,7 +33,7 @@ import net.miginfocom.swing.MigLayout;
 /**
  * A very basic custom frame.
  */
-@Factory(inject = true, singleton = true)
+@Factory(inject = true, singleton = true, providers = true)
 public class CustomFrame extends TextFrame {
 
     /**
