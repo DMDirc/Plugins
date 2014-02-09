@@ -168,7 +168,7 @@ public class Apple implements InvocationHandler {
      * @return true if we are running on OS X
      */
     public static boolean isApple() {
-        return (System.getProperty("mrj.version") != null);
+        return (System.getProperty("os.name").contains("OS X") || System.getProperty("mrj.version") != null);
     }
 
     /**
