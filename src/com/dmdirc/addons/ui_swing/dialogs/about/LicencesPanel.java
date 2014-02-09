@@ -81,7 +81,8 @@ public class LicencesPanel extends JPanel implements TreeSelectionListener {
         super();
 
         this.config = globalConfig;
-        initComponents(new LicenceLoader(pluginManager, list, listModel));
+        initComponents();
+        new LicenceLoader(pluginManager, list, listModel).executeInExecutor();
         addListeners();
         layoutComponents();
     }
@@ -103,17 +104,13 @@ public class LicencesPanel extends JPanel implements TreeSelectionListener {
     }
 
     /** Initialises the components. */
-    private void initComponents(final LicenceLoader licenceLoader) {
+    private void initComponents() {
         setOpaque(UIUtilities.getTabbedPaneOpaque());
         listModel = new DefaultTreeModel(new DefaultMutableTreeNode());
         list = new JTree(listModel) {
 
             /**
-             * A version number for this class. It should be changed whenever
-             * the class
-             * structure is changed (or anything else that would prevent
-             * serialized
-             * objects being unserialized with the new class).
+             * A version number for this class.
              */
             private static final long serialVersionUID = 1;
 
@@ -136,7 +133,6 @@ public class LicencesPanel extends JPanel implements TreeSelectionListener {
         list.getSelectionModel().setSelectionMode(TreeSelectionModel.
                 SINGLE_TREE_SELECTION);
         new TreeScroller(list);
-        licenceLoader.executeInExecutor();
         licence = new JEditorPane();
         licence.setEditorKit(new HTMLEditorKit());
         final Font font = UIManager.getFont("Label.font");
