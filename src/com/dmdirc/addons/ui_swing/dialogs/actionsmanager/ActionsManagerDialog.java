@@ -19,7 +19,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 package com.dmdirc.addons.ui_swing.dialogs.actionsmanager;
 
 import com.dmdirc.ClientModule.UserConfig;
@@ -72,9 +71,9 @@ public class ActionsManagerDialog extends StandardDialog implements
         ListSelectionListener {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 1;
     /** Config instance. */
@@ -134,7 +133,7 @@ public class ActionsManagerDialog extends StandardDialog implements
         initComponents();
         validator = new ValidatorChain<>(
                 new ActionGroupNoDuplicatesInListValidator(groups,
-                (DefaultListModel) groups.getModel()), new FileNameValidator());
+                        (DefaultListModel) groups.getModel()), new FileNameValidator());
         addListeners();
         layoutGroupPanel();
         layoutComponents();
@@ -315,72 +314,72 @@ public class ActionsManagerDialog extends StandardDialog implements
                 ModalityType.DOCUMENT_MODAL, "New action group",
                 "Please enter the name of the new action group", validator) {
 
-            /** Java Serialisation version ID. */
-            private static final long serialVersionUID = 1;
+                    /** Java Serialisation version ID. */
+                    private static final long serialVersionUID = 1;
 
-            /** {@inheritDoc} */
-            @Override
-            public boolean save() {
-                if (!saving.getAndSet(true)) {
-                    groups.setSelectedIndex(index);
-                    if (getText() == null || getText().isEmpty()
+                    /** {@inheritDoc} */
+                    @Override
+                    public boolean save() {
+                        if (!saving.getAndSet(true)) {
+                            groups.setSelectedIndex(index);
+                            if (getText() == null || getText().isEmpty()
                             && !ActionManager.getActionManager().getGroupsMap()
                             .containsKey(getText())) {
-                        return false;
-                    } else {
-                        final ActionGroup group = ActionManager
+                                return false;
+                            } else {
+                                final ActionGroup group = ActionManager
                                 .getActionManager().createGroup(getText());
-                        reloadGroups(group);
-                        return true;
+                                reloadGroups(group);
+                                return true;
+                            }
+                        }
+                        return false;
                     }
-                }
-                return false;
-            }
 
-            /** {@inheritDoc} */
-            @Override
-            public void cancelled() {
-                groups.setSelectedIndex(index);
-            }
-        }.display(this);
+                    /** {@inheritDoc} */
+                    @Override
+                    public void cancelled() {
+                        groups.setSelectedIndex(index);
+                    }
+                }.display(this);
     }
 
     /**
      * Prompts then edits an action group.
      */
     private void editGroup() {
-        final String oldName =
-                ((ActionGroup) groups.getSelectedValue()).getName();
+        final String oldName
+                = ((ActionGroup) groups.getSelectedValue()).getName();
         final StandardInputDialog inputDialog = new StandardInputDialog(
                 this, ModalityType.DOCUMENT_MODAL,
                 "Edit action group",
                 "Please enter the new name of the action group", validator) {
 
-            /** Java Serialisation version ID. */
-            private static final long serialVersionUID = 1;
+                    /** Java Serialisation version ID. */
+                    private static final long serialVersionUID = 1;
 
-            /** {@inheritDoc} */
-            @Override
-            public boolean save() {
-                if (!saving.getAndSet(true)) {
-                    if (getText() == null || getText().isEmpty()) {
+                    /** {@inheritDoc} */
+                    @Override
+                    public boolean save() {
+                        if (!saving.getAndSet(true)) {
+                            if (getText() == null || getText().isEmpty()) {
+                                return false;
+                            } else {
+                                ActionManager.getActionManager().changeGroupName(
+                                        oldName, getText());
+                                reloadGroups();
+                                return true;
+                            }
+                        }
                         return false;
-                    } else {
-                        ActionManager.getActionManager().changeGroupName(
-                                oldName, getText());
-                        reloadGroups();
-                        return true;
                     }
-                }
-                return false;
-            }
 
-            /** {@inheritDoc} */
-            @Override
-            public void cancelled() {
-                //Ignore
-            }
-        };
+                    /** {@inheritDoc} */
+                    @Override
+                    public void cancelled() {
+                        //Ignore
+                    }
+                };
         inputDialog.setText(oldName);
         inputDialog.display(this);
     }
@@ -389,42 +388,42 @@ public class ActionsManagerDialog extends StandardDialog implements
      * Prompts then deletes an action group.
      */
     private void delGroup() {
-        final String group =
-                ((ActionGroup) groups.getSelectedValue()).getName();
+        final String group
+                = ((ActionGroup) groups.getSelectedValue()).getName();
         new StandardQuestionDialog(this,
                 ModalityType.APPLICATION_MODAL,
                 "Confirm deletion",
                 "Are you sure you wish to delete the '" + group
                 + "' group and all actions within it?") {
 
-            /** Java Serialisation version ID. */
-            private static final long serialVersionUID = 1;
+                    /** Java Serialisation version ID. */
+                    private static final long serialVersionUID = 1;
 
-            /** {@inheritDoc} */
-            @Override
-            public boolean save() {
-                int location =
-                        ((DefaultListModel) groups.getModel()).indexOf(
-                        ActionManager.getActionManager().getOrCreateGroup(group));
-                ActionManager.getActionManager().deleteGroup(group);
-                reloadGroups();
-                if (groups.getModel().getSize() == 0) {
-                    location = -1;
-                } else if (location >= groups.getModel().getSize()) {
-                    location = groups.getModel().getSize();
-                } else if (location <= 0) {
-                    location = 0;
-                }
-                groups.setSelectedIndex(location);
-                return true;
-            }
+                    /** {@inheritDoc} */
+                    @Override
+                    public boolean save() {
+                        int location
+                        = ((DefaultListModel) groups.getModel()).indexOf(
+                                ActionManager.getActionManager().getOrCreateGroup(group));
+                        ActionManager.getActionManager().deleteGroup(group);
+                        reloadGroups();
+                        if (groups.getModel().getSize() == 0) {
+                            location = -1;
+                        } else if (location >= groups.getModel().getSize()) {
+                            location = groups.getModel().getSize();
+                        } else if (location <= 0) {
+                            location = 0;
+                        }
+                        groups.setSelectedIndex(location);
+                        return true;
+                    }
 
-            /** {@inheritDoc} */
-            @Override
-            public void cancelled() {
-                //Ignore
-            }
-        }.display();
+                    /** {@inheritDoc} */
+                    @Override
+                    public void cancelled() {
+                        //Ignore
+                    }
+                }.display();
     }
 
     /** {@inheritDoc} */
