@@ -56,11 +56,7 @@ import net.miginfocom.swing.MigLayout;
 public class UpdateConfigPanel extends JPanel implements ActionListener,
         PreferencesInterface, ConfigChangeListener {
 
-    /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
-     */
+    /** A version number for this class. */
     private static final long serialVersionUID = 1;
     /** Global checkbox. */
     private JCheckBox enable;
@@ -74,8 +70,6 @@ public class UpdateConfigPanel extends JPanel implements ActionListener,
     private JButton checkNow;
     /** Update channel. */
     private JComboBox updateChannel;
-    /** The prefs dialog that will be hosting the panel. */
-    private final SwingPreferencesDialog prefsDialog;
     /** The configuration to write settings changes to. */
     private final ConfigProvider userConfig;
     /** The configuration to read global settings from. */
@@ -88,7 +82,6 @@ public class UpdateConfigPanel extends JPanel implements ActionListener,
     /**
      * Instantiates a new update config panel.
      *
-     * @param prefsDialog The prefs dialog that will be hosting the panel.
      * @param userConfig The configuration to write settings changes to.
      * @param globalConfig The configuration to read global settings from.
      * @param updateManager The manager to read update information from.
@@ -96,12 +89,10 @@ public class UpdateConfigPanel extends JPanel implements ActionListener,
      */
     @Inject
     public UpdateConfigPanel(
-            final SwingPreferencesDialog prefsDialog,
             @UserConfig final ConfigProvider userConfig,
             @GlobalConfig final AggregateConfigProvider globalConfig,
             final CachingUpdateManager updateManager,
             final IdentityController identityController) {
-        this.prefsDialog = prefsDialog;
         this.userConfig = userConfig;
         this.globalConfig = globalConfig;
         this.updateManager = updateManager;
@@ -166,7 +157,7 @@ public class UpdateConfigPanel extends JPanel implements ActionListener,
      * Lays out the components.
      */
     private void layoutComponents() {
-        setLayout(new MigLayout("fill, ins 0, hmax " + prefsDialog.getPanelHeight()));
+        setLayout(new MigLayout("fill, ins 0, hmax 500"));
 
         add(new JLabel("Update checking:"), "split");
         add(enable, "growx");
