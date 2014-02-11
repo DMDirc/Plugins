@@ -19,12 +19,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 package com.dmdirc.addons.nickcolours;
 
-import com.dmdirc.addons.ui_swing.SwingController;
+import com.dmdirc.ClientModule;
+import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.config.prefs.PreferencesInterface;
 import com.dmdirc.interfaces.config.ConfigProvider;
+import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.messages.ColourManager;
 
 import java.awt.Color;
@@ -45,16 +46,15 @@ import javax.swing.table.TableCellRenderer;
 import net.miginfocom.swing.MigLayout;
 
 /**
- * Panel used for the custom nick colour settings component in the plugin's
- * config dialog.
+ * Panel used for the custom nick colour settings component in the plugin's config dialog.
  */
 public class NickColourPanel extends JPanel implements ActionListener,
         PreferencesInterface, ListSelectionListener {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 1;
 
@@ -67,38 +67,39 @@ public class NickColourPanel extends JPanel implements ActionListener,
     private final transient NickColourPlugin plugin;
     /** The identity to write settings to. */
     private final ConfigProvider configIdentity;
-    /** The controller that owns this dialog. */
-    private final SwingController swingController;
-
     /** Edit and delete buttons. */
     private final JButton editButton, deleteButton;
+    private MainFrame mainFrame;
+    private IconManager iconManager;
+    private ColourManager colourManager;
 
     /**
      * Creates a new instance of NickColourPanel.
      *
-     * @param controller The UI controller that owns this panel
      * @param plugin The plugin that owns this panel
      * @param colourManager The colour manager to use to parse colours.
      * @param userSettings The provider to write user settings to.
      */
     public NickColourPanel(
-            final SwingController controller,
+            final MainFrame mainFrame,
+            @SuppressWarnings("qualifiers") @ClientModule.GlobalConfig final IconManager iconManager,
             final NickColourPlugin plugin,
             final ColourManager colourManager,
             final ConfigProvider userSettings) {
+        this.mainFrame = mainFrame;
+        this.iconManager = iconManager;
+        this.colourManager = colourManager;
         this.plugin = plugin;
         this.configIdentity = userSettings;
-        this.swingController = controller;
 
         final Object[][] data = plugin.getData();
 
         table = new JTable(new DefaultTableModel(data, HEADERS)) {
 
             /**
-             * A version number for this class. It should be changed whenever
-             * the class structure is changed (or anything else that would
-             * prevent serialized objects being unserialized with the new
-             * class).
+             * A version number for this class. It should be changed whenever the class structure is
+             * changed (or anything else that would prevent serialized objects being unserialized
+             * with the new class).
              */
             private static final long serialVersionUID = 1;
             /** The colour renderer we're using for colour cells. */
@@ -128,7 +129,7 @@ public class NickColourPanel extends JPanel implements ActionListener,
         table.setFillsViewportHeight(true);
         table.setDefaultRenderer(Color.class, new ColourRenderer(colourManager));
 
-        setLayout(new MigLayout("ins 0, fillx, hmax " + controller.getPrefsDialog().getPanelHeight()));
+        setLayout(new MigLayout("ins 0, fillx, hmax 500"));
         add(scrollPane, "grow, push, wrap, spanx");
 
         final JButton addButton = new JButton("Add");
@@ -166,11 +167,7 @@ public class NickColourPanel extends JPanel implements ActionListener,
         final int row = table.getSelectedRow();
         switch (e.getActionCommand()) {
             case "Add":
-                new NickColourInputDialog(
-                        swingController.getMainFrame(),
-                        swingController.getColourManager(),
-                        swingController.getIconManager(),
-                        this);
+                new NickColourInputDialog(mainFrame, colourManager, iconManager, this);
                 break;
             case "Edit":
                 final DefaultTableModel model = ((DefaultTableModel) table.getModel());
@@ -184,12 +181,8 @@ public class NickColourPanel extends JPanel implements ActionListener,
                 if (nickcolour == null) {
                     nickcolour = "";
                 }
-                new NickColourInputDialog(
-                        swingController.getMainFrame(),
-                        swingController.getColourManager(),
-                        swingController.getIconManager(),
-                        this, row, nickname, network,
-                        textcolour, nickcolour);
+                new NickColourInputDialog(mainFrame, colourManager, iconManager, this,
+                        row, nickname, network, textcolour, nickcolour);
                 break;
             case "Delete":
                 if (row > -1) {

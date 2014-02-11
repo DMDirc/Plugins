@@ -19,14 +19,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 package com.dmdirc.addons.nickcolours;
 
 import com.dmdirc.Channel;
 import com.dmdirc.ChannelClientProperty;
+import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionType;
-import com.dmdirc.addons.ui_swing.SwingController;
+import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
@@ -37,6 +37,7 @@ import com.dmdirc.interfaces.ActionListener;
 import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
+import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.config.IdentityController;
 import com.dmdirc.parser.interfaces.ChannelClientInfo;
 import com.dmdirc.parser.interfaces.ChannelInfo;
@@ -44,6 +45,7 @@ import com.dmdirc.parser.interfaces.ClientInfo;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.implementations.BasePlugin;
 import com.dmdirc.ui.Colour;
+import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.messages.ColourManager;
 
 import java.util.ArrayList;
@@ -59,7 +61,7 @@ public class NickColourPlugin extends BasePlugin implements ActionListener, Conf
     /** "Random" colours to use to colour nicknames. */
     private String[] randColours = new String[]{
         "E90E7F", "8E55E9", "B30E0E", "18B33C",
-        "58ADB3", "9E54B3", "B39875", "3176B3", };
+        "58ADB3", "9E54B3", "B39875", "3176B3",};
     private boolean useowncolour;
     private String owncolour;
     private boolean userandomcolour;
@@ -71,16 +73,20 @@ public class NickColourPlugin extends BasePlugin implements ActionListener, Conf
     private final IdentityController identityController;
     /** Manager to parse colours with. */
     private final ColourManager colourManager;
-    /** The swing controller to use. */
-    private final SwingController swingController;
+    private MainFrame mainFrame;
+    private IconManager iconManager;
+    private ConfigProvider globalConfig;
 
     public NickColourPlugin(final PluginInfo pluginInfo,
             final IdentityController identityController, final ColourManager colourManager,
-            final SwingController swingController) {
+            final MainFrame mainFrame, @SuppressWarnings("qualifiers") @GlobalConfig final IconManager iconManager,
+            @SuppressWarnings("qualifiers") @GlobalConfig final ConfigProvider globalConfig) {
+        this.mainFrame = mainFrame;
+        this.iconManager = iconManager;
         this.pluginInfo = pluginInfo;
+        this.globalConfig = globalConfig;
         this.identityController = identityController;
         this.colourManager = colourManager;
-        this.swingController = swingController;
     }
 
     /** {@inheritDoc} */
@@ -88,8 +94,8 @@ public class NickColourPlugin extends BasePlugin implements ActionListener, Conf
     public void processEvent(final ActionType type, final StringBuffer format,
             final Object... arguments) {
         if (type.equals(CoreActionType.CHANNEL_GOTNAMES)) {
-            final ChannelInfo chanInfo =
-                    ((Channel) arguments[0]).getChannelInfo();
+            final ChannelInfo chanInfo
+                    = ((Channel) arguments[0]).getChannelInfo();
             final String network = ((Channel) arguments[0]).getConnection().
                     getNetwork();
 
@@ -113,8 +119,8 @@ public class NickColourPlugin extends BasePlugin implements ActionListener, Conf
     private void colourClient(final String network,
             final ChannelClientInfo client) {
         final Map<Object, Object> map = client.getMap();
-        final ClientInfo myself =
-                client.getClient().getParser().getLocalClient();
+        final ClientInfo myself
+                = client.getClient().getParser().getLocalClient();
         final String nickOption1 = "color:"
                 + client.getClient().getParser().getStringConverter().
                 toLowerCase(network + ":" + client.getClient().getNickname());
@@ -155,8 +161,7 @@ public class NickColourPlugin extends BasePlugin implements ActionListener, Conf
     }
 
     /**
-     * Puts the specified colour into the given map. The keys are determined
-     * by config settings.
+     * Puts the specified colour into the given map. The keys are determined by config settings.
      *
      * @param map The map to use
      * @param textColour Text colour to be inserted
@@ -205,7 +210,6 @@ public class NickColourPlugin extends BasePlugin implements ActionListener, Conf
                 final String user = key.substring(1 + key.indexOf(':', 6));
                 final String[] parts = getParts(key);
 
-
                 data.add(new Object[]{network, user, parts[0], parts[1]});
             }
         }
@@ -223,8 +227,8 @@ public class NickColourPlugin extends BasePlugin implements ActionListener, Conf
     }
 
     /**
-     * Retrieves the config option with the specified key, and returns an
-     * array of the colours that should be used for it.
+     * Retrieves the config option with the specified key, and returns an array of the colours that
+     * should be used for it.
      *
      * @param key The config key to look up
      * @return The colours specified by the given key
@@ -265,18 +269,18 @@ public class NickColourPlugin extends BasePlugin implements ActionListener, Conf
         final PreferencesCategory colours = new PluginPreferencesCategory(
                 pluginInfo, "Colours",
                 "Set colours for specific nicknames.", UIUtilities.invokeAndWait(
-                new Callable<NickColourPanel>() {
+                        new Callable<NickColourPanel>() {
 
-                    /** {@inheritDoc} */
-                    @Override
-                    public NickColourPanel call() {
-                        return new NickColourPanel(
-                                swingController,
-                                NickColourPlugin.this,
-                                colourManager,
-                                swingController.getGlobalIdentity());
-                    }
-                }));
+                            /** {@inheritDoc} */
+                            @Override
+                            public NickColourPanel call() {
+                                return new NickColourPanel(mainFrame,
+                                        iconManager,
+                                        NickColourPlugin.this,
+                                        colourManager,
+                                        globalConfig);
+                            }
+                        }));
 
         general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
                 "ui", "shownickcoloursintext", "Show colours in text area",
@@ -304,9 +308,9 @@ public class NickColourPlugin extends BasePlugin implements ActionListener, Conf
                 manager.getConfigManager(), manager.getIdentity()));
         general.addSetting(
                 new PreferencesSetting(PreferencesType.COLOUR, getDomain(),
-                "owncolour", "Colour to use for own nick",
-                "Colour used for our own nickname, if above setting is "
-                + "enabled.", manager.getConfigManager(), manager.getIdentity()));
+                        "owncolour", "Colour to use for own nick",
+                        "Colour used for our own nickname, if above setting is "
+                        + "enabled.", manager.getConfigManager(), manager.getIdentity()));
 
         general.addSubCategory(colours);
         manager.getCategory("Plugins").addSubCategory(general);
