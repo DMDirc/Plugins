@@ -19,7 +19,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 package com.dmdirc.addons.ui_swing.dialogs.actionsmanager;
 
 import com.dmdirc.actions.Action;
@@ -53,18 +52,17 @@ import javax.swing.table.TableRowSorter;
 import net.miginfocom.swing.MigLayout;
 
 /**
- * The actions group panel is the control displayed within the tabbed control
- * of the actions manager dialog. It shows the user all actions belonging to
- * a particular group.
+ * The actions group panel is the control displayed within the tabbed control of the actions manager
+ * dialog. It shows the user all actions belonging to a particular group.
  */
-@Factory(inject=true, singleton=true)
+@Factory(inject = true, singleton = true)
 public class ActionsGroupPanel extends JPanel implements ActionListener,
         ListSelectionListener {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 1;
     /** Factory to use to create editor dialogs. */
@@ -145,10 +143,9 @@ public class ActionsGroupPanel extends JPanel implements ActionListener,
         table = new PackingTable(model, scrollPane, false) {
 
             /**
-             * A version number for this class. It should be changed whenever
-             * the class structure is changed (or anything else that would
-             * prevent serialized objects being unserialized with the new
-             * class).
+             * A version number for this class. It should be changed whenever the class structure is
+             * changed (or anything else that would prevent serialized objects being unserialized
+             * with the new class).
              */
             private static final long serialVersionUID = 1;
             /** Action type renderer. */
@@ -169,7 +166,6 @@ public class ActionsGroupPanel extends JPanel implements ActionListener,
                 }
             }
         };
-
 
         final TableRowSorter<ActionTableModel> sorter
                 = new TableRowSorter<>(model);
@@ -252,38 +248,37 @@ public class ActionsGroupPanel extends JPanel implements ActionListener,
         } else if (e.getSource() == edit) {
             editorDialogFactory.getActionEditorDialog(parent,
                     model.getAction(table.getRowSorter().convertRowIndexToModel(
-                            table.getSelectedRow()))).display();
+                                    table.getSelectedRow()))).display();
         } else if (e.getSource() == delete) {
-            final Action action =
-                    model.getAction(
-                    table.getRowSorter().convertRowIndexToModel(table.
-                    getSelectedRow()));
+            final Action action
+                    = model.getAction(
+                            table.getRowSorter().convertRowIndexToModel(table.
+                                    getSelectedRow()));
             new StandardQuestionDialog(parent,
                     ModalityType.APPLICATION_MODAL, "Confirm deletion",
                     "Are you sure you wish to delete the action '" + action.
                     getName() + "'?") {
 
-                /**
-                 * A version number for this class. It should be changed
-                 * whenever the class structure is changed (or anything else
-                 * that would prevent serialized objects being unserialized
-                 * with the new class).
-                 */
-                private static final long serialVersionUID = 1;
+                        /**
+                         * A version number for this class. It should be changed whenever the class
+                         * structure is changed (or anything else that would prevent serialized
+                         * objects being unserialized with the new class).
+                         */
+                        private static final long serialVersionUID = 1;
 
-                /** {@inheritDoc} */
-                @Override
-                public boolean save() {
-                    group.deleteAction(action);
-                    return true;
-                }
+                        /** {@inheritDoc} */
+                        @Override
+                        public boolean save() {
+                            group.deleteAction(action);
+                            return true;
+                        }
 
-                /** {@inheritDoc} */
-                @Override
-                public void cancelled() {
-                    //Ignore
-                }
-            }.display();
+                        /** {@inheritDoc} */
+                        @Override
+                        public void cancelled() {
+                            //Ignore
+                        }
+                    }.display();
         }
     }
 

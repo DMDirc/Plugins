@@ -19,7 +19,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 package com.dmdirc.addons.ui_swing.components.addonbrowser;
 
 import java.awt.Window;
@@ -45,9 +44,9 @@ import net.miginfocom.swing.MigLayout;
 public class BrowserWindow extends JDialog implements ActionListener {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 1;
     /** The search box. */
@@ -188,8 +187,8 @@ public class BrowserWindow extends JDialog implements ActionListener {
     }
 
     /**
-     * Loads the addon data into the browser window, either from the local cache
-     * or by downloading the data from the website.
+     * Loads the addon data into the browser window, either from the local cache or by downloading
+     * the data from the website.
      *
      * @param download Download new addon feed?
      */

@@ -19,10 +19,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 package com.dmdirc.addons.ui_swing.dialogs.prefs;
 
-import com.dmdirc.addons.ui_swing.SwingController;
+import com.dmdirc.ClientModule.GlobalConfig;
+import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.ListScroller;
 import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
@@ -34,6 +34,7 @@ import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
+import com.dmdirc.ui.IconManager;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -43,6 +44,7 @@ import java.util.concurrent.ExecutionException;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
+import javax.inject.Singleton;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -58,6 +60,7 @@ import net.miginfocom.swing.MigLayout;
 /**
  * Allows the user to modify global client preferences.
  */
+@Singleton
 public final class SwingPreferencesDialog extends StandardDialog implements
         ActionListener, ListSelectionListener {
 
@@ -75,13 +78,11 @@ public final class SwingPreferencesDialog extends StandardDialog implements
     private final LoggingSwingWorker<PreferencesDialogModel, Void> worker;
     /** Panel size. */
     private int panelSize = 500;
-    /** Swing controller. */
-    @Deprecated
-    private final SwingController controller;
     /** The provider to use for restart dialogs. */
     private final DialogProvider<SwingRestartDialog> restartDialogProvider;
     /** The provider to use to produce a category panel. */
     private final Provider<CategoryPanel> categoryPanelProvider;
+    private IconManager iconManager;
 
     /**
      * Creates a new instance of SwingPreferencesDialog.
@@ -93,13 +94,13 @@ public final class SwingPreferencesDialog extends StandardDialog implements
      */
     @Inject
     public SwingPreferencesDialog(
-            final SwingController controller,
+            final MainFrame mainFrame, @GlobalConfig final IconManager iconManager,
             @ForSettings final DialogProvider<SwingRestartDialog> restartDialogProvider,
             final Provider<PreferencesDialogModel> dialogModelProvider,
             final Provider<CategoryPanel> categoryPanelProvider) {
-        super(controller.getMainFrame(), ModalityType.MODELESS);
+        super(mainFrame, ModalityType.MODELESS);
 
-        this.controller = controller;
+        this.iconManager = iconManager;
         this.restartDialogProvider = restartDialogProvider;
         this.categoryPanelProvider = categoryPanelProvider;
 
@@ -116,8 +117,8 @@ public final class SwingPreferencesDialog extends StandardDialog implements
                     prefsManager = dialogModelProvider.get();
                 } catch (IllegalArgumentException ex) {
                     mainPanel.setError(ex.getMessage());
-                    Logger.appError(ErrorLevel.HIGH, "Unable to load the" +
-                            "preferences dialog.", ex);
+                    Logger.appError(ErrorLevel.HIGH, "Unable to load the"
+                            + "preferences dialog.", ex);
                 }
                 return prefsManager;
             }
@@ -149,8 +150,7 @@ public final class SwingPreferencesDialog extends StandardDialog implements
         mainPanel.setCategory(null);
 
         final int count = countCategories(manager.getCategories());
-        tabList.setCellRenderer(new PreferencesListCellRenderer(
-                controller.getIconManager(), count));
+        tabList.setCellRenderer(new PreferencesListCellRenderer(iconManager, count));
 
         addCategories(manager.getCategories());
     }
@@ -180,8 +180,8 @@ public final class SwingPreferencesDialog extends StandardDialog implements
         getOkButton().addActionListener(this);
         getCancelButton().addActionListener(this);
 
-        final MigLayout layout = new MigLayout("pack, hmin min(80sp, 700), " +
-                "hmax min(700, 80sp)");
+        final MigLayout layout = new MigLayout("pack, hmin min(80sp, 700), "
+                + "hmax min(700, 80sp)");
         setLayout(layout);
         add(tabListScrollPane, "w 150!, growy, pushy");
         add(mainPanel, "wrap, w 480!, pushy, growy, pushy");
@@ -190,8 +190,7 @@ public final class SwingPreferencesDialog extends StandardDialog implements
     }
 
     /**
-     * Adds the categories from the preferences manager, clearing existing
-     * categories first.
+     * Adds the categories from the preferences manager, clearing existing categories first.
      */
     private void addCategories(final List<PreferencesCategory> categories) {
         UIUtilities.invokeLater(new Runnable() {
@@ -207,7 +206,7 @@ public final class SwingPreferencesDialog extends StandardDialog implements
                     addCategories(category.getSubcats());
                 }
                 tabList.addListSelectionListener(SwingPreferencesDialog.this);
-                restoreActiveCategory();
+                tabList.setSelectedIndex(0);
             }
         });
         mainPanel.setWaiting(false);
@@ -247,12 +246,6 @@ public final class SwingPreferencesDialog extends StandardDialog implements
         mainPanel.setCategory(null);
 
         if (actionEvent != null && getOkButton().equals(actionEvent.getSource())) {
-            if (tabList.getSelectedIndex() > -1) {
-                final PreferencesCategory node = (PreferencesCategory) tabList.
-                        getSelectedValue();
-                controller.getGlobalIdentity().setOption("dialogstate",
-                        "preferences", node.getPath());
-            }
             saveOptions();
         }
 
@@ -321,22 +314,6 @@ public final class SwingPreferencesDialog extends StandardDialog implements
             dispose();
             restartDialogProvider.displayOrRequestFocus();
         }
-    }
-
-    private void restoreActiveCategory() {
-        final String oldCategoryPath = controller.getGlobalConfig().
-                getOption("dialogstate", "preferences");
-        final DefaultListModel model = (DefaultListModel) tabList.getModel();
-        int indexToSelect = 0;
-        for (int i = 0; i < model.getSize(); i++) {
-            final PreferencesCategory category =
-                    (PreferencesCategory) model.get(i);
-            if (oldCategoryPath.equals(category.getPath())) {
-                indexToSelect = i;
-                break;
-            }
-        }
-        tabList.setSelectedIndex(indexToSelect);
     }
 
     /**

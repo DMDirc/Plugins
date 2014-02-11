@@ -19,7 +19,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 package com.dmdirc.addons.ui_swing;
 
 import com.dmdirc.Channel;
@@ -33,14 +32,12 @@ import com.dmdirc.addons.ui_swing.commands.ServerSettings;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.addons.ui_swing.components.statusbar.SwingStatusBar;
 import com.dmdirc.addons.ui_swing.dialogs.error.ErrorListDialog;
-import com.dmdirc.addons.ui_swing.dialogs.prefs.SwingPreferencesDialog;
 import com.dmdirc.addons.ui_swing.injection.SwingModule;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
-import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.config.IdentityController;
@@ -54,7 +51,6 @@ import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.plugins.implementations.BaseCommandPlugin;
 import com.dmdirc.ui.IconManager;
-import com.dmdirc.ui.core.util.URLHandler;
 import com.dmdirc.ui.messages.ColourManager;
 import com.dmdirc.updater.Version;
 import com.dmdirc.util.URLBuilder;
@@ -473,17 +469,6 @@ public class SwingController extends BaseCommandPlugin implements UIController {
                 UIManager.getFont("TextPane.font").getSize());
     }
 
-    /**
-     * Returns the preferences dialog instance creating if required.
-     *
-     * @return Swing prefs dialog
-     * @deprecated Inject the relevant dialog manager instead.
-     */
-    @Deprecated
-    public SwingPreferencesDialog getPrefsDialog() {
-        return swingManager.getPrefsDialogProvider().get();
-    }
-
     /** {@inheritDoc} */
     @Override
     public void showConfig(final PreferencesDialogModel manager) {
@@ -579,25 +564,25 @@ public class SwingController extends BaseCommandPlugin implements UIController {
                 globalConfig, globalIdentity));
         advanced.addSetting(
                 new PreferencesSetting(PreferencesType.BOOLEAN, "ui",
-                "useOneTouchExpandable", "Use one touch expandable split "
-                + "panes?", "Use one touch expandable arrows for "
-                + "collapsing/expanding the split panes",
-                globalConfig, globalIdentity));
+                        "useOneTouchExpandable", "Use one touch expandable split "
+                        + "panes?", "Use one touch expandable arrows for "
+                        + "collapsing/expanding the split panes",
+                        globalConfig, globalIdentity));
         advanced.addSetting(new PreferencesSetting(PreferencesType.INTEGER,
                 getDomain(), "windowMenuItems", "Window menu item count",
                 "Number of items to show in the window menu",
                 globalConfig, globalIdentity));
         advanced.addSetting(
                 new PreferencesSetting(PreferencesType.INTEGER, getDomain(),
-                "windowMenuScrollInterval", "Window menu scroll interval",
-                "Number of milliseconds to pause when autoscrolling in the "
-                + "window menu",
-                globalConfig, globalIdentity));
+                        "windowMenuScrollInterval", "Window menu scroll interval",
+                        "Number of milliseconds to pause when autoscrolling in the "
+                        + "window menu",
+                        globalConfig, globalIdentity));
         advanced.addSetting(
                 new PreferencesSetting(PreferencesType.BOOLEAN, getDomain(),
-                "showtopicbar", "Show topic bar",
-                "Shows a graphical topic bar in channels.",
-                globalConfig, globalIdentity));
+                        "showtopicbar", "Show topic bar",
+                        "Shows a graphical topic bar in channels.",
+                        globalConfig, globalIdentity));
         advanced.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
                 getDomain(),
                 "shownicklist", "Show nicklist?",
@@ -605,8 +590,8 @@ public class SwingController extends BaseCommandPlugin implements UIController {
                 globalConfig, globalIdentity));
         advanced.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
                 getDomain(), "showfulltopic", "Show full topic in topic bar?",
-               "Do you want to show the full topic in the topic bar or just"
-               + "first line?",
+                "Do you want to show the full topic in the topic bar or just"
+                + "first line?",
                 globalConfig, globalIdentity));
         advanced.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
                 getDomain(), "hideEmptyTopicBar", "Hide empty topic bar?",
@@ -739,8 +724,7 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     }
 
     /**
-     * Returns an instance of SwingController. This method is exported for use
-     * in other plugins.
+     * Returns an instance of SwingController. This method is exported for use in other plugins.
      *
      * @return A reference to this SwingController.
      */
@@ -750,8 +734,7 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     }
 
     /**
-     * Adds the specified menu item to the named parent menu, creating the
-     * parent menu if required.
+     * Adds the specified menu item to the named parent menu, creating the parent menu if required.
      *
      * @param parentMenu Parent menu name
      * @param menuItem Menu item to add
