@@ -19,7 +19,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 package com.dmdirc.addons.ui_swing.dialogs.prefs;
 
 import com.dmdirc.ClientModule.GlobalConfig;
@@ -33,7 +32,6 @@ import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.ui.IconManager;
 
 import java.awt.Component;
-import java.awt.Window;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -45,8 +43,6 @@ import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
 
-import net.miginfocom.layout.ComponentWrapper;
-import net.miginfocom.layout.LayoutCallback;
 import net.miginfocom.swing.MigLayout;
 
 /**
@@ -58,8 +54,6 @@ public class CategoryPanel extends JPanel {
     private static final long serialVersionUID = -3268284364607758509L;
     /** Active preferences category. */
     private PreferencesCategory category;
-    /** Parent window. */
-    private final SwingPreferencesDialog parent;
     /** Title label. */
     private final TitlePanel title;
     /** Tooltip display area. */
@@ -89,9 +83,8 @@ public class CategoryPanel extends JPanel {
     @Inject
     public CategoryPanel(
             final PrefsComponentFactory factory,
-            @GlobalConfig final IconManager iconManager,
-            final SwingPreferencesDialog parent) {
-        this(factory, parent, iconManager, null);
+            @GlobalConfig final IconManager iconManager) {
+        this(factory, iconManager, null);
     }
 
     /**
@@ -103,11 +96,9 @@ public class CategoryPanel extends JPanel {
      * @param category Initial category
      */
     public CategoryPanel(final PrefsComponentFactory factory,
-            final SwingPreferencesDialog parent,
             final IconManager iconManager,
             final PreferencesCategory category) {
         super(new MigLayout("fillx, wrap, ins 0"));
-        this.parent = parent;
         this.factory = factory;
 
         panels = Collections.synchronizedMap(
@@ -138,27 +129,6 @@ public class CategoryPanel extends JPanel {
 
         panels.put(null, loading);
         setCategory(category);
-        ((MigLayout) getLayout()).addLayoutCallback(new LayoutCallback() {
-
-            /** {@inheritDoc} */
-            @Override
-            public void correctBounds(final ComponentWrapper cw) {
-                if (cw.getComponent() == scrollPane) {
-                    final int newSize = Math.max(parent.getPanelHeight(),
-                            scrollPane.getViewport().getExtentSize().height);
-                    parent.setPanelHeight((int) (newSize * 0.95));
-                }
-            }
-        });
-    }
-
-    /**
-     * Returns this categrory panel's parent window.
-     *
-     * @return Parent window
-     */
-    protected Window getParentWindow() {
-        return parent;
     }
 
     /**

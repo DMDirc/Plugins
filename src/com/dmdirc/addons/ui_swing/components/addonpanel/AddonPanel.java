@@ -19,7 +19,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 package com.dmdirc.addons.ui_swing.components.addonpanel;
 
 import com.dmdirc.addons.ui_swing.UIUtilities;
@@ -28,7 +27,6 @@ import com.dmdirc.addons.ui_swing.components.addonbrowser.BrowserWindow;
 import com.dmdirc.addons.ui_swing.components.addonbrowser.DataLoaderWorkerFactory;
 import com.dmdirc.addons.ui_swing.components.renderers.AddonCellRenderer;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
-import com.dmdirc.addons.ui_swing.dialogs.prefs.SwingPreferencesDialog;
 import com.dmdirc.config.prefs.PreferencesInterface;
 
 import java.awt.Window;
@@ -57,8 +55,6 @@ public abstract class AddonPanel extends JPanel implements AddonToggleListener,
     private static final long serialVersionUID = 3;
     /** List of addons. */
     protected JTable addonList;
-    /** The prefs dialog that contains this panel. */
-    private final SwingPreferencesDialog prefsDialog;
     /** Parent Window. */
     private final Window parentWindow;
     /** The factory to use to produce data loader workers. */
@@ -78,17 +74,14 @@ public abstract class AddonPanel extends JPanel implements AddonToggleListener,
      * Creates a new instance of AddonPanel
      *
      * @param parentWindow Parent window
-     * @param prefsDialog The prefs dialog that contains this panel
      * @param workerFactory The factory to use to produce data loader workers.
      */
     public AddonPanel(
             final Window parentWindow,
-            final SwingPreferencesDialog prefsDialog,
             final DataLoaderWorkerFactory workerFactory) {
         super();
 
         this.parentWindow = parentWindow;
-        this.prefsDialog = prefsDialog;
         this.workerFactory = workerFactory;
 
         initComponents();
@@ -98,29 +91,35 @@ public abstract class AddonPanel extends JPanel implements AddonToggleListener,
     /** Initialises the components. */
     private void initComponents() {
         addonList = new JTable(new DefaultTableModel(
-                new Object[]{"Addon", }, 0)) {
+                new Object[]{"Addon",}, 0)) {
 
-            /** Serial Version UID. */
-            private static final long serialVersionUID = 1;
+                    /** Serial Version UID. */
+                    private static final long serialVersionUID = 1;
 
-            /** {@inheritDoc} */
-            @Override
-            public boolean isCellEditable(final int row, final int column) {
-                return false;
-            }
+                    /** {@inheritDoc} */
+                    @Override
+                    public boolean isCellEditable(final int row, final int column) {
+                        return false;
+                    }
 
-        };
-        addonList.setDefaultRenderer(Object.class,
-                new AddonCellRenderer());
-        addonList.setTableHeader(null);
-        addonList.setShowGrid(false);
-        addonList.getSelectionModel().setSelectionMode(
-                ListSelectionModel.SINGLE_SELECTION);
+                };
+        addonList
+                .setDefaultRenderer(Object.class,
+                        new AddonCellRenderer());
+        addonList.setTableHeader(
+                null);
+        addonList.setShowGrid(
+                false);
+        addonList.getSelectionModel()
+                .setSelectionMode(
+                        ListSelectionModel.SINGLE_SELECTION);
 
         scrollPane = new JScrollPane(new JLabel("Loading " + getTypeName()
                 + "..."));
+
         scrollPane.setHorizontalScrollBarPolicy(
                 JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+
         scrollPane.setVerticalScrollBarPolicy(
                 JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
@@ -129,9 +128,13 @@ public abstract class AddonPanel extends JPanel implements AddonToggleListener,
                 + "functionality of DMDirc.");
         getMoreLabel = new TextLabel(
                 "<a href=\"http://addons.dmdirc.com\">Get more addons</a>");
-        getMoreLabel.addHyperlinkListener(this);
+
+        getMoreLabel.addHyperlinkListener(
+                this);
         addonInfo = new AddonInfoPanel();
-        addonInfo.addListener(this);
+
+        addonInfo.addListener(
+                this);
 
         /** {@inheritDoc}. */
         new LoggingSwingWorker<Object, Object>() {
@@ -159,12 +162,13 @@ public abstract class AddonPanel extends JPanel implements AddonToggleListener,
                     }
                 });
             }
-        }.executeInExecutor();
+        }
+                .executeInExecutor();
     }
 
     /** Lays out the dialog. */
     private void layoutComponents() {
-        setLayout(new MigLayout("ins 0, fill, hmax " + prefsDialog.getPanelHeight()));
+        setLayout(new MigLayout("ins 0, fill, hmax 500"));
         add(blurbLabel, "wrap 5, growx, pushx");
         add(getMoreLabel, "wrap 5, right");
         add(scrollPane, "wrap 5, grow, push");
