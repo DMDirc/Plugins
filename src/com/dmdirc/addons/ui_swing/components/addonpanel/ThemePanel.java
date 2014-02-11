@@ -19,7 +19,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 package com.dmdirc.addons.ui_swing.components.addonpanel;
 
 import com.dmdirc.ClientModule.GlobalConfig;
@@ -27,7 +26,6 @@ import com.dmdirc.ClientModule.UserConfig;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.addonbrowser.DataLoaderWorkerFactory;
-import com.dmdirc.addons.ui_swing.dialogs.prefs.SwingPreferencesDialog;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.themes.Theme;
@@ -43,15 +41,14 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 /**
- * Lists known themes, enabling the end user to enable/disable these as well
- * as download new ones.
+ * Lists known themes, enabling the end user to enable/disable these as well as download new ones.
  */
 public class ThemePanel extends AddonPanel {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 1;
 
@@ -69,7 +66,6 @@ public class ThemePanel extends AddonPanel {
      *
      * @param parentWindow Parent window
      * @param themeManager Manager to retrieve themes from.
-     * @param prefsDialog The prefs dialog that contains this panel
      * @param workerFactory Factory to use to create data workers.
      * @param iconManager Manager to use to retrieve addon-related icons.
      * @param updateManager Manager to use to retrieve update information.
@@ -79,12 +75,11 @@ public class ThemePanel extends AddonPanel {
     public ThemePanel(
             final MainFrame parentWindow,
             final ThemeManager themeManager,
-            final SwingPreferencesDialog prefsDialog,
             final DataLoaderWorkerFactory workerFactory,
             @GlobalConfig final IconManager iconManager,
             final CachingUpdateManager updateManager,
             @UserConfig final ConfigProvider userConfig) {
-        super(parentWindow, prefsDialog, workerFactory);
+        super(parentWindow, workerFactory);
         this.themeManager = themeManager;
         this.iconManager = iconManager;
         this.updateManager = updateManager;
@@ -112,8 +107,7 @@ public class ThemePanel extends AddonPanel {
                                                 userConfig,
                                                 themeManager,
                                                 theme),
-                                        iconManager),
-                            });
+                                        iconManager),});
                 }
 
                 addonList.repaint();

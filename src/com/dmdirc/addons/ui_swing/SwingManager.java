@@ -19,7 +19,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 package com.dmdirc.addons.ui_swing;
 
 import com.dmdirc.Channel;
@@ -176,11 +175,6 @@ public class SwingManager {
      */
     public FirstRunWizardExecutor getFirstRunExecutor() {
         return firstRunExecutor.get();
-    }
-
-    @Deprecated
-    public DialogProvider<SwingPreferencesDialog> getPrefsDialogProvider() {
-        return prefsDialogProvider;
     }
 
     @Deprecated
