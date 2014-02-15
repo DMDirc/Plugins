@@ -29,11 +29,9 @@ import com.dmdirc.addons.ui_swing.components.statusbar.FeedbackNag;
 import com.dmdirc.addons.ui_swing.components.statusbar.SwingStatusBar;
 import com.dmdirc.addons.ui_swing.dialogs.DialogKeyListener;
 import com.dmdirc.addons.ui_swing.dialogs.channelsetting.ChannelSettingsDialog;
-import com.dmdirc.addons.ui_swing.dialogs.prefs.SwingPreferencesDialog;
 import com.dmdirc.addons.ui_swing.dialogs.serversetting.ServerSettingsDialog;
 import com.dmdirc.addons.ui_swing.dialogs.url.URLDialogFactory;
 import com.dmdirc.addons.ui_swing.framemanager.ctrltab.CtrlTabWindowManager;
-import com.dmdirc.addons.ui_swing.injection.DialogProvider;
 import com.dmdirc.addons.ui_swing.injection.KeyedDialogProvider;
 import com.dmdirc.addons.ui_swing.wizard.firstrun.FirstRunWizardExecutor;
 import com.dmdirc.ui.WindowManager;
@@ -76,8 +74,6 @@ public class SwingManager {
     /** Provider of first run executors. */
     private final Provider<FirstRunWizardExecutor> firstRunExecutor;
 
-    /** Provider of prefs dialogs. */
-    private final DialogProvider<SwingPreferencesDialog> prefsDialogProvider;
     /** Provider of server settings dialogs. */
     private final KeyedDialogProvider<Server, ServerSettingsDialog> serverSettingsDialogProvider;
     /** Provider of channel settings dialogs. */
@@ -102,7 +98,6 @@ public class SwingManager {
      * @param ctrlTabManager The window manager that handles ctrl+tab behaviour.
      * @param dialogKeyListener The key listener that supports dialogs.
      * @param firstRunExecutor A provider of first run executors.
-     * @param prefsDialogProvider Provider of prefs dialogs.
      * @param serverSettingsDialogProvider Provider of server settings dialogs.
      * @param channelSettingsDialogProvider Provider of channel settings dialogs.
      * @param feedbackNagProvider Provider of feedback nags.
@@ -120,7 +115,6 @@ public class SwingManager {
             final CtrlTabWindowManager ctrlTabManager,
             final DialogKeyListener dialogKeyListener,
             final Provider<FirstRunWizardExecutor> firstRunExecutor,
-            final DialogProvider<SwingPreferencesDialog> prefsDialogProvider,
             final KeyedDialogProvider<Server, ServerSettingsDialog> serverSettingsDialogProvider,
             final KeyedDialogProvider<Channel, ChannelSettingsDialog> channelSettingsDialogProvider,
             final Provider<FeedbackNag> feedbackNagProvider,
@@ -132,7 +126,6 @@ public class SwingManager {
         this.statusBarManager = statusBarManager;
         this.dialogKeyListener = dialogKeyListener;
         this.firstRunExecutor = firstRunExecutor;
-        this.prefsDialogProvider = prefsDialogProvider;
         this.serverSettingsDialogProvider = serverSettingsDialogProvider;
         this.channelSettingsDialogProvider = channelSettingsDialogProvider;
         this.feedbackNagProvider = feedbackNagProvider;
@@ -176,11 +169,6 @@ public class SwingManager {
      */
     public FirstRunWizardExecutor getFirstRunExecutor() {
         return firstRunExecutor.get();
-    }
-
-    @Deprecated
-    public DialogProvider<SwingPreferencesDialog> getPrefsDialogProvider() {
-        return prefsDialogProvider;
     }
 
     @Deprecated
