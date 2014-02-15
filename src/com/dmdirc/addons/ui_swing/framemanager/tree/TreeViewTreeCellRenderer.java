@@ -25,6 +25,7 @@ package com.dmdirc.addons.ui_swing.framemanager.tree;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
+import com.dmdirc.ui.messages.ColourManager;
 import com.dmdirc.ui.messages.Styliser;
 
 import java.awt.Color;
@@ -47,6 +48,8 @@ public class TreeViewTreeCellRenderer implements TreeCellRenderer,
     private final TreeFrameManager manager;
     /** Config manager. */
     private final AggregateConfigProvider config;
+    /** The colour manager to use to resolve colours. */
+    private final ColourManager colourManager;
     /** Styliser to use. */
     private final Styliser styliser;
     /** Rollover colours. */
@@ -62,13 +65,18 @@ public class TreeViewTreeCellRenderer implements TreeCellRenderer,
      * Creates a new instance of TreeViewTreeCellRenderer.
      *
      * @param config Config manager to retrieve settings from
+     * @param colourManager The colour manager to use to resolve colours.
      * @param manager Parent TreeFrameManager
      */
-    public TreeViewTreeCellRenderer(final AggregateConfigProvider config,
+    public TreeViewTreeCellRenderer(
+            final AggregateConfigProvider config,
+            final ColourManager colourManager,
             final TreeFrameManager manager) {
         this.manager = manager;
 
         this.config = config;
+        this.colourManager = colourManager;
+
         styliser = new Styliser(null, config);
 
         setColours();
@@ -145,18 +153,24 @@ public class TreeViewTreeCellRenderer implements TreeCellRenderer,
 
     /** Sets the colours for the renderer. */
     private void setColours() {
-        rolloverColour = UIUtilities.convertColour(config.getOptionColour(
-                "ui", "treeviewRolloverColour",
-                "treeview", "backgroundcolour",
-                "ui", "backgroundcolour"));
-        activeBackground = UIUtilities.convertColour(config.getOptionColour(
-                "ui", "treeviewActiveBackground",
-                "treeview", "backgroundcolour",
-                "ui", "backgroundcolour"));
-        activeForeground = UIUtilities.convertColour(config.getOptionColour(
-                "ui", "treeviewActiveForeground",
-                "treeview", "foregroundcolour",
-                "ui", "foregroundcolour"));
+        rolloverColour = UIUtilities.convertColour(
+                colourManager.getColourFromString(
+                        config.getOptionString(
+                                "ui", "treeviewRolloverColour",
+                                "treeview", "backgroundcolour",
+                                "ui", "backgroundcolour"), null));
+        activeBackground = UIUtilities.convertColour(
+                colourManager.getColourFromString(
+                        config.getOptionString(
+                                "ui", "treeviewActiveBackground",
+                                "treeview", "backgroundcolour",
+                                "ui", "backgroundcolour"), null));
+        activeForeground = UIUtilities.convertColour(
+                colourManager.getColourFromString(
+                        config.getOptionString(
+                                "ui", "treeviewActiveForeground",
+                                "treeview", "foregroundcolour",
+                                "ui", "foregroundcolour"), null));
         activeBold = config.getOptionBool("ui", "treeviewActiveBold");
 
         manager.getTree().repaint();
