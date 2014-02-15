@@ -28,8 +28,10 @@ import com.dmdirc.addons.ui_swing.components.frames.InputTextFrame;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.addons.ui_swing.components.validating.ValidatingJTextField;
 import com.dmdirc.addons.ui_swing.textpane.TextPane;
+import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.interfaces.ui.SearchBar;
+import com.dmdirc.ui.messages.ColourManager;
 import com.dmdirc.ui.messages.IRCDocument;
 import com.dmdirc.ui.messages.IRCDocumentSearcher;
 import com.dmdirc.ui.messages.LinePosition;
@@ -407,14 +409,20 @@ public final class SwingSearchBar extends JPanel implements ActionListener,
 
     /** Sets the colours used in this document. */
     private void setColours() {
+        AggregateConfigProvider config = parent.getContainer().getConfigManager();
+        ColourManager colourManager = new ColourManager(config);
+
         searchBox.setForeground(UIUtilities.convertColour(
-                parent.getController().getGlobalConfig().
-                getOptionColour("ui", "foregroundcolour")));
+                colourManager.getColourFromString(
+                        config.getOptionString(
+                                "ui", "foregroundcolour"), null)));
         searchBox.setBackground(UIUtilities.convertColour(
-                parent.getController().getGlobalConfig().
-                getOptionColour("ui", "backgroundcolour")));
+                colourManager.getColourFromString(
+                        config.getOptionString(
+                                "ui", "backgroundcolour"), null)));
         searchBox.setCaretColor(UIUtilities.convertColour(
-                parent.getController().getGlobalConfig().
-                getOptionColour("ui", "foregroundcolour")));
+                colourManager.getColourFromString(
+                        config.getOptionString(
+                                "ui", "foregroundcolour"), null)));
     }
 }

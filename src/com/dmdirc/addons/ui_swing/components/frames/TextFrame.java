@@ -61,6 +61,7 @@ import com.dmdirc.interfaces.ui.Window;
 import com.dmdirc.parser.common.ChannelJoinRequest;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.core.util.URLHandler;
+import com.dmdirc.ui.messages.ColourManager;
 import com.dmdirc.util.URLBuilder;
 
 import java.awt.Point;
@@ -586,12 +587,15 @@ public abstract class TextFrame extends JPanel implements Window,
      * Updates colour settings from their config values.
      */
     private void updateColours() {
+        final ColourManager colourManager = new ColourManager(getContainer().getConfigManager());
         getTextPane().setForeground(UIUtilities.convertColour(
-                getContainer().getConfigManager()
-                .getOptionColour("ui", "foregroundcolour")));
+                colourManager.getColourFromString(
+                        getContainer().getConfigManager().getOptionString(
+                                "ui", "foregroundcolour"), null)));
         getTextPane().setBackground(UIUtilities.convertColour(
-                getContainer().getConfigManager()
-                .getOptionColour("ui", "backgroundcolour")));
+                colourManager.getColourFromString(
+                        getContainer().getConfigManager().getOptionString(
+                                "ui", "backgroundcolour"), null)));
     }
 
     /** Disposes of this window, removing any listeners. */
