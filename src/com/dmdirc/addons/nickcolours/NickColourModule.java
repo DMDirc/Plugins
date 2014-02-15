@@ -22,48 +22,47 @@
 
 package com.dmdirc.addons.nickcolours;
 
-import com.dmdirc.config.prefs.PreferencesDialogModel;
+import com.dmdirc.addons.ui_swing.injection.SwingModule;
 import com.dmdirc.plugins.PluginInfo;
-import com.dmdirc.plugins.implementations.BasePlugin;
 
-import dagger.ObjectGraph;
+import javax.inject.Qualifier;
 
+import dagger.Module;
+import dagger.Provides;
 
 /**
- * Adds support for nick colours throughout the client.
+ * DI module for the nick colour plugin.
  */
-public class NickColourPlugin extends BasePlugin {
+@Module(injects={NickColourManager.class}, addsTo = SwingModule.class)
+public class NickColourModule {
 
-    /** Nick colour manager. */
-    private NickColourManager nickColourManager;
+    /** The domain for plugin settings. */
+    private final String domain;
+    /** The plugin's plugin info. */
+    private final PluginInfo pluginInfo;
 
-    public NickColourPlugin() {
+    @Qualifier
+    public static @interface NickColourSettingsDomain {}
 
+    public NickColourModule(final PluginInfo pluginInfo, final String domain) {
+        this.pluginInfo = pluginInfo;
+        this.domain = domain;
     }
 
-    @Override
-    public void load(final PluginInfo pluginInfo, final ObjectGraph graph) {
-        super.load(pluginInfo, graph);
-
-        setObjectGraph(graph.plus(new NickColourModule(pluginInfo, getDomain())));
-        nickColourManager = getObjectGraph().get(NickColourManager.class);
+    /**
+     * Provides the domain that the swing settings should be stored under.
+     *
+     * @return The settings domain for the swing plugin.
+     */
+    @Provides
+    @NickColourSettingsDomain
+    public String getSettingsDomain() {
+        return domain;
     }
 
-    @Override
-        public void onLoad() {
-        super.onLoad();
-        nickColourManager.onLoad();
-    }
-
-    @Override
-    public void onUnload() {
-        super.onUnload();
-        nickColourManager.onUnload();
-    }
-
-    @Override
-    public void showConfig(final PreferencesDialogModel manager) {
-        nickColourManager.showConfig(manager);
+    @Provides
+    public PluginInfo getPluginInfo() {
+        return pluginInfo;
     }
 
 }
