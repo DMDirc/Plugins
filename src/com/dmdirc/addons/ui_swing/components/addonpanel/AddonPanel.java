@@ -28,7 +28,6 @@ import com.dmdirc.addons.ui_swing.components.addonbrowser.BrowserWindow;
 import com.dmdirc.addons.ui_swing.components.addonbrowser.DataLoaderWorkerFactory;
 import com.dmdirc.addons.ui_swing.components.renderers.AddonCellRenderer;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
-import com.dmdirc.addons.ui_swing.dialogs.prefs.SwingPreferencesDialog;
 import com.dmdirc.config.prefs.PreferencesInterface;
 
 import java.awt.Window;
@@ -57,8 +56,6 @@ public abstract class AddonPanel extends JPanel implements AddonToggleListener,
     private static final long serialVersionUID = 3;
     /** List of addons. */
     protected JTable addonList;
-    /** The prefs dialog that contains this panel. */
-    private final SwingPreferencesDialog prefsDialog;
     /** Parent Window. */
     private final Window parentWindow;
     /** The factory to use to produce data loader workers. */
@@ -78,17 +75,12 @@ public abstract class AddonPanel extends JPanel implements AddonToggleListener,
      * Creates a new instance of AddonPanel
      *
      * @param parentWindow Parent window
-     * @param prefsDialog The prefs dialog that contains this panel
      * @param workerFactory The factory to use to produce data loader workers.
      */
-    public AddonPanel(
-            final Window parentWindow,
-            final SwingPreferencesDialog prefsDialog,
-            final DataLoaderWorkerFactory workerFactory) {
+    public AddonPanel(final Window parentWindow, final DataLoaderWorkerFactory workerFactory) {
         super();
 
         this.parentWindow = parentWindow;
-        this.prefsDialog = prefsDialog;
         this.workerFactory = workerFactory;
 
         initComponents();
@@ -164,7 +156,7 @@ public abstract class AddonPanel extends JPanel implements AddonToggleListener,
 
     /** Lays out the dialog. */
     private void layoutComponents() {
-        setLayout(new MigLayout("ins 0, fill, hmax " + prefsDialog.getPanelHeight()));
+        setLayout(new MigLayout("ins 0, fill, hmax 500"));
         add(blurbLabel, "wrap 5, growx, pushx");
         add(getMoreLabel, "wrap 5, right");
         add(scrollPane, "wrap 5, grow, push");

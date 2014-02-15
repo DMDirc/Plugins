@@ -26,9 +26,6 @@ import com.dmdirc.addons.ui_swing.Apple;
 import com.dmdirc.addons.ui_swing.PrefsComponentFactory;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
-import com.dmdirc.addons.ui_swing.components.colours.ColourChooser;
-import com.dmdirc.addons.ui_swing.components.colours.OptionalColourChooser;
-import com.dmdirc.addons.ui_swing.components.durationeditor.DurationDisplay;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesSetting;
@@ -197,33 +194,22 @@ public class PrefsCategoryLoader extends LoggingSwingWorker<JPanel, Object> {
 
         final TextLabel label = new TextLabel(setting.getTitle() + ": ", false);
 
-
         final JComponent option = UIUtilities.invokeAndWait(
                 new Callable<JComponent>() {
 
-            /** {@inheritDoc} */
-            @Override
-            public JComponent call() {
-                JComponent option = factory.getComponent(setting);
-                option.setToolTipText(null);
-                return option;
-            }
-        });
+                    /** {@inheritDoc} */
+                    @Override
+                    public JComponent call() {
+                        JComponent option = factory.getComponent(setting);
+                        option.setToolTipText(null);
+                        return option;
+                    }
+                });
 
         categoryPanel.getToolTipPanel().registerTooltipHandler(label,
                 getTooltipText(setting, categoryPanel));
         categoryPanel.getToolTipPanel().registerTooltipHandler(option,
                 getTooltipText(setting, categoryPanel));
-
-
-        if (option instanceof DurationDisplay) {
-            ((DurationDisplay) option).setWindow(categoryPanel.getParentWindow());
-        } else if (option instanceof ColourChooser) {
-            ((ColourChooser) option).setWindow(categoryPanel.getParentWindow());
-        } else if (option instanceof OptionalColourChooser) {
-            ((OptionalColourChooser) option).setWindow(categoryPanel.
-                    getParentWindow());
-        }
 
         if (setting.getType() != PreferencesType.LABEL) {
             if (Apple.isAppleUI()) {
