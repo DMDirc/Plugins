@@ -27,7 +27,6 @@ import com.dmdirc.addons.serverlists.ServerGroup;
 import com.dmdirc.addons.serverlists.ServerGroupItem;
 import com.dmdirc.addons.ui_swing.PrefsComponentFactory;
 import com.dmdirc.addons.ui_swing.components.expandingsettings.SettingsPanel;
-import com.dmdirc.config.ConfigManager;
 import com.dmdirc.config.prefs.PreferencesManager;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
@@ -129,9 +128,9 @@ public class Settings extends JPanel implements ServerListListener {
         if (!panels.containsKey(item)) {
             if (item instanceof ServerGroup) {
                 panels.put(item, new SettingsPanel(iconManager, componentFactory, "", false));
-                addSettings(panels.get(item), new ConfigManager("irc", "",
-                    item.getGroup().getNetwork(), item.getName()),
-                    identityFactory.createServerConfig(item.getName()));
+                addSettings(panels.get(item),
+                        identityFactory.createAggregateConfig("irc", "", item.getGroup().getNetwork(), item.getName()),
+                        identityFactory.createServerConfig(item.getName()));
             } else {
                 panels.put(item, new SettingsPanel(iconManager, componentFactory, "", false));
             }
