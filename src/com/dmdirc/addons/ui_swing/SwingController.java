@@ -33,14 +33,12 @@ import com.dmdirc.addons.ui_swing.commands.ServerSettings;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.addons.ui_swing.components.statusbar.SwingStatusBar;
 import com.dmdirc.addons.ui_swing.dialogs.error.ErrorListDialog;
-import com.dmdirc.addons.ui_swing.dialogs.prefs.SwingPreferencesDialog;
 import com.dmdirc.addons.ui_swing.injection.SwingModule;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
-import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.config.IdentityController;
@@ -54,7 +52,6 @@ import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.plugins.implementations.BaseCommandPlugin;
 import com.dmdirc.ui.IconManager;
-import com.dmdirc.ui.core.util.URLHandler;
 import com.dmdirc.ui.messages.ColourManager;
 import com.dmdirc.updater.Version;
 import com.dmdirc.util.URLBuilder;
@@ -471,17 +468,6 @@ public class SwingController extends BaseCommandPlugin implements UIController {
                 UIManager.getFont("TextPane.font").getFamily());
         addonIdentity.setOption("ui", "textPaneFontSize",
                 UIManager.getFont("TextPane.font").getSize());
-    }
-
-    /**
-     * Returns the preferences dialog instance creating if required.
-     *
-     * @return Swing prefs dialog
-     * @deprecated Inject the relevant dialog manager instead.
-     */
-    @Deprecated
-    public SwingPreferencesDialog getPrefsDialog() {
-        return swingManager.getPrefsDialogProvider().get();
     }
 
     /** {@inheritDoc} */

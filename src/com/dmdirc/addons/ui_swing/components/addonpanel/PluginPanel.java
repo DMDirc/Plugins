@@ -29,7 +29,6 @@ import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.addonbrowser.DataLoaderWorkerFactory;
-import com.dmdirc.addons.ui_swing.dialogs.prefs.SwingPreferencesDialog;
 import com.dmdirc.interfaces.ActionListener;
 import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.interfaces.config.ConfigProvider;
@@ -73,7 +72,6 @@ public class PluginPanel extends AddonPanel implements ActionListener {
      *
      * @param parentWindow Parent window
      * @param pluginManager Manager to retrieve plugins from.
-     * @param prefsDialog The prefs dialog that contains this panel
      * @param workerFactory Factory to use to create data workers.
      * @param iconManager Manager to use to retrieve addon-related icons.
      * @param updateManager Manager to use to retrieve update information.
@@ -83,12 +81,11 @@ public class PluginPanel extends AddonPanel implements ActionListener {
     public PluginPanel(
             final MainFrame parentWindow,
             final PluginManager pluginManager,
-            final SwingPreferencesDialog prefsDialog,
             final DataLoaderWorkerFactory workerFactory,
             @GlobalConfig final IconManager iconManager,
             final CachingUpdateManager updateManager,
             @UserConfig final ConfigProvider userConfig) {
-        super(parentWindow, prefsDialog, workerFactory);
+        super(parentWindow, workerFactory);
         this.pluginManager = pluginManager;
         this.iconManager = iconManager;
         this.updateManager = updateManager;
