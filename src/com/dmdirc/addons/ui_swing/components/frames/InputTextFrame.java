@@ -39,6 +39,7 @@ import com.dmdirc.interfaces.ui.InputWindow;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.ui.input.InputHandler;
+import com.dmdirc.ui.messages.ColourManager;
 
 import java.awt.BorderLayout;
 import java.awt.Point;
@@ -66,6 +67,10 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
     private static final long serialVersionUID = 3;
     /** Swing controller. */
     private final SwingController controller;
+    /** Config provider for this frame. */
+    private final AggregateConfigProvider config;
+    /** Colour manager for this frame. */
+    private final ColourManager colourManager;
     /** Input field panel. */
     protected JPanel inputPanel;
     /** The InputHandler for our input field. */
@@ -93,24 +98,29 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
         super(owner, deps);
 
         this.controller = getController();
+        this.config = owner.getConfigManager();
+        this.colourManager = new ColourManager(config);
+
         initComponents();
 
-        final AggregateConfigProvider config = owner.getConfigManager();
 
         if (!UIUtilities.isGTKUI()) {
             //GTK users appear to dislike choice, ignore them if they want some.
             getInputField().setBackground(UIUtilities.convertColour(
-                    config.getOptionColour(
-                    "ui", "inputbackgroundcolour",
-                    "ui", "backgroundcolour")));
+                    colourManager.getColourFromString(
+                            config.getOptionString(
+                                    "ui", "inputbackgroundcolour",
+                                    "ui", "backgroundcolour"), null)));
             getInputField().setForeground(UIUtilities.convertColour(
-                    config.getOptionColour(
-                    "ui", "inputforegroundcolour",
-                    "ui", "foregroundcolour")));
+                    colourManager.getColourFromString(
+                            config.getOptionString(
+                                    "ui", "inputforegroundcolour",
+                                    "ui", "foregroundcolour"), null)));
             getInputField().setCaretColor(UIUtilities.convertColour(
-                    config.getOptionColour(
-                    "ui", "inputforegroundcolour",
-                    "ui", "foregroundcolour")));
+                    colourManager.getColourFromString(
+                            config.getOptionString(
+                                    "ui", "inputforegroundcolour",
+                                    "ui", "foregroundcolour"), null)));
         }
 
         config.addChangeListener("ui", "inputforegroundcolour", this);
@@ -369,20 +379,23 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
                 case "inputbackgroundcolour":
                 case "backgroundcolour":
                     getInputField().setBackground(UIUtilities.convertColour(
-                            getContainer().getConfigManager().
-                                    getOptionColour("ui", "inputbackgroundcolour",
-                                            "ui", "backgroundcolour")));
+                            colourManager.getColourFromString(
+                                    config.getOptionString(
+                                            "ui", "inputbackgroundcolour",
+                                            "ui", "backgroundcolour"), null)));
                     break;
                 case "inputforegroundcolour":
                 case "foregroundcolour":
                     getInputField().setForeground(UIUtilities.convertColour(
-                            getContainer().getConfigManager()
-                                    .getOptionColour("ui", "inputforegroundcolour",
-                                            "ui", "foregroundcolour")));
+                            colourManager.getColourFromString(
+                                    config.getOptionString(
+                                            "ui", "inputforegroundcolour",
+                                            "ui", "foregroundcolour"), null)));
                     getInputField().setCaretColor(UIUtilities.convertColour(
-                            getContainer().getConfigManager()
-                                    .getOptionColour("ui", "inputforegroundcolour",
-                                            "ui", "foregroundcolour")));
+                            colourManager.getColourFromString(
+                                    config.getOptionString(
+                                            "ui", "inputforegroundcolour",
+                                            "ui", "foregroundcolour"), null)));
                     break;
             }
         }

@@ -134,8 +134,9 @@ public class OsdWindow extends JDialog implements MouseListener,
         panel = new JPanel();
         panel.setBorder(new LineBorder(Color.BLACK));
         panel.setBackground(UIUtilities.convertColour(
-                identityController.getGlobalConfiguration()
-                .getOptionColour(plugin.getDomain(), "bgcolour")));
+                colourManager.getColourFromString(
+                    identityController.getGlobalConfiguration()
+                            .getOptionString(plugin.getDomain(), "bgcolour"), null)));
 
         final int width = identityController.getGlobalConfiguration()
                 .getOptionInt(plugin.getDomain(), "width");
@@ -144,8 +145,9 @@ public class OsdWindow extends JDialog implements MouseListener,
 
         label = new JLabel(text);
         label.setForeground(UIUtilities.convertColour(
-                identityController.getGlobalConfiguration()
-                .getOptionColour(plugin.getDomain(), "fgcolour")));
+                colourManager.getColourFromString(
+                    identityController.getGlobalConfiguration()
+                        .getOptionString(plugin.getDomain(), "fgcolour"), null)));
         label.setFont(label.getFont().deriveFont(
                 (float) identityController
                 .getGlobalConfiguration().getOptionInt(plugin.getDomain(), "fontSize")));

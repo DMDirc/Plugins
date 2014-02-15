@@ -32,6 +32,7 @@ import com.dmdirc.interfaces.NicklistListener;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.parser.interfaces.ChannelClientInfo;
+import com.dmdirc.ui.messages.ColourManager;
 
 import java.awt.Dimension;
 import java.awt.Font;
@@ -63,6 +64,8 @@ public class NickList extends JScrollPane implements ConfigChangeListener,
     private final ChannelFrame frame;
     /** Config. */
     private final AggregateConfigProvider config;
+    /** The colour manager to use for this nicklist. */
+    private final ColourManager colourManager;
     /** Nick list model. */
     private final NicklistListModel nicklistModel;
 
@@ -76,17 +79,20 @@ public class NickList extends JScrollPane implements ConfigChangeListener,
         super();
         this.frame = frame;
         this.config = config;
+        this.colourManager = new ColourManager(config);
 
         nickList = new JList();
 
         nickList.setBackground(UIUtilities.convertColour(
-                config.getOptionColour(
-                "ui", "nicklistbackgroundcolour",
-                "ui", "backgroundcolour")));
+                colourManager.getColourFromString(
+                        config.getOptionString(
+                                "ui", "nicklistbackgroundcolour",
+                                "ui", "backgroundcolour"), null)));
         nickList.setForeground(UIUtilities.convertColour(
-                config.getOptionColour(
-                "ui", "nicklistforegroundcolour",
-                "ui", "foregroundcolour")));
+                colourManager.getColourFromString(
+                        config.getOptionString(
+                                "ui", "nicklistforegroundcolour",
+                                "ui", "foregroundcolour"), null)));
         nickList.setFont(new Font(config.getOption("ui", "textPaneFontName"),
                 Font.PLAIN, getFont().getSize()));
         config.addChangeListener("ui", "nicklistforegroundcolour", this);
@@ -96,7 +102,7 @@ public class NickList extends JScrollPane implements ConfigChangeListener,
         config.addChangeListener("ui", "nickListAltBackgroundColour", this);
         config.addChangeListener("ui", "textPaneFontName", this);
 
-        nickList.setCellRenderer(new NicklistRenderer(config, nickList));
+        nickList.setCellRenderer(new NicklistRenderer(config, nickList, colourManager));
         nickList.setSelectionMode(
                 ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 
@@ -258,13 +264,15 @@ public class NickList extends JScrollPane implements ConfigChangeListener,
                 || "foregroundcolour".equals(key)
                 || "textPaneFontName".equals(key)) {
             nickList.setBackground(UIUtilities.convertColour(
-                    config.getOptionColour(
-                    "ui", "nicklistbackgroundcolour",
-                    "ui", "backgroundcolour")));
+                    colourManager.getColourFromString(
+                            config.getOptionString(
+                                    "ui", "nicklistbackgroundcolour",
+                                    "ui", "backgroundcolour"), null)));
             nickList.setForeground(UIUtilities.convertColour(
-                    config.getOptionColour(
-                    "ui", "nicklistforegroundcolour",
-                    "ui", "foregroundcolour")));
+                    colourManager.getColourFromString(
+                            config.getOptionString(
+                                    "ui", "nicklistforegroundcolour",
+                                    "ui", "foregroundcolour"), null)));
             nickList.setFont(new Font(config.getOption("ui", "textPaneFontName"),
                 Font.PLAIN, getFont().getSize()));
             nickList.repaint();

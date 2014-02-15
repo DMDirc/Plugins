@@ -28,6 +28,7 @@ import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.parser.interfaces.ChannelClientInfo;
 import com.dmdirc.ui.Colour;
+import com.dmdirc.ui.messages.ColourManager;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -54,27 +55,36 @@ public final class NicklistRenderer extends DefaultListCellRenderer implements
     private boolean showColours;
     /** The list that we're using for the nicklist. */
     private final JList nicklist;
+    /** Colour manager to use to resolve colours. */
+    private final ColourManager colourManager;
 
     /**
      * Creates a new instance of NicklistRenderer.
      *
      * @param config ConfigManager for the associated channel
      * @param nicklist The nicklist that we're rendering for.
+     * @param colourManager Colour manager to use to resolve colours.
      */
-    public NicklistRenderer(final AggregateConfigProvider config, final JList nicklist) {
+    public NicklistRenderer(
+            final AggregateConfigProvider config,
+            final JList nicklist,
+            final ColourManager colourManager) {
         super();
 
         this.config = config;
         this.nicklist = nicklist;
+        this.colourManager = colourManager;
 
         config.addChangeListener("ui", "shownickcoloursinnicklist", this);
         config.addChangeListener("ui", "nicklistbackgroundcolour", this);
         config.addChangeListener("ui", "backgroundcolour", this);
         config.addChangeListener("ui", "nickListAltBackgroundColour", this);
-        altBackgroundColour = UIUtilities.convertColour(config.getOptionColour(
-                "ui", "nickListAltBackgroundColour",
-                "ui", "nicklistbackgroundcolour",
-                "ui", "backgroundcolour"));
+        altBackgroundColour = UIUtilities.convertColour(
+                colourManager.getColourFromString(
+                        config.getOptionString(
+                                "ui", "nickListAltBackgroundColour",
+                                "ui", "nicklistbackgroundcolour",
+                                "ui", "backgroundcolour"), null));
         showColours = config.getOptionBool("ui", "shownickcoloursinnicklist");
     }
 
@@ -113,11 +123,12 @@ public final class NicklistRenderer extends DefaultListCellRenderer implements
             showColours = config.getOptionBool("ui", "shownickcoloursinnicklist");
 
         } else {
-            altBackgroundColour =
-                    UIUtilities.convertColour(config.getOptionColour(
-                    "ui", "nickListAltBackgroundColour",
-                    "ui", "nicklistbackgroundcolour",
-                    "ui", "backgroundcolour"));
+            altBackgroundColour = UIUtilities.convertColour(
+                    colourManager.getColourFromString(
+                            config.getOptionString(
+                                    "ui", "nickListAltBackgroundColour",
+                                    "ui", "nicklistbackgroundcolour",
+                                    "ui", "backgroundcolour"), null));
         }
         nicklist.repaint();
     }

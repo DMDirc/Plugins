@@ -89,6 +89,8 @@ public class TopicBar extends JComponent implements ActionListener,
     private final JButton topicCancel;
     /** The factory to use to retrieve windows. */
     private final SwingWindowFactory windowFactory;
+    /** Manager to use to resolve colours. */
+    private final ColourManager colourManager;
     /** The URL handler to use to launch URLs. */
     private final URLHandler urlHandler;
     /** The controller to use to manage window focus. */
@@ -145,6 +147,7 @@ public class TopicBar extends JComponent implements ActionListener,
         this.domain = domain;
         this.windowFactory = windowFactory;
         this.urlHandler = urlHandler;
+        this.colourManager = colourManager;
         this.swingController = swingController;
         topicText = new TextPaneInputField(parentWindow, globalConfig, colourManager, iconManager);
         topicLengthMax = channel.getMaxTopicLength();
@@ -374,11 +377,15 @@ public class TopicBar extends JComponent implements ActionListener,
      */
     private void setColours() {
         backgroundColour = UIUtilities.convertColour(
-                channel.getConfigManager().getOptionColour(
-                "ui", "inputbackgroundcolour", "ui", "backgroundcolour"));
+                colourManager.getColourFromString(
+                        channel.getConfigManager().getOptionString(
+                                "ui", "inputbackgroundcolour",
+                                "ui", "backgroundcolour"), null));
         foregroundColour = UIUtilities.convertColour(
-                channel.getConfigManager().getOptionColour(
-                "ui", "inputforegroundcolour", "ui", "foregroundcolour"));
+                colourManager.getColourFromString(
+                        channel.getConfigManager().getOptionString(
+                                "ui", "inputforegroundcolour",
+                                "ui", "foregroundcolour"), null));
         setBackground(backgroundColour);
         setForeground(foregroundColour);
         setDisabledTextColour(foregroundColour);
