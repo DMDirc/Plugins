@@ -32,6 +32,7 @@ import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.parser.interfaces.callbacks.DebugInfoListener;
 import com.dmdirc.plugins.implementations.BaseCommandPlugin;
 import com.dmdirc.ui.WindowManager;
+import com.dmdirc.util.URLBuilder;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -55,15 +56,19 @@ public final class DebugPlugin extends BaseCommandPlugin implements
      * @param actionController The action controller to register listeners with
      * @param commandController Command controller to register commands
      * @param windowManager Window Manager
+     * @param urlBuilder The URL builder to use when finding icons.
      */
-    public DebugPlugin(final ActionController actionController,
+    public DebugPlugin(
+            final ActionController actionController,
             final CommandController commandController,
-            final WindowManager windowManager) {
+            final WindowManager windowManager,
+            final URLBuilder urlBuilder) {
         super(commandController);
 
         this.actionController = actionController;
 
-        registerCommand(new ParserDebugCommand(commandController, this, windowManager), ParserDebugCommand.INFO);
+        registerCommand(new ParserDebugCommand(commandController, this, windowManager, urlBuilder),
+                ParserDebugCommand.INFO);
     }
 
     /** {@inheritDoc} */

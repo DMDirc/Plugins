@@ -28,6 +28,7 @@ import com.dmdirc.interfaces.Connection;
 import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.parser.interfaces.callbacks.DebugInfoListener;
 import com.dmdirc.ui.core.components.WindowComponent;
+import com.dmdirc.util.URLBuilder;
 
 import java.util.Arrays;
 
@@ -50,9 +51,15 @@ public class DebugWindow extends FrameContainer {
      * @param title The title of this window
      * @param parser The parser this plugin is debugging
      * @param server The Server window this is a child of
+     * @param urlBuilder The URL builder to use when finding icons.
      */
-    public DebugWindow(final DebugPlugin plugin, final String title, final Parser parser, final Server server) {
-        super("raw", "Parser Debug", title, server.getConfigManager(),
+    public DebugWindow(
+            final DebugPlugin plugin,
+            final String title,
+            final Parser parser,
+            final Server server,
+            final URLBuilder urlBuilder) {
+        super("raw", "Parser Debug", title, server.getConfigManager(), urlBuilder,
                 Arrays.asList(WindowComponent.TEXTAREA.getIdentifier()));
         this.plugin = plugin;
         this.parser = parser;

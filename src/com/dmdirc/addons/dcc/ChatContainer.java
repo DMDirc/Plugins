@@ -30,6 +30,7 @@ import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.messages.MessageSinkManager;
 import com.dmdirc.ui.core.components.WindowComponent;
 import com.dmdirc.ui.input.TabCompleterFactory;
+import com.dmdirc.util.URLBuilder;
 
 import java.util.Arrays;
 
@@ -56,17 +57,23 @@ public class ChatContainer extends DCCFrameContainer implements DCCChatHandler {
      * @param targetNick Nickname of target
      * @param tabCompleterFactory The factory to use to create tab completers.
      * @param messageSinkManager The sink manager to use to despatch messages.
+     * @param urlBuilder The URL builder to use when finding icons.
      */
-    public ChatContainer(final DCCChat dcc,
+    public ChatContainer(
+            final DCCChat dcc,
             final AggregateConfigProvider configManager,
             final CommandController commandController,
-            final String title, final String nick, final String targetNick,
+            final String title,
+            final String nick,
+            final String targetNick,
             final TabCompleterFactory tabCompleterFactory,
-            final MessageSinkManager messageSinkManager) {
+            final MessageSinkManager messageSinkManager,
+            final URLBuilder urlBuilder) {
         super(title, "dcc-chat-inactive", configManager,
                 new DCCCommandParser(configManager, commandController),
                 messageSinkManager,
                 tabCompleterFactory,
+                urlBuilder,
                 Arrays.asList(
                     WindowComponent.TEXTAREA.getIdentifier(),
                     WindowComponent.INPUTFIELD.getIdentifier()));

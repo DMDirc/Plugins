@@ -25,6 +25,7 @@ package com.dmdirc.addons.logging;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.ui.core.components.WindowComponent;
+import com.dmdirc.util.URLBuilder;
 import com.dmdirc.util.io.ReverseFileReader;
 
 import java.util.Arrays;
@@ -40,11 +41,16 @@ public class HistoryWindow extends FrameContainer {
      * @param title The title of the window
      * @param reader The reader to use to get the history
      * @param parent The window this history window was opened from
+     * @param urlBuilder The URL builder to use when finding icons.
      * @param numLines The number of lines to show
      */
-    public HistoryWindow(final String title, final ReverseFileReader reader,
-                         final FrameContainer parent, final int numLines) {
-        super("raw", title, title, parent.getConfigManager(),
+    public HistoryWindow(
+            final String title,
+            final ReverseFileReader reader,
+            final FrameContainer parent,
+            final URLBuilder urlBuilder,
+            final int numLines) {
+        super("raw", title, title, parent.getConfigManager(), urlBuilder,
                 Arrays.asList(WindowComponent.TEXTAREA.getIdentifier()));
 
         final int frameBufferSize = parent.getConfigManager().getOptionInt(

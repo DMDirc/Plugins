@@ -35,6 +35,7 @@ import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.parser.interfaces.callbacks.DebugInfoListener;
 import com.dmdirc.ui.WindowManager;
+import com.dmdirc.util.URLBuilder;
 
 /**
  * The ParserDebug Command allows controlling of which parsers spam debug info.
@@ -51,6 +52,7 @@ public final class ParserDebugCommand extends Command {
     final DebugPlugin myPlugin;
     /** Window management. */
     private final WindowManager windowManager;
+    private final URLBuilder urlBuilder;
 
     /**
      * Creates a new instance of ParserDebugCommand.
@@ -58,11 +60,17 @@ public final class ParserDebugCommand extends Command {
      * @param controller The controller to use for command information.
      * @param plugin Plugin that owns this command
      * @param windowManager Window management
+     * @param urlBuilder The URL builder to use when finding icons.
      */
-    public ParserDebugCommand(final CommandController controller, final DebugPlugin plugin, final WindowManager windowManager) {
+    public ParserDebugCommand(
+            final CommandController controller,
+            final DebugPlugin plugin,
+            final WindowManager windowManager,
+            final URLBuilder urlBuilder) {
         super(controller);
         myPlugin = plugin;
         this.windowManager = windowManager;
+        this.urlBuilder = urlBuilder;
     }
 
     /**
@@ -99,7 +107,7 @@ public final class ParserDebugCommand extends Command {
             try {
                 parser.getCallbackManager().addCallback(DebugInfoListener.class, myPlugin);
                 final DebugWindow window = new DebugWindow(myPlugin,
-                        "Parser Debug", parser, (Server) origin.getConnection());
+                        "Parser Debug", parser, (Server) origin.getConnection(), urlBuilder);
                 windowManager.addWindow((Server) origin.getConnection(), window);
                 myPlugin.registeredParsers.put(parser, window);
                 sendLine(origin, isSilent, FORMAT_OUTPUT, "Adding callback ok");
