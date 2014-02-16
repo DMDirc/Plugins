@@ -19,48 +19,41 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 package com.dmdirc.addons.windowstatus;
 
-import com.dmdirc.config.prefs.PreferencesDialogModel;
+import com.dmdirc.addons.ui_swing.injection.SwingModule;
 import com.dmdirc.plugins.PluginInfo;
-import com.dmdirc.plugins.implementations.BasePlugin;
 
-import dagger.ObjectGraph;
+import javax.inject.Qualifier;
+
+import dagger.Module;
+import dagger.Provides;
 
 /**
- * Displays information related to the current window in the status bar.
+ * DI module for this plugin.
  */
-public class WindowStatusPlugin extends BasePlugin {
+@Module(injects = {WindowStatusManager.class}, addsTo = SwingModule.class)
+public class WindowStatusModule {
 
-    /** Nick colour manager. */
-    private WindowStatusManager windowStatusManager;
-    /** Plugin info. */
-    private PluginInfo pluginInfo;
+    @Qualifier
+    public @interface WindowStatusDomain {};
 
-    @Override
-    public void load(final PluginInfo pluginInfo, final ObjectGraph graph) {
-        super.load(pluginInfo, graph);
+    /** The plugin's plugin info. */
+    private final PluginInfo pluginInfo;
+
+    public WindowStatusModule(final PluginInfo pluginInfo) {
         this.pluginInfo = pluginInfo;
-        setObjectGraph(graph.plus(new WindowStatusModule(pluginInfo)));
-        windowStatusManager = getObjectGraph().get(WindowStatusManager.class);
     }
 
-    @Override
-        public void onLoad() {
-        super.onLoad();
-        windowStatusManager.onLoad();
-    }
-
-    @Override
-    public void onUnload() {
-        super.onUnload();
-        windowStatusManager.onUnload();
-    }
-
-    @Override
-    public void showConfig(final PreferencesDialogModel manager) {
-        windowStatusManager.showConfig(manager, pluginInfo);
+    /**
+     * Provides the domain that the settings should be stored under.
+     *
+     * @return The settings domain for the plugin.
+     */
+    @Provides
+    @WindowStatusDomain
+    public String getSettingsDomain() {
+        return pluginInfo.getDomain();
     }
 
 }
