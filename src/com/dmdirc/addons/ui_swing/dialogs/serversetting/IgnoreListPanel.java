@@ -179,7 +179,7 @@ public final class IgnoreListPanel extends JPanel implements ActionListener,
     public void actionPerformed(final ActionEvent e) {
         if (e.getSource() == addButton) {
             new StandardInputDialog(parentWindow,
-                    ModalityType.MODELESS, "New ignore list entry",
+                    ModalityType.MODELESS, controller.getIconManager(), "New ignore list entry",
                     "Please enter the new ignore list entry",
                     viewToggle.isSelected() ? new ValidatorChain<>(
                     new NotEmptyValidator(), new RegexValidator())

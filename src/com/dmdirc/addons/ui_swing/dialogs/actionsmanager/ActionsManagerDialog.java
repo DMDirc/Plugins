@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.actionsmanager;
 
+import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.ClientModule.UserConfig;
 import com.dmdirc.actions.Action;
 import com.dmdirc.actions.ActionGroup;
@@ -41,6 +42,7 @@ import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialog;
 import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
 import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.interfaces.config.ConfigProvider;
+import com.dmdirc.ui.IconManager;
 import com.dmdirc.util.validators.FileNameValidator;
 import com.dmdirc.util.validators.ValidatorChain;
 
@@ -105,6 +107,8 @@ public class ActionsManagerDialog extends StandardDialog implements
     private ActionGroupSettingsPanel activeSettings;
     /** Group panel. */
     private JPanel groupPanel;
+    /** The icon manager to use for validating text fields. */
+    private final IconManager iconManager;
     /** Factory to use to create group panels. */
     private final ActionsGroupPanelFactory groupPanelFactory;
 
@@ -115,6 +119,7 @@ public class ActionsManagerDialog extends StandardDialog implements
      * @param controller Parent controller
      * @param config Config to save dialog state to
      * @param compFactory Prefs setting component factory
+     * @param iconManager The icon manager to use for validating text fields.
      * @param groupPanelFactory Factory to use to create group panels.
      */
     @Inject
@@ -123,12 +128,14 @@ public class ActionsManagerDialog extends StandardDialog implements
             final SwingController controller,
             @UserConfig final ConfigProvider config,
             final PrefsComponentFactory compFactory,
+            @GlobalConfig final IconManager iconManager,
             final ActionsGroupPanelFactory groupPanelFactory) {
         super(Apple.isAppleUI()
                 ? new AppleJFrame(parentWindow, controller)
                 : parentWindow, ModalityType.MODELESS);
         this.config = config;
         this.compFactory = compFactory;
+        this.iconManager = iconManager;
         this.groupPanelFactory = groupPanelFactory;
 
         initComponents();
@@ -311,8 +318,7 @@ public class ActionsManagerDialog extends StandardDialog implements
     private void addGroup() {
         final int index = groups.getSelectedIndex();
         groups.getSelectionModel().clearSelection();
-        new StandardInputDialog(this,
-                ModalityType.DOCUMENT_MODAL, "New action group",
+        new StandardInputDialog(this, ModalityType.DOCUMENT_MODAL, iconManager, "New action group",
                 "Please enter the name of the new action group", validator) {
 
             /** Java Serialisation version ID. */
@@ -352,8 +358,7 @@ public class ActionsManagerDialog extends StandardDialog implements
         final String oldName =
                 ((ActionGroup) groups.getSelectedValue()).getName();
         final StandardInputDialog inputDialog = new StandardInputDialog(
-                this, ModalityType.DOCUMENT_MODAL,
-                "Edit action group",
+                this, ModalityType.DOCUMENT_MODAL, iconManager, "Edit action group",
                 "Please enter the new name of the action group", validator) {
 
             /** Java Serialisation version ID. */
