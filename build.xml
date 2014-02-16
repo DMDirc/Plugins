@@ -145,11 +145,6 @@ version:
             <zipfileset src="${plugins.lib}/main/smackx.jar" includes="org/** com/**"/>
         </jar>
 
-       <jar destfile="${plugins.dist}/parser_msn.jar" update="true">
-            <zipfileset src="${plugins.lib}/main/jml.jar" includes="net/** org/**"/>
-            <zipfileset src="${plugins.lib}/main/httpcore.jar" includes="org/**"/>
-        </jar>
-
         <jar destfile="${plugins.dist}/windowflashing.jar" update="true">
             <zipfileset src="${plugins.lib}/main/jna.jar" includes="com/**"/>
             <zipfileset src="${plugins.lib}/main/platform.jar" includes="com/**"/>
