@@ -92,8 +92,6 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     private final PluginInfo pluginInfo;
     /** Global config manager. */
     private final AggregateConfigProvider globalConfig;
-    /** Identity Manager. */
-    private final IdentityController identityManager;
     /** Identity factory. */
     private final IdentityFactory identityFactory;
     /** Global config identity. */
@@ -135,7 +133,6 @@ public class SwingController extends BaseCommandPlugin implements UIController {
             final ColourManager colourManager,
             final EventBus eventBus) {
         this.pluginInfo = pluginInfo;
-        this.identityManager = identityManager;
         this.identityFactory = identityFactory;
         this.pluginManager = pluginManager;
         this.colourManager = colourManager;
@@ -153,11 +150,6 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     @Deprecated
     public AggregateConfigProvider getGlobalConfig() {
         return globalConfig;
-    }
-
-    @Deprecated
-    public IdentityController getIdentityManager() {
-        return identityManager;
     }
 
     @Deprecated

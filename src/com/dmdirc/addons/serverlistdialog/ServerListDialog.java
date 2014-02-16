@@ -28,6 +28,7 @@ import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.LockedLayer;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
+import com.dmdirc.interfaces.config.IdentityController;
 import com.dmdirc.ui.core.util.URLHandler;
 
 import java.awt.color.ColorSpace;
@@ -83,6 +84,7 @@ public class ServerListDialog extends StandardDialog implements
      * @param serverListModel The model to use for the dialog.
      * @param mainFrame The main frame that owns the dialog.
      * @param settingsPanel The panel to use for settings.
+     * @param identityController Controller to use to get profiles.
      */
     @Inject
     public ServerListDialog(
@@ -91,7 +93,8 @@ public class ServerListDialog extends StandardDialog implements
             final PerformWrapper performWrapper,
             final ServerListModel serverListModel,
             final MainFrame mainFrame,
-            final Settings settingsPanel) {
+            final Settings settingsPanel,
+            final IdentityController identityController) {
         super(mainFrame, ModalityType.MODELESS);
 
         setTitle("Server List");
@@ -112,7 +115,7 @@ public class ServerListDialog extends StandardDialog implements
         infoLock = new LockedLayer<>(new BufferedImageOpEffect(
                 new ColorConvertOp(ColorSpace.getInstance(ColorSpace.CS_GRAY),
                 null)));
-        profileLayer = new JXLayer<>(new Profiles(model, controller), profileLock);
+        profileLayer = new JXLayer<>(new Profiles(model, identityController), profileLock);
         performLayer = new JXLayer<>(new Perform(controller, performWrapper, model), performLock);
         settingsLayer = new JXLayer<>(settingsPanel, settingsLock);
         infoLayer = new JXLayer<>(new Info(model, urlHandler), infoLock);
