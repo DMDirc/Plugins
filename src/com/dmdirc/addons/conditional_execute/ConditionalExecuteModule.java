@@ -22,21 +22,14 @@
 
 package com.dmdirc.addons.conditional_execute;
 
-import com.dmdirc.plugins.PluginInfo;
-import com.dmdirc.plugins.implementations.BaseCommandPlugin;
+import com.dmdirc.ClientModule;
 
-import dagger.ObjectGraph;
+import dagger.Module;
 
 /**
- * The ConditionalExecute plugin allows the user to run commands only if
- * external conditions have been met.
+ * DI for the conditional execute plugin.
  */
-public final class ConditionalExecutePlugin extends BaseCommandPlugin {
+@Module(injects={ConditionalExecuteCommand.class}, addsTo = ClientModule.class)
+public class ConditionalExecuteModule {
 
-    @Override
-    public void load(final PluginInfo pluginInfo, final ObjectGraph graph) {
-        super.load(pluginInfo, graph);
-        setObjectGraph(graph.plus(new ConditionalExecuteModule()));
-        registerCommand(ConditionalExecuteCommand.class, ConditionalExecuteCommand.INFO);
-    }
 }
