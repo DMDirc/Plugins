@@ -30,6 +30,8 @@ import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.SendWorker;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
+import com.dmdirc.commandline.CommandLineOptionsModule.Directory;
+import com.dmdirc.commandline.CommandLineOptionsModule.DirectoryType;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.IdentityController;
 import com.dmdirc.ui.core.util.Info;
@@ -84,18 +86,20 @@ public class FeedbackDialog extends StandardDialog implements ActionListener, Do
      * @param identityController Identity controller (needs to be a config directory)
      * @param serverManager Server manager
      * @param config Config
+     * @param baseDirectory The base directory to include in feedback.
      */
     @Inject
     public FeedbackDialog(
             final MainFrame parentWindow,
             final IdentityController identityController,
             final ServerManager serverManager,
-            @GlobalConfig final AggregateConfigProvider config) {
+            @GlobalConfig final AggregateConfigProvider config,
+            @Directory(DirectoryType.BASE) final String baseDirectory) {
         super(parentWindow, ModalityType.MODELESS);
 
         this.serverManager = serverManager;
         this.config = config;
-        this.configDirectory = identityController.getConfigurationDirectory();
+        this.configDirectory = baseDirectory;
 
         initComponents();
         layoutComponents();
@@ -225,7 +229,7 @@ public class FeedbackDialog extends StandardDialog implements ActionListener, Do
             }
         }
         if (dmdircCheckbox.isSelected()) {
-            dmdircInfo.append("DMDirc version: ").append(Info.getDMDircVersion()).append("\n");
+            dmdircInfo.append("DMDirc version: ").append(Info.getDMDircVersion(config)).append("\n");
             dmdircInfo.append("Profile directory: ").append(configDirectory).append("\n");
             dmdircInfo.append("Java version: ").append(Info.getJavaVersion()).append("\n");
             dmdircInfo.append("OS Version: ").append(Info.getOSVersion()).append("\n");

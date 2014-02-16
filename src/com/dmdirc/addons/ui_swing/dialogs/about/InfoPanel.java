@@ -22,8 +22,12 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.about;
 
+import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
+import com.dmdirc.commandline.CommandLineOptionsModule.Directory;
+import com.dmdirc.commandline.CommandLineOptionsModule.DirectoryType;
+import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.ui.core.util.Info;
 import com.dmdirc.util.DateUtils;
 
@@ -48,17 +52,28 @@ public final class InfoPanel extends JPanel {
     private static final long serialVersionUID = 1;
     /** Parent controller. */
     private final SwingController controller;
+    /** The config to read settings from. */
+    private final AggregateConfigProvider globalConfig;
+    /** The base directory used for settings. */
+    private final String baseDirectory;
 
     /**
      * Creates a new instance of InfoPanel.
      *
      * @param controller Parent swing controller
+     * @param globalConfig The config to read settings from.
+     * @param baseDirectory The base directory that DMDirc is using for settings.
      */
     @Inject
-    public InfoPanel(final SwingController controller) {
+    public InfoPanel(
+            final SwingController controller,
+            @GlobalConfig final AggregateConfigProvider globalConfig,
+            @Directory(DirectoryType.BASE) final String baseDirectory) {
         super();
 
         this.controller = controller;
+        this.globalConfig = globalConfig;
+        this.baseDirectory = baseDirectory;
         setOpaque(UIUtilities.getTabbedPaneOpaque());
         initComponents();
     }
@@ -74,14 +89,12 @@ public final class InfoPanel extends JPanel {
                 + font.getSize() + "pt; }");
 
          infoPane.setText("<html>"
-                 + "<b>DMDirc version: </b>" + Info.getDMDircVersion() + "<br>"
-                 + "<b>Mode Alises version: </b>" + controller
-                 .getGlobalConfig().getOption("identity", "modealiasversion")
+                 + "<b>DMDirc version: </b>" + Info.getDMDircVersion(globalConfig) + "<br>"
+                 + "<b>Mode Alises version: </b>" + globalConfig.getOption("identity", "modealiasversion")
                  + "<br>"
-                 + "<b>Swing UI version: </b>" + controller.getVersion()
-                 .toString() + "<br>"
+                 + "<b>Swing UI version: </b>" + controller.getVersion().toString() + "<br>"
                  + "<b>OS Version: </b>" + Info.getOSVersion() + "<br>"
-                 + "<b>Profile directory: </b>" + controller.getIdentityManager().getConfigurationDirectory() + "<br>"
+                 + "<b>Profile directory: </b>" + baseDirectory + "<br>"
                  + "<b>Java version: </b>" + Info.getJavaVersion() + "<br>"
                  + "<b>Look and Feel: </b>" + SwingController.getLookAndFeel()
                  + "<br>"
