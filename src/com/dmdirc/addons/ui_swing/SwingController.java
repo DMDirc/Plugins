@@ -42,7 +42,6 @@ import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.config.IdentityController;
-import com.dmdirc.interfaces.config.IdentityFactory;
 import com.dmdirc.interfaces.ui.UIController;
 import com.dmdirc.interfaces.ui.Window;
 import com.dmdirc.logger.ErrorLevel;
@@ -92,8 +91,6 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     private final PluginInfo pluginInfo;
     /** Global config manager. */
     private final AggregateConfigProvider globalConfig;
-    /** Identity factory. */
-    private final IdentityFactory identityFactory;
     /** Global config identity. */
     private final ConfigProvider globalIdentity;
     /** Addon config identity. */
@@ -116,7 +113,6 @@ public class SwingController extends BaseCommandPlugin implements UIController {
      *
      * @param pluginInfo Plugin info
      * @param identityManager Identity Manager
-     * @param identityFactory Factory used to create identities.
      * @param pluginManager Plugin manager
      * @param serverManager Server manager to use for server information.
      * @param urlBuilder URL builder to use to resolve icons etc.
@@ -126,14 +122,12 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     public SwingController(
             final PluginInfo pluginInfo,
             final IdentityController identityManager,
-            final IdentityFactory identityFactory,
             final PluginManager pluginManager,
             final ServerManager serverManager,
             final URLBuilder urlBuilder,
             final ColourManager colourManager,
             final EventBus eventBus) {
         this.pluginInfo = pluginInfo;
-        this.identityFactory = identityFactory;
         this.pluginManager = pluginManager;
         this.colourManager = colourManager;
         this.urlBuilder = urlBuilder;
@@ -150,11 +144,6 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     @Deprecated
     public AggregateConfigProvider getGlobalConfig() {
         return globalConfig;
-    }
-
-    @Deprecated
-    public IdentityFactory getIdentityFactory() {
-        return identityFactory;
     }
 
     @Deprecated
