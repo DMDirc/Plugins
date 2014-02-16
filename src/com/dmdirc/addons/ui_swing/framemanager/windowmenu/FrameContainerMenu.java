@@ -63,7 +63,7 @@ public class FrameContainerMenu extends JMenu implements FrameInfoListener,
     public FrameContainerMenu(final FrameContainer frame,
             final SwingController controller) {
         super(frame.getName());
-        setIcon(frame.getIconManager(controller.getUrlBuilder()).getIcon(frame.getIcon()));
+        setIcon(frame.getIconManager().getIcon(frame.getIcon()));
         new WindowMenuScroller(this, controller.getGlobalConfig(),
                 controller.getDomain(), 0);
 
@@ -83,7 +83,7 @@ public class FrameContainerMenu extends JMenu implements FrameInfoListener,
             @Override
             public void run() {
                 if ((frame != null && window != null) && frame.equals(window)) {
-                    setIcon(window.getIconManager(controller.getUrlBuilder()).getIcon(icon));
+                    setIcon(window.getIconManager().getIcon(icon));
                 }
             }
         });

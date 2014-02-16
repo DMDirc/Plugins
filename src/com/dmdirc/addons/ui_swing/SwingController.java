@@ -103,8 +103,6 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     private final Apple apple;
     /** The colour manager to use to parse colours. */
     private final ColourManager colourManager;
-    /** The URL builder to use. */
-    private final URLBuilder urlBuilder;
     /** The manager we're using for dependencies. */
     private SwingManager swingManager;
 
@@ -130,7 +128,6 @@ public class SwingController extends BaseCommandPlugin implements UIController {
         this.pluginInfo = pluginInfo;
         this.pluginManager = pluginManager;
         this.colourManager = colourManager;
-        this.urlBuilder = urlBuilder;
 
         globalConfig = identityManager.getGlobalConfiguration();
         globalIdentity = identityManager.getUserSettings();
@@ -169,11 +166,6 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     @Deprecated
     public ColourManager getColourManager() {
         return colourManager;
-    }
-
-    @Deprecated
-    public URLBuilder getUrlBuilder() {
-        return urlBuilder;
     }
 
     /**
