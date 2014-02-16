@@ -44,7 +44,6 @@ public class ProfileListCellRenderer extends DMDircListCellRenderer {
         super(renderer);
     }
 
-    /** {@inheritDoc} */
     @Override
     protected void renderValue(final JLabel label, final Object value,
             final int index, final boolean isSelected,
@@ -52,7 +51,12 @@ public class ProfileListCellRenderer extends DMDircListCellRenderer {
         if (!(value instanceof Profile)) {
             label.setText("");
         } else {
-            label.setText(((Profile) value).getName());
+            final String name = ((Profile) value).getName();
+            if (name.isEmpty()) {
+                label.setText("   ");
+            } else {
+                label.setText(name);
+            }
         }
     }
 }
