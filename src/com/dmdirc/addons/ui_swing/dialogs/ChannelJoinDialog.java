@@ -24,6 +24,7 @@ package com.dmdirc.addons.ui_swing.dialogs;
 
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.parser.common.ChannelJoinRequest;
+import com.dmdirc.ui.IconManager;
 
 /**
  * A dialog to prompt the user for a channel and then join that channel.
@@ -42,13 +43,17 @@ public class ChannelJoinDialog extends StandardInputDialog {
      *
      * @param mainFrame Main frame
      * @param modality Window modality
+     * @param iconManager The icon manager to use for validating text fields.
      * @param title Window title
      * @param message Window message
      */
-    public ChannelJoinDialog(final MainFrame mainFrame,
-            final ModalityType modality, final String title,
+    public ChannelJoinDialog(
+            final MainFrame mainFrame,
+            final ModalityType modality,
+            final IconManager iconManager,
+            final String title,
             final String message) {
-        super(mainFrame, modality, title, message);
+        super(mainFrame, modality, iconManager, title, message);
 
         this.mainFrame = mainFrame;
     }

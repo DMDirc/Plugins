@@ -25,6 +25,7 @@ import com.dmdirc.addons.ui_swing.components.validating.ValidatableJTextField;
 import com.dmdirc.addons.ui_swing.components.validating.ValidatableReorderableJList;
 import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialog;
 import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
+import com.dmdirc.ui.IconManager;
 
 import java.awt.Dialog.ModalityType;
 import java.awt.event.ActionEvent;
@@ -52,12 +53,18 @@ public class ProfileManagerDialogLinker {
     private final ProfileManagerModel model;
     /** Dialog. */
     private final ProfileManagerDialog dialog;
+    /** The icon manager to use for validating text fields. */
+    private final IconManager iconManager;
 
-    public ProfileManagerDialogLinker(final ProfileManagerController controller,
-            final ProfileManagerModel model, final ProfileManagerDialog dialog) {
+    public ProfileManagerDialogLinker(
+            final ProfileManagerController controller,
+            final ProfileManagerModel model,
+            final ProfileManagerDialog dialog,
+            final IconManager iconManager) {
         this.controller = controller;
         this.model = model;
         this.dialog = dialog;
+        this.iconManager = iconManager;
     }
 
     /**
@@ -155,7 +162,7 @@ public class ProfileManagerDialogLinker {
 
             @Override
             public void actionPerformed(final ActionEvent e) {
-                new StandardInputDialog(dialog, ModalityType.DOCUMENT_MODAL,
+                new StandardInputDialog(dialog, ModalityType.DOCUMENT_MODAL, iconManager,
                         "Add nickname", "Enter nickname to add:", new AddNicknameValidator(model)) {
 
                             @Override
@@ -197,7 +204,8 @@ public class ProfileManagerDialogLinker {
             @Override
             public void actionPerformed(final ActionEvent e) {
                 final StandardInputDialog inputDialog = new StandardInputDialog(dialog,
-                        ModalityType.DOCUMENT_MODAL, "Add nickname", "Enter edited nickname:",
+                        ModalityType.DOCUMENT_MODAL, iconManager,
+                        "Add nickname", "Enter edited nickname:",
                         new EditNicknameValidator(model)) {
 
                             @Override

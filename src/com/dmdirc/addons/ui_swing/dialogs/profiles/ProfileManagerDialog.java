@@ -85,8 +85,10 @@ public class ProfileManagerDialog extends StandardDialog {
      * @param iconManager Icon manager to retrieve icons
      */
     @Inject
-    public ProfileManagerDialog(final MainFrame mainFrame,
-            final IdentityFactory identityFactory, final IdentityController identityController,
+    public ProfileManagerDialog(
+            final MainFrame mainFrame,
+            final IdentityFactory identityFactory,
+            final IdentityController identityController,
             @GlobalConfig final IconManager iconManager) {
         super(mainFrame, ModalityType.MODELESS);
         this.model = new ProfileManagerModel(identityController, identityFactory);
@@ -95,7 +97,7 @@ public class ProfileManagerDialog extends StandardDialog {
         ident = new ValidatableJTextField(iconManager);
         name = new ValidatableJTextField(iconManager);
         initComponents();
-        linker = new ProfileManagerDialogLinker(controller, model, this);
+        linker = new ProfileManagerDialogLinker(controller, model, this, iconManager);
         linker.bindAddNickname(addNickname);
         linker.bindAddProfile(addProfile);
         linker.bindCancelButton(getCancelButton());

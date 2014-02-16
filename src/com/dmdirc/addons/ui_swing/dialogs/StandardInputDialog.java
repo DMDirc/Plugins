@@ -24,9 +24,7 @@ package com.dmdirc.addons.ui_swing.dialogs;
 
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.addons.ui_swing.components.validating.ValidatingJTextField;
-import com.dmdirc.config.IdentityManager;
 import com.dmdirc.ui.IconManager;
-import com.dmdirc.util.URLBuilder;
 import com.dmdirc.util.validators.ValidationResponse;
 import com.dmdirc.util.validators.Validator;
 
@@ -58,6 +56,8 @@ public abstract class StandardInputDialog extends StandardDialog {
     private TextLabel blurb;
     /** Message. */
     private String message;
+    /** The icon manager to use for validating text fields. */
+    private final IconManager iconManager;
     /** Are we saving? */
     protected final AtomicBoolean saving = new AtomicBoolean(false);
 
@@ -66,13 +66,14 @@ public abstract class StandardInputDialog extends StandardDialog {
      *
      * @param owner Dialog owner
      * @param modal modality type
+     * @param iconManager The icon manager to use for validating text fields.
      * @param title Dialog title
      * @param message Dialog message
      */
     public StandardInputDialog(
-            final Window owner, final ModalityType modal,
+            final Window owner, final ModalityType modal, final IconManager iconManager,
             final String title, final String message) {
-        this(owner, modal, title, message, new Validator<String>() {
+        this(owner, modal, iconManager, title, message, new Validator<String>() {
 
             /** {@inheritDoc} */
             @Override
@@ -87,18 +88,20 @@ public abstract class StandardInputDialog extends StandardDialog {
      *
      * @param owner Dialog owner
      * @param modal modality type
+     * @param iconManager The icon manager to use for validating text fields.
      * @param validator Textfield validator
      * @param title Dialog title
      * @param message Dialog message
      */
     public StandardInputDialog(
-            final Window owner, final ModalityType modal,
+            final Window owner, final ModalityType modal, final IconManager iconManager,
             final String title, final String message,
             final Validator<String> validator) {
         super(owner, modal);
 
         this.validator = validator;
         this.message = message;
+        this.iconManager = iconManager;
 
         setTitle(title);
         setDefaultCloseOperation(StandardInputDialog.DISPOSE_ON_CLOSE);
@@ -125,9 +128,7 @@ public abstract class StandardInputDialog extends StandardDialog {
      */
     private void initComponents() {
         orderButtons(new JButton(), new JButton());
-        textField = new ValidatingJTextField(new IconManager(
-                IdentityManager.getIdentityManager().getGlobalConfiguration(),
-                URLBuilder.getInstance()), validator);
+        textField = new ValidatingJTextField(iconManager, validator);
         blurb = new TextLabel(message);
         validateText();
     }
