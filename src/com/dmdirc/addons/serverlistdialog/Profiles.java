@@ -23,9 +23,9 @@
 package com.dmdirc.addons.serverlistdialog;
 
 import com.dmdirc.addons.serverlists.ServerGroupItem;
-import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.vetoable.VetoableComboBoxModel;
 import com.dmdirc.interfaces.config.ConfigProvider;
+import com.dmdirc.interfaces.config.IdentityController;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -53,20 +53,20 @@ public class Profiles extends JPanel implements ServerListListener {
     private final Map<ServerGroupItem, JComboBox> combos = new HashMap<>();
     /** Info label. */
     private final JLabel label;
-    /** Swing controller. */
-    private final SwingController controller;
+    /** Controller to use to get profiles. */
+    private final IdentityController identityController;
 
     /**
      * Creates a new profile panel backed by the specified model.
      *
      * @param model Backing server list model
-     * @param controller Swing controller
+     * @param identityController Controller to use to get profiles.
      */
-    public Profiles(final ServerListModel model, final SwingController controller) {
+    public Profiles(final ServerListModel model, final IdentityController identityController) {
         super();
 
         this.model = model;
-        this.controller = controller;
+        this.identityController = identityController;
 
         label = new JLabel("Use this profile on this network: ");
         setBorder(BorderFactory.createTitledBorder(UIManager.getBorder(
@@ -109,7 +109,7 @@ public class Profiles extends JPanel implements ServerListListener {
 
             ConfigProvider selectedItem = null;
             comboModel.addElement(null);
-            for (ConfigProvider profile : controller.getIdentityManager().getProvidersByType("profile")) {
+            for (ConfigProvider profile : identityController.getProvidersByType("profile")) {
                 comboModel.addElement(profile);
                 if (item != null && profile.getName().equals(
                         item.getProfile())) {
