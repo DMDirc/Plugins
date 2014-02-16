@@ -22,21 +22,14 @@
 
 package com.dmdirc.addons.calc;
 
-import com.dmdirc.plugins.PluginInfo;
-import com.dmdirc.plugins.implementations.BaseCommandPlugin;
+import com.dmdirc.addons.ui_swing.injection.SwingModule;
 
-import dagger.ObjectGraph;
+import dagger.Module;
 
 /**
- * A plugin which parses and evaluates various mathematical expressions.
+ * DI Module for the calc plugin.
  */
-public class CalcPlugin extends BaseCommandPlugin {
+@Module(injects={CalcCommand.class}, addsTo = SwingModule.class)
+public class CalcModule {
 
-    @Override
-    public void load(final PluginInfo pluginInfo, final ObjectGraph graph) {
-        super.load(pluginInfo, graph);
-
-        setObjectGraph(graph.plus(new CalcModule()));
-        registerCommand(CalcCommand.class, CalcCommand.INFO);
-    }
 }

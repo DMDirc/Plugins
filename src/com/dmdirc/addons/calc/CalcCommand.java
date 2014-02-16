@@ -33,6 +33,8 @@ import com.dmdirc.interfaces.CommandController;
 
 import java.text.ParseException;
 
+import javax.inject.Inject;
+
 /**
  * A command which allows users to evaluate various mathematical expressions,
  * and perform basic calculations.
@@ -49,6 +51,7 @@ public class CalcCommand extends Command {
      *
      * @param controller The controller to use for command information.
      */
+    @Inject
     public CalcCommand(final CommandController controller) {
         super(controller);
     }
