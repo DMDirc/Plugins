@@ -62,7 +62,6 @@ import com.dmdirc.parser.common.ChannelJoinRequest;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.core.util.URLHandler;
 import com.dmdirc.ui.messages.ColourManager;
-import com.dmdirc.util.URLBuilder;
 
 import java.awt.Point;
 import java.awt.event.KeyEvent;
@@ -109,8 +108,6 @@ public abstract class TextFrame extends JPanel implements Window,
     private final PopupManager popupManager;
     /** Handler to use to open URLs. */
     private final URLHandler urlHandler;
-    /** Builder to use to construct URLs. */
-    private final URLBuilder urlBuilder;
     /** Controller to use for commands. */
     private final CommandController commandController;
     /** Boolean to determine if this frame should be popped out of main client. */
@@ -137,7 +134,6 @@ public abstract class TextFrame extends JPanel implements Window,
         this.controller = deps.controller;
         this.mainFrame = deps.mainFrame;
         this.popupManager = deps.popupManager;
-        this.urlBuilder = deps.urlBuilder;
         this.urlHandler = deps.urlHandler;
         this.commandController = deps.commandController;
         this.frameParent = owner;
@@ -580,7 +576,7 @@ public abstract class TextFrame extends JPanel implements Window,
      * @return This frame's IconManager
      */
     public IconManager getIconManager() {
-        return getContainer().getIconManager(urlBuilder);
+        return getContainer().getIconManager();
     }
 
     /**
@@ -618,7 +614,6 @@ public abstract class TextFrame extends JPanel implements Window,
         private final Provider<MainFrame> mainFrame;
         private final PopupManager popupManager;
         private final URLHandler urlHandler;
-        private final URLBuilder urlBuilder;
         private final CommandController commandController;
 
         @Inject
@@ -628,14 +623,12 @@ public abstract class TextFrame extends JPanel implements Window,
                 final Provider<MainFrame> mainFrame,
                 final PopupManager popupManager,
                 final URLHandler urlHandler,
-                final URLBuilder urlBuilder,
                 final CommandController commandController) {
             this.textPaneFactory = textPaneFactory;
             this.controller = controller;
             this.mainFrame = mainFrame;
             this.popupManager = popupManager;
             this.urlHandler = urlHandler;
-            this.urlBuilder = urlBuilder;
             this.commandController = commandController;
         }
     }

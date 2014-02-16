@@ -308,8 +308,7 @@ public final class ButtonBar implements FrameManager, ActionListener,
     private void addButton(final Window source) {
         final FrameToggleButton button = new FrameToggleButton(
                 source.getContainer().getName(),
-                source.getContainer().getIconManager(controller.getUrlBuilder())
-                        .getIcon(source.getContainer().getIcon()),
+                source.getContainer().getIconManager().getIcon(source.getContainer().getIcon()),
                 source);
         button.addActionListener(this);
         button.addMouseListener(this);
@@ -491,7 +490,7 @@ public final class ButtonBar implements FrameManager, ActionListener,
             public void run() {
                 final FrameToggleButton button = getButton(window);
                 if (button != null) {
-                    button.setIcon(window.getIconManager(controller.getUrlBuilder()).getIcon(icon));
+                    button.setIcon(window.getIconManager().getIcon(icon));
                 }
             }
         });

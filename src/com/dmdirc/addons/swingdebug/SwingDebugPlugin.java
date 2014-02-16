@@ -27,6 +27,7 @@ import com.dmdirc.addons.ui_swing.components.CheckBoxMenuItem;
 import com.dmdirc.interfaces.config.IdentityController;
 import com.dmdirc.plugins.implementations.BasePlugin;
 import com.dmdirc.ui.WindowManager;
+import com.dmdirc.util.URLBuilder;
 
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -59,12 +60,18 @@ public class SwingDebugPlugin extends BasePlugin implements ActionListener {
     private SystemStreamContainer sysoutFrame;
     /** System error window. */
     private SystemStreamContainer syserrFrame;
+    /** URL Builder to use for frame containers. */
+    private final URLBuilder urlBuilder;
 
-    public SwingDebugPlugin(final IdentityController identityController,
-            final SwingController controller, final WindowManager windowManager) {
+    public SwingDebugPlugin(
+            final IdentityController identityController,
+            final SwingController controller,
+            final WindowManager windowManager,
+            final URLBuilder urlBuilder) {
         this.identityController = identityController;
         this.controller = controller;
         this.windowManager = windowManager;
+        this.urlBuilder = urlBuilder;
     }
 
     /** {@inheritDoc} */
@@ -108,7 +115,7 @@ public class SwingDebugPlugin extends BasePlugin implements ActionListener {
         if (e.getSource() == showSysOut) {
             if (showSysOut.isSelected()) {
                 sysoutFrame = new SystemStreamContainer(SystemStreamType.Out,
-                        controller.getGlobalConfig(), this, controller.getUrlBuilder());
+                        controller.getGlobalConfig(), this, urlBuilder);
                 windowManager.addWindow(sysoutFrame);
             } else {
                 sysoutFrame.close();
@@ -118,7 +125,7 @@ public class SwingDebugPlugin extends BasePlugin implements ActionListener {
         if (e.getSource() == showSysErr) {
             if (showSysErr.isSelected()) {
                 syserrFrame = new SystemStreamContainer(SystemStreamType.Error,
-                        controller.getGlobalConfig(), this, controller.getUrlBuilder());
+                        controller.getGlobalConfig(), this, urlBuilder);
                 windowManager.addWindow(syserrFrame);
             } else {
                 syserrFrame.close();

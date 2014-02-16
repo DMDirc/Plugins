@@ -66,7 +66,7 @@ public class FrameContainerMenuItem extends JMenuItem implements FrameInfoListen
             final FrameContainer frame,
             final WindowMenuFrameManager manager) {
         super(frame.getName(),
-                frame.getIconManager(controller.getUrlBuilder()).getIcon(frame.getIcon()));
+                frame.getIconManager().getIcon(frame.getIcon()));
 
         this.controller = controller;
         this.frame = frame;
@@ -85,7 +85,7 @@ public class FrameContainerMenuItem extends JMenuItem implements FrameInfoListen
             @Override
             public void run() {
                 if (frame != null && window != null && frame.equals(window)) {
-                    setIcon(window.getIconManager(controller.getUrlBuilder()).getIcon(icon));
+                    setIcon(window.getIconManager().getIcon(icon));
                 }
             }
         });
