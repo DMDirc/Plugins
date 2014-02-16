@@ -37,7 +37,6 @@ import com.dmdirc.commandparser.PopupType;
 import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.config.IdentityFactory;
-import com.dmdirc.util.URLBuilder;
 import com.dmdirc.util.annotations.factory.Factory;
 import com.dmdirc.util.annotations.factory.Unbound;
 
@@ -84,19 +83,17 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
      * @param deps The dependencies required by text frames.
      * @param identityFactory The factory to use to create a channel identity.
      * @param topicBarFactory The factory to use to create topic bars.
-     * @param urlBuilder The URL Builder to use for constructing icons paths.
      * @param owner The Channel object that owns this frame
      */
     public ChannelFrame(
             final TextFrameDependencies deps,
             final IdentityFactory identityFactory,
             final TopicBarFactory topicBarFactory,
-            final URLBuilder urlBuilder,
             @Unbound final Channel owner) {
         super(deps, owner);
         this.controller = getController();
 
-        initComponents(topicBarFactory, urlBuilder);
+        initComponents(topicBarFactory);
 
         controller.getGlobalConfig().addChangeListener("ui",
                 "channelSplitPanePosition", this);
@@ -128,13 +125,13 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
     }
 
     /**
-     * Initialises the compoents in this frame.
+     * Initialises the components in this frame.
+     *
+     * @param topicBarFactory The factory to use to produce topic bars.
      */
-    private void initComponents(
-            final TopicBarFactory topicBarFactory,
-            final URLBuilder urlBuilder) {
+    private void initComponents(final TopicBarFactory topicBarFactory) {
         topicBar = topicBarFactory.getTopicBar((Channel) getContainer(),
-                getContainer().getIconManager(urlBuilder));
+                getContainer().getIconManager());
 
         nicklist = new NickList(this, getContainer().getConfigManager());
         settingsMI = new JMenuItem("Settings");

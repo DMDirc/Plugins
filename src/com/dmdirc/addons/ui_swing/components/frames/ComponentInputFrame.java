@@ -26,6 +26,7 @@ import com.dmdirc.FrameContainer;
 import com.dmdirc.WritableFrameContainer;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.commandparser.PopupType;
+import com.dmdirc.util.URLBuilder;
 
 import javax.swing.JComponent;
 import javax.swing.JPopupMenu;
@@ -44,6 +45,8 @@ public class ComponentInputFrame extends InputTextFrame {
      * objects being unserialized with the new class).
      */
     private static final long serialVersionUID = 2;
+    /** URL builder to use when making components. */
+    private final URLBuilder urlBuilder;
     /** Parent frame container. */
     private final FrameContainer owner;
     /** Parent controller. */
@@ -53,12 +56,16 @@ public class ComponentInputFrame extends InputTextFrame {
      * Creates a new instance of CustomInputFrame.
      *
      * @param deps The dependencies required by text frames.
+     * @param urlBuilder URL builder to use when making components.
      * @param owner The frame container that owns this frame
      */
-    public ComponentInputFrame(final TextFrameDependencies deps,
+    public ComponentInputFrame(
+            final TextFrameDependencies deps,
+            final URLBuilder urlBuilder,
             final WritableFrameContainer owner) {
         super(deps, owner);
         this.controller = getController();
+        this.urlBuilder = urlBuilder;
         this.owner = owner;
         initComponents();
     }
@@ -68,8 +75,8 @@ public class ComponentInputFrame extends InputTextFrame {
      */
     private void initComponents() {
         setLayout(new MigLayout("fill"));
-        for (JComponent comp : new ComponentCreator().initFrameComponents(this,
-                controller, owner)) {
+        for (JComponent comp : new ComponentCreator()
+                .initFrameComponents(this, controller, urlBuilder, owner)) {
             add(comp, "wrap, grow");
         }
     }

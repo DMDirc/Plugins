@@ -30,6 +30,7 @@ import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.ui.core.components.WindowComponent;
 import com.dmdirc.util.SimpleInjector;
+import com.dmdirc.util.URLBuilder;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -47,12 +48,16 @@ public class ComponentCreator {
      *
      * @param frame Frame to initialise
      * @param controller UI Controller
+     * @param urlBuilder URL builder to inject.
      * @param owner container
      *
      * @return Set of initialised components
      */
     @Deprecated
-    public Set<JComponent> initFrameComponents(final Object frame, final SwingController controller,
+    public Set<JComponent> initFrameComponents(
+            final Object frame,
+            final SwingController controller,
+            final URLBuilder urlBuilder,
             final FrameContainer owner) {
         final SimpleInjector injector = new SimpleInjector();
         final Set<String> names = owner.getComponents();
@@ -62,7 +67,7 @@ public class ComponentCreator {
         injector.addParameter(owner);
         injector.addParameter(controller);
         injector.addParameter(controller.getMainFrame());
-        injector.addParameter(controller.getUrlBuilder());
+        injector.addParameter(urlBuilder);
         injector.addParameter(controller.getDomain());
 
         for (String string : names) {
