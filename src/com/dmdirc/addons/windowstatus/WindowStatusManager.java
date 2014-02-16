@@ -58,12 +58,12 @@ public class WindowStatusManager implements ConfigChangeListener, SelectionListe
     private final MainFrame mainFrame;
     /** Status bar we're adding to. */
     private final SwingStatusBar statusBar;
-    /** The panel we use in the status bar. */
-    private final WindowStatusPanel panel;
     /** Identity controller to read settings from. */
     private final IdentityController identityController;
     /** Plugin settings domain. */
     private final String domain;
+    /** The panel we use in the status bar. */
+    private WindowStatusPanel panel;
     /** Should we show the real name in queries? */
     private boolean showname;
     /** Should we show users without modes? */
@@ -79,7 +79,12 @@ public class WindowStatusManager implements ConfigChangeListener, SelectionListe
         this.mainFrame = mainFrame;
         this.statusBar = statusBar;
         this.identityController = identityController;
+    }
 
+    /**
+     * Loads the plugin.
+     */
+    public void onLoad() {
         panel = UIUtilities.invokeAndWait(new Callable<WindowStatusPanel>() {
 
             /** {@inheritDoc} */
@@ -88,12 +93,6 @@ public class WindowStatusManager implements ConfigChangeListener, SelectionListe
                 return new WindowStatusPanel();
             }
         });
-    }
-
-    /**
-     * Loads the plugin.
-     */
-    public void onLoad() {
         statusBar.addComponent(panel);
         mainFrame.addSelectionListener(this);
         identityController.getGlobalConfiguration().addChangeListener(domain, this);
