@@ -42,7 +42,6 @@ class ProfileNameValidator implements Validator<String> {
         this.selectedProfile = selectedProfile;
     }
 
-    /** {@inheritDoc} */
     @Override
     public ValidationResponse validate(final String object) {
         for (Profile targetprofile : profiles) {

@@ -22,23 +22,16 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.profiles;
 
-import com.dmdirc.addons.ui_swing.SwingController;
-import com.dmdirc.addons.ui_swing.cinch.ConfirmAction;
-import com.dmdirc.addons.ui_swing.cinch.InputAction;
-import com.dmdirc.addons.ui_swing.cinch.SwingUIBindings;
-import com.dmdirc.addons.ui_swing.cinch.ValidatesIf;
+import com.dmdirc.ClientModule.GlobalConfig;
+import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.components.renderers.ProfileListCellRenderer;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.addons.ui_swing.components.validating.ValidatableJTextField;
 import com.dmdirc.addons.ui_swing.components.validating.ValidatableReorderableJList;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
-
-import com.palantir.ptoss.cinch.core.Bindable;
-import com.palantir.ptoss.cinch.core.Bindings;
-import com.palantir.ptoss.cinch.swing.Action;
-import com.palantir.ptoss.cinch.swing.Bound;
-import com.palantir.ptoss.cinch.swing.BoundSelection;
-import com.palantir.ptoss.cinch.swing.EnabledIf;
+import com.dmdirc.interfaces.config.IdentityController;
+import com.dmdirc.interfaces.config.IdentityFactory;
+import com.dmdirc.ui.IconManager;
 
 import javax.inject.Inject;
 import javax.swing.Box;
@@ -51,7 +44,6 @@ import javax.swing.ListSelectionModel;
 import net.miginfocom.swing.MigLayout;
 
 /** Profile editing dialog. */
-@SuppressWarnings("unused")
 public class ProfileManagerDialog extends StandardDialog {
 
     /** Serial version UID. */
@@ -59,84 +51,63 @@ public class ProfileManagerDialog extends StandardDialog {
     /** Model used to store state. */
     private final ProfileManagerModel model;
     /** Dialog controller, used to perform actions. */
-    @Bindable
     private final ProfileManagerController controller;
+    /** Dialog linker. */
+    private final ProfileManagerDialogLinker linker;
     /** List of profiles. */
-    @Bound(to = "profiles")
-    @BoundSelection(to = "selectedProfile", multi = false)
     private final JList profileList = new JList();
     /** List of nicknames for a profile. */
-    @Bound(to = "nicknames")
-    @BoundSelection(to = "selectedNickname", multi = false)
-    @EnabledIf(to = "manipulateProfileAllowed")
-    @ValidatesIf(to = "nicknamesValid")
     private final ValidatableReorderableJList nicknames
             = new ValidatableReorderableJList();
     /** Adds a new nickname to the active profile. */
-    @InputAction(
-            call = "addNickname",
-            validator = AddNicknameValidator.class,
-            message = "Enter nickname to add:")
-    @EnabledIf(to = "manipulateProfileAllowed")
     private final JButton addNickname = new JButton("Add");
     /** Edits the active nickname in the active profile. */
-    @InputAction(
-            call = "editNickname",
-            validator = EditNicknameValidator.class,
-            message = "Enter edited nickname:",
-            content = "getSelectedNickname")
-    @EnabledIf(to = "manipulateNicknameAllowed")
     private final JButton editNickname = new JButton("Edit");
     /** Deletes the selected nickname from the active profile. */
-    @ConfirmAction(call = "deleteNickname")
-    @EnabledIf(to = "manipulateNicknameAllowed")
     private final JButton deleteNickname = new JButton("Delete");
     /** Edits the name of the active profile. */
-    @Bound(to = "name")
-    @EnabledIf(to = "manipulateProfileAllowed")
-    @ValidatesIf(to = "nameValid")
     private final ValidatableJTextField name;
     /** Edits the realname for the active profile. */
-    @Bound(to = "realname")
-    @EnabledIf(to = "manipulateProfileAllowed")
-    @ValidatesIf(to = "realnameValid")
     private final ValidatableJTextField realname;
     /** Edits the ident for the active profile. */
-    @Bound(to = "ident")
-    @EnabledIf(to = "manipulateProfileAllowed")
-    @ValidatesIf(to = "identValid")
     private final ValidatableJTextField ident;
     /** Adds a new profile to the list. */
-    @Action(call = "addProfile")
     private final JButton addProfile = new JButton("Add");
     /** Deletes the active profile. */
-    @ConfirmAction(call = "deleteProfile")
-    @EnabledIf(to = "manipulateProfileAllowed")
     private final JButton deleteProfile = new JButton("Delete");
-    /** Saves and closes the dialog. */
-    @Action(call = "saveAndCloseDialog")
-    @EnabledIf(to = "OKAllowed")
-    private final JButton okButton = getOkButton();
-    /** Closes the dialog without saving. */
-    @Action(call = "closeDialog")
-    private final JButton cancelButton = getCancelButton();
 
     /**
      * Creates a new instance of ProfileEditorDialog.
      *
-     * @param controller Swing controller
+     * @param mainFrame Main frame
+     * @param identityFactory Identity factory to create new identities
+     * @param identityController Identity controller to retrieve identities from
+     * @param iconManager Icon manager to retrieve icons
      */
     @Inject
-    public ProfileManagerDialog(final SwingController controller) {
-        super(controller.getMainFrame(), ModalityType.MODELESS);
-        this.model = new ProfileManagerModel(controller.getIdentityManager(), controller.getIdentityFactory());
-        this.controller = new ProfileManagerController(this, model, controller.getIdentityFactory());
-        final Bindings bindings = SwingUIBindings.extendedBindings();
-        realname = new ValidatableJTextField(controller.getIconManager());
-        ident = new ValidatableJTextField(controller.getIconManager());
-        name = new ValidatableJTextField(controller.getIconManager());
+    public ProfileManagerDialog(final MainFrame mainFrame,
+            final IdentityFactory identityFactory, final IdentityController identityController,
+            @GlobalConfig final IconManager iconManager) {
+        super(mainFrame, ModalityType.MODELESS);
+        this.model = new ProfileManagerModel(identityController, identityFactory);
+        this.controller = new ProfileManagerController(this, model, identityFactory);
+        realname = new ValidatableJTextField(iconManager);
+        ident = new ValidatableJTextField(iconManager);
+        name = new ValidatableJTextField(iconManager);
         initComponents();
-        bindings.bind(this);
+        linker = new ProfileManagerDialogLinker(controller, model, this);
+        linker.bindAddNickname(addNickname);
+        linker.bindAddProfile(addProfile);
+        linker.bindCancelButton(getCancelButton());
+        linker.bindDeleteNickname(deleteNickname);
+        linker.bindDeleteProfile(deleteProfile);
+        linker.bindEditNickname(editNickname);
+        linker.bindProfileList(profileList);
+        linker.bindOKButton(getOkButton());
+        linker.bindProfileIdent(ident);
+        linker.bindProfileName(name);
+        linker.bindProfileNicknames(nicknames);
+        linker.bindProfileRealnames(realname);
     }
 
     /** Initialises the components. */
