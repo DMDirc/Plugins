@@ -80,7 +80,7 @@ import dagger.Provides;
 public class SwingModule {
 
     @Qualifier
-    public static @interface SwingSettingsDomain {}
+    public @interface SwingSettingsDomain {}
 
     /** The controller to return to clients. */
     private final SwingController controller;

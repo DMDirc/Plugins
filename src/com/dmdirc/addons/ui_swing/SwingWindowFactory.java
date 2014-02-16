@@ -266,7 +266,7 @@ public class SwingWindowFactory implements FrameListener {
     /**
      * Provides a new window instance for a container.
      */
-    public static interface WindowProvider {
+    public interface WindowProvider {
 
         /**
          * Gets a new window for the specified container.
