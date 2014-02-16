@@ -53,7 +53,9 @@
     <target name="compile" depends="-init-compile">
        <javac srcdir="${plugins.src}" destdir="${plugins.build.classes}"
               classpathref="plugins.classpath" includeantruntime="false"
-              debug="true"/>
+              debug="true" deprecation="true">
+           <compilerarg value="-Xlint:unchecked"/>
+       </javac>
 
        <copy todir="${plugins.build.classes}">
           <fileset dir="${plugins.src}">
