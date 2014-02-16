@@ -36,6 +36,7 @@ import com.dmdirc.addons.ui_swing.components.TopicBarFactory;
 import com.dmdirc.commandparser.PopupType;
 import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.interfaces.config.ConfigProvider;
+import com.dmdirc.interfaces.config.IdentityFactory;
 import com.dmdirc.util.URLBuilder;
 import com.dmdirc.util.annotations.factory.Factory;
 import com.dmdirc.util.annotations.factory.Unbound;
@@ -81,12 +82,14 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
      * and default options for the form.
      *
      * @param deps The dependencies required by text frames.
+     * @param identityFactory The factory to use to create a channel identity.
      * @param topicBarFactory The factory to use to create topic bars.
      * @param urlBuilder The URL Builder to use for constructing icons paths.
      * @param owner The Channel object that owns this frame
      */
     public ChannelFrame(
             final TextFrameDependencies deps,
+            final IdentityFactory identityFactory,
             final TopicBarFactory topicBarFactory,
             final URLBuilder urlBuilder,
             @Unbound final Channel owner) {
@@ -102,8 +105,8 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
         ActionManager.getActionManager().registerListener(this,
                 CoreActionType.CLIENT_CLOSING);
 
-        identity = controller.getIdentityFactory().createChannelConfig(
-                owner.getConnection().getNetwork(), owner.getChannelInfo().getName());
+        identity = identityFactory.createChannelConfig(owner.getConnection().getNetwork(),
+                owner.getChannelInfo().getName());
     }
 
     /**
