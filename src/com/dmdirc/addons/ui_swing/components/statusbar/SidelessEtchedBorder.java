@@ -102,7 +102,7 @@ class SidelessEtchedBorder extends EtchedBorder {
      */
     public SidelessEtchedBorder(final int etchType, final Color highlight,
             final Color shadow, final Side side) {
-        super(etchType, highlight, shadow );
+        super(etchType, highlight, shadow);
         this.side = side;
     }
 

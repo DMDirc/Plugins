@@ -103,7 +103,6 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
 
         initComponents();
 
-
         if (!UIUtilities.isGTKUI()) {
             //GTK users appear to dislike choice, ignore them if they want some.
             getInputField().setBackground(UIUtilities.convertColour(
