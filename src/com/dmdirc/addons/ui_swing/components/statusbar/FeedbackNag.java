@@ -22,10 +22,11 @@
 
 package com.dmdirc.addons.ui_swing.components.statusbar;
 
-import com.dmdirc.addons.ui_swing.SwingController;
+import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.addons.ui_swing.dialogs.FeedbackDialog;
 import com.dmdirc.addons.ui_swing.injection.DialogProvider;
 import com.dmdirc.interfaces.ui.StatusBarComponent;
+import com.dmdirc.ui.IconManager;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -54,30 +55,34 @@ public class FeedbackNag extends JLabel implements StatusBarComponent,
     private final JPopupMenu menu;
     /** Show menu item. */
     private final JMenuItem show;
-    /** Swing Controller. */
-    private final SwingController controller;
+    /** Status bar we're displayed in. */
+    // TODO: There should be some other class which adds the nag to the status bar, and manages it.
+    private final SwingStatusBar statusBar;
     /** Provider of feedback dialogs. */
     private final DialogProvider<FeedbackDialog> feedbackDialogProvider;
 
     /**
      * Creates a new feedback nag.
      *
-     * @param controller Swing controller
+     * @param statusBar Status bar the nag will be displayed in.
+     * @param iconManager The icon manager to use to find the feedback nag icon.
      * @param feedbackDialogProvider Provider of feedback dialogs.
      */
     @Inject
     public FeedbackNag(
-            final SwingController controller,
+            final SwingStatusBar statusBar,
+            @GlobalConfig final IconManager iconManager,
             final DialogProvider<FeedbackDialog> feedbackDialogProvider) {
         super();
-        this.controller = controller;
+
+        this.statusBar = statusBar;
         this.feedbackDialogProvider = feedbackDialogProvider;
 
         menu = new JPopupMenu();
         show = new JMenuItem("Open");
         final JMenuItem dismiss = new JMenuItem("Dismiss");
 
-        setIcon(controller.getIconManager().getIcon("feedback"));
+        setIcon(iconManager.getIcon("feedback"));
         setBorder(BorderFactory.createEtchedBorder());
         setToolTipText("We would appreciate any feedback you may have about "
                 + "DMDirc.");
@@ -88,7 +93,7 @@ public class FeedbackNag extends JLabel implements StatusBarComponent,
         show.addActionListener(this);
         dismiss.addActionListener(this);
         addMouseListener(this);
-        controller.getSwingStatusBar().addComponent(this);
+        statusBar.addComponent(this);
     }
 
     /**
@@ -120,7 +125,7 @@ public class FeedbackNag extends JLabel implements StatusBarComponent,
     public void mouseReleased(final MouseEvent e) {
         if (e.getButton() == 1) {
             feedbackDialogProvider.displayOrRequestFocus();
-            controller.getSwingStatusBar().removeComponent(this);
+            statusBar.removeComponent(this);
         }
         checkMouseEvent(e);
     }
@@ -166,6 +171,6 @@ public class FeedbackNag extends JLabel implements StatusBarComponent,
         if (e.getSource() == show) {
             feedbackDialogProvider.displayOrRequestFocus();
         }
-        controller.getSwingStatusBar().removeComponent(this);
+        statusBar.removeComponent(this);
     }
 }
