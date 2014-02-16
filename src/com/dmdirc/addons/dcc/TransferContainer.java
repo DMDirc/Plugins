@@ -32,6 +32,7 @@ import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.parser.interfaces.callbacks.SocketCloseListener;
+import com.dmdirc.util.URLBuilder;
 
 import java.awt.Desktop;
 import java.io.File;
@@ -90,13 +91,14 @@ public class TransferContainer extends FrameContainer implements
      * @param title The title of this window
      * @param targetNick Nickname of target
      * @param connection The connection that the send was that initiated on
+     * @param urlBuilder The URL builder to use when finding icons.
      */
     public TransferContainer(final DCCManager plugin, final DCCTransfer dcc,
             final AggregateConfigProvider config, final String title,
-            final String targetNick, final Connection connection) {
+            final String targetNick, final Connection connection, final URLBuilder urlBuilder) {
         super(dcc.getType() == DCCTransfer.TransferType.SEND
                 ? "dcc-send-inactive" : "dcc-receive-inactive",
-                title, title, config,
+                title, title, config, urlBuilder,
                 Arrays.asList("com.dmdirc.addons.dcc.ui.TransferPanel"));
         this.plugin = plugin;
         this.dcc = dcc;

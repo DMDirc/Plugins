@@ -28,6 +28,7 @@ import com.dmdirc.interfaces.Connection;
 import com.dmdirc.messages.MessageSinkManager;
 import com.dmdirc.ui.input.TabCompleter;
 import com.dmdirc.ui.messages.Formatter;
+import com.dmdirc.util.URLBuilder;
 
 import java.util.Collections;
 import java.util.Date;
@@ -46,13 +47,15 @@ public class FakeWriteableFrameContainer extends WritableFrameContainer {
      *
      * @param target The message target that output gets sent to
      * @param messageSinkManager The sink manager to use to despatch messages.
+     * @param urlBuilder The URL builder to use when finding icons.
      */
     public FakeWriteableFrameContainer(
             final MessageTarget target,
-            final MessageSinkManager messageSinkManager) {
+            final MessageSinkManager messageSinkManager,
+            final URLBuilder urlBuilder) {
         super(target.getIcon(), target.getName(), target.getTitle(),
-                target.getConfigManager(), target.getCommandParser(),
-                messageSinkManager, Collections.<String>emptyList());
+                target.getConfigManager(), target.getCommandParser(), messageSinkManager,
+                urlBuilder, Collections.<String>emptyList());
         this.target = target;
     }
 

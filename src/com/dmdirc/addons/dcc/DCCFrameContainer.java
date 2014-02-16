@@ -29,6 +29,7 @@ import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.messages.MessageSinkManager;
 import com.dmdirc.ui.input.TabCompleter;
 import com.dmdirc.ui.input.TabCompleterFactory;
+import com.dmdirc.util.URLBuilder;
 
 import java.util.Collection;
 
@@ -52,15 +53,20 @@ public abstract class DCCFrameContainer extends WritableFrameContainer {
      * @param parser Command parser to use for this window
      * @param messageSinkManager The sink manager to use to despatch messages.
      * @param tabCompleterFactory The factory to use to create tab completers.
+     * @param urlBuilder The URL builder to use when finding icons.
      * @param components The UI components that this frame requires
      */
     public DCCFrameContainer(
-            final String title, final String icon,
-            final AggregateConfigProvider configManager, final CommandParser parser,
+            final String title,
+            final String icon,
+            final AggregateConfigProvider configManager,
+            final CommandParser parser,
             final MessageSinkManager messageSinkManager,
             final TabCompleterFactory tabCompleterFactory,
+            final URLBuilder urlBuilder,
             final Collection<String> components) {
-        super(icon, title, title, configManager, parser, messageSinkManager, components);
+        super(icon, title, title, configManager, parser, messageSinkManager, urlBuilder,
+                components);
         this.tabCompleterFactory = tabCompleterFactory;
     }
 

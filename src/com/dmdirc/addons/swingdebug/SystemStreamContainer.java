@@ -26,6 +26,7 @@ import com.dmdirc.FrameContainer;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.ui.core.components.WindowComponent;
+import com.dmdirc.util.URLBuilder;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -46,11 +47,14 @@ public class SystemStreamContainer extends FrameContainer {
      * @param stream Stream to wrap
      * @param config Config to wrap
      * @param plugin Parent plugin
+     * @param urlBuilder The URL builder to use when finding icons.
      */
-    public SystemStreamContainer(final SystemStreamType stream,
+    public SystemStreamContainer(
+            final SystemStreamType stream,
             final AggregateConfigProvider config,
-            final SwingDebugPlugin plugin) {
-        super("dmdirc", stream.toString(), stream.toString(), config,
+            final SwingDebugPlugin plugin,
+            final URLBuilder urlBuilder) {
+        super("dmdirc", stream.toString(), stream.toString(), config, urlBuilder,
                 Arrays.asList(WindowComponent.TEXTAREA.getIdentifier()));
         this.plugin = plugin;
         try {
