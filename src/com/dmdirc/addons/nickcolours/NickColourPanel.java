@@ -62,8 +62,10 @@ public class NickColourPanel extends JPanel implements ActionListener,
     private final transient NickColourManager plugin;
     /** The identity to write settings to. */
     private final ConfigProvider configIdentity;
-    /** Edit and delete buttons. */
-    private final JButton editButton, deleteButton;
+    /** Edit button. */
+    private final JButton editButton;
+    /** Delete button. */
+    private final JButton deleteButton;
     /** Main frame instance to parent dialogs on. */
     private final MainFrame mainFrame;
     /** Icon manager to retrieve icons from. */

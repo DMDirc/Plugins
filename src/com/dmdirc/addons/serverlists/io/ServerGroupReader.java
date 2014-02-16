@@ -117,7 +117,8 @@ public class ServerGroupReader {
                 } catch (URISyntaxException | IllegalArgumentException ex) {
                     // TODO: Raise an error about malformed server
                 }
-            }        }
+            }
+        }
 
         return group;
     }

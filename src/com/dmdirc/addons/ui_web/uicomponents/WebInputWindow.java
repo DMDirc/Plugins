@@ -81,7 +81,8 @@ public class WebInputWindow extends WebWindow implements InputWindow {
 
     public WebInputHandler getInputHandler(final Client client,
             final String text, final String selStart, final String selEnd) {
-        int sel1, sel2;
+        int sel1;
+        int sel2;
 
         try {
             sel1 = Integer.parseInt(selStart);

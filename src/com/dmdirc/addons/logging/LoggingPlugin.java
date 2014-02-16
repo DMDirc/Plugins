@@ -80,12 +80,25 @@ public class LoggingPlugin extends BaseCommandPlugin implements ActionListener,
         ConfigChangeListener {
 
     /** Cached boolean settings. */
-    private boolean networkfolders, filenamehash, addtime, stripcodes,
-            channelmodeprefix, autobackbuffer, backbufferTimestamp, usedate;
+    private boolean networkfolders;
+    private boolean filenamehash;
+    private boolean addtime;
+    private boolean stripcodes;
+    private boolean channelmodeprefix;
+    private boolean autobackbuffer;
+    private boolean backbufferTimestamp;
+    private boolean usedate;
+
     /** Cached string settings. */
-    private String timestamp, usedateformat, logDirectory, colour;
+    private String timestamp;
+    private String usedateformat;
+    private String logDirectory;
+    private String colour;
+
     /** Cached int settings. */
-    private int historyLines, backbufferLines;
+    private int historyLines;
+    private int backbufferLines;
+
     /** This plugin's plugin info. */
     private final PluginInfo pluginInfo;
     /** The action controller to use. */

@@ -23,6 +23,7 @@
 package com.dmdirc.addons.serverlists;
 
 import com.dmdirc.interfaces.config.IdentityController;
+
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;

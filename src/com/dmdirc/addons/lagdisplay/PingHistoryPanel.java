@@ -90,7 +90,8 @@ public class PingHistoryPanel extends JPanel {
         g.drawLine(1, getHeight() - 2, getWidth() - 1, getHeight() - 2);
         g.setFont(g.getFont().deriveFont(10f));
 
-        float lastX = -1, lastY = -1;
+        float lastX = -1;
+        float lastY = -1;
         final float pixelsperpointX = (getWidth() - 3)
                 / (float) (history.getList().size() == 1 ? 1
                 : history.getList().size() - 1);
@@ -100,7 +101,8 @@ public class PingHistoryPanel extends JPanel {
             g.drawString("No data", getWidth() / 2 - 25, getHeight() / 2 + 5);
         }
 
-        long last1 = -1, last2 = -1;
+        long last1 = -1;
+        long last2 = -1;
         final List<Long> list = history.getList();
         final List<Rectangle> rects = new ArrayList<>();
 

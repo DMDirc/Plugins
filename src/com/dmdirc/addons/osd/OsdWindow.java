@@ -73,10 +73,12 @@ public class OsdWindow extends JDialog implements MouseListener,
     private final JPanel panel;
 
     /** Starting positions of the mouse. */
-    private int startX, startY;
+    private int startX;
+    private int startY;
 
     /** Desired position. */
-    private volatile int desiredX, desiredY;
+    private volatile int desiredX;
+    private volatile int desiredY;
 
     /** Is this a config instance? */
     private final boolean config;

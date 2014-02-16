@@ -22,8 +22,8 @@
 
 package com.dmdirc.addons.serverlistdialog;
 
-import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.serverlists.ServerGroupItem;
+import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.ui.core.util.URLHandler;
 

@@ -126,7 +126,8 @@ public class TimerCommand extends Command implements IntelligentCommand {
                                 origin);
 
                         sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Command scheduled.");
-                    }   break;
+                    }
+                    break;
             }
         } else {
             doUsage(origin, args.isSilent());

@@ -24,8 +24,8 @@ package com.dmdirc.addons.ui_swing.dialogs.actioneditor;
 
 import com.dmdirc.actions.ActionGroup;
 import com.dmdirc.actions.ActionManager;
-import com.dmdirc.addons.ui_swing.components.validating.ValidatingJTextField;
 import com.dmdirc.actions.validators.ActionNameValidator;
+import com.dmdirc.addons.ui_swing.components.validating.ValidatingJTextField;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.util.validators.FileNameValidator;
 import com.dmdirc.util.validators.ValidatorChain;
@@ -36,7 +36,6 @@ import java.beans.PropertyChangeListener;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 import javax.swing.UIManager;
 
 import net.miginfocom.swing.MigLayout;

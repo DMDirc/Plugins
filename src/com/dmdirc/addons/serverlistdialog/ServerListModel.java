@@ -23,15 +23,15 @@
 package com.dmdirc.addons.serverlistdialog;
 
 import com.dmdirc.ServerManager;
-import com.dmdirc.actions.wrappers.PerformWrapper.PerformDescription;
 import com.dmdirc.actions.wrappers.PerformType;
-import com.dmdirc.logger.ErrorLevel;
-import com.dmdirc.logger.Logger;
+import com.dmdirc.actions.wrappers.PerformWrapper.PerformDescription;
 import com.dmdirc.addons.serverlists.ServerEntry;
 import com.dmdirc.addons.serverlists.ServerGroup;
 import com.dmdirc.addons.serverlists.ServerGroupItem;
 import com.dmdirc.addons.serverlists.ServerList;
 import com.dmdirc.interfaces.config.IdentityController;
+import com.dmdirc.logger.ErrorLevel;
+import com.dmdirc.logger.Logger;
 import com.dmdirc.util.collections.ListenerList;
 
 import java.io.IOException;
