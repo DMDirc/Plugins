@@ -24,27 +24,24 @@ package com.dmdirc.addons.ui_swing.dialogs.profiles;
 
 import com.dmdirc.util.validators.ValidationResponse;
 
-import com.palantir.ptoss.cinch.core.BindableModel;
-
 /**
  * Validates a nickname that is being edited.
  */
 public class EditNicknameValidator extends AddNicknameValidator {
 
     /** Model used to query for validation. */
-    private ProfileManagerModel model;
+    private final ProfileManagerModel model;
 
     /**
      * Creates a new edit nickname validator.
      *
      * @param model Model used to query for information
      */
-    public EditNicknameValidator(final BindableModel model) {
+    public EditNicknameValidator(final ProfileManagerModel model) {
         super(model);
-        this.model = (ProfileManagerModel) model;
+        this.model = model;
     }
 
-    /** {@inheritDoc} */
     @Override
     public ValidationResponse validate(final String object) {
         final String nickname = (String) model.getSelectedNickname();

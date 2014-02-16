@@ -118,8 +118,6 @@ version:
             <zipfileset src="${plugins.lib}/main/miglayout-core.jar" includes="net/miginfocom/layout/**"/>
             <zipfileset src="${plugins.lib}/main/menuscroller.jar" includes="darrylbu/util/**"/>
             <zipfileset src="${plugins.lib}/main/jxlayer.jar" includes="org/jdesktop/jxlayer/**"/>
-            <zipfileset src="${plugins.lib}/main/cinch.jar" includes="*/**"/>
-            <zipfileset src="${plugins.lib}/main/cinchsupport.jar" includes="*/**"/>
         </jar>
 
         <jar destfile="${plugins.dist}/ui_web.jar" update="true">

@@ -31,8 +31,8 @@ import com.dmdirc.util.validators.ValidationResponse;
 
 import com.google.common.collect.ImmutableList;
 
-import com.palantir.ptoss.cinch.core.DefaultBindableModel;
-
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -40,12 +40,14 @@ import java.util.List;
 /**
  * Model used to store state for the profile manager dialog.
  */
-public class ProfileManagerModel extends DefaultBindableModel {
+public class ProfileManagerModel {
 
+    /** Profile change support. */
+    private final PropertyChangeSupport pcs;
     /** List of known profiles. */
     private List<Profile> profiles = new ArrayList<>();
     /** List of profiles to be displayed. */
-    private List<Profile> displayedProfiles = new ArrayList<>();
+    private final List<Profile> displayedProfiles = new ArrayList<>();
     /** Selected profile. */
     private Profile selectedProfile;
     /** Selected nickname. */
@@ -60,6 +62,7 @@ public class ProfileManagerModel extends DefaultBindableModel {
     public ProfileManagerModel(
             final IdentityController identityController,
             final IdentityFactory identityFactory) {
+        pcs = new PropertyChangeSupport(this);
         final List<ConfigProvider> identities = identityController.getProvidersByType("profile");
         for (ConfigProvider identity : identities) {
             profiles.add(new Profile(identityFactory, identity));
@@ -103,11 +106,10 @@ public class ProfileManagerModel extends DefaultBindableModel {
         if (!profiles.contains(selectedProfile)) {
             upadateSelectedProfile(null);
         }
-        update();
         if (selectedProfile == null && !profiles.isEmpty()) {
             upadateSelectedProfile(profiles.get(0));
         }
-        update();
+        pcs.firePropertyChange("profiles", null, null);
     }
 
     /**
@@ -118,9 +120,8 @@ public class ProfileManagerModel extends DefaultBindableModel {
     public void addProfile(final Profile profile) {
         profiles.add(profile);
         updateDisplayedProfiles();
-        update();
         upadateSelectedProfile(profile);
-        update();
+        pcs.firePropertyChange("profiles", null, null);
     }
 
     /**
@@ -146,9 +147,8 @@ public class ProfileManagerModel extends DefaultBindableModel {
         } else if (selected - 1 >= 0 && size != 0) {
             newSelectedProfile = displayedProfiles.get(selected - 1);
         }
-        update();
         upadateSelectedProfile(newSelectedProfile);
-        update();
+        pcs.firePropertyChange("profiles", null, null);
     }
 
     /**
@@ -173,7 +173,7 @@ public class ProfileManagerModel extends DefaultBindableModel {
                 && profiles.contains((Profile) selectedProfile)) {
             upadateSelectedProfile((Profile) selectedProfile);
         }
-        update();
+        pcs.firePropertyChange("selectedprofile", null, null);
     }
 
     /**
@@ -209,7 +209,7 @@ public class ProfileManagerModel extends DefaultBindableModel {
             return;
         }
         selectedProfile.setNicknames(nicknames);
-        update();
+        pcs.firePropertyChange("nicknames", null, null);
     }
 
     /**
@@ -223,9 +223,8 @@ public class ProfileManagerModel extends DefaultBindableModel {
             return;
         }
         selectedProfile.addNickname(nickname);
-        update();
         selectedNickname = nickname;
-        update();
+        pcs.firePropertyChange("nicknames", null, null);
     }
 
     /**
@@ -264,9 +263,8 @@ public class ProfileManagerModel extends DefaultBindableModel {
         } else if (selected - 1 >= 0 && size != 0) {
             newSelectedNickname = selectedProfile.getNicknames().get(selected - 1);
         }
-        update();
         selectedNickname = newSelectedNickname;
-        update();
+        pcs.firePropertyChange("nicknames", null, null);
     }
 
     /**
@@ -278,9 +276,8 @@ public class ProfileManagerModel extends DefaultBindableModel {
     public void editNickname(final String nickname, final String edited) {
         selectedNickname = edited;
         selectedProfile.editNickname(nickname, edited);
-        update();
         selectedNickname = edited;
-        update();
+        pcs.firePropertyChange("nicknames", null, null);
     }
 
     /**
@@ -296,7 +293,7 @@ public class ProfileManagerModel extends DefaultBindableModel {
                 && selectedNickname instanceof String
                 && selectedProfile.getNicknames().contains((String) selectedNickname)) {
             this.selectedNickname = (String) selectedNickname;
-            update();
+            pcs.firePropertyChange("selectednickname", null, null);
         }
     }
 
@@ -335,7 +332,7 @@ public class ProfileManagerModel extends DefaultBindableModel {
     public void setName(final String name) {
         if (selectedProfile != null) {
             selectedProfile.setName(name);
-            update();
+            pcs.firePropertyChange("name", null, null);
         }
     }
 
@@ -361,7 +358,7 @@ public class ProfileManagerModel extends DefaultBindableModel {
     public void setRealname(final String realname) {
         if (selectedProfile != null) {
             selectedProfile.setRealname(realname);
-            update();
+            pcs.firePropertyChange("realname", null, null);
         }
     }
 
@@ -388,7 +385,7 @@ public class ProfileManagerModel extends DefaultBindableModel {
     public void setIdent(final String ident) {
         if (selectedProfile != null) {
             selectedProfile.setIdent(ident);
-            update();
+            pcs.firePropertyChange("ident", null, null);
         }
     }
 
@@ -499,5 +496,25 @@ public class ProfileManagerModel extends DefaultBindableModel {
                 profile.save();
             }
         }
+    }
+
+    /**
+     * Adds a property change listener to all property change events in the model.
+     *
+     * @param listener Listener to add
+     */
+    public void addPropertyChangeListener(final PropertyChangeListener listener) {
+        pcs.addPropertyChangeListener(listener);
+    }
+
+    /**
+     * Adds a property change listener to a given property on this model.
+     *
+     * @param propertyName Property to listen on
+     * @param listener Listener to add
+     */
+    public void addPropertyChangeListener(final String propertyName,
+            final PropertyChangeListener listener) {
+        pcs.addPropertyChangeListener(propertyName, listener);
     }
 }
