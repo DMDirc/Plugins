@@ -50,6 +50,7 @@ import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.implementations.BaseCommandPlugin;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.messages.Styliser;
+import com.dmdirc.util.URLBuilder;
 import com.dmdirc.util.io.ReverseFileReader;
 import com.dmdirc.util.io.StreamUtils;
 
@@ -108,6 +109,7 @@ public class LoggingPlugin extends BaseCommandPlugin implements ActionListener,
 
     /** Date format used for "File Opened At" log. */
     final DateFormat openedAtFormat = new SimpleDateFormat("EEEE MMMM dd, yyyy - HH:mm:ss");
+    private final URLBuilder urlBuilder;
 
     /**
      * Creates a new instance of this plugin.
@@ -117,15 +119,18 @@ public class LoggingPlugin extends BaseCommandPlugin implements ActionListener,
      * @param identityController The Identity Manager that controls the current config
      * @param commandController Command controller to register commands
      * @param windowManager The manager to add history windows to.
+     * @param urlBuilder The URL builder to use when finding icons.
      */
     public LoggingPlugin(final PluginInfo pluginInfo,
             final ActionController actionController,
             final IdentityController identityController,
             final CommandController commandController,
-            final WindowManager windowManager) {
+            final WindowManager windowManager,
+            final URLBuilder urlBuilder) {
         super(commandController);
         this.identityController = identityController;
         this.windowManager = windowManager;
+        this.urlBuilder = urlBuilder;
 
         this.pluginInfo = pluginInfo;
         this.actionController = actionController;
@@ -871,7 +876,8 @@ public class LoggingPlugin extends BaseCommandPlugin implements ActionListener,
             return false;
         }
 
-        HistoryWindow window = new HistoryWindow("History", reader, target, historyLines);
+        final HistoryWindow window = new HistoryWindow("History", reader, target, urlBuilder,
+                historyLines);
         windowManager.addWindow(target, window);
 
         return true;

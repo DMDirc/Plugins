@@ -25,6 +25,7 @@ package com.dmdirc.addons.redirect;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.messages.MessageSinkManager;
 import com.dmdirc.plugins.implementations.BaseCommandPlugin;
+import com.dmdirc.util.URLBuilder;
 
 /**
  * The redirect plugin allows the suer to redirect the output of commands that
@@ -37,12 +38,14 @@ public class RedirectPlugin extends BaseCommandPlugin {
      *
      * @param commandController Command controller to register commands
      * @param messageSinkManager The sink manager to use to despatch messages.
+     * @param urlBuilder The URL builder to use when finding icons.
      */
     public RedirectPlugin(
             final CommandController commandController,
-            final MessageSinkManager messageSinkManager) {
+            final MessageSinkManager messageSinkManager,
+            final URLBuilder urlBuilder) {
         super(commandController);
-        registerCommand(new RedirectCommand(commandController, messageSinkManager),
+        registerCommand(new RedirectCommand(commandController, messageSinkManager, urlBuilder),
                 RedirectCommand.INFO);
     }
 }

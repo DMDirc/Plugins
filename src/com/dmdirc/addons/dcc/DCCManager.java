@@ -57,6 +57,7 @@ import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.input.TabCompleterFactory;
+import com.dmdirc.util.URLBuilder;
 
 import java.io.File;
 import java.io.IOException;
@@ -94,6 +95,8 @@ public class DCCManager implements ActionListener {
     private final MainFrame mainFrame;
     /** The configuration domain to use. */
     private final String domain;
+    /** The URL builder to use when finding icons. */
+    private final URLBuilder urlBuilder;
 
     /**
      * Creates a new instance of this plugin.
@@ -108,6 +111,7 @@ public class DCCManager implements ActionListener {
      * @param tabCompleterFactory The factory to use for tab completers.
      * @param windowFactory The window factory to register the DCC implementations with.
      * @param componentFrameFactory Factory to use to create new component frames for DCC windows.
+     * @param urlBuilder The URL builder to use when finding icons.
      * @param baseDirectory The directory to create a downloads directory within.
      */
     @Inject
@@ -122,6 +126,7 @@ public class DCCManager implements ActionListener {
             final TabCompleterFactory tabCompleterFactory,
             final SwingWindowFactory windowFactory,
             final ComponentFrameFactory componentFrameFactory,
+            final URLBuilder urlBuilder,
             @Directory(DirectoryType.BASE) final String baseDirectory) {
         this.mainFrame = mainFrame;
         this.messageSinkManager = messageSinkManager;
@@ -131,6 +136,7 @@ public class DCCManager implements ActionListener {
         this.domain = pluginInfo.getDomain();
         this.config = globalConfig;
         this.pluginInfo = pluginInfo;
+        this.urlBuilder = urlBuilder;
 
         windowFactory.registerImplementation(
                 new HashSet<>(Arrays.asList("com.dmdirc.addons.dcc.ui.PlaceholderPanel")),
@@ -224,7 +230,7 @@ public class DCCManager implements ActionListener {
                 final boolean resume = handleResume(jc);
                 if (reverse && !token.isEmpty()) {
                     TransferContainer container = new TransferContainer(DCCManager.this, send,
-                            config, "*Receive: " + nickname, nickname, null);
+                            config, "*Receive: " + nickname, nickname, null, urlBuilder);
                     windowManager.addWindow(getContainer(), container);
                     send.setToken(token);
                     if (resume) {
@@ -250,7 +256,7 @@ public class DCCManager implements ActionListener {
                     }
                 } else {
                     TransferContainer container = new TransferContainer(DCCManager.this, send,
-                            config, "Receive: " + nickname, nickname, null);
+                            config, "Receive: " + nickname, nickname, null, urlBuilder);
                     windowManager.addWindow(getContainer(), container);
                     if (resume) {
                         parser.sendCTCP(nickname, "DCC", "RESUME "
@@ -437,7 +443,7 @@ public class DCCManager implements ActionListener {
                     .getLocalClient().getNickname();
             final DCCFrameContainer f = new ChatContainer(chat, config, commandController,
                     "Chat: " + nickname, myNickname, nickname, tabCompleterFactory,
-                    messageSinkManager);
+                    messageSinkManager, urlBuilder);
             windowManager.addWindow(getContainer(), f);
             f.addLine("DCCChatStarting", nickname, chat.getHost(),
                     chat.getPort());
@@ -686,7 +692,7 @@ public class DCCManager implements ActionListener {
      * Create the container window.
      */
     protected void createContainer() {
-        container = new PlaceholderContainer(this, config, mainFrame);
+        container = new PlaceholderContainer(this, config, mainFrame, urlBuilder);
         windowManager.addWindow(container);
     }
 

@@ -27,6 +27,7 @@ import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
+import com.dmdirc.util.URLBuilder;
 
 import java.awt.Dialog.ModalityType;
 import java.util.Arrays;
@@ -47,13 +48,15 @@ public class PlaceholderContainer extends FrameContainer {
      * @param plugin The plugin which owns this placeholder
      * @param config Config manager
      * @param mainFrame Frame that will own new dialogs.
+     * @param urlBuilder The URL builder to use when finding icons.
      */
     public PlaceholderContainer(
             final DCCManager plugin,
             final AggregateConfigProvider config,
-            final MainFrame mainFrame) {
-        super("dcc", "DCCs", "DCCs", config, Arrays.asList(
-                "com.dmdirc.addons.dcc.ui.PlaceholderPanel"));
+            final MainFrame mainFrame,
+            final URLBuilder urlBuilder) {
+        super("dcc", "DCCs", "DCCs", config, urlBuilder,
+                Arrays.asList("com.dmdirc.addons.dcc.ui.PlaceholderPanel"));
         this.plugin = plugin;
         this.mainFrame = mainFrame;
     }
