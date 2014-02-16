@@ -28,7 +28,6 @@
         <dependency org="com.greboid.libraries" name="locksupport" rev="latest.release" conf="main->default" />
         <dependency org="com.greboid.libraries" name="menuscroller" rev="latest.release" conf="main->default" />
         <dependency org="org.mortbay.jetty" name="jetty" rev="6.+" conf="main->default" />
-        <dependency org="net.sourceforge.java-jml" name="jml" rev="1.+" conf="main->default" />
         <dependency org="commons-lang" name="commons-lang" rev="latest.release" conf="main->default" />
     </dependencies>
 </ivy-module>
