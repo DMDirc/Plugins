@@ -60,7 +60,9 @@ public class ChannelMenu extends JMenu implements ActionListener,
     /** Main frame. */
     private final MainFrame mainFrame;
     /** Menu items to be disabled/enabled. */
-    private JMenuItem csd, join, list;
+    private JMenuItem csd;
+    private JMenuItem join;
+    private JMenuItem list;
 
     /**
      * Creates a new channel menu.
@@ -120,7 +122,8 @@ public class ChannelMenu extends JMenu implements ActionListener,
                 final FrameContainer activeWindow = mainFrame.getActiveFrame().getContainer();
                 if (activeWindow instanceof Channel) {
                     controller.showChannelSettingsDialog(((Channel) activeWindow));
-                }   break;
+                }
+                break;
             case "ListChannels":
                 new ChannelListDialog(controller).display();
                 break;

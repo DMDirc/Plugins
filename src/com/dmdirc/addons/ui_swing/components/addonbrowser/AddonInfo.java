@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.components.addonbrowser;
 
-import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.updater.UpdateChannel;
 import com.dmdirc.updater.UpdateComponent;
@@ -63,7 +62,7 @@ public class AddonInfo {
     private final int rating;
     /** Full text description. */
     private final String description;
-    /** Addon type, {@link ActionType}. */
+    /** Addon type. */
     private final AddonType type;
     /** Has this addon been verified by the developers? */
     private final boolean verified;

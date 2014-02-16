@@ -59,8 +59,12 @@ public class OsdPlugin extends BaseCommandPlugin implements
     /** Y-axis potion of OSD. */
     private int y;
     /** Setting objects with registered change listeners.*/
-    private PreferencesSetting fontSizeSetting, backgroundSetting,
-            foregroundSetting, widthSetting, timeoutSetting, maxWindowsSetting;
+    private PreferencesSetting fontSizeSetting;
+    private PreferencesSetting backgroundSetting;
+    private PreferencesSetting foregroundSetting;
+    private PreferencesSetting widthSetting;
+    private PreferencesSetting timeoutSetting;
+    private PreferencesSetting maxWindowsSetting;
     /** This plugin's plugin info. */
     private final PluginInfo pluginInfo;
     /** The controller to read/write settings with. */

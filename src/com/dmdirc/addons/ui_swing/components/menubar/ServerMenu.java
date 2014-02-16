@@ -60,7 +60,8 @@ public class ServerMenu extends JMenu implements ActionListener,
     /** Main frame. */
     private final MainFrame mainFrame;
     /** Menu items which can be enabled/disabled. */
-    private JMenuItem ssd, disconnect;
+    private JMenuItem ssd;
+    private JMenuItem disconnect;
     /** Provider to use to retrieve NSD instances. */
     private final DialogProvider<NewServerDialog> newServerProvider;
 

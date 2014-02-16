@@ -26,6 +26,7 @@ import com.dmdirc.addons.ui_swing.components.menubar.MenuBar;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.swing.JMenuItem;

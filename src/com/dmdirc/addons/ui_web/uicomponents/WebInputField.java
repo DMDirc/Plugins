@@ -38,7 +38,8 @@ public class WebInputField implements InputField {
 
     private String text;
 
-    private int selStart, selEnd;
+    private int selStart;
+    private int selEnd;
 
     public WebInputField() {
         super();
