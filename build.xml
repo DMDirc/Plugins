@@ -53,7 +53,13 @@
     <target name="compile" depends="-init-compile">
        <javac srcdir="${plugins.src}" destdir="${plugins.build.classes}"
               classpathref="plugins.classpath" includeantruntime="false"
-              debug="true"/>
+              debug="true" deprecation="true">
+           <compilerarg value="-Xlint:all"/>
+           <compilerarg value="-Xmaxwarns"/>
+           <compilerarg value="1000"/>
+           <compilerarg value="-Xmaxerrs"/>
+           <compilerarg value="1000"/>
+       </javac>
 
        <copy todir="${plugins.build.classes}">
           <fileset dir="${plugins.src}">
