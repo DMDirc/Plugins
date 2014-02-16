@@ -22,12 +22,14 @@
 
 package com.dmdirc.addons.ui_swing.injection;
 
-import static com.dmdirc.addons.ui_swing.SwingPreconditions.checkOnEDT;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+
 import javax.inject.Provider;
+
+import static com.dmdirc.addons.ui_swing.SwingPreconditions.checkOnEDT;
 
 /**
  * Simple provider for {@link StandardDialog} based windows.
@@ -94,8 +96,8 @@ public class DialogProvider<T extends StandardDialog> {
     private class Listener extends WindowAdapter {
 
         @Override
-        public void windowClosing(final WindowEvent e) {
-            super.windowClosing(e);
+        public void windowClosed(final WindowEvent e) {
+            super.windowClosed(e);
             instance = null;
         }
 
