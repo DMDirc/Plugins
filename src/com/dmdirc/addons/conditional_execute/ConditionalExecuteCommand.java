@@ -34,6 +34,8 @@ import com.dmdirc.interfaces.CommandController;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 /**
  * The ConditionalExecute command allows the user to conditionally execute a
  * command based on external and pre-determined conditions.
@@ -52,6 +54,7 @@ public class ConditionalExecuteCommand extends Command {
      *
      * @param controller The controller to use for command information.
      */
+    @Inject
     public ConditionalExecuteCommand(final CommandController controller) {
         super(controller);
     }

@@ -22,14 +22,14 @@
 
 package com.dmdirc.addons.calc;
 
-import com.dmdirc.addons.ui_swing.injection.SwingModule;
+import com.dmdirc.ClientModule;
 
 import dagger.Module;
 
 /**
  * DI Module for the calc plugin.
  */
-@Module(injects={CalcCommand.class}, addsTo = SwingModule.class)
+@Module(injects={CalcCommand.class}, addsTo = ClientModule.class)
 public class CalcModule {
 
 }
