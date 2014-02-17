@@ -32,7 +32,8 @@ import com.dmdirc.plugins.implementations.BasePlugin;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.core.components.StatusBarManager;
 
-import org.mortbay.jetty.Handler;
+import dagger.ObjectGraph;
+
 
 /**
  * The main web interface plugin.
@@ -72,31 +73,16 @@ public class WebInterfacePlugin extends BasePlugin {
         this.statusBarManager = statusBarManager;
     }
 
+    @Override
+    public void load(final PluginInfo pluginInfo, final ObjectGraph graph) {
+        super.load(pluginInfo, graph);
+        setObjectGraph(graph.plus(new WebInterfaceModule(pluginInfo)));
+    }
+
     /** {@inheritDoc} */
     @Override
     public void onLoad() {
-        if (controller == null) {
-            controller = new WebInterfaceUI(getDomain(),
-                    identityController, serverManager,
-                    pluginManager, pluginInfo, windowManager,
-                    statusBarManager);
-        }
-    }
-
-    /**
-     * Adds the specified handler to the WebInterface's web server.
-     *
-     * @param newHandler The handler to be added
-     */
-    public void addWebHandler(final Handler newHandler) {
-        if (controller == null) {
-            controller = new WebInterfaceUI(getDomain(),
-                    identityController, serverManager,
-                    pluginManager, pluginInfo, windowManager,
-                    statusBarManager);
-        }
-
-        controller.addWebHandler(newHandler);
+        getObjectGraph().get(WebInterfaceUI.class);
     }
 
     /**

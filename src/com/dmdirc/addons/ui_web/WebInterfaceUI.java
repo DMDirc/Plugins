@@ -25,16 +25,18 @@ package com.dmdirc.addons.ui_web;
 import com.dmdirc.Channel;
 import com.dmdirc.Server;
 import com.dmdirc.ServerManager;
+import com.dmdirc.addons.ui_web.WebInterfaceModule.WebUIDomain;
 import com.dmdirc.addons.ui_web.uicomponents.WebStatusBar;
 import com.dmdirc.interfaces.config.IdentityController;
 import com.dmdirc.interfaces.ui.UIController;
 import com.dmdirc.interfaces.ui.Window;
-import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.core.components.StatusBarManager;
 
 import java.net.URI;
+
+import javax.inject.Inject;
 
 import org.mortbay.jetty.Handler;
 import org.mortbay.jetty.security.Constraint;
@@ -56,9 +58,6 @@ public class WebInterfaceUI implements UIController {
     /** The dynamic request handler in use. */
     private final DynamicRequestHandler handler;
 
-    /** The PluginInfo object for this plugin. */
-    private final PluginInfo pluginInfo;
-
     /** The plugin manager used to find other plugins. */
     private final PluginManager pluginManager;
 
@@ -69,22 +68,22 @@ public class WebInterfaceUI implements UIController {
      * @param identityController The controller to read/write settings with.
      * @param serverManager The manager to use to find and create servers
      * @param pluginManager The manager to use to find other plugins
-     * @param pluginInfo The information object for this UI's plugin.
      * @param coreWindowManager Window management
      * @param statusBarManager The status bar manager.
+     * @param staticRequestHandler Status request handler
      */
+    @Inject
     public WebInterfaceUI(
-            final String domain,
+            @WebUIDomain final String domain,
             final IdentityController identityController,
             final ServerManager serverManager,
             final PluginManager pluginManager,
-            final PluginInfo pluginInfo,
             final WindowManager coreWindowManager,
-            final StatusBarManager statusBarManager) {
+            final StatusBarManager statusBarManager,
+            final StaticRequestHandler staticRequestHandler) {
         super();
 
         this.pluginManager = pluginManager;
-        this.pluginInfo = pluginInfo;
 
         final SecurityHandler sh = new SecurityHandler();
         final Constraint constraint = new Constraint();
@@ -106,7 +105,7 @@ public class WebInterfaceUI implements UIController {
         webServer.setHandlers(new Handler[]{
             sh,
             new RootRequestHandler(),
-            new StaticRequestHandler(this),
+            staticRequestHandler,
             new DMDircRequestHandler(),
             handler,
         });
@@ -128,10 +127,6 @@ public class WebInterfaceUI implements UIController {
 
     public DynamicRequestHandler getHandler() {
         return handler;
-    }
-
-    public PluginInfo getPluginInfo() {
-        return pluginInfo;
     }
 
     public PluginManager getPluginManager() {
