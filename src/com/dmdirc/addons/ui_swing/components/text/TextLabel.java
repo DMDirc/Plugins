@@ -28,6 +28,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Insets;
 
+import javax.annotation.Nullable;
 import javax.swing.JTextPane;
 import javax.swing.UIManager;
 import javax.swing.plaf.basic.BasicTextPaneUI;
@@ -54,6 +55,9 @@ public class TextLabel extends JTextPane {
 
     /**
      * Creates a new instance of TextLabel.
+     *
+     * <p>Labels constructed without a {@link URLBuilder} will not be able to resolve
+     * DMDirc-specific URLs in image tags.
      */
     public TextLabel() {
         this(null, true);
@@ -61,6 +65,9 @@ public class TextLabel extends JTextPane {
 
     /**
      * Creates a new instance of TextLabel.
+     *
+     * <p>Labels constructed without a {@link URLBuilder} will not be able to resolve
+     * DMDirc-specific URLs in image tags.
      *
      * @param justified Justify the text?
      */
@@ -71,6 +78,9 @@ public class TextLabel extends JTextPane {
     /**
      * Creates a new instance of TextLabel.
      *
+     * <p>Labels constructed without a {@link URLBuilder} will not be able to resolve
+     * DMDirc-specific URLs in image tags.
+     *
      * @param text Text to display
      */
     public TextLabel(final String text) {
@@ -80,12 +90,30 @@ public class TextLabel extends JTextPane {
     /**
      * Creates a new instance of TextLabel.
      *
+     * <p>Labels constructed without a {@link URLBuilder} will not be able to resolve
+     * DMDirc-specific URLs in image tags.
+     *
      * @param text Text to display
      * @param justified Justify the text?
      */
     public TextLabel(final String text, final boolean justified) {
+        this(null, text, justified);
+    }
+
+    /**
+     * Creates a new instance of TextLabel.
+     *
+     * @param urlBuilder The URL builder to use for embedded image URLs. If {@code null}, then only
+     * standard URLs will be handled in image tags (not DMDirc-specific ones).
+     * @param text Text to display
+     * @param justified Justify the text?
+     */
+    public TextLabel(
+            @Nullable final URLBuilder urlBuilder,
+            final String text,
+            final boolean justified) {
         super(new DefaultStyledDocument());
-        setEditorKit(new DMDircHTMLEditorKit(URLBuilder.getInstance()));
+        setEditorKit(new DMDircHTMLEditorKit(urlBuilder));
         setUI(new BasicTextPaneUI());
 
         final StyleSheet styleSheet = ((HTMLDocument) getDocument()).

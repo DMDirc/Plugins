@@ -24,6 +24,7 @@ package com.dmdirc.addons.ui_swing.components.text;
 
 import com.dmdirc.util.URLBuilder;
 
+import javax.annotation.Nullable;
 import javax.swing.text.Element;
 import javax.swing.text.View;
 import javax.swing.text.html.HTMLEditorKit.HTMLFactory;
@@ -35,9 +36,16 @@ import javax.swing.text.html.ImageView;
 public class DMDircHTMLFactory extends HTMLFactory {
 
     /** The URL builder to use to construct image URLs. */
+    @Nullable
     private final URLBuilder urlBuilder;
 
-    public DMDircHTMLFactory(final URLBuilder urlBuilder) {
+    /**
+     * Creates a new instance of {@link DMDircHTMLFactory}.
+     *
+     * @param urlBuilder The URL builder to use for images. If {@code null}, then only standard
+     * URLs will be handled in image views (not DMDirc-specific ones).
+     */
+    public DMDircHTMLFactory(@Nullable final URLBuilder urlBuilder) {
         this.urlBuilder = urlBuilder;
     }
 
@@ -45,7 +53,7 @@ public class DMDircHTMLFactory extends HTMLFactory {
     @Override
     public View create(final Element elem) {
         final View view = super.create(elem);
-        if (view instanceof ImageView) {
+        if (view instanceof ImageView && urlBuilder != null) {
             return new DMDircImageView(urlBuilder, elem);
         }
         return view;
