@@ -26,6 +26,7 @@ import com.dmdirc.util.resourcemanager.ResourceManager;
 
 import java.io.IOException;
 
+import javax.inject.Inject;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -39,32 +40,22 @@ import org.mortbay.jetty.handler.AbstractHandler;
  */
 public class StaticRequestHandler extends AbstractHandler {
 
-    private ResourceManager rm;
-
-    private final WebInterfaceUI controller;
+    private final ResourceManager rm;
 
     /**
      * Create a new StaticRequestHandler.
      *
-     * @param controller UI Controller that owns this handler.
+     * @param rm Resource manager
      */
-    public StaticRequestHandler(final WebInterfaceUI controller) {
-        this.controller = controller;
+    @Inject
+    public StaticRequestHandler(final ResourceManager rm) {
+        this.rm = rm;
     }
 
-    /** {@inheritDoc} */
     @Override
     public void handle(final String target, final HttpServletRequest request,
             final HttpServletResponse response, final int dispatch)
             throws IOException, ServletException {
-
-        if (rm == null) {
-            try {
-                rm = controller.getPluginInfo().getResourceManager();
-            } catch (IOException ex) {
-                // Die horribly
-            }
-        }
 
         if (((request instanceof Request) ? (Request) request
                 : HttpConnection.getCurrentConnection().getRequest()).isHandled()) {
