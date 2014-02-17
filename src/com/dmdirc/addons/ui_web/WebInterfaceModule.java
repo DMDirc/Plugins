@@ -22,41 +22,44 @@
 
 package com.dmdirc.addons.ui_web;
 
-import com.dmdirc.interfaces.ui.UIController;
-import com.dmdirc.plugins.Exported;
+import com.dmdirc.ClientModule;
 import com.dmdirc.plugins.PluginInfo;
-import com.dmdirc.plugins.implementations.BasePlugin;
 
-import dagger.ObjectGraph;
+import com.dmdirc.util.resourcemanager.ResourceManager;
 
+import java.io.IOException;
+import javax.inject.Qualifier;
+import javax.inject.Singleton;
 
-/**
- * The main web interface plugin.
- */
-public class WebInterfacePlugin extends BasePlugin {
+import dagger.Module;
+import dagger.Provides;
 
-    /** The UI that we're using. */
-    private WebInterfaceUI controller;
+@Module(injects={WebInterfaceUI.class, StaticRequestHandler.class}, addsTo=ClientModule.class)
+public class WebInterfaceModule {
 
-    @Override
-    public void load(final PluginInfo pluginInfo, final ObjectGraph graph) {
-        super.load(pluginInfo, graph);
-        setObjectGraph(graph.plus(new WebInterfaceModule(pluginInfo)));
+    private final PluginInfo pluginInfo;
+
+    public WebInterfaceModule(final PluginInfo pluginInfo) {
+        this.pluginInfo = pluginInfo;
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void onLoad() {
-        getObjectGraph().get(WebInterfaceUI.class);
+    @Qualifier
+    public @interface WebUIDomain {};
+
+    @Provides
+    @WebUIDomain
+    public String getSettingsDomain() {
+        return pluginInfo.getDomain();
     }
 
-    /**
-     * Exported version of the controller.
-     *
-     * @return The controller, exported for use in the client.
-     */
-    @Exported
-    public UIController getController() {
-        return controller;
+    @Singleton
+    @Provides
+    public ResourceManager getResourceManager() {
+        try {
+            return pluginInfo.getResourceManager();
+        } catch (IOException ex) {
+            throw new IllegalStateException("Die Horrible", ex);
+        }
     }
+
 }
