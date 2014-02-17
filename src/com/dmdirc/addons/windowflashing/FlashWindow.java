@@ -30,6 +30,8 @@ import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.interfaces.CommandController;
 
+import javax.inject.Inject;
+
 /**
  * Command to flash an inactive window under Windows.
  */
@@ -39,24 +41,25 @@ public class FlashWindow extends Command {
     public static final BaseCommandInfo INFO = new BaseCommandInfo(
             "flashwindow", "flashwindow - Flashes the window until activated",
             CommandType.TYPE_GLOBAL);
-    /** Parent plugin. */
-    private final WindowFlashing plugin;
+    /** Window flashing manager. */
+    private final WindowFlashingManager manager;
 
     /**
      * Creates a new flash window command.
      *
-     * @param plugin Parent plugin to trigger window flashing
+     * @param manager Window flashing manager
      * @param commandController The controller to use for command information.
      */
-    public FlashWindow(final WindowFlashing plugin, final CommandController commandController) {
+    @Inject
+    public FlashWindow(final WindowFlashingManager manager, final CommandController commandController) {
         super(commandController);
-        this.plugin = plugin;
+        this.manager = manager;
     }
 
     /** {@inheritDoc} */
     @Override
     public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
-        plugin.flashWindow();
+        manager.flashWindow();
     }
 }
