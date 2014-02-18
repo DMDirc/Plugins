@@ -33,7 +33,7 @@ import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.commandline.CommandLineOptionsModule.Directory;
 import com.dmdirc.commandline.CommandLineOptionsModule.DirectoryType;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
-import com.dmdirc.ui.core.util.Info;
+import com.dmdirc.util.ClientInfo;
 
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
@@ -81,9 +81,9 @@ public class FeedbackDialog extends StandardDialog implements ActionListener, Do
     /**
      * Instantiates the feedback dialog.
      *
-     * @param parentWindow Parent window
+     * @param parentWindow  Parent window
      * @param serverManager Server manager
-     * @param config Config
+     * @param config        Config
      * @param baseDirectory The base directory to include in feedback.
      */
     @Inject
@@ -226,10 +226,13 @@ public class FeedbackDialog extends StandardDialog implements ActionListener, Do
             }
         }
         if (dmdircCheckbox.isSelected()) {
-            dmdircInfo.append("DMDirc version: ").append(Info.getDMDircVersion(config)).append("\n");
+            dmdircInfo.append("DMDirc version: ").append(ClientInfo.getVersionInformation())
+                    .append("\n");
             dmdircInfo.append("Profile directory: ").append(configDirectory).append("\n");
-            dmdircInfo.append("Java version: ").append(Info.getJavaVersion()).append("\n");
-            dmdircInfo.append("OS Version: ").append(Info.getOSVersion()).append("\n");
+            dmdircInfo.append("Java version: ").append(ClientInfo.getJavaInformation())
+                    .append("\n");
+            dmdircInfo.append("OS Version: ").append(ClientInfo.getOperatingSystemInformation())
+                    .append("\n");
             dmdircInfo.append("Look & Feel: ").append(SwingController.getLookAndFeel());
         }
         new SendWorker(this, config, name.getText().trim(), email.getText().trim(),
@@ -290,4 +293,5 @@ public class FeedbackDialog extends StandardDialog implements ActionListener, Do
     public void changedUpdate(final DocumentEvent e) {
         // Do nothing
     }
+
 }
