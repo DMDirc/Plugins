@@ -125,4 +125,5 @@ public class InstallWorker extends LoggingSwingWorker<String, Void> {
             }
         }
     }
+
 }

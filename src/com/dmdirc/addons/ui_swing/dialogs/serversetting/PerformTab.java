@@ -63,9 +63,9 @@ public class PerformTab extends JPanel implements ActionListener {
      * Creates a new instance of IgnoreList.
      *
      * @param iconManager Icon manager
-     * @param config Config to read settings from
-     * @param wrapper Perform wrapper to read/write performs to.
-     * @param connection Connection whose perform should be displayed.
+     * @param config      Config to read settings from
+     * @param wrapper     Perform wrapper to read/write performs to.
+     * @param connection  Connection whose perform should be displayed.
      */
     public PerformTab(
             final IconManager iconManager,
@@ -86,7 +86,7 @@ public class PerformTab extends JPanel implements ActionListener {
      * Initialises the components.
      *
      * @param iconManager Icon manager
-     * @param config Config to read settings from
+     * @param config      Config to read settings from
      */
     private void initComponents(final IconManager iconManager,
             final AggregateConfigProvider config) {
@@ -102,11 +102,11 @@ public class PerformTab extends JPanel implements ActionListener {
         final PerformDescription networkPerform = new PerformDescription(
                 PerformType.NETWORK, connection.getNetwork());
         final PerformDescription networkProfilePerform = new PerformDescription(
-                PerformType.NETWORK, connection.getNetwork() ,connection.getProfile().getName());
+                PerformType.NETWORK, connection.getNetwork(), connection.getProfile().getName());
         final PerformDescription serverPerform = new PerformDescription(
                 PerformType.SERVER, connection.getAddress());
         final PerformDescription serverProfilePerform = new PerformDescription(
-                PerformType.SERVER, connection.getAddress() ,connection.getProfile().getName());
+                PerformType.SERVER, connection.getAddress(), connection.getProfile().getName());
 
         model.addElement(networkPerform);
         model.addElement(networkProfilePerform);
@@ -143,8 +143,8 @@ public class PerformTab extends JPanel implements ActionListener {
      */
     @Override
     public void actionPerformed(final ActionEvent e) {
-        final PerformDescription perform
-                = (PerformDescription)((JComboBox) e.getSource()).getSelectedItem();
+        final PerformDescription perform = (PerformDescription) ((JComboBox) e.getSource()).
+                getSelectedItem();
         performPanel.switchPerform(perform);
     }
 

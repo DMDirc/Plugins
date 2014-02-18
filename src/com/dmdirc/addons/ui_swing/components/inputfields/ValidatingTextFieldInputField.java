@@ -50,7 +50,7 @@ public class ValidatingTextFieldInputField extends ValidatingJTextField
      * Creates a new text field with the specified validator.
      *
      * @param controller Swing controller
-     * @param validator Validator for this textfield
+     * @param validator  Validator for this textfield
      */
     public ValidatingTextFieldInputField(final SwingController controller,
             final Validator<String> validator) {
@@ -61,8 +61,8 @@ public class ValidatingTextFieldInputField extends ValidatingJTextField
      * Creates a new text field with the specified validator.
      *
      * @param controller Swing controller
-     * @param validator Validator for this textfield
-     * @param text Text to use
+     * @param validator  Validator for this textfield
+     * @param text       Text to use
      */
     public ValidatingTextFieldInputField(final SwingController controller,
             final String text, final Validator<String> validator) {
@@ -90,7 +90,6 @@ public class ValidatingTextFieldInputField extends ValidatingJTextField
             colourPicker = new ColourPickerDialog(this, controller.getColourManager(),
                     controller.getIconManager(), irc, hex);
             colourPicker.addActionListener(new ActionListener() {
-
                 @Override
                 public void actionPerformed(final ActionEvent actionEvent) {
                     try {
@@ -105,8 +104,7 @@ public class ValidatingTextFieldInputField extends ValidatingJTextField
             });
             colourPicker.setVisible(true);
             colourPicker.setLocation((int) getLocationOnScreen().getX(),
-                    (int) getLocationOnScreen().getY() -
-                    colourPicker.getHeight());
+                    (int) getLocationOnScreen().getY() - colourPicker.getHeight());
         }
     }
 
@@ -118,4 +116,5 @@ public class ValidatingTextFieldInputField extends ValidatingJTextField
             colourPicker = null;
         }
     }
+
 }

@@ -28,8 +28,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Describes the different types of possible token, their arities, precedence,
- * and the types of token that may follow them.
+ * Describes the different types of possible token, their arities, precedence, and the types of
+ * token that may follow them.
  */
 public enum TokenType {
 
@@ -37,35 +37,32 @@ public enum TokenType {
     START(TokenTypeArity.HIDDEN, "^", 0, "NUMBER_*", "BRACKET_OPEN", "MOD_*"),
     /** The end of an input string. */
     END(TokenTypeArity.HIDDEN, "$", 0),
-
     /** An opening bracket. */
     BRACKET_OPEN(TokenTypeArity.NULLARY, "\\(", 0, "NUMBER_*", "MOD_*",
-                "BRACKET_OPEN"),
+    "BRACKET_OPEN"),
     /** A closing bracket. */
     BRACKET_CLOSE(TokenTypeArity.NULLARY, "\\)", 50, "OP_*", "BRACKET_*",
-                "END"),
-
+    "END"),
     /** A floating point number. */
     NUMBER_FLOAT(TokenTypeArity.NULLARY, "[0-9]+\\.[0-9]+", 1, "OP_*",
-                "BRACKET_*", "END") {
+    "BRACKET_*", "END") {
         /** {@inheritDoc} */
         @Override
         public Number evaluate(final TreeToken token) {
             return Float.valueOf(token.getToken().getContent());
         }
     },
-
     /** An integer. */
     NUMBER_INT(TokenTypeArity.NULLARY, "[0-9]+", 1, "OP_*",
-                "BRACKET_*", "END") {
+    "BRACKET_*", "END") {
         /** {@inheritDoc} */
         @Override
         public Number evaluate(final TreeToken token) {
             return Float.valueOf(token.getToken().getContent());
         }
     },
-
-    /** A modifier signalling the following number is positive. */
+    /** A modifier signalling the
+     * following number is positive. */
     MOD_POSITIVE(TokenTypeArity.UNARY, "\\+", 100, "NUMBER_*") {
         /** {@inheritDoc} */
         @Override
@@ -73,8 +70,8 @@ public enum TokenType {
             return token.getChildren().get(0).evaluate();
         }
     },
-
-    /** A modifier signalling the following number is negative. */
+    /** A modifier signalling the
+     * following number is negative. */
     MOD_NEGATIVE(TokenTypeArity.UNARY, "-", 100, "NUMBER_*") {
         /** {@inheritDoc} */
         @Override
@@ -82,7 +79,6 @@ public enum TokenType {
             return -1 * token.getChildren().get(0).evaluate().floatValue();
         }
     },
-
     /** The addition operator. */
     OP_PLUS(TokenTypeArity.BINARY, "\\+", 7, "NUMBER_*", "BRACKET_OPEN") {
         /** {@inheritDoc} */
@@ -92,7 +88,6 @@ public enum TokenType {
                     + token.getChildren().get(1).evaluate().floatValue();
         }
     },
-
     /** The subtraction operator. */
     OP_MINUS(TokenTypeArity.BINARY, "-", 6, "NUMBER_*", "BRACKET_OPEN") {
         /** {@inheritDoc} */
@@ -102,10 +97,9 @@ public enum TokenType {
                     - token.getChildren().get(1).evaluate().floatValue();
         }
     },
-
     /** The multiplication operator. */
     OP_MULT(TokenTypeArity.BINARY, "(?=\\()|\\*", 9, "NUMBER_*",
-            "BRACKET_OPEN") {
+    "BRACKET_OPEN") {
         /** {@inheritDoc} */
         @Override
         public Number evaluate(final TreeToken token) {
@@ -113,7 +107,6 @@ public enum TokenType {
                     * token.getChildren().get(1).evaluate().floatValue();
         }
     },
-
     /** The division operator. */
     OP_DIVIDE(TokenTypeArity.BINARY, "/", 10, "NUMBER_*", "BRACKET_OPEN") {
         /** {@inheritDoc} */
@@ -123,7 +116,6 @@ public enum TokenType {
                     / token.getChildren().get(1).evaluate().floatValue();
         }
     },
-
     /** The modulo operator. */
     OP_MOD(TokenTypeArity.BINARY, "%", 8, "NUMBER_*", "BRACKET_OPEN") {
         /** {@inheritDoc} */
@@ -133,7 +125,6 @@ public enum TokenType {
                     % token.getChildren().get(1).evaluate().floatValue();
         }
     },
-
     /** The power operator. */
     OP_POWER(TokenTypeArity.BINARY, "\\^", 11, "NUMBER_*", "BRACKET_OPEN") {
         /** {@inheritDoc} */
@@ -144,7 +135,6 @@ public enum TokenType {
                     token.getChildren().get(1).evaluate().doubleValue()));
         }
     };
-
     /** The string representation of tokens that may follow this one. */
     private final String[] strfollows;
     /** The precedence of this token. */
@@ -159,13 +149,13 @@ public enum TokenType {
     /**
      * Creates a new token type with the specified arguments.
      *
-     * @param arity The arity of this token
-     * @param regex The regular expression used to match this token
+     * @param arity      The arity of this token
+     * @param regex      The regular expression used to match this token
      * @param precedence The precendence of this token
-     * @param follows The names of the tokens which may follow this one
+     * @param follows    The names of the tokens which may follow this one
      */
     TokenType(final TokenTypeArity arity, final String regex,
-            final int precedence, final String ... follows) {
+            final int precedence, final String... follows) {
         this.arity = arity;
         this.strfollows = follows;
         this.precedence = precedence;
@@ -198,13 +188,14 @@ public enum TokenType {
     }
 
     /**
-     * Attempts to match this token type against the specified input string
-     * (starting at the specified offset).
+     * Attempts to match this token type against the specified input string (starting at the
+     * specified offset).
      *
-     * @param input The string to be matched
+     * @param input  The string to be matched
      * @param offset The offset within the string to start at
-     * @return -1 if no match was made, otherwise the number of characters that
-     * were matched as part of this token type.
+     *
+     * @return -1 if no match was made, otherwise the number of characters that were matched as part
+     *         of this token type.
      */
     public int match(final String input, final int offset) {
         final Matcher matcher = regex.matcher(input);
@@ -219,6 +210,7 @@ public enum TokenType {
      * Evaluates the specified token of this token type into a number.
      *
      * @param token The token to be evaluated
+     *
      * @return A numerical representation of the specified token
      */
     public Number evaluate(final TreeToken token) {
@@ -226,10 +218,11 @@ public enum TokenType {
     }
 
     /**
-     * Retrieves a list of types which match the specified name. The name
-     * may end with an asterisk (*), which is treated as a wild card.
+     * Retrieves a list of types which match the specified name. The name may end with an asterisk
+     * (*), which is treated as a wild card.
      *
      * @param name The name to be searched for
+     *
      * @return A list of matching tokens
      */
     protected static List<TokenType> searchValueOf(final String name) {
@@ -244,4 +237,5 @@ public enum TokenType {
 
         return res;
     }
+
 }

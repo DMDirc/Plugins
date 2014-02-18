@@ -58,9 +58,9 @@ public class ConfigPanel extends JPanel implements PreferencesInterface,
         KeyListener {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 1;
     /** Media source order list. */
@@ -84,8 +84,8 @@ public class ConfigPanel extends JPanel implements PreferencesInterface,
      * Creates a new instance of ConfigPanel.
      *
      * @param identityController The controller to read/write settings with.
-     * @param plugin The plugin that owns this panel
-     * @param sources A list of sources to be used in the panel
+     * @param plugin             The plugin that owns this panel
+     * @param sources            A list of sources to be used in the panel
      */
     public ConfigPanel(
             final IdentityController identityController,
@@ -147,8 +147,8 @@ public class ConfigPanel extends JPanel implements PreferencesInterface,
         previewPanel = panel;
 
         add(new NowPlayingSubsitutionPanel(Arrays.asList(new String[]{"app",
-                    "title", "artist", "album", "bitrate", "format", "length",
-                    "time", "state"})), "growx");
+            "title", "artist", "album", "bitrate", "format", "length",
+            "time", "state"})), "growx");
         schedulePreviewUpdate();
     }
 
@@ -166,7 +166,6 @@ public class ConfigPanel extends JPanel implements PreferencesInterface,
 
         final String text = plugin.doSubstitution(
                 UIUtilities.invokeAndWait(new Callable<String>() {
-
             /** {@inheritDoc} */
             @Override
             public String call() {
@@ -174,7 +173,6 @@ public class ConfigPanel extends JPanel implements PreferencesInterface,
             }
         }), source);
         SwingUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -251,7 +249,6 @@ public class ConfigPanel extends JPanel implements PreferencesInterface,
 
         updateTimer = new Timer("Nowplaying config timer");
         updateTimer.schedule(new TimerTask() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -323,6 +320,7 @@ public class ConfigPanel extends JPanel implements PreferencesInterface,
         public String getBitrate() {
             return "128";
         }
+
     }
 
 }

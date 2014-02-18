@@ -31,5 +31,4 @@ import dagger.Module;
  */
 @Module(injects = {AudioCommand.class, BeepCommand.class}, addsTo = ClientModule.class)
 public class AudioPluginModule {
-
 }

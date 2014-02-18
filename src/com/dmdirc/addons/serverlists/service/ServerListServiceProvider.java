@@ -38,8 +38,8 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Provides a fake parser service which handles <code>serverlist://</code> URIs,
- * and returns a suitable parser for the corresponding server list.
+ * Provides a fake parser service which handles
+ * <code>serverlist://</code> URIs, and returns a suitable parser for the corresponding server list.
  *
  * @since 0.6.4
  */
@@ -47,10 +47,8 @@ public class ServerListServiceProvider implements ServiceProvider {
 
     /** The server list that we're providing for. */
     private final ServerList serverList;
-
     /** The services that this provider providers. */
     private final List<Service> services;
-
     /** Plugin Manager */
     private final PluginManager pluginManager;
 
@@ -58,13 +56,13 @@ public class ServerListServiceProvider implements ServiceProvider {
      * Creates a new server list service provider.
      *
      * @param pluginManager The PluginManager to use.
-     * @param serverList The {@link ServerList} to retrieve items from
+     * @param serverList    The {@link ServerList} to retrieve items from
      */
     public ServerListServiceProvider(final PluginManager pluginManager, final ServerList serverList) {
         this.serverList = serverList;
         this.pluginManager = pluginManager;
-        this.services = Arrays.asList(new Service[] {
-           pluginManager.getService("parser", "serverlist", true)
+        this.services = Arrays.asList(new Service[]{
+            pluginManager.getService("parser", "serverlist", true)
         });
     }
 
@@ -114,8 +112,9 @@ public class ServerListServiceProvider implements ServiceProvider {
     /**
      * Retrieves a parser for the specified details.
      *
-     * @param myInfo The user-supplied client identification information
+     * @param myInfo  The user-supplied client identification information
      * @param address The address to connect to (a serverlist:// URI)
+     *
      * @return A corresponding Parser instance, or null if none applicable
      */
     public Parser getParser(final MyInfo myInfo, final URI address) {
@@ -146,7 +145,8 @@ public class ServerListServiceProvider implements ServiceProvider {
      * Retrieves a parser for the specified item.
      *
      * @param myInfo The user-supplied client identification information
-     * @param item The item to retrieve a URI from
+     * @param item   The item to retrieve a URI from
+     *
      * @return A corresponding parser instance
      */
     protected Parser getParserForItem(final MyInfo myInfo, final ServerGroupItem item) {

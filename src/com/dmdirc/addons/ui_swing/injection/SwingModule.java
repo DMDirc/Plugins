@@ -69,31 +69,29 @@ import dagger.Provides;
         addsTo = ClientModule.class,
         includes = DialogModule.class,
         injects = {
-            SwingManager.class,
-            PopInCommand.class,
-            PopOutCommand.class,
-            Input.class,
-            ServerSettings.class,
-            ChannelSettings.class
-        }
-)
+    SwingManager.class,
+    PopInCommand.class,
+    PopOutCommand.class,
+    Input.class,
+    ServerSettings.class,
+    ChannelSettings.class
+})
 public class SwingModule {
 
     @Qualifier
-    public @interface SwingSettingsDomain {}
-
+    public @interface SwingSettingsDomain {
+    }
     /** The controller to return to clients. */
     private final SwingController controller;
-
     /** The domain for plugin settings. */
     private final String domain;
 
     /**
      * Creates a new instance of {@link SwingModule}.
      *
-     * @param controller The controller to return. This should be removed when SwingController
-     * is separated from the plugin implementation.
-     * @param domain The domain for plugin settings.
+     * @param controller The controller to return. This should be removed when SwingController is
+     *                   separated from the plugin implementation.
+     * @param domain     The domain for plugin settings.
      */
     public SwingModule(final SwingController controller, final String domain) {
         this.controller = controller;
@@ -124,13 +122,14 @@ public class SwingModule {
     /**
      * Gets the main DMDirc window.
      *
-     * @param swingController The controller that will own the frame.
-     * @param windowFactory The window factory to use to create and listen for windows.
+     * @param swingController     The controller that will own the frame.
+     * @param windowFactory       The window factory to use to create and listen for windows.
      * @param lifecycleController The controller to use to quit the application.
-     * @param globalConfig The config to read settings from.
-     * @param quitWorker The worker to use when quitting the application.
-     * @param urlBuilder The URL builder to use to find icons.
-     * @param windowManager The core window manager to use to find windows.
+     * @param globalConfig        The config to read settings from.
+     * @param quitWorker          The worker to use when quitting the application.
+     * @param urlBuilder          The URL builder to use to find icons.
+     * @param windowManager       The core window manager to use to find windows.
+     *
      * @return The main window.
      */
     @Provides
@@ -162,10 +161,11 @@ public class SwingModule {
     /**
      * Provides an URL handler for use in the swing UI.
      *
-     * @param swingController The controller that will own the handler.
-     * @param globalConfig The global configuration to read settings from.
-     * @param serverManager The server manager to use to connect to servers.
+     * @param swingController  The controller that will own the handler.
+     * @param globalConfig     The global configuration to read settings from.
+     * @param serverManager    The server manager to use to connect to servers.
      * @param statusBarManager The status bar manager to add messages to.
+     *
      * @return The URL handler to use.
      */
     @Provides

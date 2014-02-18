@@ -196,8 +196,8 @@ public abstract class ModesPane extends JPanel {
     }
 
     /**
-     * Processes the channel settings dialog and constructs a mode string for
-     * changed modes, then sends this to the server.
+     * Processes the channel settings dialog and constructs a mode string for changed modes, then
+     * sends this to the server.
      */
     public void save() {
         boolean changed = false;
@@ -312,8 +312,8 @@ public abstract class ModesPane extends JPanel {
     /**
      * Queues the specified mode change to be flushed with flushmodes.
      *
-     * @param add Whether to add or remove the specified mode
-     * @param mode The mode to be changed
+     * @param add       Whether to add or remove the specified mode
+     * @param mode      The mode to be changed
      * @param parameter Optional parameter needed to make change
      */
     public abstract void alterMode(final boolean add, final String mode,
@@ -323,4 +323,5 @@ public abstract class ModesPane extends JPanel {
      * Sends the queued mode changes to the server.
      */
     public abstract void flushModes();
+
 }

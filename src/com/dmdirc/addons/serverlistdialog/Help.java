@@ -34,9 +34,9 @@ import net.miginfocom.swing.MigLayout;
 public class Help extends JPanel {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 2;
 
@@ -45,7 +45,8 @@ public class Help extends JPanel {
      */
     public Help() {
         setLayout(new MigLayout("fill"));
-        add(new TextLabel("Please select an item from the left to start " +
-                "editing options and settings."), "grow, pushy");
+        add(new TextLabel("Please select an item from the left to start "
+                + "editing options and settings."), "grow, pushy");
     }
+
 }

@@ -33,19 +33,17 @@ public class ChannelJoinDialog extends StandardInputDialog {
 
     /** Serial version UID. */
     private static final long serialVersionUID = 1;
-
     /** The main frame that owns this dialog. */
     private final MainFrame mainFrame;
 
     /**
-     * Creates a new dialog which prompts a user and then joins the channel
-     * they specify.
+     * Creates a new dialog which prompts a user and then joins the channel they specify.
      *
-     * @param mainFrame Main frame
-     * @param modality Window modality
+     * @param mainFrame   Main frame
+     * @param modality    Window modality
      * @param iconManager The icon manager to use for validating text fields.
-     * @param title Window title
-     * @param message Window message
+     * @param title       Window title
+     * @param message     Window message
      */
     public ChannelJoinDialog(
             final MainFrame mainFrame,
@@ -71,4 +69,5 @@ public class ChannelJoinDialog extends StandardInputDialog {
     public void cancelled() {
         //Ignore
     }
+
 }

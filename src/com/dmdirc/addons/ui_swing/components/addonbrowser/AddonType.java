@@ -40,4 +40,5 @@ public enum AddonType {
         return super.toString().charAt(5)
                 + super.toString().substring(6).toLowerCase().replace('_', ' ');
     }
+
 }

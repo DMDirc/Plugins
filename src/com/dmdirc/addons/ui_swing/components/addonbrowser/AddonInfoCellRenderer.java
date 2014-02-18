@@ -22,14 +22,12 @@
 
 package com.dmdirc.addons.ui_swing.components.addonbrowser;
 
-
 import java.awt.Color;
 import java.awt.Component;
 
 import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
-
 
 /**
  * Addon list cell renderer.
@@ -63,4 +61,5 @@ public class AddonInfoCellRenderer implements TableCellRenderer {
             return new JLabel(value.toString());
         }
     }
+
 }

@@ -67,11 +67,11 @@ public class SwingWindowFactory implements FrameListener {
     /**
      * Creates a new window factory for the specified controller.
      *
-     * @param controller The controller this factory is for
-     * @param customFrameFactory The factory to use to produce custom frames.
+     * @param controller              The controller this factory is for
+     * @param customFrameFactory      The factory to use to produce custom frames.
      * @param customInputFrameFactory The factory to use to produce custom input frames.
-     * @param serverFrameFactory The factory to use to produce server frames.
-     * @param channelFrameFactory The factory to use to produce channel frames.
+     * @param serverFrameFactory      The factory to use to produce server frames.
+     * @param channelFrameFactory     The factory to use to produce channel frames.
      */
     @Inject
     public SwingWindowFactory(
@@ -85,47 +85,47 @@ public class SwingWindowFactory implements FrameListener {
         // TODO: Allow auto-factories to implement an interface and simplify this a bit.
         registerImplementation(
                 new HashSet<>(Arrays.asList(
-                        WindowComponent.TEXTAREA.getIdentifier())),
+                WindowComponent.TEXTAREA.getIdentifier())),
                 new WindowProvider() {
-                    @Override
-                    public TextFrame getWindow(final FrameContainer container) {
-                        return customFrameFactory.getCustomFrame(container);
-                    }
-                });
+            @Override
+            public TextFrame getWindow(final FrameContainer container) {
+                return customFrameFactory.getCustomFrame(container);
+            }
+        });
         registerImplementation(
                 new HashSet<>(Arrays.asList(
-                        WindowComponent.TEXTAREA.getIdentifier(),
-                        WindowComponent.INPUTFIELD.getIdentifier())),
+                WindowComponent.TEXTAREA.getIdentifier(),
+                WindowComponent.INPUTFIELD.getIdentifier())),
                 new WindowProvider() {
-                    @Override
-                    public TextFrame getWindow(final FrameContainer container) {
-                        return customInputFrameFactory.getCustomInputFrame(
-                                (WritableFrameContainer) container);
-                    }
-                });
+            @Override
+            public TextFrame getWindow(final FrameContainer container) {
+                return customInputFrameFactory.getCustomInputFrame(
+                        (WritableFrameContainer) container);
+            }
+        });
         registerImplementation(
                 new HashSet<>(Arrays.asList(
-                        WindowComponent.TEXTAREA.getIdentifier(),
-                        WindowComponent.INPUTFIELD.getIdentifier(),
-                        WindowComponent.CERTIFICATE_VIEWER.getIdentifier())),
+                WindowComponent.TEXTAREA.getIdentifier(),
+                WindowComponent.INPUTFIELD.getIdentifier(),
+                WindowComponent.CERTIFICATE_VIEWER.getIdentifier())),
                 new WindowProvider() {
-                    @Override
-                    public TextFrame getWindow(final FrameContainer container) {
-                        return serverFrameFactory.getServerFrame((Server) container);
-                    }
-                });
+            @Override
+            public TextFrame getWindow(final FrameContainer container) {
+                return serverFrameFactory.getServerFrame((Server) container);
+            }
+        });
         registerImplementation(
                 new HashSet<>(Arrays.asList(
-                        WindowComponent.TEXTAREA.getIdentifier(),
-                        WindowComponent.INPUTFIELD.getIdentifier(),
-                        WindowComponent.TOPICBAR.getIdentifier(),
-                        WindowComponent.USERLIST.getIdentifier())),
+                WindowComponent.TEXTAREA.getIdentifier(),
+                WindowComponent.INPUTFIELD.getIdentifier(),
+                WindowComponent.TOPICBAR.getIdentifier(),
+                WindowComponent.USERLIST.getIdentifier())),
                 new WindowProvider() {
-                    @Override
-                    public TextFrame getWindow(final FrameContainer container) {
-                        return channelFrameFactory.getChannelFrame((Channel) container);
-                    }
-                });
+            @Override
+            public TextFrame getWindow(final FrameContainer container) {
+                return channelFrameFactory.getChannelFrame((Channel) container);
+            }
+        });
     }
 
     /**
@@ -134,7 +134,7 @@ public class SwingWindowFactory implements FrameListener {
      * <p>If a previous provider exists for the same configuration, it will be replaced.
      *
      * @param components The component configuration that is provided by the implementation.
-     * @param provider The provider to use to generate new windows.
+     * @param provider   The provider to use to generate new windows.
      */
     public final void registerImplementation(
             final Set<String> components,
@@ -143,8 +143,8 @@ public class SwingWindowFactory implements FrameListener {
     }
 
     /**
-     * Registers a new listener which will be notified about the addition
-     * and deletion of all Swing UI windows.
+     * Registers a new listener which will be notified about the addition and deletion of all Swing
+     * UI windows.
      *
      * @param listener The listener to be added
      */
@@ -153,8 +153,8 @@ public class SwingWindowFactory implements FrameListener {
     }
 
     /**
-     * Un-registers the specified listener from being notified about the
-     * addiction and deletion of all Swing UI windows.
+     * Un-registers the specified listener from being notified about the addiction and deletion of
+     * all Swing UI windows.
      *
      * @param listener The listener to be removed
      */
@@ -172,7 +172,8 @@ public class SwingWindowFactory implements FrameListener {
      * Creates a new window for the specified container.
      *
      * @param window The container that owns the window
-     * @param focus Whether the window should be focused initially
+     * @param focus  Whether the window should be focused initially
+     *
      * @return The created window or null on error
      */
     protected TextFrame doAddWindow(final FrameContainer window, final boolean focus) {
@@ -190,11 +191,11 @@ public class SwingWindowFactory implements FrameListener {
     }
 
     /**
-     * Retrieves a single Swing UI created window belonging to the specified
-     * container. Returns null if the container is null or no such window
-     * exists.
+     * Retrieves a single Swing UI created window belonging to the specified container. Returns null
+     * if the container is null or no such window exists.
      *
      * @param window The container whose windows should be searched
+     *
      * @return A relevant window or null
      */
     public TextFrame getSwingWindow(final FrameContainer window) {
@@ -212,7 +213,6 @@ public class SwingWindowFactory implements FrameListener {
     public void addWindow(final FrameContainer parent,
             final FrameContainer window, final boolean focus) {
         UIUtilities.invokeLater(new Runnable() {
-
             @Override
             public void run() {
                 final TextFrame parentWindow = getSwingWindow(parent);
@@ -238,7 +238,6 @@ public class SwingWindowFactory implements FrameListener {
     public void delWindow(final FrameContainer parent,
             final FrameContainer window) {
         UIUtilities.invokeLater(new Runnable() {
-
             @Override
             public void run() {
                 final TextFrame parentWindow = getSwingWindow(parent);
@@ -272,6 +271,7 @@ public class SwingWindowFactory implements FrameListener {
          * Gets a new window for the specified container.
          *
          * @param container The container to create a new window for.
+         *
          * @return A new window for the given container.
          */
         TextFrame getWindow(FrameContainer container);

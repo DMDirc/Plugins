@@ -43,21 +43,20 @@ import javax.inject.Inject;
  *
  * @since 0.6.4
  */
-@CommandOptions(allowOffline=false)
+@CommandOptions(allowOffline = false)
 public class ServerSettings extends Command implements IntelligentCommand {
 
     /** A command info object for this command. */
     public static final CommandInfo INFO = new BaseCommandInfo("serversettings",
             "serversettings - opens the server settings window",
             CommandType.TYPE_SERVER);
-
     /** The controller to use to show the settings window. */
     private final SwingController controller;
 
     /**
      * Creates a new instance of the {@link ServerSettings} command.
      *
-     * @param controller The controller to use to show the settings window.
+     * @param controller        The controller to use to show the settings window.
      * @param commandController The command controller to use for command info.
      */
     @Inject
@@ -81,4 +80,5 @@ public class ServerSettings extends Command implements IntelligentCommand {
             final IntelligentCommandContext context) {
         return new AdditionalTabTargets().excludeAll();
     }
+
 }

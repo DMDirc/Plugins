@@ -159,4 +159,5 @@ public class DMDircEventQueue extends EventQueue {
     public void pop() { //NOPMD
         super.pop();
     }
+
 }

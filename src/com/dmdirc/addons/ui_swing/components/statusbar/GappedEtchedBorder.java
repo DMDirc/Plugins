@@ -28,8 +28,7 @@ import java.awt.Graphics;
 import javax.swing.border.EtchedBorder;
 
 /**
- * An {@link EtchedBorder} that leaves a gap in the bottom where the
- * status bar popup window is.
+ * An {@link EtchedBorder} that leaves a gap in the bottom where the status bar popup window is.
  */
 public class GappedEtchedBorder extends EtchedBorder {
 
@@ -55,8 +54,8 @@ public class GappedEtchedBorder extends EtchedBorder {
         g.setColor(etchType == LOWERED ? getShadowColor(c)
                 : getHighlightColor(c));
         g.drawLine(0, 0, width - 1, 0);
-        g.drawLine(0, height - 1, outer.getParentPanel().getLocationOnScreen()
-                .x - outer.getLocationOnScreen().x, height - 1);
+        g.drawLine(0, height - 1, outer.getParentPanel().getLocationOnScreen().x - outer.
+                getLocationOnScreen().x, height - 1);
         g.drawLine(outer.getParentPanel().getWidth() + outer.getParentPanel()
                 .getLocationOnScreen().x - outer.getLocationOnScreen().x - 2,
                 height - 1, width - 1, height - 1);
@@ -64,4 +63,5 @@ public class GappedEtchedBorder extends EtchedBorder {
         g.drawLine(width - 1, 0, width - 1, height - 1);
         g.translate(-x, -y);
     }
+
 }

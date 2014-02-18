@@ -50,9 +50,9 @@ public class NodeLabel extends JPanel implements SelectionListener,
         NotificationListener, FrameInfoListener {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 1;
     /** The window this node represents in the tree. */
@@ -267,7 +267,7 @@ public class NodeLabel extends JPanel implements SelectionListener,
     /**
      * Sets the text and style in this label.
      *
-     * @param styliser Styliser to use to style text
+     * @param styliser   Styliser to use to style text
      * @param styledText Styled text string to use
      */
     public void setStyledText(final Styliser styliser,
@@ -278,14 +278,14 @@ public class NodeLabel extends JPanel implements SelectionListener,
         text.setText("");
         currentText = styledText;
         styliser.addStyledString((StyledDocument) text.getDocument(),
-                new String[] {styledText, });
+                new String[]{styledText,});
     }
 
     /**
      * Sets the styles for the text in this label.
      *
      * @param styliser Styliser to use
-     * @param newText Style to set
+     * @param newText  Style to set
      */
     public void setTextStyle(final Styliser styliser, final String newText) {
         if (currentText.equals(newText + window.getName())) {
@@ -294,7 +294,7 @@ public class NodeLabel extends JPanel implements SelectionListener,
         text.setText("");
         currentText = newText + window.getName();
         styliser.addStyledString((StyledDocument) text.getDocument(),
-                new String[] {newText, window.getName(), });
+                new String[]{newText, window.getName(),});
     }
 
 }

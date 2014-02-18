@@ -33,9 +33,9 @@ public class XmppLocalClientInfo extends XmppClientInfo implements LocalClientIn
      * Creates a new XMPP Client Info object with the specified details.
      *
      * @param parser The parser that owns this client info object
-     * @param nick The nickname of the user this object represents
-     * @param user The username of the user this object represents
-     * @param host The hostname of the user this object represents
+     * @param nick   The nickname of the user this object represents
+     * @param user   The username of the user this object represents
+     * @param host   The hostname of the user this object represents
      */
     public XmppLocalClientInfo(final XmppParser parser, final String nick,
             final String user, final String host) {

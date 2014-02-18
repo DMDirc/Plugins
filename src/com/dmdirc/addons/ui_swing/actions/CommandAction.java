@@ -35,27 +35,24 @@ import javax.swing.AbstractAction;
 public class CommandAction extends AbstractAction {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 2;
-
     /** Command parser. */
     private final CommandParser parser;
-
     /** Window. */
     private final transient Window window;
-
     /** Command. */
     private final String command;
 
     /**
      * Creates a new instance of CommandAction.
      *
-     * @param parser Command parser
-     * @param window Window
-     * @param name Command name
+     * @param parser  Command parser
+     * @param window  Window
+     * @param name    Command name
      * @param command Command to execute
      */
     public CommandAction(final CommandParser parser, final Window window,

@@ -42,35 +42,32 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * This class replaces the ChannelHandler in the core to allow intercepting
- * callbacks from the parser.
+ * This class replaces the ChannelHandler in the core to allow intercepting callbacks from the
+ * parser.
  *
  * This allows us to hide them from the core and send faked onullnes instead.
  *
  * @author shane
  */
 public class RelayChannelHandler implements ChannelMessageListener {
+
     /** My Channel. */
     private final Channel myChannel;
-
     /** Core channel handler. */
     private final ChannelEventHandler coreChannelHandler;
-
     /** Plugin that owns this RelayChannelHandler. */
     private final RelayBotPlugin myPlugin;
-
     /** Known ChannelClients. */
     private final Map<String, IRCChannelClientInfo> channelClients = new HashMap<>();
-
     /** The controller to read/write settings with. */
     private final IdentityController identityController;
 
     /**
      * Create a new RelayChannelHandler.
      *
-     * @param myPlugin Parent plugin
+     * @param myPlugin           Parent plugin
      * @param identityController Identity controller to read settings from
-     * @param myChannel channel to hax!
+     * @param myChannel          channel to hax!
      */
     public RelayChannelHandler(
             final RelayBotPlugin myPlugin,
@@ -86,7 +83,8 @@ public class RelayChannelHandler implements ChannelMessageListener {
             final Field field = myChannel.getClass().getDeclaredField("eventHandler");
             field.setAccessible(true);
             ceh = (ChannelEventHandler) field.get(myChannel);
-        } catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException ex) {
+        } catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException |
+                SecurityException ex) {
             ceh = null;
         }
 
@@ -101,14 +99,14 @@ public class RelayChannelHandler implements ChannelMessageListener {
         }
     }
 
-
     /**
      * Get a ChannelClient object for the given nick@server.
      *
-     * @param channel Channel
-     * @param date Date for event
-     * @param nick Nickname to get channel client for.
+     * @param channel       Channel
+     * @param date          Date for event
+     * @param nick          Nickname to get channel client for.
      * @param sendJoinIfNew Send join if new client seen
+     *
      * @return Requested ChannelClient Info.
      */
     private IRCChannelClientInfo getChannelClient(final ChannelInfo channel,
@@ -119,8 +117,8 @@ public class RelayChannelHandler implements ChannelMessageListener {
             if (!channelClients.containsKey(storeName)) {
                 final RelayClientInfo client = new RelayClientInfo(channel
                         .getParser(), nick);
-                final IRCChannelClientInfo newChannelClient
-                        = new IRCChannelClientInfo((IRCParser) channel
+                final IRCChannelClientInfo newChannelClient = new IRCChannelClientInfo(
+                        (IRCParser) channel
                         .getParser(), client, channel);
                 colourClient(newChannelClient);
 
@@ -144,7 +142,7 @@ public class RelayChannelHandler implements ChannelMessageListener {
      * Remove a stored ChannelClient.
      *
      * @param channel Channel
-     * @param nick Nickname to get channel client for.
+     * @param nick    Nickname to get channel client for.
      */
     private void removeChannelClient(final ChannelInfo channel,
             final String nick) {
@@ -159,7 +157,7 @@ public class RelayChannelHandler implements ChannelMessageListener {
      * Rename a stored ChannelClient.
      *
      * @param channelClient ChannelClient
-     * @param newNick new Nickname
+     * @param newNick       new Nickname
      */
     private void renameChannelClient(final IRCChannelClientInfo channelClient,
             final String newNick) {
@@ -206,10 +204,10 @@ public class RelayChannelHandler implements ChannelMessageListener {
     }
 
     /**
-    * Colour a client as needed.
-    *
-    * @param channelClient Client to colour
-    */
+     * Colour a client as needed.
+     *
+     * @param channelClient Client to colour
+     */
     private void colourClient(final ChannelClientInfo channelClient) {
         // Use nick colour plugin to colour the client if available.
         final PluginInfo nickColour = myPlugin.getPluginManager()
@@ -242,16 +240,15 @@ public class RelayChannelHandler implements ChannelMessageListener {
         client.setShowFullNickname(oldValue);
     }
 
-
     /**
      * Handle the IRCParsers incoming message.
      *
-     * @param parser Parser that sent the message
-     * @param date Date for event
-     * @param channel Channel the message went to
+     * @param parser        Parser that sent the message
+     * @param date          Date for event
+     * @param channel       Channel the message went to
      * @param channelClient Client who send the message
-     * @param message Message content
-     * @param host Host of client
+     * @param message       Message content
+     * @param host          Host of client
      */
     @Override
     public void onChannelMessage(final Parser parser, final Date date,
@@ -291,8 +288,8 @@ public class RelayChannelHandler implements ChannelMessageListener {
                 final String[] newBits = bits[1].split(" ");
 
                 if (newBits.length > 2) {
-                    final IRCChannelClientInfo newChannelClient
-                            = getChannelClient(channel, date, newBits[0],
+                    final IRCChannelClientInfo newChannelClient = getChannelClient(channel, date,
+                            newBits[0],
                             joinNew);
 
                     if (newBits[2].equalsIgnoreCase("joined")) {
@@ -334,8 +331,8 @@ public class RelayChannelHandler implements ChannelMessageListener {
                                 newBits, 7, newBits.length - 1, " ") : "()";
                         reason = reason.substring(1, reason.length() - 1);
 
-                        final IRCChannelClientInfo kickingChannelClient
-                                = (newBits.length > 6) ? getChannelClient(
+                        final IRCChannelClientInfo kickingChannelClient = (newBits.length > 6)
+                                ? getChannelClient(
                                 channel, date, newBits[6], joinNew) : null;
 
                         coreChannelHandler.onChannelKick(parser, date, channel,
@@ -374,18 +371,23 @@ public class RelayChannelHandler implements ChannelMessageListener {
     /**
      * Merge the given bits.
      *
-     * @param bits Bits to merge
-     * @param start Start
-     * @param end end
+     * @param bits   Bits to merge
+     * @param start  Start
+     * @param end    end
      * @param joiner What to use to join them
+     *
      * @return Joined bits.
      */
     private String mergeBits(final String[] bits, final int start,
             final int end, final String joiner) {
         final StringBuilder builder = new StringBuilder();
         for (int i = start; i <= end; i++) {
-            if (bits.length < i) { break; }
-            if (i != start) { builder.append(joiner); }
+            if (bits.length < i) {
+                break;
+            }
+            if (i != start) {
+                builder.append(joiner);
+            }
             builder.append(bits[i]);
         }
 
@@ -393,11 +395,12 @@ public class RelayChannelHandler implements ChannelMessageListener {
     }
 
     /**
-     * Send an onChannelNames() event for this channel.
-     * This will cause all remote clients to vanish from the nicklist.
+     * Send an onChannelNames() event for this channel. This will cause all remote clients to vanish
+     * from the nicklist.
      */
     public void updateNames() {
         coreChannelHandler.onChannelGotNames(myChannel.getConnection().getParser(),
                 new Date(), myChannel.getChannelInfo());
     }
+
 }

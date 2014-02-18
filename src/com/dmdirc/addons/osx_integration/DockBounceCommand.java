@@ -42,9 +42,7 @@ public class DockBounceCommand extends Command {
     public static final BaseCommandInfo INFO = new BaseCommandInfo(
             "dockbounce",
             "dockbounce - bounce the dock icon on OS X",
-            CommandType.TYPE_GLOBAL
-    );
-
+            CommandType.TYPE_GLOBAL);
     /**
      * The current UI's Apple-specific library.
      */
@@ -54,7 +52,7 @@ public class DockBounceCommand extends Command {
      * Creates an instance of {@link DockBounceCommand}.
      *
      * @param controller The controller to use for command information.
-     * @param apple The UI wrapper for Apple-specific things
+     * @param apple      The UI wrapper for Apple-specific things
      */
     public DockBounceCommand(final CommandController controller, final Apple apple) {
         super(controller);
@@ -69,4 +67,5 @@ public class DockBounceCommand extends Command {
             final CommandContext context) {
         apple.requestUserAttention(false);
     }
+
 }

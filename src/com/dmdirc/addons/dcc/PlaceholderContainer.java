@@ -45,9 +45,9 @@ public class PlaceholderContainer extends FrameContainer {
     /**
      * Creates a placeholder DCC frame.
      *
-     * @param plugin The plugin which owns this placeholder
-     * @param config Config manager
-     * @param mainFrame Frame that will own new dialogs.
+     * @param plugin     The plugin which owns this placeholder
+     * @param config     Config manager
+     * @param mainFrame  Frame that will own new dialogs.
      * @param urlBuilder The URL builder to use when finding icons.
      */
     public PlaceholderContainer(
@@ -80,10 +80,9 @@ public class PlaceholderContainer extends FrameContainer {
                     "Closing this window will cause all existing DCCs "
                     + "to terminate, are you sure you want to do this?") {
                 /**
-                 * A version number for this class. It should be changed
-                 * whenever the class structure is changed (or anything else
-                 * that would prevent serialized objects being unserialized
-                 * with the new class).
+                 * A version number for this class. It should be changed whenever the class
+                 * structure is changed (or anything else that would prevent serialized objects
+                 * being unserialized with the new class).
                  */
                 private static final long serialVersionUID = 1;
 
@@ -122,4 +121,5 @@ public class PlaceholderContainer extends FrameContainer {
             close();
         }
     }
+
 }

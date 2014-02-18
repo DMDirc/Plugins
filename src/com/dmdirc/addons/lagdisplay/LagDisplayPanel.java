@@ -19,6 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 package com.dmdirc.addons.lagdisplay;
 
 import com.dmdirc.addons.ui_swing.components.statusbar.StatusbarPopupPanel;
@@ -29,16 +30,16 @@ import javax.inject.Singleton;
 import javax.swing.JLabel;
 
 /**
- * Shows the user's lag in the status bar, and reveals details of all servers
- * when the user hovers over it.
+ * Shows the user's lag in the status bar, and reveals details of all servers when the user hovers
+ * over it.
  */
 @Singleton
 public class LagDisplayPanel extends StatusbarPopupPanel<JLabel> {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 2;
     /** Factory of dialogs. */
@@ -60,4 +61,5 @@ public class LagDisplayPanel extends StatusbarPopupPanel<JLabel> {
     protected StatusbarPopupWindow getWindow() {
         return dialogFactory.getServerInfoDialog(this);
     }
+
 }

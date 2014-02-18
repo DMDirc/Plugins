@@ -75,8 +75,8 @@ public class ErrorPanel extends StatusbarPopupPanel<JLabel> implements
      * Creates a new ErrorPanel for the specified status bar.
      *
      * @param controller Swing controller
-     * @param mainFrame Main frame
-     * @param statusBar Status bar
+     * @param mainFrame  Main frame
+     * @param statusBar  Status bar
      */
     public ErrorPanel(final SwingController controller,
             final MainFrame mainFrame, final SwingStatusBar statusBar) {
@@ -133,7 +133,6 @@ public class ErrorPanel extends StatusbarPopupPanel<JLabel> implements
     /** Checks all the errors for the most significant error. */
     private void checkErrors() {
         SwingUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -144,8 +143,7 @@ public class ErrorPanel extends StatusbarPopupPanel<JLabel> implements
                     setVisible(false);
                 } else {
                     for (final ProgramError error : errors) {
-                        if (errorLevel == null ||
-                                !error.getLevel().moreImportant(errorLevel)) {
+                        if (errorLevel == null || !error.getLevel().moreImportant(errorLevel)) {
                             errorLevel = error.getLevel();
                             label.setIcon(controller.getIconManager()
                                     .getIcon(errorLevel.getIcon()));

@@ -34,9 +34,9 @@ import javax.swing.border.EtchedBorder;
 class SidelessEtchedBorder extends EtchedBorder {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 1;
     /** Side to not paint. */
@@ -46,6 +46,7 @@ class SidelessEtchedBorder extends EtchedBorder {
      * Specifies which side to not include.
      */
     public enum Side {
+
         /** Top border. */
         TOP,
         /** Right hand bortder. */
@@ -56,6 +57,7 @@ class SidelessEtchedBorder extends EtchedBorder {
         LEFT,
         /* Draw all borders. */
         NONE,
+
     }
 
     /**
@@ -72,7 +74,7 @@ class SidelessEtchedBorder extends EtchedBorder {
      * Creates a new sideless etched border.
      *
      * @param etchType What etch type to use
-     * @param side Which side do you wish to leave out
+     * @param side     Which side do you wish to leave out
      */
     public SidelessEtchedBorder(final int etchType, final Side side) {
         super(etchType);
@@ -83,8 +85,8 @@ class SidelessEtchedBorder extends EtchedBorder {
      * Creates a new sideless etched border.
      *
      * @param highlight Highlight colour to use
-     * @param shadow Shadow colour to use
-     * @param side Which side do you wish to leave out
+     * @param shadow    Shadow colour to use
+     * @param side      Which side do you wish to leave out
      */
     public SidelessEtchedBorder(final Color highlight, final Color shadow,
             final Side side) {
@@ -95,10 +97,10 @@ class SidelessEtchedBorder extends EtchedBorder {
     /**
      * Creates a new sideless etched border.
      *
-     * @param etchType What etch type to use
+     * @param etchType  What etch type to use
      * @param highlight Highlight colour to use
-     * @param shadow Shadow colour to use
-     * @param side Which side do you wish to leave out
+     * @param shadow    Shadow colour to use
+     * @param side      Which side do you wish to leave out
      */
     public SidelessEtchedBorder(final int etchType, final Color highlight,
             final Color shadow, final Side side) {
@@ -113,7 +115,7 @@ class SidelessEtchedBorder extends EtchedBorder {
         g.translate(x, y);
         g.setColor(etchType == LOWERED ? getShadowColor(c) : getHighlightColor(c));
         if (!side.equals(Side.TOP)) {
-              g.drawLine(0, 0, width - 1, 0);
+            g.drawLine(0, 0, width - 1, 0);
         }
         if (!side.equals(Side.BOTTOM)) {
             g.drawLine(0, height - 2, width, height - 2);
@@ -133,4 +135,5 @@ class SidelessEtchedBorder extends EtchedBorder {
         }
         g.translate(-x, -y);
     }
+
 }

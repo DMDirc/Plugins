@@ -19,6 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 package com.dmdirc.addons.osd;
 
 /**
@@ -30,7 +31,7 @@ package com.dmdirc.addons.osd;
 public enum OsdPolicy {
 
     /** Spawn new windows below old ones. */
-    DOWN ("Place new windows below old ones", true) {
+    DOWN("Place new windows below old ones", true) {
         /** {@inheritDoc} */
         @Override
         public int getYPosition(final OsdManager osdManager, final int startY) {
@@ -44,7 +45,7 @@ public enum OsdPolicy {
         }
     },
     /** Spawn new windows above old ones. */
-    UP ("Place new windows above old ones", true) {
+    UP("Place new windows above old ones", true) {
         /** {@inheritDoc} */
         @Override
         public int getYPosition(final OsdManager osdManager, final int startY) {
@@ -58,7 +59,7 @@ public enum OsdPolicy {
         }
     },
     /** Close old OSD windows and display the new windows. */
-    CLOSE ("Close existing windows", false) {
+    CLOSE("Close existing windows", false) {
         /** {@inheritDoc} */
         @Override
         public int getYPosition(final OsdManager osdManager, final int startY) {
@@ -67,20 +68,17 @@ public enum OsdPolicy {
         }
     },
     /** Place new windows on top of old windows. */
-    ONTOP ("Place new windows on top of existing windows", false) {
+    ONTOP("Place new windows on top of existing windows", false) {
         /** {@inheritDoc} */
         @Override
         public int getYPosition(final OsdManager osdManager, final int startY) {
             return startY;
         }
     };
-
     /** The spacing between the windows. */
     private static final int WINDOW_GAP = 5;
-
     /** Description of policy. */
     private final String description;
-
     /** Does policy need to change window location */
     private final boolean changesPosition;
 
@@ -97,15 +95,14 @@ public enum OsdPolicy {
     /**
      * Calculates the Y position for new windows according to this policy.
      * <p>
-     * In order to ensure that windows are displayed at the correct position,
-     * the calling party MUST ensure that the window list is not altered between
-     * this method's invocation and the time at which the window is displayed.
-     * If the window list is altered, multiple windows may appear on top of
-     * each other instead of stacking correctly, or there may be gaps in up/down
-     * policy layouts.
+     * In order to ensure that windows are displayed at the correct position, the calling party MUST
+     * ensure that the window list is not altered between this method's invocation and the time at
+     * which the window is displayed. If the window list is altered, multiple windows may appear on
+     * top of each other instead of stacking correctly, or there may be gaps in up/down policy
+     * layouts.
      *
      * @param osdManager OSD Manager we are using
-     * @param startY Value of startY from the main config
+     * @param startY     Value of startY from the main config
      *
      * @return returns Y Value to use for new windows
      */
@@ -118,7 +115,9 @@ public enum OsdPolicy {
      */
     public boolean changesPosition() {
         return changesPosition;
-    };
+    }
+
+    ;
 
     /**
      * Return a description of what each policy does.
@@ -128,4 +127,5 @@ public enum OsdPolicy {
     public String getDescription() {
         return description;
     }
+
 }

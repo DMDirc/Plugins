@@ -29,35 +29,36 @@ package com.dmdirc.addons.nowplaying;
  * @since 0.6.3m1
  */
 public enum MediaSourceState {
-    /** Media Source is closed. */
-    CLOSED ("Closed"),
-    /** Media Source is stopped. */
-    STOPPED ("Stopped"),
-    /** Media Source is paused. */
-    PAUSED ("Paused"),
-    /** Media Source is playing. */
-    PLAYING ("Playing"),
-    /** Media Source is giving an unknown state. */
-    NOTKNOWN ("Unknown");
 
+    /** Media Source is closed. */
+    CLOSED("Closed"),
+    /** Media Source is stopped. */
+    STOPPED("Stopped"),
+    /** Media Source is paused. */
+    PAUSED("Paused"),
+    /** Media Source is playing. */
+    PLAYING("Playing"),
+    /** Media Source is giving an unknown state. */
+    NOTKNOWN("Unknown");
     /** Nice name for this state. */
     final String niceName;
 
     /**
-    * Create a new MediaSourceState
-    *
-    * @param niceName Nice name for this state.
-    */
+     * Create a new MediaSourceState
+     *
+     * @param niceName Nice name for this state.
+     */
     MediaSourceState(final String niceName) {
         this.niceName = niceName;
     }
 
     /**
-    * Get the nice name for this state.
-    *
-    * @return This state's nice name
-    */
+     * Get the nice name for this state.
+     *
+     * @return This state's nice name
+     */
     public String getNiceName() {
         return niceName;
     }
+
 }

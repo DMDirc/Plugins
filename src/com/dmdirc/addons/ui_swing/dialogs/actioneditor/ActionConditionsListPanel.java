@@ -65,7 +65,7 @@ public class ActionConditionsListPanel extends JPanel implements
      * Instantiates the panel.
      *
      * @param iconManager Icon manager
-     * @param treePanel Condition tree panel.
+     * @param treePanel   Condition tree panel.
      */
     public ActionConditionsListPanel(final IconManager iconManager,
             final ActionConditionsTreePanel treePanel) {
@@ -77,8 +77,8 @@ public class ActionConditionsListPanel extends JPanel implements
      * Instantiates the panel.
      *
      * @param iconManager Icon manager
-     * @param trigger Action trigger
-     * @param treePanel Condition tree panel.
+     * @param trigger     Action trigger
+     * @param treePanel   Condition tree panel.
      */
     public ActionConditionsListPanel(final IconManager iconManager,
             final ActionType trigger, final ActionConditionsTreePanel treePanel) {
@@ -90,9 +90,9 @@ public class ActionConditionsListPanel extends JPanel implements
      * Instantiates the panel.
      *
      * @param iconManager Icon manager to retrieve icons
-     * @param trigger Action trigger
-     * @param conditions List of existing conditions;
-     * @param treePanel Condition tree panel.
+     * @param trigger     Action trigger
+     * @param conditions  List of existing conditions;
+     * @param treePanel   Condition tree panel.
      */
     public ActionConditionsListPanel(final IconManager iconManager,
             final ActionType trigger,
@@ -283,4 +283,5 @@ public class ActionConditionsListPanel extends JPanel implements
         firePropertyChange("validationResult", validates, pass);
         validates = pass;
     }
+
 }

@@ -31,5 +31,4 @@ import dagger.Module;
  */
 @Module(injects = {WindowFlashingManager.class, FlashWindow.class}, addsTo = SwingModule.class)
 public class WindowFlashingModule {
-
 }

@@ -42,25 +42,22 @@ import javax.swing.JPanel;
 public class PingHistoryPanel extends JPanel {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 1;
-
     /** The plugin that this panel is for. */
     protected final LagDisplayPlugin plugin;
-
     /** The history that we're graphing. */
     protected final RollingList<Long> history;
-
     /** The maximum ping value. */
     protected long maximum = 0L;
 
     /**
      * Creates a new history panel for the specified plugin.
      *
-     * @param plugin The plugin that owns this panel
+     * @param plugin    The plugin that owns this panel
      * @param mainFrame Swing main frame
      */
     public PingHistoryPanel(final LagDisplayPlugin plugin,

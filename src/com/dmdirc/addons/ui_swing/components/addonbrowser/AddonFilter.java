@@ -44,14 +44,14 @@ public class AddonFilter extends RowFilter<DefaultTableModel, Integer> {
     /**
      * Creates a new addon filter.
      *
-     * @param verifiedBox Verified checkbox
-     * @param unverifiedBox Unverified checkbox
-     * @param installedBox Installed checkbox
+     * @param verifiedBox     Verified checkbox
+     * @param unverifiedBox   Unverified checkbox
+     * @param installedBox    Installed checkbox
      * @param notinstalledBox Not installed checkbox
-     * @param pluginsBox Plugins checkbox
-     * @param themesBox Themes checkbox
-     * @param actionsBox Actions checkbox
-     * @param searchBox Search field
+     * @param pluginsBox      Plugins checkbox
+     * @param themesBox       Themes checkbox
+     * @param actionsBox      Actions checkbox
+     * @param searchBox       Search field
      */
     public AddonFilter(final ButtonModel verifiedBox,
             final ButtonModel unverifiedBox, final ButtonModel installedBox,
@@ -73,7 +73,7 @@ public class AddonFilter extends RowFilter<DefaultTableModel, Integer> {
     /** {@inheritDoc} */
     @Override
     public boolean include(
-        final Entry<? extends DefaultTableModel, ? extends Integer> entry) {
+            final Entry<? extends DefaultTableModel, ? extends Integer> entry) {
         final AddonInfo info = ((AddonInfoLabel) entry.getModel().getValueAt(
                 entry.getIdentifier(), 0)).getAddonInfo();
         return !((!verifiedBox.isSelected() && info.isVerified())
@@ -89,4 +89,5 @@ public class AddonFilter extends RowFilter<DefaultTableModel, Integer> {
                 || (!searchBox.getText().isEmpty()
                 && !info.matches(searchBox.getText())));
     }
+
 }

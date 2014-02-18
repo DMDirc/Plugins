@@ -47,8 +47,8 @@ public final class LineInfo {
     /**
      * Creates a new instance of LineInfo.
      *
-     * @param line Line number
-     * @param part line wrap number
+     * @param line  Line number
+     * @param part  line wrap number
      * @param index Position index
      */
     public LineInfo(final int line, final int part, final int index) {
@@ -117,4 +117,5 @@ public final class LineInfo {
         return "LineInfo[line=" + line + ", part=" + part + ", index="
                 + index + "]";
     }
+
 }

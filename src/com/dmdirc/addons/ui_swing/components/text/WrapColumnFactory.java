@@ -43,4 +43,5 @@ public class WrapColumnFactory implements ViewFactory {
         // default to text display
         return new LabelView(elem);
     }
+
 }

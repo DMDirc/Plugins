@@ -25,8 +25,8 @@ package com.dmdirc.addons.ui_swing.components;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.interfaces.AwayStateListener;
-import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.interfaces.FrameCloseListener;
+import com.dmdirc.interfaces.config.ConfigChangeListener;
 
 import javax.swing.JLabel;
 
@@ -37,9 +37,9 @@ public class AwayLabel extends JLabel implements ConfigChangeListener,
         AwayStateListener, FrameCloseListener {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 2;
     /** awayindicator string for compiler optimisation. */
@@ -80,7 +80,6 @@ public class AwayLabel extends JLabel implements ConfigChangeListener,
                 .getOptionBool("ui", AWAY_INDICATOR);
         if (!useAwayIndicator) {
             UIUtilities.invokeLater(new Runnable() {
-
                 /** {@inheritDoc} */
                 @Override
                 public void run() {
@@ -94,7 +93,6 @@ public class AwayLabel extends JLabel implements ConfigChangeListener,
     @Override
     public void onAway(final String reason) {
         UIUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -109,7 +107,6 @@ public class AwayLabel extends JLabel implements ConfigChangeListener,
     @Override
     public void onBack() {
         UIUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -127,4 +124,5 @@ public class AwayLabel extends JLabel implements ConfigChangeListener,
             container.getConnection().removeAwayStateListener(this);
         }
     }
+
 }

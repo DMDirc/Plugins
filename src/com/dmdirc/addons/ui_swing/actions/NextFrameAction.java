@@ -34,9 +34,9 @@ import javax.swing.AbstractAction;
 public class NextFrameAction extends AbstractAction {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 1;
     /** Tree scroller used to go up and down the frame manager. */
@@ -61,4 +61,5 @@ public class NextFrameAction extends AbstractAction {
     public void actionPerformed(final ActionEvent evt) {
         manager.changeFocus(false);
     }
+
 }

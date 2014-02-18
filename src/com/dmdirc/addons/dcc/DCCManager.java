@@ -101,18 +101,18 @@ public class DCCManager implements ActionListener {
     /**
      * Creates a new instance of this plugin.
      *
-     * @param mainFrame The main frame that will own any new windows.
-     * @param pluginInfo This plugin's plugin info
-     * @param identityController The Identity controller that provides the current config
-     * @param globalConfig The configuration to read settings from.
-     * @param commandController Command controller to register commands
-     * @param messageSinkManager The sink manager to use to despatch messages.
-     * @param windowManager Window Management
-     * @param tabCompleterFactory The factory to use for tab completers.
-     * @param windowFactory The window factory to register the DCC implementations with.
+     * @param mainFrame             The main frame that will own any new windows.
+     * @param pluginInfo            This plugin's plugin info
+     * @param identityController    The Identity controller that provides the current config
+     * @param globalConfig          The configuration to read settings from.
+     * @param commandController     Command controller to register commands
+     * @param messageSinkManager    The sink manager to use to despatch messages.
+     * @param windowManager         Window Management
+     * @param tabCompleterFactory   The factory to use for tab completers.
+     * @param windowFactory         The window factory to register the DCC implementations with.
      * @param componentFrameFactory Factory to use to create new component frames for DCC windows.
-     * @param urlBuilder The URL builder to use when finding icons.
-     * @param baseDirectory The directory to create a downloads directory within.
+     * @param urlBuilder            The URL builder to use when finding icons.
+     * @param baseDirectory         The directory to create a downloads directory within.
      */
     @Inject
     public DCCManager(
@@ -141,19 +141,19 @@ public class DCCManager implements ActionListener {
         windowFactory.registerImplementation(
                 new HashSet<>(Arrays.asList("com.dmdirc.addons.dcc.ui.PlaceholderPanel")),
                 new SwingWindowFactory.WindowProvider() {
-                    @Override
-                    public TextFrame getWindow(final FrameContainer container) {
-                        return componentFrameFactory.getComponentFrame(container);
-                    }
-                });
+            @Override
+            public TextFrame getWindow(final FrameContainer container) {
+                return componentFrameFactory.getComponentFrame(container);
+            }
+        });
         windowFactory.registerImplementation(
                 new HashSet<>(Arrays.asList("com.dmdirc.addons.dcc.ui.TransferPanel")),
                 new SwingWindowFactory.WindowProvider() {
-                    @Override
-                    public TextFrame getWindow(final FrameContainer container) {
-                        return componentFrameFactory.getComponentFrame(container);
-                    }
-                });
+            @Override
+            public TextFrame getWindow(final FrameContainer container) {
+                return componentFrameFactory.getComponentFrame(container);
+            }
+        });
 
         final ConfigProvider defaults = identityController.getAddonSettings();
         defaults.setOption(domain, "receive.savelocation",
@@ -165,22 +165,20 @@ public class DCCManager implements ActionListener {
     }
 
     /**
-     * Ask a question, if the answer is the answer required, then recall
-     * handleProcessEvent.
+     * Ask a question, if the answer is the answer required, then recall handleProcessEvent.
      *
-     * @param question Question to ask
-     * @param title Title of question dialog
+     * @param question      Question to ask
+     * @param title         Title of question dialog
      * @param desiredAnswer Answer required
-     * @param type Actiontype to pass back
-     * @param format StringBuffer to pass back
-     * @param arguments arguments to pass back
+     * @param type          Actiontype to pass back
+     * @param format        StringBuffer to pass back
+     * @param arguments     arguments to pass back
      */
     public void askQuestion(final String question, final String title,
             final int desiredAnswer, final ActionType type,
             final StringBuffer format, final Object... arguments) {
         // New thread to ask the question in to stop us locking the UI
         new Thread(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -190,7 +188,6 @@ public class DCCManager implements ActionListener {
                     handleProcessEvent(type, format, true, arguments);
                 }
             }
-
         }, "QuestionThread: " + title).start();
     }
 
@@ -198,16 +195,15 @@ public class DCCManager implements ActionListener {
      * Ask the location to save a file, then start the download.
      *
      * @param nickname Person this dcc is from.
-     * @param send The DCCSend to save for.
-     * @param parser The parser this send was received on
-     * @param reverse Is this a reverse dcc?
-     * @param token Token used in reverse dcc.
+     * @param send     The DCCSend to save for.
+     * @param parser   The parser this send was received on
+     * @param reverse  Is this a reverse dcc?
+     * @param token    Token used in reverse dcc.
      */
     public void saveFile(final String nickname, final DCCTransfer send,
             final Parser parser, final boolean reverse, final String token) {
         // New thread to ask the user where to save in to stop us locking the UI
         new Thread(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -224,7 +220,7 @@ public class DCCManager implements ActionListener {
                     return;
                 }
                 send.setFileName(jc.getSelectedFile().getPath());
-                if (!handleExists(send, jc, nickname, parser,reverse, token)) {
+                if (!handleExists(send, jc, nickname, parser, reverse, token)) {
                     return;
                 }
                 final boolean resume = handleResume(jc);
@@ -268,19 +264,18 @@ public class DCCManager implements ActionListener {
                     }
                 }
             }
-
         }, "saveFileThread: " + send.getShortFileName()).start();
     }
 
     /**
      * Checks if the selected file exists and prompts the user as required.
      *
-     * @param send DCC Transfer
-     * @param jc File chooser
+     * @param send     DCC Transfer
+     * @param jc       File chooser
      * @param nickname Remote nickname
-     * @param parser Parser
-     * @param reverse Reverse DCC?
-     * @param token DCC token
+     * @param parser   Parser
+     * @param reverse  Reverse DCC?
+     * @param token    DCC token
      *
      * @return true if the user wants to continue, false if they wish to abort
      */
@@ -332,21 +327,20 @@ public class DCCManager implements ActionListener {
      * Sets up and display a file chooser.
      *
      * @param send DCCTransfer object sending the file
-     * @param jc File chooser
+     * @param jc   File chooser
      *
-     * @return   the return state of the file chooser on popdown:
+     * @return the return state of the file chooser on popdown:
      * <ul>
      * <li>JFileChooser.CANCEL_OPTION
      * <li>JFileChooser.APPROVE_OPTION
-     * <li>JFileChooser.ERROR_OPTION if an error occurs or the
-     *                               dialog is dismissed
+     * <li>JFileChooser.ERROR_OPTION if an error occurs or the dialog is dismissed
      * </ul>
      */
     private int showFileChooser(final DCCTransfer send, final JFileChooser jc) {
         jc.setDialogTitle("Save " + send.getShortFileName() + " As - DMDirc");
-                jc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-                jc.setMultiSelectionEnabled(false);
-                jc.setSelectedFile(new File(send.getFileName()));
+        jc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        jc.setMultiSelectionEnabled(false);
+        jc.setSelectedFile(new File(send.getFileName()));
         return jc.showSaveDialog(mainFrame);
     }
 
@@ -358,11 +352,11 @@ public class DCCManager implements ActionListener {
     }
 
     /**
-     * Make the given DCC start listening.
-     * This will either call dcc.listen() or dcc.listen(startPort, endPort)
-     * depending on config.
+     * Make the given DCC start listening. This will either call dcc.listen() or
+     * dcc.listen(startPort, endPort) depending on config.
      *
      * @param dcc DCC to start listening.
+     *
      * @return True if Socket was opened.
      */
     protected boolean listen(final DCC dcc) {
@@ -387,9 +381,9 @@ public class DCCManager implements ActionListener {
     /**
      * Process an event of the specified type.
      *
-     * @param type The type of the event to process
-     * @param format Format of messages that are about to be sent. (May be null)
-     * @param dontAsk Don't ask any questions, assume yes.
+     * @param type      The type of the event to process
+     * @param format    Format of messages that are about to be sent. (May be null)
+     * @param dontAsk   Don't ask any questions, assume yes.
      * @param arguments The arguments for the event
      */
     public void handleProcessEvent(final ActionType type,
@@ -421,10 +415,10 @@ public class DCCManager implements ActionListener {
     /**
      * Handles a DCC chat request.
      *
-     * @param type The type of the event to process
-     * @param format Format of messages that are about to be sent. (May be null)
-     * @param dontAsk Don't ask any questions, assume yes.
-     * @param ctcpData CTCP data bits
+     * @param type      The type of the event to process
+     * @param format    Format of messages that are about to be sent. (May be null)
+     * @param dontAsk   Don't ask any questions, assume yes.
+     * @param ctcpData  CTCP data bits
      * @param arguments The arguments for the event
      */
     private void handleChat(final ActionType type, final StringBuffer format,
@@ -464,10 +458,10 @@ public class DCCManager implements ActionListener {
     /**
      * Handles a DCC send request.
      *
-     * @param type The type of the event to process
-     * @param format Format of messages that are about to be sent. (May be null)
-     * @param dontAsk Don't ask any questions, assume yes.
-     * @param ctcpData CTCP data bits
+     * @param type      The type of the event to process
+     * @param format    Format of messages that are about to be sent. (May be null)
+     * @param dontAsk   Don't ask any questions, assume yes.
+     * @param ctcpData  CTCP data bits
      * @param arguments The arguments for the event
      */
     private void handleSend(final ActionType type, final StringBuffer format,
@@ -578,7 +572,7 @@ public class DCCManager implements ActionListener {
     /**
      * Handles a DCC chat request.
      *
-     * @param ctcpData CTCP data bits
+     * @param ctcpData  CTCP data bits
      * @param arguments The arguments for the event
      */
     private void handleReceive(final String[] ctcpData,
@@ -613,8 +607,8 @@ public class DCCManager implements ActionListener {
         try {
             port = Integer.parseInt(ctcpData[++i]);
             position = Integer.parseInt(ctcpData[++i]);
-            } catch (NumberFormatException nfe) {
-                return;
+        } catch (NumberFormatException nfe) {
+            return;
         }
         final String token = (ctcpData.length - 1 > i) ? " "
                 + ctcpData[++i] : "";
@@ -630,7 +624,7 @@ public class DCCManager implements ActionListener {
                 final Parser parser = ((Connection) arguments[0]).getParser();
                 final String nick = ((ClientInfo) arguments[1]).getNickname();
                 if (ctcpData[0].equalsIgnoreCase("resume")) {
-                    parser.sendCTCP(nick, "DCC", "ACCEPT "+ ((quoted) ? "\""
+                    parser.sendCTCP(nick, "DCC", "ACCEPT " + ((quoted) ? "\""
                             + filename + "\"" : filename) + " " + port + " "
                             + send.setFileStart(position) + token);
                 } else {
@@ -662,8 +656,6 @@ public class DCCManager implements ActionListener {
             }
         }
     }
-
-
 
     /**
      * Retrieves the container for the placeholder.
@@ -736,6 +728,7 @@ public class DCCManager implements ActionListener {
      * Get the IP Address we should send as our listening IP.
      *
      * @param parser Parser the IRC Parser where this dcc is initiated
+     *
      * @return The IP Address we should send as our listening IP.
      */
     public String getListenIP(final Parser parser) {

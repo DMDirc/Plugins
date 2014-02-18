@@ -32,9 +32,9 @@ import javax.swing.DefaultComboBoxModel;
 public class VetoableComboBoxModel<T> extends DefaultComboBoxModel<T> {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 1;
     /** Listener list. */
@@ -48,10 +48,9 @@ public class VetoableComboBoxModel<T> extends DefaultComboBoxModel<T> {
     }
 
     /**
-     * Constructs a DefaultComboBoxModel object initialized with
-     * an array of objects.
+     * Constructs a DefaultComboBoxModel object initialized with an array of objects.
      *
-     * @param items  an array of Object objects
+     * @param items an array of Object objects
      */
     public VetoableComboBoxModel(final T[] items) {
         super(items);
@@ -87,9 +86,9 @@ public class VetoableComboBoxModel<T> extends DefaultComboBoxModel<T> {
     protected boolean fireVetoableSelectionChange(final Object newValue) {
         boolean result = true;
         final VetoableChangeEvent event = new VetoableChangeEvent(this, newValue);
-        for (VetoableComboBoxSelectionListener listener :
-            listeners.get(VetoableComboBoxSelectionListener.class)) {
-                result &= listener.selectionChanged(event);
+        for (VetoableComboBoxSelectionListener listener : listeners.get(
+                VetoableComboBoxSelectionListener.class)) {
+            result &= listener.selectionChanged(event);
         }
         return result;
     }
@@ -104,4 +103,5 @@ public class VetoableComboBoxModel<T> extends DefaultComboBoxModel<T> {
             super.setSelectedItem(oldItem);
         }
     }
+
 }

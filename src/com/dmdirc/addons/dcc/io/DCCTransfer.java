@@ -51,49 +51,34 @@ public class DCCTransfer extends DCC {
         SEND, RECEIVE;
 
     }
-
     /** The File transfer type for this file. */
     private TransferType transferType = TransferType.RECEIVE;
-
     /** The handlers for this DCCSend. */
     private final ListenerList handlers = new ListenerList();
-
     /** Used to send data out the socket. */
     private DataOutputStream out;
-
     /** Used to read data from the socket. */
     private DataInputStream in;
-
     /** File we are using. */
     private File transferFile;
-
     /** Used to write data to the file. */
     private DataOutputStream fileOut;
-
     /** Used to read data from the file. */
     private DataInputStream fileIn;
-
     /** Where are we starting from? */
     private int startpos;
-
     /** How big is this file? */
     private long size = -1;
-
     /** How much of this file have we read so far? */
     private long readSize;
-
     /** What is the name of the file? */
     private String filename = "";
-
     /** What is the token for this send? */
     private String token = "";
-
     /** Block Size. */
     private final int blockSize;
-
     /** Is this a turbo dcc? */
     private boolean turbo = false;
-
     private boolean active = false;
 
     /** Creates a new instance of DCCTransfer with a default block size. */
@@ -200,8 +185,7 @@ public class DCCTransfer extends DCC {
     }
 
     /**
-     * Set turbo mode on/off.
-     * Turbo mode doesn't wait for ack packets. Only relevent when sending.
+     * Set turbo mode on/off. Turbo mode doesn't wait for ack packets. Only relevent when sending.
      *
      * @param turbo True for turbo dcc, else false
      */
@@ -210,8 +194,7 @@ public class DCCTransfer extends DCC {
     }
 
     /**
-     * Is turbo mode on/off.
-     * Turbo mode doesn't wait for ack packets. Only relevent when sending.
+     * Is turbo mode on/off. Turbo mode doesn't wait for ack packets. Only relevent when sending.
      *
      * @return True for turbo dcc, else false
      */
@@ -238,8 +221,7 @@ public class DCCTransfer extends DCC {
     }
 
     /**
-     * Make a Token for this send.
-     * This token will be unique compared to all the other known sends
+     * Make a Token for this send. This token will be unique compared to all the other known sends
      *
      * @return The Token for this send.
      */
@@ -256,8 +238,9 @@ public class DCCTransfer extends DCC {
      * Find a send based on a given token.
      *
      * @param token Token to look for. (case sensitive)
-     * @return The first DCCTransfer that matches the given token.
-     *         null if none match, or token is "" or null.
+     *
+     * @return The first DCCTransfer that matches the given token. null if none match, or token is
+     *         "" or null.
      */
     public static DCCTransfer findByToken(final String token) {
         if (token == null || token.isEmpty()) {
@@ -293,8 +276,8 @@ public class DCCTransfer extends DCC {
      * Set the starting position of the file
      *
      * @param startpos Starting position
-     * @return -1 if fileIn is null or if dcc receive, else the result of
-     * fileIn.skipBytes()
+     *
+     * @return -1 if fileIn is null or if dcc receive, else the result of fileIn.skipBytes()
      */
     public int setFileStart(final int startpos) {
         this.startpos = startpos;
@@ -400,8 +383,8 @@ public class DCCTransfer extends DCC {
     /**
      * Handle the socket as a RECEIVE.
      *
-     * @return false when socket is closed (or should be closed), true will
-     * cause the method to be called again.
+     * @return false when socket is closed (or should be closed), true will cause the method to be
+     *         called again.
      */
     protected boolean handleReceive() {
         try {
@@ -445,8 +428,8 @@ public class DCCTransfer extends DCC {
     /**
      * Handle the socket as a SEND.
      *
-     * @return false when socket is closed (or should be closed), true will
-     * cause the method to be called again.
+     * @return false when socket is closed (or should be closed), true will cause the method to be
+     *         called again.
      */
     protected boolean handleSend() {
         try {

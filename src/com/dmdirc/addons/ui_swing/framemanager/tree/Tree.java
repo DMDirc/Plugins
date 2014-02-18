@@ -55,9 +55,9 @@ public class Tree extends JTree implements MouseMotionListener,
         ConfigChangeListener, MouseListener, ActionListener {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 1;
     /** Tree frame manager. */
@@ -76,8 +76,8 @@ public class Tree extends JTree implements MouseMotionListener,
     /**
      * Specialised JTree for frame manager.
      *
-     * @param manager Frame manager
-     * @param model tree model.
+     * @param manager    Frame manager
+     * @param model      tree model.
      * @param controller Swing controller
      */
     public Tree(final TreeFrameManager manager, final TreeModel model,
@@ -130,7 +130,6 @@ public class Tree extends JTree implements MouseMotionListener,
      */
     public void setTreePath(final TreePath path) {
         UIUtilities.invokeLater(new Runnable() {
-
             @Override
             public void run() {
                 setSelectionPath(path);
@@ -139,8 +138,8 @@ public class Tree extends JTree implements MouseMotionListener,
     }
 
     /**
-     * Returns the node for the specified location, returning null if rollover
-     * is disabled or there is no node at the specified location.
+     * Returns the node for the specified location, returning null if rollover is disabled or there
+     * is no node at the specified location.
      *
      * @param x x coordiantes
      * @param y y coordiantes
@@ -263,6 +262,7 @@ public class Tree extends JTree implements MouseMotionListener,
 
     /**
      * Processes every mouse button event to check for a popup trigger.
+     *
      * @param e mouse event
      */
     public void processMouseEvents(final MouseEvent e) {
@@ -276,7 +276,7 @@ public class Tree extends JTree implements MouseMotionListener,
             }
 
             final JPopupMenu popupMenu = frame.getPopupMenu(null,
-                    new Object[][] {new Object[]{""}});
+                    new Object[][]{new Object[]{""}});
             frame.addCustomPopupItems(popupMenu);
             if (popupMenu.getComponentCount() > 0) {
                 popupMenu.addSeparator();
@@ -350,4 +350,5 @@ public class Tree extends JTree implements MouseMotionListener,
         ((TreeViewModel) getModel()).insertNodeInto(node, parentNode, index);
         setExpandedState(nodePath, isExpanded);
     }
+
 }

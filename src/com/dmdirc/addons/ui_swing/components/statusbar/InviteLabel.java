@@ -51,17 +51,16 @@ import javax.swing.JPopupMenu;
 import javax.swing.JSeparator;
 
 /**
- * A status bar component to show invites to the user and enable them to accept
- * or dismiss them.
+ * A status bar component to show invites to the user and enable them to accept or dismiss them.
  */
 public class InviteLabel extends StatusbarPopupPanel<JLabel> implements
         StatusBarComponent, InviteListener, ActionListener,
         java.awt.event.ActionListener, SelectionListener {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 1;
     /** Invite popup menu. */
@@ -78,9 +77,9 @@ public class InviteLabel extends StatusbarPopupPanel<JLabel> implements
     /**
      * Instantiates a new invite label.
      *
-     * @param iconManager The manager to retrieve the invite icon from.
+     * @param iconManager   The manager to retrieve the invite icon from.
      * @param serverManager The manager to use to iterate servers.
-     * @param mainFrame Main frame
+     * @param mainFrame     Main frame
      */
     @Inject
     public InviteLabel(
@@ -143,7 +142,6 @@ public class InviteLabel extends StatusbarPopupPanel<JLabel> implements
      */
     private void update() {
         UIUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -222,4 +220,5 @@ public class InviteLabel extends StatusbarPopupPanel<JLabel> implements
         activeServer = window == null ? null : (Server) window.getContainer().getConnection();
         update();
     }
+
 }

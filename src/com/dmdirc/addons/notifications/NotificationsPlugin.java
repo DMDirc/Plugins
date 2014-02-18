@@ -19,6 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 package com.dmdirc.addons.notifications;
 
 import com.dmdirc.actions.ActionManager;
@@ -39,8 +40,7 @@ import java.util.List;
 import java.util.concurrent.Callable;
 
 /**
- * Notification Manager plugin, aggregates notification sources exposing them
- * via a single command.
+ * Notification Manager plugin, aggregates notification sources exposing them via a single command.
  */
 public class NotificationsPlugin extends BaseCommandPlugin implements ActionListener {
 
@@ -56,8 +56,8 @@ public class NotificationsPlugin extends BaseCommandPlugin implements ActionList
     /**
      * Creates a new instance of this plugin.
      *
-     * @param pluginInfo This plugin's plugin info
-     * @param commandController Command controller to register commands
+     * @param pluginInfo         This plugin's plugin info
+     * @param commandController  Command controller to register commands
      * @param identityController The controller to read and write settings with.
      */
     public NotificationsPlugin(
@@ -100,7 +100,6 @@ public class NotificationsPlugin extends BaseCommandPlugin implements ActionList
     public void showConfig(final PreferencesDialogModel manager) {
         final NotificationConfig configPanel = UIUtilities.invokeAndWait(
                 new Callable<NotificationConfig>() {
-
             /** {@inheritDoc} */
             @Override
             public NotificationConfig call() {
@@ -118,7 +117,8 @@ public class NotificationsPlugin extends BaseCommandPlugin implements ActionList
     /** Loads the plugins settings. */
     private void loadSettings() {
         if (identityController.getGlobalConfiguration().hasOptionString(getDomain(), "methodOrder")) {
-            order = identityController.getGlobalConfiguration().getOptionList(getDomain(), "methodOrder");
+            order = identityController.getGlobalConfiguration().getOptionList(getDomain(),
+                    "methodOrder");
         } else {
             order = new ArrayList<>();
         }
@@ -136,8 +136,8 @@ public class NotificationsPlugin extends BaseCommandPlugin implements ActionList
     }
 
     /**
-     * Checks to see if a plugin implements the notification method interface
-     * and if it does, adds the method to our list.
+     * Checks to see if a plugin implements the notification method interface and if it does, adds
+     * the method to our list.
      *
      * @param target The plugin to be tested
      */
@@ -149,8 +149,8 @@ public class NotificationsPlugin extends BaseCommandPlugin implements ActionList
     }
 
     /**
-     * Checks to see if the specified notification method needs to be added to
-     * our order list, and adds it if neccessary.
+     * Checks to see if the specified notification method needs to be added to our order list, and
+     * adds it if neccessary.
      *
      * @param source The notification method to be tested
      */
@@ -161,8 +161,8 @@ public class NotificationsPlugin extends BaseCommandPlugin implements ActionList
     }
 
     /**
-     * Checks to see if a plugin implements the notification method interface
-     * and if it does, removes the method from our list.
+     * Checks to see if a plugin implements the notification method interface and if it does,
+     * removes the method from our list.
      *
      * @param target The plugin to be tested
      */
@@ -174,6 +174,7 @@ public class NotificationsPlugin extends BaseCommandPlugin implements ActionList
      * Retrieves a method based on its name.
      *
      * @param name The name to search for
+     *
      * @return The method with the specified name or null if none were found.
      */
     public PluginInfo getMethod(final String name) {
@@ -215,7 +216,7 @@ public class NotificationsPlugin extends BaseCommandPlugin implements ActionList
         for (String method : order) {
             if (methods.contains(method)) {
                 return pluginInfo.getMetaData().getManager().getPluginInfoByName(
-                    method);
+                        method);
             }
         }
         return null;
@@ -231,4 +232,5 @@ public class NotificationsPlugin extends BaseCommandPlugin implements ActionList
         identityController.getUserSettings()
                 .setOption(getDomain(), "methodOrder", order);
     }
+
 }

@@ -77,7 +77,7 @@ public class ActionConditionsPanel extends JPanel implements ActionListener,
      * Instantiates the panel.
      *
      * @param iconManager Icon manager
-     * @param trigger Action trigger
+     * @param trigger     Action trigger
      */
     public ActionConditionsPanel(final IconManager iconManager,
             final ActionType trigger) {
@@ -138,8 +138,7 @@ public class ActionConditionsPanel extends JPanel implements ActionListener,
     public void setActionTrigger(final ActionType trigger) {
         list.setTrigger(trigger);
         add.setEnabled(trigger != null);
-        add.setEnabled(trigger != null &&
-                trigger.getType().getArgNames().length != 0);
+        add.setEnabled(trigger != null && trigger.getType().getArgNames().length != 0);
     }
 
     /** {@inheritDoc} */
@@ -221,4 +220,5 @@ public class ActionConditionsPanel extends JPanel implements ActionListener,
         firePropertyChange("validationResult", currentlyValidates,
                 listValidates && treeValidates);
     }
+
 }

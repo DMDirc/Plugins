@@ -34,8 +34,7 @@ import java.util.Collections;
 import java.util.Date;
 
 /**
- * Implements a fake input window, which sends echoed text to the specified
- * chat window instead.
+ * Implements a fake input window, which sends echoed text to the specified chat window instead.
  */
 public class FakeWriteableFrameContainer extends WritableFrameContainer {
 
@@ -45,9 +44,9 @@ public class FakeWriteableFrameContainer extends WritableFrameContainer {
     /**
      * Creates a new instance of FakeInputWindow.
      *
-     * @param target The message target that output gets sent to
+     * @param target             The message target that output gets sent to
      * @param messageSinkManager The sink manager to use to despatch messages.
-     * @param urlBuilder The URL builder to use when finding icons.
+     * @param urlBuilder         The URL builder to use when finding icons.
      */
     public FakeWriteableFrameContainer(
             final MessageTarget target,

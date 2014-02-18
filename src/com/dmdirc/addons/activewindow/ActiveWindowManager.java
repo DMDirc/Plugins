@@ -33,7 +33,6 @@ public class ActiveWindowManager {
 
     /** The message sink to register and unregister. */
     private final ActiveWindowMessageSink sink;
-
     /** The manager to add and remove the sink from. */
     private final MessageSinkManager sinkManager;
 
@@ -41,7 +40,7 @@ public class ActiveWindowManager {
      * Creates a new instance of {@link ActiveWindowManager}.
      *
      * @param sinkManager The manager to add and remove sinks from.
-     * @param sink The sink to be added and removed.
+     * @param sink        The sink to be added and removed.
      */
     @Inject
     public ActiveWindowManager(

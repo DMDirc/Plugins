@@ -51,9 +51,9 @@ public abstract class StandardQuestionDialog extends StandardDialog {
     /**
      * Instantiates a new standard input dialog.
      *
-     * @param owner Dialog owner
-     * @param modal modality type
-     * @param title Dialog title
+     * @param owner   Dialog owner
+     * @param modal   modality type
+     * @param title   Dialog title
      * @param message Dialog message
      */
     public StandardQuestionDialog(
@@ -98,7 +98,6 @@ public abstract class StandardQuestionDialog extends StandardDialog {
      */
     private void addListeners() {
         getOkButton().addActionListener(new ActionListener() {
-
             /** {@inheritDoc} */
             @Override
             public void actionPerformed(final ActionEvent e) {
@@ -109,7 +108,6 @@ public abstract class StandardQuestionDialog extends StandardDialog {
             }
         });
         getCancelButton().addActionListener(new ActionListener() {
-
             /** {@inheritDoc} */
             @Override
             public void actionPerformed(final ActionEvent e) {
@@ -118,7 +116,6 @@ public abstract class StandardQuestionDialog extends StandardDialog {
             }
         });
         addWindowListener(new WindowAdapter() {
-
             /** {@inheritDoc} */
             @Override
             public void windowOpened(final WindowEvent e) {
@@ -154,4 +151,5 @@ public abstract class StandardQuestionDialog extends StandardDialog {
     public boolean getResult() {
         return result;
     }
+
 }

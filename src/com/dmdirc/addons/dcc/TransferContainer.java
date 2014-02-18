@@ -49,46 +49,35 @@ public class TransferContainer extends FrameContainer implements
 
     /** The dcc plugin that owns this frame */
     protected final DCCManager plugin;
-
     /** Config manager. */
     private final AggregateConfigProvider config;
-
     /** The Window we're using. */
     private boolean windowClosing = false;
-
     /** The DCCSend object we are a window for */
     private final DCCTransfer dcc;
-
     /** Other Nickname */
     private final String otherNickname;
-
     /** Total data transfered */
     private volatile long transferCount = 0;
-
     /** Time Started */
     private long timeStarted = 0;
-
     /** Plugin that this send belongs to. */
     private final DCCManager myPlugin;
-
     /** IRC Parser that caused this send */
     private Parser parser = null;
-
     /** Connection the send was initiated on. */
     private Connection connection = null;
-
     /** Show open button. */
-    private boolean showOpen = Desktop.isDesktopSupported() &&
-            Desktop.getDesktop().isSupported(Desktop.Action.OPEN);
+    private boolean showOpen = Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(
+            Desktop.Action.OPEN);
 
     /**
-     * Creates a new instance of DCCTransferWindow with a given DCCTransfer
-     * object.
+     * Creates a new instance of DCCTransferWindow with a given DCCTransfer object.
      *
-     * @param plugin the DCC Plugin responsible for this window
-     * @param dcc The DCCTransfer object this window wraps around
-     * @param config Config manager
-     * @param title The title of this window
+     * @param plugin     the DCC Plugin responsible for this window
+     * @param dcc        The DCCTransfer object this window wraps around
+     * @param config     Config manager
+     * @param title      The title of this window
      * @param targetNick Nickname of target
      * @param connection The connection that the send was that initiated on
      * @param urlBuilder The URL builder to use when finding icons.
@@ -137,6 +126,7 @@ public class TransferContainer extends FrameContainer implements
      * Retrieves the nickname of the other party involved in this transfer.
      *
      * @return The other party's nickname
+     *
      * @since 0.6.4
      */
     public String getOtherNickname() {
@@ -146,7 +136,7 @@ public class TransferContainer extends FrameContainer implements
     /**
      * Called when data is sent/recieved
      *
-     * @param dcc The DCCSend that this message is from
+     * @param dcc   The DCCSend that this message is from
      * @param bytes The number of new bytes that were transfered
      */
     @Override
@@ -162,7 +152,9 @@ public class TransferContainer extends FrameContainer implements
 
         if (percentageInTitle) {
             final StringBuilder title = new StringBuilder();
-            if (dcc.isListenSocket()) { title.append("*"); }
+            if (dcc.isListenSocket()) {
+                title.append("*");
+            }
             title.append(dcc.getType() == DCCTransfer.TransferType.SEND
                     ? "Sending: " : "Recieving: ");
             title.append(otherNickname);
@@ -224,8 +216,7 @@ public class TransferContainer extends FrameContainer implements
      * Retrieves the timestamp at which this transfer started.
      *
      * @since 0.6.4
-     * @return The timestamp (milliseconds since 01/01/1970) at which this
-     * transfer started.
+     * @return The timestamp (milliseconds since 01/01/1970) at which this transfer started.
      */
     public long getStartTime() {
         return timeStarted;
@@ -252,8 +243,7 @@ public class TransferContainer extends FrameContainer implements
     }
 
     /**
-     * Determines whether the "Open" button should be displayed for this
-     * transfer.
+     * Determines whether the "Open" button should be displayed for this transfer.
      *
      * @since 0.6.4
      * @return True if the open button should be displayed, false otherwise
@@ -318,7 +308,6 @@ public class TransferContainer extends FrameContainer implements
             if (connection.getParser().getStringConverter().equalsIgnoreCase(
                     otherNickname, myNickname)) {
                 final Thread errorThread = new Thread(new Runnable() {
-
                     /** {@inheritDoc} */
                     @Override
                     public void run() {
@@ -326,13 +315,12 @@ public class TransferContainer extends FrameContainer implements
                                 "You can't DCC yourself.", "DCC Error",
                                 JOptionPane.ERROR_MESSAGE);
                     }
-
                 }, "DCC-Error-Message");
                 errorThread.start();
             } else {
                 if (config.getOptionBool(plugin.getDomain(), "send.reverse")) {
-                    parser.sendCTCP(otherNickname, "DCC", "SEND \"" +
-                            new File(dcc.getFileName()).getName() + "\" "
+                    parser.sendCTCP(otherNickname, "DCC", "SEND \"" + new File(dcc.getFileName()).
+                            getName() + "\" "
                             + DCC.ipToLong(myPlugin.getListenIP(parser))
                             + " 0 " + dcc.getFileSize() + " " + dcc.makeToken()
                             + ((dcc.isTurbo()) ? " T" : ""));

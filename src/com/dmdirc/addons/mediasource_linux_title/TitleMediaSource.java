@@ -39,7 +39,6 @@ public class TitleMediaSource implements MediaSource {
 
     /** The command to use to get the title. */
     private final String command;
-
     /** The name of the player we're retrieving. */
     private final String name;
 
@@ -47,7 +46,7 @@ public class TitleMediaSource implements MediaSource {
      * Creates a new title media source.
      *
      * @param command The command to be executed
-     * @param name The name of the media source
+     * @param name    The name of the media source
      */
     public TitleMediaSource(final String command, final String name) {
         this.command = command;

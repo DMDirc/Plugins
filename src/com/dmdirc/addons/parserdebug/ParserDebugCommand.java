@@ -40,7 +40,7 @@ import com.dmdirc.util.URLBuilder;
 /**
  * The ParserDebug Command allows controlling of which parsers spam debug info.
  */
-@CommandOptions(allowOffline=false)
+@CommandOptions(allowOffline = false)
 public final class ParserDebugCommand extends Command {
 
     /** A command info object for this command. */
@@ -57,10 +57,10 @@ public final class ParserDebugCommand extends Command {
     /**
      * Creates a new instance of ParserDebugCommand.
      *
-     * @param controller The controller to use for command information.
-     * @param plugin Plugin that owns this command
+     * @param controller    The controller to use for command information.
+     * @param plugin        Plugin that owns this command
      * @param windowManager Window management
-     * @param urlBuilder The URL builder to use when finding icons.
+     * @param urlBuilder    The URL builder to use when finding icons.
      */
     public ParserDebugCommand(
             final CommandController controller,
@@ -76,12 +76,13 @@ public final class ParserDebugCommand extends Command {
     /**
      * Executes this command.
      *
-     * @param origin The framecontainer in which this command was issued
+     * @param origin      The framecontainer in which this command was issued
      * @param commandArgs The user supplied arguments
-     * @param context The Context of this command execution
+     * @param context     The Context of this command execution
      */
     @Override
-    public void execute(final FrameContainer origin, final CommandArguments commandArgs, final CommandContext context) {
+    public void execute(final FrameContainer origin, final CommandArguments commandArgs,
+            final CommandContext context) {
         final boolean isSilent = commandArgs.isSilent();
 
         final Parser parser = ((ServerCommandContext) context).getServer()
@@ -119,5 +120,5 @@ public final class ParserDebugCommand extends Command {
             }
         }
     }
-}
 
+}

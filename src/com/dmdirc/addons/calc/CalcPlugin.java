@@ -39,4 +39,5 @@ public class CalcPlugin extends BaseCommandPlugin {
         setObjectGraph(graph.plus(new CalcModule()));
         registerCommand(CalcCommand.class, CalcCommand.INFO);
     }
+
 }

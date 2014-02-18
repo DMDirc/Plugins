@@ -19,6 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 package com.dmdirc.addons.windowstatus;
 
 import com.dmdirc.Channel;
@@ -86,7 +87,6 @@ public class WindowStatusManager implements ConfigChangeListener, SelectionListe
      */
     public void onLoad() {
         panel = UIUtilities.invokeAndWait(new Callable<WindowStatusPanel>() {
-
             /** {@inheritDoc} */
             @Override
             public WindowStatusPanel call() {
@@ -222,7 +222,7 @@ public class WindowStatusManager implements ConfigChangeListener, SelectionListe
     /**
      * Shows the configuration page.
      *
-     * @param manager Prefs dialog manager to add settings to
+     * @param manager    Prefs dialog manager to add settings to
      * @param pluginInfo Plugin info
      */
     public void showConfig(final PreferencesDialogModel manager,
@@ -251,4 +251,5 @@ public class WindowStatusManager implements ConfigChangeListener, SelectionListe
     public void configChanged(final String domain, final String key) {
         updateCache();
     }
+
 }

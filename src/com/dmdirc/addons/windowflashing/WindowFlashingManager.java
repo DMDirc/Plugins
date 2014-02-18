@@ -50,18 +50,18 @@ public class WindowFlashingManager implements ActionListener {
     /** Config binder. */
     private final ConfigBinder binder;
     /** Cached blink rate setting. */
-    @ConfigBinding(domain="plugin-windowflashing", key="blinkrate",
-            fallbacks={"plugin-windowflashing", "blinkratefallback"})
+    @ConfigBinding(domain = "plugin-windowflashing", key = "blinkrate",
+            fallbacks = {"plugin-windowflashing", "blinkratefallback"})
     private int blinkrate;
     /** Cached count setting. */
-    @ConfigBinding(domain="plugin-windowflashing", key="flashcount",
-            fallbacks={"plugin-windowflashing", "flashcountfallback"})
+    @ConfigBinding(domain = "plugin-windowflashing", key = "flashcount",
+            fallbacks = {"plugin-windowflashing", "flashcountfallback"})
     private int flashcount;
     /** Cached flash taskbar setting. */
-    @ConfigBinding(domain="plugin-windowflashing", key="flashtaskbar")
+    @ConfigBinding(domain = "plugin-windowflashing", key = "flashtaskbar")
     private boolean flashtaskbar;
     /** Cached flash caption setting. */
-    @ConfigBinding(domain="plugin-windowflashing", key="flashcaption")
+    @ConfigBinding(domain = "plugin-windowflashing", key = "flashcaption")
     private boolean flashcaption;
     /** Library instance. */
     private User32 user32;
@@ -97,8 +97,7 @@ public class WindowFlashingManager implements ActionListener {
     }
 
     /**
-     * Creates a new flash info object that starts flashing with the configured
-     * settings.
+     * Creates a new flash info object that starts flashing with the configured settings.
      */
     private WinUser.FLASHWINFO setupFlashObject() {
         final WinUser.FLASHWINFO flashInfo = new WinUser.FLASHWINFO();
@@ -125,6 +124,7 @@ public class WindowFlashingManager implements ActionListener {
 
     /**
      * Returns the native handle object for the main frame.
+     *
      * @return
      */
     private WinDef.HWND getHWND() {
@@ -162,4 +162,5 @@ public class WindowFlashingManager implements ActionListener {
             user32.FlashWindowEx(stopFlashObject());
         }
     }
+
 }

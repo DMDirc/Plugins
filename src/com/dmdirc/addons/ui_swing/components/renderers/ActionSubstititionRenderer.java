@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.components.renderers;
 
-
 import com.dmdirc.addons.ui_swing.components.substitutions.Substitution;
 
 import javax.swing.JLabel;

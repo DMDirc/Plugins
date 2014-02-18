@@ -32,8 +32,7 @@ import java.util.concurrent.ExecutionException;
 import javax.swing.Icon;
 
 /**
- * Loads an icon in the background and uses it for a category label once it
- * has been loaded.
+ * Loads an icon in the background and uses it for a category label once it has been loaded.
  */
 public class IconLoader extends LoggingSwingWorker<Icon, Void> {
 
@@ -45,12 +44,12 @@ public class IconLoader extends LoggingSwingWorker<Icon, Void> {
     private final IconManager iconManager;
 
     /**
-     * Creates a new icon loader adding the specified icon to the specified
-     * icon after it has been loaded in the background.
+     * Creates a new icon loader adding the specified icon to the specified icon after it has been
+     * loaded in the background.
      *
      * @param iconManager Icon manager
-     * @param label Label to load category for
-     * @param icon Icon to load1111
+     * @param label       Label to load category for
+     * @param icon        Icon to load1111
      */
     public IconLoader(final IconManager iconManager,
             final CategoryLabel label, final String icon) {
@@ -79,4 +78,5 @@ public class IconLoader extends LoggingSwingWorker<Icon, Void> {
         }
 
     }
+
 }

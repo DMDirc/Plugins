@@ -42,10 +42,9 @@ import java.util.List;
 import java.util.concurrent.Callable;
 
 /**
- * Plugin that allows users to advertise what they're currently playing or
- * listening to.
+ * Plugin that allows users to advertise what they're currently playing or listening to.
  */
-public class NowPlayingPlugin extends BaseCommandPlugin implements ActionListener  {
+public class NowPlayingPlugin extends BaseCommandPlugin implements ActionListener {
 
     /** The sources that we know of. */
     private final List<MediaSource> sources = new ArrayList<>();
@@ -63,9 +62,9 @@ public class NowPlayingPlugin extends BaseCommandPlugin implements ActionListene
     /**
      * Creates a new instance of this plugin.
      *
-     * @param pluginInfo This plugin's plugin info
-     * @param actionController The action controller to register listeners with
-     * @param commandController Command controller to register commands
+     * @param pluginInfo         This plugin's plugin info
+     * @param actionController   The action controller to register listeners with
+     * @param commandController  Command controller to register commands
      * @param identityController The identity controller to use.
      */
     public NowPlayingPlugin(final PluginInfo pluginInfo,
@@ -78,7 +77,8 @@ public class NowPlayingPlugin extends BaseCommandPlugin implements ActionListene
         this.actionController = actionController;
         this.identityController = identityController;
 
-        registerCommand(new NowPlayingCommand(commandController, this, identityController), NowPlayingCommand.INFO);
+        registerCommand(new NowPlayingCommand(commandController, this, identityController),
+                NowPlayingCommand.INFO);
     }
 
     /** {@inheritDoc} */
@@ -115,7 +115,6 @@ public class NowPlayingPlugin extends BaseCommandPlugin implements ActionListene
     public void showConfig(final PreferencesDialogModel manager) {
         final ConfigPanel configPanel = UIUtilities.invokeAndWait(
                 new Callable<ConfigPanel>() {
-
             @Override
             public ConfigPanel call() {
                 return new ConfigPanel(identityController, NowPlayingPlugin.this, order);
@@ -141,7 +140,8 @@ public class NowPlayingPlugin extends BaseCommandPlugin implements ActionListene
     /** Loads the plugins settings. */
     private void loadSettings() {
         if (identityController.getGlobalConfiguration().hasOptionString(getDomain(), "sourceOrder")) {
-            order = identityController.getGlobalConfiguration().getOptionList(getDomain(), "sourceOrder");
+            order = identityController.getGlobalConfiguration().getOptionList(getDomain(),
+                    "sourceOrder");
         } else {
             order = new ArrayList<>();
         }
@@ -159,8 +159,8 @@ public class NowPlayingPlugin extends BaseCommandPlugin implements ActionListene
     }
 
     /**
-     * Checks to see if a plugin implements one of the Media Source interfaces
-     * and if it does, adds the source(s) to our list.
+     * Checks to see if a plugin implements one of the Media Source interfaces and if it does, adds
+     * the source(s) to our list.
      *
      * @param target The plugin to be tested
      */
@@ -183,8 +183,8 @@ public class NowPlayingPlugin extends BaseCommandPlugin implements ActionListene
     }
 
     /**
-     * Checks to see if the specified media source needs to be added to our
-     * order list, and adds it if neccessary.
+     * Checks to see if the specified media source needs to be added to our order list, and adds it
+     * if neccessary.
      *
      * @param source The media source to be tested
      */
@@ -195,8 +195,8 @@ public class NowPlayingPlugin extends BaseCommandPlugin implements ActionListene
     }
 
     /**
-     * Checks to see if a plugin implements one of the Media Source interfaces
-     * and if it does, removes the source(s) from our list.
+     * Checks to see if a plugin implements one of the Media Source interfaces and if it does,
+     * removes the source(s) from our list.
      *
      * @param target The plugin to be tested
      */
@@ -227,11 +227,10 @@ public class NowPlayingPlugin extends BaseCommandPlugin implements ActionListene
     }
 
     /**
-     * Retrieves the "best" source to use for displaying media information.
-     * The best source is defined as the earliest in the list that is running
-     * and not paused, or, if no such source exists, the earliest in the list
-     * that is running and paused. If neither condition is satisified returns
-     * null.
+     * Retrieves the "best" source to use for displaying media information. The best source is
+     * defined as the earliest in the list that is running and not paused, or, if no such source
+     * exists, the earliest in the list that is running and paused. If neither condition is
+     * satisified returns null.
      *
      * @return The best source to use for media info
      */
@@ -255,11 +254,12 @@ public class NowPlayingPlugin extends BaseCommandPlugin implements ActionListene
     }
 
     /**
-     * Substitutes the keywords in the specified format with the values with
-     * values from the specified source.
+     * Substitutes the keywords in the specified format with the values with values from the
+     * specified source.
      *
      * @param format The format to be substituted
      * @param source The source whose values should be used
+     *
      * @return The substituted string
      */
     public String doSubstitution(final String format, final MediaSource source) {
@@ -274,24 +274,25 @@ public class NowPlayingPlugin extends BaseCommandPlugin implements ActionListene
         final String state = source.getState().getNiceName();
 
         return format.replace("$artist", sanitise(artist))
-                     .replace("$title", sanitise(title))
-                     .replace("$album", sanitise(album))
-                     .replace("$app", sanitise(app))
-                     .replace("$bitrate", sanitise(bitrate))
-                     .replace("$format", sanitise(filetype))
-                     .replace("$length", sanitise(length))
-                     .replace("$state", sanitise(state))
-                     .replace("$time", sanitise(time));
+                .replace("$title", sanitise(title))
+                .replace("$album", sanitise(album))
+                .replace("$app", sanitise(app))
+                .replace("$bitrate", sanitise(bitrate))
+                .replace("$format", sanitise(filetype))
+                .replace("$length", sanitise(length))
+                .replace("$state", sanitise(state))
+                .replace("$time", sanitise(time));
     }
 
     /**
-     * Sanitises the specified String so that it may be used as the replacement
-     * in a call to String.replaceAll. Namely, at present, this method returns
-     * an empty String if it is passed a null value; otherwise the input is
-     * returned as-is.
+     * Sanitises the specified String so that it may be used as the replacement in a call to
+     * String.replaceAll. Namely, at present, this method returns an empty String if it is passed a
+     * null value; otherwise the input is returned as-is.
      *
      * @param input The string to be sanitised
+     *
      * @return A sanitised version of the String
+     *
      * @since 0.6.3
      */
     protected static String sanitise(final String input) {
@@ -302,6 +303,7 @@ public class NowPlayingPlugin extends BaseCommandPlugin implements ActionListene
      * Retrieves a source based on its name.
      *
      * @param name The name to search for
+     *
      * @return The source with the specified name or null if none were found.
      */
     public MediaSource getSource(final String name) {
@@ -328,4 +330,5 @@ public class NowPlayingPlugin extends BaseCommandPlugin implements ActionListene
 
         return res;
     }
+
 }

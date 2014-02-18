@@ -35,9 +35,9 @@ import net.miginfocom.swing.MigLayout;
 public final class CommunicationStep extends Step {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 1;
     /** Update info. */
@@ -64,14 +64,14 @@ public final class CommunicationStep extends Step {
      */
     protected void initComponents() {
         updatesInfo =
-                new TextLabel("DMDirc can automatically check for " +
-                "updates for various parts of the client, you can globally " +
-                "disable that behaviour here, you can also fine tune the " +
-                "behaviour in the preferences dialog once the client is running.");
+                new TextLabel("DMDirc can automatically check for "
+                + "updates for various parts of the client, you can globally "
+                + "disable that behaviour here, you can also fine tune the "
+                + "behaviour in the preferences dialog once the client is running.");
         updates = new JCheckBox("Enable update checks?", true);
-        errorsInfo = new TextLabel("DMDirc will automatically report application " +
-                "errors to the developers, whilst this is of great help to the developers " +
-                "you may disable this behaviour here.");
+        errorsInfo = new TextLabel("DMDirc will automatically report application "
+                + "errors to the developers, whilst this is of great help to the developers "
+                + "you may disable this behaviour here.");
         errors = new JCheckBox("Enable error reporting?", true);
     }
 
@@ -99,7 +99,7 @@ public final class CommunicationStep extends Step {
     /**
      * Checks if error reports are enabled.
      *
-     * @return true iif error reports  are enabled
+     * @return true iif error reports are enabled
      */
     public boolean checkErrors() {
         return updates.isSelected();
@@ -110,4 +110,5 @@ public final class CommunicationStep extends Step {
     public String getTitle() {
         return "Communication settings";
     }
+
 }

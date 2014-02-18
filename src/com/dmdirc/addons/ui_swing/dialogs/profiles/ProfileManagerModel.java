@@ -57,7 +57,7 @@ public class ProfileManagerModel {
      * Creates a new model.
      *
      * @param identityController Identity manager to retrieve profiles from.
-     * @param identityFactory Factory to use when creating new profiles.
+     * @param identityFactory    Factory to use when creating new profiles.
      */
     public ProfileManagerModel(
             final IdentityController identityController,
@@ -74,8 +74,7 @@ public class ProfileManagerModel {
     }
 
     /**
-     * Updates the list of displayed profiles, showing only those not marked
-     * deleted.
+     * Updates the list of displayed profiles, showing only those not marked deleted.
      */
     private void updateDisplayedProfiles() {
         displayedProfiles.clear();
@@ -152,8 +151,8 @@ public class ProfileManagerModel {
     }
 
     /**
-     * Updates the selected profile.  This method clears the selected nickname,
-     * the update method is not called by this method.
+     * Updates the selected profile. This method clears the selected nickname, the update method is
+     * not called by this method.
      *
      * @param profile Newly selected profile, may be null
      */
@@ -186,8 +185,8 @@ public class ProfileManagerModel {
     }
 
     /**
-     * Retrieves the list of nicknames for the active profile, this will return
-     * an empty list if there is no selected profile.
+     * Retrieves the list of nicknames for the active profile, this will return an empty list if
+     * there is no selected profile.
      *
      * @return List of nicknames
      */
@@ -199,8 +198,8 @@ public class ProfileManagerModel {
     }
 
     /**
-     * Sets the list of nicknames for the active profile.  Will do nothing if
-     * there is no active profile.
+     * Sets the list of nicknames for the active profile. Will do nothing if there is no active
+     * profile.
      *
      * @param nicknames List of nicknames
      */
@@ -213,8 +212,8 @@ public class ProfileManagerModel {
     }
 
     /**
-     * Adds the specified nickname to the list of nicknames in the active
-     * profile.  Will do nothing if there is no active profile.
+     * Adds the specified nickname to the list of nicknames in the active profile. Will do nothing
+     * if there is no active profile.
      *
      * @param nickname New nickname
      */
@@ -228,11 +227,10 @@ public class ProfileManagerModel {
     }
 
     /**
-     * Deletes the specified nickname from the active profile. This method will
-     * do nothing if there is no active profile.
+     * Deletes the specified nickname from the active profile. This method will do nothing if there
+     * is no active profile.
      *
-     * @param nickname Nickname to be deleted (This method will do nothing if
-     * this is not a String)
+     * @param nickname Nickname to be deleted (This method will do nothing if this is not a String)
      */
     public void deleteNickname(final Object nickname) {
         if (nickname instanceof String) {
@@ -241,8 +239,8 @@ public class ProfileManagerModel {
     }
 
     /**
-     * Deletes the specified nickname from the active profile. This method
-     * will do nothing if there is no active profile.
+     * Deletes the specified nickname from the active profile. This method will do nothing if there
+     * is no active profile.
      *
      * @param nickname Nickname to be deleted
      */
@@ -271,7 +269,7 @@ public class ProfileManagerModel {
      * Alters the specified nickname.
      *
      * @param nickname Nickname to be edited
-     * @param edited Resultant nickname
+     * @param edited   Resultant nickname
      */
     public void editNickname(final String nickname, final String edited) {
         selectedNickname = edited;
@@ -281,12 +279,12 @@ public class ProfileManagerModel {
     }
 
     /**
-     * Sets the selected nickname on the active profile.  This method expects a
-     * String, it will do nothing if the parameter is not.  If the specified
-     * nickname is not found the selection will be cleared.
+     * Sets the selected nickname on the active profile. This method expects a String, it will do
+     * nothing if the parameter is not. If the specified nickname is not found the selection will be
+     * cleared.
      *
-     * @param selectedNickname Nickname to be selected, may be null.  (This
-     * method will do nothing if this is not a String)
+     * @param selectedNickname Nickname to be selected, may be null. (This method will do nothing if
+     *                         this is not a String)
      */
     public void setSelectedNickname(final Object selectedNickname) {
         if (selectedProfile != null
@@ -300,8 +298,7 @@ public class ProfileManagerModel {
     /**
      * Retrieves the selected nickname from the active profile.
      *
-     * @return Selected nickname (String) or an empty string if there is no
-     * active profile
+     * @return Selected nickname (String) or an empty string if there is no active profile
      */
     public Object getSelectedNickname() {
         if (selectedProfile == null) {
@@ -313,8 +310,7 @@ public class ProfileManagerModel {
     /**
      * Retrieves the name of the active profile.
      *
-     * @return Active profile name or an empty string if there is no
-     * active profile
+     * @return Active profile name or an empty string if there is no active profile
      */
     public String getName() {
         if (selectedProfile == null) {
@@ -324,8 +320,8 @@ public class ProfileManagerModel {
     }
 
     /**
-     * Sets the name of the active profile.  This method will do nothing if
-     * there is no active profile.
+     * Sets the name of the active profile. This method will do nothing if there is no active
+     * profile.
      *
      * @param name New profile name
      */
@@ -339,8 +335,7 @@ public class ProfileManagerModel {
     /**
      * Retrieves the realname in the active profile.
      *
-     * @return Active profile realname or an empty string if there is no
-     * active profile
+     * @return Active profile realname or an empty string if there is no active profile
      */
     public String getRealname() {
         if (selectedProfile == null) {
@@ -350,8 +345,8 @@ public class ProfileManagerModel {
     }
 
     /**
-     * Sets the realname in the active profile.  This method will do nothing if
-     * there is no active profile.
+     * Sets the realname in the active profile. This method will do nothing if there is no active
+     * profile.
      *
      * @param realname New profile real name
      */
@@ -363,11 +358,10 @@ public class ProfileManagerModel {
     }
 
     /**
-     * Retrieves the ident of the active profile.  This method will return an
-     * empty string if there is no active profile.
+     * Retrieves the ident of the active profile. This method will return an empty string if there
+     * is no active profile.
      *
-     * @return Active profile ident or an empty string if there is no
-     * active profile
+     * @return Active profile ident or an empty string if there is no active profile
      */
     public String getIdent() {
         if (selectedProfile == null) {
@@ -377,8 +371,8 @@ public class ProfileManagerModel {
     }
 
     /**
-     * Sets the ident of the active profile. This method will do nothing if
-     * there is no active profile.
+     * Sets the ident of the active profile. This method will do nothing if there is no active
+     * profile.
      *
      * @param ident New profile ident
      */
@@ -410,8 +404,7 @@ public class ProfileManagerModel {
     /**
      * Is it possible to save and close the dialog?
      *
-     * @return true if all other validators pass and there is at least one
-     * profile
+     * @return true if all other validators pass and there is at least one profile
      */
     public boolean isOKAllowed() {
         return !profiles.isEmpty()
@@ -435,8 +428,8 @@ public class ProfileManagerModel {
     }
 
     /**
-     * Are the nicknames in the active profile valid?  If there is no active
-     * profile the validation passes.
+     * Are the nicknames in the active profile valid? If there is no active profile the validation
+     * passes.
      *
      * @return passes when there are nicknames present
      */
@@ -451,8 +444,8 @@ public class ProfileManagerModel {
     }
 
     /**
-     * Is the realname in the active profile valid?  If there is no active
-     * profile the validation passes.
+     * Is the realname in the active profile valid? If there is no active profile the validation
+     * passes.
      *
      * @return passes the realname is valid
      */
@@ -467,8 +460,8 @@ public class ProfileManagerModel {
     }
 
     /**
-     * Is the ident in the active profile valid?  If there is no active
-     * profile the validation passes.
+     * Is the ident in the active profile valid? If there is no active profile the validation
+     * passes.
      *
      * @return passes the ident is valid
      */
@@ -484,9 +477,8 @@ public class ProfileManagerModel {
     }
 
     /**
-     * This method saves any changes made in the model to disk.  All profiles
-     * marked for deletion are removed and then all remaining profiles are have
-     * their save method called.
+     * This method saves any changes made in the model to disk. All profiles marked for deletion are
+     * removed and then all remaining profiles are have their save method called.
      */
     public void save() {
         for (Profile profile : profiles) {
@@ -511,10 +503,11 @@ public class ProfileManagerModel {
      * Adds a property change listener to a given property on this model.
      *
      * @param propertyName Property to listen on
-     * @param listener Listener to add
+     * @param listener     Listener to add
      */
     public void addPropertyChangeListener(final String propertyName,
             final PropertyChangeListener listener) {
         pcs.addPropertyChangeListener(propertyName, listener);
     }
+
 }

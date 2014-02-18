@@ -37,11 +37,10 @@ import java.util.Collection;
 public class XmppFakeChannel extends BaseChannelInfo {
 
     /**
-     * Creates a new fake channel belonging to the specified parser and
-     * with the given name.
+     * Creates a new fake channel belonging to the specified parser and with the given name.
      *
      * @param parser The XMPP parser that owns this channel
-     * @param name The name of the channel
+     * @param name   The name of the channel
      */
     public XmppFakeChannel(final Parser parser, final String name) {
         super(parser, name);

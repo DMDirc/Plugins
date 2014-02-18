@@ -34,7 +34,6 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 
-
 /**
  * Prefs dialog list cell renderer.
  *
@@ -43,9 +42,9 @@ import javax.swing.ListCellRenderer;
 public class PreferencesListCellRenderer extends JLabel implements ListCellRenderer {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 1;
     /** Number of categories shown. */
@@ -59,7 +58,7 @@ public class PreferencesListCellRenderer extends JLabel implements ListCellRende
      * Instantiates a new prefs list cell renderer.
      *
      * @param iconManager Icon manager to load icons
-     * @param numCats Number of categories in the list
+     * @param numCats     Number of categories in the list
      */
     public PreferencesListCellRenderer(final IconManager iconManager,
             final int numCats) {

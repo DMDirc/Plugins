@@ -67,7 +67,7 @@ public class ToolTipPanel extends JPanel implements MouseListener {
      * Instantiates a new tool tip panel.
      *
      * @param iconManager Icon Manager
-     * @param helpText Default help message when idle
+     * @param helpText    Default help message when idle
      */
     public ToolTipPanel(final IconManager iconManager, final String helpText) {
         super(new MigLayout("hidemode 3"));
@@ -135,6 +135,7 @@ public class ToolTipPanel extends JPanel implements MouseListener {
      * Sets whether or not this tool tip should be rendered as a warning.
      *
      * @param warning Warning string, null or empty to reset.
+     *
      * @since 0.6.3
      */
     public void setWarning(final String warning) {
@@ -155,7 +156,7 @@ public class ToolTipPanel extends JPanel implements MouseListener {
     /**
      * Registers a component with this tool tip handler.
      *
-     * @param component Component to register
+     * @param component   Component to register
      * @param tooltipText Tool tip text for the component
      */
     @SuppressWarnings("unchecked")
@@ -168,7 +169,6 @@ public class ToolTipPanel extends JPanel implements MouseListener {
         if (component instanceof JXLayer<?>) {
             final LayerUI<JComponent> layerUI =
                     new AbstractLayerUI<JComponent>() {
-
                 private static final long serialVersionUID =
                         -8698248993206174390L;
 
@@ -186,7 +186,6 @@ public class ToolTipPanel extends JPanel implements MouseListener {
                 }
             };
             UIUtilities.invokeLater(new Runnable() {
-
                 /** {@inheritDoc} */
                 @Override
                 public void run() {
@@ -249,4 +248,5 @@ public class ToolTipPanel extends JPanel implements MouseListener {
     public void mouseExited(final MouseEvent e) {
         reset();
     }
+
 }

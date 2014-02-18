@@ -43,10 +43,8 @@ public class WebUserRealm implements UserRealm {
 
     /** A map of known principals. */
     private final Map<String, Principal> principals = new HashMap<>();
-
     /** The config source to retrieve user information from. */
     private final IdentityController identityController;
-
     /** The domain to use when retrieving configuration. */
     private final String domain;
 
@@ -83,7 +81,8 @@ public class WebUserRealm implements UserRealm {
             identityController.getUserSettings().setOption(domain, "users", users);
         }
 
-        for (String userinfo : identityController.getGlobalConfiguration().getOptionList(domain, "users")) {
+        for (String userinfo : identityController.getGlobalConfiguration().getOptionList(domain,
+                "users")) {
             if (userinfo.startsWith(username + ":")) {
                 final String pass = userinfo.substring(username.length() + 1);
 

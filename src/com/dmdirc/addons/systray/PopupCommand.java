@@ -31,8 +31,7 @@ import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.interfaces.CommandController;
 
 /**
- * The /popup command allows the user to show a popup message from the system
- * tray icon.
+ * The /popup command allows the user to show a popup message from the system tray icon.
  */
 public class PopupCommand extends Command {
 
@@ -46,7 +45,7 @@ public class PopupCommand extends Command {
     /**
      * Creates a new instance of PopupCommand.
      *
-     * @param newParent The plugin that this command belongs to
+     * @param newParent         The plugin that this command belongs to
      * @param commandController The controller to use for command information.
      */
     public PopupCommand(final SystrayPlugin newParent, final CommandController commandController) {
@@ -58,8 +57,9 @@ public class PopupCommand extends Command {
     /**
      * Used to show a notification using this plugin.
      *
-     * @param title Title of dialog if applicable
+     * @param title   Title of dialog if applicable
      * @param message Message to show
+     *
      * @return True if the notification was shown.
      */
     public boolean showPopup(final String title, final String message) {
@@ -73,4 +73,5 @@ public class PopupCommand extends Command {
             final CommandArguments args, final CommandContext context) {
         showPopup("DMDirc", args.getArgumentsAsString());
     }
+
 }

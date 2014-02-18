@@ -19,6 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 package com.dmdirc.addons.ui_swing.framemanager.buttonbar;
 
 import com.dmdirc.FrameContainer;
@@ -36,9 +37,9 @@ import javax.swing.JToggleButton;
 public class FrameToggleButton extends JToggleButton {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 1;
     /** Contains the window associated with this button. */
@@ -47,8 +48,8 @@ public class FrameToggleButton extends JToggleButton {
     /**
      * Create a new instance of FrameToggleButton.
      *
-     * @param text Text to show
-     * @param icon Icon to show
+     * @param text   Text to show
+     * @param icon   Icon to show
      * @param window Parent window
      */
     public FrameToggleButton(final String text, final Icon icon, final Window window) {

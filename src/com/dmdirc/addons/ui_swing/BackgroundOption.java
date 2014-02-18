@@ -35,4 +35,5 @@ public enum BackgroundOption {
     CENTER,
     /** Tiled. */
     TILED;
+
 }

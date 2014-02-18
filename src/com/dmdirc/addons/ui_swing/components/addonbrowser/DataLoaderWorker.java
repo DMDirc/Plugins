@@ -88,15 +88,15 @@ public class DataLoaderWorker
     /**
      * Creates a new data loader worker.
      *
-     * @param globalConfig Configuration to read settings from.
-     * @param urlBuilder URL Builder to use when loading addon resources.
+     * @param globalConfig  Configuration to read settings from.
+     * @param urlBuilder    URL Builder to use when loading addon resources.
      * @param workerFactory Factory to use to produce install workers.
      * @param updateManager Manager to use to retrieve update information.
      * @param tempDirectory The directory to store temporary items in, such as the addons feed.
-     * @param table Table to load data into
-     * @param download Download new addons feed?
+     * @param table         Table to load data into
+     * @param download      Download new addons feed?
      * @param browserWindow Browser window to pass to table objects
-     * @param scrollPane Table's parent scrollpane
+     * @param scrollPane    Table's parent scrollpane
      */
     public DataLoaderWorker(
             @SuppressWarnings("qualifiers") @GlobalConfig final AggregateConfigProvider globalConfig,
@@ -184,8 +184,7 @@ public class DataLoaderWorker
         table.getModel().setRowCount(0);
         for (final AddonInfo info : data) {
             table.getModel().addRow(new Object[]{
-                new AddonInfoLabel(info, browserWindow, workerFactory),
-            });
+                new AddonInfoLabel(info, browserWindow, workerFactory),});
         }
         table.getSelectionModel().setSelectionInterval(selectedRow, selectedRow);
         scrollPane.setViewportView(table);
@@ -195,7 +194,6 @@ public class DataLoaderWorker
     @Override
     public void downloadProgress(final float percent) {
         UIUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -208,13 +206,12 @@ public class DataLoaderWorker
     @Override
     public void setIndeterminate(final boolean indeterminate) {
         UIUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
                 jpb.setIndeterminate(indeterminate);
             }
         });
-   }
+    }
 
 }

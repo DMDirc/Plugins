@@ -42,8 +42,8 @@ import java.util.Map;
 import javax.inject.Inject;
 
 /**
- * Maintains a list of top level {@link ServerGroup}s and handles reading and
- * writing of the lists to disk.
+ * Maintains a list of top level {@link ServerGroup}s and handles reading and writing of the lists
+ * to disk.
  *
  * @since 0.6.4
  */
@@ -51,23 +51,20 @@ public class ServerList implements ConfigProviderListener {
 
     /** A list of all known groups. */
     private final Map<ServerGroup, ServerGroupWriter> groups = new HashMap<>();
-
     /** ServerManager that ServerEntrys use to create servers */
     private final ServerManager serverManager;
-
     /** The controller to read/write settings with. */
     private final IdentityController identityController;
-
     /** The factory to create new identities with. */
     private final IdentityFactory identityFactory;
 
     /**
      * Creates a new ServerList and loads groups and servers.
      *
-     * @param pluginManager Plugin Manager to use.
-     * @param serverManager Server Manager to use.
+     * @param pluginManager      Plugin Manager to use.
+     * @param serverManager      Server Manager to use.
      * @param identityController The controller to read/write settings with.
-     * @param identityFactory The factory to create new identities with.
+     * @param identityFactory    The factory to create new identities with.
      */
     @Inject
     public ServerList(
@@ -91,7 +88,7 @@ public class ServerList implements ConfigProviderListener {
     /**
      * Adds a server group to the master server list.
      *
-     * @param group The group to be added
+     * @param group  The group to be added
      * @param writer The writer to use to write the group to disk
      */
     public void addServerGroup(final ServerGroup group, final ServerGroupWriter writer) {
@@ -99,10 +96,11 @@ public class ServerList implements ConfigProviderListener {
     }
 
     /**
-     * Adds a server group to the master server list, and creates a new
-     * writer which will write the group to an identity.
+     * Adds a server group to the master server list, and creates a new writer which will write the
+     * group to an identity.
      *
      * @param group The group to be added
+     *
      * @throws IOException if the new identity cannot be written
      */
     public void addServerGroup(final ServerGroup group) throws IOException {
@@ -143,10 +141,11 @@ public class ServerList implements ConfigProviderListener {
     }
 
     /**
-     * Retrieves a ServerGroup with the specified name, if one exists. This
-     * method ignores the case of group's name when comparing.
+     * Retrieves a ServerGroup with the specified name, if one exists. This method ignores the case
+     * of group's name when comparing.
      *
      * @param name The name of the group to be retrieved
+     *
      * @return A correspondingly named server group, or null if none exists
      */
     public ServerGroup getGroupByName(final String name) {
@@ -163,7 +162,8 @@ public class ServerList implements ConfigProviderListener {
     @Override
     public void configProviderAdded(final ConfigProvider configProvider) {
         try {
-            final ServerGroupReader reader = new ServerGroupReader(serverManager, identityController, configProvider);
+            final ServerGroupReader reader =
+                    new ServerGroupReader(serverManager, identityController, configProvider);
             addServerGroup(reader.read(), reader.getWriter());
         } catch (IllegalArgumentException ex) {
             // Silently ignore

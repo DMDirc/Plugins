@@ -32,8 +32,8 @@ import com.dmdirc.updater.manager.UpdateStatus;
 import com.dmdirc.util.collections.ListenerList;
 
 /**
- * Wraps a Addon object (Theme or Plugin) with a boolean to indicate whether
- * it should be toggled or not.
+ * Wraps a Addon object (Theme or Plugin) with a boolean to indicate whether it should be toggled or
+ * not.
  */
 public final class AddonToggle {
 
@@ -53,12 +53,11 @@ public final class AddonToggle {
     private final ThemeManager themeManager;
 
     /**
-     * Creates a new instance of AddonToggle to wrap the specified
-     * PluginInfo.
+     * Creates a new instance of AddonToggle to wrap the specified PluginInfo.
      *
      * @param updateManager The update manager to use to retrieve component info.
-     * @param identity Identity to change update settings in.
-     * @param pi The PluginInfo to be wrapped.
+     * @param identity      Identity to change update settings in.
+     * @param pi            The PluginInfo to be wrapped.
      */
     public AddonToggle(
             final CachingUpdateManager updateManager,
@@ -77,9 +76,9 @@ public final class AddonToggle {
      * Creates a new instance of AddonToggle to wrap the specified Theme.
      *
      * @param updateManager The update manager to use to retrieve component info.
-     * @param identity Identity to change update settings in.
-     * @param themeManager The manager to update when toggling a theme.
-     * @param theme The Theme to be wrapped
+     * @param identity      Identity to change update settings in.
+     * @param themeManager  The manager to update when toggling a theme.
+     * @param theme         The Theme to be wrapped
      */
     public AddonToggle(
             final CachingUpdateManager updateManager,
@@ -130,8 +129,7 @@ public final class AddonToggle {
     }
 
     /**
-     * Gets the state of this PluginInfo, taking into account the state
-     * of the toggle setting.
+     * Gets the state of this PluginInfo, taking into account the state of the toggle setting.
      *
      * @return True if the plugin is or should be loaded, false otherwise.
      */
@@ -140,8 +138,8 @@ public final class AddonToggle {
     }
 
     /**
-     * Gets the update state of this PluginInfo, taking into account the state
-     * of the update toggle setting.
+     * Gets the update state of this PluginInfo, taking into account the state of the update toggle
+     * setting.
      *
      * @return True if the plugin is or should be updated, false otherwise.
      */
@@ -175,7 +173,6 @@ public final class AddonToggle {
      */
     public void apply() {
         new Thread("Addon-Load-Unload") {
-
             /** {@inheritDoc} */
             @Override
             public void run() {

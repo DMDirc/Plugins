@@ -71,9 +71,9 @@ public class CtrlTabWindowManager implements SwingWindowListener,
     /**
      * Creates a new ctrl tab window manager.
      *
-     * @param globalConfig The configuration to read settings from.
+     * @param globalConfig  The configuration to read settings from.
      * @param windowFactory The window factory to use to create and listen for windows.
-     * @param mainFrame The main frame that owns this window manager
+     * @param mainFrame     The main frame that owns this window manager
      */
     @Inject
     public CtrlTabWindowManager(
@@ -84,7 +84,6 @@ public class CtrlTabWindowManager implements SwingWindowListener,
         model = new TreeViewModel(globalConfig, new TreeViewNode(null, null));
         selectionModel = new DefaultTreeSelectionModel();
         treeScroller = new TreeScroller(model, selectionModel, false) {
-
             /** {@inheritDoc} */
             @Override
             protected void setPath(final TreePath path) {
@@ -121,7 +120,6 @@ public class CtrlTabWindowManager implements SwingWindowListener,
         }
 
         UIUtilities.invokeAndWait(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -139,8 +137,7 @@ public class CtrlTabWindowManager implements SwingWindowListener,
     /* {@inheritDoc} */
     @Override
     public void windowDeleted(final TextFrame parent, final TextFrame window) {
-         UIUtilities.invokeAndWait(new Runnable() {
-
+        UIUtilities.invokeAndWait(new Runnable() {
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -175,7 +172,6 @@ public class CtrlTabWindowManager implements SwingWindowListener,
     @Override
     public void selectionChanged(final TextFrame window) {
         UIUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -187,4 +183,5 @@ public class CtrlTabWindowManager implements SwingWindowListener,
             }
         });
     }
+
 }

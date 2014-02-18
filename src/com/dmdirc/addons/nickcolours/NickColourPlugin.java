@@ -28,7 +28,6 @@ import com.dmdirc.plugins.implementations.BasePlugin;
 
 import dagger.ObjectGraph;
 
-
 /**
  * Adds support for nick colours throughout the client.
  */
@@ -38,7 +37,6 @@ public class NickColourPlugin extends BasePlugin {
     private NickColourManager nickColourManager;
 
     public NickColourPlugin() {
-
     }
 
     @Override
@@ -50,7 +48,7 @@ public class NickColourPlugin extends BasePlugin {
     }
 
     @Override
-        public void onLoad() {
+    public void onLoad() {
         super.onLoad();
         nickColourManager.onLoad();
     }

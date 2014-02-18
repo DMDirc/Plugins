@@ -35,4 +35,5 @@ public enum ClickType {
     NICKNAME,
     /** Normal. */
     NORMAL;
+
 }

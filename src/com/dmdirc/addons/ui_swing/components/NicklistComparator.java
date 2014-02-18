@@ -32,10 +32,11 @@ import java.util.Comparator;
  */
 public final class NicklistComparator implements Comparator<ChannelClientInfo>,
         Serializable {
+
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 1;
     /** whether to sort the nicklist by modes. */
@@ -45,6 +46,7 @@ public final class NicklistComparator implements Comparator<ChannelClientInfo>,
 
     /**
      * Creates a new instance of NicklistComparator.
+     *
      * @param newSortByMode sorts by channel mode of the user
      * @param newSortByCase sorts by nickname case
      */
@@ -55,12 +57,13 @@ public final class NicklistComparator implements Comparator<ChannelClientInfo>,
     }
 
     /**
-     * Compares two ChannelClient objects based on the settings the comparator
-     * was initialised with.
+     * Compares two ChannelClient objects based on the settings the comparator was initialised with.
+     *
      * @param client1 the first client to be compared
      * @param client2 the second client to be compared
-     * @return a negative integer, zero, or a positive integer as the first
-     * argument is less than, equal to, or greater than the second.
+     *
+     * @return a negative integer, zero, or a positive integer as the first argument is less than,
+     *         equal to, or greater than the second.
      */
     @Override
     public int compare(final ChannelClientInfo client1,
@@ -82,4 +85,5 @@ public final class NicklistComparator implements Comparator<ChannelClientInfo>,
             return nickname1.compareToIgnoreCase(nickname2);
         }
     }
+
 }

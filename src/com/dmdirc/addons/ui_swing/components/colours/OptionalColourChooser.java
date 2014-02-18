@@ -75,12 +75,12 @@ public class OptionalColourChooser extends JPanel implements
     /**
      * Creates a new instance of ColourChooser.
      *
-     * @param iconManager Icon manager
+     * @param iconManager   Icon manager
      * @param colourManager The colour manager to use to parse colours.
      * @param initialColour Initial colour
-     * @param initialState Initial state
-     * @param ircColours Show IRC colours
-     * @param hexColours Show hex colours
+     * @param initialState  Initial state
+     * @param ircColours    Show IRC colours
+     * @param hexColours    Show hex colours
      *
      * @since 0.6
      */
@@ -192,8 +192,8 @@ public class OptionalColourChooser extends JPanel implements
     }
 
     /**
-     * Adds an action listener to this optional colour chooser. Action
-     * listeners are notified whenever the state changes in some way.
+     * Adds an action listener to this optional colour chooser. Action listeners are notified
+     * whenever the state changes in some way.
      *
      * @param l The listener to be added
      */
@@ -219,4 +219,5 @@ public class OptionalColourChooser extends JPanel implements
     public void setWindow(final Window window) {
         this.window = window;
     }
+
 }

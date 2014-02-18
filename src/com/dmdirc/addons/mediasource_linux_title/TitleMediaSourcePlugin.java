@@ -30,8 +30,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A media source plugin which provides two {@link TitleMediaSource}s, one for
- * the Last.fm linux client and one for Spotify (running under Wine).
+ * A media source plugin which provides two {@link TitleMediaSource}s, one for the Last.fm linux
+ * client and one for Spotify (running under Wine).
  */
 public class TitleMediaSourcePlugin extends BasePlugin implements MediaSourceManager {
 
@@ -42,12 +42,12 @@ public class TitleMediaSourcePlugin extends BasePlugin implements MediaSourceMan
     @Override
     public void onLoad() {
         sources = new ArrayList<>(2);
-        sources.add(new TitleMediaSource("grep -E '\\(\"last\\.?fm\" \"Last\\.?fm\"\\)'" +
-                    "| grep -vE '(\"Last.fm " +
-                    "Options\"|\"Diagnostics\"|\"last\\.?fm\"|\"Share\"|\\(has no " +
-                    "name\\)):' | sed -r 's/^[^\"]*?\"(.*)\": \\(\"last\\.?fm.*$/\\1/g'", "Last.fm"));
+        sources.add(new TitleMediaSource("grep -E '\\(\"last\\.?fm\" \"Last\\.?fm\"\\)'"
+                + "| grep -vE '(\"Last.fm "
+                + "Options\"|\"Diagnostics\"|\"last\\.?fm\"|\"Share\"|\\(has no "
+                + "name\\)):' | sed -r 's/^[^\"]*?\"(.*)\": \\(\"last\\.?fm.*$/\\1/g'", "Last.fm"));
         sources.add(new TitleMediaSource("grep '\": (\"spotify.exe' | cut -d '\"' -f 2 | "
-                    + "cut -d '-' -f 2- | sed -r 's/^\\s+|\\s+$//g' | sed -r 's/-/–/g'", "Spotify"));
+                + "cut -d '-' -f 2- | sed -r 's/^\\s+|\\s+$//g' | sed -r 's/-/–/g'", "Spotify"));
     }
 
     /** {@inheritDoc} */

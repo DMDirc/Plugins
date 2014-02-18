@@ -38,9 +38,9 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 public class LicenceRenderer extends DefaultTreeCellRenderer {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 1;
 
@@ -53,8 +53,7 @@ public class LicenceRenderer extends DefaultTreeCellRenderer {
                 value, sel, expanded, leaf, row, hasFocus);
         label.setIcon(null);
         label.setOpaque(false);
-        if (((DefaultMutableTreeNode) value).getUserObject()
-                instanceof PluginInfo) {
+        if (((DefaultMutableTreeNode) value).getUserObject() instanceof PluginInfo) {
             setText(((PluginInfo) ((DefaultMutableTreeNode) value)
                     .getUserObject()).getMetaData().getFriendlyName());
         }
@@ -76,4 +75,5 @@ public class LicenceRenderer extends DefaultTreeCellRenderer {
     public Color getBackground() {
         return null;
     }
+
 }

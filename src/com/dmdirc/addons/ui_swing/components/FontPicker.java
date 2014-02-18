@@ -40,9 +40,9 @@ import javax.swing.SwingUtilities;
 public class FontPicker extends JComboBox {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = -9054812588033935839L;
     /** Font family to choose from. */
@@ -60,7 +60,6 @@ public class FontPicker extends JComboBox {
 
         setRenderer(new FontListCellRenderer(getRenderer()));
         new LoggingSwingWorker<String[], String[]>() {
-
             /** {@inheritDoc} */
             @Override
             protected String[] doInBackground() {
@@ -82,7 +81,6 @@ public class FontPicker extends JComboBox {
         }.executeInExecutor();
     }
 
-
     /**
      * Loads the fonts and adds them to the font picker.
      *
@@ -92,7 +90,6 @@ public class FontPicker extends JComboBox {
         final int size = getFont().getSize();
         for (final String font : fonts) {
             SwingUtilities.invokeLater(new Runnable() {
-
                 /** {@inheritDoc} */
                 @Override
                 public void run() {
@@ -102,7 +99,6 @@ public class FontPicker extends JComboBox {
             });
         }
         SwingUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -110,4 +106,5 @@ public class FontPicker extends JComboBox {
             }
         });
     }
+
 }

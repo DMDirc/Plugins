@@ -60,8 +60,8 @@ public class LicenceLoader extends LoggingSwingWorker<Void, Void> {
      * Instantiates a new licence loader.
      *
      * @param pluginManager to get plugin manager from to get plugin list from to read licenses
-     * @param tree Tree
-     * @param model Model to load licences into
+     * @param tree          Tree
+     * @param model         Model to load licences into
      */
     public LicenceLoader(
             final PluginManager pluginManager,
@@ -131,7 +131,6 @@ public class LicenceLoader extends LoggingSwingWorker<Void, Void> {
     private void addLicensesToNode(final Map<String, InputStream> licences,
             final DefaultMutableTreeNode root) {
         UIUtilities.invokeAndWait(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -145,7 +144,6 @@ public class LicenceLoader extends LoggingSwingWorker<Void, Void> {
                 continue;
             }
             UIUtilities.invokeAndWait(new Runnable() {
-
                 /** {@inheritDoc} */
                 @Override
                 public void run() {
@@ -192,4 +190,5 @@ public class LicenceLoader extends LoggingSwingWorker<Void, Void> {
 
         return text.toString();
     }
+
 }

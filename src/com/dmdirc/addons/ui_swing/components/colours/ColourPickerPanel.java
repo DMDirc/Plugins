@@ -43,8 +43,7 @@ import java.util.List;
 import javax.swing.JPanel;
 
 /**
- * The ColourPickerPanel allows users to pick either an IRC colour or a hex
- * colour visually.
+ * The ColourPickerPanel allows users to pick either an IRC colour or a hex colour visually.
  */
 public final class ColourPickerPanel extends JPanel implements MouseListener,
         MouseMotionListener, MouseWheelListener {
@@ -94,8 +93,8 @@ public final class ColourPickerPanel extends JPanel implements MouseListener,
      * Creates a new instance of ColourPickerPanel.
      *
      * @param colourManager The colour manager to use to parse colours.
-     * @param newShowIrc Whether to show IRC colours or not
-     * @param newShowHex Whether to show hex colours or not
+     * @param newShowIrc    Whether to show IRC colours or not
+     * @param newShowHex    Whether to show hex colours or not
      */
     public ColourPickerPanel(
             final ColourManager colourManager,
@@ -155,8 +154,8 @@ public final class ColourPickerPanel extends JPanel implements MouseListener,
 
                 for (int i = HEX_WIDTH; i > 0; i--) {
                     for (int j = HEX_HEIGHT; j > 0; j--) {
-                        g.setColor(new Color(Color.HSBtoRGB((float) i /
-                                HEX_WIDTH, saturation, (float) j / HEX_HEIGHT)));
+                        g.setColor(new Color(Color.HSBtoRGB((float) i / HEX_WIDTH, saturation,
+                                (float) j / HEX_HEIGHT)));
                         g.drawLine(BORDER_SIZE + i, offset + HEX_HEIGHT - j,
                                 BORDER_SIZE + i, offset + HEX_HEIGHT - j);
                     }
@@ -168,8 +167,7 @@ public final class ColourPickerPanel extends JPanel implements MouseListener,
                 g.drawRect(BORDER_SIZE * 2 + HEX_WIDTH, offset, 10, HEX_HEIGHT);
 
                 for (int i = 1; i < HEX_HEIGHT; i++) {
-                    g.setColor(new Color(Color.HSBtoRGB(0, (float) i /
-                            HEX_HEIGHT, 1)));
+                    g.setColor(new Color(Color.HSBtoRGB(0, (float) i / HEX_HEIGHT, 1)));
                     g.drawLine(BORDER_SIZE * 2 + HEX_WIDTH + 1, offset + i,
                             BORDER_SIZE * 2 + HEX_WIDTH + SLIDER_WIDTH - 1,
                             offset + i);
@@ -177,12 +175,12 @@ public final class ColourPickerPanel extends JPanel implements MouseListener,
 
                 final Polygon arrow = new Polygon();
 
-                arrow.addPoint(HEX_WIDTH + BORDER_SIZE * 2 + 4, offset +
-                        Math.round(saturation * HEX_HEIGHT));
-                arrow.addPoint(HEX_WIDTH + BORDER_SIZE * 2 + 13, offset +
-                        Math.round(saturation * HEX_HEIGHT) + 5);
-                arrow.addPoint(HEX_WIDTH + BORDER_SIZE * 2 + 13, offset +
-                        Math.round(saturation * HEX_HEIGHT) - 5);
+                arrow.addPoint(HEX_WIDTH + BORDER_SIZE * 2 + 4, offset + Math.round(saturation
+                        * HEX_HEIGHT));
+                arrow.addPoint(HEX_WIDTH + BORDER_SIZE * 2 + 13, offset + Math.round(saturation
+                        * HEX_HEIGHT) + 5);
+                arrow.addPoint(HEX_WIDTH + BORDER_SIZE * 2 + 13, offset + Math.round(saturation
+                        * HEX_HEIGHT) - 5);
 
                 g.setColor(Color.BLACK);
                 g.fillPolygon(arrow);
@@ -212,8 +210,7 @@ public final class ColourPickerPanel extends JPanel implements MouseListener,
             g.fillRect(BORDER_SIZE + 1, offset + 1,
                     getWidth() - BORDER_SIZE * 2 - 1, PREVIEW_HEIGHT - 1);
             g.setColor(Color.BLACK);
-            g.drawLine(BORDER_SIZE, offset, getWidth() - BORDER_SIZE, offset +
-                    PREVIEW_HEIGHT);
+            g.drawLine(BORDER_SIZE, offset, getWidth() - BORDER_SIZE, offset + PREVIEW_HEIGHT);
         } else {
             g.setColor(preview);
             g.fillRect(BORDER_SIZE + 1, offset + 1,
@@ -222,9 +219,11 @@ public final class ColourPickerPanel extends JPanel implements MouseListener,
     }
 
     /**
-     * Retrieves the hex colour beneath the mouse. It is assumed that this
-     * method is only called if the mouse is within the hex area.
+     * Retrieves the hex colour beneath the mouse. It is assumed that this method is only called if
+     * the mouse is within the hex area.
+     *
      * @param e The mouse event that triggered this call
+     *
      * @return A colour object representing the colour beneat the mouse
      */
     private Color getHexColour(final MouseEvent e) {
@@ -236,9 +235,11 @@ public final class ColourPickerPanel extends JPanel implements MouseListener,
     }
 
     /**
-     * Retrieves the irc colour beneath the mouse. It is assumed that this
-     * method is only called if the mouse is within the irc colour area.
+     * Retrieves the irc colour beneath the mouse. It is assumed that this method is only called if
+     * the mouse is within the irc colour area.
+     *
      * @param e The mouse event that triggered this call
+     *
      * @return A colour object representing the colour beneath the mouse
      */
     private Color getIrcColour(final MouseEvent e) {
@@ -248,10 +249,10 @@ public final class ColourPickerPanel extends JPanel implements MouseListener,
     }
 
     /**
-     * Adds an action listener to this object. Action events are generated (and
-     * passed to all action listeners) when the user selects a colour. The two
-     * IDs used by this object are ACTION_HEX and ACTION_IRC, to indicate a
-     * hex colour or an irc colour was selected, respectively.
+     * Adds an action listener to this object. Action events are generated (and passed to all action
+     * listeners) when the user selects a colour. The two IDs used by this object are ACTION_HEX and
+     * ACTION_IRC, to indicate a hex colour or an irc colour was selected, respectively.
+     *
      * @param listener The action listener to register
      */
     public void addActionListener(final ActionListener listener) {
@@ -260,6 +261,7 @@ public final class ColourPickerPanel extends JPanel implements MouseListener,
 
     /**
      * Removes an action listener from this object.
+     *
      * @param listener The listener to be removed
      */
     public void removeActionListener(final ActionListener listener) {
@@ -268,7 +270,8 @@ public final class ColourPickerPanel extends JPanel implements MouseListener,
 
     /**
      * Throws a new action event to all listeners.
-     * @param id The id of the action
+     *
+     * @param id      The id of the action
      * @param message The 'message' to use for the event
      */
     private void throwAction(final int id, final String message) {
@@ -281,27 +284,26 @@ public final class ColourPickerPanel extends JPanel implements MouseListener,
 
     /**
      * Converts the specified integer (in the range 0-255) into a hex string.
+     *
      * @param value The integer to convert
+     *
      * @return A char digit hex string representing the specified integer
      */
     private static String toHex(final int value) {
         final char[] chars = {
             '0', '1', '2', '3', '4', '5', '6', '7',
-            '8', '9', 'A', 'B', 'C', 'D', 'E', 'F',
-        };
+            '8', '9', 'A', 'B', 'C', 'D', 'E', 'F',};
 
         return Character.toString(chars[value / 16])
                 + Character.toString(chars[value % 16]);
     }
 
     private void mouseMotion(final MouseEvent e) {
-        if (showIrc && e.getY() > ircOffset && e.getY() < ircOffset + IRC_HEIGHT &&
-                e.getX() > BORDER_SIZE && e.getX() < BORDER_SIZE + 16 *
-                IRC_WIDTH) {
+        if (showIrc && e.getY() > ircOffset && e.getY() < ircOffset + IRC_HEIGHT && e.getX()
+                > BORDER_SIZE && e.getX() < BORDER_SIZE + 16 * IRC_WIDTH) {
             preview = getIrcColour(e);
-        } else if (showHex && e.getY() > hexOffset && e.getY() < hexOffset +
-                HEX_HEIGHT && e.getX() > BORDER_SIZE && e.getX() < BORDER_SIZE +
-                HEX_WIDTH) {
+        } else if (showHex && e.getY() > hexOffset && e.getY() < hexOffset + HEX_HEIGHT && e.getX()
+                > BORDER_SIZE && e.getX() < BORDER_SIZE + HEX_WIDTH) {
             preview = getHexColour(e);
         } else {
             preview = null;
@@ -317,7 +319,7 @@ public final class ColourPickerPanel extends JPanel implements MouseListener,
      */
     @Override
     public void mouseClicked(final MouseEvent e) {
-    // Do nothing
+        // Do nothing
     }
 
     /**
@@ -327,7 +329,7 @@ public final class ColourPickerPanel extends JPanel implements MouseListener,
      */
     @Override
     public void mousePressed(final MouseEvent e) {
-    // Do nothing
+        // Do nothing
     }
 
     /**
@@ -337,26 +339,24 @@ public final class ColourPickerPanel extends JPanel implements MouseListener,
      */
     @Override
     public void mouseReleased(final MouseEvent e) {
-    if (showIrc && e.getY() > ircOffset && e.getY() < ircOffset + IRC_HEIGHT &&
-                e.getX() > BORDER_SIZE && e.getX() < BORDER_SIZE + 16 *
-                IRC_WIDTH) {
+        if (showIrc && e.getY() > ircOffset && e.getY() < ircOffset + IRC_HEIGHT && e.getX()
+                > BORDER_SIZE && e.getX() < BORDER_SIZE + 16 * IRC_WIDTH) {
 
             final int i = (e.getX() - BORDER_SIZE) / IRC_WIDTH;
 
             throwAction(ACTION_IRC, Integer.toString(i));
 
-        } else if (showHex && e.getY() > hexOffset && e.getY() < hexOffset +
-                HEX_HEIGHT) {
+        } else if (showHex && e.getY() > hexOffset && e.getY() < hexOffset + HEX_HEIGHT) {
 
             if (e.getX() > BORDER_SIZE && e.getX() < BORDER_SIZE + HEX_WIDTH) {
 
                 final Color color = getHexColour(e);
 
-                throwAction(ACTION_HEX, toHex(color.getRed()) +
-                        toHex(color.getGreen()) + toHex(color.getBlue()));
+                throwAction(ACTION_HEX, toHex(color.getRed()) + toHex(color.getGreen()) + toHex(
+                        color.getBlue()));
 
-            } else if (e.getX() > BORDER_SIZE * 2 + HEX_WIDTH && e.getX() <
-                    BORDER_SIZE * 3 + HEX_WIDTH + SLIDER_WIDTH) {
+            } else if (e.getX() > BORDER_SIZE * 2 + HEX_WIDTH && e.getX() < BORDER_SIZE * 3
+                    + HEX_WIDTH + SLIDER_WIDTH) {
                 saturation = (float) (e.getY() - hexOffset) / 125;
                 repaint();
             }
@@ -370,7 +370,7 @@ public final class ColourPickerPanel extends JPanel implements MouseListener,
      */
     @Override
     public void mouseEntered(final MouseEvent e) {
-    // Do nothing
+        // Do nothing
     }
 
     /**
@@ -380,7 +380,7 @@ public final class ColourPickerPanel extends JPanel implements MouseListener,
      */
     @Override
     public void mouseExited(final MouseEvent e) {
-    // Do nothing
+        // Do nothing
     }
 
     /**
@@ -424,4 +424,5 @@ public final class ColourPickerPanel extends JPanel implements MouseListener,
             repaint();
         }
     }
+
 }

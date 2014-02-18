@@ -40,15 +40,14 @@ import javax.swing.text.StyleConstants;
 import net.miginfocom.swing.MigLayout;
 
 /**
- * Displays the certificate info panel. Listing various informational
- * snippets about a certificate.
+ * Displays the certificate info panel. Listing various informational snippets about a certificate.
  */
 public class CertificateInfoPanel extends JScrollPane {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 1;
     /** Certificate info list. */
@@ -122,4 +121,5 @@ public class CertificateInfoPanel extends JScrollPane {
         }
         layoutComponents();
     }
+
 }

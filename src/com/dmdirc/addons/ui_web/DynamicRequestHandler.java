@@ -60,19 +60,14 @@ import org.slf4j.LoggerFactory;
 public class DynamicRequestHandler extends AbstractHandler {
 
     private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(DynamicRequestHandler.class);
-
     /** Number of milliseconds before a client is timed out. */
     private static final long TIMEOUT = 1000 * 60 * 2; // Two minutes
-
     /** The last time each client was seen. */
     private final Map<String, Client> clients = new HashMap<>();
-
     /** The controller which owns this request handler. */
     private final WebInterfaceUI controller;
-
     /** The server manager to use to connect to new servers. */
     private final ServerManager serverManager;
-
     /** The controller to read/write settings with. */
     private final IdentityController identityController;
 
@@ -80,9 +75,9 @@ public class DynamicRequestHandler extends AbstractHandler {
      * Creates a new instance of DynamicRequestHandler. Registers object convertors with the JSON
      * serialiser.
      *
-     * @param controller The controller that this request handler is for.
+     * @param controller         The controller that this request handler is for.
      * @param identityController The controller to read/write settings with.
-     * @param serverManager The server manager to use to connect to new servers.
+     * @param serverManager      The server manager to use to connect to new servers.
      */
     public DynamicRequestHandler(
             final WebInterfaceUI controller,
@@ -197,8 +192,9 @@ public class DynamicRequestHandler extends AbstractHandler {
     /**
      * Handles a request for the event feed.
      *
-     * @param request The servlet request that is being handled
+     * @param request  The servlet request that is being handled
      * @param response The servlet response object to write to
+     *
      * @throws IOException If unable to write the response
      */
     private void doFeed(final HttpServletRequest request,
@@ -253,10 +249,10 @@ public class DynamicRequestHandler extends AbstractHandler {
                         request.getParameter("input"),
                         request.getParameter("selstart"),
                         request.getParameter("selend")).handleKeyPressed(
-                                request.getParameter("input"),
-                                Integer.parseInt(request.getParameter("key")), 0,
-                                Boolean.parseBoolean(request.getParameter("shift")),
-                                Boolean.parseBoolean(request.getParameter("ctrl")));
+                        request.getParameter("input"),
+                        Integer.parseInt(request.getParameter("key")), 0,
+                        Boolean.parseBoolean(request.getParameter("shift")),
+                        Boolean.parseBoolean(request.getParameter("ctrl")));
             } catch (NumberFormatException ex) {
                 // Do nothing
             }
@@ -273,7 +269,7 @@ public class DynamicRequestHandler extends AbstractHandler {
 
             wiw.getInputHandler(client,
                     request.getParameter("input"), request.getParameter(
-                            "selstart"),
+                    "selstart"),
                     request.getParameter("selend")).doTabCompletion(false);
         }
     }
@@ -305,8 +301,8 @@ public class DynamicRequestHandler extends AbstractHandler {
         try {
             serverManager.connectToAddress(
                     new URI("irc://" + request.getParameter("password") + "@"
-                            + request.getParameter("server") + ":"
-                            + request.getParameter("port")),
+                    + request.getParameter("server") + ":"
+                    + request.getParameter("port")),
                     findProfile(request.getParameter("profile")));
         } catch (URISyntaxException ex) {
             // Ugh.
@@ -420,6 +416,7 @@ public class DynamicRequestHandler extends AbstractHandler {
      * control characters.
      *
      * @param object The object to be JSON-ified.
+     *
      * @return A JSON representation of the specified object.
      */
     private static String toJSON(final Object object) {

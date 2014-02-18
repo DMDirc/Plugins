@@ -64,9 +64,11 @@ public class Profile {
      * Creates a new profile based off the specified Identity.
      *
      * @param identityFactory The factory to use to create the profile's config file when saving.
-     * @param configProvider Provider to read existing profile from. If null, a blank profile is created.
+     * @param configProvider  Provider to read existing profile from. If null, a blank profile is
+     *                        created.
      */
-    public Profile(final IdentityFactory identityFactory, @Nullable final ConfigProvider configProvider) {
+    public Profile(final IdentityFactory identityFactory,
+            @Nullable final ConfigProvider configProvider) {
         this.identityFactory = identityFactory;
         this.configProvider = configProvider;
 
@@ -158,7 +160,7 @@ public class Profile {
     /**
      * Edits a nickname in the list.
      *
-     * @param nickname Nickname to edit
+     * @param nickname    Nickname to edit
      * @param newNickname Edited nickname
      */
     public void editNickname(final String nickname, final String newNickname) {
@@ -233,4 +235,5 @@ public class Profile {
         return "Profile{" + "name=" + name + ", realname=" + realname
                 + ", ident=" + ident + ", nicknames=" + nicknames + ", deleted=" + deleted + '}';
     }
+
 }

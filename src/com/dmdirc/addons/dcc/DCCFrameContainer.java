@@ -40,21 +40,20 @@ public abstract class DCCFrameContainer extends WritableFrameContainer {
 
     /** The factory to use to create tab completers. */
     private final TabCompleterFactory tabCompleterFactory;
-
     /** The Window we're using. */
     private boolean windowClosing = false;
 
     /**
      * Creates a new instance of DCCFrame.
      *
-     * @param title The title of this window
-     * @param icon The icon to use
-     * @param configManager Config manager
-     * @param parser Command parser to use for this window
-     * @param messageSinkManager The sink manager to use to despatch messages.
+     * @param title               The title of this window
+     * @param icon                The icon to use
+     * @param configManager       Config manager
+     * @param parser              Command parser to use for this window
+     * @param messageSinkManager  The sink manager to use to despatch messages.
      * @param tabCompleterFactory The factory to use to create tab completers.
-     * @param urlBuilder The URL builder to use when finding icons.
-     * @param components The UI components that this frame requires
+     * @param urlBuilder          The URL builder to use when finding icons.
+     * @param components          The UI components that this frame requires
      */
     public DCCFrameContainer(
             final String title,

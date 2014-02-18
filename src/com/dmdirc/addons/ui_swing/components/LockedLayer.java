@@ -1,34 +1,26 @@
-/**
- * Copyright (c) 2006-2009, Alexander Potochkin
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *
- *   * Redistributions of source code must retain the above copyright
- *     notice, this list of conditions and the following disclaimer.
- *   * Redistributions in binary form must reproduce the above
- *     copyright notice, this list of conditions and the following
- *     disclaimer in the documentation and/or other materials provided
- *     with the distribution.
- *   * Neither the name of the JXLayer project nor the names of its
- *     contributors may be used to endorse or promote products derived
- *     from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
- * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
- * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
 
+/**
+ * Copyright (c) 2006-2009, Alexander Potochkin All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without modification, are permitted
+ * provided that the following conditions are met:
+ *
+ *   * Redistributions of source code must retain the above copyright notice, this list of conditions
+ * and the following disclaimer. * Redistributions in binary form must reproduce the above copyright
+ * notice, this list of conditions and the following disclaimer in the documentation and/or other
+ * materials provided with the distribution. * Neither the name of the JXLayer project nor the names
+ * of its contributors may be used to endorse or promote products derived from this software without
+ * specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
+ * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
+ * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
 package com.dmdirc.addons.ui_swing.components;
 
 import java.awt.Component;
@@ -47,24 +39,21 @@ import org.jdesktop.jxlayer.plaf.AbstractBufferedLayerUI;
 import org.jdesktop.jxlayer.plaf.effect.LayerEffect;
 
 /**
- * An implementation of the {@code BufferedLayerUI} which provides
- * a lightweight disabling for the content of its {@link JXLayer}.
- * This allows temporarily blocking a part of the interface
- * with all it subcomponents, it is also useful when some kind of action
- * is in progress, e.g. reading data from a database.
+ * An implementation of the {@code BufferedLayerUI} which provides a lightweight disabling for the
+ * content of its {@link JXLayer}. This allows temporarily blocking a part of the interface with all
+ * it subcomponents, it is also useful when some kind of action is in progress, e.g. reading data
+ * from a database.
  * <p>
- * When {@code true} is passed to the {@link #setLocked(boolean)},
- * the {@code JXLayer} of this {@code LockableLayerUI} becomes "locked".
- * It sets the "wait" mouse cursor and stops reacting
- * on mouse, keyboard and focus events.
+ * When {@code true} is passed to the {@link #setLocked(boolean)}, the {@code JXLayer} of this
+ * {@code LockableLayerUI} becomes "locked". It sets the "wait" mouse cursor and stops reacting on
+ * mouse, keyboard and focus events.
  * <p>
- * If {@code setLocked(boolean)} is called with {@code false} parameter
- * after that, the {@code JXLayer}, together with all its subcomponents,
- * gets back to live.
+ * If {@code setLocked(boolean)} is called with {@code false} parameter after that, the
+ * {@code JXLayer}, together with all its subcomponents, gets back to live.
  * <p>
  * Subclasses usually override {@link #paintLayer(Graphics2D,JXLayer)} or
- * {@link #getLayerEffects(JXLayer)} to implement some visual effects
- * when {@code JXLayer} is in locked state.
+ * {@link #getLayerEffects(JXLayer)} to implement some visual effects when {@code JXLayer} is in
+ * locked state.
  * <p>
  * Here is an example of using {@code LockableLayerUI}:
  * <pre>
@@ -80,15 +69,15 @@ import org.jdesktop.jxlayer.plaf.effect.LayerEffect;
  * // add the layer to a frame or a panel, like any other component
  * frame.add(layer);
  * </pre>
+ *
  * @param <T> Generic type
  */
-public class LockedLayer<T extends JComponent> extends
-        AbstractBufferedLayerUI<T> {
+public class LockedLayer<T extends JComponent> extends AbstractBufferedLayerUI<T> {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 1;
     /** Are we locked. */
@@ -102,7 +91,6 @@ public class LockedLayer<T extends JComponent> extends
     private LayerEffect[] lockedEffects = new LayerEffect[0];
     /** Focus listener. */
     private final transient FocusListener focusListener = new FocusListener() {
-
         /** {@inheritDoc} */
         @Override
         public void focusGained(final FocusEvent e) {
@@ -128,10 +116,11 @@ public class LockedLayer<T extends JComponent> extends
     }
 
     /**
-     * Creates a new instance of LockableUI, passed lockedEffects will be used
-     * for when this UI in the locked state.
+     * Creates a new instance of LockableUI, passed lockedEffects will be used for when this UI in
+     * the locked state.
      *
      * @param effects effects to be used when this UI is locked
+     *
      * @see #setLocked(boolean)
      * @see #setLockedEffects(LayerEffect...)
      */
@@ -162,28 +151,26 @@ public class LockedLayer<T extends JComponent> extends
     }
 
     /**
-     * Returns {@code true} if this {@code LockableLayerUI}
-     * is in locked state and all {@link JXLayer}'s mouse, keyboard and focus
-     * events are temporarily blocked, otherwise returns {@code false}.
+     * Returns {@code true} if this {@code LockableLayerUI} is in locked state and all
+     * {@link JXLayer}'s mouse, keyboard and focus events are temporarily blocked, otherwise returns
+     * {@code false}.
      *
-     * @return {@code true} if this {@code LockableLayerUI} is in locked state
-     * and all {@code JXLayer}'s mouse, keyboard and focus events are
-     * temporarily blocked, otherwise returns {@code false}
+     * @return {@code true} if this {@code LockableLayerUI} is in locked state and all
+     *         {@code JXLayer}'s mouse, keyboard and focus events are temporarily blocked, otherwise
+     *         returns {@code false}
      */
     public boolean isLocked() {
         return locked;
     }
 
     /**
-     * If {@code isLocked} is {@code true} then all mouse, keyboard and focus
-     * events from the {@link JXLayer} of this {@code LockableLayerUI} will be
-     * temporarily blocked.
+     * If {@code isLocked} is {@code true} then all mouse, keyboard and focus events from the
+     * {@link JXLayer} of this {@code LockableLayerUI} will be temporarily blocked.
      *
-     * @param isLocked if {@code true} then all mouse, keyboard and focus events
-     * from the {@code JXLayer} of this {@code LockableLayerUI} will be
-     * temporarily blocked
+     * @param isLocked if {@code true} then all mouse, keyboard and focus events from the
+     *                 {@code JXLayer} of this {@code LockableLayerUI} will be temporarily blocked
      */
-    public void setLocked(final     boolean isLocked) {
+    public void setLocked(final boolean isLocked) {
         if (isLocked != isLocked()) {
             if (getLayer() != null) {
                 final KeyboardFocusManager kfm = KeyboardFocusManager.
@@ -259,11 +246,10 @@ public class LockedLayer<T extends JComponent> extends
     }
 
     /**
-     * Returns the mouse cursor to be used
-     * by this {@code LockableLayerUI} when it locked state.
+     * Returns the mouse cursor to be used by this {@code LockableLayerUI} when it locked state.
      *
-     * @return the mouse cursor to be used
-     *         by this {@code LockableLayerUI} when it locked state
+     * @return the mouse cursor to be used by this {@code LockableLayerUI} when it locked state
+     *
      * @see #getLockedCursor()
      * @see #setLocked(boolean)
      */
@@ -272,11 +258,10 @@ public class LockedLayer<T extends JComponent> extends
     }
 
     /**
-     * Sets the mouse cursor to be used
-     * by this {@code LockableLayerUI} when it locked state.
+     * Sets the mouse cursor to be used by this {@code LockableLayerUI} when it locked state.
      *
-     * @param newCursor the mouse cursor to be used by this
-     * {@code LockableLayerUI} when it locked state
+     * @param newCursor the mouse cursor to be used by this {@code LockableLayerUI} when it locked
+     *                  state
      */
     public void setLockedCursor(final Cursor newCursor) {
         final Cursor oldCursor = getLockedCursor();
@@ -291,6 +276,7 @@ public class LockedLayer<T extends JComponent> extends
      * Returns the effects to be used when this UI is locked.
      *
      * @return the effects to be used when this UI is locked
+     *
      * @see #setLocked(boolean)
      */
     public LayerEffect[] getLockedEffects() {
@@ -300,14 +286,12 @@ public class LockedLayer<T extends JComponent> extends
     }
 
     /**
-     * This method returns the array of {@code LayerEffect}s
-     * set using
+     * This method returns the array of {@code LayerEffect}s set using
      * {@link #setLockedEffects(LayerEffect...)}
      * <p>
-     * If a {@code LockableUI} provides more extensive API
-     * to support different {@code Effect}s depending on its state
-     * or on the state of the passed {@code JXLayer},
-     * this method should be overridden.
+     * If a {@code LockableUI} provides more extensive API to support different {@code Effect}s
+     * depending on its state or on the state of the passed {@code JXLayer}, this method should be
+     * overridden.
      *
      * @param l Layer to get effects from
      *
@@ -325,6 +309,7 @@ public class LockedLayer<T extends JComponent> extends
      * Sets the effects to be used when this UI is locked.
      *
      * @param effects the effects to be used when this UI is locked
+     *
      * @see #setLocked(boolean)
      */
     public void setLockedEffects(final LayerEffect... effects) {
@@ -362,4 +347,5 @@ public class LockedLayer<T extends JComponent> extends
             return super.getLayerEffects(l);
         }
     }
+
 }

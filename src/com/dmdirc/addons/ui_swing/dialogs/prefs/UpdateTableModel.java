@@ -40,9 +40,9 @@ import javax.swing.table.AbstractTableModel;
 public class UpdateTableModel extends AbstractTableModel {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 3;
     /** Update component list. */
@@ -54,7 +54,7 @@ public class UpdateTableModel extends AbstractTableModel {
      * Instantiates a new table model.
      *
      * @param updateManager The update manager to use to retrieve component status.
-     * @param updates Update components to show
+     * @param updates       Update components to show
      */
     public UpdateTableModel(
             final CachingUpdateManager updateManager,
@@ -215,9 +215,11 @@ public class UpdateTableModel extends AbstractTableModel {
      *
      * @since 0.6.3m2
      * @param row The row number
+     *
      * @return The corresponding update component
      */
     public UpdateComponent getComponent(final int row) {
         return updates.get(row);
     }
+
 }

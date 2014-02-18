@@ -41,9 +41,9 @@ import net.miginfocom.swing.MigLayout;
 public class AddonInfoLabel extends JPanel {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 1;
     /** Addon info to be represented. */
@@ -56,8 +56,8 @@ public class AddonInfoLabel extends JPanel {
     /**
      * Creates a new addon info label to describe the specified addon info.
      *
-     * @param addonInfo Addon to describe
-     * @param parentWindow Parent window
+     * @param addonInfo     Addon to describe
+     * @param parentWindow  Parent window
      * @param workerFactory
      */
     public AddonInfoLabel(
@@ -145,4 +145,5 @@ public class AddonInfoLabel extends JPanel {
             final int oldValue, final int newValue) {
         //NOOP for performance reasons
     }
+
 }

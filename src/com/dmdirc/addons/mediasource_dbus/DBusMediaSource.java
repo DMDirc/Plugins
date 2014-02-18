@@ -45,8 +45,7 @@ public class DBusMediaSource extends BasePlugin implements MediaSourceManager {
     /** The sources used by this media source. */
     private List<MediaSource> sources;
     /** A map of discovered mpris sources. */
-    private final Map<String, MediaSource> mprisSources
-            = new HashMap<>();
+    private final Map<String, MediaSource> mprisSources = new HashMap<>();
     /** The path to qdbus. */
     private String qdbus;
 
@@ -93,13 +92,14 @@ public class DBusMediaSource extends BasePlugin implements MediaSourceManager {
      * Performs a dbus call.
      *
      * @param service The name of the service
-     * @param iface The name of the interface
-     * @param method The name of the method
-     * @param args Any arguments to the method
+     * @param iface   The name of the interface
+     * @param method  The name of the method
+     * @param args    Any arguments to the method
+     *
      * @return A list of output (one entry per line)
      */
     public List<String> doDBusCall(final String service, final String iface,
-            final String method, final String ... args) {
+            final String method, final String... args) {
         final String[] exeArgs = new String[4 + args.length];
         exeArgs[0] = qdbus;
         exeArgs[1] = service;
@@ -115,6 +115,7 @@ public class DBusMediaSource extends BasePlugin implements MediaSourceManager {
      * Executes the specified command and arguments and returns the results.
      *
      * @param args The command/arguments to be executed
+     *
      * @return The output of the specified command
      */
     protected static List<String> getInfo(final String[] args) {
@@ -150,6 +151,7 @@ public class DBusMediaSource extends BasePlugin implements MediaSourceManager {
      * Parses a dbus dictionary into a {@link Map}.
      *
      * @param lines The lines to be parsed as a dictionary
+     *
      * @return A map corresponding to the specified dictionary
      */
     protected static Map<String, String> parseDictionary(

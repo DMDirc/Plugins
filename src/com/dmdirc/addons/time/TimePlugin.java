@@ -47,7 +47,7 @@ public class TimePlugin extends BaseCommandPlugin {
     /**
      * Creates a new instance of this plugin.
      *
-     * @param actionController The action controller to register listeners with
+     * @param actionController  The action controller to register listeners with
      * @param commandController Command controller to register commands
      */
     public TimePlugin(
@@ -115,4 +115,5 @@ public class TimePlugin extends BaseCommandPlugin {
     public TimerManager getTimerManager() {
         return manager;
     }
+
 }

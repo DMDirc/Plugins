@@ -29,8 +29,8 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Executor for creating swing worker daemon threads.
- * Workaround for bug http://bugs.sun.com/view_bug.do?bug_id=6880336
+ * Executor for creating swing worker daemon threads. Workaround for bug
+ * http://bugs.sun.com/view_bug.do?bug_id=6880336
  */
 public final class SwingWorkerExecutor extends ThreadPoolExecutor implements
         ThreadFactory {
@@ -67,4 +67,5 @@ public final class SwingWorkerExecutor extends ThreadPoolExecutor implements
     public static void queue(final Runnable runnable) {
         EXECUTOR.execute(runnable);
     }
+
 }

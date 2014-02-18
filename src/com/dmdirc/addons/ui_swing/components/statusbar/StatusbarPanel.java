@@ -37,10 +37,11 @@ import javax.swing.border.EtchedBorder;
 import net.miginfocom.swing.MigLayout;
 
 /**
- * A panel shown in the status bar which displays a {@link StatusbarPopupWindow}
- * when the user mouses over it.
+ * A panel shown in the status bar which displays a {@link StatusbarPopupWindow} when the user
+ * mouses over it.
  *
  * @param <T> Type of component used to trigger this panel
+ *
  * @since 0.6.3m1
  */
 public abstract class StatusbarPanel<T extends JComponent> extends JPanel
@@ -49,9 +50,9 @@ public abstract class StatusbarPanel<T extends JComponent> extends JPanel
     /** The label we use to show information. */
     protected final T label;
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 2;
     /** The popup window we're using to show extra info. */
@@ -74,9 +75,9 @@ public abstract class StatusbarPanel<T extends JComponent> extends JPanel
     /**
      * Creates a new {@link StatusbarPanel}.
      *
-     * @param label The component to be displayed in the status bar
+     * @param label             The component to be displayed in the status bar
      * @param nonSelectedBorder The border for when the panel is unselected
-     * @param selectedBorder The border for when for the panel is selected
+     * @param selectedBorder    The border for when for the panel is selected
      */
     public StatusbarPanel(final T label, final Border nonSelectedBorder,
             final Border selectedBorder) {
@@ -193,10 +194,11 @@ public abstract class StatusbarPanel<T extends JComponent> extends JPanel
     }
 
     /**
-     * Retrieves the implementation of {@link StatusbarPopupWindow} that should
-     * be shown by this panel when the user mouses over it.
+     * Retrieves the implementation of {@link StatusbarPopupWindow} that should be shown by this
+     * panel when the user mouses over it.
      *
      * @return A concrete {@link StatusbarPopupWindow} implementation to use
      */
     protected abstract StatusbarPopupWindow getWindow();
+
 }

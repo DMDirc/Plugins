@@ -53,60 +53,98 @@ import dagger.Provides;
 public class DebugModule {
 
     @Provides(type = Provides.Type.SET)
-    public DebugCommand getCommand(final Benchmark command) { return command; }
+    public DebugCommand getCommand(final Benchmark command) {
+        return command;
+    }
 
     @Provides(type = Provides.Type.SET)
-    public DebugCommand getCommand(final ColourSpam command) { return command; }
+    public DebugCommand getCommand(final ColourSpam command) {
+        return command;
+    }
 
     @Provides(type = Provides.Type.SET)
-    public DebugCommand getCommand(final ConfigInfo command) { return command; }
+    public DebugCommand getCommand(final ConfigInfo command) {
+        return command;
+    }
 
     @Provides(type = Provides.Type.SET)
-    public DebugCommand getCommand(final FakeError command) { return command; }
+    public DebugCommand getCommand(final FakeError command) {
+        return command;
+    }
 
     @Provides(type = Provides.Type.SET)
-    public DebugCommand getCommand(final FakeUpdates command) { return command; }
+    public DebugCommand getCommand(final FakeUpdates command) {
+        return command;
+    }
 
     @Provides(type = Provides.Type.SET)
-    public DebugCommand getCommand(final FirstRun command) { return command; }
+    public DebugCommand getCommand(final FirstRun command) {
+        return command;
+    }
 
     @Provides(type = Provides.Type.SET)
-    public DebugCommand getCommand(final ForceUpdate command) { return command; }
+    public DebugCommand getCommand(final ForceUpdate command) {
+        return command;
+    }
 
     @Provides(type = Provides.Type.SET)
-    public DebugCommand getCommand(final GlobalConfigInfo command) { return command; }
+    public DebugCommand getCommand(final GlobalConfigInfo command) {
+        return command;
+    }
 
     @Provides(type = Provides.Type.SET)
-    public DebugCommand getCommand(final Identities command) { return command; }
+    public DebugCommand getCommand(final Identities command) {
+        return command;
+    }
 
     @Provides(type = Provides.Type.SET)
-    public DebugCommand getCommand(final MemInfo command) { return command; }
+    public DebugCommand getCommand(final MemInfo command) {
+        return command;
+    }
 
     @Provides(type = Provides.Type.SET)
-    public DebugCommand getCommand(final Notify command) { return command; }
+    public DebugCommand getCommand(final Notify command) {
+        return command;
+    }
 
     @Provides(type = Provides.Type.SET)
-    public DebugCommand getCommand(final RunGC command) { return command; }
+    public DebugCommand getCommand(final RunGC command) {
+        return command;
+    }
 
     @Provides(type = Provides.Type.SET)
-    public DebugCommand getCommand(final ServerInfo command) { return command; }
+    public DebugCommand getCommand(final ServerInfo command) {
+        return command;
+    }
 
     @Provides(type = Provides.Type.SET)
-    public DebugCommand getCommand(final ServerState command) { return command; }
+    public DebugCommand getCommand(final ServerState command) {
+        return command;
+    }
 
     @Provides(type = Provides.Type.SET)
-    public DebugCommand getCommand(final Services command) { return command; }
+    public DebugCommand getCommand(final Services command) {
+        return command;
+    }
 
     @Provides(type = Provides.Type.SET)
-    public DebugCommand getCommand(final ShowRaw command) { return command; }
+    public DebugCommand getCommand(final ShowRaw command) {
+        return command;
+    }
 
     @Provides(type = Provides.Type.SET)
-    public DebugCommand getCommand(final StatusbarMessage command) { return command; }
+    public DebugCommand getCommand(final StatusbarMessage command) {
+        return command;
+    }
 
     @Provides(type = Provides.Type.SET)
-    public DebugCommand getCommand(final Threads command) { return command; }
+    public DebugCommand getCommand(final Threads command) {
+        return command;
+    }
 
     @Provides(type = Provides.Type.SET)
-    public DebugCommand getCommand(final Time command) { return command; }
+    public DebugCommand getCommand(final Time command) {
+        return command;
+    }
 
 }

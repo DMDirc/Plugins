@@ -68,9 +68,9 @@ public class TreeScroller implements MouseWheelListener {
     /**
      * Creates a new instance of TreeScroller.
      *
-     * @param model Tree model to scroll over
+     * @param model          Tree model to scroll over
      * @param selectionModel Tree selection model to scroll over
-     * @param rootVisible Is the root node visible
+     * @param rootVisible    Is the root node visible
      */
     public TreeScroller(final DefaultTreeModel model,
             final TreeSelectionModel selectionModel,
@@ -89,7 +89,6 @@ public class TreeScroller implements MouseWheelListener {
      */
     public static void register(final JTree tree) {
         UIUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -101,15 +100,14 @@ public class TreeScroller implements MouseWheelListener {
     /**
      * Registers a new tree scroller for the specified models.
      *
-     * @param model Tree model.
+     * @param model          Tree model.
      * @param selectionModel Selection model.
-     * @param rootVisible Root visible
+     * @param rootVisible    Root visible
      */
     public static void register(final DefaultTreeModel model,
             final TreeSelectionModel selectionModel,
             final boolean rootVisible) {
         UIUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -233,4 +231,5 @@ public class TreeScroller implements MouseWheelListener {
 
         return nextNode;
     }
+
 }

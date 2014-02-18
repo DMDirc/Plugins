@@ -38,4 +38,5 @@ public abstract class Step extends JPanel {
      * @return Step title
      */
     public abstract String getTitle();
+
 }

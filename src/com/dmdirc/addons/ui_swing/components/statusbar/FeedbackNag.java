@@ -46,9 +46,9 @@ public class FeedbackNag extends JLabel implements StatusBarComponent,
         MouseListener, ActionListener {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 1;
     /** Dismiss menu. */
@@ -64,8 +64,8 @@ public class FeedbackNag extends JLabel implements StatusBarComponent,
     /**
      * Creates a new feedback nag.
      *
-     * @param statusBar Status bar the nag will be displayed in.
-     * @param iconManager The icon manager to use to find the feedback nag icon.
+     * @param statusBar              Status bar the nag will be displayed in.
+     * @param iconManager            The icon manager to use to find the feedback nag icon.
      * @param feedbackDialogProvider Provider of feedback dialogs.
      */
     @Inject
@@ -173,4 +173,5 @@ public class FeedbackNag extends JLabel implements StatusBarComponent,
         }
         statusBar.removeComponent(this);
     }
+
 }

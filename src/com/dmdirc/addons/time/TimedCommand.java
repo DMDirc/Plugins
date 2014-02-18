@@ -38,35 +38,29 @@ public class TimedCommand extends TimerTask {
 
     /** The number of repetitions remaining. */
     private int repetitions;
-
     /** The command to execute. */
     private final String command;
-
     /** The container to use for executing commands. */
     private final FrameContainer origin;
-
     /** The timer we're using for scheduling this command. */
     private final Timer timer;
-
     /** The key for this timer in the Timer Manager. */
     private final int timerKey;
-
     /** The manager for this timer. */
     private final TimerManager manager;
-
     /** The command controller to use when executing global commands. */
     private final CommandController commandController;
 
     /**
      * Creates a new instance of TimedCommand.
      *
-     * @param manager The manager that is controlling this command.
+     * @param manager           The manager that is controlling this command.
      * @param commandController The command controller to use when executing global commands.
-     * @param timerKey The key for this timer in the Timer Manager.
-     * @param repetitions The number of times this command will be executed
-     * @param delay The number of seconds between each execution
-     * @param command The command to be executed
-     * @param origin The frame container to use for the execution
+     * @param timerKey          The key for this timer in the Timer Manager.
+     * @param repetitions       The number of times this command will be executed
+     * @param delay             The number of seconds between each execution
+     * @param command           The command to be executed
+     * @param origin            The frame container to use for the execution
      */
     public TimedCommand(
             final TimerManager manager,
@@ -91,6 +85,7 @@ public class TimedCommand extends TimerTask {
      * Returns the command this timer is due to execute.
      *
      * @return Command the timer will run
+     *
      * @since 0.6.5
      */
     public String getCommand() {
@@ -124,4 +119,5 @@ public class TimedCommand extends TimerTask {
             timer.cancel();
         }
     }
+
 }

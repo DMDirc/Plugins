@@ -64,10 +64,10 @@ public class TextPaneInputField extends JEditorPane implements InputField,
     /**
      * Creates a new text pane input field.
      *
-     * @param parentWindow Parent window, can be null
-     * @param globalConfig The config to read settings from.
+     * @param parentWindow  Parent window, can be null
+     * @param globalConfig  The config to read settings from.
      * @param colourManager The colour manager to use when picking colours.
-     * @param iconManager The manager to use to retrieve icons.
+     * @param iconManager   The manager to use to retrieve icons.
      */
     public TextPaneInputField(
             final MainFrame parentWindow,
@@ -89,7 +89,6 @@ public class TextPaneInputField extends JEditorPane implements InputField,
             colourPicker = new ColourPickerDialog(this, colourManager,
                     iconManager, irc, hex, parentWindow);
             colourPicker.addActionListener(new ActionListener() {
-
                 @Override
                 public void actionPerformed(final ActionEvent actionEvent) {
                     try {
@@ -151,4 +150,5 @@ public class TextPaneInputField extends JEditorPane implements InputField,
             hideColourPicker();
         }
     }
+
 }

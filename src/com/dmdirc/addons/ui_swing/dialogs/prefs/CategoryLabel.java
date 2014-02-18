@@ -43,8 +43,7 @@ public class CategoryLabel extends JLabel {
     /** Serial version UID. */
     private static final long serialVersionUID = -1659415238166842265L;
     /** Panel gap. */
-    private final int padding = (int)
-            (1.5 * PlatformDefaults.getUnitValueX("related").getValue());
+    private final int padding = (int) (1.5 * PlatformDefaults.getUnitValueX("related").getValue());
     /** Parent list. */
     private final JList parentList;
 
@@ -52,10 +51,10 @@ public class CategoryLabel extends JLabel {
      * Creates a new category label.
      *
      * @param iconManager Icon manager
-     * @param parentList Parent list
-     * @param category Parent category
-     * @param numCats Number of categories shown
-     * @param index Index of this label
+     * @param parentList  Parent list
+     * @param category    Parent category
+     * @param numCats     Number of categories shown
+     * @param index       Index of this label
      */
     public CategoryLabel(final IconManager iconManager,
             final JList parentList,

@@ -44,4 +44,5 @@ class ModesComparator implements Comparator<String>, Serializable {
         }
         return insensitiveResult;
     }
+
 }

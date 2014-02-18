@@ -2,6 +2,7 @@
  * @author Stanislav Lapitsky
  * @version 1.0
  */
+
 package com.dmdirc.addons.ui_swing.components.text;
 
 import javax.swing.text.BadLocationException;
@@ -31,7 +32,7 @@ public class WrapLabelView extends LabelView {
         if (axis == View.X_AXIS) {
             checkPainter();
             final int p0 = getStartOffset();
-            final  int p1 = getGlyphPainter().getBoundedPosition(this, p0, pos,
+            final int p1 = getGlyphPainter().getBoundedPosition(this, p0, pos,
                     len);
             if (p1 == p0) {
                 // can't even fit a single character
@@ -70,4 +71,5 @@ public class WrapLabelView extends LabelView {
         }
         return super.breakView(axis, p0, pos, len);
     }
+
 }

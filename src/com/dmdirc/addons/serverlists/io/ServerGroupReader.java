@@ -40,20 +40,17 @@ public class ServerGroupReader {
 
     /** The config provider this reader should read from. */
     private final ConfigProvider identity;
-
     /** The reader we'll use for individual servers. */
     private final ServerEntryReader entryReader;
-
     /** The controller to read/write settings with. */
     private final IdentityController identityController;
 
     /**
-     * Creates a new ServerGroupReader that will read from the specified
-     * identity.
+     * Creates a new ServerGroupReader that will read from the specified identity.
      *
-     * @param serverManager The server manager to use to connect to servers.
+     * @param serverManager      The server manager to use to connect to servers.
      * @param identityController The identity controller to use.
-     * @param identity The identity describing the server group
+     * @param identity           The identity describing the server group
      */
     public ServerGroupReader(
             final ServerManager serverManager,
@@ -69,6 +66,7 @@ public class ServerGroupReader {
      *
      * @see #read(ServerGroup, java.lang.String)
      * @return A ServerGroup corresponding to the identity's default group
+     *
      * @throws IllegalArgumentException If the identity doesn't define a group
      */
     public ServerGroup read() {
@@ -83,8 +81,10 @@ public class ServerGroupReader {
      * Reads a named server group from this reader's identity.
      *
      * @param parent The parent of the group being read
-     * @param name The name of the server group to read
+     * @param name   The name of the server group to read
+     *
      * @return A corresponding ServerGroup
+     *
      * @throws IllegalArgumentException If the server group doesn't define a name
      */
     public ServerGroup read(final ServerGroup parent, final String name)
@@ -124,10 +124,9 @@ public class ServerGroupReader {
     }
 
     /**
-     * Reads a set of links from the named domain and adds them to the specified
-     * group.
+     * Reads a set of links from the named domain and adds them to the specified group.
      *
-     * @param group The group to add links to
+     * @param group  The group to add links to
      * @param domain The domain in the identity containing links
      */
     private void readLinks(final ServerGroup group, final String domain) {

@@ -45,9 +45,9 @@ import net.miginfocom.swing.MigLayout;
 public class ActionTriggersListPanel extends JPanel {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 1;
     /** Trigger list. */
@@ -70,7 +70,7 @@ public class ActionTriggersListPanel extends JPanel {
      * Instantiates the panel.
      *
      * @param iconManager Icon Manager
-     * @param triggers Trigger list
+     * @param triggers    Trigger list
      */
     public ActionTriggersListPanel(final IconManager iconManager,
             final List<ActionType> triggers) {
@@ -105,7 +105,6 @@ public class ActionTriggersListPanel extends JPanel {
                         "delete", iconManager.getIcon("close-inactive"),
                         iconManager.getIcon("close-active"));
                 button.addActionListener(new ActionListener() {
-
                     /** {@inheritDoc} */
                     @Override
                     public void actionPerformed(final ActionEvent e) {
@@ -137,7 +136,6 @@ public class ActionTriggersListPanel extends JPanel {
      */
     public void addTrigger(final ActionType trigger) {
         SwingUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -159,7 +157,6 @@ public class ActionTriggersListPanel extends JPanel {
      */
     public void delTrigger(final ActionType trigger) {
         SwingUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -258,7 +255,6 @@ public class ActionTriggersListPanel extends JPanel {
     public void setEnabled(final boolean enabled) {
         super.setEnabled(enabled);
         SwingUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -271,4 +267,5 @@ public class ActionTriggersListPanel extends JPanel {
     public void validateTriggers() {
         firePropertyChange("triggerCount", triggers.size(), triggers.size());
     }
+
 }

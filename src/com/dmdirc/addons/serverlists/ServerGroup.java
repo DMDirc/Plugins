@@ -32,8 +32,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * A server group contains an ordered collection of server entries or other
- * server groups.
+ * A server group contains an ordered collection of server entries or other server groups.
  *
  * @since 0.6.4
  */
@@ -41,16 +40,12 @@ public class ServerGroup extends ServerGroupItemBase {
 
     /** The name of the network for the group. */
     private String network;
-
     /** A description of this group. */
     private String description = "";
-
     /** This group's parent. */
     private final ServerGroup parent;
-
     /** A set of links relevant to this group (e.g. homepages). */
     private final Map<String, URI> links = new HashMap<>();
-
     /** The items contained within the group. */
     private final List<ServerGroupItem> entries = new ArrayList<>();
 
@@ -58,7 +53,7 @@ public class ServerGroup extends ServerGroupItemBase {
      * Creates a new server group with the specified name and no parent.
      *
      * @param identityController The controller to read/write settings with.
-     * @param name The name to be used for this group
+     * @param name               The name to be used for this group
      */
     public ServerGroup(final IdentityController identityController, final String name) {
         this(identityController, null, name);
@@ -68,8 +63,8 @@ public class ServerGroup extends ServerGroupItemBase {
      * Creates a new server group with the specified name.
      *
      * @param identityController The controller to read/write settings with.
-     * @param parent The parent of this group, or <code>null</code> for roots.
-     * @param name The name to be used for this group
+     * @param parent             The parent of this group, or <code>null</code> for roots.
+     * @param name               The name to be used for this group
      */
     public ServerGroup(
             final IdentityController identityController,
@@ -124,10 +119,11 @@ public class ServerGroup extends ServerGroupItemBase {
     }
 
     /**
-     * Retrieves a ServerGroupItem with the specified name, if one exists. This
-     * method ignores the case of item's name when comparing.
+     * Retrieves a ServerGroupItem with the specified name, if one exists. This method ignores the
+     * case of item's name when comparing.
      *
      * @param name The name of the item to be retrieved
+     *
      * @return A correspondingly named item, or null if none exists
      */
     public ServerGroupItem getItemByName(final String name) {
@@ -152,8 +148,8 @@ public class ServerGroup extends ServerGroupItemBase {
     /**
      * Retrieves the network that this group represents, if any.
      *
-     * @return This group's network name, or null if the group does not
-     * correspond to a known network.
+     * @return This group's network name, or null if the group does not correspond to a known
+     *         network.
      */
     public String getNetwork() {
         return network;
@@ -170,9 +166,8 @@ public class ServerGroup extends ServerGroupItemBase {
     }
 
     /**
-     * Retrieves a map of link titles to {@link URI}s which are associated
-     * with this server group. Links will typically include network homepages,
-     * forums, or support channels.
+     * Retrieves a map of link titles to {@link URI}s which are associated with this server group.
+     * Links will typically include network homepages, forums, or support channels.
      *
      * @return An immutable map of links
      */
@@ -181,10 +176,10 @@ public class ServerGroup extends ServerGroupItemBase {
     }
 
     /**
-     * Adds a new link with the specified title and address. If a link with the
-     * same title existed previously, it will be replaced.
+     * Adds a new link with the specified title and address. If a link with the same title existed
+     * previously, it will be replaced.
      *
-     * @param title The title of the new link
+     * @param title   The title of the new link
      * @param address The address of the link
      */
     public void addLink(final String title, final URI address) {
@@ -195,8 +190,7 @@ public class ServerGroup extends ServerGroupItemBase {
     /**
      * {@inheritDoc}
      *
-     * Current implementation just selects the first item in this group and
-     * asks for its URI.
+     * Current implementation just selects the first item in this group and asks for its URI.
      */
     @Override
     public URI getAddress() {
@@ -210,8 +204,7 @@ public class ServerGroup extends ServerGroupItemBase {
     /**
      * {@inheritDoc}
      *
-     * Current implementation just selects the first item in this group and
-     * asks it to connect.
+     * Current implementation just selects the first item in this group and asks it to connect.
      */
     @Override
     public void connect() {
@@ -226,4 +219,5 @@ public class ServerGroup extends ServerGroupItemBase {
         return "[" + getName() + ": links: " + getLinks() + "; desc: "
                 + getDescription() + "; content: " + getItems() + "]";
     }
+
 }

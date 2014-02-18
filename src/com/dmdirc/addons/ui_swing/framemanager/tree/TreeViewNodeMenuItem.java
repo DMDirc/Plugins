@@ -30,9 +30,9 @@ import javax.swing.JMenuItem;
 public class TreeViewNodeMenuItem extends JMenuItem {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 1;
     /** Tree view node. */
@@ -41,9 +41,9 @@ public class TreeViewNodeMenuItem extends JMenuItem {
     /**
      * Creates a new treeviewnodemenuitem.
      *
-     * @param name Menu item name
+     * @param name          Menu item name
      * @param actionCommand Action command
-     * @param treeNode Encapsulated treeview node
+     * @param treeNode      Encapsulated treeview node
      */
     public TreeViewNodeMenuItem(final String name, final String actionCommand,
             final TreeViewNode treeNode) {
@@ -70,4 +70,5 @@ public class TreeViewNodeMenuItem extends JMenuItem {
     public void setTreeNode(final TreeViewNode treeNode) {
         this.treeNode = treeNode;
     }
+
 }

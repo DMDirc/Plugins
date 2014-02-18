@@ -60,7 +60,7 @@ public class FakeUpdates extends DebugCommand {
      * Creates a new instance of the command.
      *
      * @param commandProvider The provider to use to access the main debug command.
-     * @param updateManager The update manager to add fake updates to.
+     * @param updateManager   The update manager to add fake updates to.
      */
     @Inject
     public FakeUpdates(
@@ -112,6 +112,7 @@ public class FakeUpdates extends DebugCommand {
 
             return res;
         }
+
     }
 
     /**
@@ -142,8 +143,10 @@ public class FakeUpdates extends DebugCommand {
             super(FakeUpdateCheckResult.class);
         }
 
-        protected void fireRetrievalProgressChanged(final UpdateComponent component, final double progress) {
-            listeners.getCallable(UpdateRetrievalListener.class).retrievalProgressChanged(component, progress);
+        protected void fireRetrievalProgressChanged(final UpdateComponent component,
+                final double progress) {
+            listeners.getCallable(UpdateRetrievalListener.class).retrievalProgressChanged(component,
+                    progress);
         }
 
         protected void fireRetrievalFailed(final UpdateComponent component) {
@@ -204,7 +207,7 @@ public class FakeUpdates extends DebugCommand {
          * Creates a new fake retrieval result.
          *
          * @param checkResult The check result that was retrieved
-         * @param success Whether the result is successful or not
+         * @param success     Whether the result is successful or not
          */
         public FakeRetrievalResult(final UpdateCheckResult checkResult,
                 final boolean success) {
@@ -236,8 +239,10 @@ public class FakeUpdates extends DebugCommand {
             listeners.getCallable(UpdateInstallationListener.class).installFailed(component);
         }
 
-        protected void fireInstallProgressChanged(final UpdateComponent component, final double progress) {
-            listeners.getCallable(UpdateInstallationListener.class).installProgressChanged(component, progress);
+        protected void fireInstallProgressChanged(final UpdateComponent component,
+                final double progress) {
+            listeners.getCallable(UpdateInstallationListener.class).
+                    installProgressChanged(component, progress);
         }
 
         @Override

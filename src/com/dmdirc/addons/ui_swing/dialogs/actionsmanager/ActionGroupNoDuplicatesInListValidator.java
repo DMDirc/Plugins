@@ -31,13 +31,12 @@ import javax.swing.JList;
 /**
  * No duplicates list validator, overriden to work with action groups.
  */
-class ActionGroupNoDuplicatesInListValidator extends
-        NoDuplicatesInListValidator {
+class ActionGroupNoDuplicatesInListValidator extends NoDuplicatesInListValidator {
 
     /**
      * Creates a new validator.
      *
-     * @param list List
+     * @param list  List
      * @param model Model to validate
      */
     public ActionGroupNoDuplicatesInListValidator(final JList list,
@@ -48,9 +47,9 @@ class ActionGroupNoDuplicatesInListValidator extends
     /**
      * Creates a new validator.
      *
-     * @param list List
+     * @param list          List
      * @param caseSensitive Case sensitive check?
-     * @param model Model to validate
+     * @param model         Model to validate
      */
     public ActionGroupNoDuplicatesInListValidator(final boolean caseSensitive,
             final JList list, final DefaultListModel model) {
@@ -76,4 +75,5 @@ class ActionGroupNoDuplicatesInListValidator extends
         }
         return index;
     }
+
 }

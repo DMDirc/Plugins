@@ -49,7 +49,8 @@ import org.apache.commons.lang.StringEscapeUtils;
 /**
  * This plugin adds freedesktop Style Notifications to dmdirc.
  */
-public class FreeDesktopNotificationsPlugin extends BaseCommandPlugin implements ConfigChangeListener {
+public class FreeDesktopNotificationsPlugin extends BaseCommandPlugin implements
+        ConfigChangeListener {
 
     /** notification timeout. */
     private int timeout;
@@ -73,9 +74,9 @@ public class FreeDesktopNotificationsPlugin extends BaseCommandPlugin implements
     /**
      * Creates a new instance of this plugin.
      *
-     * @param pluginInfo This plugin's plugin info
+     * @param pluginInfo         This plugin's plugin info
      * @param identityController Identity Manager instance
-     * @param commandController Command controller to register commands
+     * @param commandController  Command controller to register commands
      */
     public FreeDesktopNotificationsPlugin(final PluginInfo pluginInfo,
             final IdentityController identityController,
@@ -91,8 +92,9 @@ public class FreeDesktopNotificationsPlugin extends BaseCommandPlugin implements
     /**
      * Used to show a notification using this plugin.
      *
-     * @param title Title of dialog if applicable
+     * @param title   Title of dialog if applicable
      * @param message Message to show
+     *
      * @return True if the notification was shown.
      */
     @Exported
@@ -141,6 +143,7 @@ public class FreeDesktopNotificationsPlugin extends BaseCommandPlugin implements
      * Prepare the string for sending to dbus.
      *
      * @param input Input string
+     *
      * @return Input string after being processed according to config settings.
      */
     public String prepareString(final String input) {
@@ -173,7 +176,8 @@ public class FreeDesktopNotificationsPlugin extends BaseCommandPlugin implements
             filesHelper.extractResoucesEndingWith(".py");
             filesHelper.extractResoucesEndingWith(".png");
         } catch (IOException ex) {
-            Logger.userError(ErrorLevel.MEDIUM, "Unable to extract files for Free desktop notifications: " + ex.getMessage(), ex);
+            Logger.userError(ErrorLevel.MEDIUM,
+                    "Unable to extract files for Free desktop notifications: " + ex.getMessage(), ex);
         }
         super.onLoad();
     }
@@ -238,4 +242,5 @@ public class FreeDesktopNotificationsPlugin extends BaseCommandPlugin implements
     public void configChanged(final String domain, final String key) {
         setCachedSettings();
     }
+
 }

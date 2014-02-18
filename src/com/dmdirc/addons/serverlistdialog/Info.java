@@ -45,9 +45,9 @@ public class Info extends JPanel implements HyperlinkListener,
         ServerListListener {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 2;
     /** Info pane. */
@@ -64,7 +64,7 @@ public class Info extends JPanel implements HyperlinkListener,
     /**
      * Creates a new info panel.
      *
-     * @param model Model to pull information from
+     * @param model      Model to pull information from
      * @param urlHandler A {@link URLHandler} to use to open links
      */
     public Info(final ServerListModel model, final URLHandler urlHandler) {
@@ -161,4 +161,5 @@ public class Info extends JPanel implements HyperlinkListener,
             final ServerGroupItem group) {
         //Ignore
     }
+
 }

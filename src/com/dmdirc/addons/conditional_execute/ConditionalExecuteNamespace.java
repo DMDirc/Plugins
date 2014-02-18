@@ -29,15 +29,13 @@ import java.text.SimpleDateFormat;
  * Class representing a ConditionalExecute Namespace.
  */
 public class ConditionalExecuteNamespace {
+
     /** Name of this namespace. */
     private final String name;
-
     /** Are we currently inhibited? */
     private boolean inhibited = false;
-
     /** Are we currently forced? */
     private boolean forced = false;
-
     /** What is the current limit time? */
     private long limitTime = 0L;
 
@@ -53,14 +51,12 @@ public class ConditionalExecuteNamespace {
     /**
      * Can a command in this namespace be run?
      *
-     * This checks as follows:
-     *   - Is the namespace inhibited? - return False
-     *   - Is the namespace in "force" mode?  - return True
-     *   - If inverse is true, are we under the limit time? return True
-     *   - If inverse is false, are we over the limit time? return True
-     *   - return False
+     * This checks as follows: - Is the namespace inhibited? - return False - Is the namespace in
+     * "force" mode? - return True - If inverse is true, are we under the limit time? return True -
+     * If inverse is false, are we over the limit time? return True - return False
      *
      * @param inverse Check if we are *before* the limit time rather than after?
+     *
      * @return True if the command can be run.
      */
     public boolean canRun(final boolean inverse) {
@@ -89,6 +85,7 @@ public class ConditionalExecuteNamespace {
      * Change the limit time on this namespace.
      *
      * @param difference Change (in milliseconds) to make to the limit time.
+     *
      * @return New limit time.
      */
     public long changeLimit(final long difference) {
@@ -100,6 +97,7 @@ public class ConditionalExecuteNamespace {
      * Set the limit time on this namespace.
      *
      * @param time new Limit time (in milliseconds)
+     *
      * @return New limit time.
      */
     public long setLimit(final long time) {
@@ -148,13 +146,13 @@ public class ConditionalExecuteNamespace {
     public String toString() {
         final StringBuilder sb = new StringBuilder(getName());
         if (isForced()) {
-          sb.append(" - Forced");
+            sb.append(" - Forced");
         } else if (isInhibited()) {
-          sb.append(" - Inhibited");
+            sb.append(" - Inhibited");
         } else {
-          sb.append(" - Limit Time: ");
-          final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-          sb.append(dateFormat.format(limitTime));
+            sb.append(" - Limit Time: ");
+            final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            sb.append(dateFormat.format(limitTime));
         }
         if (canRun(false)) {
             sb.append(" [Can Run]");
@@ -164,4 +162,5 @@ public class ConditionalExecuteNamespace {
         }
         return sb.toString();
     }
+
 }

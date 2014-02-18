@@ -58,10 +58,9 @@ public class WindowFlashing extends BaseCommandPlugin {
     }
 
     /**
-     * Flashes an inactive window under windows, used as a showNotifications
-     * exported command
+     * Flashes an inactive window under windows, used as a showNotifications exported command
      *
-     * @param title Unused
+     * @param title   Unused
      * @param message Unused
      */
     @Exported
@@ -109,4 +108,5 @@ public class WindowFlashing extends BaseCommandPlugin {
 
         manager.getCategory("Plugins").addSubCategory(category);
     }
+
 }

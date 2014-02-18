@@ -43,9 +43,9 @@ public class FrameContainerMenuItem extends JMenuItem implements FrameInfoListen
         ActionListener, SelectionListener, FrameContainerMenuInterface {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 1;
     /** The swing controller that owns this item. */
@@ -59,8 +59,8 @@ public class FrameContainerMenuItem extends JMenuItem implements FrameInfoListen
      * Instantiates a new FrameContainer menu item wrapping the specified frame.
      *
      * @param controller The Swing Controller that owns this item
-     * @param frame Wrapped frame
-     * @param manager Parent window menu frame manager.
+     * @param frame      Wrapped frame
+     * @param manager    Parent window menu frame manager.
      */
     public FrameContainerMenuItem(final SwingController controller,
             final FrameContainer frame,
@@ -80,7 +80,6 @@ public class FrameContainerMenuItem extends JMenuItem implements FrameInfoListen
     @Override
     public void iconChanged(final FrameContainer window, final String icon) {
         SwingUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -95,7 +94,6 @@ public class FrameContainerMenuItem extends JMenuItem implements FrameInfoListen
     @Override
     public void nameChanged(final FrameContainer window, final String name) {
         SwingUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -142,4 +140,5 @@ public class FrameContainerMenuItem extends JMenuItem implements FrameInfoListen
     public FrameContainer getFrame() {
         return frame;
     }
+
 }

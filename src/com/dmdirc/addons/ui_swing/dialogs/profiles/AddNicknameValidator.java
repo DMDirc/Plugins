@@ -49,4 +49,5 @@ public class AddNicknameValidator extends NicknameValidator {
         }
         return super.validate(object);
     }
+
 }

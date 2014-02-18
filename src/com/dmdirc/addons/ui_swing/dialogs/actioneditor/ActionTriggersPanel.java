@@ -55,9 +55,9 @@ public class ActionTriggersPanel extends JPanel implements ActionListener,
         ActionTriggerRemovalListener, PropertyChangeListener {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 1;
     /** Trigger combo box. */
@@ -223,8 +223,7 @@ public class ActionTriggersPanel extends JPanel implements ActionListener,
     }
 
     /**
-     * Populates the combo boxes with triggers compatible with the specified
-     * type.
+     * Populates the combo boxes with triggers compatible with the specified type.
      *
      * @param primaryType Primary type
      */
@@ -238,7 +237,8 @@ public class ActionTriggersPanel extends JPanel implements ActionListener,
         itemModel.removeAllElements();
         final List<ActionType> types = triggerList.getTriggers();
 
-        for (final ActionType thisType : ActionManager.getActionManager().findCompatibleTypes(primaryType)) {
+        for (final ActionType thisType : ActionManager.getActionManager().findCompatibleTypes(
+                primaryType)) {
             if (!types.contains(thisType)) {
                 compatibleTriggers.add(thisType);
                 itemModel.addElement(thisType);
@@ -313,4 +313,5 @@ public class ActionTriggersPanel extends JPanel implements ActionListener,
     public void validateTriggers() {
         triggerList.validateTriggers();
     }
+
 }

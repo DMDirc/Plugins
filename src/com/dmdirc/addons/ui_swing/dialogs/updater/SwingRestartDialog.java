@@ -53,9 +53,9 @@ public class SwingRestartDialog extends StandardDialog implements ActionListener
     /**
      * Dialog to restart the client.
      *
-     * @param parentWindow Parent window
+     * @param parentWindow        Parent window
      * @param lifecycleController Life cycle controller, for restarting client
-     * @param cause Reason for restart
+     * @param cause               Reason for restart
      */
     public SwingRestartDialog(final Window parentWindow,
             final LifecycleController lifecycleController, final String cause) {
@@ -74,13 +74,12 @@ public class SwingRestartDialog extends StandardDialog implements ActionListener
     private void initComponents() {
         orderButtons(new JButton(), new JButton());
         if (LauncherComponent.isUsingLauncher()) {
-            info = new TextLabel("Your client needs to be restarted to " +
-                    cause + ".");
+            info = new TextLabel("Your client needs to be restarted to " + cause + ".");
         } else {
-            info = new TextLabel("Your client needs to be restarted to " +
-                    cause + ", but as you do not seem to be using " +
-                    "the launcher you will have to restart the client " +
-                    "manually, do you wish to close the client?");
+            info = new TextLabel("Your client needs to be restarted to " + cause
+                    + ", but as you do not seem to be using "
+                    + "the launcher you will have to restart the client "
+                    + "manually, do you wish to close the client?");
         }
         getOkButton().setText("Now");
         getCancelButton().setText("Later");
@@ -119,4 +118,5 @@ public class SwingRestartDialog extends StandardDialog implements ActionListener
         }
         dispose();
     }
+
 }

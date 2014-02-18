@@ -40,15 +40,14 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * The now playing command retrieves the currently playing song from a
- * variety of media players.
+ * The now playing command retrieves the currently playing song from a variety of media players.
  */
 public class NowPlayingCommand extends Command implements IntelligentCommand {
 
     /** A command info object for this command. */
     public static final BaseCommandInfo INFO = new BaseCommandInfo("nowplaying",
-            "nowplaying [--sources|--source <source>] [format] - " +
-                "tells the channel the song you're currently playing",
+            "nowplaying [--sources|--source <source>] [format] - "
+            + "tells the channel the song you're currently playing",
             CommandType.TYPE_CHAT);
     /** The plugin that's using this command. */
     private final NowPlayingPlugin parent;
@@ -58,8 +57,8 @@ public class NowPlayingCommand extends Command implements IntelligentCommand {
     /**
      * Creates a new instance of this command.
      *
-     * @param controller The controller to use for command information.
-     * @param parent The plugin that owns this command.
+     * @param controller         The controller to use for command information.
+     * @param parent             The plugin that owns this command.
      * @param identityController The controller to use to read/write settings.
      */
     public NowPlayingCommand(
@@ -105,7 +104,8 @@ public class NowPlayingCommand extends Command implements IntelligentCommand {
                         getInformation(parent.getBestSource(), args.
                         getArgumentsAsString(0)));
             } else {
-                sendLine(origin, args.isSilent(), FORMAT_ERROR, "No running media sources available.");
+                sendLine(origin, args.isSilent(), FORMAT_ERROR,
+                        "No running media sources available.");
             }
         }
     }
@@ -113,9 +113,9 @@ public class NowPlayingCommand extends Command implements IntelligentCommand {
     /**
      * Outputs a list of sources for the nowplaying command.
      *
-     * @param origin The input window where the command was entered
+     * @param origin   The input window where the command was entered
      * @param isSilent Whether this command is being silenced
-     * @param format Format to be passed to getInformation
+     * @param format   Format to be passed to getInformation
      */
     private void doSourceList(final FrameContainer origin, final boolean isSilent,
             final String format) {
@@ -153,6 +153,7 @@ public class NowPlayingCommand extends Command implements IntelligentCommand {
      * @param format Format to use
      *
      * @return Formatted information string
+     *
      * @since 0.6.3
      */
     private String getInformation(final MediaSource source, final String format) {
@@ -169,7 +170,7 @@ public class NowPlayingCommand extends Command implements IntelligentCommand {
     public AdditionalTabTargets getSuggestions(final int arg,
             final IntelligentCommandContext context) {
 
-        final List<String> subsList = Arrays.asList(new String[] {
+        final List<String> subsList = Arrays.asList(new String[]{
             "$artist", "$title", "$album", "$app", "$bitrate", "$format",
             "$length", "$state", "$time"
         });
@@ -196,11 +197,12 @@ public class NowPlayingCommand extends Command implements IntelligentCommand {
             res.addAll(subsList);
             return res;
         } else {
-            final AdditionalTabTargets res =  TabCompleter
+            final AdditionalTabTargets res = TabCompleter
                     .getIntelligentResults(arg, context, context
                     .getPreviousArgs().get(0).equalsIgnoreCase("--sources") ? 1 : 0);
             res.addAll(subsList);
             return res;
         }
     }
+
 }

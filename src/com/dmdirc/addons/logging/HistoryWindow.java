@@ -38,11 +38,11 @@ public class HistoryWindow extends FrameContainer {
     /**
      * Creates a new HistoryWindow.
      *
-     * @param title The title of the window
-     * @param reader The reader to use to get the history
-     * @param parent The window this history window was opened from
+     * @param title      The title of the window
+     * @param reader     The reader to use to get the history
+     * @param parent     The window this history window was opened from
      * @param urlBuilder The URL builder to use when finding icons.
-     * @param numLines The number of lines to show
+     * @param numLines   The number of lines to show
      */
     public HistoryWindow(
             final String title,

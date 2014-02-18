@@ -31,5 +31,4 @@ import dagger.Module;
  */
 @Module(injects = {ServerListController.class}, addsTo = SwingModule.class)
 public class ServerListModule {
-
 }

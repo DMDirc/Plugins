@@ -29,7 +29,6 @@ import dagger.Module;
 /**
  * DI Module for the calc plugin.
  */
-@Module(injects={CalcCommand.class}, addsTo = ClientModule.class)
+@Module(injects = {CalcCommand.class}, addsTo = ClientModule.class)
 public class CalcModule {
-
 }

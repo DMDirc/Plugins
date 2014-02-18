@@ -88,8 +88,7 @@ public class VlcMediaSourcePlugin extends BasePlugin implements MediaSource {
     /** {@inheritDoc} */
     @Override
     public String getArtist() {
-        return information.containsKey("artist") ? information.get("artist") :
-                getFallbackArtist();
+        return information.containsKey("artist") ? information.get("artist") : getFallbackArtist();
     }
 
     /**
@@ -262,10 +261,9 @@ public class VlcMediaSourcePlugin extends BasePlugin implements MediaSource {
     }
 
     /**
-     * Parses the information from the two pages obtained from VLC's web
-     * interface.
+     * Parses the information from the two pages obtained from VLC's web interface.
      *
-     * @param res The first page of VLC info (/old/info.html)
+     * @param res  The first page of VLC info (/old/info.html)
      * @param res2 The second page of VLC info (/old/)
      */
     protected void parseInformation(final List<String> res,

@@ -75,10 +75,10 @@ public class ColourChooser extends JPanel implements ActionListener {
      * Creates a new instance of ColourChooser.
      *
      * @param colourManager The colour manager to use to parse colours.
-     * @param iconManager Icon manager
+     * @param iconManager   Icon manager
      * @param initialColour initial colour
-     * @param ircColours show irc colours
-     * @param hexColours show hex colours
+     * @param ircColours    show irc colours
+     * @param hexColours    show hex colours
      *
      * @since 0.6
      */
@@ -221,7 +221,7 @@ public class ColourChooser extends JPanel implements ActionListener {
             if (localListenerList[i] == ActionListener.class) {
                 ((ActionListener) localListenerList[i + 1]).actionPerformed(
                         new ActionEvent(this,
-                                ActionEvent.ACTION_PERFORMED, command));
+                        ActionEvent.ACTION_PERFORMED, command));
             }
         }
     }
@@ -234,4 +234,5 @@ public class ColourChooser extends JPanel implements ActionListener {
     public void setWindow(final Window window) {
         this.window = window;
     }
+
 }

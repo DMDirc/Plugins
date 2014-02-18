@@ -43,21 +43,19 @@ import javax.swing.table.DefaultTableModel;
 import net.miginfocom.swing.MigLayout;
 
 /**
- * Panel used for the relay bot channel and nickname settings in the plugin's
- * config dialog.
+ * Panel used for the relay bot channel and nickname settings in the plugin's config dialog.
  */
 public class RelayChannelPanel extends JPanel implements ActionListener,
         PreferencesInterface, ListSelectionListener {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 1;
     /** The table headings. */
-    private static final String[] HEADERS = {"Channel", "Nickname", };
-
+    private static final String[] HEADERS = {"Channel", "Nickname",};
     /** The table used for displaying the options. */
     private final JTable table;
     /** The plugin we're associated with. */
@@ -70,8 +68,8 @@ public class RelayChannelPanel extends JPanel implements ActionListener,
     /**
      * Creates a new instance of NickColourPanel.
      *
-     * @param controller The UI controller that owns this panel
-     * @param plugin The plugin that owns this panel
+     * @param controller         The UI controller that owns this panel
+     * @param plugin             The plugin that owns this panel
      * @param identityController The controller to read/write settings with.
      */
     public RelayChannelPanel(
@@ -153,12 +151,12 @@ public class RelayChannelPanel extends JPanel implements ActionListener,
     /**
      * Adds a row to the table.
      *
-     * @param channel The channel setting
+     * @param channel  The channel setting
      * @param nickname The nickname setting
      */
     public void addRow(final String channel, final String nickname) {
         final DefaultTableModel model = ((DefaultTableModel) table.getModel());
-        model.addRow(new Object[]{channel, nickname, });
+        model.addRow(new Object[]{channel, nickname,});
     }
 
     /**
@@ -172,7 +170,7 @@ public class RelayChannelPanel extends JPanel implements ActionListener,
 
         for (int i = 0; i < model.getRowCount(); i++) {
             res.add(new String[]{(String) model.getValueAt(i, 0),
-            (String) model.getValueAt(i, 1), });
+                (String) model.getValueAt(i, 1),});
         }
 
         return res;
@@ -183,8 +181,8 @@ public class RelayChannelPanel extends JPanel implements ActionListener,
     public void save() {
         // Remove all old config entries
         for (String[] parts : plugin.getData()) {
-           identityController.getUserSettings()
-                   .unsetOption(plugin.getDomain(), parts[0]);
+            identityController.getUserSettings()
+                    .unsetOption(plugin.getDomain(), parts[0]);
         }
 
         // And write the new ones
@@ -200,4 +198,5 @@ public class RelayChannelPanel extends JPanel implements ActionListener,
         deleteButton.setEnabled(table.getSelectedRow() > -1
                 && table.getModel().getRowCount() > 0);
     }
+
 }

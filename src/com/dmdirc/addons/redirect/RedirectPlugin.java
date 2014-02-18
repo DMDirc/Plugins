@@ -28,17 +28,17 @@ import com.dmdirc.plugins.implementations.BaseCommandPlugin;
 import com.dmdirc.util.URLBuilder;
 
 /**
- * The redirect plugin allows the suer to redirect the output of commands that
- * would normally echo their results locally to a channel or chat window instead.
+ * The redirect plugin allows the suer to redirect the output of commands that would normally echo
+ * their results locally to a channel or chat window instead.
  */
 public class RedirectPlugin extends BaseCommandPlugin {
 
     /**
      * Creates a new instance of this plugin.
      *
-     * @param commandController Command controller to register commands
+     * @param commandController  Command controller to register commands
      * @param messageSinkManager The sink manager to use to despatch messages.
-     * @param urlBuilder The URL builder to use when finding icons.
+     * @param urlBuilder         The URL builder to use when finding icons.
      */
     public RedirectPlugin(
             final CommandController commandController,
@@ -48,4 +48,5 @@ public class RedirectPlugin extends BaseCommandPlugin {
         registerCommand(new RedirectCommand(commandController, messageSinkManager, urlBuilder),
                 RedirectCommand.INFO);
     }
+
 }

@@ -48,11 +48,11 @@ public class ColourPickerDialog extends JDialog {
     /**
      * Creates a new instance of ColourPickerDialog.
      *
-     * @param centerObject Object to center dialog on
+     * @param centerObject  Object to center dialog on
      * @param colourManager The colour manager to use to parse colours.
-     * @param iconManager Icon manager
-     * @param showIRC show irc colours
-     * @param showHex show hex colours
+     * @param iconManager   Icon manager
+     * @param showIRC       show irc colours
+     * @param showHex       show hex colours
      */
     public ColourPickerDialog(final Component centerObject,
             final ColourManager colourManager,
@@ -64,12 +64,12 @@ public class ColourPickerDialog extends JDialog {
     /**
      * Creates a new instance of ColourPickerDialog.
      *
-     * @param centerObject Object to center dialog on
+     * @param centerObject  Object to center dialog on
      * @param colourManager The colour manager to use to parse colours.
-     * @param iconManager Icon manager
-     * @param showIRC show irc colours
-     * @param showHex show hex colours
-     * @param window Parent window
+     * @param iconManager   Icon manager
+     * @param showIRC       show irc colours
+     * @param showHex       show hex colours
+     * @param window        Parent window
      *
      * @since 0.6
      */
@@ -107,7 +107,6 @@ public class ColourPickerDialog extends JDialog {
     public void setWindow(final Window window) {
         if (window != null) {
             window.addWindowListener(new WindowAdapter() {
-
                 /** {@inheritDoc} */
                 @Override
                 public void windowClosed(final WindowEvent e) {
@@ -126,4 +125,5 @@ public class ColourPickerDialog extends JDialog {
             setLocationRelativeTo(centerObject);
         }
     }
+
 }

@@ -19,6 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 package com.dmdirc.addons.ui_swing.dialogs.profiles;
 
 import com.dmdirc.addons.ui_swing.components.validating.ValidatableJTextField;
@@ -76,14 +77,12 @@ public class ProfileManagerDialogLinker {
         list.setModel(new DefaultListModel());
         list.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         list.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-
             @Override
             public void valueChanged(final ListSelectionEvent e) {
                 model.setSelectedProfile(list.getSelectedValue());
             }
         });
         model.addPropertyChangeListener("profiles", new PropertyChangeListener() {
-
             @Override
             public void propertyChange(final PropertyChangeEvent evt) {
                 ((DefaultListModel) list.getModel()).clear();
@@ -94,15 +93,12 @@ public class ProfileManagerDialogLinker {
                     list.setSelectedValue(model.getSelectedProfile(), true);
                 }
             }
-
         });
         model.addPropertyChangeListener("name", new PropertyChangeListener() {
-
             @Override
             public void propertyChange(final PropertyChangeEvent evt) {
                 list.repaint();
             }
-
         });
         for (Profile profile : model.getProfiles()) {
             ((DefaultListModel) list.getModel()).addElement(profile);
@@ -118,14 +114,12 @@ public class ProfileManagerDialogLinker {
         nicknames.setModel(new DefaultListModel());
         nicknames.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         nicknames.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-
             @Override
             public void valueChanged(final ListSelectionEvent e) {
                 model.setSelectedNickname(nicknames.getSelectedValue());
             }
         });
         model.addPropertyChangeListener("selectedprofile", new PropertyChangeListener() {
-
             @Override
             public void propertyChange(final PropertyChangeEvent evt) {
                 nicknames.getModel().clear();
@@ -138,7 +132,6 @@ public class ProfileManagerDialogLinker {
             }
         });
         model.addPropertyChangeListener("nicknames", new PropertyChangeListener() {
-
             @Override
             public void propertyChange(final PropertyChangeEvent evt) {
                 nicknames.getModel().clear();
@@ -159,33 +152,29 @@ public class ProfileManagerDialogLinker {
      */
     public void bindAddNickname(final JButton addNickname) {
         addNickname.addActionListener(new ActionListener() {
-
             @Override
             public void actionPerformed(final ActionEvent e) {
                 new StandardInputDialog(dialog, ModalityType.DOCUMENT_MODAL, iconManager,
                         "Add nickname", "Enter nickname to add:", new AddNicknameValidator(model)) {
+                    @Override
+                    public boolean save() {
+                        controller.addNickname(getText());
+                        return true;
+                    }
 
-                            @Override
-                            public boolean save() {
-                                controller.addNickname(getText());
-                                return true;
-                            }
-
-                            @Override
-                            public void cancelled() {
-                            }
-                        }.display();
+                    @Override
+                    public void cancelled() {
+                    }
+                }.display();
             }
         });
         model.addPropertyChangeListener("selectedprofile", new PropertyChangeListener() {
-
             @Override
             public void propertyChange(final PropertyChangeEvent evt) {
                 addNickname.setEnabled(model.isManipulateProfileAllowed());
             }
         });
         model.addPropertyChangeListener("profiles", new PropertyChangeListener() {
-
             @Override
             public void propertyChange(final PropertyChangeEvent evt) {
                 addNickname.setEnabled(model.isManipulateProfileAllowed());
@@ -200,30 +189,27 @@ public class ProfileManagerDialogLinker {
      */
     public void bindEditNickname(final JButton editNickname) {
         editNickname.addActionListener(new ActionListener() {
-
             @Override
             public void actionPerformed(final ActionEvent e) {
                 final StandardInputDialog inputDialog = new StandardInputDialog(dialog,
                         ModalityType.DOCUMENT_MODAL, iconManager,
                         "Add nickname", "Enter edited nickname:",
                         new EditNicknameValidator(model)) {
+                    @Override
+                    public boolean save() {
+                        controller.editNickname(getText());
+                        return true;
+                    }
 
-                            @Override
-                            public boolean save() {
-                                controller.editNickname(getText());
-                                return true;
-                            }
-
-                            @Override
-                            public void cancelled() {
-                            }
-                        };
+                    @Override
+                    public void cancelled() {
+                    }
+                };
                 inputDialog.setText((String) model.getSelectedNickname());
                 inputDialog.display();
             }
         });
         model.addPropertyChangeListener("nicknames", new PropertyChangeListener() {
-
             @Override
             public void propertyChange(final PropertyChangeEvent evt) {
                 editNickname.setEnabled(model.isManipulateNicknameAllowed());
@@ -238,26 +224,23 @@ public class ProfileManagerDialogLinker {
      */
     public void bindDeleteNickname(final JButton deleteNickname) {
         deleteNickname.addActionListener(new ActionListener() {
-
             @Override
             public void actionPerformed(final ActionEvent e) {
                 new StandardQuestionDialog(dialog, ModalityType.DOCUMENT_MODAL,
                         "Delete nickname?", "Are you sure you want to delete this nickname?") {
+                    @Override
+                    public boolean save() {
+                        controller.deleteNickname();
+                        return true;
+                    }
 
-                            @Override
-                            public boolean save() {
-                                controller.deleteNickname();
-                                return true;
-                            }
-
-                            @Override
-                            public void cancelled() {
-                            }
-                        }.display();
+                    @Override
+                    public void cancelled() {
+                    }
+                }.display();
             }
         });
         model.addPropertyChangeListener("nicknames", new PropertyChangeListener() {
-
             @Override
             public void propertyChange(final PropertyChangeEvent evt) {
                 deleteNickname.setEnabled(model.isManipulateNicknameAllowed());
@@ -272,7 +255,6 @@ public class ProfileManagerDialogLinker {
      */
     public void bindProfileName(final ValidatableJTextField profileName) {
         profileName.getDocument().addDocumentListener(new DocumentListener() {
-
             @Override
             public void insertUpdate(final DocumentEvent e) {
                 model.setName(profileName.getText());
@@ -297,7 +279,6 @@ public class ProfileManagerDialogLinker {
             }
         });
         model.addPropertyChangeListener("selectedprofile", new PropertyChangeListener() {
-
             @Override
             public void propertyChange(final PropertyChangeEvent evt) {
                 profileName.setText(model.getName());
@@ -314,7 +295,6 @@ public class ProfileManagerDialogLinker {
      */
     public void bindProfileRealnames(final ValidatableJTextField profileRealname) {
         profileRealname.getDocument().addDocumentListener(new DocumentListener() {
-
             @Override
             public void insertUpdate(final DocumentEvent e) {
                 model.setRealname(profileRealname.getText());
@@ -337,7 +317,6 @@ public class ProfileManagerDialogLinker {
             }
         });
         model.addPropertyChangeListener("selectedprofile", new PropertyChangeListener() {
-
             @Override
             public void propertyChange(final PropertyChangeEvent evt) {
                 profileRealname.setText(model.getRealname());
@@ -354,7 +333,6 @@ public class ProfileManagerDialogLinker {
      */
     public void bindProfileIdent(final ValidatableJTextField profileIdent) {
         profileIdent.getDocument().addDocumentListener(new DocumentListener() {
-
             @Override
             public void insertUpdate(final DocumentEvent e) {
                 model.setIdent(profileIdent.getText());
@@ -377,7 +355,6 @@ public class ProfileManagerDialogLinker {
             }
         });
         model.addPropertyChangeListener("selectedprofile", new PropertyChangeListener() {
-
             @Override
             public void propertyChange(final PropertyChangeEvent evt) {
                 profileIdent.setEnabled(model.isManipulateProfileAllowed());
@@ -393,7 +370,6 @@ public class ProfileManagerDialogLinker {
      */
     public void bindAddProfile(final JButton addProfile) {
         addProfile.addActionListener(new ActionListener() {
-
             @Override
             public void actionPerformed(final ActionEvent e) {
                 controller.addProfile();
@@ -408,26 +384,23 @@ public class ProfileManagerDialogLinker {
      */
     public void bindDeleteProfile(final JButton deleteProfile) {
         deleteProfile.addActionListener(new ActionListener() {
-
             @Override
             public void actionPerformed(final ActionEvent e) {
                 new StandardQuestionDialog(dialog, ModalityType.DOCUMENT_MODAL,
                         "Delete profile?", "Are you sure you want to delete this profile?") {
+                    @Override
+                    public boolean save() {
+                        controller.deleteProfile();
+                        return true;
+                    }
 
-                            @Override
-                            public boolean save() {
-                                controller.deleteProfile();
-                                return true;
-                            }
-
-                            @Override
-                            public void cancelled() {
-                            }
-                        }.display();
+                    @Override
+                    public void cancelled() {
+                    }
+                }.display();
             }
         });
         model.addPropertyChangeListener("profiles", new PropertyChangeListener() {
-
             @Override
             public void propertyChange(final PropertyChangeEvent evt) {
                 deleteProfile.setEnabled(model.isManipulateProfileAllowed());
@@ -442,14 +415,12 @@ public class ProfileManagerDialogLinker {
      */
     public void bindOKButton(final JButton okButton) {
         okButton.addActionListener(new ActionListener() {
-
             @Override
             public void actionPerformed(final ActionEvent e) {
                 controller.saveAndCloseDialog();
             }
         });
         model.addPropertyChangeListener(new PropertyChangeListener() {
-
             @Override
             public void propertyChange(final PropertyChangeEvent evt) {
                 okButton.setEnabled(model.isOKAllowed());
@@ -464,11 +435,11 @@ public class ProfileManagerDialogLinker {
      */
     public void bindCancelButton(final JButton cancelButton) {
         cancelButton.addActionListener(new ActionListener() {
-
             @Override
             public void actionPerformed(final ActionEvent e) {
                 controller.closeDialog();
             }
         });
     }
+
 }

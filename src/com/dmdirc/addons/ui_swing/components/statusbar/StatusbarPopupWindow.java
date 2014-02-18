@@ -33,18 +33,17 @@ import javax.swing.UIManager;
 
 import net.miginfocom.swing.MigLayout;
 
- /**
- * A popup window which is shown above a status bar component to provide more
- * detailed information.
+/**
+ * A popup window which is shown above a status bar component to provide more detailed information.
  *
  * @since 0.6.3m1
  */
 public abstract class StatusbarPopupWindow extends StandardDialog {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 1;
     /** The parent JPanel. */
@@ -55,7 +54,7 @@ public abstract class StatusbarPopupWindow extends StandardDialog {
     /**
      * Creates a new status bar popup window.
      *
-     * @param parent The {@link JPanel} to use for positioning
+     * @param parent       The {@link JPanel} to use for positioning
      * @param parentWindow Parent window
      */
     public StatusbarPopupWindow(
@@ -100,7 +99,7 @@ public abstract class StatusbarPopupWindow extends StandardDialog {
     protected Point getPopupLocation() {
         final Point point = parent.getLocationOnScreen();
         point.translate(parent.getWidth() / 2 - getWidth() / 2,
-                - getHeight());
+                -getHeight());
         final int maxX = Math.max(parentWindow.getLocationOnScreen().x
                 + parentWindow.getWidth() - 10 - getWidth(),
                 parent.getLocationOnScreen().x + parent.getWidth() - 1
@@ -124,10 +123,10 @@ public abstract class StatusbarPopupWindow extends StandardDialog {
      * @param panel The {@link JPanel} to be initialised
      */
     protected void initPanel(final JPanel panel) {
-            panel.setLayout(new MigLayout("ins 3 5 6 10, gap 10 5"));
-            panel.setBackground(UIManager.getColor("ToolTip.background"));
-            panel.setForeground(UIManager.getColor("ToolTip.foreground"));
-            panel.setBorder(new GappedEtchedBorder(this));
+        panel.setLayout(new MigLayout("ins 3 5 6 10, gap 10 5"));
+        panel.setBackground(UIManager.getColor("ToolTip.background"));
+        panel.setForeground(UIManager.getColor("ToolTip.foreground"));
+        panel.setBorder(new GappedEtchedBorder(this));
     }
 
     /**
@@ -136,4 +135,5 @@ public abstract class StatusbarPopupWindow extends StandardDialog {
      * @param panel The {@link JPanel} to which content should be added
      */
     protected abstract void initContent(final JPanel panel);
+
 }

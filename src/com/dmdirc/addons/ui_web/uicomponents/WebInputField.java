@@ -35,9 +35,7 @@ import java.awt.event.KeyListener;
 public class WebInputField implements InputField {
 
     private Client client;
-
     private String text;
-
     private int selStart;
     private int selEnd;
 

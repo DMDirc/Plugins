@@ -44,7 +44,7 @@ public class PopInCommand extends Command {
     /** A command info object for this command. */
     public static final CommandInfo INFO = new BaseCommandInfo("popin",
             "popin - Reattaches the current window to the main client if it"
-                + " has been detached via the popin command.",
+            + " has been detached via the popin command.",
             CommandType.TYPE_GLOBAL);
     /** Factory to use to locate windows. */
     private final SwingWindowFactory windowFactory;
@@ -52,7 +52,7 @@ public class PopInCommand extends Command {
     /**
      * Create a new instance of PopInCommand.
      *
-     * @param windowFactory Factory to use to locate windows.
+     * @param windowFactory     Factory to use to locate windows.
      * @param commandController The command controller to use for command info.
      */
     @Inject

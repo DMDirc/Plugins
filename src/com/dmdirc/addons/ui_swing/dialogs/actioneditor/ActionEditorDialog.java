@@ -50,12 +50,11 @@ import org.slf4j.LoggerFactory;
 /**
  * Action editor dialog.
  */
-@Factory(inject=true, singleton=true)
+@Factory(inject = true, singleton = true)
 public class ActionEditorDialog extends StandardDialog implements ActionListener,
         PropertyChangeListener {
 
     private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(ActionEditorDialog.class);
-
     /** Serial version UID. */
     private static final long serialVersionUID = 1;
     /** Name panel. */
@@ -90,12 +89,12 @@ public class ActionEditorDialog extends StandardDialog implements ActionListener
     /**
      * Instantiates the panel.
      *
-     * @param iconManager Icon manager
-     * @param config Config
-     * @param subsFactory Actions substitution factory
+     * @param iconManager   Icon manager
+     * @param config        Config
+     * @param subsFactory   Actions substitution factory
      * @param actionFactory Actions factory
-     * @param parentWindow Parent window
-     * @param group Action's group
+     * @param parentWindow  Parent window
+     * @param group         Action's group
      */
     public ActionEditorDialog(
             @SuppressWarnings("qualifiers") @GlobalConfig final IconManager iconManager,
@@ -124,12 +123,12 @@ public class ActionEditorDialog extends StandardDialog implements ActionListener
     /**
      * Instantiates the panel.
      *
-     * @param iconManager Icon manager
-     * @param config Config
-     * @param subsFactory Actions substitution factory
+     * @param iconManager   Icon manager
+     * @param config        Config
+     * @param subsFactory   Actions substitution factory
      * @param actionFactory Actions factory
-     * @param parentWindow Parent window
-     * @param action Action to be edited
+     * @param parentWindow  Parent window
+     * @param action        Action to be edited
      */
     public ActionEditorDialog(
             @SuppressWarnings("qualifiers") @GlobalConfig final IconManager iconManager,
@@ -211,8 +210,7 @@ public class ActionEditorDialog extends StandardDialog implements ActionListener
     /** Lays out the components. */
     private void layoutComponents() {
         setMinimumSize(new Dimension(800, 600));
-        setLayout(new MigLayout("fill, hidemode 3, wrap 2, pack, hmax 80sp," +
-                "wmin 800, wmax 800"));
+        setLayout(new MigLayout("fill, hidemode 3, wrap 2, pack, hmax 80sp," + "wmin 800, wmax 800"));
 
         add(name, "grow, w 50%");
         add(conditions, "spany 3, grow, pushx, w 50%");
@@ -237,7 +235,7 @@ public class ActionEditorDialog extends StandardDialog implements ActionListener
             substitutions.setVisible(!substitutions.isVisible());
             showSubstitutions
                     .setText(substitutions.isVisible() ? "Hide Substitutions"
-                            : "Show Substitutions");
+                    : "Show Substitutions");
             pack();
         } else if (e.getSource().equals(showAdvanced)) {
             advanced.setVisible(!advanced.isVisible());
@@ -259,7 +257,6 @@ public class ActionEditorDialog extends StandardDialog implements ActionListener
         super.validate();
 
         SwingUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -324,4 +321,5 @@ public class ActionEditorDialog extends StandardDialog implements ActionListener
 
         getOkButton().setEnabled(triggersValid && conditionsValid && nameValid);
     }
+
 }

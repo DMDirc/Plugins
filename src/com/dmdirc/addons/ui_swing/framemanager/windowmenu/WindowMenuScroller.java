@@ -49,10 +49,10 @@ public class WindowMenuScroller implements ConfigChangeListener {
     /**
      * Creates a new menu scroller for the window menu.
      *
-     * @param menu Menu to create scroller for
-     * @param config Config manager
+     * @param menu         Menu to create scroller for
+     * @param config       Config manager
      * @param configDomain Domain to check config settings in
-     * @param fixedCount Number of fixed items in the menu
+     * @param fixedCount   Number of fixed items in the menu
      */
     public WindowMenuScroller(final JMenu menu, final AggregateConfigProvider config,
             final String configDomain, final int fixedCount) {
@@ -77,7 +77,6 @@ public class WindowMenuScroller implements ConfigChangeListener {
     @Override
     public void configChanged(final String domain, final String key) {
         UIUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -90,4 +89,5 @@ public class WindowMenuScroller implements ConfigChangeListener {
             }
         });
     }
+
 }

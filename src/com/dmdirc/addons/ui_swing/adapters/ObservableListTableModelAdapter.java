@@ -37,13 +37,11 @@ public abstract class ObservableListTableModelAdapter<T> extends AbstractTableMo
 
     /** Serial version UID. */
     private static final long serialVersionUID = 1L;
-
     /** The list we're observing. */
     protected final ObservableList<T> list;
 
     /**
-     * Creates a new {@link ObservableListTableModelAdapter} backed by the
-     * given list.
+     * Creates a new {@link ObservableListTableModelAdapter} backed by the given list.
      *
      * @param list The backing list for this model
      */
@@ -59,8 +57,7 @@ public abstract class ObservableListTableModelAdapter<T> extends AbstractTableMo
     }
 
     /**
-     * List observer which fires the relevant methods to notify this model's
-     * listeners.
+     * List observer which fires the relevant methods to notify this model's listeners.
      */
     private class Listener implements ListObserver {
 
@@ -69,7 +66,6 @@ public abstract class ObservableListTableModelAdapter<T> extends AbstractTableMo
         public void onItemsAdded(final Object source, final int startIndex,
                 final int endIndex) {
             UIUtilities.invokeLater(new Runnable() {
-
                 /** {@inheritDoc} */
                 @Override
                 public void run() {
@@ -83,7 +79,6 @@ public abstract class ObservableListTableModelAdapter<T> extends AbstractTableMo
         public void onItemsRemoved(final Object source, final int startIndex,
                 final int endIndex) {
             UIUtilities.invokeLater(new Runnable() {
-
                 /** {@inheritDoc} */
                 @Override
                 public void run() {
@@ -97,7 +92,6 @@ public abstract class ObservableListTableModelAdapter<T> extends AbstractTableMo
         public void onItemsChanged(final Object source, final int startIndex,
                 final int endIndex) {
             UIUtilities.invokeLater(new Runnable() {
-
                 /** {@inheritDoc} */
                 @Override
                 public void run() {
@@ -105,6 +99,7 @@ public abstract class ObservableListTableModelAdapter<T> extends AbstractTableMo
                 }
             });
         }
+
     }
 
 }

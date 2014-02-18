@@ -55,7 +55,6 @@ public class NickColourPanel extends JPanel implements ActionListener,
     private static final long serialVersionUID = 1;
     /** The table headings. */
     private static final String[] HEADERS = {"Network", "Nickname", "Text colour", "Nicklist colour"};
-
     /** The table used for displaying the options. */
     private final JTable table;
     /** The plugin we're associated with. */
@@ -76,11 +75,11 @@ public class NickColourPanel extends JPanel implements ActionListener,
     /**
      * Creates a new instance of NickColourPanel.
      *
-     * @param mainFrame Main frame to parent dialogs on
-     * @param iconManager Icon manager to load icons from
-     * @param plugin The plugin that owns this panel
+     * @param mainFrame     Main frame to parent dialogs on
+     * @param iconManager   Icon manager to load icons from
+     * @param plugin        The plugin that owns this panel
      * @param colourManager The colour manager to use to parse colours.
-     * @param userSettings The provider to write user settings to.
+     * @param userSettings  The provider to write user settings to.
      */
     public NickColourPanel(
             final MainFrame mainFrame, final IconManager iconManager, final NickColourManager plugin,
@@ -94,7 +93,6 @@ public class NickColourPanel extends JPanel implements ActionListener,
         final Object[][] data = plugin.getData();
 
         table = new JTable(new DefaultTableModel(data, HEADERS)) {
-
             /** A version number for this class. */
             private static final long serialVersionUID = 1;
             /** The colour renderer we're using for colour cells. */
@@ -199,8 +197,8 @@ public class NickColourPanel extends JPanel implements ActionListener,
     /**
      * Adds a row to the table.
      *
-     * @param network The network setting
-     * @param nickname The nickname setting
+     * @param network    The network setting
+     * @param nickname   The nickname setting
      * @param textcolour The textpane colour setting
      * @param nickcolour The nick list colour setting
      */
@@ -253,4 +251,5 @@ public class NickColourPanel extends JPanel implements ActionListener,
         editButton.setEnabled(enable);
         deleteButton.setEnabled(enable);
     }
+
 }

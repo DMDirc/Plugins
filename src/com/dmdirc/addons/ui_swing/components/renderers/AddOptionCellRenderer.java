@@ -45,7 +45,7 @@ public final class AddOptionCellRenderer extends DMDircListCellRenderer {
      * Creates a new add option cell renderer.
      *
      * @param settingsPanel Parent settings panel
-     * @param renderer Parent renderer
+     * @param renderer      Parent renderer
      */
     public AddOptionCellRenderer(final SettingsPanel settingsPanel,
             final ListCellRenderer renderer) {
@@ -66,9 +66,10 @@ public final class AddOptionCellRenderer extends DMDircListCellRenderer {
             setting = null;
         }
         if (setting == null) {
-           label.setText((String) value);
+            label.setText((String) value);
         } else {
             label.setText(setting.getTitle());
         }
     }
+
 }

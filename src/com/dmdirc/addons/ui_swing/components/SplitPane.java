@@ -30,16 +30,15 @@ import java.awt.Component;
 
 import javax.swing.JSplitPane;
 
-
 /**
  * JSplit pane that snaps around its components preferred size.
  */
 public class SplitPane extends JSplitPane implements ConfigChangeListener {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 2;
     /** use one touch expandable? */
@@ -49,15 +48,17 @@ public class SplitPane extends JSplitPane implements ConfigChangeListener {
 
     /** Orientation type . */
     public enum Orientation {
+
         /** Horizontal orientation. */
         HORIZONTAL,
         /** Vertical orientation. */
         VERTICAL;
+
     }
 
     /**
-     * Instantiates a new snapping split pane. Defaults to using a horizontal
-     * split, two null components and snapping to the left component.
+     * Instantiates a new snapping split pane. Defaults to using a horizontal split, two null
+     * components and snapping to the left component.
      *
      * @param manager Config manager to read values from
      */
@@ -66,10 +67,10 @@ public class SplitPane extends JSplitPane implements ConfigChangeListener {
     }
 
     /**
-     * Instantiates a new snapping split pane. Defaults to using a horizontal
-     * split, two null components and snapping to the left component.
+     * Instantiates a new snapping split pane. Defaults to using a horizontal split, two null
+     * components and snapping to the left component.
      *
-     * @param manager Config manager to read values from
+     * @param manager     Config manager to read values from
      * @param orientation Split pane orientation
      */
     public SplitPane(final AggregateConfigProvider manager, final Orientation orientation) {
@@ -77,14 +78,12 @@ public class SplitPane extends JSplitPane implements ConfigChangeListener {
     }
 
     /**
-     * Instantiates a new snapping split pane. Defaults to using two null
-     * components.
+     * Instantiates a new snapping split pane. Defaults to using two null components.
      *
-     * @param manager Config manager to read values from
-     * @param orientation Split pane orientation
-     * <code>JSplitPane.HORIZONTAL_SPLIT</code> or
-     * <code>JSplitPane.VERTICAL_SPLIT</code>
-     * @param leftComponent left component
+     * @param manager        Config manager to read values from
+     * @param orientation    Split pane orientation <code>JSplitPane.HORIZONTAL_SPLIT</code> or
+     *                       <code>JSplitPane.VERTICAL_SPLIT</code>
+     * @param leftComponent  left component
      * @param rightComponent right component
      */
     public SplitPane(final AggregateConfigProvider manager, final Orientation orientation,
@@ -113,7 +112,6 @@ public class SplitPane extends JSplitPane implements ConfigChangeListener {
                 "ui", "useOneTouchExpandable");
 
         UIUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -121,4 +119,5 @@ public class SplitPane extends JSplitPane implements ConfigChangeListener {
             }
         });
     }
+
 }

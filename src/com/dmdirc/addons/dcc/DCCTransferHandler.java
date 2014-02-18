@@ -25,8 +25,7 @@ package com.dmdirc.addons.dcc;
 import com.dmdirc.addons.dcc.io.DCCTransfer;
 
 /**
- * This interfaces allows DCC Transfer Windows to receive data from a
- * DCCTransfer.
+ * This interfaces allows DCC Transfer Windows to receive data from a DCCTransfer.
  *
  * @author Shane 'Dataforce' McCormack
  */
@@ -49,7 +48,7 @@ public interface DCCTransferHandler {
     /**
      * Called when data is sent/recieved.
      *
-     * @param dcc The DCCTransfer that this message is from
+     * @param dcc   The DCCTransfer that this message is from
      * @param bytes The number of new bytes that were transfered
      */
     void dataTransfered(final DCCTransfer dcc, final int bytes);

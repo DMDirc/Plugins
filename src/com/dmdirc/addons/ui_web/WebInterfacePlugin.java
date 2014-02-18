@@ -58,4 +58,5 @@ public class WebInterfacePlugin extends BasePlugin {
     public UIController getController() {
         return controller;
     }
+
 }

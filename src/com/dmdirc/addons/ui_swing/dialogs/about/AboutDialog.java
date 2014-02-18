@@ -54,11 +54,11 @@ public class AboutDialog extends StandardDialog implements ActionListener, Chang
     /**
      * Creates a new instance of AboutDialog.
      *
-     * @param parentWindow Parent window
-     * @param infoPanel The info panel to display.
-     * @param creditsPanel The credits panel to display.
+     * @param parentWindow  Parent window
+     * @param infoPanel     The info panel to display.
+     * @param creditsPanel  The credits panel to display.
      * @param licensesPanel The licenses panel to display.
-     * @param aboutPanel The about panel to display.
+     * @param aboutPanel    The about panel to display.
      */
     @Inject
     public AboutDialog(
@@ -97,8 +97,8 @@ public class AboutDialog extends StandardDialog implements ActionListener, Chang
         tabbedPane.add("Information", infoPanel);
         tabbedPane.addChangeListener(this);
 
-        getContentPane().setLayout(new MigLayout("ins rel, wrap 1, fill, " +
-                "wmin 600, wmax 600, hmin 400, hmax 400"));
+        getContentPane().setLayout(new MigLayout("ins rel, wrap 1, fill, "
+                + "wmin 600, wmax 600, hmin 400, hmax 400"));
         getContentPane().add(tabbedPane, "grow, push");
         getContentPane().add(getOkButton(), "right");
     }
@@ -130,4 +130,5 @@ public class AboutDialog extends StandardDialog implements ActionListener, Chang
             cp.showEE();
         }
     }
+
 }

@@ -32,8 +32,8 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 
 /**
- * Textpane speed benchmark, outputs a large volume of text and times the amount
- * of time it takes the textpane to draw this.
+ * Textpane speed benchmark, outputs a large volume of text and times the amount of time it takes
+ * the textpane to draw this.
  */
 public class Benchmark extends DebugCommand {
 
@@ -83,4 +83,5 @@ public class Benchmark extends DebugCommand {
                     + " nanoseconds.");
         }
     }
+
 }

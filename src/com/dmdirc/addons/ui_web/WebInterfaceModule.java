@@ -24,17 +24,17 @@ package com.dmdirc.addons.ui_web;
 
 import com.dmdirc.ClientModule;
 import com.dmdirc.plugins.PluginInfo;
-
 import com.dmdirc.util.resourcemanager.ResourceManager;
 
 import java.io.IOException;
+
 import javax.inject.Qualifier;
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
 
-@Module(injects={WebInterfaceUI.class, StaticRequestHandler.class}, addsTo=ClientModule.class)
+@Module(injects = {WebInterfaceUI.class, StaticRequestHandler.class}, addsTo = ClientModule.class)
 public class WebInterfaceModule {
 
     private final PluginInfo pluginInfo;
@@ -44,7 +44,8 @@ public class WebInterfaceModule {
     }
 
     @Qualifier
-    public @interface WebUIDomain {};
+    public @interface WebUIDomain {
+    };
 
     @Provides
     @WebUIDomain

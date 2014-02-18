@@ -44,8 +44,8 @@ public class ErrorTable extends PackingTable {
      * Table listing ProgramErrors in the client.
      *
      * @param iconManager Icon manager
-     * @param tableModel Table model
-     * @param scrollPane Parent scrollpane
+     * @param tableModel  Table model
+     * @param scrollPane  Parent scrollpane
      */
     public ErrorTable(final IconManager iconManager,
             final ErrorTableModel tableModel, final JScrollPane scrollPane) {
@@ -75,4 +75,5 @@ public class ErrorTable extends PackingTable {
                 return super.getCellRenderer(row, column);
         }
     }
+
 }

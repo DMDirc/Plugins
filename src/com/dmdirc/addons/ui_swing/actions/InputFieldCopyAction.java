@@ -35,12 +35,11 @@ import javax.swing.JTextField;
 public final class InputFieldCopyAction extends AbstractAction {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 1;
-
     /** Text component to be acted upon. */
     private final TextPane textPane;
     /** Input field to be acted upon. */
@@ -49,7 +48,7 @@ public final class InputFieldCopyAction extends AbstractAction {
     /**
      * Instantiates a new copy action.
      *
-     * @param textPane TextPane to be acted upon
+     * @param textPane   TextPane to be acted upon
      * @param inputField Inputfield to be acted upon
      */
     public InputFieldCopyAction(final TextPane textPane,
@@ -72,7 +71,8 @@ public final class InputFieldCopyAction extends AbstractAction {
             inputField.copy();
         } else if (textPane.hasSelectedRange()) {
             textPane.copy((e.getModifiers() & ActionEvent.SHIFT_MASK)
-                == ActionEvent.SHIFT_MASK);
+                    == ActionEvent.SHIFT_MASK);
         }
     }
+
 }

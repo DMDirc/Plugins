@@ -39,15 +39,12 @@ import org.slf4j.LoggerFactory;
 public class NotifyMyAndroidClient {
 
     private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(NotifyMyAndroidClient.class);
-
     /** The base URL for the NMA API. */
     private static final String BASE_URL = "https://www.notifymyandroid.com";
     /** The method to call to send a notification. */
     private static final String NOTIFY_PATH = "/publicapi/notify";
-
     /** The API keys to deliver to. */
     private final Collection<String> apiKeys;
-
     /** The application to report ourselves as. */
     private final String application;
 
@@ -57,22 +54,21 @@ public class NotifyMyAndroidClient {
     }
 
     /**
-     * Creates a new instance of {@link NotifyMyAndroidClient} with a single
-     * API key.
+     * Creates a new instance of {@link NotifyMyAndroidClient} with a single API key.
      *
-     * @param apiKey The API key to use when connecting to NMA
+     * @param apiKey      The API key to use when connecting to NMA
      * @param application The application string to report to NMA.
      */
     public NotifyMyAndroidClient(final String apiKey, final String application) {
-        this(Arrays.asList(new String[] { apiKey }), application);
+        this(Arrays.asList(new String[]{apiKey}), application);
     }
 
     /**
-     * Sends a notification to NotifyMyAndroid. At present return status and
-     * text is ignored.
+     * Sends a notification to NotifyMyAndroid. At present return status and text is ignored.
      *
-     * @param event The name of the event to send (max 1,000 chars).
+     * @param event       The name of the event to send (max 1,000 chars).
      * @param description The description of the event (max 10,000 chars).
+     *
      * @throws IOException If the NMA service couldn't be reached
      */
     public void notify(final String event, final String description) throws IOException {

@@ -47,7 +47,7 @@ public class CertificateChainEntryCellRenderer extends DMDircListCellRenderer {
      * Creates a new renderer.
      *
      * @param iconManager Icon manager
-     * @param renderer Parent renderer
+     * @param renderer    Parent renderer
      */
     public CertificateChainEntryCellRenderer(final IconManager iconManager,
             final ListCellRenderer renderer) {
@@ -75,4 +75,5 @@ public class CertificateChainEntryCellRenderer extends DMDircListCellRenderer {
             }
         }
     }
+
 }

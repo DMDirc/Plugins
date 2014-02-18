@@ -54,8 +54,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 /**
- * The Systray plugin shows DMDirc in the user's system tray, and allows
- * notifications to be disabled.
+ * The Systray plugin shows DMDirc in the user's system tray, and allows notifications to be
+ * disabled.
  */
 public class SystrayPlugin extends BaseCommandPlugin implements
         ActionListener, MouseListener, com.dmdirc.interfaces.ActionListener {
@@ -74,12 +74,12 @@ public class SystrayPlugin extends BaseCommandPlugin implements
     /**
      * Creates a new system tray plugin.
      *
-     * @param swingController The controller that owns this plugin.
-     * @param pluginInfo This plugin's plugin info.
-     * @param actionController The action controller to use.
+     * @param swingController    The controller that owns this plugin.
+     * @param pluginInfo         This plugin's plugin info.
+     * @param actionController   The action controller to use.
      * @param identityController The identity manager to read settings from.
-     * @param commandController The controller to use for command information.
-     * @param urlBuilder URL builder to use to resolve icon paths.
+     * @param commandController  The controller to use for command information.
+     * @param urlBuilder         URL builder to use to resolve icon paths.
      */
     public SystrayPlugin(
             final SwingController swingController,
@@ -113,9 +113,10 @@ public class SystrayPlugin extends BaseCommandPlugin implements
 
     /**
      * Sends a notification via the system tray icon.
-     * @param title The title of the notification
+     *
+     * @param title   The title of the notification
      * @param message The contents of the notification
-     * @param type The type of notification
+     * @param type    The type of notification
      */
     public void notify(final String title, final String message,
             final TrayIcon.MessageType type) {
@@ -124,7 +125,8 @@ public class SystrayPlugin extends BaseCommandPlugin implements
 
     /**
      * Sends a notification via the system tray icon.
-     * @param title The title of the notification
+     *
+     * @param title   The title of the notification
      * @param message The contents of the notification
      */
     public void notify(final String title, final String message) {
@@ -132,10 +134,10 @@ public class SystrayPlugin extends BaseCommandPlugin implements
     }
 
     /**
-     * Proxy method for notify, this method is used for the exported command to
-     * avoid ambiguity when performing reflection.
+     * Proxy method for notify, this method is used for the exported command to avoid ambiguity when
+     * performing reflection.
      *
-     * @param title Title for the notification
+     * @param title   Title for the notification
      * @param message Text for the notification
      */
     @Exported

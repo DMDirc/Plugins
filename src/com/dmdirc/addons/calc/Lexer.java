@@ -28,8 +28,8 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * The lexer takes a String input and produces an ordered list of {@link Token}s
- * corresponding to the input.
+ * The lexer takes a String input and produces an ordered list of {@link Token}s corresponding to
+ * the input.
  */
 public class Lexer {
 
@@ -49,6 +49,7 @@ public class Lexer {
      * Tokenises the input string into an ordered list of tokens.
      *
      * @return A list of tokens corresponding to the input string
+     *
      * @throws ParseException If an expected token is not found
      */
     public List<Token> tokenise() throws ParseException {

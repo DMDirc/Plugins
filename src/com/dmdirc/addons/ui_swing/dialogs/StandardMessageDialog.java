@@ -49,9 +49,9 @@ public class StandardMessageDialog extends StandardDialog {
     /**
      * Instantiates a new standard input dialog.
      *
-     * @param owner Dialog owner
-     * @param modal modality type
-     * @param title Dialog title
+     * @param owner   Dialog owner
+     * @param modal   modality type
+     * @param title   Dialog title
      * @param message Dialog message
      */
     public StandardMessageDialog(
@@ -99,7 +99,6 @@ public class StandardMessageDialog extends StandardDialog {
      */
     private void addListeners() {
         final ActionListener listener = new ActionListener() {
-
             /** {@inheritDoc} */
             @Override
             public void actionPerformed(final ActionEvent e) {
@@ -111,7 +110,6 @@ public class StandardMessageDialog extends StandardDialog {
         getCancelButton().addActionListener(listener);
         getOkButton().addActionListener(listener);
         addWindowListener(new WindowAdapter() {
-
             /** {@inheritDoc} */
             @Override
             public void windowOpened(final WindowEvent e) {
@@ -136,4 +134,5 @@ public class StandardMessageDialog extends StandardDialog {
         add(blurb, "growx");
         add(getOkButton(), "right");
     }
+
 }

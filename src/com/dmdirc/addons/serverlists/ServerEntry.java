@@ -37,10 +37,8 @@ public class ServerEntry extends ServerGroupItemBase {
 
     /** The address of the server in question. */
     private URI address;
-
     /** The group that owns this entry. */
     private final ServerGroup group;
-
     /** The manager to use to create new servers. */
     private final ServerManager serverManager;
 
@@ -48,11 +46,11 @@ public class ServerEntry extends ServerGroupItemBase {
      * Creates a new server entry.
      *
      * @param identityController The controller to read/write settings with.
-     * @param serverManager The server manager to connect to servers with.
-     * @param group The group that owns this entry
-     * @param name The name of this server
-     * @param address The address of this server
-     * @param profile The name of the profile to be used by this server
+     * @param serverManager      The server manager to connect to servers with.
+     * @param group              The group that owns this entry
+     * @param name               The name of this server
+     * @param address            The address of this server
+     * @param profile            The name of the profile to be used by this server
      */
     public ServerEntry(
             final IdentityController identityController,

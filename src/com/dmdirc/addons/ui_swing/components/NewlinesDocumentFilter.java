@@ -61,4 +61,5 @@ public class NewlinesDocumentFilter extends DocumentFilter {
         }
         return text;
     }
+
 }

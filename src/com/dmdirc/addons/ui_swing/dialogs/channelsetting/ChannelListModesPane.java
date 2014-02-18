@@ -65,9 +65,9 @@ public final class ChannelListModesPane extends JPanel implements ActionListener
         ListSelectionListener, ConfigChangeListener {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 5;
     /** Channel. */
@@ -104,8 +104,8 @@ public final class ChannelListModesPane extends JPanel implements ActionListener
     /**
      * Creates a new instance of ChannelListModePane.
      *
-     * @param controller Swing controller
-     * @param channel Parent channel
+     * @param controller   Swing controller
+     * @param channel      Parent channel
      * @param parentWindow Parent window
      */
     public ChannelListModesPane(final SwingController controller,
@@ -157,7 +157,7 @@ public final class ChannelListModesPane extends JPanel implements ActionListener
                 continue;
             }
             existingListItems.add(mode, new ArrayList<>(listItems));
-            final DefaultListModel model =(DefaultListModel) listModesPanels.get(i).getModel();
+            final DefaultListModel model = (DefaultListModel) listModesPanels.get(i).getModel();
 
             model.removeAllElements();
             for (ChannelListModeItem listItem : listItems) {
@@ -265,7 +265,8 @@ public final class ChannelListModesPane extends JPanel implements ActionListener
 
         channel.getChannelInfo().flushModes();
 
-        controller.getGlobalIdentity().setOption("general", "extendedListModes", toggle.isSelected());
+        controller.getGlobalIdentity().
+                setOption("general", "extendedListModes", toggle.isSelected());
     }
 
     /** Adds a list mode. */
@@ -281,11 +282,10 @@ public final class ChannelListModesPane extends JPanel implements ActionListener
                 controller.getIconManager(), "Add new " + modeText,
                 "Please enter the hostmask for the new " + modeText,
                 new NotEmptyValidator()) {
-
             /**
-             * A version number for this class. It should be changed whenever the class
-             * structure is changed (or anything else that would prevent serialized
-             * objects being unserialized with the new class).
+             * A version number for this class. It should be changed whenever the class structure is
+             * changed (or anything else that would prevent serialized objects being unserialized
+             * with the new class).
              */
             private static final long serialVersionUID = 1;
 
@@ -400,4 +400,5 @@ public final class ChannelListModesPane extends JPanel implements ActionListener
             list.setCellRenderer(renderer);
         }
     }
+
 }

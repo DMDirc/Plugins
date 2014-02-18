@@ -44,9 +44,9 @@ import net.miginfocom.swing.MigLayout;
 class MessagePopup extends StatusbarTogglePanel<JLabel> {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 2;
     /** Parent window. */
@@ -61,9 +61,9 @@ class MessagePopup extends StatusbarTogglePanel<JLabel> {
     /**
      * Creates a new message history popup.
      *
-     * @param parent Parent to size against
+     * @param parent       Parent to size against
      * @param parentWindow Parent window
-     * @param controller Swing controller
+     * @param controller   Swing controller
      */
     public MessagePopup(final JPanel parent, final Window parentWindow,
             final SwingController controller) {
@@ -131,9 +131,9 @@ class MessagePopup extends StatusbarTogglePanel<JLabel> {
     private class MessageHistoryPanel extends StatusbarPopupWindow {
 
         /**
-         * A version number for this class. It should be changed whenever the
-         * class structure is changed (or anything else that would prevent
-         * serialized objects being unserialized with the new class).
+         * A version number for this class. It should be changed whenever the class structure is
+         * changed (or anything else that would prevent serialized objects being unserialized with
+         * the new class).
          */
         private static final long serialVersionUID = 2;
 
@@ -180,5 +180,7 @@ class MessagePopup extends StatusbarTogglePanel<JLabel> {
             point.y = point.y - getHeight() + 2;
             return point;
         }
+
     }
+
 }

@@ -85,15 +85,15 @@ public class ChannelSettingsDialog extends StandardDialog implements ActionListe
     /**
      * Creates a new instance of ChannelSettingsDialog.
      *
-     * @param controller Swing controller
-     * @param identityFactory Identity factory
-     * @param windowFactory Swing window factory
-     * @param iconManager Icon manager
-     * @param serviceManager Service manager
+     * @param controller         Swing controller
+     * @param identityFactory    Identity factory
+     * @param windowFactory      Swing window factory
+     * @param iconManager        Icon manager
+     * @param serviceManager     Service manager
      * @param preferencesManager Preferences Manager
-     * @param compFactory Preferences setting component factory
-     * @param newChannel The channel object that we're editing settings for
-     * @param parentWindow Parent window
+     * @param compFactory        Preferences setting component factory
+     * @param newChannel         The channel object that we're editing settings for
+     * @param parentWindow       Parent window
      */
     public ChannelSettingsDialog(
             final SwingController controller,
@@ -223,4 +223,5 @@ public class ChannelSettingsDialog extends StandardDialog implements ActionListe
 
         dispose();
     }
+
 }

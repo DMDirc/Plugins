@@ -69,7 +69,6 @@ public class TextFieldInputField extends JTextField implements InputField,
             colourPicker = new ColourPickerDialog(this, controller.getColourManager(),
                     controller.getIconManager(), irc, hex);
             colourPicker.addActionListener(new ActionListener() {
-
                 @Override
                 public void actionPerformed(final ActionEvent actionEvent) {
                     try {
@@ -105,4 +104,5 @@ public class TextFieldInputField extends JTextField implements InputField,
             hideColourPicker();
         }
     }
+
 }

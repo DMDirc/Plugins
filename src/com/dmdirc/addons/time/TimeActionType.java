@@ -27,6 +27,7 @@ import com.dmdirc.interfaces.actions.ActionType;
 
 /**
  * Lists the actions that the time plugin will raise.
+ *
  * @author chris
  */
 public enum TimeActionType implements ActionType {
@@ -37,12 +38,12 @@ public enum TimeActionType implements ActionType {
     TIME_HOUR("Every hour"),
     /** Day type. */
     TIME_DAY("Every day");
-
     /** Action type name. */
     private final String name;
 
     /**
      * Creates a new instance of a TimeActionType.
+     *
      * @param name The name of the action type
      */
     TimeActionType(final String name) {

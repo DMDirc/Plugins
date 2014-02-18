@@ -34,4 +34,5 @@ public class NoWrapParagraphView extends ParagraphView {
     public float getMinimumSpan(final int axis) {
         return super.getPreferredSpan(axis);
     }
+
 }

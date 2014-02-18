@@ -36,4 +36,5 @@ public interface WizardListener {
      * Called when the wizard is cancelled.
      */
     void wizardCancelled();
+
 }

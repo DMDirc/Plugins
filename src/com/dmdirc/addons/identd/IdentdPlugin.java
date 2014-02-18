@@ -63,10 +63,10 @@ public class IdentdPlugin extends BasePlugin implements ActionListener {
     /**
      * Creates a new instance of this plugin.
      *
-     * @param pluginInfo This plugin's plugin info
-     * @param actionController The action controller to register listeners with
+     * @param pluginInfo         This plugin's plugin info
+     * @param actionController   The action controller to register listeners with
      * @param identityController Identity manager to get settings from
-     * @param serverManager Server manager to retrieve servers from
+     * @param serverManager      Server manager to retrieve servers from
      */
     public IdentdPlugin(final PluginInfo pluginInfo,
             final ActionController actionController,
@@ -114,8 +114,8 @@ public class IdentdPlugin extends BasePlugin implements ActionListener {
     /**
      * Process an event of the specified type.
      *
-     * @param type The type of the event to process
-     * @param format Format of messages that are about to be sent. (May be null)
+     * @param type      The type of the event to process
+     * @param format    Format of messages that are about to be sent. (May be null)
      * @param arguments The arguments for the event
      */
     @Override
@@ -146,31 +146,31 @@ public class IdentdPlugin extends BasePlugin implements ActionListener {
     public void showConfig(final PreferencesDialogModel manager) {
         final PreferencesCategory general = new PluginPreferencesCategory(
                 pluginInfo, "Identd",
-                "General Identd Plugin config ('Lower' options take priority " +
-                "over those above them)");
+                "General Identd Plugin config ('Lower' options take priority "
+                + "over those above them)");
         final PreferencesCategory advanced = new PluginPreferencesCategory(
                 pluginInfo, "Advanced",
-                "Advanced Identd Plugin config - Only edit these if you need " +
-                "to/know what you are doing. Editing these could prevent " +
-                "access to some servers. ('Lower' options take priority over " +
-                "those above them)");
+                "Advanced Identd Plugin config - Only edit these if you need "
+                + "to/know what you are doing. Editing these could prevent "
+                + "access to some servers. ('Lower' options take priority over "
+                + "those above them)");
 
         general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
-                getDomain(), "general.useUsername", "Use connection " +
-                "username rather than system username", "If this is enabled," +
-                " the username for the connection will be used rather than " +
-                "'" + System.getProperty("user.name") + "'",
+                getDomain(), "general.useUsername", "Use connection "
+                + "username rather than system username", "If this is enabled,"
+                + " the username for the connection will be used rather than " + "'" + System.
+                getProperty("user.name") + "'",
                 manager.getConfigManager(), manager.getIdentity()));
         general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
-                getDomain(), "general.useNickname", "Use connection " +
-                "nickname rather than system username", "If this is enabled, " +
-                "the nickname for the connection will be used rather than " +
-                "'" + System.getProperty("user.name") + "'",
+                getDomain(), "general.useNickname", "Use connection "
+                + "nickname rather than system username", "If this is enabled, "
+                + "the nickname for the connection will be used rather than " + "'" + System.
+                getProperty("user.name") + "'",
                 manager.getConfigManager(), manager.getIdentity()));
         general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
-                getDomain(), "general.useCustomName", "Use custom name" +
-                " all the time", "If this is enabled, the name specified below" +
-                " will be used all the time", manager.getConfigManager(),
+                getDomain(), "general.useCustomName", "Use custom name" + " all the time",
+                "If this is enabled, the name specified below" + " will be used all the time",
+                manager.getConfigManager(),
                 manager.getIdentity()));
         general.addSetting(new PreferencesSetting(PreferencesType.TEXT,
                 getDomain(), "general.customName", "Custom Name to use",
@@ -178,36 +178,36 @@ public class IdentdPlugin extends BasePlugin implements ActionListener {
                 manager.getConfigManager(), manager.getIdentity()));
 
         advanced.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
-                getDomain(), "advanced.alwaysOn", "Always have ident " +
-                "port open", "By default the identd only runs when there are " +
-                "active connection attempts. This overrides that.",
+                getDomain(), "advanced.alwaysOn", "Always have ident " + "port open",
+                "By default the identd only runs when there are "
+                + "active connection attempts. This overrides that.",
                 manager.getConfigManager(), manager.getIdentity()));
         advanced.addSetting(new PreferencesSetting(PreferencesType.INTEGER,
                 new PortValidator(), getDomain(), "advanced.port",
-                "What port should the identd listen on", "Default port is 113," +
-                " this is probably useless if changed unless you port forward" +
-                " ident to a different port", manager.getConfigManager(),
+                "What port should the identd listen on", "Default port is 113,"
+                + " this is probably useless if changed unless you port forward"
+                + " ident to a different port", manager.getConfigManager(),
                 manager.getIdentity()));
         advanced.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
                 getDomain(), "advanced.useCustomSystem", "Use custom OS",
-                "By default the plugin uses 'UNIX' or 'WIN32' as the system " +
-                "type, this can be overriden by enabling this.",
+                "By default the plugin uses 'UNIX' or 'WIN32' as the system "
+                + "type, this can be overriden by enabling this.",
                 manager.getConfigManager(), manager.getIdentity()));
         advanced.addSetting(new PreferencesSetting(PreferencesType.TEXT,
                 getDomain(), "advanced.customSystem", "Custom OS to use",
                 "The custom system to use when 'Use Custom System' is enabled",
                 manager.getConfigManager(), manager.getIdentity()));
         advanced.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
-                getDomain(), "advanced.isHiddenUser", "Respond to ident" +
-                " requests with HIDDEN-USER error", "By default the plugin will" +
-                " give a USERID response, this can force an 'ERROR :" +
-                " HIDDEN-USER' response instead.", manager.getConfigManager(),
+                getDomain(), "advanced.isHiddenUser", "Respond to ident"
+                + " requests with HIDDEN-USER error", "By default the plugin will"
+                + " give a USERID response, this can force an 'ERROR :"
+                + " HIDDEN-USER' response instead.", manager.getConfigManager(),
                 manager.getIdentity()));
         advanced.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
-                getDomain(), "advanced.isNoUser", "Respond to ident" +
-                " requests with NO-USER error", "By default the plugin will" +
-                " give a USERID response, this can force an 'ERROR : NO-USER'" +
-                " response instead. (Overrides HIDDEN-USER)",
+                getDomain(), "advanced.isNoUser", "Respond to ident"
+                + " requests with NO-USER error", "By default the plugin will"
+                + " give a USERID response, this can force an 'ERROR : NO-USER'"
+                + " response instead. (Overrides HIDDEN-USER)",
                 manager.getConfigManager(), manager.getIdentity()));
 
         manager.getCategory("Plugins").addSubCategory(general);

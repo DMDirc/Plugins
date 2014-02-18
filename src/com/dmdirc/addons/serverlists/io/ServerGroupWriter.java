@@ -53,8 +53,7 @@ public class ServerGroupWriter {
     }
 
     /**
-     * Writes the specified server group and all of its children to this
-     * writer's identity.
+     * Writes the specified server group and all of its children to this writer's identity.
      *
      * @param group The group to be written
      */
@@ -74,13 +73,12 @@ public class ServerGroupWriter {
     }
 
     /**
-     * Appends the specified group to this writer's identity. Any keysections
-     * that are used will be removed from the sections set, so callers can
-     * track which sections in the identity have not been used.
+     * Appends the specified group to this writer's identity. Any keysections that are used will be
+     * removed from the sections set, so callers can track which sections in the identity have not
+     * been used.
      *
-     * @param group The group to be written
-     * @param sections A set of sections from which any new keysections
-     * should be removed
+     * @param group    The group to be written
+     * @param sections A set of sections from which any new keysections should be removed
      */
     protected void writeGroup(final ServerGroup group, final Set<String> sections) {
         final String domain = group.getName() + " servergroup";
@@ -124,7 +122,7 @@ public class ServerGroupWriter {
     /**
      * Writes a map of links for the specified entry.
      *
-     * @param name The name of the entry for which to write the links
+     * @param name  The name of the entry for which to write the links
      * @param links The links to be written
      */
     protected void writeLinks(final String name, final Map<String, URI> links) {
@@ -142,13 +140,12 @@ public class ServerGroupWriter {
     }
 
     /**
-     * Writes the specified entry to this writer's identity. Any keysections
-     * that are used will be removed from the sections set, so callers can
-     * track which sections in the identity have not been used.
+     * Writes the specified entry to this writer's identity. Any keysections that are used will be
+     * removed from the sections set, so callers can track which sections in the identity have not
+     * been used.
      *
-     * @param entry The entry to be written
-     * @param sections A set of sections from which any new keysections
-     * should be removed
+     * @param entry    The entry to be written
+     * @param sections A set of sections from which any new keysections should be removed
      */
     protected void writeEntry(final ServerEntry entry, final Set<String> sections) {
         final String domain = entry.getName() + " server";

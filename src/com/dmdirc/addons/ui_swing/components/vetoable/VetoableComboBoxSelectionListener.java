@@ -37,4 +37,5 @@ public interface VetoableComboBoxSelectionListener extends EventListener {
      * @return true iif the selection is allowed to happen
      */
     boolean selectionChanged(VetoableChangeEvent e);
+
 }

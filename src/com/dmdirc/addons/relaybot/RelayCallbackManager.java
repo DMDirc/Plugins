@@ -40,11 +40,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * This is a callback manager that when created will replace the callback
- * manager of the given parser with itself.
+ * This is a callback manager that when created will replace the callback manager of the given
+ * parser with itself.
  *
- * When a new callback is added it will be allowed unless the RelayBotPlugin
- * says otherwise.
+ * When a new callback is added it will be allowed unless the RelayBotPlugin says otherwise.
  *
  * When the parser disconnects, the original CBM is restored.
  *
@@ -54,7 +53,6 @@ public class RelayCallbackManager extends CallbackManager implements SocketClose
 
     /** Pluign that created this callback manager. */
     private final RelayBotPlugin myPlugin;
-
     /** Original CallbackManager */
     private final CallbackManager originalCBM;
 
@@ -62,7 +60,7 @@ public class RelayCallbackManager extends CallbackManager implements SocketClose
      * Create a new RelayCallbackManager and replace
      *
      * @param myPlugin Parent plugin
-     * @param parser Parser to relay
+     * @param parser   Parser to relay
      */
     public RelayCallbackManager(final RelayBotPlugin myPlugin, final IRCParser parser) {
         super(parser, getImplementations());
@@ -87,7 +85,8 @@ public class RelayCallbackManager extends CallbackManager implements SocketClose
 
     /** {@inheritDoc} */
     @Override
-    public <S extends CallbackInterface> void addCallback(final Class<S> callback, final S o, final String target) throws CallbackNotFoundException {
+    public <S extends CallbackInterface> void addCallback(final Class<S> callback, final S o,
+            final String target) throws CallbackNotFoundException {
         // Don't allow the core to give itself a ChannelMessageListener if we
         // already have a listener for this channel.
         if (o instanceof ChannelEventHandler && callback == ChannelMessageListener.class) {
@@ -100,7 +99,8 @@ public class RelayCallbackManager extends CallbackManager implements SocketClose
                 if (myPlugin.isListening(channel)) {
                     return;
                 }
-            } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException ex) {
+            } catch (NoSuchFieldException | SecurityException | IllegalArgumentException |
+                    IllegalAccessException ex) {
                 ex.printStackTrace();
             }
         }
@@ -111,31 +111,33 @@ public class RelayCallbackManager extends CallbackManager implements SocketClose
     }
 
     /**
-     * Add a callback with a specific target.
-     * This method will throw a CallbackNotFoundException if the callback does not exist.
+     * Add a callback with a specific target. This method will throw a CallbackNotFoundException if
+     * the callback does not exist.
      *
-     * @param <T> The type of callback
+     * @param <T>      The type of callback
      * @param callback Type of callback object.
-     * @param o instance of ICallbackInterface to add.
-     * @param target Parameter to specify that a callback should only fire for specific things
+     * @param o        instance of ICallbackInterface to add.
+     * @param target   Parameter to specify that a callback should only fire for specific things
+     *
      * @throws CallbackNotFoundException If callback is not found.
-     * @throws NullPointerException If 'o' is null
+     * @throws NullPointerException      If 'o' is null
      */
-    public <T extends CallbackInterface> void forceAddCallback(final Class<T> callback, final T o, final String target) throws CallbackNotFoundException {
+    public <T extends CallbackInterface> void forceAddCallback(final Class<T> callback, final T o,
+            final String target) throws CallbackNotFoundException {
         super.addCallback(callback, o, target);
     }
-
 
     /**
      * Set the Callback Manager of a given parser.
      *
      * @param parser Parser to set the callback manager on
-     * @param cbm Callback manager to set
+     * @param cbm    Callback manager to set
      */
     private void setCallbackManager(final IRCParser parser, final CallbackManager cbm) {
         try {
             // Get the old callback manager
-            final Field field = parser.getClass().getSuperclass().getDeclaredField("callbackManager");
+            final Field field = parser.getClass().getSuperclass().
+                    getDeclaredField("callbackManager");
             field.setAccessible(true);
             @SuppressWarnings("unchecked")
             final CallbackManager oldCBM = (CallbackManager) field.get(parser);
@@ -145,11 +147,13 @@ public class RelayCallbackManager extends CallbackManager implements SocketClose
             final Field cbField = CallbackManager.class.getDeclaredField("callbackHash");
             cbField.setAccessible(true);
             @SuppressWarnings("unchecked")
-            final Map<Class<? extends CallbackInterface>, CallbackObject> oldCallbackHash = (Map<Class<? extends CallbackInterface>, CallbackObject>) cbField.get(oldCBM);
+            final Map<Class<? extends CallbackInterface>, CallbackObject> oldCallbackHash =
+                    (Map<Class<? extends CallbackInterface>, CallbackObject>) cbField.get(oldCBM);
 
             // Clear my map of callbacks
             @SuppressWarnings("unchecked")
-            final Map<Class<? extends CallbackInterface>, CallbackObject> myCallbackHash = (Map<Class<? extends CallbackInterface>, CallbackObject>) cbField.get(cbm);
+            final Map<Class<? extends CallbackInterface>, CallbackObject> myCallbackHash =
+                    (Map<Class<? extends CallbackInterface>, CallbackObject>) cbField.get(cbm);
             myCallbackHash.clear();
 
             // Now add them all to the new cbm.
@@ -165,7 +169,8 @@ public class RelayCallbackManager extends CallbackManager implements SocketClose
 
             // Replace the old one with the new one.
             field.set(parser, cbm);
-        } catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException ex) {
+        } catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException |
+                SecurityException ex) {
             ex.printStackTrace();
         }
     }
@@ -174,12 +179,13 @@ public class RelayCallbackManager extends CallbackManager implements SocketClose
      * When the socket closes, reset the callback manager.
      *
      * @param parser Parser to reset
-     * @param date Time socket closed
+     * @param date   Time socket closed
      */
     @Override
     public void onSocketClosed(final Parser parser, final Date date) {
         if (parser.getCallbackManager() instanceof RelayCallbackManager) {
-            setCallbackManager((IRCParser)parser, originalCBM);
+            setCallbackManager((IRCParser) parser, originalCBM);
         }
     }
+
 }

@@ -42,7 +42,7 @@ import javax.swing.JButton;
 import net.miginfocom.swing.MigLayout;
 
 /** URL Protocol dialog. */
-@Factory(inject=true, singleton=true)
+@Factory(inject = true, singleton = true)
 public class URLDialog extends StandardDialog implements ActionListener {
 
     /** Serial version UID. */
@@ -61,10 +61,10 @@ public class URLDialog extends StandardDialog implements ActionListener {
     /**
      * Instantiates the URLDialog.
      *
-     * @param url URL to open once added
-     * @param config Config
+     * @param url          URL to open once added
+     * @param config       Config
      * @param parentWindow Parent window
-     * @param urlHandler The URL Handler to use to handle clicked links
+     * @param urlHandler   The URL Handler to use to handle clicked links
      */
     public URLDialog(
             @Unbound final URI url,
@@ -87,9 +87,8 @@ public class URLDialog extends StandardDialog implements ActionListener {
     /** Initialises the components. */
     private void initComponents(final ConfigProvider config) {
         orderButtons(new JButton(), new JButton());
-        blurb = new TextLabel("Please select the appropriate action to " +
-                "handle " + url.getScheme() + ":// URLs from the list " +
-                "below.");
+        blurb = new TextLabel("Please select the appropriate action to " + "handle " + url.
+                getScheme() + ":// URLs from the list " + "below.");
         panel = new URLProtocolPanel(config, url, false);
     }
 
@@ -143,4 +142,5 @@ public class URLDialog extends StandardDialog implements ActionListener {
 
         setLocationRelativeTo(parentWindow);
     }
+
 }

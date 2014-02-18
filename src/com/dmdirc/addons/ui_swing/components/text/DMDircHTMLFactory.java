@@ -42,8 +42,8 @@ public class DMDircHTMLFactory extends HTMLFactory {
     /**
      * Creates a new instance of {@link DMDircHTMLFactory}.
      *
-     * @param urlBuilder The URL builder to use for images. If {@code null}, then only standard
-     * URLs will be handled in image views (not DMDirc-specific ones).
+     * @param urlBuilder The URL builder to use for images. If {@code null}, then only standard URLs
+     *                   will be handled in image views (not DMDirc-specific ones).
      */
     public DMDircHTMLFactory(@Nullable final URLBuilder urlBuilder) {
         this.urlBuilder = urlBuilder;
@@ -58,4 +58,5 @@ public class DMDircHTMLFactory extends HTMLFactory {
         }
         return view;
     }
+
 }

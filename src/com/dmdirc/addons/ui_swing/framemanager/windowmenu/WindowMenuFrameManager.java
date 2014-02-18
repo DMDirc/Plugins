@@ -59,9 +59,9 @@ public class WindowMenuFrameManager extends JMenu implements
         SwingWindowListener, ActionListener, SelectionListener {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 1;
     /** Comparator. */
@@ -85,9 +85,9 @@ public class WindowMenuFrameManager extends JMenu implements
     /**
      * Creates a new instance of WindowMenuFrameManager.
      *
-     * @param controller Swing controller
+     * @param controller    Swing controller
      * @param windowFactory The window factory to use to create and listen for windows.
-     * @param mainFrame The frame that owns this manager
+     * @param mainFrame     The frame that owns this manager
      */
     @Inject
     public WindowMenuFrameManager(
@@ -129,8 +129,7 @@ public class WindowMenuFrameManager extends JMenu implements
     }
 
     /**
-     * Checks the number of components in the menu and enables menus items
-     * appropriately.
+     * Checks the number of components in the menu and enables menus items appropriately.
      */
     private void checkMenuItems() {
         enabledMenuItems.set((getMenuComponentCount() > itemCount));
@@ -144,19 +143,17 @@ public class WindowMenuFrameManager extends JMenu implements
         if (parent == null) {
             final FrameContainerMenuItem item = UIUtilities.invokeAndWait(
                     new Callable<FrameContainerMenuItem>() {
-
-                        /** {@inheritDoc} */
-                        @Override
-                        public FrameContainerMenuItem call() {
-                            return new FrameContainerMenuItem(controller,
-                                    window.getContainer(),
-                                    WindowMenuFrameManager.this);
-                        }
-                    });
+                /** {@inheritDoc} */
+                @Override
+                public FrameContainerMenuItem call() {
+                    return new FrameContainerMenuItem(controller,
+                            window.getContainer(),
+                            WindowMenuFrameManager.this);
+                }
+            });
             items.put(window.getContainer(), item);
             final int index = getIndex(window.getContainer(), this);
             UIUtilities.invokeLater(new Runnable() {
-
                 /** {@inheritDoc} */
                 @Override
                 public void run() {
@@ -166,27 +163,25 @@ public class WindowMenuFrameManager extends JMenu implements
         } else {
             final FrameContainerMenuItem item = UIUtilities.invokeAndWait(
                     new Callable<FrameContainerMenuItem>() {
-
-                        /** {@inheritDoc} */
-                        @Override
-                        public FrameContainerMenuItem call() {
-                            return new FrameContainerMenuItem(controller,
-                                    window.getContainer(),
-                                    WindowMenuFrameManager.this);
-                        }
-                    });
+                /** {@inheritDoc} */
+                @Override
+                public FrameContainerMenuItem call() {
+                    return new FrameContainerMenuItem(controller,
+                            window.getContainer(),
+                            WindowMenuFrameManager.this);
+                }
+            });
             final JMenu parentMenu;
             if (!menus.containsKey(parent.getContainer())) {
                 final FrameContainerMenu replacement = UIUtilities.invokeAndWait(
                         new Callable<FrameContainerMenu>() {
-
-                            /** {@inheritDoc} */
-                            @Override
-                            public FrameContainerMenu call() {
-                                return new FrameContainerMenu(parent.
-                                        getContainer(), controller);
-                            }
-                        });
+                    /** {@inheritDoc} */
+                    @Override
+                    public FrameContainerMenu call() {
+                        return new FrameContainerMenu(parent.
+                                getContainer(), controller);
+                    }
+                });
                 replaceItemWithMenu(getParentMenu(parent.getContainer()),
                         items.get(parent.getContainer()), replacement);
                 parentMenu = replacement;
@@ -195,7 +190,6 @@ public class WindowMenuFrameManager extends JMenu implements
             }
             items.put(window.getContainer(), item);
             UIUtilities.invokeLater(new Runnable() {
-
                 /** {@inheritDoc} */
                 @Override
                 public void run() {
@@ -222,7 +216,6 @@ public class WindowMenuFrameManager extends JMenu implements
                 return;
             }
             UIUtilities.invokeLater(new Runnable() {
-
                 /** {@inheritDoc} */
                 @Override
                 public void run() {
@@ -236,7 +229,6 @@ public class WindowMenuFrameManager extends JMenu implements
                         getContainer());
                 items.remove(window.getContainer());
                 UIUtilities.invokeAndWait(new Runnable() {
-
                     /** {@inheritDoc} */
                     @Override
                     public void run() {
@@ -273,7 +265,6 @@ public class WindowMenuFrameManager extends JMenu implements
     private void replaceItemWithMenu(final JMenu parentMenu,
             final FrameContainerMenuItem item, final FrameContainerMenu menu) {
         UIUtilities.invokeAndWait(new Runnable() {
-
             @Override
             public void run() {
                 parentMenu.remove(item);
@@ -320,7 +311,6 @@ public class WindowMenuFrameManager extends JMenu implements
             }
         }
         UIUtilities.invokeLater(new Runnable() {
-
             @Override
             public void run() {
                 for (SelectionListener menuItem : values) {
@@ -343,11 +333,11 @@ public class WindowMenuFrameManager extends JMenu implements
     }
 
     /**
-     * Compares the new child with the existing children or parent to decide
-     * where it needs to be inserted.
+     * Compares the new child with the existing children or parent to decide where it needs to be
+     * inserted.
      *
      * @param newChild new node to be inserted.
-     * @param menu Menu for the node to be inserted in
+     * @param menu     Menu for the node to be inserted in
      *
      * @return index where new node is to be inserted.
      */
@@ -355,28 +345,25 @@ public class WindowMenuFrameManager extends JMenu implements
         final int count = menu == this ? itemCount : 0;
         final int menuItemCount = UIUtilities.invokeAndWait(
                 new Callable<Integer>() {
-
-                    /** {@inheritDoc} */
-                    @Override
-                    public Integer call() {
-                        return menu.getMenuComponentCount();
-                    }
-                });
+            /** {@inheritDoc} */
+            @Override
+            public Integer call() {
+                return menu.getMenuComponentCount();
+            }
+        });
         for (int i = count; i < menuItemCount; i++) {
             final int index = i;
             final Component component = UIUtilities.invokeAndWait(
                     new Callable<Component>() {
-
-                        @Override
-                        public Component call() {
-                            return menu.getMenuComponent(index);
-                        }
-                    });
+                @Override
+                public Component call() {
+                    return menu.getMenuComponent(index);
+                }
+            });
             if (!(component instanceof FrameContainerMenuInterface)) {
                 continue;
             }
-            final FrameContainer child
-                    = ((FrameContainerMenuInterface) component).getFrame();
+            final FrameContainer child = ((FrameContainerMenuInterface) component).getFrame();
             if (sortBefore(newChild, child)) {
                 return i;
             } else if (!sortAfter(newChild, child) && controller
@@ -388,7 +375,6 @@ public class WindowMenuFrameManager extends JMenu implements
         }
 
         return UIUtilities.invokeAndWait(new Callable<Integer>() {
-
             /** {@inheritDoc} */
             @Override
             public Integer call() {
@@ -398,11 +384,11 @@ public class WindowMenuFrameManager extends JMenu implements
     }
 
     /**
-     * Compares the types of the specified nodes' objects to see if the new
-     * node should be sorted before the other.
+     * Compares the types of the specified nodes' objects to see if the new node should be sorted
+     * before the other.
      *
      * @param newChild The new child to be tested
-     * @param child The existing child that it's being tested against
+     * @param child    The existing child that it's being tested against
      *
      * @return True iff newChild should be sorted before child
      */
@@ -413,11 +399,11 @@ public class WindowMenuFrameManager extends JMenu implements
     }
 
     /**
-     * Compares the types of the specified nodes' objects to see if the new
-     * node should be sorted after the other.
+     * Compares the types of the specified nodes' objects to see if the new node should be sorted
+     * after the other.
      *
      * @param newChild The new child to be tested
-     * @param child The existing child that it's being tested against
+     * @param child    The existing child that it's being tested against
      *
      * @return True iff newChild should be sorted before child
      */
@@ -426,4 +412,5 @@ public class WindowMenuFrameManager extends JMenu implements
 
         return comparator.compare(newChild, child) >= 1;
     }
+
 }

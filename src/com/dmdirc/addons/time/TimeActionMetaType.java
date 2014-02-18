@@ -37,13 +37,21 @@ public enum TimeActionMetaType implements ActionMetaType {
     TIME_TIME {
         /** {@inheritDoc} */
         @Override
-        public int getArity() { return 1; }
+        public int getArity() {
+            return 1;
+        }
+
         /** {@inheritDoc} */
         @Override
-        public Class[] getArgTypes() { return new Class[]{Calendar.class}; }
+        public Class[] getArgTypes() {
+            return new Class[]{Calendar.class};
+        }
+
         /** {@inheritDoc} */
         @Override
-        public String[] getArgNames() { return new String[]{"Date"}; }
+        public String[] getArgNames() {
+            return new String[]{"Date"};
+        }
     };
 
     /** {@inheritDoc} */

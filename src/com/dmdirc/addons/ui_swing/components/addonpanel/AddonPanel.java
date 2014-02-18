@@ -74,7 +74,7 @@ public abstract class AddonPanel extends JPanel implements AddonToggleListener,
     /**
      * Creates a new instance of AddonPanel
      *
-     * @param parentWindow Parent window
+     * @param parentWindow  Parent window
      * @param workerFactory The factory to use to produce data loader workers.
      */
     public AddonPanel(final Window parentWindow, final DataLoaderWorkerFactory workerFactory) {
@@ -90,8 +90,7 @@ public abstract class AddonPanel extends JPanel implements AddonToggleListener,
     /** Initialises the components. */
     private void initComponents() {
         addonList = new JTable(new DefaultTableModel(
-                new Object[]{"Addon", }, 0)) {
-
+                new Object[]{"Addon",}, 0)) {
             /** Serial Version UID. */
             private static final long serialVersionUID = 1;
 
@@ -100,7 +99,6 @@ public abstract class AddonPanel extends JPanel implements AddonToggleListener,
             public boolean isCellEditable(final int row, final int column) {
                 return false;
             }
-
         };
         addonList.setDefaultRenderer(Object.class,
                 new AddonCellRenderer());
@@ -127,7 +125,6 @@ public abstract class AddonPanel extends JPanel implements AddonToggleListener,
 
         /** {@inheritDoc}. */
         new LoggingSwingWorker<Object, Object>() {
-
             /** {@inheritDoc}. */
             @Override
             protected Object doInBackground() {
@@ -140,7 +137,6 @@ public abstract class AddonPanel extends JPanel implements AddonToggleListener,
                 super.done();
                 scrollPane.setViewportView(addonList);
                 UIUtilities.invokeLater(new Runnable() {
-
                     /** {@inheritDoc}. */
                     @Override
                     public void run() {

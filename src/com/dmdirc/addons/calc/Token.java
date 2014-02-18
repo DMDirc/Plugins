@@ -23,14 +23,12 @@
 package com.dmdirc.addons.calc;
 
 /**
- * Describes a distinct piece of a mathematical formula, as tokenised by a
- * {@link Lexer}.
+ * Describes a distinct piece of a mathematical formula, as tokenised by a {@link Lexer}.
  */
 public class Token {
 
     /** The type of this token. */
     private final TokenType type;
-
     /** The content of this token, if any. */
     private final String content;
 

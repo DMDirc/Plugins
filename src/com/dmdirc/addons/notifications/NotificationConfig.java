@@ -44,9 +44,9 @@ import net.miginfocom.swing.MigLayout;
 public class NotificationConfig extends JPanel implements PreferencesInterface {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 1;
     /** Notification method order list. */
@@ -59,7 +59,7 @@ public class NotificationConfig extends JPanel implements PreferencesInterface {
     /**
      * Creates a new instance of NotificationConfig panel.
      *
-     * @param plugin The plugin that owns this panel
+     * @param plugin  The plugin that owns this panel
      * @param methods A list of methods to be used in the panel
      */
     public NotificationConfig(final NotificationsPlugin plugin,
@@ -131,4 +131,5 @@ public class NotificationConfig extends JPanel implements PreferencesInterface {
     public void save() {
         plugin.saveSettings(getMethods());
     }
+
 }

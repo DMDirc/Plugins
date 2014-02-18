@@ -43,7 +43,7 @@ public class NoDuplicatesInListValidator implements Validator<String> {
     /**
      * Creates a new validator.
      *
-     * @param list List
+     * @param list  List
      * @param model Model to validate
      */
     public NoDuplicatesInListValidator(final JList list,
@@ -54,9 +54,9 @@ public class NoDuplicatesInListValidator implements Validator<String> {
     /**
      * Creates a new validator.
      *
-     * @param list List
+     * @param list          List
      * @param caseSensitive Case sensitive check?
-     * @param model Model to validate
+     * @param model         Model to validate
      */
     public NoDuplicatesInListValidator(final boolean caseSensitive,
             final JList list, final DefaultListModel model) {
@@ -69,17 +69,16 @@ public class NoDuplicatesInListValidator implements Validator<String> {
     @Override
     public ValidationResponse validate(final String object) {
         final String string = caseSensitive ? object : object.toLowerCase();
-        if (indexOfString(string) != -1 && (list.getSelectedValue() == null ||
-                !listValueToString(list.getSelectedValue()).equals(string))) {
-                return new ValidationResponse("Value is a duplicate");
+        if (indexOfString(string) != -1 && (list.getSelectedValue() == null || !listValueToString(
+                list.getSelectedValue()).equals(string))) {
+            return new ValidationResponse("Value is a duplicate");
         } else {
             return new ValidationResponse();
         }
     }
 
     /**
-     * Converts the list object to a string for validation. Defaults to the
-     * objects toString method.
+     * Converts the list object to a string for validation. Defaults to the objects toString method.
      *
      * @param object Object to convert
      *
@@ -90,8 +89,7 @@ public class NoDuplicatesInListValidator implements Validator<String> {
     }
 
     /**
-     * Returns the index of an object represented by a string.  Defaults to
-     * searching for the string.
+     * Returns the index of an object represented by a string. Defaults to searching for the string.
      *
      * @param string String to look for
      *
@@ -100,4 +98,5 @@ public class NoDuplicatesInListValidator implements Validator<String> {
     public int indexOfString(final String string) {
         return model.indexOf(string);
     }
+
 }

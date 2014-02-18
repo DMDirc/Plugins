@@ -125,4 +125,5 @@ public class SettingsMenu extends JMenu implements ActionListener {
                 break;
         }
     }
+
 }

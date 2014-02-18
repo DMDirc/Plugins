@@ -28,19 +28,19 @@ import java.awt.event.MouseEvent;
 import javax.swing.JComponent;
 
 /**
- * A panel shown in the status bar which displays a {@link StatusbarPopupWindow}
- * when the user mouses over it.
+ * A panel shown in the status bar which displays a {@link StatusbarPopupWindow} when the user
+ * mouses over it.
  *
  * @param <T> Type of component used to trigger this panel
+ *
  * @since 0.6.3m1
  */
-public abstract class StatusbarPopupPanel<T extends JComponent> extends
-        StatusbarPanel<T> {
+public abstract class StatusbarPopupPanel<T extends JComponent> extends StatusbarPanel<T> {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 2;
 
@@ -125,4 +125,5 @@ public abstract class StatusbarPopupPanel<T extends JComponent> extends
         }
         super.closeDialog();
     }
+
 }

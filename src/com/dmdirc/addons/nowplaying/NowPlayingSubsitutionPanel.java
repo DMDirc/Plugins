@@ -37,9 +37,9 @@ import javax.swing.SwingUtilities;
 public class NowPlayingSubsitutionPanel extends SubstitutionsPanel<List<String>> {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 1;
 
@@ -47,7 +47,8 @@ public class NowPlayingSubsitutionPanel extends SubstitutionsPanel<List<String>>
      * Instantiates a new now playing subsitutiuons panel.
      */
     public NowPlayingSubsitutionPanel() {
-        super("Substitutions may be used as part of the output format", SubstitutionsPanel.Alignment.HORIZONTAL, null);
+        super("Substitutions may be used as part of the output format",
+                SubstitutionsPanel.Alignment.HORIZONTAL, null);
     }
 
     /**
@@ -56,14 +57,14 @@ public class NowPlayingSubsitutionPanel extends SubstitutionsPanel<List<String>>
      * @param subs list of substitutions.
      */
     public NowPlayingSubsitutionPanel(final List<String> subs) {
-        super("Substitutions may be used as part of the output format", SubstitutionsPanel.Alignment.HORIZONTAL, subs);
+        super("Substitutions may be used as part of the output format",
+                SubstitutionsPanel.Alignment.HORIZONTAL, subs);
     }
 
     /** {@inheritDoc} */
     @Override
     public void setType(final List<String> type) {
         SwingUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -80,4 +81,5 @@ public class NowPlayingSubsitutionPanel extends SubstitutionsPanel<List<String>>
             }
         });
     }
+
 }

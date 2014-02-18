@@ -65,7 +65,6 @@ public class DCCCommand extends Command implements IntelligentCommand {
     public static final CommandInfo INFO = new BaseCommandInfo("dcc",
             "dcc <SEND|CHAT> <target> [params] - starts a DCC",
             CommandType.TYPE_SERVER);
-
     /** My Plugin. */
     private final DCCManager myPlugin;
     /** Main frame instance used as the parent for dialogs. */
@@ -82,13 +81,13 @@ public class DCCCommand extends Command implements IntelligentCommand {
     /**
      * Creates a new instance of DCCCommand.
      *
-     * @param controller The controller to use for command information.
-     * @param mainFrame mainFrame instance to use
-     * @param plugin The DCC Plugin that this command belongs to
-     * @param messageSinkManager The sink manager to use to despatch messages.
-     * @param windowManager Window management
+     * @param controller          The controller to use for command information.
+     * @param mainFrame           mainFrame instance to use
+     * @param plugin              The DCC Plugin that this command belongs to
+     * @param messageSinkManager  The sink manager to use to despatch messages.
+     * @param windowManager       Window management
      * @param tabCompleterFactory The factory to use for tab completers.
-     * @param urlBuilder The URL builder to use when finding icons.
+     * @param urlBuilder          The URL builder to use when finding icons.
      */
     @Inject
     public DCCCommand(
@@ -122,7 +121,6 @@ public class DCCCommand extends Command implements IntelligentCommand {
                     || parser.getStringConverter().equalsIgnoreCase(target,
                     myNickname)) {
                 new Thread(new Runnable() {
-
                     /** {@inheritDoc} */
                     @Override
                     public void run() {
@@ -137,7 +135,6 @@ public class DCCCommand extends Command implements IntelligentCommand {
                                     JOptionPane.ERROR_MESSAGE);
                         }
                     }
-
                 }, "DCC-Error-Message").start();
                 return;
             }
@@ -159,12 +156,12 @@ public class DCCCommand extends Command implements IntelligentCommand {
     /**
      * Starts a DCC Chat.
      *
-     * @param parser Parser from which command originated
+     * @param parser     Parser from which command originated
      * @param connection Server from which command originated
-     * @param origin Frame container from which command originated
+     * @param origin     Frame container from which command originated
      * @param myNickname My current nickname
-     * @param target Target of the command
-     * @param isSilent Is this a silent command
+     * @param target     Target of the command
+     * @param isSilent   Is this a silent command
      */
     private void startChat(final Parser parser, final Connection connection,
             final FrameContainer origin, final String myNickname,
@@ -193,11 +190,12 @@ public class DCCCommand extends Command implements IntelligentCommand {
     /**
      * Ask for the file to send, then start the send.
      *
-     * @param target Person this dcc is to.
-     * @param origin The InputWindow this command was issued on
+     * @param target     Person this dcc is to.
+     * @param origin     The InputWindow this command was issued on
      * @param connection The server instance that this command is being executed on
-     * @param isSilent Whether this command is silenced or not
-     * @param filename The file to send
+     * @param isSilent   Whether this command is silenced or not
+     * @param filename   The file to send
+     *
      * @since 0.6.3m1
      */
     public void sendFile(final String target, final FrameContainer origin,
@@ -205,14 +203,13 @@ public class DCCCommand extends Command implements IntelligentCommand {
         // New thread to ask the user what file to send
         final File givenFile = new File(filename);
         final File selectedFile = UIUtilities.invokeAndWait(new Callable<File>() {
-
             @Override
             public File call() {
                 final JFileChooser jc = givenFile.exists()
                         ? KFileChooser.getFileChooser(origin.getConfigManager(),
-                                myPlugin, givenFile)
+                        myPlugin, givenFile)
                         : KFileChooser.getFileChooser(origin.getConfigManager(),
-                                myPlugin);
+                        myPlugin);
                 final int result = showFileChooser(givenFile, target, jc);
 
                 if (result != JFileChooser.APPROVE_OPTION
@@ -226,7 +223,6 @@ public class DCCCommand extends Command implements IntelligentCommand {
             return;
         }
         new Thread(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -279,7 +275,6 @@ public class DCCCommand extends Command implements IntelligentCommand {
                     }
                 }
             }
-
         }, "openFileThread").start();
     }
 
@@ -308,15 +303,14 @@ public class DCCCommand extends Command implements IntelligentCommand {
      * Sets up and display a file chooser.
      *
      * @param givenFile File to display
-     * @param target DCC target
-     * @param jc File chooser
+     * @param target    DCC target
+     * @param jc        File chooser
      *
-     * @return   the return state of the file chooser on popdown:
+     * @return the return state of the file chooser on popdown:
      * <ul>
      * <li>JFileChooser.CANCEL_OPTION
      * <li>JFileChooser.APPROVE_OPTION
-     * <li>JFileChooser.ERROR_OPTION if an error occurs or the
-     *                               dialog is dismissed
+     * <li>JFileChooser.ERROR_OPTION if an error occurs or the dialog is dismissed
      * </ul>
      */
     private int showFileChooser(final File givenFile, final String target,
@@ -325,10 +319,10 @@ public class DCCCommand extends Command implements IntelligentCommand {
             jc.setSelectedFile(givenFile);
             return JFileChooser.APPROVE_OPTION;
         } else {
-        jc.setDialogTitle("Send file to " + target + " - DMDirc ");
-        jc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        jc.setMultiSelectionEnabled(false);
-        return jc.showOpenDialog(mainFrame);
+            jc.setDialogTitle("Send file to " + target + " - DMDirc ");
+            jc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+            jc.setMultiSelectionEnabled(false);
+            return jc.showOpenDialog(mainFrame);
         }
     }
 
@@ -353,4 +347,3 @@ public class DCCCommand extends Command implements IntelligentCommand {
     }
 
 }
-

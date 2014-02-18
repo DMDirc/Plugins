@@ -37,9 +37,9 @@ import javax.swing.SwingUtilities;
 public class URLSubsitutionsPanel extends SubstitutionsPanel<List<String>> {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 1;
 
@@ -47,7 +47,8 @@ public class URLSubsitutionsPanel extends SubstitutionsPanel<List<String>> {
      * Instantiates a new URL subsitutiuons panel.
      */
     public URLSubsitutionsPanel() {
-        super("Substitutions may be used as part of the launch command", SubstitutionsPanel.Alignment.VERTICAL, null);
+        super("Substitutions may be used as part of the launch command",
+                SubstitutionsPanel.Alignment.VERTICAL, null);
     }
 
     /**
@@ -63,7 +64,6 @@ public class URLSubsitutionsPanel extends SubstitutionsPanel<List<String>> {
     @Override
     public void setType(final List<String> type) {
         SwingUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -80,4 +80,5 @@ public class URLSubsitutionsPanel extends SubstitutionsPanel<List<String>> {
             }
         });
     }
+
 }

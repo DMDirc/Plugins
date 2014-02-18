@@ -95,4 +95,5 @@ public class SearchTermsPanel extends JPanel implements ActionListener,
     public void onGroupListStarted() {
         // Do nothing
     }
+
 }

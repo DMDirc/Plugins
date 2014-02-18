@@ -42,22 +42,20 @@ public class FrameContainerMenu extends JMenu implements FrameInfoListener,
         ActionListener, SelectionListener, FrameContainerMenuInterface {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 1;
-
     /** The swing controller that owns this item. */
     private final SwingController controller;
-
     /** Wrapped frame. */
     private final FrameContainer frame;
 
     /**
      * Instantiates a new FrameContainer menu item wrapping the specified frame.
      *
-     * @param frame Wrapped frame
+     * @param frame      Wrapped frame
      * @param controller Controller
      */
     public FrameContainerMenu(final FrameContainer frame,
@@ -78,7 +76,6 @@ public class FrameContainerMenu extends JMenu implements FrameInfoListener,
     @Override
     public void iconChanged(final FrameContainer window, final String icon) {
         SwingUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -93,7 +90,6 @@ public class FrameContainerMenu extends JMenu implements FrameInfoListener,
     @Override
     public void nameChanged(final FrameContainer window, final String name) {
         SwingUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -143,4 +139,5 @@ public class FrameContainerMenu extends JMenu implements FrameInfoListener,
     public FrameContainer getFrame() {
         return frame;
     }
+
 }

@@ -35,7 +35,7 @@ public final class Substitution {
     /**
      * Creates a new instance of Substitution.
      *
-     * @param name Name of the substitution
+     * @param name  Name of the substitution
      * @param value Value of the substitution
      */
     public Substitution(final String name, final String value) {
@@ -66,4 +66,5 @@ public final class Substitution {
     public String toString() {
         return value;
     }
+
 }

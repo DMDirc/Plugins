@@ -47,9 +47,8 @@ import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 
 /**
- * Event queue extention to monitor long running tasks on the EDT. Original
- * code found at http://today.java.net/lpt/a/433 modified to work as a DMDirc
- * plugin.
+ * Event queue extention to monitor long running tasks on the EDT. Original code found at
+ * http://today.java.net/lpt/a/433 modified to work as a DMDirc plugin.
  */
 public class TracingEventQueue extends DMDircEventQueue implements
         Runnable, ConfigChangeListener {
@@ -72,9 +71,9 @@ public class TracingEventQueue extends DMDircEventQueue implements
     /**
      * Instantiates a new tracing thread.
      *
-     * @param parentPlugin Parent plugin
+     * @param parentPlugin       Parent plugin
      * @param identityController The controller to read/write settings with.
-     * @param controller Swing controller
+     * @param controller         Swing controller
      */
     public TracingEventQueue(
             final Plugin parentPlugin,
@@ -119,8 +118,6 @@ public class TracingEventQueue extends DMDircEventQueue implements
         eventProcessed(event);
     }
 
-
-
     /**
      * Marks the start time for the specified event.
      *
@@ -144,8 +141,8 @@ public class TracingEventQueue extends DMDircEventQueue implements
     /**
      * Check how long an event took, if over threshold notify user.
      *
-     * @param event Event to check
-     * @param currTime Current time
+     * @param event     Event to check
+     * @param currTime  Current time
      * @param startTime Start time
      */
     private void checkEventTime(final AWTEvent event, final long currTime,
@@ -247,4 +244,5 @@ public class TracingEventQueue extends DMDircEventQueue implements
     public void configChanged(final String domain, final String key) {
         checkTracing();
     }
+
 }

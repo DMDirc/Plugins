@@ -30,18 +30,17 @@ import javax.swing.JComponent;
 import javax.swing.border.Border;
 
 /**
- * A panel shown in the status bar which displays a {@link StatusbarPopupWindow}
- * when the clicks it.
+ * A panel shown in the status bar which displays a {@link StatusbarPopupWindow} when the clicks it.
  *
  * @since 0.6.6
  */
-public abstract class StatusbarTogglePanel<T extends JComponent> extends
-        StatusbarPanel<T> implements HierarchyBoundsListener {
+public abstract class StatusbarTogglePanel<T extends JComponent> extends StatusbarPanel<T>
+        implements HierarchyBoundsListener {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 2;
 
@@ -59,9 +58,9 @@ public abstract class StatusbarTogglePanel<T extends JComponent> extends
     /**
      * Creates a new {@link StatusbarPanel}.
      *
-     * @param label The component to be displayed in the status bar
+     * @param label             The component to be displayed in the status bar
      * @param nonSelectedBorder The border for when the panel is unselected
-     * @param selectedBorder The border for when for the panel is selected
+     * @param selectedBorder    The border for when for the panel is selected
      */
     public StatusbarTogglePanel(final T label, final Border nonSelectedBorder,
             final Border selectedBorder) {
@@ -135,4 +134,5 @@ public abstract class StatusbarTogglePanel<T extends JComponent> extends
     public void ancestorResized(final HierarchyEvent e) {
         refreshDialog();
     }
+
 }

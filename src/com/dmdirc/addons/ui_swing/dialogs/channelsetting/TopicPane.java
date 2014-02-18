@@ -39,9 +39,9 @@ import net.miginfocom.swing.MigLayout;
 public class TopicPane extends JPanel implements ActionListener {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 2;
     /** Parent channel. */
@@ -58,11 +58,11 @@ public class TopicPane extends JPanel implements ActionListener {
     /**
      * Creates a new instance of TopicModesPane.
      *
-     * @param channel Parent channel
-     * @param iconManager Icon manager
+     * @param channel        Parent channel
+     * @param iconManager    Icon manager
      * @param serviceManager Service manager
-     * @param parent Parent dialog
-     * @param channelWindow Channel window
+     * @param parent         Parent dialog
+     * @param channelWindow  Channel window
      */
     public TopicPane(final Channel channel, final IconManager iconManager,
             final ServiceManager serviceManager, final ChannelSettingsDialog parent,
@@ -125,4 +125,5 @@ public class TopicPane extends JPanel implements ActionListener {
             topicDisplayPane.setTopic(topicHistoryPane.getSelectedTopic());
         }
     }
+
 }

@@ -56,9 +56,9 @@ public class TextAreaInputField extends JTextArea implements InputField,
      * Creates a new text area with the specified number of rows and columns.
      *
      * @param iconManager Icon manager
-     * @param config Config to read settings from
-     * @param rows The number of rows to use
-     * @param columns The number of columns to use
+     * @param config      Config to read settings from
+     * @param rows        The number of rows to use
+     * @param columns     The number of columns to use
      */
     public TextAreaInputField(final IconManager iconManager,
             final AggregateConfigProvider config, final int rows, final int columns) {
@@ -73,8 +73,8 @@ public class TextAreaInputField extends JTextArea implements InputField,
      * Creates a new text area containing the specified text.
      *
      * @param iconManager Icon manager
-     * @param config Config to read settings from
-     * @param text The text to contain initially
+     * @param config      Config to read settings from
+     * @param text        The text to contain initially
      */
     public TextAreaInputField(final IconManager iconManager,
             final AggregateConfigProvider config, final String text) {
@@ -104,7 +104,6 @@ public class TextAreaInputField extends JTextArea implements InputField,
             colourPicker = new ColourPickerDialog(TextAreaInputField.this,
                     new ColourManager(config), iconManager, irc, hex);
             colourPicker.addActionListener(new ActionListener() {
-
                 @Override
                 public void actionPerformed(final ActionEvent actionEvent) {
                     try {
@@ -119,8 +118,7 @@ public class TextAreaInputField extends JTextArea implements InputField,
             });
             colourPicker.setVisible(true);
             colourPicker.setLocation((int) getLocationOnScreen().getX(),
-                    (int) getLocationOnScreen().getY() -
-                    colourPicker.getHeight());
+                    (int) getLocationOnScreen().getY() - colourPicker.getHeight());
         }
     }
 

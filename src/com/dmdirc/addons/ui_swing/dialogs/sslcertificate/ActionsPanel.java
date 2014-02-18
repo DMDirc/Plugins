@@ -38,9 +38,9 @@ import net.miginfocom.swing.MigLayout;
 public class ActionsPanel extends JPanel {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 1;
     /** Radio button for temporarily accept. */
@@ -61,10 +61,10 @@ public class ActionsPanel extends JPanel {
     }
 
     private void initComponents() {
-        tempAccept = new JRadioButton("Temporarily accept the problems with " +
-                "this certificate and connect.");
-        permAccept = new JRadioButton("Permanently accept the problems with " +
-                "this certificate and connect.");
+        tempAccept = new JRadioButton("Temporarily accept the problems with "
+                + "this certificate and connect.");
+        permAccept = new JRadioButton("Permanently accept the problems with "
+                + "this certificate and connect.");
         disconnect = new JRadioButton("Do not connect.");
         group = new ButtonGroup();
         group.add(tempAccept);
@@ -97,4 +97,5 @@ public class ActionsPanel extends JPanel {
             return CertificateAction.DISCONNECT;
         }
     }
+
 }

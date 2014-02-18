@@ -111,7 +111,6 @@ public class StandardDialog extends JDialog {
             return;
         }
         addWindowListener(new WindowAdapter() {
-
             /** {@inheritDoc} */
             @Override
             public void windowClosing(final WindowEvent e) {
@@ -126,16 +125,14 @@ public class StandardDialog extends JDialog {
     }
 
     /**
-     * Displays the dialog centering on the parent window, blocking until
-     * complete.
+     * Displays the dialog centering on the parent window, blocking until complete.
      */
     public void displayBlocking() {
         displayBlocking(owner);
     }
 
     /**
-     * Displays the dialog centering on the specified window, blocking until
-     * complete.
+     * Displays the dialog centering on the specified window, blocking until complete.
      *
      * @param owner Window to center on
      */
@@ -146,13 +143,11 @@ public class StandardDialog extends JDialog {
         }
         final Semaphore semaphore = new Semaphore(0);
         SwingUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
                 display(owner);
                 addWindowListener(new WindowAdapter() {
-
                     @Override
                     public void windowClosed(final WindowEvent e) {
                         semaphore.release();
@@ -162,7 +157,6 @@ public class StandardDialog extends JDialog {
         });
         semaphore.acquireUninterruptibly();
     }
-
 
     /**
      * Centres this dialog on its owner, or the screen if no owner is present.
@@ -186,6 +180,7 @@ public class StandardDialog extends JDialog {
 
     /**
      * Sets the specified button up as the OK button.
+     *
      * @param button The target button
      */
     protected void setOkButton(final JButton button) {
@@ -196,6 +191,7 @@ public class StandardDialog extends JDialog {
 
     /**
      * Sets the specified button up as the Cancel button.
+     *
      * @param button The target button
      */
     protected void setCancelButton(final JButton button) {
@@ -206,6 +202,7 @@ public class StandardDialog extends JDialog {
 
     /**
      * Gets the left hand button for a dialog.
+     *
      * @return left JButton
      */
     protected JButton getLeftButton() {
@@ -218,6 +215,7 @@ public class StandardDialog extends JDialog {
 
     /**
      * Gets the right hand button for a dialog.
+     *
      * @return right JButton
      */
     protected JButton getRightButton() {
@@ -229,9 +227,9 @@ public class StandardDialog extends JDialog {
     }
 
     /**
-     * Orders the OK and Cancel buttons in an appropriate order for the current
-     * operating system.
-     * @param leftButton The left-most button
+     * Orders the OK and Cancel buttons in an appropriate order for the current operating system.
+     *
+     * @param leftButton  The left-most button
      * @param rightButton The right-most button
      */
     protected void orderButtons(final JButton leftButton,
@@ -254,6 +252,7 @@ public class StandardDialog extends JDialog {
 
     /**
      * Retrieves the OK button for this form.
+     *
      * @return The form's OK button
      */
     public JButton getOkButton() {
@@ -262,6 +261,7 @@ public class StandardDialog extends JDialog {
 
     /**
      * Retrieves the Cancel button for this form.
+     *
      * @return The form's cancel button
      */
     public JButton getCancelButton() {
@@ -270,6 +270,7 @@ public class StandardDialog extends JDialog {
 
     /**
      * Simulates the user clicking on the specified target button.
+     *
      * @param target The button to use
      */
     public void executeAction(final JButton target) {
@@ -279,22 +280,22 @@ public class StandardDialog extends JDialog {
     }
 
     /**
-     * This method is called when enter is pressed anywhere in the dialog
-     * except on a button. By default this method does nothing.
+     * This method is called when enter is pressed anywhere in the dialog except on a button. By
+     * default this method does nothing.
      *
-     * @return Returns true if the key press has been handled and is not be
-     * be forwarded on by default this is false
+     * @return Returns true if the key press has been handled and is not be be forwarded on by
+     *         default this is false
      */
     public boolean enterPressed() {
         return false;
     }
 
     /**
-     * This method is called when ctrl + enter is pressed anywhere in the
-     * dialog. By default this method presses the OK button.
+     * This method is called when ctrl + enter is pressed anywhere in the dialog. By default this
+     * method presses the OK button.
      *
-     * @return Returns true if the key press has been handled and is not be
-     * be forwarded on by default this is true
+     * @return Returns true if the key press has been handled and is not be be forwarded on by
+     *         default this is true
      */
     public boolean ctrlEnterPressed() {
         executeAction(getOkButton());
@@ -302,14 +303,15 @@ public class StandardDialog extends JDialog {
     }
 
     /**
-     * This method is called when enter is pressed anywhere in the dialog
-     * except on a button. By default this method presses the cancel button.
+     * This method is called when enter is pressed anywhere in the dialog except on a button. By
+     * default this method presses the cancel button.
      *
-     * @return Returns true if the key press has been handled and is not be
-     * be forwarded on by default this is true
+     * @return Returns true if the key press has been handled and is not be be forwarded on by
+     *         default this is true
      */
     public boolean escapePressed() {
         executeAction(getCancelButton());
         return true;
     }
+
 }

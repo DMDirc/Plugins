@@ -39,15 +39,14 @@ import org.slf4j.LoggerFactory;
  */
 public class NotifyMyAndroidCommand extends Command {
 
-    private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(NotifyMyAndroidCommand.class);
-
+    private static final org.slf4j.Logger LOG = LoggerFactory.
+            getLogger(NotifyMyAndroidCommand.class);
     /** A command info object for this command. */
     public static final BaseCommandInfo INFO = new BaseCommandInfo(
             "notifymyandroid",
             "notifymyandroid <title> -- <body>"
-                + " - Sends notification to NotifyMyAndroid",
+            + " - Sends notification to NotifyMyAndroid",
             CommandType.TYPE_GLOBAL);
-
     /** The configuration domain to retrieve settings from. */
     private String configDomain;
 
@@ -81,7 +80,6 @@ public class NotifyMyAndroidCommand extends Command {
                 origin.getConfigManager().getOption(configDomain, "application"));
 
         new Thread(new Runnable() {
-
             @Override
             public void run() {
                 try {
@@ -89,7 +87,8 @@ public class NotifyMyAndroidCommand extends Command {
                     sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Notification sent");
                 } catch (IOException ex) {
                     LOG.info("Exception when trying to notify NMA", ex);
-                    sendLine(origin, args.isSilent(), FORMAT_ERROR, "Unable to send: " + ex.getMessage());
+                    sendLine(origin, args.isSilent(), FORMAT_ERROR, "Unable to send: " + ex.
+                            getMessage());
                 }
             }
         }, "NMA Thread").start();

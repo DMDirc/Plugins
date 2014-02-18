@@ -28,15 +28,15 @@ import javax.swing.JPanel;
 import net.miginfocom.swing.MigLayout;
 
 /**
- * Creates a DesktopPlaceholderFrame frame which is used to fill the space
- * in the client usually reserved for a window that is not popped out.
+ * Creates a DesktopPlaceholderFrame frame which is used to fill the space in the client usually
+ * reserved for a window that is not popped out.
  */
 public class DesktopPlaceHolderFrame extends JPanel {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 1;
 
@@ -47,4 +47,5 @@ public class DesktopPlaceHolderFrame extends JPanel {
         super(new MigLayout("aligny center, alignx center"));
         add(new JLabel("This window is currently open in a desktop window"));
     }
+
 }

@@ -42,9 +42,9 @@ import javax.swing.table.AbstractTableModel;
 public class UpdateTableModel extends AbstractTableModel implements UpdateStatusListener {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 3;
     /** The update manager to use. */
@@ -62,7 +62,7 @@ public class UpdateTableModel extends AbstractTableModel implements UpdateStatus
      * Creates a new instance of UpdateTableModel.
      *
      * @param updateManager The update manager to use
-     * @param updates List of components to display
+     * @param updates       List of components to display
      */
     public UpdateTableModel(final CachingUpdateManager updateManager,
             final List<UpdateComponent> updates) {
@@ -117,8 +117,7 @@ public class UpdateTableModel extends AbstractTableModel implements UpdateStatus
             case 3:
                 return "Status";
             default:
-                throw new IllegalArgumentException("Unknown column: " +
-                        columnIndex);
+                throw new IllegalArgumentException("Unknown column: " + columnIndex);
         }
     }
 
@@ -185,8 +184,7 @@ public class UpdateTableModel extends AbstractTableModel implements UpdateStatus
     public void setValueAt(final Object aValue, final int rowIndex,
             final int columnIndex) {
         if (updates.size() <= rowIndex) {
-            throw new IndexOutOfBoundsException(rowIndex + " >= " +
-                    updates.size());
+            throw new IndexOutOfBoundsException(rowIndex + " >= " + updates.size());
         }
         if (rowIndex < 0) {
             throw new IllegalArgumentException("Must specify a positive integer");
@@ -282,5 +280,5 @@ public class UpdateTableModel extends AbstractTableModel implements UpdateStatus
         this.progress.put(component, progress);
         fireTableCellUpdated(updates.indexOf(component), 3);
     }
-}
 
+}

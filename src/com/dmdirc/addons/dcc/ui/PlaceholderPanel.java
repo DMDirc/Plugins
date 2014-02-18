@@ -40,8 +40,7 @@ public class PlaceholderPanel extends JPanel implements SwingFrameComponent {
     private static final long serialVersionUID = 1L;
 
     /**
-     * Creates a new placeholder window for the specified UI controller and
-     * owner.
+     * Creates a new placeholder window for the specified UI controller and owner.
      */
     public PlaceholderPanel() {
         super(new MigLayout("fill, alignx center, aligny center"));
@@ -49,4 +48,5 @@ public class PlaceholderPanel extends JPanel implements SwingFrameComponent {
                 "This is a placeholder window to group DCCs together."
                 + "\n\nClosing this window will close all the active DCCs"));
     }
+
 }

@@ -42,9 +42,9 @@ import net.miginfocom.swing.MigLayout;
 public class AddonCell extends JPanel implements AddonToggleListener {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 1;
     /** Addon toggle object. */
@@ -61,7 +61,7 @@ public class AddonCell extends JPanel implements AddonToggleListener {
     /**
      * Creates a new addon cell representing the specified addon info.
      *
-     * @param info PluginInfoToggle or ThemeToggle
+     * @param info        PluginInfoToggle or ThemeToggle
      * @param iconManager Icon manager to retrieve icons from
      */
     public AddonCell(final AddonToggle info, final IconManager iconManager) {
@@ -96,13 +96,13 @@ public class AddonCell extends JPanel implements AddonToggleListener {
         status.setForeground(foreground);
 
         final int initialPadding;
-        if (info.getTheme()!= null || info.getPluginInfo().getMetaData().getParent() == null) {
+        if (info.getTheme() != null || info.getPluginInfo().getMetaData().getParent() == null) {
             initialPadding = 20;
         } else {
             initialPadding = 30;
         }
         add(icon, "gaptop rel, gapbottom rel, gapleft rel, "
-                    + ", wmax " + initialPadding + ", right");
+                + ", wmax " + initialPadding + ", right");
         add(name, "gaptop rel, gapbottom rel, " + "wmin 50% - "
                 + initialPadding + ", wmax 50% - " + initialPadding);
         add(status, "gaptop rel, gapbottom rel, gapright rel, " + "wmin 50% - "
@@ -144,4 +144,5 @@ public class AddonCell extends JPanel implements AddonToggleListener {
     public void addonToggled() {
         status.setText(info.getState() ? "Enabled" : "Disabled");
     }
+
 }

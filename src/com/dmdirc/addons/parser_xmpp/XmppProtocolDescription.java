@@ -41,7 +41,7 @@ public class XmppProtocolDescription implements ProtocolDescription {
     @Override
     public String[] parseHostmask(final String hostmask) {
         final String[] parts = hostmask.split("/");
-        return new String[] { parts[0], parts.length > 1 ? parts[1] : "unknown", "" };
+        return new String[]{parts[0], parts.length > 1 ? parts[1] : "unknown", ""};
     }
 
     /** {@inheritDoc} */

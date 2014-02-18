@@ -25,11 +25,11 @@ package com.dmdirc.addons.ui_swing.dialogs.actioneditor;
 import com.dmdirc.actions.ConditionTree;
 import com.dmdirc.actions.ConditionTreeFactory;
 import com.dmdirc.actions.ConditionTreeFactory.ConditionTreeFactoryType;
+import com.dmdirc.actions.validators.ConditionRuleValidator;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.addons.ui_swing.components.validating.ValidatingJTextField;
-import com.dmdirc.actions.validators.ConditionRuleValidator;
-
 import com.dmdirc.ui.IconManager;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
@@ -50,9 +50,9 @@ public class ActionConditionsTreePanel extends JPanel implements ActionListener,
         PropertyChangeListener, DocumentListener {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 1;
     /** Button group. */
@@ -223,7 +223,7 @@ public class ActionConditionsTreePanel extends JPanel implements ActionListener,
      * Sets the tree rule.
      *
      * @param conditionCount condition count
-     * @param tree new condition tree
+     * @param tree           new condition tree
      */
     public void setRule(final int conditionCount, final ConditionTree tree) {
         if (tree != null) {
@@ -273,6 +273,7 @@ public class ActionConditionsTreePanel extends JPanel implements ActionListener,
     /** {@inheritDoc} */
     @Override
     public void changedUpdate(final DocumentEvent e) {
-    //Ignore
+        //Ignore
     }
+
 }

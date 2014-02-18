@@ -28,8 +28,7 @@ import com.dmdirc.addons.ui_swing.SwingController;
 import javax.swing.JFrame;
 
 /**
- * Haxy JFrame to allow Apple to show the MenuBar in otherwise parent-less
- * dialogs.
+ * Haxy JFrame to allow Apple to show the MenuBar in otherwise parent-less dialogs.
  */
 public class AppleJFrame extends JFrame {
 
@@ -40,7 +39,7 @@ public class AppleJFrame extends JFrame {
      * Create a new Apple JFrame
      *
      * @param parentWindow Main Window
-     * @param controller Parent swing controller
+     * @param controller   Parent swing controller
      */
     public AppleJFrame(
             final MainFrame parentWindow,
@@ -49,4 +48,5 @@ public class AppleJFrame extends JFrame {
         controller.getApple().setMenuBar(parentWindow.getJMenuBar());
         setJMenuBar(parentWindow.getJMenuBar());
     }
+
 }

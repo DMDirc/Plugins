@@ -34,15 +34,14 @@ import javax.swing.JPopupMenu;
 import net.miginfocom.swing.MigLayout;
 
 /**
- * A component frame that includes an input field (for use with writable
- * containers).
+ * A component frame that includes an input field (for use with writable containers).
  */
 public class ComponentInputFrame extends InputTextFrame {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 2;
     /** URL builder to use when making components. */
@@ -55,9 +54,9 @@ public class ComponentInputFrame extends InputTextFrame {
     /**
      * Creates a new instance of CustomInputFrame.
      *
-     * @param deps The dependencies required by text frames.
+     * @param deps       The dependencies required by text frames.
      * @param urlBuilder URL builder to use when making components.
-     * @param owner The frame container that owns this frame
+     * @param owner      The frame container that owns this frame
      */
     public ComponentInputFrame(
             final TextFrameDependencies deps,
@@ -110,4 +109,5 @@ public class ComponentInputFrame extends InputTextFrame {
     public void addCustomPopupItems(final JPopupMenu popupMenu) {
         //Add no custom popup items
     }
+
 }

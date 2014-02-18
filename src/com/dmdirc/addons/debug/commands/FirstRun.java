@@ -46,7 +46,7 @@ public class FirstRun extends DebugCommand {
      * Creates a new instance of the command.
      *
      * @param commandProvider The provider to use to access the main debug command.
-     * @param pluginManager The plugin manager to use to hackily poke the Swing UI.
+     * @param pluginManager   The plugin manager to use to hackily poke the Swing UI.
      */
     @Inject
     public FirstRun(final Provider<Debug> commandProvider, final PluginManager pluginManager) {

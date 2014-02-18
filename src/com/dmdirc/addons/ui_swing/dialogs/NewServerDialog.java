@@ -97,7 +97,7 @@ public class NewServerDialog extends StandardDialog implements
     private JComboBox<ConfigProvider> identityField;
     /** button. */
     private JButton editProfileButton;
-    /**  Opening new server? */
+    /** Opening new server? */
     private boolean openingServer = false;
     /** Provider to use to retrieve PMDs. */
     private final DialogProvider<ProfileManagerDialog> profileDialogProvider;
@@ -105,11 +105,11 @@ public class NewServerDialog extends StandardDialog implements
     /**
      * Creates a new instance of the dialog.
      *
-     * @param mainFrame Main frame
-     * @param config Config
-     * @param iconManager Icon manager
-     * @param identityController Identity controller
-     * @param serverManager Server manager
+     * @param mainFrame             Main frame
+     * @param config                Config
+     * @param iconManager           Icon manager
+     * @param identityController    Identity controller
+     * @param serverManager         Server manager
      * @param profileDialogProvider Provider to use to retrieve PMDs.
      */
     @Inject
@@ -222,8 +222,8 @@ public class NewServerDialog extends StandardDialog implements
     private void layoutComponents() {
         getContentPane().setLayout(new MigLayout("fill"));
 
-        getContentPane().add(new JLabel("Enter the details of the server that " +
-                "you wish to connect to."), "span 3, wrap 1.5*unrel");
+        getContentPane().add(new JLabel("Enter the details of the server that "
+                + "you wish to connect to."), "span 3, wrap 1.5*unrel");
         getContentPane().add(new JLabel("Server: "), "");
         getContentPane().add(serverField, "growx, pushx, wrap");
         getContentPane().add(new JLabel("Port: "), "");
@@ -268,8 +268,9 @@ public class NewServerDialog extends StandardDialog implements
         final ConfigProvider profile = (ConfigProvider) identityField.getSelectedItem();
 
         try {
-            final URI address = new URI("irc" + (sslCheck.isSelected() ? "s" :
-                ""), pass, host, port, null, null, null);
+            final URI address =
+                    new URI("irc" + (sslCheck.isSelected() ? "s" : ""), pass, host, port, null, null,
+                    null);
 
             // Open in a new window?
             if (newServerWindowCheck.isSelected()
@@ -284,10 +285,10 @@ public class NewServerDialog extends StandardDialog implements
                     }
                 }.executeInExecutor();
             } else {
-                final Connection connection = mainFrame.getActiveFrame().getContainer().getConnection();
+                final Connection connection = mainFrame.getActiveFrame().getContainer().
+                        getConnection();
 
                 new LoggingSwingWorker<Void, Void>() {
-
                     /** {@inheritDoc} */
                     @Override
                     protected Void doInBackground() {
@@ -338,7 +339,6 @@ public class NewServerDialog extends StandardDialog implements
     @Override
     public void configProviderAdded(final ConfigProvider configProvider) {
         UIUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -358,7 +358,6 @@ public class NewServerDialog extends StandardDialog implements
     @Override
     public void configProviderRemoved(final ConfigProvider configProvider) {
         UIUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -366,4 +365,5 @@ public class NewServerDialog extends StandardDialog implements
             }
         });
     }
+
 }

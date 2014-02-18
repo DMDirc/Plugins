@@ -59,8 +59,8 @@ public class URLHandlerTableModel extends AbstractTableModel {
      * Instantiates a new table model.
      *
      * @param configManager Config manager
-     * @param uris URIs to show
-     * @param handlers Handlers to show
+     * @param uris          URIs to show
+     * @param handlers      Handlers to show
      */
     public URLHandlerTableModel(final AggregateConfigProvider configManager,
             final List<URI> uris, final List<String> handlers) {
@@ -106,8 +106,7 @@ public class URLHandlerTableModel extends AbstractTableModel {
             case 1:
                 return String.class;
             default:
-                throw new IllegalArgumentException("Unknown column: " +
-                        columnIndex);
+                throw new IllegalArgumentException("Unknown column: " + columnIndex);
         }
     }
 
@@ -219,4 +218,5 @@ public class URLHandlerTableModel extends AbstractTableModel {
 
         return urlHandlers;
     }
+
 }

@@ -19,10 +19,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 package com.dmdirc.addons.ui_swing.dialogs.actionsmanager;
 
 import com.dmdirc.actions.ActionGroup;
-
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 
 import javax.swing.JLabel;
@@ -36,9 +36,9 @@ import net.miginfocom.swing.MigLayout;
 public final class ActionGroupInformationPanel extends JPanel {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 1;
     /** Action group. */
@@ -137,4 +137,5 @@ public final class ActionGroupInformationPanel extends JPanel {
     public boolean shouldDisplay() {
         return group != null && group.getDescription() != null;
     }
+
 }

@@ -36,9 +36,9 @@ import javax.swing.event.ChangeListener;
 public class CheckBoxMenuItem extends JCheckBoxMenuItem {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 1;
     /** Menu path to use when clicked. */
@@ -91,10 +91,9 @@ public class CheckBoxMenuItem extends JCheckBoxMenuItem {
     }
 
     /**
-     * Constructs a new checkbox menu item with the specified text and selected
-     * state.
+     * Constructs a new checkbox menu item with the specified text and selected state.
      *
-     * @param text Text to use
+     * @param text     Text to use
      * @param selected Initial selection state
      *
      * @see JCheckBoxMenuItem#JCheckBoxMenuItem(String, boolean)
@@ -118,11 +117,10 @@ public class CheckBoxMenuItem extends JCheckBoxMenuItem {
     }
 
     /**
-     * Constructs a new checkbox menu item with the specified text icon and
-     * initial selected state.
+     * Constructs a new checkbox menu item with the specified text icon and initial selected state.
      *
-     * @param text Text to use
-     * @param icon Icon to use
+     * @param text     Text to use
+     * @param icon     Icon to use
      * @param selected Initial selection state
      *
      * @see JCheckBoxMenuItem#JCheckBoxMenuItem(String, Icon, boolean)
@@ -156,5 +154,7 @@ public class CheckBoxMenuItem extends JCheckBoxMenuItem {
                 path = MenuSelectionManager.defaultManager().getSelectedPath();
             }
         }
+
     }
+
 }

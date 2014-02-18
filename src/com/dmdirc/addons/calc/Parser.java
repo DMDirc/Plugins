@@ -30,14 +30,13 @@ import java.util.Comparator;
 import java.util.List;
 
 /**
- * The parser takes the output from a {@link Lexer} and applies precdence rules
- * to build the tokens into a tree.
+ * The parser takes the output from a {@link Lexer} and applies precdence rules to build the tokens
+ * into a tree.
  */
 public class Parser {
 
     /** A list of token types sorted by their precendece. */
     protected static final List<TokenType> TOKENS_BY_PRECEDENCE;
-
     /** The lexer whose output will be parsed. */
     protected final Lexer lexer;
 
@@ -53,13 +52,14 @@ public class Parser {
     }
 
     /**
-     * Parses the output of this parser's lexer, and returns a {@link TreeToken}
-     * representing the parsed formula.
+     * Parses the output of this parser's lexer, and returns a {@link TreeToken} representing the
+     * parsed formula.
      *
      * @return A token tree corresponding to the lexer's token output
-     * @throws ParseException If the lexer encounters a parse error, or if an
-     * error occurs while parsing the lexer's output (such as a non-sensical
-     * formula such as one involving a mis-matched bracket).
+     *
+     * @throws ParseException If the lexer encounters a parse error, or if an error occurs while
+     *                        parsing the lexer's output (such as a non-sensical formula such as one
+     *                        involving a mis-matched bracket).
      */
     public TreeToken parse() throws ParseException {
         final List<TreeToken> tokens = new ArrayList<>();
@@ -75,7 +75,9 @@ public class Parser {
      * Parses the specified tokens into a tree.
      *
      * @param tokens The tokens to be parsed
+     *
      * @return A single tree containing all of the specified tokens
+     *
      * @throws ParseException If the tokens contain mismatched brackets
      */
     protected TreeToken parse(final List<TreeToken> tokens)
@@ -113,8 +115,8 @@ public class Parser {
      *
      * @param tokens The supply of tokens from which the operator will be parsed
      * @param offset The offset at which the operator occurs
-     * @throws ParseException If the operator is a bracket and that bracket is
-     * mismatched
+     *
+     * @throws ParseException If the operator is a bracket and that bracket is mismatched
      */
     protected void parseNullaryOperator(final List<TreeToken> tokens,
             final int offset)
@@ -134,8 +136,8 @@ public class Parser {
      *
      * @param tokens The supply of tokens from which the operator will be parsed
      * @param offset The offset at which the operator occurs
-     * @throws ParseException If the operator is a bracket and that bracket is
-     * mismatched
+     *
+     * @throws ParseException If the operator is a bracket and that bracket is mismatched
      */
     protected void parseBracket(final List<TreeToken> tokens, final int offset)
             throws ParseException {
@@ -189,8 +191,8 @@ public class Parser {
     }
 
     /**
-     * Parses an operator that does not actually correspond to a piece of the
-     * input (such as the START and END operators).
+     * Parses an operator that does not actually correspond to a piece of the input (such as the
+     * START and END operators).
      *
      * @param tokens The supply of tokens from which the operator will be parsed
      * @param offset The offset at which the operator occurs
@@ -211,11 +213,12 @@ public class Parser {
     }
 
     /**
-     * Retrieves the offset of the first token within the input list that has
-     * a type corresponding to the specified {@link TokenType}.
+     * Retrieves the offset of the first token within the input list that has a type corresponding
+     * to the specified {@link TokenType}.
      *
      * @param tokens The tokens to be searched
-     * @param type The desired token type
+     * @param type   The desired token type
+     *
      * @return The index of the first token with that type, or -1 if none found
      */
     protected static int findTokenType(final List<TreeToken> tokens,

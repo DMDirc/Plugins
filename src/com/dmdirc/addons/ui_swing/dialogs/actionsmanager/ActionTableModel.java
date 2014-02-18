@@ -37,9 +37,9 @@ import javax.swing.table.AbstractTableModel;
 public class ActionTableModel extends AbstractTableModel {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 1;
     /** Action list. */
@@ -92,8 +92,7 @@ public class ActionTableModel extends AbstractTableModel {
             case 2:
                 return "Response";
             default:
-                throw new IllegalArgumentException("Unknown column: " +
-                        columnIndex);
+                throw new IllegalArgumentException("Unknown column: " + columnIndex);
         }
     }
 
@@ -108,8 +107,7 @@ public class ActionTableModel extends AbstractTableModel {
             case 2:
                 return String[].class;
             default:
-                throw new IllegalArgumentException("Unknown column: " +
-                        columnIndex);
+                throw new IllegalArgumentException("Unknown column: " + columnIndex);
         }
     }
 
@@ -125,8 +123,7 @@ public class ActionTableModel extends AbstractTableModel {
                 case 2:
                     return actions.get(rowIndex).getResponse();
                 default:
-                    throw new IllegalArgumentException("Unknown column: " +
-                            columnIndex);
+                    throw new IllegalArgumentException("Unknown column: " + columnIndex);
             }
         }
     }
@@ -230,7 +227,7 @@ public class ActionTableModel extends AbstractTableModel {
     public int findAction(final String name) {
         int location = -1;
         synchronized (actions) {
-            for(Action action : actions) {
+            for (Action action : actions) {
                 if (action.getName().equals(name)) {
                     location = actions.indexOf(action);
                 }
@@ -238,4 +235,5 @@ public class ActionTableModel extends AbstractTableModel {
         }
         return location;
     }
+
 }

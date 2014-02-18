@@ -19,6 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 package com.dmdirc.addons.ui_swing.components.frames;
 
 import com.dmdirc.FrameContainer;
@@ -40,9 +41,9 @@ import net.miginfocom.swing.MigLayout;
 public class ComponentFrame extends TextFrame {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 2;
     /** URL builder to use when making components. */
@@ -55,9 +56,9 @@ public class ComponentFrame extends TextFrame {
     /**
      * Creates a new instance of CustomFrame.
      *
-     * @param deps The dependencies required by text frames.
+     * @param deps       The dependencies required by text frames.
      * @param urlBuilder URL builder to use when making components.
-     * @param owner The frame container that owns this frame
+     * @param owner      The frame container that owns this frame
      */
     public ComponentFrame(
             final TextFrameDependencies deps,
@@ -110,4 +111,5 @@ public class ComponentFrame extends TextFrame {
     public void addCustomPopupItems(final JPopupMenu popupMenu) {
         //Add no custom popup items
     }
+
 }

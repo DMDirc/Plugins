@@ -59,4 +59,5 @@ public abstract class LoggingSwingWorker<T, V> extends SwingWorker<T, V> {
     public void executeInExecutor() {
         SwingWorkerExecutor.queue(this);
     }
+
 }

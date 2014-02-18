@@ -36,15 +36,15 @@ import java.text.ParseException;
 import javax.inject.Inject;
 
 /**
- * A command which allows users to evaluate various mathematical expressions,
- * and perform basic calculations.
+ * A command which allows users to evaluate various mathematical expressions, and perform basic
+ * calculations.
  */
 public class CalcCommand extends Command {
 
     /** A command info object for this command. */
     public static final CommandInfo INFO = new BaseCommandInfo("calc",
             "calc [--showexpr] <expr> - evaluate mathematical expression",
-            CommandType.TYPE_GLOBAL) ;
+            CommandType.TYPE_GLOBAL);
 
     /**
      * Creates a new instance of this command.

@@ -33,8 +33,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Provides a media source for mplayer which uses lsof to hackily see what
- * mplayer is currently accessing.
+ * Provides a media source for mplayer which uses lsof to hackily see what mplayer is currently
+ * accessing.
  */
 public class MplayerMediaSourcePlugin extends BasePlugin implements MediaSource {
 
@@ -110,10 +110,10 @@ public class MplayerMediaSourcePlugin extends BasePlugin implements MediaSource 
 
         try {
             final String[] command = new String[]{"/bin/bash", "-c",
-                    "/usr/bin/lsof -c gmplayer |" +
-                    " grep -Ev '/dev|/lib|/var|/usr|/SYS|DIR|/tmp|pipe|socket|" +
-                    "\\.xession|fontconfig' | tail -n 1 | sed -r 's/ +/ /g' |" +
-                    " cut -d ' ' -f 9- | sed -r 's/^.*\\/(.*?)$/\\1/'"};
+                "/usr/bin/lsof -c gmplayer |"
+                + " grep -Ev '/dev|/lib|/var|/usr|/SYS|DIR|/tmp|pipe|socket|"
+                + "\\.xession|fontconfig' | tail -n 1 | sed -r 's/ +/ /g' |"
+                + " cut -d ' ' -f 9- | sed -r 's/^.*\\/(.*?)$/\\1/'"};
             process = Runtime.getRuntime().exec(command);
 
             reader = new InputStreamReader(process.getInputStream());

@@ -46,61 +46,53 @@ import javax.swing.border.LineBorder;
 import net.miginfocom.swing.MigLayout;
 
 /**
- * The OSD Window is an always-on-top window designed to convey information
- * about events to the user.
+ * The OSD Window is an always-on-top window designed to convey information about events to the
+ * user.
+ *
  * @author chris
  */
 public class OsdWindow extends JDialog implements MouseListener,
         MouseMotionListener {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 2;
-
     /** The OSD Manager that owns this window. */
     private final OsdManager osdManager;
-
     /** The manager to use to parse colours. */
     private final ColourManager colourManager;
-
     /** OSD Label. */
     private final JLabel label;
-
     /** OSD Panel. */
     private final JPanel panel;
-
     /** Starting positions of the mouse. */
     private int startX;
     private int startY;
-
     /** Desired position. */
     private volatile int desiredX;
     private volatile int desiredY;
-
     /** Is this a config instance? */
     private final boolean config;
-
     /** Timeout before the windows are automatically closed */
     private final Integer timeout;
 
     /**
      * Creates a new instance of OsdWindow.
      *
-     * @param mainFrame The window to associate with.
+     * @param mainFrame          The window to associate with.
      * @param identityController The controller to read/write settings with.
-     * @param colourManager The manager to use to parse colours.
-     * @param timeout Timeout period for the window. Set to -1 to use value from
-     *        config
-     * @param text The text to be displayed in the OSD window
-     * @param config Is the window being configured (should it timeout and
-     *        allow itself to be moved)
-     * @param x The x-axis position for the OSD Window
-     * @param y The y-axis position for the OSD window
-     * @param plugin Parent OSD Plugin
-     * @param osdManager The manager that owns this OSD Window
+     * @param colourManager      The manager to use to parse colours.
+     * @param timeout            Timeout period for the window. Set to -1 to use value from config
+     * @param text               The text to be displayed in the OSD window
+     * @param config             Is the window being configured (should it timeout and allow itself
+     *                           to be moved)
+     * @param x                  The x-axis position for the OSD Window
+     * @param y                  The y-axis position for the OSD window
+     * @param plugin             Parent OSD Plugin
+     * @param osdManager         The manager that owns this OSD Window
      */
     public OsdWindow(
             final MainFrame mainFrame,
@@ -137,8 +129,8 @@ public class OsdWindow extends JDialog implements MouseListener,
         panel.setBorder(new LineBorder(Color.BLACK));
         panel.setBackground(UIUtilities.convertColour(
                 colourManager.getColourFromString(
-                    identityController.getGlobalConfiguration()
-                            .getOptionString(plugin.getDomain(), "bgcolour"), null)));
+                identityController.getGlobalConfiguration()
+                .getOptionString(plugin.getDomain(), "bgcolour"), null)));
 
         final int width = identityController.getGlobalConfiguration()
                 .getOptionInt(plugin.getDomain(), "width");
@@ -148,8 +140,8 @@ public class OsdWindow extends JDialog implements MouseListener,
         label = new JLabel(text);
         label.setForeground(UIUtilities.convertColour(
                 colourManager.getColourFromString(
-                    identityController.getGlobalConfiguration()
-                        .getOptionString(plugin.getDomain(), "fgcolour"), null)));
+                identityController.getGlobalConfiguration()
+                .getOptionString(plugin.getDomain(), "fgcolour"), null)));
         label.setFont(label.getFont().deriveFont(
                 (float) identityController
                 .getGlobalConfiguration().getOptionInt(plugin.getDomain(), "fontSize")));
@@ -166,7 +158,6 @@ public class OsdWindow extends JDialog implements MouseListener,
             addMouseListener(this);
             if (this.timeout != null && this.timeout > 0) {
                 new Timer("OSD Display Timer").schedule(new TimerTask() {
-
                     /** {@inheritDoc} */
                     @Override
                     public void run() {
@@ -176,7 +167,6 @@ public class OsdWindow extends JDialog implements MouseListener,
             }
         }
     }
-
 
     /**
      * {@inheritDoc}
@@ -270,7 +260,8 @@ public class OsdWindow extends JDialog implements MouseListener,
      * @param colour The background colour to use
      */
     public void setBackgroundColour(final String colour) {
-        panel.setBackground(UIUtilities.convertColour(colourManager.getColourFromString(colour, Colour.WHITE)));
+        panel.setBackground(UIUtilities.convertColour(colourManager.getColourFromString(colour,
+                Colour.WHITE)));
     }
 
     /**
@@ -279,7 +270,8 @@ public class OsdWindow extends JDialog implements MouseListener,
      * @param colour The foreground colour to use
      */
     public void setForegroundColour(final String colour) {
-        label.setForeground(UIUtilities.convertColour(colourManager.getColourFromString(colour, Colour.WHITE)));
+        label.setForeground(UIUtilities.convertColour(colourManager.getColourFromString(colour,
+                Colour.WHITE)));
     }
 
     /** {@inheritDoc} */
@@ -315,22 +307,21 @@ public class OsdWindow extends JDialog implements MouseListener,
     }
 
     /**
-     * Sets the desired location of this OSD window, and queues an event to
-     * move the window to the desired location at some point in the future.
+     * Sets the desired location of this OSD window, and queues an event to move the window to the
+     * desired location at some point in the future.
      * <p>
-     * This method WILL NOT alter the location immediately, but will schedule
-     * an event in the AWT event despatch thread which will be executed in
-     * the future.
+     * This method WILL NOT alter the location immediately, but will schedule an event in the AWT
+     * event despatch thread which will be executed in the future.
      * <p>
-     * This method will immediately update the values returned by the
-     * {@link #getDesiredX()} and {@link #getDesiredY()} methods, but the
-     * {@link #getX()} and {@link #getY()} methods will continue to reflect the
-     * actual location of the window.
+     * This method will immediately update the values returned by the {@link #getDesiredX()} and
+     * {@link #getDesiredY()} methods, but the {@link #getX()} and {@link #getY()} methods will
+     * continue to reflect the actual location of the window.
      * <p>
      * This method is thread safe.
      *
      * @param x The desired x offset of this window
      * @param y The desired y offset of this window
+     *
      * @since 0.6.3
      */
     public void setDesiredLocation(final int x, final int y) {
@@ -351,4 +342,5 @@ public class OsdWindow extends JDialog implements MouseListener,
     public String toString() {
         return label.getText();
     }
+
 }

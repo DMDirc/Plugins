@@ -90,10 +90,10 @@ public class OsdManager {
     /**
      * Create a new OSD window with "message".
      * <p>
-     * This method needs to be synchronised to ensure that the window list is
-     * not modified in between the invocation of
-     * {@link OsdPolicy#getYPosition(com.dmdirc.addons.osd.OsdManager, int)}
-     * and the point at which the {@link OsdWindow} is added to the windowList.
+     * This method needs to be synchronised to ensure that the window list is not modified in
+     * between the invocation of
+     * {@link OsdPolicy#getYPosition(com.dmdirc.addons.osd.OsdManager, int)} and the point at which
+     * the {@link OsdWindow} is added to the windowList.
      *
      * @see OsdPolicy#getYPosition(com.dmdirc.addons.osd.OsdManager, int)
      * @param message Text to display in the OSD window.
@@ -107,7 +107,6 @@ public class OsdManager {
 
         windowList.add(UIUtilities.invokeAndWait(
                 new Callable<OsdWindow>() {
-
             /** {@inheritDoc} */
             @Override
             public OsdWindow call() {
@@ -123,8 +122,7 @@ public class OsdManager {
     }
 
     /**
-     * Destroy the given OSD Window and check if the Queue has items, if so
-     * Display them.
+     * Destroy the given OSD Window and check if the Queue has items, if so Display them.
      *
      * @param window The window that we are destroying.
      */
@@ -197,4 +195,5 @@ public class OsdManager {
     public OsdPlugin getPlugin() {
         return plugin;
     }
+
 }

@@ -87,9 +87,9 @@ public abstract class TextFrame extends JPanel implements Window,
         ConfigChangeListener, TextPaneListener, FrameCloseListener {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 5;
     /** The channel object that owns this frame. */
@@ -113,8 +113,7 @@ public abstract class TextFrame extends JPanel implements Window,
     /** Boolean to determine if this frame should be popped out of main client. */
     private boolean popout;
     /**
-     * DesktopWindowFrame to use for this TextFrame if it is to be popped out of
-     * the client.
+     * DesktopWindowFrame to use for this TextFrame if it is to be popped out of the client.
      */
     private DesktopWindowFrame popoutFrame;
     /** Desktop place holder object used if this frame is popped out. */
@@ -124,7 +123,7 @@ public abstract class TextFrame extends JPanel implements Window,
      * Creates a new instance of Frame.
      *
      * @param owner FrameContainer owning this frame.
-     * @param deps Collection of TextPane dependencies.
+     * @param deps  Collection of TextPane dependencies.
      */
     public TextFrame(
             final FrameContainer owner,
@@ -185,12 +184,11 @@ public abstract class TextFrame extends JPanel implements Window,
     }
 
     /**
-     * Determines if this frame should be popped out of the client or not. Once
-     * this is set to true it will pop out of the client as a free floating
-     * Desktop window.
+     * Determines if this frame should be popped out of the client or not. Once this is set to true
+     * it will pop out of the client as a free floating Desktop window.
      *
-     * If this is set to false then the desktop window for this frame is
-     * disposed of and this frame is returned to the client.
+     * If this is set to false then the desktop window for this frame is disposed of and this frame
+     * is returned to the client.
      *
      * @param popout Should this frame pop out?
      */
@@ -212,8 +210,8 @@ public abstract class TextFrame extends JPanel implements Window,
     }
 
     /**
-     * Returns the frame for the free floating desktop window associated with this
-     * TextFrame. If one does not exist then null is returned.
+     * Returns the frame for the free floating desktop window associated with this TextFrame. If one
+     * does not exist then null is returned.
      *
      * @return Desktop window frame or null if does not exist
      */
@@ -222,9 +220,8 @@ public abstract class TextFrame extends JPanel implements Window,
     }
 
     /**
-     * Checks if this frame should be popped out of the client or not. Returns
-     * our place holder frame if it is to be used or this TextFrame if it is
-     * not to be popped out.
+     * Checks if this frame should be popped out of the client or not. Returns our place holder
+     * frame if it is to be used or this TextFrame if it is not to be popped out.
      *
      * @return JPanel to use by the client in the window pane
      */
@@ -241,7 +238,6 @@ public abstract class TextFrame extends JPanel implements Window,
      */
     public void activateFrame() {
         UIUtilities.invokeLater(new Runnable() {
-
             @Override
             public void run() {
                 frameParent.clearNotification();
@@ -422,7 +418,7 @@ public abstract class TextFrame extends JPanel implements Window,
     /**
      * Shows a popup menu at the specified point for the specified click type.
      *
-     * @param type ClickType Click type
+     * @param type  ClickType Click type
      * @param point Point Point of the click
      */
     private void showPopupMenuInternal(final ClickTypeValue type,
@@ -478,7 +474,7 @@ public abstract class TextFrame extends JPanel implements Window,
     /**
      * Shows a popup menu at the specified point for the specified click type.
      *
-     * @param type ClickType Click type
+     * @param type  ClickType Click type
      * @param point Point Point of the click (Must be screen coords)
      */
     public void showPopupMenu(final ClickTypeValue type,
@@ -490,7 +486,7 @@ public abstract class TextFrame extends JPanel implements Window,
     /**
      * Builds a popup menu of a specified type.
      *
-     * @param type type of menu to build
+     * @param type      type of menu to build
      * @param arguments Arguments for the command
      *
      * @return PopupMenu
@@ -510,8 +506,8 @@ public abstract class TextFrame extends JPanel implements Window,
     /**
      * Populates the specified popupmenu.
      *
-     * @param menu Menu component
-     * @param popup Popup to get info from
+     * @param menu      Menu component
+     * @param popup     Popup to get info from
      * @param arguments Arguments for the command
      *
      * @return Populated popup
@@ -586,12 +582,12 @@ public abstract class TextFrame extends JPanel implements Window,
         final ColourManager colourManager = new ColourManager(getContainer().getConfigManager());
         getTextPane().setForeground(UIUtilities.convertColour(
                 colourManager.getColourFromString(
-                        getContainer().getConfigManager().getOptionString(
-                                "ui", "foregroundcolour"), null)));
+                getContainer().getConfigManager().getOptionString(
+                "ui", "foregroundcolour"), null)));
         getTextPane().setBackground(UIUtilities.convertColour(
                 colourManager.getColourFromString(
-                        getContainer().getConfigManager().getOptionString(
-                                "ui", "backgroundcolour"), null)));
+                getContainer().getConfigManager().getOptionString(
+                "ui", "backgroundcolour"), null)));
     }
 
     /** Disposes of this window, removing any listeners. */
@@ -631,5 +627,7 @@ public abstract class TextFrame extends JPanel implements Window,
             this.urlHandler = urlHandler;
             this.commandController = commandController;
         }
+
     }
+
 }

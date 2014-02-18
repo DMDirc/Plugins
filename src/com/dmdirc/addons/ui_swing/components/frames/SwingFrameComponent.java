@@ -25,4 +25,5 @@ package com.dmdirc.addons.ui_swing.components.frames;
 /**
  * Interface to express how components should be added to the UI.
  */
-public interface SwingFrameComponent {}
+public interface SwingFrameComponent {
+}

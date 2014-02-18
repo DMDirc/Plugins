@@ -35,9 +35,9 @@ import javax.swing.JToggleButton;
 public class ImageToggleButton extends JToggleButton {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 2;
 
@@ -45,7 +45,7 @@ public class ImageToggleButton extends JToggleButton {
      * Creates a new instance of ImageToggleButton.
      *
      * @param actionCommand Action command for the button
-     * @param icon Normal icon for the button
+     * @param icon          Normal icon for the button
      */
     public ImageToggleButton(final String actionCommand, final Icon icon) {
         this(actionCommand, icon, icon);
@@ -55,8 +55,8 @@ public class ImageToggleButton extends JToggleButton {
      * Creates a new instance of ImageToggleButton.
      *
      * @param actionCommand Action command for the button
-     * @param icon Normal icon for the button
-     * @param rolloverIcon Rollover icon for the button
+     * @param icon          Normal icon for the button
+     * @param rolloverIcon  Rollover icon for the button
      */
     public ImageToggleButton(final String actionCommand, final Icon icon,
             final Icon rolloverIcon) {
@@ -67,9 +67,9 @@ public class ImageToggleButton extends JToggleButton {
      * Creates a new instance of ImageToggleButton.
      *
      * @param actionCommand Action command for the button
-     * @param icon Normal icon for the button
-     * @param rolloverIcon Rollover icon for the button
-     * @param pressedIcon Pressed icon for the button
+     * @param icon          Normal icon for the button
+     * @param rolloverIcon  Rollover icon for the button
+     * @param pressedIcon   Pressed icon for the button
      */
     public ImageToggleButton(final String actionCommand, final Icon icon,
             final Icon rolloverIcon, final Icon pressedIcon) {
@@ -96,4 +96,5 @@ public class ImageToggleButton extends JToggleButton {
         setRolloverIcon(icon);
         setPressedIcon(icon);
     }
+
 }

@@ -57,10 +57,10 @@ public class SendWorker extends LoggingSwingWorker<Object, Void> {
     /**
      * Creates a new send worker to send feedback.
      *
-     * @param dialog Parent feedback dialog
-     * @param config Config
-     * @param name Name
-     * @param email Email
+     * @param dialog   Parent feedback dialog
+     * @param config   Config
+     * @param name     Name
+     * @param email    Email
      * @param feedback Feedback
      */
     public SendWorker(final FeedbackDialog dialog, final AggregateConfigProvider config,
@@ -71,11 +71,11 @@ public class SendWorker extends LoggingSwingWorker<Object, Void> {
     /**
      * Creates a new send worker to send feedback.
      *
-     * @param dialog Parent feedback dialog
-     * @param config Config
-     * @param name Name
-     * @param email Email
-     * @param feedback Feedback
+     * @param dialog     Parent feedback dialog
+     * @param config     Config
+     * @param name       Name
+     * @param email      Email
+     * @param feedback   Feedback
      * @param serverInfo serverInfo
      * @param dmdircInfo DMDirc info
      */
@@ -123,8 +123,8 @@ public class SendWorker extends LoggingSwingWorker<Object, Void> {
     }
 
     /**
-     * Sends the error data to the server appending returned information to the
-     * global error variable.
+     * Sends the error data to the server appending returned information to the global error
+     * variable.
      *
      * @param postData Feedback data to send
      */
@@ -152,5 +152,5 @@ public class SendWorker extends LoggingSwingWorker<Object, Void> {
         super.done();
         dialog.layoutComponents2(error);
     }
-}
 
+}

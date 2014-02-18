@@ -40,4 +40,5 @@ public interface StepListener {
      * @param step Step thats been hidden
      */
     void stepHidden(final Step step);
+
 }

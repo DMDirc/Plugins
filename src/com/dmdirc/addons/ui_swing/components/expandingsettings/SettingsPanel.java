@@ -67,7 +67,7 @@ public class SettingsPanel extends JPanel {
      *
      * @param iconManager Icon manager
      * @param compFactory Preferences setting component factory
-     * @param infoText Info blurb.
+     * @param infoText    Info blurb.
      */
     public SettingsPanel(final IconManager iconManager, final PrefsComponentFactory compFactory,
             final String infoText) {
@@ -79,8 +79,8 @@ public class SettingsPanel extends JPanel {
      *
      * @param iconManager Icon manager
      * @param compFactory Preferences setting component factory
-     * @param infoText Info blurb.
-     * @param padding Should we add padding to the panel?
+     * @param infoText    Info blurb.
+     * @param padding     Should we add padding to the panel?
      */
     public SettingsPanel(final IconManager iconManager, final PrefsComponentFactory compFactory,
             final String infoText, final boolean padding) {
@@ -101,7 +101,7 @@ public class SettingsPanel extends JPanel {
      * Initialises the components.
      *
      * @param iconManager Icon manager
-     * @param infoText Info blurb.
+     * @param infoText    Info blurb.
      */
     private void initComponents(final IconManager iconManager, final String infoText) {
         infoLabel = new TextLabel(infoText);
@@ -220,4 +220,5 @@ public class SettingsPanel extends JPanel {
     public PreferencesSetting getSettingForComponent(final JComponent comp) {
         return settings.getKey(comp);
     }
+
 }

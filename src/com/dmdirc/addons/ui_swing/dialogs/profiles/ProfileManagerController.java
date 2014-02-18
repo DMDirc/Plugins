@@ -92,4 +92,5 @@ public class ProfileManagerController {
         model.save();
         closeDialog();
     }
+
 }

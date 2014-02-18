@@ -58,7 +58,7 @@ public class ActionResponsePanel extends JPanel {
      * Instantiates the panel.
      *
      * @param iconManager Icon manager
-     * @param config Config
+     * @param config      Config
      */
     public ActionResponsePanel(final IconManager iconManager, final AggregateConfigProvider config) {
         super();
@@ -180,4 +180,5 @@ public class ActionResponsePanel extends JPanel {
         response.setEnabled(enabled);
         formatter.setEnabled(enabled);
     }
+
 }

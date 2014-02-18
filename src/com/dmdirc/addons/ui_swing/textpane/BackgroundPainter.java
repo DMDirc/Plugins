@@ -38,8 +38,8 @@ import javax.swing.JComponent;
 import org.jdesktop.jxlayer.plaf.LayerUI;
 
 /**
- * Background painting layer UI. Paints a opaque background then paints the
- * specified image onto the background layer.
+ * Background painting layer UI. Paints a opaque background then paints the specified image onto the
+ * background layer.
  */
 public class BackgroundPainter extends LayerUI<JComponent> {
 
@@ -48,32 +48,26 @@ public class BackgroundPainter extends LayerUI<JComponent> {
      */
     @Nonnull
     private final String domain;
-
     /**
      * Key in domain to get image URL from.
      */
     @Nonnull
     private final String imageKey;
-
     /**
      * Key in domain to get image background type from.
      */
     @Nonnull
     private final String optionKey;
-
     /** The URL builder to use to find icons. */
     private final URLBuilder urlBuilder;
-
     /**
      * Config manager to bind to and retrieve settings from.
      */
     private final AggregateConfigProvider configManager;
-
     /**
      * Background image.
      */
     private Image backgroundImage;
-
     /**
      * Background option type.
      */
@@ -83,10 +77,10 @@ public class BackgroundPainter extends LayerUI<JComponent> {
      * Creates a new background painter.
      *
      * @param configManager Config manager to retrieve settings from
-     * @param urlBuilder URL Builder
-     * @param domain Domain to retrieve settings from
-     * @param imageKey Key for background image
-     * @param optionKey Key for background type
+     * @param urlBuilder    URL Builder
+     * @param domain        Domain to retrieve settings from
+     * @param imageKey      Key for background image
+     * @param optionKey     Key for background type
      */
     public BackgroundPainter(
             final AggregateConfigProvider configManager,

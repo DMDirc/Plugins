@@ -43,9 +43,9 @@ import net.miginfocom.swing.MigLayout;
 public abstract class SubstitutionsPanel<T> extends JPanel {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 1;
     /** Substitions list. */
@@ -62,6 +62,7 @@ public abstract class SubstitutionsPanel<T> extends JPanel {
         HORIZONTAL,
         /** Vertical separator. */
         VERTICAL;
+
     }
 
     /**
@@ -77,7 +78,7 @@ public abstract class SubstitutionsPanel<T> extends JPanel {
      * Instantiates the panel.
      *
      * @param description Description
-     * @param type Action type
+     * @param type        Action type
      */
     public SubstitutionsPanel(final String description, final T type) {
         this(description, Alignment.VERTICAL, type);
@@ -87,7 +88,7 @@ public abstract class SubstitutionsPanel<T> extends JPanel {
      * Instantiates the panel.
      *
      * @param description Description
-     * @param alignment Alignment of the separator
+     * @param alignment   Alignment of the separator
      */
     public SubstitutionsPanel(final String description,
             final Alignment alignment) {
@@ -98,8 +99,8 @@ public abstract class SubstitutionsPanel<T> extends JPanel {
      * Instantiates the panel.
      *
      * @param description Description
-     * @param alignment Alignment of the separator
-     * @param type Action type
+     * @param alignment   Alignment of the separator
+     * @param type        Action type
      */
     public SubstitutionsPanel(final String description,
             final Alignment alignment, final T type) {
@@ -134,9 +135,8 @@ public abstract class SubstitutionsPanel<T> extends JPanel {
         setVisible(false);
         removeAll();
 
-        final TextLabel textLabel = new TextLabel(description +
-                ". Drag and drop, or click on an item when " +
-                "editing the field, to insert it.");
+        final TextLabel textLabel = new TextLabel(description
+                + ". Drag and drop, or click on an item when " + "editing the field, to insert it.");
         if (alignment.equals(Alignment.VERTICAL)) {
             add(textLabel, "spany, aligny top, wmin 225, wmax 225");
             add(new JSeparator(JSeparator.VERTICAL), "growy, spany");
@@ -164,4 +164,5 @@ public abstract class SubstitutionsPanel<T> extends JPanel {
      * @param type New action type
      */
     public abstract void setType(final T type);
+
 }

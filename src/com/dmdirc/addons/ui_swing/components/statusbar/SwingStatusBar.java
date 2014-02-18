@@ -47,9 +47,9 @@ import net.miginfocom.swing.MigLayout;
 public class SwingStatusBar extends JPanel implements StatusBar {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 5;
     /** Mig layout component restraints. */
@@ -68,9 +68,9 @@ public class SwingStatusBar extends JPanel implements StatusBar {
     /**
      * Creates a new instance of SwingStatusBar.
      *
-     * @param controller Swing controller
-     * @param mainFrame Main frame
-     * @param inviteLabel The invite label to add to the status bar.
+     * @param controller   Swing controller
+     * @param mainFrame    Main frame
+     * @param inviteLabel  The invite label to add to the status bar.
      * @param updaterLabel The updater label to add to the status bar.
      */
     @Inject
@@ -84,8 +84,8 @@ public class SwingStatusBar extends JPanel implements StatusBar {
         height = getFontMetrics(UIManager.getFont("Table.font")).getHeight()
                 + (int) PlatformDefaults.getUnitValueX("related").getValue()
                 + (int) PlatformDefaults.getUnitValueX("related").getValue();
-        componentConstraints = "sgy components, hmax "+height+", hmin "+height
-                +", wmin 20, shrink 0";
+        componentConstraints = "sgy components, hmax " + height + ", hmin " + height
+                + ", wmin 20, shrink 0";
 
         messageLabel = new MessageLabel(controller, mainFrame);
         errorPanel = new ErrorPanel(controller, mainFrame, this);
@@ -118,13 +118,12 @@ public class SwingStatusBar extends JPanel implements StatusBar {
     public void addComponent(final StatusBarComponent component) {
         if (!(component instanceof Component)) {
             Logger.appError(ErrorLevel.HIGH, "Error adding status bar component",
-                    new IllegalArgumentException("Component must be an " +
-                    "instance of java.awt.component"));
+                    new IllegalArgumentException("Component must be an "
+                    + "instance of java.awt.component"));
             return;
         }
         if (!Arrays.asList(getComponents()).contains(component)) {
             SwingUtilities.invokeLater(new Runnable() {
-
                 /** {@inheritDoc} */
                 @Override
                 public void run() {
@@ -151,24 +150,23 @@ public class SwingStatusBar extends JPanel implements StatusBar {
             return;
         }
         SwingUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
                 remove((Component) component);
                 validate();
             }
-            });
+        });
     }
 
     /**
-     * Returns the message label for this status bar. This is intended to be
-     * used for advanced plugins that wish to do compliated things with
-     * messages.
+     * Returns the message label for this status bar. This is intended to be used for advanced
+     * plugins that wish to do compliated things with messages.
      *
      * @return Message label component
      */
     public MessageLabel getMessageComponent() {
         return messageLabel;
     }
+
 }

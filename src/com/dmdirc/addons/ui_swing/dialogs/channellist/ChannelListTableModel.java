@@ -33,15 +33,13 @@ public class ChannelListTableModel extends ObservableListTableModelAdapter<Group
 
     /** Serial version UID. */
     private static final long serialVersionUID = 1L;
-
     /** The names to use for the model's columns. */
-    private static final String[] COLUMN_NAMES = new String[] {
+    private static final String[] COLUMN_NAMES = new String[]{
         "Name", "Users", "Topic"
     };
-
     /** The types to use for the model's columns. */
     @SuppressWarnings("rawtypes")
-    private static final Class[] COLUMN_TYPES = new Class[] {
+    private static final Class[] COLUMN_TYPES = new Class[]{
         String.class, Integer.class, String.class
     };
 
@@ -99,4 +97,5 @@ public class ChannelListTableModel extends ObservableListTableModelAdapter<Group
     public GroupListEntry getGroupListEntry(final int row) {
         return list.get(row);
     }
+
 }

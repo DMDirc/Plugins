@@ -49,10 +49,10 @@ public class WizardDialog extends StandardDialog implements ActionListener {
     /**
      * Creates a new instance of WizardFrame that requires a mainframe.
      *
-     * @param title Title for the wizard
-     * @param steps Steps for the wizard
+     * @param title        Title for the wizard
+     * @param steps        Steps for the wizard
      * @param parentWindow Parent component
-     * @param modality Modality
+     * @param modality     Modality
      */
     public WizardDialog(final String title, final List<Step> steps, final Window parentWindow,
             final ModalityType modality) {
@@ -81,7 +81,6 @@ public class WizardDialog extends StandardDialog implements ActionListener {
             CoreUIUtils.centreWindow(this);
         }
         addWindowListener(new WindowAdapter() {
-
             /** {@inheritDoc} */
             @Override
             public void windowClosed(final WindowEvent e) {
@@ -197,4 +196,5 @@ public class WizardDialog extends StandardDialog implements ActionListener {
     public void removeWizardListener(final WizardListener listener) {
         wizard.removeWizardListener(listener);
     }
+
 }

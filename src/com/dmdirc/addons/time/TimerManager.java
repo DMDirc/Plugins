@@ -19,6 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 package com.dmdirc.addons.time;
 
 import com.dmdirc.FrameContainer;
@@ -38,7 +39,6 @@ public class TimerManager {
 
     /** Map of all the timers that are running. */
     private final Map<Integer, TimedCommand> timerList = new HashMap<>();
-
     /** The command controller to use when executing global commands. */
     private final CommandController commandController;
 
@@ -50,9 +50,9 @@ public class TimerManager {
      * Adds a timer to the internal list and starts the timer.
      *
      * @param repetitions Amount of times the timer repeats
-     * @param interval Interval between repetitions
-     * @param command Command to be run when the timer fires
-     * @param origin The frame container to use for the execution
+     * @param interval    Interval between repetitions
+     * @param command     Command to be run when the timer fires
+     * @param origin      The frame container to use for the execution
      */
     public void addTimer(final int repetitions, final int interval,
             final String command, final FrameContainer origin) {
@@ -65,8 +65,8 @@ public class TimerManager {
     }
 
     /**
-     * Removes a timer from our internal list of active timers. This should only
-     * be called when a timer is cancelled.
+     * Removes a timer from our internal list of active timers. This should only be called when a
+     * timer is cancelled.
      *
      * @param timerKey Key of the timer to remove
      */
@@ -106,8 +106,8 @@ public class TimerManager {
     }
 
     /**
-     * Matches a Timer ID to a Timer.
-     * This will return null if there is no Timer with the provided ID.
+     * Matches a Timer ID to a Timer. This will return null if there is no Timer with the provided
+     * ID.
      *
      * @param id ID that we want the timer for
      *
@@ -127,4 +127,5 @@ public class TimerManager {
     public boolean hasTimerWithID(final int id) {
         return timerList.containsKey(id);
     }
+
 }

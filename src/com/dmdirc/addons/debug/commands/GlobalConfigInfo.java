@@ -46,7 +46,7 @@ public class GlobalConfigInfo extends DebugCommand {
      * Creates a new instance of the command.
      *
      * @param commandProvider The provider to use to access the main debug command.
-     * @param globalConfig The global config to retrieve sources for.
+     * @param globalConfig    The global config to retrieve sources for.
      */
     @Inject
     public GlobalConfigInfo(

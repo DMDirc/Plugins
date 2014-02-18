@@ -68,10 +68,10 @@ public class Settings extends JPanel implements ServerListListener {
     /**
      * Instantiates a new settings panel.
      *
-     * @param model Backing model
-     * @param iconManager Manager to use to retrieve icons.
+     * @param model            Backing model
+     * @param iconManager      Manager to use to retrieve icons.
      * @param componentFactory Factory to use to produce preference components.
-     * @param identityFactory Factory to use to produce identities.
+     * @param identityFactory  Factory to use to produce identities.
      */
     @Inject
     public Settings(
@@ -117,8 +117,7 @@ public class Settings extends JPanel implements ServerListListener {
     }
 
     /**
-     * Gets a settings panel for the specified group item, creating it if
-     * required.
+     * Gets a settings panel for the specified group item, creating it if required.
      *
      * @param item Group item panel
      *
@@ -129,7 +128,8 @@ public class Settings extends JPanel implements ServerListListener {
             if (item instanceof ServerGroup) {
                 panels.put(item, new SettingsPanel(iconManager, componentFactory, "", false));
                 addSettings(panels.get(item),
-                        identityFactory.createAggregateConfig("irc", "", item.getGroup().getNetwork(), item.getName()),
+                        identityFactory.createAggregateConfig("irc", "", item.getGroup().
+                        getNetwork(), item.getName()),
                         identityFactory.createServerConfig(item.getName()));
             } else {
                 panels.put(item, new SettingsPanel(iconManager, componentFactory, "", false));
@@ -166,12 +166,13 @@ public class Settings extends JPanel implements ServerListListener {
      * Adds the settings to the panel.
      *
      * @param settingsPanel Settings panel to add settings to
-     * @param manager The config manager to read current settings from.
-     * @param identity The provider to write settings to.
+     * @param manager       The config manager to read current settings from.
+     * @param identity      The provider to write settings to.
      */
     private void addSettings(final SettingsPanel settingsPanel,
             final AggregateConfigProvider manager, final ConfigProvider identity) {
         settingsPanel.addOption(PreferencesManager.getPreferencesManager()
                 .getServerSettings(manager, identity));
     }
+
 }

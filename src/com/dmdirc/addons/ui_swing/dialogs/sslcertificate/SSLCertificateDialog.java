@@ -38,8 +38,8 @@ import javax.swing.event.ListSelectionListener;
 import net.miginfocom.swing.MigLayout;
 
 /**
- * SSL Certificate information dialog. Also provides the ability to accept and
- * reject certificates whilst connecting to an SSL server.
+ * SSL Certificate information dialog. Also provides the ability to accept and reject certificates
+ * whilst connecting to an SSL server.
  */
 public class SSLCertificateDialog extends StandardDialog implements ActionListener,
         ListSelectionListener {
@@ -67,8 +67,8 @@ public class SSLCertificateDialog extends StandardDialog implements ActionListen
      * Creates a new instance of ActionsManagerDialog.
      *
      * @param iconManager Icon manager
-     * @param parent Parent window for the dialog
-     * @param model dialog model
+     * @param parent      Parent window for the dialog
+     * @param model       dialog model
      */
     public SSLCertificateDialog(final IconManager iconManager,
             final Window parent, final SSLCertificateDialogModel model) {
@@ -106,11 +106,12 @@ public class SSLCertificateDialog extends StandardDialog implements ActionListen
 
         actions.setVisible(model.needsResponse());
         if (model.needsResponse()) {
-            blurb.setText("Theres is a problem with the certificate used by " +
-                    model.getServerName());
+            blurb.setText("Theres is a problem with the certificate used by " + model.
+                    getServerName());
         } else {
-            blurb.setText("Your connection to " + model.getServerName() +
-                    " is encrypted using SSL.");
+            blurb.
+                    setText("Your connection to " + model.getServerName()
+                    + " is encrypted using SSL.");
         }
     }
 
@@ -151,4 +152,5 @@ public class SSLCertificateDialog extends StandardDialog implements ActionListen
             }
         }
     }
+
 }

@@ -59,7 +59,7 @@ public class Profiles extends JPanel implements ServerListListener {
     /**
      * Creates a new profile panel backed by the specified model.
      *
-     * @param model Backing server list model
+     * @param model              Backing server list model
      * @param identityController Controller to use to get profiles.
      */
     public Profiles(final ServerListModel model, final IdentityController identityController) {
@@ -96,8 +96,7 @@ public class Profiles extends JPanel implements ServerListListener {
     }
 
     /**
-     * Gets or creates a combo box for selecting performs for the specified
-     * server group item.
+     * Gets or creates a combo box for selecting performs for the specified server group item.
      *
      * @param item Server group item requiring the profile selection
      *
@@ -152,4 +151,5 @@ public class Profiles extends JPanel implements ServerListListener {
             final ServerGroupItem group) {
         //Ignore
     }
+
 }

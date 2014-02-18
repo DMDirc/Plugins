@@ -34,13 +34,10 @@ public abstract class ServerGroupItemBase implements ServerGroupItem {
 
     /** The controller to read/write settings with. */
     private final IdentityController identityController;
-
     /** Whether or not this item has been modified. */
     private boolean modified;
-
     /** The name of the item. */
     private String name;
-
     /** The name of the profile to use. */
     private String profile;
 
@@ -96,8 +93,8 @@ public abstract class ServerGroupItemBase implements ServerGroupItem {
     }
 
     /**
-     * Returns the parent group of this item, or <code>null</code> if the
-     * item is a root group.
+     * Returns the parent group of this item, or
+     * <code>null</code> if the item is a root group.
      *
      * @return This item's parent group
      */

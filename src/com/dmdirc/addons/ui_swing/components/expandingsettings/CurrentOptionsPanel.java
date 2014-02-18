@@ -56,7 +56,7 @@ public class CurrentOptionsPanel extends JPanel implements
      * Creates a new instance of CurrentOptionsPanel.
      *
      * @param iconManager IconManager
-     * @param parent Parent settings panel.
+     * @param parent      Parent settings panel.
      */
     protected CurrentOptionsPanel(final IconManager iconManager, final SettingsPanel parent) {
         super();
@@ -98,10 +98,10 @@ public class CurrentOptionsPanel extends JPanel implements
     /**
      * Adds an option to the current options pane.
      *
-     * @param configName config option name
+     * @param configName  config option name
      * @param displayName config option display name
-     * @param panel parent panel
-     * @param component Option component to add
+     * @param panel       parent panel
+     * @param component   Option component to add
      */
     private void addCurrentOption(final JComponent component) {
         final JLabel label = new JLabel();
@@ -119,7 +119,6 @@ public class CurrentOptionsPanel extends JPanel implements
         add(component, "");
         add(button, "wrap");
     }
-
 
     /** Populates the current settings. */
     protected void populateCurrentSettings() {
@@ -144,8 +143,7 @@ public class CurrentOptionsPanel extends JPanel implements
     @Override
     @SuppressWarnings("unchecked")
     public void actionPerformed(final ActionEvent e) {
-        final JComponent setting = ((ImageButton<JComponent>)
-                e.getSource()).getObject();
+        final JComponent setting = ((ImageButton<JComponent>) e.getSource()).getObject();
         delOption(setting);
         parent.addAddableOption(setting);
     }

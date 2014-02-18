@@ -44,4 +44,5 @@ public interface SwingWindowListener {
      * @param window The window that was deleted
      */
     void windowDeleted(final TextFrame parent, final TextFrame window);
+
 }

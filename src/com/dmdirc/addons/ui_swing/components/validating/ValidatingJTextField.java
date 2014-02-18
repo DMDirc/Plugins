@@ -34,7 +34,6 @@ import javax.swing.ImageIcon;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-
 /**
  * Validating Text field.
  */
@@ -51,7 +50,7 @@ public class ValidatingJTextField extends JIconTextField implements DocumentList
      * Instantiates a new Validating text field.
      *
      * @param iconManager Icon manager
-     * @param validator Validator instance
+     * @param validator   Validator instance
      */
     public ValidatingJTextField(final IconManager iconManager,
             final Validator<String> validator) {
@@ -62,8 +61,8 @@ public class ValidatingJTextField extends JIconTextField implements DocumentList
      * Instantiates a new Validating text field.
      *
      * @param iconManager Icon manager
-     * @param text Text to display in textfield
-     * @param validator Validator instance
+     * @param text        Text to display in textfield
+     * @param validator   Validator instance
      */
     public ValidatingJTextField(final IconManager iconManager, final String text,
             final Validator<String> validator) {
@@ -73,11 +72,12 @@ public class ValidatingJTextField extends JIconTextField implements DocumentList
     /**
      * Instantiates a new Validating text field.
      *
-     * @param icon Icon to show on error
-     * @param text Text to display in textfield
+     * @param icon      Icon to show on error
+     * @param text      Text to display in textfield
      * @param validator Validator instance
      */
-    public ValidatingJTextField(final Image icon, final String text, final Validator<String> validator) {
+    public ValidatingJTextField(final Image icon, final String text,
+            final Validator<String> validator) {
         super();
         this.validator = validator;
         errorIcon = new ImageIcon(icon);
@@ -152,4 +152,5 @@ public class ValidatingJTextField extends JIconTextField implements DocumentList
     public void removeUpdate(final DocumentEvent e) {
         checkError();
     }
+
 }
