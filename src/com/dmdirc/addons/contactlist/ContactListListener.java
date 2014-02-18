@@ -59,7 +59,8 @@ public class ContactListListener implements NicklistListener,
     public void addListeners() {
         channel.addNicklistListener(this);
         channel.addCloseListener(this);
-        ActionManager.getActionManager().registerListener(this, CoreActionType.CHANNEL_USERAWAY, CoreActionType.CHANNEL_USERBACK);
+        ActionManager.getActionManager().registerListener(this, CoreActionType.CHANNEL_USERAWAY,
+                CoreActionType.CHANNEL_USERBACK);
     }
 
     /**
@@ -88,7 +89,8 @@ public class ContactListListener implements NicklistListener,
     /** {@inheritDoc} */
     @Override
     public void clientAdded(final ChannelClientInfo client) {
-        final Query query = channel.getConnection().getQuery(client.getClient().getNickname(), false);
+        final Query query = channel.getConnection().
+                getQuery(client.getClient().getNickname(), false);
 
         query.setIcon("query-" + client.getClient().getAwayState().name().toLowerCase());
     }
@@ -101,7 +103,8 @@ public class ContactListListener implements NicklistListener,
 
     /** {@inheritDoc} */
     @Override
-    public void processEvent(final ActionType type, final StringBuffer format, final Object... arguments) {
+    public void processEvent(final ActionType type, final StringBuffer format,
+            final Object... arguments) {
         if (arguments[0] == channel) {
             clientAdded((ChannelClientInfo) arguments[1]);
         }
@@ -112,4 +115,5 @@ public class ContactListListener implements NicklistListener,
     public void windowClosing(final FrameContainer window) {
         removeListeners();
     }
+
 }

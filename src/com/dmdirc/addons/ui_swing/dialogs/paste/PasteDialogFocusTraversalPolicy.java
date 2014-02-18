@@ -44,8 +44,8 @@ public final class PasteDialogFocusTraversalPolicy extends FocusTraversalPolicy 
      * Creates a new instance of PasteDialogFocusTraversalPolicy.
      *
      * @param cancelButton Cancel button
-     * @param editButton Edit button
-     * @param sendButton Send button
+     * @param editButton   Edit button
+     * @param sendButton   Send button
      */
     public PasteDialogFocusTraversalPolicy(final JButton cancelButton,
             final JButton editButton, final JButton sendButton) {
@@ -102,4 +102,5 @@ public final class PasteDialogFocusTraversalPolicy extends FocusTraversalPolicy 
     public Component getDefaultComponent(final Container aContainer) {
         return sendButton;
     }
+
 }

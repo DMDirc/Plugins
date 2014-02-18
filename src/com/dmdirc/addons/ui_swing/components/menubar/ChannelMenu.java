@@ -50,9 +50,9 @@ public class ChannelMenu extends JMenu implements ActionListener,
         MenuListener {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 1;
     /** Swing controller. */
@@ -68,7 +68,7 @@ public class ChannelMenu extends JMenu implements ActionListener,
      * Creates a new channel menu.
      *
      * @param controller Parent swing controller.
-     * @param mainFrame Parent mainframe
+     * @param mainFrame  Parent mainframe
      */
     @Inject
     public ChannelMenu(
@@ -157,4 +157,5 @@ public class ChannelMenu extends JMenu implements ActionListener,
     public final void menuCanceled(final MenuEvent e) {
         //Ignore
     }
+
 }

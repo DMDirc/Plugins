@@ -19,6 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 package com.dmdirc.addons.ui_swing.components.renderers;
 
 import java.awt.Font;
@@ -33,8 +34,8 @@ public class FontListCellRenderer extends DMDircListCellRenderer {
 
     /**
      * A version number for this class.
-
-    /**
+     *
+     * /**
      * Creates a new instance of this renderer.
      *
      * @param renderer RendereParent renderer
@@ -57,4 +58,5 @@ public class FontListCellRenderer extends DMDircListCellRenderer {
             label.setText(value.toString());
         }
     }
+
 }

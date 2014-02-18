@@ -37,7 +37,6 @@ public class FirstRunWizardExecutor {
 
     /** Semaphore used to signal when the dialog is complete. */
     private final Semaphore semaphore = new Semaphore(0);
-
     /** The provider of actual first-run wizards. */
     private final Provider<SwingFirstRunWizard> wizardProvider;
 
@@ -71,6 +70,7 @@ public class FirstRunWizardExecutor {
             wizard.getWizardDialog().addWizardListener(new FirstRunWizardListener());
             wizard.display();
         }
+
     }
 
     /**

@@ -49,12 +49,11 @@ public class ListScroller implements MouseWheelListener {
     }
 
     /**
-     * Creates a new instance of ListScroller. You will need to manually need
-     * to add a listener to trigger the scrolling behaviour either by adding a
-     * mouse wheel listener or by triggering
+     * Creates a new instance of ListScroller. You will need to manually need to add a listener to
+     * trigger the scrolling behaviour either by adding a mouse wheel listener or by triggering
      * {@link #changeFocus(boolean)}.
      *
-     * @param model List model to scroll over
+     * @param model          List model to scroll over
      * @param selectionModel List selection model to scroll over
      */
     public ListScroller(final ListModel model,
@@ -64,8 +63,7 @@ public class ListScroller implements MouseWheelListener {
     }
 
     /**
-     * Creates a new instance of ListScroller and attaches it to the specified
-     * list.
+     * Creates a new instance of ListScroller and attaches it to the specified list.
      *
      * @param list List to scroll over
      *
@@ -77,12 +75,11 @@ public class ListScroller implements MouseWheelListener {
     }
 
     /**
-     * Creates a new instance of ListScroller and attaches it to the specified
-     * model and selection model.  You will need to manually need to add a
-     * listener to trigger the scrolling behaviour either by adding a mouse
-     * wheel listener or by triggering {@link #changeFocus(boolean)}.
+     * Creates a new instance of ListScroller and attaches it to the specified model and selection
+     * model. You will need to manually need to add a listener to trigger the scrolling behaviour
+     * either by adding a mouse wheel listener or by triggering {@link #changeFocus(boolean)}.
      *
-     * @param model List model to scroll over
+     * @param model          List model to scroll over
      * @param selectionModel List selection model to scroll over
      *
      * @since 0.6.6
@@ -162,4 +159,5 @@ public class ListScroller implements MouseWheelListener {
 
         return nextIndex;
     }
+
 }

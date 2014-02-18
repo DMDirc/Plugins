@@ -34,15 +34,14 @@ import javax.swing.table.TableModel;
 import net.miginfocom.layout.PlatformDefaults;
 
 /**
- * Creates a new table that automatically sizes its columns to the size of its
- * data.
+ * Creates a new table that automatically sizes its columns to the size of its data.
  */
 public class PackingTable extends JTable {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 1;
     /** Scrollpane. */
@@ -56,8 +55,8 @@ public class PackingTable extends JTable {
     /**
      * Creates a new packing table.
      *
-     * @param rows Row data
-     * @param cols Column data
+     * @param rows       Row data
+     * @param cols       Column data
      * @param scrollPane Scrollpane parent
      */
     public PackingTable(final Object[][] rows, final Object[] cols,
@@ -68,11 +67,10 @@ public class PackingTable extends JTable {
     /**
      * Creates a new packing table.
      *
-     * @param rows Row data
-     * @param cols Column data
-     * @param scrollPane Scrollpane parent
-     * @param lastColumnFit Should the last column fit text (true),
-     * or fit viewport (false).
+     * @param rows          Row data
+     * @param cols          Column data
+     * @param scrollPane    Scrollpane parent
+     * @param lastColumnFit Should the last column fit text (true), or fit viewport (false).
      */
     public PackingTable(final Object[][] rows, final Object[] cols,
             final JScrollPane scrollPane, final boolean lastColumnFit) {
@@ -94,10 +92,9 @@ public class PackingTable extends JTable {
     /**
      * Creates a new packing table.
      *
-     * @param tableModel Table data model
-     * @param scrollPane Scrollpane parent
-     * @param lastColumnFit Should the last column fit text (true),
-     * or fit viewport (false).
+     * @param tableModel    Table data model
+     * @param scrollPane    Scrollpane parent
+     * @param lastColumnFit Should the last column fit text (true), or fit viewport (false).
      */
     public PackingTable(final TableModel tableModel,
             final JScrollPane scrollPane, final boolean lastColumnFit) {
@@ -115,7 +112,7 @@ public class PackingTable extends JTable {
     /** {@inheritDoc} */
     @Override
     public void setAutoResizeMode(final int mode) {
-    //Ignore
+        //Ignore
     }
 
     /** {@inheritDoc} */
@@ -144,8 +141,7 @@ public class PackingTable extends JTable {
         final TableColumnModel myColumnModel = getTableHeader()
                 .getColumnModel();
         final int numCols = myColumnModel.getColumnCount();
-        final int totalSize = (int) (scrollPane.getViewportBorderBounds()
-                .width * 0.99);
+        final int totalSize = (int) (scrollPane.getViewportBorderBounds().width * 0.99);
         final int[] widths = new int[numCols];
         int widthsTotal = 0;
 
@@ -206,4 +202,5 @@ public class PackingTable extends JTable {
 
         return width + padding;
     }
+
 }

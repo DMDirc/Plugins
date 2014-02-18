@@ -47,11 +47,12 @@ public class FlashWindow extends Command {
     /**
      * Creates a new flash window command.
      *
-     * @param manager Window flashing manager
+     * @param manager           Window flashing manager
      * @param commandController The controller to use for command information.
      */
     @Inject
-    public FlashWindow(final WindowFlashingManager manager, final CommandController commandController) {
+    public FlashWindow(final WindowFlashingManager manager,
+            final CommandController commandController) {
         super(commandController);
         this.manager = manager;
     }
@@ -62,4 +63,5 @@ public class FlashWindow extends Command {
             final CommandArguments args, final CommandContext context) {
         manager.flashWindow();
     }
+
 }

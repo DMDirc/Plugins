@@ -35,4 +35,5 @@ public interface ActionTriggerRemovalListener {
      * @param trigger Removed trigger
      */
     void triggerRemoved(ActionType trigger);
+
 }

@@ -46,10 +46,10 @@ public class ComponentCreator {
     /**
      * Initialises the components specified by the given frame.
      *
-     * @param frame Frame to initialise
+     * @param frame      Frame to initialise
      * @param controller UI Controller
      * @param urlBuilder URL builder to inject.
-     * @param owner container
+     * @param owner      container
      *
      * @return Set of initialised components
      */
@@ -82,7 +82,7 @@ public class ComponentCreator {
                     clazz = Class.forName(string);
                 }
                 object = injector.createInstance(clazz);
-            } catch(ClassNotFoundException | IllegalArgumentException ex) {
+            } catch (ClassNotFoundException | IllegalArgumentException ex) {
                 object = null;
                 Logger.userError(ErrorLevel.HIGH, "Unable to create component: " + ex.getMessage());
             }
@@ -93,4 +93,5 @@ public class ComponentCreator {
 
         return components;
     }
+
 }

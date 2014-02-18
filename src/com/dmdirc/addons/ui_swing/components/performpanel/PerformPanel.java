@@ -41,8 +41,8 @@ import javax.swing.JTextArea;
 import net.miginfocom.swing.MigLayout;
 
 /**
- * Creates a text area that fills whatever space it has available. This panel
- * facilitates modification of performs.
+ * Creates a text area that fills whatever space it has available. This panel facilitates
+ * modification of performs.
  *
  * @since 0.6.4
  */
@@ -60,13 +60,13 @@ public class PerformPanel extends JPanel {
     private PerformDescription visiblePerform;
 
     /**
-     * Creates a new instance of PerformPanel that has no knowledge of any
-     * performs at the time of creation.
+     * Creates a new instance of PerformPanel that has no knowledge of any performs at the time of
+     * creation.
      *
      * By default this panel displays a blank text area.
      *
-     * @param iconManager Icon manager
-     * @param config Config to read settings from
+     * @param iconManager    Icon manager
+     * @param config         Config to read settings from
      * @param performWrapper Perform wrapper to read/write performs to.
      */
     public PerformPanel(
@@ -77,15 +77,15 @@ public class PerformPanel extends JPanel {
     }
 
     /**
-     * Creates a new instance of PerformPanel and prepares the list of
-     * PerformDescriptions passed to it for viewing/modification.
+     * Creates a new instance of PerformPanel and prepares the list of PerformDescriptions passed to
+     * it for viewing/modification.
      *
      * By default this panel displays a blank text area.
      *
-     * @param iconManager Icon manager
-     * @param config Config to read settings from
+     * @param iconManager    Icon manager
+     * @param config         Config to read settings from
      * @param performWrapper Perform wrapper to read/write performs to.
-     * @param performs Collection of PerformDescriptions to initialise
+     * @param performs       Collection of PerformDescriptions to initialise
      */
     public PerformPanel(
             final IconManager iconManager,
@@ -105,8 +105,8 @@ public class PerformPanel extends JPanel {
     }
 
     /**
-     * This will add a perform to the internal cache so that switching performs
-     * is more efficient. Switching performs can be achieved using
+     * This will add a perform to the internal cache so that switching performs is more efficient.
+     * Switching performs can be achieved using
      * {@link #switchPerform(com.dmdirc.actions.wrappers.PerformWrapper.PerformDescription) }
      *
      * @param perform PerformDescription to add
@@ -138,10 +138,9 @@ public class PerformPanel extends JPanel {
     }
 
     /**
-     * Displays the specified perform to the user. Edits made to any
-     * previously displayed perform are stored, but are not saved
-     * until {@link #savePerform()} is called. If the specified perform
-     * is not in this panel's cache, it will be added.
+     * Displays the specified perform to the user. Edits made to any previously displayed perform
+     * are stored, but are not saved until {@link #savePerform()} is called. If the specified
+     * perform is not in this panel's cache, it will be added.
      *
      * @param perform Perform to display in the text area
      */
@@ -165,6 +164,7 @@ public class PerformPanel extends JPanel {
      * Implodes the specified string array, joining each line with a LF.
      *
      * @param lines The lines to be joined together
+     *
      * @return A string containing each element of lines, separated by a LF.
      */
     private String implode(final String[] lines) {
@@ -177,4 +177,5 @@ public class PerformPanel extends JPanel {
 
         return res.length() == 0 ? "" : res.substring(1);
     }
+
 }

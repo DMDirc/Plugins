@@ -23,16 +23,18 @@
 package com.dmdirc.addons.nowplaying;
 
 /**
- * The media source describes one source of "now playing" information
- * (i.e., one method of getting information from one media player).
+ * The media source describes one source of "now playing" information (i.e., one method of getting
+ * information from one media player).
  *
  * @author chris
  */
 public interface MediaSource {
+
     /**
      * Get the state of this media source
      *
      * @return State for this media source.
+     *
      * @since 0.6.3m1
      */
     MediaSourceState getState();

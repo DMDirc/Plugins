@@ -66,31 +66,27 @@ public final class UIUtilities {
     /**
      * GTK LAF class name.
      */
-    private static final String GTKUI
-            = "com.sun.java.swing.plaf.gtk.GTKLookAndFeel";
+    private static final String GTKUI = "com.sun.java.swing.plaf.gtk.GTKLookAndFeel";
     /**
      * Nimbus LAF class name.
      */
-    private static final String NIMBUSUI
-            = "sun.swing.plaf.nimbus.NimbusLookAndFeel";
+    private static final String NIMBUSUI = "sun.swing.plaf.nimbus.NimbusLookAndFeel";
     /**
      * Windows LAF class name.
      */
-    private static final String WINDOWSUI
-            = "com.sun.java.swing.plaf.windows.WindowsLookAndFeel";
+    private static final String WINDOWSUI = "com.sun.java.swing.plaf.windows.WindowsLookAndFeel";
     /**
      * Windows classic LAF class name.
      */
-    private static final String WINDOWSCLASSICUI
-            = "com.sun.java.swing.plaf.windows.WindowsClassicLookAndFeel";
+    private static final String WINDOWSCLASSICUI =
+            "com.sun.java.swing.plaf.windows.WindowsClassicLookAndFeel";
 
     /** Not intended to be instantiated. */
     private UIUtilities() {
     }
 
     /**
-     * Adds an undo manager and associated key bindings to the specified text
-     * component.
+     * Adds an undo manager and associated key bindings to the specified text component.
      *
      * @param component component Text component to add an undo manager to
      */
@@ -115,19 +111,18 @@ public final class UIUtilities {
     }
 
     /**
-     * Initialises any settings required by this UI (this is always called
-     * before any aspect of the UI is instantiated).
+     * Initialises any settings required by this UI (this is always called before any aspect of the
+     * UI is instantiated).
      *
-     * @throws UnsupportedOperationException If unable to switch to the system
-     * look and feel
+     * @throws UnsupportedOperationException If unable to switch to the system look and feel
      */
     public static void initUISettings() {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (InstantiationException | ClassNotFoundException |
-                  UnsupportedLookAndFeelException | IllegalAccessException ex) {
-            throw new UnsupportedOperationException("Unable to switch to the " +
-                    "system look and feel", ex);
+                UnsupportedLookAndFeelException | IllegalAccessException ex) {
+            throw new UnsupportedOperationException("Unable to switch to the "
+                    + "system look and feel", ex);
         }
 
         UIManager.put("swing.useSystemFontSettings", true);
@@ -151,8 +146,8 @@ public final class UIUtilities {
     }
 
     /**
-     * Sets the font of all components in the current look and feel to the
-     * specified font, using the style and size from the original font.
+     * Sets the font of all components in the current look and feel to the specified font, using the
+     * style and size from the original font.
      *
      * @param font New font
      */
@@ -164,9 +159,9 @@ public final class UIUtilities {
             if (value instanceof FontUIResource) {
                 final FontUIResource orig = (FontUIResource) value;
                 UIManager.put(key, new UIDefaults.ProxyLazyValue(
-                        "javax.swing.plaf.FontUIResource", new Object[] {
-                            font.getFontName(), orig.getStyle(), orig.getSize()
-                        }));
+                        "javax.swing.plaf.FontUIResource", new Object[]{
+                    font.getFontName(), orig.getStyle(), orig.getSize()
+                }));
             }
         }
     }
@@ -179,8 +174,7 @@ public final class UIUtilities {
      * @return Look and feel class name or a zero length string
      */
     public static String getLookAndFeel(final String displayName) {
-        if (displayName == null || displayName.isEmpty() ||
-                "Native".equals(displayName)) {
+        if (displayName == null || displayName.isEmpty() || "Native".equals(displayName)) {
             return UIManager.getSystemLookAndFeelClassName();
         }
 
@@ -219,12 +213,10 @@ public final class UIUtilities {
         }
     }
 
-
-
     /**
      * Invokes and waits for the specified callable, executed on the EDT.
      *
-     * @param <T> The return type of the returnable thread
+     * @param <T>        The return type of the returnable thread
      * @param returnable Thread to be executed
      *
      * @return Result from the completed thread or null if an exception occurred
@@ -303,11 +295,11 @@ public final class UIUtilities {
     }
 
     /**
-     * Get the value to pass to set Opaque on items being added to a
-     * JTabbedPane.  Currently they need to be transparent on Windows
-     * (non classic), Apple, Nimbus and GTK.
+     * Get the value to pass to set Opaque on items being added to a JTabbedPane. Currently they
+     * need to be transparent on Windows (non classic), Apple, Nimbus and GTK.
      *
      * @return True if tabbed panes should be opaque
+     *
      * @since 0.6
      */
     public static boolean getTabbedPaneOpaque() {
@@ -318,6 +310,7 @@ public final class UIUtilities {
      * Get the DOWN_MASK for the command/ctrl key.
      *
      * @return on OSX this returns META_DOWN_MASK, else CTRL_DOWN_MASK
+     *
      * @since 0.6
      */
     public static int getCtrlDownMask() {
@@ -328,6 +321,7 @@ public final class UIUtilities {
      * Get the MASK for the command/ctrl key.
      *
      * @return on OSX this returns META_MASK, else CTRL_MASK
+     *
      * @since 0.6
      */
     public static int getCtrlMask() {
@@ -338,7 +332,9 @@ public final class UIUtilities {
      * Check if the command/ctrl key is pressed down.
      *
      * @param e The KeyEvent to check
+     *
      * @return on OSX this returns e.isMetaDown(), else e.isControlDown()
+     *
      * @since 0.6
      */
     public static boolean isCtrlDown(final KeyEvent e) {
@@ -348,8 +344,8 @@ public final class UIUtilities {
     /**
      * Clips a string if its longer than the specified width.
      *
-     * @param component Component containing string
-     * @param string String to check
+     * @param component     Component containing string
+     * @param string        String to check
      * @param avaiableWidth Available Width
      *
      * @return String (clipped if required)
@@ -370,8 +366,8 @@ public final class UIUtilities {
     /**
      * Clips the passed string .
      *
-     * @param component Component containing string
-     * @param string String to check
+     * @param component     Component containing string
+     * @param string        String to check
      * @param avaiableWidth Available Width
      *
      * @return String (clipped if required)
@@ -404,7 +400,6 @@ public final class UIUtilities {
      */
     public static void resetScrollPane(final JScrollPane scrollPane) {
         SwingUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -415,12 +410,12 @@ public final class UIUtilities {
     }
 
     /**
-     * Paints the background, either from the config setting or the background
-     * colour of the textpane.
+     * Paints the background, either from the config setting or the background colour of the
+     * textpane.
      *
-     * @param g Graphics object to draw onto
-     * @param bounds Bounds to paint within
-     * @param backgroundImage background image
+     * @param g                Graphics object to draw onto
+     * @param bounds           Bounds to paint within
+     * @param backgroundImage  background image
      * @param backgroundOption How to draw the background
      */
     public static void paintBackground(final Graphics2D g,
@@ -499,8 +494,8 @@ public final class UIUtilities {
     }
 
     /**
-     * Adds a popup listener which will modify the width of the combo box
-     * popup menu to be sized according to the preferred size of its components.
+     * Adds a popup listener which will modify the width of the combo box popup menu to be sized
+     * according to the preferred size of its components.
      *
      * @param combo Combo box to modify
      */
@@ -509,10 +504,11 @@ public final class UIUtilities {
     }
 
     /**
-     * Converts a DMDirc {@link Colour} into an AWT-specific {@link Color} by
-     * copying the values of the red, green and blue channels.
+     * Converts a DMDirc {@link Colour} into an AWT-specific {@link Color} by copying the values of
+     * the red, green and blue channels.
      *
      * @param colour The colour to be converted
+     *
      * @return A corresponding AWT colour
      */
     public static Color convertColour(final Colour colour) {
@@ -523,6 +519,7 @@ public final class UIUtilities {
      * Converts the given colour into a hexadecimal string.
      *
      * @param colour The colour to be converted
+     *
      * @return A corresponding 6 character hex string
      */
     public static String getHex(final Color colour) {
@@ -532,11 +529,14 @@ public final class UIUtilities {
 
     /**
      * Converts the specified integer (in the range 0-255) into a hex string.
+     *
      * @param value The integer to convert
+     *
      * @return A 2 char hex string representing the specified integer
      */
     private static String getHex(final int value) {
         final String hex = Integer.toHexString(value);
         return (hex.length() < 2 ? "0" : "") + hex;
     }
+
 }

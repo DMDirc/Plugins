@@ -40,9 +40,9 @@ import javax.swing.text.JTextComponent;
 public final class ReplacePasteAction extends AbstractAction {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 1;
     /** Regex to match for replacement. */
@@ -53,7 +53,7 @@ public final class ReplacePasteAction extends AbstractAction {
     /**
      * Creates a new instance of regex replacement paste action.
      *
-     * @param replacementRegex Regex to match for replacement
+     * @param replacementRegex  Regex to match for replacement
      * @param replacementString Replacement string
      */
     public ReplacePasteAction(final String replacementRegex,
@@ -81,8 +81,7 @@ public final class ReplacePasteAction extends AbstractAction {
             //Get clipboard clipboard contents
             //Replace spaces with nothing
             //Replace the current selection with the contents of the clipboard
-            ((JTextComponent) e.getSource()).replaceSelection(((String)
-                    Toolkit.getDefaultToolkit()
+            ((JTextComponent) e.getSource()).replaceSelection(((String) Toolkit.getDefaultToolkit()
                     .getSystemClipboard().getData(DataFlavor.stringFlavor))
                     .replaceAll(replacementRegex, replacementString));
         } catch (IOException ex) {

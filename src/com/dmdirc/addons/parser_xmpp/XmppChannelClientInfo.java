@@ -36,7 +36,7 @@ public class XmppChannelClientInfo extends BaseChannelClientInfo {
      * Creates a new client info object for the specified channel and client.
      *
      * @param channel The channel the association is with
-     * @param client The user that holds the association
+     * @param client  The user that holds the association
      */
     public XmppChannelClientInfo(final ChannelInfo channel, final ClientInfo client) {
         super(channel, client);

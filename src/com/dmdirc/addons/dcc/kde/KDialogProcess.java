@@ -35,16 +35,12 @@ public class KDialogProcess {
 
     /** Is kdialog in /bin? */
     private static final boolean IS_BIN = new File("/bin/kdialog").exists();
-
     /** Does KDialog exist? */
     private static final boolean HAS_KDIALOG = IS_BIN || new File("/usr/bin/kdialog").exists();
-
     /** Stream for the stdout stream for this process. */
     private final StreamReader stdOutputStream;
-
     /** Stream for the stderr stream for this process. */
     private final StreamReader stdErrorStream;
-
     /** The actual process for this process. */
     private final Process process;
 
@@ -52,6 +48,7 @@ public class KDialogProcess {
      * Execute kdialog with the Parameters in params.
      *
      * @param params Parameters to pass to kdialog
+     *
      * @throws IOException if an I/O error occurs
      */
     public KDialogProcess(final String[] params) throws IOException {
@@ -104,8 +101,8 @@ public class KDialogProcess {
     /**
      * Wait for the process to finish.
      *
-     * @throws InterruptedException if the current thread is interrupted by
-     * another thread while it is waiting
+     * @throws InterruptedException if the current thread is interrupted by another thread while it
+     *                              is waiting
      */
     public void waitFor() throws InterruptedException {
         process.waitFor();

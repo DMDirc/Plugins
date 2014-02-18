@@ -78,7 +78,7 @@ public final class ArrayListTransferable implements Transferable {
     /** {@inheritDoc} */
     @Override
     public DataFlavor[] getTransferDataFlavors() {
-        return new DataFlavor[]{localArrayListFlavor, serialArrayListFlavor, };
+        return new DataFlavor[]{localArrayListFlavor, serialArrayListFlavor,};
     }
 
     /** {@inheritDoc} */
@@ -87,4 +87,5 @@ public final class ArrayListTransferable implements Transferable {
         return localArrayListFlavor.equals(flavor)
                 || serialArrayListFlavor.equals(flavor);
     }
+
 }

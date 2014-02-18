@@ -52,56 +52,47 @@ public class SwingManager {
 
     /** The event queue to use. */
     private final DMDircEventQueue eventQueue;
-
     /** The window factory in use. */
     private final SwingWindowFactory windowFactory;
-
     /** The status bar manager to register our status bar with. */
     private final StatusBarManager statusBarManager;
-
     /** The status bar in use. */
     private final SwingStatusBar statusBar;
-
     /** The window manager to listen on for events. */
     private final WindowManager windowManager;
-
     /** The main frame of the Swing UI. */
     private final MainFrame mainFrame;
-
     /** The key listener that supports dialogs. */
     private final DialogKeyListener dialogKeyListener;
-
     /** Provider of first run executors. */
     private final Provider<FirstRunWizardExecutor> firstRunExecutor;
-
     /** Provider of server settings dialogs. */
     private final KeyedDialogProvider<Server, ServerSettingsDialog> serverSettingsDialogProvider;
     /** Provider of channel settings dialogs. */
     private final KeyedDialogProvider<Channel, ChannelSettingsDialog> channelSettingsDialogProvider;
-
     /** Provider of feedback nags. */
     private final Provider<FeedbackNag> feedbackNagProvider;
-
     /** Factory to use to create URL dialogs. */
     private final URLDialogFactory urlDialogFactory;
 
     /**
      * Creates a new instance of {@link SwingManager}.
      *
-     * @param eventQueue The event queue to use.
-     * @param windowFactory The window factory in use.
-     * @param windowManager The window manager to listen on for events.
-     * @param statusBarManager The core status bar manager to register our status bar with.
-     * @param mainFrame The main frame of the Swing UI.
-     * @param menuBar The menu bar to use for the main frame.
-     * @param statusBar The status bar to use in the main frame.
-     * @param ctrlTabManager The window manager that handles ctrl+tab behaviour.
-     * @param dialogKeyListener The key listener that supports dialogs.
-     * @param firstRunExecutor A provider of first run executors.
-     * @param serverSettingsDialogProvider Provider of server settings dialogs.
+     * @param eventQueue                    The event queue to use.
+     * @param windowFactory                 The window factory in use.
+     * @param windowManager                 The window manager to listen on for events.
+     * @param statusBarManager              The core status bar manager to register our status bar
+     *                                      with.
+     * @param mainFrame                     The main frame of the Swing UI.
+     * @param menuBar                       The menu bar to use for the main frame.
+     * @param statusBar                     The status bar to use in the main frame.
+     * @param ctrlTabManager                The window manager that handles ctrl+tab behaviour.
+     * @param dialogKeyListener             The key listener that supports dialogs.
+     * @param firstRunExecutor              A provider of first run executors.
+     * @param serverSettingsDialogProvider  Provider of server settings dialogs.
      * @param channelSettingsDialogProvider Provider of channel settings dialogs.
-     * @param feedbackNagProvider Provider of feedback nags.
-     * @param urlDialogFactory Factory to use to create URL dialogs.
+     * @param feedbackNagProvider           Provider of feedback nags.
+     * @param urlDialogFactory              Factory to use to create URL dialogs.
      */
     @Inject
     public SwingManager(
@@ -195,6 +186,7 @@ public class SwingManager {
      * Retrieves the window factory to use.
      *
      * @return A swing window factory instance.
+     *
      * @deprecated Should be injected.
      */
     @Deprecated
@@ -206,6 +198,7 @@ public class SwingManager {
      * Retrieves the main frame.
      *
      * @return A main frame instance.
+     *
      * @deprecated Should be injected.
      */
     @Deprecated

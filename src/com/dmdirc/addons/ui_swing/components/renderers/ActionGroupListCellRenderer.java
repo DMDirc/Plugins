@@ -57,4 +57,5 @@ public class ActionGroupListCellRenderer extends DMDircListCellRenderer {
             label.setText(value.toString());
         }
     }
+
 }

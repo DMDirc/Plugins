@@ -42,8 +42,9 @@ public class IrcPlugin extends BasePlugin {
     /**
      * Get an IRC parser instance.
      *
-     * @param myInfo The client information to use
+     * @param myInfo  The client information to use
      * @param address The address of the server to connect to
+     *
      * @return An appropriately configured parser
      */
     @Exported

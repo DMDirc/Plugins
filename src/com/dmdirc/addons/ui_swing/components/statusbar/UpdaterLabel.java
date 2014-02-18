@@ -40,16 +40,15 @@ import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 
 /**
- * Updater label is responsible for handling the display of updates in the
- * status bar.
+ * Updater label is responsible for handling the display of updates in the status bar.
  */
 public class UpdaterLabel extends StatusbarPopupPanel<JLabel> implements
         StatusBarComponent, UpdateManagerListener {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 1;
     /** Swing controller. */
@@ -62,11 +61,10 @@ public class UpdaterLabel extends StatusbarPopupPanel<JLabel> implements
     private final DialogProvider<SwingRestartDialog> restartDialogProvider;
 
     /**
-     * Instantiates a new updater label, handles showing updates on the status
-     * bar.
+     * Instantiates a new updater label, handles showing updates on the status bar.
      *
-     * @param controller Swing controller
-     * @param updateManager The manager to use to retrieve information.
+     * @param controller            Swing controller
+     * @param updateManager         The manager to use to retrieve information.
      * @param updaterDialogProvider Provider of updater dialogs.
      * @param restartDialogProvider Provider of restart dialogs.
      */
@@ -130,4 +128,5 @@ public class UpdaterLabel extends StatusbarPopupPanel<JLabel> implements
             label.setIcon(controller.getIconManager().getIcon("restart-needed"));
         }
     }
+
 }

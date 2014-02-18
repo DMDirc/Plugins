@@ -24,11 +24,11 @@ package com.dmdirc.addons.ui_swing.dialogs.actioneditor;
 
 import com.dmdirc.actions.ActionCondition;
 import com.dmdirc.actions.ActionManager;
+import com.dmdirc.addons.ui_swing.UIUtilities;
+import com.dmdirc.addons.ui_swing.components.renderers.ActionCellRenderer;
 import com.dmdirc.interfaces.actions.ActionComparison;
 import com.dmdirc.interfaces.actions.ActionComponent;
 import com.dmdirc.interfaces.actions.ActionType;
-import com.dmdirc.addons.ui_swing.UIUtilities;
-import com.dmdirc.addons.ui_swing.components.renderers.ActionCellRenderer;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -52,9 +52,9 @@ public class ActionConditionEditorPanel extends JPanel implements
         ActionListener, DocumentListener, PropertyChangeListener {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 1;
     /** Condition. */
@@ -74,7 +74,7 @@ public class ActionConditionEditorPanel extends JPanel implements
      * Instantiates the panel.
      *
      * @param condition Action condition
-     * @param trigger Action trigger
+     * @param trigger   Action trigger
      */
     public ActionConditionEditorPanel(final ActionCondition condition,
             final ActionType trigger) {
@@ -120,7 +120,6 @@ public class ActionConditionEditorPanel extends JPanel implements
         UIUtilities.addComboBoxWidthModifier(comparisons);
 
         target = new JTextField() {
-
             /** Serial version UID. */
             private static final long serialVersionUID = 1;
 
@@ -324,4 +323,5 @@ public class ActionConditionEditorPanel extends JPanel implements
     public boolean checkError() {
         return target.isEnabled();
     }
+
 }

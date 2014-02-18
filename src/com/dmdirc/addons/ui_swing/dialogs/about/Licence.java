@@ -34,9 +34,9 @@ public class Licence {
     /**
      * Instantiates a new licence with the specified attributes.
      *
-     * @param name Name of the licence
+     * @param name      Name of the licence
      * @param component Component the licence applies to
-     * @param body Body of the licence
+     * @param body      Body of the licence
      */
     public Licence(final String name, final String component, final String body) {
         this.name = name;
@@ -103,6 +103,5 @@ public class Licence {
     public String toString() {
         return getComponent();
     }
-
 
 }

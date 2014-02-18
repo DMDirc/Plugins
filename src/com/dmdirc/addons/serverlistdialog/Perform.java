@@ -52,8 +52,8 @@ public class Perform extends JPanel implements ServerListListener {
      * Creates a new perform panel backed by the specified model.
      *
      * @param controller Swing controller
-     * @param wrapper Perform wrapper to read/write performs to.
-     * @param model Backing model
+     * @param wrapper    Perform wrapper to read/write performs to.
+     * @param model      Backing model
      */
     public Perform(
             final SwingController controller,
@@ -62,7 +62,8 @@ public class Perform extends JPanel implements ServerListListener {
         super();
 
         this.model = model;
-        performPanel = new PerformPanel(controller.getIconManager(), controller.getGlobalConfig(), wrapper);
+        performPanel = new PerformPanel(controller.getIconManager(), controller.getGlobalConfig(),
+                wrapper);
 
         addListeners();
         if (model.getSelectedItemPerformDescription() != null) {
@@ -121,4 +122,5 @@ public class Perform extends JPanel implements ServerListListener {
             performPanel.savePerform();
         }
     }
+
 }

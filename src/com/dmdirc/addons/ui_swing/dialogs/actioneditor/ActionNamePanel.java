@@ -46,9 +46,9 @@ import net.miginfocom.swing.MigLayout;
 public class ActionNamePanel extends JPanel implements PropertyChangeListener {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 1;
     /** Original name. */
@@ -64,7 +64,7 @@ public class ActionNamePanel extends JPanel implements PropertyChangeListener {
      * Instantiates the panel.
      *
      * @param iconManager Icon manager
-     * @param group Associated group for this action
+     * @param group       Associated group for this action
      */
     public ActionNamePanel(final IconManager iconManager, final String group) {
         this(iconManager, "", group);
@@ -74,8 +74,8 @@ public class ActionNamePanel extends JPanel implements PropertyChangeListener {
      * Instantiates the panel.
      *
      * @param iconManager Icon manager
-     * @param name Initial name of the action
-     * @param group Associated group for this action
+     * @param name        Initial name of the action
+     * @param group       Associated group for this action
      */
     public ActionNamePanel(final IconManager iconManager, final String name,
             final String group) {
@@ -146,7 +146,7 @@ public class ActionNamePanel extends JPanel implements PropertyChangeListener {
      * Has the action's name changed.
      *
      * @return true if the action name has changed.
-
+     *
      */
     public boolean hasNameChanged() {
         return getActionName().equals(existingName);
@@ -173,4 +173,5 @@ public class ActionNamePanel extends JPanel implements PropertyChangeListener {
         firePropertyChange("validationResult", evt.getOldValue(), evt.
                 getNewValue());
     }
+
 }

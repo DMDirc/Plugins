@@ -45,9 +45,9 @@ import javax.swing.text.html.StyleSheet;
 public class TextLabel extends JTextPane {
 
     /**
-     * A version number for this class. It should be changed whenever the
-     * class structure is changed (or anything else that would prevent
-     * serialized objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 1;
     /** Simple attribute set. */
@@ -93,7 +93,7 @@ public class TextLabel extends JTextPane {
      * <p>Labels constructed without a {@link URLBuilder} will not be able to resolve
      * DMDirc-specific URLs in image tags.
      *
-     * @param text Text to display
+     * @param text      Text to display
      * @param justified Justify the text?
      */
     public TextLabel(final String text, final boolean justified) {
@@ -104,9 +104,9 @@ public class TextLabel extends JTextPane {
      * Creates a new instance of TextLabel.
      *
      * @param urlBuilder The URL builder to use for embedded image URLs. If {@code null}, then only
-     * standard URLs will be handled in image tags (not DMDirc-specific ones).
-     * @param text Text to display
-     * @param justified Justify the text?
+     *                   standard URLs will be handled in image tags (not DMDirc-specific ones).
+     * @param text       Text to display
+     * @param justified  Justify the text?
      */
     public TextLabel(
             @Nullable final URLBuilder urlBuilder,
@@ -187,16 +187,17 @@ public class TextLabel extends JTextPane {
      * Sets the alignment of the text in this label.
      *
      * @param alignment One of the following values
-     *                  <ul>
-     *                     <li>StyleConstants.ALIGN_CENTER
-     *                     <li>StyleConstants.ALIGN_JUSTIFIED
-     *                     <li>StyleConstants.ALIGN_LEFT
-     *                     <li>StyleConstants.ALIGN_RIGHT
-     *                  </ul>
+     * <ul>
+     * <li>StyleConstants.ALIGN_CENTER
+     * <li>StyleConstants.ALIGN_JUSTIFIED
+     * <li>StyleConstants.ALIGN_LEFT
+     * <li>StyleConstants.ALIGN_RIGHT
+     * </ul>
      */
     public void setAlignment(final int alignment) {
         StyleConstants.setAlignment(sas, alignment);
         getDocument().setParagraphAttributes(0, getDocument().getLength(),
-                    sas, false);
+                sas, false);
     }
+
 }

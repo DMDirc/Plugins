@@ -42,9 +42,9 @@ public class DesktopWindowFrame extends JFrame implements FrameInfoListener,
         FrameCloseListener {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 1;
     /** TextFrame associated with this popout window. */
@@ -55,8 +55,7 @@ public class DesktopWindowFrame extends JFrame implements FrameInfoListener,
     /**
      * Creates a new instance of DesktopWindowFrame.
      *
-     * @param windowWindow Frame that we want to contain in this Desktop frame.
-     * popped out.
+     * @param windowWindow Frame that we want to contain in this Desktop frame. popped out.
      */
     public DesktopWindowFrame(final TextFrame windowWindow) {
         super();

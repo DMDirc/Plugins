@@ -35,19 +35,17 @@ import java.util.Map.Entry;
 
 import javax.swing.SwingUtilities;
 
-
 /**
  * Lists substitutions for aliases.
  */
-public class AliasSubstitutionsPanel extends SubstitutionsPanel<ActionType>  {
+public class AliasSubstitutionsPanel extends SubstitutionsPanel<ActionType> {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 1;
-
     /** Factory to use to create {@link ActionSubstitutor}s. */
     private final ActionSubstitutorFactory substitutorFactory;
 
@@ -72,7 +70,6 @@ public class AliasSubstitutionsPanel extends SubstitutionsPanel<ActionType>  {
     @Override
     public void setType(final ActionType type) {
         SwingUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -99,11 +96,13 @@ public class AliasSubstitutionsPanel extends SubstitutionsPanel<ActionType>  {
                     }
 
                     for (int i = 1; i < 4; i++) {
-                        substitutions.add(new SubstitutionLabel(new Substitution("Argument #" + i, Integer.toString(i))));
+                        substitutions.add(new SubstitutionLabel(new Substitution("Argument #" + i,
+                                Integer.toString(i))));
                     }
 
                     for (int i = 1; i < 4; i++) {
-                        substitutions.add(new SubstitutionLabel(new Substitution("Argument #" + i + " onwards", i + "-")));
+                        substitutions.add(new SubstitutionLabel(new Substitution("Argument #" + i
+                                + " onwards", i + "-")));
                     }
                 }
 
@@ -113,4 +112,5 @@ public class AliasSubstitutionsPanel extends SubstitutionsPanel<ActionType>  {
             }
         });
     }
+
 }

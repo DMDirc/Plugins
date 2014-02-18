@@ -31,4 +31,5 @@ public interface AddonToggleListener {
      * Called when the addon has been toggled.
      */
     void addonToggled();
+
 }

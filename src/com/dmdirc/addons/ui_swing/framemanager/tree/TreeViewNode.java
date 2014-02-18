@@ -32,9 +32,9 @@ import javax.swing.tree.DefaultMutableTreeNode;
 public class TreeViewNode extends DefaultMutableTreeNode {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 5;
     /** Node's label. */
@@ -45,7 +45,7 @@ public class TreeViewNode extends DefaultMutableTreeNode {
     /**
      * Instantiates a new tree view node.
      *
-     * @param label Node label
+     * @param label  Node label
      * @param window Node window
      */
     public TreeViewNode(final NodeLabel label, final FrameContainer window) {
@@ -72,4 +72,5 @@ public class TreeViewNode extends DefaultMutableTreeNode {
     public FrameContainer getWindow() {
         return window;
     }
+
 }

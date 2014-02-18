@@ -53,18 +53,17 @@ import javax.swing.table.TableRowSorter;
 import net.miginfocom.swing.MigLayout;
 
 /**
- * The actions group panel is the control displayed within the tabbed control
- * of the actions manager dialog. It shows the user all actions belonging to
- * a particular group.
+ * The actions group panel is the control displayed within the tabbed control of the actions manager
+ * dialog. It shows the user all actions belonging to a particular group.
  */
-@Factory(inject=true, singleton=true)
+@Factory(inject = true, singleton = true)
 public class ActionsGroupPanel extends JPanel implements ActionListener,
         ListSelectionListener {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 1;
     /** Factory to use to create editor dialogs. */
@@ -90,8 +89,8 @@ public class ActionsGroupPanel extends JPanel implements ActionListener,
      * Creates a new instance of ActionsManagerDialog.
      *
      * @param editorDialogFactory Factory to use to create editor dialogs.
-     * @param parent Parent window
-     * @param group Action group to display
+     * @param parent              Parent window
+     * @param group               Action group to display
      */
     public ActionsGroupPanel(
             final ActionEditorDialogFactory editorDialogFactory,
@@ -143,16 +142,15 @@ public class ActionsGroupPanel extends JPanel implements ActionListener,
         scrollPane = new JScrollPane();
         model = new ActionTableModel(group == null ? new ArrayList<Action>() : group.getActions());
         table = new PackingTable(model, scrollPane, false) {
-
             /**
-             * A version number for this class. It should be changed whenever
-             * the class structure is changed (or anything else that would
-             * prevent serialized objects being unserialized with the new
-             * class).
+             * A version number for this class. It should be changed whenever the class structure is
+             * changed (or anything else that would prevent serialized objects being unserialized
+             * with the new class).
              */
             private static final long serialVersionUID = 1;
             /** Action type renderer. */
-            private final ActionTypeTableCellRenderer typeRenderer = new ActionTypeTableCellRenderer();
+            private final ActionTypeTableCellRenderer typeRenderer =
+                    new ActionTypeTableCellRenderer();
             /** Action response renrderer. */
             private final ArrayCellRenderer arrayRenderer = new ArrayCellRenderer();
 
@@ -171,14 +169,12 @@ public class ActionsGroupPanel extends JPanel implements ActionListener,
         };
 
 
-        final TableRowSorter<ActionTableModel> sorter
-                = new TableRowSorter<>(model);
+        final TableRowSorter<ActionTableModel> sorter = new TableRowSorter<>(model);
         sorter.setComparator(1, new ActionTypeComparator());
         sorter.setComparator(2, new StringArrayComparator());
 
         table.setRowSorter(sorter);
         table.addMouseListener(new MouseAdapter() {
-
             /** {@inheritDoc} */
             @Override
             public void mouseClicked(final MouseEvent e) {
@@ -252,7 +248,7 @@ public class ActionsGroupPanel extends JPanel implements ActionListener,
         } else if (e.getSource() == edit) {
             editorDialogFactory.getActionEditorDialog(parent,
                     model.getAction(table.getRowSorter().convertRowIndexToModel(
-                            table.getSelectedRow()))).display();
+                    table.getSelectedRow()))).display();
         } else if (e.getSource() == delete) {
             final Action action =
                     model.getAction(
@@ -262,12 +258,10 @@ public class ActionsGroupPanel extends JPanel implements ActionListener,
                     ModalityType.APPLICATION_MODAL, "Confirm deletion",
                     "Are you sure you wish to delete the action '" + action.
                     getName() + "'?") {
-
                 /**
-                 * A version number for this class. It should be changed
-                 * whenever the class structure is changed (or anything else
-                 * that would prevent serialized objects being unserialized
-                 * with the new class).
+                 * A version number for this class. It should be changed whenever the class
+                 * structure is changed (or anything else that would prevent serialized objects
+                 * being unserialized with the new class).
                  */
                 private static final long serialVersionUID = 1;
 
@@ -302,4 +296,5 @@ public class ActionsGroupPanel extends JPanel implements ActionListener,
             delete.setEnabled(true);
         }
     }
+
 }

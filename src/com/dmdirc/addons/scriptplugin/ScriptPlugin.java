@@ -67,9 +67,9 @@ public class ScriptPlugin extends BaseCommandPlugin implements ActionListener {
     /**
      * Creates a new instance of the Script Plugin.
      *
-     * @param actionController The action controller to register listeners with
+     * @param actionController   The action controller to register listeners with
      * @param identityController The Identity Manager that controls the current config
-     * @param commandController Command controller to register commands
+     * @param commandController  Command controller to register commands
      */
     public ScriptPlugin(final ActionController actionController,
             final IdentityController identityController,
@@ -94,16 +94,19 @@ public class ScriptPlugin extends BaseCommandPlugin implements ActionListener {
 
         // Make sure our scripts dir exists
         final File newDir = new File(scriptDir);
-        if (!newDir.exists()) { newDir.mkdirs(); }
+        if (!newDir.exists()) {
+            newDir.mkdirs();
+        }
 
-        final File savedVariables = new File(scriptDir+"storedVariables");
+        final File savedVariables = new File(scriptDir + "storedVariables");
         if (savedVariables.exists()) {
             FileInputStream fis = null;
             try {
                 fis = new FileInputStream(savedVariables);
                 globalVariables.load(fis);
             } catch (IOException e) {
-                Logger.userError(ErrorLevel.LOW, "Error reading savedVariables from '"+savedVariables.getPath()+"': "+e.getMessage(), e);
+                Logger.userError(ErrorLevel.LOW, "Error reading savedVariables from '"
+                        + savedVariables.getPath() + "': " + e.getMessage(), e);
             } finally {
                 StreamUtils.close(fis);
             }
@@ -116,13 +119,14 @@ public class ScriptPlugin extends BaseCommandPlugin implements ActionListener {
     public void onUnload() {
         actionController.unregisterListener(this);
 
-        final File savedVariables = new File(scriptDir+"storedVariables");
+        final File savedVariables = new File(scriptDir + "storedVariables");
         FileOutputStream fos = null;
         try {
             fos = new FileOutputStream(savedVariables);
             globalVariables.store(fos, "# DMDirc Script Plugin savedVariables");
         } catch (IOException e) {
-            Logger.userError(ErrorLevel.LOW, "Error reading savedVariables to '"+savedVariables.getPath()+"': "+e.getMessage(), e);
+            Logger.userError(ErrorLevel.LOW, "Error reading savedVariables to '" + savedVariables.
+                    getPath() + "': " + e.getMessage(), e);
         } finally {
             StreamUtils.close(fos);
         }
@@ -130,8 +134,7 @@ public class ScriptPlugin extends BaseCommandPlugin implements ActionListener {
     }
 
     /**
-     * Register all the action types.
-     * This will unregister all the actions first.
+     * Register all the action types. This will unregister all the actions first.
      */
     private void registerAll() {
         actionController.unregisterListener(this);
@@ -145,13 +148,14 @@ public class ScriptPlugin extends BaseCommandPlugin implements ActionListener {
 
     /** {@inheritDoc} */
     @Override
-    public void processEvent(final ActionType type, final StringBuffer format, final Object... arguments) {
+    public void processEvent(final ActionType type, final StringBuffer format,
+            final Object... arguments) {
         // Plugins may to register/unregister action types, so lets reregister all
         // the action types. This
         if (type.equals(CoreActionType.PLUGIN_LOADED) || type.equals(CoreActionType.PLUGIN_UNLOADED)) {
             registerAll();
         }
-        callFunctionAll("action_"+type.toString().toLowerCase(), arguments);
+        callFunctionAll("action_" + type.toString().toLowerCase(), arguments);
     }
 
     /**
@@ -159,35 +163,45 @@ public class ScriptPlugin extends BaseCommandPlugin implements ActionListener {
      *
      * @return a clone of the scripts map
      */
-    protected Map<String, ScriptEngineWrapper> getScripts() { return new HashMap<>(scripts); }
+    protected Map<String, ScriptEngineWrapper> getScripts() {
+        return new HashMap<>(scripts);
+    }
 
     /**
      * Get a reference to the scriptFactory.
      *
      * @return a reference to the scriptFactory
      */
-    protected ScriptEngineManager getScriptFactory() { return scriptFactory; }
+    protected ScriptEngineManager getScriptFactory() {
+        return scriptFactory;
+    }
 
     /**
      * Get a reference to the JavaScriptHelper
      *
      * @return a reference to the JavaScriptHelper
      */
-    protected JavaScriptHelper getJavaScriptHelper() { return jsHelper; }
+    protected JavaScriptHelper getJavaScriptHelper() {
+        return jsHelper;
+    }
 
     /**
      * Get a reference to the GlobalVariables Properties
      *
      * @return a reference to the GlobalVariables Properties
      */
-    protected TypedProperties getGlobalVariables() { return globalVariables; }
+    protected TypedProperties getGlobalVariables() {
+        return globalVariables;
+    }
 
     /**
      * Get the name of the directory where scripts should be stored.
      *
      * @return The name of the directory where scripts should be stored.
      */
-    protected String getScriptDir() { return scriptDir; }
+    protected String getScriptDir() {
+        return scriptDir;
+    }
 
     /** Reload all scripts */
     public void rehash() {
@@ -202,7 +216,7 @@ public class ScriptPlugin extends BaseCommandPlugin implements ActionListener {
      * Call a function in all scripts.
      *
      * @param functionName Name of function
-     * @param args Arguments for function
+     * @param args         Arguments for function
      */
     private void callFunctionAll(final String functionName, final Object... args) {
         for (final ScriptEngineWrapper engine : scripts.values()) {
@@ -230,7 +244,9 @@ public class ScriptPlugin extends BaseCommandPlugin implements ActionListener {
      * Load a script file into a new jsEngine
      *
      * @param scriptFilename Path to script
-     * @return true for Success (or already loaded), false for fail. (Fail occurs if script already exists, or if it has errors)
+     *
+     * @return true for Success (or already loaded), false for fail. (Fail occurs if script already
+     *         exists, or if it has errors)
      */
     public boolean loadScript(final String scriptFilename) {
         if (!scripts.containsKey(scriptFilename)) {
@@ -238,7 +254,8 @@ public class ScriptPlugin extends BaseCommandPlugin implements ActionListener {
                 final ScriptEngineWrapper wrapper = new ScriptEngineWrapper(this, scriptFilename);
                 scripts.put(scriptFilename, wrapper);
             } catch (FileNotFoundException | ScriptException e) {
-                Logger.userError(ErrorLevel.LOW, "Error loading '"+scriptFilename+"': "+e.getMessage(), e);
+                Logger.userError(ErrorLevel.LOW, "Error loading '" + scriptFilename + "': " + e.
+                        getMessage(), e);
                 return false;
             }
         }
@@ -267,5 +284,5 @@ public class ScriptPlugin extends BaseCommandPlugin implements ActionListener {
             return "";
         }
     }
-}
 
+}

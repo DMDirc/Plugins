@@ -29,9 +29,9 @@ import com.dmdirc.addons.ui_swing.SwingController;
 public final class UserModesPane extends ModesPane {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 1;
     /** Parent server. */
@@ -43,7 +43,7 @@ public final class UserModesPane extends ModesPane {
      * Creates a new instance of UserModesPane.
      *
      * @param controller Swing controller
-     * @param server Parent server
+     * @param server     Parent server
      */
     public UserModesPane(final SwingController controller,
             final Server server) {
@@ -58,7 +58,7 @@ public final class UserModesPane extends ModesPane {
     @Override
     public boolean hasModeValue(final String mode) {
         return server.getConfigManager().hasOptionString("server",
-                    "umode" + mode);
+                "umode" + mode);
     }
 
     /** {@inheritDoc} */
@@ -121,4 +121,5 @@ public final class UserModesPane extends ModesPane {
     public SwingController getSwingController() {
         return controller;
     }
+
 }

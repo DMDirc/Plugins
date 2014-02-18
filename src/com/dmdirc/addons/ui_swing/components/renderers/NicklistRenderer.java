@@ -42,9 +42,9 @@ public final class NicklistRenderer extends DefaultListCellRenderer implements
         ConfigChangeListener {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 5;
     /** Config manager. */
@@ -61,8 +61,8 @@ public final class NicklistRenderer extends DefaultListCellRenderer implements
     /**
      * Creates a new instance of NicklistRenderer.
      *
-     * @param config ConfigManager for the associated channel
-     * @param nicklist The nicklist that we're rendering for.
+     * @param config        ConfigManager for the associated channel
+     * @param nicklist      The nicklist that we're rendering for.
      * @param colourManager Colour manager to use to resolve colours.
      */
     public NicklistRenderer(
@@ -81,10 +81,10 @@ public final class NicklistRenderer extends DefaultListCellRenderer implements
         config.addChangeListener("ui", "nickListAltBackgroundColour", this);
         altBackgroundColour = UIUtilities.convertColour(
                 colourManager.getColourFromString(
-                        config.getOptionString(
-                                "ui", "nickListAltBackgroundColour",
-                                "ui", "nicklistbackgroundcolour",
-                                "ui", "backgroundcolour"), null));
+                config.getOptionString(
+                "ui", "nickListAltBackgroundColour",
+                "ui", "nicklistbackgroundcolour",
+                "ui", "backgroundcolour"), null));
         showColours = config.getOptionBool("ui", "shownickcoloursinnicklist");
     }
 
@@ -105,11 +105,13 @@ public final class NicklistRenderer extends DefaultListCellRenderer implements
 
         if (showColours && map != null) {
             if (map.containsKey(ChannelClientProperty.NICKLIST_FOREGROUND)) {
-                setForeground(UIUtilities.convertColour((Colour) map.get(ChannelClientProperty.NICKLIST_FOREGROUND)));
+                setForeground(UIUtilities.convertColour((Colour) map.get(
+                        ChannelClientProperty.NICKLIST_FOREGROUND)));
             }
 
             if (map.containsKey(ChannelClientProperty.NICKLIST_BACKGROUND)) {
-                setBackground(UIUtilities.convertColour((Colour) map.get(ChannelClientProperty.NICKLIST_BACKGROUND)));
+                setBackground(UIUtilities.convertColour((Colour) map.get(
+                        ChannelClientProperty.NICKLIST_BACKGROUND)));
             }
         }
 
@@ -125,11 +127,12 @@ public final class NicklistRenderer extends DefaultListCellRenderer implements
         } else {
             altBackgroundColour = UIUtilities.convertColour(
                     colourManager.getColourFromString(
-                            config.getOptionString(
-                                    "ui", "nickListAltBackgroundColour",
-                                    "ui", "nicklistbackgroundcolour",
-                                    "ui", "backgroundcolour"), null));
+                    config.getOptionString(
+                    "ui", "nickListAltBackgroundColour",
+                    "ui", "nicklistbackgroundcolour",
+                    "ui", "backgroundcolour"), null));
         }
         nicklist.repaint();
     }
+
 }

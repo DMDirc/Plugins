@@ -70,10 +70,10 @@ public class ExecCommand extends Command {
             // (if necessary). Without this /exec "command arg1 arg2 would error.
             if (commandArray.length == 0) {
                 sendLine(origin, args.isSilent(), FORMAT_ERROR,
-                       "Could not execute: Invalid file name provided");
+                        "Could not execute: Invalid file name provided");
             } else if (!new File(commandArray[0]).exists()) {
                 sendLine(origin, args.isSilent(), FORMAT_ERROR,
-                       "Could not execute: " + commandArray[0] + " does not exist.");
+                        "Could not execute: " + commandArray[0] + " does not exist.");
             } else {
                 final Process p = Runtime.getRuntime().exec(commandArray);
                 final List<String> execOutput = args.isSilent()
@@ -81,9 +81,9 @@ public class ExecCommand extends Command {
                 final List<String> errorOutput = args.isSilent()
                         ? null : new LinkedList<String>();
                 final StreamReader inputReader = new StreamReader(
-                            p.getInputStream(), execOutput);
+                        p.getInputStream(), execOutput);
                 final StreamReader errorReader = new StreamReader(
-                            p.getErrorStream(), errorOutput);
+                        p.getErrorStream(), errorOutput);
 
                 inputReader.run();
                 errorReader.run();
@@ -101,4 +101,5 @@ public class ExecCommand extends Command {
                     + ex.getMessage(), ex);
         }
     }
+
 }

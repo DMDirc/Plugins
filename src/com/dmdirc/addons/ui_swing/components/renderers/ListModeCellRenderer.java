@@ -57,4 +57,5 @@ public class ListModeCellRenderer extends DMDircListCellRenderer {
             label.setText(value.toString());
         }
     }
+
 }

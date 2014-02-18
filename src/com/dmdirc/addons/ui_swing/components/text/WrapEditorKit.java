@@ -32,9 +32,9 @@ public class WrapEditorKit extends StyledEditorKit implements MouseListener,
         MouseMotionListener {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 1;
     /** Wrap column factory. */
@@ -122,22 +122,22 @@ public class WrapEditorKit extends StyledEditorKit implements MouseListener,
                     IRCTextAttribute.HYPERLINK);
             if (target != null) {
                 editorPane.fireHyperlinkUpdate(new HyperlinkEvent(editorPane,
-                    HyperlinkEvent.EventType.ACTIVATED, null,
-                    (String) target));
+                        HyperlinkEvent.EventType.ACTIVATED, null,
+                        (String) target));
             }
             target = characterElementAt(e).getAttributes().getAttribute(
                     IRCTextAttribute.CHANNEL);
             if (target != null) {
                 editorPane.fireHyperlinkUpdate(new HyperlinkEvent(editorPane,
-                    HyperlinkEvent.EventType.ACTIVATED, null,
-                    (String) target));
+                        HyperlinkEvent.EventType.ACTIVATED, null,
+                        (String) target));
             }
             target = characterElementAt(e).getAttributes().getAttribute(
                     IRCTextAttribute.NICKNAME);
             if (target != null) {
                 editorPane.fireHyperlinkUpdate(new HyperlinkEvent(editorPane,
-                    HyperlinkEvent.EventType.ACTIVATED, null,
-                    (String) target));
+                        HyperlinkEvent.EventType.ACTIVATED, null,
+                        (String) target));
             }
         }
     }
@@ -203,4 +203,5 @@ public class WrapEditorKit extends StyledEditorKit implements MouseListener,
         return ((StyledDocument) editorPane.getDocument()).getCharacterElement(
                 editorPane.getUI().viewToModel(editorPane, e.getPoint()));
     }
+
 }

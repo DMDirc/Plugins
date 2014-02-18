@@ -62,9 +62,9 @@ public class ScriptCommand extends Command implements IntelligentCommand {
     /**
      * Creates a new instance of this command.
      *
-     * @param myPlugin The plugin that owns the command.
+     * @param myPlugin           The plugin that owns the command.
      * @param identityController The controller to read and write settings from.
-     * @param commandController The controller to use for command information.
+     * @param commandController  The controller to use for command information.
      */
     public ScriptCommand(final ScriptPlugin myPlugin, final IdentityController identityController,
             final CommandController commandController) {
@@ -79,31 +79,38 @@ public class ScriptCommand extends Command implements IntelligentCommand {
             final CommandContext context) {
         final String[] sargs = args.getArguments();
 
-        if (sargs.length > 0 && (sargs[0].equalsIgnoreCase("rehash") || sargs[0].equalsIgnoreCase("reload"))) {
+        if (sargs.length > 0 && (sargs[0].equalsIgnoreCase("rehash") || sargs[0].equalsIgnoreCase(
+                "reload"))) {
             sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Reloading scripts");
             myPlugin.rehash();
         } else if (sargs.length > 0 && sargs[0].equalsIgnoreCase("load")) {
             if (sargs.length > 1) {
                 final String filename = args.getArgumentsAsString(1);
-                sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Loading: "+filename+" ["+myPlugin.loadScript(myPlugin.getScriptDir()+filename)+"]");
+                sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Loading: " + filename + " ["
+                        + myPlugin.loadScript(myPlugin.getScriptDir() + filename) + "]");
             } else {
                 sendLine(origin, args.isSilent(), FORMAT_ERROR, "You must specify a script to load");
             }
         } else if (sargs.length > 0 && sargs[0].equalsIgnoreCase("unload")) {
             if (sargs.length > 1) {
                 final String filename = args.getArgumentsAsString(1);
-                sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Unloading: "+filename+" ["+myPlugin.loadScript(myPlugin.getScriptDir()+filename)+"]");
+                sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Unloading: " + filename + " ["
+                        + myPlugin.loadScript(myPlugin.getScriptDir() + filename) + "]");
             } else {
-                sendLine(origin, args.isSilent(), FORMAT_ERROR, "You must specify a script to unload");
+                sendLine(origin, args.isSilent(), FORMAT_ERROR,
+                        "You must specify a script to unload");
             }
         } else if (sargs.length > 0 && sargs[0].equalsIgnoreCase("eval")) {
             if (sargs.length > 1) {
                 final String script = args.getArgumentsAsString(1);
-                sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Evaluating: "+script);
+                sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Evaluating: " + script);
                 try {
                     ScriptEngineWrapper wrapper;
-                    if (identityController.getGlobalConfiguration().hasOptionString(myPlugin.getDomain(), "eval.baseFile")) {
-                        final String baseFile = myPlugin.getScriptDir()+'/'+identityController.getGlobalConfiguration().getOption(myPlugin.getDomain(), "eval.baseFile");
+                    if (identityController.getGlobalConfiguration().hasOptionString(myPlugin.
+                            getDomain(), "eval.baseFile")) {
+                        final String baseFile = myPlugin.getScriptDir() + '/' + identityController.
+                                getGlobalConfiguration().getOption(myPlugin.getDomain(),
+                                "eval.baseFile");
                         if (new File(baseFile).exists()) {
                             wrapper = new ScriptEngineWrapper(myPlugin, baseFile);
                         } else {
@@ -115,40 +122,53 @@ public class ScriptCommand extends Command implements IntelligentCommand {
                     wrapper.getScriptEngine().put("cmd_origin", origin);
                     wrapper.getScriptEngine().put("cmd_isSilent", args.isSilent());
                     wrapper.getScriptEngine().put("cmd_args", sargs);
-                    sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Result: "+wrapper.getScriptEngine().eval(script));
+                    sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Result: " + wrapper.
+                            getScriptEngine().eval(script));
                 } catch (FileNotFoundException | ScriptException e) {
-                    sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Exception: "+e+" -> "+e.getMessage());
+                    sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Exception: " + e + " -> " + e.
+                            getMessage());
 
-                    if (identityController.getGlobalConfiguration().getOptionBool(myPlugin.getDomain(), "eval.showStackTrace")) {
+                    if (identityController.getGlobalConfiguration().getOptionBool(myPlugin.
+                            getDomain(), "eval.showStackTrace")) {
                         try {
                             final Class<?> logger = Class.forName("com.dmdirc.logger.Logger");
                             if (logger != null) {
-                                final Method exceptionToStringArray = logger.getDeclaredMethod("exceptionToStringArray", new Class[]{Throwable.class});
+                                final Method exceptionToStringArray = logger.getDeclaredMethod(
+                                        "exceptionToStringArray", new Class[]{Throwable.class});
                                 exceptionToStringArray.setAccessible(true);
 
-                                final String[] stacktrace = (String[]) exceptionToStringArray.invoke(null, e);
+                                final String[] stacktrace = (String[]) exceptionToStringArray.
+                                        invoke(null, e);
                                 for (String line : stacktrace) {
-                                    sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Stack trace: "+line);
+                                    sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Stack trace: "
+                                            + line);
                                 }
                             }
                         } catch (ReflectiveOperationException ex) {
-                            sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Stack trace: Exception showing stack trace: "+ex+" -> "+ex.getMessage());
+                            sendLine(origin, args.isSilent(), FORMAT_OUTPUT,
+                                    "Stack trace: Exception showing stack trace: " + ex + " -> "
+                                    + ex.getMessage());
                         }
                     }
 
                 }
             } else {
-                sendLine(origin, args.isSilent(), FORMAT_ERROR, "You must specify some script to eval.");
+                sendLine(origin, args.isSilent(), FORMAT_ERROR,
+                        "You must specify some script to eval.");
             }
         } else if (sargs.length > 0 && sargs[0].equalsIgnoreCase("savetobasefile")) {
             if (sargs.length > 2) {
                 final String[] bits = sargs[1].split("/");
                 final String functionName = bits[0];
                 final String script = args.getArgumentsAsString(2);
-                sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Saving as '"+functionName+"': "+script);
-                if (identityController.getGlobalConfiguration().hasOptionString(myPlugin.getDomain(), "eval.baseFile")) {
+                sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Saving as '" + functionName
+                        + "': " + script);
+                if (identityController.getGlobalConfiguration().
+                        hasOptionString(myPlugin.getDomain(), "eval.baseFile")) {
                     try {
-                        final String baseFile = myPlugin.getScriptDir()+'/'+identityController.getGlobalConfiguration().getOption(myPlugin.getDomain(), "eval.baseFile");
+                        final String baseFile = myPlugin.getScriptDir() + '/' + identityController.
+                                getGlobalConfiguration().getOption(myPlugin.getDomain(),
+                                "eval.baseFile");
                         try (FileWriter writer = new FileWriter(baseFile, true)) {
                             writer.write("function ");
                             writer.write(functionName);
@@ -163,26 +183,40 @@ public class ScriptCommand extends Command implements IntelligentCommand {
                             writer.flush();
                         }
                     } catch (IOException ioe) {
-                        sendLine(origin, args.isSilent(), FORMAT_ERROR, "IOException: "+ioe.getMessage());
+                        sendLine(origin, args.isSilent(), FORMAT_ERROR, "IOException: " + ioe.
+                                getMessage());
                     }
                 } else {
-                    sendLine(origin, args.isSilent(), FORMAT_ERROR, "No baseFile specified, please /set "+myPlugin.getDomain()+" eval.baseFile filename (stored in scripts dir of profile)");
+                    sendLine(origin, args.isSilent(), FORMAT_ERROR,
+                            "No baseFile specified, please /set " + myPlugin.getDomain()
+                            + " eval.baseFile filename (stored in scripts dir of profile)");
                 }
             } else if (sargs.length > 1) {
-                sendLine(origin, args.isSilent(), FORMAT_ERROR, "You must specify some script to save.");
+                sendLine(origin, args.isSilent(), FORMAT_ERROR,
+                        "You must specify some script to save.");
             } else {
-                sendLine(origin, args.isSilent(), FORMAT_ERROR, "You must specify a function name and some script to save.");
+                sendLine(origin, args.isSilent(), FORMAT_ERROR,
+                        "You must specify a function name and some script to save.");
             }
         } else if (sargs.length > 0 && sargs[0].equalsIgnoreCase("help")) {
-            sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "This command allows you to interact with the script plugin");
+            sendLine(origin, args.isSilent(), FORMAT_OUTPUT,
+                    "This command allows you to interact with the script plugin");
             sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "-------------------");
-            sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "reload/rehash                  - Reload all loaded scripts");
-            sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "load <script>                  - load scripts/<script> (file name relative to scripts dir)");
-            sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "unload <script>                - unload <script> (full file name)");
-            sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "eval <script>                  - evaluate the code <script> and return the result");
-            sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "savetobasefile <name> <script> - save the code <script> to the eval basefile ("+myPlugin.getDomain()+".eval.basefile)");
-            sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "                                 as the function <name> (name/foo/bar will save it as 'name' with foo and");
-            sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "                                 bar as arguments.");
+            sendLine(origin, args.isSilent(), FORMAT_OUTPUT,
+                    "reload/rehash                  - Reload all loaded scripts");
+            sendLine(origin, args.isSilent(), FORMAT_OUTPUT,
+                    "load <script>                  - load scripts/<script> (file name relative to scripts dir)");
+            sendLine(origin, args.isSilent(), FORMAT_OUTPUT,
+                    "unload <script>                - unload <script> (full file name)");
+            sendLine(origin, args.isSilent(), FORMAT_OUTPUT,
+                    "eval <script>                  - evaluate the code <script> and return the result");
+            sendLine(origin, args.isSilent(), FORMAT_OUTPUT,
+                    "savetobasefile <name> <script> - save the code <script> to the eval basefile ("
+                    + myPlugin.getDomain() + ".eval.basefile)");
+            sendLine(origin, args.isSilent(), FORMAT_OUTPUT,
+                    "                                 as the function <name> (name/foo/bar will save it as 'name' with foo and");
+            sendLine(origin, args.isSilent(), FORMAT_OUTPUT,
+                    "                                 bar as arguments.");
             sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "-------------------");
         } else {
             sendLine(origin, args.isSilent(), FORMAT_ERROR, "Unknown subcommand.");
@@ -221,9 +255,8 @@ public class ScriptCommand extends Command implements IntelligentCommand {
     }
 
     /**
-     * Retrieves a list of all installed scripts.
-     * Any file under the main plugin directory (~/.DMDirc/scripts or similar)
-     * that matches *.js is deemed to be a valid script.
+     * Retrieves a list of all installed scripts. Any file under the main plugin directory
+     * (~/.DMDirc/scripts or similar) that matches *.js is deemed to be a valid script.
      *
      * @return A list of all installed scripts
      */
@@ -244,5 +277,5 @@ public class ScriptCommand extends Command implements IntelligentCommand {
         }
         return res;
     }
-}
 
+}

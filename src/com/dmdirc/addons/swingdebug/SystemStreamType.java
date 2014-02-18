@@ -19,6 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
 package com.dmdirc.addons.swingdebug;
 
 /**
@@ -30,7 +31,6 @@ public enum SystemStreamType {
     Out("System Out"),
     /** System.in. */
     Error("System Error");
-
     /** Human readable description. */
     private final String description;
 
@@ -48,4 +48,5 @@ public enum SystemStreamType {
     public String toString() {
         return description;
     }
+
 }

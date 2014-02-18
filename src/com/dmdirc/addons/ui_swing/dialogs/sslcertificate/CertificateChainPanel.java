@@ -82,7 +82,7 @@ public class CertificateChainPanel extends JPanel {
 
         add(new JScrollPane(list), "grow, pushy");
         add(new JLabel("Certificate is trusted", iconManager
-                .getIcon("tick"),JLabel.LEFT), "growx");
+                .getIcon("tick"), JLabel.LEFT), "growx");
         add(new JLabel("Problem with certificate", iconManager
                 .getIcon("cross"), JLabel.LEFT), "growx");
     }
@@ -139,4 +139,5 @@ public class CertificateChainPanel extends JPanel {
     public void addListSelectionListener(final ListSelectionListener listener) {
         list.addListSelectionListener(listener);
     }
+
 }

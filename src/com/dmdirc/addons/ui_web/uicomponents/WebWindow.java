@@ -53,13 +53,10 @@ public class WebWindow implements Window, IRCDocumentListener,
 
     /** The unique ID of this window, used by clients to address the window. */
     private final String id;
-
     /** The container that this window corresponds to. */
     private final FrameContainer container;
-
     /** The handler to pass global events to. */
     private final DynamicRequestHandler handler;
-
     /** The controller that owns this window. */
     private final WebInterfaceUI controller;
 
@@ -81,7 +78,7 @@ public class WebWindow implements Window, IRCDocumentListener,
         } else {
             handler.addEvent(new Event("newchildwindow",
                     new Object[]{controller.getWindowManager().getWindow(
-                            parent.getParent()), this}));
+                parent.getParent()), this}));
         }
     }
 
@@ -156,7 +153,8 @@ public class WebWindow implements Window, IRCDocumentListener,
                 builder.append("; ");
             } else if (entry.getKey().equals(TextAttribute.WEIGHT)) {
                 builder.append("font-weight: bold; ");
-            } else if (entry.getKey().equals(TextAttribute.FAMILY) && "monospaced".equals(entry.getValue())) {
+            } else if (entry.getKey().equals(TextAttribute.FAMILY) && "monospaced".equals(entry.
+                    getValue())) {
                 builder.append("font-family: monospace; ");
             } else if (entry.getKey().equals(TextAttribute.POSTURE)) {
                 builder.append("font-style: italic; ");
@@ -208,7 +206,7 @@ public class WebWindow implements Window, IRCDocumentListener,
     public void linesAdded(final int line, final int length, final int size) {
         for (int i = 0; i < length; i++) {
             handler.addEvent(new Event("lineadded", new Message(
-                style(container.getDocument().getStyledLine(line)), this)));
+                    style(container.getDocument().getStyledLine(line)), this)));
         }
     }
 

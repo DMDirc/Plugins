@@ -38,15 +38,15 @@ import javax.swing.event.ChangeListener;
 import net.miginfocom.swing.MigLayout;
 
 /**
- * Optional JSpinner component.  Composite JSpinner, JCheckbox component.
+ * Optional JSpinner component. Composite JSpinner, JCheckbox component.
  */
 public class OptionalJSpinner extends JPanel implements ActionListener,
         ChangeListener {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = -2867331420063503447L;
     /** Composite spinner. */
@@ -84,7 +84,7 @@ public class OptionalJSpinner extends JPanel implements ActionListener,
     /**
      * Creates a new optional SPinner with a default number model.
      *
-     * @param model Model to show
+     * @param model   Model to show
      * @param enabled Initial selected state
      */
     public OptionalJSpinner(final SpinnerModel model, final boolean enabled) {
@@ -105,8 +105,7 @@ public class OptionalJSpinner extends JPanel implements ActionListener,
     }
 
     /**
-     * Returns the state of the button. True if the toggle button is selected,
-     * false if it's not.
+     * Returns the state of the button. True if the toggle button is selected, false if it's not.
      *
      * @return true if the toggle button is selected, otherwise false
      */
@@ -124,10 +123,9 @@ public class OptionalJSpinner extends JPanel implements ActionListener,
     }
 
     /**
-     * Returns the current value of the model, typically this value is
-     * displayed by the editor. If the user has changed the value displayed
-     * by the editor it is possible for the model's value to differ from that
-     * of the editor, refer to the class level javadoc for examples of how to
+     * Returns the current value of the model, typically this value is displayed by the editor. If
+     * the user has changed the value displayed by the editor it is possible for the model's value
+     * to differ from that of the editor, refer to the class level javadoc for examples of how to
      * deal with this.
      *
      * This method simply delegates to the model. It is equivalent to:
@@ -141,10 +139,10 @@ public class OptionalJSpinner extends JPanel implements ActionListener,
     }
 
     /**
-     * Changes current value of the model, typically this value is displayed
-     * by the editor. If the SpinnerModel implementation doesn't support
-     * the specified value then an IllegalArgumentException is thrown.
-     * This method simply delegates to the model. It is equivalent to:
+     * Changes current value of the model, typically this value is displayed by the editor. If the
+     * SpinnerModel implementation doesn't support the specified value then an
+     * IllegalArgumentException is thrown. This method simply delegates to the model. It is
+     * equivalent to:
      *
      * getModel().setValue(value)
      *
@@ -164,11 +162,10 @@ public class OptionalJSpinner extends JPanel implements ActionListener,
     }
 
     /**
-     * Changes the model that represents the value of this spinner. If the
-     * editor property has not been explicitly set, the editor property
-     * is (implicitly) set after the "model" PropertyChangeEvent has been
-     * fired. The editor property is set to the value returned by createEditor,
-     * as in:
+     * Changes the model that represents the value of this spinner. If the editor property has not
+     * been explicitly set, the editor property is (implicitly) set after the "model"
+     * PropertyChangeEvent has been fired. The editor property is set to the value returned by
+     * createEditor, as in:
      *
      * setEditor(createEditor(model));
      *
@@ -219,4 +216,5 @@ public class OptionalJSpinner extends JPanel implements ActionListener,
         fireChangeListener();
         spinner.setEnabled(checkbox.isSelected());
     }
+
 }

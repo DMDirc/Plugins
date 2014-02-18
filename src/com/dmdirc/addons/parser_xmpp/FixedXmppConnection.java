@@ -34,9 +34,9 @@ import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smackx.ServiceDiscoveryManager;
 
 /**
- * An extension of XMPPConnection that hacks around the problems caused by
- * Smack's ridiculous use of static initialisers (and the dependencies between
- * them). See http://issues.igniterealtime.org/browse/SMACK-315 for info.
+ * An extension of XMPPConnection that hacks around the problems caused by Smack's ridiculous use of
+ * static initialisers (and the dependencies between them). See
+ * http://issues.igniterealtime.org/browse/SMACK-315 for info.
  */
 public class FixedXmppConnection extends XMPPConnection
         implements ConnectionCreationListener {
@@ -48,6 +48,7 @@ public class FixedXmppConnection extends XMPPConnection
      * Creates a new fixed XMPP connection with the specified config.
      *
      * @param config The config to pass on to the underlying connection
+     *
      * @see XMPPConnection#XMPPConnection(org.jivesoftware.smack.ConnectionConfiguration)
      */
     public FixedXmppConnection(final ConnectionConfiguration config) {
@@ -97,15 +98,16 @@ public class FixedXmppConnection extends XMPPConnection
     }
 
     /**
-     * Retrieves the set of listeners that have been registered statically
-     * with the XMPPConnection class.
+     * Retrieves the set of listeners that have been registered statically with the XMPPConnection
+     * class.
      *
      * @return The raw listener set.
      */
     @SuppressWarnings("unchecked")
     private Set<ConnectionCreationListener> getListeners() {
         try {
-            final Field field = XMPPConnection.class.getDeclaredField("connectionEstablishedListeners");
+            final Field field = XMPPConnection.class.getDeclaredField(
+                    "connectionEstablishedListeners");
             field.setAccessible(true);
             return (Set<ConnectionCreationListener>) field.get(null);
         } catch (ReflectiveOperationException ex) {

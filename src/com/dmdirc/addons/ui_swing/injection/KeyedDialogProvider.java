@@ -35,8 +35,8 @@ import static com.dmdirc.addons.ui_swing.SwingPreconditions.checkOnEDT;
  * Provider for {@link StandardDialog} based windows that correspond to some key.
  *
  * <p>This provider will cache instances that are created until the windows are closed. Once a
- * window has been closed, the next call to {@link #get()} or {@link #displayOrRequestFocus()}
- * will result in a new instance being created.
+ * window has been closed, the next call to {@link #get()} or {@link #displayOrRequestFocus()} will
+ * result in a new instance being created.
  *
  * <p>Dialogs with different keys may be open simultaneously, and are treated independently.
  *
@@ -59,6 +59,7 @@ public abstract class KeyedDialogProvider<K, T extends StandardDialog> {
      * <p>This method <em>must</em> be called on the Event Despatch Thread.
      *
      * @param key The key associated with the dialog to get.
+     *
      * @return An instance of the dialog.
      */
     public T get(final K key) {
@@ -89,8 +90,8 @@ public abstract class KeyedDialogProvider<K, T extends StandardDialog> {
      * Ensures the dialog is visible to the user.
      *
      * <p>If no dialog currently exists with the same key, a new one will be created and displayed
-     * to the user. If a dialog existed prior to this method being invoked, it will request focus
-     * to bring it to the user's attention.
+     * to the user. If a dialog existed prior to this method being invoked, it will request focus to
+     * bring it to the user's attention.
      *
      * <p>This method <em>must</em> be called on the Event Despatch Thread.
      *
@@ -105,6 +106,7 @@ public abstract class KeyedDialogProvider<K, T extends StandardDialog> {
      * Returns a new instance of the dialog with the specified key.
      *
      * @param key The key to create a new dialog for.
+     *
      * @return A new instance of this provider's dialog.
      */
     protected abstract T getInstance(final K key);

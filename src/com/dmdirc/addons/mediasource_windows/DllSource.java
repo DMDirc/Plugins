@@ -34,17 +34,15 @@ public class DllSource implements MediaSource {
 
     /** Player name */
     private final String playerName;
-
     /** Use getArtistTitle */
     private final boolean useArtistTitle;
-
     /** Parent Plugin. */
     final WindowsMediaSourcePlugin parent;
 
     /**
      * Instantiates the media source.
      *
-     * @param parent The plugin that owns this DllSource
+     * @param parent     The plugin that owns this DllSource
      * @param playerName Name of Player and DLL
      */
     public DllSource(final WindowsMediaSourcePlugin parent, final String playerName) {
@@ -54,12 +52,13 @@ public class DllSource implements MediaSource {
     /**
      * Instantiates the media source.
      *
-     * @param parent The plugin that owns this DllSource
-     * @param playerName Name of Player and DLL
-     * @param useArtistTitle True if getArtistTitle should be parsed rather than
-     *                       using getArtist() and getTitle()
+     * @param parent         The plugin that owns this DllSource
+     * @param playerName     Name of Player and DLL
+     * @param useArtistTitle True if getArtistTitle should be parsed rather than using getArtist()
+     *                       and getTitle()
      */
-    public DllSource(final WindowsMediaSourcePlugin parent, final String playerName, final boolean useArtistTitle) {
+    public DllSource(final WindowsMediaSourcePlugin parent, final String playerName,
+            final boolean useArtistTitle) {
         this.playerName = playerName;
         this.useArtistTitle = useArtistTitle;
         this.parent = parent;
@@ -75,6 +74,7 @@ public class DllSource implements MediaSource {
      * Get the "goodoutput" from GetMediaInfo for the given command
      *
      * @param command Command to run
+     *
      * @return "Good" Output
      */
     private String getOutput(final String command) {
@@ -133,6 +133,7 @@ public class DllSource implements MediaSource {
      * Get the duration in seconds as a string.
      *
      * @param secondsInput to get duration for
+     *
      * @return Duration as a string
      */
     private String duration(final long secondsInput) {

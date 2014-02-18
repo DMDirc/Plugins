@@ -37,21 +37,22 @@ import javax.swing.ImageIcon;
  * Describes an addon.
  */
 public class AddonInfo {
+
     /** Addon site ID. */
     private final int id;
     /**
-     * Stable download name. This should be prepended with
-     * http://addons.dmdirc.com/addondownload/ to get a full URL.
+     * Stable download name. This should be prepended with http://addons.dmdirc.com/addondownload/
+     * to get a full URL.
      */
     private final String stableDownload;
     /**
-     * Stable download name. This should be prepended with
-     * http://addons.dmdirc.com/addondownload/ to get a full URL.
+     * Stable download name. This should be prepended with http://addons.dmdirc.com/addondownload/
+     * to get a full URL.
      */
     private final String unstableDownload;
     /**
-     * Stable download name. This should be prepended with
-     * http://addons.dmdirc.com/addondownload/ to get a full URL.
+     * Stable download name. This should be prepended with http://addons.dmdirc.com/addondownload/
+     * to get a full URL.
      */
     private final String nightlyDownload;
     /** Addon title. */
@@ -80,8 +81,8 @@ public class AddonInfo {
      *
      * @param configManager The config provider to use to find settings.
      * @param updateManager The manager to use to check for update information.
-     * @param urlBuilder The URL builder to use to retrieve image URLs.
-     * @param entry List of entries
+     * @param urlBuilder    The URL builder to use to retrieve image URLs.
+     * @param entry         List of entries
      */
     public AddonInfo(
             final AggregateConfigProvider configManager,
@@ -92,9 +93,8 @@ public class AddonInfo {
         title = entry.get("title");
         author = entry.get("user");
         rating = Integer.parseInt(entry.get("rating"));
-        type = entry.get("type").equals("plugin") ?
-                AddonType.TYPE_PLUGIN : entry.get("type").equals("theme") ?
-                        AddonType.TYPE_THEME : AddonType.TYPE_ACTION_PACK;
+        type = entry.get("type").equals("plugin") ? AddonType.TYPE_PLUGIN : entry.get("type").
+                equals("theme") ? AddonType.TYPE_THEME : AddonType.TYPE_ACTION_PACK;
         stableDownload = entry.containsKey("stable") ? entry.get("stable") : "";
         unstableDownload = entry.containsKey("unstable") ? entry
                 .get("unstable") : "";
@@ -210,17 +210,17 @@ public class AddonInfo {
     public String getDownload() {
         switch (channel) { // NOPMD
             case NONE:
-                // fallthrough
+            // fallthrough
             case NIGHTLY:
                 if (!nightlyDownload.isEmpty()) {
                     return nightlyDownload;
                 }
-                // fallthrough
+            // fallthrough
             case UNSTABLE:
                 if (!unstableDownload.isEmpty()) {
                     return unstableDownload;
                 }
-                // fallthrough
+            // fallthrough
             case STABLE:
                 if (!stableDownload.isEmpty()) {
                     return stableDownload;

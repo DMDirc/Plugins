@@ -87,10 +87,10 @@ public final class SwingPreferencesDialog extends StandardDialog implements
     /**
      * Creates a new instance of SwingPreferencesDialog.
      *
-     * @param mainFrame Main frame to parent dialogs on.
-     * @param iconManager Icon manager used to retrieve images
+     * @param mainFrame             Main frame to parent dialogs on.
+     * @param iconManager           Icon manager used to retrieve images
      * @param restartDialogProvider The provider to use for restart dialogs.
-     * @param dialogModelProvider The provider to use to get a dialog model.
+     * @param dialogModelProvider   The provider to use to get a dialog model.
      * @param categoryPanelProvider The provider to use to produce a category panel.
      */
     @Inject
@@ -108,7 +108,6 @@ public final class SwingPreferencesDialog extends StandardDialog implements
         initComponents();
 
         worker = new LoggingSwingWorker<PreferencesDialogModel, Void>() {
-
             /** {@inheritDoc} */
             @Override
             protected PreferencesDialogModel doInBackground() {
@@ -118,8 +117,8 @@ public final class SwingPreferencesDialog extends StandardDialog implements
                     prefsManager = dialogModelProvider.get();
                 } catch (IllegalArgumentException ex) {
                     mainPanel.setError(ex.getMessage());
-                    Logger.appError(ErrorLevel.HIGH, "Unable to load the" +
-                            "preferences dialog.", ex);
+                    Logger.appError(ErrorLevel.HIGH, "Unable to load the" + "preferences dialog.",
+                            ex);
                 }
                 return prefsManager;
             }
@@ -181,8 +180,8 @@ public final class SwingPreferencesDialog extends StandardDialog implements
         getOkButton().addActionListener(this);
         getCancelButton().addActionListener(this);
 
-        final MigLayout layout = new MigLayout("pack, hmin min(80sp, 700), " +
-                "hmax min(700, 80sp)");
+        final MigLayout layout =
+                new MigLayout("pack, hmin min(80sp, 700), " + "hmax min(700, 80sp)");
         setLayout(layout);
         add(tabListScrollPane, "w 150!, growy, pushy");
         add(mainPanel, "wrap, w 480!, pushy, growy, pushy");
@@ -191,12 +190,10 @@ public final class SwingPreferencesDialog extends StandardDialog implements
     }
 
     /**
-     * Adds the categories from the preferences manager, clearing existing
-     * categories first.
+     * Adds the categories from the preferences manager, clearing existing categories first.
      */
     private void addCategories(final List<PreferencesCategory> categories) {
         UIUtilities.invokeLater(new Runnable() {
-
             @Override
             public void run() {
                 tabList.removeListSelectionListener(SwingPreferencesDialog.this);
@@ -218,7 +215,9 @@ public final class SwingPreferencesDialog extends StandardDialog implements
      * Counts the number of categories that will be displayed in the list panel.
      *
      * @param categories The collection of categories to inspect
+     *
      * @return The number of those categories (including children) that will be displayed
+     *
      * @since 0.6.3m1rc3
      */
     protected int countCategories(
@@ -252,7 +251,6 @@ public final class SwingPreferencesDialog extends StandardDialog implements
         }
 
         new LoggingSwingWorker<Void, Void>() {
-
             @Override
             protected Void doInBackground() {
                 if (manager != null) {
@@ -268,6 +266,7 @@ public final class SwingPreferencesDialog extends StandardDialog implements
      * {@inheritDoc}
      *
      * @param e List selection event
+     *
      * @since 0.6.3m1
      */
     @Override
@@ -349,4 +348,5 @@ public final class SwingPreferencesDialog extends StandardDialog implements
             super.dispose();
         }
     }
+
 }

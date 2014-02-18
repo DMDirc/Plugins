@@ -50,9 +50,9 @@ public class XmppClientInfo extends BaseClientInfo {
      * Creates a new XMPP Client Info object with the specified details.
      *
      * @param parser The parser that owns this client info object
-     * @param nick The nickname of the user this object represents
-     * @param user The username of the user this object represents
-     * @param host The hostname of the user this object represents
+     * @param nick   The nickname of the user this object represents
+     * @param user   The username of the user this object represents
+     * @param host   The hostname of the user this object represents
      */
     public XmppClientInfo(final XmppParser parser, final String nick, final String user,
             final String host) {
@@ -85,7 +85,7 @@ public class XmppClientInfo extends BaseClientInfo {
 
         if (packet.getType() == Type.unavailable) {
             endpoints.remove(parts[1]);
-        } else  {
+        } else {
             if (!endpoints.containsKey(parts[1])) {
                 endpoints.put(parts[1], new XmppEndpoint());
             }
@@ -106,8 +106,8 @@ public class XmppClientInfo extends BaseClientInfo {
     }
 
     /**
-     * Determines whether or not this contact is "away" - that is, their
-     * aggregate presence state is "Unavailable", "Away", "DND" or "XA".
+     * Determines whether or not this contact is "away" - that is, their aggregate presence state is
+     * "Unavailable", "Away", "DND" or "XA".
      *
      * @return True if the client is away, false otherwise
      */
@@ -126,8 +126,8 @@ public class XmppClientInfo extends BaseClientInfo {
     /**
      * Gets the aggregate presence of this contact.
      *
-     * @return The highest available state of the contact's highest priority
-     * endpoints, or <code>null</code> if no endpoints are available.
+     * @return The highest available state of the contact's highest priority endpoints, *
+     *         or <code>null</code> if no endpoints are available.
      */
     public Mode getAggregatePresence() {
         final List<XmppEndpoint> sortedEndpoints = new ArrayList<>(endpoints.values());

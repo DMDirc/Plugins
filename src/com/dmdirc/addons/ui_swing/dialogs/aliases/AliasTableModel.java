@@ -36,12 +36,11 @@ import javax.swing.table.AbstractTableModel;
 public final class AliasTableModel extends AbstractTableModel {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 3;
-
     /** Data list. */
     private List<Alias> aliases;
 
@@ -84,7 +83,7 @@ public final class AliasTableModel extends AbstractTableModel {
 
     /** {@inheritDoc} */
     public String getColumnName(final int columnIndex) {
-        switch(columnIndex) {
+        switch (columnIndex) {
             case 0:
                 return "Command";
             case 1:
@@ -99,7 +98,7 @@ public final class AliasTableModel extends AbstractTableModel {
 
     /** {@inheritDoc} */
     public Class<?> getColumnClass(final int columnIndex) {
-        switch(columnIndex) {
+        switch (columnIndex) {
             case 0:
                 return String.class;
             case 1:
@@ -125,7 +124,7 @@ public final class AliasTableModel extends AbstractTableModel {
         if (rowIndex < 0) {
             throw new IllegalArgumentException("Must specify a positive integer");
         }
-        switch(columnIndex) {
+        switch (columnIndex) {
             case 0:
                 return aliases.get(rowIndex).getCommand();
             case 1:
@@ -147,7 +146,7 @@ public final class AliasTableModel extends AbstractTableModel {
         if (rowIndex < 0) {
             throw new IllegalArgumentException("Must specify a positive integer");
         }
-        switch(columnIndex) {
+        switch (columnIndex) {
             case 0:
                 aliases.get(rowIndex).setCommand((String) aValue);
                 break;
@@ -214,4 +213,5 @@ public final class AliasTableModel extends AbstractTableModel {
     public int indexOf(final Alias alias) {
         return aliases.indexOf(alias);
     }
+
 }

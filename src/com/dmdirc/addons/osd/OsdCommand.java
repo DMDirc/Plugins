@@ -41,8 +41,8 @@ public class OsdCommand extends Command implements IntelligentCommand {
     /** A command info object for this command. */
     public static final BaseCommandInfo INFO = new BaseCommandInfo("osd",
             "osd --close - closes all OSD windows\n"
-                + "osd [--timeout <delay in seconds>] <message> - show the "
-                + "specified message in an OSD window",
+            + "osd [--timeout <delay in seconds>] <message> - show the "
+            + "specified message in an OSD window",
             CommandType.TYPE_GLOBAL);
     /** The OSDManager that this command should use. */
     private final OsdManager osdManager;
@@ -62,9 +62,9 @@ public class OsdCommand extends Command implements IntelligentCommand {
     /**
      * Used to show a notification using this plugin.
      *
-     * @param timeout Timeout for the OSD window. If negative then the value
-     * from the config will be used
-     * @param title Title of dialog if applicable
+     * @param timeout Timeout for the OSD window. If negative then the value from the config will be
+     *                used
+     * @param title   Title of dialog if applicable
      * @param message Message to show
      *
      * @return True if the notification was shown.
@@ -98,7 +98,7 @@ public class OsdCommand extends Command implements IntelligentCommand {
                         + "must specify a valid number for the OSD timeout.");
             }
         } else {
-            showOSD(-1 , null, args.getArgumentsAsString());
+            showOSD(-1, null, args.getArgumentsAsString());
         }
     }
 

@@ -74,7 +74,7 @@ public class Time extends DebugCommand implements IntelligentCommand {
      *
      * @param origin The origin of the command
      * @param window The window to be passed on to the timed command, if any
-     * @param args The arguments that were passed to the command
+     * @param args   The arguments that were passed to the command
      */
     private void doTime(final FrameContainer origin,
             final CommandArguments args) {
@@ -84,8 +84,7 @@ public class Time extends DebugCommand implements IntelligentCommand {
         }
 
         if (origin instanceof WritableFrameContainer) {
-            final WritableFrameContainer container
-                    = (WritableFrameContainer) origin;
+            final WritableFrameContainer container = (WritableFrameContainer) origin;
             final long start = System.currentTimeMillis();
             container.getCommandParser().parseCommand(origin,
                     args.getArgumentsAsString(0));

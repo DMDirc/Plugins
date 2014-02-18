@@ -33,9 +33,9 @@ import javax.swing.JOptionPane;
 public class DMDircJOptionPane extends JOptionPane {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 1;
     /** Maximum characters per line. */
@@ -46,10 +46,10 @@ public class DMDircJOptionPane extends JOptionPane {
     /**
      * Create a DMDircJOptionPane.
      *
-     * @param title Title to use
-     * @param message Message to show
+     * @param title       Title to use
+     * @param message     Message to show
      * @param messageType Message Type.
-     * @param optionType Options.
+     * @param optionType  Options.
      */
     public DMDircJOptionPane(final String title, final String message,
             final int messageType, final int optionType) {
@@ -84,4 +84,5 @@ public class DMDircJOptionPane extends JOptionPane {
         dialog.setVisible(true);
         dialog.dispose();
     }
+
 }

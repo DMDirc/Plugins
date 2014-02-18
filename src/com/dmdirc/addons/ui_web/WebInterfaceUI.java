@@ -51,25 +51,22 @@ public class WebInterfaceUI implements UIController {
 
     /** The web server we're using. */
     private final org.mortbay.jetty.Server webServer;
-
     /** The window manager for this UI. */
     private final WebWindowManager windowManager;
-
     /** The dynamic request handler in use. */
     private final DynamicRequestHandler handler;
-
     /** The plugin manager used to find other plugins. */
     private final PluginManager pluginManager;
 
     /**
      * Creates a new WebInterfaceUI belonging to the specified plugin.
      *
-     * @param domain The domain to retrieve config settings from
-     * @param identityController The controller to read/write settings with.
-     * @param serverManager The manager to use to find and create servers
-     * @param pluginManager The manager to use to find other plugins
-     * @param coreWindowManager Window management
-     * @param statusBarManager The status bar manager.
+     * @param domain               The domain to retrieve config settings from
+     * @param identityController   The controller to read/write settings with.
+     * @param serverManager        The manager to use to find and create servers
+     * @param pluginManager        The manager to use to find other plugins
+     * @param coreWindowManager    Window management
+     * @param statusBarManager     The status bar manager.
      * @param staticRequestHandler Status request handler
      */
     @Inject
@@ -107,8 +104,7 @@ public class WebInterfaceUI implements UIController {
             new RootRequestHandler(),
             staticRequestHandler,
             new DMDircRequestHandler(),
-            handler,
-        });
+            handler,});
 
         try {
             webServer.start();

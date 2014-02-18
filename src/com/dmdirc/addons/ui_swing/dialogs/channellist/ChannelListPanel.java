@@ -48,7 +48,7 @@ public class ChannelListPanel extends JPanel {
      * Creates a new panel to perform a group list search on a server.
      *
      * @param server Server on which to perform search
-     * @param total Label to update with total
+     * @param total  Label to update with total
      */
     public ChannelListPanel(final Server server, final JLabel total) {
         manager = new GroupListManager(server);
@@ -63,4 +63,5 @@ public class ChannelListPanel extends JPanel {
         add(searchTerms, "growx, wrap");
         add(results, "grow, push");
     }
+
 }

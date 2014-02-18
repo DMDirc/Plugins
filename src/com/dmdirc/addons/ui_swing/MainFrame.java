@@ -75,11 +75,10 @@ public class MainFrame extends JFrame implements WindowListener,
         NotificationListener {
 
     private static final org.slf4j.Logger log = LoggerFactory.getLogger(MainFrame.class);
-
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 9;
     /** Focus queue. */
@@ -130,13 +129,13 @@ public class MainFrame extends JFrame implements WindowListener,
     /**
      * Creates new form MainFrame.
      *
-     * @param controller Swing controller
-     * @param windowFactory The window factory to use to create and listen for windows.
+     * @param controller          Swing controller
+     * @param windowFactory       The window factory to use to create and listen for windows.
      * @param lifecycleController Controller to use to end the application.
-     * @param globalConfig The config to read settings from.
-     * @param quitWorker The quit worker to use when quitting the app.
-     * @param iconManager The icon manager to use to get icons.
-     * @param windowManager Window management
+     * @param globalConfig        The config to read settings from.
+     * @param quitWorker          The quit worker to use when quitting the app.
+     * @param iconManager         The icon manager to use to get icons.
+     * @param windowManager       Window management
      */
     public MainFrame(
             final SwingController controller,
@@ -174,7 +173,6 @@ public class MainFrame extends JFrame implements WindowListener,
         globalConfig.addChangeListener("icon", "icon", this);
 
         addWindowFocusListener(new WindowFocusListener() {
-
             /** {@inheritDoc} */
             @Override
             public void windowGainedFocus(final WindowEvent e) {
@@ -232,7 +230,6 @@ public class MainFrame extends JFrame implements WindowListener,
     @Override
     public void setTitle(final String title) {
         UIUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc}. */
             @Override
             public void run() {
@@ -282,7 +279,6 @@ public class MainFrame extends JFrame implements WindowListener,
     @Override
     public void windowClosed(final WindowEvent windowEvent) {
         new Thread(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -336,7 +332,6 @@ public class MainFrame extends JFrame implements WindowListener,
     /** Initialiases the frame managers. */
     private void initFrameManagers() {
         UIUtilities.invokeAndWait(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -369,7 +364,6 @@ public class MainFrame extends JFrame implements WindowListener,
      */
     public void initComponents() {
         UIUtilities.invokeAndWait(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -521,7 +515,6 @@ public class MainFrame extends JFrame implements WindowListener,
     public void quit(final int exitCode) {
         if (exitCode == 0 && globalConfig.getOptionBool("ui", "confirmQuit")) {
             final StandardQuestionDialog dialog = new ConfirmQuitDialog(this) {
-
                 /** Serial version UID. */
                 private static final long serialVersionUID = 9;
 
@@ -560,7 +553,6 @@ public class MainFrame extends JFrame implements WindowListener,
                 case "framemanager":
                 case "framemanagerPosition":
                     UIUtilities.invokeAndWait(new Runnable() {
-
                         /** {@inheritDoc} */
                         @Override
                         public void run() {
@@ -586,7 +578,6 @@ public class MainFrame extends JFrame implements WindowListener,
         } else {
             imageIcon = new ImageIcon(iconManager.getImage("icon"));
             UIUtilities.invokeLater(new Runnable() {
-
                 /** {@inheritDoc} */
                 @Override
                 public void run() {
@@ -603,7 +594,6 @@ public class MainFrame extends JFrame implements WindowListener,
      */
     public void setActiveFrame(final TextFrame activeFrame) {
         UIUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -644,10 +634,11 @@ public class MainFrame extends JFrame implements WindowListener,
     }
 
     /**
-     * Registers a new selection listener with this frame. The listener will
-     * be notified whenever the currently selected frame is changed.
+     * Registers a new selection listener with this frame. The listener will be notified whenever
+     * the currently selected frame is changed.
      *
      * @param listener The listener to be added
+     *
      * @see #setActiveFrame(com.dmdirc.addons.ui_swing.components.frames.TextFrame)
      * @see #getActiveFrame()
      */
@@ -659,6 +650,7 @@ public class MainFrame extends JFrame implements WindowListener,
      * Removes a previously registered selection listener.
      *
      * @param listener The listener to be removed
+     *
      * @see #addSelectionListener(com.dmdirc.addons.ui_swing.SelectionListener)
      */
     public void removeSelectionListener(final SelectionListener listener) {
@@ -685,7 +677,6 @@ public class MainFrame extends JFrame implements WindowListener,
             framePanel.setVisible(true);
             if (focusOrder.peek() == null) {
                 SwingUtilities.invokeLater(new Runnable() {
-
                     /** {@inheritDoc} */
                     @Override
                     public void run() {
@@ -745,4 +736,5 @@ public class MainFrame extends JFrame implements WindowListener,
         globalConfig.removeListener(this);
         super.dispose();
     }
+
 }

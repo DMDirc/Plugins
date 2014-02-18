@@ -19,6 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 package com.dmdirc.addons.serverlistdialog;
 
 import com.dmdirc.addons.ui_swing.components.validating.ValidatingJTextField;
@@ -26,8 +27,8 @@ import com.dmdirc.ui.IconManager;
 import com.dmdirc.util.validators.Validator;
 
 /**
- * Simple extention of JTextField to return an URI usable string (defaulting to
- * an irc scheme if none specified).
+ * Simple extention of JTextField to return an URI usable string (defaulting to an irc scheme if
+ * none specified).
  */
 public class URIJTextField extends ValidatingJTextField {
 
@@ -48,4 +49,5 @@ public class URIJTextField extends ValidatingJTextField {
             return hostname;
         }
     }
+
 }

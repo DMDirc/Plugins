@@ -74,9 +74,9 @@ public class AddGroupInputDialog extends StandardDialog {
      * Instantiates a new standard input dialog.
      *
      * @param controller Swing controller
-     * @param items Parent tree
-     * @param owner Dialog owner
-     * @param model Server list model
+     * @param items      Parent tree
+     * @param owner      Dialog owner
+     * @param model      Server list model
      */
     public AddGroupInputDialog(final SwingController controller,
             final Window owner, final JTree items,
@@ -141,7 +141,6 @@ public class AddGroupInputDialog extends StandardDialog {
      */
     private void addListeners() {
         getOkButton().addActionListener(new ActionListener() {
-
             /** {@inheritDoc} */
             @Override
             public void actionPerformed(final ActionEvent e) {
@@ -151,7 +150,6 @@ public class AddGroupInputDialog extends StandardDialog {
             }
         });
         getCancelButton().addActionListener(new ActionListener() {
-
             /** {@inheritDoc} */
             @Override
             public void actionPerformed(final ActionEvent e) {
@@ -159,7 +157,6 @@ public class AddGroupInputDialog extends StandardDialog {
             }
         });
         addWindowListener(new WindowAdapter() {
-
             /** {@inheritDoc} */
             @Override
             public void windowOpened(final WindowEvent e) {
@@ -173,7 +170,6 @@ public class AddGroupInputDialog extends StandardDialog {
             }
         });
         groupName.getDocument().addDocumentListener(new DocumentListener() {
-
             /** {@inheritDoc} */
             @Override
             public void insertUpdate(final DocumentEvent e) {
@@ -241,4 +237,5 @@ public class AddGroupInputDialog extends StandardDialog {
     public String getNetworkName() {
         return networkName.getText();
     }
+
 }

@@ -98,12 +98,12 @@ public class AliasManagerDialog extends StandardDialog implements ActionListener
     /**
      * Creates a new instance of ErrorListDialog.
      *
-     * @param controller Swing controller
-     * @param parentWindow Parent window
+     * @param controller         Swing controller
+     * @param parentWindow       Parent window
      * @param substitutorFactory Actions substitution factory
-     * @param aliasWrapper The alias wrapper to read aliases from.
-     * @param actionFactory The factory to use to create new actions.
-     * @param aliasPanel The alias panel to use.
+     * @param aliasWrapper       The alias wrapper to read aliases from.
+     * @param actionFactory      The factory to use to create new actions.
+     * @param aliasPanel         The alias panel to use.
      */
     @Inject
     public AliasManagerDialog(
@@ -145,7 +145,6 @@ public class AliasManagerDialog extends StandardDialog implements ActionListener
 
         tableModel = new AliasTableModel(getTableData());
         table = new PackingTable(tableModel, scrollPane, false) {
-
             /** Java Serialisation verion ID. */
             private static final long serialVersionUID = 1;
 
@@ -305,7 +304,6 @@ public class AliasManagerDialog extends StandardDialog implements ActionListener
                         this, ModalityType.APPLICATION_MODAL,
                         "Duplicate Aliases", "There are duplicate aliases in "
                         + "the table, these need to be removed before saving") {
-
                     /** Java Serialisation verion ID. */
                     private static final long serialVersionUID = 1;
 
@@ -477,4 +475,5 @@ public class AliasManagerDialog extends StandardDialog implements ActionListener
 
         return false;
     }
+
 }

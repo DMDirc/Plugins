@@ -19,6 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 package com.dmdirc.addons.windowstatus;
 
 import com.dmdirc.addons.ui_swing.injection.SwingModule;
@@ -36,8 +37,8 @@ import dagger.Provides;
 public class WindowStatusModule {
 
     @Qualifier
-    public @interface WindowStatusDomain {};
-
+    public @interface WindowStatusDomain {
+    };
     /** The plugin's plugin info. */
     private final PluginInfo pluginInfo;
 

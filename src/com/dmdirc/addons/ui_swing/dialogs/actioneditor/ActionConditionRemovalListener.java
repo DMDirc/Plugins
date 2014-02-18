@@ -33,4 +33,5 @@ public interface ActionConditionRemovalListener {
      * @param condition Condition to be removed
      */
     void conditionRemoved(ActionConditionDisplayPanel condition);
+
 }

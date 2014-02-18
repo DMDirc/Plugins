@@ -74,11 +74,11 @@ public class SwingFirstRunWizard implements WizardListener, FirstRunWizard {
     /**
      * Instantiate the wizard.
      *
-     * @param parentWindow Parent window
-     * @param config Global config
-     * @param actionsDirectory Actions directory
-     * @param pluginExtractor Plugin extractor to use.
-     * @param iconManager Manager to use to find icons.
+     * @param parentWindow          Parent window
+     * @param config                Global config
+     * @param actionsDirectory      Actions directory
+     * @param pluginExtractor       Plugin extractor to use.
+     * @param iconManager           Manager to use to find icons.
      * @param profileDialogProvider Provider to use to obtain PMDs.
      */
     @Inject
@@ -98,7 +98,7 @@ public class SwingFirstRunWizard implements WizardListener, FirstRunWizard {
                 parentWindow, ModalityType.APPLICATION_MODAL);
         wizardDialog.setIconImage(iconManager.getImage("icon"));
         wizardDialog.addWizardListener(this);
-        if(Apple.isAppleUI()) {
+        if (Apple.isAppleUI()) {
             wizardDialog.setMinimumSize(new Dimension(400, 500));
         } else {
             wizardDialog.setMinimumSize(new Dimension(400, 500));
@@ -205,4 +205,5 @@ public class SwingFirstRunWizard implements WizardListener, FirstRunWizard {
     public WizardDialog getWizardDialog() {
         return wizardDialog;
     }
+
 }

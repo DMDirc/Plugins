@@ -55,8 +55,7 @@ import javax.swing.table.TableCellRenderer;
 import net.miginfocom.swing.MigLayout;
 
 /**
- * URL Config panel. List all known url protocols and allows them to be
- * configured.
+ * URL Config panel. List all known url protocols and allows them to be configured.
  */
 public class URLConfigPanel extends JPanel implements
         ListSelectionListener, ActionListener, PreferencesInterface {
@@ -89,7 +88,7 @@ public class URLConfigPanel extends JPanel implements
     /**
      * Instantiates a new URL config panel.
      *
-     * @param controller Swing controller
+     * @param controller   Swing controller
      * @param parentWindow Parent window
      */
     @Inject
@@ -114,7 +113,6 @@ public class URLConfigPanel extends JPanel implements
         tableScrollPane = new JScrollPane();
         model = new URLHandlerTableModel(controller.getGlobalConfig());
         table = new PackingTable(model, tableScrollPane) {
-
             private static final long serialVersionUID = 1;
 
             /** {@inheritDoc} */
@@ -214,7 +212,7 @@ public class URLConfigPanel extends JPanel implements
      * Saves or updates a handler to the config.
      *
      * @param protocol Protocol for the handler
-     * @param handler Handler for the protocol
+     * @param handler  Handler for the protocol
      */
     private void saveHandler(final String protocol, final String handler) {
         if (handler.isEmpty()) {
@@ -270,7 +268,6 @@ public class URLConfigPanel extends JPanel implements
                     ModalityType.MODELESS, controller.getIconManager(), "New URL handler",
                     "Please enter the name of the new protocol.",
                     new URLProtocolValidator(controller.getGlobalConfig())) {
-
                 /** Serial version UID. */
                 private static final long serialVersionUID = 1;
 
@@ -278,8 +275,7 @@ public class URLConfigPanel extends JPanel implements
                 @Override
                 public boolean save() {
                     try {
-                        final URI uri = new URI(getText() +
-                                "://example.test.com");
+                        final URI uri = new URI(getText() + "://example.test.com");
                         model.addURI(uri);
                         details.put(uri, new URLProtocolPanel(controller.getGlobalIdentity(), uri,
                                 true));
@@ -301,4 +297,5 @@ public class URLConfigPanel extends JPanel implements
                     getSelectedRow()));
         }
     }
+
 }

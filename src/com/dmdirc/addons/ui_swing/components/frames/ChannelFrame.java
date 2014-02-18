@@ -58,9 +58,9 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
         com.dmdirc.interfaces.ActionListener {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 10;
     /** Identity. */
@@ -77,13 +77,13 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
     private final SwingController controller;
 
     /**
-     * Creates a new instance of ChannelFrame. Sets up callbacks and handlers,
-     * and default options for the form.
+     * Creates a new instance of ChannelFrame. Sets up callbacks and handlers, and default options
+     * for the form.
      *
-     * @param deps The dependencies required by text frames.
+     * @param deps            The dependencies required by text frames.
      * @param identityFactory The factory to use to create a channel identity.
      * @param topicBarFactory The factory to use to create topic bars.
-     * @param owner The Channel object that owns this frame
+     * @param owner           The Channel object that owns this frame
      */
     public ChannelFrame(
             final TextFrameDependencies deps,
@@ -172,6 +172,7 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
 
     /**
      * Returns the splitpane.
+     *
      * @return nicklist JSplitPane
      */
     public JSplitPane getSplitPane() {
@@ -282,4 +283,5 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
         controller.getGlobalConfig().removeListener(this);
         super.dispose();
     }
+
 }

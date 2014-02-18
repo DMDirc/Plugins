@@ -44,7 +44,7 @@ public class PopOutCommand extends Command {
     /** A command info object for this command. */
     public static final CommandInfo INFO = new BaseCommandInfo("popout",
             "popout - Makes the current window pop out of the client as a "
-                + "free floating window on your desktop.",
+            + "free floating window on your desktop.",
             CommandType.TYPE_GLOBAL);
     /** Factory to use to locate windows. */
     private final SwingWindowFactory windowFactory;
@@ -52,7 +52,7 @@ public class PopOutCommand extends Command {
     /**
      * Create a new instance of PopOutCommand.
      *
-     * @param windowFactory Factory to use to locate windows.
+     * @param windowFactory     Factory to use to locate windows.
      * @param commandController The command controller to use for command info.
      */
     @Inject

@@ -37,8 +37,8 @@ import com.dmdirc.ui.input.AdditionalTabTargets;
 import java.util.List;
 
 /**
- * Notification command, delegating notification to one of the registered
- * notification commands as preferred by the end user.
+ * Notification command, delegating notification to one of the registered notification commands as
+ * preferred by the end user.
  */
 public class NotificationCommand extends Command implements
         IntelligentCommand {
@@ -47,7 +47,7 @@ public class NotificationCommand extends Command implements
     public static final BaseCommandInfo INFO = new BaseCommandInfo(
             "notification",
             "notification [--methods|--method <method>] text - "
-                + "Notifies you of the text",
+            + "Notifies you of the text",
             CommandType.TYPE_GLOBAL);
     /** The plugin that's using this command. */
     private final NotificationsPlugin parent;
@@ -56,7 +56,7 @@ public class NotificationCommand extends Command implements
      * Creates a new instance of this notification command.
      *
      * @param controller The controller to use for command information.
-     * @param parent The plugin that's instantiating this command
+     * @param parent     The plugin that's instantiating this command
      */
     public NotificationCommand(final CommandController controller, final NotificationsPlugin parent) {
         super(controller);
@@ -100,7 +100,7 @@ public class NotificationCommand extends Command implements
     /**
      * Outputs a list of methods for the notifcation command.
      *
-     * @param origin The input window where the command was entered
+     * @param origin   The input window where the command was entered
      * @param isSilent Whether this command is being silenced
      */
     private void doMethodList(final FrameContainer origin,
@@ -142,4 +142,5 @@ public class NotificationCommand extends Command implements
         }
         return res;
     }
+
 }

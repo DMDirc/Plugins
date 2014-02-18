@@ -55,11 +55,11 @@ public abstract class DMDircListCellRenderer<E> implements ListCellRenderer<E> {
     /**
      * Renders the cell on the given label.
      *
-     * @param label Label to render
-     * @param value Object to render
-     * @param index Index of the cell in the list
+     * @param label      Label to render
+     * @param value      Object to render
+     * @param index      Index of the cell in the list
      * @param isSelected Is the cell selected
-     * @param hasFocus Does the cell have focus
+     * @param hasFocus   Does the cell have focus
      */
     protected abstract void renderValue(final JLabel label, final Object value,
             final int index, final boolean isSelected, final boolean hasFocus);
@@ -80,4 +80,5 @@ public abstract class DMDircListCellRenderer<E> implements ListCellRenderer<E> {
             return label;
         }
     }
+
 }

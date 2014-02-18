@@ -54,9 +54,9 @@ public class HelpMenu extends JMenu implements ActionListener {
     /**
      * Instantiates a new help menu.
      *
-     * @param serverManager The manager to use to join dev chat.
+     * @param serverManager          The manager to use to join dev chat.
      * @param feedbackDialogProvider Provider of feedback dialogs.
-     * @param aboutDialogProvider Provider of about dialogs.
+     * @param aboutDialogProvider    Provider of about dialogs.
      */
     @Inject
     public HelpMenu(
@@ -120,4 +120,5 @@ public class HelpMenu extends JMenu implements ActionListener {
                 break;
         }
     }
+
 }

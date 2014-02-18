@@ -49,15 +49,15 @@ public class ChatContainer extends DCCFrameContainer implements DCCChatHandler {
     /**
      * Creates a new instance of DCCChatWindow with a given DCCChat object.
      *
-     * @param dcc The DCCChat object this window wraps around
-     * @param configManager Config manager
-     * @param commandController The controller to use in the command parser.
-     * @param title The title of this window
-     * @param nick My Current Nickname
-     * @param targetNick Nickname of target
+     * @param dcc                 The DCCChat object this window wraps around
+     * @param configManager       Config manager
+     * @param commandController   The controller to use in the command parser.
+     * @param title               The title of this window
+     * @param nick                My Current Nickname
+     * @param targetNick          Nickname of target
      * @param tabCompleterFactory The factory to use to create tab completers.
-     * @param messageSinkManager The sink manager to use to despatch messages.
-     * @param urlBuilder The URL builder to use when finding icons.
+     * @param messageSinkManager  The sink manager to use to despatch messages.
+     * @param urlBuilder          The URL builder to use when finding icons.
      */
     public ChatContainer(
             final DCCChat dcc,
@@ -75,8 +75,8 @@ public class ChatContainer extends DCCFrameContainer implements DCCChatHandler {
                 tabCompleterFactory,
                 urlBuilder,
                 Arrays.asList(
-                    WindowComponent.TEXTAREA.getIdentifier(),
-                    WindowComponent.INPUTFIELD.getIdentifier()));
+                WindowComponent.TEXTAREA.getIdentifier(),
+                WindowComponent.INPUTFIELD.getIdentifier()));
         dccChat = dcc;
         dcc.setHandler(this);
         nickname = nick;

@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.wizard;
 
-
 import com.dmdirc.ui.CoreUIUtils;
 
 import java.util.List;
@@ -35,9 +34,9 @@ import javax.swing.JFrame;
 public class WizardFrame extends JFrame {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 2;
     /** Wizard. */
@@ -160,4 +159,5 @@ public class WizardFrame extends JFrame {
     public void removeWizardListener(final WizardListener listener) {
         wizard.removeWizardListener(listener);
     }
+
 }

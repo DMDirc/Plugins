@@ -48,7 +48,7 @@ public class Services extends DebugCommand implements IntelligentCommand {
      * Creates a new instance of the command.
      *
      * @param commandProvider The provider to use to access the main debug command.
-     * @param serviceManager The service manager to get services from.
+     * @param serviceManager  The service manager to get services from.
      */
     @Inject
     public Services(final Provider<Debug> commandProvider, final ServiceManager serviceManager) {

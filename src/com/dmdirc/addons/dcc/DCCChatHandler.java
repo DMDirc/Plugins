@@ -32,7 +32,7 @@ public interface DCCChatHandler {
     /**
      * Handle a received message.
      *
-     * @param dcc The DCCChat that this message is from
+     * @param dcc     The DCCChat that this message is from
      * @param message The message
      */
     void handleChatMessage(DCCChat dcc, String message);

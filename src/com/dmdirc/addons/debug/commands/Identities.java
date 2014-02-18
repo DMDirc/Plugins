@@ -47,7 +47,7 @@ public class Identities extends DebugCommand {
      * Creates a new instance of the command.
      *
      * @param commandProvider The provider to use to access the main debug command.
-     * @param controller The controller to read identities from.
+     * @param controller      The controller to read identities from.
      */
     @Inject
     public Identities(final Provider<Debug> commandProvider, final IdentityController controller) {
@@ -86,8 +86,8 @@ public class Identities extends DebugCommand {
         int i = 0;
         for (ConfigProvider source : identities) {
             data[i++] = new String[]{source.getName(),
-            source.getTarget().getTypeName(), source.getTarget().getData(),
-            String.valueOf(source.getTarget().getOrder())};
+                source.getTarget().getTypeName(), source.getTarget().getData(),
+                String.valueOf(source.getTarget().getOrder())};
         }
 
         sendLine(origin, args.isSilent(), FORMAT_OUTPUT,

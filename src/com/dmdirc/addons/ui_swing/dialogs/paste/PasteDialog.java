@@ -73,9 +73,9 @@ public final class PasteDialog extends StandardDialog implements ActionListener,
     /**
      * Creates a new instance of PreferencesDialog.
      *
-     * @param controller Swing controller
-     * @param newParent The frame that owns this dialog
-     * @param text text to show in the paste dialog
+     * @param controller   Swing controller
+     * @param newParent    The frame that owns this dialog
+     * @param text         text to show in the paste dialog
      * @param parentWindow Parent window
      */
     public PasteDialog(final SwingController controller,
@@ -105,7 +105,9 @@ public final class PasteDialog extends StandardDialog implements ActionListener,
      */
     private void initComponents(final String text) {
         scrollPane = new JScrollPane();
-        textField = new TextAreaInputField(controller.getIconManager(), controller.getGlobalConfig(), text);
+        textField =
+                new TextAreaInputField(controller.getIconManager(), controller.getGlobalConfig(),
+                text);
         editButton = new JButton("Edit");
         infoLabel = new TextLabel();
 
@@ -127,7 +129,7 @@ public final class PasteDialog extends StandardDialog implements ActionListener,
 
         new SwingInputHandler(controller.getPluginManager(), textField,
                 parent.getContainer().getCommandParser(), parent.getContainer())
-                .setTypes(false, false, true,false);
+                .setTypes(false, false, true, false);
 
         scrollPane.setViewportView(textField);
         scrollPane.setVisible(false);
@@ -151,33 +153,31 @@ public final class PasteDialog extends StandardDialog implements ActionListener,
 
         getRootPane().getActionMap().put("rightArrowAction",
                 new AbstractAction("rightArrowAction") {
+            private static final long serialVersionUID = 1;
 
-                    private static final long serialVersionUID = 1;
-
-                    /** {@inheritDoc} */
-                    @Override
-                    public void actionPerformed(final ActionEvent evt) {
-                        final JButton button = (JButton) getFocusTraversalPolicy().
-                                getComponentAfter(PasteDialog.this, getFocusOwner());
-                        button.requestFocusInWindow();
-                        button.setSelected(true);
-                    }
-                });
+            /** {@inheritDoc} */
+            @Override
+            public void actionPerformed(final ActionEvent evt) {
+                final JButton button = (JButton) getFocusTraversalPolicy().
+                        getComponentAfter(PasteDialog.this, getFocusOwner());
+                button.requestFocusInWindow();
+                button.setSelected(true);
+            }
+        });
 
         getRootPane().getActionMap().put("leftArrowAction",
                 new AbstractAction("leftArrowAction") {
+            private static final long serialVersionUID = 1;
 
-                    private static final long serialVersionUID = 1;
-
-                    /** {@inheritDoc} */
-                    @Override
-                    public void actionPerformed(final ActionEvent evt) {
-                        final JButton button = (JButton) getFocusTraversalPolicy().
-                                getComponentBefore(PasteDialog.this, getFocusOwner());
-                        button.requestFocusInWindow();
-                        button.setSelected(true);
-                    }
-                });
+            /** {@inheritDoc} */
+            @Override
+            public void actionPerformed(final ActionEvent evt) {
+                final JButton button = (JButton) getFocusTraversalPolicy().
+                        getComponentBefore(PasteDialog.this, getFocusOwner());
+                button.requestFocusInWindow();
+                button.setSelected(true);
+            }
+        });
 
         getRootPane().getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(
                 KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0), "rightArrowAction");
@@ -213,8 +213,7 @@ public final class PasteDialog extends StandardDialog implements ActionListener,
                     + " lines.");
             setResizable(true);
             pack();
-            SwingUtilities.invokeLater(new Runnable(){
-
+            SwingUtilities.invokeLater(new Runnable() {
                 @Override
                 public void run() {
                     setLocationRelativeTo(parentWindow);
@@ -248,4 +247,5 @@ public final class PasteDialog extends StandardDialog implements ActionListener,
     public void keyReleased(final KeyEvent e) {
         // Do nothing
     }
+
 }

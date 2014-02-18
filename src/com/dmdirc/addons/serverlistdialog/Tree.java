@@ -72,8 +72,8 @@ public class Tree extends JPanel implements TreeSelectionListener,
     /**
      * Instantiates a new tree of server groups.
      *
-     * @param controller Swing controller
-     * @param model Model backing this tree
+     * @param controller   Swing controller
+     * @param model        Model backing this tree
      * @param parentWindow Dialog's parent window
      */
     public Tree(final SwingController controller, final ServerListModel model,
@@ -88,7 +88,6 @@ public class Tree extends JPanel implements TreeSelectionListener,
         model.addServerListListener(this);
         treeModel = model.getTreeModel();
         items = new JTree(treeModel) {
-
             /** Serial version UID. */
             private static final long serialVersionUID = 2;
 
@@ -201,8 +200,8 @@ public class Tree extends JPanel implements TreeSelectionListener,
     }
 
     /**
-     * Find the node for a specified server group item, will return root node
-     * if the group isn't found.
+     * Find the node for a specified server group item, will return root node if the group isn't
+     * found.
      *
      * @param item Item to search for in the tree
      *
@@ -223,4 +222,5 @@ public class Tree extends JPanel implements TreeSelectionListener,
         }
         return node;
     }
+
 }

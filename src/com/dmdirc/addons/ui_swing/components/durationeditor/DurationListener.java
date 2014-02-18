@@ -33,4 +33,5 @@ public interface DurationListener {
      * @param newDuration Updated duration
      */
     void durationUpdated(final int newDuration);
+
 }

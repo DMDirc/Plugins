@@ -24,9 +24,9 @@ package com.dmdirc.addons.ui_swing.components;
 
 import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.ui_swing.UIUtilities;
-import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.interfaces.FrameCloseListener;
 import com.dmdirc.interfaces.FrameComponentChangeListener;
+import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.ui.core.components.WindowComponent;
 
 import javax.swing.JLabel;
@@ -38,9 +38,9 @@ public class TypingLabel extends JLabel implements ConfigChangeListener,
         FrameComponentChangeListener, FrameCloseListener {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 2;
     /** typingindicator string for compiler optimisation. */
@@ -81,7 +81,6 @@ public class TypingLabel extends JLabel implements ConfigChangeListener,
                 .getOptionBool("ui", CONFIG_KEY);
         if (!useTypingIndicator) {
             UIUtilities.invokeLater(new Runnable() {
-
                 /** {@inheritDoc} */
                 @Override
                 public void run() {
@@ -103,14 +102,13 @@ public class TypingLabel extends JLabel implements ConfigChangeListener,
     public void componentAdded(final FrameContainer container, final String component) {
         if (WindowComponent.TYPING_INDICATOR.getIdentifier().equals(component)) {
             UIUtilities.invokeLater(new Runnable() {
-
-                    /** {@inheritDoc} */
-                    @Override
-                    public void run() {
-                        if (useTypingIndicator) {
-                            setVisible(true);
-                        }
+                /** {@inheritDoc} */
+                @Override
+                public void run() {
+                    if (useTypingIndicator) {
+                        setVisible(true);
                     }
+                }
             });
         }
     }
@@ -119,15 +117,15 @@ public class TypingLabel extends JLabel implements ConfigChangeListener,
     public void componentRemoved(final FrameContainer container, final String component) {
         if (WindowComponent.TYPING_INDICATOR.getIdentifier().equals(component)) {
             UIUtilities.invokeLater(new Runnable() {
-
-                    /** {@inheritDoc} */
-                    @Override
-                    public void run() {
-                        if (useTypingIndicator) {
-                            setVisible(false);
-                        }
+                /** {@inheritDoc} */
+                @Override
+                public void run() {
+                    if (useTypingIndicator) {
+                        setVisible(false);
                     }
+                }
             });
         }
     }
+
 }

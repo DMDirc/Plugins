@@ -44,9 +44,9 @@ import net.miginfocom.swing.MigLayout;
 public class DurationEditor extends StandardDialog implements ActionListener {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 1;
     /** How many seconds in a minute. */
@@ -86,7 +86,7 @@ public class DurationEditor extends StandardDialog implements ActionListener {
     /**
      * Instantiates a new duration editor.
      *
-     * @param window Parent window.
+     * @param window   Parent window.
      * @param duration Starting duration
      *
      * @since 0.6
@@ -233,7 +233,6 @@ public class DurationEditor extends StandardDialog implements ActionListener {
 
         if (window != null) {
             window.addWindowListener(new WindowAdapter() {
-
                 /** {@inheritDoc} */
                 @Override
                 public void windowClosed(final WindowEvent e) {
@@ -242,4 +241,5 @@ public class DurationEditor extends StandardDialog implements ActionListener {
             });
         }
     }
+
 }

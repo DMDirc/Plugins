@@ -29,16 +29,15 @@ import java.io.Serializable;
 import java.util.Comparator;
 
 /**
- * A comparator that proxies TextFrame comparisons to a Frame container
- * comparator if appropriate.
+ * A comparator that proxies TextFrame comparisons to a Frame container comparator if appropriate.
  */
 public class TextFrameComparator implements Comparator<TextFrame>,
         Serializable {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 1;
     /** Comparator to proxy compares to. */
@@ -50,11 +49,12 @@ public class TextFrameComparator implements Comparator<TextFrame>,
      *
      * @param item1 The first container to compare
      * @param item2 The second container to compare
-     * @return -1 if item1 is before item2, 0 if they're equal,
-     * +1 if item1 is after item2.
+     *
+     * @return -1 if item1 is before item2, 0 if they're equal, +1 if item1 is after item2.
      */
     @Override
     public int compare(final TextFrame item1, final TextFrame item2) {
         return comparator.compare(item1.getContainer(), item2.getContainer());
     }
+
 }

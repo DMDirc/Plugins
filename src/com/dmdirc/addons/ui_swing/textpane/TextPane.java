@@ -65,9 +65,9 @@ public final class TextPane extends JComponent implements MouseWheelListener,
         AdjustmentListener, IRCDocumentListener, ConfigChangeListener {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 5;
     /** Scrollbar model. */
@@ -93,8 +93,8 @@ public final class TextPane extends JComponent implements MouseWheelListener,
      * Creates a new instance of TextPane.
      *
      * @param configDomain The domain to read configuration from.
-     * @param urlBuilder The builder to use to construct URLs for resources.
-     * @param frame Parent Frame
+     * @param urlBuilder   The builder to use to construct URLs for resources.
+     * @param frame        Parent Frame
      */
     public TextPane(
             @SuppressWarnings("qualifiers") @SwingSettingsDomain final String configDomain,
@@ -135,9 +135,7 @@ public final class TextPane extends JComponent implements MouseWheelListener,
         document.addIRCDocumentListener(this);
         setAutoscrolls(true);
 
-        final MouseMotionListener doScrollRectToVisible
-                = new MouseMotionAdapter() {
-
+        final MouseMotionListener doScrollRectToVisible = new MouseMotionAdapter() {
             /** {@inheritDoc} */
             @Override
             public void mouseDragged(final MouseEvent e) {
@@ -161,10 +159,10 @@ public final class TextPane extends JComponent implements MouseWheelListener,
     }
 
     /**
-     * Sets the range properties of the scroll model.  This method takes into
-     * account the scroll model working with 0 indexed line numbers.
+     * Sets the range properties of the scroll model. This method takes into account the scroll
+     * model working with 0 indexed line numbers.
      *
-     * @param max Total number of lines
+     * @param max   Total number of lines
      * @param value Current line
      */
     private void setRangeProperties(final int max, final int value) {
@@ -191,8 +189,8 @@ public final class TextPane extends JComponent implements MouseWheelListener,
     }
 
     /**
-     * Sets the new position for the scrollbar and the associated position
-     * to render the text from.
+     * Sets the new position for the scrollbar and the associated position to render the text from.
+     *
      * @param position new position of the scrollbar
      */
     public void setScrollBarPosition(final int position) {
@@ -247,7 +245,7 @@ public final class TextPane extends JComponent implements MouseWheelListener,
      *
      * Returns the line information from a mouse click inside the textpane.
      *
-     * @param point mouse position
+     * @param point     mouse position
      * @param selection Are we selecting text?
      *
      * @return line number, line part, position in whole line
@@ -343,9 +341,9 @@ public final class TextPane extends JComponent implements MouseWheelListener,
     /**
      * Gets a range of text (styled or unstyled) from the given text.
      *
-     * @param text Text to extract text from
-     * @param start Start index
-     * @param end End index
+     * @param text   Text to extract text from
+     * @param start  Start index
+     * @param end    End index
      * @param styled Styled text?
      *
      * @return Requested text range as a String
@@ -403,7 +401,7 @@ public final class TextPane extends JComponent implements MouseWheelListener,
      * Returns the surrouding word at the specified position.
      *
      * @param lineNumber Line number to get word from
-     * @param index Position to get surrounding word
+     * @param index      Position to get surrounding word
      *
      * @return Surrounding word
      */
@@ -430,15 +428,14 @@ public final class TextPane extends JComponent implements MouseWheelListener,
     public void copy(final boolean copyControlCharacters) {
         if (getSelectedText() != null && !getSelectedText().isEmpty()) {
             Toolkit.getDefaultToolkit().getSystemClipboard().setContents(
-                        new StringSelection(getSelectedText(
-                        copyControlCharacters)), null);
+                    new StringSelection(getSelectedText(
+                    copyControlCharacters)), null);
         }
     }
 
     /** Clears the textpane. */
     public void clear() {
         UIUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc}. */
             @Override
             public void run() {
@@ -476,7 +473,6 @@ public final class TextPane extends JComponent implements MouseWheelListener,
     @Override
     public void trimmed(final int newSize, final int numTrimmed) {
         UIUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc}. */
             @Override
             public void run() {
@@ -507,7 +503,6 @@ public final class TextPane extends JComponent implements MouseWheelListener,
     @Override
     public void cleared() {
         UIUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc}. */
             @Override
             public void run() {
@@ -522,7 +517,6 @@ public final class TextPane extends JComponent implements MouseWheelListener,
     @Override
     public void linesAdded(final int line, final int length, final int size) {
         UIUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc}. */
             @Override
             public void run() {
@@ -542,7 +536,6 @@ public final class TextPane extends JComponent implements MouseWheelListener,
     @Override
     public void repaintNeeded() {
         UIUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc}. */
             @Override
             public void run() {
@@ -594,11 +587,10 @@ public final class TextPane extends JComponent implements MouseWheelListener,
                 .getOptionBool(configDomain, "textpanelinenotification");
         if (!showNotification) {
             UIUtilities.invokeLater(new Runnable() {
-
-            /** {@inheritDoc}. */
-            @Override
-            public void run() {
-                newLineIndicator.setVisible(false);
+                /** {@inheritDoc}. */
+                @Override
+                public void run() {
+                    newLineIndicator.setVisible(false);
                 }
             });
         }
@@ -610,4 +602,5 @@ public final class TextPane extends JComponent implements MouseWheelListener,
     public void close() {
         backgroundPainter.unbind();
     }
+
 }

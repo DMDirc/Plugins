@@ -61,9 +61,9 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
         ComponentListener, AdjustmentListener, ConfigChangeListener {
 
     /**
-     * A version number for this class. It should be changed whenever the
-     * class structure is changed (or anything else that would prevent
-     * serialized objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 8;
     /** Hand cursor. */
@@ -100,7 +100,7 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
     /**
      * Creates a new text pane canvas.
      *
-     * @param parent parent text pane for the canvas
+     * @param parent   parent text pane for the canvas
      * @param document IRCDocument to be displayed
      */
     public TextPaneCanvas(final TextPane parent, final IRCDocument document) {
@@ -154,7 +154,6 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
     private void updateCachedSettings() {
         quickCopy = manager.getOptionBool("ui", "quickCopy");
         UIUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -248,7 +247,7 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
                     firstVisibleLine = line;
                     textLayouts.put(layout, new LineInfo(line, numberOfWraps));
                     positions.put(new Rectangle(0,
-                            (int) (drawPosY + 1.5- layout.getAscent()
+                            (int) (drawPosY + 1.5 - layout.getAscent()
                             + layout.getDescent()),
                             (int) formatWidth + DOUBLE_SIDE_PADDING,
                             (int) (layout.getAscent() + layout.getDescent())),
@@ -272,10 +271,10 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
     /**
      * Returns the number of times a line will wrap.
      *
-     * @param lineMeasurer LineBreakMeasurer to work out wrapping for
+     * @param lineMeasurer   LineBreakMeasurer to work out wrapping for
      * @param paragraphStart Start index of the paragraph
-     * @param paragraphEnd End index of the paragraph
-     * @param formatWidth Width to wrap at
+     * @param paragraphEnd   End index of the paragraph
+     * @param formatWidth    Width to wrap at
      *
      * @return Number of times the line wraps
      */
@@ -298,10 +297,10 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
     /**
      * Redraws the text that has been highlighted.
      *
-     * @param line Line number
-     * @param chars Number of characters so far in the line
-     * @param layout Current line textlayout
-     * @param g Graphics surface to draw highlight on
+     * @param line     Line number
+     * @param chars    Number of characters so far in the line
+     * @param layout   Current line textlayout
+     * @param g        Graphics surface to draw highlight on
      * @param drawPosY current y location of the line
      * @param drawPosX current x location of the line
      */
@@ -503,10 +502,9 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
     }
 
     /**
-     * Returns the indexes for the word surrounding the index in the specified
-     * string.
+     * Returns the indexes for the word surrounding the index in the specified string.
      *
-     * @param text Text to get word from
+     * @param text  Text to get word from
      * @param index Index to get surrounding word
      *
      * @return Indexes of the word surrounding the index (start, end)
@@ -525,10 +523,9 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
     }
 
     /**
-     * Returns the start index for the word surrounding the index in the
-     * specified string.
+     * Returns the start index for the word surrounding the index in the specified string.
      *
-     * @param text Text to get word from
+     * @param text  Text to get word from
      * @param index Index to get surrounding word
      *
      * @return Start index of the word surrounding the index
@@ -549,10 +546,9 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
     }
 
     /**
-     * Returns the end index for the word surrounding the index in the
-     * specified string.
+     * Returns the end index for the word surrounding the index in the specified string.
      *
-     * @param text Text to get word from
+     * @param text  Text to get word from
      * @param index Index to get surrounding word
      *
      * @return End index of the word surrounding the index
@@ -595,7 +591,6 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
             textPane.copy((e.getModifiers() & MouseEvent.CTRL_MASK)
                     == MouseEvent.CTRL_MASK);
             SwingUtilities.invokeLater(new Runnable() {
-
                 /** {@inheritDoc} */
                 @Override
                 public void run() {
@@ -669,21 +664,20 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
     }
 
     /**
-     * Retrieves a character iterator for the text at the specified mouse
-     * position.
+     * Retrieves a character iterator for the text at the specified mouse position.
      *
      * @since 0.6.4
      * @param mousePosition The mouse position to retrieve text for
-     * @return A corresponding character iterator, or null if the specified
-     * mouse position doesn't correspond to any text
+     *
+     * @return A corresponding character iterator, or null if the specified mouse position doesn't
+     *         correspond to any text
      */
     private AttributedCharacterIterator getIterator(final Point mousePosition) {
         final LineInfo lineInfo = getClickPosition(mousePosition, false);
 
         if (lineInfo.getLine() != -1
                 && document.getLine(lineInfo.getLine()) != null) {
-            final AttributedCharacterIterator iterator
-                    = document.getStyledLine(lineInfo.getLine());
+            final AttributedCharacterIterator iterator = document.getStyledLine(lineInfo.getLine());
 
             if (lineInfo.getIndex() < iterator.getBeginIndex()
                     || lineInfo.getIndex() > iterator.getEndIndex()) {
@@ -701,7 +695,7 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
      * Sets the selection for the given event.
      *
      * @param type mouse event type
-     * @param e responsible mouse event
+     * @param e    responsible mouse event
      */
     protected void highlightEvent(final MouseEventType type,
             final MouseEvent e) {
@@ -838,7 +832,7 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
      *
      * Returns the line information from a mouse click inside the textpane.
      *
-     * @param point mouse position
+     * @param point     mouse position
      * @param selection Are we selecting text?
      *
      * @return line number, line part, position in whole line
@@ -866,13 +860,12 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
     }
 
     /**
-     * Returns the character index for a specified line and part for a
-     * specific hit position.
+     * Returns the character index for a specified line and part for a specific hit position.
      *
      * @param lineNumber Line number
-     * @param linePart Line part
-     * @param x X position
-     * @param y Y position
+     * @param linePart   Line part
+     * @param x          X position
+     * @param y          Y position
      *
      * @return Hit position
      */
@@ -1033,7 +1026,7 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
      *
      * @param clickType Click type
      * @param eventType Mouse event type
-     * @param event Triggering mouse event
+     * @param event     Triggering mouse event
      */
     private void fireMouseEvents(final ClickTypeValue clickType,
             final MouseEventType eventType, final MouseEvent event) {
@@ -1060,4 +1053,5 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
     public void removeTextPaneListener(final TextPaneListener listener) {
         listeners.remove(TextPaneListener.class, listener);
     }
+
 }

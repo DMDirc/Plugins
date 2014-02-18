@@ -77,9 +77,9 @@ public class AddEntryInputDialog extends StandardDialog {
      * Instantiates a new standard input dialog.
      *
      * @param controller Swing controller
-     * @param items Parent tree
-     * @param owner Dialog owner
-     * @param model Server list model
+     * @param items      Parent tree
+     * @param owner      Dialog owner
+     * @param model      Server list model
      */
     public AddEntryInputDialog(final SwingController controller,
             final Window owner, final JTree items,
@@ -132,7 +132,6 @@ public class AddEntryInputDialog extends StandardDialog {
      */
     private void addListeners() {
         getOkButton().addActionListener(new ActionListener() {
-
             /** {@inheritDoc} */
             @Override
             public void actionPerformed(final ActionEvent e) {
@@ -142,7 +141,6 @@ public class AddEntryInputDialog extends StandardDialog {
             }
         });
         getCancelButton().addActionListener(new ActionListener() {
-
             /** {@inheritDoc} */
             @Override
             public void actionPerformed(final ActionEvent e) {
@@ -150,7 +148,6 @@ public class AddEntryInputDialog extends StandardDialog {
             }
         });
         addWindowListener(new WindowAdapter() {
-
             /** {@inheritDoc} */
             @Override
             public void windowOpened(final WindowEvent e) {
@@ -164,7 +161,6 @@ public class AddEntryInputDialog extends StandardDialog {
             }
         });
         final DocumentListener dl = new DocumentListener() {
-
             /** {@inheritDoc} */
             @Override
             public void insertUpdate(final DocumentEvent e) {
@@ -234,4 +230,5 @@ public class AddEntryInputDialog extends StandardDialog {
     public String getURI() {
         return uri.getText();
     }
+
 }

@@ -58,9 +58,9 @@ import net.miginfocom.swing.MigLayout;
 public class AliasPanel extends JPanel implements ActionListener {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 2;
     /** Factory to use when creating aliases. */
@@ -79,8 +79,8 @@ public class AliasPanel extends JPanel implements ActionListener {
     /**
      * Creates a new instance of AliasPanel.
      *
-     * @param controller Swing controller
-     * @param actionFactory The factory to use to create new actions.
+     * @param controller        Swing controller
+     * @param actionFactory     The factory to use to create new actions.
      * @param commandController The controller to use to retrieve command information.
      */
     @Inject
@@ -100,8 +100,7 @@ public class AliasPanel extends JPanel implements ActionListener {
 
         argumentComponent = new JComboBox(new CoreActionComparison[]{null,
             CoreActionComparison.INT_GREATER, CoreActionComparison.INT_EQUALS,
-            CoreActionComparison.INT_LESS,
-        });
+            CoreActionComparison.INT_LESS,});
         argumentNumber = new JSpinner(new SpinnerNumberModel(0, 0,
                 Integer.MAX_VALUE, 1));
         response = new JTextArea();
@@ -207,8 +206,7 @@ public class AliasPanel extends JPanel implements ActionListener {
         ((SpinnerNumberModel) argumentNumber.getModel()).setMinimum(0);
         if (argumentComponent.getSelectedIndex() > 0) {
             argumentNumber.setEnabled(true);
-            if (argumentComponent.getSelectedItem() ==
-                    CoreActionComparison.INT_LESS) {
+            if (argumentComponent.getSelectedItem() == CoreActionComparison.INT_LESS) {
                 if (argumentNumber.getModel().getValue().equals(0)) {
                     argumentNumber.getModel().setValue(1);
                 }
@@ -296,4 +294,5 @@ public class AliasPanel extends JPanel implements ActionListener {
     public void focusCommand() {
         command.requestFocusInWindow();
     }
+
 }

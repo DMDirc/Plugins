@@ -27,19 +27,17 @@ import java.util.Locale;
 import java.util.Map;
 
 /**
- * Used to allow the rhino javascript to do stuff that it otherwise can't, such
- * as setting global variables, string triming and getting a char.
+ * Used to allow the rhino javascript to do stuff that it otherwise can't, such as setting global
+ * variables, string triming and getting a char.
  */
 public class JavaScriptHelper {
+
     /** Used to identify the JavaScriptHelper. */
     private static final String ID = "DMDIRC-JSH";
-
     /**
-     * Used to allow scripts to know if a specific function they need is
-     * available.
+     * Used to allow scripts to know if a specific function they need is available.
      */
     private static final int VERSION = 2;
-
     /** Hashtable for storing stuff. */
     private static final Map<String, Object> SETTINGS = new HashMap<>();
 
@@ -47,7 +45,7 @@ public class JavaScriptHelper {
      * Method to set Stuff.
      *
      * @param setting Name of setting
-     * @param value Value of setting
+     * @param value   Value of setting
      */
     public void setGlobal(final String setting, final Object value) {
         if (setting.isEmpty()) {
@@ -108,12 +106,13 @@ public class JavaScriptHelper {
     }
 
     /**
-     * Get the ID of this JavaScriptHelper.
-     * If you extend or modify this, you should change the myIDString variable.
+     * Get the ID of this JavaScriptHelper. If you extend or modify this, you should change the
+     * myIDString variable.
      *
      * @return JavaScriptHelper ID
      */
     public String getID() {
         return ID;
     }
+
 }

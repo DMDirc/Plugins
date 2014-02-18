@@ -21,7 +21,6 @@
  */
 
 /**
- * Treeview frame mananger.  Provides a visual interface to manage irc windows
- * in a tree format.
+ * Treeview frame mananger. Provides a visual interface to manage irc windows in a tree format.
  */
 package com.dmdirc.addons.ui_swing.framemanager.tree;

@@ -19,6 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 package com.dmdirc.addons.ui_swing.dialogs;
 
 import java.awt.Window;
@@ -29,10 +30,9 @@ import java.awt.Window;
 public abstract class ConfirmQuitDialog extends StandardQuestionDialog {
 
     /**
-     * A version number for this class. It should be changed
-     * whenever the class structure is changed (or anything else
-     * that would prevent serialized objects being unserialized
-     * with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 1;
 
@@ -63,4 +63,5 @@ public abstract class ConfirmQuitDialog extends StandardQuestionDialog {
      * Called when the user confirms they wish to quit the client.
      */
     protected abstract void handleQuit();
+
 }

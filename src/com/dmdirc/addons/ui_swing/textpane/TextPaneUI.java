@@ -49,4 +49,5 @@ public class TextPaneUI extends ComponentUI {
         }
         c.setBorder(border);
     }
+
 }

@@ -58,22 +58,16 @@ public class Apple implements InvocationHandler {
 
     /** Store any addresses that are opened before CLIENT_OPENED. */
     private final List<URI> addresses = new ArrayList<>();
-
     /** Config manager used to read settings. */
     private final AggregateConfigProvider configManager;
-
     /** The "Application" object used to do stuff on OS X. */
     private Object application;
-
     /** Whether we're listening or not. */
     private boolean isListener = false;
-
     /** The MenuBar for the application. */
     private MenuBar menuBar = null;
-
     /** Whether the CLIENT_OPENED action has been called or not. */
     private boolean clientOpened = false;
-
     /** The server manager to use to connect to URLs. */
     private final ServerManager serverManager;
 
@@ -84,7 +78,7 @@ public class Apple implements InvocationHandler {
      *
      * @param configManager Config manager
      * @param serverManager The server manager to use to connect to URLs.
-     * @param eventBus The bus to listen for events on.
+     * @param eventBus      The bus to listen for events on.
      */
     public Apple(
             final AggregateConfigProvider configManager,
@@ -111,21 +105,23 @@ public class Apple implements InvocationHandler {
      */
     private synchronized native int registerOpenURLCallback();
 
-
     /**
      * Call a method on the given object.
      *
-     * @param obj Object to call method on.
-     * @param className Name of class that object really is.
+     * @param obj        Object to call method on.
+     * @param className  Name of class that object really is.
      * @param methodName Method to call
-     * @param classes Array of classes to pass when calling getMethod
-     * @param objects Array of objects to pass when invoking.
+     * @param classes    Array of classes to pass when calling getMethod
+     * @param objects    Array of objects to pass when invoking.
+     *
      * @return Output from method.invoke()
      */
-    private Object reflectMethod(final Object obj, final String className, final String methodName, final Class[] classes, final Object[] objects) {
+    private Object reflectMethod(final Object obj, final String className, final String methodName,
+            final Class[] classes, final Object[] objects) {
         try {
             final Class<?> clazz = className == null ? obj.getClass() : Class.forName(className);
-            final Method method = clazz.getMethod(methodName, classes == null ? new Class<?>[0] : classes);
+            final Method method = clazz.getMethod(methodName, classes == null ? new Class<?>[0]
+                    : classes);
             return method.invoke(obj, objects == null ? new Object[0] : objects);
         } catch (ReflectiveOperationException ex) {
             Logger.userError(ErrorLevel.LOW, "Unable to find OS X classes");
@@ -138,12 +134,16 @@ public class Apple implements InvocationHandler {
      * Handle a method call to the apple Application class.
      *
      * @param methodName Method to call
-     * @param classes Array of classes to pass when calling getMethod
-     * @param objects Array of objects to pass when invoking.
+     * @param classes    Array of classes to pass when calling getMethod
+     * @param objects    Array of objects to pass when invoking.
+     *
      * @return Output from method.invoke()
      */
-    private Object doAppleMethod(final String methodName, final Class[] classes, final Object[] objects) {
-        if (!isApple()) { return null; }
+    private Object doAppleMethod(final String methodName, final Class[] classes,
+            final Object[] objects) {
+        if (!isApple()) {
+            return null;
+        }
 
         return reflectMethod(getApplication(), null, methodName, classes, objects);
     }
@@ -156,7 +156,8 @@ public class Apple implements InvocationHandler {
     public Object getApplication() {
         synchronized (Apple.class) {
             if (isApple() && application == null) {
-                application = reflectMethod(null, "com.apple.eawt.Application", "getApplication", null, null);
+                application = reflectMethod(null, "com.apple.eawt.Application", "getApplication",
+                        null, null);
             }
             return application;
         }
@@ -178,7 +179,8 @@ public class Apple implements InvocationHandler {
      */
     public static boolean isAppleUI() {
         final String name = UIManager.getLookAndFeel().getClass().getName();
-        return isApple() && (name.equals("apple.laf.AquaLookAndFeel") || name.equals("com.apple.laf.AquaLookAndFeel"));
+        return isApple() && (name.equals("apple.laf.AquaLookAndFeel") || name.equals(
+                "com.apple.laf.AquaLookAndFeel"));
     }
 
     /**
@@ -204,21 +206,20 @@ public class Apple implements InvocationHandler {
     /**
      * Requests this application to move to the foreground.
      *
-     * @param allWindows if all windows of this application should be moved to
-     *                   the foreground, or only the foremost one
+     * @param allWindows if all windows of this application should be moved to the foreground, or
+     *                   only the foremost one
      */
     public void requestForeground(final boolean allWindows) {
         doAppleMethod("requestForeground", new Class<?>[]{Boolean.TYPE}, new Object[]{allWindows});
     }
 
     /**
-     * Requests user attention to this application (usually through bouncing
-     * the Dock icon). Critical requests will continue to bounce the Dock icon
-     * until the app is activated. An already active application requesting
-     * attention does nothing.
+     * Requests user attention to this application (usually through bouncing the Dock icon).
+     * Critical requests will continue to bounce the Dock icon until the app is activated. An
+     * already active application requesting attention does nothing.
      *
-     * @param isCritical If this is false, the dock icon only bounces once,
-     *            otherwise it will bounce until clicked on.
+     * @param isCritical If this is false, the dock icon only bounces once, otherwise it will bounce
+     *                   until clicked on.
      */
     public void requestUserAttention(final boolean isCritical) {
         doAppleMethod("requestUserAttention", new Class<?>[]{Boolean.TYPE}, new Object[]{isCritical});
@@ -240,7 +241,7 @@ public class Apple implements InvocationHandler {
      */
     public PopupMenu getDockMenu() {
         final Object result = doAppleMethod("getDockMenu", null, null);
-        return (result instanceof PopupMenu) ? (PopupMenu)result : null;
+        return (result instanceof PopupMenu) ? (PopupMenu) result : null;
     }
 
     /**
@@ -259,12 +260,11 @@ public class Apple implements InvocationHandler {
      */
     public Image getDockIconImage() {
         final Object result = doAppleMethod("getDockIconImage", null, null);
-        return (result instanceof Image) ? (Image)result : null;
+        return (result instanceof Image) ? (Image) result : null;
     }
 
     /**
-     * Affixes a small system provided badge to this application's Dock icon.
-     * Usually a number.
+     * Affixes a small system provided badge to this application's Dock icon. Usually a number.
      *
      * @param badge textual label to affix to the Dock icon
      */
@@ -273,9 +273,8 @@ public class Apple implements InvocationHandler {
     }
 
     /**
-     * Sets the default menu bar to use when there are no active frames.
-     * Only used when the system property "apple.laf.useScreenMenuBar" is
-     * "true", and the Aqua Look and Feel is active.
+     * Sets the default menu bar to use when there are no active frames. Only used when the system
+     * property "apple.laf.useScreenMenuBar" is "true", and the Aqua Look and Feel is active.
      *
      * @param menuBar to use when no other frames are active
      */
@@ -286,16 +285,19 @@ public class Apple implements InvocationHandler {
     /**
      * Add this application as a handler for the given event.
      *
-     * @param handlerClass Class used as the handler.
+     * @param handlerClass  Class used as the handler.
      * @param handlerMethod Method used to set the handler.
+     *
      * @return True if we succeeded.
      */
     private boolean addHandler(final String handlerClass, final String handlerMethod) {
         try {
             final Class<?> listenerClass = Class.forName(handlerClass);
-            final Object listener = Proxy.newProxyInstance(getClass().getClassLoader(), new Class<?>[]{listenerClass}, this);
+            final Object listener = Proxy.newProxyInstance(getClass().getClassLoader(),
+                    new Class<?>[]{listenerClass}, this);
 
-            final Method method = getApplication().getClass().getMethod(handlerMethod, new Class<?>[]{listenerClass});
+            final Method method = getApplication().getClass().getMethod(handlerMethod,
+                    new Class<?>[]{listenerClass});
             method.invoke(getApplication(), listener);
 
             return true;
@@ -364,8 +366,7 @@ public class Apple implements InvocationHandler {
     }
 
     /**
-     * Set the MenuBar.
-     * This will unset all menu mnemonics aswell if on the OSX ui.
+     * Set the MenuBar. This will unset all menu mnemonics aswell if on the OSX ui.
      *
      * @param newMenuBar MenuBar to use to send events to,
      */
@@ -403,7 +404,7 @@ public class Apple implements InvocationHandler {
         for (int i = 0; i < menuBar.getMenuCount(); i++) {
             final JMenu menu = menuBar.getMenu(i);
             if (menu instanceof java.awt.event.ActionListener) {
-                ((java.awt.event.ActionListener)menu).actionPerformed(actionEvent);
+                ((java.awt.event.ActionListener) menu).actionPerformed(actionEvent);
             }
         }
     }
@@ -445,7 +446,7 @@ public class Apple implements InvocationHandler {
     /**
      * This is called when Quit is selected from the Application menu.
      *
-     * @param event an ApplicationEvent object
+     * @param event        an ApplicationEvent object
      * @param quitResponse QuitResponse object.
      */
     public void handleQuitRequestWith(final EventObject event, final Object quitResponse) {
@@ -460,23 +461,22 @@ public class Apple implements InvocationHandler {
     }
 
     /**
-     * Callback from our JNI library.
-     * This should work when not launcher via JavaApplicationStub
+     * Callback from our JNI library. This should work when not launcher via JavaApplicationStub
      *
      * @param url The irc url string to connect to.
      */
     public void handleOpenURL(final String url) {
         try {
             handleURI(NewServer.getURI(url));
-        } catch (final URISyntaxException use) { }
+        } catch (final URISyntaxException use) {
+        }
     }
 
     /**
-     * Callback from OSX Directly.
-     * This will work if we were launched using the JavaApplicationStub
+     * Callback from OSX Directly. This will work if we were launched using the JavaApplicationStub
      *
-     * @param event Event related to this callback. This event will have a
-     *              reflectable getURI method to get a URI.
+     * @param event Event related to this callback. This event will have a reflectable getURI method
+     *              to get a URI.
      */
     public void openURI(final EventObject event) {
         if (!isApple()) {
@@ -492,9 +492,8 @@ public class Apple implements InvocationHandler {
     /**
      * Handle connecting to a URI.
      *
-     * If called before the client has finished opening, the URI will be added
-     * to a list that will be connected to once the CLIENT_OPENED action is
-     * called. Otherwise we connect right away.
+     * If called before the client has finished opening, the URI will be added to a list that will
+     * be connected to once the CLIENT_OPENED action is called. Otherwise we connect right away.
      *
      * @param uri URI to connect to.
      */
@@ -514,4 +513,5 @@ public class Apple implements InvocationHandler {
             }
         }
     }
+
 }

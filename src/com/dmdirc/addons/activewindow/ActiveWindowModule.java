@@ -29,7 +29,6 @@ import dagger.Module;
 /**
  * DI module for the active window plugin.
  */
-@Module(injects={ActiveWindowManager.class, ActiveCommand.class}, addsTo = SwingModule.class)
+@Module(injects = {ActiveWindowManager.class, ActiveCommand.class}, addsTo = SwingModule.class)
 public class ActiveWindowModule {
-
 }

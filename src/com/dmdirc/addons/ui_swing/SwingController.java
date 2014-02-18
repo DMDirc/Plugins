@@ -109,13 +109,13 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     /**
      * Instantiates a new SwingController.
      *
-     * @param pluginInfo Plugin info
+     * @param pluginInfo      Plugin info
      * @param identityManager Identity Manager
-     * @param pluginManager Plugin manager
-     * @param serverManager Server manager to use for server information.
-     * @param urlBuilder URL builder to use to resolve icons etc.
-     * @param colourManager The colour manager to use to parse colours.
-     * @param eventBus The bus to publish and subscribe to events on.
+     * @param pluginManager   Plugin manager
+     * @param serverManager   Server manager to use for server information.
+     * @param urlBuilder      URL builder to use to resolve icons etc.
+     * @param colourManager   The colour manager to use to parse colours.
+     * @param eventBus        The bus to publish and subscribe to events on.
      */
     public SwingController(
             final PluginInfo pluginInfo,
@@ -199,7 +199,6 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     @Override
     public void showChannelSettingsDialog(final Channel channel) {
         UIUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -212,7 +211,6 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     @Override
     public void showServerSettingsDialog(final Server server) {
         UIUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -227,7 +225,6 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     @Deprecated
     public void closeServerSettingsDialog(final Server server) {
         UIUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -257,15 +254,13 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     public void updateComponentTrees() {
         final int state = UIUtilities.invokeAndWait(
                 new Callable<Integer>() {
-
-                    /** {@inheritDoc} */
-                    @Override
-                    public Integer call() {
-                        return getMainFrame().getExtendedState();
-                    }
-                });
+            /** {@inheritDoc} */
+            @Override
+            public Integer call() {
+                return getMainFrame().getExtendedState();
+            }
+        });
         UIUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -274,7 +269,6 @@ public class SwingController extends BaseCommandPlugin implements UIController {
         });
         for (final java.awt.Window window : getTopLevelWindows()) {
             UIUtilities.invokeLater(new Runnable() {
-
                 /** {@inheritDoc} */
                 @Override
                 public void run() {
@@ -286,7 +280,6 @@ public class SwingController extends BaseCommandPlugin implements UIController {
             });
         }
         UIUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -300,7 +293,6 @@ public class SwingController extends BaseCommandPlugin implements UIController {
      */
     private void initUISettings() {
         UIUtilities.invokeAndWait(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -341,7 +333,6 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     @Override
     public void showURLDialog(final URI url) {
         UIUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -354,7 +345,6 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     @Override
     public void showFeedbackNag() {
         UIUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -409,7 +399,6 @@ public class SwingController extends BaseCommandPlugin implements UIController {
         swingManager.load();
 
         UIUtilities.invokeAndWait(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -564,8 +553,8 @@ public class SwingController extends BaseCommandPlugin implements UIController {
                 globalConfig, globalIdentity));
         advanced.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
                 getDomain(), "showfulltopic", "Show full topic in topic bar?",
-               "Do you want to show the full topic in the topic bar or just"
-               + "first line?",
+                "Do you want to show the full topic in the topic bar or just"
+                + "first line?",
                 globalConfig, globalIdentity));
         advanced.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
                 getDomain(), "hideEmptyTopicBar", "Hide empty topic bar?",
@@ -698,8 +687,7 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     }
 
     /**
-     * Returns an instance of SwingController. This method is exported for use
-     * in other plugins.
+     * Returns an instance of SwingController. This method is exported for use in other plugins.
      *
      * @return A reference to this SwingController.
      */
@@ -709,11 +697,10 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     }
 
     /**
-     * Adds the specified menu item to the named parent menu, creating the
-     * parent menu if required.
+     * Adds the specified menu item to the named parent menu, creating the parent menu if required.
      *
      * @param parentMenu Parent menu name
-     * @param menuItem Menu item to add
+     * @param menuItem   Menu item to add
      */
     public void addMenuItem(final String parentMenu, final JMenuItem menuItem) {
         getMainFrame().getJMenuBar().addMenuItem(parentMenu, menuItem);
@@ -740,6 +727,7 @@ public class SwingController extends BaseCommandPlugin implements UIController {
      * Retrieves the window factory to use.
      *
      * @return The window factory to use.
+     *
      * @deprecated Should be injected where needed.
      */
     @Deprecated
@@ -751,6 +739,7 @@ public class SwingController extends BaseCommandPlugin implements UIController {
      * Retrieves the main frame to use.
      *
      * @return The main frame to use.
+     *
      * @deprecated Should be injected where needed.
      */
     @Deprecated
@@ -762,6 +751,7 @@ public class SwingController extends BaseCommandPlugin implements UIController {
      * Retrieves the status bar that's in use.
      *
      * @return The status bar that's in use.
+     *
      * @deprecated Should be injected where needed.
      */
     @Deprecated

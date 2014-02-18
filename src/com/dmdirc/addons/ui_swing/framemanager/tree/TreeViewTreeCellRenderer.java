@@ -64,9 +64,9 @@ public class TreeViewTreeCellRenderer implements TreeCellRenderer,
     /**
      * Creates a new instance of TreeViewTreeCellRenderer.
      *
-     * @param config Config manager to retrieve settings from
+     * @param config        Config manager to retrieve settings from
      * @param colourManager The colour manager to use to resolve colours.
-     * @param manager Parent TreeFrameManager
+     * @param manager       Parent TreeFrameManager
      */
     public TreeViewTreeCellRenderer(
             final AggregateConfigProvider config,
@@ -88,12 +88,12 @@ public class TreeViewTreeCellRenderer implements TreeCellRenderer,
     /**
      * Configures the renderer based on the passed parameters.
      *
-     * @param tree JTree for this renderer.
-     * @param value node to be rendered.
-     * @param sel whether the node is selected.
+     * @param tree     JTree for this renderer.
+     * @param value    node to be rendered.
+     * @param sel      whether the node is selected.
      * @param expanded whether the node is expanded.
-     * @param leaf whether the node is a leaf.
-     * @param row the node's row.
+     * @param leaf     whether the node is a leaf.
+     * @param row      the node's row.
      * @param hasFocus whether the node has focus.
      *
      * @return RendererComponent for this node.
@@ -155,22 +155,22 @@ public class TreeViewTreeCellRenderer implements TreeCellRenderer,
     private void setColours() {
         rolloverColour = UIUtilities.convertColour(
                 colourManager.getColourFromString(
-                        config.getOptionString(
-                                "ui", "treeviewRolloverColour",
-                                "treeview", "backgroundcolour",
-                                "ui", "backgroundcolour"), null));
+                config.getOptionString(
+                "ui", "treeviewRolloverColour",
+                "treeview", "backgroundcolour",
+                "ui", "backgroundcolour"), null));
         activeBackground = UIUtilities.convertColour(
                 colourManager.getColourFromString(
-                        config.getOptionString(
-                                "ui", "treeviewActiveBackground",
-                                "treeview", "backgroundcolour",
-                                "ui", "backgroundcolour"), null));
+                config.getOptionString(
+                "ui", "treeviewActiveBackground",
+                "treeview", "backgroundcolour",
+                "ui", "backgroundcolour"), null));
         activeForeground = UIUtilities.convertColour(
                 colourManager.getColourFromString(
-                        config.getOptionString(
-                                "ui", "treeviewActiveForeground",
-                                "treeview", "foregroundcolour",
-                                "ui", "foregroundcolour"), null));
+                config.getOptionString(
+                "ui", "treeviewActiveForeground",
+                "treeview", "foregroundcolour",
+                "ui", "foregroundcolour"), null));
         activeBold = config.getOptionBool("ui", "treeviewActiveBold");
 
         manager.getTree().repaint();
@@ -189,4 +189,5 @@ public class TreeViewTreeCellRenderer implements TreeCellRenderer,
             setColours();
         }
     }
+
 }

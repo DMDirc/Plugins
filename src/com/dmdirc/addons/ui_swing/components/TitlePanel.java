@@ -37,9 +37,9 @@ import net.miginfocom.swing.MigLayout;
 public class TitlePanel extends JPanel {
 
     /**
-     * A version number for this class. It should be changed whenever the
-     * class structure is changed (or anything else that would prevent
-     * serialized objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = -4026633984970698130L;
     /** Title label. */
@@ -67,7 +67,7 @@ public class TitlePanel extends JPanel {
      * Instantiates a new title panel.
      *
      * @param border Border to use for the panel
-     * @param text Initial text
+     * @param text   Initial text
      */
     public TitlePanel(final Border border, final String text) {
         super(new MigLayout());
@@ -92,4 +92,5 @@ public class TitlePanel extends JPanel {
     public void setText(final String text) {
         title.setText(text);
     }
+
 }

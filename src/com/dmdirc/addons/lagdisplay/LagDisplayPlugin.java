@@ -127,10 +127,11 @@ public final class LagDisplayPlugin extends BasePlugin implements
     }
 
     /**
-     * Retrieves the history of the specified server. If there is no history,
-     * a new list is added to the history map and returned.
+     * Retrieves the history of the specified server. If there is no history, a new list is added to
+     * the history map and returned.
      *
      * @param connection The connection whose history is being requested
+     *
      * @return The history for the specified server
      */
     protected RollingList<Long> getHistory(final Connection connection) {
@@ -141,8 +142,8 @@ public final class LagDisplayPlugin extends BasePlugin implements
     }
 
     /**
-     * Determines if the {@link ServerInfoDialog} should show a graph of the
-     * ping time for the current server.
+     * Determines if the {@link ServerInfoDialog} should show a graph of the ping time for the
+     * current server.
      *
      * @return True if a graph should be shown, false otherwise
      */
@@ -151,8 +152,7 @@ public final class LagDisplayPlugin extends BasePlugin implements
     }
 
     /**
-     * Determines if the {@link PingHistoryPanel} should show labels on
-     * selected points.
+     * Determines if the {@link PingHistoryPanel} should show labels on selected points.
      *
      * @return True if labels should be shown, false otherwise
      */
@@ -225,7 +225,8 @@ public final class LagDisplayPlugin extends BasePlugin implements
 
             panel.refreshDialog();
         } else if (useAlternate && type.equals(CoreActionType.SERVER_PINGSENT)) {
-            ((Connection) arguments[0]).getParser().sendRawMessage("LAGCHECK_" + new Date().getTime());
+            ((Connection) arguments[0]).getParser().sendRawMessage("LAGCHECK_" + new Date().
+                    getTime());
         } else if (useAlternate && type.equals(CoreActionType.SERVER_NUMERIC)
                 && ((Integer) arguments[1]) == 421
                 && ((String[]) arguments[2])[3].startsWith("LAGCHECK_")) {
@@ -256,6 +257,7 @@ public final class LagDisplayPlugin extends BasePlugin implements
      * Retrieves the ping time for the specified connection.
      *
      * @param connection The connection whose ping time is being requested
+     *
      * @return A String representation of the current lag, or "Unknown"
      */
     public String getTime(final Connection connection) {
@@ -264,7 +266,9 @@ public final class LagDisplayPlugin extends BasePlugin implements
 
     /**
      * Formats the specified time so it's a nice size to display in the label.
+     *
      * @param object An uncast Long representing the time to be formatted
+     *
      * @return Formatted time string
      */
     protected String formatTime(final Object object) {
@@ -288,16 +292,16 @@ public final class LagDisplayPlugin extends BasePlugin implements
                 + "lag which bypasses bouncers or proxies that may reply?",
                 manager.getConfigManager(), manager.getIdentity()));
         cat.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
-                getDomain(), "graph", "Show graph", "Show a graph of ping times " +
-                "for the current server in the information popup?",
+                getDomain(), "graph", "Show graph", "Show a graph of ping times "
+                + "for the current server in the information popup?",
                 manager.getConfigManager(), manager.getIdentity()));
         cat.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
-                getDomain(), "labels", "Show labels", "Show labels on selected " +
-                "points on the ping graph?",
+                getDomain(), "labels", "Show labels", "Show labels on selected "
+                + "points on the ping graph?",
                 manager.getConfigManager(), manager.getIdentity()));
         cat.addSetting(new PreferencesSetting(PreferencesType.INTEGER,
-                getDomain(), "history", "Graph points", "Number of data points " +
-                "to plot on the graph, if enabled.",
+                getDomain(), "history", "Graph points", "Number of data points "
+                + "to plot on the graph, if enabled.",
                 manager.getConfigManager(), manager.getIdentity()));
         manager.getCategory("Plugins").addSubCategory(cat);
     }
@@ -307,4 +311,5 @@ public final class LagDisplayPlugin extends BasePlugin implements
     public void configChanged(final String domain, final String key) {
         readConfig();
     }
+
 }

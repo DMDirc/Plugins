@@ -35,15 +35,15 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.SwingUtilities;
 
 /**
- * Model for the "trigger" list of the actions editor. Adds type group headers,
- * and ensures they can't be selected.
+ * Model for the "trigger" list of the actions editor. Adds type group headers, and ensures they
+ * can't be selected.
  */
 public final class ActionTypeModel extends DefaultComboBoxModel {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 1;
     /** Max Width. */
@@ -54,7 +54,7 @@ public final class ActionTypeModel extends DefaultComboBoxModel {
     /**
      * Creates a new instance of ActionTypeModel.
      *
-     * @param fm Font metrics
+     * @param fm         Font metrics
      * @param typeGroups The action type groups to use
      */
     public ActionTypeModel(final FontMetrics fm, final MapList<String, ActionType> typeGroups) {
@@ -127,4 +127,5 @@ public final class ActionTypeModel extends DefaultComboBoxModel {
     public int getMaxWidth() {
         return maxWidth;
     }
+
 }

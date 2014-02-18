@@ -42,25 +42,21 @@ public class IdentClient implements Runnable {
 
     /** The IdentdServer that owns this Client. */
     private final IdentdServer myServer;
-
     /** The Socket that we are in charge of. */
     private final Socket mySocket;
-
     /** The Thread in use for this client. */
     private volatile Thread myThread;
-
     /** The plugin that owns us. */
     private final IdentdPlugin myPlugin;
-
     /** Server manager. */
     private final ServerManager serverManager;
 
     /**
      * Create the IdentClient.
      *
-     * @param server The server that owns this
-     * @param socket The socket we are handing
-     * @param plugin Parent plugin
+     * @param server        The server that owns this
+     * @param socket        The socket we are handing
+     * @param plugin        Parent plugin
      * @param serverManager Server manager to retrieve servers from
      */
     public IdentClient(final IdentdServer server, final Socket socket,
@@ -107,11 +103,12 @@ public class IdentClient implements Runnable {
     }
 
     /**
-     * Get the ident response for a given line.
-     * Complies with rfc1413 (http://www.faqs.org/rfcs/rfc1413.html)
+     * Get the ident response for a given line. Complies with rfc1413
+     * (http://www.faqs.org/rfcs/rfc1413.html)
      *
-     * @param input Line to generate response for
+     * @param input  Line to generate response for
      * @param config The config manager to use for settings
+     *
      * @return the ident response for the given line
      */
     protected String getIdentResponse(final String input, final AggregateConfigProvider config) {
@@ -126,7 +123,8 @@ public class IdentClient implements Runnable {
             myPort = Integer.parseInt(bits[0].trim());
             theirPort = Integer.parseInt(bits[1].trim());
         } catch (NumberFormatException e) {
-            return String.format("%s , %s : ERROR : X-INVALID-INPUT", escapeString(bits[0]), escapeString(bits[1]));
+            return String.format("%s , %s : ERROR : X-INVALID-INPUT", escapeString(bits[0]),
+                    escapeString(bits[1]));
         }
 
         if (myPort > 65535 || myPort < 1 || theirPort > 65535 || theirPort < 1) {
@@ -134,7 +132,8 @@ public class IdentClient implements Runnable {
         }
 
         final Connection connection = getConnectionByPort(myPort);
-        if (!config.getOptionBool(myPlugin.getDomain(), "advanced.alwaysOn") && (connection == null || config.getOptionBool(myPlugin.getDomain(), "advanced.isNoUser"))) {
+        if (!config.getOptionBool(myPlugin.getDomain(), "advanced.alwaysOn") && (connection == null
+                || config.getOptionBool(myPlugin.getDomain(), "advanced.isNoUser"))) {
             return String.format("%d , %d : ERROR : NO-USER", myPort, theirPort);
         }
 
@@ -147,7 +146,8 @@ public class IdentClient implements Runnable {
         final String username;
 
         final String customSystem = config.getOption(myPlugin.getDomain(), "advanced.customSystem");
-        if (config.getOptionBool(myPlugin.getDomain(), "advanced.useCustomSystem") && customSystem != null && customSystem.length() > 0 && customSystem.length() < 513) {
+        if (config.getOptionBool(myPlugin.getDomain(), "advanced.useCustomSystem") && customSystem
+                != null && customSystem.length() > 0 && customSystem.length() < 513) {
             os = customSystem;
         } else {
             // Tad excessive maybe, but complete!
@@ -173,23 +173,28 @@ public class IdentClient implements Runnable {
         }
 
         final String customName = config.getOption(myPlugin.getDomain(), "general.customName");
-        if (config.getOptionBool(myPlugin.getDomain(), "general.useCustomName") && customName != null && customName.length() > 0 && customName.length() < 513) {
+        if (config.getOptionBool(myPlugin.getDomain(), "general.useCustomName") && customName
+                != null && customName.length() > 0 && customName.length() < 513) {
             username = customName;
-        } else if (connection != null && config.getOptionBool(myPlugin.getDomain(), "general.useNickname")) {
+        } else if (connection != null && config.getOptionBool(myPlugin.getDomain(),
+                "general.useNickname")) {
             username = connection.getParser().getLocalClient().getNickname();
-        } else if (connection != null && config.getOptionBool(myPlugin.getDomain(), "general.useUsername")) {
+        } else if (connection != null && config.getOptionBool(myPlugin.getDomain(),
+                "general.useUsername")) {
             username = connection.getParser().getLocalClient().getUsername();
         } else {
             username = System.getProperty("user.name");
         }
 
-        return String.format("%d , %d : USERID : %s : %s", myPort, theirPort, escapeString(os), escapeString(username));
+        return String.format("%d , %d : USERID : %s : %s", myPort, theirPort, escapeString(os),
+                escapeString(username));
     }
 
     /**
      * Escape special chars.
      *
      * @param str String to escape
+     *
      * @return Escaped string.
      */
     public static String escapeString(final String str) {
@@ -200,6 +205,7 @@ public class IdentClient implements Runnable {
      * Unescape special chars.
      *
      * @param str String to escape
+     *
      * @return Escaped string.
      */
     public static String unescapeString(final String str) {
@@ -224,6 +230,7 @@ public class IdentClient implements Runnable {
      * Retrieves the server that is bound to the specified local port.
      *
      * @param port Port to check for
+     *
      * @return The server instance listening on the given port
      */
     protected Connection getConnectionByPort(final int port) {
@@ -236,4 +243,3 @@ public class IdentClient implements Runnable {
     }
 
 }
-

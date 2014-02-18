@@ -38,12 +38,11 @@ import javax.swing.table.DefaultTableCellRenderer;
 public class ColourRenderer extends DefaultTableCellRenderer {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 1;
-
     /** The colour manager to use to parse colours. */
     private final ColourManager colourManager;
 
@@ -65,7 +64,8 @@ public class ColourRenderer extends DefaultTableCellRenderer {
             final boolean hasFocus, final int row, final int column) {
         Color colour = null;
         if (value != null && !((String) value).isEmpty()) {
-            colour = UIUtilities.convertColour(colourManager.getColourFromString((String) value, null));
+            colour = UIUtilities.convertColour(colourManager.getColourFromString((String) value,
+                    null));
         }
 
         setHorizontalAlignment(CENTER);

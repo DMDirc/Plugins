@@ -39,7 +39,6 @@ import org.slf4j.LoggerFactory;
 public class ImageLoader extends LoggingSwingWorker<Image, Void> {
 
     private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(ImageLoader.class);
-
     /**
      * URL of image file to load.
      */
@@ -86,7 +85,9 @@ public class ImageLoader extends LoggingSwingWorker<Image, Void> {
         } catch (InterruptedException ex) {
             LOG.debug("Interrupted whilst loading image: {}", imageURL);
         } catch (ExecutionException ex) {
-            LOG.debug("Exception whilst loading image: {}. " + "Exception message:", imageURL, ex.getMessage());
+            LOG.debug("Exception whilst loading image: {}. " + "Exception message:", imageURL, ex.
+                    getMessage());
         }
     }
+
 }

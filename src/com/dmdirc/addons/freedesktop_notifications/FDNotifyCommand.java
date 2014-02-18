@@ -31,8 +31,7 @@ import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.interfaces.CommandController;
 
 /**
- * The FDNotify Command shows a nice popup on using the FreeDesktop
- * VisualNotifications.
+ * The FDNotify Command shows a nice popup on using the FreeDesktop VisualNotifications.
  */
 public final class FDNotifyCommand extends Command {
 
@@ -47,16 +46,18 @@ public final class FDNotifyCommand extends Command {
      * Creates a new instance of FDNotifyCommand.
      *
      * @param controller The controller to use for command information.
-     * @param myPlugin the plugin creating this command.
+     * @param myPlugin   the plugin creating this command.
      */
-    public FDNotifyCommand(final CommandController controller, final FreeDesktopNotificationsPlugin myPlugin) {
+    public FDNotifyCommand(final CommandController controller,
+            final FreeDesktopNotificationsPlugin myPlugin) {
         super(controller);
         this.myPlugin = myPlugin;
     }
 
     /** {@inheritDoc} */
     @Override
-    public void execute(final FrameContainer origin, final CommandArguments args, final CommandContext context) {
+    public void execute(final FrameContainer origin, final CommandArguments args,
+            final CommandContext context) {
         new Thread() {
             /** {@inheritDoc} */
             @Override
@@ -65,4 +66,5 @@ public final class FDNotifyCommand extends Command {
             }
         }.start();
     }
+
 }

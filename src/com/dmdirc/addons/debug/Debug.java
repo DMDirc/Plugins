@@ -53,17 +53,15 @@ public class Debug extends Command implements IntelligentCommand {
     public static final CommandInfo INFO = new BaseCommandInfo("debug",
             "debug <command> [args] - facilitates debugging of DMDirc",
             CommandType.TYPE_GLOBAL);
-
     /** The command controller to use to lookup command information. */
     private final CommandController controller;
-
     /** List of registered debug commands. */
     private final Map<String, DebugCommand> commands;
 
     /**
      * Creates a new debug command.
      *
-     * @param controller The command controller to use to lookup command information.
+     * @param controller  The command controller to use to lookup command information.
      * @param subcommands The subcommands to be loaded.
      */
     @Inject
@@ -106,23 +104,23 @@ public class Debug extends Command implements IntelligentCommand {
     /**
      * Sends a line, if appropriate, to the specified target.
      *
-     * @param target The command window to send the line to
+     * @param target   The command window to send the line to
      * @param isSilent Whether this command is being silenced or not
-     * @param type The type of message to send
-     * @param args The arguments of the message
+     * @param type     The type of message to send
+     * @param args     The arguments of the message
      */
     public void proxySendLine(final FrameContainer target,
-            final boolean isSilent, final String type, final Object ... args) {
+            final boolean isSilent, final String type, final Object... args) {
         sendLine(target, isSilent, type, args);
     }
 
     /**
      * Sends a usage line, if appropriate, to the specified target.
      *
-     * @param target The command window to send the line to
+     * @param target   The command window to send the line to
      * @param isSilent Whether this command is being silenced or not
-     * @param name The name of the command that's raising the error
-     * @param args The arguments that the command accepts or expects
+     * @param name     The name of the command that's raising the error
+     * @param args     The arguments that the command accepts or expects
      */
     public void proxyShowUsage(final FrameContainer target,
             final boolean isSilent, final String name, final String args) {
@@ -130,12 +128,12 @@ public class Debug extends Command implements IntelligentCommand {
     }
 
     /**
-     * Formats the specified data into a table suitable for output in the
-     * textpane. It is expected that each String[] in data has the same number
-     * of elements as the headers array.
+     * Formats the specified data into a table suitable for output in the textpane. It is expected
+     * that each String[] in data has the same number of elements as the headers array.
      *
      * @param headers The headers of the table.
-     * @param data The contents of the table.
+     * @param data    The contents of the table.
+     *
      * @return A string containing an ASCII table
      */
     public String proxyDoTable(final String[] headers, final String[][] data) {

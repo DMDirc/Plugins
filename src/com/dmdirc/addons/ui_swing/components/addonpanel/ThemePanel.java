@@ -42,18 +42,16 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 /**
- * Lists known themes, enabling the end user to enable/disable these as well
- * as download new ones.
+ * Lists known themes, enabling the end user to enable/disable these as well as download new ones.
  */
 public class ThemePanel extends AddonPanel {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 1;
-
     /** Manager to retrieve themes from. */
     private final ThemeManager themeManager;
     /** Manager to use to retrieve addon-related icons. */
@@ -66,12 +64,12 @@ public class ThemePanel extends AddonPanel {
     /**
      * Creates a new instance of ThemePanel.
      *
-     * @param parentWindow Parent window
-     * @param themeManager Manager to retrieve themes from.
+     * @param parentWindow  Parent window
+     * @param themeManager  Manager to retrieve themes from.
      * @param workerFactory Factory to use to create data workers.
-     * @param iconManager Manager to use to retrieve addon-related icons.
+     * @param iconManager   Manager to use to retrieve addon-related icons.
      * @param updateManager Manager to use to retrieve update information.
-     * @param userConfig Configuration to write update-related settings to.
+     * @param userConfig    Configuration to write update-related settings to.
      */
     @Inject
     public ThemePanel(
@@ -95,7 +93,6 @@ public class ThemePanel extends AddonPanel {
         Collections.sort(list);
 
         UIUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -103,14 +100,13 @@ public class ThemePanel extends AddonPanel {
                 for (final Theme theme : list) {
                     ((DefaultTableModel) addonList.getModel()).addRow(
                             new AddonCell[]{
-                                new AddonCell(
-                                        new AddonToggle(
-                                                updateManager,
-                                                userConfig,
-                                                themeManager,
-                                                theme),
-                                        iconManager),
-                            });
+                        new AddonCell(
+                        new AddonToggle(
+                        updateManager,
+                        userConfig,
+                        themeManager,
+                        theme),
+                        iconManager),});
                 }
 
                 addonList.repaint();

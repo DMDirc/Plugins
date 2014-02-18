@@ -34,6 +34,7 @@ import java.awt.event.FocusListener;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+
 import javax.swing.Icon;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -71,7 +72,7 @@ public class ValidatableJTextField extends JComponent implements Validatable {
      * Instantiates a new Validating text field.
      *
      * @param iconManager Icon manager
-     * @param textField JTextField to wrap
+     * @param textField   JTextField to wrap
      */
     public ValidatableJTextField(final IconManager iconManager,
             final JTextField textField) {
@@ -81,7 +82,7 @@ public class ValidatableJTextField extends JComponent implements Validatable {
     /**
      * Instantiates a new Validating text field.
      *
-     * @param icon Icon to show on error
+     * @param icon      Icon to show on error
      * @param textField JTextField to wrap
      */
     public ValidatableJTextField(final Icon icon, final JTextField textField) {
@@ -289,4 +290,5 @@ public class ValidatableJTextField extends JComponent implements Validatable {
     public synchronized void addMouseMotionListener(final MouseMotionListener l) {
         textField.addMouseMotionListener(l);
     }
+
 }

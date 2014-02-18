@@ -31,7 +31,6 @@ public enum SessionLockActionMetaType implements ActionMetaType {
 
     /** Session Event. */
     SESSION_EVENT(new String[]{});
-
     /** The names of the arguments for this meta type. */
     private String[] argNames;
     /** The classes of the arguments for this meta type. */
@@ -43,7 +42,7 @@ public enum SessionLockActionMetaType implements ActionMetaType {
      * @param argNames The names of the meta-type's arguments
      * @param argTypes The types of the meta-type's arguments
      */
-    SessionLockActionMetaType(final String[] argNames, final Class ... argTypes) {
+    SessionLockActionMetaType(final String[] argNames, final Class... argTypes) {
         this.argNames = argNames;
         this.argTypes = argTypes;
     }

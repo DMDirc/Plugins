@@ -19,6 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 package com.dmdirc.addons.nickcolours;
 
 import com.dmdirc.Channel;
@@ -122,7 +123,7 @@ public class NickColourManager implements ActionListener, ConfigChangeListener {
      * Colours the specified client according to the user's config.
      *
      * @param network The network to use for the colouring
-     * @param client The client to be coloured
+     * @param client  The client to be coloured
      */
     private void colourClient(final String network,
             final ChannelClientInfo client) {
@@ -169,7 +170,7 @@ public class NickColourManager implements ActionListener, ConfigChangeListener {
     /**
      * Puts the specified colour into the given map. The keys are determined by config settings.
      *
-     * @param map The map to use
+     * @param map        The map to use
      * @param textColour Text colour to be inserted
      * @param nickColour Nick colour to be inserted
      */
@@ -188,6 +189,7 @@ public class NickColourManager implements ActionListener, ConfigChangeListener {
      * Retrieves a pseudo-random colour for the specified nickname.
      *
      * @param nick The nickname of the client whose colour we're determining
+     *
      * @return Colour of the specified nickname
      */
     private Colour getColour(final String nick) {
@@ -237,6 +239,7 @@ public class NickColourManager implements ActionListener, ConfigChangeListener {
      * should be used for it.
      *
      * @param key The config key to look up
+     *
      * @return The colours specified by the given key
      */
     private String[] getParts(final String key) {
@@ -267,7 +270,6 @@ public class NickColourManager implements ActionListener, ConfigChangeListener {
         ActionManager.getActionManager().unregisterListener(this);
     }
 
-
     /**
      * Shows the prefs configuration page for this plugin.
      *
@@ -280,15 +282,14 @@ public class NickColourManager implements ActionListener, ConfigChangeListener {
         final PreferencesCategory colours = new PluginPreferencesCategory(
                 pluginInfo, "Colours",
                 "Set colours for specific nicknames.", UIUtilities.invokeAndWait(
-                        new Callable<NickColourPanel>() {
-
-                            /** {@inheritDoc} */
-                            @Override
-                            public NickColourPanel call() {
-                                return new NickColourPanel(mainFrame, iconManager,
-                                        NickColourManager.this, colourManager, userConfig);
-                            }
-                        }));
+                new Callable<NickColourPanel>() {
+            /** {@inheritDoc} */
+            @Override
+            public NickColourPanel call() {
+                return new NickColourPanel(mainFrame, iconManager,
+                        NickColourManager.this, colourManager, userConfig);
+            }
+        }));
 
         general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
                 "ui", "shownickcoloursintext", "Show colours in text area",
@@ -315,9 +316,9 @@ public class NickColourManager implements ActionListener, ConfigChangeListener {
                 "Always use the same colour for our own nickname?",
                 manager.getConfigManager(), manager.getIdentity()));
         general.addSetting(new PreferencesSetting(PreferencesType.COLOUR, domain,
-                        "owncolour", "Colour to use for own nick",
-                        "Colour used for our own nickname, if above setting is "
-                        + "enabled.", manager.getConfigManager(), manager.getIdentity()));
+                "owncolour", "Colour to use for own nick",
+                "Colour used for our own nickname, if above setting is "
+                + "enabled.", manager.getConfigManager(), manager.getIdentity()));
 
         general.addSubCategory(colours);
         manager.getCategory("Plugins").addSubCategory(general);
@@ -351,4 +352,5 @@ public class NickColourManager implements ActionListener, ConfigChangeListener {
     public String getDomain() {
         return domain;
     }
+
 }

@@ -78,4 +78,5 @@ public class StaticRequestHandler extends AbstractHandler {
             }
         }
     }
+
 }

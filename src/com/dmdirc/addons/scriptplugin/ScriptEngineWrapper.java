@@ -40,28 +40,27 @@ import javax.script.ScriptException;
  * @author Shane 'Dataforce' McCormack
  */
 public class ScriptEngineWrapper {
+
     /** The Script Engine this wrapper wraps */
     private ScriptEngine engine;
-
     /** The File this script is from */
     private final File file;
-
     /** Script-Local JS Helper */
     private final JavaScriptHelper localHelper = new JavaScriptHelper();
-
     /** The script plugin that owns this wrapper. */
     private final ScriptPlugin plugin;
 
     /**
      * Create a new ScriptEngineWrapper
      *
-     * @param plugin The script plugin that owns this wrapper
+     * @param plugin   The script plugin that owns this wrapper
      * @param filename Filename of script
      *
      * @throws java.io.FileNotFoundException If file is not found
-     * @throws javax.script.ScriptException If there was an error during creation
+     * @throws javax.script.ScriptException  If there was an error during creation
      */
-    protected ScriptEngineWrapper(final ScriptPlugin plugin, final String filename) throws FileNotFoundException, ScriptException {
+    protected ScriptEngineWrapper(final ScriptPlugin plugin, final String filename) throws
+            FileNotFoundException, ScriptException {
         this.plugin = plugin;
         file = (filename != null) ? new File(filename) : null;
 
@@ -75,21 +74,27 @@ public class ScriptEngineWrapper {
      *
      * @return a reference to the ScriptEngine
      */
-    protected ScriptEngine getScriptEngine() { return engine; }
+    protected ScriptEngine getScriptEngine() {
+        return engine;
+    }
 
     /**
      * Get a reference to the JavaScriptHelper
      *
      * @return a reference to the JavaScriptHelper
      */
-    protected JavaScriptHelper getJavaScriptHelper() { return localHelper; }
+    protected JavaScriptHelper getJavaScriptHelper() {
+        return localHelper;
+    }
 
     /**
      * Get the file for this script
      *
      * @return The file for this script
      */
-    protected File getFile() { return file; }
+    protected File getFile() {
+        return file;
+    }
 
     /**
      * Create a new engine for this script
@@ -97,7 +102,7 @@ public class ScriptEngineWrapper {
      * @return Created script engine
      *
      * @throws java.io.FileNotFoundException If file is not found
-     * @throws javax.script.ScriptException If there was an error during creation
+     * @throws javax.script.ScriptException  If there was an error during creation
      */
     protected ScriptEngine createEngine() throws FileNotFoundException, ScriptException {
         final ScriptEngine result = plugin.getScriptFactory().getEngineByName("JavaScript");
@@ -121,7 +126,7 @@ public class ScriptEngineWrapper {
      * Call a function in this script.
      *
      * @param functionName Name of function
-     * @param args Arguments for function
+     * @param args         Arguments for function
      */
     protected void callFunction(final String functionName, final Object... args) {
         try {
@@ -133,7 +138,8 @@ public class ScriptEngineWrapper {
             // and do nothing rather that add an erropr every time a method is called
             // that doesn't exist (such as the action_* methods)
         } catch (ScriptException e) {
-            Logger.userError(ErrorLevel.LOW, "Error calling '"+functionName+"' in '"+file.getPath()+"': "+e.getMessage(), e);
+            Logger.userError(ErrorLevel.LOW, "Error calling '" + functionName + "' in '" + file.
+                    getPath() + "': " + e.getMessage(), e);
         }
     }
 
@@ -152,7 +158,8 @@ public class ScriptEngineWrapper {
             // Tell it that it has been rehashed
             callFunction("onRehashSucess");
         } catch (FileNotFoundException | ScriptException e) {
-            Logger.userError(ErrorLevel.LOW, "Reloading '"+file.getPath()+"' failed: "+e.getMessage(), e);
+            Logger.userError(ErrorLevel.LOW, "Reloading '" + file.getPath() + "' failed: " + e.
+                    getMessage(), e);
             // Tell it that its rehash failed
             callFunction("onRehashFailed", e);
             return false;
@@ -160,4 +167,5 @@ public class ScriptEngineWrapper {
 
         return true;
     }
+
 }

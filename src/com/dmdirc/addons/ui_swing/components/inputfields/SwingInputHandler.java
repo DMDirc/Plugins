@@ -49,13 +49,12 @@ import javax.swing.text.JTextComponent;
 public class SwingInputHandler extends InputHandler implements KeyListener {
 
     /**
-     * Creates a new instance of InputHandler. Adds listeners to the target
-     * that we need to operate.
+     * Creates a new instance of InputHandler. Adds listeners to the target that we need to operate.
      *
      * @param serviceManager Manager to use to look up tab completion services.
-     * @param target The text field this input handler is dealing with.
-     * @param commandParser The command parser to use for this text field.
-     * @param parentWindow The window that owns this input handler
+     * @param target         The text field this input handler is dealing with.
+     * @param commandParser  The command parser to use for this text field.
+     * @param parentWindow   The window that owns this input handler
      */
     public SwingInputHandler(
             final ServiceManager serviceManager,
@@ -78,7 +77,6 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
         }
 
         localTarget.getActionMap().put("upArrow", new AbstractAction() {
-
             /** Serial version UID. */
             private static final long serialVersionUID = 1;
 
@@ -111,7 +109,6 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
         }
 
         localTarget.getActionMap().put("downArrow", new AbstractAction() {
-
             /** Serial version UID. */
             private static final long serialVersionUID = 1;
 
@@ -146,7 +143,6 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
         }
 
         localTarget.getActionMap().put("insert-tab", new AbstractAction() {
-
             /** Serial version UID. */
             private static final long serialVersionUID = 1;
 
@@ -154,7 +150,6 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
             @Override
             public void actionPerformed(final ActionEvent e) {
                 new LoggingSwingWorker<Object, Void>() {
-
                     /** {@inheritDoc} */
                     @Override
                     protected Object doInBackground() {
@@ -173,7 +168,6 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
         });
         localTarget.getActionMap().put("insert-shift-tab",
                 new AbstractAction() {
-
             /** Serial version UID. */
             private static final long serialVersionUID = 1;
 
@@ -181,7 +175,6 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
             @Override
             public void actionPerformed(final ActionEvent e) {
                 new LoggingSwingWorker<Object, Void>() {
-
                     /** {@inheritDoc} */
                     @Override
                     protected Object doInBackground() {
@@ -218,7 +211,6 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
         }
 
         localTarget.getActionMap().put("enterButton", new AbstractAction() {
-
             /** Serial version UID. */
             private static final long serialVersionUID = 1;
 
@@ -228,7 +220,6 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
                 final String line = target.getText();
                 target.setText("");
                 UIUtilities.invokeLater(new Runnable() {
-
                     /** {@inheritDoc} */
                     @Override
                     public void run() {
@@ -246,7 +237,6 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
                         }
                         if (source.isEditable()) {
                             new LoggingSwingWorker<Object, Void>() {
-
                                 /** {@inheritDoc} */
                                 @Override
                                 protected Object doInBackground() {
@@ -308,4 +298,5 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
     public void keyReleased(final KeyEvent e) {
         validateText();
     }
+
 }

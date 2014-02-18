@@ -152,12 +152,12 @@ public class TransferPanel extends JPanel implements ActionListener,
                 try {
                     Desktop.getDesktop().open(file.getParentFile());
                 } catch (IllegalArgumentException ex1) {
-                    Logger.userError(ErrorLevel.LOW, "Unable to open folder: " +
-                            file.getParentFile(), ex1);
+                    Logger.userError(ErrorLevel.LOW, "Unable to open folder: " + file.
+                            getParentFile(), ex1);
                     openButton.setEnabled(false);
                 } catch (IOException ex1) {
-                    Logger.userError(ErrorLevel.LOW, "No associated handler " +
-                            "to open file or directory.", ex1);
+                    Logger.userError(ErrorLevel.LOW, "No associated handler "
+                            + "to open file or directory.", ex1);
                     openButton.setEnabled(false);
                 }
             }
@@ -176,7 +176,6 @@ public class TransferPanel extends JPanel implements ActionListener,
     @Override
     public void socketClosed(final DCCTransfer dcc) {
         UIUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -205,13 +204,11 @@ public class TransferPanel extends JPanel implements ActionListener,
     @Override
     public void socketOpened(final DCCTransfer dcc) {
         UIUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
                 status.setText("Status: Socket Opened");
             }
-
         });
     }
 
@@ -219,7 +216,6 @@ public class TransferPanel extends JPanel implements ActionListener,
     @Override
     public void dataTransfered(final DCCTransfer dcc, final int bytes) {
         UIUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -258,6 +254,7 @@ public class TransferPanel extends JPanel implements ActionListener,
      * Get the duration in seconds as a string.
      *
      * @param secondsInput to get duration for
+     *
      * @return Duration as a string
      */
     private String duration(final long secondsInput) {

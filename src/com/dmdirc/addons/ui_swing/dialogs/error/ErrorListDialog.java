@@ -76,7 +76,7 @@ public final class ErrorListDialog extends StandardDialog implements
     /**
      * Creates a new instance of ErrorListDialog.
      *
-     * @param mainFrame The parent window.
+     * @param mainFrame   The parent window.
      * @param iconManager The manager to use to load icons.
      */
     public ErrorListDialog(final MainFrame mainFrame, final IconManager iconManager) {
@@ -183,8 +183,8 @@ public final class ErrorListDialog extends StandardDialog implements
                 }
                 errorDetails.setError(error);
                 deleteButton.setEnabled(true);
-                if (error.getReportStatus() == ErrorReportStatus.NOT_APPLICABLE ||
-                        error.getReportStatus() == ErrorReportStatus.FINISHED) {
+                if (error.getReportStatus() == ErrorReportStatus.NOT_APPLICABLE || error.
+                        getReportStatus() == ErrorReportStatus.FINISHED) {
                     sendButton.setEnabled(false);
                 } else {
                     sendButton.setEnabled(true);
@@ -268,10 +268,8 @@ public final class ErrorListDialog extends StandardDialog implements
                 final int errorRow = e.getFirstRow();
                 final ProgramError error = tableModel.getError(errorRow);
                 if (errorRow == table.getSelectedRow()) {
-                    if (error.getReportStatus() ==
-                            ErrorReportStatus.NOT_APPLICABLE ||
-                            error.getReportStatus() ==
-                            ErrorReportStatus.FINISHED) {
+                    if (error.getReportStatus() == ErrorReportStatus.NOT_APPLICABLE || error.
+                            getReportStatus() == ErrorReportStatus.FINISHED) {
                         sendButton.setEnabled(false);
                     } else {
                         sendButton.setEnabled(true);
@@ -299,4 +297,5 @@ public final class ErrorListDialog extends StandardDialog implements
         tableModel.dispose();
         super.dispose();
     }
+
 }

@@ -109,7 +109,6 @@ public class TreeFrameManager implements FrameManager,
     @Override
     public void setParent(final JComponent parent) {
         SwingUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -140,7 +139,6 @@ public class TreeFrameManager implements FrameManager,
         this.colourManager = controller.getColourManager();
 
         UIUtilities.invokeLater(new Runnable() {
-
             @Override
             public void run() {
                 model = new TreeViewModel(config, new TreeViewNode(null, null));
@@ -176,7 +174,6 @@ public class TreeFrameManager implements FrameManager,
     @Override
     public void windowDeleted(final TextFrame parent, final TextFrame window) {
         UIUtilities.invokeAndWait(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -213,7 +210,6 @@ public class TreeFrameManager implements FrameManager,
     public void addWindow(final TreeViewNode parent,
             final FrameContainer window) {
         UIUtilities.invokeAndWait(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -278,14 +274,14 @@ public class TreeFrameManager implements FrameManager,
     private void setColours() {
         tree.setBackground(UIUtilities.convertColour(
                 colourManager.getColourFromString(
-                        config.getOptionString(
-                                "treeview", "backgroundcolour",
-                                "ui", "backgroundcolour"), null)));
+                config.getOptionString(
+                "treeview", "backgroundcolour",
+                "ui", "backgroundcolour"), null)));
         tree.setForeground(UIUtilities.convertColour(
                 colourManager.getColourFromString(
-                        config.getOptionString(
-                                "treeview", "foregroundcolour",
-                                "ui", "foregroundcolour"), null)));
+                config.getOptionString(
+                "treeview", "foregroundcolour",
+                "ui", "foregroundcolour"), null)));
 
         tree.repaint();
     }
@@ -305,7 +301,6 @@ public class TreeFrameManager implements FrameManager,
      */
     private void redoTreeView() {
         UIUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -346,7 +341,6 @@ public class TreeFrameManager implements FrameManager,
 
         if (window != null) {
             UIUtilities.invokeLater(new Runnable() {
-
                 /** {@inheritDoc} */
                 @Override
                 public void run() {
@@ -367,7 +361,6 @@ public class TreeFrameManager implements FrameManager,
     @Override
     public void notificationSet(final FrameContainer window, final Colour colour) {
         SwingUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -389,7 +382,6 @@ public class TreeFrameManager implements FrameManager,
     @Override
     public void notificationCleared(final FrameContainer window) {
         SwingUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -411,7 +403,6 @@ public class TreeFrameManager implements FrameManager,
     @Override
     public void iconChanged(final FrameContainer window, final String icon) {
         SwingUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -433,7 +424,6 @@ public class TreeFrameManager implements FrameManager,
     @Override
     public void nameChanged(final FrameContainer window, final String name) {
         SwingUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -456,4 +446,5 @@ public class TreeFrameManager implements FrameManager,
     public void titleChanged(final FrameContainer window, final String title) {
         // Do nothing
     }
+
 }

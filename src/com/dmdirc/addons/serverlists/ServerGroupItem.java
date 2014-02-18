@@ -33,8 +33,7 @@ import java.net.URI;
 public interface ServerGroupItem {
 
     /**
-     * Retrieves a group that is either the same as this item, or contains this
-     * item.
+     * Retrieves a group that is either the same as this item, or contains this item.
      *
      * @return A group containing or equal to this item
      */
@@ -69,15 +68,15 @@ public interface ServerGroupItem {
     /**
      * Retrieves a URI for this item.
      *
-     * @return A URI that represents this item or one of its children, or null
-     * if the item has no URIs associated with it.
+     * @return A URI that represents this item or one of its children, or null if the item has no
+     *         URIs associated with it.
      */
     URI getAddress();
 
     /**
      * Determines whether this item has been modified since the last time
-     * {@link #setModified(boolean)} was called with a <code>false</code>
-     * argument (or since this item was created).
+     * {@link #setModified(boolean)} was called with a
+     * <code>false</code> argument (or since this item was created).
      *
      * @return True if the item has been modified, false otherwise
      */
@@ -91,19 +90,18 @@ public interface ServerGroupItem {
     void setModified(final boolean isModified);
 
     /**
-     * Retrieves the name of the profile which should be used when connecting
-     * to this item.
+     * Retrieves the name of the profile which should be used when connecting to this item.
      *
-     * @return The profile name used by this entry, or <code>null</code> if the
-     * default or parent group's profile should be used
+     * @return The profile name used by this entry, or <code>null</code> if the default or parent
+     *         group's profile should be used
      */
     String getProfile();
 
     /**
      * Sets the profile to be used for this server entry.
      *
-     * @param profile The new profile name for this entry, or <code>null</code>
-     * if the default or parent group's profile should be used
+     * @param profile The new profile name for this entry, or <code>null</code> if the default or
+     *                parent group's profile should be used
      */
     void setProfile(final String profile);
 

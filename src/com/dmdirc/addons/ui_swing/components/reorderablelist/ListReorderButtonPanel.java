@@ -41,9 +41,9 @@ public class ListReorderButtonPanel extends JPanel implements
         ListSelectionListener, ActionListener {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 1;
     /** List to reoder. */
@@ -105,7 +105,7 @@ public class ListReorderButtonPanel extends JPanel implements
     /**
      * Moves an object up in the list.
      *
-     * @param object Object to move
+     * @param object       Object to move
      * @param currentIndex Current index
      */
     private void moveUp(final Object object, final int currentIndex) {
@@ -119,7 +119,7 @@ public class ListReorderButtonPanel extends JPanel implements
     /**
      * Moves an object down in the list.
      *
-     * @param object Object to move
+     * @param object       Object to move
      * @param currentIndex Current index
      */
     private void moveDown(final Object object, final int currentIndex) {
@@ -133,7 +133,7 @@ public class ListReorderButtonPanel extends JPanel implements
     /**
      * Moves an object from its current positition to a new position in a list.
      *
-     * @param object Object to move
+     * @param object   Object to move
      * @param newIndex Current index
      */
     private void moveElement(final Object object, final int newIndex) {
@@ -141,4 +141,5 @@ public class ListReorderButtonPanel extends JPanel implements
         model.add(newIndex, object);
         list.setSelectedIndex(newIndex);
     }
+
 }

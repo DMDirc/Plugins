@@ -44,9 +44,9 @@ public class SystemStreamContainer extends FrameContainer {
     /**
      * Creates a new system stream container wrapping the specified stream.
      *
-     * @param stream Stream to wrap
-     * @param config Config to wrap
-     * @param plugin Parent plugin
+     * @param stream     Stream to wrap
+     * @param config     Config to wrap
+     * @param plugin     Parent plugin
      * @param urlBuilder The URL builder to use when finding icons.
      */
     public SystemStreamContainer(

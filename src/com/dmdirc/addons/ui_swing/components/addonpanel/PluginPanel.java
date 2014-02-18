@@ -46,18 +46,16 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 /**
- * Lists known plugins, enabling the end user to enable/disable these as well
- * as download new ones.
+ * Lists known plugins, enabling the end user to enable/disable these as well as download new ones.
  */
 public class PluginPanel extends AddonPanel implements ActionListener {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 1;
-
     /** Manager to retrieve plugin information from. */
     private final PluginManager pluginManager;
     /** Manager to use to retrieve addon-related icons. */
@@ -70,12 +68,12 @@ public class PluginPanel extends AddonPanel implements ActionListener {
     /**
      * Creates a new instance of PluginPanel.
      *
-     * @param parentWindow Parent window
+     * @param parentWindow  Parent window
      * @param pluginManager Manager to retrieve plugins from.
      * @param workerFactory Factory to use to create data workers.
-     * @param iconManager Manager to use to retrieve addon-related icons.
+     * @param iconManager   Manager to use to retrieve addon-related icons.
      * @param updateManager Manager to use to retrieve update information.
-     * @param userConfig Configuration to write update-related settings to.
+     * @param userConfig    Configuration to write update-related settings to.
      */
     @Inject
     public PluginPanel(
@@ -118,7 +116,6 @@ public class PluginPanel extends AddonPanel implements ActionListener {
 
 
         UIUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -126,13 +123,12 @@ public class PluginPanel extends AddonPanel implements ActionListener {
                 for (final PluginInfo plugin : sortedList) {
                     ((DefaultTableModel) table.getModel()).addRow(
                             new AddonCell[]{
-                                new AddonCell(
-                                        new AddonToggle(
-                                                updateManager,
-                                                userConfig,
-                                                plugin),
-                                        iconManager),
-                            });
+                        new AddonCell(
+                        new AddonToggle(
+                        updateManager,
+                        userConfig,
+                        plugin),
+                        iconManager),});
                 }
                 table.repaint();
             }
@@ -152,4 +148,5 @@ public class PluginPanel extends AddonPanel implements ActionListener {
     protected String getTypeName() {
         return "plugins";
     }
+
 }

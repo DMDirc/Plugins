@@ -25,8 +25,8 @@ package com.dmdirc.addons.nowplaying;
 import java.util.List;
 
 /**
- * The media source manager is a standard interface for an object that controls
- * one or more media sources.
+ * The media source manager is a standard interface for an object that controls one or more media
+ * sources.
  *
  * @author chris
  */

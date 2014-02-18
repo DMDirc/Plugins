@@ -58,7 +58,7 @@ public class OsdPlugin extends BaseCommandPlugin implements
     private int x;
     /** Y-axis potion of OSD. */
     private int y;
-    /** Setting objects with registered change listeners.*/
+    /** Setting objects with registered change listeners. */
     private PreferencesSetting fontSizeSetting;
     private PreferencesSetting backgroundSetting;
     private PreferencesSetting foregroundSetting;
@@ -77,11 +77,11 @@ public class OsdPlugin extends BaseCommandPlugin implements
     /**
      * Creates a new instance of this plugin.
      *
-     * @param swingController The controller that owns this plugin.
-     * @param pluginInfo This plugin's plugin info
+     * @param swingController    The controller that owns this plugin.
+     * @param pluginInfo         This plugin's plugin info
      * @param identityController The controller to use to read and write settings.
-     * @param commandController Command controller to register commands
-     * @param colourManager The manager to use to parse colours.
+     * @param commandController  Command controller to register commands
+     * @param colourManager      The manager to use to parse colours.
      */
     public OsdPlugin(
             final SwingController swingController,
@@ -110,8 +110,8 @@ public class OsdPlugin extends BaseCommandPlugin implements
                 "General configuration for OSD plugin.", "category-osd");
 
         fontSizeSetting = new PreferencesSetting(PreferencesType.INTEGER,
-                getDomain(), "fontSize", "Font size", "Changes the font " +
-                "size of the OSD", manager.getConfigManager(),
+                getDomain(), "fontSize", "Font size", "Changes the font " + "size of the OSD",
+                manager.getConfigManager(),
                 manager.getIdentity()).registerChangeListener(this);
         backgroundSetting = new PreferencesSetting(PreferencesType.COLOUR,
                 getDomain(), "bgcolour", "Background colour",
@@ -127,8 +127,8 @@ public class OsdPlugin extends BaseCommandPlugin implements
                 .registerChangeListener(this);
         timeoutSetting = new PreferencesSetting(PreferencesType.OPTIONALINTEGER,
                 new OptionalValidator(new NumericalValidator(1, Integer.MAX_VALUE)),
-                getDomain(), "timeout", "Timeout", "Length of time in " +
-                "seconds before the OSD window closes", manager.getConfigManager(),
+                getDomain(), "timeout", "Timeout", "Length of time in "
+                + "seconds before the OSD window closes", manager.getConfigManager(),
                 manager.getIdentity());
         maxWindowsSetting = new PreferencesSetting(PreferencesType.OPTIONALINTEGER,
                 new OptionalValidator(new NumericalValidator(1, Integer.MAX_VALUE)),
@@ -218,10 +218,10 @@ public class OsdPlugin extends BaseCommandPlugin implements
     }
 
     /**
-     * Shows an OSD with the specified message, title is ignored, exported
-     * method used for showNotification.
+     * Shows an OSD with the specified message, title is ignored, exported method used for
+     * showNotification.
      *
-     * @param title Ignored
+     * @param title   Ignored
      * @param message Message to show
      */
     @Exported

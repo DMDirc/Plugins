@@ -133,6 +133,7 @@ public class XmppEndpoint implements Comparable<XmppEndpoint> {
      * Returns a friendly representation of the specified presence mode.
      *
      * @param mode The mode being represented
+     *
      * @return A user-friendly string corresponding to the mode
      */
     private static String getFriendlyMode(final Mode mode) {
@@ -157,4 +158,5 @@ public class XmppEndpoint implements Comparable<XmppEndpoint> {
     public int compareTo(final XmppEndpoint o) {
         return o.getPriority() - priority;
     }
+
 }

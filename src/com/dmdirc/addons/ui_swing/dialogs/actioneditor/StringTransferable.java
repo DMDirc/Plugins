@@ -53,11 +53,9 @@ public class StringTransferable implements Transferable {
 
         try {
             localStringFlavor = new DataFlavor(
-                    DataFlavor.javaJVMLocalObjectMimeType +
-                    ";class=java.lang.String");
+                    DataFlavor.javaJVMLocalObjectMimeType + ";class=java.lang.String");
         } catch (ClassNotFoundException e) {
-            Logger.userError(ErrorLevel.LOW, "unable to create data flavor: " +
-                    e.getMessage());
+            Logger.userError(ErrorLevel.LOW, "unable to create data flavor: " + e.getMessage());
         }
         serialStringFlavor = new DataFlavor(String.class, "String");
     }
@@ -65,7 +63,7 @@ public class StringTransferable implements Transferable {
     /** {@inheritDoc} */
     @Override
     public DataFlavor[] getTransferDataFlavors() {
-        return new DataFlavor[]{localStringFlavor, serialStringFlavor, };
+        return new DataFlavor[]{localStringFlavor, serialStringFlavor,};
     }
 
     /** {@inheritDoc} */
@@ -87,4 +85,5 @@ public class StringTransferable implements Transferable {
 
         return data;
     }
+
 }

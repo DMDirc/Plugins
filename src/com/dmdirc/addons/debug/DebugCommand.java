@@ -36,10 +36,8 @@ public abstract class DebugCommand {
 
     /** The format name used for command output. */
     public static final String FORMAT_OUTPUT = "commandOutput";
-
     /** The format name used for command errors. */
     public static final String FORMAT_ERROR = "commandError";
-
     /** Parent debug command. */
     private final Provider<Debug> commandProvider;
 
@@ -62,14 +60,14 @@ public abstract class DebugCommand {
     /**
      * Returns a string representing the help message for this command.
      * <p>
-     * The help text should generally be one line, and must start with
-     * the name of the command. It should then summarise the arguments of
-     * that command, using <code>&lt;angled&gt;</code> brackets for required
-     * arguments, and <code>[square]</code> brackets for optional arguments.
-     * Where multiple possibilities exist, they are typically separated by a
-     * pipe (<code>|</code>), for example: <code>command [--arg1|--arg2]</code>.
-     * The usage summary should then be followed by a dash and a brief
-     * summary of the purpose of the command.
+     * The help text should generally be one line, and must start with the name of the command. It
+     * should then summarise the arguments of that command, using
+     * <code>&lt;angled&gt;</code> brackets for required arguments, and
+     * <code>[square]</code> brackets for optional arguments. Where multiple possibilities exist,
+     * they are typically separated by a pipe (
+     * <code>|</code>), for example:
+     * <code>command [--arg1|--arg2]</code>. The usage summary should then be followed by a dash and
+     * a brief summary of the purpose of the command.
      * <p>
      * A typical help message would look similar to:
      * <p>
@@ -82,8 +80,8 @@ public abstract class DebugCommand {
     /**
      * Executes this command.
      *
-     * @param origin The container which received the command
-     * @param args Arguments passed to this command
+     * @param origin  The container which received the command
+     * @param args    Arguments passed to this command
      * @param context The context the command was executed in
      */
     public abstract void execute(final FrameContainer origin,
@@ -92,23 +90,23 @@ public abstract class DebugCommand {
     /**
      * Sends a line, if appropriate, to the specified target.
      *
-     * @param target The command window to send the line to
+     * @param target   The command window to send the line to
      * @param isSilent Whether this command is being silenced or not
-     * @param type The type of message to send
-     * @param args The arguments of the message
+     * @param type     The type of message to send
+     * @param args     The arguments of the message
      */
     public void sendLine(final FrameContainer target,
-            final boolean isSilent, final String type, final Object ... args) {
+            final boolean isSilent, final String type, final Object... args) {
         commandProvider.get().proxySendLine(target, isSilent, type, args);
     }
 
     /**
      * Sends a usage line, if appropriate, to the specified target.
      *
-     * @param target The command window to send the line to
+     * @param target   The command window to send the line to
      * @param isSilent Whether this command is being silenced or not
-     * @param name The name of the command that's raising the error
-     * @param args The arguments that the command accepts or expects
+     * @param name     The name of the command that's raising the error
+     * @param args     The arguments that the command accepts or expects
      */
     public void showUsage(final FrameContainer target,
             final boolean isSilent, final String name, final String args) {
@@ -116,15 +114,16 @@ public abstract class DebugCommand {
     }
 
     /**
-     * Formats the specified data into a table suitable for output in the
-     * textpane. It is expected that each String[] in data has the same number
-     * of elements as the headers array.
+     * Formats the specified data into a table suitable for output in the textpane. It is expected
+     * that each String[] in data has the same number of elements as the headers array.
      *
      * @param headers The headers of the table.
-     * @param data The contents of the table.
+     * @param data    The contents of the table.
+     *
      * @return A string containing an ASCII table
      */
     public String doTable(final String[] headers, final String[][] data) {
         return commandProvider.get().proxyDoTable(headers, data);
     }
+
 }

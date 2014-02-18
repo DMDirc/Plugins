@@ -32,17 +32,18 @@ import javax.swing.BorderFactory;
 import javax.swing.border.Border;
 
 /**
- * A re-orderable list with a setErorr method to add a visual distinction when
- * there is an error state.
+ * A re-orderable list with a setErorr method to add a visual distinction when there is an error
+ * state.
  */
 public class ValidatableReorderableJList extends ReorderableJList implements Validatable {
+
     /** Serial version UID. */
     private static final long serialVersionUID = 1L;
     /** Normal component border, used for non error state. */
     private final Border passBorder = getBorder();
     /** Error border, used when in an error state. */
     private final Border failBorder = BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(Color.RED, 2), getBorder());
+            BorderFactory.createLineBorder(Color.RED, 2), getBorder());
 
     /** {@inheritDoc} */
     @Override
@@ -55,4 +56,5 @@ public class ValidatableReorderableJList extends ReorderableJList implements Val
             setToolTipText(null);
         }
     }
+
 }

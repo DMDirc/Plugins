@@ -23,18 +23,19 @@
 package com.dmdirc.addons.ui_swing.textpane;
 
 import java.awt.event.ActionEvent;
+
 import javax.swing.AbstractAction;
 
 /**
- * This listener waits to be triggered then scrolls the current active TextPane
- * to the top most line.
+ * This listener waits to be triggered then scrolls the current active TextPane to the top most
+ * line.
  */
 public class TextPaneHomeAction extends AbstractAction {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 1;
     /** TextPane instance. */
@@ -53,10 +54,12 @@ public class TextPaneHomeAction extends AbstractAction {
 
     /**
      * {@inheritDoc}.
+     *
      * @param e Action event
      */
     @Override
     public void actionPerformed(final ActionEvent e) {
         textpane.goToHome();
     }
+
 }

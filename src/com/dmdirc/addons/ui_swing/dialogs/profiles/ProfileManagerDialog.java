@@ -57,8 +57,7 @@ public class ProfileManagerDialog extends StandardDialog {
     /** List of profiles. */
     private final JList profileList = new JList();
     /** List of nicknames for a profile. */
-    private final ValidatableReorderableJList nicknames
-            = new ValidatableReorderableJList();
+    private final ValidatableReorderableJList nicknames = new ValidatableReorderableJList();
     /** Adds a new nickname to the active profile. */
     private final JButton addNickname = new JButton("Add");
     /** Edits the active nickname in the active profile. */
@@ -79,10 +78,10 @@ public class ProfileManagerDialog extends StandardDialog {
     /**
      * Creates a new instance of ProfileEditorDialog.
      *
-     * @param mainFrame Main frame
-     * @param identityFactory Identity factory to create new identities
+     * @param mainFrame          Main frame
+     * @param identityFactory    Identity factory to create new identities
      * @param identityController Identity controller to retrieve identities from
-     * @param iconManager Icon manager to retrieve icons
+     * @param iconManager        Icon manager to retrieve icons
      */
     @Inject
     public ProfileManagerDialog(
@@ -143,4 +142,5 @@ public class ProfileManagerDialog extends StandardDialog {
         add(getLeftButton(), "flowx, split 2, right, sg button");
         add(getRightButton(), "right, sg button");
     }
+
 }

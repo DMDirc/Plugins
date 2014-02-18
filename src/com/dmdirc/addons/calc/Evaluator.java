@@ -23,8 +23,7 @@
 package com.dmdirc.addons.calc;
 
 /**
- * A simple evaluator which just requests that the {@link TreeToken} evaluates
- * itself.
+ * A simple evaluator which just requests that the {@link TreeToken} evaluates itself.
  */
 public class Evaluator {
 

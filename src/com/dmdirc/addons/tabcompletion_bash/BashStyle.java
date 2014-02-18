@@ -35,16 +35,12 @@ public class BashStyle implements TabCompletionStyle {
 
     /** The last position the user tab-completed at. */
     private int lastPosition = -1;
-
     /** The number of times the user has tab-completed the same position. */
     private int tabCount = 0;
-
     /** The last word that was tab completed. */
     private String lastWord = "";
-
     /** The tab completer that we use. */
     protected final TabCompleter tabCompleter;
-
     /** The input window that we use. */
     protected final WritableFrameContainer window;
 
@@ -52,7 +48,7 @@ public class BashStyle implements TabCompletionStyle {
      * Creates a new Bash-style tab completer.
      *
      * @param completer The tab completer this style is for
-     * @param window The window this tab style is for
+     * @param window    The window this tab style is for
      */
     public BashStyle(final TabCompleter completer, final WritableFrameContainer window) {
         this.tabCompleter = completer;

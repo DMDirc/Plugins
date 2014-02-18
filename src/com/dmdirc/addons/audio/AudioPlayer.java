@@ -44,7 +44,6 @@ public final class AudioPlayer implements Runnable {
         WAV, INVALID;
 
     }
-
     /** The file object of the file to play */
     final File myFile;
 
@@ -83,6 +82,7 @@ public final class AudioPlayer implements Runnable {
      * Check if this File is a supported file type
      *
      * @param file the File to check
+     *
      * @return true if playable, else false.
      */
     public static boolean isValid(final File file) {
@@ -94,6 +94,7 @@ public final class AudioPlayer implements Runnable {
      * Get the AudioType of a given file
      *
      * @param file the File to check
+     *
      * @return AudioType for this file.
      */
     public static AudioType getAudioType(final File file) {
@@ -108,9 +109,8 @@ public final class AudioPlayer implements Runnable {
     }
 
     /**
-     * Play the file as a wav file, using the Applet class.
-     * (This code seems to work better than the non-applet version, but can't play
-     * streams)
+     * Play the file as a wav file, using the Applet class. (This code seems to work better than the
+     * non-applet version, but can't play streams)
      */
     private void playWav() {
         try {

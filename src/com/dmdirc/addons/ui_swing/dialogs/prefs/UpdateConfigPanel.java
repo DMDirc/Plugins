@@ -57,9 +57,9 @@ public class UpdateConfigPanel extends JPanel implements ActionListener,
         PreferencesInterface, ConfigChangeListener {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 1;
     /** Global checkbox. */
@@ -86,9 +86,9 @@ public class UpdateConfigPanel extends JPanel implements ActionListener,
     /**
      * Instantiates a new update config panel.
      *
-     * @param userConfig The configuration to write settings changes to.
-     * @param globalConfig The configuration to read global settings from.
-     * @param updateManager The manager to read update information from.
+     * @param userConfig         The configuration to write settings changes to.
+     * @param globalConfig       The configuration to read global settings from.
+     * @param updateManager      The manager to read update information from.
      * @param identityController Controller to pass to the update checker.
      */
     @Inject
@@ -189,4 +189,5 @@ public class UpdateConfigPanel extends JPanel implements ActionListener,
     public void configChanged(final String domain, final String key) {
         checkNow.setEnabled(globalConfig.getOptionBool("updater", "enable"));
     }
+
 }

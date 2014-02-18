@@ -50,7 +50,7 @@ public class SystemStreamRedirectThread implements Runnable {
     /**
      * Constructs a new redirection thread.
      *
-     * @param stream System stream to redirect
+     * @param stream   System stream to redirect
      * @param document Document to redirect stream into
      *
      * @throws IOException On error redirecting stream
@@ -86,7 +86,7 @@ public class SystemStreamRedirectThread implements Runnable {
         while (running) {
             try {
                 if (reader.ready()) {
-                    document.addText(new String[]{reader.readLine(), });
+                    document.addText(new String[]{reader.readLine(),});
                 } else {
                     try {
                         Thread.sleep(500);
@@ -137,4 +137,5 @@ public class SystemStreamRedirectThread implements Runnable {
     public boolean isRunning() {
         return running;
     }
+
 }

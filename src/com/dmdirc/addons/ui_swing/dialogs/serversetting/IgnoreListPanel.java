@@ -81,8 +81,8 @@ public final class IgnoreListPanel extends JPanel implements ActionListener,
     /**
      * Creates a new instance of IgnoreList.
      *
-     * @param controller Swing controller
-     * @param connection The connection whose ignore list should be displayed.
+     * @param controller   Swing controller
+     * @param connection   The connection whose ignore list should be displayed.
      * @param parentWindow Parent window
      */
     public IgnoreListPanel(final SwingController controller,
@@ -184,12 +184,10 @@ public final class IgnoreListPanel extends JPanel implements ActionListener,
                     viewToggle.isSelected() ? new ValidatorChain<>(
                     new NotEmptyValidator(), new RegexValidator())
                     : new NotEmptyValidator()) {
-
                 /**
-                 * A version number for this class. It should be changed
-                 * whenever the class structure is changed (or anything else
-                 * that would prevent serialized objects being unserialized
-                 * with the new class).
+                 * A version number for this class. It should be changed whenever the class
+                 * structure is changed (or anything else that would prevent serialized objects
+                 * being unserialized with the new class).
                  */
                 private static final long serialVersionUID = 2;
 
@@ -218,11 +216,10 @@ public final class IgnoreListPanel extends JPanel implements ActionListener,
                     ModalityType.APPLICATION_MODAL,
                     "Confirm deletion",
                     "Are you sure you want to delete this item?") {
-
                 /**
                  * A version number for this class. It should be changed whenever the class
-                 * structure is changed (or anything else that would prevent serialized
-                 * objects being unserialized with the new class).
+                 * structure is changed (or anything else that would prevent serialized objects
+                 * being unserialized with the new class).
                  */
                 private static final long serialVersionUID = 1;
 
@@ -255,4 +252,5 @@ public final class IgnoreListPanel extends JPanel implements ActionListener,
             delButton.setEnabled(true);
         }
     }
+
 }

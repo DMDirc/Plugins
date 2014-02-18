@@ -62,9 +62,9 @@ public final class SwingSearchBar extends JPanel implements ActionListener,
         KeyListener, SearchBar, DocumentListener, ConfigChangeListener {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 6;
     /** Frame parent. */
@@ -188,7 +188,6 @@ public final class SwingSearchBar extends JPanel implements ActionListener,
     @Override
     public void open() {
         SwingUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -204,7 +203,6 @@ public final class SwingSearchBar extends JPanel implements ActionListener,
     @Override
     public void close() {
         SwingUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -257,11 +255,11 @@ public final class SwingSearchBar extends JPanel implements ActionListener,
                 getEndLine())
                 || (!up && result.getStartLine() < textPane.getSelectedRange().
                 getStartLine()))) {
-                     wrapIndicator.setVisible(true);
-                     textPane.setScrollBarPosition(result.getEndLine());
-                     textPane.setSelectedTexT(result);
-                     validator.setValidates(true);
-                     searchBox.checkError();
+            wrapIndicator.setVisible(true);
+            textPane.setScrollBarPosition(result.getEndLine());
+            textPane.setSelectedTexT(result);
+            validator.setValidates(true);
+            searchBox.checkError();
         } else {
             //found, select and return found
             textPane.setScrollBarPosition(result.getEndLine());
@@ -328,7 +326,6 @@ public final class SwingSearchBar extends JPanel implements ActionListener,
     /** Focuses the search box in the search bar. */
     public void getFocus() {
         SwingUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -379,7 +376,6 @@ public final class SwingSearchBar extends JPanel implements ActionListener,
     @Override
     public void addKeyListener(final KeyListener l) {
         UIUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -392,7 +388,6 @@ public final class SwingSearchBar extends JPanel implements ActionListener,
     @Override
     public void removeKeyListener(final KeyListener l) {
         UIUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -414,15 +409,16 @@ public final class SwingSearchBar extends JPanel implements ActionListener,
 
         searchBox.setForeground(UIUtilities.convertColour(
                 colourManager.getColourFromString(
-                        config.getOptionString(
-                                "ui", "foregroundcolour"), null)));
+                config.getOptionString(
+                "ui", "foregroundcolour"), null)));
         searchBox.setBackground(UIUtilities.convertColour(
                 colourManager.getColourFromString(
-                        config.getOptionString(
-                                "ui", "backgroundcolour"), null)));
+                config.getOptionString(
+                "ui", "backgroundcolour"), null)));
         searchBox.setCaretColor(UIUtilities.convertColour(
                 colourManager.getColourFromString(
-                        config.getOptionString(
-                                "ui", "foregroundcolour"), null)));
+                config.getOptionString(
+                "ui", "foregroundcolour"), null)));
     }
+
 }

@@ -50,7 +50,7 @@ public class LoggingCommand extends Command implements IntelligentCommand {
      * Creates a new instance of this command.
      *
      * @param controller The controller to use for command information.
-     * @param plugin The plugin providing logging services.
+     * @param plugin     The plugin providing logging services.
      */
     public LoggingCommand(final CommandController controller, final LoggingPlugin plugin) {
         super(controller);
@@ -64,17 +64,23 @@ public class LoggingCommand extends Command implements IntelligentCommand {
         if (args.getArguments().length > 0) {
             if (args.getArguments()[0].equalsIgnoreCase("history")) {
                 if (!plugin.showHistory(origin)) {
-                    sendLine(origin, args.isSilent(), FORMAT_ERROR, "Unable to open history for this window.");
+                    sendLine(origin, args.isSilent(), FORMAT_ERROR,
+                            "Unable to open history for this window.");
                 }
             } else if (args.getArguments()[0].equalsIgnoreCase("help")) {
-                sendLine(origin, args.isSilent(), FORMAT_OUTPUT, LOGGING + " reload           - Reload the logging plugin.");
-                sendLine(origin, args.isSilent(), FORMAT_OUTPUT, LOGGING + " history          - Open the history of this window, if available.");
-                sendLine(origin, args.isSilent(), FORMAT_OUTPUT, LOGGING + " help             - Show this help.");
+                sendLine(origin, args.isSilent(), FORMAT_OUTPUT, LOGGING
+                        + " reload           - Reload the logging plugin.");
+                sendLine(origin, args.isSilent(), FORMAT_OUTPUT, LOGGING
+                        + " history          - Open the history of this window, if available.");
+                sendLine(origin, args.isSilent(), FORMAT_OUTPUT, LOGGING
+                        + " help             - Show this help.");
             } else {
-                sendLine(origin, args.isSilent(), FORMAT_ERROR, "Unknown command '" + args.getArguments()[0] + "'. Use " + LOGGING + " help for a list of commands.");
+                sendLine(origin, args.isSilent(), FORMAT_ERROR, "Unknown command '" + args.
+                        getArguments()[0] + "'. Use " + LOGGING + " help for a list of commands.");
             }
         } else {
-            sendLine(origin, args.isSilent(), FORMAT_ERROR, "Use " + LOGGING + " help for a list of commands.");
+            sendLine(origin, args.isSilent(), FORMAT_ERROR, "Use " + LOGGING
+                    + " help for a list of commands.");
         }
     }
 
@@ -91,5 +97,5 @@ public class LoggingCommand extends Command implements IntelligentCommand {
         }
         return res;
     }
-}
 
+}

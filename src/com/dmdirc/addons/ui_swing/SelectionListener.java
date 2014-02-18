@@ -27,8 +27,8 @@ import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import java.util.EventListener;
 
 /**
- * Defines the methods that should be implemented by classes which wish to
- * receive information about Swing frame selection changes.
+ * Defines the methods that should be implemented by classes which wish to receive information about
+ * Swing frame selection changes.
  */
 public interface SelectionListener extends EventListener {
 

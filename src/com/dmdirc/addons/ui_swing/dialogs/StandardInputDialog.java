@@ -64,17 +64,16 @@ public abstract class StandardInputDialog extends StandardDialog {
     /**
      * Instantiates a new standard input dialog.
      *
-     * @param owner Dialog owner
-     * @param modal modality type
+     * @param owner       Dialog owner
+     * @param modal       modality type
      * @param iconManager The icon manager to use for validating text fields.
-     * @param title Dialog title
-     * @param message Dialog message
+     * @param title       Dialog title
+     * @param message     Dialog message
      */
     public StandardInputDialog(
             final Window owner, final ModalityType modal, final IconManager iconManager,
             final String title, final String message) {
         this(owner, modal, iconManager, title, message, new Validator<String>() {
-
             /** {@inheritDoc} */
             @Override
             public ValidationResponse validate(final String object) {
@@ -86,12 +85,12 @@ public abstract class StandardInputDialog extends StandardDialog {
     /**
      * Instantiates a new standard input dialog.
      *
-     * @param owner Dialog owner
-     * @param modal modality type
+     * @param owner       Dialog owner
+     * @param modal       modality type
      * @param iconManager The icon manager to use for validating text fields.
-     * @param validator Textfield validator
-     * @param title Dialog title
-     * @param message Dialog message
+     * @param validator   Textfield validator
+     * @param title       Dialog title
+     * @param message     Dialog message
      */
     public StandardInputDialog(
             final Window owner, final ModalityType modal, final IconManager iconManager,
@@ -138,7 +137,6 @@ public abstract class StandardInputDialog extends StandardDialog {
      */
     private void addListeners() {
         getOkButton().addActionListener(new ActionListener() {
-
             /** {@inheritDoc} */
             @Override
             public void actionPerformed(final ActionEvent e) {
@@ -148,7 +146,6 @@ public abstract class StandardInputDialog extends StandardDialog {
             }
         });
         getCancelButton().addActionListener(new ActionListener() {
-
             /** {@inheritDoc} */
             @Override
             public void actionPerformed(final ActionEvent e) {
@@ -157,7 +154,6 @@ public abstract class StandardInputDialog extends StandardDialog {
             }
         });
         addWindowListener(new WindowAdapter() {
-
             /** {@inheritDoc} */
             @Override
             public void windowOpened(final WindowEvent e) {
@@ -168,11 +164,10 @@ public abstract class StandardInputDialog extends StandardDialog {
             @Override
             public void windowClosed(final WindowEvent e) {
                 cancelled();
-            //dispose();
+                //dispose();
             }
         });
         textField.getDocument().addDocumentListener(new DocumentListener() {
-
             /** {@inheritDoc} */
             @Override
             public void insertUpdate(final DocumentEvent e) {
@@ -188,7 +183,7 @@ public abstract class StandardInputDialog extends StandardDialog {
             /** {@inheritDoc} */
             @Override
             public void changedUpdate(final DocumentEvent e) {
-            //Ignore
+                //Ignore
             }
         });
     }
@@ -236,4 +231,5 @@ public abstract class StandardInputDialog extends StandardDialog {
     public final void setText(final String text) {
         textField.setText(text);
     }
+
 }

@@ -19,6 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 package com.dmdirc.addons.ui_swing.components;
 
 import com.dmdirc.util.validators.ValidationResponse;
@@ -49,4 +50,5 @@ public class SearchValidator implements Validator<String> {
     public void setValidates(final boolean validates) {
         this.validates = validates;
     }
+
 }

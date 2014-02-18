@@ -119,16 +119,16 @@ public class TopicBar extends JComponent implements ActionListener,
     /**
      * Creates a new instance of {@link TopicBar}.
      *
-     * @param parentWindow The window that ultimately contains this topic bar.
-     * @param globalConfig The config provider to read settings from.
-     * @param domain The domain that settings are stored in.
-     * @param colourManager The colour manager to use for colour input.
-     * @param pluginManager The plugin manager to use for plugin information.
-     * @param windowFactory The factory to use to find and create windows.
-     * @param urlHandler The URL handler to use to open URLs.
+     * @param parentWindow    The window that ultimately contains this topic bar.
+     * @param globalConfig    The config provider to read settings from.
+     * @param domain          The domain that settings are stored in.
+     * @param colourManager   The colour manager to use for colour input.
+     * @param pluginManager   The plugin manager to use for plugin information.
+     * @param windowFactory   The factory to use to find and create windows.
+     * @param urlHandler      The URL handler to use to open URLs.
      * @param swingController The controller to use to manage window focus.
-     * @param channel The channel that this topic bar is for.
-     * @param iconManager The icon manager to use for this bar's icons.
+     * @param channel         The channel that this topic bar is for.
+     * @param iconManager     The icon manager to use for this bar's icons.
      */
     public TopicBar(
             final MainFrame parentWindow,
@@ -194,9 +194,9 @@ public class TopicBar extends JComponent implements ActionListener,
         topicText.getActionMap().put("enterButton", new AbstractAction(
                 "enterButton") {
             /**
-             * A version number for this class. It should be changed whenever the class
-             * structure is changed (or anything else that would prevent serialized
-             * objects being unserialized with the new class).
+             * A version number for this class. It should be changed whenever the class structure is
+             * changed (or anything else that would prevent serialized objects being unserialized
+             * with the new class).
              */
             private static final long serialVersionUID = 1;
 
@@ -378,14 +378,14 @@ public class TopicBar extends JComponent implements ActionListener,
     private void setColours() {
         backgroundColour = UIUtilities.convertColour(
                 colourManager.getColourFromString(
-                        channel.getConfigManager().getOptionString(
-                                "ui", "inputbackgroundcolour",
-                                "ui", "backgroundcolour"), null));
+                channel.getConfigManager().getOptionString(
+                "ui", "inputbackgroundcolour",
+                "ui", "backgroundcolour"), null));
         foregroundColour = UIUtilities.convertColour(
                 colourManager.getColourFromString(
-                        channel.getConfigManager().getOptionString(
-                                "ui", "inputforegroundcolour",
-                                "ui", "foregroundcolour"), null));
+                channel.getConfigManager().getOptionString(
+                "ui", "inputforegroundcolour",
+                "ui", "foregroundcolour"), null));
         setBackground(backgroundColour);
         setForeground(foregroundColour);
         setDisabledTextColour(foregroundColour);
@@ -623,4 +623,5 @@ public class TopicBar extends JComponent implements ActionListener,
     public void changedUpdate(final DocumentEvent e) {
         validateTopic();
     }
+
 }

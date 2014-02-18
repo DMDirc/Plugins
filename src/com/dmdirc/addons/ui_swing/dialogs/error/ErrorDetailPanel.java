@@ -43,33 +43,25 @@ import net.miginfocom.swing.MigLayout;
 public final class ErrorDetailPanel extends JPanel implements ErrorListener {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 3;
-
     /** Error to show. */
     private ProgramError error;
-
     /** ID field. */
     private JTextField id;
-
     /** Date field. */
     private JTextField date;
-
     /** Severity field. */
     private JTextField level;
-
     /** Report Status field. */
     private JTextField reportStatus;
-
     /** Error status field. */
     private JTextField errorStatus;
-
     /** Details field. */
     private JTextArea details;
-
     /** Details scrollpane. */
     private JScrollPane scrollPane;
 

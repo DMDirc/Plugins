@@ -51,6 +51,7 @@ public final class DcopPlugin extends BaseCommandPlugin {
      * Retrieves the result from executing the specified command.
      *
      * @param command The command to be executed
+     *
      * @return The output of the specified command
      */
     @Exported
@@ -82,4 +83,5 @@ public final class DcopPlugin extends BaseCommandPlugin {
 
         return result;
     }
+
 }

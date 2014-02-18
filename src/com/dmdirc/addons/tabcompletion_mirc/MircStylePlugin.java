@@ -37,7 +37,8 @@ public class MircStylePlugin extends BasePlugin {
      * Retrieves a new instance of the mIRC tab completion style.
      *
      * @param completer The tab completer the instance is for
-     * @param window The window the instance is for
+     * @param window    The window the instance is for
+     *
      * @return A relevant TabCompletionStyle
      */
     @Exported

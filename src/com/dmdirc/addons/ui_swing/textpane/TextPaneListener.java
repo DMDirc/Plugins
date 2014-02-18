@@ -35,8 +35,9 @@ public interface TextPaneListener extends EventListener {
      *
      * @param clicktype Click type
      * @param eventType Mouse event type
-     * @param event Mouse event
+     * @param event     Mouse event
      */
     void mouseClicked(ClickTypeValue clicktype, MouseEventType eventType,
             MouseEvent event);
+
 }

@@ -45,9 +45,9 @@ public class NickColourInputDialog extends StandardDialog
         implements ActionListener {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 1;
     /** Whether or not this is a new entry (as opposed to editing an old one). */
@@ -68,15 +68,15 @@ public class NickColourInputDialog extends StandardDialog
     /**
      * Creates a new instance of NickColourInputDialog.
      *
-     * @param owner The window that owns this dialog.
+     * @param owner         The window that owns this dialog.
      * @param colourManager The colour manager to use to retrieve colours.
-     * @param iconManager The icon manager to use for the dialog icon.
-     * @param panel The panel that's opening this dialog
-     * @param row The row of the table we're editing
-     * @param nickname The nickname that's currently set
-     * @param network The network that's currently set
-     * @param textcolour The text colour that's currently set
-     * @param nickcolour The nicklist colour that's currently set
+     * @param iconManager   The icon manager to use for the dialog icon.
+     * @param panel         The panel that's opening this dialog
+     * @param row           The row of the table we're editing
+     * @param nickname      The nickname that's currently set
+     * @param network       The network that's currently set
+     * @param textcolour    The text colour that's currently set
+     * @param nickcolour    The nicklist colour that's currently set
      */
     public NickColourInputDialog(
             final MainFrame owner,
@@ -103,10 +103,10 @@ public class NickColourInputDialog extends StandardDialog
     /**
      * Creates a new instance of NickColourInputDialog.
      *
-     * @param owner The window that owns this dialog.
+     * @param owner         The window that owns this dialog.
      * @param colourManager The colour manager to use to retrieve colours.
-     * @param iconManager The icon manager to use for the dialog icon.
-     * @param panel The panel that's opening this dialog
+     * @param iconManager   The icon manager to use for the dialog icon.
+     * @param panel         The panel that's opening this dialog
      */
     public NickColourInputDialog(
             final MainFrame owner,
@@ -121,8 +121,8 @@ public class NickColourInputDialog extends StandardDialog
     /**
      * Initialises the components.
      *
-     * @param defaultNickname The default value for the nickname text field
-     * @param defaultNetwork The default value for the network text field
+     * @param defaultNickname   The default value for the nickname text field
+     * @param defaultNetwork    The default value for the network text field
      * @param defaultTextColour The default value for the text colour option
      * @param defaultNickColour The default value for the nick colour option
      */

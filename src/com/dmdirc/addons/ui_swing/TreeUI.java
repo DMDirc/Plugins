@@ -35,8 +35,8 @@ import javax.swing.plaf.metal.MetalTreeUI;
 import javax.swing.tree.TreePath;
 
 /**
- * Metal Tree UI Delegate, with adjustable expand handle control.
- * Use putClientProperty("showHandles", Boolean); to adjust handle visibility.
+ * Metal Tree UI Delegate, with adjustable expand handle control. Use
+ * putClientProperty("showHandles", Boolean); to adjust handle visibility.
  */
 public class TreeUI extends MetalTreeUI implements PropertyChangeListener {
 
@@ -56,7 +56,6 @@ public class TreeUI extends MetalTreeUI implements PropertyChangeListener {
         }
         throw new IllegalArgumentException("Component must of of type JTree.");
     }
-
 
     /**
      * Creates a new UI Delegate for the specified component.
@@ -87,4 +86,5 @@ public class TreeUI extends MetalTreeUI implements PropertyChangeListener {
             showHandles = (Boolean) evt.getNewValue();
         }
     }
+
 }

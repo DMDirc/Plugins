@@ -74,9 +74,9 @@ public class ActionsManagerDialog extends StandardDialog implements
         ListSelectionListener {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 1;
     /** Config instance. */
@@ -115,11 +115,11 @@ public class ActionsManagerDialog extends StandardDialog implements
     /**
      * Creates a new instance of ActionsManagerDialog.
      *
-     * @param parentWindow Parent window
-     * @param controller Parent controller
-     * @param config Config to save dialog state to
-     * @param compFactory Prefs setting component factory
-     * @param iconManager The icon manager to use for validating text fields.
+     * @param parentWindow      Parent window
+     * @param controller        Parent controller
+     * @param config            Config to save dialog state to
+     * @param compFactory       Prefs setting component factory
+     * @param iconManager       The icon manager to use for validating text fields.
      * @param groupPanelFactory Factory to use to create group panels.
      */
     @Inject
@@ -320,7 +320,6 @@ public class ActionsManagerDialog extends StandardDialog implements
         groups.getSelectionModel().clearSelection();
         new StandardInputDialog(this, ModalityType.DOCUMENT_MODAL, iconManager, "New action group",
                 "Please enter the name of the new action group", validator) {
-
             /** Java Serialisation version ID. */
             private static final long serialVersionUID = 1;
 
@@ -360,7 +359,6 @@ public class ActionsManagerDialog extends StandardDialog implements
         final StandardInputDialog inputDialog = new StandardInputDialog(
                 this, ModalityType.DOCUMENT_MODAL, iconManager, "Edit action group",
                 "Please enter the new name of the action group", validator) {
-
             /** Java Serialisation version ID. */
             private static final long serialVersionUID = 1;
 
@@ -401,7 +399,6 @@ public class ActionsManagerDialog extends StandardDialog implements
                 "Confirm deletion",
                 "Are you sure you wish to delete the '" + group
                 + "' group and all actions within it?") {
-
             /** Java Serialisation version ID. */
             private static final long serialVersionUID = 1;
 
@@ -471,4 +468,5 @@ public class ActionsManagerDialog extends StandardDialog implements
             }
         }
     }
+
 }

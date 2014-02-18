@@ -58,7 +58,7 @@ public class ResultsPanel extends JPanel implements TableModelListener,
      * Creates a new panel to show group list results.
      *
      * @param manager Group manager to show results
-     * @param total Label to update with total
+     * @param total   Label to update with total
      */
     public ResultsPanel(final GroupListManager manager, final JLabel total) {
         this.manager = manager;
@@ -128,4 +128,5 @@ public class ResultsPanel extends JPanel implements TableModelListener,
     public void mouseExited(final MouseEvent e) {
         //Ignore
     }
+
 }

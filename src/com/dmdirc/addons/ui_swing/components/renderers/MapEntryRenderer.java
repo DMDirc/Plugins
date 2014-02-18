@@ -28,7 +28,7 @@ import javax.swing.JLabel;
 import javax.swing.ListCellRenderer;
 
 /**
- *  Renders a map entry as its value.
+ * Renders a map entry as its value.
  */
 public final class MapEntryRenderer extends DMDircListCellRenderer {
 
@@ -59,4 +59,5 @@ public final class MapEntryRenderer extends DMDircListCellRenderer {
             label.setText(value.toString());
         }
     }
+
 }

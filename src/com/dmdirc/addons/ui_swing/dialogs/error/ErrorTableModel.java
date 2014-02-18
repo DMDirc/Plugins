@@ -28,8 +28,8 @@ import com.dmdirc.logger.ErrorListener;
 import com.dmdirc.logger.ErrorManager;
 import com.dmdirc.logger.ErrorReportStatus;
 import com.dmdirc.logger.ProgramError;
-import java.util.Collections;
 
+import java.util.Collections;
 import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
@@ -41,9 +41,9 @@ public final class ErrorTableModel extends AbstractTableModel implements
         ErrorListener {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 2;
     /** Data list. */
@@ -173,13 +173,12 @@ public final class ErrorTableModel extends AbstractTableModel implements
                                 (ErrorReportStatus) aValue);
                         break;
                     } else {
-                        throw new IllegalArgumentException("Received: " +
-                                aValue.getClass() + ", expecting: " +
-                                ErrorReportStatus.class);
+                        throw new IllegalArgumentException("Received: " + aValue.getClass()
+                                + ", expecting: " + ErrorReportStatus.class);
                     }
                 default:
-                    throw new UnsupportedOperationException("Only editing the " +
-                            "status is allowed");
+                    throw new UnsupportedOperationException("Only editing the "
+                            + "status is allowed");
             }
             fireTableCellUpdated(rowIndex, columnIndex);
         }
@@ -254,7 +253,6 @@ public final class ErrorTableModel extends AbstractTableModel implements
     @Override
     public void errorAdded(final ProgramError error) {
         UIUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -267,7 +265,6 @@ public final class ErrorTableModel extends AbstractTableModel implements
     @Override
     public void errorDeleted(final ProgramError error) {
         UIUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -280,7 +277,6 @@ public final class ErrorTableModel extends AbstractTableModel implements
     @Override
     public void errorStatusChanged(final ProgramError error) {
         UIUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -307,4 +303,5 @@ public final class ErrorTableModel extends AbstractTableModel implements
         ErrorManager.getErrorManager().removeErrorListener(this);
         ready = false;
     }
+
 }

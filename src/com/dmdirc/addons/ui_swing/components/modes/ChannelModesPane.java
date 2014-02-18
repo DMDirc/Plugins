@@ -40,7 +40,7 @@ public final class ChannelModesPane extends ModesPane {
      * Creates a new instance of ChannelModesPane.
      *
      * @param controller Swing controller
-     * @param channel Parent channel
+     * @param channel    Parent channel
      */
     public ChannelModesPane(final SwingController controller,
             final Channel channel) {
@@ -129,4 +129,5 @@ public final class ChannelModesPane extends ModesPane {
     public SwingController getSwingController() {
         return controller;
     }
+
 }

@@ -19,9 +19,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 package com.dmdirc.addons.ui_swing.dialogs.serversetting;
 
 import com.dmdirc.parser.common.IgnoreList;
+
 import javax.swing.AbstractListModel;
 
 /**
@@ -31,9 +33,9 @@ import javax.swing.AbstractListModel;
 public class IgnoreListModel extends AbstractListModel {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 1;
     /** Ignore list backing this model. */

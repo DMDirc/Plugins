@@ -39,26 +39,21 @@ public final class IdentdServer implements Runnable {
 
     /** The Thread in use for this server */
     private volatile Thread myThread = null;
-
     /** The current socket in use for this server */
     private ServerSocket serverSocket;
-
     /** Arraylist of all the clients we have */
     private final List<IdentClient> clientList = new ArrayList<>();
-
     /** The plugin that owns us. */
     private final IdentdPlugin myPlugin;
-
     /** Server manager. */
     private final ServerManager serverManager;
-
     /** Have we failed to start this server previously? */
     private boolean failed = false;
 
     /**
      * Create the IdentdServer.
      *
-     * @param plugin Parent ident plugin
+     * @param plugin        Parent ident plugin
      * @param serverManager Server manager to iterate over servers
      */
     public IdentdServer(final IdentdPlugin plugin, final ServerManager serverManager) {
@@ -76,7 +71,8 @@ public final class IdentdServer implements Runnable {
         while (myThread == thisThread) {
             try {
                 final Socket clientSocket = serverSocket.accept();
-                final IdentClient client = new IdentClient(this, clientSocket, myPlugin, serverManager);
+                final IdentClient client = new IdentClient(this, clientSocket, myPlugin,
+                        serverManager);
                 client.start();
                 addClient(client);
             } catch (IOException e) {
@@ -135,7 +131,9 @@ public final class IdentdServer implements Runnable {
                 myThread = new Thread(this);
                 myThread.start();
             } catch (IOException e) {
-                Logger.userError(ErrorLevel.HIGH, "Unable to start identd server: " + e.getMessage());
+                Logger.
+                        userError(ErrorLevel.HIGH, "Unable to start identd server: " + e.
+                        getMessage());
                 if (e.getMessage().equals("Permission denied")) {
                     failed = true;
                 }
@@ -168,4 +166,3 @@ public final class IdentdServer implements Runnable {
     }
 
 }
-

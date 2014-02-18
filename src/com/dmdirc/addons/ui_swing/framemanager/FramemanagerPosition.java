@@ -28,6 +28,7 @@ import java.util.Locale;
  * Frame manager position enum.
  */
 public enum FramemanagerPosition {
+
     /** Top of the window. */
     TOP,
     /** Left side of the window. */
@@ -65,4 +66,5 @@ public enum FramemanagerPosition {
     public boolean isHorizontal() {
         return this == TOP || this == BOTTOM;
     }
+
 }

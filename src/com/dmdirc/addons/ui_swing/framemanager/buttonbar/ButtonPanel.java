@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_swing.framemanager.buttonbar;
 
 import com.dmdirc.addons.ui_swing.SwingController;
+
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Rectangle;
@@ -43,15 +44,13 @@ public class ButtonPanel extends JPanel implements Scrollable,
         MouseWheelListener {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 1;
-
     /** The controller that owns this panel. */
     private final SwingController controller;
-
     /** The ButtonBar that created this Panel. */
     private final ButtonBar buttonBar;
 
@@ -59,8 +58,8 @@ public class ButtonPanel extends JPanel implements Scrollable,
      * Constructor for ButtonPanel.
      *
      * @param controller The controller that owns this panel
-     * @param layout Layout settings for this ButtonPanel
-     * @param buttonBar the buttonBar that created this Panel
+     * @param layout     Layout settings for this ButtonPanel
+     * @param buttonBar  the buttonBar that created this Panel
      */
     public ButtonPanel(final SwingController controller, final MigLayout layout,
             final ButtonBar buttonBar) {
@@ -122,8 +121,7 @@ public class ButtonPanel extends JPanel implements Scrollable,
     }
 
     /**
-     * Gets the component index of the button associated with the current
-     * selected window.
+     * Gets the component index of the button associated with the current selected window.
      *
      * @return Integer Index for the button of the selected window
      *
@@ -140,4 +138,5 @@ public class ButtonPanel extends JPanel implements Scrollable,
         }
         return selectedIndex;
     }
+
 }

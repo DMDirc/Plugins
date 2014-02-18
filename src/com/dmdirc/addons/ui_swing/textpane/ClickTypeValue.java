@@ -26,6 +26,7 @@ package com.dmdirc.addons.ui_swing.textpane;
  * Returns a click type and assocaited value.
  */
 public class ClickTypeValue {
+
     private ClickType clickType;
     private String value;
 
@@ -33,7 +34,7 @@ public class ClickTypeValue {
      * Instantiates a new click type with the specified type and value.
      *
      * @param clickType Click type
-     * @param value Value for click (can be empty but not null)
+     * @param value     Value for click (can be empty but not null)
      */
     public ClickTypeValue(final ClickType clickType, final String value) {
         if (value == null) {

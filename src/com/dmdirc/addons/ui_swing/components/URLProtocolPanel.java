@@ -83,8 +83,8 @@ public class URLProtocolPanel extends JPanel implements ActionListener,
     /**
      * Instantiates the URLDialog.
      *
-     * @param config Configuration
-     * @param url URL to open once added
+     * @param config    Configuration
+     * @param url       URL to open once added
      * @param useInsets Show insets?
      */
     public URLProtocolPanel(final ConfigProvider config, final URI url,
@@ -123,11 +123,11 @@ public class URLProtocolPanel extends JPanel implements ActionListener,
         optionType.add(mail);
         optionType.add(custom);
 
-        subsPanel = new URLSubsitutionsPanel(Arrays.asList(new String[] {
-                "url",
-                "fragment", "host", "path", "port", "query", "protocol",
-                "username",
-                "password"
+        subsPanel = new URLSubsitutionsPanel(Arrays.asList(new String[]{
+            "url",
+            "fragment", "host", "path", "port", "query", "protocol",
+            "username",
+            "password"
         }));
         subsPanel.setVisible(custom.isSelected());
 
@@ -252,7 +252,7 @@ public class URLProtocolPanel extends JPanel implements ActionListener,
             fileChooser.addChoosableFileFilter(new ExecutableFileFilter());
             fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
             if (fileChooser.showDialog(this, "Select")
-                == JFileChooser.APPROVE_OPTION) {
+                    == JFileChooser.APPROVE_OPTION) {
                 commandPath.setText(fileChooser.getSelectedFile().toString());
             }
         } else {
@@ -289,4 +289,5 @@ public class URLProtocolPanel extends JPanel implements ActionListener,
     public void changedUpdate(final DocumentEvent e) {
         // Ignore
     }
+
 }

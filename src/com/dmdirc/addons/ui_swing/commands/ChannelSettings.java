@@ -48,14 +48,13 @@ public class ChannelSettings extends Command implements IntelligentCommand {
     public static final CommandInfo INFO = new BaseCommandInfo("channelsettings",
             "channelsettings - opens the channel settings window",
             CommandType.TYPE_CHANNEL);
-
     /** The controller to use to show the settings window. */
     private final SwingController controller;
 
     /**
      * Creates a new instance of the {@link ChannelSettings} command.
      *
-     * @param controller The controller to use to show the settings window.
+     * @param controller        The controller to use to show the settings window.
      * @param commandController The command controller to use for command info.
      */
     @Inject
@@ -80,4 +79,5 @@ public class ChannelSettings extends Command implements IntelligentCommand {
             final IntelligentCommandContext context) {
         return new AdditionalTabTargets().excludeAll();
     }
+
 }

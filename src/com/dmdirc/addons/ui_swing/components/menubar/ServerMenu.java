@@ -50,9 +50,9 @@ public class ServerMenu extends JMenu implements ActionListener,
         MenuListener {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 1;
     /** Swing controller. */
@@ -68,8 +68,8 @@ public class ServerMenu extends JMenu implements ActionListener,
     /**
      * Creates a new Server menu.
      *
-     * @param controller Parent swing controller
-     * @param mainFrame Parent main frame
+     * @param controller        Parent swing controller
+     * @param mainFrame         Parent main frame
      * @param newServerProvider Provider to use to retrieve NSD instances.
      */
     @Inject
@@ -169,4 +169,5 @@ public class ServerMenu extends JMenu implements ActionListener,
     public void menuCanceled(final MenuEvent e) {
         // Do nothing
     }
+
 }

@@ -28,8 +28,8 @@ import com.dmdirc.plugins.implementations.BaseCommandPlugin;
 import dagger.ObjectGraph;
 
 /**
- * The ConditionalExecute plugin allows the user to run commands only if
- * external conditions have been met.
+ * The ConditionalExecute plugin allows the user to run commands only if external conditions have
+ * been met.
  */
 public final class ConditionalExecutePlugin extends BaseCommandPlugin {
 
@@ -39,4 +39,5 @@ public final class ConditionalExecutePlugin extends BaseCommandPlugin {
         setObjectGraph(graph.plus(new ConditionalExecuteModule()));
         registerCommand(ConditionalExecuteCommand.class, ConditionalExecuteCommand.INFO);
     }
+
 }

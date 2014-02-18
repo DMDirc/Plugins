@@ -30,8 +30,8 @@ import javax.inject.Inject;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.event.HyperlinkEvent;
-import javax.swing.event.HyperlinkListener;
 import javax.swing.event.HyperlinkEvent.EventType;
+import javax.swing.event.HyperlinkListener;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -41,15 +41,13 @@ import net.miginfocom.swing.MigLayout;
 public final class CreditsPanel extends JPanel implements HyperlinkListener {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 2;
-
     /** HTML label we're using. */
     private TextLabel about;
-
     /** URL Handler to use to open clicked links. */
     private final URLHandler urlHandler;
 

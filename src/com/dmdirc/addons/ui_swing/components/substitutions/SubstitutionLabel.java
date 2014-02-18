@@ -50,9 +50,9 @@ public class SubstitutionLabel extends JButton implements MouseListener,
         DragGestureListener, ActionListener, FocusListener {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 1;
     /** Drag source. */
@@ -88,8 +88,7 @@ public class SubstitutionLabel extends JButton implements MouseListener,
         setBorder(
                 BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(Color.GRAY),
-                BorderFactory.createEmptyBorder(1, 1, 1, 1)
-                ));
+                BorderFactory.createEmptyBorder(1, 1, 1, 1)));
         setContentAreaFilled(false);
         setMargin(new Insets(0, 0, 0, 0));
     }
@@ -108,7 +107,7 @@ public class SubstitutionLabel extends JButton implements MouseListener,
      */
     @Override
     public void mouseClicked(final MouseEvent e) {
-    //Ignore
+        //Ignore
     }
 
     /**
@@ -118,7 +117,7 @@ public class SubstitutionLabel extends JButton implements MouseListener,
      */
     @Override
     public void mousePressed(final MouseEvent e) {
-    //Ignore
+        //Ignore
     }
 
     /**
@@ -128,7 +127,7 @@ public class SubstitutionLabel extends JButton implements MouseListener,
      */
     @Override
     public void mouseReleased(final MouseEvent e) {
-    //Ignore
+        //Ignore
     }
 
     /**
@@ -148,7 +147,7 @@ public class SubstitutionLabel extends JButton implements MouseListener,
      */
     @Override
     public void mouseExited(final MouseEvent e) {
-    //Ignore
+        //Ignore
     }
 
     /** {@inheritDoc} */
@@ -191,4 +190,5 @@ public class SubstitutionLabel extends JButton implements MouseListener,
     public void focusLost(final FocusEvent e) {
         //Ignore
     }
+
 }

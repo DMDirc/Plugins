@@ -40,12 +40,11 @@ import javax.swing.SwingUtilities;
 public class ActionSubstitutionsPanel extends SubstitutionsPanel<ActionType> {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 1;
-
     /** Factory to use to create {@link ActionSubstitutor}s. */
     private final ActionSubstitutorFactory substitutorFactory;
 
@@ -70,7 +69,6 @@ public class ActionSubstitutionsPanel extends SubstitutionsPanel<ActionType> {
     @Override
     public void setType(final ActionType type) {
         SwingUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -103,4 +101,5 @@ public class ActionSubstitutionsPanel extends SubstitutionsPanel<ActionType> {
             }
         });
     }
+
 }

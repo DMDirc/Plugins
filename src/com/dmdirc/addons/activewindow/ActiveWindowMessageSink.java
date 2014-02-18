@@ -40,7 +40,6 @@ public class ActiveWindowMessageSink implements MessageSink {
 
     /** The pattern to use to match this sink. */
     private static final Pattern PATTERN = Pattern.compile("active");
-
     /** The main frame to use to get the currently active frame. */
     private final MainFrame mainFrame;
 

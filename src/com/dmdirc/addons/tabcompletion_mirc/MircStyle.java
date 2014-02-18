@@ -37,13 +37,10 @@ public class MircStyle implements TabCompletionStyle {
 
     /** The last word that was tab completed. */
     private String lastWord;
-
     /** The last string we tried to tab complete. */
     private String tabString;
-
     /** The tab completer that we use. */
     protected final TabCompleter tabCompleter;
-
     /** The input window that we use. */
     protected final WritableFrameContainer window;
 
@@ -51,7 +48,7 @@ public class MircStyle implements TabCompletionStyle {
      * Creates a new mIRC-style tab completer.
      *
      * @param completer The tab completer this style is for
-     * @param window The window this tab style is for
+     * @param window    The window this tab style is for
      */
     public MircStyle(final TabCompleter completer, final WritableFrameContainer window) {
         this.tabCompleter = completer;
@@ -70,8 +67,8 @@ public class MircStyle implements TabCompletionStyle {
             final TabCompleterResult res = tabCompleter.complete(tabString, additional);
             Collections.sort(res.getResults(), String.CASE_INSENSITIVE_ORDER);
             // We're continuing to tab through
-            target = res.getResults().get((res.getResults().indexOf(lastWord) +
-                    (shiftPressed ? -1 : 1) + res.getResults().size()) % res
+            target = res.getResults().get((res.getResults().indexOf(lastWord) + (shiftPressed ? -1
+                    : 1) + res.getResults().size()) % res
                     .getResults().size());
         } else {
             // New tab target

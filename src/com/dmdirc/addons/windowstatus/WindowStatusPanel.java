@@ -35,12 +35,11 @@ import net.miginfocom.swing.MigLayout;
 public class WindowStatusPanel extends JPanel implements StatusBarComponent {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 3333052848780326565L;
-
     /** The label we use to show window status. */
     private final JLabel label = new JLabel("???");
 
@@ -53,14 +52,12 @@ public class WindowStatusPanel extends JPanel implements StatusBarComponent {
     }
 
     /**
-     * Sets the text for this label.
-     * This will strip any formatting from the text.
+     * Sets the text for this label. This will strip any formatting from the text.
      *
      * @param text New text
      */
     public void setText(final String text) {
         UIUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {

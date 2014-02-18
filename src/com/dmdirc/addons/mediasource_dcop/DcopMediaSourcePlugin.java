@@ -40,7 +40,6 @@ public class DcopMediaSourcePlugin extends BasePlugin
 
     /** Media sources. */
     private final List<MediaSource> sources;
-
     /** This plugins plugin manager. */
     private final PluginManager pluginManager;
 
@@ -62,6 +61,7 @@ public class DcopMediaSourcePlugin extends BasePlugin
      * Get DCOP Result
      *
      * @param query Query to try
+     *
      * @return The result of the dcop query, line-by-line
      */
     @SuppressWarnings("unchecked")
@@ -79,4 +79,5 @@ public class DcopMediaSourcePlugin extends BasePlugin
     public List<MediaSource> getSources() {
         return Collections.unmodifiableList(sources);
     }
+
 }

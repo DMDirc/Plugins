@@ -50,9 +50,9 @@ import net.miginfocom.swing.MigLayout;
 public final class ActionGroupSettingsPanel extends JPanel implements ActionListener {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 1;
     /** Settings list. */
@@ -68,7 +68,7 @@ public final class ActionGroupSettingsPanel extends JPanel implements ActionList
      * Initialises a new action group information panel.
      *
      * @param factory Prefs component factory
-     * @param group Action group
+     * @param group   Action group
      */
     public ActionGroupSettingsPanel(final PrefsComponentFactory factory,
             final ActionGroup group) {
@@ -79,8 +79,8 @@ public final class ActionGroupSettingsPanel extends JPanel implements ActionList
      * Initialises a new action group information panel.
      *
      * @param factory Prefs component factory
-     * @param group Action group
-     * @param window Parent window
+     * @param group   Action group
+     * @param window  Parent window
      *
      * @since 0.6
      */
@@ -108,7 +108,7 @@ public final class ActionGroupSettingsPanel extends JPanel implements ActionList
      * Adds listeners.
      */
     private void addListeners() {
-    //Empty
+        //Empty
     }
 
     /**
@@ -185,4 +185,5 @@ public final class ActionGroupSettingsPanel extends JPanel implements ActionList
         layoutComponents();
         setVisible(true);
     }
+
 }

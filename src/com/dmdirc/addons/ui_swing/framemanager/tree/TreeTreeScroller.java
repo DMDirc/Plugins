@@ -41,7 +41,7 @@ public class TreeTreeScroller extends TreeScroller {
      * Creates a new Tree scroller for the tree view.
      *
      * @param controller The Swing Controller that owns this item
-     * @param tree Tree view tree
+     * @param tree       Tree view tree
      */
     public TreeTreeScroller(final SwingController controller, final Tree tree) {
         super(tree);
@@ -78,4 +78,5 @@ public class TreeTreeScroller extends TreeScroller {
                 .getSwingWindow(((TreeViewNode) path.getLastPathComponent())
                 .getWindow()));
     }
+
 }

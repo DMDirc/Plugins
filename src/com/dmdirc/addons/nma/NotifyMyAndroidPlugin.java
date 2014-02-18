@@ -38,14 +38,13 @@ public class NotifyMyAndroidPlugin extends BaseCommandPlugin {
 
     /** The command to register. */
     private final NotifyMyAndroidCommand command;
-
     /** Our info object. */
     private final PluginInfo pluginInfo;
 
     /**
      * Creates a new instance of the {@link NotifyMyAndroidPlugin}.
      *
-     * @param pluginInfo The plugin info object for this plugin.
+     * @param pluginInfo        The plugin info object for this plugin.
      * @param commandController Command controller to register commands
      */
     public NotifyMyAndroidPlugin(final PluginInfo pluginInfo,

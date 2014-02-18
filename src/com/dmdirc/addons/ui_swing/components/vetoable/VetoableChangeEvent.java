@@ -28,10 +28,11 @@ import javax.swing.event.ChangeEvent;
  * Vetoable change event.
  */
 public class VetoableChangeEvent extends ChangeEvent {
+
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 1;
     /** New value. */
@@ -40,7 +41,7 @@ public class VetoableChangeEvent extends ChangeEvent {
     /**
      * Creates a new vetoable change event.
      *
-     * @param source Event source
+     * @param source   Event source
      * @param newValue New value
      */
     public VetoableChangeEvent(final Object source, final Object newValue) {

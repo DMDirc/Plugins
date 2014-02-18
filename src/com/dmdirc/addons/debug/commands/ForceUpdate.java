@@ -52,10 +52,10 @@ public class ForceUpdate extends DebugCommand {
     /**
      * Creates a new instance of the command.
      *
-     * @param commandProvider The provider to use to access the main debug command.
-     * @param globalConfig The global config to use to check if updates are enabled.
+     * @param commandProvider    The provider to use to access the main debug command.
+     * @param globalConfig       The global config to use to check if updates are enabled.
      * @param identityController The controller to use to read/write settings for the updater.
-     * @param updateManager The update manager to use when forcing an update.
+     * @param updateManager      The update manager to use when forcing an update.
      */
     @Inject
     public ForceUpdate(

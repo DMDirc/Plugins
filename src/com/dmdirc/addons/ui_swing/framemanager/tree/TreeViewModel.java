@@ -34,9 +34,9 @@ import javax.swing.tree.DefaultTreeModel;
 public class TreeViewModel extends DefaultTreeModel {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 1;
     /** Frame container comparator. */
@@ -48,7 +48,7 @@ public class TreeViewModel extends DefaultTreeModel {
      * Creates a tree in which any node can have children.
      *
      * @param globalConfig The configuration provider to read settings from.
-     * @param root a TreeNode object that is the root of the tree.
+     * @param root         a TreeNode object that is the root of the tree.
      */
     public TreeViewModel(
             final AggregateConfigProvider globalConfig,
@@ -63,7 +63,7 @@ public class TreeViewModel extends DefaultTreeModel {
      * Inserts a new node into the tree and fires the appropriate events.
      *
      * @param newChild child to be added.
-     * @param parent parent child is to be added too.
+     * @param parent   parent child is to be added too.
      */
     public final void insertNodeInto(final TreeViewNode newChild,
             final TreeViewNode parent) {
@@ -76,8 +76,8 @@ public class TreeViewModel extends DefaultTreeModel {
      * Inserts a new node into the tree and fires the appropriate events.
      *
      * @param newChild child to be added.
-     * @param parent parent child is to be added too.
-     * @param index Index of item to add
+     * @param parent   parent child is to be added too.
+     * @param index    Index of item to add
      */
     public final void insertNodeInto(final TreeViewNode newChild,
             final TreeViewNode parent, final int index) {
@@ -85,11 +85,11 @@ public class TreeViewModel extends DefaultTreeModel {
     }
 
     /**
-     * Compares the new child with the existing children or parent to decide
-     * where it needs to be inserted.
+     * Compares the new child with the existing children or parent to decide where it needs to be
+     * inserted.
      *
      * @param newChild new node to be inserted.
-     * @param parent node the new node will be inserted into.
+     * @param parent   node the new node will be inserted into.
      *
      * @return index where new node is to be inserted.
      */
@@ -120,11 +120,11 @@ public class TreeViewModel extends DefaultTreeModel {
     }
 
     /**
-     * Compares the types of the specified nodes' objects to see if the new
-     * node should be sorted before the other.
+     * Compares the types of the specified nodes' objects to see if the new node should be sorted
+     * before the other.
      *
      * @param newChild The new child to be tested
-     * @param child The existing child that it's being tested against
+     * @param child    The existing child that it's being tested against
      *
      * @return True iff newChild should be sorted before child
      */
@@ -135,11 +135,11 @@ public class TreeViewModel extends DefaultTreeModel {
     }
 
     /**
-     * Compares the types of the specified nodes' objects to see if the new
-     * node should be sorted after the other.
+     * Compares the types of the specified nodes' objects to see if the new node should be sorted
+     * after the other.
      *
      * @param newChild The new child to be tested
-     * @param child The existing child that it's being tested against
+     * @param child    The existing child that it's being tested against
      *
      * @return True iff newChild should be sorted before child
      */
@@ -157,4 +157,5 @@ public class TreeViewModel extends DefaultTreeModel {
     public TreeViewNode getRootNode() {
         return (TreeViewNode) getRoot();
     }
+
 }

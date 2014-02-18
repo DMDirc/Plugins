@@ -72,12 +72,12 @@ public class ServerSettingsDialog extends StandardDialog implements ActionListen
     /**
      * Creates a new instance of ServerSettingsDialog.
      *
-     * @param controller Swing controller
-     * @param iconManager Icon manager
-     * @param compFactory Preferences setting component factory
+     * @param controller     Swing controller
+     * @param iconManager    Icon manager
+     * @param compFactory    Preferences setting component factory
      * @param performWrapper Wrapper for the perform tab.
-     * @param server The server object that we're editing settings for
-     * @param parentWindow Parent window
+     * @param server         The server object that we're editing settings for
+     * @param parentWindow   Parent window
      */
     public ServerSettingsDialog(
             final SwingController controller,
@@ -100,8 +100,9 @@ public class ServerSettingsDialog extends StandardDialog implements ActionListen
     /**
      * Initialises the main UI components.
      *
-     * @param controller Swing controller
+     * @param controller  Swing controller
      * @param iconManager Icon manager
+     *
      * @config Config to read from
      * @param compFactory Preferences setting component factory
      */
@@ -164,10 +165,8 @@ public class ServerSettingsDialog extends StandardDialog implements ActionListen
         if (server.getState() != ServerState.CONNECTED) {
             new StandardQuestionDialog(getOwner(),
                     ModalityType.MODELESS,
-                    "Server has been disconnected.", "Any changes you have " +
-                    "made will be lost, are you sure you want to close this " +
-                    "dialog?") {
-
+                    "Server has been disconnected.", "Any changes you have "
+                    + "made will be lost, are you sure you want to close this " + "dialog?") {
                 private static final long serialVersionUID = 1;
 
                 /** {@inheritDoc} */
@@ -182,7 +181,7 @@ public class ServerSettingsDialog extends StandardDialog implements ActionListen
                 public void cancelled() {
                     //Ignore
                 }
-                    }.display(getOwner());
+            }.display(getOwner());
         } else {
             closeAndSave();
         }
@@ -215,4 +214,5 @@ public class ServerSettingsDialog extends StandardDialog implements ActionListen
             dispose();
         }
     }
+
 }

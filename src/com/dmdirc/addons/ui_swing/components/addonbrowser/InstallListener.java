@@ -41,8 +41,8 @@ public class InstallListener implements ActionListener {
      * Instantiates a new install listener.
      *
      * @param workerFactory Factory to use to construct install workers.
-     * @param info Addoninfo to install
-     * @param parentWindow Parent window
+     * @param info          Addoninfo to install
+     * @param parentWindow  Parent window
      */
     public InstallListener(
             final InstallWorkerFactory workerFactory,
@@ -64,4 +64,5 @@ public class InstallListener implements ActionListener {
         installer.display(parentWindow);
         workerFactory.getInstallWorker(info, installer).executeInExecutor();
     }
+
 }

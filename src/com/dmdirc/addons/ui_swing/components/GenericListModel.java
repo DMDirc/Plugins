@@ -37,9 +37,9 @@ import javax.swing.AbstractListModel;
 public class GenericListModel<T> extends AbstractListModel {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = -4227892376992714545L;
     /** Data stored in list. */
@@ -127,7 +127,7 @@ public class GenericListModel<T> extends AbstractListModel {
     /**
      * Sets the object at the specified index to be the specified object.
      *
-     * @param index Index of the object
+     * @param index  Index of the object
      * @param object Object to set
      */
     public void set(final int index, final T object) {
@@ -148,7 +148,7 @@ public class GenericListModel<T> extends AbstractListModel {
     /**
      * Adds the specified object at the specified index.
      *
-     * @param index Index to insert object at
+     * @param index  Index to insert object at
      * @param object Object to insert
      */
     public void add(final int index, final T object) {
@@ -204,7 +204,7 @@ public class GenericListModel<T> extends AbstractListModel {
      * Removes the specified range of items from the list.
      *
      * @param start Index to start removing
-     * @param end Index to stop removing
+     * @param end   Index to stop removing
      */
     public void removeRange(final int start, final int end) {
         if (start > end) {
@@ -227,10 +227,9 @@ public class GenericListModel<T> extends AbstractListModel {
     }
 
     /**
-     * Adds all the objects in the specified collection to this list at the
-     * specified index.
+     * Adds all the objects in the specified collection to this list at the specified index.
      *
-     * @param index Index to add the items
+     * @param index      Index to add the items
      * @param collection Collection to add
      */
     public void addAll(final int index, final Collection<T> collection) {
@@ -242,4 +241,5 @@ public class GenericListModel<T> extends AbstractListModel {
     public Object getElementAt(final int index) {
         return get(index);
     }
+
 }

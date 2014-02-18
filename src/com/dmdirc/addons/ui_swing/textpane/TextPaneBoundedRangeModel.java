@@ -19,6 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 package com.dmdirc.addons.ui_swing.textpane;
 
 import com.dmdirc.util.collections.ListenerList;
@@ -126,4 +127,5 @@ public class TextPaneBoundedRangeModel implements BoundedRangeModel {
     public void removeChangeListener(final ChangeListener x) {
         listeners.remove(ChangeListener.class, x);
     }
+
 }

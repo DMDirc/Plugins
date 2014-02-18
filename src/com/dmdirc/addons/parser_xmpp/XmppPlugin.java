@@ -38,8 +38,9 @@ public class XmppPlugin extends BasePlugin {
     /**
      * Creates a new XMPP parser for the specified client info and address.
      *
-     * @param myInfo The settings for the local client
+     * @param myInfo  The settings for the local client
      * @param address The address to connect to
+     *
      * @return An appropriately configured parser
      */
     @Exported

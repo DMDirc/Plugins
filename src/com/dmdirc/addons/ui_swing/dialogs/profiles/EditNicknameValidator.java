@@ -50,4 +50,5 @@ public class EditNicknameValidator extends AddNicknameValidator {
         }
         return super.validate(object);
     }
+
 }

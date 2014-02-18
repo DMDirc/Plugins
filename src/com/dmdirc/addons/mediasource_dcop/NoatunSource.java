@@ -112,7 +112,7 @@ public class NoatunSource implements MediaSource {
     @Override
     public String getTime() {
         return duration(Integer.parseInt(myPlugin.getDcopResult(
-                "dcop noatun Noatun position").get(0)) /1000);
+                "dcop noatun Noatun position").get(0)) / 1000);
     }
 
     /** {@inheritDoc} */

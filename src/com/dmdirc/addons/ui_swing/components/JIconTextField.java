@@ -19,6 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 package com.dmdirc.addons.ui_swing.components;
 
 import java.awt.Graphics;
@@ -79,9 +80,11 @@ public class JIconTextField extends JTextField {
 
     @Override
     public String getToolTipText(final MouseEvent event) {
-        if (icon != null && (event.getX() >= getWidth() - dummyInsets.right - dummyInsets.right - icon.getIconWidth())) {
+        if (icon != null && (event.getX() >= getWidth() - dummyInsets.right - dummyInsets.right
+                - icon.getIconWidth())) {
             return message;
         }
         return super.getToolTipText(event);
     }
+
 }

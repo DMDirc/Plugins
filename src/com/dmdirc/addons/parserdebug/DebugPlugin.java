@@ -53,10 +53,10 @@ public final class DebugPlugin extends BaseCommandPlugin implements
     /**
      * Creates a new instance of this plugin.
      *
-     * @param actionController The action controller to register listeners with
+     * @param actionController  The action controller to register listeners with
      * @param commandController Command controller to register commands
-     * @param windowManager Window Manager
-     * @param urlBuilder The URL builder to use when finding icons.
+     * @param windowManager     Window Manager
+     * @param urlBuilder        The URL builder to use when finding icons.
      */
     public DebugPlugin(
             final ActionController actionController,
@@ -89,7 +89,8 @@ public final class DebugPlugin extends BaseCommandPlugin implements
                 parser.getCallbackManager().delCallback(DebugInfoListener.class, this);
                 final DebugWindow window = registeredParsers.get(parser);
                 windowList.add(window);
-            } catch (Exception e) { }
+            } catch (Exception e) {
+            }
         }
         for (DebugWindow window : windowList) {
             window.close();
@@ -109,7 +110,8 @@ public final class DebugPlugin extends BaseCommandPlugin implements
 
     /** {@inheritDoc} */
     @Override
-    public void processEvent(final ActionType type, final StringBuffer format, final Object... arguments) {
+    public void processEvent(final ActionType type, final StringBuffer format,
+            final Object... arguments) {
         if (type == CoreActionType.SERVER_DISCONNECTED) {
             final Connection connection = (Connection) arguments[0];
             final Parser parser = connection.getParser();
@@ -120,11 +122,13 @@ public final class DebugPlugin extends BaseCommandPlugin implements
                     window.unsetParser();
                     parser.getCallbackManager().delCallback(DebugInfoListener.class, this);
                     window.addLine("======================", true);
-                    window.addLine("No Longer Monitoring: "+parser+" (Server Disconnected)", true);
+                    window.addLine("No Longer Monitoring: " + parser + " (Server Disconnected)",
+                            true);
                     window.addLine("======================", true);
-                } catch (Exception e) { }
+                } catch (Exception e) {
+                }
             }
         }
     }
-}
 
+}

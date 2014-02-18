@@ -47,7 +47,7 @@ public class WindowStatusPlugin extends BasePlugin {
     }
 
     @Override
-        public void onLoad() {
+    public void onLoad() {
         super.onLoad();
         windowStatusManager.onLoad();
     }

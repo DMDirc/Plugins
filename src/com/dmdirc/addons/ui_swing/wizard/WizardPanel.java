@@ -19,6 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 package com.dmdirc.addons.ui_swing.wizard;
 
 import com.dmdirc.addons.ui_swing.UIUtilities;
@@ -329,4 +330,5 @@ public class WizardPanel extends JPanel implements ActionListener {
             listener.wizardCancelled();
         }
     }
+
 }

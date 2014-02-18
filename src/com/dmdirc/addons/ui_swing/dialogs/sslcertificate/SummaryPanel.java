@@ -46,6 +46,7 @@ public class SummaryPanel extends JPanel {
     private final IconManager iconManager;
     /** List of certificate summary entries. */
     private List<CertificateSummaryEntry> summary;
+
     /**
      * Creates a Certificate chain summary panel.
      *
@@ -79,4 +80,5 @@ public class SummaryPanel extends JPanel {
         this.summary = summary;
         layoutComponents();
     }
+
 }

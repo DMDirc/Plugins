@@ -19,6 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 package com.dmdirc.addons.swingdebug;
 
 import com.dmdirc.addons.ui_swing.DMDircEventQueue;
@@ -37,8 +38,8 @@ import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 
 /**
- * Swing debug plugin. Provides long running EDT task violation detection and a
- * console for System.out and System.err.
+ * Swing debug plugin. Provides long running EDT task violation detection and a console for
+ * System.out and System.err.
  */
 public class SwingDebugPlugin extends BasePlugin implements ActionListener {
 
@@ -146,4 +147,5 @@ public class SwingDebugPlugin extends BasePlugin implements ActionListener {
             showSysErr.setSelected(false);
         }
     }
+
 }

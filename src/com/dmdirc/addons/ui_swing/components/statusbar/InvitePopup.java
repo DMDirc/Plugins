@@ -39,9 +39,9 @@ import javax.swing.JPanel;
 public class InvitePopup extends StatusbarPopupWindow {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 1;
     /** The connection to show invites for. */
@@ -50,8 +50,8 @@ public class InvitePopup extends StatusbarPopupWindow {
     /**
      * Creates a new InvitePopup for the specified panel and connection.
      *
-     * @param parent The parent of this popup
-     * @param connection The connection to show invites for
+     * @param parent       The parent of this popup
+     * @param connection   The connection to show invites for
      * @param parentWindow Parent window
      */
     public InvitePopup(final JPanel parent,
@@ -67,10 +67,11 @@ public class InvitePopup extends StatusbarPopupWindow {
             panel.add(new JLabel(invite.getChannel()), "growx, pushx");
             panel.add(new JLabel(invite.getSource()[0], JLabel.CENTER),
                     "growx, pushx, al center");
-            panel.add(new JLabel(DateUtils.formatDuration((int)
-                    (System.currentTimeMillis() - invite.getTimestamp())
+            panel.add(new JLabel(DateUtils.formatDuration((int) (System.currentTimeMillis()
+                    - invite.getTimestamp())
                     / 1000) + " ago", JLabel.RIGHT),
                     "growx, pushx, al right, wrap");
         }
     }
+
 }

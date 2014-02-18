@@ -32,23 +32,22 @@ import javax.swing.JPopupMenu;
 import net.miginfocom.swing.MigLayout;
 
 /**
- * A custom frame that includes an input field (for use with writable
- * containers).
+ * A custom frame that includes an input field (for use with writable containers).
  */
 @Factory(inject = true, singleton = true, providers = true)
 public class CustomInputFrame extends InputTextFrame {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 2;
 
     /**
      * Creates a new instance of CustomInputFrame.
      *
-     * @param deps The dependencies required by text frames.
+     * @param deps  The dependencies required by text frames.
      * @param owner The frame container that owns this frame
      */
     public CustomInputFrame(
@@ -98,4 +97,5 @@ public class CustomInputFrame extends InputTextFrame {
     public void addCustomPopupItems(final JPopupMenu popupMenu) {
         //Add no custom popup items
     }
+
 }

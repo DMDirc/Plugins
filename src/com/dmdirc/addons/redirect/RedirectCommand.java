@@ -38,18 +38,16 @@ import com.dmdirc.ui.input.TabCompleter;
 import com.dmdirc.util.URLBuilder;
 
 /**
- * The redirect command allows the user to redirect the output from another
- * command that would normally echo results locally to a query or channel
- * window instead.
+ * The redirect command allows the user to redirect the output from another command that would
+ * normally echo results locally to a query or channel window instead.
  */
 public class RedirectCommand extends Command implements IntelligentCommand {
 
     /** A command info object for this command. */
     public static final BaseCommandInfo INFO = new BaseCommandInfo("redirect",
             "redirect <command> - sends the output of the command to a "
-                + "channel or query window",
+            + "channel or query window",
             CommandType.TYPE_CHAT);
-
     /** The sink manager to use to despatch messages. */
     private final MessageSinkManager messageSinkManager;
     /** The URL builder to use when finding icons. */
@@ -58,9 +56,9 @@ public class RedirectCommand extends Command implements IntelligentCommand {
     /**
      * Creates a new instance of this command.
      *
-     * @param controller The controller to use for command information.
+     * @param controller         The controller to use for command information.
      * @param messageSinkManager The sink manager to use to despatch messages.
-     * @param urlBuilder The URL builder to use when finding icons.
+     * @param urlBuilder         The URL builder to use when finding icons.
      */
     public RedirectCommand(
             final CommandController controller,

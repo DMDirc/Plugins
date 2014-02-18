@@ -44,12 +44,11 @@ import javax.swing.JSeparator;
 public class ServerInfoDialog extends StatusbarPopupWindow {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 3;
-
     /** The lag display plugin. */
     protected final LagDisplayPlugin plugin;
     /** Swing main frame. */
@@ -60,9 +59,9 @@ public class ServerInfoDialog extends StatusbarPopupWindow {
     /**
      * Creates a new ServerInfoDialog.
      *
-     * @param plugin The {@link LagDisplayPlugin} we're using for info
-     * @param parent The {@link JPanel} to use for positioning
-     * @param mainFrame The frame that will own this dialog.
+     * @param plugin        The {@link LagDisplayPlugin} we're using for info
+     * @param parent        The {@link JPanel} to use for positioning
+     * @param mainFrame     The frame that will own this dialog.
      * @param serverManager The manager to use to iterate servers.
      */
     public ServerInfoDialog(
@@ -99,6 +98,5 @@ public class ServerInfoDialog extends StatusbarPopupWindow {
             }
         }
     }
-
 
 }

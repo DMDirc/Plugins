@@ -70,6 +70,7 @@ public class WindowsMediaSourcePlugin extends BasePlugin
      *
      * @param player Player to ask about
      * @param method Method to call
+     *
      * @return a MediaInfoOutput with the results
      */
     protected MediaInfoOutput getOutput(final String player, final String method) {
@@ -101,7 +102,9 @@ public class WindowsMediaSourcePlugin extends BasePlugin
             filesHelper.extractResoucesEndingWith(".dll");
             filesHelper.extractResoucesEndingWith(".exe");
         } catch (IOException ex) {
-            Logger.userError(ErrorLevel.MEDIUM, "Unable to extract files for windows media source: " + ex.getMessage(), ex);
+            Logger.userError(ErrorLevel.MEDIUM, "Unable to extract files for windows media source: "
+                    + ex.getMessage(), ex);
         }
     }
+
 }

@@ -19,6 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 package com.dmdirc.addons.scriptplugin;
 
 import java.io.IOException;
@@ -34,15 +35,13 @@ import java.util.Properties;
  * @author Shane 'Dataforce' McCormack
  */
 public class TypedProperties extends Properties {
+
     /**
-     * A version number for this class.
-     * It should be changed whenever the class structure is changed (or anything
-     * else that would prevent serialized objects being unserialized with the
-     * new
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
      * class).
      */
     private static final long serialVersionUID = 200711071;
-
     /** Is this properties file Case Sensitive */
     private boolean caseSensitive = true;
 
@@ -56,8 +55,7 @@ public class TypedProperties extends Properties {
     /**
      * Creates an empty property list with the specified defaults.
      *
-     * @param defaults
-     *            The Defaults
+     * @param defaults The Defaults
      */
     public TypedProperties(final Properties defaults) {
         super(defaults);
@@ -66,8 +64,7 @@ public class TypedProperties extends Properties {
     /**
      * Set case sensitivity of this properties file.
      *
-     * @param value
-     *            True/False for the case sensitivity of this file
+     * @param value True/False for the case sensitivity of this file
      */
     public void setCaseSensitivity(final boolean value) {
         // Set all existing values to lowercase.
@@ -87,15 +84,13 @@ public class TypedProperties extends Properties {
     }
 
     /**
-     * Load properties from an InputStream.
-     * After loading, setCaseSensitivity(caseSensitive) is called.
-     * If this properties file is ment to be case Insensitive, all non-lowercase
-     * property names will be lowercased.
+     * Load properties from an InputStream. After loading, setCaseSensitivity(caseSensitive) is
+     * called. If this properties file is ment to be case Insensitive, all non-lowercase property
+     * names will be lowercased.
      *
-     * @param inStream
-     *            InputStream to load from.
-     * @throws IOException
-     *             If there is a problem reading from the Input Stream
+     * @param inStream InputStream to load from.
+     *
+     * @throws IOException If there is a problem reading from the Input Stream
      */
     @Override
     public synchronized void load(final InputStream inStream) throws IOException {
@@ -104,15 +99,13 @@ public class TypedProperties extends Properties {
     }
 
     /**
-     * Load properties from a Reader.
-     * After loading, setCaseSensitivity(caseSensitive) is called.
-     * If this properties file is ment to be case Insensitive, all non-lowercase
-     * property names will be lowercased.
+     * Load properties from a Reader. After loading, setCaseSensitivity(caseSensitive) is called. If
+     * this properties file is ment to be case Insensitive, all non-lowercase property names will be
+     * lowercased.
      *
-     * @param reader
-     *            Reader to load from.
-     * @throws IOException
-     *             If there is an error reading from the reader
+     * @param reader Reader to load from.
+     *
+     * @throws IOException If there is an error reading from the reader
      */
     @Override
     public synchronized void load(final Reader reader) throws IOException {
@@ -121,13 +114,12 @@ public class TypedProperties extends Properties {
     }
 
     /**
-     * Load properties from an XML InputStream.
-     * After loading, setCaseSensitivity(caseSensitive) is called.
-     * If this properties file is ment to be case Insensitive, all non-lowercase
-     * property names will be lowercased.
+     * Load properties from an XML InputStream. After loading, setCaseSensitivity(caseSensitive) is
+     * called. If this properties file is ment to be case Insensitive, all non-lowercase property
+     * names will be lowercased.
      *
-     * @param in
-     *            InputStream to load from.
+     * @param in InputStream to load from.
+     *
      * @throws java.io.IOException if an error occurs loading the XML
      */
     @Override
@@ -139,8 +131,8 @@ public class TypedProperties extends Properties {
     /**
      * Get a property from the config
      *
-     * @param key
-     *            key for property
+     * @param key key for property
+     *
      * @return the requested property, or null if not defined
      */
     @Override
@@ -155,10 +147,9 @@ public class TypedProperties extends Properties {
     /**
      * Get a property from the config
      *
-     * @param key
-     *            key for property
-     * @param fallback
-     *            Value to return if key is not found
+     * @param key      key for property
+     * @param fallback Value to return if key is not found
+     *
      * @return the requested property, or the fallback value if not defined
      */
     @Override
@@ -173,10 +164,9 @@ public class TypedProperties extends Properties {
     /**
      * Set a property in the config
      *
-     * @param key
-     *            key for property
-     * @param value
-     *            Value for property
+     * @param key   key for property
+     * @param value Value for property
+     *
      * @return Old value of property
      */
     @Override
@@ -191,8 +181,8 @@ public class TypedProperties extends Properties {
     /**
      * Check if a property exists
      *
-     * @param key
-     *            key for property
+     * @param key key for property
+     *
      * @return True if the property exists, else false
      */
     public boolean hasProperty(final String key) {
@@ -202,10 +192,9 @@ public class TypedProperties extends Properties {
     /**
      * Get a Byte property from the config
      *
-     * @param key
-     *            key for property
-     * @param fallback
-     *            Value to return if key is not found
+     * @param key      key for property
+     * @param fallback Value to return if key is not found
+     *
      * @return the requested property, or the fallback value if not defined
      */
     public byte getByteProperty(final String key, final byte fallback) {
@@ -219,10 +208,8 @@ public class TypedProperties extends Properties {
     /**
      * Set a Byte property in the config
      *
-     * @param key
-     *            key for property
-     * @param value
-     *            Value for property
+     * @param key   key for property
+     * @param value Value for property
      */
     public void setByteProperty(final String key, final byte value) {
         setProperty(key, Byte.toString(value));
@@ -231,10 +218,9 @@ public class TypedProperties extends Properties {
     /**
      * Get a Short property from the config
      *
-     * @param key
-     *            key for property
-     * @param fallback
-     *            Value to return if key is not found
+     * @param key      key for property
+     * @param fallback Value to return if key is not found
+     *
      * @return the requested property, or the fallback value if not defined
      */
     public short getShortProperty(final String key, final short fallback) {
@@ -248,10 +234,8 @@ public class TypedProperties extends Properties {
     /**
      * Set a Short property in the config
      *
-     * @param key
-     *            key for property
-     * @param value
-     *            Value for property
+     * @param key   key for property
+     * @param value Value for property
      */
     public void setShortProperty(final String key, final short value) {
         setProperty(key, Short.toString(value));
@@ -260,10 +244,9 @@ public class TypedProperties extends Properties {
     /**
      * Get an integer property from the config
      *
-     * @param key
-     *            key for property
-     * @param fallback
-     *            Value to return if key is not found
+     * @param key      key for property
+     * @param fallback Value to return if key is not found
+     *
      * @return the requested property, or the fallback value if not defined
      */
     public int getIntProperty(final String key, final int fallback) {
@@ -278,10 +261,8 @@ public class TypedProperties extends Properties {
     /**
      * Set an integer property in the config
      *
-     * @param key
-     *            key for property
-     * @param value
-     *            Value for property
+     * @param key   key for property
+     * @param value Value for property
      */
     public void setIntProperty(final String key, final int value) {
         setProperty(key, Integer.toString(value));
@@ -290,10 +271,9 @@ public class TypedProperties extends Properties {
     /**
      * Get a Long property from the config
      *
-     * @param key
-     *            key for property
-     * @param fallback
-     *            Value to return if key is not found
+     * @param key      key for property
+     * @param fallback Value to return if key is not found
+     *
      * @return the requested property, or the fallback value if not defined
      */
     public long getLongProperty(final String key, final long fallback) {
@@ -307,10 +287,8 @@ public class TypedProperties extends Properties {
     /**
      * Set a Long property in the config
      *
-     * @param key
-     *            key for property
-     * @param value
-     *            Value for property
+     * @param key   key for property
+     * @param value Value for property
      */
     public void setLongProperty(final String key, final long value) {
         setProperty(key, Long.toString(value));
@@ -319,10 +297,9 @@ public class TypedProperties extends Properties {
     /**
      * Get a float property from the config
      *
-     * @param key
-     *            key for property
-     * @param fallback
-     *            Value to return if key is not found
+     * @param key      key for property
+     * @param fallback Value to return if key is not found
+     *
      * @return the requested property, or the fallback value if not defined
      */
     public float getFloatProperty(final String key, final float fallback) {
@@ -336,10 +313,8 @@ public class TypedProperties extends Properties {
     /**
      * Set a float property in the config
      *
-     * @param key
-     *            key for property
-     * @param value
-     *            Value for property
+     * @param key   key for property
+     * @param value Value for property
      */
     public void setFloatProperty(final String key, final float value) {
         setProperty(key, Float.toString(value));
@@ -348,10 +323,9 @@ public class TypedProperties extends Properties {
     /**
      * Get a double property from the config
      *
-     * @param key
-     *            key for property
-     * @param fallback
-     *            Value to return if key is not found
+     * @param key      key for property
+     * @param fallback Value to return if key is not found
+     *
      * @return the requested property, or the fallback value if not defined
      */
     public double getDoubleProperty(final String key, final double fallback) {
@@ -366,10 +340,8 @@ public class TypedProperties extends Properties {
     /**
      * Set a double property in the config
      *
-     * @param key
-     *            key for property
-     * @param value
-     *            Value for property
+     * @param key   key for property
+     * @param value Value for property
      */
     public void setDoubleProperty(final String key, final double value) {
         setProperty(key, Double.toString(value));
@@ -378,10 +350,9 @@ public class TypedProperties extends Properties {
     /**
      * Get a boolean property from the config
      *
-     * @param key
-     *            key for property
-     * @param fallback
-     *            Value to return if key is not found
+     * @param key      key for property
+     * @param fallback Value to return if key is not found
+     *
      * @return the requested property, or the fallback value if not defined
      */
     public boolean getBoolProperty(final String key, final boolean fallback) {
@@ -392,10 +363,8 @@ public class TypedProperties extends Properties {
     /**
      * Set a Boolean property in the config
      *
-     * @param key
-     *            key for property
-     * @param value
-     *            Value for property
+     * @param key   key for property
+     * @param value Value for property
      */
     public void setBoolProperty(final String key, final boolean value) {
         setProperty(key, Boolean.toString(value));
@@ -404,10 +373,9 @@ public class TypedProperties extends Properties {
     /**
      * Get a Char property from the config
      *
-     * @param key
-     *            key for property
-     * @param fallback
-     *            Value to return if key is not found
+     * @param key      key for property
+     * @param fallback Value to return if key is not found
+     *
      * @return the requested property, or the fallback value if not defined
      */
     public char getCharProperty(final String key, final char fallback) {
@@ -422,10 +390,8 @@ public class TypedProperties extends Properties {
     /**
      * Set a Char property in the config
      *
-     * @param key
-     *            key for property
-     * @param value
-     *            Value for property
+     * @param key   key for property
+     * @param value Value for property
      */
     public void setCharProperty(final String key, final char value) {
         setProperty(key, Character.toString(value));
@@ -434,10 +400,9 @@ public class TypedProperties extends Properties {
     /**
      * Get a List property from the config.
      *
-     * @param key
-     *            key for property
-     * @param fallback
-     *            List to return if key is not found
+     * @param key      key for property
+     * @param fallback List to return if key is not found
+     *
      * @return the requested property, or the fallback value if not defined
      */
     public List<String> getListProperty(final String key,
@@ -458,10 +423,8 @@ public class TypedProperties extends Properties {
     /**
      * Set a List property in the config
      *
-     * @param key
-     *            key for property
-     * @param value
-     *            Value for property
+     * @param key   key for property
+     * @param value Value for property
      */
     public void setListProperty(final String key, final List<String> value) {
         final StringBuilder val = new StringBuilder();
@@ -477,4 +440,5 @@ public class TypedProperties extends Properties {
         }
         setProperty(key, val.toString());
     }
+
 }

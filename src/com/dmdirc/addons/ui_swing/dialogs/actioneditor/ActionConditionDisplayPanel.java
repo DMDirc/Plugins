@@ -67,8 +67,8 @@ public class ActionConditionDisplayPanel extends JPanel implements
      * Instantiates the panel.
      *
      * @param iconManager Icon Manager
-     * @param condition Action condition
-     * @param trigger Action trigger
+     * @param condition   Action condition
+     * @param trigger     Action trigger
      */
     public ActionConditionDisplayPanel(final IconManager iconManager,
             final ActionCondition condition, final ActionType trigger) {
@@ -86,8 +86,8 @@ public class ActionConditionDisplayPanel extends JPanel implements
         validate();
         layoutComponents();
 
-        if (condition.getArg() == -1 && condition.getComponent() == null &&
-                condition.getComparison() == null
+        if (condition.getArg() == -1 && condition.getComponent() == null && condition.
+                getComparison() == null
                 && condition.getTarget().isEmpty()) {
             editPanel.setVisible(true);
             editButton.setSelected(true);
@@ -290,4 +290,5 @@ public class ActionConditionDisplayPanel extends JPanel implements
     public boolean checkError() {
         return editPanel.checkError();
     }
+
 }

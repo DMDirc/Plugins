@@ -47,7 +47,7 @@ public interface ServerListListener {
      * Called to indicate a server group has been added.
      *
      * @param parent Parent group
-     * @param group New group
+     * @param group  New group
      */
     void serverGroupAdded(ServerGroupItem parent, ServerGroupItem group);
 
@@ -55,7 +55,8 @@ public interface ServerListListener {
      * Called to indicate a server group has been removed.
      *
      * @param parent Parent group
-     * @param group Removed group
+     * @param group  Removed group
      */
     void serverGroupRemoved(ServerGroupItem parent, ServerGroupItem group);
+
 }

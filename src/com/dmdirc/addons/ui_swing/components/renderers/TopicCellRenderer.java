@@ -66,4 +66,5 @@ public class TopicCellRenderer implements TableCellRenderer {
         table.setRowHeight(row, panel.getPreferredSize().height);
         return panel;
     }
+
 }

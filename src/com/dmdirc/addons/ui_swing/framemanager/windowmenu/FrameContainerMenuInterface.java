@@ -35,4 +35,5 @@ public interface FrameContainerMenuInterface {
      * @return Wrapped frame container
      */
     FrameContainer getFrame();
+
 }

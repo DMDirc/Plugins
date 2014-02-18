@@ -44,9 +44,9 @@ public class DurationDisplay extends JPanel implements ActionListener,
         DurationListener {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 1;
     /** Listener list. */
@@ -90,7 +90,7 @@ public class DurationDisplay extends JPanel implements ActionListener,
     /**
      * Initialises a new duration display showing the specified millisecond duration.
      *
-     * @param window Parent window.
+     * @param window   Parent window.
      * @param duration Duration to display in milliseconds
      *
      * @since 0.6
@@ -219,4 +219,5 @@ public class DurationDisplay extends JPanel implements ActionListener,
     public void setWindow(final Window window) {
         this.window = window;
     }
+
 }

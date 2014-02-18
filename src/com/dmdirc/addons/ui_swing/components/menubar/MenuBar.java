@@ -44,9 +44,9 @@ import net.miginfocom.swing.MigLayout;
 public class MenuBar extends JMenuBar {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 1;
     /** Normal menu count. */
@@ -55,12 +55,12 @@ public class MenuBar extends JMenuBar {
     /**
      * Instantiates a new menu bar.
      *
-     * @param serverMenu The server menu to use.
-     * @param channelMenu The channel menu to use.
+     * @param serverMenu   The server menu to use.
+     * @param channelMenu  The channel menu to use.
      * @param settingsMenu The settings menu to use.
-     * @param windowMenu The window menu to use.
-     * @param helpMenu The help menu to use.
-     * @param mdiBar The MDI bar to use.
+     * @param windowMenu   The window menu to use.
+     * @param helpMenu     The help menu to use.
+     * @param mdiBar       The MDI bar to use.
      */
     @Inject
     public MenuBar(
@@ -98,10 +98,10 @@ public class MenuBar extends JMenuBar {
     }
 
     /**
-     * Adds a new menu item to a named parent menu, creating the parent menu
-     * if required.
+     * Adds a new menu item to a named parent menu, creating the parent menu if required.
+     *
      * @param parentMenu Name of the parent menu
-     * @param menuItem Menu item to add
+     * @param menuItem   Menu item to add
      */
     public void addMenuItem(final String parentMenu, final JMenuItem menuItem) {
         JMenu menu = null;
@@ -119,4 +119,5 @@ public class MenuBar extends JMenuBar {
 
         menu.add(menuItem, 0);
     }
+
 }

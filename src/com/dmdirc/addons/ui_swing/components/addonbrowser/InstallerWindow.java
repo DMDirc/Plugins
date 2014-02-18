@@ -39,9 +39,9 @@ import net.miginfocom.swing.MigLayout;
 public class InstallerWindow extends StandardDialog implements ActionListener {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 1;
     /** Downloader progress bar. */
@@ -57,7 +57,7 @@ public class InstallerWindow extends StandardDialog implements ActionListener {
      * Instantiates a new installer window.
      *
      * @param parentWindow Parent window
-     * @param info Associated addon info
+     * @param info         Associated addon info
      */
     public InstallerWindow(final BrowserWindow parentWindow, final AddonInfo info) {
         super(parentWindow, ModalityType.MODELESS);
@@ -88,8 +88,8 @@ public class InstallerWindow extends StandardDialog implements ActionListener {
     }
 
     /**
-     * Tells the window the installation has finished and displays the
-     * appropriate message to the user.
+     * Tells the window the installation has finished and displays the appropriate message to the
+     * user.
      *
      * @param message Message to display (or an empty sting for success)
      */
@@ -106,4 +106,5 @@ public class InstallerWindow extends StandardDialog implements ActionListener {
         pack();
         parentWindow.loadData(false);
     }
+
 }

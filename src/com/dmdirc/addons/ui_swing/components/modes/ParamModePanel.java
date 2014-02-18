@@ -37,15 +37,15 @@ import javax.swing.JPanel;
 import net.miginfocom.swing.MigLayout;
 
 /**
- * A component to encapsulate one parameter-requiring channel mode, displaying
- * the user a checkbox, the mode's name, and a text field.
+ * A component to encapsulate one parameter-requiring channel mode, displaying the user a checkbox,
+ * the mode's name, and a text field.
  */
 public final class ParamModePanel extends JPanel implements ActionListener {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 1;
     /** The checkbox used in this mode panel. */
@@ -59,10 +59,11 @@ public final class ParamModePanel extends JPanel implements ActionListener {
 
     /**
      * Creates a new instance of ParamModePanel.
-     * @param thisMode The mode that this panel should deal with
-     * @param state The current state of the mode
-     * @param value The current value of the mode
-     * @param controller  Swing controller to gain access to settings/icons
+     *
+     * @param thisMode   The mode that this panel should deal with
+     * @param state      The current state of the mode
+     * @param value      The current value of the mode
+     * @param controller Swing controller to gain access to settings/icons
      */
     public ParamModePanel(final String thisMode, final boolean state,
             final String value, final SwingController controller) {
@@ -106,6 +107,7 @@ public final class ParamModePanel extends JPanel implements ActionListener {
 
     /**
      * Called when our checkbox is toggled.
+     *
      * @param actionEvent associated action event
      */
     @Override
@@ -121,6 +123,7 @@ public final class ParamModePanel extends JPanel implements ActionListener {
 
     /**
      * returns the state of this component.
+     *
      * @return boolean state of mode
      */
     public boolean getState() {
@@ -128,8 +131,8 @@ public final class ParamModePanel extends JPanel implements ActionListener {
     }
 
     /**
-     * returns the parameter of this mode if enabled, else returns an empty
-     * string.
+     * returns the parameter of this mode if enabled, else returns an empty string.
+     *
      * @return String mode parameter or "" if unset
      */
     public String getValue() {
@@ -138,6 +141,7 @@ public final class ParamModePanel extends JPanel implements ActionListener {
 
     /**
      * Returns the name of the mode this component represents.
+     *
      * @return String name of the mode
      */
     public String getModeName() {
@@ -146,6 +150,7 @@ public final class ParamModePanel extends JPanel implements ActionListener {
 
     /**
      * Returns the mode this component represents.
+     *
      * @return String mode
      */
     public String getMode() {
@@ -169,4 +174,5 @@ public final class ParamModePanel extends JPanel implements ActionListener {
     public Component getValueComponent() {
         return textField;
     }
+
 }

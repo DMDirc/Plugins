@@ -86,29 +86,21 @@ import org.slf4j.LoggerFactory;
 public class XmppParser extends BaseSocketAwareParser {
 
     private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(XmppParser.class);
-
     /** Pattern to use to extract priority. */
-    private static final Pattern PRIORITY_PATTERN
-            = Pattern.compile("(?i)(?:^|&)priority=([0-9]+)(?:$|&)");
-
+    private static final Pattern PRIORITY_PATTERN = Pattern.compile(
+            "(?i)(?:^|&)priority=([0-9]+)(?:$|&)");
     /** The connection to use. */
     private XMPPConnection connection;
-
     /** The state manager for the current connection. */
     private ChatStateManager stateManager;
-
     /** A cache of known chats. */
     private final Map<String, Chat> chats = new HashMap<>();
-
     /** A cache of known clients. */
     private final Map<String, XmppClientInfo> contacts = new HashMap<>();
-
     /** Whether or not to use a fake local channel for a buddy list replacement. */
     private final boolean useFakeChannel;
-
     /** The priority of this endpoint. */
     private final int priority;
-
     /** The fake channel to use is useFakeChannel is enabled. */
     private XmppFakeChannel fakeChannel;
 
@@ -120,7 +112,7 @@ public class XmppParser extends BaseSocketAwareParser {
     public XmppParser(final URI address) {
         super(address);
 
-         if (address.getQuery() == null) {
+        if (address.getQuery() == null) {
             useFakeChannel = false;
             priority = 0;
         } else {
@@ -130,8 +122,9 @@ public class XmppParser extends BaseSocketAwareParser {
             priority = matcher.find() ? Integer.parseInt(matcher.group(1)) : 0;
         }
 
-         LOG.debug("XMPP parser created with query string {}, parsed fake channel = {}, priority = {}",
-                 new Object[] { address.getQuery(), useFakeChannel, priority });
+        LOG.debug(
+                "XMPP parser created with query string {}, parsed fake channel = {}, priority = {}",
+                new Object[]{address.getQuery(), useFakeChannel, priority});
     }
 
     /** {@inheritDoc} */
@@ -217,7 +210,6 @@ public class XmppParser extends BaseSocketAwareParser {
         } else if (message.length() > 0 && message.charAt(0) == '<') {
             // Looks vaguely like XML, let's send it.
             connection.sendPacket(new Packet() {
-
                 /** {@inheritDoc} */
                 @Override
                 public String toXML() {
@@ -251,7 +243,7 @@ public class XmppParser extends BaseSocketAwareParser {
         callNumericCallback(318, target, "End of /WHOIS.");
     }
 
-    private void callNumericCallback(final int numeric, final String ... args) {
+    private void callNumericCallback(final int numeric, final String... args) {
         final String[] newArgs = new String[args.length + 3];
         newArgs[0] = ":xmpp.server";
         newArgs[1] = (numeric < 100 ? "0" : "") + (numeric < 10 ? "0" : "") + numeric;
@@ -398,7 +390,8 @@ public class XmppParser extends BaseSocketAwareParser {
     public void sendMessage(final String target, final String message) {
         if (!chats.containsKey(target)) {
             LOG.debug("Creating new chat for {}", target);
-            chats.put(target, connection.getChatManager().createChat(target, new MessageListenerImpl()));
+            chats.put(target, connection.getChatManager().createChat(target,
+                    new MessageListenerImpl()));
         }
 
         try {
@@ -449,14 +442,15 @@ public class XmppParser extends BaseSocketAwareParser {
     public void run() {
         if (getURI().getUserInfo() == null || !getURI().getUserInfo().contains(":")) {
             getCallback(ConnectErrorListener.class).onConnectError(this,
-                         new Date(), new ParserError(ParserError.ERROR_USER,
-                         "User name and password must be specified in URI", ""));
-                 return;
+                    new Date(), new ParserError(ParserError.ERROR_USER,
+                    "User name and password must be specified in URI", ""));
+            return;
         }
         final String[] userInfoParts = getURI().getUserInfo().split(":", 2);
         final String[] userParts = userInfoParts[0].split("@", 2);
 
-        final ConnectionConfiguration config = new ConnectionConfiguration(getURI().getHost(), getURI().getPort(), userParts[0]);
+        final ConnectionConfiguration config = new ConnectionConfiguration(getURI().getHost(),
+                getURI().getPort(), userParts[0]);
         config.setSecurityMode(getURI().getScheme().equalsIgnoreCase("xmpps")
                 ? ConnectionConfiguration.SecurityMode.required
                 : ConnectionConfiguration.SecurityMode.disabled);
@@ -470,20 +464,23 @@ public class XmppParser extends BaseSocketAwareParser {
             connection.connect();
 
             connection.addConnectionListener(new ConnectionListenerImpl());
-            connection.addPacketListener(new PacketListenerImpl(DataInListener.class), new AcceptAllPacketFilter());
-            connection.addPacketWriterListener(new PacketListenerImpl(DataOutListener.class), new AcceptAllPacketFilter());
+            connection.addPacketListener(new PacketListenerImpl(DataInListener.class),
+                    new AcceptAllPacketFilter());
+            connection.addPacketWriterListener(new PacketListenerImpl(DataOutListener.class),
+                    new AcceptAllPacketFilter());
             connection.getChatManager().addChatListener(new ChatManagerListenerImpl());
 
             try {
                 connection.login(userInfoParts[0], userInfoParts[1], "DMDirc.");
             } catch (XMPPException ex) {
-                 getCallback(ConnectErrorListener.class).onConnectError(this,
-                         new Date(), new ParserError(ParserError.ERROR_USER,
-                         ex.getMessage(), ""));
-                 return;
+                getCallback(ConnectErrorListener.class).onConnectError(this,
+                        new Date(), new ParserError(ParserError.ERROR_USER,
+                        ex.getMessage(), ""));
+                return;
             }
 
-            connection.sendPacket(new Presence(Presence.Type.available, null, priority, Presence.Mode.available));
+            connection.sendPacket(new Presence(Presence.Type.available, null, priority,
+                    Presence.Mode.available));
             connection.getRoster().addRosterListener(new RosterListenerImpl());
 
             stateManager = ChatStateManager.getInstance(connection);
@@ -498,15 +495,16 @@ public class XmppParser extends BaseSocketAwareParser {
 
             if (useFakeChannel) {
                 fakeChannel = new XmppFakeChannel(this, "&contacts");
-                getCallback(ChannelSelfJoinListener.class).onChannelSelfJoin(null, null, fakeChannel);
+                getCallback(ChannelSelfJoinListener.class).
+                        onChannelSelfJoin(null, null, fakeChannel);
                 fakeChannel.updateContacts(contacts.values());
 
                 for (XmppClientInfo client : contacts.values()) {
                     if (client.isAway()) {
                         getCallback(OtherAwayStateListener.class)
-                            .onAwayStateOther(null, null, client,
-                            AwayState.UNKNOWN,
-                            AwayState.AWAY);
+                                .onAwayStateOther(null, null, client,
+                                AwayState.UNKNOWN,
+                                AwayState.AWAY);
                     }
                 }
             }
@@ -515,7 +513,8 @@ public class XmppParser extends BaseSocketAwareParser {
 
             connection = null;
 
-            final ParserError error = new ParserError(ParserError.ERROR_ERROR, "Unable to connect", "");
+            final ParserError error = new ParserError(ParserError.ERROR_ERROR, "Unable to connect",
+                    "");
 
             if (ex.getWrappedThrowable() instanceof Exception) {
                 // Pass along the underlying exception instead of an XMPP
@@ -692,11 +691,11 @@ public class XmppParser extends BaseSocketAwareParser {
         public void processMessage(final Chat chat, final Message msg) {
             if (msg.getType() == Message.Type.error) {
                 getCallback(NumericListener.class).onNumeric(null, null,
-                        404, new String[] {
-                            ":xmpp", "404", getLocalClient().getNickname(),
-                            msg.getFrom(),
-                            "Cannot send message: " + msg.getError().toString()
-                        });
+                        404, new String[]{
+                    ":xmpp", "404", getLocalClient().getNickname(),
+                    msg.getFrom(),
+                    "Cannot send message: " + msg.getError().toString()
+                });
                 return;
             }
 

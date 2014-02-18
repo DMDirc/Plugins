@@ -66,4 +66,5 @@ public class AddonCellRenderer implements TableCellRenderer {
             return new JLabel(value.toString());
         }
     }
+
 }

@@ -57,8 +57,8 @@ public class FileBrowser extends JPanel implements ActionListener {
      * Creates a new File Browser.
      *
      * @param iconManager Icon Manager to get icons from
-     * @param setting The setting to create the component for
-     * @param type The type of filechooser we want (Files/Directories/Both)
+     * @param setting     The setting to create the component for
+     * @param type        The type of filechooser we want (Files/Directories/Both)
      */
     public FileBrowser(final IconManager iconManager,
             final PreferencesSetting setting, final int type) {
@@ -69,7 +69,8 @@ public class FileBrowser extends JPanel implements ActionListener {
         final JButton browseButton = new JButton("Browse");
         browseButton.addActionListener(this);
 
-        pathField = new ValidatingJTextField(iconManager, setting.getValue(), setting.getValidator());
+        pathField =
+                new ValidatingJTextField(iconManager, setting.getValue(), setting.getValidator());
 
         setLayout(new MigLayout("ins 0, fill"));
         add(pathField, "growx, pushx, sgy all");
@@ -92,8 +93,8 @@ public class FileBrowser extends JPanel implements ActionListener {
     }
 
     /**
-     * Adds an action listener to this file browser. Action
-     * listeners are notified whenever the path changes.
+     * Adds an action listener to this file browser. Action listeners are notified whenever the path
+     * changes.
      *
      * @param l The listener to be added
      */
@@ -128,4 +129,5 @@ public class FileBrowser extends JPanel implements ActionListener {
             listener.actionPerformed(new ActionEvent(this, 1, getPath()));
         }
     }
+
 }

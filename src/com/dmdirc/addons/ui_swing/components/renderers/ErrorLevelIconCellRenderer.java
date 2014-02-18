@@ -51,4 +51,5 @@ public final class ErrorLevelIconCellRenderer extends DefaultTableCellRenderer {
         setHorizontalAlignment(JLabel.CENTER);
         setIcon(iconManager.getIcon(((ErrorLevel) value).getIcon()));
     }
+
 }

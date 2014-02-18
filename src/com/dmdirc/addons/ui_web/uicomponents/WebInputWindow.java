@@ -38,13 +38,9 @@ import java.util.Map;
 public class WebInputWindow extends WebWindow implements InputWindow {
 
     private final WritableFrameContainer container;
-
     private final CommandParser commandparser;
-
     private final WebInputHandler inputHandler;
-
     private final Map<Client, WebInputHandler> inputHandlers = new HashMap<>();
-
     private final WebInterfaceUI controller;
 
     public WebInputWindow(final WebInterfaceUI controller,

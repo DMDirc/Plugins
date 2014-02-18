@@ -74,7 +74,7 @@ public class SwingInputField extends JComponent implements InputField,
     /**
      * Instantiates a new swing input field.
      *
-     * @param textFrame Parent textFrame
+     * @param textFrame    Parent textFrame
      * @param parentWindow Parent window
      */
     public SwingInputField(final InputTextFrame textFrame,
@@ -120,7 +120,6 @@ public class SwingInputField extends JComponent implements InputField,
     @Override
     public void requestFocus() {
         UIUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -133,7 +132,6 @@ public class SwingInputField extends JComponent implements InputField,
     @Override
     public boolean requestFocusInWindow() {
         return UIUtilities.invokeAndWait(new Callable<Boolean>() {
-
             /** {@inheritDoc} */
             @Override
             public Boolean call() {
@@ -146,7 +144,6 @@ public class SwingInputField extends JComponent implements InputField,
     @Override
     public void showColourPicker(final boolean irc, final boolean hex) {
         UIUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -156,7 +153,6 @@ public class SwingInputField extends JComponent implements InputField,
                             controller.getColourManager(), controller.getIconManager(),
                             irc, hex, parentWindow);
                     colourPicker.addActionListener(new ActionListener() {
-
                         @Override
                         public void actionPerformed(final ActionEvent actionEvent) {
                             try {
@@ -164,7 +160,7 @@ public class SwingInputField extends JComponent implements InputField,
                                         insertString(textField.getCaretPosition(),
                                         actionEvent.getActionCommand(), null);
                             } catch (final BadLocationException ex) {
-                            //Ignore, wont happen
+                                //Ignore, wont happen
                             }
                             colourPicker.dispose();
                             colourPicker = null;
@@ -173,8 +169,7 @@ public class SwingInputField extends JComponent implements InputField,
                     colourPicker.setVisible(true);
                     colourPicker.setLocation((int) textField.getLocationOnScreen().
                             getX(),
-                            (int) textField.getLocationOnScreen().getY() -
-                            colourPicker.getHeight());
+                            (int) textField.getLocationOnScreen().getY() - colourPicker.getHeight());
                 }
             }
         });
@@ -184,7 +179,6 @@ public class SwingInputField extends JComponent implements InputField,
     @Override
     public void hideColourPicker() {
         UIUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -203,7 +197,6 @@ public class SwingInputField extends JComponent implements InputField,
      */
     public JTextField getTextField() {
         return UIUtilities.invokeAndWait(new Callable<JTextField>() {
-
             /** {@inheritDoc} */
             @Override
             public JTextField call() {
@@ -216,7 +209,6 @@ public class SwingInputField extends JComponent implements InputField,
     @Override
     public void addActionListener(final ActionListener listener) {
         UIUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -229,7 +221,6 @@ public class SwingInputField extends JComponent implements InputField,
     @Override
     public void addKeyListener(final KeyListener listener) {
         UIUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -242,7 +233,6 @@ public class SwingInputField extends JComponent implements InputField,
     @Override
     public void removeActionListener(final ActionListener listener) {
         UIUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -255,7 +245,6 @@ public class SwingInputField extends JComponent implements InputField,
     @Override
     public void removeKeyListener(final KeyListener listener) {
         UIUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -268,7 +257,6 @@ public class SwingInputField extends JComponent implements InputField,
     @Override
     public String getSelectedText() {
         return UIUtilities.invokeAndWait(new Callable<String>() {
-
             /** {@inheritDoc} */
             @Override
             public String call() {
@@ -281,7 +269,6 @@ public class SwingInputField extends JComponent implements InputField,
     @Override
     public int getSelectionEnd() {
         return UIUtilities.invokeAndWait(new Callable<Integer>() {
-
             /** {@inheritDoc} */
             @Override
             public Integer call() {
@@ -294,7 +281,6 @@ public class SwingInputField extends JComponent implements InputField,
     @Override
     public int getSelectionStart() {
         return UIUtilities.invokeAndWait(new Callable<Integer>() {
-
             /** {@inheritDoc} */
             @Override
             public Integer call() {
@@ -307,7 +293,6 @@ public class SwingInputField extends JComponent implements InputField,
     @Override
     public String getText() {
         return UIUtilities.invokeAndWait(new Callable<String>() {
-
             /** {@inheritDoc} */
             @Override
             public String call() {
@@ -320,7 +305,6 @@ public class SwingInputField extends JComponent implements InputField,
     @Override
     public void setText(final String text) {
         UIUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -333,7 +317,6 @@ public class SwingInputField extends JComponent implements InputField,
     @Override
     public int getCaretPosition() {
         return UIUtilities.invokeAndWait(new Callable<Integer>() {
-
             /** {@inheritDoc} */
             @Override
             public Integer call() {
@@ -346,7 +329,6 @@ public class SwingInputField extends JComponent implements InputField,
     @Override
     public void setCaretPosition(final int position) {
         UIUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -362,7 +344,6 @@ public class SwingInputField extends JComponent implements InputField,
      */
     public void replaceSelection(final String clipboard) {
         UIUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -378,7 +359,6 @@ public class SwingInputField extends JComponent implements InputField,
      */
     public void setCaretColor(final Color optionColour) {
         UIUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -395,7 +375,6 @@ public class SwingInputField extends JComponent implements InputField,
     @Override
     public void setForeground(final Color optionColour) {
         UIUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -412,7 +391,6 @@ public class SwingInputField extends JComponent implements InputField,
     @Override
     public void setBackground(final Color optionColour) {
         UIUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -425,7 +403,6 @@ public class SwingInputField extends JComponent implements InputField,
     @Override
     public boolean hasFocus() {
         return UIUtilities.invokeAndWait(new Callable<Boolean>() {
-
             /** {@inheritDoc} */
             @Override
             public Boolean call() {
@@ -438,7 +415,6 @@ public class SwingInputField extends JComponent implements InputField,
     @Override
     public boolean isFocusOwner() {
         return UIUtilities.invokeAndWait(new Callable<Boolean>() {
-
             /** {@inheritDoc} */
             @Override
             public Boolean call() {
@@ -454,7 +430,6 @@ public class SwingInputField extends JComponent implements InputField,
      */
     public void setSelectionStart(final int selectionStart) {
         UIUtilities.invokeLater(new Runnable() {
-
             @Override
             public void run() {
                 textField.setSelectionStart(selectionStart);
@@ -469,7 +444,6 @@ public class SwingInputField extends JComponent implements InputField,
      */
     public void setSelectionEnd(final int selectionEnd) {
         UIUtilities.invokeLater(new Runnable() {
-
             @Override
             public void run() {
                 textField.setSelectionEnd(selectionEnd);
@@ -517,7 +491,6 @@ public class SwingInputField extends JComponent implements InputField,
     @Override
     public void illegalCommand(final String reason) {
         UIUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -532,7 +505,6 @@ public class SwingInputField extends JComponent implements InputField,
     @Override
     public void legalCommand() {
         UIUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -546,7 +518,6 @@ public class SwingInputField extends JComponent implements InputField,
     @Override
     public void wrappedText(final int count) {
         UIUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -564,4 +535,5 @@ public class SwingInputField extends JComponent implements InputField,
             hideColourPicker();
         }
     }
+
 }

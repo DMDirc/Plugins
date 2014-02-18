@@ -34,7 +34,6 @@ public enum SessionLockActionType implements ActionType {
     SESSION_LOCK("Session locked"),
     /** Indicated the session is unlocked. */
     SESSION_UNLOCK("Session unlocked");
-
     /** Type name. */
     private final String name;
 

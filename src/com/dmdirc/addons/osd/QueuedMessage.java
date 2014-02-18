@@ -27,10 +27,10 @@ package com.dmdirc.addons.osd;
  *
  * @since 0.6.5
  */
-public class QueuedMessage  {
+public class QueuedMessage {
+
     /** Timeout delay in seconds. */
     private final int timeout;
-
     /** Message to display on the OSD. */
     private final String message;
 
@@ -62,4 +62,5 @@ public class QueuedMessage  {
     public String getMessage() {
         return message;
     }
+
 }

@@ -117,8 +117,8 @@ public class AddonInfoPanel extends JPanel implements ActionListener,
     }
 
     /**
-     * Adds an addon toggle listener to this panel, this proxies whatever
-     * addon listener is being displayed.
+     * Adds an addon toggle listener to this panel, this proxies whatever addon listener is being
+     * displayed.
      *
      * @param listener Listener to add
      */

@@ -47,7 +47,7 @@ public class MPRISSource implements MediaSource {
     /**
      * Creates a new MPRIS source for the specified service name.
      *
-     * @param source The manager which owns this source
+     * @param source  The manager which owns this source
      * @param service The service name of the MRPIS service
      */
     public MPRISSource(final DBusMediaSource source, final String service) {
@@ -64,10 +64,11 @@ public class MPRISSource implements MediaSource {
     }
 
     /**
-     * Get the first line of the output for a dbus call to the given function
-     * against this service in the /org/mpris/MediaPlayer2 obejct.
+     * Get the first line of the output for a dbus call to the given function against this service
+     * in the /org/mpris/MediaPlayer2 obejct.
      *
      * @param function Function to get data for.
+     *
      * @return First line of output.
      */
     protected String getFirstValue(final String function) {
@@ -107,10 +108,11 @@ public class MPRISSource implements MediaSource {
     }
 
     /**
-     * Utility method to return the value of the specified key if it exists,
-     * or "Unknown" if it doesn't.
+     * Utility method to return the value of the specified key if it exists, or "Unknown" if it
+     * doesn't.
      *
      * @param key The key to be retrieved
+     *
      * @return The value of the specified key or "Unknown".
      */
     protected String getData(final String key) {
@@ -203,6 +205,7 @@ public class MPRISSource implements MediaSource {
      * Get the duration in seconds as a string.
      *
      * @param seconds Input to get duration for
+     *
      * @return Duration as a string
      */
     private String duration(final long secondsInput) {
@@ -233,4 +236,5 @@ public class MPRISSource implements MediaSource {
 
         return result.toString();
     }
+
 }

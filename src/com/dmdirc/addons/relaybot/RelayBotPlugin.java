@@ -91,7 +91,8 @@ public class RelayBotPlugin extends BasePlugin implements ActionListener, Config
         // connected with.
         for (Server server : serverManager.getServers()) {
             final Parser parser = server.getParser();
-            if (parser instanceof IRCParser && !(parser.getCallbackManager() instanceof RelayCallbackManager)) {
+            if (parser instanceof IRCParser
+                    && !(parser.getCallbackManager() instanceof RelayCallbackManager)) {
                 new RelayCallbackManager(this, (IRCParser) parser);
             }
             for (String channel : server.getChannels()) {
@@ -117,8 +118,10 @@ public class RelayBotPlugin extends BasePlugin implements ActionListener, Config
         // Remove RelayCallbackManagers
         for (Server server : serverManager.getServers()) {
             final Parser parser = server.getParser();
-            if (parser instanceof IRCParser && parser.getCallbackManager() instanceof RelayCallbackManager) {
-                ((RelayCallbackManager) parser.getCallbackManager()).onSocketClosed(parser, new Date());
+            if (parser instanceof IRCParser
+                    && parser.getCallbackManager() instanceof RelayCallbackManager) {
+                ((RelayCallbackManager) parser.getCallbackManager()).onSocketClosed(parser,
+                        new Date());
             }
         }
 
@@ -134,12 +137,13 @@ public class RelayBotPlugin extends BasePlugin implements ActionListener, Config
     /**
      * Process an event of the specified type.
      *
-     * @param type The type of the event to process
-     * @param format Format of messages that are about to be sent. (May be null)
+     * @param type      The type of the event to process
+     * @param format    Format of messages that are about to be sent. (May be null)
      * @param arguments The arguments for the event
      */
     @Override
-    public void processEvent(final ActionType type, final StringBuffer format, final Object... arguments) {
+    public void processEvent(final ActionType type, final StringBuffer format,
+            final Object... arguments) {
         if (type == CoreActionType.CHANNEL_OPENED) {
             getHandler((Channel) arguments[0]);
         } else if (type == CoreActionType.CHANNEL_CLOSED) {
@@ -150,9 +154,12 @@ public class RelayBotPlugin extends BasePlugin implements ActionListener, Config
             final ChannelClientInfo cci = (ChannelClientInfo) arguments[1];
             final String channelName = parser.getStringConverter().toLowerCase(chan.getName());
 
-            if (identityController.getGlobalConfiguration().hasOptionString(getDomain(), channelName)) {
-                final String botName = identityController.getGlobalConfiguration().getOption(getDomain(), channelName);
-                if (parser.getStringConverter().equalsIgnoreCase(botName, cci.getClient().getNickname())) {
+            if (identityController.getGlobalConfiguration().
+                    hasOptionString(getDomain(), channelName)) {
+                final String botName = identityController.getGlobalConfiguration().getOption(
+                        getDomain(), channelName);
+                if (parser.getStringConverter().equalsIgnoreCase(botName, cci.getClient().
+                        getNickname())) {
                     // The bot quit :(
                     final RelayChannelHandler handler = getHandler(chan);
                     if (handler != null) {
@@ -164,7 +171,8 @@ public class RelayBotPlugin extends BasePlugin implements ActionListener, Config
             final Connection connection = (Connection) arguments[0];
 
             final Parser parser = connection.getParser();
-            if (parser instanceof IRCParser && !(parser.getCallbackManager() instanceof RelayCallbackManager)) {
+            if (parser instanceof IRCParser
+                    && !(parser.getCallbackManager() instanceof RelayCallbackManager)) {
                 new RelayCallbackManager(this, (IRCParser) parser);
             }
         } else if (type == CoreActionType.SERVER_DISCONNECTED) {
@@ -182,7 +190,8 @@ public class RelayBotPlugin extends BasePlugin implements ActionListener, Config
     /** {@inheritDoc} */
     @Override
     public void configChanged(final String domain, final String key) {
-        final boolean wasUnset = !identityController.getGlobalConfiguration().hasOptionString(domain, key);
+        final boolean wasUnset = !identityController.getGlobalConfiguration().
+                hasOptionString(domain, key);
 
         for (Server server : serverManager.getServers()) {
             if (server.hasChannel(key)) {
@@ -197,12 +206,11 @@ public class RelayBotPlugin extends BasePlugin implements ActionListener, Config
     }
 
     /**
-     * Do we have an intercept for the given channel object?
-     * If we have one, we will return true.
-     * If we should have one (as determined by checking the config) we will add
-     * one and return true.
+     * Do we have an intercept for the given channel object? If we have one, we will return true. If
+     * we should have one (as determined by checking the config) we will add one and return true.
      *
      * @param channel Channel to check
+     *
      * @return true or false
      */
     public boolean isListening(final Channel channel) {
@@ -210,13 +218,12 @@ public class RelayBotPlugin extends BasePlugin implements ActionListener, Config
     }
 
     /**
-     * Get the RelayChannelHandler for a given Channel.
-     * If we have one, we will return it.
-     * If we should have one (as determined by checking the config) we will
-     * create and return it.
+     * Get the RelayChannelHandler for a given Channel. If we have one, we will return it. If we
+     * should have one (as determined by checking the config) we will create and return it.
      * Otherwise we will return null.
      *
      * @param channel Channel to get Handler for.
+     *
      * @return ChannelHandler or null
      */
     public RelayChannelHandler getHandler(final Channel channel) {
@@ -224,9 +231,12 @@ public class RelayBotPlugin extends BasePlugin implements ActionListener, Config
             if (handlers.containsKey(channel)) {
                 return handlers.get(channel);
             } else {
-                final String channelName = channel.getConnection().getParser().getStringConverter().toLowerCase(channel.getName());
-                if (identityController.getGlobalConfiguration().hasOptionString(getDomain(), channelName)) {
-                    final RelayChannelHandler handler = new RelayChannelHandler(this, identityController, channel);
+                final String channelName = channel.getConnection().getParser().getStringConverter().
+                        toLowerCase(channel.getName());
+                if (identityController.getGlobalConfiguration().hasOptionString(getDomain(),
+                        channelName)) {
+                    final RelayChannelHandler handler = new RelayChannelHandler(this,
+                            identityController, channel);
                     handlers.put(channel, handler);
                     return handler;
                 }
@@ -237,11 +247,11 @@ public class RelayBotPlugin extends BasePlugin implements ActionListener, Config
     }
 
     /**
-     * Remove the RelayChannelHandler for a given Channel.
-     * If we have one already, we will return it and remove it.
-     * Otherwise we will return null.
+     * Remove the RelayChannelHandler for a given Channel. If we have one already, we will return it
+     * and remove it. Otherwise we will return null.
      *
      * @param channel Channel to remove Handler for.
+     *
      * @return Handler that we removed, or null.
      */
     public RelayChannelHandler removeHandler(final Channel channel) {
@@ -276,7 +286,7 @@ public class RelayBotPlugin extends BasePlugin implements ActionListener, Config
         i = 0;
         for (Map.Entry<String, String> entry : settings.entrySet()) {
             if (entry.getKey().charAt(0) == '#') {
-                data[i] = new String[]{entry.getKey(), entry.getValue(), };
+                data[i] = new String[]{entry.getKey(), entry.getValue(),};
                 i++;
             }
         }
@@ -295,7 +305,6 @@ public class RelayBotPlugin extends BasePlugin implements ActionListener, Config
                 "Identifies where and who the bot is in channels.",
                 UIUtilities.invokeAndWait(
                 new Callable<RelayChannelPanel>() {
-
             /** {@inheritDoc} */
             @Override
             public RelayChannelPanel call() {
@@ -316,4 +325,5 @@ public class RelayBotPlugin extends BasePlugin implements ActionListener, Config
         manager.getCategory("Plugins").addSubCategory(general);
         general.addSubCategory(colours);
     }
+
 }

@@ -29,8 +29,8 @@ import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- * This class manages the socket and low-level I/O functionality for all
- * types of DCC. Subclasses process the data received by this class.
+ * This class manages the socket and low-level I/O functionality for all types of DCC. Subclasses
+ * process the data received by this class.
  */
 public abstract class DCC implements Runnable {
 
@@ -47,28 +47,24 @@ public abstract class DCC implements Runnable {
     /** Are we a listen socket? */
     protected boolean listen = false;
     /**
-     * The current socket in use if this is a listen socket.
-     * This reference may be changed if and only if exactly one permit from the
-     * {@link #serverSocketSem} and {@link #serverListeningSem} semaphores is
-     * held by the thread doing the modification.
+     * The current socket in use if this is a listen socket. This reference may be changed if and
+     * only if exactly one permit from the {@link #serverSocketSem} and {@link #serverListeningSem}
+     * semaphores is held by the thread doing the modification.
      */
     private ServerSocket serverSocket;
     /**
-     * Semaphore to control write access to ServerSocket.
-     * If an object acquires a permit from the {@link #serverSocketSem}, then
-     * {@link #serverSocket} is <em>guaranteed</em> not to be externally
-     * modified until that permit is released, <em>unless</em> the object also
-     * acquires a permit from the {@link #serverListeningSem}.
+     * Semaphore to control write access to ServerSocket. If an object acquires a permit from the
+     * {@link #serverSocketSem}, then {@link #serverSocket} is <em>guaranteed</em> not to be
+     * externally modified until that permit is released, <em>unless</em> the object also acquires a
+     * permit from the {@link #serverListeningSem}.
      */
     private final Semaphore serverSocketSem = new Semaphore(1);
     /**
-     * Semaphore used when we're blocking waiting for connections.
-     * If an object acquires a permit from the {@link #serverListeningSem},
-     * then it is <em>guaranteed</em> that the {@link #run()} method is blocking
-     * waiting for incoming connections. In addition, it is <em>guaranteed</em>
-     * that the {@link #run()} method is holding the {@link #serverSocketSem}
-     * permit, and it will continue holding that permit until it can reaquire
-     * the {@link #serverListeningSem} permit.
+     * Semaphore used when we're blocking waiting for connections. If an object acquires a permit
+     * from the {@link #serverListeningSem}, then it is <em>guaranteed</em> that the {@link #run()}
+     * method is blocking waiting for incoming connections. In addition, it is <em>guaranteed</em>
+     * that the {@link #run()} method is holding the {@link #serverSocketSem} permit, and it will
+     * continue holding that permit until it can reaquire the {@link #serverListeningSem} permit.
      */
     private final Semaphore serverListeningSem = new Semaphore(0);
 
@@ -108,11 +104,11 @@ public abstract class DCC implements Runnable {
     }
 
     /**
-     * Start a listen socket rather than a connect socket, use a port from the
-     * given range.
+     * Start a listen socket rather than a connect socket, use a port from the given range.
      *
      * @param startPort Port to try first
-     * @param endPort Last port to try.
+     * @param endPort   Last port to try.
+     *
      * @throws IOException If no sockets were available in the given range
      */
     public void listen(final int startPort, final int endPort) throws IOException {
@@ -245,19 +241,17 @@ public abstract class DCC implements Runnable {
     }
 
     /**
-     * Called periodically to read or write data to this DCC's socket.
-     * Implementations should attempt to send or receive one unit of data
-     * (for example one block of binary data, or one line of ASCII data) each
-     * time this method is called.
+     * Called periodically to read or write data to this DCC's socket. Implementations should
+     * attempt to send or receive one unit of data (for example one block of binary data, or one
+     * line of ASCII data) each time this method is called.
      * <p>
-     * The return value of this method is used to determine whether the DCC
-     * has been completed. If the method returns <code>false</code>, the
-     * DCC is assumed to have finished (i.e., the socket has closed), and the
-     * method will not be called again. A return value of <code>true</code> will
-     * cause the method to be recalled.
+     * The return value of this method is used to determine whether the DCC has been completed. If
+     * the method returns
+     * <code>false</code>, the DCC is assumed to have finished (i.e., the socket has closed), and
+     * the method will not be called again. A return value of
+     * <code>true</code> will cause the method to be recalled.
      *
-     * @return false when socket is closed, true will cause the method to be
-     *         called again.
+     * @return false when socket is closed, true will cause the method to be called again.
      */
     protected abstract boolean handleSocket();
 
@@ -265,7 +259,7 @@ public abstract class DCC implements Runnable {
      * Set the address to connect to for this DCC
      *
      * @param address Address as an int (Network Byte Order, as specified in the DCC CTCP)
-     * @param port Port to connect to
+     * @param port    Port to connect to
      */
     public void setAddress(final long address, final int port) {
         this.address = address;
@@ -303,6 +297,7 @@ public abstract class DCC implements Runnable {
      * Convert the given IP Address to a long
      *
      * @param ip Input IP Address
+     *
      * @return ip as a long
      */
     public static long ipToLong(final String ip) {
@@ -318,6 +313,7 @@ public abstract class DCC implements Runnable {
      * Convert the given long to an IP Address
      *
      * @param in Input long
+     *
      * @return long as an IP
      */
     public static String longToIP(final long in) {

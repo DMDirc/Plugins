@@ -55,7 +55,7 @@ public class Input extends Command implements IntelligentCommand {
     /**
      * Creates a new input command.
      *
-     * @param windowFactory Window factory to get windows from
+     * @param windowFactory     Window factory to get windows from
      * @param commandController The controller to use for command information.
      */
     @Inject

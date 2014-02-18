@@ -49,8 +49,7 @@ import javax.swing.event.DocumentListener;
 import net.miginfocom.swing.MigLayout;
 
 /**
- * Class to display a topic to an end user as part of the channel settings
- * dialog.
+ * Class to display a topic to an end user as part of the channel settings dialog.
  */
 public class TopicDisplayPane extends JPanel implements DocumentListener {
 
@@ -64,7 +63,7 @@ public class TopicDisplayPane extends JPanel implements DocumentListener {
     private final InputWindow channelWindow;
     /** the maximum length allowed for a topic. */
     private final int topicLengthMax;
-    /** label showing the number of characters left in a topic.*/
+    /** label showing the number of characters left in a topic. */
     private JLabel topicLengthLabel;
     /** Topic text entry text area. */
     private TextAreaInputField topicText;
@@ -72,15 +71,14 @@ public class TopicDisplayPane extends JPanel implements DocumentListener {
     private TextLabel topicWho;
 
     /**
-     * Creates a new topic display panel.  This panel shows an editable version
-     * of the current topic along with relating meta data and validates the
-     * length of the new input.
+     * Creates a new topic display panel. This panel shows an editable version of the current topic
+     * along with relating meta data and validates the length of the new input.
      *
-     * @param channel Associated channel
-     * @param iconManager Icon manager
+     * @param channel        Associated channel
+     * @param iconManager    Icon manager
      * @param serviceManager Service manager
-     * @param parent Parent channel settings dialog
-     * @param channelWindow Channel window
+     * @param parent         Parent channel settings dialog
+     * @param channelWindow  Channel window
      */
     public TopicDisplayPane(final Channel channel, final IconManager iconManager,
             final ServiceManager serviceManager, final ChannelSettingsDialog parent,
@@ -117,7 +115,7 @@ public class TopicDisplayPane extends JPanel implements DocumentListener {
         handler.setTabCompleter(channel.getTabCompleter());
 
         topicText.getActionMap().put("paste-from-clipboard",
-                    new ReplacePasteAction("(\r\n|\n|\r)", " "));
+                new ReplacePasteAction("(\r\n|\n|\r)", " "));
         topicText.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER,
                 0), new TopicEnterAction(parent));
         topicText.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER,
@@ -202,4 +200,5 @@ public class TopicDisplayPane extends JPanel implements DocumentListener {
     public void changedUpdate(final DocumentEvent e) {
         //Ignore
     }
+
 }

@@ -42,16 +42,15 @@ public class StatusbarMessage extends DebugCommand {
 
     /** The status bar manager to show messages in. */
     private final StatusBarManager statusBarManager;
-
     /** The global configuration. */
     private final AggregateConfigProvider globalConfig;
 
     /**
      * Creates a new instance of the command.
      *
-     * @param commandProvider The provider to use to access the main debug command.
+     * @param commandProvider  The provider to use to access the main debug command.
      * @param statusBarManager The status bar manager to show messages in.
-     * @param globalConfig The global configuration to use.
+     * @param globalConfig     The global configuration to use.
      */
     @Inject
     public StatusbarMessage(
@@ -83,4 +82,5 @@ public class StatusbarMessage extends DebugCommand {
         statusBarManager.setMessage(new StatusMessage(null,
                 "Test: " + args.getArgumentsAsString(), null, 5, globalConfig));
     }
+
 }

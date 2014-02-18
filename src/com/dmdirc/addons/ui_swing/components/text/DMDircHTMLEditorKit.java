@@ -40,7 +40,7 @@ public class DMDircHTMLEditorKit extends HTMLEditorKit {
      * Creates a new instance of {@link DMDircHTMLEditorKit}.
      *
      * @param urlBuilder The URL builder to use to construct image URLs. If {@code null}, then only
-     * standard URLs will be handled (not DMDirc-specific ones).
+     *                   standard URLs will be handled (not DMDirc-specific ones).
      */
     public DMDircHTMLEditorKit(@Nullable final URLBuilder urlBuilder) {
         defaultFactory = new DMDircHTMLFactory(urlBuilder);
@@ -51,4 +51,5 @@ public class DMDircHTMLEditorKit extends HTMLEditorKit {
     public ViewFactory getViewFactory() {
         return defaultFactory;
     }
+
 }

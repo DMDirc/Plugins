@@ -59,12 +59,11 @@ public class ReorderableJList extends JList implements DragSourceListener,
         DropTargetListener, DragGestureListener {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 1;
-
     /** Drag source. */
     private final DragSource dragSource;
     /** Drag target. */
@@ -298,6 +297,5 @@ public class ReorderableJList extends JList implements DragSourceListener,
         draggedIndex = index;
         dragSource.startDrag(dge, Cursor.getDefaultCursor(), trans, this);
     }
+
 }
-
-

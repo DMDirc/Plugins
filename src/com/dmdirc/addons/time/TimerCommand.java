@@ -36,8 +36,8 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 /**
- * The timer command allows users to schedule commands to occur after a certain
- * interval, or to repeatedly occur with a specified delay.
+ * The timer command allows users to schedule commands to occur after a certain interval, or to
+ * repeatedly occur with a specified delay.
  */
 public class TimerCommand extends Command implements IntelligentCommand {
 
@@ -54,7 +54,7 @@ public class TimerCommand extends Command implements IntelligentCommand {
     /**
      * Creates a new instance of TimerCommand.
      *
-     * @param manager The instance of TimerManager associated with this command
+     * @param manager           The instance of TimerManager associated with this command
      * @param commandController The controller to use for command information.
      */
     public TimerCommand(final TimerManager manager, final CommandController commandController) {
@@ -95,8 +95,8 @@ public class TimerCommand extends Command implements IntelligentCommand {
                                     + entry.getKey() + " - " + entry.getValue().getCommand());
                         }
                     } else {
-                        sendLine(origin, args.isSilent(), FORMAT_ERROR, "There are " +
-                                "currently no active timers");
+                        sendLine(origin, args.isSilent(), FORMAT_ERROR, "There are "
+                                + "currently no active timers");
                     }
                     break;
                 default:
@@ -117,8 +117,8 @@ public class TimerCommand extends Command implements IntelligentCommand {
                         }
 
                         if (interval < 1) {
-                            sendLine(origin, args.isSilent(), FORMAT_ERROR, "Cannot use" +
-                                    " intervals below 1");
+                            sendLine(origin, args.isSilent(), FORMAT_ERROR, "Cannot use"
+                                    + " intervals below 1");
                             return;
                         }
 
@@ -136,12 +136,13 @@ public class TimerCommand extends Command implements IntelligentCommand {
 
     /**
      * Displays usage information for this command.
-     * @param origin The window that the command was entered in
+     *
+     * @param origin   The window that the command was entered in
      * @param isSilent Whether this command is being silenced or not
      */
     private void doUsage(final FrameContainer origin, final boolean isSilent) {
-        showUsage(origin, isSilent, "timer", "[--list|--cancel <timer id> | " +
-                "<repetitions> <interval> <command>]");
+        showUsage(origin, isSilent, "timer", "[--list|--cancel <timer id> | "
+                + "<repetitions> <interval> <command>]");
     }
 
     /** {@inheritDoc} */
@@ -162,4 +163,5 @@ public class TimerCommand extends Command implements IntelligentCommand {
 
         return targets;
     }
+
 }

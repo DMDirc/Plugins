@@ -56,8 +56,8 @@ import javax.swing.table.TableCellRenderer;
 import net.miginfocom.swing.MigLayout;
 
 /**
- * The updater dialog informs the user of the new update that is available,
- * and walks them through the process of downloading the update.
+ * The updater dialog informs the user of the new update that is available, and walks them through
+ * the process of downloading the update.
  */
 public class SwingUpdaterDialog extends StandardDialog implements
         ActionListener, UpdateManagerListener {
@@ -82,8 +82,8 @@ public class SwingUpdaterDialog extends StandardDialog implements
     /**
      * Creates a new instance of the updater dialog.
      *
-     * @param updateManager The update manager to use for information
-     * @param parentWindow Parent window
+     * @param updateManager         The update manager to use for information
+     * @param parentWindow          Parent window
      * @param restartDialogProvider Provider of restart dialogs.
      */
     @Inject
@@ -130,7 +130,6 @@ public class SwingUpdaterDialog extends StandardDialog implements
 
         scrollPane = new JScrollPane();
         table = new PackingTable(new UpdateTableModel(updateManager, updates), scrollPane) {
-
             /** Serialisation version ID. */
             private static final long serialVersionUID = 1;
 
@@ -190,7 +189,6 @@ public class SwingUpdaterDialog extends StandardDialog implements
             header.setText("DMDirc is updating the following components:");
 
             new LoggingSwingWorker<Void, Void>() {
-
                 /** {@inheritDoc} */
                 @Override
                 protected Void doInBackground() {
@@ -224,7 +222,6 @@ public class SwingUpdaterDialog extends StandardDialog implements
     public void updateManagerStatusChanged(final UpdateManager manager,
             final UpdateManagerStatus status) {
         UIUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -241,4 +238,5 @@ public class SwingUpdaterDialog extends StandardDialog implements
             }
         });
     }
+
 }

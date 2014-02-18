@@ -77,9 +77,9 @@ public class CategoryPanel extends JPanel {
     /**
      * Instantiates a new category panel.
      *
-     * @param factory Prefs component factory instance
+     * @param factory     Prefs component factory instance
      * @param iconManager Icon manager
-     * @param parent Parent window
+     * @param parent      Parent window
      */
     @Inject
     public CategoryPanel(
@@ -91,10 +91,10 @@ public class CategoryPanel extends JPanel {
     /**
      * Instantiates a new category panel.
      *
-     * @param factory Prefs component factory instance
-     * @param parent Parent window
+     * @param factory     Prefs component factory instance
+     * @param parent      Parent window
      * @param iconManager Icon manager
-     * @param category Initial category
+     * @param category    Initial category
      */
     public CategoryPanel(final PrefsComponentFactory factory,
             final IconManager iconManager,
@@ -144,7 +144,7 @@ public class CategoryPanel extends JPanel {
     /**
      * Informs the category panel a category has been loaded.
      *
-     * @param loader Category loader
+     * @param loader   Category loader
      * @param category Loaded category
      */
     protected void categoryLoaded(final PrefsCategoryLoader loader,
@@ -156,7 +156,6 @@ public class CategoryPanel extends JPanel {
     private void categoryLoaded(final PreferencesCategory category) {
         if (this.category == category) {
             UIUtilities.invokeAndWait(new Runnable() {
-
                 /** {@inheritDoc} */
                 @Override
                 public void run() {
@@ -173,7 +172,6 @@ public class CategoryPanel extends JPanel {
                     }
                     //And for good measure, hack the crap out of it some more :(
                     SwingUtilities.invokeLater(new Runnable() {
-
                         @Override
                         public void run() {
                             panel.invalidate();
@@ -212,7 +210,6 @@ public class CategoryPanel extends JPanel {
 
         if (!panels.containsKey(category)) {
             UIUtilities.invokeAndWait(new Runnable() {
-
                 @Override
                 public void run() {
                     scrollPane.setViewportView(loading);
@@ -233,7 +230,6 @@ public class CategoryPanel extends JPanel {
      */
     public void setWaiting(final boolean b) {
         UIUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -249,7 +245,6 @@ public class CategoryPanel extends JPanel {
      */
     public void setError(final String message) {
         UIUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -262,4 +257,5 @@ public class CategoryPanel extends JPanel {
             }
         });
     }
+
 }

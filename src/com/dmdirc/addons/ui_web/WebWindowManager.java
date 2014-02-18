@@ -45,7 +45,8 @@ import java.util.Map;
 public class WebWindowManager implements FrameListener {
 
     /** A map of known implementations of window interfaces. */
-    private static final Map<Collection<String>, Class<? extends Window>> IMPLEMENTATIONS = new HashMap<>();
+    private static final Map<Collection<String>, Class<? extends Window>> IMPLEMENTATIONS =
+            new HashMap<>();
 
     static {
         IMPLEMENTATIONS.put(new HashSet<>(
@@ -67,23 +68,19 @@ public class WebWindowManager implements FrameListener {
                 WindowComponent.USERLIST.getIdentifier())),
                 WebInputWindow.class);
     }
-
     /** The controller that owns this manager. */
     private final WebInterfaceUI controller;
-
     /** The ID of the next window to be created. */
     private long nextId = 0L;
-
     /** Map of known windows. */
     private final Map<FrameContainer, WebWindow> windows = new HashMap<>();
-
     /** A map of window IDs to their windows. */
     private final Map<String, WebWindow> windowsById = new HashMap<>();
 
     /**
      * Creates a new window manager for the specified controller.
      *
-     * @param controller The Web UI controller that owns this manager
+     * @param controller    The Web UI controller that owns this manager
      * @param windowManager Window manager to add/remove windows
      */
     public WebWindowManager(final WebInterfaceUI controller, final WindowManager windowManager) {
@@ -93,10 +90,10 @@ public class WebWindowManager implements FrameListener {
     }
 
     /**
-     * Retrieves the web window corresponding to the specified container,
-     * if any.
+     * Retrieves the web window corresponding to the specified container, if any.
      *
      * @param container The container whose window should be retrieved
+     *
      * @return The corresponding web window, or null if there is none
      */
     public WebWindow getWindow(final FrameContainer container) {
@@ -107,6 +104,7 @@ public class WebWindowManager implements FrameListener {
      * Retrieves the web window with the specified ID, if any.
      *
      * @param id The ID of the window to retrieve
+     *
      * @return The corresponding web window, or null if there isn't one
      */
     public WebWindow getWindow(final String id) {
@@ -158,7 +156,7 @@ public class WebWindowManager implements FrameListener {
      * Creates a new window for the specified container.
      *
      * @param window The container that owns the window
-     * @param focus Whether the window should be focused initially
+     * @param focus  Whether the window should be focused initially
      */
     protected void doAddWindow(final FrameContainer window,
             final boolean focus) {
@@ -175,7 +173,8 @@ public class WebWindowManager implements FrameListener {
         try {
             final String id = String.valueOf(nextId++);
 
-            final WebWindow frame = (WebWindow) clazz.getConstructors()[0].newInstance(controller, window, id);
+            final WebWindow frame = (WebWindow) clazz.getConstructors()[0].newInstance(controller,
+                    window, id);
 
             windows.put(window, frame);
             windowsById.put(id, frame);

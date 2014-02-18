@@ -61,9 +61,9 @@ public class ServerListModel {
     /**
      * Creates a new server list model.
      *
-     * @param serverManager ServerManager currently in use.
+     * @param serverManager      ServerManager currently in use.
      * @param identityController The controller to read/write settings with.
-     * @param serverList The server list to use for the top-level entries.
+     * @param serverList         The server list to use for the top-level entries.
      */
     @Inject
     public ServerListModel(
@@ -118,9 +118,9 @@ public class ServerListModel {
     /**
      * Recursively adds groups to the specified tree model.
      *
-     * @param model Tree model
+     * @param model  Tree model
      * @param parent Parent node to populate
-     * @param items Items to add to parent node
+     * @param items  Items to add to parent node
      */
     private void addGroups(final DefaultTreeModel model,
             final DefaultMutableTreeNode parent,
@@ -169,8 +169,8 @@ public class ServerListModel {
                     .getName());
         } else if (activeItem instanceof ServerGroup
                 && ((ServerGroup) activeItem).getNetwork() != null) {
-                perform = new PerformDescription(PerformType.NETWORK,
-                        ((ServerGroup) activeItem).getNetwork());
+            perform = new PerformDescription(PerformType.NETWORK,
+                    ((ServerGroup) activeItem).getNetwork());
         } else {
             perform = null;
         }
@@ -189,7 +189,7 @@ public class ServerListModel {
     /**
      * Saves the changes.
      *
-     * @param  save Do we need to save changes
+     * @param save Do we need to save changes
      */
     public void dialogClosed(final boolean save) {
         for (ServerListListener listener : listeners.get(
@@ -202,7 +202,7 @@ public class ServerListModel {
      * Adds a group to this model.
      *
      * @param parentGroup Parent group
-     * @param groupName Group name (not null or empty)
+     * @param groupName   Group name (not null or empty)
      * @param networkName Network name (may be null or empty)
      */
     public void addGroup(final ServerGroup parentGroup,
@@ -230,8 +230,8 @@ public class ServerListModel {
      * Adds a group to this model.
      *
      * @param parentGroup Parent group
-     * @param entryName  name (not null or empty)
-     * @param url Valid URI
+     * @param entryName   name (not null or empty)
+     * @param url         Valid URI
      */
     public void addEntry(final ServerGroup parentGroup, final String entryName,
             final URI url) {
@@ -250,4 +250,5 @@ public class ServerListModel {
     public void save() {
         list.save();
     }
+
 }

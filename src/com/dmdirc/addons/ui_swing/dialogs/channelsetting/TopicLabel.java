@@ -46,9 +46,9 @@ import net.miginfocom.swing.MigLayout;
 public class TopicLabel extends JPanel {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 1;
     /** How many milliseconds in a second. */
@@ -66,7 +66,8 @@ public class TopicLabel extends JPanel {
      * Instantiates a new topic label based on the specified topic.
      *
      * @param channel The channel to which this label belongs
-     * @param topic Specified topic
+     * @param topic   Specified topic
+     *
      * @since 0.6.3
      */
     public TopicLabel(final Channel channel, final Topic topic) {
@@ -127,7 +128,7 @@ public class TopicLabel extends JPanel {
         if (!topic.getTopic().isEmpty()) {
             channel.getStyliser().addStyledString(
                     (StyledDocument) pane.getDocument(),
-                    new String[]{topic.getTopic(), }, as);
+                    new String[]{topic.getTopic(),}, as);
             add(pane, "wmax 450, grow, push, wrap, gapleft 5, gapleft 5");
         }
 
@@ -205,4 +206,5 @@ public class TopicLabel extends JPanel {
             final int oldValue, final int newValue) {
         //Deliberate NOOP
     }
+
 }

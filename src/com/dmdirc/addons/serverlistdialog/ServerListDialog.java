@@ -78,12 +78,12 @@ public class ServerListDialog extends StandardDialog implements
     /**
      * Creates a new server list dialog.
      *
-     * @param controller Swing controller
-     * @param urlHandler The URL Handler to use to handle clicked links
-     * @param performWrapper The wrapper to use for the perform tab
-     * @param serverListModel The model to use for the dialog.
-     * @param mainFrame The main frame that owns the dialog.
-     * @param settingsPanel The panel to use for settings.
+     * @param controller         Swing controller
+     * @param urlHandler         The URL Handler to use to handle clicked links
+     * @param performWrapper     The wrapper to use for the perform tab
+     * @param serverListModel    The model to use for the dialog.
+     * @param mainFrame          The main frame that owns the dialog.
+     * @param settingsPanel      The panel to use for settings.
      * @param identityController Controller to use to get profiles.
      */
     @Inject
@@ -212,4 +212,5 @@ public class ServerListDialog extends StandardDialog implements
             final ServerGroupItem group) {
         lockLayers();
     }
+
 }

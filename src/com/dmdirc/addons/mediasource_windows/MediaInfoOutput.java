@@ -29,7 +29,6 @@ public class MediaInfoOutput {
 
     /** Exit Code from GetMediaInfo.exe */
     private final int exitCode;
-
     /** Output from GetMediaInfo.exe */
     private final String output;
 
@@ -37,7 +36,7 @@ public class MediaInfoOutput {
      * Create a MediaInfoOutput
      *
      * @param exitCode Exit code from GetMediaInfo.exe
-     * @param output Output from GetMediaInfo.exe
+     * @param output   Output from GetMediaInfo.exe
      */
     public MediaInfoOutput(final int exitCode, final String output) {
         this.exitCode = exitCode;

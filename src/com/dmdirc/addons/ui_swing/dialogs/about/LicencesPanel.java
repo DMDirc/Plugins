@@ -71,7 +71,7 @@ public class LicencesPanel extends JPanel implements TreeSelectionListener {
     /**
      * Creates a new instance of LicencesPanel.
      *
-     * @param globalConfig The config to read settings from.
+     * @param globalConfig  The config to read settings from.
      * @param pluginManager The manager to use to find plugins (to display their licenses).
      */
     @Inject
@@ -108,7 +108,6 @@ public class LicencesPanel extends JPanel implements TreeSelectionListener {
         setOpaque(UIUtilities.getTabbedPaneOpaque());
         listModel = new DefaultTreeModel(new DefaultMutableTreeNode());
         list = new JTree(listModel) {
-
             /**
              * A version number for this class.
              */
@@ -130,15 +129,13 @@ public class LicencesPanel extends JPanel implements TreeSelectionListener {
         list.setCellRenderer(new LicenceRenderer());
         list.setRootVisible(false);
         list.setOpaque(false);
-        list.getSelectionModel().setSelectionMode(TreeSelectionModel.
-                SINGLE_TREE_SELECTION);
+        list.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
         new TreeScroller(list);
         licence = new JEditorPane();
         licence.setEditorKit(new HTMLEditorKit());
         final Font font = UIManager.getFont("Label.font");
-        ((HTMLDocument) licence.getDocument()).getStyleSheet().addRule("body " +
-                "{ font-family: " + font.getFamily() + "; " + "font-size: " +
-                font.getSize() + "pt; }");
+        ((HTMLDocument) licence.getDocument()).getStyleSheet().addRule("body " + "{ font-family: "
+                + font.getFamily() + "; " + "font-size: " + font.getSize() + "pt; }");
         licence.setEditable(false);
         scrollPane = new JScrollPane(licence);
     }
@@ -171,4 +168,5 @@ public class LicencesPanel extends JPanel implements TreeSelectionListener {
         }
         UIUtilities.resetScrollPane(scrollPane);
     }
+
 }

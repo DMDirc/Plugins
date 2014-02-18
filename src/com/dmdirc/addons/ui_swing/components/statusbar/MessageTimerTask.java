@@ -33,8 +33,7 @@ public class MessageTimerTask extends TimerTask {
     private final MessageLabel messageLabel;
 
     /**
-     * Creates a new message timer task that clears a message label on
-     * completion.
+     * Creates a new message timer task that clears a message label on completion.
      *
      * @param messageLabel Message label to clear on completion
      */
@@ -48,4 +47,5 @@ public class MessageTimerTask extends TimerTask {
     public void run() {
         messageLabel.clearMessage();
     }
+
 }

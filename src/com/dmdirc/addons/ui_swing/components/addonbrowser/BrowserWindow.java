@@ -45,9 +45,9 @@ import net.miginfocom.swing.MigLayout;
 public class BrowserWindow extends JDialog implements ActionListener {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 1;
     /** The search box. */
@@ -90,7 +90,7 @@ public class BrowserWindow extends JDialog implements ActionListener {
      * Creates and displays a new browser window.
      *
      * @param loaderFactory Factory to use to produce workers.
-     * @param parentWindow Parent window
+     * @param parentWindow  Parent window
      */
     public BrowserWindow(
             final DataLoaderWorkerFactory loaderFactory,
@@ -188,8 +188,8 @@ public class BrowserWindow extends JDialog implements ActionListener {
     }
 
     /**
-     * Loads the addon data into the browser window, either from the local cache
-     * or by downloading the data from the website.
+     * Loads the addon data into the browser window, either from the local cache or by downloading
+     * the data from the website.
      *
      * @param download Download new addon feed?
      */
@@ -205,7 +205,6 @@ public class BrowserWindow extends JDialog implements ActionListener {
     @Override
     public void actionPerformed(final ActionEvent e) {
         SwingUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -215,4 +214,5 @@ public class BrowserWindow extends JDialog implements ActionListener {
             }
         });
     }
+
 }

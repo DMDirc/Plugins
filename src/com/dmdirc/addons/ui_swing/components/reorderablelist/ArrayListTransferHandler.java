@@ -43,9 +43,9 @@ import javax.swing.TransferHandler;
 public final class ArrayListTransferHandler extends TransferHandler {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 1;
     /** Local Transfer flavour. */
@@ -85,7 +85,8 @@ public final class ArrayListTransferHandler extends TransferHandler {
             if (hasLocalArrayListFlavor(t.getTransferDataFlavors())) {
                 return doImport((JList) comp, (ArrayList<?>) t.getTransferData(localArrayListFlavor));
             } else if (hasSerialArrayListFlavor(t.getTransferDataFlavors())) {
-                return doImport((JList) comp, (ArrayList<?>) t.getTransferData(serialArrayListFlavor));
+                return doImport((JList) comp, (ArrayList<?>) t.
+                        getTransferData(serialArrayListFlavor));
             } else {
                 return false;
             }
@@ -101,14 +102,15 @@ public final class ArrayListTransferHandler extends TransferHandler {
     /**
      * Imports the tranferrable data into the list.
      *
-     * @param target target list
+     * @param target       target list
      * @param transferList transferable list
      *
      * @return Whether the data was imported
      */
     private boolean doImport(final JList target, final List<?> transferList) {
         int index = target.getSelectedIndex();
-        if (sourceList.equals(target) && indices != null && index >= indices[0] - 1 && index <= indices[indices.length - 1]) {
+        if (sourceList.equals(target) && indices != null && index >= indices[0] - 1 && index
+                <= indices[indices.length - 1]) {
             indices = null;
             return true;
         }
@@ -243,4 +245,5 @@ public final class ArrayListTransferHandler extends TransferHandler {
     public int getSourceActions(final JComponent c) {
         return COPY_OR_MOVE;
     }
+
 }

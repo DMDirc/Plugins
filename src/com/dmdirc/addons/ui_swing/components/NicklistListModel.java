@@ -38,9 +38,9 @@ public final class NicklistListModel extends AbstractListModel implements
         ConfigChangeListener {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = 1;
     /** stores the nicknames to be shown in this list. */
@@ -65,7 +65,7 @@ public final class NicklistListModel extends AbstractListModel implements
     /**
      * Creates a new model and initiliases it with the data provided.
      *
-     * @param config Config manager
+     * @param config       Config manager
      * @param newNicknames list of nicknames used for initialisation
      */
     public NicklistListModel(final AggregateConfigProvider config,
@@ -85,6 +85,7 @@ public final class NicklistListModel extends AbstractListModel implements
 
     /**
      * Returns the size of the current nicklist.
+     *
      * @return nicklist size
      */
     @Override
@@ -197,4 +198,5 @@ public final class NicklistListModel extends AbstractListModel implements
 
         sort();
     }
+
 }

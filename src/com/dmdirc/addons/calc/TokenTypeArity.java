@@ -28,8 +28,8 @@ package com.dmdirc.addons.calc;
 public enum TokenTypeArity {
 
     /**
-     * A special type which does not have any operands and does not correspond
-     * to any input (e.g. the special START and END tokens).
+     * A special type which does not have any operands and does not correspond to any input (e.g.
+     * the special START and END tokens).
      */
     HIDDEN,
     /** A type which takes no operands. */

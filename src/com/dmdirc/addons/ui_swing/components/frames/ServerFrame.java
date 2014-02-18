@@ -65,7 +65,7 @@ public final class ServerFrame extends InputTextFrame implements
     /**
      * Creates a new ServerFrame.
      *
-     * @param deps The dependencies required by text frames.
+     * @param deps  The dependencies required by text frames.
      * @param owner Parent Frame container
      */
     public ServerFrame(final TextFrameDependencies deps, @Unbound final Server owner) {
@@ -142,12 +142,14 @@ public final class ServerFrame extends InputTextFrame implements
 
         popupMenu.add(settingsMI);
     }
+
     /** {@inheritDoc} */
     @Override
     public void certificateProblemEncountered(final X509Certificate[] chain,
             final Collection<CertificateException> problems,
             final CertificateManager certificateManager) {
-        sslDialog = new SSLCertificateDialog(getController().getIconManager(), getController().getMainFrame(),
+        sslDialog = new SSLCertificateDialog(getController().getIconManager(), getController().
+                getMainFrame(),
                 new SSLCertificateDialogModel(chain, problems, certificateManager));
         sslDialog.display();
     }
@@ -173,4 +175,5 @@ public final class ServerFrame extends InputTextFrame implements
         ((Connection) frameParent).removeCertificateProblemListener(this);
         super.dispose();
     }
+
 }

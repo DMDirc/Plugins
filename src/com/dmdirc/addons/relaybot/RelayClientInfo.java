@@ -27,10 +27,10 @@ import com.dmdirc.parser.irc.IRCClientInfo;
 import com.dmdirc.parser.irc.IRCParser;
 
 /**
- * This class is used to proxy an IRCClientInfo and to show the nickname
- * as nick@network.
+ * This class is used to proxy an IRCClientInfo and to show the nickname as nick@network.
  */
 public class RelayClientInfo extends IRCClientInfo {
+
     /** Shoulf getNickname() return the network aswell? */
     private boolean showFullNickname = true;
 
@@ -38,7 +38,7 @@ public class RelayClientInfo extends IRCClientInfo {
      * Create a new RelayClientInfo
      *
      * @param parser Parser that owns this client
-     * @param host Host of client.
+     * @param host   Host of client.
      */
     public RelayClientInfo(final Parser parser, final String host) {
         super((IRCParser) parser, host);
@@ -70,7 +70,8 @@ public class RelayClientInfo extends IRCClientInfo {
      */
     @Override
     public String getNickname() {
-        return (showFullNickname) ? super.getNickname()+"@"+super.getHostname() : super.getNickname();
+        return (showFullNickname) ? super.getNickname() + "@" + super.getHostname() : super.
+                getNickname();
     }
 
     /**
@@ -93,4 +94,5 @@ public class RelayClientInfo extends IRCClientInfo {
     public String getUsername() {
         return "";
     }
+
 }

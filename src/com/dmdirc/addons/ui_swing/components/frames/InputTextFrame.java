@@ -89,7 +89,7 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
     /**
      * Creates a new instance of InputFrame.
      *
-     * @param deps The dependencies required by text frames.
+     * @param deps  The dependencies required by text frames.
      * @param owner WritableFrameContainer owning this frame.
      */
     public InputTextFrame(
@@ -107,19 +107,19 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
             //GTK users appear to dislike choice, ignore them if they want some.
             getInputField().setBackground(UIUtilities.convertColour(
                     colourManager.getColourFromString(
-                            config.getOptionString(
-                                    "ui", "inputbackgroundcolour",
-                                    "ui", "backgroundcolour"), null)));
+                    config.getOptionString(
+                    "ui", "inputbackgroundcolour",
+                    "ui", "backgroundcolour"), null)));
             getInputField().setForeground(UIUtilities.convertColour(
                     colourManager.getColourFromString(
-                            config.getOptionString(
-                                    "ui", "inputforegroundcolour",
-                                    "ui", "foregroundcolour"), null)));
+                    config.getOptionString(
+                    "ui", "inputforegroundcolour",
+                    "ui", "foregroundcolour"), null)));
             getInputField().setCaretColor(UIUtilities.convertColour(
                     colourManager.getColourFromString(
-                            config.getOptionString(
-                                    "ui", "inputforegroundcolour",
-                                    "ui", "foregroundcolour"), null)));
+                    config.getOptionString(
+                    "ui", "inputforegroundcolour",
+                    "ui", "foregroundcolour"), null)));
         }
 
         config.addChangeListener("ui", "inputforegroundcolour", this);
@@ -322,6 +322,7 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
      * Pastes the specified content into the input area.
      *
      * @param clipboard The contents of the clipboard to be pasted
+     *
      * @since 0.6.3m1
      */
     protected void doPaste(final String clipboard) {
@@ -379,22 +380,22 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
                 case "backgroundcolour":
                     getInputField().setBackground(UIUtilities.convertColour(
                             colourManager.getColourFromString(
-                                    config.getOptionString(
-                                            "ui", "inputbackgroundcolour",
-                                            "ui", "backgroundcolour"), null)));
+                            config.getOptionString(
+                            "ui", "inputbackgroundcolour",
+                            "ui", "backgroundcolour"), null)));
                     break;
                 case "inputforegroundcolour":
                 case "foregroundcolour":
                     getInputField().setForeground(UIUtilities.convertColour(
                             colourManager.getColourFromString(
-                                    config.getOptionString(
-                                            "ui", "inputforegroundcolour",
-                                            "ui", "foregroundcolour"), null)));
+                            config.getOptionString(
+                            "ui", "inputforegroundcolour",
+                            "ui", "foregroundcolour"), null)));
                     getInputField().setCaretColor(UIUtilities.convertColour(
                             colourManager.getColourFromString(
-                                    config.getOptionString(
-                                            "ui", "inputforegroundcolour",
-                                            "ui", "foregroundcolour"), null)));
+                            config.getOptionString(
+                            "ui", "inputforegroundcolour",
+                            "ui", "foregroundcolour"), null)));
                     break;
             }
         }
@@ -420,4 +421,5 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
         frameParent.getConfigManager().removeListener(this);
         super.dispose();
     }
+
 }

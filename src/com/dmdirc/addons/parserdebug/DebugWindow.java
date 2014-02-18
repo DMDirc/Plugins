@@ -47,10 +47,10 @@ public class DebugWindow extends FrameContainer {
     /**
      * Creates a new instance of DebugWindow.
      *
-     * @param plugin The plugin that owns this window
-     * @param title The title of this window
-     * @param parser The parser this plugin is debugging
-     * @param server The Server window this is a child of
+     * @param plugin     The plugin that owns this window
+     * @param title      The title of this window
+     * @param parser     The parser this plugin is debugging
+     * @param server     The Server window this is a child of
      * @param urlBuilder The URL builder to use when finding icons.
      */
     public DebugWindow(
@@ -77,12 +77,11 @@ public class DebugWindow extends FrameContainer {
     }
 
     /**
-     * Set the parser to null to stop us holding onto parsers when the server
-     * connection is closed.
+     * Set the parser to null to stop us holding onto parsers when the server connection is closed.
      */
     public void unsetParser() {
         addLine("======================", true);
-        addLine("Unset parser: "+parser, true);
+        addLine("Unset parser: " + parser, true);
         parser = null;
     }
 

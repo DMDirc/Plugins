@@ -51,8 +51,8 @@ public class PropertyListCellRenderer<E> extends DMDircListCellRenderer<E> {
      * Creates a renderer.
      *
      * @param parentRenderer Parent renderer
-     * @param type Type of object to be rendered
-     * @param property name of the getter to be called on the type
+     * @param type           Type of object to be rendered
+     * @param property       name of the getter to be called on the type
      */
     public PropertyListCellRenderer(final ListCellRenderer<? super E> parentRenderer,
             final Class<? super E> type, final String property) {

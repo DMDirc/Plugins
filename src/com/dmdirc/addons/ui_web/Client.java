@@ -36,13 +36,10 @@ public class Client {
 
     /** The timestamp that the client was last seen. */
     private long lastSeenTime = System.currentTimeMillis();
-
     /** The Jetty continuation currently in use by the client, if any. */
     private Continuation continuation;
-
     /** The IP address of the client. */
     private final String ip;
-
     /** An ordered list of events to be sent to the client */
     private final List<Event> events = new LinkedList<>();
 
@@ -50,7 +47,7 @@ public class Client {
      * Creates a new client for the specified controller.
      *
      * @param controller The controller that this client is connected to
-     * @param ip The IP address of this client
+     * @param ip         The IP address of this client
      */
     public Client(final WebInterfaceUI controller, final String ip) {
         events.add(new Event("statusbar",
@@ -59,8 +56,8 @@ public class Client {
         this.ip = ip;
 
         final List<Window> added = new LinkedList<>();
-        final List<Window> queued
-                = new LinkedList<Window>(controller.getWindowManager().getWindows());
+        final List<Window> queued = new LinkedList<Window>(controller.getWindowManager().
+                getWindows());
 
         while (!queued.isEmpty()) {
             final Window window = queued.remove(0);
@@ -85,8 +82,7 @@ public class Client {
     }
 
     /**
-     * Gets the time in milliseconds that has elapsed since this client was
-     * last seen.
+     * Gets the time in milliseconds that has elapsed since this client was last seen.
      *
      * @return The time since the client was last seen, in milliseconds
      */
@@ -95,8 +91,7 @@ public class Client {
     }
 
     /**
-     * Retrieves the mutex that should be synchronised on when performing
-     * a continuation.
+     * Retrieves the mutex that should be synchronised on when performing a continuation.
      *
      * @return This client's mutex
      */

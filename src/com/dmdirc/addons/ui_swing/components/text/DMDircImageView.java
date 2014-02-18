@@ -41,7 +41,7 @@ public class DMDircImageView extends ImageView {
     /**
      * Creates a new DMDirc image view.
      *
-     * @param elem element to view
+     * @param elem       element to view
      * @param urlBuilder The URL builder to use to construct image URLs.
      */
     public DMDircImageView(final URLBuilder urlBuilder, final Element elem) {
@@ -62,4 +62,5 @@ public class DMDircImageView extends ImageView {
 
         return src == null ? null : urlBuilder.getUrl(src);
     }
+
 }

@@ -50,8 +50,8 @@ public class QuitWorker extends SwingWorker<Void, Void> {
      * Creates a new {@link QuitWorker}.
      *
      * @param identityController The identity controller to use to read/write settings.
-     * @param serverManager The server manager to use to disconnect all servers.
-     * @param mainFrame The main frame to interact with.
+     * @param serverManager      The server manager to use to disconnect all servers.
+     * @param mainFrame          The main frame to interact with.
      */
     @Inject
     public QuitWorker(

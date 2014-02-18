@@ -51,7 +51,6 @@ public class MessageLabel extends JPanel implements StatusBarComponent,
         MouseListener {
 
     private static final org.slf4j.Logger log = LoggerFactory.getLogger(MessageLabel.class);
-
     /** Serial version UID. */
     private static final long serialVersionUID = 1;
     /** Default status bar message. */
@@ -72,7 +71,7 @@ public class MessageLabel extends JPanel implements StatusBarComponent,
     /**
      * Instantiates a new message label.
      *
-     * @param controller Swing controller
+     * @param controller   Swing controller
      * @param parentWindow Parent window
      */
     public MessageLabel(final SwingController controller,
@@ -114,7 +113,6 @@ public class MessageLabel extends JPanel implements StatusBarComponent,
      */
     private void updateCurrentMessage() {
         SwingUtilities.invokeLater(new Runnable() {
-
             /** {@inheritDoc} */
             @Override
             public void run() {
@@ -214,4 +212,5 @@ public class MessageLabel extends JPanel implements StatusBarComponent,
     public void mouseExited(final MouseEvent e) {
         //Ignore
     }
+
 }

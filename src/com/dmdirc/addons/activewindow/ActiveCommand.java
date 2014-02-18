@@ -19,6 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 package com.dmdirc.addons.activewindow;
 
 import com.dmdirc.FrameContainer;
@@ -47,7 +48,6 @@ public class ActiveCommand extends Command implements IntelligentCommand {
     public static final CommandInfo INFO = new BaseCommandInfo("active",
             "active <command> - executes the command as though it had been "
             + "executed in the active window", CommandType.TYPE_GLOBAL);
-
     /** Parent MainFrame. */
     private final MainFrame mainFrame;
 
@@ -55,7 +55,7 @@ public class ActiveCommand extends Command implements IntelligentCommand {
      * Creates a new active command.
      *
      * @param controller The controller to use for command information.
-     * @param mainFrame Parent MainFrame
+     * @param mainFrame  Parent MainFrame
      */
     @Inject
     public ActiveCommand(final CommandController controller, final MainFrame mainFrame) {
@@ -82,4 +82,5 @@ public class ActiveCommand extends Command implements IntelligentCommand {
             final IntelligentCommandContext context) {
         return TabCompleter.getIntelligentResults(arg, context, 0);
     }
+
 }

@@ -42,7 +42,7 @@ public class ContactListCommand extends Command implements IntelligentCommand {
     /** A command info object for this command. */
     public static final CommandInfo INFO = new BaseCommandInfo("contactlist",
             "contactlist - show a contact list for the current channel",
-            CommandType.TYPE_CHANNEL) ;
+            CommandType.TYPE_CHANNEL);
 
     /**
      * Creates a new instance of this command.

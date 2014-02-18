@@ -51,9 +51,9 @@ public class MDIBar extends JPanel implements SwingWindowListener,
         SelectionListener, ActionListener, ConfigChangeListener {
 
     /**
-     * A version number for this class. It should be changed whenever the class
-     * structure is changed (or anything else that would prevent serialized
-     * objects being unserialized with the new class).
+     * A version number for this class. It should be changed whenever the class structure is changed
+     * (or anything else that would prevent serialized objects being unserialized with the new
+     * class).
      */
     private static final long serialVersionUID = -8028057596226636245L;
     /** Icon size for the close button. */
@@ -72,11 +72,11 @@ public class MDIBar extends JPanel implements SwingWindowListener,
     /**
      * Instantiates a new MDI bar.
      *
-     * @param globalConfig The config to read settings from.
-     * @param iconManager The manager to use to retrieve icons.
-     * @param domain The domain to read settings from under.
+     * @param globalConfig  The config to read settings from.
+     * @param iconManager   The manager to use to retrieve icons.
+     * @param domain        The domain to read settings from under.
      * @param windowFactory The window factory to use to create and listen for windows.
-     * @param mainFrame Main frame instance
+     * @param mainFrame     Main frame instance
      */
     @Inject
     public MDIBar(
@@ -92,7 +92,7 @@ public class MDIBar extends JPanel implements SwingWindowListener,
         this.configDomain = domain;
         visibility = config.getOptionBool(configDomain, "mdiBarVisibility");
 
-        closeButton = new NoFocusButton(iconManager.getScaledIcon("close-12", ICON_SIZE,ICON_SIZE));
+        closeButton = new NoFocusButton(iconManager.getScaledIcon("close-12", ICON_SIZE, ICON_SIZE));
 
         setOpaque(false);
         setLayout(new MigLayout("hmax 17, ins 1 0 0 0, fill"));
@@ -114,12 +114,10 @@ public class MDIBar extends JPanel implements SwingWindowListener,
     }
 
     /**
-     * Checks whether this MDI bar should be visible and active and sets itself
-     * accordingly.
+     * Checks whether this MDI bar should be visible and active and sets itself accordingly.
      */
     private void check() {
         SwingUtilities.invokeLater(new Runnable() {
-
             @Override
             public void run() {
                 setVisible(visibility);
@@ -167,4 +165,5 @@ public class MDIBar extends JPanel implements SwingWindowListener,
     public void selectionChanged(final TextFrame window) {
         check();
     }
+
 }

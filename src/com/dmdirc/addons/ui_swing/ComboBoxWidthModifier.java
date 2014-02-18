@@ -31,8 +31,7 @@ import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 
 /**
- * Modifies the popup of a JComboBox to make it the full width of the components
- * it is displaying.
+ * Modifies the popup of a JComboBox to make it the full width of the components it is displaying.
  */
 public class ComboBoxWidthModifier implements PopupMenuListener {
 
@@ -75,4 +74,5 @@ public class ComboBoxWidthModifier implements PopupMenuListener {
     public void popupMenuCanceled(final PopupMenuEvent e) {
         //Ignore
     }
+
 }
