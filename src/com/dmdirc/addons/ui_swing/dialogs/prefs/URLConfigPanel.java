@@ -22,8 +22,9 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.prefs;
 
+import com.dmdirc.ClientModule.GlobalConfig;
+import com.dmdirc.ClientModule.UserConfig;
 import com.dmdirc.addons.ui_swing.MainFrame;
-import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.PackingTable;
 import com.dmdirc.addons.ui_swing.components.URLProtocolPanel;
 import com.dmdirc.addons.ui_swing.components.renderers.URIHandlerCellRenderer;
@@ -31,6 +32,9 @@ import com.dmdirc.addons.ui_swing.components.renderers.URISchemeCellRenderer;
 import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialog;
 import com.dmdirc.config.prefs.PreferencesInterface;
 import com.dmdirc.config.validators.URLProtocolValidator;
+import com.dmdirc.interfaces.config.AggregateConfigProvider;
+import com.dmdirc.interfaces.config.ConfigProvider;
+import com.dmdirc.ui.IconManager;
 
 import java.awt.Dialog.ModalityType;
 import java.awt.Window;
@@ -62,8 +66,12 @@ public class URLConfigPanel extends JPanel implements
 
     /** Serial version UID. */
     private static final long serialVersionUID = 1;
-    /** Swing controller. */
-    private final SwingController controller;
+    /** The global configuration to read settings from. */
+    private final AggregateConfigProvider globalConfig;
+    /** The user configuration to store settings in. */
+    private final ConfigProvider userConfig;
+    /** The icon manager to use for input dialogs. */
+    private final IconManager iconManager;
     /** Protocol list. */
     private PackingTable table;
     /** Table mode. */
@@ -88,17 +96,23 @@ public class URLConfigPanel extends JPanel implements
     /**
      * Instantiates a new URL config panel.
      *
-     * @param controller   Swing controller
      * @param parentWindow Parent window
+     * @param globalConfig The global configuration to read settings from.
+     * @param userConfig   The user configuration to write settings to.
+     * @param iconManager  The icon manager to use for input dialogs.
      */
     @Inject
     public URLConfigPanel(
-            final SwingController controller,
-            final MainFrame parentWindow) {
+            final MainFrame parentWindow,
+            @GlobalConfig final AggregateConfigProvider globalConfig,
+            @UserConfig final ConfigProvider userConfig,
+            @GlobalConfig final IconManager iconManager) {
         super();
 
-        this.controller = controller;
         this.parentWindow = parentWindow;
+        this.globalConfig = globalConfig;
+        this.userConfig = userConfig;
+        this.iconManager = iconManager;
 
         initComponents();
         addListeners();
@@ -111,7 +125,7 @@ public class URLConfigPanel extends JPanel implements
      */
     private void initComponents() {
         tableScrollPane = new JScrollPane();
-        model = new URLHandlerTableModel(controller.getGlobalConfig());
+        model = new URLHandlerTableModel(globalConfig);
         table = new PackingTable(model, tableScrollPane) {
             private static final long serialVersionUID = 1;
 
@@ -138,7 +152,7 @@ public class URLConfigPanel extends JPanel implements
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         table.getRowSorter().toggleSortOrder(0);
         details = new HashMap<>();
-        empty = new URLProtocolPanel(controller.getGlobalIdentity(), null, true);
+        empty = new URLProtocolPanel(userConfig, null, true);
         activeComponent = empty;
         add = new JButton("Add");
         remove = new JButton("Remove");
@@ -146,14 +160,13 @@ public class URLConfigPanel extends JPanel implements
 
         tableScrollPane.setViewportView(table);
 
-        final Set<String> options = controller.getGlobalConfig().
-                getOptions("protocol").keySet();
+        final Set<String> options = globalConfig.getOptions("protocol").keySet();
 
         for (final String option : options) {
             try {
                 final URI uri = new URI(option + "://example.test.com");
                 model.addURI(uri);
-                details.put(uri, new URLProtocolPanel(controller.getGlobalIdentity(), uri, true));
+                details.put(uri, new URLProtocolPanel(userConfig, uri, true));
             } catch (final URISyntaxException ex) {
                 //Ignore wont happen
             }
@@ -187,8 +200,7 @@ public class URLConfigPanel extends JPanel implements
     public void save() {
         valueChanged(null);
         final Map<URI, String> handlers = model.getURLHandlers();
-        final Set<String> protocols = controller.getGlobalConfig().
-                getOptions("protocol").keySet();
+        final Set<String> protocols = globalConfig.getOptions("protocol").keySet();
         for (final String protocol : protocols) {
             URI uri;
             try {
@@ -216,17 +228,14 @@ public class URLConfigPanel extends JPanel implements
      */
     private void saveHandler(final String protocol, final String handler) {
         if (handler.isEmpty()) {
-            controller.getGlobalIdentity().unsetOption("protocol",
-                    protocol);
+            userConfig.unsetOption("protocol", protocol);
         } else {
-            controller.getGlobalIdentity().setOption("protocol",
-                    protocol, handler);
+            userConfig.setOption("protocol", protocol, handler);
 
         }
 
     }
 
-    /** {@inheritDoc} */
     @Override
     public void valueChanged(final ListSelectionEvent e) {
         if (e == null || !e.getValueIsAdjusting()) {
@@ -265,9 +274,9 @@ public class URLConfigPanel extends JPanel implements
     public void actionPerformed(final ActionEvent e) {
         if (e.getSource() == add) {
             new StandardInputDialog(parentWindow,
-                    ModalityType.MODELESS, controller.getIconManager(), "New URL handler",
+                    ModalityType.MODELESS, iconManager, "New URL handler",
                     "Please enter the name of the new protocol.",
-                    new URLProtocolValidator(controller.getGlobalConfig())) {
+                    new URLProtocolValidator(globalConfig)) {
                 /** Serial version UID. */
                 private static final long serialVersionUID = 1;
 
@@ -277,8 +286,7 @@ public class URLConfigPanel extends JPanel implements
                     try {
                         final URI uri = new URI(getText() + "://example.test.com");
                         model.addURI(uri);
-                        details.put(uri, new URLProtocolPanel(controller.getGlobalIdentity(), uri,
-                                true));
+                        details.put(uri, new URLProtocolPanel(userConfig, uri, true));
                         return true;
                     } catch (final URISyntaxException ex) {
                         return false;
@@ -293,8 +301,7 @@ public class URLConfigPanel extends JPanel implements
             }.display();
 
         } else if (e.getSource() == remove) {
-            model.removeURI(table.getRowSorter().convertRowIndexToModel(table.
-                    getSelectedRow()));
+            model.removeURI(table.getRowSorter().convertRowIndexToModel(table.getSelectedRow()));
         }
     }
 
