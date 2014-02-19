@@ -34,8 +34,10 @@ import javax.swing.border.Border;
 /**
  * A re-orderable list with a setErorr method to add a visual distinction when there is an error
  * state.
+ *
+ * @param <T> Type contained in the list
  */
-public class ValidatableReorderableJList extends ReorderableJList implements Validatable {
+public class ValidatableReorderableJList<T> extends ReorderableJList<T> implements Validatable {
 
     /** Serial version UID. */
     private static final long serialVersionUID = 1L;
