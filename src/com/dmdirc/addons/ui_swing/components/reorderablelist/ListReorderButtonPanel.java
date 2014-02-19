@@ -36,31 +36,29 @@ import net.miginfocom.swing.MigLayout;
 
 /**
  * Simple panel to reorder a JList using buttons.
+ *
+ * @param <T> Type contained in the list
  */
-public class ListReorderButtonPanel extends JPanel implements
+public class ListReorderButtonPanel<T> extends JPanel implements
         ListSelectionListener, ActionListener {
 
-    /**
-     * A version number for this class. It should be changed whenever the class structure is changed
-     * (or anything else that would prevent serialized objects being unserialized with the new
-     * class).
-     */
+    /** A version number for this class. */
     private static final long serialVersionUID = 1;
-    /** List to reoder. */
-    private JList list;
+    /** List to reorder. */
+    private final JList<T> list;
     /** Default list model. */
-    private DefaultListModel model;
+    private final DefaultListModel<T> model;
     /** Up button. */
-    private JButton up;
+    private final JButton up;
     /** Down button. */
-    private JButton down;
+    private final JButton down;
 
     /**
-     * Creates a panel to reoder a jlist.
+     * Creates a panel to reorder a JList.
      *
      * @param list JList
      */
-    public ListReorderButtonPanel(final ReorderableJList list) {
+    public ListReorderButtonPanel(final ReorderableJList<T> list) {
         this.list = list;
         this.model = list.getModel();
 
@@ -79,21 +77,15 @@ public class ListReorderButtonPanel extends JPanel implements
         valueChanged(null);
     }
 
-    /** {@inheritDoc} */
     @Override
     public void valueChanged(final ListSelectionEvent e) {
         up.setEnabled(list.getSelectedIndex() != -1);
         down.setEnabled(list.getSelectedIndex() != -1);
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Action event
-     */
     @Override
     public void actionPerformed(final ActionEvent e) {
-        final Object object = list.getSelectedValue();
+        final T object = list.getSelectedValue();
         final int currentIndex = list.getSelectedIndex();
         if (e.getSource() == up) {
             moveUp(object, currentIndex);
@@ -108,7 +100,7 @@ public class ListReorderButtonPanel extends JPanel implements
      * @param object       Object to move
      * @param currentIndex Current index
      */
-    private void moveUp(final Object object, final int currentIndex) {
+    private void moveUp(final T object, final int currentIndex) {
         int newIndex = currentIndex - 1;
         if (newIndex < 0) {
             newIndex = model.getSize() - 1;
@@ -122,7 +114,7 @@ public class ListReorderButtonPanel extends JPanel implements
      * @param object       Object to move
      * @param currentIndex Current index
      */
-    private void moveDown(final Object object, final int currentIndex) {
+    private void moveDown(final T object, final int currentIndex) {
         int newIndex = currentIndex + 1;
         if (newIndex > model.getSize() - 1) {
             newIndex = 0;
@@ -131,12 +123,12 @@ public class ListReorderButtonPanel extends JPanel implements
     }
 
     /**
-     * Moves an object from its current positition to a new position in a list.
+     * Moves an object from its current position to a new position in a list.
      *
      * @param object   Object to move
      * @param newIndex Current index
      */
-    private void moveElement(final Object object, final int newIndex) {
+    private void moveElement(final T object, final int newIndex) {
         model.removeElement(object);
         model.add(newIndex, object);
         list.setSelectedIndex(newIndex);
