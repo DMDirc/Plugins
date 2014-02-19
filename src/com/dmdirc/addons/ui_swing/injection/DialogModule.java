@@ -24,6 +24,7 @@ package com.dmdirc.addons.ui_swing.injection;
 
 import com.dmdirc.Channel;
 import com.dmdirc.ClientModule.GlobalConfig;
+import com.dmdirc.ClientModule.UserConfig;
 import com.dmdirc.Server;
 import com.dmdirc.actions.wrappers.PerformWrapper;
 import com.dmdirc.addons.ui_swing.MainFrame;
@@ -43,6 +44,8 @@ import com.dmdirc.addons.ui_swing.dialogs.updater.SwingRestartDialog;
 import com.dmdirc.addons.ui_swing.dialogs.updater.SwingUpdaterDialog;
 import com.dmdirc.config.prefs.PreferencesManager;
 import com.dmdirc.interfaces.LifecycleController;
+import com.dmdirc.interfaces.config.AggregateConfigProvider;
+import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.config.IdentityFactory;
 import com.dmdirc.plugins.ServiceManager;
 import com.dmdirc.ui.IconManager;
@@ -140,6 +143,8 @@ public class DialogModule {
             final IdentityFactory identityFactory,
             final SwingWindowFactory windowFactory,
             @GlobalConfig final IconManager iconManager,
+            @GlobalConfig final AggregateConfigProvider globalConfig,
+            @UserConfig final ConfigProvider userConfig,
             final ServiceManager serviceManager,
             final PreferencesManager preferencesManager,
             final PrefsComponentFactory compFactory,
@@ -148,8 +153,8 @@ public class DialogModule {
             @Override
             protected ChannelSettingsDialog getInstance(final Channel key) {
                 return new ChannelSettingsDialog(controller, identityFactory, windowFactory,
-                        iconManager, serviceManager, preferencesManager, compFactory, key,
-                        parentWindow);
+                        iconManager, globalConfig, userConfig, serviceManager, preferencesManager,
+                        compFactory, key, parentWindow);
             }
         };
     }

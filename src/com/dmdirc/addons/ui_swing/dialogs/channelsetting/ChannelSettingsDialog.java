@@ -32,6 +32,7 @@ import com.dmdirc.addons.ui_swing.components.expandingsettings.SettingsPanel;
 import com.dmdirc.addons.ui_swing.components.modes.ChannelModesPane;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.config.prefs.PreferencesManager;
+import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.config.IdentityFactory;
 import com.dmdirc.interfaces.ui.InputWindow;
@@ -73,6 +74,10 @@ public class ChannelSettingsDialog extends StandardDialog implements ActionListe
     private ChannelListModesPane channelListModesPane;
     /** Swing controller. */
     private final SwingController controller;
+    /** The config to read settings from. */
+    private final AggregateConfigProvider globalConfig;
+    /** The config to write settings to. */
+    private final ConfigProvider userConfig;
     /** Service manager. */
     private final ServiceManager serviceManager;
     /** Icon manager. */
@@ -89,6 +94,8 @@ public class ChannelSettingsDialog extends StandardDialog implements ActionListe
      * @param identityFactory    Identity factory
      * @param windowFactory      Swing window factory
      * @param iconManager        Icon manager
+     * @param globalConfig       The config to read global settings from.
+     * @param userConfig         The config to write global settings to.
      * @param serviceManager     Service manager
      * @param preferencesManager Preferences Manager
      * @param compFactory        Preferences setting component factory
@@ -100,6 +107,8 @@ public class ChannelSettingsDialog extends StandardDialog implements ActionListe
             final IdentityFactory identityFactory,
             final SwingWindowFactory windowFactory,
             final IconManager iconManager,
+            final AggregateConfigProvider globalConfig,
+            final ConfigProvider userConfig,
             final ServiceManager serviceManager,
             final PreferencesManager preferencesManager,
             final PrefsComponentFactory compFactory,
@@ -109,6 +118,7 @@ public class ChannelSettingsDialog extends StandardDialog implements ActionListe
 
         this.controller = controller;
         this.iconManager = iconManager;
+        this.userConfig = userConfig;
         this.serviceManager = serviceManager;
         this.preferencesManager = preferencesManager;
         this.compFactory = compFactory;
@@ -120,6 +130,7 @@ public class ChannelSettingsDialog extends StandardDialog implements ActionListe
 
         initComponents();
         initListeners();
+        this.globalConfig = globalConfig;
     }
 
     /** Initialises the main UI components. */
@@ -171,7 +182,8 @@ public class ChannelSettingsDialog extends StandardDialog implements ActionListe
 
     /** Initialises the IRC Settings tab. */
     private void initListModesTab() {
-        channelListModesPane = new ChannelListModesPane(controller, channel, this);
+        channelListModesPane = new ChannelListModesPane(globalConfig, userConfig, iconManager,
+                channel, this);
         tabbedPane.addTab("List Modes", channelListModesPane);
     }
 
