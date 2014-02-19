@@ -109,6 +109,7 @@ public class ProfileManagerDialog extends StandardDialog {
         linker.bindProfileName(name);
         linker.bindProfileNicknames(nicknames);
         linker.bindProfileRealnames(realname);
+        model.load();
     }
 
     /** Initialises the components. */
