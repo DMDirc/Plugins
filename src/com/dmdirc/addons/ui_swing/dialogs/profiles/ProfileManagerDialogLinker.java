@@ -131,6 +131,12 @@ public class ProfileManagerDialogLinker {
                 nicknames.setValidation(model.isNicknamesValid());
             }
         });
+        model.addPropertyChangeListener("profiles", new PropertyChangeListener() {
+            @Override
+            public void propertyChange(final PropertyChangeEvent evt) {
+                nicknames.setEnabled(model.isManipulateProfileAllowed());
+            }
+        });
         model.addPropertyChangeListener("nicknames", new PropertyChangeListener() {
             @Override
             public void propertyChange(final PropertyChangeEvent evt) {
@@ -143,6 +149,7 @@ public class ProfileManagerDialogLinker {
                 nicknames.setValidation(model.isNicknamesValid());
             }
         });
+        nicknames.setEnabled(model.isManipulateProfileAllowed());
     }
 
     /**
@@ -180,6 +187,7 @@ public class ProfileManagerDialogLinker {
                 addNickname.setEnabled(model.isManipulateProfileAllowed());
             }
         });
+        addNickname.setEnabled(model.isManipulateProfileAllowed());
     }
 
     /**
@@ -209,12 +217,13 @@ public class ProfileManagerDialogLinker {
                 inputDialog.display();
             }
         });
-        model.addPropertyChangeListener("nicknames", new PropertyChangeListener() {
+        model.addPropertyChangeListener("selectednickname", new PropertyChangeListener() {
             @Override
             public void propertyChange(final PropertyChangeEvent evt) {
                 editNickname.setEnabled(model.isManipulateNicknameAllowed());
             }
         });
+        editNickname.setEnabled(model.isManipulateNicknameAllowed());
     }
 
     /**
@@ -240,12 +249,13 @@ public class ProfileManagerDialogLinker {
                 }.display();
             }
         });
-        model.addPropertyChangeListener("nicknames", new PropertyChangeListener() {
+        model.addPropertyChangeListener("selectednickname", new PropertyChangeListener() {
             @Override
             public void propertyChange(final PropertyChangeEvent evt) {
                 deleteNickname.setEnabled(model.isManipulateNicknameAllowed());
             }
         });
+        deleteNickname.setEnabled(model.isManipulateNicknameAllowed());
     }
 
     /**
@@ -286,6 +296,7 @@ public class ProfileManagerDialogLinker {
                 profileName.setValidation(model.isNameValid());
             }
         });
+        profileName.setEnabled(model.isManipulateProfileAllowed());
     }
 
     /**
@@ -324,6 +335,7 @@ public class ProfileManagerDialogLinker {
                 profileRealname.setValidation(model.isRealnameValid());
             }
         });
+        profileRealname.setEnabled(model.isManipulateProfileAllowed());
     }
 
     /**
@@ -361,6 +373,14 @@ public class ProfileManagerDialogLinker {
                 profileIdent.setValidation(model.isIdentValid());
             }
         });
+        model.addPropertyChangeListener("profiles", new PropertyChangeListener() {
+            @Override
+            public void propertyChange(final PropertyChangeEvent evt) {
+                profileIdent.setEnabled(model.isManipulateProfileAllowed());
+                profileIdent.setValidation(model.isIdentValid());
+            }
+        });
+        profileIdent.setEnabled(model.isManipulateProfileAllowed());
     }
 
     /**
@@ -406,6 +426,7 @@ public class ProfileManagerDialogLinker {
                 deleteProfile.setEnabled(model.isManipulateProfileAllowed());
             }
         });
+        deleteProfile.setEnabled(model.isManipulateProfileAllowed());
     }
 
     /**
@@ -426,6 +447,7 @@ public class ProfileManagerDialogLinker {
                 okButton.setEnabled(model.isOKAllowed());
             }
         });
+        okButton.setEnabled(model.isOKAllowed());
     }
 
     /**

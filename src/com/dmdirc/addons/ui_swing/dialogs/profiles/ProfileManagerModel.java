@@ -32,6 +32,7 @@ import com.dmdirc.util.validators.ValidationResponse;
 import com.google.common.collect.ImmutableList;
 
 import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeListenerProxy;
 import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -44,6 +45,10 @@ public class ProfileManagerModel {
 
     /** Profile change support. */
     private final PropertyChangeSupport pcs;
+    /** Identity Controller. */
+    private final IdentityController identityController;
+    /** Identity Factory. */
+    private final IdentityFactory identityFactory;
     /** List of known profiles. */
     private List<Profile> profiles = new ArrayList<>();
     /** List of profiles to be displayed. */
@@ -63,6 +68,14 @@ public class ProfileManagerModel {
             final IdentityController identityController,
             final IdentityFactory identityFactory) {
         pcs = new PropertyChangeSupport(this);
+        this.identityController = identityController;
+        this.identityFactory = identityFactory;
+    }
+
+    /**
+     * Load model with data.
+     */
+    public void load() {
         final List<ConfigProvider> identities = identityController.getProvidersByType("profile");
         for (ConfigProvider identity : identities) {
             profiles.add(new Profile(identityFactory, identity));
@@ -70,6 +83,13 @@ public class ProfileManagerModel {
         updateDisplayedProfiles();
         if (!profiles.isEmpty()) {
             selectedProfile = profiles.get(0);
+        }
+        final PropertyChangeListener[] listeners = pcs.getPropertyChangeListeners();
+        for (PropertyChangeListener listener : listeners) {
+            if (listener instanceof PropertyChangeListenerProxy) {
+                final PropertyChangeListenerProxy proxy = (PropertyChangeListenerProxy) listener;
+                pcs.firePropertyChange(proxy.getPropertyName(), null, null);
+            }
         }
     }
 
