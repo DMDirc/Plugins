@@ -23,13 +23,15 @@
 package com.dmdirc.addons.ui_swing.dialogs.channelsetting;
 
 import com.dmdirc.Channel;
-import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.renderers.ExtendedListModeCellRenderer;
 import com.dmdirc.addons.ui_swing.components.renderers.ListModeCellRenderer;
 import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialog;
+import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
+import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.parser.common.ChannelListModeItem;
+import com.dmdirc.ui.IconManager;
 import com.dmdirc.util.collections.MapList;
 import com.dmdirc.util.validators.NotEmptyValidator;
 
@@ -92,27 +94,39 @@ public final class ChannelListModesPane extends JPanel implements ActionListener
     private final JCheckBox toggle;
     /** Parent window. */
     private final Window parentWindow;
-    /** Swing controller. */
-    private final SwingController controller;
     /** Native cell renderer. */
     private final ListCellRenderer nativeRenderer;
     /** Cell renderer. */
     private ListCellRenderer renderer;
     /** Mode list. */
     private JList list;
+    /** The config to read settings from. */
+    private final AggregateConfigProvider globalConfig;
+    /** The config to write settings to. */
+    private final ConfigProvider userConfig;
+    /** The manager to use to retrieve icons for dialogs and validation. */
+    private final IconManager iconManager;
 
     /**
      * Creates a new instance of ChannelListModePane.
      *
-     * @param controller   Swing controller
+     * @param globalConfig The config to read settings from.
+     * @param userConfig   The config to write settings to.
+     * @param iconManager  The manager to use to retrieve icons for dialogs and validation.
      * @param channel      Parent channel
      * @param parentWindow Parent window
      */
-    public ChannelListModesPane(final SwingController controller,
-            final Channel channel, final Window parentWindow) {
+    public ChannelListModesPane(
+            final AggregateConfigProvider globalConfig,
+            final ConfigProvider userConfig,
+            final IconManager iconManager,
+            final Channel channel,
+            final Window parentWindow) {
         super();
 
-        this.controller = controller;
+        this.globalConfig = globalConfig;
+        this.userConfig = userConfig;
+        this.iconManager = iconManager;
         this.setOpaque(UIUtilities.getTabbedPaneOpaque());
         this.channel = channel;
         this.parentWindow = parentWindow;
@@ -134,8 +148,8 @@ public final class ChannelListModesPane extends JPanel implements ActionListener
         removeListModeButton = new JButton("Remove");
         removeListModeButton.setEnabled(false);
         modeCount = new JLabel();
-        toggle = new JCheckBox("Show extended information", channel.getConfigManager()
-                .getOptionBool("general", "extendedListModes"));
+        toggle = new JCheckBox("Show extended information",
+                channel.getConfigManager().getOptionBool("general", "extendedListModes"));
         toggle.setOpaque(UIUtilities.getTabbedPaneOpaque());
 
         initListModesPanel();
@@ -264,9 +278,7 @@ public final class ChannelListModesPane extends JPanel implements ActionListener
         }
 
         channel.getChannelInfo().flushModes();
-
-        controller.getGlobalIdentity().
-                setOption("general", "extendedListModes", toggle.isSelected());
+        userConfig.setOption("general", "extendedListModes", toggle.isSelected());
     }
 
     /** Adds a list mode. */
@@ -279,7 +291,7 @@ public final class ChannelListModesPane extends JPanel implements ActionListener
                     getOption("server", "mode" + listModesArray[selectedIndex]);
         }
         new StandardInputDialog(parentWindow, ModalityType.DOCUMENT_MODAL,
-                controller.getIconManager(), "Add new " + modeText,
+                iconManager, "Add new " + modeText,
                 "Please enter the hostmask for the new " + modeText,
                 new NotEmptyValidator()) {
             /**
@@ -390,8 +402,7 @@ public final class ChannelListModesPane extends JPanel implements ActionListener
     /** {@inheritDoc} */
     @Override
     public void configChanged(final String domain, final String key) {
-        if (controller.getGlobalConfig().getOptionBool("general",
-                "extendedListModes")) {
+        if (globalConfig.getOptionBool("general", "extendedListModes")) {
             renderer = new ListModeCellRenderer(nativeRenderer);
         } else {
             renderer = new ExtendedListModeCellRenderer();

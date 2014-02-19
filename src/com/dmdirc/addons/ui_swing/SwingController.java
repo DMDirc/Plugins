@@ -144,11 +144,6 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     }
 
     @Deprecated
-    public ConfigProvider getGlobalIdentity() {
-        return globalIdentity;
-    }
-
-    @Deprecated
     public IconManager getIconManager() {
         return iconManager;
     }
