@@ -47,7 +47,7 @@ public class Profile {
     /** Nicknames. */
     private List<String> nicknames;
     /** Has this profile been marked deleted? */
-    private boolean deleted = false;
+    private boolean deleted;
     /** Factory to use to create profiles when saving. */
     private final IdentityFactory identityFactory;
 
@@ -224,10 +224,7 @@ public class Profile {
         if (!Objects.equals(this.ident, other.ident)) {
             return false;
         }
-        if (!Objects.equals(this.nicknames, other.nicknames)) {
-            return false;
-        }
-        return true;
+        return Objects.equals(this.nicknames, other.nicknames);
     }
 
     @Override

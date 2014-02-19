@@ -73,8 +73,8 @@ public class ProfileManagerDialogLinker {
      *
      * @param list List to bind
      */
-    public void bindProfileList(final JList list) {
-        list.setModel(new DefaultListModel());
+    public void bindProfileList(final JList<Profile> list) {
+        list.setModel(new DefaultListModel<Profile>());
         list.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         list.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
@@ -87,7 +87,7 @@ public class ProfileManagerDialogLinker {
             public void propertyChange(final PropertyChangeEvent evt) {
                 ((DefaultListModel) list.getModel()).clear();
                 for (Profile profile : model.getProfiles()) {
-                    ((DefaultListModel) list.getModel()).addElement(profile);
+                    ((DefaultListModel<Profile>) list.getModel()).addElement(profile);
                 }
                 if (list.getSelectedValue() != model.getSelectedProfile()) {
                     list.setSelectedValue(model.getSelectedProfile(), true);
@@ -101,7 +101,7 @@ public class ProfileManagerDialogLinker {
             }
         });
         for (Profile profile : model.getProfiles()) {
-            ((DefaultListModel) list.getModel()).addElement(profile);
+            ((DefaultListModel<Profile>) list.getModel()).addElement(profile);
         }
     }
 
@@ -111,7 +111,7 @@ public class ProfileManagerDialogLinker {
      * @param nicknames list to bind
      */
     public void bindProfileNicknames(final ValidatableReorderableJList nicknames) {
-        nicknames.setModel(new DefaultListModel());
+        nicknames.setModel(new DefaultListModel<String>());
         nicknames.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         nicknames.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
@@ -124,7 +124,7 @@ public class ProfileManagerDialogLinker {
             public void propertyChange(final PropertyChangeEvent evt) {
                 nicknames.getModel().clear();
                 for (String nickname : model.getNicknames()) {
-                    nicknames.getModel().addElement(nickname);
+                    ((DefaultListModel<String>) nicknames.getModel()).addElement(nickname);
                 }
                 nicknames.setSelectedValue(model.getSelectedNickname(), true);
                 nicknames.setEnabled(model.isManipulateProfileAllowed());
@@ -142,7 +142,7 @@ public class ProfileManagerDialogLinker {
             public void propertyChange(final PropertyChangeEvent evt) {
                 nicknames.getModel().clear();
                 for (String nickname : model.getNicknames()) {
-                    nicknames.getModel().addElement(nickname);
+                    ((DefaultListModel<String>) nicknames.getModel()).addElement(nickname);
                 }
                 nicknames.setSelectedValue(model.getSelectedNickname(), true);
                 nicknames.setEnabled(model.isManipulateProfileAllowed());
@@ -163,6 +163,7 @@ public class ProfileManagerDialogLinker {
             public void actionPerformed(final ActionEvent e) {
                 new StandardInputDialog(dialog, ModalityType.DOCUMENT_MODAL, iconManager,
                         "Add nickname", "Enter nickname to add:", new AddNicknameValidator(model)) {
+                    private static final long serialVersionUID = 1L;
                     @Override
                     public boolean save() {
                         controller.addNickname(getText());
@@ -203,6 +204,7 @@ public class ProfileManagerDialogLinker {
                         ModalityType.DOCUMENT_MODAL, iconManager,
                         "Add nickname", "Enter edited nickname:",
                         new EditNicknameValidator(model)) {
+                    private static final long serialVersionUID = 1L;
                     @Override
                     public boolean save() {
                         controller.editNickname(getText());
@@ -237,6 +239,7 @@ public class ProfileManagerDialogLinker {
             public void actionPerformed(final ActionEvent e) {
                 new StandardQuestionDialog(dialog, ModalityType.DOCUMENT_MODAL,
                         "Delete nickname?", "Are you sure you want to delete this nickname?") {
+                    private static final long serialVersionUID = 1L;
                     @Override
                     public boolean save() {
                         controller.deleteNickname();
@@ -408,6 +411,7 @@ public class ProfileManagerDialogLinker {
             public void actionPerformed(final ActionEvent e) {
                 new StandardQuestionDialog(dialog, ModalityType.DOCUMENT_MODAL,
                         "Delete profile?", "Are you sure you want to delete this profile?") {
+                    private static final long serialVersionUID = 1L;
                     @Override
                     public boolean save() {
                         controller.deleteProfile();

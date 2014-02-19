@@ -24,7 +24,7 @@ package com.dmdirc.addons.ui_swing.dialogs.profiles;
 
 import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.addons.ui_swing.MainFrame;
-import com.dmdirc.addons.ui_swing.components.renderers.ProfileListCellRenderer;
+import com.dmdirc.addons.ui_swing.components.renderers.PropertyListCellRenderer;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.addons.ui_swing.components.validating.ValidatableJTextField;
 import com.dmdirc.addons.ui_swing.components.validating.ValidatableReorderableJList;
@@ -55,7 +55,7 @@ public class ProfileManagerDialog extends StandardDialog {
     /** Dialog linker. */
     private final ProfileManagerDialogLinker linker;
     /** List of profiles. */
-    private final JList profileList = new JList();
+    private final JList<Profile> profileList = new JList<>();
     /** List of nicknames for a profile. */
     private final ValidatableReorderableJList nicknames = new ValidatableReorderableJList();
     /** Adds a new nickname to the active profile. */
@@ -116,8 +116,8 @@ public class ProfileManagerDialog extends StandardDialog {
     private void initComponents() {
         profileList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         nicknames.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        profileList.setCellRenderer(new ProfileListCellRenderer(
-                profileList.getCellRenderer()));
+        profileList.setCellRenderer(new PropertyListCellRenderer<>(profileList.getCellRenderer(),
+                Profile.class, "name"));
 
         setLayout(new MigLayout("fill, wmin 700, wmax 700, flowy"));
 
