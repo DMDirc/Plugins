@@ -31,7 +31,6 @@ import com.dmdirc.addons.ui_swing.commands.PopInCommand;
 import com.dmdirc.addons.ui_swing.commands.PopOutCommand;
 import com.dmdirc.addons.ui_swing.commands.ServerSettings;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
-import com.dmdirc.addons.ui_swing.components.statusbar.SwingStatusBar;
 import com.dmdirc.addons.ui_swing.dialogs.error.ErrorListDialog;
 import com.dmdirc.addons.ui_swing.injection.SwingModule;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
@@ -740,18 +739,6 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     @Deprecated
     public MainFrame getMainFrame() {
         return swingManager.getMainFrame();
-    }
-
-    /**
-     * Retrieves the status bar that's in use.
-     *
-     * @return The status bar that's in use.
-     *
-     * @deprecated Should be injected where needed.
-     */
-    @Deprecated
-    public SwingStatusBar getSwingStatusBar() {
-        return swingManager.getMainFrame().getStatusBar();
     }
 
 }
