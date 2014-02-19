@@ -30,13 +30,15 @@ import javax.swing.JList;
 
 /**
  * Validator to check for duplicate values in a list.
+ *
+ * @param <T> Type in the list to validate
  */
-public class NoDuplicatesInListValidator implements Validator<String> {
+public class NoDuplicatesInListValidator<T> implements Validator<String> {
 
     /** List. */
-    protected JList list;
+    protected JList<? super T> list;
     /** List to validate. */
-    protected DefaultListModel model;
+    protected DefaultListModel<? super T> model;
     /** Case sensitive. */
     protected boolean caseSensitive;
 
@@ -46,8 +48,8 @@ public class NoDuplicatesInListValidator implements Validator<String> {
      * @param list  List
      * @param model Model to validate
      */
-    public NoDuplicatesInListValidator(final JList list,
-            final DefaultListModel model) {
+    public NoDuplicatesInListValidator(final JList<? super T> list,
+            final DefaultListModel<? super T> model) {
         this(true, list, model);
     }
 
@@ -59,7 +61,7 @@ public class NoDuplicatesInListValidator implements Validator<String> {
      * @param model         Model to validate
      */
     public NoDuplicatesInListValidator(final boolean caseSensitive,
-            final JList list, final DefaultListModel model) {
+            final JList<? super T> list, final DefaultListModel<? super T> model) {
         this.model = model;
         this.list = list;
         this.caseSensitive = caseSensitive;
