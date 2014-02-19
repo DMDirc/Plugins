@@ -37,8 +37,14 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Test for ProfileManagerModel
@@ -84,7 +90,7 @@ public class ProfileManagerModelTest {
      * Test creating profiles from identities.
      */
     @Test
-    public void testConstructor() {
+    public void testLoad() {
         final List<String> nicknames = new ArrayList<>();
         nicknames.add("nickname");
         final ConfigProvider configProvider = mock(ConfigProvider.class);
@@ -99,6 +105,7 @@ public class ProfileManagerModelTest {
         when(im.getProvidersByType("profile")).thenReturn(identities);
 
         ProfileManagerModel instance = new ProfileManagerModel(im, identityFactory);
+        instance.load();
 
         assertEquals(Arrays.asList(new Profile[]{new Profile(identityFactory, configProvider), }), instance.getProfiles());
     }
