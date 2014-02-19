@@ -24,24 +24,32 @@ package com.dmdirc.addons.lagdisplay;
 
 import com.dmdirc.addons.ui_swing.injection.SwingModule;
 
+import javax.inject.Qualifier;
+
 import dagger.Module;
 import dagger.Provides;
 
 /**
  * DI module for the lag display plugin.
  */
-@Module(injects = {LagDisplayPanel.class}, addsTo = SwingModule.class)
+@Module(injects = {LagDisplayManager.class}, addsTo = SwingModule.class)
 public class LagDisplayModule {
 
-    private final LagDisplayPlugin plugin;
+    /** The domain for plugin settings. */
+    private final String domain;
 
-    public LagDisplayModule(final LagDisplayPlugin plugin) {
-        this.plugin = plugin;
+    @Qualifier
+    public static @interface LagDisplaySettingsDomain {
+    }
+
+    public LagDisplayModule(final String domain) {
+        this.domain = domain;
     }
 
     @Provides
-    public LagDisplayPlugin getPlugin() {
-        return plugin;
+    @LagDisplaySettingsDomain
+    public String getDomain() {
+        return domain;
     }
 
 }

@@ -47,20 +47,20 @@ public class PingHistoryPanel extends JPanel {
      * class).
      */
     private static final long serialVersionUID = 1;
-    /** The plugin that this panel is for. */
-    protected final LagDisplayPlugin plugin;
+    /** The manager that this panel is for. */
+    protected final LagDisplayManager manager;
     /** The history that we're graphing. */
     protected final RollingList<Long> history;
     /** The maximum ping value. */
-    protected long maximum = 0L;
+    protected long maximum;
 
     /**
      * Creates a new history panel for the specified plugin.
      *
-     * @param plugin    The plugin that owns this panel
+     * @param manager   The manager that owns this panel
      * @param mainFrame Swing main frame
      */
-    public PingHistoryPanel(final LagDisplayPlugin plugin,
+    public PingHistoryPanel(final LagDisplayManager manager,
             final MainFrame mainFrame) {
         super();
 
@@ -68,9 +68,8 @@ public class PingHistoryPanel extends JPanel {
         setMaximumSize(new Dimension(Integer.MAX_VALUE, 100));
         setOpaque(false);
 
-        this.plugin = plugin;
-        history = plugin.getHistory(mainFrame.getActiveFrame().getContainer()
-                .getConnection());
+        this.manager = manager;
+        history = manager.getHistory(mainFrame.getActiveFrame().getContainer().getConnection());
 
         for (Long value : history.getList()) {
             maximum = Math.max(value, maximum);
@@ -115,8 +114,8 @@ public class PingHistoryPanel extends JPanel {
 
             g.drawRect((int) x - 1, (int) y - 1, 2, 2);
 
-            if (plugin.shouldShowLabels() && last1 > -1 && (last2 <= last1 || last1 >= value)) {
-                final String text = plugin.formatTime(last1);
+            if (manager.shouldShowLabels() && last1 > -1 && (last2 <= last1 || last1 >= value)) {
+                final String text = manager.formatTime(last1);
                 final Rectangle2D rect = g.getFont().getStringBounds(text,
                         ((Graphics2D) g).getFontRenderContext());
                 final int width = 10 + (int) rect.getWidth();
