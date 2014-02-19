@@ -39,21 +39,19 @@ import javax.swing.TransferHandler;
 
 /**
  * Arraylist Transfer handler.
+ *
+ * @param <T> Type to be transferred
  */
-public final class ArrayListTransferHandler extends TransferHandler {
+public final class ArrayListTransferHandler<T> extends TransferHandler {
 
-    /**
-     * A version number for this class. It should be changed whenever the class structure is changed
-     * (or anything else that would prevent serialized objects being unserialized with the new
-     * class).
-     */
+    /** A version number for this class. */
     private static final long serialVersionUID = 1;
     /** Local Transfer flavour. */
     private DataFlavor localArrayListFlavor;
     /** Serial Transfer flavour. */
     private final DataFlavor serialArrayListFlavor;
     /** Source component. */
-    private JList sourceList;
+    private JList<T> sourceList;
     /** Dragged Indices. */
     private int[] indices;
     /** Index to add item(s). */
@@ -61,21 +59,18 @@ public final class ArrayListTransferHandler extends TransferHandler {
     /** Number of items to add. */
     private int addCount;
 
-    /** Instantiates a new ArrayListTransferHandler. */
     public ArrayListTransferHandler() {
-        super();
-
         try {
             localArrayListFlavor = new DataFlavor(
                     DataFlavor.javaJVMLocalObjectMimeType + ";class=java.util.ArrayList");
         } catch (ClassNotFoundException e) {
             Logger.userError(ErrorLevel.LOW, "unable to create data flavor: " + e.getMessage());
         }
-        serialArrayListFlavor = new DataFlavor(ArrayList.class, "ArrayList"); //NOPMD
+        serialArrayListFlavor = new DataFlavor(ArrayList.class, "ArrayList");
     }
 
-    /** {@inheritDoc} */
     @Override
+    @SuppressWarnings("unchecked")
     public boolean importData(final JComponent comp, final Transferable t) {
         if (!canImport(comp, t.getTransferDataFlavors())) {
             return false;
@@ -83,9 +78,9 @@ public final class ArrayListTransferHandler extends TransferHandler {
 
         try {
             if (hasLocalArrayListFlavor(t.getTransferDataFlavors())) {
-                return doImport((JList) comp, (ArrayList<?>) t.getTransferData(localArrayListFlavor));
+                return doImport((JList<T>) comp, (ArrayList<T>) t.getTransferData(localArrayListFlavor));
             } else if (hasSerialArrayListFlavor(t.getTransferDataFlavors())) {
-                return doImport((JList) comp, (ArrayList<?>) t.
+                return doImport((JList<T>) comp, (ArrayList<T>) t.
                         getTransferData(serialArrayListFlavor));
             } else {
                 return false;
@@ -100,14 +95,14 @@ public final class ArrayListTransferHandler extends TransferHandler {
     }
 
     /**
-     * Imports the tranferrable data into the list.
+     * Imports the transferable data into the list.
      *
      * @param target       target list
      * @param transferList transferable list
      *
      * @return Whether the data was imported
      */
-    private boolean doImport(final JList target, final List<?> transferList) {
+    private boolean doImport(final JList<T> target, final List<T> transferList) {
         int index = target.getSelectedIndex();
         if (sourceList.equals(target) && indices != null && index >= indices[0] - 1 && index
                 <= indices[indices.length - 1]) {
@@ -115,7 +110,7 @@ public final class ArrayListTransferHandler extends TransferHandler {
             return true;
         }
 
-        final DefaultListModel listModel = (DefaultListModel) target.getModel();
+        final DefaultListModel<T> listModel = (DefaultListModel<T>) target.getModel();
         final int max = listModel.getSize();
 
         if (index < 0) {
@@ -142,7 +137,7 @@ public final class ArrayListTransferHandler extends TransferHandler {
     protected void exportDone(final JComponent source, final Transferable data,
             final int action) {
         if ((action == MOVE) && (indices != null)) {
-            final DefaultListModel model = (DefaultListModel) sourceList.getModel();
+            final DefaultListModel<T> model = (DefaultListModel<T>) sourceList.getModel();
 
             if (addCount > 0) {
                 for (int i = 0; i < indices.length; i++) {
@@ -172,9 +167,8 @@ public final class ArrayListTransferHandler extends TransferHandler {
         if (localArrayListFlavor == null) {
             return false;
         }
-
-        for (int i = 0; i < transferFlavors.length; i++) {
-            if (transferFlavors[i].equals(localArrayListFlavor)) {
+        for (DataFlavor transferFlavor : transferFlavors) {
+            if (transferFlavor.equals(localArrayListFlavor)) {
                 return true;
             }
         }
@@ -193,9 +187,8 @@ public final class ArrayListTransferHandler extends TransferHandler {
         if (serialArrayListFlavor == null) {
             return false;
         }
-
-        for (int i = 0; i < transferFlavors.length; i++) {
-            if (transferFlavors[i].equals(serialArrayListFlavor)) {
+        for (DataFlavor transferFlavor : transferFlavors) {
+            if (transferFlavor.equals(serialArrayListFlavor)) {
                 return true;
             }
         }
@@ -203,7 +196,6 @@ public final class ArrayListTransferHandler extends TransferHandler {
         return false;
     }
 
-    /** {@inheritDoc} */
     @Override
     public boolean canImport(final JComponent comp, final DataFlavor[] transferFlavors) {
         return comp instanceof JList && ((JList) comp).getModel() instanceof DefaultListModel
@@ -211,36 +203,21 @@ public final class ArrayListTransferHandler extends TransferHandler {
                 || hasSerialArrayListFlavor(transferFlavors));
     }
 
-    /** {@inheritDoc} */
     @Override
     protected Transferable createTransferable(final JComponent c) {
         if (c instanceof JList) {
-            sourceList = (JList) c;
+            @SuppressWarnings("unchecked")
+            final JList<T> list = (JList<T>) c;
+            sourceList = list;
             indices = sourceList.getSelectedIndices();
-            final Object[] values = sourceList.getSelectedValues();
+            final List<T> values = sourceList.getSelectedValuesList();
 
-            if (values == null || values.length == 0) {
-                return null;
-            }
-
-            final ArrayList<Object> alist = new ArrayList<>(values.length);
-
-            for (int i = 0; i < values.length; i++) {
-                final Object o = values[i];
-                String str = o.toString();
-                if (str == null) {
-                    str = "";
-                }
-                alist.add(str);
-            }
-
-            return new ArrayListTransferable(alist);
+            return new ListTransferable<>(values);
         }
 
         return null;
     }
 
-    /** {@inheritDoc} */
     @Override
     public int getSourceActions(final JComponent c) {
         return COPY_OR_MOVE;
