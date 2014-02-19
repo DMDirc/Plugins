@@ -37,28 +37,28 @@ import net.miginfocom.swing.MigLayout;
 
 /**
  * Renderer for the reorderable JList, procides visual clues to DnD.
+ *
+ * @param <T> Type contained in this list
  */
-public class ReorderableJListCellRenderer implements ListCellRenderer {
+public class ReorderableJListCellRenderer<T> implements ListCellRenderer<T> {
 
     /** Parent list. */
-    private final ReorderableJList parent;
+    private final ReorderableJList<? super T> parent;
 
     /**
      * Instantiates a new ReorderableJListCellRenderer.
      *
      * @param parent Parent list
      */
-    public ReorderableJListCellRenderer(final ReorderableJList parent) {
+    public ReorderableJListCellRenderer(final ReorderableJList<T> parent) {
         super();
 
         this.parent = parent;
     }
 
-    /** {@inheritDoc} */
     @Override
-    public Component getListCellRendererComponent(final JList list,
-            final Object value, final int index, final boolean isSelected,
-            final boolean cellHasFocus) {
+    public Component getListCellRendererComponent(final JList<? extends T> list, final T value,
+            final int index, final boolean isSelected, final boolean cellHasFocus) {
         final JPanel panel = new JPanel();
         panel.setLayout(new MigLayout("fill, ins 0"));
         final boolean isTargetCell = value == parent.getTargetCell();
@@ -79,7 +79,6 @@ public class ReorderableJListCellRenderer implements ListCellRenderer {
                 panel.setBackground(UIManager.getColor("List.background"));
             }
         }
-
 
         if (isTargetCell) {
             if (parent.getBelowTarget()) {

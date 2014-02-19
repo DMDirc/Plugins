@@ -30,7 +30,6 @@ import java.awt.Cursor;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.datatransfer.DataFlavor;
-import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DragGestureEvent;
@@ -50,18 +49,19 @@ import java.util.ArrayList;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
+import javax.swing.ListModel;
 import javax.swing.ListSelectionModel;
 
 /**
  * Reorderable JList.
+ *
+ * @param <T> Type contained in the list
  */
-public class ReorderableJList extends JList implements DragSourceListener,
+public class ReorderableJList<T> extends JList<T> implements DragSourceListener,
         DropTargetListener, DragGestureListener {
 
     /**
-     * A version number for this class. It should be changed whenever the class structure is changed
-     * (or anything else that would prevent serialized objects being unserialized with the new
-     * class).
+     * A version number for this class.
      */
     private static final long serialVersionUID = 1;
     /** Drag source. */
@@ -79,7 +79,7 @@ public class ReorderableJList extends JList implements DragSourceListener,
 
     /** Instantiate new ReorderableJList. */
     public ReorderableJList() {
-        this(new DefaultListModel());
+        this(new DefaultListModel<T>());
     }
 
     /**
@@ -87,18 +87,17 @@ public class ReorderableJList extends JList implements DragSourceListener,
      *
      * @param model Model
      */
-    public ReorderableJList(final DefaultListModel model) {
+    public ReorderableJList(final DefaultListModel<T> model) {
         super(model);
 
-        setCellRenderer(new ReorderableJListCellRenderer(this));
+        setCellRenderer(new ReorderableJListCellRenderer<>(this));
         setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         setTransferHandler(new ArrayListTransferHandler());
 
         dragSource = DragSource.getDefaultDragSource();
         dropTarget = new DropTarget(this, this);
 
-        dragSource.createDefaultDragGestureRecognizer(this,
-                DnDConstants.ACTION_MOVE, this);
+        dragSource.createDefaultDragGestureRecognizer(this, DnDConstants.ACTION_MOVE, this);
         try {
 
             dataFlavor = new DataFlavor(DataFlavor.javaJVMLocalObjectMimeType
@@ -110,19 +109,18 @@ public class ReorderableJList extends JList implements DragSourceListener,
         }
     }
 
-    /** {@inheritDoc} */
     @Override
-    public DefaultListModel getModel() {
-        return (DefaultListModel) super.getModel();
+    public DefaultListModel<T> getModel() {
+        return (DefaultListModel<T>) super.getModel();
     }
 
-    /**
-     * Sets the model for the list.
-     *
-     * @param model Model for the list
-     */
-    public void setModel(final DefaultListModel model) { //NOPMD stupid
-        super.setModel(model);
+    @Override
+    public void setModel(final ListModel<T> model) {
+        if (model instanceof DefaultListModel) {
+            super.setModel(model);
+        } else {
+            throw new IllegalArgumentException("model needs to be an instance of DefaultListModel");
+        }
     }
 
     /**
@@ -143,31 +141,26 @@ public class ReorderableJList extends JList implements DragSourceListener,
         return belowTarget;
     }
 
-    /** {@inheritDoc} */
     @Override
     public void dragEnter(final DragSourceDragEvent dsde) {
         //Ignore
     }
 
-    /** {@inheritDoc} */
     @Override
     public void dragOver(final DragSourceDragEvent dsde) {
         //Ignore
     }
 
-    /** {@inheritDoc} */
     @Override
     public void dropActionChanged(final DragSourceDragEvent dsde) {
         //Ignore
     }
 
-    /** {@inheritDoc} */
     @Override
     public void dragExit(final DragSourceEvent dse) {
         //Ignore
     }
 
-    /** {@inheritDoc} */
     @Override
     public void dragDropEnd(final DragSourceDropEvent dsde) {
         //clear drop variables and repaint
@@ -176,7 +169,6 @@ public class ReorderableJList extends JList implements DragSourceListener,
         repaint();
     }
 
-    /** {@inheritDoc} */
     @Override
     public void dragEnter(final DropTargetDragEvent dtde) {
         //check whether to accept drag
@@ -187,7 +179,6 @@ public class ReorderableJList extends JList implements DragSourceListener,
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public void dragOver(final DropTargetDragEvent dtde) {
         //Reject drops on self
@@ -206,30 +197,23 @@ public class ReorderableJList extends JList implements DragSourceListener,
             dropTargetCell = getModel().getElementAt(index);
             //check whether the drop point is after the last index
             final Rectangle bounds = getCellBounds(index, index);
-            if (index == getModel().getSize() - 1
-                    && dragPoint.y > bounds.y + bounds.height) {
-                belowTarget = true;
-            } else {
-                belowTarget = false;
-            }
+            belowTarget = index == getModel().getSize() - 1
+                    && dragPoint.y > bounds.y + bounds.height;
         }
 
         repaint();
     }
 
-    /** {@inheritDoc} */
     @Override
     public void dropActionChanged(final DropTargetDragEvent dtde) {
         //Ignore
     }
 
-    /** {@inheritDoc} */
     @Override
     public void dragExit(final DropTargetEvent dte) {
         //Ignore
     }
 
-    /** {@inheritDoc} */
     @Override
     public void drop(final DropTargetDropEvent dtde) {
         //check source and reject
@@ -263,11 +247,13 @@ public class ReorderableJList extends JList implements DragSourceListener,
 
         //move items
         final boolean sourceBeforeTarget = draggedIndex < index;
-        final DefaultListModel mod = getModel();
+        final DefaultListModel<T> mod = getModel();
         final int newIndex = sourceBeforeTarget ? index - 1 : index;
         mod.remove(draggedIndex);
-        for (Object item : (ArrayList<?>) dragged) {
-            mod.add(newIndex, item);
+        for (Object item : (ArrayList) dragged) {
+            @SuppressWarnings("unchecked")
+            final T genericItem = (T) item;
+            mod.add(newIndex, genericItem);
         }
 
         getSelectionModel().setSelectionInterval(newIndex, newIndex);
@@ -276,7 +262,6 @@ public class ReorderableJList extends JList implements DragSourceListener,
         dtde.dropComplete(true);
     }
 
-    /** {@inheritDoc} */
     @Override
     public void dragGestureRecognized(final DragGestureEvent dge) {
         //find the objects location and index
@@ -288,11 +273,11 @@ public class ReorderableJList extends JList implements DragSourceListener,
         }
 
         //get the list object
-        final Object target = getModel().getElementAt(index);
+        final T target = getModel().getElementAt(index);
         //create the trasnferable object
-        final ArrayList<Object> transferObject = new ArrayList<>();
+        final ArrayList<T> transferObject = new ArrayList<>();
         transferObject.add(target);
-        final Transferable trans = new ArrayListTransferable(transferObject);
+        final ListTransferable<T> trans = new ListTransferable<>(transferObject);
         //start drag
         draggedIndex = index;
         dragSource.startDrag(dge, Cursor.getDefaultCursor(), trans, this);
