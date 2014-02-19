@@ -49,8 +49,8 @@ public class ServerInfoDialog extends StatusbarPopupWindow {
      * class).
      */
     private static final long serialVersionUID = 3;
-    /** The lag display plugin. */
-    protected final LagDisplayPlugin plugin;
+    /** The lag display manager. */
+    protected final LagDisplayManager manager;
     /** Swing main frame. */
     private final MainFrame mainFrame;
     /** Server manager to retrieve servers from. */
@@ -59,19 +59,19 @@ public class ServerInfoDialog extends StatusbarPopupWindow {
     /**
      * Creates a new ServerInfoDialog.
      *
-     * @param plugin        The {@link LagDisplayPlugin} we're using for info
+     * @param manager       The {@link LagDisplayManager} we're using for info
      * @param parent        The {@link JPanel} to use for positioning
      * @param mainFrame     The frame that will own this dialog.
      * @param serverManager The manager to use to iterate servers.
      */
     public ServerInfoDialog(
-            final LagDisplayPlugin plugin,
+            final LagDisplayManager manager,
             @Unbound final StatusbarPanel parent,
             final MainFrame mainFrame,
             final ServerManager serverManager) {
         super(parent, mainFrame);
 
-        this.plugin = plugin;
+        this.manager = manager;
         this.mainFrame = mainFrame;
         this.serverManager = serverManager;
     }
@@ -84,8 +84,8 @@ public class ServerInfoDialog extends StatusbarPopupWindow {
         if (servers.isEmpty()) {
             panel.add(new JLabel("No open servers."));
         } else {
-            if (plugin.shouldShowGraph()) {
-                panel.add(new PingHistoryPanel(plugin, mainFrame), "span, grow, wrap");
+            if (manager.shouldShowGraph()) {
+                panel.add(new PingHistoryPanel(manager, mainFrame), "span, grow, wrap");
                 panel.add(new JSeparator(), "span, grow, wrap");
             }
 
@@ -94,7 +94,7 @@ public class ServerInfoDialog extends StatusbarPopupWindow {
                 panel.add(new JLabel(server.getState() == ServerState.CONNECTED
                         ? server.getNetwork() : "---", JLabel.CENTER), "grow");
                 panel.add(new JLabel(server.getState() == ServerState.CONNECTED
-                        ? plugin.getTime(server) : "---", JLabel.RIGHT), "grow, wrap");
+                        ? manager.getTime(server) : "---", JLabel.RIGHT), "grow, wrap");
             }
         }
     }
