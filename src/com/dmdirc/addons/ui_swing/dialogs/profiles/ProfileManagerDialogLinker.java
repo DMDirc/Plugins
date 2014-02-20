@@ -163,17 +163,18 @@ public class ProfileManagerDialogLinker {
             public void actionPerformed(final ActionEvent e) {
                 new StandardInputDialog(dialog, ModalityType.DOCUMENT_MODAL, iconManager,
                         "Add nickname", "Enter nickname to add:", new AddNicknameValidator(model)) {
-                    private static final long serialVersionUID = 1L;
-                    @Override
-                    public boolean save() {
-                        controller.addNickname(getText());
-                        return true;
-                    }
+                            private static final long serialVersionUID = 1L;
 
-                    @Override
-                    public void cancelled() {
-                    }
-                }.display();
+                            @Override
+                            public boolean save() {
+                                controller.addNickname(getText());
+                                return true;
+                            }
+
+                            @Override
+                            public void cancelled() {
+                            }
+                        }.display();
             }
         });
         model.addPropertyChangeListener("selectedprofile", new PropertyChangeListener() {
@@ -204,17 +205,18 @@ public class ProfileManagerDialogLinker {
                         ModalityType.DOCUMENT_MODAL, iconManager,
                         "Add nickname", "Enter edited nickname:",
                         new EditNicknameValidator(model)) {
-                    private static final long serialVersionUID = 1L;
-                    @Override
-                    public boolean save() {
-                        controller.editNickname(getText());
-                        return true;
-                    }
+                            private static final long serialVersionUID = 1L;
 
-                    @Override
-                    public void cancelled() {
-                    }
-                };
+                            @Override
+                            public boolean save() {
+                                controller.editNickname(getText());
+                                return true;
+                            }
+
+                            @Override
+                            public void cancelled() {
+                            }
+                        };
                 inputDialog.setText((String) model.getSelectedNickname());
                 inputDialog.display();
             }
@@ -239,17 +241,18 @@ public class ProfileManagerDialogLinker {
             public void actionPerformed(final ActionEvent e) {
                 new StandardQuestionDialog(dialog, ModalityType.DOCUMENT_MODAL,
                         "Delete nickname?", "Are you sure you want to delete this nickname?") {
-                    private static final long serialVersionUID = 1L;
-                    @Override
-                    public boolean save() {
-                        controller.deleteNickname();
-                        return true;
-                    }
+                            private static final long serialVersionUID = 1L;
 
-                    @Override
-                    public void cancelled() {
-                    }
-                }.display();
+                            @Override
+                            public boolean save() {
+                                controller.deleteNickname();
+                                return true;
+                            }
+
+                            @Override
+                            public void cancelled() {
+                            }
+                        }.display();
             }
         });
         model.addPropertyChangeListener("selectednickname", new PropertyChangeListener() {
@@ -395,7 +398,24 @@ public class ProfileManagerDialogLinker {
         addProfile.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent e) {
-                controller.addProfile();
+                final StandardInputDialog inputDialog = new StandardInputDialog(dialog,
+                        ModalityType.DOCUMENT_MODAL, iconManager,
+                        "Add profile", "New profile name:",
+                        new ProfileNameValidator(model.getProfiles())) {
+                            private static final long serialVersionUID = 1L;
+
+                            @Override
+                            public boolean save() {
+                                controller.addProfile(getText());
+                                return true;
+                            }
+
+                            @Override
+                            public void cancelled() {
+                            }
+                        };
+                inputDialog.setText((String) model.getSelectedNickname());
+                inputDialog.display();
             }
         });
     }
@@ -411,17 +431,18 @@ public class ProfileManagerDialogLinker {
             public void actionPerformed(final ActionEvent e) {
                 new StandardQuestionDialog(dialog, ModalityType.DOCUMENT_MODAL,
                         "Delete profile?", "Are you sure you want to delete this profile?") {
-                    private static final long serialVersionUID = 1L;
-                    @Override
-                    public boolean save() {
-                        controller.deleteProfile();
-                        return true;
-                    }
+                            private static final long serialVersionUID = 1L;
 
-                    @Override
-                    public void cancelled() {
-                    }
-                }.display();
+                            @Override
+                            public boolean save() {
+                                controller.deleteProfile();
+                                return true;
+                            }
+
+                            @Override
+                            public void cancelled() {
+                            }
+                        }.display();
             }
         });
         model.addPropertyChangeListener("profiles", new PropertyChangeListener() {

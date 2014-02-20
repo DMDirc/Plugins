@@ -509,7 +509,7 @@ public class ProfileManagerModelTest {
      */
     @Test
     public void testIsOKAllowed() {
-        final Profile profile = new Profile(null);
+        final Profile profile = new Profile("New Profile", null);
         profile.setName("*");
         profile.setRealname("");
         profile.setIdent("*");
