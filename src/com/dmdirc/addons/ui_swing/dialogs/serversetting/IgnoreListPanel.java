@@ -22,12 +22,12 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.serversetting;
 
-import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialog;
 import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.parser.common.IgnoreList;
+import com.dmdirc.ui.IconManager;
 import com.dmdirc.util.validators.NotEmptyValidator;
 import com.dmdirc.util.validators.RegexValidator;
 import com.dmdirc.util.validators.ValidatorChain;
@@ -52,8 +52,7 @@ import net.miginfocom.swing.MigLayout;
 /**
  * Ignore list panel.
  */
-public final class IgnoreListPanel extends JPanel implements ActionListener,
-        ListSelectionListener {
+public final class IgnoreListPanel extends JPanel implements ActionListener, ListSelectionListener {
 
     /** Serial version UID. */
     private static final long serialVersionUID = 2;
@@ -61,8 +60,8 @@ public final class IgnoreListPanel extends JPanel implements ActionListener,
     private final Connection connection;
     /** Parent window. */
     private final Window parentWindow;
-    /** Swing controller. */
-    private final SwingController controller;
+    /** Icon manager. */
+    private final IconManager iconManager;
     /** Add button. */
     private JButton addButton;
     /** Remove button. */
@@ -72,7 +71,7 @@ public final class IgnoreListPanel extends JPanel implements ActionListener,
     /** Size label. */
     private JLabel sizeLabel;
     /** Ignore list. */
-    private JList list;
+    private JList<String> list;
     /** Cached ignore list. */
     private IgnoreList cachedIgnoreList;
     /** Ignore list model . */
@@ -81,15 +80,15 @@ public final class IgnoreListPanel extends JPanel implements ActionListener,
     /**
      * Creates a new instance of IgnoreList.
      *
-     * @param controller   Swing controller
+     * @param iconManager   Icon manager
      * @param connection   The connection whose ignore list should be displayed.
      * @param parentWindow Parent window
      */
-    public IgnoreListPanel(final SwingController controller,
+    public IgnoreListPanel(final IconManager iconManager,
             final Connection connection, final Window parentWindow) {
         super();
 
-        this.controller = controller;
+        this.iconManager = iconManager;
         this.connection = connection;
         this.parentWindow = parentWindow;
 
@@ -104,7 +103,7 @@ public final class IgnoreListPanel extends JPanel implements ActionListener,
         cachedIgnoreList = new IgnoreList(connection.getIgnoreList().getRegexList());
 
         listModel = new IgnoreListModel(cachedIgnoreList);
-        list = new JList(listModel);
+        list = new JList<>(listModel);
 
         final JScrollPane scrollPane = new JScrollPane(list);
 
@@ -129,8 +128,8 @@ public final class IgnoreListPanel extends JPanel implements ActionListener,
 
     /** Updates the size label. */
     private void updateSizeLabel() {
-        sizeLabel.setText(cachedIgnoreList.count() + " entr" + (cachedIgnoreList.
-                count() == 1 ? "y" : "ies"));
+        sizeLabel.setText(cachedIgnoreList.count() + " entr" + (cachedIgnoreList.count()
+                == 1 ? "y" : "ies"));
     }
 
     /** Adds listeners to the components. */
@@ -179,16 +178,12 @@ public final class IgnoreListPanel extends JPanel implements ActionListener,
     public void actionPerformed(final ActionEvent e) {
         if (e.getSource() == addButton) {
             new StandardInputDialog(parentWindow,
-                    ModalityType.MODELESS, controller.getIconManager(), "New ignore list entry",
+                    ModalityType.MODELESS, iconManager, "New ignore list entry",
                     "Please enter the new ignore list entry",
                     viewToggle.isSelected() ? new ValidatorChain<>(
                     new NotEmptyValidator(), new RegexValidator())
                     : new NotEmptyValidator()) {
-                /**
-                 * A version number for this class. It should be changed whenever the class
-                 * structure is changed (or anything else that would prevent serialized objects
-                 * being unserialized with the new class).
-                 */
+                /** A version number for this class. */
                 private static final long serialVersionUID = 2;
 
                 /** {@inheritDoc} */
@@ -216,11 +211,7 @@ public final class IgnoreListPanel extends JPanel implements ActionListener,
                     ModalityType.APPLICATION_MODAL,
                     "Confirm deletion",
                     "Are you sure you want to delete this item?") {
-                /**
-                 * A version number for this class. It should be changed whenever the class
-                 * structure is changed (or anything else that would prevent serialized objects
-                 * being unserialized with the new class).
-                 */
+                /** A version number for this class. */
                 private static final long serialVersionUID = 1;
 
                 /** {@inheritDoc} */
