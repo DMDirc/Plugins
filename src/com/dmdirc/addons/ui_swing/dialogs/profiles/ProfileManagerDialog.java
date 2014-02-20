@@ -57,7 +57,8 @@ public class ProfileManagerDialog extends StandardDialog {
     /** List of profiles. */
     private final JList<Profile> profileList = new JList<>();
     /** List of nicknames for a profile. */
-    private final ValidatableReorderableJList nicknames = new ValidatableReorderableJList();
+    private final ValidatableReorderableJList<String> nicknames
+            = new ValidatableReorderableJList<>();
     /** Adds a new nickname to the active profile. */
     private final JButton addNickname = new JButton("Add");
     /** Edits the active nickname in the active profile. */

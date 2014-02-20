@@ -110,7 +110,7 @@ public class ProfileManagerDialogLinker {
      *
      * @param nicknames list to bind
      */
-    public void bindProfileNicknames(final ValidatableReorderableJList nicknames) {
+    public void bindProfileNicknames(final ValidatableReorderableJList<String> nicknames) {
         nicknames.setModel(new DefaultListModel<String>());
         nicknames.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         nicknames.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
@@ -124,7 +124,7 @@ public class ProfileManagerDialogLinker {
             public void propertyChange(final PropertyChangeEvent evt) {
                 nicknames.getModel().clear();
                 for (String nickname : model.getNicknames()) {
-                    ((DefaultListModel<String>) nicknames.getModel()).addElement(nickname);
+                    nicknames.getModel().addElement(nickname);
                 }
                 nicknames.setSelectedValue(model.getSelectedNickname(), true);
                 nicknames.setEnabled(model.isManipulateProfileAllowed());
@@ -142,7 +142,7 @@ public class ProfileManagerDialogLinker {
             public void propertyChange(final PropertyChangeEvent evt) {
                 nicknames.getModel().clear();
                 for (String nickname : model.getNicknames()) {
-                    ((DefaultListModel<String>) nicknames.getModel()).addElement(nickname);
+                    nicknames.getModel().addElement(nickname);
                 }
                 nicknames.setSelectedValue(model.getSelectedNickname(), true);
                 nicknames.setEnabled(model.isManipulateProfileAllowed());
