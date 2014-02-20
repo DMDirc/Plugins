@@ -61,9 +61,4 @@ public class NickColourModule {
         return domain;
     }
 
-    @Provides
-    public PluginInfo getPluginInfo() {
-        return pluginInfo;
-    }
-
 }
