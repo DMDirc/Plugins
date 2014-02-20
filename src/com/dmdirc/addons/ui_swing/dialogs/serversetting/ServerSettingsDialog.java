@@ -93,7 +93,8 @@ public class ServerSettingsDialog extends StandardDialog implements ActionListen
         setTitle("Server settings");
         setResizable(false);
 
-        initComponents(controller, iconManager, server.getConfigManager(), compFactory);
+        initComponents(controller, parentWindow, iconManager, server.getConfigManager(),
+                compFactory);
         initListeners();
     }
 
@@ -106,15 +107,16 @@ public class ServerSettingsDialog extends StandardDialog implements ActionListen
      * @config Config to read from
      * @param compFactory Preferences setting component factory
      */
-    private void initComponents(final SwingController controller, final IconManager iconManager,
-            final AggregateConfigProvider config, final PrefsComponentFactory compFactory) {
+    private void initComponents(final SwingController controller, final MainFrame parentWindow,
+            final IconManager iconManager, final AggregateConfigProvider config,
+            final PrefsComponentFactory compFactory) {
         orderButtons(new JButton(), new JButton());
 
         tabbedPane = new JTabbedPane();
 
         modesPanel = new UserModesPane(controller, server);
 
-        ignoreList = new IgnoreListPanel(controller, server, controller.getMainFrame());
+        ignoreList = new IgnoreListPanel(iconManager, server, parentWindow);
 
         performPanel = new PerformTab(iconManager, config, performWrapper, server);
 
@@ -167,21 +169,21 @@ public class ServerSettingsDialog extends StandardDialog implements ActionListen
                     ModalityType.MODELESS,
                     "Server has been disconnected.", "Any changes you have "
                     + "made will be lost, are you sure you want to close this " + "dialog?") {
-                private static final long serialVersionUID = 1;
+                        private static final long serialVersionUID = 1;
 
-                /** {@inheritDoc} */
-                @Override
-                public boolean save() {
-                    ServerSettingsDialog.this.dispose();
-                    return true;
-                }
+                        /** {@inheritDoc} */
+                        @Override
+                        public boolean save() {
+                            ServerSettingsDialog.this.dispose();
+                            return true;
+                        }
 
-                /** {@inheritDoc} */
-                @Override
-                public void cancelled() {
-                    //Ignore
-                }
-            }.display(getOwner());
+                        /** {@inheritDoc} */
+                        @Override
+                        public void cancelled() {
+                            //Ignore
+                        }
+                    }.display(getOwner());
         } else {
             closeAndSave();
         }

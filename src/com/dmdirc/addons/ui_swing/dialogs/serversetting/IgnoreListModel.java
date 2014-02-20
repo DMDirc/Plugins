@@ -27,16 +27,11 @@ import com.dmdirc.parser.common.IgnoreList;
 import javax.swing.AbstractListModel;
 
 /**
- *
- * @author chris
+ * Shows the list of ignores in string form.
  */
-public class IgnoreListModel extends AbstractListModel {
+public class IgnoreListModel extends AbstractListModel<String> {
 
-    /**
-     * A version number for this class. It should be changed whenever the class structure is changed
-     * (or anything else that would prevent serialized objects being unserialized with the new
-     * class).
-     */
+    /** A version number for this class. */
     private static final long serialVersionUID = 1;
     /** Ignore list backing this model. */
     private final IgnoreList ignoreList;
@@ -55,15 +50,13 @@ public class IgnoreListModel extends AbstractListModel {
         isSimple = ignoreList.canConvert();
     }
 
-    /** {@inheritDoc} */
     @Override
     public int getSize() {
         return ignoreList.count();
     }
 
-    /** {@inheritDoc} */
     @Override
-    public Object getElementAt(final int index) {
+    public String getElementAt(final int index) {
         if (isSimple) {
             return ignoreList.getSimpleList().get(index);
         } else {
