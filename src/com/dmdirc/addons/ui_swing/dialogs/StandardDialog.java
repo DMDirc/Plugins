@@ -44,7 +44,7 @@ public class StandardDialog extends JDialog {
     /** Serial version UID. */
     private static final long serialVersionUID = 1;
     /** Parent window. */
-    private final Window owner;
+    private Window owner;
     /** The OK button for this frame. */
     private JButton okButton;
     /** The cancel button for this frame. */
@@ -84,20 +84,23 @@ public class StandardDialog extends JDialog {
     }
 
     /**
-     * Displays the dialog centering on the parent window.
-     */
-    public void display() {
-        display(owner);
-    }
-
-    /**
      * Displays the dialog if it is not visible, otherwise requests focus.
      */
     public void displayOrRequestFocus() {
+        displayOrRequestFocus(owner);
+    }
+
+    /**
+     * Displays the dialog if it is not visible, otherwise requests focus.  The parent window will
+     * only be changed if the dialog has not been displayed.
+     *
+     * @param parent Parent window
+     */
+    public void displayOrRequestFocus(final Window parent) {
         if (isVisible()) {
             requestFocus();
         } else {
-            display();
+            display(parent);
         }
     }
 
@@ -106,7 +109,15 @@ public class StandardDialog extends JDialog {
      *
      * @param owner Window to center on
      */
-    public void display(final Component owner) {
+    public void display(final Window owner) {
+        this.owner = owner;
+        display();
+    }
+
+    /**
+     * Displays the dialog centering on the parent window.
+     */
+    public void display() {
         if (isVisible()) {
             return;
         }
@@ -146,7 +157,7 @@ public class StandardDialog extends JDialog {
             /** {@inheritDoc} */
             @Override
             public void run() {
-                display(owner);
+                display();
                 addWindowListener(new WindowAdapter() {
                     @Override
                     public void windowClosed(final WindowEvent e) {
@@ -174,7 +185,7 @@ public class StandardDialog extends JDialog {
      *
      * @return Parent window or null
      */
-    public Window getParentWindow() {
+    public Component getParentWindow() {
         return owner;
     }
 
