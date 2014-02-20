@@ -22,7 +22,11 @@
 
 package com.dmdirc.addons.windowstatus;
 
+import com.dmdirc.config.prefs.PluginPreferencesCategory;
+import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
+import com.dmdirc.config.prefs.PreferencesSetting;
+import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.implementations.BasePlugin;
 
@@ -33,15 +37,18 @@ import dagger.ObjectGraph;
  */
 public class WindowStatusPlugin extends BasePlugin {
 
+    /** Plugin info. */
+    private final PluginInfo pluginInfo;
     /** Nick colour manager. */
     private WindowStatusManager windowStatusManager;
-    /** Plugin info. */
-    private PluginInfo pluginInfo;
+
+    public WindowStatusPlugin(final PluginInfo pluginInfo) {
+        this.pluginInfo = pluginInfo;
+    }
 
     @Override
     public void load(final PluginInfo pluginInfo, final ObjectGraph graph) {
         super.load(pluginInfo, graph);
-        this.pluginInfo = pluginInfo;
         setObjectGraph(graph.plus(new WindowStatusModule(pluginInfo)));
         windowStatusManager = getObjectGraph().get(WindowStatusManager.class);
     }
@@ -60,7 +67,23 @@ public class WindowStatusPlugin extends BasePlugin {
 
     @Override
     public void showConfig(final PreferencesDialogModel manager) {
-        windowStatusManager.showConfig(manager, pluginInfo);
+        final PreferencesCategory category = new PluginPreferencesCategory(
+                pluginInfo, "Window status", "");
+
+        category.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
+                pluginInfo.getDomain(), "channel.shownone", "Show 'none' count",
+                "Should the count for users with no state be shown?",
+                manager.getConfigManager(), manager.getIdentity()));
+        category.addSetting(new PreferencesSetting(PreferencesType.TEXT,
+                pluginInfo.getDomain(), "channel.noneprefix", "'None' count prefix",
+                "The Prefix to use when showing the 'none' count",
+                manager.getConfigManager(), manager.getIdentity()));
+        category.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
+                pluginInfo.getDomain(), "client.showname", "Show real name",
+                "Should the realname for clients be shown if known?",
+                manager.getConfigManager(), manager.getIdentity()));
+
+        manager.getCategory("Plugins").addSubCategory(category);
     }
 
 }
