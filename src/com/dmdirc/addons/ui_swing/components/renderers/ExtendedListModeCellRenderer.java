@@ -38,21 +38,15 @@ import net.miginfocom.swing.MigLayout;
 /**
  * Extended list mode cell renderer.
  */
-public class ExtendedListModeCellRenderer extends JPanel implements ListCellRenderer {
+public class ExtendedListModeCellRenderer extends JPanel implements ListCellRenderer<ChannelListModeItem> {
 
-    /**
-     * A version number for this class. It should be changed whenever the class structure is changed
-     * (or anything else that would prevent serialized objects being unserialized with the new
-     * class).
-     */
+    /** A version number for this class. */
     private static final long serialVersionUID = 1;
 
-    /** {@inheritDoc} */
     @Override
-    public Component getListCellRendererComponent(final JList list,
-            final Object value, final int index, final boolean isSelected,
+    public Component getListCellRendererComponent(final JList<? extends ChannelListModeItem> list,
+            final ChannelListModeItem value, final int index, final boolean isSelected,
             final boolean cellHasFocus) {
-        final ChannelListModeItem listMode = (ChannelListModeItem) value;
 
         removeAll();
         setLayout(new MigLayout("fill, ins 0"));
@@ -63,10 +57,10 @@ public class ExtendedListModeCellRenderer extends JPanel implements ListCellRend
             setBackground(list.getBackground());
         }
 
-        add(new JLabel(listMode.getItem()), "split 2, growx, pushx, gapleft 3");
-        add(new JLabel(new Date(listMode.getTime() * 1000).toString()),
+        add(new JLabel(value.getItem()), "split 2, growx, pushx, gapleft 3");
+        add(new JLabel(new Date(value.getTime() * 1000).toString()),
                 "right, wrap, gapright 3");
-        add(new JLabel(listMode.getOwner()), "growx, pushx, wrap, gapleft 3");
+        add(new JLabel(value.getOwner()), "growx, pushx, wrap, gapleft 3");
         add(new JSeparator(), "growx, pushx");
 
         return this;

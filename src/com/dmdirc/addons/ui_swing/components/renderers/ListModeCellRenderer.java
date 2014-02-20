@@ -28,7 +28,7 @@ import javax.swing.JLabel;
 import javax.swing.ListCellRenderer;
 
 /** List mode cell renderer. */
-public class ListModeCellRenderer extends DMDircListCellRenderer {
+public class ListModeCellRenderer extends DMDircListCellRenderer<ChannelListModeItem> {
 
     /**
      * A version number for this class.
@@ -40,11 +40,10 @@ public class ListModeCellRenderer extends DMDircListCellRenderer {
      *
      * @param renderer RendereParent renderer
      */
-    public ListModeCellRenderer(final ListCellRenderer renderer) {
+    public ListModeCellRenderer(final ListCellRenderer<? super ChannelListModeItem> renderer) {
         super(renderer);
     }
 
-    /** {@inheritDoc} */
     @Override
     protected void renderValue(final JLabel label, final Object value,
             final int index, final boolean isSelected,

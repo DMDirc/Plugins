@@ -66,18 +66,14 @@ import net.miginfocom.swing.MigLayout;
 public final class ChannelListModesPane extends JPanel implements ActionListener,
         ListSelectionListener, ConfigChangeListener {
 
-    /**
-     * A version number for this class. It should be changed whenever the class structure is changed
-     * (or anything else that would prevent serialized objects being unserialized with the new
-     * class).
-     */
+    /** A version number for this class. */
     private static final long serialVersionUID = 5;
     /** Channel. */
     private final Channel channel;
     /** Combox box used to switch between list modes. */
-    private final JComboBox listModesMenu;
+    private final JComboBox<String> listModesMenu;
     /** Arraylist of jpanels containing the listmodes. */
-    private final List<JList> listModesPanels;
+    private final List<JList<ChannelListModeItem>> listModesPanels;
     /** JPanel used to show listmodespanels in. */
     private final JScrollPane listModesPanel;
     /** Add list mode button. */
@@ -95,11 +91,11 @@ public final class ChannelListModesPane extends JPanel implements ActionListener
     /** Parent window. */
     private final Window parentWindow;
     /** Native cell renderer. */
-    private final ListCellRenderer nativeRenderer;
+    private final ListCellRenderer<? super ChannelListModeItem> nativeRenderer;
     /** Cell renderer. */
-    private ListCellRenderer renderer;
+    private ListCellRenderer<? super ChannelListModeItem> renderer;
     /** Mode list. */
-    private JList list;
+    private JList<ChannelListModeItem> list;
     /** The config to read settings from. */
     private final AggregateConfigProvider globalConfig;
     /** The config to write settings to. */
@@ -131,7 +127,7 @@ public final class ChannelListModesPane extends JPanel implements ActionListener
         this.channel = channel;
         this.parentWindow = parentWindow;
 
-        list = new JList();
+        list = new JList<>();
         nativeRenderer = list.getCellRenderer();
         if (channel.getConfigManager().getOptionBool("general", "extendedListModes")) {
             renderer = new ExtendedListModeCellRenderer();
@@ -143,7 +139,7 @@ public final class ChannelListModesPane extends JPanel implements ActionListener
         listModesArray = channel.getConnection().getParser().getListChannelModes().
                 toCharArray();
         existingListItems = new MapList<>();
-        listModesMenu = new JComboBox(new DefaultComboBoxModel());
+        listModesMenu = new JComboBox<>(new DefaultComboBoxModel<String>());
         addListModeButton = new JButton("Add");
         removeListModeButton = new JButton("Remove");
         removeListModeButton.setEnabled(false);
@@ -171,7 +167,8 @@ public final class ChannelListModesPane extends JPanel implements ActionListener
                 continue;
             }
             existingListItems.add(mode, new ArrayList<>(listItems));
-            final DefaultListModel model = (DefaultListModel) listModesPanels.get(i).getModel();
+            final DefaultListModel<ChannelListModeItem> model
+                    = (DefaultListModel<ChannelListModeItem>) listModesPanels.get(i).getModel();
 
             model.removeAllElements();
             for (ChannelListModeItem listItem : listItems) {
@@ -191,7 +188,8 @@ public final class ChannelListModesPane extends JPanel implements ActionListener
             addListModeButton.setEnabled(true);
         }
 
-        final DefaultComboBoxModel model = (DefaultComboBoxModel) listModesMenu.getModel();
+        final DefaultComboBoxModel<String> model = (DefaultComboBoxModel<String>) listModesMenu.
+                getModel();
         for (char mode : listModesArray) {
             String modeText = mode + " list";
             if (channel.getConfigManager().hasOptionString("server", "mode" + mode)) {
@@ -200,7 +198,7 @@ public final class ChannelListModesPane extends JPanel implements ActionListener
             }
             model.addElement(modeText);
 
-            list = new JList(new DefaultListModel());
+            list = new JList<>(new DefaultListModel<ChannelListModeItem>());
             list.setCellRenderer(renderer);
             list.setVisibleRowCount(8);
             list.addListSelectionListener(this);
@@ -294,39 +292,39 @@ public final class ChannelListModesPane extends JPanel implements ActionListener
                 iconManager, "Add new " + modeText,
                 "Please enter the hostmask for the new " + modeText,
                 new NotEmptyValidator()) {
-            /**
-             * A version number for this class. It should be changed whenever the class structure is
-             * changed (or anything else that would prevent serialized objects being unserialized
-             * with the new class).
-             */
-            private static final long serialVersionUID = 1;
+                    /**
+                     * A version number for this class. It should be changed whenever the class
+                     * structure is changed (or anything else that would prevent serialized objects
+                     * being unserialized with the new class).
+                     */
+                    private static final long serialVersionUID = 1;
 
-            /** {@inheritDoc} */
-            @Override
-            public boolean save() {
-                final DefaultListModel model =
-                        (DefaultListModel) listModesPanels.get(selectedIndex).
+                    /** {@inheritDoc} */
+                    @Override
+                    public boolean save() {
+                        final DefaultListModel<ChannelListModeItem> model
+                        = (DefaultListModel<ChannelListModeItem>) listModesPanels.get(selectedIndex).
                         getModel();
-                model.addElement(new ChannelListModeItem(getText(), "",
-                        System.currentTimeMillis() / 1000));
-                updateModeCount();
-                return true;
-            }
+                        model.addElement(new ChannelListModeItem(getText(), "",
+                                        System.currentTimeMillis() / 1000));
+                        updateModeCount();
+                        return true;
+                    }
 
-            /** {@inheritDoc} */
-            @Override
-            public void cancelled() {
-                //Ignore
-            }
-        }.display();
+                    /** {@inheritDoc} */
+                    @Override
+                    public void cancelled() {
+                        //Ignore
+                    }
+                }.display();
     }
 
     /** Removes a list mode. */
     private void removeListMode() {
         final int selectedIndex = listModesMenu.getSelectedIndex();
-        final JList list = listModesPanels.get(selectedIndex);
-        for (Object mode : list.getSelectedValues()) {
-            ((DefaultListModel) list.getModel()).removeElement(mode);
+        final JList<ChannelListModeItem> removeList = listModesPanels.get(selectedIndex);
+        for (ChannelListModeItem mode : removeList.getSelectedValuesList()) {
+            ((DefaultListModel) removeList.getModel()).removeElement(mode);
         }
         updateModeCount();
     }
@@ -354,8 +352,8 @@ public final class ChannelListModesPane extends JPanel implements ActionListener
             } else {
                 renderer = new ListModeCellRenderer(nativeRenderer);
             }
-            for (JList list : listModesPanels) {
-                list.setCellRenderer(renderer);
+            for (JList<ChannelListModeItem> renderList : listModesPanels) {
+                renderList.setCellRenderer(renderer);
             }
         }
     }
@@ -368,8 +366,7 @@ public final class ChannelListModesPane extends JPanel implements ActionListener
     @Override
     public void valueChanged(final ListSelectionEvent event) {
         if (!event.getValueIsAdjusting()) {
-            final int selected =
-                    ((JList) event.getSource()).getSelectedIndex();
+            final int selected = ((JList) event.getSource()).getSelectedIndex();
             if (selected == -1) {
                 removeListModeButton.setEnabled(false);
             } else {
@@ -407,8 +404,8 @@ public final class ChannelListModesPane extends JPanel implements ActionListener
         } else {
             renderer = new ExtendedListModeCellRenderer();
         }
-        for (JList list : listModesPanels) {
-            list.setCellRenderer(renderer);
+        for (JList<ChannelListModeItem> renderList : listModesPanels) {
+            renderList.setCellRenderer(renderer);
         }
     }
 
