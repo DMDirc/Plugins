@@ -104,10 +104,12 @@ public class ValidatingJTextField extends JIconTextField implements DocumentList
      * Checks the text for errors and sets the error state accordingly.
      */
     public void checkError() {
+        final boolean previousStatus = getMessage() == null || getMessage().isEmpty();
+
         if (isEnabled()) {
             final ValidationResponse vr = validator.validate(getText());
             setMessage(vr.getFailureReason());
-            firePropertyChange("validationResult", getMessage() != null, !vr.isFailure());
+            firePropertyChange("validationResult", previousStatus, !vr.isFailure());
             if (vr.isFailure()) {
                 setIcon(errorIcon);
             } else {
@@ -116,7 +118,7 @@ public class ValidatingJTextField extends JIconTextField implements DocumentList
         } else {
             setIcon(null);
             setMessage(null);
-            firePropertyChange("validationResult", !getMessage().isEmpty(), true);
+            firePropertyChange("validationResult", previousStatus, true);
         }
     }
 
