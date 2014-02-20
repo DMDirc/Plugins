@@ -443,7 +443,7 @@ public class ProfileManagerModel {
         if (filenameValidation.isFailure()) {
             return filenameValidation;
         }
-        return new ProfileRenameValidator(profiles, selectedProfile).validate(
+        return new ProfileRenameValidator(displayedProfiles, selectedProfile).validate(
                 selectedProfile.getName());
     }
 

@@ -302,6 +302,14 @@ public class ProfileManagerDialogLinker {
                 profileName.setValidation(model.isNameValid());
             }
         });
+        model.addPropertyChangeListener("profiles", new PropertyChangeListener() {
+            @Override
+            public void propertyChange(final PropertyChangeEvent evt) {
+                profileName.setText(model.getName());
+                profileName.setEnabled(model.isManipulateProfileAllowed());
+                profileName.setValidation(model.isNameValid());
+            }
+        });
         profileName.setEnabled(model.isManipulateProfileAllowed());
     }
 
