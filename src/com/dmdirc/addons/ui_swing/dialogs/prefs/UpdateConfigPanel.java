@@ -56,11 +56,7 @@ import net.miginfocom.swing.MigLayout;
 public class UpdateConfigPanel extends JPanel implements ActionListener,
         PreferencesInterface, ConfigChangeListener {
 
-    /**
-     * A version number for this class. It should be changed whenever the class structure is changed
-     * (or anything else that would prevent serialized objects being unserialized with the new
-     * class).
-     */
+    /** A version number for this class. */
     private static final long serialVersionUID = 1;
     /** Global checkbox. */
     private JCheckBox enable;
@@ -73,7 +69,7 @@ public class UpdateConfigPanel extends JPanel implements ActionListener,
     /** Check now button. */
     private JButton checkNow;
     /** Update channel. */
-    private JComboBox updateChannel;
+    private JComboBox<UpdateChannel> updateChannel;
     /** The configuration to write settings changes to. */
     private final ConfigProvider userConfig;
     /** The configuration to read global settings from. */
@@ -134,7 +130,7 @@ public class UpdateConfigPanel extends JPanel implements ActionListener,
         table = new PackingTable(tableModel, scrollPane);
         checkNow = new JButton("Check now");
         checkNow.setEnabled(globalConfig.getOptionBool("updater", "enable"));
-        updateChannel = new JComboBox(new DefaultComboBoxModel(UpdateChannel.values()));
+        updateChannel = new JComboBox<>(new DefaultComboBoxModel<>(UpdateChannel.values()));
 
         enable.setSelected(globalConfig.getOptionBool("updater", "enable"));
         UpdateChannel channel = UpdateChannel.NONE;
