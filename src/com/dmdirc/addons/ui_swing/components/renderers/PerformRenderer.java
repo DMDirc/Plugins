@@ -24,7 +24,6 @@ package com.dmdirc.addons.ui_swing.components.renderers;
 
 import com.dmdirc.actions.wrappers.PerformWrapper.PerformDescription;
 
-
 import javax.swing.JLabel;
 import javax.swing.ListCellRenderer;
 
@@ -33,11 +32,9 @@ import javax.swing.ListCellRenderer;
  *
  * @since 0.6.4
  */
-public class PerformRenderer extends DMDircListCellRenderer {
+public class PerformRenderer extends DMDircListCellRenderer<PerformDescription> {
 
-    /**
-     * A version number for this class.
-     */
+    /** A version number for this class. */
     private static final long serialVersionUID = 1;
 
     /**
@@ -45,11 +42,10 @@ public class PerformRenderer extends DMDircListCellRenderer {
      *
      * @param renderer RendereParent renderer
      */
-    public PerformRenderer(final ListCellRenderer renderer) {
+    public PerformRenderer(final ListCellRenderer<? super PerformDescription> renderer) {
         super(renderer);
     }
 
-    /** {@inheritDoc} */
     @Override
     protected void renderValue(final JLabel label, final Object value,
             final int index, final boolean isSelected,
