@@ -183,7 +183,7 @@ public class ServerSettingsDialog extends StandardDialog implements ActionListen
                         public void cancelled() {
                             //Ignore
                         }
-                    }.display(getOwner());
+                    }.display();
         } else {
             closeAndSave();
         }

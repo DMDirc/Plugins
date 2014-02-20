@@ -151,7 +151,7 @@ public class DurationDisplay extends JPanel implements ActionListener,
     @Override
     public void actionPerformed(final ActionEvent e) {
         final DurationEditor editor = new DurationEditor(window, duration);
-        editor.display(this);
+        editor.display(window);
         editor.addDurationListener(this);
     }
 

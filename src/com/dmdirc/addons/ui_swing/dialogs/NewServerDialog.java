@@ -316,7 +316,7 @@ public class NewServerDialog extends StandardDialog implements
         if (e.getSource() == getOkButton()) {
             save();
         } else if (e.getSource() == editProfileButton) {
-            profileDialogProvider.displayOrRequestFocus();
+            profileDialogProvider.displayOrRequestFocus(this);
         } else if (e.getSource() == getCancelButton()) {
             dispose();
         }
