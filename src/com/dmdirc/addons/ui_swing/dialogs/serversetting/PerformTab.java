@@ -55,7 +55,7 @@ public class PerformTab extends JPanel implements ActionListener {
     /** Perform wrapper to read/write performs to. */
     private final PerformWrapper wrapper;
     /** Network/server combo box. */
-    private JComboBox target;
+    private JComboBox<PerformDescription> target;
     /** Perform panel. */
     private PerformPanel performPanel;
 
@@ -92,8 +92,8 @@ public class PerformTab extends JPanel implements ActionListener {
             final AggregateConfigProvider config) {
         setLayout(new MigLayout("fill"));
 
-        final DefaultComboBoxModel model = new DefaultComboBoxModel();
-        target = new JComboBox(model);
+        final DefaultComboBoxModel<PerformDescription> model = new DefaultComboBoxModel<>();
+        target = new JComboBox<>(model);
 
         add(target, "growx, pushx, wrap");
 
