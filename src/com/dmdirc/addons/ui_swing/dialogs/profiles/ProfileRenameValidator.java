@@ -28,21 +28,25 @@ import com.dmdirc.util.validators.Validator;
 import java.util.List;
 
 /**
- * Validates a profile name ensuring its uniqueness and validity as a filename.
+ * Ensures profile names are unique.
  */
-public class ProfileNameValidator implements Validator<String> {
+class ProfileRenameValidator implements Validator<String> {
 
     /** List of profiles to validate. */
     private final List<Profile> profiles;
+    /** Currently selected profile. */
+    private final Profile selectedProfile;
 
-    public ProfileNameValidator(final List<Profile> profiles) {
+    public ProfileRenameValidator(final List<Profile> profiles, final Profile selectedProfile) {
         this.profiles = profiles;
+        this.selectedProfile = selectedProfile;
     }
 
     @Override
     public ValidationResponse validate(final String object) {
         for (Profile targetprofile : profiles) {
-            if (targetprofile.getName().equalsIgnoreCase(object)) {
+            if (targetprofile != selectedProfile
+                    && targetprofile.getName().equalsIgnoreCase(object)) {
                 return new ValidationResponse("Profile names must be unique");
             }
         }

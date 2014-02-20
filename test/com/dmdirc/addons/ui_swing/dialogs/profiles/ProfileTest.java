@@ -66,11 +66,11 @@ public class ProfileTest {
      */
     @Test
     public void testEmptyConstructor() {
-        Profile instance = new Profile(identityFactory);
+        Profile instance = new Profile("New Profile", identityFactory);
         assertEquals("", instance.getIdent());
         assertEquals("New Profile", instance.getName());
-        assertEquals(new ArrayList<String>(), instance.getNicknames());
-        assertEquals("", instance.getRealname());
+        assertEquals(new ArrayList<>(Arrays.asList("New Profile")), instance.getNicknames());
+        assertEquals("New Profile", instance.getRealname());
     }
 
     /**
@@ -170,7 +170,7 @@ public class ProfileTest {
 
         when(identityFactory.createProfileConfig("New Profile")).thenReturn(configProvider);
 
-        Profile instance = new Profile(identityFactory, null);
+        Profile instance = new Profile("New Profile", identityFactory);
         instance.save();
         verify(identityFactory).createProfileConfig("New Profile");
     }
@@ -244,7 +244,7 @@ public class ProfileTest {
      */
     @Test
     public void testDeleteNullIdentity() {
-        Profile instance = new Profile(null);
+        Profile instance = new Profile("New Profile", null);
         instance.delete();
     }
 }
