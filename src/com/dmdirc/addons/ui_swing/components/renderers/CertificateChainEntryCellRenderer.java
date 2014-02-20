@@ -32,7 +32,7 @@ import javax.swing.ListCellRenderer;
 /**
  * Renderer for Certificate chain entries, shows the verified icon and name.
  */
-public class CertificateChainEntryCellRenderer extends DMDircListCellRenderer {
+public class CertificateChainEntryCellRenderer extends DMDircListCellRenderer<CertificateChainEntry> {
 
     /** Serial version UID. */
     private static final long serialVersionUID = 1;
@@ -50,7 +50,7 @@ public class CertificateChainEntryCellRenderer extends DMDircListCellRenderer {
      * @param renderer    Parent renderer
      */
     public CertificateChainEntryCellRenderer(final IconManager iconManager,
-            final ListCellRenderer renderer) {
+            final ListCellRenderer<? super CertificateChainEntry> renderer) {
         super(renderer);
         icon = iconManager.getIcon("nothing");
         trustedIcon = iconManager.getIcon("tick");

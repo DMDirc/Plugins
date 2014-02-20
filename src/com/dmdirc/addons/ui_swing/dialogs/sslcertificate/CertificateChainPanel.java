@@ -51,9 +51,9 @@ public class CertificateChainPanel extends JPanel {
     /** Icon manager. */
     private final IconManager iconManager;
     /** Chain list. */
-    private JList list;
+    private JList<CertificateChainEntry> list;
     /** List model. */
-    private DefaultListModel model;
+    private DefaultListModel<CertificateChainEntry> model;
 
     /**
      * Creates a new certificate chain panel.
@@ -67,8 +67,8 @@ public class CertificateChainPanel extends JPanel {
     }
 
     private void initComponents() {
-        model = new DefaultListModel();
-        list = new JList(model);
+        model = new DefaultListModel<>();
+        list = new JList<>(model);
         list.setCellRenderer(new CertificateChainEntryCellRenderer(iconManager,
                 list.getCellRenderer()));
         list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -110,7 +110,7 @@ public class CertificateChainPanel extends JPanel {
      * @return Name of specified index
      */
     public String getName(final int index) {
-        return ((CertificateChainEntry) model.get(index)).getName();
+        return model.get(index).getName();
     }
 
     /**
