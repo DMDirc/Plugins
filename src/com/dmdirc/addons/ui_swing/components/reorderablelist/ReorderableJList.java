@@ -92,7 +92,7 @@ public class ReorderableJList<T> extends JList<T> implements DragSourceListener,
 
         setCellRenderer(new ReorderableJListCellRenderer<>(this));
         setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        setTransferHandler(new ArrayListTransferHandler());
+        setTransferHandler(new ArrayListTransferHandler<T>());
 
         dragSource = DragSource.getDefaultDragSource();
         dropTarget = new DropTarget(this, this);
@@ -101,7 +101,7 @@ public class ReorderableJList<T> extends JList<T> implements DragSourceListener,
         try {
 
             dataFlavor = new DataFlavor(DataFlavor.javaJVMLocalObjectMimeType
-                    + ";class=java.util.ArrayList");
+                    + ";class=java.util.List");
         } catch (ClassNotFoundException e) {
             Logger.userError(ErrorLevel.LOW, "unable to create data flavor: "
                     + e.getMessage());
