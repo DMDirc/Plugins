@@ -24,6 +24,7 @@ package com.dmdirc.addons.nickcolours;
 
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.config.prefs.PreferencesInterface;
+import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.messages.ColourManager;
@@ -54,11 +55,10 @@ public class NickColourPanel extends JPanel implements ActionListener,
     /** A version number for this class. */
     private static final long serialVersionUID = 1;
     /** The table headings. */
-    private static final String[] HEADERS = {"Network", "Nickname", "Text colour", "Nicklist colour"};
+    private static final String[] HEADERS
+            = {"Network", "Nickname", "Text colour", "Nicklist colour"};
     /** The table used for displaying the options. */
     private final JTable table;
-    /** The plugin we're associated with. */
-    private final transient NickColourManager plugin;
     /** The identity to write settings to. */
     private final ConfigProvider configIdentity;
     /** Edit button. */
@@ -71,26 +71,33 @@ public class NickColourPanel extends JPanel implements ActionListener,
     private final IconManager iconManager;
     /** Colour manage to use to parse colours. */
     private final ColourManager colourManager;
+    /** Config provider to read settings from. */
+    private final AggregateConfigProvider config;
+    /** The plugin's config domain. */
+    private final String domain;
 
     /**
      * Creates a new instance of NickColourPanel.
      *
      * @param mainFrame     Main frame to parent dialogs on
      * @param iconManager   Icon manager to load icons from
-     * @param plugin        The plugin that owns this panel
      * @param colourManager The colour manager to use to parse colours.
      * @param userSettings  The provider to write user settings to.
+     * @param config        The config provider to read settings from.
+     * @param domain        The plugin's config domain
      */
     public NickColourPanel(
-            final MainFrame mainFrame, final IconManager iconManager, final NickColourManager plugin,
-            final ColourManager colourManager, final ConfigProvider userSettings) {
+            final MainFrame mainFrame, final IconManager iconManager,
+            final ColourManager colourManager, final ConfigProvider userSettings,
+            final AggregateConfigProvider config, final String domain) {
         this.mainFrame = mainFrame;
         this.iconManager = iconManager;
         this.colourManager = colourManager;
-        this.plugin = plugin;
         this.configIdentity = userSettings;
+        this.config = config;
+        this.domain = domain;
 
-        final Object[][] data = plugin.getData();
+        final Object[][] data = getPluginData();
 
         table = new JTable(new DefaultTableModel(data, HEADERS)) {
             /** A version number for this class. */
@@ -139,15 +146,6 @@ public class NickColourPanel extends JPanel implements ActionListener,
 
         editButton.setEnabled(false);
         deleteButton.setEnabled(false);
-    }
-
-    /**
-     * Get an instance of the plugin that owns us.
-     *
-     * @return Our plugin.
-     */
-    public NickColourManager getPlugin() {
-        return plugin;
     }
 
     /**
@@ -217,10 +215,10 @@ public class NickColourPanel extends JPanel implements ActionListener,
         final List<Object[]> res = new ArrayList<>();
         final DefaultTableModel model = ((DefaultTableModel) table.getModel());
 
+        @SuppressWarnings("unchecked")
         final List<List<?>> rows = (List<List<?>>) model.getDataVector();
         for (List<?> row : rows) {
-            res.add(new Object[]{row.get(0), row.get(1), row.get(2),
-                row.get(3)});
+            res.add(new Object[]{row.get(0), row.get(1), row.get(2), row.get(3)});
         }
 
         return res;
@@ -230,15 +228,14 @@ public class NickColourPanel extends JPanel implements ActionListener,
     @Override
     public void save() {
         // Remove all old config entries
-        for (Object[] parts : plugin.getData()) {
-            configIdentity.unsetOption(plugin.getDomain(),
-                    "color:" + parts[0] + ":" + parts[1]);
+        for (Object[] parts : getPluginData()) {
+            configIdentity.unsetOption(domain, "color:" + parts[0] + ":" + parts[1]);
         }
 
         // And write the new ones
         for (Object[] row : getData()) {
-            configIdentity.setOption(plugin.getDomain(),
-                    "color:" + row[0] + ":" + row[1], row[2] + ":" + row[3]);
+            configIdentity.
+                    setOption(domain, "color:" + row[0] + ":" + row[1], row[2] + ":" + row[3]);
         }
     }
 
@@ -250,6 +247,56 @@ public class NickColourPanel extends JPanel implements ActionListener,
 
         editButton.setEnabled(enable);
         deleteButton.setEnabled(enable);
+    }
+
+    /**
+     * Reads the nick colour data from the config.
+     *
+     * @return A multi-dimensional array of nick colour info.
+     */
+    public Object[][] getPluginData() {
+        final List<Object[]> data = new ArrayList<>();
+
+        for (String key : config.getOptions(domain).keySet()) {
+            if (key.startsWith("color:")) {
+                final String network = key.substring(6, key.indexOf(':', 6));
+                final String user = key.substring(1 + key.indexOf(':', 6));
+                final String[] parts = getParts(key);
+
+                data.add(new Object[]{network, user, parts[0], parts[1]});
+            }
+        }
+
+        final Object[][] res = new Object[data.size()][4];
+
+        int i = 0;
+        for (Object[] row : data) {
+            res[i] = row;
+
+            i++;
+        }
+
+        return res;
+    }
+
+    /**
+     * Retrieves the config option with the specified key, and returns an array of the colours that
+     * should be used for it.
+     *
+     * @param key The config key to look up
+     *
+     * @return The colours specified by the given key
+     */
+    private String[] getParts(final String key) {
+        String[] parts = config.getOption(domain, key).split(":");
+
+        if (parts.length == 0) {
+            parts = new String[]{null, null};
+        } else if (parts.length == 1) {
+            parts = new String[]{parts[0], null};
+        }
+
+        return parts;
     }
 
 }

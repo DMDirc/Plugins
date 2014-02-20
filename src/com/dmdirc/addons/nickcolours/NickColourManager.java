@@ -29,12 +29,6 @@ import com.dmdirc.ClientModule.UserConfig;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.addons.ui_swing.MainFrame;
-import com.dmdirc.addons.ui_swing.UIUtilities;
-import com.dmdirc.config.prefs.PluginPreferencesCategory;
-import com.dmdirc.config.prefs.PreferencesCategory;
-import com.dmdirc.config.prefs.PreferencesDialogModel;
-import com.dmdirc.config.prefs.PreferencesSetting;
-import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.interfaces.ActionListener;
 import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
@@ -48,10 +42,7 @@ import com.dmdirc.ui.Colour;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.messages.ColourManager;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Callable;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -205,36 +196,6 @@ public class NickColourManager implements ActionListener, ConfigChangeListener {
     }
 
     /**
-     * Reads the nick colour data from the config.
-     *
-     * @return A multi-dimensional array of nick colour info.
-     */
-    public Object[][] getData() {
-        final List<Object[]> data = new ArrayList<>();
-
-        for (String key : globalConfig.getOptions(domain).keySet()) {
-            if (key.startsWith("color:")) {
-                final String network = key.substring(6, key.indexOf(':', 6));
-                final String user = key.substring(1 + key.indexOf(':', 6));
-                final String[] parts = getParts(key);
-
-                data.add(new Object[]{network, user, parts[0], parts[1]});
-            }
-        }
-
-        final Object[][] res = new Object[data.size()][4];
-
-        int i = 0;
-        for (Object[] row : data) {
-            res[i] = row;
-
-            i++;
-        }
-
-        return res;
-    }
-
-    /**
      * Retrieves the config option with the specified key, and returns an array of the colours that
      * should be used for it.
      *
@@ -268,60 +229,6 @@ public class NickColourManager implements ActionListener, ConfigChangeListener {
      */
     public void onUnload() {
         ActionManager.getActionManager().unregisterListener(this);
-    }
-
-    /**
-     * Shows the prefs configuration page for this plugin.
-     *
-     * @param manager Prefs manager to add settings to
-     */
-    public void showConfig(final PreferencesDialogModel manager) {
-        final PreferencesCategory general = new PluginPreferencesCategory(
-                pluginInfo, "Nick Colours",
-                "General configuration for NickColour plugin.");
-        final PreferencesCategory colours = new PluginPreferencesCategory(
-                pluginInfo, "Colours",
-                "Set colours for specific nicknames.", UIUtilities.invokeAndWait(
-                new Callable<NickColourPanel>() {
-            /** {@inheritDoc} */
-            @Override
-            public NickColourPanel call() {
-                return new NickColourPanel(mainFrame, iconManager,
-                        NickColourManager.this, colourManager, userConfig);
-            }
-        }));
-
-        general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
-                "ui", "shownickcoloursintext", "Show colours in text area",
-                "Colour nicknames in main text area?",
-                manager.getConfigManager(), manager.getIdentity()));
-        general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
-                "ui", "shownickcoloursinnicklist", "Show colours in"
-                + " nick list", "Colour nicknames in channel nick lists?",
-                manager.getConfigManager(), manager.getIdentity()));
-        general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
-                domain, "settext", "Set colours in textarea",
-                "Should the plugin set the textarea colour of nicks?",
-                manager.getConfigManager(), manager.getIdentity()));
-        general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
-                domain, "setnicklist", "Set colours in nick list",
-                "Should the plugin set the nick list colour of nicks?",
-                manager.getConfigManager(), manager.getIdentity()));
-        general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
-                domain, "userandomcolour", "Use random colour",
-                "Use a pseudo-random colour for each person?",
-                manager.getConfigManager(), manager.getIdentity()));
-        general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
-                domain, "useowncolour", "Use colour for own nick",
-                "Always use the same colour for our own nickname?",
-                manager.getConfigManager(), manager.getIdentity()));
-        general.addSetting(new PreferencesSetting(PreferencesType.COLOUR, domain,
-                "owncolour", "Colour to use for own nick",
-                "Colour used for our own nickname, if above setting is "
-                + "enabled.", manager.getConfigManager(), manager.getIdentity()));
-
-        general.addSubCategory(colours);
-        manager.getCategory("Plugins").addSubCategory(general);
     }
 
     /**
