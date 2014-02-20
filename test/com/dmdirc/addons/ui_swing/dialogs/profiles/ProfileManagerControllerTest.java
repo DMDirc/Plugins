@@ -29,7 +29,9 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Tests for ProfileManagerController.
@@ -53,8 +55,8 @@ public class ProfileManagerControllerTest {
      */
     @Test
     public void testAddProfile() {
-        instance.addProfile();
-        verify(model).addProfile(new Profile(identityFactory));
+        instance.addProfile("New Profile");
+        verify(model).addProfile(new Profile("New Profile", identityFactory));
     }
 
     /**
