@@ -23,7 +23,6 @@
 package com.dmdirc.addons.nickcolours;
 
 import com.dmdirc.addons.ui_swing.injection.SwingModule;
-import com.dmdirc.plugins.PluginInfo;
 
 import javax.inject.Qualifier;
 
@@ -38,15 +37,12 @@ public class NickColourModule {
 
     /** The domain for plugin settings. */
     private final String domain;
-    /** The plugin's plugin info. */
-    private final PluginInfo pluginInfo;
 
     @Qualifier
     public static @interface NickColourSettingsDomain {
     }
 
-    public NickColourModule(final PluginInfo pluginInfo, final String domain) {
-        this.pluginInfo = pluginInfo;
+    public NickColourModule(final String domain) {
         this.domain = domain;
     }
 
@@ -59,11 +55,6 @@ public class NickColourModule {
     @NickColourSettingsDomain
     public String getSettingsDomain() {
         return domain;
-    }
-
-    @Provides
-    public PluginInfo getPluginInfo() {
-        return pluginInfo;
     }
 
 }
