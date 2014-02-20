@@ -25,11 +25,14 @@ package com.dmdirc.addons.ui_swing.dialogs.profiles;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.config.IdentityFactory;
 
+import com.google.common.base.Preconditions;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-import javax.annotation.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * Profile wrapper class.
@@ -54,35 +57,33 @@ public class Profile {
     /**
      * Creates a new profile.
      *
+     * @param name            Profile name
      * @param identityFactory The factory to use to create the profile's config file when saving.
      */
-    public Profile(final IdentityFactory identityFactory) {
-        this(identityFactory, null);
+    public Profile(final String name, final IdentityFactory identityFactory) {
+        this.identityFactory = identityFactory;
+        this.configProvider = null;
+        this.name = name;
+        this.nicknames = new ArrayList<>(Arrays.asList(name));
+        this.realname = name;
+        this.ident = "";
     }
 
     /**
      * Creates a new profile based off the specified Identity.
      *
      * @param identityFactory The factory to use to create the profile's config file when saving.
-     * @param configProvider  Provider to read existing profile from. If null, a blank profile is
-     *                        created.
+     * @param configProvider  Provider to read existing profile from.
      */
     public Profile(final IdentityFactory identityFactory,
-            @Nullable final ConfigProvider configProvider) {
+            @Nonnull final ConfigProvider configProvider) {
+        Preconditions.checkNotNull(configProvider);
         this.identityFactory = identityFactory;
         this.configProvider = configProvider;
-
-        if (configProvider == null) {
-            name = "New Profile";
-            nicknames = new ArrayList<>();
-            realname = "";
-            ident = "";
-        } else {
-            name = configProvider.getOption("identity", "name");
-            nicknames = configProvider.getOptionList("profile", "nicknames");
-            realname = configProvider.getOption("profile", "realname");
-            ident = configProvider.getOption("profile", "ident");
-        }
+        this.name = configProvider.getOption("identity", "name");
+        this.nicknames = configProvider.getOptionList("profile", "nicknames");
+        this.realname = configProvider.getOption("profile", "realname");
+        this.ident = configProvider.getOption("profile", "ident");
     }
 
     public String getName() {

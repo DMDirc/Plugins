@@ -43,9 +43,13 @@ public class ProfileManagerController {
         this.identityFactory = identityFactory;
     }
 
-    /** Adds a new profile. */
-    public void addProfile() {
-        model.addProfile(new Profile(identityFactory));
+    /**
+     * Adds a new profile.
+     *
+     * @param name Name of the profile
+     */
+    public void addProfile(final String name) {
+        model.addProfile(new Profile(name, identityFactory));
     }
 
     /** Deletes the active profile. */

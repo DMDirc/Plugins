@@ -46,7 +46,7 @@ public class ProfileNameValidatorTest {
         final List<Profile> profiles = new ArrayList<>();
         profiles.add(selected);
         profiles.add(other);
-        ProfileNameValidator instance = new ProfileNameValidator(profiles, selected);
+        ProfileRenameValidator instance = new ProfileRenameValidator(profiles, selected);
         assertFalse(instance.validate("Random").isFailure());
     }
 
@@ -62,7 +62,7 @@ public class ProfileNameValidatorTest {
         final List<Profile> profiles = new ArrayList<>();
         profiles.add(selected);
         profiles.add(other);
-        ProfileNameValidator instance = new ProfileNameValidator(profiles, selected);
+        ProfileRenameValidator instance = new ProfileRenameValidator(profiles, selected);
         assertTrue(instance.validate("other").isFailure());
     }
 
@@ -78,7 +78,7 @@ public class ProfileNameValidatorTest {
         final List<Profile> profiles = new ArrayList<>();
         profiles.add(selected);
         profiles.add(other);
-        ProfileNameValidator instance = new ProfileNameValidator(profiles, selected);
+        ProfileRenameValidator instance = new ProfileRenameValidator(profiles, selected);
         assertFalse(instance.validate("selected").isFailure());
     }
 }
