@@ -55,6 +55,9 @@ public class ProfileManagerController {
     /** Deletes the active profile. */
     public void deleteProfile() {
         model.deleteProfile((Profile) model.getSelectedProfile());
+        if (model.getProfiles().isEmpty()) {
+            model.addProfile(new Profile("New Profile", identityFactory));
+        }
     }
 
     /**
