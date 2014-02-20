@@ -24,6 +24,7 @@ package com.dmdirc.addons.ui_swing.injection;
 
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 
+import java.awt.Window;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -88,6 +89,22 @@ public class DialogProvider<T extends StandardDialog> {
     public void displayOrRequestFocus() {
         checkOnEDT();
         get().displayOrRequestFocus();
+    }
+
+    /**
+     * Ensures the dialog is visible to the user.
+     *
+     * <p>If no dialog currently exists, a new one will be created and displayed to the user. If a
+     * dialog existed prior to this method being invoked, it will request focus to bring it to the
+     * user's attention.
+     *
+     * <p>This method <em>must</em> be called on the Event Despatch Thread.
+     *
+     * @param parent Parent window for the dialog
+     */
+    public void displayOrRequestFocus(final Window parent) {
+        checkOnEDT();
+        get().displayOrRequestFocus(parent);
     }
 
     /**
