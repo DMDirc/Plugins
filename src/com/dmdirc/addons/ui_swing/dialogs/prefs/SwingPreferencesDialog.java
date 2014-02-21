@@ -66,7 +66,7 @@ public final class SwingPreferencesDialog extends StandardDialog implements
     /** Serial version UID. */
     private static final long serialVersionUID = 9;
     /** Preferences tab list, used to switch option types. */
-    private JList tabList;
+    private JList<PreferencesCategory> tabList;
     /** Main panel. */
     private CategoryPanel mainPanel;
     /** Previously selected category. */
@@ -161,7 +161,7 @@ public final class SwingPreferencesDialog extends StandardDialog implements
     private void initComponents() {
         mainPanel = categoryPanelProvider.get();
 
-        tabList = new JList(new DefaultListModel());
+        tabList = new JList<>(new DefaultListModel<PreferencesCategory>());
         tabList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         tabList.addListSelectionListener(this);
         ListScroller.register(tabList);
@@ -199,7 +199,7 @@ public final class SwingPreferencesDialog extends StandardDialog implements
                 tabList.removeListSelectionListener(SwingPreferencesDialog.this);
                 for (PreferencesCategory category : categories) {
                     if (!category.isInline()) {
-                        ((DefaultListModel) tabList.getModel()).addElement(
+                        ((DefaultListModel<PreferencesCategory>) tabList.getModel()).addElement(
                                 category);
                     }
                     addCategories(category.getSubcats());
@@ -233,11 +233,6 @@ public final class SwingPreferencesDialog extends StandardDialog implements
         return count;
     }
 
-    /**
-     * Handles the actions for the dialog.
-     *
-     * @param actionEvent Action event
-     */
     @Override
     public void actionPerformed(final ActionEvent actionEvent) {
         if (selected != null) {
@@ -262,19 +257,12 @@ public final class SwingPreferencesDialog extends StandardDialog implements
         dispose();
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e List selection event
-     *
-     * @since 0.6.3m1
-     */
     @Override
     public void valueChanged(final ListSelectionEvent e) {
         if (!e.getValueIsAdjusting()) {
             PreferencesCategory node = null;
             try {
-                node = (PreferencesCategory) tabList.getSelectedValue();
+                node = tabList.getSelectedValue();
             } catch (ArrayIndexOutOfBoundsException ex) {
                 //I hate the JVM
             }

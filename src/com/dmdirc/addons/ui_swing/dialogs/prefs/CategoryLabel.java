@@ -45,7 +45,7 @@ public class CategoryLabel extends JLabel {
     /** Panel gap. */
     private final int padding = (int) (1.5 * PlatformDefaults.getUnitValueX("related").getValue());
     /** Parent list. */
-    private final JList parentList;
+    private final JList<? extends PreferencesCategory> parentList;
 
     /**
      * Creates a new category label.
@@ -57,7 +57,7 @@ public class CategoryLabel extends JLabel {
      * @param index       Index of this label
      */
     public CategoryLabel(final IconManager iconManager,
-            final JList parentList,
+            final JList<? extends PreferencesCategory> parentList,
             final PreferencesCategory category, final int numCats,
             final int index) {
         super();

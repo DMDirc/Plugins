@@ -36,16 +36,11 @@ import javax.swing.ListCellRenderer;
 
 /**
  * Prefs dialog list cell renderer.
- *
- * @since 0.6.3m1
  */
-public class PreferencesListCellRenderer extends JLabel implements ListCellRenderer {
+public class PreferencesListCellRenderer extends JLabel implements
+        ListCellRenderer<PreferencesCategory> {
 
-    /**
-     * A version number for this class. It should be changed whenever the class structure is changed
-     * (or anything else that would prevent serialized objects being unserialized with the new
-     * class).
-     */
+    /** A version number for this class. */
     private static final long serialVersionUID = 1;
     /** Number of categories shown. */
     private final int numCats;
@@ -67,17 +62,15 @@ public class PreferencesListCellRenderer extends JLabel implements ListCellRende
         this.iconManager = iconManager;
     }
 
-    /** {@inheritDoc} */
     @Override
-    public Component getListCellRendererComponent(final JList list,
-            final Object value, final int index, final boolean isSelected,
+    public Component getListCellRendererComponent(final JList<? extends PreferencesCategory> list,
+            final PreferencesCategory value, final int index, final boolean isSelected,
             final boolean cellHasFocus) {
-        final PreferencesCategory cat = (PreferencesCategory) value;
-        if (!labelMap.containsKey(cat)) {
-            labelMap.put(cat, new CategoryLabel(iconManager,
-                    list, cat, numCats, index));
+        if (!labelMap.containsKey(value)) {
+            labelMap.put(value, new CategoryLabel(iconManager,
+                    list, value, numCats, index));
         }
-        final JLabel label = labelMap.get(cat);
+        final JLabel label = labelMap.get(value);
 
         if (isSelected) {
             label.setFont(getFont().deriveFont(Font.BOLD));
