@@ -119,7 +119,6 @@ public class ActionsManagerDialog extends StandardDialog implements
      * @param groupPanelFactory Factory to use to create group panels.
      */
     @Inject
-    @SuppressWarnings("unchecked")
     public ActionsManagerDialog(
             final MainFrame parentWindow,
             final SwingController controller,
@@ -136,9 +135,10 @@ public class ActionsManagerDialog extends StandardDialog implements
         this.groupPanelFactory = groupPanelFactory;
 
         initComponents();
-        validator = new ValidatorChain<>(
-                new ActionGroupNoDuplicatesInListValidator(groups,
-                (DefaultListModel) groups.getModel()), new FileNameValidator());
+        validator = ValidatorChain.<String>builder().addValidator(
+                new ActionGroupNoDuplicatesInListValidator(
+                groups, (DefaultListModel<ActionGroup>) groups.getModel()))
+                .addValidator(new FileNameValidator()).build();
         addListeners();
         layoutGroupPanel();
         layoutComponents();
@@ -176,7 +176,8 @@ public class ActionsManagerDialog extends StandardDialog implements
         actions.setBorder(BorderFactory.createTitledBorder(UIManager.getBorder(
                 "TitledBorder.border"), "Actions"));
 
-        groups.setCellRenderer(new PropertyListCellRenderer<>(groups.getCellRenderer(), ActionGroup.class, "name"));
+        groups.setCellRenderer(new PropertyListCellRenderer<>(groups.getCellRenderer(),
+                ActionGroup.class, "name"));
         groups.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         edit.setEnabled(false);
         delete.setEnabled(false);
@@ -286,11 +287,6 @@ public class ActionsManagerDialog extends StandardDialog implements
         getContentPane().setVisible(true);
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Action event
-     */
     @Override
     public void actionPerformed(final ActionEvent e) {
         if (e.getSource() == add) {
@@ -424,7 +420,6 @@ public class ActionsManagerDialog extends StandardDialog implements
         }.display();
     }
 
-    /** {@inheritDoc} */
     @Override
     public void valueChanged(final ListSelectionEvent e) {
         if (e.getValueIsAdjusting()) {
@@ -441,7 +436,6 @@ public class ActionsManagerDialog extends StandardDialog implements
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public void processEvent(final ActionType type, final StringBuffer format,
             final Object... arguments) {

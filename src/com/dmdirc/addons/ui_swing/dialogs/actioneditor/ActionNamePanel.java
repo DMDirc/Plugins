@@ -45,11 +45,7 @@ import net.miginfocom.swing.MigLayout;
  */
 public class ActionNamePanel extends JPanel implements PropertyChangeListener {
 
-    /**
-     * A version number for this class. It should be changed whenever the class structure is changed
-     * (or anything else that would prevent serialized objects being unserialized with the new
-     * class).
-     */
+    /** A version number for this class. */
     private static final long serialVersionUID = 1;
     /** Original name. */
     private String existingName;
@@ -100,15 +96,16 @@ public class ActionNamePanel extends JPanel implements PropertyChangeListener {
      *
      * @param newName new name
      */
-    @SuppressWarnings("unchecked")
     void setActionName(final String newName) {
         if (newName == null) {
             this.existingName = "";
         } else {
             this.existingName = newName;
         }
-        name.setValidator(new ValidatorChain<>(new FileNameValidator(),
-                new ActionNameValidator(group, existingName)));
+        name.setValidator(ValidatorChain.<String>builder()
+                .addValidator(new FileNameValidator())
+                .addValidator(new ActionNameValidator(group, existingName))
+                .build());
         this.name.setText(newName);
     }
 
@@ -118,12 +115,13 @@ public class ActionNamePanel extends JPanel implements PropertyChangeListener {
     }
 
     /** Initialises the components. */
-    @SuppressWarnings("unchecked")
     private void initComponents() {
         name = new ValidatingJTextField(iconManager,
                 existingName,
-                new ValidatorChain<>(new FileNameValidator(),
-                new ActionNameValidator(group, existingName)));
+                ValidatorChain.<String>builder()
+                .addValidator(new FileNameValidator())
+                .addValidator(new ActionNameValidator(group, existingName))
+                .build());
     }
 
     /** Adds the listeners. */
@@ -161,13 +159,11 @@ public class ActionNamePanel extends JPanel implements PropertyChangeListener {
         return name.getText();
     }
 
-    /** {@inheritDoc} */
     @Override
     public void setEnabled(final boolean enabled) {
         name.setEnabled(enabled);
     }
 
-    /** {@inheritDoc} */
     @Override
     public void propertyChange(final PropertyChangeEvent evt) {
         firePropertyChange("validationResult", evt.getOldValue(), evt.
