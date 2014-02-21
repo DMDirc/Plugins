@@ -34,6 +34,8 @@ import javax.swing.Scrollable;
  */
 public class XScrollablePanel extends JPanel implements Scrollable {
 
+    private static final long serialVersionUID = 1L;
+
     /** Creates a new scrollable panel. */
     public XScrollablePanel() {
         super();

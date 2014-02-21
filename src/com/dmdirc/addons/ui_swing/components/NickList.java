@@ -40,6 +40,7 @@ import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.Collection;
+import java.util.List;
 
 import javax.swing.JList;
 import javax.swing.JScrollPane;
@@ -52,14 +53,10 @@ import javax.swing.SwingUtilities;
 public class NickList extends JScrollPane implements ConfigChangeListener,
         MouseListener, NicklistListener {
 
-    /**
-     * A version number for this class. It should be changed whenever the class structure is changed
-     * (or anything else that would prevent serialized objects being unserialized with the new
-     * class).
-     */
+    /** A version number for this class. */
     private static final long serialVersionUID = 10;
     /** Nick list. */
-    private final JList nickList;
+    private final JList<ChannelClientInfo> nickList;
     /** Parent frame. */
     private final ChannelFrame frame;
     /** Config. */
@@ -81,7 +78,7 @@ public class NickList extends JScrollPane implements ConfigChangeListener,
         this.config = config;
         this.colourManager = new ColourManager(config);
 
-        nickList = new JList();
+        nickList = new JList<>();
 
         nickList.setBackground(UIUtilities.convertColour(
                 colourManager.getColourFromString(
@@ -186,16 +183,15 @@ public class NickList extends JScrollPane implements ConfigChangeListener,
             return;
         }
         if (checkCursorInSelectedCell() || selectNickUnderCursor()) {
-            final Object[] values = nickList.getSelectedValues();
+            final List<ChannelClientInfo> values = nickList.getSelectedValuesList();
             final StringBuilder builder = new StringBuilder();
 
-            for (Object value : values) {
+            for (ChannelClientInfo value : values) {
                 if (builder.length() > 0) {
                     builder.append("\n");
                 }
 
-                builder.append(((ChannelClientInfo) value).getClient()
-                        .getNickname());
+                builder.append(value.getClient().getNickname());
             }
 
             frame.showPopupMenu(new ClickTypeValue(ClickType.NICKNAME,
