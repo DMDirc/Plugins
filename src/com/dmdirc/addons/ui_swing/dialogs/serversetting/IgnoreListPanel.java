@@ -31,6 +31,7 @@ import com.dmdirc.ui.IconManager;
 import com.dmdirc.util.validators.NotEmptyValidator;
 import com.dmdirc.util.validators.RegexValidator;
 import com.dmdirc.util.validators.ValidatorChain;
+import com.dmdirc.util.validators.ValidatorChainBuilder;
 
 import java.awt.Dialog.ModalityType;
 import java.awt.Window;
@@ -80,7 +81,7 @@ public final class IgnoreListPanel extends JPanel implements ActionListener, Lis
     /**
      * Creates a new instance of IgnoreList.
      *
-     * @param iconManager   Icon manager
+     * @param iconManager  Icon manager
      * @param connection   The connection whose ignore list should be displayed.
      * @param parentWindow Parent window
      */
@@ -168,21 +169,18 @@ public final class IgnoreListPanel extends JPanel implements ActionListener, Lis
         connection.saveIgnoreList();
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Action event
-     */
-    @SuppressWarnings("unchecked")
     @Override
     public void actionPerformed(final ActionEvent e) {
         if (e.getSource() == addButton) {
+            final ValidatorChainBuilder<String> validatorBuilder = ValidatorChain.builder();
+            validatorBuilder.addValidator(new NotEmptyValidator());
+            if (viewToggle.isSelected()) {
+                validatorBuilder.addValidator(new RegexValidator());
+            }
+
             new StandardInputDialog(parentWindow,
                     ModalityType.MODELESS, iconManager, "New ignore list entry",
-                    "Please enter the new ignore list entry",
-                    viewToggle.isSelected() ? new ValidatorChain<>(
-                    new NotEmptyValidator(), new RegexValidator())
-                    : new NotEmptyValidator()) {
+                    "Please enter the new ignore list entry", validatorBuilder.build()) {
                 /** A version number for this class. */
                 private static final long serialVersionUID = 2;
 
@@ -205,8 +203,7 @@ public final class IgnoreListPanel extends JPanel implements ActionListener, Lis
                     //Ignore
                 }
             }.display();
-        } else if (e.getSource() == delButton && list.getSelectedIndex()
-                != -1) {
+        } else if (e.getSource() == delButton && list.getSelectedIndex() != -1) {
             new StandardQuestionDialog(parentWindow,
                     ModalityType.APPLICATION_MODAL,
                     "Confirm deletion",
@@ -234,7 +231,6 @@ public final class IgnoreListPanel extends JPanel implements ActionListener, Lis
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public void valueChanged(final ListSelectionEvent e) {
         if (list.getSelectedIndex() == -1) {

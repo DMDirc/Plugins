@@ -95,10 +95,10 @@ public class AliasPanel extends JPanel implements ActionListener {
 
         this.actionFactory = actionFactory;
 
-        @SuppressWarnings("unchecked")
-        final ValidatorChain<String> chain = new ValidatorChain<>(
-                new CommandNameValidator(commandController.getCommandChar()),
-                new FileNameValidator());
+        final ValidatorChain<String> chain = ValidatorChain.<String>builder()
+                .addValidator(new CommandNameValidator(commandController.getCommandChar()))
+                .addValidator(new FileNameValidator())
+                .build();
         command = new ValidatingTextFieldInputField(iconManager, colourManager, globalConfig, chain);
         command.setEnabled(false);
 
