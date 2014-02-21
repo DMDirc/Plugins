@@ -92,25 +92,22 @@ public class LagDisplayManager implements ActionListener, ConfigChangeListener, 
     }
 
     public void load() {
+        panel = panelProvider.get();
         statusBar.addComponent(panel);
         mainFrame.addSelectionListener(this);
-
         globalConfig.addChangeListener(domain, this);
         readConfig();
         ActionManager.getActionManager().registerListener(this,
                 CoreActionType.SERVER_GOTPING, CoreActionType.SERVER_NOPING,
                 CoreActionType.SERVER_DISCONNECTED,
                 CoreActionType.SERVER_PINGSENT, CoreActionType.SERVER_NUMERIC);
-
-        panel = panelProvider.get();
     }
 
     public void unload() {
-        mainFrame.removeSelectionListener(this);
         statusBar.removeComponent(panel);
+        mainFrame.removeSelectionListener(this);
         globalConfig.removeListener(this);
         ActionManager.getActionManager().unregisterListener(this);
-
         panel = null;
     }
 
