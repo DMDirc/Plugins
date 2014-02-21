@@ -61,7 +61,7 @@ public abstract class DMDircListCellRenderer<E> implements ListCellRenderer<E> {
      * @param isSelected Is the cell selected
      * @param hasFocus   Does the cell have focus
      */
-    protected abstract void renderValue(final JLabel label, final Object value,
+    protected abstract void renderValue(final JLabel label, final E value,
             final int index, final boolean isSelected, final boolean hasFocus);
 
     @Override

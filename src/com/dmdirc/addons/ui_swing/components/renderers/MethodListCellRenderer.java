@@ -22,49 +22,50 @@
 
 package com.dmdirc.addons.ui_swing.components.renderers;
 
-import com.dmdirc.interfaces.actions.ActionComparison;
-import com.dmdirc.interfaces.actions.ActionComponent;
-import com.dmdirc.interfaces.actions.ActionType;
+import java.lang.reflect.Method;
 
 import javax.swing.JLabel;
 import javax.swing.ListCellRenderer;
 
 /**
- * Displays actions using getName not toString.
+ * Displays the text from the specified getter as the list cell. If the getter does not exist it
+ * will fall back to the toString method.
+ *
+ * @param <E> the type of values this renderer can be used for
  */
-public class ActionCellRenderer extends DMDircListCellRenderer {
+public class MethodListCellRenderer<E> extends DMDircListCellRenderer<E> {
 
     /**
-     * A version number for this class.
+     * Serial version UID.
      */
-    private static final long serialVersionUID = 1;
+    private static final long serialVersionUID = 1L;
+    /**
+     * Stores the method to read the displayed text from.
+     */
+    protected final Method read;
 
     /**
-     * Creates a new instance of this renderer.
+     * Creates a renderer.
      *
-     * @param renderer RendereParent renderer
+     * @param parentRenderer Parent renderer
+     * @param method         Method to call on the renderer value
      */
-    public ActionCellRenderer(final ListCellRenderer renderer) {
-        super(renderer);
+    public MethodListCellRenderer(final ListCellRenderer<? super E> parentRenderer,
+            final Method method) {
+        super(parentRenderer);
+        this.read = method;
     }
 
-    /** {@inheritDoc} */
     @Override
-    protected void renderValue(final JLabel label, final Object value,
-            final int index, final boolean isSelected,
-            final boolean cellHasFocus) {
-        if (value instanceof ActionComparison) {
-            label.setText(((ActionComparison) value).getName());
-        } else if (value instanceof ActionComponent) {
-            label.setText(((ActionComponent) value).getName());
-        } else if (value instanceof ActionType) {
-            label.setText(((ActionType) value).getName());
-        } else if (value instanceof Class<?>) {
-            label.setText(((Class<?>) value).getSimpleName());
-        } else if (value == null) {
-            label.setText("");
-        } else {
-            label.setText(value.toString());
+    protected void renderValue(final JLabel label, final E value, final int index,
+            final boolean isSelected, final boolean hasFocus) {
+        String textValue = "";
+        try {
+            textValue = (String) read.invoke(value);
+        } catch (ReflectiveOperationException ex) {
+            textValue = value.toString();
+        } finally {
+            label.setText(textValue);
         }
     }
 

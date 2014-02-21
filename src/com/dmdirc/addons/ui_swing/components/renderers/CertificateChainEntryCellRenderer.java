@@ -59,21 +59,17 @@ public class CertificateChainEntryCellRenderer extends DMDircListCellRenderer<Ce
 
     /** {@inheritDoc} */
     @Override
-    protected void renderValue(final JLabel label, final Object value,
+    protected void renderValue(final JLabel label, final CertificateChainEntry value,
             final int index, final boolean isSelected,
             final boolean hasFocus) {
-        if (value instanceof CertificateChainEntry) {
-            final CertificateChainEntry entry = (CertificateChainEntry) value;
-
-            label.setText(entry.getName());
-            if (entry.isInvalid()) {
+            label.setText(value.getName());
+            if (value.isInvalid()) {
                 label.setIcon(invalidIcon);
-            } else if (entry.isTrusted()) {
+            } else if (value.isTrusted()) {
                 label.setIcon(trustedIcon);
             } else {
                 label.setIcon(icon);
             }
-        }
     }
 
 }

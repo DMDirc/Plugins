@@ -25,7 +25,8 @@ package com.dmdirc.addons.ui_swing.dialogs.actioneditor;
 import com.dmdirc.actions.ActionCondition;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.addons.ui_swing.UIUtilities;
-import com.dmdirc.addons.ui_swing.components.renderers.ActionCellRenderer;
+import com.dmdirc.addons.ui_swing.components.renderers.PropertyListCellRenderer;
+import com.dmdirc.addons.ui_swing.components.renderers.ToStringListCellRenderer;
 import com.dmdirc.interfaces.actions.ActionComparison;
 import com.dmdirc.interfaces.actions.ActionComponent;
 import com.dmdirc.interfaces.actions.ActionType;
@@ -46,27 +47,23 @@ import javax.swing.event.DocumentListener;
 import net.miginfocom.swing.MigLayout;
 
 /**
- * Action conditioneditor panel.
+ * Action condition editor panel.
  */
 public class ActionConditionEditorPanel extends JPanel implements
         ActionListener, DocumentListener, PropertyChangeListener {
 
-    /**
-     * A version number for this class. It should be changed whenever the class structure is changed
-     * (or anything else that would prevent serialized objects being unserialized with the new
-     * class).
-     */
+    /** A version number for this class. */
     private static final long serialVersionUID = 1;
     /** Condition. */
     private final ActionCondition condition;
     /** Trigger. */
     private ActionType trigger;
     /** Argument. */
-    private JComboBox arguments;
+    private JComboBox<String> arguments;
     /** Component. */
-    private JComboBox components;
+    private JComboBox<ActionComponent> components;
     /** Comparison. */
-    private JComboBox comparisons;
+    private JComboBox<ActionComparison> comparisons;
     /** Target. */
     private JTextField target;
 
@@ -103,17 +100,17 @@ public class ActionConditionEditorPanel extends JPanel implements
 
     /** Initialises the components. */
     private void initComponents() {
-        arguments = new JComboBox(new DefaultComboBoxModel());
+        arguments = new JComboBox<>(new DefaultComboBoxModel<String>());
         arguments.putClientProperty("JComboBox.isTableCellEditor",
                 Boolean.TRUE);
         arguments.setName("argument");
         UIUtilities.addComboBoxWidthModifier(arguments);
-        components = new JComboBox(new DefaultComboBoxModel());
+        components = new JComboBox<>(new DefaultComboBoxModel<ActionComponent>());
         components.putClientProperty("JComboBox.isTableCellEditor",
                 Boolean.TRUE);
         components.setName("component");
         UIUtilities.addComboBoxWidthModifier(components);
-        comparisons = new JComboBox(new DefaultComboBoxModel());
+        comparisons = new JComboBox<>(new DefaultComboBoxModel<ActionComparison>());
         comparisons.putClientProperty("JComboBox.isTableCellEditor",
                 Boolean.TRUE);
         comparisons.setName("comparison");
@@ -132,9 +129,9 @@ public class ActionConditionEditorPanel extends JPanel implements
             }
         };
 
-        arguments.setRenderer(new ActionCellRenderer(arguments.getRenderer()));
-        components.setRenderer(new ActionCellRenderer(components.getRenderer()));
-        comparisons.setRenderer(new ActionCellRenderer(comparisons.getRenderer()));
+        arguments.setRenderer(new ToStringListCellRenderer<>(arguments.getRenderer(), String.class));
+        components.setRenderer(new PropertyListCellRenderer<>(components.getRenderer(), ActionComponent.class, "name"));
+        comparisons.setRenderer(new PropertyListCellRenderer<>(comparisons.getRenderer(), ActionComparison.class, "name"));
 
         components.setEnabled(false);
         comparisons.setEnabled(false);
@@ -143,23 +140,23 @@ public class ActionConditionEditorPanel extends JPanel implements
 
     /** Populates the arguments combo box. */
     private void populateArguments() {
-        ((DefaultComboBoxModel) arguments.getModel()).removeAllElements();
+        ((DefaultComboBoxModel<String>) arguments.getModel()).removeAllElements();
 
         for (String arg : trigger.getType().getArgNames()) {
-            ((DefaultComboBoxModel) arguments.getModel()).addElement(arg);
+            ((DefaultComboBoxModel<String>) arguments.getModel()).addElement(arg);
         }
         arguments.setSelectedIndex(condition.getArg());
     }
 
     /** Populates the components combo box. */
     private void populateComponents() {
-        ((DefaultComboBoxModel) components.getModel()).removeAllElements();
+        ((DefaultComboBoxModel<ActionComponent>) components.getModel()).removeAllElements();
 
         if (condition.getArg() != -1) {
             for (ActionComponent comp : ActionManager.getActionManager()
                     .findCompatibleComponents(trigger.getType()
                     .getArgTypes()[condition.getArg()])) {
-                ((DefaultComboBoxModel) components.getModel()).addElement(comp);
+                ((DefaultComboBoxModel<ActionComponent>) components.getModel()).addElement(comp);
             }
         }
         components.setSelectedItem(condition.getComponent());
@@ -167,13 +164,12 @@ public class ActionConditionEditorPanel extends JPanel implements
 
     /** Populates the comparisons combo box. */
     private void populateComparisons() {
-        ((DefaultComboBoxModel) comparisons.getModel()).removeAllElements();
+        ((DefaultComboBoxModel<ActionComparison>) comparisons.getModel()).removeAllElements();
 
         if (condition.getComponent() != null) {
             for (ActionComparison comp : ActionManager.getActionManager()
                     .findCompatibleComparisons(condition.getComponent().getType())) {
-                ((DefaultComboBoxModel) comparisons.getModel())
-                        .addElement(comp);
+                ((DefaultComboBoxModel<ActionComparison>) comparisons.getModel()).addElement(comp);
             }
         }
         comparisons.setSelectedItem(condition.getComparison());

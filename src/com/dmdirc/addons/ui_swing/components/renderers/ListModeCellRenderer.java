@@ -45,15 +45,13 @@ public class ListModeCellRenderer extends DMDircListCellRenderer<ChannelListMode
     }
 
     @Override
-    protected void renderValue(final JLabel label, final Object value,
+    protected void renderValue(final JLabel label, final ChannelListModeItem value,
             final int index, final boolean isSelected,
             final boolean cellHasFocus) {
         if (value == null) {
             label.setText("");
-        } else if (value instanceof ChannelListModeItem) {
-            label.setText(((ChannelListModeItem) value).getItem());
         } else {
-            label.setText(value.toString());
+            label.setText(value.getItem());
         }
     }
 
