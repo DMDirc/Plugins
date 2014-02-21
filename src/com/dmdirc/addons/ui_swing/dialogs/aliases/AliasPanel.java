@@ -60,18 +60,14 @@ import net.miginfocom.swing.MigLayout;
  */
 public class AliasPanel extends JPanel implements ActionListener {
 
-    /**
-     * A version number for this class. It should be changed whenever the class structure is changed
-     * (or anything else that would prevent serialized objects being unserialized with the new
-     * class).
-     */
+    /** A version number for this class. */
     private static final long serialVersionUID = 2;
     /** Factory to use when creating aliases. */
     private final ActionFactory actionFactory;
     /** Name field. */
     private final ValidatingTextFieldInputField command;
     /** argument component combo box. */
-    private final JComboBox argumentComponent;
+    private final JComboBox<Object> argumentComponent;
     /** Argument number spinner. */
     private final JSpinner argumentNumber;
     /** Response field. */
@@ -99,20 +95,17 @@ public class AliasPanel extends JPanel implements ActionListener {
 
         this.actionFactory = actionFactory;
 
-        command = new ValidatingTextFieldInputField(
-                iconManager,
-                colourManager,
-                globalConfig,
-                new ValidatorChain<>(
+        @SuppressWarnings("unchecked")
+        final ValidatorChain<String> chain = new ValidatorChain<>(
                 new CommandNameValidator(commandController.getCommandChar()),
-                new FileNameValidator()));
+                new FileNameValidator());
+        command = new ValidatingTextFieldInputField(iconManager, colourManager, globalConfig, chain);
         command.setEnabled(false);
 
-        argumentComponent = new JComboBox(new CoreActionComparison[]{null,
+        argumentComponent = new JComboBox<Object>(new CoreActionComparison[]{null,
             CoreActionComparison.INT_GREATER, CoreActionComparison.INT_EQUALS,
             CoreActionComparison.INT_LESS,});
-        argumentNumber = new JSpinner(new SpinnerNumberModel(0, 0,
-                Integer.MAX_VALUE, 1));
+        argumentNumber = new JSpinner(new SpinnerNumberModel(0, 0, Integer.MAX_VALUE, 1));
         response = new JTextArea();
 
         argumentNumber.setEnabled(false);

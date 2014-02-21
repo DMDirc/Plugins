@@ -35,7 +35,7 @@ import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.ListScroller;
 import com.dmdirc.addons.ui_swing.components.SortedListModel;
 import com.dmdirc.addons.ui_swing.components.frames.AppleJFrame;
-import com.dmdirc.addons.ui_swing.components.renderers.ActionGroupListCellRenderer;
+import com.dmdirc.addons.ui_swing.components.renderers.PropertyListCellRenderer;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialog;
@@ -73,11 +73,7 @@ public class ActionsManagerDialog extends StandardDialog implements
         ActionListener, com.dmdirc.interfaces.ActionListener,
         ListSelectionListener {
 
-    /**
-     * A version number for this class. It should be changed whenever the class structure is changed
-     * (or anything else that would prevent serialized objects being unserialized with the new
-     * class).
-     */
+    /** A version number for this class. */
     private static final long serialVersionUID = 1;
     /** Config instance. */
     private final ConfigProvider config;
@@ -90,7 +86,7 @@ public class ActionsManagerDialog extends StandardDialog implements
     /** Info label. */
     private TextLabel infoLabel;
     /** Group list. */
-    private JList groups;
+    private JList<ActionGroup> groups;
     /** Add button. */
     private JButton add;
     /** Edit button. */
@@ -123,6 +119,7 @@ public class ActionsManagerDialog extends StandardDialog implements
      * @param groupPanelFactory Factory to use to create group panels.
      */
     @Inject
+    @SuppressWarnings("unchecked")
     public ActionsManagerDialog(
             final MainFrame parentWindow,
             final SwingController controller,
@@ -160,7 +157,7 @@ public class ActionsManagerDialog extends StandardDialog implements
                 + " intelligently respond to various events.  Action groups are"
                 + " there for you to organise groups, add or remove them"
                 + " to suit your needs.");
-        groups = new JList(new SortedListModel<>(new ActionGroupNameComparator()));
+        groups = new JList<>(new SortedListModel<>(new ActionGroupNameComparator()));
         actions = groupPanelFactory.getActionsGroupPanel(this, null);
         info = new ActionGroupInformationPanel(null);
         settings = new HashMap<>();
@@ -179,7 +176,7 @@ public class ActionsManagerDialog extends StandardDialog implements
         actions.setBorder(BorderFactory.createTitledBorder(UIManager.getBorder(
                 "TitledBorder.border"), "Actions"));
 
-        groups.setCellRenderer(new ActionGroupListCellRenderer(groups.getCellRenderer()));
+        groups.setCellRenderer(new PropertyListCellRenderer<>(groups.getCellRenderer(), ActionGroup.class, "name"));
         groups.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         edit.setEnabled(false);
         delete.setEnabled(false);
@@ -256,7 +253,7 @@ public class ActionsManagerDialog extends StandardDialog implements
     private void reloadGroups(final ActionGroup selectedGroup) {
         ((DefaultListModel) groups.getModel()).clear();
         for (ActionGroup group : ActionManager.getActionManager().getGroupsMap().values()) {
-            ((DefaultListModel) groups.getModel()).addElement(group);
+            ((DefaultListModel<ActionGroup>) groups.getModel()).addElement(group);
         }
         groups.setSelectedValue(selectedGroup, true);
     }
@@ -354,8 +351,7 @@ public class ActionsManagerDialog extends StandardDialog implements
      * Prompts then edits an action group.
      */
     private void editGroup() {
-        final String oldName =
-                ((ActionGroup) groups.getSelectedValue()).getName();
+        final String oldName = groups.getSelectedValue().getName();
         final StandardInputDialog inputDialog = new StandardInputDialog(
                 this, ModalityType.DOCUMENT_MODAL, iconManager, "Edit action group",
                 "Please enter the new name of the action group", validator) {
@@ -392,8 +388,7 @@ public class ActionsManagerDialog extends StandardDialog implements
      * Prompts then deletes an action group.
      */
     private void delGroup() {
-        final String group =
-                ((ActionGroup) groups.getSelectedValue()).getName();
+        final String group = groups.getSelectedValue().getName();
         new StandardQuestionDialog(this,
                 ModalityType.APPLICATION_MODAL,
                 "Confirm deletion",
@@ -436,9 +431,8 @@ public class ActionsManagerDialog extends StandardDialog implements
             return;
         }
 
-        changeActiveGroup((ActionGroup) groups.getSelectedValue());
-        if (groups.getSelectedIndex() == -1 || !((ActionGroup) groups.
-                getSelectedValue()).isDelible()) {
+        changeActiveGroup(groups.getSelectedValue());
+        if (groups.getSelectedIndex() == -1 || !groups.getSelectedValue().isDelible()) {
             edit.setEnabled(false);
             delete.setEnabled(false);
         } else {
@@ -457,13 +451,11 @@ public class ActionsManagerDialog extends StandardDialog implements
         if (type.equals(CoreActionType.ACTION_CREATED) || type.equals(
                 CoreActionType.ACTION_UPDATED)) {
             final Action action = (Action) arguments[0];
-            if (action.getGroup().equals(((ActionGroup) groups.getSelectedValue()).
-                    getName())) {
+            if (action.getGroup().equals(groups.getSelectedValue().getName())) {
                 actions.actionChanged(action);
             }
         } else {
-            if (arguments[0].equals(((ActionGroup) groups.getSelectedValue()).
-                    getName())) {
+            if (arguments[0].equals(groups.getSelectedValue().getName())) {
                 actions.actionDeleted((String) arguments[1]);
             }
         }
