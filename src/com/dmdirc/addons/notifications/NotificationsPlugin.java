@@ -116,9 +116,10 @@ public class NotificationsPlugin extends BaseCommandPlugin implements ActionList
 
     /** Loads the plugins settings. */
     private void loadSettings() {
-        if (identityController.getGlobalConfiguration().hasOptionString(getDomain(), "methodOrder")) {
-            order = identityController.getGlobalConfiguration().getOptionList(getDomain(),
-                    "methodOrder");
+        if (identityController.getGlobalConfiguration()
+                .hasOptionString(pluginInfo.getDomain(), "methodOrder")) {
+            order = identityController.getGlobalConfiguration().
+                    getOptionList(pluginInfo.getDomain(), "methodOrder");
         } else {
             order = new ArrayList<>();
         }
@@ -230,7 +231,7 @@ public class NotificationsPlugin extends BaseCommandPlugin implements ActionList
     protected void saveSettings(final List<String> newOrder) {
         order = newOrder;
         identityController.getUserSettings()
-                .setOption(getDomain(), "methodOrder", order);
+                .setOption(pluginInfo.getDomain(), "methodOrder", order);
     }
 
 }

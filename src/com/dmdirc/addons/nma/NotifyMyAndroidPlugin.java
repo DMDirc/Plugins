@@ -72,12 +72,12 @@ public class NotifyMyAndroidPlugin extends BaseCommandPlugin {
                 "General configuration for Notify My Android plugin.");
 
         category.addSetting(new PreferencesSetting(
-                PreferencesType.TEXT, getDomain(), "apikey",
+                PreferencesType.TEXT, pluginInfo.getDomain(), "apikey",
                 "API Key", "Comma-separated list of NotifyMyAndroid API keys"
                 + " to be notified when the command is used.",
                 manager.getConfigManager(), manager.getIdentity()));
         category.addSetting(new PreferencesSetting(
-                PreferencesType.TEXT, getDomain(), "application",
+                PreferencesType.TEXT, pluginInfo.getDomain(), "application",
                 "Application", "Name of the application to report to "
                 + "NotifyMyAndroid",
                 manager.getConfigManager(), manager.getIdentity()));

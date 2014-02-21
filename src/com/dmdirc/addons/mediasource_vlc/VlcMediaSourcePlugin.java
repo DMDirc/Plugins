@@ -205,7 +205,7 @@ public class VlcMediaSourcePlugin extends BasePlugin implements MediaSource {
                 "", "category-vlc");
 
         final PreferencesSetting setting = new PreferencesSetting(
-                PreferencesType.LABEL, getDomain(), "", "Instructions",
+                PreferencesType.LABEL, pluginInfo.getDomain(), "", "Instructions",
                 "Instructions", manager.getConfigManager(), manager.getIdentity());
         setting.setValue("<html><p>"
                 + "The VLC media source requires that VLC's web interface is"
@@ -231,7 +231,7 @@ public class VlcMediaSourcePlugin extends BasePlugin implements MediaSource {
                 + "'Save'<li>Restart VLC</ol></html>");
         general.addSetting(setting);
         general.addSetting(new PreferencesSetting(PreferencesType.TEXT,
-                getDomain(), "host", "Hostname and port",
+                pluginInfo.getDomain(), "host", "Hostname and port",
                 "The host and port that VLC listens on for web connections",
                 manager.getConfigManager(), manager.getIdentity()));
 
@@ -250,7 +250,7 @@ public class VlcMediaSourcePlugin extends BasePlugin implements MediaSource {
 
         try {
             final String host = identityController.getGlobalConfiguration()
-                    .getOption(getDomain(), "host");
+                    .getOption(pluginInfo.getDomain(), "host");
             res = Downloader.getPage("http://" + host + "/old/info.html");
             res2 = Downloader.getPage("http://" + host + "/old/");
             parseInformation(res, res2);

@@ -169,7 +169,7 @@ public class FreeDesktopNotificationsPlugin extends BaseCommandPlugin implements
      */
     @Override
     public void onLoad() {
-        config.addChangeListener(getDomain(), this);
+        config.addChangeListener(pluginInfo.getDomain(), this);
         setCachedSettings();
         // Extract the files needed
         try {
@@ -194,8 +194,8 @@ public class FreeDesktopNotificationsPlugin extends BaseCommandPlugin implements
     /** {@inheritDoc} */
     @Override
     public void domainUpdated() {
-        identity.setOption(getDomain(),
-                "general.icon", filesHelper.getFilesDirString() + "icon.png");
+        identity.setOption(pluginInfo.getDomain(), "general.icon",
+                filesHelper.getFilesDirString() + "icon.png");
     }
 
     /** {@inheritDoc} */
@@ -206,23 +206,23 @@ public class FreeDesktopNotificationsPlugin extends BaseCommandPlugin implements
                 "General configuration for FreeDesktop Notifications plugin.");
 
         general.addSetting(new PreferencesSetting(PreferencesType.INTEGER,
-                getDomain(), "general.timeout", "Timeout",
+                pluginInfo.getDomain(), "general.timeout", "Timeout",
                 "Length of time in seconds before the notification popup closes.",
                 manager.getConfigManager(), manager.getIdentity()));
         general.addSetting(new PreferencesSetting(PreferencesType.FILE,
-                getDomain(), "general.icon", "icon",
+                pluginInfo.getDomain(), "general.icon", "icon",
                 "Path to icon to use on the notification.",
                 manager.getConfigManager(), manager.getIdentity()));
         general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
-                getDomain(), "advanced.escapehtml", "Escape HTML",
+                pluginInfo.getDomain(), "advanced.escapehtml", "Escape HTML",
                 "Some Implementations randomly parse HTML, escape it before showing?",
                 manager.getConfigManager(), manager.getIdentity()));
         general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
-                getDomain(), "advanced.strictescape", "Strict Escape HTML",
+                pluginInfo.getDomain(), "advanced.strictescape", "Strict Escape HTML",
                 "Strictly escape HTML or just the basic characters? (&, < and >)",
                 manager.getConfigManager(), manager.getIdentity()));
         general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
-                getDomain(), "advanced.stripcodes", "Strip Control Codes",
+                pluginInfo.getDomain(), "advanced.stripcodes", "Strip Control Codes",
                 "Strip IRC Control codes from messages?",
                 manager.getConfigManager(), manager.getIdentity()));
 
@@ -230,11 +230,11 @@ public class FreeDesktopNotificationsPlugin extends BaseCommandPlugin implements
     }
 
     private void setCachedSettings() {
-        timeout = config.getOptionInt(getDomain(), "general.timeout");
-        icon = config.getOption(getDomain(), "general.icon");
-        escapehtml = config.getOptionBool(getDomain(), "advanced.escapehtml");
-        strictescape = config.getOptionBool(getDomain(), "advanced.strictescape");
-        stripcodes = config.getOptionBool(getDomain(), "advanced.stripcodes");
+        timeout = config.getOptionInt(pluginInfo.getDomain(), "general.timeout");
+        icon = config.getOption(pluginInfo.getDomain(), "general.icon");
+        escapehtml = config.getOptionBool(pluginInfo.getDomain(), "advanced.escapehtml");
+        strictescape = config.getOptionBool(pluginInfo.getDomain(), "advanced.strictescape");
+        stripcodes = config.getOptionBool(pluginInfo.getDomain(), "advanced.stripcodes");
     }
 
     /** {@inheritDoc} */
