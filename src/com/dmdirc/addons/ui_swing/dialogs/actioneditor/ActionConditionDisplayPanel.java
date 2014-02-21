@@ -157,11 +157,6 @@ public class ActionConditionDisplayPanel extends JPanel implements
         add(editPanel, "alignx right");
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Action event
-     */
     @Override
     public void actionPerformed(final ActionEvent e) {
         if (e.getSource().equals(deleteButton)) {
@@ -208,7 +203,6 @@ public class ActionConditionDisplayPanel extends JPanel implements
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public void setEnabled(final boolean enabled) {
         editPanel.setEnabled(enabled);
@@ -271,7 +265,6 @@ public class ActionConditionDisplayPanel extends JPanel implements
         return condition;
     }
 
-    /** {@inheritDoc} */
     @Override
     public void propertyChange(final PropertyChangeEvent evt) {
         if ("edit".equals(evt.getPropertyName())) {

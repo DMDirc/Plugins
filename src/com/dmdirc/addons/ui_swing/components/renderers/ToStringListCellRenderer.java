@@ -22,45 +22,40 @@
 
 package com.dmdirc.addons.ui_swing.components.renderers;
 
-import com.dmdirc.actions.wrappers.PerformWrapper.PerformDescription;
+import java.lang.reflect.Method;
 
-import javax.swing.JLabel;
 import javax.swing.ListCellRenderer;
 
 /**
- * Custom renderer for PerformDescriptions.
+ * Displays the text from the specified getter as the list cell. If the getter does not exist it
+ * will fall back to the toString method.
  *
- * @since 0.6.4
+ * @param <E> the type of values this renderer can be used for
  */
-public class PerformRenderer extends DMDircListCellRenderer<PerformDescription> {
+public class ToStringListCellRenderer<E> extends MethodListCellRenderer<E> {
 
-    /** A version number for this class. */
-    private static final long serialVersionUID = 1;
+    /** Serial version UID. */
+    private static final long serialVersionUID = 1L;
 
     /**
-     * Creates a new instance of this renderer.
+     * Creates a renderer.
      *
-     * @param renderer RendereParent renderer
+     * @param parentRenderer Parent renderer
+     * @param type           Type of object to be rendered
      */
-    public PerformRenderer(final ListCellRenderer<? super PerformDescription> renderer) {
-        super(renderer);
+    public ToStringListCellRenderer(final ListCellRenderer<? super E> parentRenderer,
+            final Class<? super E> type) {
+        super(parentRenderer, ToStringListCellRenderer.<E>getMethod(type));
     }
 
-    @Override
-    protected void renderValue(final JLabel label, final PerformDescription value,
-            final int index, final boolean isSelected,
-            final boolean cellHasFocus) {
-        final String target = value.getTarget();
-        final String profile = value.getProfile();
-        final String type = value.getType().toString();
-        String friendlyText = type + " perform (" + target + ") ";
-
-        if (profile != null) {
-            friendlyText += "This profile (" + profile + ")";
-        } else {
-            friendlyText += "Any profile";
+    private static <E> Method getMethod(final Class<? super E> type) {
+        Method readMethod;
+        try {
+            readMethod = type.getMethod("toString");
+        } catch (NoSuchMethodException | SecurityException ex1) {
+            throw new IllegalStateException("Unable to access toString method", ex1);
         }
-        label.setText(friendlyText);
+        return readMethod;
     }
 
 }
