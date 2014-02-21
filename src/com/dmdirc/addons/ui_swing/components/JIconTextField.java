@@ -36,6 +36,8 @@ import javax.swing.UIManager;
  */
 public class JIconTextField extends JTextField {
 
+    /** A version number for this class, used in serialisation. */
+    private static final long serialVersionUID = 1L;
     /** Insets used by a normal text field. */
     private final Insets dummyInsets;
     /** Icon to show, or null. */

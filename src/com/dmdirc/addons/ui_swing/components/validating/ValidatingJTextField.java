@@ -105,21 +105,27 @@ public class ValidatingJTextField extends JIconTextField implements DocumentList
      */
     public void checkError() {
         final boolean previousStatus = getMessage() == null || getMessage().isEmpty();
+        final ValidationResponse vr = validator.validate(getText());
+        setMessage(vr.getFailureReason());
+        firePropertyChange("validationResult", previousStatus, !vr.isFailure());
+        if (vr.isFailure()) {
+            setIcon(errorIcon);
+        } else {
+            setIcon(null);
+        }
+    }
 
-        if (isEnabled()) {
-            final ValidationResponse vr = validator.validate(getText());
-            setMessage(vr.getFailureReason());
-            firePropertyChange("validationResult", previousStatus, !vr.isFailure());
-            if (vr.isFailure()) {
-                setIcon(errorIcon);
-            } else {
-                setIcon(null);
-            }
+    @Override
+    public void setEnabled(final boolean enabled) {
+        final boolean previousStatus = getMessage() == null || getMessage().isEmpty();
+        if (enabled) {
+            checkError();
         } else {
             setIcon(null);
             setMessage(null);
             firePropertyChange("validationResult", previousStatus, true);
         }
+        super.setEnabled(enabled);
     }
 
     /**

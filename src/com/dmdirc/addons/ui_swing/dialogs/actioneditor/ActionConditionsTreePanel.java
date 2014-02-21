@@ -49,12 +49,10 @@ import net.miginfocom.swing.MigLayout;
 public class ActionConditionsTreePanel extends JPanel implements ActionListener,
         PropertyChangeListener, DocumentListener {
 
-    /**
-     * A version number for this class. It should be changed whenever the class structure is changed
-     * (or anything else that would prevent serialized objects being unserialized with the new
-     * class).
-     */
+    /** A version number for this class. */
     private static final long serialVersionUID = 1;
+    /** Icon manager. */
+    private final IconManager iconManager;
     /** Button group. */
     private ButtonGroup group;
     /** All triggers button. */
@@ -73,8 +71,6 @@ public class ActionConditionsTreePanel extends JPanel implements ActionListener,
     private ConditionRuleValidator treeValidator;
     /** validates. */
     private boolean validates = true;
-    /** Icon manager. */
-    private IconManager iconManager;
 
     /**
      * Instantiates the panel.
@@ -139,6 +135,11 @@ public class ActionConditionsTreePanel extends JPanel implements ActionListener,
         }
 
         switch (type) {
+            case CONJUNCTION:
+                allButton.setSelected(true);
+                rule.setText("");
+                rule.setEnabled(false);
+                break;
             case DISJUNCTION:
                 oneButton.setSelected(true);
                 rule.setText("");
