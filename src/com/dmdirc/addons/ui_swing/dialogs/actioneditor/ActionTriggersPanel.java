@@ -61,9 +61,9 @@ public class ActionTriggersPanel extends JPanel implements ActionListener,
      */
     private static final long serialVersionUID = 1;
     /** Trigger combo box. */
-    private JComboBox triggerGroup;
+    private JComboBox<Object> triggerGroup;
     /** Trigger combo box. */
-    private JComboBox triggerItem;
+    private JComboBox<Object> triggerItem;
     /** Triggers list. */
     private ActionTriggersListPanel triggerList;
     /** Are we internally changing the combo boxes? */
@@ -95,14 +95,14 @@ public class ActionTriggersPanel extends JPanel implements ActionListener,
         setBorder(BorderFactory.createTitledBorder(UIManager.getBorder(
                 "TitledBorder.border"), "Triggers"));
 
-        triggerGroup = new JComboBox(new DefaultComboBoxModel());
+        triggerGroup = new JComboBox<>(new DefaultComboBoxModel<>());
         // Only fire events on selection not on highlight
         triggerGroup.putClientProperty("JComboBox.isTableCellEditor",
                 Boolean.TRUE);
         triggerGroup.setRenderer(new ActionTypeRenderer(triggerGroup.getRenderer()));
         triggerGroup.addPopupMenuListener(new ComboBoxWidthModifier());
 
-        triggerItem = new JComboBox(new DefaultComboBoxModel());
+        triggerItem = new JComboBox<>(new DefaultComboBoxModel<>());
         // Only fire events on selection not on highlight
         triggerItem.putClientProperty("JComboBox.isTableCellEditor",
                 Boolean.TRUE);
@@ -209,12 +209,13 @@ public class ActionTriggersPanel extends JPanel implements ActionListener,
     private void addAll(final MapList<String, ActionType> mapList) {
         comboChange = true;
         compatibleTriggers.clear();
-        ((DefaultComboBoxModel) triggerGroup.getModel()).removeAllElements();
-        ((DefaultComboBoxModel) triggerItem.getModel()).removeAllElements();
+        final DefaultComboBoxModel<Object> triggerModel
+                = (DefaultComboBoxModel<Object>) triggerGroup.getModel();
+        triggerModel.removeAllElements();
+        ((DefaultComboBoxModel<Object>) triggerItem.getModel()).removeAllElements();
         for (final Map.Entry<String, List<ActionType>> entry : mapList
                 .entrySet()) {
-            ((DefaultComboBoxModel) triggerGroup.getModel())
-                    .addElement(entry.getKey());
+            triggerModel.addElement(entry.getKey());
         }
         triggerGroup.setSelectedIndex(-1);
         triggerGroup.setEnabled(triggerGroup.getModel().getSize() > 0);
@@ -228,8 +229,10 @@ public class ActionTriggersPanel extends JPanel implements ActionListener,
      * @param primaryType Primary type
      */
     private void addCompatible(final ActionType primaryType) {
-        final DefaultComboBoxModel groupModel = (DefaultComboBoxModel) triggerGroup.getModel();
-        final DefaultComboBoxModel itemModel = (DefaultComboBoxModel) triggerItem.getModel();
+        final DefaultComboBoxModel<Object> groupModel = (DefaultComboBoxModel<Object>) triggerGroup.
+                getModel();
+        final DefaultComboBoxModel<Object> itemModel = (DefaultComboBoxModel<Object>) triggerItem.
+                getModel();
 
         comboChange = true;
         compatibleTriggers.clear();
@@ -275,8 +278,7 @@ public class ActionTriggersPanel extends JPanel implements ActionListener,
         for (final ActionType entry : list) {
             if (compatibleTriggers.isEmpty()
                     || compatibleTriggers.contains(entry)) {
-                ((DefaultComboBoxModel) triggerItem.getModel())
-                        .addElement(entry);
+                ((DefaultComboBoxModel<Object>) triggerItem.getModel()).addElement(entry);
             }
         }
         triggerItem.setSelectedIndex(-1);

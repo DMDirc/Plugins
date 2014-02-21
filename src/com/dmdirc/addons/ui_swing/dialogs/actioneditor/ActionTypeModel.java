@@ -38,18 +38,14 @@ import javax.swing.SwingUtilities;
  * Model for the "trigger" list of the actions editor. Adds type group headers, and ensures they
  * can't be selected.
  */
-public final class ActionTypeModel extends DefaultComboBoxModel {
+public final class ActionTypeModel extends DefaultComboBoxModel<Object> {
 
-    /**
-     * A version number for this class. It should be changed whenever the class structure is changed
-     * (or anything else that would prevent serialized objects being unserialized with the new
-     * class).
-     */
+    /** A version number for this class. */
     private static final long serialVersionUID = 1;
+    /** Font metrics. */
+    private final FontMetrics fm;
     /** Max Width. */
     private int maxWidth = -1;
-    /** Font metrics. */
-    private FontMetrics fm;
 
     /**
      * Creates a new instance of ActionTypeModel.
@@ -77,7 +73,7 @@ public final class ActionTypeModel extends DefaultComboBoxModel {
     /**
      * {@inheritDoc}
      *
-     * @param anObject Objerct to add
+     * @param anObject Object to add
      */
     @Override
     public void addElement(final Object anObject) {
