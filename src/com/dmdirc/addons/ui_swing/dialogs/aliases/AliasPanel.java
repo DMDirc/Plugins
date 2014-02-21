@@ -22,17 +22,20 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.aliases;
 
+import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.actions.ActionCondition;
 import com.dmdirc.actions.ActionFactory;
 import com.dmdirc.actions.CoreActionComparison;
 import com.dmdirc.actions.CoreActionComponent;
 import com.dmdirc.actions.wrappers.Alias;
-import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.inputfields.ValidatingTextFieldInputField;
 import com.dmdirc.addons.ui_swing.components.renderers.ActionComparisonCellRenderer;
 import com.dmdirc.commandparser.validators.CommandNameValidator;
 import com.dmdirc.interfaces.CommandController;
+import com.dmdirc.interfaces.config.AggregateConfigProvider;
+import com.dmdirc.ui.IconManager;
+import com.dmdirc.ui.messages.ColourManager;
 import com.dmdirc.util.validators.FileNameValidator;
 import com.dmdirc.util.validators.ValidatorChain;
 
@@ -79,20 +82,27 @@ public class AliasPanel extends JPanel implements ActionListener {
     /**
      * Creates a new instance of AliasPanel.
      *
-     * @param controller        Swing controller
+     * @param iconManager       The icon manager to use for validation and dialog icons.
+     * @param colourManager     The manager to use for colour input.
+     * @param globalConfig      The config to read settings from.
      * @param actionFactory     The factory to use to create new actions.
      * @param commandController The controller to use to retrieve command information.
      */
     @Inject
     public AliasPanel(
-            final SwingController controller,
+            @GlobalConfig final IconManager iconManager,
+            final ColourManager colourManager,
+            @GlobalConfig final AggregateConfigProvider globalConfig,
             final ActionFactory actionFactory,
             final CommandController commandController) {
         super();
 
         this.actionFactory = actionFactory;
 
-        command = new ValidatingTextFieldInputField(controller,
+        command = new ValidatingTextFieldInputField(
+                iconManager,
+                colourManager,
+                globalConfig,
                 new ValidatorChain<>(
                 new CommandNameValidator(commandController.getCommandChar()),
                 new FileNameValidator()));
