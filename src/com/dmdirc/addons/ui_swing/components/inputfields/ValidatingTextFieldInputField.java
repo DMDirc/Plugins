@@ -22,10 +22,12 @@
 
 package com.dmdirc.addons.ui_swing.components.inputfields;
 
-import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.colours.ColourPickerDialog;
 import com.dmdirc.addons.ui_swing.components.validating.ValidatingJTextField;
+import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.ui.InputField;
+import com.dmdirc.ui.IconManager;
+import com.dmdirc.ui.messages.ColourManager;
 import com.dmdirc.util.validators.Validator;
 
 import java.awt.event.ActionEvent;
@@ -43,31 +45,48 @@ public class ValidatingTextFieldInputField extends ValidatingJTextField
     private static final long serialVersionUID = 2;
     /** Colour picker. */
     private ColourPickerDialog colourPicker;
-    /** Swing controller. */
-    private final SwingController controller;
+    /** The icon manager to use for validation and dialog icons. */
+    private final IconManager iconManager;
+    /** The manager to use for colour input. */
+    private final ColourManager colourManager;
+    /** The config to read settings from. */
+    private final AggregateConfigProvider globalConfig;
 
     /**
      * Creates a new text field with the specified validator.
      *
-     * @param controller Swing controller
-     * @param validator  Validator for this textfield
+     * @param iconManager   The icon manager to use for validation and dialog icons.
+     * @param colourManager The manager to use for colour input.
+     * @param globalConfig  The config to read settings from.
+     * @param validator     Validator for this textfield
      */
-    public ValidatingTextFieldInputField(final SwingController controller,
+    public ValidatingTextFieldInputField(
+            final IconManager iconManager,
+            final ColourManager colourManager,
+            final AggregateConfigProvider globalConfig,
             final Validator<String> validator) {
-        this(controller, "", validator);
+        this(iconManager, colourManager, globalConfig, "", validator);
     }
 
     /**
      * Creates a new text field with the specified validator.
      *
-     * @param controller Swing controller
-     * @param validator  Validator for this textfield
-     * @param text       Text to use
+     * @param iconManager   The icon manager to use for validation and dialog icons.
+     * @param colourManager The manager to use for colour input.
+     * @param globalConfig  The config to read settings from.
+     * @param validator     Validator for this textfield
+     * @param text          Text to use
      */
-    public ValidatingTextFieldInputField(final SwingController controller,
-            final String text, final Validator<String> validator) {
-        super(controller.getIconManager(), text, validator);
-        this.controller = controller;
+    public ValidatingTextFieldInputField(
+            final IconManager iconManager,
+            final ColourManager colourManager,
+            final AggregateConfigProvider globalConfig,
+            final String text,
+            final Validator<String> validator) {
+        super(iconManager, text, validator);
+        this.iconManager = iconManager;
+        this.colourManager = colourManager;
+        this.globalConfig = globalConfig;
     }
 
     /** {@inheritDoc} */
@@ -85,10 +104,8 @@ public class ValidatingTextFieldInputField extends ValidatingJTextField
     /** {@inheritDoc} */
     @Override
     public void showColourPicker(final boolean irc, final boolean hex) {
-        if (controller.getGlobalConfig().getOptionBool("general",
-                "showcolourdialog")) {
-            colourPicker = new ColourPickerDialog(this, controller.getColourManager(),
-                    controller.getIconManager(), irc, hex);
+        if (globalConfig.getOptionBool("general", "showcolourdialog")) {
+            colourPicker = new ColourPickerDialog(this, colourManager, iconManager, irc, hex);
             colourPicker.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(final ActionEvent actionEvent) {
