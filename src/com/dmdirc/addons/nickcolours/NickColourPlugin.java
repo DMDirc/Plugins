@@ -43,7 +43,7 @@ public class NickColourPlugin extends BasePlugin {
     public void load(final PluginInfo pluginInfo, final ObjectGraph graph) {
         super.load(pluginInfo, graph);
 
-        setObjectGraph(graph.plus(new NickColourModule(pluginInfo, getDomain())));
+        setObjectGraph(graph.plus(new NickColourModule(pluginInfo, pluginInfo.getDomain())));
         nickColourManager = getObjectGraph().get(NickColourManager.class);
     }
 
