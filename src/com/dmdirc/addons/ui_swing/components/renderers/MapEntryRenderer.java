@@ -42,7 +42,7 @@ public final class MapEntryRenderer extends DMDircListCellRenderer<Object> {
      *
      * @param renderer RendereParent renderer
      */
-    public MapEntryRenderer(final ListCellRenderer<Object> renderer) {
+    public MapEntryRenderer(final ListCellRenderer<? super Object> renderer) {
         super(renderer);
     }
 

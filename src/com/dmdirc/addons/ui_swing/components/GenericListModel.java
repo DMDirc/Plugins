@@ -34,13 +34,9 @@ import javax.swing.AbstractListModel;
  *
  * @param <T> Generic type of the list
  */
-public class GenericListModel<T> extends AbstractListModel {
+public class GenericListModel<T> extends AbstractListModel<T> {
 
-    /**
-     * A version number for this class. It should be changed whenever the class structure is changed
-     * (or anything else that would prevent serialized objects being unserialized with the new
-     * class).
-     */
+    /** A version number for this class. */
     private static final long serialVersionUID = -4227892376992714545L;
     /** Data stored in list. */
     private final List<T> list;
@@ -65,7 +61,6 @@ public class GenericListModel<T> extends AbstractListModel {
         this.list = Collections.synchronizedList(new ArrayList<>(list));
     }
 
-    /** {@inheritDoc} */
     @Override
     public int getSize() {
         return list.size();
@@ -194,7 +189,6 @@ public class GenericListModel<T> extends AbstractListModel {
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public String toString() {
         return list.toString();
@@ -236,9 +230,8 @@ public class GenericListModel<T> extends AbstractListModel {
         list.addAll(index, collection);
     }
 
-    /** {@inheritDoc} */
     @Override
-    public Object getElementAt(final int index) {
+    public T getElementAt(final int index) {
         return get(index);
     }
 

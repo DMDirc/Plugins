@@ -29,19 +29,13 @@ import javax.swing.ComboBoxModel;
  *
  * @param <T> Model holds this type of object
  */
-public class GenericComboBoxModel<T> extends GenericListModel<T> implements
-        ComboBoxModel {
+public class GenericComboBoxModel<T> extends GenericListModel<T> implements ComboBoxModel<T> {
 
-    /**
-     * A version number for this class. It should be changed whenever the class structure is changed
-     * (or anything else that would prevent serialized objects being unserialized with the new
-     * class).
-     */
+    /** A version number for this class. */
     private static final long serialVersionUID = 2;
     /** Selected Object. */
     private T selectedObject;
 
-    /** {@inheritDoc} */
     @Override
     @SuppressWarnings("unchecked")
     public void setSelectedItem(final Object anItem) {
@@ -52,7 +46,6 @@ public class GenericComboBoxModel<T> extends GenericListModel<T> implements
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public T getSelectedItem() {
         return selectedObject;

@@ -209,8 +209,7 @@ public final class PrefsComponentFactory {
      * @return A JComponent descendent for the specified setting
      */
     private JComponent getComboOption(final PreferencesSetting setting) {
-        final JComboBox option = new JComboBox(setting.getComboOptions()
-                .entrySet().toArray());
+        final JComboBox<Object> option = new JComboBox<>(setting.getComboOptions().entrySet().toArray());
         option.setRenderer(new MapEntryRenderer(option.getRenderer()));
         option.setEditable(false);
 

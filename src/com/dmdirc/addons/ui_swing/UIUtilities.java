@@ -499,7 +499,7 @@ public final class UIUtilities {
      *
      * @param combo Combo box to modify
      */
-    public static void addComboBoxWidthModifier(final JComboBox combo) {
+    public static void addComboBoxWidthModifier(final JComboBox<?> combo) {
         combo.addPopupMenuListener(new ComboBoxWidthModifier());
     }
 
