@@ -43,6 +43,9 @@ import org.jdesktop.jxlayer.plaf.LayerUI;
  */
 public class BackgroundPainter extends LayerUI<JComponent> {
 
+    /** A version for this class, sued for serialisation. */
+    private static final long serialVersionUID = 1L;
+
     /**
      * Domain to retrieve settings from.
      */
@@ -139,9 +142,6 @@ public class BackgroundPainter extends LayerUI<JComponent> {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void paint(final Graphics graphics, final JComponent component) {
         final Graphics2D g2 = (Graphics2D) graphics;
