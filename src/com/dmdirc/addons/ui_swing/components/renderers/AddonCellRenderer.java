@@ -36,7 +36,6 @@ import javax.swing.table.TableCellRenderer;
  */
 public class AddonCellRenderer implements TableCellRenderer {
 
-    /** {@inheritDoc} */
     @Override
     public Component getTableCellRendererComponent(final JTable table,
             final Object value, final boolean isSelected,

@@ -43,16 +43,12 @@ import net.miginfocom.swing.MigLayout;
  */
 public class AddOptionPanel extends JPanel implements ActionListener {
 
-    /**
-     * A version number for this class. It should be changed whenever the class structure is changed
-     * (or anything else that would prevent serialized objects being unserialized with the new
-     * class).
-     */
+    /** A version number for this class. */
     private static final long serialVersionUID = 2;
     /** Parent settings panel. */
     private final SettingsPanel parent;
     /** Add options combobox. */
-    private JComboBox addOptionComboBox;
+    private JComboBox<Object> addOptionComboBox;
     /** Add option button. */
     private JButton addOptionButton;
     /** Current add option input. */
@@ -79,7 +75,7 @@ public class AddOptionPanel extends JPanel implements ActionListener {
 
     /** Initialises the components. */
     private void initComponents() {
-        addOptionComboBox = new JComboBox(new DefaultComboBoxModel());
+        addOptionComboBox = new JComboBox<>(new DefaultComboBoxModel<>());
         addOptionButton = new JButton("Add");
 
         addOptionComboBox.setRenderer(new AddOptionCellRenderer(parent,
@@ -120,8 +116,7 @@ public class AddOptionPanel extends JPanel implements ActionListener {
      * @param setting Setting to add
      */
     protected void addOption(final JComponent setting) {
-        ((DefaultComboBoxModel) addOptionComboBox.getModel())
-                .addElement(setting);
+        ((DefaultComboBoxModel<Object>) addOptionComboBox.getModel()).addElement(setting);
         addOptionButton.setEnabled(true);
         addOptionComboBox.setEnabled(true);
     }
