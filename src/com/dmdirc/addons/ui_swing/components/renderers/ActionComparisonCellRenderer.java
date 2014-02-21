@@ -28,9 +28,9 @@ import javax.swing.JLabel;
 import javax.swing.ListCellRenderer;
 
 /**
- * Renders an action comparison in plain english.
+ * Renders an action comparison in plain English.
  */
-public final class ActionComparisonCellRenderer extends DMDircListCellRenderer {
+public final class ActionComparisonCellRenderer extends DMDircListCellRenderer<Object> {
 
     /**
      * A version number for this class.
@@ -42,11 +42,10 @@ public final class ActionComparisonCellRenderer extends DMDircListCellRenderer {
      *
      * @param renderer RendereParent renderer
      */
-    public ActionComparisonCellRenderer(final ListCellRenderer renderer) {
+    public ActionComparisonCellRenderer(final ListCellRenderer<? super Object> renderer) {
         super(renderer);
     }
 
-    /** {@inheritDoc} */
     @Override
     protected void renderValue(final JLabel label, final Object value,
             final int index, final boolean isSelected,

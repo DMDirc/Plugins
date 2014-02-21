@@ -31,13 +31,9 @@ import javax.swing.DefaultListModel;
  *
  * @param <T> Comparator type
  */
-public class SortedListModel<T> extends DefaultListModel {
+public class SortedListModel<T> extends DefaultListModel<T> {
 
-    /**
-     * A version number for this class. It should be changed whenever the class structure is changed
-     * (or anything else that would prevent serialized objects being unserialized with the new
-     * class).
-     */
+    /** A version number for this class. */
     private static final long serialVersionUID = 1L;
     /** Comparator. */
     private final Comparator<T> comparator;
@@ -53,15 +49,12 @@ public class SortedListModel<T> extends DefaultListModel {
         this.comparator = comparator;
     }
 
-    /** {@inheritDoc} */
     @Override
-    @SuppressWarnings("unchecked")
-    public void addElement(final Object obj) {
-        final T object = (T) obj;
+    public void addElement(final T obj) {
         boolean added = false;
         for (int i = 0; i < getSize(); i++) {
-            final T currentObj = (T) getElementAt(i);
-            if (comparator.compare(currentObj, object) > 0) {
+            final T currentObj = getElementAt(i);
+            if (comparator.compare(currentObj, obj) > 0) {
                 add(i, obj);
                 added = true;
                 break;

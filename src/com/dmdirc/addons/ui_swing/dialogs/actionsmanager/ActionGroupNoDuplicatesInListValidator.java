@@ -29,9 +29,9 @@ import javax.swing.DefaultListModel;
 import javax.swing.JList;
 
 /**
- * No duplicates list validator, overriden to work with action groups.
+ * No duplicates list validator, overridden to work with action groups.
  */
-class ActionGroupNoDuplicatesInListValidator extends NoDuplicatesInListValidator {
+class ActionGroupNoDuplicatesInListValidator extends NoDuplicatesInListValidator<ActionGroup> {
 
     /**
      * Creates a new validator.
@@ -39,8 +39,8 @@ class ActionGroupNoDuplicatesInListValidator extends NoDuplicatesInListValidator
      * @param list  List
      * @param model Model to validate
      */
-    public ActionGroupNoDuplicatesInListValidator(final JList list,
-            final DefaultListModel model) {
+    public ActionGroupNoDuplicatesInListValidator(final JList<ActionGroup> list,
+            final DefaultListModel<ActionGroup> model) {
         super(true, list, model);
     }
 
@@ -52,7 +52,7 @@ class ActionGroupNoDuplicatesInListValidator extends NoDuplicatesInListValidator
      * @param model         Model to validate
      */
     public ActionGroupNoDuplicatesInListValidator(final boolean caseSensitive,
-            final JList list, final DefaultListModel model) {
+            final JList<ActionGroup> list, final DefaultListModel<ActionGroup> model) {
         super(caseSensitive, list, model);
     }
 
