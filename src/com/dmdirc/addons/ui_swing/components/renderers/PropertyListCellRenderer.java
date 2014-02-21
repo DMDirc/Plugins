@@ -24,10 +24,8 @@ package com.dmdirc.addons.ui_swing.components.renderers;
 
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import javax.swing.JLabel;
 import javax.swing.ListCellRenderer;
 
 /**
@@ -36,32 +34,33 @@ import javax.swing.ListCellRenderer;
  *
  * @param <E> the type of values this renderer can be used for
  */
-public class PropertyListCellRenderer<E> extends DMDircListCellRenderer<E> {
+public class PropertyListCellRenderer<E> extends MethodListCellRenderer<E> {
 
-    /**
-     * Serial version UID.
-     */
+    /** Serial version UID. */
     private static final long serialVersionUID = 1L;
-    /**
-     * Stores the method to read the displayed text from.
-     */
-    private final Method read;
 
     /**
      * Creates a renderer.
      *
      * @param parentRenderer Parent renderer
      * @param type           Type of object to be rendered
-     * @param property       name of the getter to be called on the type
+     * @param property       The name of the property to use when rendering. The type must implement
+     *                       a 'get' method for this property that returns a string.
      */
     public PropertyListCellRenderer(final ListCellRenderer<? super E> parentRenderer,
             final Class<? super E> type, final String property) {
-        super(parentRenderer);
+        super(parentRenderer, PropertyListCellRenderer.<E>getMethod(property, type));
+    }
+
+    private static <E> Method getMethod(final String property, final Class<? super E> type) {
         final PropertyDescriptor propertyDescriptor;
         Method readMethod;
         try {
             propertyDescriptor = new PropertyDescriptor(property, type);
             readMethod = propertyDescriptor.getReadMethod();
+            if (readMethod.getReturnType() != String.class) {
+                throw new IntrospectionException("Getter must return String");
+            }
         } catch (IntrospectionException ex) {
             try {
                 readMethod = type.getMethod("toString");
@@ -69,20 +68,7 @@ public class PropertyListCellRenderer<E> extends DMDircListCellRenderer<E> {
                 throw new IllegalStateException("Unable to access toString method", ex1);
             }
         }
-        read = readMethod;
-    }
-
-    @Override
-    protected void renderValue(final JLabel label, final Object value, final int index,
-            final boolean isSelected, final boolean hasFocus) {
-        String textValue = "";
-        try {
-            textValue = (String) read.invoke(value);
-        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
-            textValue = value.toString();
-        } finally {
-            label.setText(textValue);
-        }
+        return readMethod;
     }
 
 }
