@@ -30,7 +30,7 @@ import javax.swing.ListCellRenderer;
 /**
  * Renders a map entry as its value.
  */
-public final class MapEntryRenderer extends DMDircListCellRenderer {
+public final class MapEntryRenderer extends DMDircListCellRenderer<Object> {
 
     /**
      * A version number for this class.
@@ -42,11 +42,10 @@ public final class MapEntryRenderer extends DMDircListCellRenderer {
      *
      * @param renderer RendereParent renderer
      */
-    public MapEntryRenderer(final ListCellRenderer renderer) {
+    public MapEntryRenderer(final ListCellRenderer<Object> renderer) {
         super(renderer);
     }
 
-    /** {@inheritDoc} */
     @Override
     protected void renderValue(final JLabel label, final Object value,
             final int index, final boolean isSelected,
