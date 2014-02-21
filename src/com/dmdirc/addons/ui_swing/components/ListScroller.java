@@ -35,7 +35,7 @@ import javax.swing.ListSelectionModel;
 public class ListScroller implements MouseWheelListener {
 
     /** List to scroll. */
-    private final ListModel model;
+    private final ListModel<?> model;
     /** List to scroll. */
     private final ListSelectionModel selectionModel;
 
@@ -44,7 +44,7 @@ public class ListScroller implements MouseWheelListener {
      *
      * @param list List to scroll over
      */
-    public ListScroller(final JList list) {
+    public ListScroller(final JList<?> list) {
         this(list.getModel(), list.getSelectionModel());
     }
 
@@ -56,7 +56,7 @@ public class ListScroller implements MouseWheelListener {
      * @param model          List model to scroll over
      * @param selectionModel List selection model to scroll over
      */
-    public ListScroller(final ListModel model,
+    public ListScroller(final ListModel<?> model,
             final ListSelectionModel selectionModel) {
         this.model = model;
         this.selectionModel = selectionModel;
@@ -69,7 +69,7 @@ public class ListScroller implements MouseWheelListener {
      *
      * @since 0.6.6
      */
-    public static void register(final JList list) {
+    public static void register(final JList<?> list) {
         final ListScroller scroller = new ListScroller(list);
         list.addMouseWheelListener(scroller);
     }
@@ -84,7 +84,7 @@ public class ListScroller implements MouseWheelListener {
      *
      * @since 0.6.6
      */
-    public static void register(final ListModel model,
+    public static void register(final ListModel<?> model,
             final ListSelectionModel selectionModel) {
         new ListScroller(model, selectionModel); //NOPMD
     }

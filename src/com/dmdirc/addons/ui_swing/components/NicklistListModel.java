@@ -34,14 +34,10 @@ import java.util.List;
 import javax.swing.AbstractListModel;
 
 /** Stores and provides means to modify nicklist data for a channel. */
-public final class NicklistListModel extends AbstractListModel implements
+public final class NicklistListModel extends AbstractListModel<ChannelClientInfo> implements
         ConfigChangeListener {
 
-    /**
-     * A version number for this class. It should be changed whenever the class structure is changed
-     * (or anything else that would prevent serialized objects being unserialized with the new
-     * class).
-     */
+    /** A version number for this class. */
     private static final long serialVersionUID = 1;
     /** stores the nicknames to be shown in this list. */
     private final List<ChannelClientInfo> nicknames;
