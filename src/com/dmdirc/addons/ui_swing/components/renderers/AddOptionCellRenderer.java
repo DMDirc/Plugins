@@ -32,7 +32,7 @@ import javax.swing.ListCellRenderer;
 /**
  * Add option combo box cell renderer.
  */
-public final class AddOptionCellRenderer extends DMDircListCellRenderer {
+public final class AddOptionCellRenderer extends DMDircListCellRenderer<Object> {
 
     /**
      * A version number for this class.
@@ -48,13 +48,12 @@ public final class AddOptionCellRenderer extends DMDircListCellRenderer {
      * @param renderer      Parent renderer
      */
     public AddOptionCellRenderer(final SettingsPanel settingsPanel,
-            final ListCellRenderer renderer) {
+            final ListCellRenderer<? super Object> renderer) {
         super(renderer);
 
         this.settingsPanel = settingsPanel;
     }
 
-    /** {@inheritDoc} */
     @Override
     protected void renderValue(final JLabel label, final Object value,
             final int index, final boolean isSelected,

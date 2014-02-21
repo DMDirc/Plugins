@@ -30,21 +30,17 @@ import javax.swing.ListCellRenderer;
 /**
  * Font list cell renderer.
  */
-public class FontListCellRenderer extends DMDircListCellRenderer {
+public class FontListCellRenderer extends DMDircListCellRenderer<Object> {
 
     /**
-     * A version number for this class.
-     *
-     * /**
      * Creates a new instance of this renderer.
      *
      * @param renderer RendereParent renderer
      */
-    public FontListCellRenderer(final ListCellRenderer renderer) {
+    public FontListCellRenderer(final ListCellRenderer<Object> renderer) {
         super(renderer);
     }
 
-    /** {@inheritDoc} */
     @Override
     protected void renderValue(final JLabel label, final Object value,
             final int index, final boolean isSelected,

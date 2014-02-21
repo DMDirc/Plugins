@@ -41,7 +41,6 @@ public class UpdateComponentTableCellRenderer extends DefaultTableCellRenderer {
      */
     private static final long serialVersionUID = 1;
 
-    /** {@inheritDoc} */
     @Override
     public Component getTableCellRendererComponent(final JTable table,
             final Object value, final boolean isSelected,
