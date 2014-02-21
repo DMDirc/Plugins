@@ -37,11 +37,6 @@ import com.dmdirc.addons.ui_swing.components.frames.ComponentFrameFactory;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.commandline.CommandLineOptionsModule.Directory;
 import com.dmdirc.commandline.CommandLineOptionsModule.DirectoryType;
-import com.dmdirc.config.prefs.PluginPreferencesCategory;
-import com.dmdirc.config.prefs.PreferencesCategory;
-import com.dmdirc.config.prefs.PreferencesDialogModel;
-import com.dmdirc.config.prefs.PreferencesSetting;
-import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.interfaces.ActionListener;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.Connection;
@@ -757,74 +752,6 @@ public class DCCManager implements ActionListener {
             // the right one.
             return "127.0.0.1"; //NOPMD
         }
-    }
-
-    /**
-     * Adds configuration options for the DCC plugin.
-     *
-     * @param manager The model to add options to.
-     */
-    public void showConfig(final PreferencesDialogModel manager) {
-        final PreferencesCategory general = new PluginPreferencesCategory(
-                pluginInfo, "DCC", "", "category-dcc");
-        final PreferencesCategory firewall = new PluginPreferencesCategory(
-                pluginInfo, "Firewall", "");
-        final PreferencesCategory sending = new PluginPreferencesCategory(
-                pluginInfo, "Sending", "");
-        final PreferencesCategory receiving = new PluginPreferencesCategory(
-                pluginInfo, "Receiving", "");
-
-        manager.getCategory("Plugins").addSubCategory(general.setInlineAfter());
-        general.addSubCategory(firewall.setInline());
-        general.addSubCategory(sending.setInline());
-        general.addSubCategory(receiving.setInline());
-
-        firewall.addSetting(new PreferencesSetting(PreferencesType.TEXT,
-                getDomain(), "firewall.ip", "Forced IP",
-                "What IP should be sent as our IP (Blank = work it out)",
-                manager.getConfigManager(), manager.getIdentity()));
-        firewall.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
-                getDomain(), "firewall.ports.usePortRange", "Use Port Range",
-                "Useful if you have a firewall that only forwards specific "
-                + "ports", manager.getConfigManager(), manager.getIdentity()));
-        firewall.addSetting(new PreferencesSetting(PreferencesType.INTEGER,
-                getDomain(), "firewall.ports.startPort", "Start Port",
-                "Port to try to listen on first", manager.getConfigManager(),
-                manager.getIdentity()));
-        firewall.addSetting(new PreferencesSetting(PreferencesType.INTEGER,
-                getDomain(), "firewall.ports.endPort", "End Port",
-                "Port to try to listen on last", manager.getConfigManager(),
-                manager.getIdentity()));
-        receiving.addSetting(new PreferencesSetting(PreferencesType.DIRECTORY,
-                getDomain(), "receive.savelocation", "Default save location",
-                "Where the save as window defaults to?",
-                manager.getConfigManager(), manager.getIdentity()));
-        sending.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
-                getDomain(), "send.reverse", "Reverse DCC",
-                "With reverse DCC, the sender connects rather than "
-                + "listens like normal dcc", manager.getConfigManager(),
-                manager.getIdentity()));
-        sending.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
-                getDomain(), "send.forceturbo", "Use Turbo DCC",
-                "Turbo DCC doesn't wait for ack packets. this is "
-                + "faster but not always supported.",
-                manager.getConfigManager(), manager.getIdentity()));
-        receiving.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
-                getDomain(), "receive.reverse.sendtoken",
-                "Send token in reverse receive",
-                "If you have problems with reverse dcc receive resume,"
-                + " try toggling this.", manager.getConfigManager(),
-                manager.getIdentity()));
-        general.addSetting(new PreferencesSetting(PreferencesType.INTEGER,
-                getDomain(), "send.blocksize", "Blocksize to use for DCC",
-                "Change the block size for send/receive, this can "
-                + "sometimes speed up transfers.", manager.getConfigManager(),
-                manager.getIdentity()));
-        general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
-                getDomain(), "general.percentageInTitle",
-                "Show percentage of transfers in the window title",
-                "Show the current percentage of transfers in the DCC window "
-                + "title", manager.getConfigManager(), manager.getIdentity()));
     }
 
 }
