@@ -37,13 +37,9 @@ import javax.swing.SwingUtilities;
 /**
  * System font picking component.
  */
-public class FontPicker extends JComboBox {
+public class FontPicker extends JComboBox<Object> {
 
-    /**
-     * A version number for this class. It should be changed whenever the class structure is changed
-     * (or anything else that would prevent serialized objects being unserialized with the new
-     * class).
-     */
+    /** A version number for this class. */
     private static final long serialVersionUID = -9054812588033935839L;
     /** Font family to choose from. */
     private final String fontFamily;
@@ -54,8 +50,7 @@ public class FontPicker extends JComboBox {
      * @param fontFamily Font family
      */
     public FontPicker(final String fontFamily) {
-        super(new DefaultComboBoxModel());
-        setPrototypeDisplayValue("test");
+        super(new DefaultComboBoxModel<>());
         this.fontFamily = fontFamily;
 
         setRenderer(new FontListCellRenderer(getRenderer()));
@@ -93,7 +88,7 @@ public class FontPicker extends JComboBox {
                 /** {@inheritDoc} */
                 @Override
                 public void run() {
-                    ((DefaultComboBoxModel) getModel()).addElement(new Font(
+                    ((DefaultComboBoxModel<Object>) getModel()).addElement(new Font(
                             font, Font.PLAIN, size));
                 }
             });

@@ -35,20 +35,14 @@ import javax.swing.event.PopupMenuListener;
  */
 public class ComboBoxWidthModifier implements PopupMenuListener {
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Popup menu event
-     */
     @Override
     public void popupMenuWillBecomeVisible(final PopupMenuEvent e) {
-        final JComboBox box = (JComboBox) e.getSource();
+        final JComboBox<?> box = (JComboBox) e.getSource();
         final Object comp = box.getUI().getAccessibleChild(box, 0);
         if (!(comp instanceof JPopupMenu)) {
             return;
         }
-        final JComponent scrollPane = (JComponent) ((JPopupMenu) comp)
-                .getComponent(0);
+        final JComponent scrollPane = (JComponent) ((JPopupMenu) comp).getComponent(0);
         final Dimension size = new Dimension(box.getPreferredSize().width,
                 scrollPane.getPreferredSize().height);
         scrollPane.setPreferredSize(size);
@@ -65,11 +59,6 @@ public class ComboBoxWidthModifier implements PopupMenuListener {
         //Ignore
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Popup menu event
-     */
     @Override
     public void popupMenuCanceled(final PopupMenuEvent e) {
         //Ignore
