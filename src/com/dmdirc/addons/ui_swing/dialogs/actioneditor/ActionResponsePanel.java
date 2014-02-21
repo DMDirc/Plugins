@@ -50,7 +50,7 @@ public class ActionResponsePanel extends JPanel {
     /** Response text area. */
     private JTextArea response;
     /** Formatter combo box. */
-    private JComboBox formatter;
+    private JComboBox<String> formatter;
     /** Response scrollpane. */
     private JScrollPane scrollPane;
 
@@ -77,20 +77,17 @@ public class ActionResponsePanel extends JPanel {
         response = new TextAreaInputField(iconManager, config, "");
         scrollPane = new JScrollPane(response);
         response.setRows(4);
-        //new SwingInputHandler(response, GlobalCommandParser
-        //        .getGlobalCommandParser(), inputWindow)
-        //        .setTypes(false, false, true,false);
-        formatter = new JComboBox(new DefaultComboBoxModel());
+        formatter = new JComboBox<>(new DefaultComboBoxModel<String>());
 
-        ((DefaultComboBoxModel) formatter.getModel()).addElement("No change");
-        ((DefaultComboBoxModel) formatter.getModel()).addElement("No response");
+        ((DefaultComboBoxModel<String>) formatter.getModel()).addElement("No change");
+        ((DefaultComboBoxModel<String>) formatter.getModel()).addElement("No response");
 
         final TreeSet<String> formatters = new TreeSet<>(
                 String.CASE_INSENSITIVE_ORDER);
         formatters.addAll(config.getOptions("formatter").keySet());
 
         for (final String format : formatters) {
-            ((DefaultComboBoxModel) formatter.getModel()).addElement(format);
+            ((DefaultComboBoxModel<String>) formatter.getModel()).addElement(format);
         }
     }
 

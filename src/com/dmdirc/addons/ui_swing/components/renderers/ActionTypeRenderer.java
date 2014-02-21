@@ -30,7 +30,7 @@ import javax.swing.ListCellRenderer;
 /**
  * Displays actions types and headers in a pretty fashion.
  */
-public final class ActionTypeRenderer extends DMDircListCellRenderer {
+public final class ActionTypeRenderer extends DMDircListCellRenderer<Object> {
 
     /**
      * A version number for this class.
@@ -42,11 +42,10 @@ public final class ActionTypeRenderer extends DMDircListCellRenderer {
      *
      * @param renderer RendereParent renderer
      */
-    public ActionTypeRenderer(final ListCellRenderer renderer) {
+    public ActionTypeRenderer(final ListCellRenderer<? super Object> renderer) {
         super(renderer);
     }
 
-    /** {@inheritDoc} */
     @Override
     protected void renderValue(final JLabel label, final Object value,
             final int index, final boolean isSelected,

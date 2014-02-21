@@ -44,7 +44,7 @@ public class StringTransferable implements Transferable {
     /**
      * Creates a new string transferable object.
      *
-     * @param data String to transger
+     * @param data String to transfer
      */
     public StringTransferable(final String data) {
         super();
