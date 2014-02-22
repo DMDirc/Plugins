@@ -24,9 +24,6 @@ package com.dmdirc.addons.osd;
 
 /**
  * Enumerates OSD Policies.
- *
- * @author simon
- * @since 0.6.3
  */
 public enum OsdPolicy {
 
@@ -116,8 +113,6 @@ public enum OsdPolicy {
     public boolean changesPosition() {
         return changesPosition;
     }
-
-    ;
 
     /**
      * Return a description of what each policy does.
