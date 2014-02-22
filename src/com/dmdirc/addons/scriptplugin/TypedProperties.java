@@ -24,23 +24,16 @@ package com.dmdirc.addons.scriptplugin;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
 /**
- * Properties file that allows for getting/setting of typed properties
- *
- * @author Shane 'Dataforce' McCormack
+ * Properties file that allows for getting/setting of typed properties.
  */
 public class TypedProperties extends Properties {
 
-    /**
-     * A version number for this class. It should be changed whenever the class structure is changed
-     * (or anything else that would prevent serialized objects being unserialized with the new
-     * class).
-     */
+    /** A version number for this class. */
     private static final long serialVersionUID = 200711071;
     /** Is this properties file Case Sensitive */
     private boolean caseSensitive = true;
@@ -73,8 +66,7 @@ public class TypedProperties extends Properties {
                 if (property instanceof String) {
                     final String propertyName = (String) property;
                     if (!propertyName.equals(propertyName.toLowerCase())) {
-                        super.setProperty(propertyName.toLowerCase(),
-                                getProperty(propertyName));
+                        super.setProperty(propertyName.toLowerCase(), getProperty(propertyName));
                         super.remove(propertyName);
                     }
                 }
@@ -85,7 +77,7 @@ public class TypedProperties extends Properties {
 
     /**
      * Load properties from an InputStream. After loading, setCaseSensitivity(caseSensitive) is
-     * called. If this properties file is ment to be case Insensitive, all non-lowercase property
+     * called. If this properties file is meant to be case Insensitive, all non-lowercase property
      * names will be lowercased.
      *
      * @param inStream InputStream to load from.
@@ -95,36 +87,6 @@ public class TypedProperties extends Properties {
     @Override
     public synchronized void load(final InputStream inStream) throws IOException {
         super.load(inStream);
-        setCaseSensitivity(caseSensitive);
-    }
-
-    /**
-     * Load properties from a Reader. After loading, setCaseSensitivity(caseSensitive) is called. If
-     * this properties file is ment to be case Insensitive, all non-lowercase property names will be
-     * lowercased.
-     *
-     * @param reader Reader to load from.
-     *
-     * @throws IOException If there is an error reading from the reader
-     */
-    @Override
-    public synchronized void load(final Reader reader) throws IOException {
-        super.load(reader);
-        setCaseSensitivity(caseSensitive);
-    }
-
-    /**
-     * Load properties from an XML InputStream. After loading, setCaseSensitivity(caseSensitive) is
-     * called. If this properties file is ment to be case Insensitive, all non-lowercase property
-     * names will be lowercased.
-     *
-     * @param in InputStream to load from.
-     *
-     * @throws java.io.IOException if an error occurs loading the XML
-     */
-    @Override
-    public synchronized void loadFromXML(final InputStream in) throws IOException {
-        super.loadFromXML(in);
         setCaseSensitivity(caseSensitive);
     }
 
@@ -251,8 +213,7 @@ public class TypedProperties extends Properties {
      */
     public int getIntProperty(final String key, final int fallback) {
         try {
-            return Integer
-                    .parseInt(getProperty(key, Integer.toString(fallback)));
+            return Integer.parseInt(getProperty(key, Integer.toString(fallback)));
         } catch (final NumberFormatException nfe) {
             return fallback;
         }
@@ -330,8 +291,7 @@ public class TypedProperties extends Properties {
      */
     public double getDoubleProperty(final String key, final double fallback) {
         try {
-            return Double.parseDouble(getProperty(key, Double
-                    .toString(fallback)));
+            return Double.parseDouble(getProperty(key, Double.toString(fallback)));
         } catch (final NumberFormatException nfe) {
             return fallback;
         }
@@ -356,8 +316,7 @@ public class TypedProperties extends Properties {
      * @return the requested property, or the fallback value if not defined
      */
     public boolean getBoolProperty(final String key, final boolean fallback) {
-        return Boolean
-                .parseBoolean(getProperty(key, Boolean.toString(fallback)));
+        return Boolean.parseBoolean(getProperty(key, Boolean.toString(fallback)));
     }
 
     /**
@@ -405,8 +364,7 @@ public class TypedProperties extends Properties {
      *
      * @return the requested property, or the fallback value if not defined
      */
-    public List<String> getListProperty(final String key,
-            final List<String> fallback) {
+    public List<String> getListProperty(final String key, final List<String> fallback) {
         final String res = getProperty(key, "");
         if (res == null || res.isEmpty()) {
             return fallback;

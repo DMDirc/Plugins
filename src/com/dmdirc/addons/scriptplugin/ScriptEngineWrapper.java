@@ -24,11 +24,13 @@ package com.dmdirc.addons.scriptplugin;
 
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
-import com.dmdirc.util.io.StreamUtils;
+
+import com.google.common.base.Preconditions;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 
 import javax.script.Invocable;
 import javax.script.ScriptEngine;
@@ -37,8 +39,6 @@ import javax.script.ScriptException;
 
 /**
  * Class to create script engines!
- *
- * @author Shane 'Dataforce' McCormack
  */
 public class ScriptEngineWrapper {
 
@@ -62,8 +62,9 @@ public class ScriptEngineWrapper {
      */
     protected ScriptEngineWrapper(final ScriptEngineManager scriptEngineManager,
             final String filename) throws FileNotFoundException, ScriptException {
+        Preconditions.checkNotNull(filename, "File cannot be null");
         this.scriptEngineManager = scriptEngineManager;
-        file = (filename != null) ? new File(filename) : null;
+        file = new File(filename);
 
         engine = createEngine();
 
@@ -107,14 +108,10 @@ public class ScriptEngineWrapper {
      */
     protected ScriptEngine createEngine() throws FileNotFoundException, ScriptException {
         final ScriptEngine result = scriptEngineManager.getEngineByName("JavaScript");
-        if (file != null) {
-            FileReader fr = null;
-            try {
-                fr = new FileReader(file);
-                result.eval(fr);
-            } finally {
-                StreamUtils.close(fr);
-            }
+        try (FileReader fr = new FileReader(file)) {
+            result.eval(fr);
+        } catch (IOException ex) {
+            throw new ScriptException(ex);
         }
 
         result.put("localHelper", localHelper);
