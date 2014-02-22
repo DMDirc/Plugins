@@ -36,6 +36,7 @@ import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.parser.interfaces.ChannelClientInfo;
 import com.dmdirc.parser.interfaces.ChannelInfo;
 import com.dmdirc.parser.interfaces.ClientInfo;
+import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.ui.Colour;
 import com.dmdirc.ui.messages.ColourManager;
 
@@ -69,7 +70,7 @@ public class NickColourManager implements ActionListener, ConfigChangeListener {
 
     @Inject
     public NickColourManager(final ColourManager colourManager,
-            @NickColourModule.NickColourSettingsDomain final String domain,
+            @PluginDomain(NickColourPlugin.class) final String domain,
             @GlobalConfig final AggregateConfigProvider globalConfig,
             @UserConfig final ConfigProvider userConfig) {
         this.domain = domain;
