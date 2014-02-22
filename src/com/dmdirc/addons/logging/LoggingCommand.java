@@ -32,8 +32,10 @@ import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 
+import javax.inject.Inject;
+
 /**
- * The dcop command retrieves information from a dcop application.
+ * The logging command retrieves information from a dcop application.
  */
 public class LoggingCommand extends Command implements IntelligentCommand {
 
@@ -41,20 +43,21 @@ public class LoggingCommand extends Command implements IntelligentCommand {
     private static final String LOGGING = "logging";
     /** A command info object for this command. */
     public static final BaseCommandInfo INFO = new BaseCommandInfo(LOGGING,
-            "logging - <set|help> [parameters]",
+            "logging <history|help> - view logging related information",
             CommandType.TYPE_SERVER);
-    /** Logging plugin. */
-    private final LoggingPlugin plugin;
+    /** Logging manager. */
+    private final LoggingManager manager;
 
     /**
      * Creates a new instance of this command.
      *
      * @param controller The controller to use for command information.
-     * @param plugin     The plugin providing logging services.
+     * @param manager    The manager providing logging services.
      */
-    public LoggingCommand(final CommandController controller, final LoggingPlugin plugin) {
+    @Inject
+    public LoggingCommand(final CommandController controller, final LoggingManager manager) {
         super(controller);
-        this.plugin = plugin;
+        this.manager = manager;
     }
 
     /** {@inheritDoc} */
@@ -63,13 +66,11 @@ public class LoggingCommand extends Command implements IntelligentCommand {
             final CommandArguments args, final CommandContext context) {
         if (args.getArguments().length > 0) {
             if (args.getArguments()[0].equalsIgnoreCase("history")) {
-                if (!plugin.showHistory(origin)) {
+                if (!manager.showHistory(origin)) {
                     sendLine(origin, args.isSilent(), FORMAT_ERROR,
                             "Unable to open history for this window.");
                 }
             } else if (args.getArguments()[0].equalsIgnoreCase("help")) {
-                sendLine(origin, args.isSilent(), FORMAT_OUTPUT, LOGGING
-                        + " reload           - Reload the logging plugin.");
                 sendLine(origin, args.isSilent(), FORMAT_OUTPUT, LOGGING
                         + " history          - Open the history of this window, if available.");
                 sendLine(origin, args.isSilent(), FORMAT_OUTPUT, LOGGING
@@ -90,7 +91,6 @@ public class LoggingCommand extends Command implements IntelligentCommand {
             final IntelligentCommandContext context) {
         final AdditionalTabTargets res = new AdditionalTabTargets();
         if (arg == 0) {
-            res.add("reload");
             res.add("history");
             res.add("help");
             res.excludeAll();
