@@ -39,6 +39,8 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 /**
  * A command which allows users execute scripts.
  */
@@ -54,6 +56,7 @@ public class ExecCommand extends Command {
      *
      * @param controller The controller to use for command information.
      */
+    @Inject
     public ExecCommand(final CommandController controller) {
         super(controller);
     }
