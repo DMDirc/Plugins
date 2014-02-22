@@ -22,216 +22,74 @@
 
 package com.dmdirc.addons.notifications;
 
-import com.dmdirc.actions.ActionManager;
-import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
-import com.dmdirc.interfaces.ActionListener;
-import com.dmdirc.interfaces.CommandController;
-import com.dmdirc.interfaces.actions.ActionType;
-import com.dmdirc.interfaces.config.IdentityController;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.implementations.BaseCommandPlugin;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.Callable;
+
+import dagger.ObjectGraph;
 
 /**
  * Notification Manager plugin, aggregates notification sources exposing them via a single command.
  */
-public class NotificationsPlugin extends BaseCommandPlugin implements ActionListener {
+public class NotificationsPlugin extends BaseCommandPlugin {
 
-    /** The notification methods that we know of. */
-    private final List<String> methods = new ArrayList<>();
-    /** The user's preferred order for method usage. */
-    private List<String> order;
     /** This plugin's plugin info. */
     private final PluginInfo pluginInfo;
-    /** The controller to read and write settings with. */
-    private final IdentityController identityController;
+    /** Notifications manager. */
+    private NotificationsManager manager;
 
     /**
      * Creates a new instance of this plugin.
      *
-     * @param pluginInfo         This plugin's plugin info
-     * @param commandController  Command controller to register commands
-     * @param identityController The controller to read and write settings with.
+     * @param pluginInfo This plugin's plugin info
      */
-    public NotificationsPlugin(
-            final PluginInfo pluginInfo,
-            final CommandController commandController,
-            final IdentityController identityController) {
-        super(commandController);
+    public NotificationsPlugin(final PluginInfo pluginInfo) {
         this.pluginInfo = pluginInfo;
-        this.identityController = identityController;
-        registerCommand(new NotificationCommand(commandController, this),
-                NotificationCommand.INFO);
+
     }
 
-    /** {@inheritDoc} */
+    @Override
+    public void load(PluginInfo pluginInfo, ObjectGraph graph) {
+        super.load(pluginInfo, graph);
+        setObjectGraph(graph.plus(new NotificationsModule(pluginInfo)));
+        registerCommand(NotificationCommand.class, NotificationCommand.INFO);
+        manager = getObjectGraph().get(NotificationsManager.class);
+    }
+
     @Override
     public void onLoad() {
-        methods.clear();
-        loadSettings();
-        ActionManager.getActionManager().registerListener(this,
-                CoreActionType.PLUGIN_LOADED, CoreActionType.PLUGIN_UNLOADED);
-        for (PluginInfo target : pluginInfo.getMetaData().getManager()
-                .getPluginInfos()) {
-            if (target.isLoaded()) {
-                addPlugin(target);
-            }
-        }
+        manager.onLoad();
         super.onLoad();
     }
 
-    /** {@inheritDoc} */
     @Override
     public void onUnload() {
-        methods.clear();
-        ActionManager.getActionManager().unregisterListener(this);
+        manager.onUnload();
         super.onUnload();
     }
 
-    /** {@inheritDoc} */
     @Override
     public void showConfig(final PreferencesDialogModel manager) {
         final NotificationConfig configPanel = UIUtilities.invokeAndWait(
                 new Callable<NotificationConfig>() {
-            /** {@inheritDoc} */
-            @Override
-            public NotificationConfig call() {
-                return new NotificationConfig(NotificationsPlugin.this,
-                        order);
-            }
-        });
+                    /** {@inheritDoc} */
+                    @Override
+                    public NotificationConfig call() {
+                        return new NotificationConfig(manager.getIdentity(), pluginInfo.getDomain(),
+                                manager.getConfigManager().getOptionList(pluginInfo.getDomain(),
+                                        "methodOrder"));
+                    }
+                });
 
         final PreferencesCategory category = new PluginPreferencesCategory(
                 pluginInfo, "Notifications", "", "category-notifications",
                 configPanel);
         manager.getCategory("Plugins").addSubCategory(category);
-    }
-
-    /** Loads the plugins settings. */
-    private void loadSettings() {
-        if (identityController.getGlobalConfiguration()
-                .hasOptionString(pluginInfo.getDomain(), "methodOrder")) {
-            order = identityController.getGlobalConfiguration().
-                    getOptionList(pluginInfo.getDomain(), "methodOrder");
-        } else {
-            order = new ArrayList<>();
-        }
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void processEvent(final ActionType type, final StringBuffer format,
-            final Object... arguments) {
-        if (type == CoreActionType.PLUGIN_LOADED) {
-            addPlugin((PluginInfo) arguments[0]);
-        } else if (type == CoreActionType.PLUGIN_UNLOADED) {
-            removePlugin((PluginInfo) arguments[0]);
-        }
-    }
-
-    /**
-     * Checks to see if a plugin implements the notification method interface and if it does, adds
-     * the method to our list.
-     *
-     * @param target The plugin to be tested
-     */
-    private void addPlugin(final PluginInfo target) {
-        if (target.hasExportedService("showNotification")) {
-            methods.add(target.getMetaData().getName());
-            addMethodToOrder(target);
-        }
-    }
-
-    /**
-     * Checks to see if the specified notification method needs to be added to our order list, and
-     * adds it if neccessary.
-     *
-     * @param source The notification method to be tested
-     */
-    private void addMethodToOrder(final PluginInfo source) {
-        if (!order.contains(source.getMetaData().getName())) {
-            order.add(source.getMetaData().getName());
-        }
-    }
-
-    /**
-     * Checks to see if a plugin implements the notification method interface and if it does,
-     * removes the method from our list.
-     *
-     * @param target The plugin to be tested
-     */
-    private void removePlugin(final PluginInfo target) {
-        methods.remove(target.getMetaData().getName());
-    }
-
-    /**
-     * Retrieves a method based on its name.
-     *
-     * @param name The name to search for
-     *
-     * @return The method with the specified name or null if none were found.
-     */
-    public PluginInfo getMethod(final String name) {
-        return pluginInfo.getMetaData().getManager().getPluginInfoByName(name);
-    }
-
-    /**
-     * Retrieves all the methods registered with this plugin.
-     *
-     * @return All known notification sources
-     */
-    public List<PluginInfo> getMethods() {
-        final List<PluginInfo> plugins = new ArrayList<>();
-        for (String method : methods) {
-            plugins.add(pluginInfo.getMetaData().getManager()
-                    .getPluginInfoByName(method));
-        }
-        return plugins;
-    }
-
-    /**
-     * Does this plugin have any active notification methods?
-     *
-     * @return true iif active notification methods are registered
-     */
-    public boolean hasActiveMethod() {
-        return !methods.isEmpty();
-    }
-
-    /**
-     * Returns the user's preferred method if loaded, or null if none loaded.
-     *
-     * @return Preferred notification method
-     */
-    public PluginInfo getPreferredMethod() {
-        if (methods.isEmpty()) {
-            return null;
-        }
-        for (String method : order) {
-            if (methods.contains(method)) {
-                return pluginInfo.getMetaData().getManager().getPluginInfoByName(
-                        method);
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Saves the plugins settings.
-     *
-     * @param newOrder The new order for methods
-     */
-    protected void saveSettings(final List<String> newOrder) {
-        order = newOrder;
-        identityController.getUserSettings()
-                .setOption(pluginInfo.getDomain(), "methodOrder", order);
     }
 
 }
