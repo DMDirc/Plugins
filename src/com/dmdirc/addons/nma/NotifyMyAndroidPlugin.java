@@ -27,44 +27,34 @@ import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
-import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.implementations.BaseCommandPlugin;
+
+import dagger.ObjectGraph;
 
 /**
  * Plugin to allow pushing notifications to NotifyMyAndroid.
  */
 public class NotifyMyAndroidPlugin extends BaseCommandPlugin {
 
-    /** The command to register. */
-    private final NotifyMyAndroidCommand command;
     /** Our info object. */
     private final PluginInfo pluginInfo;
 
     /**
      * Creates a new instance of the {@link NotifyMyAndroidPlugin}.
      *
-     * @param pluginInfo        The plugin info object for this plugin.
-     * @param commandController Command controller to register commands
+     * @param pluginInfo The plugin info object for this plugin.
      */
-    public NotifyMyAndroidPlugin(final PluginInfo pluginInfo,
-            final CommandController commandController) {
-        super(commandController);
-
-        command = new NotifyMyAndroidCommand(commandController);
-        registerCommand(command, NotifyMyAndroidCommand.INFO);
-
+    public NotifyMyAndroidPlugin(final PluginInfo pluginInfo) {
         this.pluginInfo = pluginInfo;
     }
 
-    /** {@inheritDoc} */
     @Override
-    public void setDomain(final String newDomain) {
-        super.setDomain(newDomain);
-        command.setConfigDomain(newDomain);
+    public void load(final PluginInfo pluginInfo, final ObjectGraph graph) {
+        super.load(pluginInfo, graph);
+        setObjectGraph(graph.plus(new NotifyMyAndroidModule(pluginInfo)));
     }
 
-    /** {@inheritDoc} */
     @Override
     public void showConfig(final PreferencesDialogModel manager) {
         final PreferencesCategory category = new PluginPreferencesCategory(

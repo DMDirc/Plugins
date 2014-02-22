@@ -29,8 +29,11 @@ import com.dmdirc.commandparser.CommandType;
 import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.interfaces.CommandController;
+import com.dmdirc.plugins.PluginDomain;
 
 import java.io.IOException;
+
+import javax.inject.Inject;
 
 import org.slf4j.LoggerFactory;
 
@@ -48,18 +51,18 @@ public class NotifyMyAndroidCommand extends Command {
             + " - Sends notification to NotifyMyAndroid",
             CommandType.TYPE_GLOBAL);
     /** The configuration domain to retrieve settings from. */
-    private String configDomain;
+    private final String configDomain;
 
     /**
      * Creates a new instance of this command.
      *
      * @param controller The controller to use for command information.
+     * @param configDomain This plugin's settings domain
      */
-    public NotifyMyAndroidCommand(final CommandController controller) {
+    @Inject
+    public NotifyMyAndroidCommand(final CommandController controller,
+            @PluginDomain(NotifyMyAndroidPlugin.class) final String configDomain) {
         super(controller);
-    }
-
-    public void setConfigDomain(final String configDomain) {
         this.configDomain = configDomain;
     }
 
