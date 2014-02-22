@@ -27,7 +27,6 @@ import com.dmdirc.FrameContainer;
 import com.dmdirc.ServerState;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionType;
-import com.dmdirc.addons.lagdisplay.LagDisplayModule.LagDisplaySettingsDomain;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SelectionListener;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
@@ -37,6 +36,7 @@ import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
+import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.util.collections.RollingList;
 
 import java.util.Date;
@@ -82,7 +82,7 @@ public class LagDisplayManager implements ActionListener, ConfigChangeListener, 
             final MainFrame mainFrame,
             final SwingStatusBar statusBar,
             final Provider<LagDisplayPanel> panelProvider,
-            @LagDisplaySettingsDomain final String domain,
+            @PluginDomain(LagDisplayPlugin.class) final String domain,
             @GlobalConfig final AggregateConfigProvider globalConfig) {
         this.mainFrame = mainFrame;
         this.statusBar = statusBar;

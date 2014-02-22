@@ -27,7 +27,6 @@ import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.Query;
 import com.dmdirc.actions.CoreActionType;
-import com.dmdirc.addons.logging.LoggingModule.LoggingDomain;
 import com.dmdirc.commandline.CommandLineOptionsModule.Directory;
 import com.dmdirc.interfaces.ActionController;
 import com.dmdirc.interfaces.ActionListener;
@@ -41,6 +40,7 @@ import com.dmdirc.parser.interfaces.ChannelClientInfo;
 import com.dmdirc.parser.interfaces.ChannelInfo;
 import com.dmdirc.parser.interfaces.ClientInfo;
 import com.dmdirc.parser.interfaces.Parser;
+import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.messages.Styliser;
 import com.dmdirc.util.URLBuilder;
@@ -114,7 +114,7 @@ public class LoggingManager implements ActionListener, ConfigChangeListener {
 
     @Inject
     public LoggingManager(
-            @LoggingDomain final String domain,
+            @PluginDomain(LoggingPlugin.class) final String domain,
             final ActionController actionController,
             @GlobalConfig final AggregateConfigProvider globalConfig,
             final WindowManager windowManager,

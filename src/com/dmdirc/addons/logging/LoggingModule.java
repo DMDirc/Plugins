@@ -29,10 +29,9 @@ import com.dmdirc.commandline.CommandLineOptionsModule.Directory;
 import com.dmdirc.commandline.CommandLineOptionsModule.DirectoryType;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
+import com.dmdirc.plugins.PluginDomain;
 
 import java.io.File;
-
-import javax.inject.Qualifier;
 
 import dagger.Module;
 import dagger.Provides;
@@ -43,10 +42,6 @@ import dagger.Provides;
 @Module(addsTo = ClientModule.class, injects = {LoggingManager.class, LoggingCommand.class})
 public class LoggingModule {
 
-    @Qualifier
-    public @interface LoggingDomain {
-    }
-
     public static final String LOGS_DIRECTORY = "logs";
 
     private final String domain;
@@ -56,7 +51,7 @@ public class LoggingModule {
     }
 
     @Provides
-    @LoggingDomain
+    @PluginDomain(LoggingPlugin.class)
     public String getDomain() {
         return domain;
     }
@@ -67,7 +62,7 @@ public class LoggingModule {
             @UserConfig final ConfigProvider userConfig,
             @GlobalConfig final AggregateConfigProvider globalConfig,
             @Directory(DirectoryType.BASE) final String baseDirectory,
-            @LoggingDomain final String domain) {
+            @PluginDomain(LoggingPlugin.class) final String domain) {
         if (!userConfig.hasOptionString(domain, "general.directory")) {
             userConfig.setOption(domain, "general.directory",
                     baseDirectory + "logs" + File.separator);

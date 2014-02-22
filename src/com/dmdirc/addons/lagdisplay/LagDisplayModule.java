@@ -23,8 +23,7 @@
 package com.dmdirc.addons.lagdisplay;
 
 import com.dmdirc.addons.ui_swing.injection.SwingModule;
-
-import javax.inject.Qualifier;
+import com.dmdirc.plugins.PluginDomain;
 
 import dagger.Module;
 import dagger.Provides;
@@ -38,16 +37,12 @@ public class LagDisplayModule {
     /** The domain for plugin settings. */
     private final String domain;
 
-    @Qualifier
-    public static @interface LagDisplaySettingsDomain {
-    }
-
     public LagDisplayModule(final String domain) {
         this.domain = domain;
     }
 
     @Provides
-    @LagDisplaySettingsDomain
+    @PluginDomain(LagDisplayPlugin.class)
     public String getDomain() {
         return domain;
     }
