@@ -32,6 +32,7 @@ import java.io.FileReader;
 
 import javax.script.Invocable;
 import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
 /**
@@ -47,21 +48,21 @@ public class ScriptEngineWrapper {
     private final File file;
     /** Script-Local JS Helper */
     private final JavaScriptHelper localHelper = new JavaScriptHelper();
-    /** The script plugin that owns this wrapper. */
-    private final ScriptPlugin plugin;
+    /** Manager to get script engines. */
+    private final ScriptEngineManager scriptEngineManager;
 
     /**
      * Create a new ScriptEngineWrapper
      *
-     * @param plugin   The script plugin that owns this wrapper
-     * @param filename Filename of script
+     * @param scriptEngineManager Manager to get script engines
+     * @param filename            Filename of script
      *
      * @throws java.io.FileNotFoundException If file is not found
      * @throws javax.script.ScriptException  If there was an error during creation
      */
-    protected ScriptEngineWrapper(final ScriptPlugin plugin, final String filename) throws
-            FileNotFoundException, ScriptException {
-        this.plugin = plugin;
+    protected ScriptEngineWrapper(final ScriptEngineManager scriptEngineManager,
+            final String filename) throws FileNotFoundException, ScriptException {
+        this.scriptEngineManager = scriptEngineManager;
         file = (filename != null) ? new File(filename) : null;
 
         engine = createEngine();
@@ -105,7 +106,7 @@ public class ScriptEngineWrapper {
      * @throws javax.script.ScriptException  If there was an error during creation
      */
     protected ScriptEngine createEngine() throws FileNotFoundException, ScriptException {
-        final ScriptEngine result = plugin.getScriptFactory().getEngineByName("JavaScript");
+        final ScriptEngine result = scriptEngineManager.getEngineByName("JavaScript");
         if (file != null) {
             FileReader fr = null;
             try {
@@ -135,7 +136,7 @@ public class ScriptEngineWrapper {
             invEngine.invokeFunction(functionName, args);
         } catch (NoSuchMethodException nsme) {
             // There is no "methodExists" function, so we catch NoSuchMethodException
-            // and do nothing rather that add an erropr every time a method is called
+            // and do nothing rather that add an error every time a method is called
             // that doesn't exist (such as the action_* methods)
         } catch (ScriptException e) {
             Logger.userError(ErrorLevel.LOW, "Error calling '" + functionName + "' in '" + file.

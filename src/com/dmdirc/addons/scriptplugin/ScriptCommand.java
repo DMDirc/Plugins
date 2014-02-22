@@ -32,6 +32,7 @@ import com.dmdirc.commandparser.commands.IntelligentCommand;
 import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.config.IdentityController;
+import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 
 import java.io.File;
@@ -44,6 +45,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
 /**
@@ -58,6 +60,12 @@ public class ScriptCommand extends Command implements IntelligentCommand {
     private final ScriptPlugin myPlugin;
     /** The controller to read/write settings with. */
     private final IdentityController identityController;
+    /** Plugin settings domain. */
+    private final String domain;
+    /** Manager used to retrieve script engines. */
+    private final ScriptEngineManager ScriptEngineManager;
+    /** Script directory. */
+    private final String scriptDirectory;
 
     /**
      * Creates a new instance of this command.
@@ -65,12 +73,19 @@ public class ScriptCommand extends Command implements IntelligentCommand {
      * @param myPlugin           The plugin that owns the command.
      * @param identityController The controller to read and write settings from.
      * @param commandController  The controller to use for command information.
+     * @param pluginInfo         This plugin's info object
+     * @param scriptManager      Manager used to get script engines
+     * @param scriptDirectory    Directory to store scripts
      */
     public ScriptCommand(final ScriptPlugin myPlugin, final IdentityController identityController,
-            final CommandController commandController) {
+            final CommandController commandController, final PluginInfo pluginInfo,
+            final ScriptEngineManager scriptManager, final String scriptDirectory) {
         super(commandController);
         this.myPlugin = myPlugin;
         this.identityController = identityController;
+        this.domain = pluginInfo.getDomain();
+        this.ScriptEngineManager = scriptManager;
+        this.scriptDirectory = scriptDirectory;
     }
 
     /** {@inheritDoc} */
@@ -87,7 +102,7 @@ public class ScriptCommand extends Command implements IntelligentCommand {
             if (sargs.length > 1) {
                 final String filename = args.getArgumentsAsString(1);
                 sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Loading: " + filename + " ["
-                        + myPlugin.loadScript(myPlugin.getScriptDir() + filename) + "]");
+                        + myPlugin.loadScript(scriptDirectory + filename) + "]");
             } else {
                 sendLine(origin, args.isSilent(), FORMAT_ERROR, "You must specify a script to load");
             }
@@ -95,7 +110,7 @@ public class ScriptCommand extends Command implements IntelligentCommand {
             if (sargs.length > 1) {
                 final String filename = args.getArgumentsAsString(1);
                 sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Unloading: " + filename + " ["
-                        + myPlugin.loadScript(myPlugin.getScriptDir() + filename) + "]");
+                        + myPlugin.loadScript(scriptDirectory + filename) + "]");
             } else {
                 sendLine(origin, args.isSilent(), FORMAT_ERROR,
                         "You must specify a script to unload");
@@ -106,18 +121,17 @@ public class ScriptCommand extends Command implements IntelligentCommand {
                 sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Evaluating: " + script);
                 try {
                     ScriptEngineWrapper wrapper;
-                    if (identityController.getGlobalConfiguration().hasOptionString(myPlugin.
-                            getDomain(), "eval.baseFile")) {
-                        final String baseFile = myPlugin.getScriptDir() + '/' + identityController.
-                                getGlobalConfiguration().getOption(myPlugin.getDomain(),
-                                "eval.baseFile");
+                    if (identityController.getGlobalConfiguration().hasOptionString(domain,
+                            "eval.baseFile")) {
+                        final String baseFile = scriptDirectory + '/' + identityController.
+                                getGlobalConfiguration().getOption(domain, "eval.baseFile");
                         if (new File(baseFile).exists()) {
-                            wrapper = new ScriptEngineWrapper(myPlugin, baseFile);
+                            wrapper = new ScriptEngineWrapper(ScriptEngineManager, baseFile);
                         } else {
-                            wrapper = new ScriptEngineWrapper(myPlugin, null);
+                            wrapper = new ScriptEngineWrapper(ScriptEngineManager, null);
                         }
                     } else {
-                        wrapper = new ScriptEngineWrapper(myPlugin, null);
+                        wrapper = new ScriptEngineWrapper(ScriptEngineManager, null);
                     }
                     wrapper.getScriptEngine().put("cmd_origin", origin);
                     wrapper.getScriptEngine().put("cmd_isSilent", args.isSilent());
@@ -128,8 +142,8 @@ public class ScriptCommand extends Command implements IntelligentCommand {
                     sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Exception: " + e + " -> " + e.
                             getMessage());
 
-                    if (identityController.getGlobalConfiguration().getOptionBool(myPlugin.
-                            getDomain(), "eval.showStackTrace")) {
+                    if (identityController.getGlobalConfiguration().getOptionBool(domain,
+                            "eval.showStackTrace")) {
                         try {
                             final Class<?> logger = Class.forName("com.dmdirc.logger.Logger");
                             if (logger != null) {
@@ -164,11 +178,10 @@ public class ScriptCommand extends Command implements IntelligentCommand {
                 sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Saving as '" + functionName
                         + "': " + script);
                 if (identityController.getGlobalConfiguration().
-                        hasOptionString(myPlugin.getDomain(), "eval.baseFile")) {
+                        hasOptionString(domain, "eval.baseFile")) {
                     try {
-                        final String baseFile = myPlugin.getScriptDir() + '/' + identityController.
-                                getGlobalConfiguration().getOption(myPlugin.getDomain(),
-                                "eval.baseFile");
+                        final String baseFile = scriptDirectory + '/' + identityController.
+                                getGlobalConfiguration().getOption(domain, "eval.baseFile");
                         try (FileWriter writer = new FileWriter(baseFile, true)) {
                             writer.write("function ");
                             writer.write(functionName);
@@ -188,7 +201,7 @@ public class ScriptCommand extends Command implements IntelligentCommand {
                     }
                 } else {
                     sendLine(origin, args.isSilent(), FORMAT_ERROR,
-                            "No baseFile specified, please /set " + myPlugin.getDomain()
+                            "No baseFile specified, please /set " + domain
                             + " eval.baseFile filename (stored in scripts dir of profile)");
                 }
             } else if (sargs.length > 1) {
@@ -212,7 +225,7 @@ public class ScriptCommand extends Command implements IntelligentCommand {
                     "eval <script>                  - evaluate the code <script> and return the result");
             sendLine(origin, args.isSilent(), FORMAT_OUTPUT,
                     "savetobasefile <name> <script> - save the code <script> to the eval basefile ("
-                    + myPlugin.getDomain() + ".eval.basefile)");
+                    + domain + ".eval.basefile)");
             sendLine(origin, args.isSilent(), FORMAT_OUTPUT,
                     "                                 as the function <name> (name/foo/bar will save it as 'name' with foo and");
             sendLine(origin, args.isSilent(), FORMAT_OUTPUT,
@@ -264,7 +277,7 @@ public class ScriptCommand extends Command implements IntelligentCommand {
         final List<String> res = new LinkedList<>();
 
         final LinkedList<File> dirs = new LinkedList<>();
-        dirs.add(new File(myPlugin.getScriptDir()));
+        dirs.add(new File(scriptDirectory));
 
         while (!dirs.isEmpty()) {
             final File dir = dirs.pop();
@@ -272,7 +285,7 @@ public class ScriptCommand extends Command implements IntelligentCommand {
                 dirs.addAll(Arrays.asList(dir.listFiles()));
             } else if (dir.isFile() && dir.getName().endsWith(".js")) {
                 final String target = dir.getPath();
-                res.add(target.substring(myPlugin.getScriptDir().length(), target.length()));
+                res.add(target.substring(scriptDirectory.length(), target.length()));
             }
         }
         return res;
