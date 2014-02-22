@@ -34,6 +34,8 @@ import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 
+import javax.inject.Inject;
+
 /**
  * Generates a contact list for the channel the command is used in.
  */
@@ -49,6 +51,7 @@ public class ContactListCommand extends Command implements IntelligentCommand {
      *
      * @param controller The controller to use for command information.
      */
+    @Inject
     public ContactListCommand(final CommandController controller) {
         super(controller);
     }

@@ -22,21 +22,11 @@
 
 package com.dmdirc.addons.contactlist;
 
-import com.dmdirc.plugins.PluginInfo;
-import com.dmdirc.plugins.implementations.BaseCommandPlugin;
+import com.dmdirc.addons.ui_swing.injection.SwingModule;
 
-import dagger.ObjectGraph;
+import dagger.Module;
 
-/**
- * Plugin to provide a POC contact list.
- */
-public class ContactListPlugin extends BaseCommandPlugin {
+@Module(injects = ContactListCommand.class, addsTo = SwingModule.class)
+public class ContactListModule {
 
-    @Override
-    public void load(final PluginInfo pluginInfo, final ObjectGraph graph) {
-        super.load(pluginInfo, graph);
-
-        setObjectGraph(graph.plus(new ContactListModule()));
-        registerCommand(ContactListCommand.class, ContactListCommand.INFO);
-    }
 }
