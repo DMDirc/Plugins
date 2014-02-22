@@ -25,6 +25,7 @@ package com.dmdirc.addons.osd;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.interfaces.config.IdentityController;
+import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.ui.messages.ColourManager;
 
 import java.util.ArrayList;
@@ -35,8 +36,6 @@ import java.util.concurrent.Callable;
 
 /**
  * Class to manage OSD Windows.
- *
- * @since 0.6.3
  */
 public class OsdManager {
 
@@ -52,13 +51,17 @@ public class OsdManager {
     private final List<OsdWindow> windowList = new ArrayList<>();
     /** List of messages to be queued. */
     private final Queue<QueuedMessage> windowQueue = new LinkedList<>();
+    /** This plugin's settings domain. */
+    private final String domain;
 
     public OsdManager(final MainFrame mainFrame, final IdentityController identityController,
-            final OsdPlugin plugin, final ColourManager colourManager) {
+            final OsdPlugin plugin, final ColourManager colourManager,
+            final PluginInfo pluginInfo) {
         this.mainFrame = mainFrame;
         this.identityController = identityController;
         this.plugin = plugin;
         this.colourManager = colourManager;
+        this.domain = pluginInfo.getDomain();
     }
 
     /**
@@ -77,7 +80,7 @@ public class OsdManager {
      */
     private synchronized void displayWindows() {
         final Integer maxWindows = identityController.getGlobalConfiguration()
-                .getOptionInt(plugin.getDomain(), "maxWindows", false);
+                .getOptionInt(domain, "maxWindows", false);
 
         QueuedMessage nextItem;
 
@@ -100,10 +103,9 @@ public class OsdManager {
      */
     private synchronized void displayWindow(final int timeout, final String message) {
         final OsdPolicy policy = OsdPolicy.valueOf(identityController.getGlobalConfiguration()
-                .getOption(plugin.getDomain(), "newbehaviour")
-                .toUpperCase());
+                .getOption(domain, "newbehaviour").toUpperCase());
         final int startY = identityController.getGlobalConfiguration()
-                .getOptionInt(plugin.getDomain(), "locationY");
+                .getOptionInt(domain, "locationY");
 
         windowList.add(UIUtilities.invokeAndWait(
                 new Callable<OsdWindow>() {
@@ -115,8 +117,7 @@ public class OsdManager {
                         identityController, plugin, OsdManager.this, colourManager,
                         timeout, message, false,
                         identityController.getGlobalConfiguration().getOptionInt(
-                        plugin.getDomain(), "locationX"), policy.getYPosition(
-                        OsdManager.this, startY));
+                        domain, "locationX"), policy.getYPosition(OsdManager.this, startY), domain);
             }
         }));
     }
@@ -129,8 +130,7 @@ public class OsdManager {
     public synchronized void closeWindow(final OsdWindow window) {
         final OsdPolicy policy = OsdPolicy.valueOf(
                 identityController.getGlobalConfiguration()
-                .getOption(plugin.getDomain(), "newbehaviour")
-                .toUpperCase());
+                .getOption(domain, "newbehaviour").toUpperCase());
 
         int oldY = window.getDesiredY();
         final int closedIndex = windowList.indexOf(window);

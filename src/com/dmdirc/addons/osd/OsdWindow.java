@@ -48,17 +48,10 @@ import net.miginfocom.swing.MigLayout;
 /**
  * The OSD Window is an always-on-top window designed to convey information about events to the
  * user.
- *
- * @author chris
  */
-public class OsdWindow extends JDialog implements MouseListener,
-        MouseMotionListener {
+public class OsdWindow extends JDialog implements MouseListener, MouseMotionListener {
 
-    /**
-     * A version number for this class. It should be changed whenever the class structure is changed
-     * (or anything else that would prevent serialized objects being unserialized with the new
-     * class).
-     */
+    /** A version number for this class. */
     private static final long serialVersionUID = 2;
     /** The OSD Manager that owns this window. */
     private final OsdManager osdManager;
@@ -91,15 +84,15 @@ public class OsdWindow extends JDialog implements MouseListener,
      *                           to be moved)
      * @param x                  The x-axis position for the OSD Window
      * @param y                  The y-axis position for the OSD window
-     * @param plugin             Parent OSD Plugin
      * @param osdManager         The manager that owns this OSD Window
+     * @param domain             This plugin's settings domain
      */
     public OsdWindow(
             final MainFrame mainFrame,
-            final IdentityController identityController, final OsdPlugin plugin,
+            final IdentityController identityController,
             final OsdManager osdManager, final ColourManager colourManager,
             final int timeout, final String text, final boolean config, final int x,
-            final int y) {
+            final int y, final String domain) {
         super(mainFrame, false);
 
         this.colourManager = colourManager;
@@ -107,8 +100,8 @@ public class OsdWindow extends JDialog implements MouseListener,
         this.osdManager = osdManager;
 
         if (timeout < 0) {
-            this.timeout = identityController.getGlobalConfiguration().getOptionInt(
-                    osdManager.getPlugin().getDomain(), "timeout", false);
+            this.timeout = identityController.getGlobalConfiguration().getOptionInt(domain,
+            "timeout", false);
         } else {
             this.timeout = timeout;
         }
@@ -128,23 +121,19 @@ public class OsdWindow extends JDialog implements MouseListener,
         panel = new JPanel();
         panel.setBorder(new LineBorder(Color.BLACK));
         panel.setBackground(UIUtilities.convertColour(
-                colourManager.getColourFromString(
-                identityController.getGlobalConfiguration()
-                .getOptionString(plugin.getDomain(), "bgcolour"), null)));
+                colourManager.getColourFromString(identityController.getGlobalConfiguration()
+                        .getOptionString(domain, "bgcolour"), null)));
 
-        final int width = identityController.getGlobalConfiguration()
-                .getOptionInt(plugin.getDomain(), "width");
+        final int width = identityController.getGlobalConfiguration().getOptionInt(domain, "width");
         setContentPane(panel);
         setLayout(new MigLayout("wmin " + width + ", wmax " + width + ", ins rel, fill"));
 
         label = new JLabel(text);
         label.setForeground(UIUtilities.convertColour(
-                colourManager.getColourFromString(
-                identityController.getGlobalConfiguration()
-                .getOptionString(plugin.getDomain(), "fgcolour"), null)));
-        label.setFont(label.getFont().deriveFont(
-                (float) identityController
-                .getGlobalConfiguration().getOptionInt(plugin.getDomain(), "fontSize")));
+                colourManager.getColourFromString(identityController.getGlobalConfiguration()
+                        .getOptionString(domain, "fgcolour"), null)));
+        label.setFont(label.getFont().deriveFont((float) identityController
+                .getGlobalConfiguration().getOptionInt(domain, "fontSize")));
         label.setHorizontalAlignment(SwingConstants.CENTER);
         add(label, "alignx center, hmin " + label.getFont().getSize());
 
