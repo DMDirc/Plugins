@@ -33,12 +33,12 @@ import static com.dmdirc.addons.ui_swing.SwingPreconditions.checkOnEDT;
 
 /**
  * Provider for {@link StandardDialog} based windows that correspond to some key.
- *
- * <p>This provider will cache instances that are created until the windows are closed. Once a
- * window has been closed, the next call to {@link #get()} or {@link #displayOrRequestFocus()} will
- * result in a new instance being created.
- *
- * <p>Dialogs with different keys may be open simultaneously, and are treated independently.
+ * <p>
+ * This provider will cache instances that are created until the windows are closed. Once a window
+ * has been closed, the next call to {@link #get()} or {@link #displayOrRequestFocus()} will result
+ * in a new instance being created.
+ * <p>
+ * Dialogs with different keys may be open simultaneously, and are treated independently.
  *
  * @param <K> The type of key that dialogs are associated with.
  * @param <T> The type of dialog that will be managed.
@@ -50,13 +50,13 @@ public abstract class KeyedDialogProvider<K, T extends StandardDialog> {
 
     /**
      * Gets an instance of the dialog provided by this class.
-     *
-     * <p>If there is an existing instance with the same key that hasn't been closed, it will be
+     * <p>
+     * If there is an existing instance with the same key that hasn't been closed, it will be
      * returned. Otherwise a new instance will be created and returned. New instances will not be
-     * automatically be * displayed to the user - use
-     * {@link #displayOrRequestFocus(java.lang.Object)} to do so.
-     *
-     * <p>This method <em>must</em> be called on the Event Despatch Thread.
+     * automatically be displayed to the user - use {@link #displayOrRequestFocus(java.lang.Object)}
+     * to do so.
+     * <p>
+     * This method <em>must</em> be called on the Event Despatch Thread.
      *
      * @param key The key associated with the dialog to get.
      *
@@ -74,8 +74,8 @@ public abstract class KeyedDialogProvider<K, T extends StandardDialog> {
 
     /**
      * Disposes of the dialog associated with the given key, if it exists.
-     *
-     * <p>This method <em>must</em> be called on the Event Despatch Thread.
+     * <p>
+     * This method <em>must</em> be called on the Event Despatch Thread.
      *
      * @param key The key associated with the dialog to close.
      */
@@ -88,12 +88,12 @@ public abstract class KeyedDialogProvider<K, T extends StandardDialog> {
 
     /**
      * Ensures the dialog is visible to the user.
-     *
-     * <p>If no dialog currently exists with the same key, a new one will be created and displayed
-     * to the user. If a dialog existed prior to this method being invoked, it will request focus to
+     * <p>
+     * If no dialog currently exists with the same key, a new one will be created and displayed to
+     * the user. If a dialog existed prior to this method being invoked, it will request focus to
      * bring it to the user's attention.
-     *
-     * <p>This method <em>must</em> be called on the Event Despatch Thread.
+     * <p>
+     * This method <em>must</em> be called on the Event Despatch Thread.
      *
      * @param key The key associated with the dialog to display.
      */
@@ -112,19 +112,19 @@ public abstract class KeyedDialogProvider<K, T extends StandardDialog> {
     protected abstract T getInstance(final K key);
 
     /**
-     * Listens to window closing events to remove the cached instance of the dialog.
+     * Listens to window closed events to remove the cached instance of the dialog.
      */
     private class Listener extends WindowAdapter {
 
         private final K key;
 
-        public Listener(final K key) {
+        Listener(final K key) {
             this.key = key;
         }
 
         @Override
-        public void windowClosing(final WindowEvent e) {
-            super.windowClosing(e);
+        public void windowClosed(final WindowEvent e) {
+            super.windowClosed(e);
             instances.remove(key);
         }
 
