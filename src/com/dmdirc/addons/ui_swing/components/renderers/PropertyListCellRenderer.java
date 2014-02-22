@@ -22,8 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.components.renderers;
 
-import java.beans.IntrospectionException;
-import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
 
 import javax.swing.ListCellRenderer;
@@ -53,15 +51,14 @@ public class PropertyListCellRenderer<E> extends MethodListCellRenderer<E> {
     }
 
     private static <E> Method getMethod(final String property, final Class<E> type) {
-        final PropertyDescriptor propertyDescriptor;
         Method readMethod;
         try {
-            propertyDescriptor = new PropertyDescriptor(property, type);
-            readMethod = propertyDescriptor.getReadMethod();
-            if (readMethod == null || readMethod.getReturnType() != String.class) {
-                readMethod = getToStringMethod(type);
-            }
-        } catch (IntrospectionException ex) {
+            readMethod = type.getMethod("get" + (property.substring(0, 1).toUpperCase() + property.
+                    substring(1)));
+        } catch (NoSuchMethodException | SecurityException ex) {
+            readMethod = getToStringMethod(type);
+        }
+        if (readMethod == null || readMethod.getReturnType() != String.class) {
             readMethod = getToStringMethod(type);
         }
         return readMethod;
