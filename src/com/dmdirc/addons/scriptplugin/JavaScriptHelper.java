@@ -28,7 +28,7 @@ import java.util.Map;
 
 /**
  * Used to allow the rhino javascript to do stuff that it otherwise can't, such as setting global
- * variables, string triming and getting a char.
+ * variables, string trimming and getting a char.
  */
 public class JavaScriptHelper {
 
@@ -90,7 +90,7 @@ public class JavaScriptHelper {
      *
      * @param str String to make object from
      *
-     * @return Character represending first char in the string
+     * @return Character representing first char in the string
      */
     public Character toChar(final String str) {
         return str.charAt(0);

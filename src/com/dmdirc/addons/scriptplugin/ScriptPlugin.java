@@ -30,8 +30,8 @@ import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.interfaces.config.IdentityController;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
+import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.implementations.BaseCommandPlugin;
-import com.dmdirc.util.io.StreamUtils;
 import com.dmdirc.util.validators.ValidationResponse;
 
 import java.io.File;
@@ -54,13 +54,13 @@ public class ScriptPlugin extends BaseCommandPlugin implements ActionListener {
     /** Script Directory */
     private final String scriptDir;
     /** Script Engine Manager */
-    private ScriptEngineManager scriptFactory = new ScriptEngineManager();
+    private final ScriptEngineManager ScriptEngineManager = new ScriptEngineManager();
     /** Instance of the javaScriptHelper class */
-    private JavaScriptHelper jsHelper = new JavaScriptHelper();
+    private final JavaScriptHelper jsHelper = new JavaScriptHelper();
     /** Store Script State Name,Engine */
-    private Map<String, ScriptEngineWrapper> scripts = new HashMap<>();
+    private final Map<String, ScriptEngineWrapper> scripts = new HashMap<>();
     /** Used to store permanent variables */
-    protected TypedProperties globalVariables = new TypedProperties();
+    private final TypedProperties globalVariables = new TypedProperties();
     /** The action controller to use. */
     private final ActionController actionController;
 
@@ -70,19 +70,21 @@ public class ScriptPlugin extends BaseCommandPlugin implements ActionListener {
      * @param actionController   The action controller to register listeners with
      * @param identityController The Identity Manager that controls the current config
      * @param commandController  Command controller to register commands
+     * @param pluginInfo         Plugin info object
      */
     public ScriptPlugin(final ActionController actionController,
             final IdentityController identityController,
-            final CommandController commandController) {
+            final CommandController commandController,
+            final PluginInfo pluginInfo) {
         super(commandController);
         scriptDir = identityController.getConfigurationDirectory() + "scripts/";
         this.actionController = actionController;
 
         // Add the JS Helper to the scriptFactory
-        getScriptFactory().put("globalHelper", getJavaScriptHelper());
-        getScriptFactory().put("globalVariables", getGlobalVariables());
-        registerCommand(new ScriptCommand(this, identityController, commandController),
-                ScriptCommand.INFO);
+        ScriptEngineManager.put("globalHelper", jsHelper);
+        ScriptEngineManager.put("globalVariables", globalVariables);
+        registerCommand(new ScriptCommand(this, identityController, commandController, pluginInfo,
+                ScriptEngineManager, scriptDir), ScriptCommand.INFO);
     }
 
     /** {@inheritDoc} */
@@ -100,35 +102,26 @@ public class ScriptPlugin extends BaseCommandPlugin implements ActionListener {
 
         final File savedVariables = new File(scriptDir + "storedVariables");
         if (savedVariables.exists()) {
-            FileInputStream fis = null;
-            try {
-                fis = new FileInputStream(savedVariables);
+            try (FileInputStream fis = new FileInputStream(savedVariables)) {
                 globalVariables.load(fis);
             } catch (IOException e) {
                 Logger.userError(ErrorLevel.LOW, "Error reading savedVariables from '"
                         + savedVariables.getPath() + "': " + e.getMessage(), e);
-            } finally {
-                StreamUtils.close(fis);
             }
         }
         super.onLoad();
     }
 
-    /** {@inheritDoc} */
     @Override
     public void onUnload() {
         actionController.unregisterListener(this);
 
         final File savedVariables = new File(scriptDir + "storedVariables");
-        FileOutputStream fos = null;
-        try {
-            fos = new FileOutputStream(savedVariables);
+        try (FileOutputStream fos = new FileOutputStream(savedVariables)) {
             globalVariables.store(fos, "# DMDirc Script Plugin savedVariables");
         } catch (IOException e) {
             Logger.userError(ErrorLevel.LOW, "Error reading savedVariables to '" + savedVariables.
                     getPath() + "': " + e.getMessage(), e);
-        } finally {
-            StreamUtils.close(fos);
         }
         super.onUnload();
     }
@@ -141,12 +134,10 @@ public class ScriptPlugin extends BaseCommandPlugin implements ActionListener {
         for (Map.Entry<String, List<ActionType>> entry
                 : actionController.getGroupedTypes().entrySet()) {
             final List<ActionType> types = entry.getValue();
-            actionController.registerListener(this,
-                    types.toArray(new ActionType[types.size()]));
+            actionController.registerListener(this, types.toArray(new ActionType[types.size()]));
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public void processEvent(final ActionType type, final StringBuffer format,
             final Object... arguments) {
@@ -168,15 +159,6 @@ public class ScriptPlugin extends BaseCommandPlugin implements ActionListener {
     }
 
     /**
-     * Get a reference to the scriptFactory.
-     *
-     * @return a reference to the scriptFactory
-     */
-    protected ScriptEngineManager getScriptFactory() {
-        return scriptFactory;
-    }
-
-    /**
      * Get a reference to the JavaScriptHelper
      *
      * @return a reference to the JavaScriptHelper
@@ -192,15 +174,6 @@ public class ScriptPlugin extends BaseCommandPlugin implements ActionListener {
      */
     protected TypedProperties getGlobalVariables() {
         return globalVariables;
-    }
-
-    /**
-     * Get the name of the directory where scripts should be stored.
-     *
-     * @return The name of the directory where scripts should be stored.
-     */
-    protected String getScriptDir() {
-        return scriptDir;
     }
 
     /** Reload all scripts */
@@ -251,7 +224,8 @@ public class ScriptPlugin extends BaseCommandPlugin implements ActionListener {
     public boolean loadScript(final String scriptFilename) {
         if (!scripts.containsKey(scriptFilename)) {
             try {
-                final ScriptEngineWrapper wrapper = new ScriptEngineWrapper(this, scriptFilename);
+                final ScriptEngineWrapper wrapper = new ScriptEngineWrapper(ScriptEngineManager,
+                        scriptFilename);
                 scripts.put(scriptFilename, wrapper);
             } catch (FileNotFoundException | ScriptException e) {
                 Logger.userError(ErrorLevel.LOW, "Error loading '" + scriptFilename + "': " + e.
@@ -262,10 +236,9 @@ public class ScriptPlugin extends BaseCommandPlugin implements ActionListener {
         return true;
     }
 
-    /** {@inheritDoc} */
     @Override
     public ValidationResponse checkPrerequisites() {
-        if (getScriptFactory().getEngineByName("JavaScript") == null) {
+        if (ScriptEngineManager.getEngineByName("JavaScript") == null) {
             return new ValidationResponse("JavaScript Scripting Engine not found.");
         } else {
             return new ValidationResponse();
@@ -275,10 +248,10 @@ public class ScriptPlugin extends BaseCommandPlugin implements ActionListener {
     /**
      * Get the reason for checkPrerequisites failing.
      *
-     * @return Human-Readble reason for checkPrerequisites failing.
+     * @return Human-Readable reason for checkPrerequisites failing.
      */
     public String checkPrerequisitesReason() {
-        if (getScriptFactory().getEngineByName("JavaScript") == null) {
+        if (ScriptEngineManager.getEngineByName("JavaScript") == null) {
             return "JavaScript Scripting Engine not found.";
         } else {
             return "";
