@@ -22,23 +22,11 @@
 
 package com.dmdirc.addons.exec;
 
-import com.dmdirc.plugins.PluginInfo;
-import com.dmdirc.plugins.implementations.BaseCommandPlugin;
+import com.dmdirc.ClientModule;
 
-import dagger.ObjectGraph;
+import dagger.Module;
 
-/**
- * A plugin which provides an execute command.
- */
-public class ExecPlugin extends BaseCommandPlugin {
-
-    @Override
-    public void load(final PluginInfo pluginInfo, final ObjectGraph graph) {
-        super.load(pluginInfo, graph);
-
-        setObjectGraph(graph.plus(new ExecModule()));
-        registerCommand(ExecCommand.class, ExecCommand.INFO);
-    }
-
+@Module(injects = ExecCommand.class, addsTo = ClientModule.class)
+public class ExecModule {
 
 }
