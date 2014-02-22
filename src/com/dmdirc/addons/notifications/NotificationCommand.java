@@ -49,19 +49,20 @@ public class NotificationCommand extends Command implements
             "notification [--methods|--method <method>] text - "
             + "Notifies you of the text",
             CommandType.TYPE_GLOBAL);
-    /** The plugin that's using this command. */
-    private final NotificationsPlugin parent;
+    /** The notifications manager to get notification plugins from. */
+    private final NotificationsManager manager;
 
     /**
      * Creates a new instance of this notification command.
      *
      * @param controller The controller to use for command information.
-     * @param parent     The plugin that's instantiating this command
+     * @param manager     The notifications manager to get notification plugins from
      */
-    public NotificationCommand(final CommandController controller, final NotificationsPlugin parent) {
+    public NotificationCommand(final CommandController controller,
+            final NotificationsManager manager) {
         super(controller);
 
-        this.parent = parent;
+        this.manager = manager;
     }
 
     /** {@inheritDoc} */
@@ -75,7 +76,7 @@ public class NotificationCommand extends Command implements
                 .equalsIgnoreCase("--method")) {
             if (args.getArguments().length > 1) {
                 final String sourceName = args.getArguments()[1];
-                final ExportedService source = parent.getMethod(sourceName)
+                final ExportedService source = manager.getMethod(sourceName)
                         .getExportedService("showNotification");
 
                 if (source == null) {
@@ -88,8 +89,8 @@ public class NotificationCommand extends Command implements
                 sendLine(origin, args.isSilent(), FORMAT_ERROR,
                         "You must specify a method when using --method.");
             }
-        } else if (parent.hasActiveMethod()) {
-            parent.getPreferredMethod().getExportedService("showNotification")
+        } else if (manager.hasActiveMethod()) {
+            manager.getPreferredMethod().getExportedService("showNotification")
                     .execute("DMDirc", args.getArgumentsAsString(0));
         } else {
             sendLine(origin, args.isSilent(), FORMAT_ERROR,
@@ -105,7 +106,7 @@ public class NotificationCommand extends Command implements
      */
     private void doMethodList(final FrameContainer origin,
             final boolean isSilent) {
-        final List<PluginInfo> methods = parent.getMethods();
+        final List<PluginInfo> methods = manager.getMethods();
 
         if (methods.isEmpty()) {
             sendLine(origin, isSilent, FORMAT_ERROR, "No notification "
@@ -135,7 +136,7 @@ public class NotificationCommand extends Command implements
             return res;
         } else if (arg == 1 && context.getPreviousArgs().get(0)
                 .equalsIgnoreCase("--method")) {
-            for (PluginInfo source : parent.getMethods()) {
+            for (PluginInfo source : manager.getMethods()) {
                 res.add(source.getMetaData().getName());
             }
             return res;
