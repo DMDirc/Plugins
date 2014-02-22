@@ -24,11 +24,12 @@ package com.dmdirc.addons.ui_swing;
 
 import com.dmdirc.ServerManager;
 import com.dmdirc.addons.ui_swing.components.menubar.MenuBar;
-import com.dmdirc.commandparser.commands.global.NewServer;
 import com.dmdirc.events.ClientOpenedEvent;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
+import com.dmdirc.util.InvalidURIException;
+import com.dmdirc.util.URIParser;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
@@ -41,7 +42,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.EventObject;
 import java.util.List;
@@ -74,7 +74,8 @@ public class Apple implements InvocationHandler {
     /**
      * Creates a new instance of {@link Apple}.
      *
-     * <p>This will attempt to load the native library and register the URL open callback.
+     * <p>
+     * This will attempt to load the native library and register the URL open callback.
      *
      * @param configManager Config manager
      * @param serverManager The server manager to use to connect to URLs.
@@ -467,8 +468,9 @@ public class Apple implements InvocationHandler {
      */
     public void handleOpenURL(final String url) {
         try {
-            handleURI(NewServer.getURI(url));
-        } catch (final URISyntaxException use) {
+            handleURI(new URIParser().parseFromText(url));
+        } catch (final InvalidURIException ex) {
+            // Do nothing?...
         }
     }
 
