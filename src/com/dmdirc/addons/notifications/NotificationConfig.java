@@ -25,6 +25,7 @@ package com.dmdirc.addons.notifications;
 import com.dmdirc.addons.ui_swing.components.reorderablelist.ListReorderButtonPanel;
 import com.dmdirc.addons.ui_swing.components.reorderablelist.ReorderableJList;
 import com.dmdirc.config.prefs.PreferencesInterface;
+import com.dmdirc.interfaces.config.ConfigProvider;
 
 import java.util.Enumeration;
 import java.util.LinkedList;
@@ -49,16 +50,21 @@ public class NotificationConfig extends JPanel implements PreferencesInterface {
     private ReorderableJList<String> list;
     /** Notification methods. */
     private final List<String> methods;
-    /** The plugin that owns this panel. */
-    private final NotificationsPlugin plugin;
+    /** User settings config to save to. */
+    private final ConfigProvider userSettings;
+    /** This plugin's settings domain. */
+    private final String domain;
 
     /**
      * Creates a new instance of NotificationConfig panel.
      *
-     * @param plugin  The plugin that owns this panel
+     * @param userSettings Config to save settings to
+     * @param domain This plugin's settings domain
      * @param methods A list of methods to be used in the panel
      */
-    public NotificationConfig(final NotificationsPlugin plugin,
+    public NotificationConfig(
+            final ConfigProvider userSettings,
+            final String domain,
             final List<String> methods) {
         super();
 
@@ -67,7 +73,8 @@ public class NotificationConfig extends JPanel implements PreferencesInterface {
         } else {
             this.methods = new LinkedList<>(methods);
         }
-        this.plugin = plugin;
+        this.userSettings = userSettings;
+        this.domain = domain;
 
         initComponents();
     }
@@ -122,10 +129,9 @@ public class NotificationConfig extends JPanel implements PreferencesInterface {
         return newMethods;
     }
 
-    /** {@inheritDoc} */
     @Override
     public void save() {
-        plugin.saveSettings(getMethods());
+        userSettings.setOption(domain, "methodOrder", getMethods());
     }
 
 }
