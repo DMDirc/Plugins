@@ -34,11 +34,11 @@ import com.dmdirc.addons.ui_swing.components.frames.ChannelFrame;
 import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputHandler;
 import com.dmdirc.addons.ui_swing.components.inputfields.TextPaneInputField;
 import com.dmdirc.addons.ui_swing.components.text.WrapEditorKit;
-import com.dmdirc.addons.ui_swing.injection.SwingModule.SwingSettingsDomain;
 import com.dmdirc.interfaces.TopicChangeListener;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.parser.common.ChannelJoinRequest;
+import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.core.util.URLHandler;
@@ -133,7 +133,7 @@ public class TopicBar extends JComponent implements ActionListener,
     public TopicBar(
             final MainFrame parentWindow,
             @SuppressWarnings("qualifiers") @GlobalConfig final AggregateConfigProvider globalConfig,
-            @SuppressWarnings("qualifiers") @SwingSettingsDomain final String domain,
+            @SuppressWarnings("qualifiers") @PluginDomain(SwingController.class) final String domain,
             final ColourManager colourManager,
             final PluginManager pluginManager,
             final SwingWindowFactory windowFactory,
@@ -193,31 +193,31 @@ public class TopicBar extends JComponent implements ActionListener,
                 "enterButton");
         topicText.getActionMap().put("enterButton", new AbstractAction(
                 "enterButton") {
-            /**
-             * A version number for this class. It should be changed whenever the class structure is
-             * changed (or anything else that would prevent serialized objects being unserialized
-             * with the new class).
-             */
-            private static final long serialVersionUID = 1;
+                    /**
+                     * A version number for this class. It should be changed whenever the class
+                     * structure is changed (or anything else that would prevent serialized objects
+                     * being unserialized with the new class).
+                     */
+                    private static final long serialVersionUID = 1;
 
-            /** {@inheritDoc} */
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                commitTopicEdit();
-            }
-        });
+                    /** {@inheritDoc} */
+                    @Override
+                    public void actionPerformed(final ActionEvent e) {
+                        commitTopicEdit();
+                    }
+                });
         topicText.getInputMap().put(KeyStroke.getKeyStroke("ESCAPE"),
                 "escapeButton");
         topicText.getActionMap().put("escapeButton", new AbstractAction(
                 "escapeButton") {
-            private static final long serialVersionUID = 1;
+                    private static final long serialVersionUID = 1;
 
-            /** {@inheritDoc} */
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                cancelTopicEdit();
-            }
-        });
+                    /** {@inheritDoc} */
+                    @Override
+                    public void actionPerformed(final ActionEvent e) {
+                        cancelTopicEdit();
+                    }
+                });
         topicText.addHyperlinkListener(this);
         topicText.addMouseListener(this);
         topicText.getDocument().addDocumentListener(this);
@@ -253,8 +253,8 @@ public class TopicBar extends JComponent implements ActionListener,
                     channel.getStyliser().addStyledString(
                             (StyledDocument) topicText.getDocument(),
                             new String[]{Styliser.CODE_HEXCOLOUR
-                        + UIUtilities.getHex(foregroundColour)
-                        + channel.getCurrentTopic().getTopic(),},
+                                + UIUtilities.getHex(foregroundColour)
+                                + channel.getCurrentTopic().getTopic(),},
                             as);
                 }
                 topicText.setCaretPosition(0);
@@ -378,14 +378,14 @@ public class TopicBar extends JComponent implements ActionListener,
     private void setColours() {
         backgroundColour = UIUtilities.convertColour(
                 colourManager.getColourFromString(
-                channel.getConfigManager().getOptionString(
-                "ui", "inputbackgroundcolour",
-                "ui", "backgroundcolour"), null));
+                        channel.getConfigManager().getOptionString(
+                                "ui", "inputbackgroundcolour",
+                                "ui", "backgroundcolour"), null));
         foregroundColour = UIUtilities.convertColour(
                 colourManager.getColourFromString(
-                channel.getConfigManager().getOptionString(
-                "ui", "inputforegroundcolour",
-                "ui", "foregroundcolour"), null));
+                        channel.getConfigManager().getOptionString(
+                                "ui", "inputforegroundcolour",
+                                "ui", "foregroundcolour"), null));
         setBackground(backgroundColour);
         setForeground(foregroundColour);
         setDisabledTextColour(foregroundColour);

@@ -30,13 +30,13 @@ import com.dmdirc.addons.ui_swing.SelectionListener;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.addons.ui_swing.components.statusbar.SwingStatusBar;
-import com.dmdirc.addons.windowstatus.WindowStatusModule.WindowStatusDomain;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.interfaces.config.IdentityController;
 import com.dmdirc.parser.interfaces.ChannelClientInfo;
 import com.dmdirc.parser.interfaces.ChannelInfo;
 import com.dmdirc.parser.interfaces.ClientInfo;
+import com.dmdirc.plugins.PluginDomain;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -69,7 +69,7 @@ public class WindowStatusManager implements ConfigChangeListener, SelectionListe
     @Inject
     public WindowStatusManager(final MainFrame mainFrame, final SwingStatusBar statusBar,
             final IdentityController identityController,
-            @WindowStatusDomain final String domain) {
+            @PluginDomain(WindowStatusPlugin.class) final String domain) {
         this.domain = domain;
         this.mainFrame = mainFrame;
         this.statusBar = statusBar;

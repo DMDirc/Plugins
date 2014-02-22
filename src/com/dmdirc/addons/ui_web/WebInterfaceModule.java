@@ -23,12 +23,12 @@
 package com.dmdirc.addons.ui_web;
 
 import com.dmdirc.ClientModule;
+import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.util.resourcemanager.ResourceManager;
 
 import java.io.IOException;
 
-import javax.inject.Qualifier;
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -43,12 +43,8 @@ public class WebInterfaceModule {
         this.pluginInfo = pluginInfo;
     }
 
-    @Qualifier
-    public @interface WebUIDomain {
-    };
-
     @Provides
-    @WebUIDomain
+    @PluginDomain(WebInterfacePlugin.class)
     public String getSettingsDomain() {
         return pluginInfo.getDomain();
     }
