@@ -36,8 +36,9 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class IdentClientTest {
@@ -48,12 +49,12 @@ public class IdentClientTest {
     @Mock private Server server;
     @Mock private IRCParser parser;
     @Mock private IRCClientInfo client;
+    @Mock private AggregateConfigProvider config;
 
     protected IdentClient getClient() {
         final List<Server> servers = new ArrayList<>();
         servers.add(server);
 
-        when(plugin.getDomain()).thenReturn("plugin-Identd");
         when(sm.getServers()).thenReturn(servers);
         when(server.getParser()).thenReturn(parser);
         when(parser.getLocalPort()).thenReturn(60);
@@ -61,7 +62,7 @@ public class IdentClientTest {
         when(client.getNickname()).thenReturn("nickname");
         when(client.getUsername()).thenReturn("username");
 
-        return new IdentClient(null, null, plugin, sm);
+        return new IdentClient(null, null, sm, config, "plugin-Identd");
     }
 
     @Test
