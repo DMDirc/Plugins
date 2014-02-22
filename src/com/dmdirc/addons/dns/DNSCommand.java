@@ -34,6 +34,8 @@ import com.dmdirc.interfaces.CommandController;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import javax.inject.Inject;
+
 /**
  * Performs DNS lookups for nicknames, hostnames or IPs.
  */
@@ -49,6 +51,7 @@ public class DNSCommand extends Command {
      *
      * @param controller The controller to use for command information.
      */
+    @Inject
     public DNSCommand(final CommandController controller) {
         super(controller);
     }

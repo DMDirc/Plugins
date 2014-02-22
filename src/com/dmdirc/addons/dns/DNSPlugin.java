@@ -22,28 +22,28 @@
 
 package com.dmdirc.addons.dns;
 
-import com.dmdirc.interfaces.CommandController;
+import com.dmdirc.addons.debug.DebugModule;
+import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.implementations.BaseCommandPlugin;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import dagger.ObjectGraph;
 
 /**
  * DNS plugin.
  */
 public final class DNSPlugin extends BaseCommandPlugin {
 
-    /**
-     * Creates a new instance of this plugin.
-     *
-     * @param commandController Command controller to register commands
-     */
-    public DNSPlugin(final CommandController commandController) {
-        super(commandController);
-        registerCommand(new DNSCommand(commandController), DNSCommand.INFO);
+    @Override
+    public void load(final PluginInfo pluginInfo, final ObjectGraph graph) {
+        super.load(pluginInfo, graph);
+
+        setObjectGraph(graph.plus(new DebugModule()));
+        registerCommand(DNSCommand.class, DNSCommand.INFO);
     }
 
     /**

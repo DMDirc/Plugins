@@ -33,6 +33,8 @@ import com.dmdirc.interfaces.CommandController;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 /**
  * The dcop command retrieves information from a dcop application.
  */
@@ -48,6 +50,7 @@ public class DcopCommand extends Command {
      *
      * @param controller The controller to use for command information.
      */
+    @Inject
     public DcopCommand(final CommandController controller) {
         super(controller);
     }
