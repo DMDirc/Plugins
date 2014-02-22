@@ -53,7 +53,7 @@ public class OsdPlugin extends BaseCommandPlugin implements
     /** Config OSD Window. */
     private OsdWindow osdWindow;
     /** The OSD Manager that this plugin is using. */
-    private OsdManager osdManager;
+    private final OsdManager osdManager;
     /** X-axis position of OSD. */
     private int x;
     /** Y-axis potion of OSD. */
@@ -73,6 +73,8 @@ public class OsdPlugin extends BaseCommandPlugin implements
     private final ColourManager colourManager;
     /** The window that the OSDs will be associated with. */
     private final MainFrame mainFrame;
+    /** This plugin's settings domain. */
+    private final String domain;
 
     /**
      * Creates a new instance of this plugin.
@@ -93,46 +95,46 @@ public class OsdPlugin extends BaseCommandPlugin implements
         this.identityController = identityController;
         this.colourManager = colourManager;
         this.mainFrame = swingController.getMainFrame();
-        osdManager = new OsdManager(mainFrame, identityController, this, colourManager);
+        this.domain = pluginInfo.getDomain();
+        osdManager = new OsdManager(mainFrame, identityController, this, colourManager, pluginInfo);
         registerCommand(new OsdCommand(commandController, osdManager), OsdCommand.INFO);
     }
 
-    /** {@inheritDoc} */
     @Override
     public void showConfig(final PreferencesDialogModel manager) {
         x = identityController.getGlobalConfiguration()
-                .getOptionInt(getDomain(), "locationX");
+                .getOptionInt(domain, "locationX");
         y = identityController.getGlobalConfiguration()
-                .getOptionInt(getDomain(), "locationY");
+                .getOptionInt(domain, "locationY");
 
         final PreferencesCategory category = new PluginPreferencesCategory(
                 pluginInfo, "OSD",
                 "General configuration for OSD plugin.", "category-osd");
 
         fontSizeSetting = new PreferencesSetting(PreferencesType.INTEGER,
-                getDomain(), "fontSize", "Font size", "Changes the font " + "size of the OSD",
+                domain, "fontSize", "Font size", "Changes the font " + "size of the OSD",
                 manager.getConfigManager(),
                 manager.getIdentity()).registerChangeListener(this);
         backgroundSetting = new PreferencesSetting(PreferencesType.COLOUR,
-                getDomain(), "bgcolour", "Background colour",
+                domain, "bgcolour", "Background colour",
                 "Background colour for the OSD", manager.getConfigManager(),
                 manager.getIdentity()).registerChangeListener(this);
         foregroundSetting = new PreferencesSetting(PreferencesType.COLOUR,
-                getDomain(), "fgcolour", "Foreground colour",
+                domain, "fgcolour", "Foreground colour",
                 "Foreground colour for the OSD", manager.getConfigManager(),
                 manager.getIdentity()).registerChangeListener(this);
         widthSetting = new PreferencesSetting(PreferencesType.INTEGER,
-                getDomain(), "width", "OSD Width", "Width of the OSD Window",
+                domain, "width", "OSD Width", "Width of the OSD Window",
                 manager.getConfigManager(), manager.getIdentity())
                 .registerChangeListener(this);
         timeoutSetting = new PreferencesSetting(PreferencesType.OPTIONALINTEGER,
                 new OptionalValidator(new NumericalValidator(1, Integer.MAX_VALUE)),
-                getDomain(), "timeout", "Timeout", "Length of time in "
+                domain, "timeout", "Timeout", "Length of time in "
                 + "seconds before the OSD window closes", manager.getConfigManager(),
                 manager.getIdentity());
         maxWindowsSetting = new PreferencesSetting(PreferencesType.OPTIONALINTEGER,
                 new OptionalValidator(new NumericalValidator(1, Integer.MAX_VALUE)),
-                getDomain(), "maxWindows", "Maximum open windows",
+                domain, "maxWindows", "Maximum open windows",
                 "Maximum number of OSD windows that will be displayed at any given time",
                 manager.getConfigManager(), manager.getIdentity());
 
@@ -150,7 +152,7 @@ public class OsdPlugin extends BaseCommandPlugin implements
             posOptions.put(policy.name(), policy.getDescription());
         }
 
-        category.addSetting(new PreferencesSetting(getDomain(), "newbehaviour",
+        category.addSetting(new PreferencesSetting(domain, "newbehaviour",
                 "New window policy", "What to do when an OSD Window "
                 + "is opened when there are other, existing windows open",
                 posOptions, manager.getConfigManager(), manager.getIdentity()));
@@ -163,10 +165,8 @@ public class OsdPlugin extends BaseCommandPlugin implements
     /** {@inheritDoc} */
     @Override
     public void categorySelected(final PreferencesCategory category) {
-        osdWindow = new OsdWindow(
-                mainFrame,
-                identityController, this, osdManager, colourManager, -1,
-                "Please drag this OSD to position", true, x, y);
+        osdWindow = new OsdWindow(mainFrame, identityController, osdManager, colourManager,
+                -1, "Please drag this OSD to position", true, x, y, domain);
         osdWindow.setBackgroundColour(backgroundSetting.getValue());
         osdWindow.setForegroundColour(foregroundSetting.getValue());
         osdWindow.setFontSize(Integer.parseInt(fontSizeSetting.getValue()));
@@ -185,10 +185,8 @@ public class OsdPlugin extends BaseCommandPlugin implements
     /** {@inheritDoc} */
     @Override
     public void save() {
-        identityController.getUserSettings()
-                .setOption(getDomain(), "locationX", x);
-        identityController.getUserSettings()
-                .setOption(getDomain(), "locationY", y);
+        identityController.getUserSettings().setOption(domain, "locationX", x);
+        identityController.getUserSettings().setOption(domain, "locationY", y);
     }
 
     /** {@inheritDoc} */
