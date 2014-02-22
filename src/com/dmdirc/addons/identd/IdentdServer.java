@@ -22,15 +22,20 @@
 
 package com.dmdirc.addons.identd;
 
+import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.ServerManager;
+import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
+import com.dmdirc.plugins.PluginDomain;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
 
 /**
  * The IdentdServer watches over the ident port when required
@@ -43,23 +48,29 @@ public final class IdentdServer implements Runnable {
     private ServerSocket serverSocket;
     /** Arraylist of all the clients we have */
     private final List<IdentClient> clientList = new ArrayList<>();
-    /** The plugin that owns us. */
-    private final IdentdPlugin myPlugin;
     /** Server manager. */
     private final ServerManager serverManager;
     /** Have we failed to start this server previously? */
     private boolean failed = false;
+    /** Global configuration to read plugin's from. */
+    private final AggregateConfigProvider config;
+    /** This plugin's config settings domain. */
+    private final String domain;
 
     /**
      * Create the IdentdServer.
      *
-     * @param plugin        Parent ident plugin
      * @param serverManager Server manager to iterate over servers
+     * @param config        Global config
+     * @param domain        This plugin's setting domain
      */
-    public IdentdServer(final IdentdPlugin plugin, final ServerManager serverManager) {
-        super();
-        myPlugin = plugin;
+    @Inject
+    public IdentdServer(final ServerManager serverManager,
+            @GlobalConfig final AggregateConfigProvider config,
+            @PluginDomain(IdentdPlugin.class) final String domain) {
         this.serverManager = serverManager;
+        this.config = config;
+        this.domain = domain;
     }
 
     /**
@@ -71,8 +82,8 @@ public final class IdentdServer implements Runnable {
         while (myThread == thisThread) {
             try {
                 final Socket clientSocket = serverSocket.accept();
-                final IdentClient client = new IdentClient(this, clientSocket, myPlugin,
-                        serverManager);
+                final IdentClient client = new IdentClient(this, clientSocket, serverManager,
+                        config, domain);
                 client.start();
                 addClient(client);
             } catch (IOException e) {
@@ -125,15 +136,13 @@ public final class IdentdServer implements Runnable {
     public void startServer() {
         if (!failed && myThread == null) {
             try {
-                final int identPort = myPlugin.getConfig().getOptionInt(
-                        myPlugin.getDomain(), "advanced.port");
+                final int identPort = config.getOptionInt(domain, "advanced.port");
                 serverSocket = new ServerSocket(identPort);
                 myThread = new Thread(this);
                 myThread.start();
             } catch (IOException e) {
-                Logger.
-                        userError(ErrorLevel.HIGH, "Unable to start identd server: " + e.
-                        getMessage());
+                Logger.userError(ErrorLevel.HIGH, "Unable to start identd server: "
+                        + e.getMessage());
                 if (e.getMessage().equals("Permission denied")) {
                     failed = true;
                 }
