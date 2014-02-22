@@ -22,8 +22,8 @@
 
 package com.dmdirc.addons.dcop;
 
-import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.plugins.Exported;
+import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.implementations.BaseCommandPlugin;
 
 import java.io.BufferedReader;
@@ -32,19 +32,19 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import dagger.ObjectGraph;
+
 /**
  * Allows the user to execute dcop commands (and read the results).
  */
 public final class DcopPlugin extends BaseCommandPlugin {
 
-    /**
-     * Creates a new instance of this plugin.
-     *
-     * @param commandController Command controller to register commands
-     */
-    public DcopPlugin(final CommandController commandController) {
-        super(commandController);
-        registerCommand(new DcopCommand(commandController), DcopCommand.INFO);
+    @Override
+    public void load(final PluginInfo pluginInfo, final ObjectGraph graph) {
+        super.load(pluginInfo, graph);
+
+        setObjectGraph(graph.plus(new DcopModule()));
+        registerCommand(DcopCommand.class, DcopCommand.INFO);
     }
 
     /**
@@ -68,7 +68,7 @@ public final class DcopPlugin extends BaseCommandPlugin {
             reader = new InputStreamReader(process.getInputStream());
             input = new BufferedReader(reader);
 
-            String line = "";
+            String line;
 
             while ((line = input.readLine()) != null) {
                 result.add(line);
