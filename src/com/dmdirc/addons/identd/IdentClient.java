@@ -41,38 +41,43 @@ import java.net.Socket;
 public class IdentClient implements Runnable {
 
     /** The IdentdServer that owns this Client. */
-    private final IdentdServer myServer;
+    private final IdentdServer server;
     /** The Socket that we are in charge of. */
-    private final Socket mySocket;
+    private final Socket socket;
     /** The Thread in use for this client. */
-    private volatile Thread myThread;
-    /** The plugin that owns us. */
-    private final IdentdPlugin myPlugin;
+    private volatile Thread thread;
     /** Server manager. */
     private final ServerManager serverManager;
+    /** Global configuration to read settings from. */
+    private final AggregateConfigProvider config;
+    /** This plugin's settings domain. */
+    private final String domain;
 
     /**
      * Create the IdentClient.
      *
      * @param server        The server that owns this
      * @param socket        The socket we are handing
-     * @param plugin        Parent plugin
      * @param serverManager Server manager to retrieve servers from
+     * @param config        Global config to read settings from
+     * @param domain        This plugin's settings domain
      */
     public IdentClient(final IdentdServer server, final Socket socket,
-            final IdentdPlugin plugin, final ServerManager serverManager) {
-        myServer = server;
-        mySocket = socket;
-        myPlugin = plugin;
+            final ServerManager serverManager, final AggregateConfigProvider config,
+            final String domain) {
+        this.server = server;
+        this.socket = socket;
         this.serverManager = serverManager;
+        this.config = config;
+        this.domain = domain;
     }
 
     /**
      * Starts this ident client in a new thread.
      */
     public void start() {
-        myThread = new Thread(this);
-        myThread.start();
+        thread = new Thread(this);
+        thread.start();
     }
 
     /**
@@ -84,21 +89,21 @@ public class IdentClient implements Runnable {
         PrintWriter out = null;
         BufferedReader in = null;
         try {
-            out = new PrintWriter(mySocket.getOutputStream(), true);
-            in = new BufferedReader(new InputStreamReader(mySocket.getInputStream()));
+            out = new PrintWriter(socket.getOutputStream(), true);
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             final String inputLine;
             if ((inputLine = in.readLine()) != null) {
-                out.println(getIdentResponse(inputLine, myPlugin.getConfig()));
+                out.println(getIdentResponse(inputLine, config));
             }
         } catch (IOException e) {
-            if (thisThread == myThread) {
+            if (thisThread == thread) {
                 Logger.userError(ErrorLevel.HIGH, "ClientSocket Error: " + e.getMessage());
             }
         } finally {
             StreamUtils.close(in);
             StreamUtils.close(out);
-            StreamUtils.close(mySocket);
-            myServer.delClient(this);
+            StreamUtils.close(socket);
+            server.delClient(this);
         }
     }
 
@@ -132,12 +137,12 @@ public class IdentClient implements Runnable {
         }
 
         final Connection connection = getConnectionByPort(myPort);
-        if (!config.getOptionBool(myPlugin.getDomain(), "advanced.alwaysOn") && (connection == null
-                || config.getOptionBool(myPlugin.getDomain(), "advanced.isNoUser"))) {
+        if (!config.getOptionBool(domain, "advanced.alwaysOn") && (connection == null
+                || config.getOptionBool(domain, "advanced.isNoUser"))) {
             return String.format("%d , %d : ERROR : NO-USER", myPort, theirPort);
         }
 
-        if (config.getOptionBool(myPlugin.getDomain(), "advanced.isHiddenUser")) {
+        if (config.getOptionBool(domain, "advanced.isHiddenUser")) {
             return String.format("%d , %d : ERROR : HIDDEN-USER", myPort, theirPort);
         }
 
@@ -145,8 +150,8 @@ public class IdentClient implements Runnable {
         final String os;
         final String username;
 
-        final String customSystem = config.getOption(myPlugin.getDomain(), "advanced.customSystem");
-        if (config.getOptionBool(myPlugin.getDomain(), "advanced.useCustomSystem") && customSystem
+        final String customSystem = config.getOption(domain, "advanced.customSystem");
+        if (config.getOptionBool(domain, "advanced.useCustomSystem") && customSystem
                 != null && customSystem.length() > 0 && customSystem.length() < 513) {
             os = customSystem;
         } else {
@@ -172,15 +177,13 @@ public class IdentClient implements Runnable {
             }
         }
 
-        final String customName = config.getOption(myPlugin.getDomain(), "general.customName");
-        if (config.getOptionBool(myPlugin.getDomain(), "general.useCustomName") && customName
+        final String customName = config.getOption(domain, "general.customName");
+        if (config.getOptionBool(domain, "general.useCustomName") && customName
                 != null && customName.length() > 0 && customName.length() < 513) {
             username = customName;
-        } else if (connection != null && config.getOptionBool(myPlugin.getDomain(),
-                "general.useNickname")) {
+        } else if (connection != null && config.getOptionBool(domain, "general.useNickname")) {
             username = connection.getParser().getLocalClient().getNickname();
-        } else if (connection != null && config.getOptionBool(myPlugin.getDomain(),
-                "general.useUsername")) {
+        } else if (connection != null && config.getOptionBool(domain, "general.useUsername")) {
             username = connection.getParser().getLocalClient().getUsername();
         } else {
             username = System.getProperty("user.name");
@@ -216,13 +219,13 @@ public class IdentClient implements Runnable {
      * Close this IdentClient.
      */
     public void close() {
-        if (myThread != null) {
-            final Thread tmpThread = myThread;
-            myThread = null;
+        if (thread != null) {
+            final Thread tmpThread = thread;
+            thread = null;
             if (tmpThread != null) {
                 tmpThread.interrupt();
             }
-            StreamUtils.close(mySocket);
+            StreamUtils.close(socket);
         }
     }
 

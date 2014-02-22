@@ -22,127 +22,58 @@
 
 package com.dmdirc.addons.identd;
 
-import com.dmdirc.ServerManager;
-import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
-import com.dmdirc.interfaces.ActionController;
-import com.dmdirc.interfaces.ActionListener;
-import com.dmdirc.interfaces.Connection;
-import com.dmdirc.interfaces.actions.ActionType;
-import com.dmdirc.interfaces.config.AggregateConfigProvider;
-import com.dmdirc.interfaces.config.IdentityController;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.implementations.BasePlugin;
 import com.dmdirc.util.validators.PortValidator;
 
-import java.util.ArrayList;
-import java.util.List;
+import dagger.ObjectGraph;
 
 /**
  * The Identd plugin answers ident requests from IRC servers.
  */
-public class IdentdPlugin extends BasePlugin implements ActionListener {
+public class IdentdPlugin extends BasePlugin {
 
-    /** List of all the connections that need ident replies. */
-    private final List<Connection> connections = new ArrayList<>();
-    /** The IdentdServer that we use. */
-    private IdentdServer myServer;
     /** This plugin's plugin info. */
     private final PluginInfo pluginInfo;
-    /** The action controller to use. */
-    private final ActionController actionController;
-    /** Server manager. */
-    private final ServerManager serverManager;
-    /** Global config. */
-    private final AggregateConfigProvider config;
+    /** This plugin's settings domain. */
+    private final String domain;
+    /** Identd Manager. */
+    private IdentdManager identdManager;
 
     /**
      * Creates a new instance of this plugin.
      *
-     * @param pluginInfo         This plugin's plugin info
-     * @param actionController   The action controller to register listeners with
-     * @param identityController Identity manager to get settings from
-     * @param serverManager      Server manager to retrieve servers from
+     * @param pluginInfo This plugin's plugin info
      */
-    public IdentdPlugin(final PluginInfo pluginInfo,
-            final ActionController actionController,
-            final IdentityController identityController,
-            final ServerManager serverManager) {
-        super();
-
+    public IdentdPlugin(final PluginInfo pluginInfo) {
         this.pluginInfo = pluginInfo;
-        this.actionController = actionController;
-        this.serverManager = serverManager;
-        config = identityController.getGlobalConfiguration();
+        domain = pluginInfo.getDomain();
     }
 
-    @Deprecated
-    AggregateConfigProvider getConfig() {
-        return config;
-    }
-
-    /**
-     * Called when the plugin is loaded.
-     */
     @Override
-    public void onLoad() {
-        // Add action hooks
-        actionController.registerListener(this,
-                CoreActionType.SERVER_CONNECTED,
-                CoreActionType.SERVER_CONNECTING,
-                CoreActionType.SERVER_CONNECTERROR);
-
-        myServer = new IdentdServer(this, serverManager);
-        if (config.getOptionBool(pluginInfo.getDomain(), "advanced.alwaysOn")) {
-            myServer.startServer();
-        }
+    public void load(final PluginInfo pluginInfo, final ObjectGraph graph) {
+        super.load(pluginInfo, graph);
+        setObjectGraph(graph.plus(new IdentModule(pluginInfo)));
+        identdManager = getObjectGraph().get(IdentdManager.class);
     }
 
-    /**
-     * Called when this plugin is unloaded.
-     */
     @Override
     public void onUnload() {
-        myServer.stopServer();
-        connections.clear();
-        actionController.unregisterListener(this);
+        super.onUnload();
+        identdManager.onLoad();
     }
 
-    /**
-     * Process an event of the specified type.
-     *
-     * @param type      The type of the event to process
-     * @param format    Format of messages that are about to be sent. (May be null)
-     * @param arguments The arguments for the event
-     */
     @Override
-    public void processEvent(final ActionType type, final StringBuffer format,
-            final Object... arguments) {
-        if (type == CoreActionType.SERVER_CONNECTING) {
-            synchronized (connections) {
-                if (connections.isEmpty()) {
-                    myServer.startServer();
-                }
-                connections.add((Connection) arguments[0]);
-            }
-        } else if (type == CoreActionType.SERVER_CONNECTED
-                || type == CoreActionType.SERVER_CONNECTERROR) {
-            synchronized (connections) {
-                connections.remove(arguments[0]);
-
-                if (connections.isEmpty() && !config.getOptionBool(pluginInfo.getDomain(),
-                        "advanced.alwaysOn")) {
-                    myServer.stopServer();
-                }
-            }
-        }
+    public void onLoad() {
+        super.onLoad();
+        identdManager.onUnload();
     }
 
-    /** {@inheritDoc} */
     @Override
     public void showConfig(final PreferencesDialogModel manager) {
         final PreferencesCategory general = new PluginPreferencesCategory(
@@ -157,55 +88,54 @@ public class IdentdPlugin extends BasePlugin implements ActionListener {
                 + "those above them)");
 
         general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
-                pluginInfo.getDomain(), "general.useUsername", "Use connection "
+                domain, "general.useUsername", "Use connection "
                 + "username rather than system username", "If this is enabled,"
                 + " the username for the connection will be used rather than " + "'" + System.
                 getProperty("user.name") + "'",
                 manager.getConfigManager(), manager.getIdentity()));
         general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
-                pluginInfo.getDomain(), "general.useNickname", "Use connection "
+                domain, "general.useNickname", "Use connection "
                 + "nickname rather than system username", "If this is enabled, "
                 + "the nickname for the connection will be used rather than " + "'" + System.
                 getProperty("user.name") + "'",
                 manager.getConfigManager(), manager.getIdentity()));
         general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
-                pluginInfo.getDomain(), "general.useCustomName", "Use custom name" + " all the time",
+                domain, "general.useCustomName", "Use custom name" + " all the time",
                 "If this is enabled, the name specified below" + " will be used all the time",
                 manager.getConfigManager(),
                 manager.getIdentity()));
         general.addSetting(new PreferencesSetting(PreferencesType.TEXT,
-                pluginInfo.getDomain(), "general.customName", "Custom Name to use",
+                domain, "general.customName", "Custom Name to use",
                 "The custom name to use when 'Use Custom Name' is enabled",
                 manager.getConfigManager(), manager.getIdentity()));
-
         advanced.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
-                pluginInfo.getDomain(), "advanced.alwaysOn", "Always have ident " + "port open",
+                domain, "advanced.alwaysOn", "Always have ident " + "port open",
                 "By default the identd only runs when there are "
                 + "active connection attempts. This overrides that.",
                 manager.getConfigManager(), manager.getIdentity()));
         advanced.addSetting(new PreferencesSetting(PreferencesType.INTEGER,
-                new PortValidator(), pluginInfo.getDomain(), "advanced.port",
+                new PortValidator(), domain, "advanced.port",
                 "What port should the identd listen on", "Default port is 113,"
                 + " this is probably useless if changed unless you port forward"
                 + " ident to a different port", manager.getConfigManager(),
                 manager.getIdentity()));
         advanced.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
-                pluginInfo.getDomain(), "advanced.useCustomSystem", "Use custom OS",
+                domain, "advanced.useCustomSystem", "Use custom OS",
                 "By default the plugin uses 'UNIX' or 'WIN32' as the system "
                 + "type, this can be overriden by enabling this.",
                 manager.getConfigManager(), manager.getIdentity()));
         advanced.addSetting(new PreferencesSetting(PreferencesType.TEXT,
-                pluginInfo.getDomain(), "advanced.customSystem", "Custom OS to use",
+                domain, "advanced.customSystem", "Custom OS to use",
                 "The custom system to use when 'Use Custom System' is enabled",
                 manager.getConfigManager(), manager.getIdentity()));
         advanced.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
-                pluginInfo.getDomain(), "advanced.isHiddenUser", "Respond to ident"
+                domain, "advanced.isHiddenUser", "Respond to ident"
                 + " requests with HIDDEN-USER error", "By default the plugin will"
                 + " give a USERID response, this can force an 'ERROR :"
                 + " HIDDEN-USER' response instead.", manager.getConfigManager(),
                 manager.getIdentity()));
         advanced.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
-                pluginInfo.getDomain(), "advanced.isNoUser", "Respond to ident"
+                domain, "advanced.isNoUser", "Respond to ident"
                 + " requests with NO-USER error", "By default the plugin will"
                 + " give a USERID response, this can force an 'ERROR : NO-USER'"
                 + " response instead. (Overrides HIDDEN-USER)",
