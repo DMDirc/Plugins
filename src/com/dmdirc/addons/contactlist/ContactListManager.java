@@ -22,21 +22,6 @@
 
 package com.dmdirc.addons.contactlist;
 
-import com.dmdirc.plugins.PluginInfo;
-import com.dmdirc.plugins.implementations.BaseCommandPlugin;
+public class ContactListManager {
 
-import dagger.ObjectGraph;
-
-/**
- * Plugin to provide a POC contact list.
- */
-public class ContactListPlugin extends BaseCommandPlugin {
-
-    @Override
-    public void load(final PluginInfo pluginInfo, final ObjectGraph graph) {
-        super.load(pluginInfo, graph);
-
-        setObjectGraph(graph.plus(new ContactListModule()));
-        registerCommand(ContactListCommand.class, ContactListCommand.INFO);
-    }
 }
