@@ -134,7 +134,7 @@ public class ScriptCommand extends Command implements IntelligentCommand {
                             final Class<?> logger = Class.forName("com.dmdirc.logger.Logger");
                             if (logger != null) {
                                 final Method exceptionToStringArray = logger.getDeclaredMethod(
-                                        "exceptionToStringArray", new Class[]{Throwable.class});
+                                        "exceptionToStringArray", new Class<?>[]{Throwable.class});
                                 exceptionToStringArray.setAccessible(true);
 
                                 final String[] stacktrace = (String[]) exceptionToStringArray.

@@ -43,14 +43,10 @@ import net.miginfocom.swing.MigLayout;
  */
 public class NotificationConfig extends JPanel implements PreferencesInterface {
 
-    /**
-     * A version number for this class. It should be changed whenever the class structure is changed
-     * (or anything else that would prevent serialized objects being unserialized with the new
-     * class).
-     */
+    /** A version number for this class. */
     private static final long serialVersionUID = 1;
     /** Notification method order list. */
-    private ReorderableJList list;
+    private ReorderableJList<String> list;
     /** Notification methods. */
     private final List<String> methods;
     /** The plugin that owns this panel. */
@@ -80,7 +76,7 @@ public class NotificationConfig extends JPanel implements PreferencesInterface {
      * Initialises the components.
      */
     private void initComponents() {
-        list = new ReorderableJList();
+        list = new ReorderableJList<>();
 
         for (String method : methods) {
             list.getModel().addElement(method);
@@ -96,7 +92,7 @@ public class NotificationConfig extends JPanel implements PreferencesInterface {
 
         panel.add(new JLabel("Drag and drop items to reorder"), "wrap");
         panel.add(new JScrollPane(list), "growx, pushx");
-        panel.add(new ListReorderButtonPanel(list), "");
+        panel.add(new ListReorderButtonPanel<>(list), "");
 
         add(panel, "growx, wrap");
 

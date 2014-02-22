@@ -57,14 +57,10 @@ import net.miginfocom.swing.MigLayout;
 public class ConfigPanel extends JPanel implements PreferencesInterface,
         KeyListener {
 
-    /**
-     * A version number for this class. It should be changed whenever the class structure is changed
-     * (or anything else that would prevent serialized objects being unserialized with the new
-     * class).
-     */
+    /** A version number for this class. */
     private static final long serialVersionUID = 1;
     /** Media source order list. */
-    private ReorderableJList list;
+    private ReorderableJList<String> list;
     /** Media sources. */
     private final List<String> sources;
     /** The plugin that owns this panel. */
@@ -109,7 +105,7 @@ public class ConfigPanel extends JPanel implements PreferencesInterface,
      * Initialises the components.
      */
     private void initComponents() {
-        list = new ReorderableJList();
+        list = new ReorderableJList<>();
 
         for (String source : sources) {
             list.getModel().addElement(source);
@@ -130,7 +126,7 @@ public class ConfigPanel extends JPanel implements PreferencesInterface,
 
         panel.add(new JLabel("Drag and drop items to reorder"), "wrap");
         panel.add(new JScrollPane(list), "growx, pushx");
-        panel.add(new ListReorderButtonPanel(list), "");
+        panel.add(new ListReorderButtonPanel<>(list), "");
 
         add(panel, "growx, wrap");
 
@@ -192,10 +188,10 @@ public class ConfigPanel extends JPanel implements PreferencesInterface,
     public List<String> getSources() {
         final List<String> newSources = new LinkedList<>();
 
-        final Enumeration<?> values = list.getModel().elements();
+        final Enumeration<String> values = list.getModel().elements();
 
         while (values.hasMoreElements()) {
-            newSources.add((String) values.nextElement());
+            newSources.add(values.nextElement());
         }
 
         return newSources;
