@@ -50,7 +50,7 @@ public class Profiles extends JPanel implements ServerListListener {
     /** Server list model. */
     private final ServerListModel model;
     /** Combo boxes. */
-    private final Map<ServerGroupItem, JComboBox> combos = new HashMap<>();
+    private final Map<ServerGroupItem, JComboBox<ConfigProvider>> combos = new HashMap<>();
     /** Info label. */
     private final JLabel label;
     /** Controller to use to get profiles. */
@@ -102,9 +102,9 @@ public class Profiles extends JPanel implements ServerListListener {
      *
      * @return The server group item's associated profile selection box
      */
-    private JComboBox getComboBox(final ServerGroupItem item) {
+    private JComboBox<ConfigProvider> getComboBox(final ServerGroupItem item) {
         if (!combos.containsKey(item)) {
-            final DefaultComboBoxModel comboModel = new VetoableComboBoxModel();
+            final DefaultComboBoxModel<ConfigProvider> comboModel = new VetoableComboBoxModel<>();
 
             ConfigProvider selectedItem = null;
             comboModel.addElement(null);
@@ -116,7 +116,7 @@ public class Profiles extends JPanel implements ServerListListener {
                 }
             }
             comboModel.setSelectedItem(selectedItem);
-            combos.put(item, new JComboBox(comboModel));
+            combos.put(item, new JComboBox<>(comboModel));
         }
         return combos.get(item);
     }
@@ -125,7 +125,7 @@ public class Profiles extends JPanel implements ServerListListener {
     @Override
     public void dialogClosed(final boolean save) {
         if (save) {
-            for (Entry<ServerGroupItem, JComboBox> entry : combos.entrySet()) {
+            for (Entry<ServerGroupItem, JComboBox<ConfigProvider>> entry : combos.entrySet()) {
                 if (entry.getKey() != null) {
                     if (entry.getValue().getSelectedItem() == null) {
                         entry.getKey().setProfile(null);
