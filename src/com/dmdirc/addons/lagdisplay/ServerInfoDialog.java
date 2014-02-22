@@ -66,7 +66,7 @@ public class ServerInfoDialog extends StatusbarPopupWindow {
      */
     public ServerInfoDialog(
             final LagDisplayManager manager,
-            @Unbound final StatusbarPanel parent,
+            @Unbound final StatusbarPanel<JLabel> parent,
             final MainFrame mainFrame,
             final ServerManager serverManager) {
         super(parent, mainFrame);
