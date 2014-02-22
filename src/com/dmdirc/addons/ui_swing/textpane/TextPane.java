@@ -22,11 +22,12 @@
 
 package com.dmdirc.addons.ui_swing.textpane;
 
+import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
-import com.dmdirc.addons.ui_swing.injection.SwingModule.SwingSettingsDomain;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.interfaces.ui.Window;
+import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.ui.messages.IRCDocument;
 import com.dmdirc.ui.messages.IRCDocumentListener;
 import com.dmdirc.ui.messages.LinePosition;
@@ -97,7 +98,7 @@ public final class TextPane extends JComponent implements MouseWheelListener,
      * @param frame        Parent Frame
      */
     public TextPane(
-            @SuppressWarnings("qualifiers") @SwingSettingsDomain final String configDomain,
+            @SuppressWarnings("qualifiers") @PluginDomain(SwingController.class) final String configDomain,
             final URLBuilder urlBuilder,
             @Unbound final TextFrame frame) {
         super();
@@ -429,7 +430,7 @@ public final class TextPane extends JComponent implements MouseWheelListener,
         if (getSelectedText() != null && !getSelectedText().isEmpty()) {
             Toolkit.getDefaultToolkit().getSystemClipboard().setContents(
                     new StringSelection(getSelectedText(
-                    copyControlCharacters)), null);
+                                    copyControlCharacters)), null);
         }
     }
 

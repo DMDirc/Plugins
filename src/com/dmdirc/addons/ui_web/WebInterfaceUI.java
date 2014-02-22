@@ -25,11 +25,11 @@ package com.dmdirc.addons.ui_web;
 import com.dmdirc.Channel;
 import com.dmdirc.Server;
 import com.dmdirc.ServerManager;
-import com.dmdirc.addons.ui_web.WebInterfaceModule.WebUIDomain;
 import com.dmdirc.addons.ui_web.uicomponents.WebStatusBar;
 import com.dmdirc.interfaces.config.IdentityController;
 import com.dmdirc.interfaces.ui.UIController;
 import com.dmdirc.interfaces.ui.Window;
+import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.core.components.StatusBarManager;
@@ -71,7 +71,7 @@ public class WebInterfaceUI implements UIController {
      */
     @Inject
     public WebInterfaceUI(
-            @WebUIDomain final String domain,
+            @PluginDomain(WebInterfacePlugin.class) final String domain,
             final IdentityController identityController,
             final ServerManager serverManager,
             final PluginManager pluginManager,

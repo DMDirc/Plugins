@@ -46,6 +46,7 @@ import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.interfaces.LifecycleController;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
+import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.WindowManager;
@@ -56,7 +57,6 @@ import com.dmdirc.util.URLBuilder;
 import java.util.concurrent.Callable;
 
 import javax.inject.Provider;
-import javax.inject.Qualifier;
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -69,18 +69,15 @@ import dagger.Provides;
         addsTo = ClientModule.class,
         includes = DialogModule.class,
         injects = {
-    SwingManager.class,
-    PopInCommand.class,
-    PopOutCommand.class,
-    Input.class,
-    ServerSettings.class,
-    ChannelSettings.class
-})
+            SwingManager.class,
+            PopInCommand.class,
+            PopOutCommand.class,
+            Input.class,
+            ServerSettings.class,
+            ChannelSettings.class
+        })
 public class SwingModule {
 
-    @Qualifier
-    public @interface SwingSettingsDomain {
-    }
     /** The controller to return to clients. */
     private final SwingController controller;
     /** The domain for plugin settings. */
@@ -104,7 +101,7 @@ public class SwingModule {
      * @return The settings domain for the swing plugin.
      */
     @Provides
-    @SwingSettingsDomain
+    @PluginDomain(SwingController.class)
     public String getSettingsDomain() {
         return domain;
     }
