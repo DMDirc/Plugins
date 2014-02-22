@@ -23,9 +23,8 @@
 package com.dmdirc.addons.windowstatus;
 
 import com.dmdirc.addons.ui_swing.injection.SwingModule;
+import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.plugins.PluginInfo;
-
-import javax.inject.Qualifier;
 
 import dagger.Module;
 import dagger.Provides;
@@ -36,9 +35,6 @@ import dagger.Provides;
 @Module(injects = {WindowStatusManager.class}, addsTo = SwingModule.class)
 public class WindowStatusModule {
 
-    @Qualifier
-    public @interface WindowStatusDomain {
-    };
     /** The plugin's plugin info. */
     private final PluginInfo pluginInfo;
 
@@ -52,7 +48,7 @@ public class WindowStatusModule {
      * @return The settings domain for the plugin.
      */
     @Provides
-    @WindowStatusDomain
+    @PluginDomain(WindowStatusPlugin.class)
     public String getSettingsDomain() {
         return pluginInfo.getDomain();
     }

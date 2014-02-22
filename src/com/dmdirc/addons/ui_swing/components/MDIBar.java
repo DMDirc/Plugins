@@ -25,12 +25,13 @@ package com.dmdirc.addons.ui_swing.components;
 import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SelectionListener;
+import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.SwingWindowFactory;
 import com.dmdirc.addons.ui_swing.SwingWindowListener;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
-import com.dmdirc.addons.ui_swing.injection.SwingModule.SwingSettingsDomain;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
+import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.ui.IconManager;
 
 import java.awt.event.ActionEvent;
@@ -82,7 +83,7 @@ public class MDIBar extends JPanel implements SwingWindowListener,
     public MDIBar(
             @GlobalConfig final AggregateConfigProvider globalConfig,
             @GlobalConfig final IconManager iconManager,
-            @SwingSettingsDomain final String domain,
+            @PluginDomain(SwingController.class) final String domain,
             final SwingWindowFactory windowFactory,
             final MainFrame mainFrame) {
         super();
