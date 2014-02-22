@@ -7,7 +7,7 @@
 
     <target name="-init-clover" depends="-init-clover-initstring">
         <path id="clover.classpath">
-            <fileset dir="lib" includes="*clover*.jar"/>
+            <fileset dir="lib/test" includes="*clover*.jar"/>
             <fileset dir="${clover.search.path}" includes="*clover*.jar"/>
         </path>
 
