@@ -22,7 +22,9 @@
 
 package com.dmdirc.addons.scriptplugin;
 
+import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.FrameContainer;
+import com.dmdirc.commandline.CommandLineOptionsModule.Directory;
 import com.dmdirc.commandparser.BaseCommandInfo;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandInfo;
@@ -31,20 +33,17 @@ import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.IntelligentCommand;
 import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.interfaces.CommandController;
-import com.dmdirc.interfaces.config.IdentityController;
-import com.dmdirc.plugins.PluginInfo;
+import com.dmdirc.interfaces.config.AggregateConfigProvider;
+import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
@@ -56,36 +55,40 @@ public class ScriptCommand extends Command implements IntelligentCommand {
     /** A command info object for this command. */
     public static final CommandInfo INFO = new BaseCommandInfo("script",
             "script - Allows controlling the script plugin", CommandType.TYPE_GLOBAL);
-    /** My Plugin. */
-    private final ScriptPlugin myPlugin;
-    /** The controller to read/write settings with. */
-    private final IdentityController identityController;
+    /** Global config to read settings from. */
+    private final AggregateConfigProvider globalConfig;
     /** Plugin settings domain. */
     private final String domain;
     /** Manager used to retrieve script engines. */
     private final ScriptEngineManager ScriptEngineManager;
     /** Script directory. */
     private final String scriptDirectory;
+    /** Script manager to handle scripts. */
+    private final ScriptManager scriptManager;
 
     /**
      * Creates a new instance of this command.
      *
-     * @param myPlugin           The plugin that owns the command.
-     * @param identityController The controller to read and write settings from.
-     * @param commandController  The controller to use for command information.
-     * @param pluginInfo         This plugin's info object
-     * @param scriptManager      Manager used to get script engines
-     * @param scriptDirectory    Directory to store scripts
+     * @param scriptManager       Used to manage scripts
+     * @param globalConfig        Global config
+     * @param commandController   The controller to use for command information.
+     * @param domain              This plugin's settings domain
+     * @param scriptEngineManager Manager used to get script engines
+     * @param scriptDirectory     Directory to store scripts
      */
-    public ScriptCommand(final ScriptPlugin myPlugin, final IdentityController identityController,
-            final CommandController commandController, final PluginInfo pluginInfo,
-            final ScriptEngineManager scriptManager, final String scriptDirectory) {
+    @Inject
+    public ScriptCommand(final ScriptManager scriptManager,
+            @Directory(ScriptModule.SCRIPTS) final String scriptDirectory,
+            @GlobalConfig final AggregateConfigProvider globalConfig,
+            final CommandController commandController,
+            @PluginDomain(ScriptPlugin.class) final String domain,
+            final ScriptEngineManager scriptEngineManager) {
         super(commandController);
-        this.myPlugin = myPlugin;
-        this.identityController = identityController;
-        this.domain = pluginInfo.getDomain();
-        this.ScriptEngineManager = scriptManager;
+        this.globalConfig = globalConfig;
+        this.domain = domain;
+        this.ScriptEngineManager = scriptEngineManager;
         this.scriptDirectory = scriptDirectory;
+        this.scriptManager = scriptManager;
     }
 
     /** {@inheritDoc} */
@@ -97,12 +100,12 @@ public class ScriptCommand extends Command implements IntelligentCommand {
         if (sargs.length > 0 && (sargs[0].equalsIgnoreCase("rehash") || sargs[0].equalsIgnoreCase(
                 "reload"))) {
             sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Reloading scripts");
-            myPlugin.rehash();
+            scriptManager.rehash();
         } else if (sargs.length > 0 && sargs[0].equalsIgnoreCase("load")) {
             if (sargs.length > 1) {
                 final String filename = args.getArgumentsAsString(1);
                 sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Loading: " + filename + " ["
-                        + myPlugin.loadScript(scriptDirectory + filename) + "]");
+                        + scriptManager.loadScript(scriptDirectory + filename) + "]");
             } else {
                 sendLine(origin, args.isSilent(), FORMAT_ERROR, "You must specify a script to load");
             }
@@ -110,7 +113,7 @@ public class ScriptCommand extends Command implements IntelligentCommand {
             if (sargs.length > 1) {
                 final String filename = args.getArgumentsAsString(1);
                 sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Unloading: " + filename + " ["
-                        + myPlugin.loadScript(scriptDirectory + filename) + "]");
+                        + scriptManager.loadScript(scriptDirectory + filename) + "]");
             } else {
                 sendLine(origin, args.isSilent(), FORMAT_ERROR,
                         "You must specify a script to unload");
@@ -121,10 +124,9 @@ public class ScriptCommand extends Command implements IntelligentCommand {
                 sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Evaluating: " + script);
                 try {
                     ScriptEngineWrapper wrapper;
-                    if (identityController.getGlobalConfiguration().hasOptionString(domain,
-                            "eval.baseFile")) {
-                        final String baseFile = scriptDirectory + '/' + identityController.
-                                getGlobalConfiguration().getOption(domain, "eval.baseFile");
+                    if (globalConfig.hasOptionString(domain, "eval.baseFile")) {
+                        final String baseFile = scriptDirectory + '/'
+                                + globalConfig.getOption(domain, "eval.baseFile");
                         if (new File(baseFile).exists()) {
                             wrapper = new ScriptEngineWrapper(ScriptEngineManager, baseFile);
                         } else {
@@ -142,26 +144,10 @@ public class ScriptCommand extends Command implements IntelligentCommand {
                     sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Exception: " + e + " -> " + e.
                             getMessage());
 
-                    if (identityController.getGlobalConfiguration().getOptionBool(domain,
-                            "eval.showStackTrace")) {
-                        try {
-                            final Class<?> logger = Class.forName("com.dmdirc.logger.Logger");
-                            if (logger != null) {
-                                final Method exceptionToStringArray = logger.getDeclaredMethod(
-                                        "exceptionToStringArray", new Class<?>[]{Throwable.class});
-                                exceptionToStringArray.setAccessible(true);
-
-                                final String[] stacktrace = (String[]) exceptionToStringArray.
-                                        invoke(null, e);
-                                for (String line : stacktrace) {
-                                    sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Stack trace: "
-                                            + line);
-                                }
-                            }
-                        } catch (ReflectiveOperationException ex) {
-                            sendLine(origin, args.isSilent(), FORMAT_OUTPUT,
-                                    "Stack trace: Exception showing stack trace: " + ex + " -> "
-                                    + ex.getMessage());
+                    if (globalConfig.getOptionBool(domain, "eval.showStackTrace")) {
+                        final String[] stacktrace = getTrace(e);
+                        for (String line : stacktrace) {
+                            sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Stack trace: " + line);
                         }
                     }
 
@@ -177,11 +163,10 @@ public class ScriptCommand extends Command implements IntelligentCommand {
                 final String script = args.getArgumentsAsString(2);
                 sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Saving as '" + functionName
                         + "': " + script);
-                if (identityController.getGlobalConfiguration().
-                        hasOptionString(domain, "eval.baseFile")) {
+                if (globalConfig.hasOptionString(domain, "eval.baseFile")) {
                     try {
-                        final String baseFile = scriptDirectory + '/' + identityController.
-                                getGlobalConfiguration().getOption(domain, "eval.baseFile");
+                        final String baseFile = scriptDirectory + '/'
+                                + globalConfig.getOption(domain, "eval.baseFile");
                         try (FileWriter writer = new FileWriter(baseFile, true)) {
                             writer.write("function ");
                             writer.write(functionName);
@@ -252,9 +237,9 @@ public class ScriptCommand extends Command implements IntelligentCommand {
             res.add("eval");
             res.add("savetobasefile");
         } else if (arg == 1) {
-            final Map<String, ScriptEngineWrapper> scripts = myPlugin.getScripts();
+            final Map<String, ScriptEngineWrapper> scripts = scriptManager.getScripts();
             if (context.getPreviousArgs().get(0).equalsIgnoreCase("load")) {
-                for (String filename : getPossibleScripts()) {
+                for (String filename : scriptManager.getPossibleScripts()) {
                     res.add(filename);
                 }
             } else if (context.getPreviousArgs().get(0).equalsIgnoreCase("unload")) {
@@ -268,27 +253,40 @@ public class ScriptCommand extends Command implements IntelligentCommand {
     }
 
     /**
-     * Retrieves a list of all installed scripts. Any file under the main plugin directory
-     * (~/.DMDirc/scripts or similar) that matches *.js is deemed to be a valid script.
+     * Converts an exception into a string array.
      *
-     * @return A list of all installed scripts
+     * @param throwable Exception to convert
+     *
+     * @return Exception string array
      */
-    private List<String> getPossibleScripts() {
-        final List<String> res = new LinkedList<>();
+    private static String[] getTrace(final Throwable throwable) {
+        String[] trace;
 
-        final LinkedList<File> dirs = new LinkedList<>();
-        dirs.add(new File(scriptDirectory));
+        if (throwable == null) {
+            trace = new String[0];
+        } else {
+            final StackTraceElement[] traceElements = throwable.getStackTrace();
+            trace = new String[traceElements.length + 1];
 
-        while (!dirs.isEmpty()) {
-            final File dir = dirs.pop();
-            if (dir.isDirectory()) {
-                dirs.addAll(Arrays.asList(dir.listFiles()));
-            } else if (dir.isFile() && dir.getName().endsWith(".js")) {
-                final String target = dir.getPath();
-                res.add(target.substring(scriptDirectory.length(), target.length()));
+            trace[0] = throwable.toString();
+
+            for (int i = 0; i < traceElements.length; i++) {
+                trace[i + 1] = traceElements[i].toString();
+            }
+
+            if (throwable.getCause() != null) {
+                final String[] causeTrace = getTrace(throwable.getCause());
+                final String[] newTrace = new String[trace.length + causeTrace.length];
+                trace[0] = "\nWhich caused: " + trace[0];
+
+                System.arraycopy(causeTrace, 0, newTrace, 0, causeTrace.length);
+                System.arraycopy(trace, 0, newTrace, causeTrace.length, trace.length);
+
+                trace = newTrace;
             }
         }
-        return res;
+
+        return trace;
     }
 
 }
