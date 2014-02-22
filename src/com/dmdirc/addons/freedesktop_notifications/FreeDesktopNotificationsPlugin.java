@@ -27,66 +27,32 @@ import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
-import com.dmdirc.interfaces.CommandController;
-import com.dmdirc.interfaces.config.AggregateConfigProvider;
-import com.dmdirc.interfaces.config.ConfigChangeListener;
-import com.dmdirc.interfaces.config.ConfigProvider;
-import com.dmdirc.interfaces.config.IdentityController;
-import com.dmdirc.logger.ErrorLevel;
-import com.dmdirc.logger.Logger;
 import com.dmdirc.plugins.Exported;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.implementations.BaseCommandPlugin;
-import com.dmdirc.plugins.implementations.PluginFilesHelper;
-import com.dmdirc.ui.messages.Styliser;
-import com.dmdirc.util.io.StreamReader;
 
-import java.io.IOException;
-import java.util.ArrayList;
-
-import org.apache.commons.lang.StringEscapeUtils;
+import dagger.ObjectGraph;
 
 /**
  * This plugin adds freedesktop Style Notifications to dmdirc.
  */
-public class FreeDesktopNotificationsPlugin extends BaseCommandPlugin implements
-        ConfigChangeListener {
+public class FreeDesktopNotificationsPlugin extends BaseCommandPlugin {
 
-    /** notification timeout. */
-    private int timeout;
-    /** notification icon. */
-    private String icon;
-    /** Escape HTML. */
-    private boolean escapehtml;
-    /** Strict escape. */
-    private boolean strictescape;
-    /** Strip codes. */
-    private boolean stripcodes;
     /** This plugin's plugin info. */
     private final PluginInfo pluginInfo;
-    /** Global config. */
-    private final AggregateConfigProvider config;
-    /** Addon identity. */
-    private final ConfigProvider identity;
-    /** Plugin files helper. */
-    private final PluginFilesHelper filesHelper;
+    /** Manager to show notifications. */
+    private FDManager manager;
 
-    /**
-     * Creates a new instance of this plugin.
-     *
-     * @param pluginInfo         This plugin's plugin info
-     * @param identityController Identity Manager instance
-     * @param commandController  Command controller to register commands
-     */
-    public FreeDesktopNotificationsPlugin(final PluginInfo pluginInfo,
-            final IdentityController identityController,
-            final CommandController commandController) {
-        super(commandController);
+    public FreeDesktopNotificationsPlugin(final PluginInfo pluginInfo) {
         this.pluginInfo = pluginInfo;
-        this.filesHelper = new PluginFilesHelper(pluginInfo);
-        config = identityController.getGlobalConfiguration();
-        identity = identityController.getAddonSettings();
-        registerCommand(new FDNotifyCommand(commandController, this), FDNotifyCommand.INFO);
+    }
+
+    @Override
+    public void load(final PluginInfo pluginInfo, final ObjectGraph graph) {
+        super.load(pluginInfo, graph);
+        setObjectGraph(graph.plus(new FDModule(pluginInfo)));
+        registerCommand(FDNotifyCommand.class, FDNotifyCommand.INFO);
+        manager = getObjectGraph().get(FDManager.class);
     }
 
     /**
@@ -99,69 +65,7 @@ public class FreeDesktopNotificationsPlugin extends BaseCommandPlugin implements
      */
     @Exported
     public boolean showNotification(final String title, final String message) {
-        if (filesHelper.getFilesDir() == null) {
-            return false;
-        }
-
-        final ArrayList<String> args = new ArrayList<>();
-
-        args.add("/usr/bin/env");
-        args.add("python");
-        args.add(filesHelper.getFilesDirString() + "notify.py");
-        args.add("-a");
-        args.add("DMDirc");
-        args.add("-i");
-        args.add(icon);
-        args.add("-t");
-        args.add(Integer.toString(timeout * 1000));
-        args.add("-s");
-
-        if (title != null && !title.isEmpty()) {
-            args.add(prepareString(title));
-        } else {
-            args.add("Notification from DMDirc");
-        }
-        args.add(prepareString(message));
-
-        try {
-            final Process myProcess = Runtime.getRuntime().exec(args.toArray(new String[]{}));
-            final StringBuffer data = new StringBuffer();
-            new StreamReader(myProcess.getErrorStream()).start();
-            new StreamReader(myProcess.getInputStream(), data).start();
-            try {
-                myProcess.waitFor();
-            } catch (InterruptedException e) {
-            }
-            return true;
-        } catch (SecurityException | IOException e) {
-        }
-
-        return false;
-    }
-
-    /**
-     * Prepare the string for sending to dbus.
-     *
-     * @param input Input string
-     *
-     * @return Input string after being processed according to config settings.
-     */
-    public String prepareString(final String input) {
-        String output = input;
-        if (stripcodes) {
-            output = Styliser.stipControlCodes(output);
-        }
-        if (escapehtml) {
-            if (strictescape) {
-                output = StringEscapeUtils.escapeHtml(output);
-            } else {
-                output = output.replace("&", "&amp;");
-                output = output.replace("<", "&lt;");
-                output = output.replace(">", "&gt;");
-            }
-        }
-
-        return output;
+        return manager.showNotification(title, message);
     }
 
     /**
@@ -169,16 +73,7 @@ public class FreeDesktopNotificationsPlugin extends BaseCommandPlugin implements
      */
     @Override
     public void onLoad() {
-        config.addChangeListener(pluginInfo.getDomain(), this);
-        setCachedSettings();
-        // Extract the files needed
-        try {
-            filesHelper.extractResoucesEndingWith(".py");
-            filesHelper.extractResoucesEndingWith(".png");
-        } catch (IOException ex) {
-            Logger.userError(ErrorLevel.MEDIUM,
-                    "Unable to extract files for Free desktop notifications: " + ex.getMessage(), ex);
-        }
+        manager.onLoad();
         super.onLoad();
     }
 
@@ -187,18 +82,16 @@ public class FreeDesktopNotificationsPlugin extends BaseCommandPlugin implements
      */
     @Override
     public synchronized void onUnload() {
-        config.removeListener(this);
+        manager.onUnLoad();
         super.onUnload();
     }
 
-    /** {@inheritDoc} */
     @Override
+    @Deprecated
     public void domainUpdated() {
-        identity.setOption(pluginInfo.getDomain(), "general.icon",
-                filesHelper.getFilesDirString() + "icon.png");
+        manager.domainUpdated();
     }
 
-    /** {@inheritDoc} */
     @Override
     public void showConfig(final PreferencesDialogModel manager) {
         final PreferencesCategory general = new PluginPreferencesCategory(
@@ -227,20 +120,6 @@ public class FreeDesktopNotificationsPlugin extends BaseCommandPlugin implements
                 manager.getConfigManager(), manager.getIdentity()));
 
         manager.getCategory("Plugins").addSubCategory(general);
-    }
-
-    private void setCachedSettings() {
-        timeout = config.getOptionInt(pluginInfo.getDomain(), "general.timeout");
-        icon = config.getOption(pluginInfo.getDomain(), "general.icon");
-        escapehtml = config.getOptionBool(pluginInfo.getDomain(), "advanced.escapehtml");
-        strictescape = config.getOptionBool(pluginInfo.getDomain(), "advanced.strictescape");
-        stripcodes = config.getOptionBool(pluginInfo.getDomain(), "advanced.stripcodes");
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void configChanged(final String domain, final String key) {
-        setCachedSettings();
     }
 
 }
