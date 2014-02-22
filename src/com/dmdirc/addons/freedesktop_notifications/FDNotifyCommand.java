@@ -30,6 +30,8 @@ import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.interfaces.CommandController;
 
+import javax.inject.Inject;
+
 /**
  * The FDNotify Command shows a nice popup on using the FreeDesktop VisualNotifications.
  */
@@ -39,19 +41,19 @@ public final class FDNotifyCommand extends Command {
     public static final BaseCommandInfo INFO = new BaseCommandInfo("fdnotify",
             "fdnotify <message> - Show a nice popup where available",
             CommandType.TYPE_GLOBAL);
-    /** Plugin that owns this command. */
-    final FreeDesktopNotificationsPlugin myPlugin;
+    /** Manager to show notifications. */
+    private final FDManager manager;
 
     /**
      * Creates a new instance of FDNotifyCommand.
      *
      * @param controller The controller to use for command information.
-     * @param myPlugin   the plugin creating this command.
+     * @param manager   Manager to show notifications
      */
-    public FDNotifyCommand(final CommandController controller,
-            final FreeDesktopNotificationsPlugin myPlugin) {
+    @Inject
+    public FDNotifyCommand(final CommandController controller, final FDManager manager) {
         super(controller);
-        this.myPlugin = myPlugin;
+        this.manager = manager;
     }
 
     /** {@inheritDoc} */
@@ -62,7 +64,7 @@ public final class FDNotifyCommand extends Command {
             /** {@inheritDoc} */
             @Override
             public void run() {
-                myPlugin.showNotification("", args.getArgumentsAsString());
+                manager.showNotification("", args.getArgumentsAsString());
             }
         }.start();
     }
