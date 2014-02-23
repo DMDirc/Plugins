@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_swing.components;
 
 import com.dmdirc.addons.ui_swing.dialogs.url.URLSubsitutionsPanel;
+import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.ui.core.util.URLHandler;
 
@@ -53,8 +54,10 @@ public class URLProtocolPanel extends JPanel implements ActionListener,
 
     /** Serial version UID. */
     private static final long serialVersionUID = 1;
-    /** Config. */
-    private final ConfigProvider config;
+    /** Global config. */
+    private final AggregateConfigProvider globalConfig;
+    /** User settings. */
+    private final ConfigProvider userSettings;
     /** URL. */
     private final URI uri;
     /** Show insets? */
@@ -83,15 +86,19 @@ public class URLProtocolPanel extends JPanel implements ActionListener,
     /**
      * Instantiates the URLDialog.
      *
-     * @param config    Configuration
-     * @param url       URL to open once added
-     * @param useInsets Show insets?
+     * @param globalConfig Global configuration
+     * @param userSettings User settings
+     * @param url          URL to open once added
+     * @param useInsets    Show insets?
      */
-    public URLProtocolPanel(final ConfigProvider config, final URI url,
+    public URLProtocolPanel(final AggregateConfigProvider globalConfig,
+            final ConfigProvider userSettings,
+            final URI url,
             final boolean useInsets) {
         super();
 
-        this.config = config;
+        this.globalConfig = globalConfig;
+        this.userSettings = userSettings;
         uri = url;
         this.useInsets = useInsets;
 
@@ -165,7 +172,7 @@ public class URLProtocolPanel extends JPanel implements ActionListener,
 
     /** Saves the settings. */
     public void save() {
-        config.setOption("protocol", uri.getScheme().toLowerCase(), getSelection());
+        userSettings.setOption("protocol", uri.getScheme().toLowerCase(), getSelection());
     }
 
     /**
@@ -204,8 +211,8 @@ public class URLProtocolPanel extends JPanel implements ActionListener,
      * Updates the selection.
      */
     public void updateSelection() {
-        if (uri != null && config.hasOptionString("protocol", uri.getScheme())) {
-            final String option = config.getOption("protocol", uri.getScheme());
+        if (uri != null && globalConfig.hasOptionString("protocol", uri.getScheme())) {
+            final String option = globalConfig.getOption("protocol", uri.getScheme());
             switch (option) {
                 case "DMDIRC":
                     optionType.setSelected(dmdirc.getModel(), true);

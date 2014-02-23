@@ -22,11 +22,13 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.url;
 
+import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.ClientModule.UserConfig;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.components.URLProtocolPanel;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
+import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.ui.core.util.URLHandler;
 import com.dmdirc.util.annotations.factory.Factory;
@@ -62,12 +64,14 @@ public class URLDialog extends StandardDialog implements ActionListener {
      * Instantiates the URLDialog.
      *
      * @param url          URL to open once added
-     * @param config       Config
+     * @param global       Global Configuration
+     * @param config       User settings
      * @param parentWindow Parent window
      * @param urlHandler   The URL Handler to use to handle clicked links
      */
     public URLDialog(
             @Unbound final URI url,
+            @SuppressWarnings("qualifiers") @GlobalConfig final AggregateConfigProvider global,
             @SuppressWarnings("qualifiers") @UserConfig final ConfigProvider config,
             final MainFrame parentWindow,
             final URLHandler urlHandler) {
@@ -77,7 +81,7 @@ public class URLDialog extends StandardDialog implements ActionListener {
         this.parentWindow = parentWindow;
         this.urlHandler = urlHandler;
 
-        initComponents(config);
+        initComponents(global, config);
         layoutComponents();
         addListeners();
 
@@ -85,11 +89,11 @@ public class URLDialog extends StandardDialog implements ActionListener {
     }
 
     /** Initialises the components. */
-    private void initComponents(final ConfigProvider config) {
+    private void initComponents(final AggregateConfigProvider global, final ConfigProvider config) {
         orderButtons(new JButton(), new JButton());
         blurb = new TextLabel("Please select the appropriate action to " + "handle " + url.
                 getScheme() + ":// URLs from the list " + "below.");
-        panel = new URLProtocolPanel(config, url, false);
+        panel = new URLProtocolPanel(global, config, url, false);
     }
 
     /** Lays out the components. */
