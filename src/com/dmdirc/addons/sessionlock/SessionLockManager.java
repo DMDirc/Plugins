@@ -22,36 +22,50 @@
 
 package com.dmdirc.addons.sessionlock;
 
-import com.dmdirc.plugins.PluginInfo;
-import com.dmdirc.plugins.implementations.BasePlugin;
+import com.dmdirc.actions.ActionManager;
 
-import dagger.ObjectGraph;
+import javax.inject.Inject;
 
-/**
- * Plugin that detects Session lock/unlock events.
- */
-public class SessionLock extends BasePlugin {
+import com.greboid.lock.LockAdapter;
+import com.greboid.lock.LockListener;
+
+public class SessionLockManager implements LockListener {
 
     /** Action manager. */
-    private SessionLockManager manager;
+    private final ActionManager actionManager;
+    /** Have we registered our actions? */
+    private static boolean registered;
+    /** Lock Adapter to detect session events. */
+    private LockAdapter lockAdapter;
 
-    @Override
-    public void load(final PluginInfo pluginInfo, final ObjectGraph graph) {
-        super.load(pluginInfo, graph);
-        setObjectGraph(graph.plus(new SessionLockModule()));
-        manager = getObjectGraph().get(SessionLockManager.class);
+    @Inject
+    public SessionLockManager(final ActionManager actionManager) {
+        this.actionManager = actionManager;
+    }
+
+    public void load() {
+        if (!registered) {
+            actionManager.registerTypes(SessionLockActionType.values());
+            registered = true;
+        }
+
+        lockAdapter = new LockAdapter();
+        lockAdapter.addLockListener(this);
+    }
+
+    public void unload() {
+        lockAdapter.removeLockListener(this);
+        lockAdapter = null;
     }
 
     @Override
-    public void onLoad() {
-        super.onLoad();
-        manager.load();
+    public void locked() {
+        actionManager.triggerEvent(SessionLockActionType.SESSION_LOCK, null);
     }
 
     @Override
-    public void onUnload() {
-        super.onUnload();
-        manager.unload();
+    public void unlocked() {
+        actionManager.triggerEvent(SessionLockActionType.SESSION_UNLOCK, null);
     }
 
 }
