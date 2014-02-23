@@ -28,9 +28,8 @@ package com.dmdirc.addons.swingdebug;
 
 import com.dmdirc.addons.ui_swing.DMDircEventQueue;
 import com.dmdirc.addons.ui_swing.SwingController;
+import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
-import com.dmdirc.interfaces.config.IdentityController;
-import com.dmdirc.plugins.Plugin;
 
 import java.awt.AWTEvent;
 import java.io.IOException;
@@ -50,8 +49,7 @@ import javax.management.ObjectName;
  * Event queue extention to monitor long running tasks on the EDT. Original code found at
  * http://today.java.net/lpt/a/433 modified to work as a DMDirc plugin.
  */
-public class TracingEventQueue extends DMDircEventQueue implements
-        Runnable, ConfigChangeListener {
+public class TracingEventQueue extends DMDircEventQueue implements Runnable, ConfigChangeListener {
 
     /** Threshold before event is considered long running. */
     private long thresholdDelay;
@@ -61,33 +59,29 @@ public class TracingEventQueue extends DMDircEventQueue implements
     private ThreadMXBean threadBean;
     /** boolean to end thread. */
     private boolean running = false;
-    /** Parent plugin. */
-    private final Plugin parentPlugin;
-    /** The controller to read/write settings with. */
-    private final IdentityController identityController;
+    /** The controller to read settings from. */
+    private final AggregateConfigProvider config;
+    /** This plugin's settings domain. */
+    private final String domain;
     /** Tracing thread. */
     private Thread tracingThread;
 
     /**
      * Instantiates a new tracing thread.
      *
-     * @param parentPlugin       Parent plugin
-     * @param identityController The controller to read/write settings with.
-     * @param controller         Swing controller
+     * @param domain     This plugin's settings domain
+     * @param config     Config to read settings from
+     * @param controller Swing controller
      */
-    public TracingEventQueue(
-            final Plugin parentPlugin,
-            final IdentityController identityController,
+    public TracingEventQueue(final String domain, final AggregateConfigProvider config,
             final SwingController controller) {
         super(controller);
-        this.parentPlugin = parentPlugin;
-        this.identityController = identityController;
+        this.domain = domain;
+        this.config = config;
 
         eventTimeMap = Collections.synchronizedMap(new HashMap<AWTEvent, Long>());
-        identityController.getGlobalConfiguration().addChangeListener(
-                parentPlugin.getDomain(), "debugEDT", this);
-        identityController.getGlobalConfiguration().addChangeListener(
-                parentPlugin.getDomain(), "slowedttaskthreshold", this);
+        config.addChangeListener(domain, "debugEDT", this);
+        config.addChangeListener(domain, "slowedttaskthreshold", this);
         checkTracing();
 
         try {
@@ -161,7 +155,7 @@ public class TracingEventQueue extends DMDircEventQueue implements
                             threadId, Integer.MAX_VALUE);
                     if (threadInfo != null
                             && threadInfo.getThreadName().startsWith(
-                            "AWT-EventQueue")) {
+                                    "AWT-EventQueue")) {
                         System.out.println(threadInfo.getThreadName() + " / "
                                 + threadInfo.getThreadState());
                         final StackTraceElement[] stack = threadInfo.getStackTrace();
@@ -226,10 +220,8 @@ public class TracingEventQueue extends DMDircEventQueue implements
     }
 
     private void checkTracing() {
-        final boolean tracing = identityController.getGlobalConfiguration()
-                .getOptionBool(parentPlugin.getDomain(), "debugEDT");
-        thresholdDelay = identityController.getGlobalConfiguration()
-                .getOptionInt(parentPlugin.getDomain(), "slowedttaskthreshold");
+        final boolean tracing = config.getOptionBool(domain, "debugEDT");
+        thresholdDelay = config.getOptionInt(domain, "slowedttaskthreshold");
         if (tracing) {
             running = true;
             tracingThread = new Thread(this);

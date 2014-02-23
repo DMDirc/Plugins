@@ -38,25 +38,20 @@ public class SystemStreamContainer extends FrameContainer {
 
     /** Stream reader thread. */
     private SystemStreamRedirectThread thread;
-    /** Parent plugin. */
-    private SwingDebugPlugin plugin;
 
     /**
      * Creates a new system stream container wrapping the specified stream.
      *
      * @param stream     Stream to wrap
      * @param config     Config to wrap
-     * @param plugin     Parent plugin
      * @param urlBuilder The URL builder to use when finding icons.
      */
     public SystemStreamContainer(
             final SystemStreamType stream,
             final AggregateConfigProvider config,
-            final SwingDebugPlugin plugin,
             final URLBuilder urlBuilder) {
         super("dmdirc", stream.toString(), stream.toString(), config, urlBuilder,
                 Arrays.asList(WindowComponent.TEXTAREA.getIdentifier()));
-        this.plugin = plugin;
         try {
             thread = new SystemStreamRedirectThread(stream, getDocument());
             thread.start();
@@ -64,19 +59,16 @@ public class SystemStreamContainer extends FrameContainer {
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public Connection getConnection() {
         return getParent() == null ? null : getParent().getConnection();
     }
 
-    /** {@inheritDoc} */
     @Override
     public void close() {
         super.close();
 
         thread.cancel();
-        plugin.windowClosing(this);
     }
 
 }
