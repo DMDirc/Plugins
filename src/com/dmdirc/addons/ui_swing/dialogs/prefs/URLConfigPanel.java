@@ -152,7 +152,7 @@ public class URLConfigPanel extends JPanel implements
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         table.getRowSorter().toggleSortOrder(0);
         details = new HashMap<>();
-        empty = new URLProtocolPanel(userConfig, null, true);
+        empty = new URLProtocolPanel(globalConfig, userConfig, null, true);
         activeComponent = empty;
         add = new JButton("Add");
         remove = new JButton("Remove");
@@ -166,7 +166,7 @@ public class URLConfigPanel extends JPanel implements
             try {
                 final URI uri = new URI(option + "://example.test.com");
                 model.addURI(uri);
-                details.put(uri, new URLProtocolPanel(userConfig, uri, true));
+                details.put(uri, new URLProtocolPanel(globalConfig, userConfig, uri, true));
             } catch (final URISyntaxException ex) {
                 //Ignore wont happen
             }
@@ -286,7 +286,7 @@ public class URLConfigPanel extends JPanel implements
                     try {
                         final URI uri = new URI(getText() + "://example.test.com");
                         model.addURI(uri);
-                        details.put(uri, new URLProtocolPanel(userConfig, uri, true));
+                        details.put(uri, new URLProtocolPanel(globalConfig, userConfig, uri, true));
                         return true;
                     } catch (final URISyntaxException ex) {
                         return false;
