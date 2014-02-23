@@ -24,8 +24,9 @@ package com.dmdirc.addons.serverlistdialog;
 
 import com.dmdirc.actions.wrappers.PerformWrapper;
 import com.dmdirc.addons.serverlists.ServerGroupItem;
-import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.performpanel.PerformPanel;
+import com.dmdirc.interfaces.config.AggregateConfigProvider;
+import com.dmdirc.ui.IconManager;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
@@ -51,19 +52,20 @@ public class Perform extends JPanel implements ServerListListener {
     /**
      * Creates a new perform panel backed by the specified model.
      *
-     * @param controller Swing controller
-     * @param wrapper    Perform wrapper to read/write performs to.
-     * @param model      Backing model
+     * @param iconManager  Icon Manager
+     * @param globalConfig Global configuration
+     * @param wrapper      Perform wrapper to read/write performs to.
+     * @param model        Backing model
      */
     public Perform(
-            final SwingController controller,
+            final IconManager iconManager,
+            final AggregateConfigProvider globalConfig,
             final PerformWrapper wrapper,
             final ServerListModel model) {
         super();
 
         this.model = model;
-        performPanel = new PerformPanel(controller.getIconManager(), controller.getGlobalConfig(),
-                wrapper);
+        performPanel = new PerformPanel(iconManager, globalConfig, wrapper);
 
         addListeners();
         if (model.getSelectedItemPerformDescription() != null) {
