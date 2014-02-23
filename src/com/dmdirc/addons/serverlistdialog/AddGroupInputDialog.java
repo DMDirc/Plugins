@@ -23,7 +23,6 @@
 package com.dmdirc.addons.serverlistdialog;
 
 import com.dmdirc.addons.serverlists.ServerGroup;
-import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.addons.ui_swing.components.validating.ValidatingJTextField;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
@@ -73,12 +72,12 @@ public class AddGroupInputDialog extends StandardDialog {
     /**
      * Instantiates a new standard input dialog.
      *
-     * @param controller Swing controller
-     * @param items      Parent tree
-     * @param owner      Dialog owner
-     * @param model      Server list model
+     * @param iconManager Icon manager
+     * @param items       Parent tree
+     * @param owner       Dialog owner
+     * @param model       Server list model
      */
-    public AddGroupInputDialog(final SwingController controller,
+    public AddGroupInputDialog(final IconManager iconManager,
             final Window owner, final JTree items,
             final ServerListModel model) {
         super(owner, ModalityType.MODELESS);
@@ -91,7 +90,7 @@ public class AddGroupInputDialog extends StandardDialog {
         setTitle("Add new server group");
         setDefaultCloseOperation(StandardInputDialog.DISPOSE_ON_CLOSE);
 
-        initComponents(controller.getIconManager());
+        initComponents(iconManager);
         addListeners();
         layoutComponents();
     }

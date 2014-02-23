@@ -22,13 +22,15 @@
 
 package com.dmdirc.addons.serverlistdialog;
 
+import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.actions.wrappers.PerformWrapper;
 import com.dmdirc.addons.serverlists.ServerGroupItem;
 import com.dmdirc.addons.ui_swing.MainFrame;
-import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.LockedLayer;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
+import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.IdentityController;
+import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.core.util.URLHandler;
 
 import java.awt.color.ColorSpace;
@@ -78,7 +80,8 @@ public class ServerListDialog extends StandardDialog implements
     /**
      * Creates a new server list dialog.
      *
-     * @param controller         Swing controller
+     * @param iconManager        Icon manager to get icons
+     * @param globalConfig       Global config to read settings from
      * @param urlHandler         The URL Handler to use to handle clicked links
      * @param performWrapper     The wrapper to use for the perform tab
      * @param serverListModel    The model to use for the dialog.
@@ -88,7 +91,8 @@ public class ServerListDialog extends StandardDialog implements
      */
     @Inject
     public ServerListDialog(
-            final SwingController controller,
+            @GlobalConfig final IconManager iconManager,
+            @GlobalConfig final AggregateConfigProvider globalConfig,
             final URLHandler urlHandler,
             final PerformWrapper performWrapper,
             final ServerListModel serverListModel,
@@ -105,18 +109,19 @@ public class ServerListDialog extends StandardDialog implements
 
         profileLock = new LockedLayer<>(new BufferedImageOpEffect(
                 new ColorConvertOp(ColorSpace.getInstance(ColorSpace.CS_GRAY),
-                null)));
+                        null)));
         performLock = new LockedLayer<>(new BufferedImageOpEffect(
                 new ColorConvertOp(ColorSpace.getInstance(ColorSpace.CS_GRAY),
-                null)));
+                        null)));
         settingsLock = new LockedLayer<>(new BufferedImageOpEffect(
                 new ColorConvertOp(ColorSpace.getInstance(ColorSpace.CS_GRAY),
-                null)));
+                        null)));
         infoLock = new LockedLayer<>(new BufferedImageOpEffect(
                 new ColorConvertOp(ColorSpace.getInstance(ColorSpace.CS_GRAY),
-                null)));
+                        null)));
         profileLayer = new JXLayer<>(new Profiles(model, identityController), profileLock);
-        performLayer = new JXLayer<>(new Perform(controller, performWrapper, model), performLock);
+        performLayer = new JXLayer<>(new Perform(iconManager, globalConfig, performWrapper, model),
+                performLock);
         settingsLayer = new JXLayer<>(settingsPanel, settingsLock);
         infoLayer = new JXLayer<>(new Info(model, urlHandler), infoLock);
         help = new Help();
@@ -124,7 +129,7 @@ public class ServerListDialog extends StandardDialog implements
 
         setLayout(new MigLayout("fill, wrap 2, wmin 600, wmax 600"));
 
-        add(new Tree(controller, model, this),
+        add(new Tree(iconManager, model, this),
                 "grow, spany 4, wmax 150, wmin 150");
         add(help, "pos 160 0.5al");
         add(infoLayer, "growx, pushx");

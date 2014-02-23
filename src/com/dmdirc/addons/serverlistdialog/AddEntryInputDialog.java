@@ -23,7 +23,6 @@
 package com.dmdirc.addons.serverlistdialog;
 
 import com.dmdirc.addons.serverlists.ServerGroup;
-import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.addons.ui_swing.components.validating.ValidatingJTextField;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
@@ -76,12 +75,12 @@ public class AddEntryInputDialog extends StandardDialog {
     /**
      * Instantiates a new standard input dialog.
      *
-     * @param controller Swing controller
-     * @param items      Parent tree
-     * @param owner      Dialog owner
-     * @param model      Server list model
+     * @param iconManager Icon Manager
+     * @param items       Parent tree
+     * @param owner       Dialog owner
+     * @param model       Server list model
      */
-    public AddEntryInputDialog(final SwingController controller,
+    public AddEntryInputDialog(final IconManager iconManager,
             final Window owner, final JTree items,
             final ServerListModel model) {
         super(owner, ModalityType.MODELESS);
@@ -95,7 +94,7 @@ public class AddEntryInputDialog extends StandardDialog {
         setTitle("Add new server entry");
         setDefaultCloseOperation(StandardInputDialog.DISPOSE_ON_CLOSE);
 
-        initComponents(controller.getIconManager());
+        initComponents(iconManager);
         addListeners();
         layoutComponents();
     }
