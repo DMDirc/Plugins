@@ -33,9 +33,8 @@ import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.commandparser.commands.context.ServerCommandContext;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.parser.interfaces.Parser;
-import com.dmdirc.parser.interfaces.callbacks.DebugInfoListener;
-import com.dmdirc.ui.WindowManager;
-import com.dmdirc.util.URLBuilder;
+
+import javax.inject.Inject;
 
 /**
  * The ParserDebug Command allows controlling of which parsers spam debug info.
@@ -48,35 +47,27 @@ public final class ParserDebugCommand extends Command {
             "parserdebug", "parserdebug - Enables/Disables hooks for "
             + "onDebugInfo for the parser that owns this window",
             CommandType.TYPE_SERVER);
-    /** My Plugin */
-    final DebugPlugin myPlugin;
-    /** Window management. */
-    private final WindowManager windowManager;
-    private final URLBuilder urlBuilder;
+    /** Parser debug manager. */
+    final ParserDebugManager parserDebugManager;
 
     /**
      * Creates a new instance of ParserDebugCommand.
      *
-     * @param controller    The controller to use for command information.
-     * @param plugin        Plugin that owns this command
-     * @param windowManager Window management
-     * @param urlBuilder    The URL builder to use when finding icons.
+     * @param controller         The controller to use for command information.
+     * @param parserDebugManager Parser debug manager
      */
+    @Inject
     public ParserDebugCommand(
             final CommandController controller,
-            final DebugPlugin plugin,
-            final WindowManager windowManager,
-            final URLBuilder urlBuilder) {
+            final ParserDebugManager parserDebugManager) {
         super(controller);
-        myPlugin = plugin;
-        this.windowManager = windowManager;
-        this.urlBuilder = urlBuilder;
+        this.parserDebugManager = parserDebugManager;
     }
 
     /**
      * Executes this command.
      *
-     * @param origin      The framecontainer in which this command was issued
+     * @param origin      The frame container in which this command was issued
      * @param commandArgs The user supplied arguments
      * @param context     The Context of this command execution
      */
@@ -85,37 +76,22 @@ public final class ParserDebugCommand extends Command {
             final CommandContext context) {
         final boolean isSilent = commandArgs.isSilent();
 
-        final Parser parser = ((ServerCommandContext) context).getServer()
-                .getParser();
+        final Parser parser = ((ServerCommandContext) context).getServer().getParser();
 
         if (parser == null) {
             sendLine(origin, isSilent, FORMAT_ERROR, "Unable to get a parser for this window.");
             return;
         }
-        if (myPlugin.registeredParsers.containsKey(parser)) {
-            try {
-                parser.getCallbackManager().delCallback(DebugInfoListener.class, myPlugin);
-                final DebugWindow window = myPlugin.registeredParsers.get(parser);
-                window.addLine("======================", true);
-                window.addLine("No Longer Monitoring: " + parser + " (User Requested)", true);
-                window.addLine("======================", true);
-                myPlugin.registeredParsers.remove(parser);
+        if (parserDebugManager.containsParser(parser)) {
+            if (parserDebugManager.removeParser(parser, false)) {
                 sendLine(origin, isSilent, FORMAT_OUTPUT, "Removing callback ok");
-            } catch (Exception e) {
+            } else {
                 sendLine(origin, isSilent, FORMAT_ERROR, "Removing callback failed");
             }
         } else {
-            try {
-                parser.getCallbackManager().addCallback(DebugInfoListener.class, myPlugin);
-                final DebugWindow window = new DebugWindow(myPlugin,
-                        "Parser Debug", parser, (Server) origin.getConnection(), urlBuilder);
-                windowManager.addWindow((Server) origin.getConnection(), window);
-                myPlugin.registeredParsers.put(parser, window);
+            if (parserDebugManager.addParser(parser, (Server) origin.getConnection())) {
                 sendLine(origin, isSilent, FORMAT_OUTPUT, "Adding callback ok");
-                window.addLine("======================", true);
-                window.addLine("Started Monitoring: " + parser, true);
-                window.addLine("======================", true);
-            } catch (Exception e) {
+            } else {
                 sendLine(origin, isSilent, FORMAT_ERROR, "Adding callback failed");
             }
         }
