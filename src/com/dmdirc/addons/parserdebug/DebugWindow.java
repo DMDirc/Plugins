@@ -37,33 +37,33 @@ import java.util.Arrays;
  */
 public class DebugWindow extends FrameContainer {
 
-    /** The plugin that owns this window */
-    protected final DebugPlugin plugin;
-    /** The parser this window is debugging */
+    /** The debug listener for this window. */
+    protected final DebugInfoListener listener;
+    /** The parser this window is debugging. */
     protected Parser parser;
-    /** The connection we're operating on */
-    protected final Connection connection;
+    /** The server we're operating on. */
+    protected final Server server;
 
     /**
      * Creates a new instance of DebugWindow.
      *
-     * @param plugin     The plugin that owns this window
+     * @param listener   The debug listener for this window
      * @param title      The title of this window
      * @param parser     The parser this plugin is debugging
      * @param server     The Server window this is a child of
      * @param urlBuilder The URL builder to use when finding icons.
      */
     public DebugWindow(
-            final DebugPlugin plugin,
+            final DebugInfoListener listener,
             final String title,
             final Parser parser,
             final Server server,
             final URLBuilder urlBuilder) {
         super("raw", "Parser Debug", title, server.getConfigManager(), urlBuilder,
                 Arrays.asList(WindowComponent.TEXTAREA.getIdentifier()));
-        this.plugin = plugin;
+        this.listener = listener;
         this.parser = parser;
-        this.connection = server;
+        this.server = server;
     }
 
     /**
@@ -73,7 +73,7 @@ public class DebugWindow extends FrameContainer {
      */
     @Override
     public Connection getConnection() {
-        return connection;
+        return server;
     }
 
     /**
@@ -94,7 +94,7 @@ public class DebugWindow extends FrameContainer {
 
         // Remove any callbacks or listeners
         if (parser != null) {
-            parser.getCallbackManager().delCallback(DebugInfoListener.class, plugin);
+            parser.getCallbackManager().delCallback(DebugInfoListener.class, listener);
         }
     }
 

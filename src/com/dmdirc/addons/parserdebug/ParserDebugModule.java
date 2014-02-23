@@ -22,37 +22,11 @@
 
 package com.dmdirc.addons.parserdebug;
 
-import com.dmdirc.plugins.PluginInfo;
-import com.dmdirc.plugins.implementations.BaseCommandPlugin;
+import com.dmdirc.ClientModule;
 
-import dagger.ObjectGraph;
+import dagger.Module;
 
-/**
- * This causes parser debugging to be output to the a debug window.
- */
-public final class DebugPlugin extends BaseCommandPlugin {
-
-    /** The action controller to use. */
-    private ParserDebugManager manager;
-
-    @Override
-    public void load(final PluginInfo pluginInfo, final ObjectGraph graph) {
-        super.load(pluginInfo, graph);
-        setObjectGraph(graph.plus(new ParserDebugModule()));
-        registerCommand(ParserDebugCommand.class, ParserDebugCommand.INFO);
-        manager = getObjectGraph().get(ParserDebugManager.class);
-    }
-
-    @Override
-    public void onLoad() {
-        manager.addActionListener();
-        super.onLoad();
-    }
-
-    @Override
-    public void onUnload() {
-        manager.removeActionListener();
-        super.onUnload();
-    }
+@Module(injects = {ParserDebugCommand.class, ParserDebugManager.class}, addsTo = ClientModule.class)
+public class ParserDebugModule {
 
 }
