@@ -30,6 +30,8 @@ import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.interfaces.CommandController;
 
+import javax.inject.Inject;
+
 /**
  * The /popup command allows the user to show a popup message from the system tray icon.
  */
@@ -39,19 +41,20 @@ public class PopupCommand extends Command {
     public static final BaseCommandInfo INFO = new BaseCommandInfo("popup",
             "popup <message> - shows the message as a system tray popup",
             CommandType.TYPE_GLOBAL);
-    /** The SystrayPlugin that we belong to. */
-    private final SystrayPlugin parent;
+    /** Systray manager, used to show notifications. */
+    private final SystrayManager manager;
 
     /**
      * Creates a new instance of PopupCommand.
      *
-     * @param newParent         The plugin that this command belongs to
+     * @param manager           Systray manager, used to show notifications
      * @param commandController The controller to use for command information.
      */
-    public PopupCommand(final SystrayPlugin newParent, final CommandController commandController) {
+    @Inject
+    public PopupCommand(final SystrayManager manager, final CommandController commandController) {
         super(commandController);
 
-        this.parent = newParent;
+        this.manager = manager;
     }
 
     /**
@@ -63,11 +66,10 @@ public class PopupCommand extends Command {
      * @return True if the notification was shown.
      */
     public boolean showPopup(final String title, final String message) {
-        parent.notify(title, message);
+        manager.notify(title, message);
         return true;
     }
 
-    /** {@inheritDoc} */
     @Override
     public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
