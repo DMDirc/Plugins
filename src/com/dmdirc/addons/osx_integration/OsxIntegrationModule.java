@@ -22,21 +22,19 @@
 
 package com.dmdirc.addons.osx_integration;
 
-import com.dmdirc.plugins.PluginInfo;
-import com.dmdirc.plugins.implementations.BaseCommandPlugin;
+import com.dmdirc.addons.ui_swing.Apple;
+import com.dmdirc.addons.ui_swing.SwingController;
+import com.dmdirc.addons.ui_swing.injection.SwingModule;
 
-import dagger.ObjectGraph;
+import dagger.Module;
+import dagger.Provides;
 
-/**
- * A plugin which provides extra commands that integrate with the OS X environment.
- */
-public class OsxIntegrationPlugin extends BaseCommandPlugin {
+@Module(injects = DockBounceCommand.class, addsTo = SwingModule.class)
+public class OsxIntegrationModule {
 
-    @Override
-    public void load(final PluginInfo pluginInfo, final ObjectGraph graph) {
-        super.load(pluginInfo, graph);
-        setObjectGraph(graph.plus(new OsxIntegrationModule()));
-        registerCommand(DockBounceCommand.class, DockBounceCommand.INFO);
+    @Provides
+    public Apple getApple(final SwingController controller) {
+        return controller.getApple();
     }
 
 }
