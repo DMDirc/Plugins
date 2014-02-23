@@ -349,9 +349,9 @@ public final class PrefsComponentFactory {
         DurationDisplay option;
 
         try {
-            option = new DurationDisplay(Integer.parseInt(setting.getValue()));
+            option = new DurationDisplay(iconManager, Integer.parseInt(setting.getValue()));
         } catch (final NumberFormatException ex) {
-            option = new DurationDisplay();
+            option = new DurationDisplay(iconManager);
         }
 
         option.addDurationListener(new DurationListener() {
