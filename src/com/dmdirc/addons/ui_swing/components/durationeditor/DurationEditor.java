@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_swing.components.durationeditor;
 
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
+import com.dmdirc.ui.IconManager;
 import com.dmdirc.util.collections.ListenerList;
 
 import java.awt.Window;
@@ -76,22 +77,24 @@ public class DurationEditor extends StandardDialog implements ActionListener {
      * Instantiates a new duration editor.
      *
      * @param window Parent window.
+     * @param iconManager Icon manager used to change window icon
      *
      * @since 0.6
      */
-    public DurationEditor(final Window window) {
-        this(window, 0);
+    public DurationEditor(final Window window, final IconManager iconManager) {
+        this(window, iconManager, 0);
     }
 
     /**
      * Instantiates a new duration editor.
      *
      * @param window   Parent window.
+     * @param iconManager Icon manager used to change window icon
      * @param duration Starting duration
      *
      * @since 0.6
      */
-    public DurationEditor(final Window window, final long duration) {
+    public DurationEditor(final Window window, final IconManager iconManager, final long duration) {
         super(window, ModalityType.MODELESS);
 
         this.window = window;
@@ -101,6 +104,7 @@ public class DurationEditor extends StandardDialog implements ActionListener {
         initComponents(duration);
         addListeners();
         layoutComponents();
+        setIconImage(iconManager.getImage("logo"));
     }
 
     /**
@@ -126,7 +130,7 @@ public class DurationEditor extends StandardDialog implements ActionListener {
         updatedDuration = (updatedDuration % SECONDS_IN_HOURS);
         minutesSpinner.setValue((int) duration / SECONDS_IN_MINUTE);
         updatedDuration = (updatedDuration % SECONDS_IN_MINUTE);
-        secondsSpinner.setValue((int) duration);
+        secondsSpinner.setValue((int) updatedDuration);
     }
 
     /**

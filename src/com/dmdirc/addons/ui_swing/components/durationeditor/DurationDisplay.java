@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_swing.components.durationeditor;
 
 import com.dmdirc.addons.ui_swing.UIUtilities;
+import com.dmdirc.ui.IconManager;
 import com.dmdirc.util.DateUtils;
 import com.dmdirc.util.collections.ListenerList;
 
@@ -43,14 +44,12 @@ import net.miginfocom.swing.MigLayout;
 public class DurationDisplay extends JPanel implements ActionListener,
         DurationListener {
 
-    /**
-     * A version number for this class. It should be changed whenever the class structure is changed
-     * (or anything else that would prevent serialized objects being unserialized with the new
-     * class).
-     */
+    /** A version number for this class. */
     private static final long serialVersionUID = 1;
     /** Listener list. */
     private final ListenerList listeners;
+    /** Icon manager to change icon on editor window. */
+    private final IconManager iconManager;
     /** Current duration. */
     private int duration;
     /** Duration label. */
@@ -62,43 +61,37 @@ public class DurationDisplay extends JPanel implements ActionListener,
 
     /**
      * Initialises a new duration display of 0 milliseconds.
+     *
+     * @param iconManager Icon manager used to change window icon
      */
-    public DurationDisplay() {
-        this(0);
+    public DurationDisplay(final IconManager iconManager) {
+        this(iconManager, 0);
     }
 
     /**
      * Instantiates a new duration display.
      *
-     * @param window Parent window.
-     *
-     * @since 0.6
-     */
-    public DurationDisplay(final Window window) {
-        this(window, 0);
-    }
-
-    /**
-     * Instantiates a new duration display.
-     *
+     * @param iconManager Icon manager used to change window icon
      * @param duration Starting duration
      */
-    public DurationDisplay(final long duration) {
-        this(null, duration);
+    public DurationDisplay(final IconManager iconManager, final long duration) {
+        this(null, iconManager, duration);
     }
 
     /**
      * Initialises a new duration display showing the specified millisecond duration.
      *
      * @param window   Parent window.
+     * @param iconManager Icon manager used to change window icon
      * @param duration Duration to display in milliseconds
      *
      * @since 0.6
      */
-    public DurationDisplay(final Window window, final long duration) {
+    public DurationDisplay(final Window window, final IconManager iconManager, final long duration) {
         super();
 
         this.window = window;
+        this.iconManager = iconManager;
         this.duration = (int) (duration / 1000);
         listeners = new ListenerList();
 
@@ -150,7 +143,7 @@ public class DurationDisplay extends JPanel implements ActionListener,
      */
     @Override
     public void actionPerformed(final ActionEvent e) {
-        final DurationEditor editor = new DurationEditor(window, duration);
+        final DurationEditor editor = new DurationEditor(window, iconManager, duration);
         editor.display(window);
         editor.addDurationListener(this);
     }
