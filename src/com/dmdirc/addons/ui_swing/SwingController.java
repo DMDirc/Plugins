@@ -104,6 +104,8 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     private final ColourManager colourManager;
     /** The manager we're using for dependencies. */
     private SwingManager swingManager;
+    /** This plugin's settings domain. */
+    private final String domain;
 
     /**
      * Instantiates a new SwingController.
@@ -127,6 +129,7 @@ public class SwingController extends BaseCommandPlugin implements UIController {
         this.pluginInfo = pluginInfo;
         this.pluginManager = pluginManager;
         this.colourManager = colourManager;
+        this.domain = pluginInfo.getDomain();
 
         globalConfig = identityManager.getGlobalConfiguration();
         globalIdentity = identityManager.getUserSettings();
@@ -516,7 +519,7 @@ public class SwingController extends BaseCommandPlugin implements UIController {
                 "Window buffer size", "The maximum number of lines in a "
                 + "window buffer", globalConfig, globalIdentity));
         advanced.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
-                getDomain(), "mdiBarVisibility", "MDI Bar Visibility",
+                domain, "mdiBarVisibility", "MDI Bar Visibility",
                 "Controls the visibility of the MDI bar",
                 globalConfig, globalIdentity));
         advanced.addSetting(
@@ -526,36 +529,36 @@ public class SwingController extends BaseCommandPlugin implements UIController {
                 + "collapsing/expanding the split panes",
                 globalConfig, globalIdentity));
         advanced.addSetting(new PreferencesSetting(PreferencesType.INTEGER,
-                getDomain(), "windowMenuItems", "Window menu item count",
+                domain, "windowMenuItems", "Window menu item count",
                 "Number of items to show in the window menu",
                 globalConfig, globalIdentity));
         advanced.addSetting(
-                new PreferencesSetting(PreferencesType.INTEGER, getDomain(),
+                new PreferencesSetting(PreferencesType.INTEGER, domain,
                 "windowMenuScrollInterval", "Window menu scroll interval",
                 "Number of milliseconds to pause when autoscrolling in the "
                 + "window menu",
                 globalConfig, globalIdentity));
         advanced.addSetting(
-                new PreferencesSetting(PreferencesType.BOOLEAN, getDomain(),
+                new PreferencesSetting(PreferencesType.BOOLEAN, domain,
                 "showtopicbar", "Show topic bar",
                 "Shows a graphical topic bar in channels.",
                 globalConfig, globalIdentity));
         advanced.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
-                getDomain(),
+                domain,
                 "shownicklist", "Show nicklist?",
                 "Do you want the nicklist visible",
                 globalConfig, globalIdentity));
         advanced.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
-                getDomain(), "showfulltopic", "Show full topic in topic bar?",
+                domain, "showfulltopic", "Show full topic in topic bar?",
                 "Do you want to show the full topic in the topic bar or just"
                 + "first line?",
                 globalConfig, globalIdentity));
         advanced.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
-                getDomain(), "hideEmptyTopicBar", "Hide empty topic bar?",
+                domain, "hideEmptyTopicBar", "Hide empty topic bar?",
                 "Do you want to hide the topic bar when there is no topic",
                 globalConfig, globalIdentity));
         advanced.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
-                getDomain(), "textpanelinenotification",
+                domain, "textpanelinenotification",
                 "New line notification", "Do you want to be notified about new "
                 + "lines whilst scrolled up?",
                 globalConfig, globalIdentity));
@@ -603,7 +606,7 @@ public class SwingController extends BaseCommandPlugin implements UIController {
                 "Foreground colour to use for active treeview node",
                 globalConfig, globalIdentity));
         treeview.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
-                getDomain(), "showtreeexpands", "Show expand/collapse handles",
+                domain, "showtreeexpands", "Show expand/collapse handles",
                 "Do you want to show tree view collapse/expand handles",
                 globalConfig, globalIdentity));
 
