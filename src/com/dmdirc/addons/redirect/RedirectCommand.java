@@ -37,6 +37,8 @@ import com.dmdirc.ui.input.AdditionalTabTargets;
 import com.dmdirc.ui.input.TabCompleter;
 import com.dmdirc.util.URLBuilder;
 
+import javax.inject.Inject;
+
 /**
  * The redirect command allows the user to redirect the output from another command that would
  * normally echo results locally to a query or channel window instead.
@@ -60,6 +62,7 @@ public class RedirectCommand extends Command implements IntelligentCommand {
      * @param messageSinkManager The sink manager to use to despatch messages.
      * @param urlBuilder         The URL builder to use when finding icons.
      */
+    @Inject
     public RedirectCommand(
             final CommandController controller,
             final MessageSinkManager messageSinkManager,

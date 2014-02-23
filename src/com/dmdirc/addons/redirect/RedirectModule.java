@@ -22,22 +22,11 @@
 
 package com.dmdirc.addons.redirect;
 
-import com.dmdirc.plugins.PluginInfo;
-import com.dmdirc.plugins.implementations.BaseCommandPlugin;
+import com.dmdirc.ClientModule;
 
-import dagger.ObjectGraph;
+import dagger.Module;
 
-/**
- * The redirect plugin allows the suer to redirect the output of commands that would normally echo
- * their results locally to a channel or chat window instead.
- */
-public class RedirectPlugin extends BaseCommandPlugin {
-
-    @Override
-    public void load(final PluginInfo pluginInfo, final ObjectGraph graph) {
-        super.load(pluginInfo, graph);
-        setObjectGraph(graph.plus(new RedirectModule()));
-        registerCommand(RedirectCommand.class, RedirectCommand.INFO);
-    }
+@Module(injects = RedirectCommand.class, addsTo = ClientModule.class)
+public class RedirectModule {
 
 }
