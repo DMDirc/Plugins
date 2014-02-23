@@ -62,6 +62,8 @@ import javax.swing.event.ListSelectionListener;
 
 import net.miginfocom.swing.MigLayout;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /** List modes panel. */
 public final class ChannelListModesPane extends JPanel implements ActionListener,
         ListSelectionListener, ConfigChangeListener {
@@ -120,12 +122,12 @@ public final class ChannelListModesPane extends JPanel implements ActionListener
             final Window parentWindow) {
         super();
 
-        this.globalConfig = globalConfig;
-        this.userConfig = userConfig;
-        this.iconManager = iconManager;
+        this.globalConfig = checkNotNull(globalConfig);
+        this.userConfig = checkNotNull(userConfig);
+        this.iconManager = checkNotNull(iconManager);
+        this.channel = checkNotNull(channel);
+        this.parentWindow = checkNotNull(parentWindow);
         this.setOpaque(UIUtilities.getTabbedPaneOpaque());
-        this.channel = channel;
-        this.parentWindow = parentWindow;
 
         list = new JList<>();
         nativeRenderer = list.getCellRenderer();
