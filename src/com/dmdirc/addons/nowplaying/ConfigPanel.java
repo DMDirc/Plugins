@@ -27,7 +27,8 @@ import com.dmdirc.addons.ui_swing.components.reorderablelist.ListReorderButtonPa
 import com.dmdirc.addons.ui_swing.components.reorderablelist.ReorderableJList;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.config.prefs.PreferencesInterface;
-import com.dmdirc.interfaces.config.IdentityController;
+import com.dmdirc.interfaces.config.AggregateConfigProvider;
+import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 
@@ -51,22 +52,27 @@ import javax.swing.UIManager;
 
 import net.miginfocom.swing.MigLayout;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Now playing plugin config panel.
  */
-public class ConfigPanel extends JPanel implements PreferencesInterface,
-        KeyListener {
+public class ConfigPanel extends JPanel implements PreferencesInterface, KeyListener {
 
     /** A version number for this class. */
     private static final long serialVersionUID = 1;
-    /** Media source order list. */
-    private ReorderableJList<String> list;
+    /** Now playing manager to get and handle sources. */
+    private final NowPlayingManager manager;
+    /** Global configuration to read settings from. */
+    private final AggregateConfigProvider globalConfig;
+    /** User settings to write settings to. */
+    private final ConfigProvider userSettings;
+    /** This plugin's settings domain. */
+    private final String domain;
     /** Media sources. */
     private final List<String> sources;
-    /** The plugin that owns this panel. */
-    private final NowPlayingPlugin plugin;
-    /** The controller to read/write settings with. */
-    private final IdentityController identityController;
+    /** Media source order list. */
+    private ReorderableJList<String> list;
     /** Text field for our setting. */
     private JTextField textfield;
     /** Panel that the preview is in. */
@@ -79,24 +85,25 @@ public class ConfigPanel extends JPanel implements PreferencesInterface,
     /**
      * Creates a new instance of ConfigPanel.
      *
-     * @param identityController The controller to read/write settings with.
-     * @param plugin             The plugin that owns this panel
-     * @param sources            A list of sources to be used in the panel
+     * @param manager      Now playing manager to get and handle sources
+     * @param globalConfig Global config to read from
+     * @param userSettings Config to write settings to
+     * @param domain       This plugin's settings domain
+     * @param sources      A list of sources to be used in the panel
      */
     public ConfigPanel(
-            final IdentityController identityController,
-            final NowPlayingPlugin plugin,
+            final NowPlayingManager manager,
+            final AggregateConfigProvider globalConfig,
+            final ConfigProvider userSettings,
+            final String domain,
             final List<String> sources) {
         super();
-
-        if (sources == null) {
-            this.sources = new LinkedList<>();
-        } else {
-            this.sources = new LinkedList<>(sources);
-        }
-
-        this.identityController = identityController;
-        this.plugin = plugin;
+        this.manager = manager;
+        this.globalConfig = globalConfig;
+        this.userSettings = userSettings;
+        this.domain = domain;
+        this.sources = new LinkedList<>();
+        this.sources.addAll(checkNotNull(sources));
 
         initComponents();
     }
@@ -111,8 +118,7 @@ public class ConfigPanel extends JPanel implements PreferencesInterface,
             list.getModel().addElement(source);
         }
 
-        textfield = new JTextField(identityController.getGlobalConfiguration()
-                .getOption(plugin.getDomain(), "format"));
+        textfield = new JTextField(globalConfig.getOption(domain, "format"));
         textfield.addKeyListener(this);
         preview = new TextLabel("Preview:\n");
 
@@ -154,22 +160,20 @@ public class ConfigPanel extends JPanel implements PreferencesInterface,
     private void updatePreview() {
         updateTimer.cancel();
 
-        MediaSource source = plugin.getBestSource();
+        MediaSource source = manager.getBestSource();
 
         if (source == null) {
             source = new DummyMediaSource();
         }
 
-        final String text = plugin.doSubstitution(
+        final String text = manager.doSubstitution(
                 UIUtilities.invokeAndWait(new Callable<String>() {
-            /** {@inheritDoc} */
-            @Override
-            public String call() {
-                return textfield.getText();
-            }
-        }), source);
+                    @Override
+                    public String call() {
+                        return textfield.getText();
+                    }
+                }), source);
         SwingUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc} */
             @Override
             public void run() {
                 preview.setText("Preview:\n" + text);
@@ -197,39 +201,22 @@ public class ConfigPanel extends JPanel implements PreferencesInterface,
         return newSources;
     }
 
-    /** {@inheritDoc} */
     @Override
     public void save() {
-        plugin.saveSettings(getSources());
-        identityController.getUserSettings()
-                .setOption(plugin.getDomain(), "format", textfield.getText());
+        userSettings.setOption(domain, "sourceOrder", getSources());
+        userSettings.setOption(domain, "format", textfield.getText());
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Key event action
-     */
     @Override
     public void keyTyped(final KeyEvent e) {
         // Do nothing
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Key event action
-     */
     @Override
     public void keyPressed(final KeyEvent e) {
         // Do nothing
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Key event action
-     */
     @Override
     public void keyReleased(final KeyEvent e) {
         schedulePreviewUpdate();
