@@ -375,7 +375,8 @@ public class TopicBar extends JComponent implements ActionListener,
     /**
      * Load and set colours.
      */
-    private void setColours() {
+    private void setColours(){
+        cancelTopicEdit();
         backgroundColour = UIUtilities.convertColour(
                 colourManager.getColourFromString(
                         channel.getConfigManager().getOptionString(
