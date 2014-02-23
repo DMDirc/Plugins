@@ -22,19 +22,25 @@
 
 package com.dmdirc.addons.nowplaying;
 
-import java.util.List;
+import com.dmdirc.addons.ui_swing.injection.SwingModule;
+import com.dmdirc.plugins.PluginDomain;
+import com.dmdirc.plugins.PluginInfo;
 
-/**
- * The media source manager is a standard interface for an object that controls one or more media
- * sources.
- */
-public interface MediaSourceManager {
+import dagger.Module;
+import dagger.Provides;
 
-    /**
-     * Retrieves the sources that this manager manages.
-     *
-     * @return A list of sources that this manager manages
-     */
-    List<MediaSource> getSources();
+@Module(injects = {NowPlayingCommand.class, NowPlayingManager.class}, addsTo = SwingModule.class)
+public class NowPlayingModule {
 
+    private final PluginInfo pluginInfo;
+
+    public NowPlayingModule(final PluginInfo pluginInfo) {
+        this.pluginInfo = pluginInfo;
+    }
+    
+    @Provides
+    @PluginDomain(NowPlayingPlugin.class)
+    public String getSettingsDomain() {
+        return pluginInfo.getDomain();
+    }
 }

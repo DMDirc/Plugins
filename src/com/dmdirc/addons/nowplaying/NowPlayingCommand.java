@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.nowplaying;
 
+import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.MessageTarget;
 import com.dmdirc.commandparser.BaseCommandInfo;
@@ -32,12 +33,15 @@ import com.dmdirc.commandparser.commands.IntelligentCommand;
 import com.dmdirc.commandparser.commands.context.ChatCommandContext;
 import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.interfaces.CommandController;
-import com.dmdirc.interfaces.config.IdentityController;
+import com.dmdirc.interfaces.config.AggregateConfigProvider;
+import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 import com.dmdirc.ui.input.TabCompleter;
 
 import java.util.Arrays;
 import java.util.List;
+
+import javax.inject.Inject;
 
 /**
  * The now playing command retrieves the currently playing song from a variety of media players.
@@ -49,28 +53,33 @@ public class NowPlayingCommand extends Command implements IntelligentCommand {
             "nowplaying [--sources|--source <source>] [format] - "
             + "tells the channel the song you're currently playing",
             CommandType.TYPE_CHAT);
-    /** The plugin that's using this command. */
-    private final NowPlayingPlugin parent;
-    /** The controller to read/write settings with. */
-    private final IdentityController identityController;
+    /** Now playing manager to get and handle sources. */
+    private final NowPlayingManager manager;
+    /** Global configuration to read settings from. */
+    private final AggregateConfigProvider globalConfig;
+    /** This plugin's settings domain. */
+    private final String domain;
 
     /**
      * Creates a new instance of this command.
      *
-     * @param controller         The controller to use for command information.
-     * @param parent             The plugin that owns this command.
-     * @param identityController The controller to use to read/write settings.
+     * @param controller   The controller to use for command information.
+     * @param manager      Now playing manager to get and handle sources.
+     * @param globalConfig Global config to read from
+     * @param domain       This plugin's settings domain
      */
+    @Inject
     public NowPlayingCommand(
             final CommandController controller,
-            final NowPlayingPlugin parent,
-            final IdentityController identityController) {
+            final NowPlayingManager manager,
+            @GlobalConfig final AggregateConfigProvider globalConfig,
+            @PluginDomain(NowPlayingPlugin.class) final String domain) {
         super(controller);
-        this.parent = parent;
-        this.identityController = identityController;
+        this.manager = manager;
+        this.globalConfig = globalConfig;
+        this.domain = domain;
     }
 
-    /** {@inheritDoc} */
     @Override
     public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
@@ -82,7 +91,7 @@ public class NowPlayingCommand extends Command implements IntelligentCommand {
                 .equalsIgnoreCase("--source")) {
             if (args.getArguments().length > 1) {
                 final String sourceName = args.getArguments()[1];
-                final MediaSource source = parent.getSource(sourceName);
+                final MediaSource source = manager.getSource(sourceName);
 
                 if (source == null) {
                     sendLine(origin, args.isSilent(), FORMAT_ERROR, "Source not found.");
@@ -99,10 +108,10 @@ public class NowPlayingCommand extends Command implements IntelligentCommand {
                         "You must specify a source when using --source.");
             }
         } else {
-            if (parent.hasRunningSource()) {
+            if (manager.hasRunningSource()) {
                 target.getCommandParser().parseCommand(origin,
-                        getInformation(parent.getBestSource(), args.
-                        getArgumentsAsString(0)));
+                        getInformation(manager.getBestSource(), args.
+                                getArgumentsAsString(0)));
             } else {
                 sendLine(origin, args.isSilent(), FORMAT_ERROR,
                         "No running media sources available.");
@@ -119,7 +128,7 @@ public class NowPlayingCommand extends Command implements IntelligentCommand {
      */
     private void doSourceList(final FrameContainer origin, final boolean isSilent,
             final String format) {
-        final List<MediaSource> sources = parent.getSources();
+        final List<MediaSource> sources = manager.getSources();
 
         if (sources.isEmpty()) {
             sendLine(origin, isSilent, FORMAT_ERROR, "No media sources available.");
@@ -147,25 +156,21 @@ public class NowPlayingCommand extends Command implements IntelligentCommand {
     }
 
     /**
-     * Returns a formatted information string from the requested soruce.
+     * Returns a formatted information string from the requested source.
      *
      * @param source MediaSource to query
      * @param format Format to use
      *
      * @return Formatted information string
-     *
-     * @since 0.6.3
      */
     private String getInformation(final MediaSource source, final String format) {
         if (format.isEmpty()) {
-            return parent.doSubstitution(identityController.getGlobalConfiguration()
-                    .getOption(parent.getDomain(), "format"), source);
+            return manager.doSubstitution(globalConfig.getOption(domain, "format"), source);
         } else {
-            return parent.doSubstitution(format, source);
+            return manager.doSubstitution(format, source);
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public AdditionalTabTargets getSuggestions(final int arg,
             final IntelligentCommandContext context) {
@@ -185,7 +190,7 @@ public class NowPlayingCommand extends Command implements IntelligentCommand {
         } else if (arg == 1 && context.getPreviousArgs().get(0).equalsIgnoreCase("--source")) {
             final AdditionalTabTargets res = new AdditionalTabTargets();
             res.excludeAll();
-            for (MediaSource source : parent.getSources()) {
+            for (MediaSource source : manager.getSources()) {
                 if (source.getState() != MediaSourceState.CLOSED) {
                     res.add(source.getAppName());
                 }
@@ -199,7 +204,7 @@ public class NowPlayingCommand extends Command implements IntelligentCommand {
         } else {
             final AdditionalTabTargets res = TabCompleter
                     .getIntelligentResults(arg, context, context
-                    .getPreviousArgs().get(0).equalsIgnoreCase("--sources") ? 1 : 0);
+                            .getPreviousArgs().get(0).equalsIgnoreCase("--sources") ? 1 : 0);
             res.addAll(subsList);
             return res;
         }
