@@ -28,16 +28,10 @@ import java.util.List;
 
 /**
  * Sorts media sources according to an ordered list of their names.
- *
- * @author chris
  */
 public class MediaSourceComparator implements Comparator<MediaSource>, Serializable {
 
-    /**
-     * A version number for this class. It should be changed whenever the class structure is changed
-     * (or anything else that would prevent serialized objects being unserialized with the new
-     * class).
-     */
+    /** A version number for this class. */
     private static final long serialVersionUID = 1;
     /** The order that the sources should be checked. */
     private final List<String> order;
@@ -52,7 +46,6 @@ public class MediaSourceComparator implements Comparator<MediaSource>, Serializa
         this.order = order;
     }
 
-    /** {@inheritDoc} */
     @Override
     public int compare(final MediaSource o1, final MediaSource o2) {
         return getPosition(o1) - getPosition(o2);
