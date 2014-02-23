@@ -22,34 +22,26 @@
 
 package com.dmdirc.addons.swingdebug;
 
+import com.dmdirc.addons.ui_swing.injection.SwingModule;
+import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.plugins.PluginInfo;
-import com.dmdirc.plugins.implementations.BasePlugin;
 
-import dagger.ObjectGraph;
+import dagger.Module;
+import dagger.Provides;
 
-/**
- * Swing debug plugin. Provides long running EDT task violation detection and a console for
- * System.out and System.err.
- */
-public class SwingDebugPlugin extends BasePlugin {
+@Module(injects = SwingDebugManager.class, addsTo = SwingModule.class)
+public class SwingDebugModule {
 
-    private SwingDebugManager manager;
+    private final PluginInfo pluginInfo;
 
-    @Override
-    public void load(final PluginInfo pluginInfo, final ObjectGraph graph) {
-        super.load(pluginInfo, graph);
-        setObjectGraph(graph.plus(new SwingDebugModule(pluginInfo)));
-        manager = getObjectGraph().get(SwingDebugManager.class);
+    public SwingDebugModule(final PluginInfo pluginInfo) {
+        this.pluginInfo = pluginInfo;
     }
 
-    @Override
-    public void onLoad() {
-        manager.load();
-    }
-
-    @Override
-    public void onUnload() {
-        manager.unload();
+    @Provides
+    @PluginDomain(SwingDebugPlugin.class)
+    public String getSettignsDomain() {
+        return pluginInfo.getDomain();
     }
 
 }
