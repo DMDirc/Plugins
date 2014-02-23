@@ -23,10 +23,12 @@
 package com.dmdirc.addons.sessionlock;
 
 import com.dmdirc.actions.ActionManager;
+import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.implementations.BasePlugin;
 
 import com.greboid.lock.LockAdapter;
 import com.greboid.lock.LockListener;
+import dagger.ObjectGraph;
 
 /**
  * Plugin that detects Session lock/unlock events.
@@ -44,15 +46,13 @@ public class SessionLock extends BasePlugin implements LockListener {
     /**
      * Action manager.
      */
-    private final ActionManager actionManager;
+    private ActionManager actionManager;
 
-    /**
-     * Creates a new session lock plugin.
-     *
-     * @param actionManager Action manager
-     */
-    public SessionLock(final ActionManager actionManager) {
-        this.actionManager = actionManager;
+    @Override
+    public void load(final PluginInfo pluginInfo, final ObjectGraph graph) {
+        super.load(pluginInfo, graph);
+        setObjectGraph(graph.plus(new SessionLockModule()));
+        actionManager = getObjectGraph().get(ActionManager.class);
     }
 
     /** {@inheritDoc} */
