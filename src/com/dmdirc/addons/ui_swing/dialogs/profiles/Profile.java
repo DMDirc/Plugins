@@ -64,7 +64,7 @@ public class Profile {
         this.identityFactory = identityFactory;
         this.configProvider = null;
         this.name = name;
-        this.nicknames = new ArrayList<>(Arrays.asList(name));
+        this.nicknames = new ArrayList<>(Arrays.asList(name.replaceAll(" ", "")));
         this.realname = name;
         this.ident = "";
     }

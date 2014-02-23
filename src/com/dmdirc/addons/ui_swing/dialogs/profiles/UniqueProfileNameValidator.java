@@ -22,35 +22,31 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.profiles;
 
-import com.dmdirc.util.validators.FileNameValidator;
 import com.dmdirc.util.validators.ValidationResponse;
 import com.dmdirc.util.validators.Validator;
-import com.dmdirc.util.validators.ValidatorChain;
 
 import java.util.List;
 
 /**
- * Validator to ensure a profile name is both unique and a valid name to be saved to disk.
+ * Validates a profile name ensuring its uniqueness and validity as a filename.
  */
-public class ProfileNameValidator implements Validator<String> {
+public class UniqueProfileNameValidator implements Validator<String> {
 
-    private final ValidatorChain<String> validator;
+    /** List of profiles to validate. */
+    private final List<Profile> profiles;
 
-    /**
-     * Creates a new profile name validator.
-     *
-     * @param profiles List of profiles to check uniqueness
-     */
-    public ProfileNameValidator(final List<Profile> profiles) {
-        validator = ValidatorChain.<String>builder()
-                .addValidator(new UniqueProfileNameValidator(profiles))
-                .addValidator(new FileNameValidator())
-                .build();
+    public UniqueProfileNameValidator(final List<Profile> profiles) {
+        this.profiles = profiles;
     }
 
     @Override
     public ValidationResponse validate(final String object) {
-        return validator.validate(object);
+        for (Profile targetprofile : profiles) {
+            if (targetprofile.getName().equalsIgnoreCase(object)) {
+                return new ValidationResponse("Profile names must be unique");
+            }
+        }
+        return new ValidationResponse();
     }
 
 }

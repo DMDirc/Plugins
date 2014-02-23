@@ -69,7 +69,7 @@ public class ProfileTest {
         Profile instance = new Profile("New Profile", identityFactory);
         assertEquals("", instance.getIdent());
         assertEquals("New Profile", instance.getName());
-        assertEquals(new ArrayList<>(Arrays.asList("New Profile")), instance.getNicknames());
+        assertEquals(new ArrayList<>(Arrays.asList("NewProfile")), instance.getNicknames());
         assertEquals("New Profile", instance.getRealname());
     }
 
