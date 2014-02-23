@@ -22,36 +22,11 @@
 
 package com.dmdirc.addons.sessionlock;
 
-import com.dmdirc.plugins.PluginInfo;
-import com.dmdirc.plugins.implementations.BasePlugin;
+import com.dmdirc.ClientModule;
 
-import dagger.ObjectGraph;
+import dagger.Module;
 
-/**
- * Plugin that detects Session lock/unlock events.
- */
-public class SessionLock extends BasePlugin {
-
-    /** Handles session lock events and registers action types. */
-    private SessionLockManager manager;
-
-    @Override
-    public void load(final PluginInfo pluginInfo, final ObjectGraph graph) {
-        super.load(pluginInfo, graph);
-        setObjectGraph(graph.plus(new SessionLockModule()));
-        manager = getObjectGraph().get(SessionLockManager.class);
-    }
-
-    @Override
-    public void onLoad() {
-        super.onLoad();
-        manager.load();
-    }
-
-    @Override
-    public void onUnload() {
-        super.onUnload();
-        manager.unload();
-    }
+@Module(injects = SessionLockManager.class, addsTo = ClientModule.class)
+public class SessionLockModule {
 
 }
