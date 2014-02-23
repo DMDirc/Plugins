@@ -49,6 +49,8 @@ import javax.swing.WindowConstants;
 
 import net.miginfocom.swing.MigLayout;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Allows the user to modify channel settings (modes, topics, etc).
  */
@@ -99,7 +101,7 @@ public class ChannelSettingsDialog extends StandardDialog implements ActionListe
      * @param serviceManager     Service manager
      * @param preferencesManager Preferences Manager
      * @param compFactory        Preferences setting component factory
-     * @param newChannel         The channel object that we're editing settings for
+     * @param channel            The channel object that we're editing settings for
      * @param parentWindow       Parent window
      */
     public ChannelSettingsDialog(
@@ -112,25 +114,25 @@ public class ChannelSettingsDialog extends StandardDialog implements ActionListe
             final ServiceManager serviceManager,
             final PreferencesManager preferencesManager,
             final PrefsComponentFactory compFactory,
-            final Channel newChannel,
+            final Channel channel,
             final MainFrame parentWindow) {
         super(parentWindow, ModalityType.MODELESS);
 
-        this.controller = controller;
-        this.iconManager = iconManager;
-        this.userConfig = userConfig;
-        this.serviceManager = serviceManager;
-        this.preferencesManager = preferencesManager;
-        this.compFactory = compFactory;
+        this.controller = checkNotNull(controller);
+        this.iconManager = checkNotNull(iconManager);
+        this.globalConfig = checkNotNull(globalConfig);
+        this.userConfig = checkNotNull(userConfig);
+        this.serviceManager = checkNotNull(serviceManager);
+        this.preferencesManager = checkNotNull(preferencesManager);
+        this.compFactory = checkNotNull(compFactory);
+        this.channel = checkNotNull(channel);
 
-        channel = newChannel;
-        identity = identityFactory.createChannelConfig(channel.getConnection().getNetwork(),
+        this.identity = identityFactory.createChannelConfig(channel.getConnection().getNetwork(),
                 channel.getChannelInfo().getName());
-        this.channelWindow = (InputWindow) windowFactory.getSwingWindow(newChannel);
+        this.channelWindow = (InputWindow) windowFactory.getSwingWindow(channel);
 
         initComponents();
         initListeners();
-        this.globalConfig = globalConfig;
     }
 
     /** Initialises the main UI components. */
