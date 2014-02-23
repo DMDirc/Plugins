@@ -87,12 +87,6 @@ public class FreeDesktopNotificationsPlugin extends BaseCommandPlugin {
     }
 
     @Override
-    @Deprecated
-    public void domainUpdated() {
-        manager.domainUpdated();
-    }
-
-    @Override
     public void showConfig(final PreferencesDialogModel manager) {
         final PreferencesCategory general = new PluginPreferencesCategory(
                 pluginInfo, "FreeDesktop Notifications",
