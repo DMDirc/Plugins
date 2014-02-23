@@ -163,6 +163,7 @@ public class FDManager implements ConfigChangeListener {
 
     public void onLoad() {
         config.addChangeListener(domain, this);
+        userConfig.setOption(domain, "general.icon", filesHelper.getFilesDirString() + "icon.png");
         setCachedSettings();
         // Extract the files needed
         try {
@@ -176,10 +177,6 @@ public class FDManager implements ConfigChangeListener {
 
     public void onUnLoad() {
         config.removeListener(this);
-    }
-
-    void domainUpdated() {
-        userConfig.setOption(domain, "general.icon", filesHelper.getFilesDirString() + "icon.png");
     }
 
 }
