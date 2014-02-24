@@ -348,8 +348,10 @@ public class TopicBar extends JComponent implements ActionListener,
         topicText.setFocusable(false);
         topicText.setEditable(false);
         topicCancel.setVisible(false);
-        ((ChannelFrame) windowFactory.getSwingWindow(channel))
-                .getInputField().requestFocusInWindow();
+        final ChannelFrame channelFrame = (ChannelFrame) windowFactory.getSwingWindow(channel);
+        if (channelFrame != null) {
+            channelFrame.getInputField().requestFocusInWindow();
+        }
         topicChanged(channel, null);
     }
 
@@ -375,8 +377,7 @@ public class TopicBar extends JComponent implements ActionListener,
     /**
      * Load and set colours.
      */
-    private void setColours(){
-        cancelTopicEdit();
+    private void setColours() {
         backgroundColour = UIUtilities.convertColour(
                 colourManager.getColourFromString(
                         channel.getConfigManager().getOptionString(
@@ -499,6 +500,7 @@ public class TopicBar extends JComponent implements ActionListener,
     public void configChanged(final String domain, final String key) {
         updateOptions();
         setVisible(showBar);
+        cancelTopicEdit();
         if ("showfulltopic".equals(key)) {
             topicText.setEditorKit(new WrapEditorKit(showFull));
             ((DefaultStyledDocument) topicText.getDocument()).setDocumentFilter(
