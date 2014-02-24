@@ -38,9 +38,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import org.apache.commons.lang.StringEscapeUtils;
 
+@Singleton
 public class FDManager implements ConfigChangeListener {
 
     /** Global configuration. */
