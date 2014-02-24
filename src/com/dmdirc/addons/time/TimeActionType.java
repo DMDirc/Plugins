@@ -27,8 +27,6 @@ import com.dmdirc.interfaces.actions.ActionType;
 
 /**
  * Lists the actions that the time plugin will raise.
- *
- * @author chris
  */
 public enum TimeActionType implements ActionType {
 
@@ -50,13 +48,11 @@ public enum TimeActionType implements ActionType {
         this.name = name;
     }
 
-    /** {@inheritDoc} */
     @Override
     public ActionMetaType getType() {
         return TimeActionMetaType.TIME_TIME;
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getName() {
         return name;

@@ -23,17 +23,21 @@
 package com.dmdirc.addons.time;
 
 import com.dmdirc.FrameContainer;
+import com.dmdirc.interfaces.ActionController;
 import com.dmdirc.interfaces.CommandController;
 
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import javax.inject.Inject;
 
 /**
  * Class to manage Timers.
- *
- * @since 0.6.5
  */
 public class TimerManager {
 
@@ -41,9 +45,44 @@ public class TimerManager {
     private final Map<Integer, TimedCommand> timerList = new HashMap<>();
     /** The command controller to use when executing global commands. */
     private final CommandController commandController;
+    /** Action controller. */
+    private final ActionController actionController;
+    /** Have we registered our types already? */
+    private static boolean registered;
+    /** The timer to use for scheduling. */
+    private Timer timer;
 
-    public TimerManager(final CommandController commandController) {
+    @Inject
+    public TimerManager(final CommandController commandController,
+            final ActionController actionController) {
         this.commandController = commandController;
+        this.actionController = actionController;
+    }
+
+    public void load() {
+        if (!registered) {
+            actionController.registerTypes(TimeActionType.values());
+            registered = true;
+        }
+
+        final int offset = 60 - Calendar.getInstance().get(Calendar.SECOND);
+
+        timer = new Timer("Time plugin timer");
+
+        timer.schedule(new TimerTask() {
+            /** {@inheritDoc} */
+            @Override
+            public void run() {
+                runTimer();
+            }
+        }, 1000 * offset, 1000 * 60);
+    }
+
+    public void unload() {
+        if (timer != null) {
+            timer.cancel();
+            timer = null;
+        }
     }
 
     /**
@@ -126,6 +165,21 @@ public class TimerManager {
      */
     public boolean hasTimerWithID(final int id) {
         return timerList.containsKey(id);
+    }
+
+    /** Handles a timer event that occurs every minute. */
+    public void runTimer() {
+        final Calendar cal = Calendar.getInstance();
+
+        actionController.triggerEvent(TimeActionType.TIME_MINUTE, null, cal);
+
+        if (cal.get(Calendar.MINUTE) == 0) {
+            actionController.triggerEvent(TimeActionType.TIME_HOUR, null, cal);
+
+            if (cal.get(Calendar.HOUR_OF_DAY) == 0) {
+                actionController.triggerEvent(TimeActionType.TIME_DAY, null, cal);
+            }
+        }
     }
 
 }

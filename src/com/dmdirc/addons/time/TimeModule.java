@@ -22,39 +22,11 @@
 
 package com.dmdirc.addons.time;
 
-import com.dmdirc.plugins.PluginInfo;
-import com.dmdirc.plugins.implementations.BaseCommandPlugin;
+import com.dmdirc.ClientModule;
 
-import dagger.ObjectGraph;
+import dagger.Module;
 
-/**
- * Provides various time-related features.
- */
-public class TimePlugin extends BaseCommandPlugin {
-
-    /** The Manager to use for managing timers. */
-    private TimerManager manager;
-
-    @Override
-    public void load(final PluginInfo pluginInfo, final ObjectGraph graph) {
-        super.load(pluginInfo, graph);
-        setObjectGraph(graph.plus(new TimeModule()));
-        registerCommand(TimerCommand.class, TimerCommand.INFO);
-        manager = getObjectGraph().get(TimerManager.class);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onLoad() {
-        manager.load();
-        super.onLoad();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onUnload() {
-        manager.unload();
-        super.onUnload();
-    }
+@Module(injects = {TimerCommand.class, TimerManager.class}, addsTo = ClientModule.class)
+public class TimeModule {
 
 }
