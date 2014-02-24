@@ -25,8 +25,6 @@ package com.dmdirc.addons.ui_swing.wizard.firstrun;
 import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.ClientModule.UserConfig;
 import com.dmdirc.CorePluginExtractor;
-import com.dmdirc.actions.ActionManager;
-import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.addons.ui_swing.Apple;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.dialogs.profiles.ProfileManagerDialog;
@@ -36,8 +34,6 @@ import com.dmdirc.addons.ui_swing.wizard.WizardDialog;
 import com.dmdirc.addons.ui_swing.wizard.WizardListener;
 import com.dmdirc.commandline.CommandLineOptionsModule.Directory;
 import com.dmdirc.commandline.CommandLineOptionsModule.DirectoryType;
-import com.dmdirc.interfaces.ActionListener;
-import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.ui.FirstRunWizard;
 import com.dmdirc.logger.ErrorLevel;
@@ -124,15 +120,7 @@ public class SwingFirstRunWizard implements WizardListener, FirstRunWizard {
                 ((CommunicationStep) wizardDialog.getStep(1)).checkErrors());
 
         if (((ProfileStep) wizardDialog.getStep(2)).getProfileManagerState()) {
-            ActionManager.getActionManager().registerListener(new ActionListener() {
-                /** {@inheritDoc} */
-                @Override
-                public void processEvent(final ActionType type,
-                        final StringBuffer format, final Object... arguments) {
-                    profileDialogProvider.displayOrRequestFocus();
-                }
-            }, CoreActionType.CLIENT_OPENED);
-
+            profileDialogProvider.displayOrRequestFocus();
         }
         wizardDialog.dispose();
     }
