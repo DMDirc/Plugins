@@ -64,7 +64,7 @@ public class ScriptPlugin extends BaseCommandPlugin {
 
     @Override
     public ValidationResponse checkPrerequisites() {
-        if (scriptEngineManager.getEngineByName("JavaScript") == null) {
+        if (new ScriptEngineManager().getEngineByName("JavaScript") == null) {
             return new ValidationResponse("JavaScript Scripting Engine not found.");
         } else {
             return new ValidationResponse();
@@ -77,7 +77,7 @@ public class ScriptPlugin extends BaseCommandPlugin {
      * @return Human-Readable reason for checkPrerequisites failing.
      */
     public String checkPrerequisitesReason() {
-        if (scriptEngineManager.getEngineByName("JavaScript") == null) {
+        if (new ScriptEngineManager().getEngineByName("JavaScript") == null) {
             return "JavaScript Scripting Engine not found.";
         } else {
             return "";
