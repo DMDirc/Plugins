@@ -35,6 +35,9 @@ import com.dmdirc.ui.input.AdditionalTabTargets;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import javax.inject.Inject;
+
+
 /**
  * The timer command allows users to schedule commands to occur after a certain interval, or to
  * repeatedly occur with a specified delay.
@@ -57,13 +60,13 @@ public class TimerCommand extends Command implements IntelligentCommand {
      * @param manager           The instance of TimerManager associated with this command
      * @param commandController The controller to use for command information.
      */
+    @Inject
     public TimerCommand(final TimerManager manager, final CommandController commandController) {
         super(commandController);
 
         this.manager = manager;
     }
 
-    /** {@inheritDoc} */
     @Override
     public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
@@ -145,7 +148,6 @@ public class TimerCommand extends Command implements IntelligentCommand {
                 + "<repetitions> <interval> <command>]");
     }
 
-    /** {@inheritDoc} */
     @Override
     public AdditionalTabTargets getSuggestions(final int arg,
             final IntelligentCommandContext context) {

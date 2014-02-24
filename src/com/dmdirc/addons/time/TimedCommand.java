@@ -31,6 +31,7 @@ import com.dmdirc.interfaces.CommandController;
 import java.util.Timer;
 import java.util.TimerTask;
 
+
 /**
  * Timed command represents a command that has been scheduled by the user.
  */
@@ -85,8 +86,6 @@ public class TimedCommand extends TimerTask {
      * Returns the command this timer is due to execute.
      *
      * @return Command the timer will run
-     *
-     * @since 0.6.5
      */
     public String getCommand() {
         return command;
@@ -94,15 +93,12 @@ public class TimedCommand extends TimerTask {
 
     /**
      * Cancels this timer and removes it from the Timer Manager
-     *
-     * @since 0.6.5
      */
     public void cancelTimer() {
         manager.removeTimer(timerKey);
         timer.cancel();
     }
 
-    /** {@inheritDoc} */
     @Override
     public void run() {
         CommandParser parser;

@@ -28,33 +28,27 @@ import java.util.Calendar;
 
 /**
  * Encapsulates the meta types used by the various time actions.
- *
- * @author chris
  */
 public enum TimeActionMetaType implements ActionMetaType {
 
     /** Time type. */
     TIME_TIME {
-        /** {@inheritDoc} */
-        @Override
-        public int getArity() {
-            return 1;
-        }
+                @Override
+                public int getArity() {
+                    return 1;
+                }
 
-        /** {@inheritDoc} */
-        @Override
-        public Class[] getArgTypes() {
-            return new Class[]{Calendar.class};
-        }
+                @Override
+                public Class[] getArgTypes() {
+                    return new Class<?>[]{Calendar.class};
+                }
 
-        /** {@inheritDoc} */
-        @Override
-        public String[] getArgNames() {
-            return new String[]{"Date"};
-        }
-    };
+                @Override
+                public String[] getArgNames() {
+                    return new String[]{"Date"};
+                }
+            };
 
-    /** {@inheritDoc} */
     @Override
     public String getGroup() {
         return "Time Events";
