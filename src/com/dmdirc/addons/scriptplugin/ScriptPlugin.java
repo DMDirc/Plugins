@@ -35,7 +35,6 @@ import dagger.ObjectGraph;
  */
 public class ScriptPlugin extends BaseCommandPlugin {
 
-    private ScriptEngineManager scriptEngineManager;
     private ScriptPluginManager scriptPluginManager;
 
     @Override
@@ -45,7 +44,6 @@ public class ScriptPlugin extends BaseCommandPlugin {
         setObjectGraph(graph.plus(new ScriptModule(pluginInfo)));
         registerCommand(ScriptCommand.class, ScriptCommand.INFO);
 
-        scriptEngineManager = getObjectGraph().get(ScriptEngineManager.class);
         scriptPluginManager = getObjectGraph().get(ScriptPluginManager.class);
     }
 
@@ -64,7 +62,7 @@ public class ScriptPlugin extends BaseCommandPlugin {
 
     @Override
     public ValidationResponse checkPrerequisites() {
-        if (scriptEngineManager.getEngineByName("JavaScript") == null) {
+        if (new ScriptEngineManager().getEngineByName("JavaScript") == null) {
             return new ValidationResponse("JavaScript Scripting Engine not found.");
         } else {
             return new ValidationResponse();
@@ -77,7 +75,7 @@ public class ScriptPlugin extends BaseCommandPlugin {
      * @return Human-Readable reason for checkPrerequisites failing.
      */
     public String checkPrerequisitesReason() {
-        if (scriptEngineManager.getEngineByName("JavaScript") == null) {
+        if (new ScriptEngineManager().getEngineByName("JavaScript") == null) {
             return "JavaScript Scripting Engine not found.";
         } else {
             return "";
