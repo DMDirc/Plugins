@@ -46,7 +46,7 @@ public class WebInterfacePlugin extends BasePlugin {
     /** {@inheritDoc} */
     @Override
     public void onLoad() {
-        getObjectGraph().get(WebInterfaceUI.class);
+        controller = getObjectGraph().get(WebInterfaceUI.class);
     }
 
     /**
