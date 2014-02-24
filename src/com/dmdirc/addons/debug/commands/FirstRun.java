@@ -73,8 +73,11 @@ public class FirstRun extends DebugCommand {
             final CommandArguments args, final CommandContext context) {
         for (Service service : pluginManager.getServicesByType("ui")) {
             if (service.isActive()) {
-                ((UIController) service.getActiveProvider().getExportedService("getController")
-                        .execute()).showFirstRunWizard();
+                final UIController uiController = ((UIController) service.getActiveProvider().
+                        getExportedService("getController").execute());
+                if (uiController != null) {
+                    uiController.showFirstRunWizard();
+                }
             }
         }
     }
