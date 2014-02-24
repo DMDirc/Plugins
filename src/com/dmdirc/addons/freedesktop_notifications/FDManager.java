@@ -71,6 +71,7 @@ public class FDManager implements ConfigChangeListener {
         this.config = config;
         this.userConfig = userConfig;
         this.filesHelper = filesHelper;
+        setCachedSettings();
     }
 
     /**
