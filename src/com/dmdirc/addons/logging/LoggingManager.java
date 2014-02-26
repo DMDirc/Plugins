@@ -28,6 +28,8 @@ import com.dmdirc.FrameContainer;
 import com.dmdirc.Query;
 import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.commandline.CommandLineOptionsModule.Directory;
+import com.dmdirc.events.ChannelClosedEvent;
+import com.dmdirc.events.ChannelOpenedEvent;
 import com.dmdirc.interfaces.ActionController;
 import com.dmdirc.interfaces.ActionListener;
 import com.dmdirc.interfaces.Connection;
@@ -46,6 +48,9 @@ import com.dmdirc.ui.messages.Styliser;
 import com.dmdirc.util.URLBuilder;
 import com.dmdirc.util.io.ReverseFileReader;
 import com.dmdirc.util.io.StreamUtils;
+
+import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
 
 import java.awt.Color;
 import java.io.BufferedWriter;
@@ -92,6 +97,7 @@ public class LoggingManager implements ActionListener, ConfigChangeListener {
     private final Map<String, OpenFile> openFiles = Collections.synchronizedMap(
             new HashMap<String, OpenFile>());
     private final URLBuilder urlBuilder;
+    private final EventBus eventBus;
     private final Provider<String> directoryProvider;
     /** Timer used to close idle files. */
     private Timer idleFileTimer;
@@ -119,12 +125,14 @@ public class LoggingManager implements ActionListener, ConfigChangeListener {
             @GlobalConfig final AggregateConfigProvider globalConfig,
             final WindowManager windowManager,
             final URLBuilder urlBuilder,
+            final EventBus eventBus,
             @Directory(LoggingModule.LOGS_DIRECTORY) final Provider<String> directoryProvider) {
         this.domain = domain;
         this.actionController = actionController;
         this.config = globalConfig;
         this.windowManager = windowManager;
         this.urlBuilder = urlBuilder;
+        this.eventBus = eventBus;
         this.directoryProvider = directoryProvider;
     }
 
@@ -146,8 +154,6 @@ public class LoggingManager implements ActionListener, ConfigChangeListener {
         config.addChangeListener(domain, this);
 
         actionController.registerListener(this,
-                CoreActionType.CHANNEL_OPENED,
-                CoreActionType.CHANNEL_CLOSED,
                 CoreActionType.CHANNEL_MESSAGE,
                 CoreActionType.CHANNEL_SELF_MESSAGE,
                 CoreActionType.CHANNEL_ACTION,
@@ -176,6 +182,8 @@ public class LoggingManager implements ActionListener, ConfigChangeListener {
                 timerTask();
             }
         }, 3600000);
+
+        eventBus.register(this);
     }
 
     public void unload() {
@@ -192,6 +200,8 @@ public class LoggingManager implements ActionListener, ConfigChangeListener {
             }
             openFiles.clear();
         }
+
+        eventBus.unregister(this);
     }
 
     /**
@@ -305,23 +315,6 @@ public class LoggingManager implements ActionListener, ConfigChangeListener {
                 ? (String) arguments[2] : null;
 
         switch (type) {
-            case CHANNEL_OPENED:
-                if (autobackbuffer) {
-                    showBackBuffer(chan, filename);
-                }
-
-                appendLine(filename, "*** Channel opened at: %s", OPENED_AT_FORMAT.
-                        format(new Date()));
-                appendLine(filename, "");
-                break;
-            case CHANNEL_CLOSED:
-                appendLine(filename, "*** Channel closed at: %s", OPENED_AT_FORMAT.
-                        format(new Date()));
-                if (openFiles.containsKey(filename)) {
-                    StreamUtils.close(openFiles.get(filename).writer);
-                    openFiles.remove(filename);
-                }
-                break;
             case CHANNEL_MESSAGE:
             case CHANNEL_SELF_MESSAGE:
             case CHANNEL_ACTION:
@@ -334,7 +327,6 @@ public class LoggingManager implements ActionListener, ConfigChangeListener {
                 }
                 break;
             case CHANNEL_GOTTOPIC:
-                // ActionManager.processEvent(CoreActionType.CHANNEL_GOTTOPIC, this);
                 final DateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
                 final DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
@@ -410,8 +402,6 @@ public class LoggingManager implements ActionListener, ConfigChangeListener {
             final CoreActionType thisType = (CoreActionType) type;
 
             switch (thisType) {
-                case CHANNEL_OPENED:
-                case CHANNEL_CLOSED:
                 case CHANNEL_MESSAGE:
                 case CHANNEL_SELF_MESSAGE:
                 case CHANNEL_ACTION:
@@ -444,6 +434,29 @@ public class LoggingManager implements ActionListener, ConfigChangeListener {
     @Override
     public void configChanged(final String domain, final String key) {
         setCachedSettings();
+    }
+
+    @Subscribe
+    public void handleChannelOpened(final ChannelOpenedEvent event) {
+        final String filename = getLogFile(event.getChannel());
+
+        if (autobackbuffer) {
+            showBackBuffer(event.getChannel(), filename);
+        }
+
+        appendLine(filename, "*** Channel opened at: %s", OPENED_AT_FORMAT.format(new Date()));
+        appendLine(filename, "");
+    }
+
+    @Subscribe
+    public void handleChannelClosed(final ChannelClosedEvent event) {
+        final String filename = getLogFile(event.getChannel());
+
+        appendLine(filename, "*** Channel closed at: %s", OPENED_AT_FORMAT.format(new Date()));
+        if (openFiles.containsKey(filename)) {
+            StreamUtils.close(openFiles.get(filename).writer);
+            openFiles.remove(filename);
+        }
     }
 
     /**
