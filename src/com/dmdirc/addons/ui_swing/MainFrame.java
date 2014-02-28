@@ -35,6 +35,8 @@ import com.dmdirc.addons.ui_swing.framemanager.FrameManager;
 import com.dmdirc.addons.ui_swing.framemanager.FramemanagerPosition;
 import com.dmdirc.addons.ui_swing.framemanager.ctrltab.CtrlTabWindowManager;
 import com.dmdirc.addons.ui_swing.framemanager.tree.TreeFrameManager;
+import com.dmdirc.events.ClientFocusGainedEvent;
+import com.dmdirc.events.ClientFocusLostEvent;
 import com.dmdirc.interfaces.FrameInfoListener;
 import com.dmdirc.interfaces.LifecycleController;
 import com.dmdirc.interfaces.NotificationListener;
@@ -48,6 +50,8 @@ import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.util.collections.ListenerList;
 import com.dmdirc.util.collections.QueuedLinkedHashSet;
+
+import com.google.common.eventbus.EventBus;
 
 import java.awt.Dimension;
 import java.awt.Font;
@@ -139,6 +143,7 @@ public class MainFrame extends JFrame implements WindowListener,
      * @param quitWorker          The quit worker to use when quitting the app.
      * @param iconManager         The icon manager to use to get icons.
      * @param windowManager       Window management
+     * @param eventBus            The event bus to post events to.
      */
     public MainFrame(
             final Apple apple,
@@ -148,7 +153,8 @@ public class MainFrame extends JFrame implements WindowListener,
             final AggregateConfigProvider globalConfig,
             final Provider<QuitWorker> quitWorker,
             final IconManager iconManager,
-            final WindowManager windowManager) {
+            final WindowManager windowManager,
+            final EventBus eventBus) {
         super();
 
         this.apple = apple;
@@ -181,15 +187,13 @@ public class MainFrame extends JFrame implements WindowListener,
             /** {@inheritDoc} */
             @Override
             public void windowGainedFocus(final WindowEvent e) {
-                ActionManager.getActionManager().triggerEvent(
-                        CoreActionType.CLIENT_FOCUS_GAINED, null);
+                eventBus.post(new ClientFocusGainedEvent());
             }
 
             /** {@inheritDoc} */
             @Override
             public void windowLostFocus(final WindowEvent e) {
-                ActionManager.getActionManager().triggerEvent(
-                        CoreActionType.CLIENT_FOCUS_LOST, null);
+                eventBus.post(new ClientFocusLostEvent());
             }
         });
 

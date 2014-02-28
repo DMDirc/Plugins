@@ -23,14 +23,14 @@
 package com.dmdirc.addons.windowflashing;
 
 import com.dmdirc.ClientModule.GlobalConfig;
-import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.config.ConfigBinder;
 import com.dmdirc.config.ConfigBinding;
-import com.dmdirc.interfaces.ActionController;
-import com.dmdirc.interfaces.ActionListener;
-import com.dmdirc.interfaces.actions.ActionType;
+import com.dmdirc.events.ClientFocusGainedEvent;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
+
+import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
 
 import javax.inject.Inject;
 
@@ -41,12 +41,12 @@ import com.sun.jna.platform.win32.User32;
 import com.sun.jna.platform.win32.WinDef;
 import com.sun.jna.platform.win32.WinUser;
 
-public class WindowFlashingManager implements ActionListener {
+public class WindowFlashingManager {
 
     /** Swing main frame. */
     private final MainFrame mainFrame;
-    /** Action controller. */
-    private final ActionController actionController;
+    /** Event bus. */
+    private final EventBus eventBus;
     /** Config binder. */
     private final ConfigBinder binder;
     /** Cached blink rate setting. */
@@ -67,21 +67,23 @@ public class WindowFlashingManager implements ActionListener {
     private User32 user32;
 
     @Inject
-    public WindowFlashingManager(@GlobalConfig final AggregateConfigProvider config,
-            final MainFrame mainFrame, final ActionController actionController) {
+    public WindowFlashingManager(
+            @GlobalConfig final AggregateConfigProvider config,
+            final MainFrame mainFrame,
+            final EventBus eventBus) {
         this.mainFrame = mainFrame;
-        this.actionController = actionController;
+        this.eventBus = eventBus;
         binder = config.getBinder();
     }
 
     public void onLoad() {
         user32 = (User32) Native.loadLibrary("user32", User32.class);
         binder.bind(this, WindowFlashing.class);
-        actionController.registerListener(this, CoreActionType.CLIENT_FOCUS_GAINED);
+        eventBus.register(this);
     }
 
     public void onUnload() {
-        actionController.unregisterListener(this);
+        eventBus.unregister(this);
         binder.unbind(this);
         user32 = null;
         NativeLibrary.getInstance("user32").dispose();
@@ -155,9 +157,8 @@ public class WindowFlashingManager implements ActionListener {
         return returnValue;
     }
 
-    @Override
-    public void processEvent(final ActionType type, final StringBuffer format,
-            final Object... arguments) {
+    @Subscribe
+    public void handleFocusGained(final ClientFocusGainedEvent event) {
         if (mainFrame != null) {
             user32.FlashWindowEx(stopFlashObject());
         }

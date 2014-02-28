@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.components.frames;
 
+import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionType;
@@ -62,6 +63,8 @@ import com.dmdirc.parser.common.ChannelJoinRequest;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.core.util.URLHandler;
 import com.dmdirc.ui.messages.ColourManager;
+
+import com.google.common.eventbus.EventBus;
 
 import java.awt.Point;
 import java.awt.event.KeyEvent;
@@ -256,26 +259,26 @@ public abstract class TextFrame extends JPanel implements Window,
 
         getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).
                 put(KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_UP, 0),
-                "pageUpAction");
+                        "pageUpAction");
 
         getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).
                 put(KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_DOWN, 0),
-                "pageDownAction");
+                        "pageDownAction");
 
         getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).
                 put(KeyStroke.getKeyStroke(KeyEvent.VK_F3, 0), "searchAction");
 
         getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).
                 put(KeyStroke.getKeyStroke(KeyEvent.VK_F,
-                UIUtilities.getCtrlDownMask()), "searchAction");
+                                UIUtilities.getCtrlDownMask()), "searchAction");
 
         getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).
                 put(KeyStroke.getKeyStroke(KeyEvent.VK_HOME,
-                UIUtilities.getCtrlDownMask()), "homeAction");
+                                UIUtilities.getCtrlDownMask()), "homeAction");
 
         getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).
                 put(KeyStroke.getKeyStroke(KeyEvent.VK_END,
-                UIUtilities.getCtrlDownMask()), "endAction");
+                                UIUtilities.getCtrlDownMask()), "endAction");
 
         getSearchBar().getTextField().getInputMap().put(KeyStroke.getKeyStroke(
                 KeyEvent.VK_C, UIUtilities.getCtrlMask()), "textpaneCopy");
@@ -284,7 +287,7 @@ public abstract class TextFrame extends JPanel implements Window,
                 & KeyEvent.SHIFT_DOWN_MASK), "textpaneCopy");
         getSearchBar().getTextField().getActionMap().put("textpaneCopy",
                 new InputFieldCopyAction(getTextPane(),
-                getSearchBar().getTextField()));
+                        getSearchBar().getTextField()));
 
         getActionMap().put("pageUpAction",
                 new TextPanePageUpAction(getTextPane()));
@@ -352,8 +355,8 @@ public abstract class TextFrame extends JPanel implements Window,
             case CHANNEL:
                 if (frameParent.getConnection() != null && ActionManager
                         .getActionManager().triggerEvent(
-                        CoreActionType.LINK_CHANNEL_CLICKED, null, this,
-                        clickType.getValue())) {
+                                CoreActionType.LINK_CHANNEL_CLICKED, null, this,
+                                clickType.getValue())) {
                     frameParent.getConnection().join(
                             new ChannelJoinRequest(clickType.getValue()));
                 }
@@ -368,11 +371,11 @@ public abstract class TextFrame extends JPanel implements Window,
             case NICKNAME:
                 if (frameParent.getConnection() != null && ActionManager
                         .getActionManager().triggerEvent(
-                        CoreActionType.LINK_NICKNAME_CLICKED, null, this,
-                        clickType.getValue())) {
+                                CoreActionType.LINK_NICKNAME_CLICKED, null, this,
+                                clickType.getValue())) {
                     getController().requestWindowFocus(getController()
                             .getWindowFactory().getSwingWindow(getContainer()
-                            .getConnection().getQuery(clickType.getValue())));
+                                    .getConnection().getQuery(clickType.getValue())));
                 }
                 break;
             default:
@@ -582,12 +585,12 @@ public abstract class TextFrame extends JPanel implements Window,
         final ColourManager colourManager = new ColourManager(getContainer().getConfigManager());
         getTextPane().setForeground(UIUtilities.convertColour(
                 colourManager.getColourFromString(
-                getContainer().getConfigManager().getOptionString(
-                "ui", "foregroundcolour"), null)));
+                        getContainer().getConfigManager().getOptionString(
+                                "ui", "foregroundcolour"), null)));
         getTextPane().setBackground(UIUtilities.convertColour(
                 colourManager.getColourFromString(
-                getContainer().getConfigManager().getOptionString(
-                "ui", "backgroundcolour"), null)));
+                        getContainer().getConfigManager().getOptionString(
+                                "ui", "backgroundcolour"), null)));
     }
 
     /** Disposes of this window, removing any listeners. */
@@ -599,18 +602,20 @@ public abstract class TextFrame extends JPanel implements Window,
     /**
      * Bundle of dependencies required by {@link TextFrame}.
      *
-     * <p>Because of the number of dependencies and the amount of subclassing, collect the
-     * dependencies together here so they can be easily modified without having to modify all
-     * subclasses.
+     * <p>
+     * Because of the number of dependencies and the amount of subclassing, collect the dependencies
+     * together here so they can be easily modified without having to modify all subclasses.
      */
     public static class TextFrameDependencies {
 
-        private final TextPaneFactory textPaneFactory;
-        private final SwingController controller;
-        private final Provider<MainFrame> mainFrame;
-        private final PopupManager popupManager;
-        private final URLHandler urlHandler;
-        private final CommandController commandController;
+        final TextPaneFactory textPaneFactory;
+        final SwingController controller;
+        final Provider<MainFrame> mainFrame;
+        final PopupManager popupManager;
+        final URLHandler urlHandler;
+        final CommandController commandController;
+        final EventBus eventBus;
+        final AggregateConfigProvider globalConfig;
 
         @Inject
         public TextFrameDependencies(
@@ -619,13 +624,17 @@ public abstract class TextFrame extends JPanel implements Window,
                 final Provider<MainFrame> mainFrame,
                 final PopupManager popupManager,
                 final URLHandler urlHandler,
-                final CommandController commandController) {
+                final CommandController commandController,
+                final EventBus eventBus,
+                @GlobalConfig final AggregateConfigProvider globalConfig) {
             this.textPaneFactory = textPaneFactory;
             this.controller = controller;
             this.mainFrame = mainFrame;
             this.popupManager = popupManager;
             this.urlHandler = urlHandler;
             this.commandController = commandController;
+            this.eventBus = eventBus;
+            this.globalConfig = globalConfig;
         }
 
     }
