@@ -83,6 +83,8 @@ public class MainFrame extends JFrame implements WindowListener,
     private static final long serialVersionUID = 9;
     /** Focus queue. */
     private final QueuedLinkedHashSet<TextFrame> focusOrder;
+    /** Apple instance. */
+    private final Apple apple;
     /** Swing Controller. */
     private final SwingController controller;
     /** Controller to use to end the program. */
@@ -130,6 +132,7 @@ public class MainFrame extends JFrame implements WindowListener,
      * Creates new form MainFrame.
      *
      * @param controller          Swing controller
+     * @param apple               Apple instance
      * @param windowFactory       The window factory to use to create and listen for windows.
      * @param lifecycleController Controller to use to end the application.
      * @param globalConfig        The config to read settings from.
@@ -138,6 +141,7 @@ public class MainFrame extends JFrame implements WindowListener,
      * @param windowManager       Window management
      */
     public MainFrame(
+            final Apple apple,
             final SwingController controller,
             final SwingWindowFactory windowFactory,
             final LifecycleController lifecycleController,
@@ -147,6 +151,7 @@ public class MainFrame extends JFrame implements WindowListener,
             final WindowManager windowManager) {
         super();
 
+        this.apple = apple;
         this.controller = controller;
         this.windowFactory = windowFactory;
         this.lifecycleController = lifecycleController;
@@ -389,7 +394,8 @@ public class MainFrame extends JFrame implements WindowListener,
     /**
      * Sets the menu bar that this frame will use.
      *
-     * <p>Must be called prior to {@link #initComponents()}.
+     * <p>
+     * Must be called prior to {@link #initComponents()}.
      *
      * @param menuBar The menu bar to use.
      */
@@ -398,7 +404,7 @@ public class MainFrame extends JFrame implements WindowListener,
             /** {@inheritDoc} */
             @Override
             public void run() {
-                controller.getApple().setMenuBar(menuBar);
+                apple.setMenuBar(menuBar);
                 setJMenuBar(menuBar);
             }
         });
@@ -407,7 +413,8 @@ public class MainFrame extends JFrame implements WindowListener,
     /**
      * Sets the window manager that this frame will use.
      *
-     * <p>Must be called prior to {@link #initComponents()}.
+     * <p>
+     * Must be called prior to {@link #initComponents()}.
      *
      * @param windowManager The window manager to use.
      */
@@ -418,7 +425,8 @@ public class MainFrame extends JFrame implements WindowListener,
     /**
      * Sets the status bar that will be used.
      *
-     * <p>Must be called prior to {@link #initComponents()}.
+     * <p>
+     * Must be called prior to {@link #initComponents()}.
      *
      * @param statusBar The status bar to be used.
      */
