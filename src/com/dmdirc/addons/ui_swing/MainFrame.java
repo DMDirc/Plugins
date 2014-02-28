@@ -23,8 +23,6 @@
 package com.dmdirc.addons.ui_swing;
 
 import com.dmdirc.FrameContainer;
-import com.dmdirc.actions.ActionManager;
-import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.addons.ui_swing.components.SplitPane;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.addons.ui_swing.components.menubar.MenuBar;
@@ -37,6 +35,8 @@ import com.dmdirc.addons.ui_swing.framemanager.ctrltab.CtrlTabWindowManager;
 import com.dmdirc.addons.ui_swing.framemanager.tree.TreeFrameManager;
 import com.dmdirc.events.ClientFocusGainedEvent;
 import com.dmdirc.events.ClientFocusLostEvent;
+import com.dmdirc.events.ClientMinimisedEvent;
+import com.dmdirc.events.ClientUnminimisedEvent;
 import com.dmdirc.interfaces.FrameInfoListener;
 import com.dmdirc.interfaces.LifecycleController;
 import com.dmdirc.interfaces.NotificationListener;
@@ -109,6 +109,8 @@ public class MainFrame extends JFrame implements WindowListener,
     private final ListenerList listeners = new ListenerList();
     /** Window management. */
     private final WindowManager windowManager;
+    /** The bus to despatch events on. */
+    private final EventBus eventBus;
     /** The main application icon. */
     private ImageIcon imageIcon;
     /** The frame manager that's being used. */
@@ -165,6 +167,7 @@ public class MainFrame extends JFrame implements WindowListener,
         this.quitWorker = quitWorker;
         this.iconManager = iconManager;
         this.windowManager = windowManager;
+        this.eventBus = eventBus;
 
         focusOrder = new QueuedLinkedHashSet<>();
         imageIcon = new ImageIcon(iconManager.getImage("icon"));
@@ -303,8 +306,7 @@ public class MainFrame extends JFrame implements WindowListener,
      */
     @Override
     public void windowIconified(final WindowEvent windowEvent) {
-        ActionManager.getActionManager().triggerEvent(
-                CoreActionType.CLIENT_MINIMISED, null);
+        eventBus.post(new ClientMinimisedEvent());
     }
 
     /**
@@ -314,8 +316,7 @@ public class MainFrame extends JFrame implements WindowListener,
      */
     @Override
     public void windowDeiconified(final WindowEvent windowEvent) {
-        ActionManager.getActionManager().triggerEvent(
-                CoreActionType.CLIENT_UNMINIMISED, null);
+        eventBus.post(new ClientUnminimisedEvent());
     }
 
     /**
