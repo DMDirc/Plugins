@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_swing;
 
+import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.ServerManager;
 import com.dmdirc.addons.ui_swing.components.menubar.MenuBar;
 import com.dmdirc.events.ClientOpenedEvent;
@@ -46,6 +47,8 @@ import java.util.ArrayList;
 import java.util.EventObject;
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -54,6 +57,7 @@ import javax.swing.UIManager;
 /**
  * Integrate DMDirc with OS X better.
  */
+@Singleton
 public class Apple implements InvocationHandler {
 
     /** Store any addresses that are opened before CLIENT_OPENED. */
@@ -81,8 +85,9 @@ public class Apple implements InvocationHandler {
      * @param serverManager The server manager to use to connect to URLs.
      * @param eventBus      The bus to listen for events on.
      */
+    @Inject
     public Apple(
-            final AggregateConfigProvider configManager,
+            @GlobalConfig final AggregateConfigProvider configManager,
             final ServerManager serverManager,
             final EventBus eventBus) {
         this.configManager = configManager;
