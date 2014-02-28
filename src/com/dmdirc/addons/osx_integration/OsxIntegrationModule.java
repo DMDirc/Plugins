@@ -22,19 +22,11 @@
 
 package com.dmdirc.addons.osx_integration;
 
-import com.dmdirc.addons.ui_swing.Apple;
-import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.injection.SwingModule;
 
 import dagger.Module;
-import dagger.Provides;
 
 @Module(injects = DockBounceCommand.class, addsTo = SwingModule.class)
 public class OsxIntegrationModule {
-
-    @Provides
-    public Apple getApple(final SwingController controller) {
-        return controller.getApple();
-    }
 
 }
