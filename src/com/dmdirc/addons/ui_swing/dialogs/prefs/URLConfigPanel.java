@@ -29,14 +29,14 @@ import com.dmdirc.addons.ui_swing.components.PackingTable;
 import com.dmdirc.addons.ui_swing.components.URLProtocolPanel;
 import com.dmdirc.addons.ui_swing.components.renderers.URIHandlerCellRenderer;
 import com.dmdirc.addons.ui_swing.components.renderers.URISchemeCellRenderer;
-import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialog;
+import com.dmdirc.addons.ui_swing.dialogs.InputDialogCloseListener;
+import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialogFactory;
 import com.dmdirc.config.prefs.PreferencesInterface;
 import com.dmdirc.config.validators.URLProtocolValidator;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.ui.IconManager;
 
-import java.awt.Dialog.ModalityType;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -72,6 +72,8 @@ public class URLConfigPanel extends JPanel implements
     private final ConfigProvider userConfig;
     /** The icon manager to use for input dialogs. */
     private final IconManager iconManager;
+    /** Input dialog factory. */
+    private final StandardInputDialogFactory inputDialogFactory;
     /** Protocol list. */
     private PackingTable table;
     /** Table mode. */
@@ -106,13 +108,15 @@ public class URLConfigPanel extends JPanel implements
             final MainFrame parentWindow,
             @GlobalConfig final AggregateConfigProvider globalConfig,
             @UserConfig final ConfigProvider userConfig,
-            @GlobalConfig final IconManager iconManager) {
+            @GlobalConfig final IconManager iconManager,
+            final StandardInputDialogFactory inputDialogFactory) {
         super();
 
         this.parentWindow = parentWindow;
         this.globalConfig = globalConfig;
         this.userConfig = userConfig;
         this.iconManager = iconManager;
+        this.inputDialogFactory = inputDialogFactory;
 
         initComponents();
         addListeners();
@@ -241,8 +245,7 @@ public class URLConfigPanel extends JPanel implements
         if (e == null || !e.getValueIsAdjusting()) {
             setVisible(false);
             if (selectedRow != -1 && selectedRow < model.getRowCount()) {
-                final URLProtocolPanel panel =
-                        details.get(model.getValueAt(selectedRow, 0));
+                final URLProtocolPanel panel = details.get(model.getValueAt(selectedRow, 0));
                 model.setValueAt(panel.getSelection(), selectedRow, 1);
             }
             if (table.getSelectedRow() == -1) {
@@ -252,8 +255,7 @@ public class URLConfigPanel extends JPanel implements
                 remove.setEnabled(false);
                 selectedRow = -1;
             } else {
-                activeComponent =
-                        details.get(model.getValueAt(table.getRowSorter().
+                activeComponent = details.get(model.getValueAt(table.getRowSorter().
                         convertRowIndexToModel(table.getSelectedRow()), 0));
                 layoutComponents();
                 add.setEnabled(true);
@@ -273,36 +275,33 @@ public class URLConfigPanel extends JPanel implements
     @Override
     public void actionPerformed(final ActionEvent e) {
         if (e.getSource() == add) {
-            new StandardInputDialog(parentWindow,
-                    ModalityType.MODELESS, iconManager, "New URL handler",
-                    "Please enter the name of the new protocol.",
-                    new URLProtocolValidator(globalConfig)) {
-                /** Serial version UID. */
-                private static final long serialVersionUID = 1;
-
-                /** {@inheritDoc} */
-                @Override
-                public boolean save() {
-                    try {
-                        final URI uri = new URI(getText() + "://example.test.com");
-                        model.addURI(uri);
-                        details.put(uri, new URLProtocolPanel(globalConfig, userConfig, uri, true));
-                        return true;
-                    } catch (final URISyntaxException ex) {
-                        return false;
-                    }
-                }
-
-                /** {@inheritDoc} */
-                @Override
-                public void cancelled() {
-                    //Ignore
-                }
-            }.display();
-
+            inputDialogFactory.getStandardInputDialog(parentWindow, "New URL handler",
+                    "Please enter the name of the new protocol.", new AddProtocolDialogListener(),
+                    new URLProtocolValidator(globalConfig)).displayOrRequestFocus();
         } else if (e.getSource() == remove) {
             model.removeURI(table.getRowSorter().convertRowIndexToModel(table.getSelectedRow()));
         }
+    }
+
+    private class AddProtocolDialogListener implements InputDialogCloseListener {
+
+        @Override
+        public boolean save(final String text) {
+            try {
+                final URI uri = new URI(text + "://example.test.com");
+                model.addURI(uri);
+                details.put(uri, new URLProtocolPanel(globalConfig, userConfig, uri, true));
+                return true;
+            } catch (final URISyntaxException ex) {
+                return false;
+            }
+        }
+
+        @Override
+        public void cancelled() {
+            //Ignore
+        }
+
     }
 
 }

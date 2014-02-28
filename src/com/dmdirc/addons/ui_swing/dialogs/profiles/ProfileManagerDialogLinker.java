@@ -24,7 +24,9 @@ package com.dmdirc.addons.ui_swing.dialogs.profiles;
 
 import com.dmdirc.addons.ui_swing.components.validating.ValidatableJTextField;
 import com.dmdirc.addons.ui_swing.components.validating.ValidatableReorderableJList;
+import com.dmdirc.addons.ui_swing.dialogs.InputDialogCloseListener;
 import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialog;
+import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialogFactory;
 import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
 import com.dmdirc.ui.IconManager;
 
@@ -56,16 +58,20 @@ public class ProfileManagerDialogLinker {
     private final ProfileManagerDialog dialog;
     /** The icon manager to use for validating text fields. */
     private final IconManager iconManager;
+    /** Input dialog factory. */
+    private final StandardInputDialogFactory inputDialogFactory;
 
     public ProfileManagerDialogLinker(
             final ProfileManagerController controller,
             final ProfileManagerModel model,
             final ProfileManagerDialog dialog,
-            final IconManager iconManager) {
+            final IconManager iconManager,
+            final StandardInputDialogFactory inputDialogFactory) {
         this.controller = controller;
         this.model = model;
         this.dialog = dialog;
         this.iconManager = iconManager;
+        this.inputDialogFactory = inputDialogFactory;
     }
 
     /**
@@ -161,20 +167,9 @@ public class ProfileManagerDialogLinker {
         addNickname.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent e) {
-                new StandardInputDialog(dialog, ModalityType.DOCUMENT_MODAL, iconManager,
-                        "Add nickname", "Enter nickname to add:", new AddNicknameValidator(model)) {
-                            private static final long serialVersionUID = 1L;
-
-                            @Override
-                            public boolean save() {
-                                controller.addNickname(getText());
-                                return true;
-                            }
-
-                            @Override
-                            public void cancelled() {
-                            }
-                        }.display();
+                inputDialogFactory.getStandardInputDialog(dialog, "Add nickname",
+                        "Enter nickname to add:", new AddNickNameDialogListener())
+                        .displayOrRequestFocus(dialog);
             }
         });
         model.addPropertyChangeListener("selectedprofile", new PropertyChangeListener() {
@@ -201,24 +196,11 @@ public class ProfileManagerDialogLinker {
         editNickname.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent e) {
-                final StandardInputDialog inputDialog = new StandardInputDialog(dialog,
-                        ModalityType.DOCUMENT_MODAL, iconManager,
-                        "Add nickname", "Enter edited nickname:",
-                        new EditNicknameValidator(model)) {
-                            private static final long serialVersionUID = 1L;
-
-                            @Override
-                            public boolean save() {
-                                controller.editNickname(getText());
-                                return true;
-                            }
-
-                            @Override
-                            public void cancelled() {
-                            }
-                        };
+                final StandardInputDialog inputDialog = inputDialogFactory
+                        .getStandardInputDialog(dialog, "Edit nickname", "Enter edited nickname:",
+                                new EditNicknameDialogListener(), new EditNicknameValidator(model));
                 inputDialog.setText((String) model.getSelectedNickname());
-                inputDialog.display();
+                inputDialog.displayOrRequestFocus(dialog);
             }
         });
         model.addPropertyChangeListener("selectednickname", new PropertyChangeListener() {
@@ -406,22 +388,10 @@ public class ProfileManagerDialogLinker {
         addProfile.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent e) {
-                final StandardInputDialog inputDialog = new StandardInputDialog(dialog,
-                        ModalityType.DOCUMENT_MODAL, iconManager,
-                        "Add profile", "New profile name:",
-                        new ProfileNameValidator(model.getProfiles())) {
-                            private static final long serialVersionUID = 1L;
-
-                            @Override
-                            public boolean save() {
-                                controller.addProfile(getText());
-                                return true;
-                            }
-
-                            @Override
-                            public void cancelled() {
-                            }
-                        };
+                final StandardInputDialog inputDialog = inputDialogFactory.getStandardInputDialog(
+                        dialog, "Add profile", "New profile name:",
+                        new AddProfileDialogListener(),
+                        new ProfileNameValidator(model.getProfiles()));
                 inputDialog.setText((String) model.getSelectedNickname());
                 inputDialog.display();
             }
@@ -495,6 +465,48 @@ public class ProfileManagerDialogLinker {
                 controller.closeDialog();
             }
         });
+    }
+
+    private class AddNickNameDialogListener implements InputDialogCloseListener {
+
+        @Override
+        public boolean save(final String text) {
+            controller.addNickname(text);
+            return true;
+        }
+
+        @Override
+        public void cancelled() {
+        }
+
+    }
+
+    private class EditNicknameDialogListener implements InputDialogCloseListener {
+
+        @Override
+        public boolean save(final String text) {
+            controller.editNickname(text);
+            return true;
+        }
+
+        @Override
+        public void cancelled() {
+        }
+
+    }
+
+    private class AddProfileDialogListener implements InputDialogCloseListener {
+
+        @Override
+        public boolean save(final String text) {
+            controller.addProfile(text);
+            return true;
+        }
+
+        @Override
+        public void cancelled() {
+        }
+
     }
 
 }

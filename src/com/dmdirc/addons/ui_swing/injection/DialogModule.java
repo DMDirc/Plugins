@@ -33,6 +33,7 @@ import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.SwingWindowFactory;
 import com.dmdirc.addons.ui_swing.dialogs.FeedbackDialog;
 import com.dmdirc.addons.ui_swing.dialogs.NewServerDialog;
+import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialogFactory;
 import com.dmdirc.addons.ui_swing.dialogs.about.AboutDialog;
 import com.dmdirc.addons.ui_swing.dialogs.actionsmanager.ActionsManagerDialog;
 import com.dmdirc.addons.ui_swing.dialogs.aliases.AliasManagerDialog;
@@ -126,12 +127,13 @@ public class DialogModule {
             @GlobalConfig final IconManager iconManager,
             final PrefsComponentFactory compFactory,
             final PerformWrapper performWrapper,
-            final MainFrame parentWindow) {
+            final MainFrame parentWindow,
+            final StandardInputDialogFactory inputDialogFactory) {
         return new KeyedDialogProvider<Server, ServerSettingsDialog>() {
             @Override
             protected ServerSettingsDialog getInstance(final Server key) {
                 return new ServerSettingsDialog(controller, iconManager, compFactory,
-                        performWrapper, key, parentWindow);
+                        performWrapper, key, parentWindow, inputDialogFactory);
             }
         };
     }
@@ -148,13 +150,14 @@ public class DialogModule {
             final ServiceManager serviceManager,
             final PreferencesManager preferencesManager,
             final PrefsComponentFactory compFactory,
-            final MainFrame parentWindow) {
+            final MainFrame parentWindow,
+            final StandardInputDialogFactory inputDialogFactory) {
         return new KeyedDialogProvider<Channel, ChannelSettingsDialog>() {
             @Override
             protected ChannelSettingsDialog getInstance(final Channel key) {
                 return new ChannelSettingsDialog(controller, identityFactory, windowFactory,
                         iconManager, globalConfig, userConfig, serviceManager, preferencesManager,
-                        compFactory, key, parentWindow);
+                        compFactory, key, parentWindow, inputDialogFactory);
             }
         };
     }

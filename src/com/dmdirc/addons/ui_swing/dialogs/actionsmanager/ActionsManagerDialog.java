@@ -37,8 +37,10 @@ import com.dmdirc.addons.ui_swing.components.SortedListModel;
 import com.dmdirc.addons.ui_swing.components.frames.AppleJFrame;
 import com.dmdirc.addons.ui_swing.components.renderers.PropertyListCellRenderer;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
+import com.dmdirc.addons.ui_swing.dialogs.InputDialogCloseListener;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialog;
+import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialogFactory;
 import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
 import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.interfaces.config.ConfigProvider;
@@ -83,6 +85,8 @@ public class ActionsManagerDialog extends StandardDialog implements
     private final AtomicBoolean saving = new AtomicBoolean(false);
     /** Duplicate action group validator. */
     private final ValidatorChain<String> validator;
+    /** Input dialog factory. */
+    private final StandardInputDialogFactory inputDialogFactory;
     /** Info label. */
     private TextLabel infoLabel;
     /** Group list. */
@@ -111,13 +115,14 @@ public class ActionsManagerDialog extends StandardDialog implements
     /**
      * Creates a new instance of ActionsManagerDialog.
      *
-     * @param apple             Apple instance
-     * @param parentWindow      Parent window
-     * @param controller        Parent controller
-     * @param config            Config to save dialog state to
-     * @param compFactory       Prefs setting component factory
-     * @param iconManager       The icon manager to use for validating text fields.
-     * @param groupPanelFactory Factory to use to create group panels.
+     * @param apple              Apple instance
+     * @param parentWindow       Parent window
+     * @param controller         Parent controller
+     * @param config             Config to save dialog state to
+     * @param compFactory        Prefs setting component factory
+     * @param iconManager        The icon manager to use for validating text fields.
+     * @param groupPanelFactory  Factory to use to create group panels.
+     * @param inputDialogFactory Input dialog factory
      */
     @Inject
     public ActionsManagerDialog(
@@ -127,18 +132,20 @@ public class ActionsManagerDialog extends StandardDialog implements
             @UserConfig final ConfigProvider config,
             final PrefsComponentFactory compFactory,
             @GlobalConfig final IconManager iconManager,
-            final ActionsGroupPanelFactory groupPanelFactory) {
+            final ActionsGroupPanelFactory groupPanelFactory,
+            final StandardInputDialogFactory inputDialogFactory) {
         super(Apple.isAppleUI() ? new AppleJFrame(apple, parentWindow)
                 : parentWindow, ModalityType.MODELESS);
         this.config = config;
         this.compFactory = compFactory;
         this.iconManager = iconManager;
         this.groupPanelFactory = groupPanelFactory;
+        this.inputDialogFactory = inputDialogFactory;
 
         initComponents();
         validator = ValidatorChain.<String>builder().addValidator(
                 new ActionGroupNoDuplicatesInListValidator(
-                groups, (DefaultListModel<ActionGroup>) groups.getModel()))
+                        groups, (DefaultListModel<ActionGroup>) groups.getModel()))
                 .addValidator(new FileNameValidator()).build();
         addListeners();
         layoutGroupPanel();
@@ -312,36 +319,9 @@ public class ActionsManagerDialog extends StandardDialog implements
     private void addGroup() {
         final int index = groups.getSelectedIndex();
         groups.getSelectionModel().clearSelection();
-        new StandardInputDialog(this, ModalityType.DOCUMENT_MODAL, iconManager, "New action group",
-                "Please enter the name of the new action group", validator) {
-            /** Java Serialisation version ID. */
-            private static final long serialVersionUID = 1;
-
-            /** {@inheritDoc} */
-            @Override
-            public boolean save() {
-                if (!saving.getAndSet(true)) {
-                    groups.setSelectedIndex(index);
-                    if (getText() == null || getText().isEmpty()
-                            && !ActionManager.getActionManager().getGroupsMap()
-                            .containsKey(getText())) {
-                        return false;
-                    } else {
-                        final ActionGroup group = ActionManager
-                                .getActionManager().createGroup(getText());
-                        reloadGroups(group);
-                        return true;
-                    }
-                }
-                return false;
-            }
-
-            /** {@inheritDoc} */
-            @Override
-            public void cancelled() {
-                groups.setSelectedIndex(index);
-            }
-        }.display(this);
+        inputDialogFactory.getStandardInputDialog(this, "New action group",
+                "Please enter the name of the new action group",
+                new AddGroupDialogListener(groups, index), validator).displayOrRequestFocus(this);
     }
 
     /**
@@ -349,36 +329,12 @@ public class ActionsManagerDialog extends StandardDialog implements
      */
     private void editGroup() {
         final String oldName = groups.getSelectedValue().getName();
-        final StandardInputDialog inputDialog = new StandardInputDialog(
-                this, ModalityType.DOCUMENT_MODAL, iconManager, "Edit action group",
-                "Please enter the new name of the action group", validator) {
-            /** Java Serialisation version ID. */
-            private static final long serialVersionUID = 1;
-
-            /** {@inheritDoc} */
-            @Override
-            public boolean save() {
-                if (!saving.getAndSet(true)) {
-                    if (getText() == null || getText().isEmpty()) {
-                        return false;
-                    } else {
-                        ActionManager.getActionManager().changeGroupName(
-                                oldName, getText());
-                        reloadGroups();
-                        return true;
-                    }
-                }
-                return false;
-            }
-
-            /** {@inheritDoc} */
-            @Override
-            public void cancelled() {
-                //Ignore
-            }
-        };
+        final StandardInputDialog inputDialog = inputDialogFactory.getStandardInputDialog(this,
+                "Edit action group",
+                "Please enter the new name of the action group",
+                new EditGroupDialogListener(groups, oldName), validator);
         inputDialog.setText(oldName);
-        inputDialog.display(this);
+        inputDialog.displayOrRequestFocus(this);
     }
 
     /**
@@ -391,34 +347,33 @@ public class ActionsManagerDialog extends StandardDialog implements
                 "Confirm deletion",
                 "Are you sure you wish to delete the '" + group
                 + "' group and all actions within it?") {
-            /** Java Serialisation version ID. */
-            private static final long serialVersionUID = 1;
+                    /** Java Serialisation version ID. */
+                    private static final long serialVersionUID = 1;
 
-            /** {@inheritDoc} */
-            @Override
-            public boolean save() {
-                int location =
-                        ((DefaultListModel) groups.getModel()).indexOf(
-                        ActionManager.getActionManager().getOrCreateGroup(group));
-                ActionManager.getActionManager().deleteGroup(group);
-                reloadGroups();
-                if (groups.getModel().getSize() == 0) {
-                    location = -1;
-                } else if (location >= groups.getModel().getSize()) {
-                    location = groups.getModel().getSize();
-                } else if (location <= 0) {
-                    location = 0;
-                }
-                groups.setSelectedIndex(location);
-                return true;
-            }
+                    /** {@inheritDoc} */
+                    @Override
+                    public boolean save() {
+                        int location = ((DefaultListModel) groups.getModel()).indexOf(
+                                ActionManager.getActionManager().getOrCreateGroup(group));
+                        ActionManager.getActionManager().deleteGroup(group);
+                        reloadGroups();
+                        if (groups.getModel().getSize() == 0) {
+                            location = -1;
+                        } else if (location >= groups.getModel().getSize()) {
+                            location = groups.getModel().getSize();
+                        } else if (location <= 0) {
+                            location = 0;
+                        }
+                        groups.setSelectedIndex(location);
+                        return true;
+                    }
 
-            /** {@inheritDoc} */
-            @Override
-            public void cancelled() {
-                //Ignore
-            }
-        }.display();
+                    /** {@inheritDoc} */
+                    @Override
+                    public void cancelled() {
+                        //Ignore
+                    }
+                }.display();
     }
 
     @Override
@@ -454,6 +409,70 @@ public class ActionsManagerDialog extends StandardDialog implements
                 actions.actionDeleted((String) arguments[1]);
             }
         }
+    }
+
+    private class AddGroupDialogListener implements InputDialogCloseListener {
+
+        private final JList<ActionGroup> groups;
+        private final int index;
+
+        private AddGroupDialogListener(final JList<ActionGroup> groups, final int index) {
+            this.groups = groups;
+            this.index = index;
+        }
+
+        @Override
+        public boolean save(final String text) {
+            if (!saving.getAndSet(true)) {
+                groups.setSelectedIndex(index);
+                if (text == null || text.isEmpty()
+                        && !ActionManager.getActionManager().getGroupsMap().containsKey(text)) {
+                    return false;
+                } else {
+                    final ActionGroup group = ActionManager.getActionManager().createGroup(text);
+                    reloadGroups(group);
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        @Override
+        public void cancelled() {
+            groups.setSelectedIndex(index);
+        }
+
+    }
+
+    private class EditGroupDialogListener implements InputDialogCloseListener {
+
+        private final JList<ActionGroup> groups;
+        private final String oldName;
+
+        private EditGroupDialogListener(final JList<ActionGroup> groups, final String oldName) {
+            this.groups = groups;
+            this.oldName = oldName;
+        }
+
+        @Override
+        public boolean save(final String text) {
+            if (!saving.getAndSet(true)) {
+                if (text == null || text.isEmpty()) {
+                    return false;
+                } else {
+                    ActionManager.getActionManager().changeGroupName(oldName, text);
+                    reloadGroups();
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        @Override
+        public void cancelled() {
+            //Ignore
+        }
+
     }
 
 }

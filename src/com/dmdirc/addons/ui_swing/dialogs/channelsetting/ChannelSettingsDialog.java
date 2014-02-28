@@ -31,6 +31,7 @@ import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.expandingsettings.SettingsPanel;
 import com.dmdirc.addons.ui_swing.components.modes.ChannelModesPane;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
+import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialogFactory;
 import com.dmdirc.config.prefs.PreferencesManager;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
@@ -103,6 +104,7 @@ public class ChannelSettingsDialog extends StandardDialog implements ActionListe
      * @param compFactory        Preferences setting component factory
      * @param channel            The channel object that we're editing settings for
      * @param parentWindow       Parent window
+     * @param inputDialogFactory Input dialog factory
      */
     public ChannelSettingsDialog(
             final SwingController controller,
@@ -115,7 +117,8 @@ public class ChannelSettingsDialog extends StandardDialog implements ActionListe
             final PreferencesManager preferencesManager,
             final PrefsComponentFactory compFactory,
             final Channel channel,
-            final MainFrame parentWindow) {
+            final MainFrame parentWindow,
+            final StandardInputDialogFactory inputDialogFactory) {
         super(parentWindow, ModalityType.MODELESS);
 
         this.controller = checkNotNull(controller);
@@ -131,12 +134,12 @@ public class ChannelSettingsDialog extends StandardDialog implements ActionListe
                 channel.getChannelInfo().getName());
         this.channelWindow = (InputWindow) windowFactory.getSwingWindow(channel);
 
-        initComponents();
+        initComponents(inputDialogFactory);
         initListeners();
     }
 
     /** Initialises the main UI components. */
-    private void initComponents() {
+    private void initComponents(final StandardInputDialogFactory inputDialogFactory) {
         tabbedPane = new JTabbedPane();
 
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
@@ -155,7 +158,7 @@ public class ChannelSettingsDialog extends StandardDialog implements ActionListe
 
         initIrcTab();
 
-        initListModesTab();
+        initListModesTab(inputDialogFactory);
 
         initSettingsTab();
 
@@ -183,9 +186,9 @@ public class ChannelSettingsDialog extends StandardDialog implements ActionListe
     }
 
     /** Initialises the IRC Settings tab. */
-    private void initListModesTab() {
+    private void initListModesTab(final StandardInputDialogFactory inputDialogFactory) {
         channelListModesPane = new ChannelListModesPane(globalConfig, userConfig, iconManager,
-                channel, this);
+                channel, this, inputDialogFactory);
         tabbedPane.addTab("List Modes", channelListModesPane);
     }
 

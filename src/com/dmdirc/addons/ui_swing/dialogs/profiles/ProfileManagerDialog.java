@@ -29,6 +29,7 @@ import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.addons.ui_swing.components.validating.ValidatableJTextField;
 import com.dmdirc.addons.ui_swing.components.validating.ValidatableReorderableJList;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
+import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialogFactory;
 import com.dmdirc.interfaces.config.IdentityController;
 import com.dmdirc.interfaces.config.IdentityFactory;
 import com.dmdirc.ui.IconManager;
@@ -83,13 +84,15 @@ public class ProfileManagerDialog extends StandardDialog {
      * @param identityFactory    Identity factory to create new identities
      * @param identityController Identity controller to retrieve identities from
      * @param iconManager        Icon manager to retrieve icons
+     * @param inputDialogFactory Input dialog factory
      */
     @Inject
     public ProfileManagerDialog(
             final MainFrame mainFrame,
             final IdentityFactory identityFactory,
             final IdentityController identityController,
-            @GlobalConfig final IconManager iconManager) {
+            @GlobalConfig final IconManager iconManager,
+            final StandardInputDialogFactory inputDialogFactory) {
         super(mainFrame, ModalityType.MODELESS);
         this.model = new ProfileManagerModel(identityController, identityFactory);
         this.controller = new ProfileManagerController(this, model, identityFactory);
@@ -97,7 +100,8 @@ public class ProfileManagerDialog extends StandardDialog {
         ident = new ValidatableJTextField(iconManager);
         name = new ValidatableJTextField(iconManager);
         initComponents();
-        linker = new ProfileManagerDialogLinker(controller, model, this, iconManager);
+        linker = new ProfileManagerDialogLinker(controller, model, this, iconManager,
+                inputDialogFactory);
         linker.bindAddNickname(addNickname);
         linker.bindAddProfile(addProfile);
         linker.bindCancelButton(getCancelButton());

@@ -23,7 +23,8 @@
 package com.dmdirc.addons.ui_swing.dialogs.serversetting;
 
 import com.dmdirc.addons.ui_swing.UIUtilities;
-import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialog;
+import com.dmdirc.addons.ui_swing.dialogs.InputDialogCloseListener;
+import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialogFactory;
 import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.parser.common.IgnoreList;
@@ -63,6 +64,8 @@ public final class IgnoreListPanel extends JPanel implements ActionListener, Lis
     private final Window parentWindow;
     /** Icon manager. */
     private final IconManager iconManager;
+    /** Input dialog factory. */
+    private final StandardInputDialogFactory inputDialogFactory;
     /** Add button. */
     private JButton addButton;
     /** Remove button. */
@@ -81,17 +84,18 @@ public final class IgnoreListPanel extends JPanel implements ActionListener, Lis
     /**
      * Creates a new instance of IgnoreList.
      *
-     * @param iconManager  Icon manager
-     * @param connection   The connection whose ignore list should be displayed.
-     * @param parentWindow Parent window
+     * @param iconManager        Icon manager
+     * @param connection         The connection whose ignore list should be displayed.
+     * @param parentWindow       Parent window
+     * @param inputDialogFactory Input dialog factory
      */
     public IgnoreListPanel(final IconManager iconManager,
-            final Connection connection, final Window parentWindow) {
-        super();
-
+            final Connection connection, final Window parentWindow,
+            final StandardInputDialogFactory inputDialogFactory) {
         this.iconManager = iconManager;
         this.connection = connection;
         this.parentWindow = parentWindow;
+        this.inputDialogFactory = inputDialogFactory;
 
         this.setOpaque(UIUtilities.getTabbedPaneOpaque());
         initComponents();
@@ -178,54 +182,32 @@ public final class IgnoreListPanel extends JPanel implements ActionListener, Lis
                 validatorBuilder.addValidator(new RegexValidator());
             }
 
-            new StandardInputDialog(parentWindow,
-                    ModalityType.MODELESS, iconManager, "New ignore list entry",
-                    "Please enter the new ignore list entry", validatorBuilder.build()) {
-                /** A version number for this class. */
-                private static final long serialVersionUID = 2;
-
-                /** {@inheritDoc} */
-                @Override
-                public boolean save() {
-                    if (viewToggle.isSelected()) {
-                        cachedIgnoreList.add(getText());
-                    } else {
-                        cachedIgnoreList.addSimple(getText());
-                    }
-
-                    updateList();
-                    return true;
-                }
-
-                /** {@inheritDoc} */
-                @Override
-                public void cancelled() {
-                    //Ignore
-                }
-            }.display();
+            inputDialogFactory.getStandardInputDialog(parentWindow, "New ignore list entry",
+                    "Please enter the new ignore list entry", new AddIgnoreItemDialogListener(),
+                    validatorBuilder.build());
         } else if (e.getSource() == delButton && list.getSelectedIndex() != -1) {
             new StandardQuestionDialog(parentWindow,
                     ModalityType.APPLICATION_MODAL,
                     "Confirm deletion",
                     "Are you sure you want to delete this item?") {
-                /** A version number for this class. */
-                private static final long serialVersionUID = 1;
+                        /** A version number for this class. */
+                        private static final long serialVersionUID = 1;
 
-                /** {@inheritDoc} */
-                @Override
-                public boolean save() {
-                    cachedIgnoreList.remove(list.getSelectedIndex());
+                        /** {@inheritDoc} */
+                        @Override
+                        public boolean save() {
+                            cachedIgnoreList.remove(list.getSelectedIndex());
 
-                    updateList();
-                    return true;
-                }
+                            updateList();
+                            return true;
+                        }
 
-                /** {@inheritDoc} */
-                @Override
-                public void cancelled() {
-                    //Ignore
-                }
-            }.display();
+                        /** {@inheritDoc} */
+                        @Override
+                        public void cancelled() {
+                            //Ignore
+                        }
+                    }.display();
         } else if (e.getSource() == viewToggle) {
             listModel.setIsSimple(!viewToggle.isSelected());
         }
@@ -238,6 +220,27 @@ public final class IgnoreListPanel extends JPanel implements ActionListener, Lis
         } else {
             delButton.setEnabled(true);
         }
+    }
+
+    private class AddIgnoreItemDialogListener implements InputDialogCloseListener {
+
+        @Override
+        public boolean save(final String text) {
+            if (viewToggle.isSelected()) {
+                cachedIgnoreList.add(text);
+            } else {
+                cachedIgnoreList.addSimple(text);
+            }
+
+            updateList();
+            return true;
+        }
+
+        @Override
+        public void cancelled() {
+            //Ignore
+        }
+
     }
 
 }

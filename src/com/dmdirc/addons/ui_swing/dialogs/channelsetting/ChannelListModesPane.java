@@ -26,7 +26,8 @@ import com.dmdirc.Channel;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.renderers.ExtendedListModeCellRenderer;
 import com.dmdirc.addons.ui_swing.components.renderers.ListModeCellRenderer;
-import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialog;
+import com.dmdirc.addons.ui_swing.dialogs.InputDialogCloseListener;
+import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialogFactory;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.interfaces.config.ConfigProvider;
@@ -35,7 +36,6 @@ import com.dmdirc.ui.IconManager;
 import com.dmdirc.util.collections.MapList;
 import com.dmdirc.util.validators.NotEmptyValidator;
 
-import java.awt.Dialog.ModalityType;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -94,6 +94,8 @@ public final class ChannelListModesPane extends JPanel implements ActionListener
     private final Window parentWindow;
     /** Native cell renderer. */
     private final ListCellRenderer<? super ChannelListModeItem> nativeRenderer;
+    /** Input dialog factory. */
+    private final StandardInputDialogFactory inputDialogFactory;
     /** Cell renderer. */
     private ListCellRenderer<? super ChannelListModeItem> renderer;
     /** Mode list. */
@@ -108,18 +110,20 @@ public final class ChannelListModesPane extends JPanel implements ActionListener
     /**
      * Creates a new instance of ChannelListModePane.
      *
-     * @param globalConfig The config to read settings from.
-     * @param userConfig   The config to write settings to.
-     * @param iconManager  The manager to use to retrieve icons for dialogs and validation.
-     * @param channel      Parent channel
-     * @param parentWindow Parent window
+     * @param globalConfig       The config to read settings from.
+     * @param userConfig         The config to write settings to.
+     * @param iconManager        The manager to use to retrieve icons for dialogs and validation.
+     * @param channel            Parent channel
+     * @param parentWindow       Parent window
+     * @param inputDialogFactory Input dialog factory
      */
     public ChannelListModesPane(
             final AggregateConfigProvider globalConfig,
             final ConfigProvider userConfig,
             final IconManager iconManager,
             final Channel channel,
-            final Window parentWindow) {
+            final Window parentWindow,
+            final StandardInputDialogFactory inputDialogFactory) {
         super();
 
         this.globalConfig = checkNotNull(globalConfig);
@@ -127,6 +131,7 @@ public final class ChannelListModesPane extends JPanel implements ActionListener
         this.iconManager = checkNotNull(iconManager);
         this.channel = checkNotNull(channel);
         this.parentWindow = checkNotNull(parentWindow);
+        this.inputDialogFactory = inputDialogFactory;
         this.setOpaque(UIUtilities.getTabbedPaneOpaque());
 
         list = new JList<>();
@@ -290,35 +295,10 @@ public final class ChannelListModesPane extends JPanel implements ActionListener
             modeText = channel.getConfigManager().
                     getOption("server", "mode" + listModesArray[selectedIndex]);
         }
-        new StandardInputDialog(parentWindow, ModalityType.DOCUMENT_MODAL,
-                iconManager, "Add new " + modeText,
+        inputDialogFactory.getStandardInputDialog(parentWindow, "Add new " + modeText,
                 "Please enter the hostmask for the new " + modeText,
-                new NotEmptyValidator()) {
-                    /**
-                     * A version number for this class. It should be changed whenever the class
-                     * structure is changed (or anything else that would prevent serialized objects
-                     * being unserialized with the new class).
-                     */
-                    private static final long serialVersionUID = 1;
-
-                    /** {@inheritDoc} */
-                    @Override
-                    public boolean save() {
-                        final DefaultListModel<ChannelListModeItem> model
-                        = (DefaultListModel<ChannelListModeItem>) listModesPanels.get(selectedIndex).
-                        getModel();
-                        model.addElement(new ChannelListModeItem(getText(), "",
-                                        System.currentTimeMillis() / 1000));
-                        updateModeCount();
-                        return true;
-                    }
-
-                    /** {@inheritDoc} */
-                    @Override
-                    public void cancelled() {
-                        //Ignore
-                    }
-                }.display();
+                new AddListModelDialogListener(selectedIndex), new NotEmptyValidator())
+                .displayOrRequestFocus();
     }
 
     /** Removes a list mode. */
@@ -409,6 +389,31 @@ public final class ChannelListModesPane extends JPanel implements ActionListener
         for (JList<ChannelListModeItem> renderList : listModesPanels) {
             renderList.setCellRenderer(renderer);
         }
+    }
+
+    private class AddListModelDialogListener implements InputDialogCloseListener {
+
+        private final int selectedIndex;
+
+        private AddListModelDialogListener(final int selectedIndex) {
+            this.selectedIndex = selectedIndex;
+        }
+
+        @Override
+        public boolean save(final String text) {
+            final DefaultListModel<ChannelListModeItem> model
+                    = (DefaultListModel<ChannelListModeItem>) listModesPanels.get(selectedIndex).
+                    getModel();
+            model.addElement(new ChannelListModeItem(text, "", System.currentTimeMillis() / 1000));
+            updateModeCount();
+            return true;
+        }
+
+        @Override
+        public void cancelled() {
+            //Ignore
+        }
+
     }
 
 }

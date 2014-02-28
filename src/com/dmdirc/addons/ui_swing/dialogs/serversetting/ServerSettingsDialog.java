@@ -32,6 +32,7 @@ import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.expandingsettings.SettingsPanel;
 import com.dmdirc.addons.ui_swing.components.modes.UserModesPane;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
+import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialogFactory;
 import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
 import com.dmdirc.config.prefs.PreferencesManager;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
@@ -72,12 +73,13 @@ public class ServerSettingsDialog extends StandardDialog implements ActionListen
     /**
      * Creates a new instance of ServerSettingsDialog.
      *
-     * @param controller     Swing controller
-     * @param iconManager    Icon manager
-     * @param compFactory    Preferences setting component factory
-     * @param performWrapper Wrapper for the perform tab.
-     * @param server         The server object that we're editing settings for
-     * @param parentWindow   Parent window
+     * @param controller         Swing controller
+     * @param iconManager        Icon manager
+     * @param compFactory        Preferences setting component factory
+     * @param performWrapper     Wrapper for the perform tab.
+     * @param server             The server object that we're editing settings for
+     * @param parentWindow       Parent window
+     * @param inputDialogFactory Input dialog factory
      */
     public ServerSettingsDialog(
             final SwingController controller,
@@ -85,7 +87,8 @@ public class ServerSettingsDialog extends StandardDialog implements ActionListen
             final PrefsComponentFactory compFactory,
             final PerformWrapper performWrapper,
             final Server server,
-            final MainFrame parentWindow) {
+            final MainFrame parentWindow,
+            final StandardInputDialogFactory inputDialogFactory) {
         super(parentWindow, ModalityType.MODELESS);
         this.server = server;
         this.performWrapper = performWrapper;
@@ -94,7 +97,7 @@ public class ServerSettingsDialog extends StandardDialog implements ActionListen
         setResizable(false);
 
         initComponents(controller, parentWindow, iconManager, server.getConfigManager(),
-                compFactory);
+                compFactory, inputDialogFactory);
         initListeners();
     }
 
@@ -109,14 +112,15 @@ public class ServerSettingsDialog extends StandardDialog implements ActionListen
      */
     private void initComponents(final SwingController controller, final MainFrame parentWindow,
             final IconManager iconManager, final AggregateConfigProvider config,
-            final PrefsComponentFactory compFactory) {
+            final PrefsComponentFactory compFactory,
+            final StandardInputDialogFactory inputDialogFactory) {
         orderButtons(new JButton(), new JButton());
 
         tabbedPane = new JTabbedPane();
 
         modesPanel = new UserModesPane(controller, server);
 
-        ignoreList = new IgnoreListPanel(iconManager, server, parentWindow);
+        ignoreList = new IgnoreListPanel(iconManager, server, parentWindow, inputDialogFactory);
 
         performPanel = new PerformTab(iconManager, config, performWrapper, server);
 

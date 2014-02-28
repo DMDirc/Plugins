@@ -22,9 +22,12 @@
 
 package com.dmdirc.addons.ui_swing.dialogs;
 
+import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.addons.ui_swing.components.validating.ValidatingJTextField;
 import com.dmdirc.ui.IconManager;
+import com.dmdirc.util.annotations.factory.Factory;
+import com.dmdirc.util.annotations.factory.Unbound;
 import com.dmdirc.util.validators.ValidationResponse;
 import com.dmdirc.util.validators.Validator;
 
@@ -44,7 +47,8 @@ import net.miginfocom.swing.MigLayout;
 /**
  * Standard input dialog.
  */
-public abstract class StandardInputDialog extends StandardDialog {
+@Factory(inject = true)
+public class StandardInputDialog extends StandardDialog {
 
     /** Serial version UID. */
     private static final long serialVersionUID = 1;
@@ -58,6 +62,8 @@ public abstract class StandardInputDialog extends StandardDialog {
     private String message;
     /** The icon manager to use for validating text fields. */
     private final IconManager iconManager;
+    /** Dialog close listener called when saving or cancelling. */
+    private final InputDialogCloseListener listener;
     /** Are we saving? */
     protected final AtomicBoolean saving = new AtomicBoolean(false);
 
@@ -65,16 +71,18 @@ public abstract class StandardInputDialog extends StandardDialog {
      * Instantiates a new standard input dialog.
      *
      * @param owner       Dialog owner
-     * @param modal       modality type
      * @param iconManager The icon manager to use for validating text fields.
      * @param title       Dialog title
      * @param message     Dialog message
+     * @param listener    Listener to call on dialog close
      */
     public StandardInputDialog(
-            final Window owner, final ModalityType modal, final IconManager iconManager,
-            final String title, final String message) {
-        this(owner, modal, iconManager, title, message, new Validator<String>() {
-            /** {@inheritDoc} */
+            @Unbound final Window owner,
+            @SuppressWarnings("qualifiers") @GlobalConfig final IconManager iconManager,
+            @Unbound final String title,
+            @Unbound final String message,
+            @Unbound final InputDialogCloseListener listener) {
+        this(owner, iconManager, title, message, listener, new Validator<String>() {
             @Override
             public ValidationResponse validate(final String object) {
                 return new ValidationResponse();
@@ -86,21 +94,25 @@ public abstract class StandardInputDialog extends StandardDialog {
      * Instantiates a new standard input dialog.
      *
      * @param owner       Dialog owner
-     * @param modal       modality type
      * @param iconManager The icon manager to use for validating text fields.
-     * @param validator   Textfield validator
      * @param title       Dialog title
      * @param message     Dialog message
+     * @param listener    Listener to call on dialog close
+     * @param validator   Textfield validator
      */
     public StandardInputDialog(
-            final Window owner, final ModalityType modal, final IconManager iconManager,
-            final String title, final String message,
-            final Validator<String> validator) {
-        super(owner, modal);
+            @Unbound final Window owner,
+            @SuppressWarnings("qualifiers") @GlobalConfig final IconManager iconManager,
+            @Unbound final String title,
+            @Unbound final String message,
+            @Unbound final InputDialogCloseListener listener,
+            @Unbound final Validator<String> validator) {
+        super(owner, ModalityType.DOCUMENT_MODAL);
 
         this.validator = validator;
         this.message = message;
         this.iconManager = iconManager;
+        this.listener = listener;
 
         setTitle(title);
         setDefaultCloseOperation(StandardInputDialog.DISPOSE_ON_CLOSE);
@@ -109,18 +121,6 @@ public abstract class StandardInputDialog extends StandardDialog {
         addListeners();
         layoutComponents();
     }
-
-    /**
-     * Called when the dialog's OK button is clicked.
-     *
-     * @return whether the dialog can close
-     */
-    public abstract boolean save();
-
-    /**
-     * Called when the dialog's cancel button is clicked, or otherwise closed.
-     */
-    public abstract void cancelled();
 
     /**
      * Initialises the components.
@@ -137,50 +137,45 @@ public abstract class StandardInputDialog extends StandardDialog {
      */
     private void addListeners() {
         getOkButton().addActionListener(new ActionListener() {
-            /** {@inheritDoc} */
             @Override
             public void actionPerformed(final ActionEvent e) {
-                if (save()) {
+                if (listener.save(getText())) {
                     dispose();
                 }
             }
         });
         getCancelButton().addActionListener(new ActionListener() {
-            /** {@inheritDoc} */
+
             @Override
             public void actionPerformed(final ActionEvent e) {
-                cancelled();
+                listener.cancelled();
                 dispose();
             }
         });
         addWindowListener(new WindowAdapter() {
-            /** {@inheritDoc} */
+
             @Override
             public void windowOpened(final WindowEvent e) {
                 textField.requestFocusInWindow();
             }
 
-            /** {@inheritDoc} */
             @Override
             public void windowClosed(final WindowEvent e) {
-                cancelled();
-                //dispose();
+                listener.cancelled();
             }
         });
         textField.getDocument().addDocumentListener(new DocumentListener() {
-            /** {@inheritDoc} */
+
             @Override
             public void insertUpdate(final DocumentEvent e) {
                 validateText();
             }
 
-            /** {@inheritDoc} */
             @Override
             public void removeUpdate(final DocumentEvent e) {
                 validateText();
             }
 
-            /** {@inheritDoc} */
             @Override
             public void changedUpdate(final DocumentEvent e) {
                 //Ignore
@@ -188,7 +183,6 @@ public abstract class StandardInputDialog extends StandardDialog {
         });
     }
 
-    /** {@inheritDoc} */
     @Override
     public boolean enterPressed() {
         executeAction(getOkButton());

@@ -28,10 +28,12 @@ import com.dmdirc.ServerState;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
-import com.dmdirc.addons.ui_swing.dialogs.ChannelJoinDialogFactory;
+import com.dmdirc.addons.ui_swing.dialogs.InputDialogCloseListener;
+import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialogFactory;
 import com.dmdirc.addons.ui_swing.dialogs.channellist.ChannelListDialog;
 import com.dmdirc.addons.ui_swing.dialogs.channelsetting.ChannelSettingsDialog;
 import com.dmdirc.addons.ui_swing.injection.KeyedDialogProvider;
+import com.dmdirc.parser.common.ChannelJoinRequest;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -47,15 +49,14 @@ import javax.swing.event.MenuListener;
  * A menu to provide channel related commands in the menu bar.
  */
 @Singleton
-public class ChannelMenu extends JMenu implements ActionListener,
-        MenuListener {
+public class ChannelMenu extends JMenu implements ActionListener, MenuListener {
 
     /** A version number for this class. */
     private static final long serialVersionUID = 1;
     /** Dialog provider. */
     private final KeyedDialogProvider<Channel, ChannelSettingsDialog> dialogProvider;
-    /** Channel join dialog factory. */
-    private final ChannelJoinDialogFactory channelJoinDialogFactory;
+    /** Input dialog factory. */
+    private final StandardInputDialogFactory inputDialogFactory;
     /** Swing controller. */
     private final SwingController controller;
     /** Main frame. */
@@ -68,22 +69,22 @@ public class ChannelMenu extends JMenu implements ActionListener,
     /**
      * Creates a new channel menu.
      *
-     * @param controller               Parent swing controller.
-     * @param mainFrame                Parent mainframe
-     * @param dialogProvider           Channel settings dialog provider
-     * @param channelJoinDialogFactory Channel join dialog factory
+     * @param controller         Parent swing controller.
+     * @param mainFrame          Parent mainframe
+     * @param dialogProvider     Channel settings dialog provider
+     * @param inputDialogFactory Input dialog factory
      */
     @Inject
     public ChannelMenu(
             final SwingController controller,
             final MainFrame mainFrame,
             final KeyedDialogProvider<Channel, ChannelSettingsDialog> dialogProvider,
-            final ChannelJoinDialogFactory channelJoinDialogFactory) {
+            final StandardInputDialogFactory inputDialogFactory) {
         super("Channel");
         this.controller = controller;
         this.mainFrame = mainFrame;
         this.dialogProvider = dialogProvider;
-        this.channelJoinDialogFactory = channelJoinDialogFactory;
+        this.inputDialogFactory = inputDialogFactory;
         setMnemonic('c');
         addMenuListener(this);
         initChannelMenu();
@@ -120,8 +121,8 @@ public class ChannelMenu extends JMenu implements ActionListener,
     public void actionPerformed(final ActionEvent e) {
         switch (e.getActionCommand()) {
             case "JoinChannel":
-                channelJoinDialogFactory.getChannelJoinDialog("Join channel",
-                        "Enter the name of the channel to join.").displayOrRequestFocus();
+                inputDialogFactory.getStandardInputDialog(mainFrame, "Join channel",
+                        "Enter the name of the channel to join.", new ChannelJoinDialogListener());
                 break;
             case "ChannelSettings":
                 final FrameContainer activeWindow = mainFrame.getActiveFrame().getContainer();
@@ -158,6 +159,22 @@ public class ChannelMenu extends JMenu implements ActionListener,
     @Override
     public final void menuCanceled(final MenuEvent e) {
         //Ignore
+    }
+
+    private class ChannelJoinDialogListener implements InputDialogCloseListener {
+
+        @Override
+        public boolean save(final String text) {
+            mainFrame.getActiveFrame().getContainer().getConnection().join(new ChannelJoinRequest(
+                    text));
+            return true;
+        }
+
+        @Override
+        public void cancelled() {
+            //Ignore
+        }
+
     }
 
 }
