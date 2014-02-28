@@ -28,10 +28,11 @@ import com.dmdirc.ServerState;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
-import com.dmdirc.addons.ui_swing.dialogs.ChannelJoinDialog;
+import com.dmdirc.addons.ui_swing.dialogs.ChannelJoinDialogFactory;
 import com.dmdirc.addons.ui_swing.dialogs.channellist.ChannelListDialog;
+import com.dmdirc.addons.ui_swing.dialogs.channelsetting.ChannelSettingsDialog;
+import com.dmdirc.addons.ui_swing.injection.KeyedDialogProvider;
 
-import java.awt.Dialog.ModalityType;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -49,12 +50,12 @@ import javax.swing.event.MenuListener;
 public class ChannelMenu extends JMenu implements ActionListener,
         MenuListener {
 
-    /**
-     * A version number for this class. It should be changed whenever the class structure is changed
-     * (or anything else that would prevent serialized objects being unserialized with the new
-     * class).
-     */
+    /** A version number for this class. */
     private static final long serialVersionUID = 1;
+    /** Dialog provider. */
+    private final KeyedDialogProvider<Channel, ChannelSettingsDialog> dialogProvider;
+    /** Channel join dialog factory. */
+    private final ChannelJoinDialogFactory channelJoinDialogFactory;
     /** Swing controller. */
     private final SwingController controller;
     /** Main frame. */
@@ -67,16 +68,22 @@ public class ChannelMenu extends JMenu implements ActionListener,
     /**
      * Creates a new channel menu.
      *
-     * @param controller Parent swing controller.
-     * @param mainFrame  Parent mainframe
+     * @param controller               Parent swing controller.
+     * @param mainFrame                Parent mainframe
+     * @param dialogProvider           Channel settings dialog provider
+     * @param channelJoinDialogFactory Channel join dialog factory
      */
     @Inject
     public ChannelMenu(
             final SwingController controller,
-            final MainFrame mainFrame) {
+            final MainFrame mainFrame,
+            final KeyedDialogProvider<Channel, ChannelSettingsDialog> dialogProvider,
+            final ChannelJoinDialogFactory channelJoinDialogFactory) {
         super("Channel");
         this.controller = controller;
         this.mainFrame = mainFrame;
+        this.dialogProvider = dialogProvider;
+        this.channelJoinDialogFactory = channelJoinDialogFactory;
         setMnemonic('c');
         addMenuListener(this);
         initChannelMenu();
@@ -109,19 +116,17 @@ public class ChannelMenu extends JMenu implements ActionListener,
         add(list);
     }
 
-    /** {@inheritDoc} */
     @Override
     public void actionPerformed(final ActionEvent e) {
         switch (e.getActionCommand()) {
             case "JoinChannel":
-                new ChannelJoinDialog(controller.getMainFrame(),
-                        ModalityType.MODELESS, controller.getIconManager(), "Join channel",
-                        "Enter the name of the channel to join.").display();
+                channelJoinDialogFactory.getChannelJoinDialog("Join channel",
+                        "Enter the name of the channel to join.").displayOrRequestFocus();
                 break;
             case "ChannelSettings":
                 final FrameContainer activeWindow = mainFrame.getActiveFrame().getContainer();
                 if (activeWindow instanceof Channel) {
-                    controller.showChannelSettingsDialog(((Channel) activeWindow));
+                    dialogProvider.displayOrRequestFocus(((Channel) activeWindow));
                 }
                 break;
             case "ListChannels":
@@ -130,7 +135,6 @@ public class ChannelMenu extends JMenu implements ActionListener,
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public final void menuSelected(final MenuEvent e) {
         final TextFrame activeFrame = mainFrame.getActiveFrame();
@@ -146,13 +150,11 @@ public class ChannelMenu extends JMenu implements ActionListener,
         list.setEnabled(connected);
     }
 
-    /** {@inheritDoc} */
     @Override
     public final void menuDeselected(final MenuEvent e) {
         //Ignore
     }
 
-    /** {@inheritDoc} */
     @Override
     public final void menuCanceled(final MenuEvent e) {
         //Ignore
