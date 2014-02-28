@@ -111,6 +111,7 @@ public class ActionsManagerDialog extends StandardDialog implements
     /**
      * Creates a new instance of ActionsManagerDialog.
      *
+     * @param apple             Apple instance
      * @param parentWindow      Parent window
      * @param controller        Parent controller
      * @param config            Config to save dialog state to
@@ -120,6 +121,7 @@ public class ActionsManagerDialog extends StandardDialog implements
      */
     @Inject
     public ActionsManagerDialog(
+            final Apple apple,
             final MainFrame parentWindow,
             final SwingController controller,
             @UserConfig final ConfigProvider config,
@@ -127,7 +129,7 @@ public class ActionsManagerDialog extends StandardDialog implements
             @GlobalConfig final IconManager iconManager,
             final ActionsGroupPanelFactory groupPanelFactory) {
         super(Apple.isAppleUI()
-                ? new AppleJFrame(parentWindow, controller)
+                ? new AppleJFrame(apple, parentWindow, controller)
                 : parentWindow, ModalityType.MODELESS);
         this.config = config;
         this.compFactory = compFactory;
