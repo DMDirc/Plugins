@@ -156,11 +156,6 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     }
 
     @Deprecated
-    public Apple getApple() {
-        return apple;
-    }
-
-    @Deprecated
     public ColourManager getColourManager() {
         return colourManager;
     }

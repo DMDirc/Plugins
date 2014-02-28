@@ -27,6 +27,7 @@ import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.ClientModule.UserConfig;
 import com.dmdirc.ServerManager;
 import com.dmdirc.actions.ActionManager;
+import com.dmdirc.addons.ui_swing.Apple;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.QuitWorker;
 import com.dmdirc.addons.ui_swing.SwingController;
@@ -69,6 +70,7 @@ import dagger.Provides;
         addsTo = ClientModule.class,
         includes = DialogModule.class,
         injects = {
+            Apple.class,
             SwingManager.class,
             PopInCommand.class,
             PopOutCommand.class,
@@ -119,6 +121,7 @@ public class SwingModule {
     /**
      * Gets the main DMDirc window.
      *
+     * @param apple               Apple instance
      * @param swingController     The controller that will own the frame.
      * @param windowFactory       The window factory to use to create and listen for windows.
      * @param lifecycleController The controller to use to quit the application.
@@ -132,6 +135,7 @@ public class SwingModule {
     @Provides
     @Singleton
     public MainFrame getMainFrame(
+            final Apple apple,
             final SwingController swingController,
             final SwingWindowFactory windowFactory,
             final LifecycleController lifecycleController,
@@ -144,7 +148,8 @@ public class SwingModule {
             @Override
             public MainFrame call() {
                 return new MainFrame(
-                        swingController,
+                        apple,
+                        controller,
                         windowFactory,
                         lifecycleController,
                         globalConfig,
