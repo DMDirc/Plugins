@@ -23,14 +23,15 @@
 package com.dmdirc.addons.systray;
 
 import com.dmdirc.ClientModule.GlobalConfig;
-import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.addons.ui_swing.MainFrame;
-import com.dmdirc.interfaces.ActionController;
-import com.dmdirc.interfaces.actions.ActionType;
+import com.dmdirc.events.ClientMinimisedEvent;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.messages.Styliser;
+
+import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
 
 import java.awt.AWTException;
 import java.awt.Frame;
@@ -45,8 +46,7 @@ import java.awt.event.MouseListener;
 
 import javax.inject.Inject;
 
-public class SystrayManager implements ActionListener, MouseListener,
-        com.dmdirc.interfaces.ActionListener {
+public class SystrayManager implements ActionListener, MouseListener {
 
     /** Main frame instance. */
     private final MainFrame mainFrame;
@@ -56,21 +56,23 @@ public class SystrayManager implements ActionListener, MouseListener,
     private final AggregateConfigProvider globalConfig;
     /** Icon manager to get images from. */
     private final IconManager iconManager;
-    /** Action Controller. */
-    private final ActionController actionController;
+    /** The event bus to listen to events on. */
+    private final EventBus eventBus;
     /** The tray icon we're currently using. */
     private TrayIcon icon;
 
     @Inject
-    public SystrayManager(@GlobalConfig final AggregateConfigProvider globalConfig,
+    public SystrayManager(
+            @GlobalConfig final AggregateConfigProvider globalConfig,
             @PluginDomain(SystrayPlugin.class) final String domain,
-            final MainFrame mainFrame, final ActionController actionController,
-            @GlobalConfig final IconManager iconManager) {
+            final MainFrame mainFrame,
+            @GlobalConfig final IconManager iconManager,
+            final EventBus eventBus) {
         this.globalConfig = globalConfig;
         this.domain = domain;
         this.mainFrame = mainFrame;
         this.iconManager = iconManager;
-        this.actionController = actionController;
+        this.eventBus = eventBus;
     }
 
     public void load() {
@@ -90,7 +92,7 @@ public class SystrayManager implements ActionListener, MouseListener,
 
         try {
             SystemTray.getSystemTray().add(icon);
-            actionController.registerListener(this, CoreActionType.CLIENT_MINIMISED);
+            eventBus.register(this);
         } catch (AWTException ex) {
             throw new IllegalStateException("Unable to load plugin", ex);
         }
@@ -98,7 +100,7 @@ public class SystrayManager implements ActionListener, MouseListener,
 
     public void unload() {
         SystemTray.getSystemTray().remove(icon);
-        actionController.unregisterListener(this);
+        eventBus.unregister(this);
         icon = null;
     }
 
@@ -149,11 +151,9 @@ public class SystrayManager implements ActionListener, MouseListener,
         }
     }
 
-    @Override
-    public void processEvent(final ActionType type, final StringBuffer format,
-            final Object... arguments) {
-        if (type == CoreActionType.CLIENT_MINIMISED
-                && globalConfig.getOptionBool(domain, "autominimise")) {
+    @Subscribe
+    public void handleClientMinimised(final ClientMinimisedEvent event) {
+        if (globalConfig.getOptionBool(domain, "autominimise")) {
             mainFrame.setVisible(false);
         }
     }
