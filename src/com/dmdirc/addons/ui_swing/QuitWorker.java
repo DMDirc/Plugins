@@ -23,11 +23,12 @@
 package com.dmdirc.addons.ui_swing;
 
 import com.dmdirc.ServerManager;
-import com.dmdirc.actions.ActionManager;
-import com.dmdirc.actions.CoreActionType;
+import com.dmdirc.events.ClientClosingEvent;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.config.IdentityController;
+
+import com.google.common.eventbus.EventBus;
 
 import javax.inject.Inject;
 import javax.swing.SwingWorker;
@@ -45,6 +46,8 @@ public class QuitWorker extends SwingWorker<Void, Void> {
     private final ServerManager serverManager;
     /** The main frame to interact with. */
     private final MainFrame mainFrame;
+    /** Bus to despatch events on. */
+    private final EventBus eventBus;
 
     /**
      * Creates a new {@link QuitWorker}.
@@ -52,23 +55,25 @@ public class QuitWorker extends SwingWorker<Void, Void> {
      * @param identityController The identity controller to use to read/write settings.
      * @param serverManager      The server manager to use to disconnect all servers.
      * @param mainFrame          The main frame to interact with.
+     * @param eventBus           Bus to despatch events on.
      */
     @Inject
     public QuitWorker(
             final IdentityController identityController,
             final ServerManager serverManager,
-            final MainFrame mainFrame) {
+            final MainFrame mainFrame,
+            final EventBus eventBus) {
         this.globalIdentity = identityController.getUserSettings();
         this.globalConfig = identityController.getGlobalConfiguration();
         this.serverManager = serverManager;
         this.mainFrame = mainFrame;
+        this.eventBus = eventBus;
     }
 
     /** {@inheritDoc} */
     @Override
     protected Void doInBackground() {
-        ActionManager.getActionManager().triggerEvent(
-                CoreActionType.CLIENT_CLOSING, null);
+        eventBus.post(new ClientClosingEvent());
         serverManager.closeAll(globalConfig.getOption("general", "closemessage"));
         globalIdentity.setOption("ui", "frameManagerSize",
                 String.valueOf(mainFrame.getFrameManagerSize()));

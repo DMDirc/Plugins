@@ -25,8 +25,6 @@ package com.dmdirc.addons.ui_swing.components.frames;
 import com.dmdirc.Channel;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.ServerState;
-import com.dmdirc.actions.ActionManager;
-import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.NickList;
@@ -34,11 +32,15 @@ import com.dmdirc.addons.ui_swing.components.SplitPane;
 import com.dmdirc.addons.ui_swing.components.TopicBar;
 import com.dmdirc.addons.ui_swing.components.TopicBarFactory;
 import com.dmdirc.commandparser.PopupType;
-import com.dmdirc.interfaces.actions.ActionType;
+import com.dmdirc.events.ClientClosingEvent;
+import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.config.IdentityFactory;
 import com.dmdirc.util.annotations.factory.Factory;
 import com.dmdirc.util.annotations.factory.Unbound;
+
+import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
 
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -54,8 +56,7 @@ import net.miginfocom.swing.MigLayout;
  * The channel frame is the GUI component that represents a channel to the user.
  */
 @Factory(inject = true, singleton = true, providers = true)
-public final class ChannelFrame extends InputTextFrame implements ActionListener,
-        com.dmdirc.interfaces.ActionListener {
+public final class ChannelFrame extends InputTextFrame implements ActionListener {
 
     /**
      * A version number for this class. It should be changed whenever the class structure is changed
@@ -75,6 +76,10 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
     private TopicBar topicBar;
     /** UI controller. */
     private final SwingController controller;
+    /** Event bus to despatch events on. */
+    private final EventBus eventBus;
+    /** Config to read settings from. */
+    private final AggregateConfigProvider globalConfig;
 
     /**
      * Creates a new instance of ChannelFrame. Sets up callbacks and handlers, and default options
@@ -91,16 +96,16 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
             final TopicBarFactory topicBarFactory,
             @Unbound final Channel owner) {
         super(deps, owner);
-        this.controller = getController();
+
+        this.controller = deps.controller;
+        this.eventBus = deps.eventBus;
+        this.globalConfig = deps.globalConfig;
 
         initComponents(topicBarFactory);
 
-        controller.getGlobalConfig().addChangeListener("ui",
-                "channelSplitPanePosition", this);
-        controller.getGlobalConfig().addChangeListener(
-                controller.getDomain(), "shownicklist", this);
-        ActionManager.getActionManager().registerListener(this,
-                CoreActionType.CLIENT_CLOSING);
+        globalConfig.addChangeListener("ui", "channelSplitPanePosition", this);
+        globalConfig.addChangeListener(controller.getDomain(), "shownicklist", this);
+        eventBus.register(this);
 
         identity = identityFactory.createChannelConfig(owner.getConnection().getNetwork(),
                 owner.getChannelInfo().getName());
@@ -137,8 +142,7 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
         settingsMI = new JMenuItem("Settings");
         settingsMI.addActionListener(this);
 
-        splitPane = new SplitPane(controller.getGlobalConfig(),
-                SplitPane.Orientation.HORIZONTAL);
+        splitPane = new SplitPane(globalConfig, SplitPane.Orientation.HORIZONTAL);
 
         setLayout(new MigLayout("fill, ins 0, hidemode 3, wrap 1"));
 
@@ -148,8 +152,8 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
         add(inputPanel, "growx");
 
         splitPane.setLeftComponent(getTextPane());
-        if (getContainer().getConfigManager().getOptionBool(getController()
-                .getDomain(), "shownicklist")) {
+        if (getContainer().getConfigManager().getOptionBool(
+                controller.getDomain(), "shownicklist")) {
             splitPane.setRightComponent(nicklist);
         } else {
             splitPane.setRightComponent(null);
@@ -166,7 +170,7 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
     @Override
     public void actionPerformed(final ActionEvent actionEvent) {
         if (actionEvent.getSource() == settingsMI) {
-            getController().showChannelSettingsDialog((Channel) getContainer());
+            controller.showChannelSettingsDialog((Channel) getContainer());
         }
     }
 
@@ -179,7 +183,6 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
         return splitPane;
     }
 
-    /** {@inheritDoc} */
     @Override
     public void configChanged(final String domain, final String key) {
         super.configChanged(domain, key);
@@ -199,8 +202,8 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
             });
         }
         if ("shownicklist".equals(key)) {
-            if (getContainer().getConfigManager().getOptionBool(getController()
-                    .getDomain(), "shownicklist")) {
+            if (getContainer().getConfigManager()
+                    .getOptionBool(controller.getDomain(), "shownicklist")) {
                 splitPane.setRightComponent(nicklist);
             } else {
                 splitPane.setRightComponent(null);
@@ -208,10 +211,8 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
         }
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void processEvent(final ActionType type, final StringBuffer format,
-            final Object... arguments) {
+    @Subscribe
+    public void handleClientClosing(final ClientClosingEvent event) {
         saveSplitPanePosition();
     }
 
@@ -279,8 +280,8 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
     /** {@inheritDoc} */
     @Override
     public void dispose() {
-        ActionManager.getActionManager().unregisterListener(this);
-        controller.getGlobalConfig().removeListener(this);
+        eventBus.unregister(this);
+        globalConfig.removeListener(this);
         super.dispose();
     }
 

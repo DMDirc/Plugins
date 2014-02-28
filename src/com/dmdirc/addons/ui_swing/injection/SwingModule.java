@@ -55,6 +55,8 @@ import com.dmdirc.ui.core.components.StatusBarManager;
 import com.dmdirc.ui.core.util.URLHandler;
 import com.dmdirc.util.URLBuilder;
 
+import com.google.common.eventbus.EventBus;
+
 import java.util.concurrent.Callable;
 
 import javax.inject.Provider;
@@ -84,53 +86,22 @@ public class SwingModule {
     /** The domain for plugin settings. */
     private final String domain;
 
-    /**
-     * Creates a new instance of {@link SwingModule}.
-     *
-     * @param controller The controller to return. This should be removed when SwingController is
-     *                   separated from the plugin implementation.
-     * @param domain     The domain for plugin settings.
-     */
     public SwingModule(final SwingController controller, final String domain) {
         this.controller = controller;
         this.domain = domain;
     }
 
-    /**
-     * Provides the domain that the swing settings should be stored under.
-     *
-     * @return The settings domain for the swing plugin.
-     */
     @Provides
     @PluginDomain(SwingController.class)
     public String getSettingsDomain() {
         return domain;
     }
 
-    /**
-     * Gets the swing controller to use.
-     *
-     * @return The swing controller.
-     */
     @Provides
     public SwingController getController() {
         return controller;
     }
 
-    /**
-     * Gets the main DMDirc window.
-     *
-     * @param apple               Apple instance
-     * @param swingController     The controller that will own the frame.
-     * @param windowFactory       The window factory to use to create and listen for windows.
-     * @param lifecycleController The controller to use to quit the application.
-     * @param globalConfig        The config to read settings from.
-     * @param quitWorker          The worker to use when quitting the application.
-     * @param urlBuilder          The URL builder to use to find icons.
-     * @param windowManager       The core window manager to use to find windows.
-     *
-     * @return The main window.
-     */
     @Provides
     @Singleton
     public MainFrame getMainFrame(
@@ -141,7 +112,8 @@ public class SwingModule {
             @GlobalConfig final AggregateConfigProvider globalConfig,
             final Provider<QuitWorker> quitWorker,
             final URLBuilder urlBuilder,
-            final WindowManager windowManager) {
+            final WindowManager windowManager,
+            final EventBus eventBus) {
         return UIUtilities.invokeAndWait(new Callable<MainFrame>() {
             /** {@inheritDoc} */
             @Override
@@ -154,21 +126,12 @@ public class SwingModule {
                         globalConfig,
                         quitWorker,
                         new IconManager(globalConfig, urlBuilder),
-                        windowManager);
+                        windowManager,
+                        eventBus);
             }
         });
     }
 
-    /**
-     * Provides an URL handler for use in the swing UI.
-     *
-     * @param swingController  The controller that will own the handler.
-     * @param globalConfig     The global configuration to read settings from.
-     * @param serverManager    The server manager to use to connect to servers.
-     * @param statusBarManager The status bar manager to add messages to.
-     *
-     * @return The URL handler to use.
-     */
     @Provides
     @Singleton
     public URLHandler getURLHandler(
