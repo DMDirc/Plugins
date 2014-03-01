@@ -22,11 +22,12 @@
 
 package com.dmdirc.addons.ui_swing;
 
-import com.dmdirc.actions.ActionManager;
-import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.addons.ui_swing.actions.CopyAction;
 import com.dmdirc.addons.ui_swing.actions.CutAction;
 import com.dmdirc.addons.ui_swing.actions.PasteAction;
+import com.dmdirc.events.ClientKeyPressedEvent;
+
+import com.google.common.eventbus.EventBus;
 
 import java.awt.AWTEvent;
 import java.awt.Component;
@@ -53,20 +54,17 @@ public class DMDircEventQueue extends EventQueue {
 
     /** Swing Controller. */
     private final SwingController controller;
+    /** Event bus to despatch events to. */
+    private final EventBus eventBus;
 
-    /**
-     * Instantiates the DMDircEventQueue.
-     *
-     * @param controller Swing controller
-     */
     @Inject
-    public DMDircEventQueue(final SwingController controller) {
+    public DMDircEventQueue(final SwingController controller, final EventBus eventBus) {
         super();
 
         this.controller = controller;
+        this.eventBus = eventBus;
     }
 
-    /** {@inheritDoc} */
     @Override
     protected void dispatchEvent(final AWTEvent event) {
         preDispatchEvent(event);
@@ -105,9 +103,8 @@ public class DMDircEventQueue extends EventQueue {
      * @param ke Key event
      */
     private void handleKeyEvent(final KeyEvent ke) {
-        ActionManager.getActionManager().triggerEvent(
-                CoreActionType.CLIENT_KEY_PRESSED, null,
-                KeyStroke.getKeyStroke(ke.getKeyChar(), ke.getModifiers()));
+        eventBus.post(new ClientKeyPressedEvent(
+                KeyStroke.getKeyStroke(ke.getKeyChar(), ke.getModifiers())));
     }
 
     /**
@@ -154,7 +151,6 @@ public class DMDircEventQueue extends EventQueue {
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public void pop() { //NOPMD
         super.pop();
