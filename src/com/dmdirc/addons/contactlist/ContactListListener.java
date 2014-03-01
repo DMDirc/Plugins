@@ -25,32 +25,40 @@ package com.dmdirc.addons.contactlist;
 import com.dmdirc.Channel;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.Query;
-import com.dmdirc.actions.ActionManager;
-import com.dmdirc.actions.CoreActionType;
-import com.dmdirc.interfaces.ActionListener;
+import com.dmdirc.events.ChannelUserAwayEvent;
+import com.dmdirc.events.ChannelUserBackEvent;
 import com.dmdirc.interfaces.FrameCloseListener;
 import com.dmdirc.interfaces.NicklistListener;
-import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.parser.interfaces.ChannelClientInfo;
 
+import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
+
 import java.util.Collection;
+
+import javax.inject.Inject;
 
 /**
  * Listens for contact list related events.
  */
-public class ContactListListener implements NicklistListener,
-        ActionListener, FrameCloseListener {
+public class ContactListListener implements NicklistListener, FrameCloseListener {
 
     /** The channel this listener is for. */
     private final Channel channel;
+    /** Event bus to register listeners with. */
+    private final EventBus eventBus;
 
     /**
      * Creates a new ContactListListener for the specified channel.
      *
-     * @param channel The channel to show a contact list for
+     * @param channel  The channel to show a contact list for
+     * @param eventBus Event bus to listen to events with
      */
-    public ContactListListener(final Channel channel) {
+    @Inject
+    public ContactListListener(final Channel channel,
+            final EventBus eventBus) {
         this.channel = channel;
+        this.eventBus = eventBus;
     }
 
     /**
@@ -59,8 +67,7 @@ public class ContactListListener implements NicklistListener,
     public void addListeners() {
         channel.addNicklistListener(this);
         channel.addCloseListener(this);
-        ActionManager.getActionManager().registerListener(this, CoreActionType.CHANNEL_USERAWAY,
-                CoreActionType.CHANNEL_USERBACK);
+        eventBus.register(this);
     }
 
     /**
@@ -69,7 +76,7 @@ public class ContactListListener implements NicklistListener,
     public void removeListeners() {
         channel.removeNicklistListener(this);
         channel.removeCloseListener(this);
-        ActionManager.getActionManager().unregisterListener(this);
+        eventBus.unregister(this);
     }
 
     /** {@inheritDoc} */
@@ -101,16 +108,20 @@ public class ContactListListener implements NicklistListener,
         // Do nothing
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void processEvent(final ActionType type, final StringBuffer format,
-            final Object... arguments) {
-        if (arguments[0] == channel) {
-            clientAdded((ChannelClientInfo) arguments[1]);
+    @Subscribe
+    public void handleUserAway(final ChannelUserAwayEvent event) {
+        if (event.getChannel() == channel) {
+            clientAdded(event.getUser());
         }
     }
 
-    /** {@inheritDoc} */
+    @Subscribe
+    public void handleUserBack(final ChannelUserBackEvent event) {
+        if (event.getChannel() == channel) {
+            clientAdded(event.getUser());
+        }
+    }
+
     @Override
     public void windowClosing(final FrameContainer window) {
         removeListeners();
