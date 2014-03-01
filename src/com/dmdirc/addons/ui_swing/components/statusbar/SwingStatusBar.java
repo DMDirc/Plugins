@@ -42,6 +42,7 @@ import net.miginfocom.swing.MigLayout;
 
 import static com.dmdirc.addons.ui_swing.SwingPreconditions.checkOnEDT;
 
+
 /** Status bar, shows message and info on the GUI. */
 public class SwingStatusBar extends JPanel implements StatusBar {
 
