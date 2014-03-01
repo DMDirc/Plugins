@@ -42,6 +42,8 @@ import javax.swing.UIManager;
 import net.miginfocom.layout.PlatformDefaults;
 import net.miginfocom.swing.MigLayout;
 
+import static com.dmdirc.addons.ui_swing.SwingPreconditions.checkOnEDT;
+
 /** Status bar, shows message and info on the GUI. */
 @Singleton
 public class SwingStatusBar extends JPanel implements StatusBar {
@@ -79,7 +81,7 @@ public class SwingStatusBar extends JPanel implements StatusBar {
             final MainFrame mainFrame,
             final InviteLabel inviteLabel,
             final UpdaterLabel updaterLabel) {
-        super();
+        checkOnEDT();
 
         height = getFontMetrics(UIManager.getFont("Table.font")).getHeight()
                 + (int) PlatformDefaults.getUnitValueX("related").getValue()
@@ -119,7 +121,7 @@ public class SwingStatusBar extends JPanel implements StatusBar {
         if (!(component instanceof Component)) {
             Logger.appError(ErrorLevel.HIGH, "Error adding status bar component",
                     new IllegalArgumentException("Component must be an "
-                    + "instance of java.awt.component"));
+                            + "instance of java.awt.component"));
             return;
         }
         if (!Arrays.asList(getComponents()).contains(component)) {
@@ -146,7 +148,7 @@ public class SwingStatusBar extends JPanel implements StatusBar {
         if (!(component instanceof Component)) {
             Logger.appError(ErrorLevel.HIGH, "Error removing status bar "
                     + "component", new IllegalArgumentException("Component "
-                    + "must be an instance of java.awt.component"));
+                            + "must be an instance of java.awt.component"));
             return;
         }
         SwingUtilities.invokeLater(new Runnable() {
