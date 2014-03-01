@@ -34,6 +34,8 @@ import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 
+import com.google.common.eventbus.EventBus;
+
 import javax.inject.Inject;
 
 /**
@@ -45,15 +47,20 @@ public class ContactListCommand extends Command implements IntelligentCommand {
     public static final CommandInfo INFO = new BaseCommandInfo("contactlist",
             "contactlist - show a contact list for the current channel",
             CommandType.TYPE_CHANNEL);
+    /** Event bus to listen to events on. */
+    private final EventBus eventBus;
 
     /**
      * Creates a new instance of this command.
      *
      * @param controller The controller to use for command information.
+     * @param eventBus   Event bus to listen to events on
      */
     @Inject
-    public ContactListCommand(final CommandController controller) {
+    public ContactListCommand(final CommandController controller,
+            final EventBus eventBus) {
         super(controller);
+        this.eventBus = eventBus;
     }
 
     /** {@inheritDoc} */
@@ -62,7 +69,8 @@ public class ContactListCommand extends Command implements IntelligentCommand {
             final CommandArguments args, final CommandContext context) {
         final ChannelCommandContext chanContext = (ChannelCommandContext) context;
 
-        final ContactListListener listener = new ContactListListener(chanContext.getChannel());
+        final ContactListListener listener = new ContactListListener(chanContext.getChannel(),
+                eventBus);
         listener.addListeners();
         listener.clientListUpdated(chanContext.getChannel().getChannelInfo().getChannelClients());
     }
