@@ -40,6 +40,10 @@ import com.dmdirc.addons.ui_swing.commands.PopOutCommand;
 import com.dmdirc.addons.ui_swing.commands.ServerSettings;
 import com.dmdirc.addons.ui_swing.components.addonpanel.PluginPanel;
 import com.dmdirc.addons.ui_swing.components.addonpanel.ThemePanel;
+import com.dmdirc.addons.ui_swing.components.statusbar.InviteLabel;
+import com.dmdirc.addons.ui_swing.components.statusbar.MessageLabel;
+import com.dmdirc.addons.ui_swing.components.statusbar.SwingStatusBar;
+import com.dmdirc.addons.ui_swing.components.statusbar.UpdaterLabel;
 import com.dmdirc.addons.ui_swing.dialogs.prefs.URLConfigPanel;
 import com.dmdirc.addons.ui_swing.dialogs.prefs.UpdateConfigPanel;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
@@ -165,6 +169,23 @@ public class SwingModule {
      *
      * @return The URL handler to use.
      */
+    @Provides
+    @Singleton
+    public SwingStatusBar getSwingStatusBar(
+            final SwingController swingController,
+            final MainFrame mainFrame,
+            final InviteLabel inviteLabel,
+            final UpdaterLabel updaterLabel,
+            final MessageLabel messageLabel) {
+        return UIUtilities.invokeAndWait(new Callable<SwingStatusBar>() {
+            @Override
+            public SwingStatusBar call() {
+                return new SwingStatusBar(swingController, mainFrame, inviteLabel, updaterLabel,
+                        messageLabel);
+            }
+        });
+    }
+
     @Provides
     @Singleton
     public URLHandler getURLHandler(
