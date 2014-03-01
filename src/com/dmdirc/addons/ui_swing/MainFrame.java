@@ -71,6 +71,8 @@ import net.miginfocom.swing.MigLayout;
 
 import org.slf4j.LoggerFactory;
 
+import static com.dmdirc.addons.ui_swing.SwingPreconditions.checkOnEDT;
+
 /**
  * The main application frame.
  */
@@ -157,8 +159,7 @@ public class MainFrame extends JFrame implements WindowListener,
             final IconManager iconManager,
             final WindowManager windowManager,
             final EventBus eventBus) {
-        super();
-
+        checkOnEDT();
         this.apple = apple;
         this.controller = controller;
         this.windowFactory = windowFactory;
