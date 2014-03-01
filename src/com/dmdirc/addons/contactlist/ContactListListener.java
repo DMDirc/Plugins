@@ -51,14 +51,12 @@ public class ContactListListener implements NicklistListener, FrameCloseListener
     /**
      * Creates a new ContactListListener for the specified channel.
      *
-     * @param channel  The channel to show a contact list for
-     * @param eventBus Event bus to listen to events with
+     * @param channel The channel to show a contact list for
      */
     @Inject
-    public ContactListListener(final Channel channel,
-            final EventBus eventBus) {
+    public ContactListListener(final Channel channel) {
         this.channel = channel;
-        this.eventBus = eventBus;
+        this.eventBus = channel.getEventBus();
     }
 
     /**
@@ -110,16 +108,12 @@ public class ContactListListener implements NicklistListener, FrameCloseListener
 
     @Subscribe
     public void handleUserAway(final ChannelUserAwayEvent event) {
-        if (event.getChannel() == channel) {
-            clientAdded(event.getUser());
-        }
+        clientAdded(event.getUser());
     }
 
     @Subscribe
     public void handleUserBack(final ChannelUserBackEvent event) {
-        if (event.getChannel() == channel) {
-            clientAdded(event.getUser());
-        }
+        clientAdded(event.getUser());
     }
 
     @Override
