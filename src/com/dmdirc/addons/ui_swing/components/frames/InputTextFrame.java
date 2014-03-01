@@ -23,7 +23,7 @@
 package com.dmdirc.addons.ui_swing.components.frames;
 
 import com.dmdirc.WritableFrameContainer;
-import com.dmdirc.addons.ui_swing.SwingController;
+import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.actions.CopyAction;
 import com.dmdirc.addons.ui_swing.actions.CutAction;
@@ -33,11 +33,12 @@ import com.dmdirc.addons.ui_swing.components.AwayLabel;
 import com.dmdirc.addons.ui_swing.components.TypingLabel;
 import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputField;
 import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputHandler;
-import com.dmdirc.addons.ui_swing.dialogs.paste.PasteDialog;
+import com.dmdirc.addons.ui_swing.dialogs.paste.PasteDialogFactory;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.ui.InputWindow;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
+import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.input.InputHandler;
 import com.dmdirc.ui.messages.ColourManager;
 
@@ -51,6 +52,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.IOException;
 
+import javax.inject.Provider;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.KeyStroke;
@@ -65,8 +67,6 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
 
     /** Serial version UID. */
     private static final long serialVersionUID = 3;
-    /** Swing controller. */
-    private final SwingController controller;
     /** Config provider for this frame. */
     private final AggregateConfigProvider config;
     /** Colour manager for this frame. */
@@ -85,6 +85,12 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
     private AwayLabel awayLabel;
     /** Typing indicator label. */
     private TypingLabel typingLabel;
+    /** Main frame. */
+    private final Provider<MainFrame> mainFrame;
+    /** Plugin Manager. */
+    private final PluginManager pluginManager;
+    /** Paste dialog factory. */
+    private final PasteDialogFactory pasteDialogFactory;
 
     /**
      * Creates a new instance of InputFrame.
@@ -97,9 +103,11 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
             final WritableFrameContainer owner) {
         super(owner, deps);
 
-        this.controller = getController();
         this.config = owner.getConfigManager();
         this.colourManager = new ColourManager(config);
+        this.mainFrame = deps.mainFrame;
+        this.pluginManager = deps.pluginManager;
+        this.pasteDialogFactory = deps.pasteDialog;
 
         initComponents();
 
@@ -107,19 +115,19 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
             //GTK users appear to dislike choice, ignore them if they want some.
             getInputField().setBackground(UIUtilities.convertColour(
                     colourManager.getColourFromString(
-                    config.getOptionString(
-                    "ui", "inputbackgroundcolour",
-                    "ui", "backgroundcolour"), null)));
+                            config.getOptionString(
+                                    "ui", "inputbackgroundcolour",
+                                    "ui", "backgroundcolour"), null)));
             getInputField().setForeground(UIUtilities.convertColour(
                     colourManager.getColourFromString(
-                    config.getOptionString(
-                    "ui", "inputforegroundcolour",
-                    "ui", "foregroundcolour"), null)));
+                            config.getOptionString(
+                                    "ui", "inputforegroundcolour",
+                                    "ui", "foregroundcolour"), null)));
             getInputField().setCaretColor(UIUtilities.convertColour(
                     colourManager.getColourFromString(
-                    config.getOptionString(
-                    "ui", "inputforegroundcolour",
-                    "ui", "foregroundcolour"), null)));
+                            config.getOptionString(
+                                    "ui", "inputforegroundcolour",
+                                    "ui", "foregroundcolour"), null)));
         }
 
         config.addChangeListener("ui", "inputforegroundcolour", this);
@@ -132,16 +140,16 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
                 | KeyEvent.SHIFT_DOWN_MASK), "textpaneCopy");
         getInputField().getTextField().getActionMap().put("textpaneCopy",
                 new InputFieldCopyAction(getTextPane(),
-                getInputField().getTextField()));
+                        getInputField().getTextField()));
     }
 
     /**
      * Initialises the components for this frame.
      */
     private void initComponents() {
-        inputField = new SwingInputField(this, getController().getMainFrame());
-        inputHandler = new SwingInputHandler(controller.getPluginManager(),
-                inputField, getContainer().getCommandParser(), getContainer());
+        inputField = new SwingInputField(this, mainFrame.get());
+        inputHandler = new SwingInputHandler(pluginManager, inputField,
+                getContainer().getCommandParser(), getContainer());
         inputHandler.addValidationListener(inputField);
         inputHandler.setTabCompleter(((WritableFrameContainer) frameParent).
                 getTabCompleter());
@@ -331,7 +339,7 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
         //- selection + clipboard)
         final String text = inputFieldText.substring(0, getInputField().
                 getSelectionStart()) + clipboard + inputFieldText.substring(
-                getInputField().getSelectionEnd());
+                        getInputField().getSelectionEnd());
         final String[] clipboardLines = getSplitLine(text);
         //check theres something to paste
         if (clipboardLines.length > 1) {
@@ -343,8 +351,8 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
             if (pasteTrigger != null && getContainer().getNumLines(text)
                     > pasteTrigger) {
                 //show the multi line paste dialog
-                new PasteDialog(controller, this, text, getController()
-                        .getMainFrame()).display();
+                pasteDialogFactory.getPasteDialog(this, text, mainFrame.get()).
+                        displayOrRequestFocus();
             } else {
                 //send the lines
                 for (final String clipboardLine : clipboardLines) {
@@ -380,22 +388,22 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
                 case "backgroundcolour":
                     getInputField().setBackground(UIUtilities.convertColour(
                             colourManager.getColourFromString(
-                            config.getOptionString(
-                            "ui", "inputbackgroundcolour",
-                            "ui", "backgroundcolour"), null)));
+                                    config.getOptionString(
+                                            "ui", "inputbackgroundcolour",
+                                            "ui", "backgroundcolour"), null)));
                     break;
                 case "inputforegroundcolour":
                 case "foregroundcolour":
                     getInputField().setForeground(UIUtilities.convertColour(
                             colourManager.getColourFromString(
-                            config.getOptionString(
-                            "ui", "inputforegroundcolour",
-                            "ui", "foregroundcolour"), null)));
+                                    config.getOptionString(
+                                            "ui", "inputforegroundcolour",
+                                            "ui", "foregroundcolour"), null)));
                     getInputField().setCaretColor(UIUtilities.convertColour(
                             colourManager.getColourFromString(
-                            config.getOptionString(
-                            "ui", "inputforegroundcolour",
-                            "ui", "foregroundcolour"), null)));
+                                    config.getOptionString(
+                                            "ui", "inputforegroundcolour",
+                                            "ui", "foregroundcolour"), null)));
                     break;
             }
         }

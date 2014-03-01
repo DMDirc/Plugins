@@ -36,6 +36,7 @@ import com.dmdirc.addons.ui_swing.actions.InputFieldCopyAction;
 import com.dmdirc.addons.ui_swing.actions.NicknameCopyAction;
 import com.dmdirc.addons.ui_swing.actions.SearchAction;
 import com.dmdirc.addons.ui_swing.components.SwingSearchBar;
+import com.dmdirc.addons.ui_swing.dialogs.paste.PasteDialogFactory;
 import com.dmdirc.addons.ui_swing.textpane.ClickTypeValue;
 import com.dmdirc.addons.ui_swing.textpane.MouseEventType;
 import com.dmdirc.addons.ui_swing.textpane.TextPane;
@@ -60,6 +61,7 @@ import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.interfaces.ui.InputWindow;
 import com.dmdirc.interfaces.ui.Window;
 import com.dmdirc.parser.common.ChannelJoinRequest;
+import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.core.util.URLHandler;
 import com.dmdirc.ui.messages.ColourManager;
@@ -616,6 +618,8 @@ public abstract class TextFrame extends JPanel implements Window,
         final CommandController commandController;
         final EventBus eventBus;
         final AggregateConfigProvider globalConfig;
+        final PasteDialogFactory pasteDialog;
+        final PluginManager pluginManager;
 
         @Inject
         public TextFrameDependencies(
@@ -626,6 +630,8 @@ public abstract class TextFrame extends JPanel implements Window,
                 final URLHandler urlHandler,
                 final CommandController commandController,
                 final EventBus eventBus,
+                final PasteDialogFactory pasteDialog,
+                final PluginManager pluginManager,
                 @GlobalConfig final AggregateConfigProvider globalConfig) {
             this.textPaneFactory = textPaneFactory;
             this.controller = controller;
@@ -635,6 +641,8 @@ public abstract class TextFrame extends JPanel implements Window,
             this.commandController = commandController;
             this.eventBus = eventBus;
             this.globalConfig = globalConfig;
+            this.pasteDialog = pasteDialog;
+            this.pluginManager = pluginManager;
         }
 
     }

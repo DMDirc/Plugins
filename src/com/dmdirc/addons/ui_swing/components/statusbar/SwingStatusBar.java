@@ -42,7 +42,6 @@ import javax.swing.UIManager;
 import net.miginfocom.layout.PlatformDefaults;
 import net.miginfocom.swing.MigLayout;
 
-import static com.dmdirc.addons.ui_swing.SwingPreconditions.checkOnEDT;
 
 /** Status bar, shows message and info on the GUI. */
 @Singleton
@@ -83,7 +82,6 @@ public class SwingStatusBar extends JPanel implements StatusBar {
             final InviteLabel inviteLabel,
             final UpdaterLabel updaterLabel,
             final MessageLabel messageLabel) {
-        checkOnEDT();
 
         height = getFontMetrics(UIManager.getFont("Table.font")).getHeight()
                 + (int) PlatformDefaults.getUnitValueX("related").getValue()
