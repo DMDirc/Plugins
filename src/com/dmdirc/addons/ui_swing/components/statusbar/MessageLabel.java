@@ -22,12 +22,14 @@
 
 package com.dmdirc.addons.ui_swing.components.statusbar;
 
-import com.dmdirc.addons.ui_swing.SwingController;
+import com.dmdirc.ClientModule.GlobalConfig;
+import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.UIUtilities;
+import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.ui.StatusBarComponent;
+import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.StatusMessage;
 
-import java.awt.Window;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.Date;
@@ -36,6 +38,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import javax.inject.Inject;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
@@ -65,25 +68,28 @@ public class MessageLabel extends JPanel implements StatusBarComponent,
     private StatusMessage currentMessage;
     /** Timer to clear the message. */
     private transient TimerTask messageTimer;
-    /** Swing controller. */
-    private final SwingController controller;
+    /** Icon manager to retrieve icons from. */
+    private final IconManager iconManager;
 
     /**
      * Instantiates a new message label.
      *
-     * @param controller   Swing controller
+     * @param iconManager  Icon manager to retrieve icons from
+     * @param config       Config to read settings from
      * @param parentWindow Parent window
      */
-    public MessageLabel(final SwingController controller,
-            final Window parentWindow) {
+    @Inject
+    public MessageLabel(
+            @GlobalConfig final AggregateConfigProvider config,
+            @GlobalConfig final IconManager iconManager,
+            final MainFrame parentWindow) {
         super(new MigLayout("fill, ins 0, gap 0  0"));
-        this.controller = controller;
+        this.iconManager = iconManager;
         queue = new ConcurrentLinkedQueue<>();
-        defaultMessage = new StatusMessage(null, "Ready.", null, -1,
-                controller.getGlobalConfig());
+        defaultMessage = new StatusMessage(null, "Ready.", null, -1, config);
         currentMessage = defaultMessage;
         label = new JLabel();
-        historyLabel = new MessagePopup(this, parentWindow, controller);
+        historyLabel = new MessagePopup(this, parentWindow, iconManager);
         label.setText("Ready.");
         label.setBorder(new SidelessEtchedBorder(
                 SidelessEtchedBorder.Side.RIGHT));
@@ -120,8 +126,7 @@ public class MessageLabel extends JPanel implements StatusBarComponent,
                 if (currentMessage.getIconType() == null) {
                     label.setIcon(null);
                 } else {
-                    label.setIcon(controller.getIconManager().getIcon(
-                            currentMessage.getIconType()));
+                    label.setIcon(iconManager.getIcon(currentMessage.getIconType()));
                 }
                 label.setText(UIUtilities.clipStringifNeeded(MessageLabel.this,
                         currentMessage.getMessage(), getWidth()));
@@ -135,7 +140,7 @@ public class MessageLabel extends JPanel implements StatusBarComponent,
                     messageTimer = new MessageTimerTask(MessageLabel.this);
                     new Timer("SwingStatusBar messageTimer").schedule(
                             messageTimer, new Date(System.currentTimeMillis()
-                            + 250 + currentMessage.getTimeout() * 1000L));
+                                    + 250 + currentMessage.getTimeout() * 1000L));
                 }
             }
         });
