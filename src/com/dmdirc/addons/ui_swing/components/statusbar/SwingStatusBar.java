@@ -72,22 +72,22 @@ public class SwingStatusBar extends JPanel implements StatusBar {
      * @param mainFrame    Main frame
      * @param inviteLabel  The invite label to add to the status bar.
      * @param updaterLabel The updater label to add to the status bar.
+     * @param messageLabel The message label to add to the status bar.
      */
     @Inject
     public SwingStatusBar(
             final SwingController controller,
             final MainFrame mainFrame,
             final InviteLabel inviteLabel,
-            final UpdaterLabel updaterLabel) {
-        super();
-
+            final UpdaterLabel updaterLabel,
+            final MessageLabel messageLabel) {
         height = getFontMetrics(UIManager.getFont("Table.font")).getHeight()
                 + (int) PlatformDefaults.getUnitValueX("related").getValue()
                 + (int) PlatformDefaults.getUnitValueX("related").getValue();
         componentConstraints = "sgy components, hmax " + height + ", hmin " + height
                 + ", wmin 20, shrink 0";
 
-        messageLabel = new MessageLabel(controller, mainFrame);
+        this.messageLabel = messageLabel;
         errorPanel = new ErrorPanel(controller, mainFrame, this);
         this.updateLabel = updaterLabel;
         this.inviteLabel = inviteLabel;

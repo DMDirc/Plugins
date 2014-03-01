@@ -22,7 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.components.statusbar;
 
-import com.dmdirc.addons.ui_swing.SwingController;
+import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.StatusMessage;
 import com.dmdirc.util.collections.RollingList;
 
@@ -55,24 +55,24 @@ class MessagePopup extends StatusbarTogglePanel<JLabel> {
     private final RollingList<StatusMessage> messages;
     /** Parent panel. */
     private final JPanel parent;
-    /** Swing controller. */
-    private final SwingController controller;
+    /** Icon manager to retrieve icons from. */
+    private final IconManager iconManager;
 
     /**
      * Creates a new message history popup.
      *
      * @param parent       Parent to size against
      * @param parentWindow Parent window
-     * @param controller   Swing controller
+     * @param iconManager  Icon manager to retrieve icons from
      */
     public MessagePopup(final JPanel parent, final Window parentWindow,
-            final SwingController controller) {
+            final IconManager iconManager) {
         super(new JLabel("^"),
                 new SidelessEtchedBorder(SidelessEtchedBorder.Side.LEFT),
                 new SidelessEtchedBorder(SidelessEtchedBorder.Side.TOP));
         this.parentWindow = parentWindow;
         this.parent = parent;
-        this.controller = controller;
+        this.iconManager = iconManager;
         messages = new RollingList<>(5);
     }
 
@@ -167,9 +167,8 @@ class MessagePopup extends StatusbarTogglePanel<JLabel> {
 
             for (final StatusMessage message : messages.getList()) {
                 panel.add(new JLabel(message.getMessage(), message.getIconType()
-                        == null ? null : controller.getIconManager()
-                        .getIcon(message.getIconType()), SwingConstants.LEFT),
-                        "grow, push, wrap");
+                        == null ? null : iconManager.getIcon(message.getIconType()),
+                        SwingConstants.LEFT), "grow, push, wrap");
             }
         }
 
