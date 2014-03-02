@@ -532,12 +532,6 @@ public abstract class TextFrame extends JPanel implements Window,
         getTextPane().close();
     }
 
-    @Override
-    @Deprecated
-    public SwingController getController() {
-        return controller;
-    }
-
     /**
      * Returns the IconManager for this frame.
      *
