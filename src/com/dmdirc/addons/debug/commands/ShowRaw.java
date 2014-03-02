@@ -51,13 +51,11 @@ public class ShowRaw extends DebugCommand {
         return "showraw";
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getUsage() {
         return " - Adds a raw window to the current server or parent server";
     }
 
-    /** {@inheritDoc} */
     @Override
     public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {

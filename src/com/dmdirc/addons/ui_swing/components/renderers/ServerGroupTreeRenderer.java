@@ -72,7 +72,6 @@ public class ServerGroupTreeRenderer extends DefaultTreeCellRenderer {
         return null;
     }
 
-    /** {@inheritDoc} */
     @Override
     public Color getBackground() {
         return null;

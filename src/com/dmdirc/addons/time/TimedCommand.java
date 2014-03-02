@@ -31,7 +31,6 @@ import com.dmdirc.interfaces.CommandController;
 import java.util.Timer;
 import java.util.TimerTask;
 
-
 /**
  * Timed command represents a command that has been scheduled by the user.
  */

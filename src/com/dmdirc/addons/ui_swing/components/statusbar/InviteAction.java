@@ -64,7 +64,6 @@ class InviteAction extends AbstractAction {
         invite.accept();
     }
 
-    /** {@inheritDoc} */
     @Override
     public String toString() {
         return invite.getChannel() + "(" + Arrays.toString(invite.getSource())

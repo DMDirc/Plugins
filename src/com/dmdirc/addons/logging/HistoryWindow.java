@@ -58,7 +58,6 @@ public class HistoryWindow extends FrameContainer {
         addLine(reader.getLinesAsString(Math.min(frameBufferSize, numLines)), false);
     }
 
-    /** {@inheritDoc} */
     @Override
     public Connection getConnection() {
         return getParent() == null ? null : getParent().getConnection();

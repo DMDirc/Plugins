@@ -87,8 +87,8 @@ public class SubstitutionLabel extends JButton implements MouseListener,
 
         setBorder(
                 BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(Color.GRAY),
-                BorderFactory.createEmptyBorder(1, 1, 1, 1)));
+                        BorderFactory.createLineBorder(Color.GRAY),
+                        BorderFactory.createEmptyBorder(1, 1, 1, 1)));
         setContentAreaFilled(false);
         setMargin(new Insets(0, 0, 0, 0));
     }
@@ -150,12 +150,11 @@ public class SubstitutionLabel extends JButton implements MouseListener,
         //Ignore
     }
 
-    /** {@inheritDoc} */
     @Override
     public void dragGestureRecognized(final DragGestureEvent dge) {
         dragSource.startDrag(dge, Cursor.getPredefinedCursor(
                 Cursor.HAND_CURSOR), new StringTransferable(substitution
-                .toString()), null);
+                        .toString()), null);
     }
 
     /**

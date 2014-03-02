@@ -29,49 +29,49 @@ public enum OsdPolicy {
 
     /** Spawn new windows below old ones. */
     DOWN("Place new windows below old ones", true) {
-        /** {@inheritDoc} */
-        @Override
-        public int getYPosition(final OsdManager osdManager, final int startY) {
-            int y = startY;
-            for (OsdWindow window : osdManager.getWindowList()) {
-                if (window.isVisible()) {
-                    y = Math.max(y, window.getY() + window.getHeight() + WINDOW_GAP);
+
+                @Override
+                public int getYPosition(final OsdManager osdManager, final int startY) {
+                    int y = startY;
+                    for (OsdWindow window : osdManager.getWindowList()) {
+                        if (window.isVisible()) {
+                            y = Math.max(y, window.getY() + window.getHeight() + WINDOW_GAP);
+                        }
+                    }
+                    return y;
                 }
-            }
-            return y;
-        }
-    },
+            },
     /** Spawn new windows above old ones. */
     UP("Place new windows above old ones", true) {
-        /** {@inheritDoc} */
-        @Override
-        public int getYPosition(final OsdManager osdManager, final int startY) {
-            int y = startY;
-            for (OsdWindow window : osdManager.getWindowList()) {
-                if (window.isVisible()) {
-                    y = Math.min(y, window.getY() - window.getHeight() - WINDOW_GAP);
+
+                @Override
+                public int getYPosition(final OsdManager osdManager, final int startY) {
+                    int y = startY;
+                    for (OsdWindow window : osdManager.getWindowList()) {
+                        if (window.isVisible()) {
+                            y = Math.min(y, window.getY() - window.getHeight() - WINDOW_GAP);
+                        }
+                    }
+                    return y;
                 }
-            }
-            return y;
-        }
-    },
+            },
     /** Close old OSD windows and display the new windows. */
     CLOSE("Close existing windows", false) {
-        /** {@inheritDoc} */
-        @Override
-        public int getYPosition(final OsdManager osdManager, final int startY) {
-            osdManager.closeAll();
-            return startY;
-        }
-    },
+
+                @Override
+                public int getYPosition(final OsdManager osdManager, final int startY) {
+                    osdManager.closeAll();
+                    return startY;
+                }
+            },
     /** Place new windows on top of old windows. */
     ONTOP("Place new windows on top of existing windows", false) {
-        /** {@inheritDoc} */
-        @Override
-        public int getYPosition(final OsdManager osdManager, final int startY) {
-            return startY;
-        }
-    };
+
+                @Override
+                public int getYPosition(final OsdManager osdManager, final int startY) {
+                    return startY;
+                }
+            };
     /** The spacing between the windows. */
     private static final int WINDOW_GAP = 5;
     /** Description of policy. */

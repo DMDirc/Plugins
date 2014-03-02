@@ -96,7 +96,6 @@ public final class CreditsPanel extends JPanel implements HyperlinkListener {
         add(scrollPane, "grow, push");
     }
 
-    /** {@inheritDoc} */
     @Override
     public void hyperlinkUpdate(final HyperlinkEvent e) {
         if (e.getEventType() == EventType.ACTIVATED) {

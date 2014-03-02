@@ -52,13 +52,11 @@ public class ChannelListTableModel extends ObservableListTableModelAdapter<Group
         super(manager.getGroups());
     }
 
-    /** {@inheritDoc} */
     @Override
     public int getColumnCount() {
         return 3;
     }
 
-    /** {@inheritDoc} */
     @Override
     public Object getValueAt(final int rowIndex, final int columnIndex) {
         final GroupListEntry entry = list.get(rowIndex);
@@ -75,13 +73,11 @@ public class ChannelListTableModel extends ObservableListTableModelAdapter<Group
         return null;
     }
 
-    /** {@inheritDoc} */
     @Override
     public Class<?> getColumnClass(final int columnIndex) {
         return COLUMN_TYPES[columnIndex];
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getColumnName(final int column) {
         return COLUMN_NAMES[column];

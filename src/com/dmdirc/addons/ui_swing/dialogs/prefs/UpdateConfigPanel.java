@@ -103,7 +103,6 @@ public class UpdateConfigPanel extends JPanel implements ActionListener,
         layoutComponents();
     }
 
-    /** {@inheritDoc} */
     @Override
     public void save() {
         userConfig.setOption("updater", "enable", enable.isSelected());
@@ -180,7 +179,6 @@ public class UpdateConfigPanel extends JPanel implements ActionListener,
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public void configChanged(final String domain, final String key) {
         checkNow.setEnabled(globalConfig.getOptionBool("updater", "enable"));

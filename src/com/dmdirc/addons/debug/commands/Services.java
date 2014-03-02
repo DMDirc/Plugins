@@ -57,20 +57,17 @@ public class Services extends DebugCommand implements IntelligentCommand {
         this.serviceManager = serviceManager;
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getName() {
         return "services";
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getUsage() {
         return "[full] - Outputs available servers, optionally showing which"
                 + " are active and which are not";
     }
 
-    /** {@inheritDoc} */
     @Override
     public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
@@ -89,7 +86,6 @@ public class Services extends DebugCommand implements IntelligentCommand {
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public AdditionalTabTargets getSuggestions(final int arg,
             final IntelligentCommandContext context) {

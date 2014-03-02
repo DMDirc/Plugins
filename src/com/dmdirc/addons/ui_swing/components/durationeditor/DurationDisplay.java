@@ -72,7 +72,7 @@ public class DurationDisplay extends JPanel implements ActionListener,
      * Instantiates a new duration display.
      *
      * @param iconManager Icon manager used to change window icon
-     * @param duration Starting duration
+     * @param duration    Starting duration
      */
     public DurationDisplay(final IconManager iconManager, final long duration) {
         this(null, iconManager, duration);
@@ -81,9 +81,9 @@ public class DurationDisplay extends JPanel implements ActionListener,
     /**
      * Initialises a new duration display showing the specified millisecond duration.
      *
-     * @param window   Parent window.
+     * @param window      Parent window.
      * @param iconManager Icon manager used to change window icon
-     * @param duration Duration to display in milliseconds
+     * @param duration    Duration to display in milliseconds
      *
      * @since 0.6
      */

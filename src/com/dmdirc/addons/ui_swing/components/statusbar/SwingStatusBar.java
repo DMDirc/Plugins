@@ -101,19 +101,16 @@ public class SwingStatusBar extends JPanel implements StatusBar {
         add(inviteLabel, componentConstraints);
     }
 
-    /** {@inheritDoc} */
     @Override
     public void setMessage(final StatusMessage message) {
         messageLabel.setMessage(message);
     }
 
-    /** {@inheritDoc} */
     @Override
     public void clearMessage() {
         messageLabel.clearMessage();
     }
 
-    /** {@inheritDoc} */
     @Override
     public void addComponent(final StatusBarComponent component) {
         if (!(component instanceof Component)) {
@@ -124,7 +121,7 @@ public class SwingStatusBar extends JPanel implements StatusBar {
         }
         if (!Arrays.asList(getComponents()).contains(component)) {
             SwingUtilities.invokeLater(new Runnable() {
-                /** {@inheritDoc} */
+
                 @Override
                 public void run() {
                     remove(updateLabel);
@@ -140,7 +137,6 @@ public class SwingStatusBar extends JPanel implements StatusBar {
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public void removeComponent(final StatusBarComponent component) {
         if (!(component instanceof Component)) {
@@ -150,7 +146,7 @@ public class SwingStatusBar extends JPanel implements StatusBar {
             return;
         }
         SwingUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc} */
+
             @Override
             public void run() {
                 remove((Component) component);

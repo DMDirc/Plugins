@@ -38,8 +38,8 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Provides a fake parser service which handles
- * <code>serverlist://</code> URIs, and returns a suitable parser for the corresponding server list.
+ * Provides a fake parser service which handles <code>serverlist://</code> URIs, and returns a
+ * suitable parser for the corresponding server list.
  *
  * @since 0.6.4
  */
@@ -75,31 +75,26 @@ public class ServerListServiceProvider implements ServiceProvider {
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public boolean isActive() {
         return true;
     }
 
-    /** {@inheritDoc} */
     @Override
     public void activateServices() {
         // Do nothing
     }
 
-    /** {@inheritDoc} */
     @Override
     public List<Service> getServices() {
         return services;
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getProviderName() {
         return "Serverlist service provider";
     }
 
-    /** {@inheritDoc} */
     @Override
     public ExportedService getExportedService(final String name) {
         if ("getParser".equals(name)) {

@@ -70,7 +70,6 @@ public class QuitWorker extends SwingWorker<Void, Void> {
         this.eventBus = eventBus;
     }
 
-    /** {@inheritDoc} */
     @Override
     protected Void doInBackground() {
         eventBus.post(new ClientClosingEvent());
@@ -80,7 +79,6 @@ public class QuitWorker extends SwingWorker<Void, Void> {
         return null;
     }
 
-    /** {@inheritDoc} */
     @Override
     protected void done() {
         super.done();

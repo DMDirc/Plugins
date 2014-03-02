@@ -35,9 +35,10 @@ import static com.dmdirc.addons.ui_swing.SwingPreconditions.checkOnEDT;
 /**
  * Simple provider for {@link StandardDialog} based windows.
  *
- * <p>This provider will cache instances that are created until the windows are closed. Once a
- * window has been closed, the next call to {@link #get()} or {@link #displayOrRequestFocus()} will
- * result in a new instance being created.
+ * <p>
+ * This provider will cache instances that are created until the windows are closed. Once a window
+ * has been closed, the next call to {@link #get()} or {@link #displayOrRequestFocus()} will result
+ * in a new instance being created.
  *
  * @param <T> The type of dialog that will be managed.
  */
@@ -60,11 +61,13 @@ public class DialogProvider<T extends StandardDialog> {
     /**
      * Gets an instance of the dialog provided by this class.
      *
-     * <p>If there is an existing instance that hasn't been closed, it will be returned. Otherwise a
+     * <p>
+     * If there is an existing instance that hasn't been closed, it will be returned. Otherwise a
      * new instance will be created and returned. New instances will not be automatically be
      * displayed to the user - use {@link #displayOrRequestFocus()} to do so.
      *
-     * <p>This method <em>must</em> be called on the Event Despatch Thread.
+     * <p>
+     * This method <em>must</em> be called on the Event Despatch Thread.
      *
      * @return An instance of the dialog.
      */
@@ -80,11 +83,13 @@ public class DialogProvider<T extends StandardDialog> {
     /**
      * Ensures the dialog is visible to the user.
      *
-     * <p>If no dialog currently exists, a new one will be created and displayed to the user. If a
+     * <p>
+     * If no dialog currently exists, a new one will be created and displayed to the user. If a
      * dialog existed prior to this method being invoked, it will request focus to bring it to the
      * user's attention.
      *
-     * <p>This method <em>must</em> be called on the Event Despatch Thread.
+     * <p>
+     * This method <em>must</em> be called on the Event Despatch Thread.
      */
     public void displayOrRequestFocus() {
         checkOnEDT();
@@ -94,13 +99,16 @@ public class DialogProvider<T extends StandardDialog> {
     /**
      * Ensures the dialog is visible to the user.
      *
-     * <p>The parent will only change if the dialog has not been made visible to the user.
+     * <p>
+     * The parent will only change if the dialog has not been made visible to the user.
      *
-     * <p>If no dialog currently exists, a new one will be created and displayed to the user. If a
+     * <p>
+     * If no dialog currently exists, a new one will be created and displayed to the user. If a
      * dialog existed prior to this method being invoked, it will request focus to bring it to the
      * user's attention.
      *
-     * <p>This method <em>must</em> be called on the Event Despatch Thread.
+     * <p>
+     * This method <em>must</em> be called on the Event Despatch Thread.
      *
      * @param parent Parent window for the dialog
      */

@@ -67,7 +67,7 @@ public class DCCPlugin extends BaseCommandPlugin {
 
     @Override
     public void showConfig(final PreferencesDialogModel manager) {
-                final PreferencesCategory general = new PluginPreferencesCategory(
+        final PreferencesCategory general = new PluginPreferencesCategory(
                 pluginInfo, "DCC", "", "category-dcc");
         final PreferencesCategory firewall = new PluginPreferencesCategory(
                 pluginInfo, "Firewall", "");

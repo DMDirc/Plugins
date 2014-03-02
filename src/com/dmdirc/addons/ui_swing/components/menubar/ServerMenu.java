@@ -123,7 +123,6 @@ public class ServerMenu extends JMenu implements ActionListener,
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public void actionPerformed(final ActionEvent e) {
         switch (e.getActionCommand()) {
@@ -143,7 +142,6 @@ public class ServerMenu extends JMenu implements ActionListener,
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public final void menuSelected(final MenuEvent e) {
         final TextFrame activeFrame = mainFrame.getActiveFrame();
@@ -158,13 +156,11 @@ public class ServerMenu extends JMenu implements ActionListener,
         disconnect.setEnabled(connected);
     }
 
-    /** {@inheritDoc} */
     @Override
     public void menuDeselected(final MenuEvent e) {
         // Do nothing
     }
 
-    /** {@inheritDoc} */
     @Override
     public void menuCanceled(final MenuEvent e) {
         // Do nothing

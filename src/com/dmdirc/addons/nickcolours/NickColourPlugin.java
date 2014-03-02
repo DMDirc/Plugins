@@ -91,15 +91,15 @@ public class NickColourPlugin extends BasePlugin {
         final PreferencesCategory colours = new PluginPreferencesCategory(
                 pluginInfo, "Colours",
                 "Set colours for specific nicknames.", UIUtilities.invokeAndWait(
-                new Callable<NickColourPanel>() {
-            /** {@inheritDoc} */
-            @Override
-            public NickColourPanel call() {
-                return new NickColourPanel(mainFrame, iconManager, colourManager,
-                        manager.getIdentity(), manager.getConfigManager(),
-                        pluginInfo.getDomain());
-            }
-        }));
+                        new Callable<NickColourPanel>() {
+
+                            @Override
+                            public NickColourPanel call() {
+                                return new NickColourPanel(mainFrame, iconManager, colourManager,
+                                        manager.getIdentity(), manager.getConfigManager(),
+                                        pluginInfo.getDomain());
+                            }
+                        }));
 
         general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
                 "ui", "shownickcoloursintext", "Show colours in text area",

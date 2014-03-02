@@ -149,12 +149,11 @@ public class ActionsGroupPanel extends JPanel implements ActionListener,
              */
             private static final long serialVersionUID = 1;
             /** Action type renderer. */
-            private final ActionTypeTableCellRenderer typeRenderer =
-                    new ActionTypeTableCellRenderer();
+            private final ActionTypeTableCellRenderer typeRenderer
+                    = new ActionTypeTableCellRenderer();
             /** Action response renrderer. */
             private final ArrayCellRenderer arrayRenderer = new ArrayCellRenderer();
 
-            /** {@inheritDoc} */
             @Override
             public TableCellRenderer getCellRenderer(final int row, final int column) {
                 switch (column) {
@@ -168,14 +167,13 @@ public class ActionsGroupPanel extends JPanel implements ActionListener,
             }
         };
 
-
         final TableRowSorter<ActionTableModel> sorter = new TableRowSorter<>(model);
         sorter.setComparator(1, new ActionTypeComparator());
         sorter.setComparator(2, new StringArrayComparator());
 
         table.setRowSorter(sorter);
         table.addMouseListener(new MouseAdapter() {
-            /** {@inheritDoc} */
+
             @Override
             public void mouseClicked(final MouseEvent e) {
                 if (e.getClickCount() == 2) {
@@ -248,40 +246,36 @@ public class ActionsGroupPanel extends JPanel implements ActionListener,
         } else if (e.getSource() == edit) {
             editorDialogFactory.getActionEditorDialog(parent,
                     model.getAction(table.getRowSorter().convertRowIndexToModel(
-                    table.getSelectedRow()))).display();
+                                    table.getSelectedRow()))).display();
         } else if (e.getSource() == delete) {
-            final Action action =
-                    model.getAction(
+            final Action action = model.getAction(
                     table.getRowSorter().convertRowIndexToModel(table.
-                    getSelectedRow()));
+                            getSelectedRow()));
             new StandardQuestionDialog(parent,
                     ModalityType.APPLICATION_MODAL, "Confirm deletion",
                     "Are you sure you wish to delete the action '" + action.
                     getName() + "'?") {
-                /**
-                 * A version number for this class. It should be changed whenever the class
-                 * structure is changed (or anything else that would prevent serialized objects
-                 * being unserialized with the new class).
-                 */
-                private static final long serialVersionUID = 1;
+                        /**
+                         * A version number for this class. It should be changed whenever the class
+                         * structure is changed (or anything else that would prevent serialized
+                         * objects being unserialized with the new class).
+                         */
+                        private static final long serialVersionUID = 1;
 
-                /** {@inheritDoc} */
-                @Override
-                public boolean save() {
-                    group.deleteAction(action);
-                    return true;
-                }
+                        @Override
+                        public boolean save() {
+                            group.deleteAction(action);
+                            return true;
+                        }
 
-                /** {@inheritDoc} */
-                @Override
-                public void cancelled() {
-                    //Ignore
-                }
-            }.display();
+                        @Override
+                        public void cancelled() {
+                            //Ignore
+                        }
+                    }.display();
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public void valueChanged(final ListSelectionEvent e) {
         if (e.getValueIsAdjusting()) {

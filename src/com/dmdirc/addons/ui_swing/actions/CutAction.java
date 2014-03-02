@@ -63,7 +63,6 @@ public final class CutAction extends AbstractAction {
         comp.cut();
     }
 
-    /** {@inheritDoc} */
     @Override
     public boolean isEnabled() {
         return comp.isEditable() && comp.isEnabled() && comp.getSelectedText()

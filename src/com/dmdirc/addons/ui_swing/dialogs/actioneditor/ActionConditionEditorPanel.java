@@ -120,7 +120,6 @@ public class ActionConditionEditorPanel extends JPanel implements
             /** Serial version UID. */
             private static final long serialVersionUID = 1;
 
-            /** {@inheritDoc} */
             @Override
             public void setEnabled(final boolean enabled) {
                 firePropertyChange("validationResult", target.isEnabled(),
@@ -130,8 +129,10 @@ public class ActionConditionEditorPanel extends JPanel implements
         };
 
         arguments.setRenderer(new ToStringListCellRenderer<>(arguments.getRenderer(), String.class));
-        components.setRenderer(new PropertyListCellRenderer<>(components.getRenderer(), ActionComponent.class, "name"));
-        comparisons.setRenderer(new PropertyListCellRenderer<>(comparisons.getRenderer(), ActionComparison.class, "name"));
+        components.setRenderer(new PropertyListCellRenderer<>(components.getRenderer(),
+                ActionComponent.class, "name"));
+        comparisons.setRenderer(new PropertyListCellRenderer<>(comparisons.getRenderer(),
+                ActionComparison.class, "name"));
 
         components.setEnabled(false);
         comparisons.setEnabled(false);
@@ -155,7 +156,7 @@ public class ActionConditionEditorPanel extends JPanel implements
         if (condition.getArg() != -1) {
             for (ActionComponent comp : ActionManager.getActionManager()
                     .findCompatibleComponents(trigger.getType()
-                    .getArgTypes()[condition.getArg()])) {
+                            .getArgTypes()[condition.getArg()])) {
                 ((DefaultComboBoxModel<ActionComponent>) components.getModel()).addElement(comp);
             }
         }
@@ -250,7 +251,6 @@ public class ActionConditionEditorPanel extends JPanel implements
         firePropertyChange("edit", null, null);
     }
 
-    /** {@inheritDoc} */
     @Override
     public void insertUpdate(final DocumentEvent e) {
         synchronized (condition) {
@@ -259,7 +259,6 @@ public class ActionConditionEditorPanel extends JPanel implements
         firePropertyChange("edit", null, null);
     }
 
-    /** {@inheritDoc} */
     @Override
     public void removeUpdate(final DocumentEvent e) {
         synchronized (condition) {
@@ -268,13 +267,11 @@ public class ActionConditionEditorPanel extends JPanel implements
         firePropertyChange("edit", null, null);
     }
 
-    /** {@inheritDoc} */
     @Override
     public void changedUpdate(final DocumentEvent e) {
         //Ignore
     }
 
-    /** {@inheritDoc} */
     @Override
     public void setEnabled(final boolean enabled) {
         super.setEnabled(enabled);
@@ -304,7 +301,6 @@ public class ActionConditionEditorPanel extends JPanel implements
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public void propertyChange(final PropertyChangeEvent evt) {
         firePropertyChange("validationResult", evt.getOldValue(),

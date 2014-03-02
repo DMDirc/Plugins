@@ -61,7 +61,6 @@ public class PlaceholderContainer extends FrameContainer {
         this.mainFrame = mainFrame;
     }
 
-    /** {@inheritDoc} */
     @Override
     public void close() {
         int dccs = 0;
@@ -79,40 +78,36 @@ public class PlaceholderContainer extends FrameContainer {
                     "Close confirmation",
                     "Closing this window will cause all existing DCCs "
                     + "to terminate, are you sure you want to do this?") {
-                /**
-                 * A version number for this class. It should be changed whenever the class
-                 * structure is changed (or anything else that would prevent serialized objects
-                 * being unserialized with the new class).
-                 */
-                private static final long serialVersionUID = 1;
+                        /**
+                         * A version number for this class. It should be changed whenever the class
+                         * structure is changed (or anything else that would prevent serialized
+                         * objects being unserialized with the new class).
+                         */
+                        private static final long serialVersionUID = 1;
 
-                /** {@inheritDoc} */
-                @Override
-                public boolean save() {
-                    PlaceholderContainer.super.close();
-                    plugin.removeContainer();
-                    return true;
-                }
+                        @Override
+                        public boolean save() {
+                            PlaceholderContainer.super.close();
+                            plugin.removeContainer();
+                            return true;
+                        }
 
-                /** {@inheritDoc} */
-                @Override
-                public void cancelled() {
-                    // Don't close!
-                }
-            }.display();
+                        @Override
+                        public void cancelled() {
+                            // Don't close!
+                        }
+                    }.display();
         } else {
             super.close();
             plugin.removeContainer();
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public Connection getConnection() {
         return null;
     }
 
-    /** {@inheritDoc} */
     @Override
     public void removeChild(final FrameContainer child) {
         super.removeChild(child);

@@ -202,7 +202,6 @@ public final class ErrorDetailPanel extends JPanel implements ErrorListener {
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public boolean isReady() {
         return isVisible();

@@ -123,13 +123,11 @@ public abstract class StatusbarTogglePanel<T extends JComponent> extends Statusb
         // Don't care
     }
 
-    /** {@inheritDoc} */
     @Override
     public void ancestorMoved(final HierarchyEvent e) {
         refreshDialog();
     }
 
-    /** {@inheritDoc} */
     @Override
     public void ancestorResized(final HierarchyEvent e) {
         refreshDialog();

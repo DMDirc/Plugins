@@ -143,19 +143,16 @@ public class ValidatingJTextField extends JIconTextField implements DocumentList
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public void changedUpdate(final DocumentEvent e) {
         checkError();
     }
 
-    /** {@inheritDoc} */
     @Override
     public void insertUpdate(final DocumentEvent e) {
         checkError();
     }
 
-    /** {@inheritDoc} */
     @Override
     public void removeUpdate(final DocumentEvent e) {
         checkError();

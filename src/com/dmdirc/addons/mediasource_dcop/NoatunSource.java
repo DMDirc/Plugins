@@ -44,7 +44,6 @@ public class NoatunSource implements MediaSource {
         this.myPlugin = myPlugin;
     }
 
-    /** {@inheritDoc} */
     @Override
     public MediaSourceState getState() {
         final List<String> res = myPlugin.getDcopResult("dcop noatun Noatun state");
@@ -70,13 +69,11 @@ public class NoatunSource implements MediaSource {
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getAppName() {
         return "Noatun";
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getArtist() {
         final String result = myPlugin.getDcopResult("dcop noatun Noatun title").get(0);
@@ -86,7 +83,6 @@ public class NoatunSource implements MediaSource {
         return result.substring(0, result.indexOf(" - "));
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getTitle() {
         final String result = myPlugin.getDcopResult("dcop noatun Noatun title").get(0);
@@ -96,32 +92,27 @@ public class NoatunSource implements MediaSource {
         return result.substring(result.indexOf(" - ") + 3, result.length());
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getAlbum() {
         return null;
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getLength() {
         return myPlugin.getDcopResult("dcop noatun Noatun lengthString").get(0);
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getTime() {
         return duration(Integer.parseInt(myPlugin.getDcopResult(
                 "dcop noatun Noatun position").get(0)) / 1000);
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getFormat() {
         return null;
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getBitrate() {
         return null;

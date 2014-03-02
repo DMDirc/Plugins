@@ -113,14 +113,12 @@ public class AboutDialog extends StandardDialog implements ActionListener, Chang
         dispose();
     }
 
-    /** {@inheritDoc} */
     @Override
     public boolean enterPressed() {
         executeAction(getOkButton());
         return true;
     }
 
-    /** {@inheritDoc} */
     @Override
     public void stateChanged(final ChangeEvent e) {
         history = 10 * (history % 10000) + tabbedPane.getSelectedIndex();

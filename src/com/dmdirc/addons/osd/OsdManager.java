@@ -109,17 +109,18 @@ public class OsdManager {
 
         windowList.add(UIUtilities.invokeAndWait(
                 new Callable<OsdWindow>() {
-            /** {@inheritDoc} */
-            @Override
-            public OsdWindow call() {
-                return new OsdWindow(
-                        mainFrame,
-                        identityController, OsdManager.this, colourManager,
-                        timeout, message, false,
-                        identityController.getGlobalConfiguration().getOptionInt(
-                        domain, "locationX"), policy.getYPosition(OsdManager.this, startY), domain);
-            }
-        }));
+
+                    @Override
+                    public OsdWindow call() {
+                        return new OsdWindow(
+                                mainFrame,
+                                identityController, OsdManager.this, colourManager,
+                                timeout, message, false,
+                                identityController.getGlobalConfiguration().getOptionInt(
+                                        domain, "locationX"), policy.getYPosition(OsdManager.this,
+                                        startY), domain);
+                    }
+                }));
     }
 
     /**
@@ -142,7 +143,7 @@ public class OsdManager {
         windowList.remove(window);
 
         UIUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc} */
+
             @Override
             public void run() {
                 window.dispose();

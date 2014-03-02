@@ -56,7 +56,6 @@ public final class PasteDialogFocusTraversalPolicy extends FocusTraversalPolicy 
         this.sendButton = sendButton;
     }
 
-    /** {@inheritDoc} */
     public Component getComponentAfter(final Container aContainer,
             final Component aComponent) {
         if (aComponent.equals(cancelButton)) {
@@ -70,7 +69,6 @@ public final class PasteDialogFocusTraversalPolicy extends FocusTraversalPolicy 
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public Component getComponentBefore(final Container aContainer,
             final Component aComponent) {
@@ -85,19 +83,16 @@ public final class PasteDialogFocusTraversalPolicy extends FocusTraversalPolicy 
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public Component getFirstComponent(final Container aContainer) {
         return cancelButton;
     }
 
-    /** {@inheritDoc} */
     @Override
     public Component getLastComponent(final Container aContainer) {
         return sendButton;
     }
 
-    /** {@inheritDoc} */
     @Override
     public Component getDefaultComponent(final Container aContainer) {
         return sendButton;

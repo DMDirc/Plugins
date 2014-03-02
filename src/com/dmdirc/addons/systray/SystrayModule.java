@@ -31,6 +31,7 @@ import dagger.Provides;
 
 @Module(injects = {SystrayManager.class, PopupCommand.class}, addsTo = SwingModule.class)
 public class SystrayModule {
+
     private final PluginInfo pluginInfo;
 
     public SystrayModule(final PluginInfo pluginInfo) {
@@ -42,4 +43,5 @@ public class SystrayModule {
     public String getSettingsDomain() {
         return pluginInfo.getDomain();
     }
+
 }

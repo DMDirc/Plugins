@@ -63,7 +63,7 @@ public class DesktopWindowFrame extends JFrame implements FrameInfoListener,
         initialLocation = windowWindow.getLocationOnScreen();
 
         addWindowListener(new WindowAdapter() {
-            /** {@inheritDoc} */
+
             @Override
             public void windowClosing(final WindowEvent e) {
                 windowWindow.setPopout(false);
@@ -89,11 +89,10 @@ public class DesktopWindowFrame extends JFrame implements FrameInfoListener,
         setLocation(initialLocation);
     }
 
-    /** {@inheritDoc} */
     @Override
     public void windowClosing(final FrameContainer window) {
         UIUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc} */
+
             @Override
             public void run() {
                 windowWindow.setPopout(false);
@@ -101,11 +100,10 @@ public class DesktopWindowFrame extends JFrame implements FrameInfoListener,
         });
     }
 
-    /** {@inheritDoc} */
     @Override
     public void iconChanged(final FrameContainer window, final String icon) {
         UIUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc} */
+
             @Override
             public void run() {
                 setIconImage(windowWindow.getIconManager().getImage(icon));
@@ -113,11 +111,10 @@ public class DesktopWindowFrame extends JFrame implements FrameInfoListener,
         });
     }
 
-    /** {@inheritDoc} */
     @Override
     public void titleChanged(final FrameContainer window, final String title) {
         UIUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc} */
+
             @Override
             public void run() {
                 setTitle(title);
@@ -125,7 +122,6 @@ public class DesktopWindowFrame extends JFrame implements FrameInfoListener,
         });
     }
 
-    /** {@inheritDoc} */
     @Override
     public void nameChanged(final FrameContainer window, final String name) {
         //ignore

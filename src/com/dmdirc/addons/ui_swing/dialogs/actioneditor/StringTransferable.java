@@ -60,13 +60,11 @@ public class StringTransferable implements Transferable {
         serialStringFlavor = new DataFlavor(String.class, "String");
     }
 
-    /** {@inheritDoc} */
     @Override
     public DataFlavor[] getTransferDataFlavors() {
         return new DataFlavor[]{localStringFlavor, serialStringFlavor,};
     }
 
-    /** {@inheritDoc} */
     @Override
     public boolean isDataFlavorSupported(final DataFlavor flavor) {
         return localStringFlavor.equals(flavor) || serialStringFlavor.equals(flavor);

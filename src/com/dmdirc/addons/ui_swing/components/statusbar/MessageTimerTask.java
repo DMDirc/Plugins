@@ -42,7 +42,6 @@ public class MessageTimerTask extends TimerTask {
         this.messageLabel = messageLabel;
     }
 
-    /** {@inheritDoc} */
     @Override
     public void run() {
         messageLabel.clearMessage();

@@ -235,7 +235,7 @@ public class ActionEditorDialog extends StandardDialog implements ActionListener
             substitutions.setVisible(!substitutions.isVisible());
             showSubstitutions
                     .setText(substitutions.isVisible() ? "Hide Substitutions"
-                    : "Show Substitutions");
+                            : "Show Substitutions");
             pack();
         } else if (e.getSource().equals(showAdvanced)) {
             advanced.setVisible(!advanced.isVisible());
@@ -257,7 +257,7 @@ public class ActionEditorDialog extends StandardDialog implements ActionListener
         super.validate();
 
         SwingUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc} */
+
             @Override
             public void run() {
                 centreOnOwner();

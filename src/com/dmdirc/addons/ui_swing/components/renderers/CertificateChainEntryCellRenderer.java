@@ -57,19 +57,18 @@ public class CertificateChainEntryCellRenderer extends DMDircListCellRenderer<Ce
         invalidIcon = iconManager.getIcon("cross");
     }
 
-    /** {@inheritDoc} */
     @Override
     protected void renderValue(final JLabel label, final CertificateChainEntry value,
             final int index, final boolean isSelected,
             final boolean hasFocus) {
-            label.setText(value.getName());
-            if (value.isInvalid()) {
-                label.setIcon(invalidIcon);
-            } else if (value.isTrusted()) {
-                label.setIcon(trustedIcon);
-            } else {
-                label.setIcon(icon);
-            }
+        label.setText(value.getName());
+        if (value.isInvalid()) {
+            label.setIcon(invalidIcon);
+        } else if (value.isTrusted()) {
+            label.setIcon(trustedIcon);
+        } else {
+            label.setIcon(icon);
+        }
     }
 
 }

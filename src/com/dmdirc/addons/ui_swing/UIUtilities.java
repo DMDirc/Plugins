@@ -78,8 +78,8 @@ public final class UIUtilities {
     /**
      * Windows classic LAF class name.
      */
-    private static final String WINDOWSCLASSICUI =
-            "com.sun.java.swing.plaf.windows.WindowsClassicLookAndFeel";
+    private static final String WINDOWSCLASSICUI
+            = "com.sun.java.swing.plaf.windows.WindowsClassicLookAndFeel";
 
     /** Not intended to be instantiated. */
     private UIUtilities() {
@@ -160,8 +160,8 @@ public final class UIUtilities {
                 final FontUIResource orig = (FontUIResource) value;
                 UIManager.put(key, new UIDefaults.ProxyLazyValue(
                         "javax.swing.plaf.FontUIResource", new Object[]{
-                    font.getFontName(), orig.getStyle(), orig.getSize()
-                }));
+                            font.getFontName(), orig.getStyle(), orig.getSize()
+                        }));
             }
         }
     }
@@ -400,7 +400,7 @@ public final class UIUtilities {
      */
     public static void resetScrollPane(final JScrollPane scrollPane) {
         SwingUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc} */
+
             @Override
             public void run() {
                 scrollPane.getHorizontalScrollBar().setValue(0);

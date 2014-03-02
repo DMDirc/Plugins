@@ -99,7 +99,6 @@ public class SwingRestartDialog extends StandardDialog implements ActionListener
         add(getRightButton(), "right");
     }
 
-    /** {@inheritDoc} */
     @Override
     public void validate() {
         super.validate();

@@ -59,7 +59,6 @@ public class XmppClientInfo extends BaseClientInfo {
         super(parser, nick, user, host);
     }
 
-    /** {@inheritDoc} */
     @Override
     public int getChannelCount() {
         return 0;
@@ -117,7 +116,6 @@ public class XmppClientInfo extends BaseClientInfo {
         return presence == null || presence.compareTo(Mode.away) >= 0;
     }
 
-    /** {@inheritDoc} */
     @Override
     public AwayState getAwayState() {
         return isAway() ? AwayState.AWAY : AwayState.HERE;
@@ -126,8 +124,8 @@ public class XmppClientInfo extends BaseClientInfo {
     /**
      * Gets the aggregate presence of this contact.
      *
-     * @return The highest available state of the contact's highest priority endpoints, *
-     *         or <code>null</code> if no endpoints are available.
+     * @return The highest available state of the contact's highest priority endpoints, * or
+     *         <code>null</code> if no endpoints are available.
      */
     public Mode getAggregatePresence() {
         final List<XmppEndpoint> sortedEndpoints = new ArrayList<>(endpoints.values());
@@ -171,7 +169,6 @@ public class XmppClientInfo extends BaseClientInfo {
         setRealname(entry.getName());
     }
 
-    /** {@inheritDoc} */
     @Override
     public XmppParser getParser() {
         return (XmppParser) super.getParser();

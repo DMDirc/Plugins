@@ -39,4 +39,5 @@ public class ContactListPlugin extends BaseCommandPlugin {
         setObjectGraph(graph.plus(new ContactListModule()));
         registerCommand(ContactListCommand.class, ContactListCommand.INFO);
     }
+
 }

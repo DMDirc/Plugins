@@ -181,17 +181,15 @@ public class SwingController extends BaseCommandPlugin implements UIController {
         return swingManager != null;
     }
 
-    /** {@inheritDoc} */
     @Override
     public void showFirstRunWizard() {
         swingManager.getFirstRunExecutor().showWizardAndWait();
     }
 
-    /** {@inheritDoc} */
     @Override
     public void showChannelSettingsDialog(final Channel channel) {
         UIUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc} */
+
             @Override
             public void run() {
                 swingManager.getChannelSettingsDialogProvider().displayOrRequestFocus(channel);
@@ -199,11 +197,10 @@ public class SwingController extends BaseCommandPlugin implements UIController {
         });
     }
 
-    /** {@inheritDoc} */
     @Override
     public void showServerSettingsDialog(final Server server) {
         UIUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc} */
+
             @Override
             public void run() {
                 swingManager.getServerSettingsDialogProvider().displayOrRequestFocus(server);
@@ -217,7 +214,7 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     @Deprecated
     public void closeServerSettingsDialog(final Server server) {
         UIUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc} */
+
             @Override
             public void run() {
                 swingManager.getServerSettingsDialogProvider().dispose(server);
@@ -246,14 +243,14 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     public void updateComponentTrees() {
         final int state = UIUtilities.invokeAndWait(
                 new Callable<Integer>() {
-            /** {@inheritDoc} */
-            @Override
-            public Integer call() {
-                return getMainFrame().getExtendedState();
-            }
-        });
+
+                    @Override
+                    public Integer call() {
+                        return getMainFrame().getExtendedState();
+                    }
+                });
         UIUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc} */
+
             @Override
             public void run() {
                 SwingUtilities.updateComponentTreeUI(errorDialog);
@@ -261,7 +258,7 @@ public class SwingController extends BaseCommandPlugin implements UIController {
         });
         for (final java.awt.Window window : getTopLevelWindows()) {
             UIUtilities.invokeLater(new Runnable() {
-                /** {@inheritDoc} */
+
                 @Override
                 public void run() {
                     SwingUtilities.updateComponentTreeUI(window);
@@ -272,7 +269,7 @@ public class SwingController extends BaseCommandPlugin implements UIController {
             });
         }
         UIUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc} */
+
             @Override
             public void run() {
                 getMainFrame().setExtendedState(state);
@@ -285,7 +282,7 @@ public class SwingController extends BaseCommandPlugin implements UIController {
      */
     private void initUISettings() {
         UIUtilities.invokeAndWait(new Runnable() {
-            /** {@inheritDoc} */
+
             @Override
             public void run() {
                 // This will do nothing on non OS X Systems
@@ -321,11 +318,10 @@ public class SwingController extends BaseCommandPlugin implements UIController {
         });
     }
 
-    /** {@inheritDoc} */
     @Override
     public void showURLDialog(final URI url) {
         UIUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc} */
+
             @Override
             public void run() {
                 swingManager.getUrlDialogFactory().getURLDialog(url).display();
@@ -333,11 +329,10 @@ public class SwingController extends BaseCommandPlugin implements UIController {
         });
     }
 
-    /** {@inheritDoc} */
     @Override
     public void showFeedbackNag() {
         UIUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc} */
+
             @Override
             public void run() {
                 swingManager.getFeedbackNagProvider().get();
@@ -361,7 +356,6 @@ public class SwingController extends BaseCommandPlugin implements UIController {
         return UIManager.getLookAndFeel().getName();
     }
 
-    /** {@inheritDoc} */
     @Override
     public void load(final PluginInfo pluginInfo, final ObjectGraph graph) {
         super.load(pluginInfo, graph);
@@ -380,7 +374,6 @@ public class SwingController extends BaseCommandPlugin implements UIController {
         registerCommand(PopInCommand.class, PopInCommand.INFO);
     }
 
-    /** {@inheritDoc} */
     @Override
     public void onLoad() {
         if (GraphicsEnvironment.isHeadless()) {
@@ -391,7 +384,7 @@ public class SwingController extends BaseCommandPlugin implements UIController {
         swingManager.load();
 
         UIUtilities.invokeAndWait(new Runnable() {
-            /** {@inheritDoc} */
+
             @Override
             public void run() {
                 getMainFrame().setVisible(true);
@@ -402,7 +395,6 @@ public class SwingController extends BaseCommandPlugin implements UIController {
         super.onLoad();
     }
 
-    /** {@inheritDoc} */
     @Override
     public void onUnload() {
         swingManager.unload();
@@ -415,7 +407,6 @@ public class SwingController extends BaseCommandPlugin implements UIController {
         super.onUnload();
     }
 
-    /** {@inheritDoc} */
     @Override
     public void domainUpdated() {
         addonIdentity.setOption("ui", "textPaneFontName",
@@ -424,7 +415,6 @@ public class SwingController extends BaseCommandPlugin implements UIController {
                 UIManager.getFont("TextPane.font").getSize());
     }
 
-    /** {@inheritDoc} */
     @Override
     public void showConfig(final PreferencesDialogModel manager) {
         manager.getCategory("GUI").addSubCategory(createGeneralCategory());
@@ -519,25 +509,25 @@ public class SwingController extends BaseCommandPlugin implements UIController {
                 globalConfig, globalIdentity));
         advanced.addSetting(
                 new PreferencesSetting(PreferencesType.BOOLEAN, "ui",
-                "useOneTouchExpandable", "Use one touch expandable split "
-                + "panes?", "Use one touch expandable arrows for "
-                + "collapsing/expanding the split panes",
-                globalConfig, globalIdentity));
+                        "useOneTouchExpandable", "Use one touch expandable split "
+                        + "panes?", "Use one touch expandable arrows for "
+                        + "collapsing/expanding the split panes",
+                        globalConfig, globalIdentity));
         advanced.addSetting(new PreferencesSetting(PreferencesType.INTEGER,
                 domain, "windowMenuItems", "Window menu item count",
                 "Number of items to show in the window menu",
                 globalConfig, globalIdentity));
         advanced.addSetting(
                 new PreferencesSetting(PreferencesType.INTEGER, domain,
-                "windowMenuScrollInterval", "Window menu scroll interval",
-                "Number of milliseconds to pause when autoscrolling in the "
-                + "window menu",
-                globalConfig, globalIdentity));
+                        "windowMenuScrollInterval", "Window menu scroll interval",
+                        "Number of milliseconds to pause when autoscrolling in the "
+                        + "window menu",
+                        globalConfig, globalIdentity));
         advanced.addSetting(
                 new PreferencesSetting(PreferencesType.BOOLEAN, domain,
-                "showtopicbar", "Show topic bar",
-                "Shows a graphical topic bar in channels.",
-                globalConfig, globalIdentity));
+                        "showtopicbar", "Show topic bar",
+                        "Shows a graphical topic bar in channels.",
+                        globalConfig, globalIdentity));
         advanced.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
                 domain,
                 "shownicklist", "Show nicklist?",
@@ -698,7 +688,6 @@ public class SwingController extends BaseCommandPlugin implements UIController {
         getMainFrame().getJMenuBar().addMenuItem(parentMenu, menuItem);
     }
 
-    /** {@inheritDoc} */
     @Override
     public void requestWindowFocus(final Window window) {
         if (window instanceof TextFrame) {

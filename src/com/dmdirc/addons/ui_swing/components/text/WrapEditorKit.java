@@ -57,7 +57,6 @@ public class WrapEditorKit extends StyledEditorKit implements MouseListener,
         wrap = wrapping;
     }
 
-    /** {@inheritDoc} */
     @Override
     public void install(final JEditorPane c) {
         super.install(c);
@@ -66,7 +65,6 @@ public class WrapEditorKit extends StyledEditorKit implements MouseListener,
         c.addMouseMotionListener(this);
     }
 
-    /** {@inheritDoc} */
     @Override
     public void deinstall(final JEditorPane c) {
         c.removeMouseListener(this);
@@ -75,7 +73,6 @@ public class WrapEditorKit extends StyledEditorKit implements MouseListener,
         super.deinstall(c);
     }
 
-    /** {@inheritDoc} */
     @Override
     public ViewFactory getViewFactory() {
         if (wrap) {
@@ -98,9 +95,9 @@ public class WrapEditorKit extends StyledEditorKit implements MouseListener,
         if (!editorPane.isEditable() && (characterElementAt(e).getAttributes()
                 .getAttribute(IRCTextAttribute.HYPERLINK) != null
                 || characterElementAt(e).getAttributes().getAttribute(
-                IRCTextAttribute.CHANNEL) != null
+                        IRCTextAttribute.CHANNEL) != null
                 || characterElementAt(e).getAttributes().getAttribute(
-                IRCTextAttribute.NICKNAME) != null)) {
+                        IRCTextAttribute.NICKNAME) != null)) {
             editorPane.setCursor(HAND_CURSOR);
             return;
         }

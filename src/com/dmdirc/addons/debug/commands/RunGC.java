@@ -46,19 +46,16 @@ public class RunGC extends DebugCommand {
         super(commandProvider);
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getName() {
         return "rungc";
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getUsage() {
         return " - Runs the JVM garbage collector";
     }
 
-    /** {@inheritDoc} */
     @Override
     public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {

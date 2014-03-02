@@ -190,7 +190,7 @@ public final class PrefsComponentFactory {
         option.setSelected(Boolean.parseBoolean(setting.getValue()));
         option.setOpaque(false);
         option.addChangeListener(new ChangeListener() {
-            /** {@inheritDoc} */
+
             @Override
             public void stateChanged(final ChangeEvent e) {
                 setting.setValue(String.valueOf(((JCheckBox) e.getSource())
@@ -209,7 +209,8 @@ public final class PrefsComponentFactory {
      * @return A JComponent descendent for the specified setting
      */
     private JComponent getComboOption(final PreferencesSetting setting) {
-        final JComboBox<Object> option = new JComboBox<>(setting.getComboOptions().entrySet().toArray());
+        final JComboBox<Object> option = new JComboBox<>(setting.getComboOptions().entrySet().
+                toArray());
         option.setRenderer(new MapEntryRenderer(option.getRenderer()));
         option.setEditable(false);
 
@@ -222,7 +223,7 @@ public final class PrefsComponentFactory {
         }
 
         option.addActionListener(new ActionListener() {
-            /** {@inheritDoc} */
+
             @Override
             @SuppressWarnings("unchecked")
             public void actionPerformed(final ActionEvent e) {
@@ -272,7 +273,7 @@ public final class PrefsComponentFactory {
         }
 
         option.addChangeListener(new ChangeListener() {
-            /** {@inheritDoc} */
+
             @Override
             public void stateChanged(final ChangeEvent e) {
                 setting.setValue(((JSpinner) e.getSource()).getValue().
@@ -316,16 +317,16 @@ public final class PrefsComponentFactory {
             } else {
                 option = new OptionalJSpinner(
                         new SpinnerNumberModel(Integer.parseInt(integer),
-                        ((NumericalValidator) numericalValidator).getMin(),
-                        ((NumericalValidator) numericalValidator).getMax(),
-                        1), state);
+                                ((NumericalValidator) numericalValidator).getMin(),
+                                ((NumericalValidator) numericalValidator).getMax(),
+                                1), state);
             }
         } catch (final NumberFormatException ex) {
             option = new OptionalJSpinner(new SpinnerNumberModel(), state);
         }
 
         option.addChangeListener(new ChangeListener() {
-            /** {@inheritDoc} */
+
             @Override
             public void stateChanged(final ChangeEvent e) {
                 setting.setValue(((OptionalJSpinner) e.getSource()).isSelected()
@@ -355,7 +356,7 @@ public final class PrefsComponentFactory {
         }
 
         option.addDurationListener(new DurationListener() {
-            /** {@inheritDoc} */
+
             @Override
             public void durationUpdated(final int newDuration) {
                 setting.setValue(String.valueOf(newDuration));
@@ -378,7 +379,7 @@ public final class PrefsComponentFactory {
                 iconManager, colourManager, setting.getValue(), true, true, true);
 
         option.addActionListener(new ActionListener() {
-            /** {@inheritDoc} */
+
             @Override
             public void actionPerformed(final ActionEvent e) {
                 final OptionalColourChooser chooser = ((OptionalColourChooser) e.getSource());
@@ -408,7 +409,7 @@ public final class PrefsComponentFactory {
                 iconManager, colourManager, colour, state, true, true);
 
         option.addActionListener(new ActionListener() {
-            /** {@inheritDoc} */
+
             @Override
             public void actionPerformed(final ActionEvent e) {
                 setting.setValue(((OptionalColourChooser) e.getSource())
@@ -433,7 +434,7 @@ public final class PrefsComponentFactory {
         final FontPicker option = new FontPicker(value);
 
         option.addActionListener(new ActionListener() {
-            /** {@inheritDoc} */
+
             @Override
             public void actionPerformed(final ActionEvent e) {
                 final Object value = ((FontPicker) e.getSource())
@@ -462,7 +463,7 @@ public final class PrefsComponentFactory {
         final FileBrowser option = new FileBrowser(iconManager, setting, type);
 
         option.addActionListener(new ActionListener() {
-            /** {@inheritDoc} */
+
             @Override
             public void actionPerformed(final ActionEvent e) {
                 setting.setValue(option.getPath());
@@ -470,7 +471,7 @@ public final class PrefsComponentFactory {
         });
 
         option.addKeyListener(new KeyAdapter() {
-            /** {@inheritDoc} */
+
             @Override
             public void keyReleased(final KeyEvent e) {
                 setting.setValue(((JTextField) e.getSource()).getText());

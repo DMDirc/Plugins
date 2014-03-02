@@ -53,13 +53,11 @@ public class ActiveWindowMessageSink implements MessageSink {
         this.mainFrame = mainFrame;
     }
 
-    /** {@inheritDoc} */
     @Override
     public Pattern getPattern() {
         return PATTERN;
     }
 
-    /** {@inheritDoc} */
     @Override
     public void handleMessage(final MessageSinkManager despatcher,
             final WritableFrameContainer source, final String[] patternMatches,

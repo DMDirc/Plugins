@@ -76,7 +76,6 @@ public class ServerInfoDialog extends StatusbarPopupWindow {
         this.serverManager = serverManager;
     }
 
-    /** {@inheritDoc} */
     @Override
     protected void initContent(final JPanel panel) {
         final List<Server> servers = serverManager.getServers();

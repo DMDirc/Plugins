@@ -176,7 +176,7 @@ public class LoggingManager implements ActionListener, ConfigChangeListener {
         // Close idle files every hour.
         idleFileTimer = new Timer("LoggingPlugin Timer");
         idleFileTimer.schedule(new TimerTask() {
-            /** {@inheritDoc} */
+
             @Override
             public void run() {
                 timerTask();
@@ -430,7 +430,6 @@ public class LoggingManager implements ActionListener, ConfigChangeListener {
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public void configChanged(final String domain, final String key) {
         setCachedSettings();

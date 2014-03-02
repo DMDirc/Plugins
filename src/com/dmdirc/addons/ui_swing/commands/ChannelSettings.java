@@ -65,7 +65,6 @@ public class ChannelSettings extends Command implements IntelligentCommand {
         this.controller = controller;
     }
 
-    /** {@inheritDoc} */
     @Override
     public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
@@ -73,7 +72,6 @@ public class ChannelSettings extends Command implements IntelligentCommand {
                 ((ChannelCommandContext) context).getChannel());
     }
 
-    /** {@inheritDoc} */
     @Override
     public AdditionalTabTargets getSuggestions(final int arg,
             final IntelligentCommandContext context) {

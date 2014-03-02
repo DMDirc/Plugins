@@ -108,7 +108,7 @@ public final class SwingPreferencesDialog extends StandardDialog implements
         initComponents();
 
         worker = new LoggingSwingWorker<PreferencesDialogModel, Void>() {
-            /** {@inheritDoc} */
+
             @Override
             protected PreferencesDialogModel doInBackground() {
                 mainPanel.setWaiting(true);
@@ -123,7 +123,6 @@ public final class SwingPreferencesDialog extends StandardDialog implements
                 return prefsManager;
             }
 
-            /** {@inheritDoc} */
             @Override
             protected void done() {
                 if (!isCancelled()) {
@@ -180,8 +179,8 @@ public final class SwingPreferencesDialog extends StandardDialog implements
         getOkButton().addActionListener(this);
         getCancelButton().addActionListener(this);
 
-        final MigLayout layout =
-                new MigLayout("pack, hmin min(80sp, 700), " + "hmax min(700, 80sp)");
+        final MigLayout layout
+                = new MigLayout("pack, hmin min(80sp, 700), " + "hmax min(700, 80sp)");
         setLayout(layout);
         add(tabListScrollPane, "w 150!, growy, pushy");
         add(mainPanel, "wrap, w 480!, pushy, growy, pushy");
@@ -297,7 +296,6 @@ public final class SwingPreferencesDialog extends StandardDialog implements
         return selected;
     }
 
-    /** {@inheritDoc} */
     public void saveOptions() {
         if (manager != null && manager.save()) {
             dispose();
@@ -323,7 +321,6 @@ public final class SwingPreferencesDialog extends StandardDialog implements
         this.panelSize = panelSize;
     }
 
-    /** {@inheritDoc} */
     @Override
     public void dispose() {
         synchronized (SwingPreferencesDialog.this) {

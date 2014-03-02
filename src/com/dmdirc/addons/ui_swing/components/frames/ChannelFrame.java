@@ -195,7 +195,7 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
             final int splitPanePosition = getContainer().getConfigManager()
                     .getOptionInt("ui", "channelSplitPanePosition");
             UIUtilities.invokeLater(new Runnable() {
-                /** {@inheritDoc} */
+
                 @Override
                 public void run() {
                     nicklist.setPreferredSize(
@@ -222,7 +222,7 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
 
     private void saveSplitPanePosition() {
         UIUtilities.invokeAndWait(new Runnable() {
-            /** {@inheritDoc} */
+
             @Override
             public void run() {
                 if (getContainer().getConfigManager().getOptionInt("ui",
@@ -234,31 +234,26 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
         });
     }
 
-    /** {@inheritDoc} */
     @Override
     public PopupType getNicknamePopupType() {
         return PopupType.CHAN_NICK;
     }
 
-    /** {@inheritDoc} */
     @Override
     public PopupType getChannelPopupType() {
         return PopupType.CHAN_NORMAL;
     }
 
-    /** {@inheritDoc} */
     @Override
     public PopupType getHyperlinkPopupType() {
         return PopupType.CHAN_HYPERLINK;
     }
 
-    /** {@inheritDoc} */
     @Override
     public PopupType getNormalPopupType() {
         return PopupType.CHAN_NORMAL;
     }
 
-    /** {@inheritDoc} */
     @Override
     public void addCustomPopupItems(final JPopupMenu popupMenu) {
         if (getContainer().getConnection().getState().equals(ServerState.CONNECTED)) {
@@ -272,7 +267,6 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
         popupMenu.add(settingsMI);
     }
 
-    /** {@inheritDoc} */
     @Override
     public void windowClosing(final FrameContainer window) {
         saveSplitPanePosition();
@@ -281,7 +275,6 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
         super.windowClosing(window);
     }
 
-    /** {@inheritDoc} */
     @Override
     public void dispose() {
         eventBus.unregister(this);

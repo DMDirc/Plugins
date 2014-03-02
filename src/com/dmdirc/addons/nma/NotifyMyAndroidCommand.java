@@ -56,7 +56,7 @@ public class NotifyMyAndroidCommand extends Command {
     /**
      * Creates a new instance of this command.
      *
-     * @param controller The controller to use for command information.
+     * @param controller   The controller to use for command information.
      * @param configDomain This plugin's settings domain
      */
     @Inject
@@ -66,7 +66,6 @@ public class NotifyMyAndroidCommand extends Command {
         this.configDomain = configDomain;
     }
 
-    /** {@inheritDoc} */
     @Override
     public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {

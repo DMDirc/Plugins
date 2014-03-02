@@ -38,7 +38,6 @@ public class TitleMediaSourcePlugin extends BasePlugin implements MediaSourceMan
     /** The sources to be returned. */
     private List<MediaSource> sources = null;
 
-    /** {@inheritDoc} */
     @Override
     public void onLoad() {
         sources = new ArrayList<>(2);
@@ -50,14 +49,12 @@ public class TitleMediaSourcePlugin extends BasePlugin implements MediaSourceMan
                 + "cut -d '-' -f 2- | sed -r 's/^\\s+|\\s+$//g' | sed -r 's/-/–/g'", "Spotify"));
     }
 
-    /** {@inheritDoc} */
     @Override
     public void onUnload() {
         sources.clear();
         sources = null;
     }
 
-    /** {@inheritDoc} */
     @Override
     public List<MediaSource> getSources() {
         return sources;

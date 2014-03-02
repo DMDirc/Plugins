@@ -63,7 +63,6 @@ public class UpdaterPopup extends StatusbarPopupWindow {
         this.updateManager = updateManager;
     }
 
-    /** {@inheritDoc} */
     @Override
     protected void initContent(final JPanel panel) {
         for (UpdateComponent component : updateManager.getComponents()) {

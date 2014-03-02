@@ -69,19 +69,16 @@ public abstract class DCCFrameContainer extends WritableFrameContainer {
         this.tabCompleterFactory = tabCompleterFactory;
     }
 
-    /** {@inheritDoc} */
     @Override
     public int getMaxLineLength() {
         return 512;
     }
 
-    /** {@inheritDoc} */
     @Override
     public Connection getConnection() { //NOPMD - server will always be null
         return null;
     }
 
-    /** {@inheritDoc} */
     @Override
     public TabCompleter getTabCompleter() {
         return tabCompleterFactory.getTabCompleter(getConfigManager());
@@ -96,7 +93,6 @@ public abstract class DCCFrameContainer extends WritableFrameContainer {
         return windowClosing;
     }
 
-    /** {@inheritDoc} */
     @Override
     public void close() {
         windowClosing = true;

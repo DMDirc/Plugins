@@ -46,85 +46,71 @@ public class XmppFakeChannel extends BaseChannelInfo {
         super(parser, name);
     }
 
-    /** {@inheritDoc} */
     @Override
     public void setTopic(final String topic) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getTopic() {
         return "No topic yet!";
     }
 
-    /** {@inheritDoc} */
     @Override
     public long getTopicTime() {
         return System.currentTimeMillis(); // TODO
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getTopicSetter() {
         return ""; // TODO
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getModes() {
         return ""; // TODO
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getMode(final char mode) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    /** {@inheritDoc} */
     @Override
     public Collection<ChannelListModeItem> getListMode(final char mode) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    /** {@inheritDoc} */
     @Override
     public void part(final String reason) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    /** {@inheritDoc} */
     @Override
     public void sendWho() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    /** {@inheritDoc} */
     @Override
     public void alterMode(final boolean add, final Character mode, final String parameter) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    /** {@inheritDoc} */
     @Override
     public void flushModes() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    /** {@inheritDoc} */
     @Override
     public void requestListModes() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    /** {@inheritDoc} */
     @Override
     public ChannelClientInfo getChannelClient(final ClientInfo client) {
         return getClient(client.getNickname());
     }
 
-    /** {@inheritDoc} */
     @Override
     public ChannelClientInfo getChannelClient(final String client, final boolean create) {
         final String[] parts = getParser().parseHostmask(client);
@@ -147,7 +133,6 @@ public class XmppFakeChannel extends BaseChannelInfo {
         }
 
         // TODO: Delete old contacts, don't needlessly create new objects
-
         getParser().getCallbackManager().getCallbackType(ChannelNamesListener.class).call(this);
     }
 

@@ -38,8 +38,7 @@ public final class SwingWorkerExecutor extends ThreadPoolExecutor implements
     /** Max number of swing worker threads. */
     private static final int MAX_WORKERS = 20;
     /** Static instance. */
-    public static final SwingWorkerExecutor EXECUTOR =
-            new SwingWorkerExecutor();
+    public static final SwingWorkerExecutor EXECUTOR = new SwingWorkerExecutor();
 
     /**
      * Creates a new swing worker executor.
@@ -50,7 +49,6 @@ public final class SwingWorkerExecutor extends ThreadPoolExecutor implements
         setThreadFactory(this);
     }
 
-    /** {@inheritDoc} */
     @Override
     public Thread newThread(final Runnable r) {
         final Thread thread = Executors.defaultThreadFactory().newThread(r);

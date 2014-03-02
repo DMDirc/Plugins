@@ -98,7 +98,7 @@ public abstract class StandardQuestionDialog extends StandardDialog {
      */
     private void addListeners() {
         getOkButton().addActionListener(new ActionListener() {
-            /** {@inheritDoc} */
+
             @Override
             public void actionPerformed(final ActionEvent e) {
                 if (save()) {
@@ -108,7 +108,7 @@ public abstract class StandardQuestionDialog extends StandardDialog {
             }
         });
         getCancelButton().addActionListener(new ActionListener() {
-            /** {@inheritDoc} */
+
             @Override
             public void actionPerformed(final ActionEvent e) {
                 cancelled();
@@ -116,13 +116,12 @@ public abstract class StandardQuestionDialog extends StandardDialog {
             }
         });
         addWindowListener(new WindowAdapter() {
-            /** {@inheritDoc} */
+
             @Override
             public void windowOpened(final WindowEvent e) {
                 //Ignore
             }
 
-            /** {@inheritDoc} */
             @Override
             public void windowClosed(final WindowEvent e) {
                 if (!result) {

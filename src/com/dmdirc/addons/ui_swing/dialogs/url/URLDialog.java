@@ -128,7 +128,6 @@ public class URLDialog extends StandardDialog implements ActionListener {
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public boolean enterPressed() {
         if (panel.getSelection().isEmpty()) {
@@ -139,7 +138,6 @@ public class URLDialog extends StandardDialog implements ActionListener {
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public void validate() {
         super.validate();

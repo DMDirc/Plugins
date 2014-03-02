@@ -177,7 +177,7 @@ public class DCCManager implements ActionListener {
             final StringBuffer format, final Object... arguments) {
         // New thread to ask the question in to stop us locking the UI
         new Thread(new Runnable() {
-            /** {@inheritDoc} */
+
             @Override
             public void run() {
                 final int result = JOptionPane.showConfirmDialog(null, question,
@@ -202,7 +202,7 @@ public class DCCManager implements ActionListener {
             final Parser parser, final boolean reverse, final String token) {
         // New thread to ask the user where to save in to stop us locking the UI
         new Thread(new Runnable() {
-            /** {@inheritDoc} */
+
             @Override
             public void run() {
                 final JFileChooser jc = KFileChooser.getFileChooser(config,
@@ -342,7 +342,6 @@ public class DCCManager implements ActionListener {
         return jc.showSaveDialog(mainFrame);
     }
 
-    /** {@inheritDoc} */
     @Override
     public void processEvent(final ActionType type, final StringBuffer format,
             final Object... arguments) {

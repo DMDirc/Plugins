@@ -107,7 +107,6 @@ public class DCCCommand extends Command implements IntelligentCommand {
         this.urlBuilder = urlBuilder;
     }
 
-    /** {@inheritDoc} */
     @Override
     public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
@@ -119,9 +118,9 @@ public class DCCCommand extends Command implements IntelligentCommand {
 
             if (parser.isValidChannelName(target)
                     || parser.getStringConverter().equalsIgnoreCase(target,
-                    myNickname)) {
+                            myNickname)) {
                 new Thread(new Runnable() {
-                    /** {@inheritDoc} */
+
                     @Override
                     public void run() {
                         if (parser.getStringConverter().equalsIgnoreCase(target,
@@ -207,9 +206,9 @@ public class DCCCommand extends Command implements IntelligentCommand {
             public File call() {
                 final JFileChooser jc = givenFile.exists()
                         ? KFileChooser.getFileChooser(origin.getConfigManager(),
-                        myPlugin, givenFile)
+                                myPlugin, givenFile)
                         : KFileChooser.getFileChooser(origin.getConfigManager(),
-                        myPlugin);
+                                myPlugin);
                 final int result = showFileChooser(givenFile, target, jc);
 
                 if (result != JFileChooser.APPROVE_OPTION
@@ -223,12 +222,12 @@ public class DCCCommand extends Command implements IntelligentCommand {
             return;
         }
         new Thread(new Runnable() {
-            /** {@inheritDoc} */
+
             @Override
             public void run() {
                 final DCCTransfer send = new DCCTransfer(origin
                         .getConfigManager().getOptionInt(myPlugin.getDomain(),
-                        "send.blocksize"));
+                                "send.blocksize"));
                 send.setTurbo(origin.getConfigManager().getOptionBool(
                         myPlugin.getDomain(), "send.forceturbo"));
                 send.setType(DCCTransfer.TransferType.SEND);
@@ -326,7 +325,6 @@ public class DCCCommand extends Command implements IntelligentCommand {
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public AdditionalTabTargets getSuggestions(final int arg,
             final IntelligentCommandContext context) {

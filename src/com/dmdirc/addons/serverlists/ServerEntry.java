@@ -66,13 +66,11 @@ public class ServerEntry extends ServerGroupItemBase {
         this.group = group;
     }
 
-    /** {@inheritDoc} */
     @Override
     public ServerGroup getGroup() {
         return group;
     }
 
-    /** {@inheritDoc} */
     @Override
     protected ServerGroup getParent() {
         return getGroup();
@@ -98,13 +96,11 @@ public class ServerEntry extends ServerGroupItemBase {
         this.address = address;
     }
 
-    /** {@inheritDoc} */
     @Override
     public void connect() {
         serverManager.connectToAddress(address, getProfileIdentity());
     }
 
-    /** {@inheritDoc} */
     @Override
     public String toString() {
         return "[" + getName() + ": address: " + getAddress() + "]";

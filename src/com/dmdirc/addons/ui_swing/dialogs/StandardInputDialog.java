@@ -74,7 +74,7 @@ public abstract class StandardInputDialog extends StandardDialog {
             final Window owner, final ModalityType modal, final IconManager iconManager,
             final String title, final String message) {
         this(owner, modal, iconManager, title, message, new Validator<String>() {
-            /** {@inheritDoc} */
+
             @Override
             public ValidationResponse validate(final String object) {
                 return new ValidationResponse();
@@ -137,7 +137,7 @@ public abstract class StandardInputDialog extends StandardDialog {
      */
     private void addListeners() {
         getOkButton().addActionListener(new ActionListener() {
-            /** {@inheritDoc} */
+
             @Override
             public void actionPerformed(final ActionEvent e) {
                 if (save()) {
@@ -146,7 +146,7 @@ public abstract class StandardInputDialog extends StandardDialog {
             }
         });
         getCancelButton().addActionListener(new ActionListener() {
-            /** {@inheritDoc} */
+
             @Override
             public void actionPerformed(final ActionEvent e) {
                 cancelled();
@@ -154,13 +154,12 @@ public abstract class StandardInputDialog extends StandardDialog {
             }
         });
         addWindowListener(new WindowAdapter() {
-            /** {@inheritDoc} */
+
             @Override
             public void windowOpened(final WindowEvent e) {
                 textField.requestFocusInWindow();
             }
 
-            /** {@inheritDoc} */
             @Override
             public void windowClosed(final WindowEvent e) {
                 cancelled();
@@ -168,19 +167,17 @@ public abstract class StandardInputDialog extends StandardDialog {
             }
         });
         textField.getDocument().addDocumentListener(new DocumentListener() {
-            /** {@inheritDoc} */
+
             @Override
             public void insertUpdate(final DocumentEvent e) {
                 validateText();
             }
 
-            /** {@inheritDoc} */
             @Override
             public void removeUpdate(final DocumentEvent e) {
                 validateText();
             }
 
-            /** {@inheritDoc} */
             @Override
             public void changedUpdate(final DocumentEvent e) {
                 //Ignore
@@ -188,7 +185,6 @@ public abstract class StandardInputDialog extends StandardDialog {
         });
     }
 
-    /** {@inheritDoc} */
     @Override
     public boolean enterPressed() {
         executeAction(getOkButton());

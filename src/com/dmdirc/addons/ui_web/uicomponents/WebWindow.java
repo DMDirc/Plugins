@@ -78,7 +78,7 @@ public class WebWindow implements Window, IRCDocumentListener,
         } else {
             handler.addEvent(new Event("newchildwindow",
                     new Object[]{controller.getWindowManager().getWindow(
-                parent.getParent()), this}));
+                                parent.getParent()), this}));
         }
     }
 
@@ -164,21 +164,21 @@ public class WebWindow implements Window, IRCDocumentListener,
                 builder.append("cursor: pointer; ");
                 link = "link_hyperlink('"
                         + StringEscapeUtils.escapeHtml(StringEscapeUtils
-                        .escapeJavaScript((String) entry.getValue()))
+                                .escapeJavaScript((String) entry.getValue()))
                         + "');";
             } else if (entry.getKey().equals(IRCTextAttribute.CHANNEL)) {
                 builder.append("cursor: pointer; ");
                 link = "link_channel('"
                         + StringEscapeUtils.escapeHtml(
-                        StringEscapeUtils.escapeJavaScript(
-                        (String) entry.getValue()))
+                                StringEscapeUtils.escapeJavaScript(
+                                        (String) entry.getValue()))
                         + "');";
             } else if (entry.getKey().equals(IRCTextAttribute.NICKNAME)) {
                 builder.append("cursor: pointer; ");
                 link = "link_query('"
                         + StringEscapeUtils.escapeHtml(
-                        StringEscapeUtils.escapeJavaScript(
-                        (String) entry.getValue()))
+                                StringEscapeUtils.escapeJavaScript(
+                                        (String) entry.getValue()))
                         + "');";
             }
         }
@@ -201,7 +201,6 @@ public class WebWindow implements Window, IRCDocumentListener,
                 + colour.getBlue() + ")";
     }
 
-    /** {@inheritDoc} */
     @Override
     public void linesAdded(final int line, final int length, final int size) {
         for (int i = 0; i < length; i++) {
@@ -210,43 +209,36 @@ public class WebWindow implements Window, IRCDocumentListener,
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public void trimmed(final int newSize, final int numTrimmed) {
         //TODO FIXME
     }
 
-    /** {@inheritDoc} */
     @Override
     public void cleared() {
         //TODO FIXME
     }
 
-    /** {@inheritDoc} */
     @Override
     public void repaintNeeded() {
         //TODO FIXME
     }
 
-    /** {@inheritDoc} */
     @Override
     public void iconChanged(final FrameContainer window, final String icon) {
         //TODO FIXME
     }
 
-    /** {@inheritDoc} */
     @Override
     public void nameChanged(final FrameContainer window, final String name) {
         //TODO FIXME
     }
 
-    /** {@inheritDoc} */
     @Override
     public void titleChanged(final FrameContainer window, final String title) {
         //TODO FIXME
     }
 
-    /** {@inheritDoc} */
     @Override
     public void windowClosing(final FrameContainer window) {
         handler.addEvent(new Event("closewindow", id));

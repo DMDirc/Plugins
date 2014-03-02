@@ -181,51 +181,47 @@ public final class IgnoreListPanel extends JPanel implements ActionListener, Lis
             new StandardInputDialog(parentWindow,
                     ModalityType.MODELESS, iconManager, "New ignore list entry",
                     "Please enter the new ignore list entry", validatorBuilder.build()) {
-                /** A version number for this class. */
-                private static final long serialVersionUID = 2;
+                        /** A version number for this class. */
+                        private static final long serialVersionUID = 2;
 
-                /** {@inheritDoc} */
-                @Override
-                public boolean save() {
-                    if (viewToggle.isSelected()) {
-                        cachedIgnoreList.add(getText());
-                    } else {
-                        cachedIgnoreList.addSimple(getText());
-                    }
+                        @Override
+                        public boolean save() {
+                            if (viewToggle.isSelected()) {
+                                cachedIgnoreList.add(getText());
+                            } else {
+                                cachedIgnoreList.addSimple(getText());
+                            }
 
-                    updateList();
-                    return true;
-                }
+                            updateList();
+                            return true;
+                        }
 
-                /** {@inheritDoc} */
-                @Override
-                public void cancelled() {
-                    //Ignore
-                }
-            }.display();
+                        @Override
+                        public void cancelled() {
+                            //Ignore
+                        }
+                    }.display();
         } else if (e.getSource() == delButton && list.getSelectedIndex() != -1) {
             new StandardQuestionDialog(parentWindow,
                     ModalityType.APPLICATION_MODAL,
                     "Confirm deletion",
                     "Are you sure you want to delete this item?") {
-                /** A version number for this class. */
-                private static final long serialVersionUID = 1;
+                        /** A version number for this class. */
+                        private static final long serialVersionUID = 1;
 
-                /** {@inheritDoc} */
-                @Override
-                public boolean save() {
-                    cachedIgnoreList.remove(list.getSelectedIndex());
+                        @Override
+                        public boolean save() {
+                            cachedIgnoreList.remove(list.getSelectedIndex());
 
-                    updateList();
-                    return true;
-                }
+                            updateList();
+                            return true;
+                        }
 
-                /** {@inheritDoc} */
-                @Override
-                public void cancelled() {
-                    //Ignore
-                }
-            }.display();
+                        @Override
+                        public void cancelled() {
+                            //Ignore
+                        }
+                    }.display();
         } else if (e.getSource() == viewToggle) {
             listModel.setIsSimple(!viewToggle.isSelected());
         }

@@ -109,19 +109,16 @@ public class PackingTable extends JTable {
         super.setDragEnabled(false);
     }
 
-    /** {@inheritDoc} */
     @Override
     public void setAutoResizeMode(final int mode) {
         //Ignore
     }
 
-    /** {@inheritDoc} */
     @Override
     public final boolean getScrollableTracksViewportHeight() {
         return getPreferredSize().height < getParent().getHeight();
     }
 
-    /** {@inheritDoc} */
     @Override
     public final void paint(final Graphics g) {
         packColumns();
@@ -185,7 +182,7 @@ public class PackingTable extends JTable {
         final TableColumn column = getColumnModel().getColumn(col);
         int width = (int) getTableHeader().getDefaultRenderer().
                 getTableCellRendererComponent(this, column.getIdentifier(),
-                false, false, -1, col).getPreferredSize().getWidth();
+                        false, false, -1, col).getPreferredSize().getWidth();
 
         if (getRowCount() == 0) {
             return width + padding;
@@ -195,7 +192,7 @@ public class PackingTable extends JTable {
             if (getCellRenderer(row, col) != null) {
                 width = Math.max(width, (int) getCellRenderer(row, col).
                         getTableCellRendererComponent(this, getValueAt(row,
-                        col), false, false, row, col).getPreferredSize().
+                                        col), false, false, row, col).getPreferredSize().
                         getWidth());
             }
         }

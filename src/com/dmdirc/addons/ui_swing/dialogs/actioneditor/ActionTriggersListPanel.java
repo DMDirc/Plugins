@@ -105,7 +105,7 @@ public class ActionTriggersListPanel extends JPanel {
                         "delete", iconManager.getIcon("close-inactive"),
                         iconManager.getIcon("close-active"));
                 button.addActionListener(new ActionListener() {
-                    /** {@inheritDoc} */
+
                     @Override
                     public void actionPerformed(final ActionEvent e) {
                         delTrigger(trigger);
@@ -136,7 +136,7 @@ public class ActionTriggersListPanel extends JPanel {
      */
     public void addTrigger(final ActionType trigger) {
         SwingUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc} */
+
             @Override
             public void run() {
                 synchronized (triggers) {
@@ -157,7 +157,7 @@ public class ActionTriggersListPanel extends JPanel {
      */
     public void delTrigger(final ActionType trigger) {
         SwingUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc} */
+
             @Override
             public void run() {
                 synchronized (triggers) {
@@ -250,12 +250,11 @@ public class ActionTriggersListPanel extends JPanel {
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public void setEnabled(final boolean enabled) {
         super.setEnabled(enabled);
         SwingUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc} */
+
             @Override
             public void run() {
                 layoutComponents();

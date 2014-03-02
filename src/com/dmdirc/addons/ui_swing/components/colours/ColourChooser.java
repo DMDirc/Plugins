@@ -221,7 +221,7 @@ public class ColourChooser extends JPanel implements ActionListener {
             if (localListenerList[i] == ActionListener.class) {
                 ((ActionListener) localListenerList[i + 1]).actionPerformed(
                         new ActionEvent(this,
-                        ActionEvent.ACTION_PERFORMED, command));
+                                ActionEvent.ACTION_PERFORMED, command));
             }
         }
     }

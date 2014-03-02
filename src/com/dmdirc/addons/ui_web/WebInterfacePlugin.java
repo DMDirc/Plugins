@@ -43,7 +43,6 @@ public class WebInterfacePlugin extends BasePlugin {
         setObjectGraph(graph.plus(new WebInterfaceModule(pluginInfo)));
     }
 
-    /** {@inheritDoc} */
     @Override
     public void onLoad() {
         controller = getObjectGraph().get(WebInterfaceUI.class);

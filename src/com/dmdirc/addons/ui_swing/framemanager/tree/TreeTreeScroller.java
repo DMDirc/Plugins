@@ -49,7 +49,6 @@ public class TreeTreeScroller extends TreeScroller {
         this.controller = controller;
     }
 
-    /** {@inheritDoc} */
     @Override
     protected void setPath(final TreePath path) {
         if (path == null) {
@@ -62,7 +61,7 @@ public class TreeTreeScroller extends TreeScroller {
             Logger.appError(ErrorLevel.HIGH,
                     "Unable to change focus",
                     new IllegalArgumentException(
-                    "Last component == null"));
+                            "Last component == null"));
             return;
         }
         if (((TreeViewNode) path.getLastPathComponent()).getWindow()
@@ -76,7 +75,7 @@ public class TreeTreeScroller extends TreeScroller {
 
         controller.requestWindowFocus(controller.getWindowFactory()
                 .getSwingWindow(((TreeViewNode) path.getLastPathComponent())
-                .getWindow()));
+                        .getWindow()));
     }
 
 }

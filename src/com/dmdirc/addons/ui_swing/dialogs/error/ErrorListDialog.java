@@ -218,20 +218,19 @@ public final class ErrorListDialog extends StandardDialog implements
             synchronized (selectedRow) {
                 ErrorManager.getErrorManager().deleteError(tableModel.getError(
                         table.getRowSorter().convertRowIndexToModel(
-                        table.getSelectedRow())));
+                                table.getSelectedRow())));
             }
         } else if (e.getSource() == sendButton) {
             synchronized (selectedRow) {
                 ErrorManager.getErrorManager().sendError(tableModel.getError(
                         table.getRowSorter().convertRowIndexToModel(
-                        table.getSelectedRow())));
+                                table.getSelectedRow())));
             }
         } else if (e.getSource() == deleteAllButton) {
             ErrorManager.getErrorManager().deleteAll();
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public boolean enterPressed() {
         executeAction(getOkButton());
@@ -284,14 +283,12 @@ public final class ErrorListDialog extends StandardDialog implements
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public void display() {
         super.display();
         setSize(new Dimension(600, 550));
     }
 
-    /** {@inheritDoc} */
     @Override
     public void dispose() {
         tableModel.dispose();

@@ -53,7 +53,6 @@ public class WebUserRealm implements UserRealm {
         this.domain = domain;
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getName() {
         if (identityController.getGlobalConfiguration().hasOptionString(domain, "users")) {
@@ -65,13 +64,11 @@ public class WebUserRealm implements UserRealm {
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public Principal getPrincipal(final String username) {
         return principals.get(username);
     }
 
-    /** {@inheritDoc} */
     @Override
     public Principal authenticate(final String username,
             final Object credentials, final Request request) {
@@ -96,39 +93,33 @@ public class WebUserRealm implements UserRealm {
         return null;
     }
 
-    /** {@inheritDoc} */
     @Override
     public boolean reauthenticate(final Principal user) {
         return principals.containsValue(user);
     }
 
-    /** {@inheritDoc} */
     @Override
     public boolean isUserInRole(final Principal user, final String role) {
         return true;
     }
 
-    /** {@inheritDoc} */
     @Override
     public void disassociate(final Principal user) {
         // Do nothing
     }
 
-    /** {@inheritDoc} */
     @Override
     public Principal pushRole(final Principal user, final String role) {
         // Do nothing
         return user;
     }
 
-    /** {@inheritDoc} */
     @Override
     public Principal popRole(final Principal user) {
         // Do nothing
         return user;
     }
 
-    /** {@inheritDoc} */
     @Override
     public void logout(final Principal user) {
         principals.remove(user.getName());

@@ -108,7 +108,6 @@ public class MDIBar extends JPanel implements SwingWindowListener,
         check();
     }
 
-    /** {@inheritDoc} */
     @Override
     public void setEnabled(final boolean enabled) {
         closeButton.setEnabled(enabled);
@@ -127,13 +126,11 @@ public class MDIBar extends JPanel implements SwingWindowListener,
         });
     }
 
-    /** {@inheritDoc} */
     @Override
     public void windowAdded(final TextFrame parent, final TextFrame window) {
         check();
     }
 
-    /** {@inheritDoc} */
     @Override
     public void windowDeleted(final TextFrame parent, final TextFrame window) {
         check();
@@ -154,14 +151,12 @@ public class MDIBar extends JPanel implements SwingWindowListener,
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public void configChanged(final String domain, final String key) {
         visibility = config.getOptionBool(configDomain, "mdiBarVisibility");
         check();
     }
 
-    /** {@inheritDoc} */
     @Override
     public void selectionChanged(final TextFrame window) {
         check();

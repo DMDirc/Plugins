@@ -158,12 +158,11 @@ public class ServerList implements ConfigProviderListener {
         return null;
     }
 
-    /** {@inheritDoc} */
     @Override
     public void configProviderAdded(final ConfigProvider configProvider) {
         try {
-            final ServerGroupReader reader =
-                    new ServerGroupReader(serverManager, identityController, configProvider);
+            final ServerGroupReader reader
+                    = new ServerGroupReader(serverManager, identityController, configProvider);
             addServerGroup(reader.read(), reader.getWriter());
         } catch (IllegalArgumentException ex) {
             // Silently ignore
@@ -172,7 +171,6 @@ public class ServerList implements ConfigProviderListener {
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public void configProviderRemoved(final ConfigProvider configProvider) {
         // TODO: Remove server group

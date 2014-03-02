@@ -65,7 +65,6 @@ public final class PasteAction extends AbstractAction {
         comp.paste();
     }
 
-    /** {@inheritDoc} */
     @Override
     public boolean isEnabled() {
         if (comp.isEditable() && comp.isEnabled()) {

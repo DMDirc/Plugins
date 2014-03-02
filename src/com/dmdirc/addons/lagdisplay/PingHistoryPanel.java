@@ -76,7 +76,6 @@ public class PingHistoryPanel extends JPanel {
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public void paint(final Graphics g) {
         super.paint(g);

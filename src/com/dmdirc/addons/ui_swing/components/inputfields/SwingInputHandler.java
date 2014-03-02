@@ -64,7 +64,6 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
         super(serviceManager, target, commandParser, parentWindow);
     }
 
-    /** {@inheritDoc} */
     @Override
     protected void addUpHandler() {
         JTextComponent localTarget = null;
@@ -80,7 +79,6 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
             /** Serial version UID. */
             private static final long serialVersionUID = 1;
 
-            /** {@inheritDoc} */
             @Override
             public void actionPerformed(final ActionEvent e) {
                 doBufferUp();
@@ -96,7 +94,6 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     protected void addDownHandler() {
         JTextComponent localTarget = null;
@@ -112,7 +109,6 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
             /** Serial version UID. */
             private static final long serialVersionUID = 1;
 
-            /** {@inheritDoc} */
             @Override
             public void actionPerformed(final ActionEvent e) {
                 doBufferDown();
@@ -121,16 +117,15 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
         if (Apple.isAppleUI()) {
             localTarget.getInputMap(JComponent.WHEN_FOCUSED).
                     put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0),
-                    "downArrow");
+                            "downArrow");
         } else {
             localTarget.getInputMap(
                     JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).
                     put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0),
-                    "downArrow");
+                            "downArrow");
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     protected void addTabHandler() {
         final JTextComponent localTarget;
@@ -146,11 +141,10 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
             /** Serial version UID. */
             private static final long serialVersionUID = 1;
 
-            /** {@inheritDoc} */
             @Override
             public void actionPerformed(final ActionEvent e) {
                 new LoggingSwingWorker<Object, Void>() {
-                    /** {@inheritDoc} */
+
                     @Override
                     protected Object doInBackground() {
                         localTarget.setEditable(false);
@@ -158,7 +152,6 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
                         return null;
                     }
 
-                    /** {@inheritDoc} */
                     @Override
                     protected void done() {
                         localTarget.setEditable(true);
@@ -168,37 +161,34 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
         });
         localTarget.getActionMap().put("insert-shift-tab",
                 new AbstractAction() {
-            /** Serial version UID. */
-            private static final long serialVersionUID = 1;
+                    /** Serial version UID. */
+                    private static final long serialVersionUID = 1;
 
-            /** {@inheritDoc} */
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                new LoggingSwingWorker<Object, Void>() {
-                    /** {@inheritDoc} */
                     @Override
-                    protected Object doInBackground() {
-                        localTarget.setEditable(false);
-                        doTabCompletion(true);
-                        return null;
-                    }
+                    public void actionPerformed(final ActionEvent e) {
+                        new LoggingSwingWorker<Object, Void>() {
 
-                    /** {@inheritDoc} */
-                    @Override
-                    protected void done() {
-                        localTarget.setEditable(true);
+                            @Override
+                            protected Object doInBackground() {
+                                localTarget.setEditable(false);
+                                doTabCompletion(true);
+                                return null;
+                            }
+
+                            @Override
+                            protected void done() {
+                                localTarget.setEditable(true);
+                            }
+                        }.executeInExecutor();
                     }
-                }.executeInExecutor();
-            }
-        });
+                });
         localTarget.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).
                 put(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 0), "insert-tab");
         localTarget.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).
                 put(KeyStroke.getKeyStroke(KeyEvent.VK_TAB,
-                KeyEvent.SHIFT_MASK), "insert-shift-tab");
+                                KeyEvent.SHIFT_MASK), "insert-shift-tab");
     }
 
-    /** {@inheritDoc} */
     @Override
     protected void addEnterHandler() {
         JTextComponent localTarget = null;
@@ -214,13 +204,12 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
             /** Serial version UID. */
             private static final long serialVersionUID = 1;
 
-            /** {@inheritDoc} */
             @Override
             public void actionPerformed(final ActionEvent e) {
                 final String line = target.getText();
                 target.setText("");
                 UIUtilities.invokeLater(new Runnable() {
-                    /** {@inheritDoc} */
+
                     @Override
                     public void run() {
                         final JTextField source;
@@ -232,12 +221,12 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
                         } else {
                             Logger.appError(ErrorLevel.HIGH, "Unable to send "
                                     + "line", new IllegalArgumentException(
-                                    "Event is not from known source."));
+                                            "Event is not from known source."));
                             return;
                         }
                         if (source.isEditable()) {
                             new LoggingSwingWorker<Object, Void>() {
-                                /** {@inheritDoc} */
+
                                 @Override
                                 protected Object doInBackground() {
                                     enterPressed(line);
@@ -251,10 +240,9 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
         });
         localTarget.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).
                 put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0),
-                "enterButton");
+                        "enterButton");
     }
 
-    /** {@inheritDoc} */
     @Override
     protected void addKeyHandler() {
         target.addKeyListener(this);

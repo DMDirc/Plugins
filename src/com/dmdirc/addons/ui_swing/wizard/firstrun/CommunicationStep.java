@@ -63,8 +63,7 @@ public final class CommunicationStep extends Step {
      * Initialises the components.
      */
     protected void initComponents() {
-        updatesInfo =
-                new TextLabel("DMDirc can automatically check for "
+        updatesInfo = new TextLabel("DMDirc can automatically check for "
                 + "updates for various parts of the client, you can globally "
                 + "disable that behaviour here, you can also fine tune the "
                 + "behaviour in the preferences dialog once the client is running.");
@@ -105,7 +104,6 @@ public final class CommunicationStep extends Step {
         return updates.isSelected();
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getTitle() {
         return "Communication settings";

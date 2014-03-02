@@ -74,14 +74,13 @@ public class TypingLabel extends JLabel implements ConfigChangeListener,
         container.addCloseListener(this);
     }
 
-    /** {@inheritDoc} */
     @Override
     public void configChanged(final String domain, final String key) {
         useTypingIndicator = container.getConfigManager()
                 .getOptionBool("ui", CONFIG_KEY);
         if (!useTypingIndicator) {
             UIUtilities.invokeLater(new Runnable() {
-                /** {@inheritDoc} */
+
                 @Override
                 public void run() {
                     setVisible(false);
@@ -90,7 +89,6 @@ public class TypingLabel extends JLabel implements ConfigChangeListener,
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public void windowClosing(final FrameContainer window) {
         if (container != null) {
@@ -102,7 +100,7 @@ public class TypingLabel extends JLabel implements ConfigChangeListener,
     public void componentAdded(final FrameContainer container, final String component) {
         if (WindowComponent.TYPING_INDICATOR.getIdentifier().equals(component)) {
             UIUtilities.invokeLater(new Runnable() {
-                /** {@inheritDoc} */
+
                 @Override
                 public void run() {
                     if (useTypingIndicator) {
@@ -117,7 +115,7 @@ public class TypingLabel extends JLabel implements ConfigChangeListener,
     public void componentRemoved(final FrameContainer container, final String component) {
         if (WindowComponent.TYPING_INDICATOR.getIdentifier().equals(component)) {
             UIUtilities.invokeLater(new Runnable() {
-                /** {@inheritDoc} */
+
                 @Override
                 public void run() {
                     if (useTypingIndicator) {

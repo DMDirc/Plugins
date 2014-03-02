@@ -138,37 +138,31 @@ public class WebInterfaceUI implements UIController {
         webServer.addHandler(newHandler);
     }
 
-    /** {@inheritDoc} */
     @Override
     public void showFirstRunWizard() {
         // Do nothing
     }
 
-    /** {@inheritDoc} */
     @Override
     public void showChannelSettingsDialog(final Channel channel) {
         // Do nothing
     }
 
-    /** {@inheritDoc} */
     @Override
     public void showServerSettingsDialog(final Server server) {
         // Do nothing
     }
 
-    /** {@inheritDoc} */
     @Override
     public void showURLDialog(final URI url) {
         // Do nothing
     }
 
-    /** {@inheritDoc} */
     @Override
     public void showFeedbackNag() {
         // Do nothing
     }
 
-    /** {@inheritDoc} */
     @Override
     public void requestWindowFocus(final Window window) {
         // TODO: Tell clients to focus

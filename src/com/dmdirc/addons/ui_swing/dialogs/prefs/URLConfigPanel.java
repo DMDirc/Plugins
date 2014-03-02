@@ -129,7 +129,6 @@ public class URLConfigPanel extends JPanel implements
         table = new PackingTable(model, tableScrollPane) {
             private static final long serialVersionUID = 1;
 
-            /** {@inheritDoc} */
             @Override
             public TableCellRenderer getCellRenderer(final int row,
                     final int column) {
@@ -195,7 +194,6 @@ public class URLConfigPanel extends JPanel implements
         add(activeComponent, "growx, pushx, wmax 100%");
     }
 
-    /** {@inheritDoc} */
     @Override
     public void save() {
         valueChanged(null);
@@ -241,8 +239,7 @@ public class URLConfigPanel extends JPanel implements
         if (e == null || !e.getValueIsAdjusting()) {
             setVisible(false);
             if (selectedRow != -1 && selectedRow < model.getRowCount()) {
-                final URLProtocolPanel panel =
-                        details.get(model.getValueAt(selectedRow, 0));
+                final URLProtocolPanel panel = details.get(model.getValueAt(selectedRow, 0));
                 model.setValueAt(panel.getSelection(), selectedRow, 1);
             }
             if (table.getSelectedRow() == -1) {
@@ -252,8 +249,7 @@ public class URLConfigPanel extends JPanel implements
                 remove.setEnabled(false);
                 selectedRow = -1;
             } else {
-                activeComponent =
-                        details.get(model.getValueAt(table.getRowSorter().
+                activeComponent = details.get(model.getValueAt(table.getRowSorter().
                         convertRowIndexToModel(table.getSelectedRow()), 0));
                 layoutComponents();
                 add.setEnabled(true);
@@ -277,28 +273,27 @@ public class URLConfigPanel extends JPanel implements
                     ModalityType.MODELESS, iconManager, "New URL handler",
                     "Please enter the name of the new protocol.",
                     new URLProtocolValidator(globalConfig)) {
-                /** Serial version UID. */
-                private static final long serialVersionUID = 1;
+                        /** Serial version UID. */
+                        private static final long serialVersionUID = 1;
 
-                /** {@inheritDoc} */
-                @Override
-                public boolean save() {
-                    try {
-                        final URI uri = new URI(getText() + "://example.test.com");
-                        model.addURI(uri);
-                        details.put(uri, new URLProtocolPanel(globalConfig, userConfig, uri, true));
-                        return true;
-                    } catch (final URISyntaxException ex) {
-                        return false;
-                    }
-                }
+                        @Override
+                        public boolean save() {
+                            try {
+                                final URI uri = new URI(getText() + "://example.test.com");
+                                model.addURI(uri);
+                                details.put(uri, new URLProtocolPanel(globalConfig, userConfig, uri,
+                                                true));
+                                return true;
+                            } catch (final URISyntaxException ex) {
+                                return false;
+                            }
+                        }
 
-                /** {@inheritDoc} */
-                @Override
-                public void cancelled() {
-                    //Ignore
-                }
-            }.display();
+                        @Override
+                        public void cancelled() {
+                            //Ignore
+                        }
+                    }.display();
 
         } else if (e.getSource() == remove) {
             model.removeURI(table.getRowSorter().convertRowIndexToModel(table.getSelectedRow()));

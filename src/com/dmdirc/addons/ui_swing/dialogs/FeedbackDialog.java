@@ -127,8 +127,7 @@ public class FeedbackDialog extends StandardDialog implements ActionListener, Do
         name = new JTextField();
         email = new JTextField();
         feedback = new JTextArea();
-        serverCheckbox =
-                new JCheckBox("Include information about connected servers.");
+        serverCheckbox = new JCheckBox("Include information about connected servers.");
         dmdircCheckbox = new JCheckBox("Include information about DMDirc.");
 
         UIUtilities.addUndoManager(name);
@@ -288,7 +287,6 @@ public class FeedbackDialog extends StandardDialog implements ActionListener, Do
         validateInput();
     }
 
-    /** {@inheritDoc} */
     @Override
     public void changedUpdate(final DocumentEvent e) {
         // Do nothing

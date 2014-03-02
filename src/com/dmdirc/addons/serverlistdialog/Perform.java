@@ -86,21 +86,18 @@ public class Perform extends JPanel implements ServerListListener {
         model.addServerListListener(this);
     }
 
-    /** {@inheritDoc} */
     @Override
     public void serverGroupAdded(final ServerGroupItem parent,
             final ServerGroupItem group) {
         //Ignore
     }
 
-    /** {@inheritDoc} */
     @Override
     public void serverGroupRemoved(final ServerGroupItem parent,
             final ServerGroupItem group) {
         //Ignore
     }
 
-    /** {@inheritDoc} */
     @Override
     public void serverGroupChanged(final ServerGroupItem item) {
         if (item == null) {
@@ -117,7 +114,6 @@ public class Perform extends JPanel implements ServerListListener {
         performPanel.switchPerform(model.getSelectedItemPerformDescription());
     }
 
-    /** {@inheritDoc} */
     @Override
     public void dialogClosed(final boolean save) {
         if (save) {

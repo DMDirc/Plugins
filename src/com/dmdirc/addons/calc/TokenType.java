@@ -39,102 +39,102 @@ public enum TokenType {
     END(TokenTypeArity.HIDDEN, "$", 0),
     /** An opening bracket. */
     BRACKET_OPEN(TokenTypeArity.NULLARY, "\\(", 0, "NUMBER_*", "MOD_*",
-    "BRACKET_OPEN"),
+            "BRACKET_OPEN"),
     /** A closing bracket. */
     BRACKET_CLOSE(TokenTypeArity.NULLARY, "\\)", 50, "OP_*", "BRACKET_*",
-    "END"),
+            "END"),
     /** A floating point number. */
     NUMBER_FLOAT(TokenTypeArity.NULLARY, "[0-9]+\\.[0-9]+", 1, "OP_*",
-    "BRACKET_*", "END") {
-        /** {@inheritDoc} */
-        @Override
-        public Number evaluate(final TreeToken token) {
-            return Float.valueOf(token.getToken().getContent());
-        }
-    },
+            "BRACKET_*", "END") {
+
+                @Override
+                public Number evaluate(final TreeToken token) {
+                    return Float.valueOf(token.getToken().getContent());
+                }
+            },
     /** An integer. */
     NUMBER_INT(TokenTypeArity.NULLARY, "[0-9]+", 1, "OP_*",
-    "BRACKET_*", "END") {
-        /** {@inheritDoc} */
-        @Override
-        public Number evaluate(final TreeToken token) {
-            return Float.valueOf(token.getToken().getContent());
-        }
-    },
-    /** A modifier signalling the
-     * following number is positive. */
+            "BRACKET_*", "END") {
+
+                @Override
+                public Number evaluate(final TreeToken token) {
+                    return Float.valueOf(token.getToken().getContent());
+                }
+            },
+    /** A modifier signalling the following number is
+     * positive. */
     MOD_POSITIVE(TokenTypeArity.UNARY, "\\+", 100, "NUMBER_*") {
-        /** {@inheritDoc} */
-        @Override
-        public Number evaluate(final TreeToken token) {
-            return token.getChildren().get(0).evaluate();
-        }
-    },
-    /** A modifier signalling the
-     * following number is negative. */
+
+                @Override
+                public Number evaluate(final TreeToken token) {
+                    return token.getChildren().get(0).evaluate();
+                }
+            },
+    /** A modifier signalling the following number is
+     * negative. */
     MOD_NEGATIVE(TokenTypeArity.UNARY, "-", 100, "NUMBER_*") {
-        /** {@inheritDoc} */
-        @Override
-        public Number evaluate(final TreeToken token) {
-            return -1 * token.getChildren().get(0).evaluate().floatValue();
-        }
-    },
+
+                @Override
+                public Number evaluate(final TreeToken token) {
+                    return -1 * token.getChildren().get(0).evaluate().floatValue();
+                }
+            },
     /** The addition operator. */
     OP_PLUS(TokenTypeArity.BINARY, "\\+", 7, "NUMBER_*", "BRACKET_OPEN") {
-        /** {@inheritDoc} */
-        @Override
-        public Number evaluate(final TreeToken token) {
-            return token.getChildren().get(0).evaluate().floatValue()
+
+                @Override
+                public Number evaluate(final TreeToken token) {
+                    return token.getChildren().get(0).evaluate().floatValue()
                     + token.getChildren().get(1).evaluate().floatValue();
-        }
-    },
+                }
+            },
     /** The subtraction operator. */
     OP_MINUS(TokenTypeArity.BINARY, "-", 6, "NUMBER_*", "BRACKET_OPEN") {
-        /** {@inheritDoc} */
-        @Override
-        public Number evaluate(final TreeToken token) {
-            return token.getChildren().get(0).evaluate().floatValue()
+
+                @Override
+                public Number evaluate(final TreeToken token) {
+                    return token.getChildren().get(0).evaluate().floatValue()
                     - token.getChildren().get(1).evaluate().floatValue();
-        }
-    },
+                }
+            },
     /** The multiplication operator. */
     OP_MULT(TokenTypeArity.BINARY, "(?=\\()|\\*", 9, "NUMBER_*",
-    "BRACKET_OPEN") {
-        /** {@inheritDoc} */
-        @Override
-        public Number evaluate(final TreeToken token) {
-            return token.getChildren().get(0).evaluate().floatValue()
+            "BRACKET_OPEN") {
+
+                @Override
+                public Number evaluate(final TreeToken token) {
+                    return token.getChildren().get(0).evaluate().floatValue()
                     * token.getChildren().get(1).evaluate().floatValue();
-        }
-    },
+                }
+            },
     /** The division operator. */
     OP_DIVIDE(TokenTypeArity.BINARY, "/", 10, "NUMBER_*", "BRACKET_OPEN") {
-        /** {@inheritDoc} */
-        @Override
-        public Number evaluate(final TreeToken token) {
-            return token.getChildren().get(0).evaluate().floatValue()
+
+                @Override
+                public Number evaluate(final TreeToken token) {
+                    return token.getChildren().get(0).evaluate().floatValue()
                     / token.getChildren().get(1).evaluate().floatValue();
-        }
-    },
+                }
+            },
     /** The modulo operator. */
     OP_MOD(TokenTypeArity.BINARY, "%", 8, "NUMBER_*", "BRACKET_OPEN") {
-        /** {@inheritDoc} */
-        @Override
-        public Number evaluate(final TreeToken token) {
-            return token.getChildren().get(0).evaluate().floatValue()
+
+                @Override
+                public Number evaluate(final TreeToken token) {
+                    return token.getChildren().get(0).evaluate().floatValue()
                     % token.getChildren().get(1).evaluate().floatValue();
-        }
-    },
+                }
+            },
     /** The power operator. */
     OP_POWER(TokenTypeArity.BINARY, "\\^", 11, "NUMBER_*", "BRACKET_OPEN") {
-        /** {@inheritDoc} */
-        @Override
-        public Number evaluate(final TreeToken token) {
-            return new Float(Math.pow(token.getChildren().get(0).evaluate()
-                    .doubleValue(),
-                    token.getChildren().get(1).evaluate().doubleValue()));
-        }
-    };
+
+                @Override
+                public Number evaluate(final TreeToken token) {
+                    return new Float(Math.pow(token.getChildren().get(0).evaluate()
+                                    .doubleValue(),
+                                    token.getChildren().get(1).evaluate().doubleValue()));
+                }
+            };
     /** The string representation of tokens that may follow this one. */
     private final String[] strfollows;
     /** The precedence of this token. */

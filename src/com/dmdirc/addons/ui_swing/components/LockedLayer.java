@@ -91,7 +91,7 @@ public class LockedLayer<T extends JComponent> extends AbstractBufferedLayerUI<T
     private LayerEffect[] lockedEffects = new LayerEffect[0];
     /** Focus listener. */
     private final transient FocusListener focusListener = new FocusListener() {
-        /** {@inheritDoc} */
+
         @Override
         public void focusGained(final FocusEvent e) {
             // we don't want extra repaintings
@@ -101,7 +101,6 @@ public class LockedLayer<T extends JComponent> extends AbstractBufferedLayerUI<T
             }
         }
 
-        /** {@inheritDoc} */
         @Override
         public void focusLost(final FocusEvent e) {
             //Ignore
@@ -178,7 +177,7 @@ public class LockedLayer<T extends JComponent> extends AbstractBufferedLayerUI<T
                 final Component focusOwner = kfm.getPermanentFocusOwner();
                 final boolean focusInLayer = focusOwner != null
                         && SwingUtilities.isDescendingFrom(focusOwner,
-                        getLayer());
+                                getLayer());
                 if (isLocked) {
                     if (focusInLayer && kfm.getFocusedWindow()
                             == SwingUtilities.getWindowAncestor(getLayer())) {
@@ -210,14 +209,12 @@ public class LockedLayer<T extends JComponent> extends AbstractBufferedLayerUI<T
 
     // If it is locked, the buffer image will be updated
     // only if the layer changes its size or setDirty(true) was called
-    /** {@inheritDoc} */
     @Override
     protected boolean isIncrementalUpdate(
             final JXLayer<? extends T> l) {
         return !isLocked();
     }
 
-    /** {@inheritDoc} */
     @Override
     protected void paintLayer(final Graphics2D g2,
             final JXLayer<? extends T> l) {
@@ -234,7 +231,6 @@ public class LockedLayer<T extends JComponent> extends AbstractBufferedLayerUI<T
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public void paint(final Graphics g, final JComponent c) {
         super.paint(g, c);

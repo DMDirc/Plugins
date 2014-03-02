@@ -37,7 +37,6 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
-
 /**
  * The timer command allows users to schedule commands to occur after a certain interval, or to
  * repeatedly occur with a specified delay.

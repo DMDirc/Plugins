@@ -154,7 +154,7 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
     private void updateCachedSettings() {
         quickCopy = manager.getOptionBool("ui", "quickCopy");
         UIUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc} */
+
             @Override
             public void run() {
                 recalc();
@@ -431,8 +431,7 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
                 start = -1;
                 end = -1;
             } else {
-                final int[] extent =
-                        getSurroundingWordIndexes(clickedText,
+                final int[] extent = getSurroundingWordIndexes(clickedText,
                         lineInfo.getIndex());
                 start = extent[0];
                 end = extent[1];
@@ -475,15 +474,13 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
             if (index >= iterator.getBeginIndex() && index <= iterator.
                     getEndIndex()) {
                 iterator.setIndex(lineInfo.getIndex());
-                Object linkattr =
-                        iterator.getAttributes().get(
+                Object linkattr = iterator.getAttributes().get(
                         IRCTextAttribute.HYPERLINK);
                 if (linkattr instanceof String) {
                     return new ClickTypeValue(ClickType.HYPERLINK,
                             (String) linkattr);
                 }
-                linkattr =
-                        iterator.getAttributes().get(IRCTextAttribute.CHANNEL);
+                linkattr = iterator.getAttributes().get(IRCTextAttribute.CHANNEL);
                 if (linkattr instanceof String) {
                     return new ClickTypeValue(ClickType.CHANNEL,
                             (String) linkattr);
@@ -591,7 +588,7 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
             textPane.copy((e.getModifiers() & MouseEvent.CTRL_MASK)
                     == MouseEvent.CTRL_MASK);
             SwingUtilities.invokeLater(new Runnable() {
-                /** {@inheritDoc} */
+
                 @Override
                 public void run() {
                     clearSelection();
@@ -647,8 +644,7 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
 
     /** Checks for a link under the cursor and sets appropriately. */
     private void checkForLink() {
-        final AttributedCharacterIterator iterator =
-                getIterator(getMousePosition());
+        final AttributedCharacterIterator iterator = getIterator(getMousePosition());
 
         if (iterator != null
                 && (iterator.getAttribute(IRCTextAttribute.HYPERLINK) != null
@@ -1001,13 +997,11 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
         //Ignore
     }
 
-    /** {@inheritDoc} */
     @Override
     public void configChanged(final String domain, final String key) {
         updateCachedSettings();
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getToolTipText(final MouseEvent event) {
         final AttributedCharacterIterator iterator = getIterator(

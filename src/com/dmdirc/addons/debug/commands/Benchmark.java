@@ -47,19 +47,16 @@ public class Benchmark extends DebugCommand {
         super(commandProvider);
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getName() {
         return "benchmark";
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getUsage() {
         return " - Runs a textpane benchmark";
     }
 
-    /** {@inheritDoc} */
     @Override
     public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {

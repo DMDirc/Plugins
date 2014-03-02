@@ -45,32 +45,27 @@ public abstract class ServerGroupItemBase implements ServerGroupItem {
         this.identityController = identityController;
     }
 
-    /** {@inheritDoc} */
     @Override
     public boolean isModified() {
         return modified;
     }
 
-    /** {@inheritDoc} */
     @Override
     public void setModified(final boolean isModified) {
         this.modified = isModified;
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getName() {
         return name;
     }
 
-    /** {@inheritDoc} */
     @Override
     public void setName(final String name) {
         setModified(true);
         this.name = name;
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getPath() {
         if (getParent() != null) {
@@ -79,13 +74,11 @@ public abstract class ServerGroupItemBase implements ServerGroupItem {
         return getName();
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getProfile() {
         return profile;
     }
 
-    /** {@inheritDoc} */
     @Override
     public void setProfile(final String profile) {
         setModified(true);
@@ -93,8 +86,7 @@ public abstract class ServerGroupItemBase implements ServerGroupItem {
     }
 
     /**
-     * Returns the parent group of this item, or
-     * <code>null</code> if the item is a root group.
+     * Returns the parent group of this item, or <code>null</code> if the item is a root group.
      *
      * @return This item's parent group
      */

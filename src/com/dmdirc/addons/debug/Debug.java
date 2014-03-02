@@ -78,7 +78,6 @@ public class Debug extends Command implements IntelligentCommand {
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
@@ -94,8 +93,8 @@ public class Debug extends Command implements IntelligentCommand {
                 final CommandArguments newArgs = new CommandArguments(
                         controller,
                         Arrays.asList((controller.getCommandChar()
-                        + command.getName() + " "
-                        + args.getArgumentsAsString(1)).split(" ")));
+                                + command.getName() + " "
+                                + args.getArgumentsAsString(1)).split(" ")));
                 command.execute(origin, newArgs, context);
             }
         }
@@ -155,7 +154,6 @@ public class Debug extends Command implements IntelligentCommand {
         return names;
     }
 
-    /** {@inheritDoc} */
     @Override
     public AdditionalTabTargets getSuggestions(final int arg,
             final IntelligentCommandContext context) {
@@ -168,10 +166,10 @@ public class Debug extends Command implements IntelligentCommand {
         } else {
             final DebugCommand command = commands.get(context.getPreviousArgs().get(0));
             if (command instanceof IntelligentCommand) {
-                final IntelligentCommandContext newContext =
-                        new IntelligentCommandContext(context.getWindow(),
+                final IntelligentCommandContext newContext = new IntelligentCommandContext(context.
+                        getWindow(),
                         context.getPreviousArgs().subList(1,
-                        context.getPreviousArgs().size()),
+                                context.getPreviousArgs().size()),
                         context.getPartial());
                 res = ((IntelligentCommand) command).getSuggestions(
                         arg, newContext);

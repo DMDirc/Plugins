@@ -55,19 +55,16 @@ public class FirstRun extends DebugCommand {
         this.pluginManager = pluginManager;
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getName() {
         return "firstrun";
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getUsage() {
         return " - shows the first run wizard";
     }
 
-    /** {@inheritDoc} */
     @Override
     public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {

@@ -171,8 +171,8 @@ public class ActionConditionsTreePanel extends JPanel implements ActionListener,
             firePropertyChange("validationResult", validates, true);
             validates = true;
         } else {
-            treeFactory =
-                    new ConditionTreeFactory.CustomFactory(ConditionTree.parseString(rule.getText()));
+            treeFactory = new ConditionTreeFactory.CustomFactory(ConditionTree.parseString(rule.
+                    getText()));
             rule.checkError();
         }
 
@@ -189,7 +189,6 @@ public class ActionConditionsTreePanel extends JPanel implements ActionListener,
         sortTreeFactory();
     }
 
-    /** {@inheritDoc} */
     @Override
     public void setEnabled(final boolean enabled) {
         allButton.setEnabled(enabled);
@@ -245,7 +244,6 @@ public class ActionConditionsTreePanel extends JPanel implements ActionListener,
         rule.checkError();
     }
 
-    /** {@inheritDoc} */
     @Override
     public void propertyChange(final PropertyChangeEvent evt) {
         firePropertyChange("validationResult", validates, evt.getNewValue());
@@ -257,21 +255,18 @@ public class ActionConditionsTreePanel extends JPanel implements ActionListener,
         selectTreeButton();
     }
 
-    /** {@inheritDoc} */
     @Override
     public void insertUpdate(final DocumentEvent e) {
-        treeFactory =
-                new ConditionTreeFactory.CustomFactory(ConditionTree.parseString(rule.getText()));
+        treeFactory = new ConditionTreeFactory.CustomFactory(ConditionTree.parseString(rule.
+                getText()));
     }
 
-    /** {@inheritDoc} */
     @Override
     public void removeUpdate(final DocumentEvent e) {
-        treeFactory =
-                new ConditionTreeFactory.CustomFactory(ConditionTree.parseString(rule.getText()));
+        treeFactory = new ConditionTreeFactory.CustomFactory(ConditionTree.parseString(rule.
+                getText()));
     }
 
-    /** {@inheritDoc} */
     @Override
     public void changedUpdate(final DocumentEvent e) {
         //Ignore

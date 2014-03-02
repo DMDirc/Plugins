@@ -56,13 +56,11 @@ class ActionGroupNoDuplicatesInListValidator extends NoDuplicatesInListValidator
         super(caseSensitive, list, model);
     }
 
-    /** {@inheritDoc} */
     @Override
     public String listValueToString(final Object object) {
         return ((ActionGroup) object).getName();
     }
 
-    /** {@inheritDoc} */
     @Override
     public int indexOfString(final String string) {
         final String value = caseSensitive ? string : string.toLowerCase();

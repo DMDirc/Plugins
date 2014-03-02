@@ -56,8 +56,9 @@ public class TextLabel extends JTextPane {
     /**
      * Creates a new instance of TextLabel.
      *
-     * <p>Labels constructed without a {@link URLBuilder} will not be able to resolve
-     * DMDirc-specific URLs in image tags.
+     * <p>
+     * Labels constructed without a {@link URLBuilder} will not be able to resolve DMDirc-specific
+     * URLs in image tags.
      */
     public TextLabel() {
         this(null, true);
@@ -66,8 +67,9 @@ public class TextLabel extends JTextPane {
     /**
      * Creates a new instance of TextLabel.
      *
-     * <p>Labels constructed without a {@link URLBuilder} will not be able to resolve
-     * DMDirc-specific URLs in image tags.
+     * <p>
+     * Labels constructed without a {@link URLBuilder} will not be able to resolve DMDirc-specific
+     * URLs in image tags.
      *
      * @param justified Justify the text?
      */
@@ -78,8 +80,9 @@ public class TextLabel extends JTextPane {
     /**
      * Creates a new instance of TextLabel.
      *
-     * <p>Labels constructed without a {@link URLBuilder} will not be able to resolve
-     * DMDirc-specific URLs in image tags.
+     * <p>
+     * Labels constructed without a {@link URLBuilder} will not be able to resolve DMDirc-specific
+     * URLs in image tags.
      *
      * @param text Text to display
      */
@@ -90,8 +93,9 @@ public class TextLabel extends JTextPane {
     /**
      * Creates a new instance of TextLabel.
      *
-     * <p>Labels constructed without a {@link URLBuilder} will not be able to resolve
-     * DMDirc-specific URLs in image tags.
+     * <p>
+     * Labels constructed without a {@link URLBuilder} will not be able to resolve DMDirc-specific
+     * URLs in image tags.
      *
      * @param text      Text to display
      * @param justified Justify the text?
@@ -138,13 +142,11 @@ public class TextLabel extends JTextPane {
         setText(text);
     }
 
-    /** {@inheritDoc} */
     @Override
     public final StyledDocument getDocument() {
         return (StyledDocument) super.getDocument();
     }
 
-    /** {@inheritDoc} */
     @Override
     public final void setText(final String t) {
         super.setText(t);
@@ -153,7 +155,6 @@ public class TextLabel extends JTextPane {
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public void setForeground(final Color colour) {
         if (sas == null) {
@@ -166,7 +167,6 @@ public class TextLabel extends JTextPane {
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public void setFont(final Font font) {
         super.setFont(font);

@@ -116,7 +116,6 @@ public class Tree extends JTree implements MouseMotionListener,
         addMouseMotionListener(this);
     }
 
-    /** {@inheritDoc} */
     @Override
     public void scrollRectToVisible(final Rectangle aRect) {
         final Rectangle rect = new Rectangle(0, aRect.y, aRect.width, aRect.height);
@@ -156,7 +155,6 @@ public class Tree extends JTree implements MouseMotionListener,
         return node;
     }
 
-    /** {@inheritDoc} */
     @Override
     public void configChanged(final String domain, final String key) {
         switch (key) {
@@ -183,7 +181,7 @@ public class Tree extends JTree implements MouseMotionListener,
             if (node != null) {
                 controller.requestWindowFocus(controller.getWindowFactory()
                         .getSwingWindow(((TreeViewNode) new TreePath(node.getPath()).
-                        getLastPathComponent()).getWindow()));
+                                getLastPathComponent()).getWindow()));
             }
         }
         manager.checkRollover(e);
@@ -223,7 +221,7 @@ public class Tree extends JTree implements MouseMotionListener,
             if (selectedPath != null) {
                 controller.requestWindowFocus(controller.getWindowFactory()
                         .getSwingWindow(((TreeViewNode) selectedPath
-                        .getLastPathComponent()).getWindow()));
+                                .getLastPathComponent()).getWindow()));
             }
         }
         processMouseEvents(e);
@@ -293,11 +291,9 @@ public class Tree extends JTree implements MouseMotionListener,
             popupMenu.addSeparator();
             popoutMenuItem.addActionListener(this);
 
-            final TreeViewNodeMenuItem moveUp =
-                    new TreeViewNodeMenuItem("Move Up", "Up",
+            final TreeViewNodeMenuItem moveUp = new TreeViewNodeMenuItem("Move Up", "Up",
                     (TreeViewNode) localPath.getLastPathComponent());
-            final TreeViewNodeMenuItem moveDown =
-                    new TreeViewNodeMenuItem("Move Down", "Down",
+            final TreeViewNodeMenuItem moveDown = new TreeViewNodeMenuItem("Move Down", "Down",
                     (TreeViewNode) localPath.getLastPathComponent());
 
             moveUp.addActionListener(this);

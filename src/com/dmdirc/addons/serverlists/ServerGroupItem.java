@@ -75,8 +75,8 @@ public interface ServerGroupItem {
 
     /**
      * Determines whether this item has been modified since the last time
-     * {@link #setModified(boolean)} was called with a
-     * <code>false</code> argument (or since this item was created).
+     * {@link #setModified(boolean)} was called with a <code>false</code> argument (or since this
+     * item was created).
      *
      * @return True if the item has been modified, false otherwise
      */

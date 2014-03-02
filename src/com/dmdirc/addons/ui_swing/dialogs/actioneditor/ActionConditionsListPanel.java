@@ -163,8 +163,8 @@ public class ActionConditionsListPanel extends JPanel implements
      * @param condition Action condition
      */
     public void addCondition(final ActionCondition condition) {
-        final ActionConditionDisplayPanel panel =
-                new ActionConditionDisplayPanel(iconManager, condition, trigger);
+        final ActionConditionDisplayPanel panel = new ActionConditionDisplayPanel(iconManager,
+                condition, trigger);
         panel.addConditionListener(this);
         panel.addPropertyChangeListener("validationResult", this);
         validations.put(panel, panel.checkError());
@@ -215,8 +215,7 @@ public class ActionConditionsListPanel extends JPanel implements
      * @return condition list
      */
     public List<ActionCondition> getConditions() {
-        final List<ActionCondition> conditionList =
-                new ArrayList<>();
+        final List<ActionCondition> conditionList = new ArrayList<>();
 
         synchronized (conditions) {
             for (final ActionConditionDisplayPanel condition : conditions) {
@@ -245,7 +244,6 @@ public class ActionConditionsListPanel extends JPanel implements
         layoutComponents();
     }
 
-    /** {@inheritDoc} */
     @Override
     public void conditionRemoved(final ActionConditionDisplayPanel condition) {
         synchronized (conditions) {
@@ -256,7 +254,6 @@ public class ActionConditionsListPanel extends JPanel implements
         layoutComponents();
     }
 
-    /** {@inheritDoc} */
     @Override
     public void setEnabled(final boolean enabled) {
         for (final ActionConditionDisplayPanel condition : conditions) {
@@ -264,7 +261,6 @@ public class ActionConditionsListPanel extends JPanel implements
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public void propertyChange(final PropertyChangeEvent evt) {
         if (evt != null) {

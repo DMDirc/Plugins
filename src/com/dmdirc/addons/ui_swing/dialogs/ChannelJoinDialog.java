@@ -29,7 +29,6 @@ import com.dmdirc.ui.IconManager;
 import com.dmdirc.util.annotations.factory.Factory;
 import com.dmdirc.util.annotations.factory.Unbound;
 
-
 /**
  * A dialog to prompt the user for a channel and then join that channel.
  */

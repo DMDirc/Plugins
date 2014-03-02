@@ -59,7 +59,6 @@ public class WindowsMediaSourcePlugin extends BasePlugin
         sources.add(new DllSource(this, "iTunes", false));
     }
 
-    /** {@inheritDoc} */
     @Override
     public List<MediaSource> getSources() {
         return sources;
@@ -94,7 +93,6 @@ public class WindowsMediaSourcePlugin extends BasePlugin
         return new MediaInfoOutput(-1, "Error executing GetMediaInfo.exe");
     }
 
-    /** {@inheritDoc} */
     @Override
     public void onLoad() {
         // Extract the .dlls and .exe

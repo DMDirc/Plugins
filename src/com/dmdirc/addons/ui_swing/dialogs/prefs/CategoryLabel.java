@@ -99,8 +99,8 @@ public class CategoryLabel extends JLabel {
             setForeground(UIManager.getColor("ToolTip.foreground"));
             setBorder(BorderFactory.createCompoundBorder(
                     BorderFactory.createMatteBorder(1, 0, hasChildren ? 1 : 0,
-                    0, UIManager.getColor("ToolTip.background").darker()
-                    .darker()), getBorder()));
+                            0, UIManager.getColor("ToolTip.background").darker()
+                            .darker()), getBorder()));
         }
     }
 

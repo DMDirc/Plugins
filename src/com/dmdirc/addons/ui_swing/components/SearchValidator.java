@@ -33,7 +33,6 @@ public class SearchValidator implements Validator<String> {
     /** Validates. */
     private boolean validates = true;
 
-    /** {@inheritDoc} */
     @Override
     public ValidationResponse validate(final String object) {
         if (validates) {
