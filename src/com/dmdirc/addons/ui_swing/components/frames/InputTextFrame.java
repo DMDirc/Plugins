@@ -101,7 +101,7 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
     public InputTextFrame(
             final TextFrameDependencies deps,
             final WritableFrameContainer owner) {
-        super(owner, deps);
+        super(owner, owner.getCommandParser(), deps);
 
         this.config = owner.getConfigManager();
         this.colourManager = new ColourManager(config);

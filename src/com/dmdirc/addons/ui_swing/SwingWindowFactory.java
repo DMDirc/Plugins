@@ -31,6 +31,7 @@ import com.dmdirc.addons.ui_swing.components.frames.CustomFrameFactory;
 import com.dmdirc.addons.ui_swing.components.frames.CustomInputFrameFactory;
 import com.dmdirc.addons.ui_swing.components.frames.ServerFrameFactory;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
+import com.dmdirc.commandparser.parsers.GlobalCommandParser;
 import com.dmdirc.interfaces.ui.FrameListener;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
@@ -72,6 +73,7 @@ public class SwingWindowFactory implements FrameListener {
      * @param customInputFrameFactory The factory to use to produce custom input frames.
      * @param serverFrameFactory      The factory to use to produce server frames.
      * @param channelFrameFactory     The factory to use to produce channel frames.
+     * @param commandParser           Command parser to use for custom non-input windows.
      */
     @Inject
     public SwingWindowFactory(
@@ -79,59 +81,61 @@ public class SwingWindowFactory implements FrameListener {
             final CustomFrameFactory customFrameFactory,
             final CustomInputFrameFactory customInputFrameFactory,
             final ServerFrameFactory serverFrameFactory,
-            final ChannelFrameFactory channelFrameFactory) {
+            final ChannelFrameFactory channelFrameFactory,
+            final GlobalCommandParser commandParser) {
         this.controller = controller;
 
         // TODO: Allow auto-factories to implement an interface and simplify this a bit.
         registerImplementation(
                 new HashSet<>(Arrays.asList(
-                WindowComponent.TEXTAREA.getIdentifier())),
+                                WindowComponent.TEXTAREA.getIdentifier())),
                 new WindowProvider() {
-            @Override
-            public TextFrame getWindow(final FrameContainer container) {
-                return customFrameFactory.getCustomFrame(container);
-            }
-        });
+                    @Override
+                    public TextFrame getWindow(final FrameContainer container) {
+                        return customFrameFactory.getCustomFrame(commandParser, container);
+                    }
+                });
         registerImplementation(
                 new HashSet<>(Arrays.asList(
-                WindowComponent.TEXTAREA.getIdentifier(),
-                WindowComponent.INPUTFIELD.getIdentifier())),
+                                WindowComponent.TEXTAREA.getIdentifier(),
+                                WindowComponent.INPUTFIELD.getIdentifier())),
                 new WindowProvider() {
-            @Override
-            public TextFrame getWindow(final FrameContainer container) {
-                return customInputFrameFactory.getCustomInputFrame(
-                        (WritableFrameContainer) container);
-            }
-        });
+                    @Override
+                    public TextFrame getWindow(final FrameContainer container) {
+                        return customInputFrameFactory.getCustomInputFrame(
+                                (WritableFrameContainer) container);
+                    }
+                });
         registerImplementation(
                 new HashSet<>(Arrays.asList(
-                WindowComponent.TEXTAREA.getIdentifier(),
-                WindowComponent.INPUTFIELD.getIdentifier(),
-                WindowComponent.CERTIFICATE_VIEWER.getIdentifier())),
+                                WindowComponent.TEXTAREA.getIdentifier(),
+                                WindowComponent.INPUTFIELD.getIdentifier(),
+                                WindowComponent.CERTIFICATE_VIEWER.getIdentifier())),
                 new WindowProvider() {
-            @Override
-            public TextFrame getWindow(final FrameContainer container) {
-                return serverFrameFactory.getServerFrame((Server) container);
-            }
-        });
+                    @Override
+                    public TextFrame getWindow(final FrameContainer container) {
+                        return serverFrameFactory.getServerFrame((Server) container);
+                    }
+                });
         registerImplementation(
                 new HashSet<>(Arrays.asList(
-                WindowComponent.TEXTAREA.getIdentifier(),
-                WindowComponent.INPUTFIELD.getIdentifier(),
-                WindowComponent.TOPICBAR.getIdentifier(),
-                WindowComponent.USERLIST.getIdentifier())),
+                                WindowComponent.TEXTAREA.getIdentifier(),
+                                WindowComponent.INPUTFIELD.getIdentifier(),
+                                WindowComponent.TOPICBAR.getIdentifier(),
+                                WindowComponent.USERLIST.getIdentifier())),
                 new WindowProvider() {
-            @Override
-            public TextFrame getWindow(final FrameContainer container) {
-                return channelFrameFactory.getChannelFrame((Channel) container);
-            }
-        });
+                    @Override
+                    public TextFrame getWindow(final FrameContainer container) {
+                        return channelFrameFactory.getChannelFrame((Channel) container);
+                    }
+                });
     }
 
     /**
      * Registers a new provider that will be used to create certain window implementations.
      *
-     * <p>If a previous provider exists for the same configuration, it will be replaced.
+     * <p>
+     * If a previous provider exists for the same configuration, it will be replaced.
      *
      * @param components The component configuration that is provided by the implementation.
      * @param provider   The provider to use to generate new windows.

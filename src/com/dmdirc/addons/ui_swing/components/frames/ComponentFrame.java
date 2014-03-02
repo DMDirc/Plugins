@@ -25,6 +25,7 @@ package com.dmdirc.addons.ui_swing.components.frames;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.commandparser.PopupType;
+import com.dmdirc.commandparser.parsers.CommandParser;
 import com.dmdirc.util.URLBuilder;
 import com.dmdirc.util.annotations.factory.Factory;
 import com.dmdirc.util.annotations.factory.Unbound;
@@ -56,15 +57,17 @@ public class ComponentFrame extends TextFrame {
     /**
      * Creates a new instance of CustomFrame.
      *
-     * @param deps       The dependencies required by text frames.
-     * @param urlBuilder URL builder to use when making components.
-     * @param owner      The frame container that owns this frame
+     * @param deps          The dependencies required by text frames.
+     * @param urlBuilder    URL builder to use when making components.
+     * @param owner         The frame container that owns this frame.
+     * @param commandParser The parser to use to process commands.
      */
     public ComponentFrame(
             final TextFrameDependencies deps,
             final URLBuilder urlBuilder,
-            @Unbound final FrameContainer owner) {
-        super(owner, deps);
+            @Unbound final FrameContainer owner,
+            @Unbound final CommandParser commandParser) {
+        super(owner, commandParser, deps);
         this.controller = getController();
         this.urlBuilder = urlBuilder;
         this.owner = owner;
