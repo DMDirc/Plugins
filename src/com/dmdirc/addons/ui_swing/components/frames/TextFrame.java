@@ -24,11 +24,8 @@ package com.dmdirc.addons.ui_swing.components.frames;
 
 import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.FrameContainer;
-import com.dmdirc.actions.ActionManager;
-import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SwingController;
-import com.dmdirc.addons.ui_swing.SwingWindowFactory;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.actions.ChannelCopyAction;
 import com.dmdirc.addons.ui_swing.actions.CommandAction;
@@ -54,14 +51,15 @@ import com.dmdirc.commandparser.PopupMenu;
 import com.dmdirc.commandparser.PopupMenuItem;
 import com.dmdirc.commandparser.PopupType;
 import com.dmdirc.commandparser.parsers.CommandParser;
+import com.dmdirc.events.LinkChannelClickedEvent;
+import com.dmdirc.events.LinkNicknameClickedEvent;
+import com.dmdirc.events.LinkUrlClickedEvent;
 import com.dmdirc.interfaces.FrameCloseListener;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.interfaces.ui.Window;
-import com.dmdirc.parser.common.ChannelJoinRequest;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.IconManager;
-import com.dmdirc.ui.core.util.URLHandler;
 import com.dmdirc.ui.messages.ColourManager;
 
 import com.google.common.eventbus.EventBus;
@@ -103,14 +101,12 @@ public abstract class TextFrame extends JPanel implements Window,
     private SwingSearchBar searchBar;
     /** Command parser for popup commands. */
     private final CommandParser commandParser;
-    /** Swing controller. */
-    private final SwingController controller;
     /** Main frame to use to activate/deactivate windows. */
     private final Provider<MainFrame> mainFrame;
     /** Manager to use for building popups. */
     private final PopupManager popupManager;
-    /** Handler to use to open URLs. */
-    private final URLHandler urlHandler;
+    /** Bus to despatch events on. */
+    private final EventBus eventBus;
     /** Boolean to determine if this frame should be popped out of main client. */
     private boolean popout;
     /**
@@ -121,8 +117,6 @@ public abstract class TextFrame extends JPanel implements Window,
     private DesktopPlaceHolderFrame popoutPlaceholder;
     /** Icon manager to retrieve icons from. */
     private final IconManager iconManager;
-    /** Window factory to retrieve and create windows. */
-    private final SwingWindowFactory windowFactory;
 
     /**
      * Creates a new instance of Frame.
@@ -135,13 +129,11 @@ public abstract class TextFrame extends JPanel implements Window,
             final FrameContainer owner,
             final CommandParser commandParser,
             final TextFrameDependencies deps) {
-        this.controller = deps.controller;
         this.mainFrame = deps.mainFrame;
         this.popupManager = deps.popupManager;
-        this.urlHandler = deps.urlHandler;
         this.frameParent = owner;
         this.iconManager = deps.iconManager;
-        this.windowFactory = deps.windowFactory;
+        this.eventBus = deps.eventBus;
         this.commandParser = commandParser;
 
         final AggregateConfigProvider config = owner.getConfigManager();
@@ -312,46 +304,18 @@ public abstract class TextFrame extends JPanel implements Window,
         if (event.isPopupTrigger()) {
             showPopupMenuInternal(clicktype, event.getPoint());
         }
-        if (eventType == MouseEventType.CLICK
-                && event.getButton() == MouseEvent.BUTTON1) {
-            handleLinkClick(clicktype);
-        }
-    }
-
-    /**
-     * Handles clicking of a link in a textpane.
-     *
-     * @param clickType Details of link clicked
-     */
-    private void handleLinkClick(final ClickTypeValue clickType) {
-        switch (clickType.getType()) {
-            case CHANNEL:
-                if (frameParent.getConnection() != null && ActionManager
-                        .getActionManager().triggerEvent(
-                                CoreActionType.LINK_CHANNEL_CLICKED, null, this,
-                                clickType.getValue())) {
-                    frameParent.getConnection().join(
-                            new ChannelJoinRequest(clickType.getValue()));
-                }
-                break;
-            case HYPERLINK:
-                if (ActionManager.getActionManager().triggerEvent(
-                        CoreActionType.LINK_URL_CLICKED, null, this,
-                        clickType.getValue())) {
-                    urlHandler.launchApp(clickType.getValue());
-                }
-                break;
-            case NICKNAME:
-                if (frameParent.getConnection() != null && ActionManager
-                        .getActionManager().triggerEvent(
-                                CoreActionType.LINK_NICKNAME_CLICKED, null, this,
-                                clickType.getValue())) {
-                    controller.requestWindowFocus(windowFactory.getSwingWindow(getContainer()
-                            .getConnection().getQuery(clickType.getValue())));
-                }
-                break;
-            default:
-                break;
+        if (eventType == MouseEventType.CLICK && event.getButton() == MouseEvent.BUTTON1) {
+            switch (clicktype.getType()) {
+                case CHANNEL:
+                    eventBus.post(new LinkChannelClickedEvent(this, clicktype.getValue()));
+                    break;
+                case NICKNAME:
+                    eventBus.post(new LinkNicknameClickedEvent(this, clicktype.getValue()));
+                    break;
+                case HYPERLINK:
+                    eventBus.post(new LinkUrlClickedEvent(this, clicktype.getValue()));
+                    break;
+            }
         }
     }
 
@@ -575,13 +539,11 @@ public abstract class TextFrame extends JPanel implements Window,
         final SwingController controller;
         final Provider<MainFrame> mainFrame;
         final PopupManager popupManager;
-        final URLHandler urlHandler;
         final EventBus eventBus;
         final AggregateConfigProvider globalConfig;
         final PasteDialogFactory pasteDialog;
         final PluginManager pluginManager;
         final IconManager iconManager;
-        final SwingWindowFactory windowFactory;
 
         @Inject
         public TextFrameDependencies(
@@ -589,24 +551,20 @@ public abstract class TextFrame extends JPanel implements Window,
                 final SwingController controller,
                 final Provider<MainFrame> mainFrame,
                 final PopupManager popupManager,
-                final URLHandler urlHandler,
                 final EventBus eventBus,
                 final PasteDialogFactory pasteDialog,
                 final PluginManager pluginManager,
                 @GlobalConfig final IconManager iconManager,
-                final SwingWindowFactory windowFactory,
                 @GlobalConfig final AggregateConfigProvider globalConfig) {
             this.textPaneFactory = textPaneFactory;
             this.controller = controller;
             this.mainFrame = mainFrame;
             this.popupManager = popupManager;
-            this.urlHandler = urlHandler;
             this.eventBus = eventBus;
             this.globalConfig = globalConfig;
             this.pasteDialog = pasteDialog;
             this.pluginManager = pluginManager;
             this.iconManager = iconManager;
-            this.windowFactory = windowFactory;
         }
 
     }

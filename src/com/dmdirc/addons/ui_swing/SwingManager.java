@@ -37,6 +37,8 @@ import com.dmdirc.addons.ui_swing.wizard.firstrun.FirstRunWizardExecutor;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.core.components.StatusBarManager;
 
+import com.google.common.eventbus.EventBus;
+
 import java.awt.KeyboardFocusManager;
 import java.awt.Toolkit;
 
@@ -74,6 +76,10 @@ public class SwingManager {
     private final Provider<FeedbackNag> feedbackNagProvider;
     /** Factory to use to create URL dialogs. */
     private final URLDialogFactory urlDialogFactory;
+    /** Link handler for swing links. */
+    private final SwingLinkHandler linkHandler;
+    /** Bus to listen on for events. */
+    private final EventBus eventBus;
 
     /**
      * Creates a new instance of {@link SwingManager}.
@@ -81,8 +87,7 @@ public class SwingManager {
      * @param eventQueue                    The event queue to use.
      * @param windowFactory                 The window factory in use.
      * @param windowManager                 The window manager to listen on for events.
-     * @param statusBarManager              The core status bar manager to register our status bar
-     *                                      with.
+     * @param statusBarManager              The status bar manager to register our status bar with.
      * @param mainFrame                     The main frame of the Swing UI.
      * @param menuBar                       The menu bar to use for the main frame.
      * @param statusBar                     The status bar to use in the main frame.
@@ -93,6 +98,8 @@ public class SwingManager {
      * @param channelSettingsDialogProvider Provider of channel settings dialogs.
      * @param feedbackNagProvider           Provider of feedback nags.
      * @param urlDialogFactory              Factory to use to create URL dialogs.
+     * @param linkHandler                   The handler to use when users click links.
+     * @param eventBus                      The bus to listen on for events.
      */
     @Inject
     public SwingManager(
@@ -109,7 +116,9 @@ public class SwingManager {
             final KeyedDialogProvider<Server, ServerSettingsDialog> serverSettingsDialogProvider,
             final KeyedDialogProvider<Channel, ChannelSettingsDialog> channelSettingsDialogProvider,
             final Provider<FeedbackNag> feedbackNagProvider,
-            final URLDialogFactory urlDialogFactory) {
+            final URLDialogFactory urlDialogFactory,
+            final SwingLinkHandler linkHandler,
+            final EventBus eventBus) {
         this.eventQueue = eventQueue;
         this.windowFactory = windowFactory;
         this.windowManager = windowManager;
@@ -121,6 +130,8 @@ public class SwingManager {
         this.channelSettingsDialogProvider = channelSettingsDialogProvider;
         this.feedbackNagProvider = feedbackNagProvider;
         this.urlDialogFactory = urlDialogFactory;
+        this.linkHandler = linkHandler;
+        this.eventBus = eventBus;
 
         this.mainFrame = mainFrame;
         this.mainFrame.setMenuBar(menuBar);
@@ -138,6 +149,7 @@ public class SwingManager {
 
         windowManager.addListenerAndSync(windowFactory);
         statusBarManager.registerStatusBar(statusBar);
+        eventBus.register(linkHandler);
     }
 
     /**
@@ -151,6 +163,7 @@ public class SwingManager {
         windowFactory.dispose();
         mainFrame.dispose();
         statusBarManager.unregisterStatusBar(statusBar);
+        eventBus.unregister(linkHandler);
     }
 
     /**
