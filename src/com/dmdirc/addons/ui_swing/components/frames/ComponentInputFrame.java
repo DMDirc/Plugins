@@ -84,31 +84,26 @@ public class ComponentInputFrame extends InputTextFrame {
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public PopupType getNicknamePopupType() {
         return null;
     }
 
-    /** {@inheritDoc} */
     @Override
     public PopupType getChannelPopupType() {
         return null;
     }
 
-    /** {@inheritDoc} */
     @Override
     public PopupType getHyperlinkPopupType() {
         return null;
     }
 
-    /** {@inheritDoc} */
     @Override
     public PopupType getNormalPopupType() {
         return null;
     }
 
-    /** {@inheritDoc} */
     @Override
     public void addCustomPopupItems(final JPopupMenu popupMenu) {
         //Add no custom popup items

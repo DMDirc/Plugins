@@ -119,7 +119,7 @@ public class MessageLabel extends JPanel implements StatusBarComponent,
      */
     private void updateCurrentMessage() {
         SwingUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc} */
+
             @Override
             public void run() {
                 log.info("Updating current message: {}", currentMessage);

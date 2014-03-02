@@ -58,61 +58,51 @@ public class FakeWriteableFrameContainer extends WritableFrameContainer {
         this.target = target;
     }
 
-    /** {@inheritDoc} */
     @Override
     public void addLine(final String line, final boolean timestamp) {
         addLine(line);
     }
 
-    /** {@inheritDoc} */
     @Override
     public void sendLine(final String line) {
         target.sendLine(line);
     }
 
-    /** {@inheritDoc} */
     @Override
     public void addLine(final String type, final Date timestamp, final Object... args) {
         addLine(type, args);
     }
 
-    /** {@inheritDoc} */
     @Override
     public void addLine(final String type, final Object... args) {
         sendLine(Formatter.formatMessage(getConfigManager(), type, args));
     }
 
-    /** {@inheritDoc} */
     @Override
     public void addLine(final StringBuffer type, final Date timestamp, final Object... args) {
         addLine(type, args);
     }
 
-    /** {@inheritDoc} */
     @Override
     public void addLine(final StringBuffer type, final Object... args) {
         addLine(type.toString(), args);
     }
 
-    /** {@inheritDoc} */
     @Override
     public void addLine(final String line, final Date timestamp) {
         addLine(line);
     }
 
-    /** {@inheritDoc} */
     @Override
     public TabCompleter getTabCompleter() {
         return target.getTabCompleter();
     }
 
-    /** {@inheritDoc} */
     @Override
     public int getMaxLineLength() {
         return target.getMaxLineLength();
     }
 
-    /** {@inheritDoc} */
     @Override
     public Connection getConnection() {
         return target.getConnection();

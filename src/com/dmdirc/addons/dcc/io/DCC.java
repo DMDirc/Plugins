@@ -246,10 +246,9 @@ public abstract class DCC implements Runnable {
      * line of ASCII data) each time this method is called.
      * <p>
      * The return value of this method is used to determine whether the DCC has been completed. If
-     * the method returns
-     * <code>false</code>, the DCC is assumed to have finished (i.e., the socket has closed), and
-     * the method will not be called again. A return value of
-     * <code>true</code> will cause the method to be recalled.
+     * the method returns <code>false</code>, the DCC is assumed to have finished (i.e., the socket
+     * has closed), and the method will not be called again. A return value of <code>true</code>
+     * will cause the method to be recalled.
      *
      * @return false when socket is closed, true will cause the method to be called again.
      */

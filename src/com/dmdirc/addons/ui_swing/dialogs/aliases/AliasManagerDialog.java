@@ -132,8 +132,7 @@ public class AliasManagerDialog extends StandardDialog implements ActionListener
     /** Initialises the components. */
     private void initComponents(final AliasPanel aliasPanel) {
         final TableCellRenderer arrayRenderer = new ArrayCellRenderer();
-        final TableCellRenderer conditionRenderer =
-                new ActionConditionCellRenderer();
+        final TableCellRenderer conditionRenderer = new ActionConditionCellRenderer();
 
         orderButtons(new JButton(), new JButton());
         addButton = new JButton("Add");
@@ -148,7 +147,6 @@ public class AliasManagerDialog extends StandardDialog implements ActionListener
             /** Java Serialisation verion ID. */
             private static final long serialVersionUID = 1;
 
-            /** {@inheritDoc} */
             @Override
             public TableCellRenderer getCellRenderer(final int row,
                     final int column) {
@@ -254,7 +252,7 @@ public class AliasManagerDialog extends StandardDialog implements ActionListener
 
             if (selectedRow > -1 && selectedRow < tableModel.getRowCount() && aliasDetails.
                     getAlias() == tableModel.getAlias(
-                    table.getRowSorter().convertRowIndexToModel(selectedRow))) {
+                            table.getRowSorter().convertRowIndexToModel(selectedRow))) {
                 updateAlias();
             }
 
@@ -304,21 +302,19 @@ public class AliasManagerDialog extends StandardDialog implements ActionListener
                         this, ModalityType.APPLICATION_MODAL,
                         "Duplicate Aliases", "There are duplicate aliases in "
                         + "the table, these need to be removed before saving") {
-                    /** Java Serialisation verion ID. */
-                    private static final long serialVersionUID = 1;
+                            /** Java Serialisation verion ID. */
+                            private static final long serialVersionUID = 1;
 
-                    /** {@inheritDoc} */
-                    @Override
-                    public boolean save() {
-                        return true;
-                    }
+                            @Override
+                            public boolean save() {
+                                return true;
+                            }
 
-                    /** {@inheritDoc} */
-                    @Override
-                    public void cancelled() {
-                        //Ignore
-                    }
-                };
+                            @Override
+                            public void cancelled() {
+                                //Ignore
+                            }
+                        };
                 dialog.getOkButton().setVisible(false);
                 dialog.getCancelButton().setText("OK");
                 dialog.display();
@@ -382,7 +378,7 @@ public class AliasManagerDialog extends StandardDialog implements ActionListener
                 if (!action.getName().equals(alias.getName()) || !action.
                         getConditions().
                         equals(alias.getArguments()) || !Arrays.equals(action.
-                        getResponse(), alias.getResponse())) {
+                                getResponse(), alias.getResponse())) {
                     modifiedAliases.add(alias);
                 }
                 actions.remove(action);

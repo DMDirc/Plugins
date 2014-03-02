@@ -141,7 +141,6 @@ public class ActionConditionsPanel extends JPanel implements ActionListener,
         add.setEnabled(trigger != null && trigger.getType().getArgNames().length != 0);
     }
 
-    /** {@inheritDoc} */
     @Override
     public void setEnabled(final boolean enabled) {
         tree.setEnabled(enabled);
@@ -207,7 +206,6 @@ public class ActionConditionsPanel extends JPanel implements ActionListener,
         return list.getConditions();
     }
 
-    /** {@inheritDoc} */
     @Override
     public void propertyChange(final PropertyChangeEvent evt) {
         final boolean currentlyValidates = listValidates && treeValidates;

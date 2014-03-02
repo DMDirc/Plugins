@@ -166,7 +166,6 @@ public class SwingWindowFactory implements FrameListener {
         listeners.remove(SwingWindowListener.class, listener);
     }
 
-    /** {@inheritDoc} */
     @Override
     public void addWindow(final FrameContainer window, final boolean focus) {
         addWindow(null, window, focus);
@@ -206,13 +205,11 @@ public class SwingWindowFactory implements FrameListener {
         return windows.get(window);
     }
 
-    /** {@inheritDoc} */
     @Override
     public void delWindow(final FrameContainer window) {
         delWindow(null, window);
     }
 
-    /** {@inheritDoc} */
     @Override
     public void addWindow(final FrameContainer parent,
             final FrameContainer window, final boolean focus) {
@@ -237,7 +234,6 @@ public class SwingWindowFactory implements FrameListener {
         });
     }
 
-    /** {@inheritDoc} */
     @Override
     public void delWindow(final FrameContainer parent,
             final FrameContainer window) {

@@ -33,7 +33,6 @@ class ModesComparator implements Comparator<String>, Serializable {
     /** Serial version UID. */
     private static final long serialVersionUID = 1;
 
-    /** {@inheritDoc} */
     @Override
     public int compare(final String o1, final String o2) {
         final int insensitiveResult = String.CASE_INSENSITIVE_ORDER.compare(o1, o2);

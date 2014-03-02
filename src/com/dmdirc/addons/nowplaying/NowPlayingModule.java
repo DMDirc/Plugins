@@ -37,10 +37,11 @@ public class NowPlayingModule {
     public NowPlayingModule(final PluginInfo pluginInfo) {
         this.pluginInfo = pluginInfo;
     }
-    
+
     @Provides
     @PluginDomain(NowPlayingPlugin.class)
     public String getSettingsDomain() {
         return pluginInfo.getDomain();
     }
+
 }

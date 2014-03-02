@@ -60,7 +60,6 @@ public class InvitePopup extends StatusbarPopupWindow {
         this.connection = connection;
     }
 
-    /** {@inheritDoc} */
     @Override
     protected void initContent(final JPanel panel) {
         for (final Invite invite : connection.getInvites()) {

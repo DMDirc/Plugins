@@ -31,7 +31,6 @@ import javax.swing.text.DocumentFilter;
  */
 public class NewlinesDocumentFilter extends DocumentFilter {
 
-    /** {@inheritDoc} */
     @Override
     public void insertString(final DocumentFilter.FilterBypass fb,
             final int offset, final String string, final AttributeSet attr)
@@ -40,7 +39,6 @@ public class NewlinesDocumentFilter extends DocumentFilter {
 
     }
 
-    /** {@inheritDoc} */
     @Override
     public void replace(final DocumentFilter.FilterBypass fb, final int offset,
             final int length, final String text, final AttributeSet attrs)

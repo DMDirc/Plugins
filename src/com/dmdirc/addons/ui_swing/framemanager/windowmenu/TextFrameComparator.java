@@ -41,8 +41,7 @@ public class TextFrameComparator implements Comparator<TextFrame>,
      */
     private static final long serialVersionUID = 1;
     /** Comparator to proxy compares to. */
-    private final FrameContainerComparator comparator =
-            new FrameContainerComparator();
+    private final FrameContainerComparator comparator = new FrameContainerComparator();
 
     /**
      * Compares two frame containers names.

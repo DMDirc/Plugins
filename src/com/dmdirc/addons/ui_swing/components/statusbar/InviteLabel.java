@@ -116,7 +116,6 @@ public class InviteLabel extends StatusbarPopupPanel<JLabel> implements
         update();
     }
 
-    /** {@inheritDoc} */
     @Override
     protected StatusbarPopupWindow getWindow() {
         return new InvitePopup(this, activeServer, mainFrame);
@@ -142,7 +141,7 @@ public class InviteLabel extends StatusbarPopupPanel<JLabel> implements
      */
     private void update() {
         UIUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc} */
+
             @Override
             public void run() {
                 if (activeServer == null || activeServer.getInvites().isEmpty()) {
@@ -156,19 +155,16 @@ public class InviteLabel extends StatusbarPopupPanel<JLabel> implements
         });
     }
 
-    /** {@inheritDoc} */
     @Override
     public void inviteReceived(final Server server, final Invite invite) {
         update();
     }
 
-    /** {@inheritDoc} */
     @Override
     public void inviteExpired(final Server server, final Invite invite) {
         update();
     }
 
-    /** {@inheritDoc} */
     @Override
     public void processEvent(final ActionType type, final StringBuffer format,
             final Object... arguments) {
@@ -214,7 +210,6 @@ public class InviteLabel extends StatusbarPopupPanel<JLabel> implements
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public void selectionChanged(final TextFrame window) {
         activeServer = window == null ? null : (Server) window.getContainer().getConnection();

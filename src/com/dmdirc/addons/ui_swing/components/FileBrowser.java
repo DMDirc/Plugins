@@ -69,8 +69,8 @@ public class FileBrowser extends JPanel implements ActionListener {
         final JButton browseButton = new JButton("Browse");
         browseButton.addActionListener(this);
 
-        pathField =
-                new ValidatingJTextField(iconManager, setting.getValue(), setting.getValidator());
+        pathField
+                = new ValidatingJTextField(iconManager, setting.getValue(), setting.getValidator());
 
         setLayout(new MigLayout("ins 0, fill"));
         add(pathField, "growx, pushx, sgy all");

@@ -81,7 +81,7 @@ public class WizardDialog extends StandardDialog implements ActionListener {
             CoreUIUtils.centreWindow(this);
         }
         addWindowListener(new WindowAdapter() {
-            /** {@inheritDoc} */
+
             @Override
             public void windowClosed(final WindowEvent e) {
                 removeWindowListener(this);
@@ -92,7 +92,6 @@ public class WizardDialog extends StandardDialog implements ActionListener {
         setVisible(true);
     }
 
-    /** {@inheritDoc} */
     @Override
     public void validate() {
         super.validate();

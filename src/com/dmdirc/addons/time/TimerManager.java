@@ -70,7 +70,7 @@ public class TimerManager {
         timer = new Timer("Time plugin timer");
 
         timer.schedule(new TimerTask() {
-            /** {@inheritDoc} */
+
             @Override
             public void run() {
                 runTimer();

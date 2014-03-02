@@ -60,7 +60,6 @@ public class VlcMediaSourcePlugin extends BasePlugin implements MediaSource {
         this.identityController = identityController;
     }
 
-    /** {@inheritDoc} */
     @Override
     public MediaSourceState getState() {
         if (fetchInformation()) {
@@ -79,13 +78,11 @@ public class VlcMediaSourcePlugin extends BasePlugin implements MediaSource {
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getAppName() {
         return "VLC";
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getArtist() {
         return information.containsKey("artist") ? information.get("artist") : getFallbackArtist();
@@ -121,7 +118,6 @@ public class VlcMediaSourcePlugin extends BasePlugin implements MediaSource {
         return result;
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getTitle() {
         return information.containsKey("title") ? information.get("title")
@@ -160,14 +156,12 @@ public class VlcMediaSourcePlugin extends BasePlugin implements MediaSource {
         return result;
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getAlbum() {
         return information.containsKey("album/movie/show title")
                 ? information.get("album/movie/show title") : "unknown";
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getLength() {
         // This is just seconds, could do with formatting.
@@ -175,7 +169,6 @@ public class VlcMediaSourcePlugin extends BasePlugin implements MediaSource {
                 : "unknown";
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getTime() {
         // This is just seconds, could do with formatting.
@@ -183,21 +176,18 @@ public class VlcMediaSourcePlugin extends BasePlugin implements MediaSource {
                 : "unknown";
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getFormat() {
         return information.containsKey("codec") ? information.get("codec")
                 : "unknown";
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getBitrate() {
         return information.containsKey("bitrate") ? information.get("bitrate")
                 : "unknown";
     }
 
-    /** {@inheritDoc} */
     @Override
     public void showConfig(final PreferencesDialogModel manager) {
         final PreferencesCategory general = new PluginPreferencesCategory(

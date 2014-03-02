@@ -156,7 +156,7 @@ public class CategoryPanel extends JPanel {
     private void categoryLoaded(final PreferencesCategory category) {
         if (this.category == category) {
             UIUtilities.invokeAndWait(new Runnable() {
-                /** {@inheritDoc} */
+
                 @Override
                 public void run() {
                     final JPanel panel = panels.get(category);
@@ -230,7 +230,7 @@ public class CategoryPanel extends JPanel {
      */
     public void setWaiting(final boolean b) {
         UIUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc} */
+
             @Override
             public void run() {
                 scrollPane.setViewportView(waitingCategory);
@@ -245,7 +245,7 @@ public class CategoryPanel extends JPanel {
      */
     public void setError(final String message) {
         UIUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc} */
+
             @Override
             public void run() {
                 final JPanel panel = new JPanel(new MigLayout("fillx"));

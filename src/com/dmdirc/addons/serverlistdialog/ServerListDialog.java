@@ -190,13 +190,11 @@ public class ServerListDialog extends StandardDialog implements
         help.setVisible(lock);
     }
 
-    /** {@inheritDoc} */
     @Override
     public void serverGroupChanged(final ServerGroupItem item) {
         lockLayers();
     }
 
-    /** {@inheritDoc} */
     @Override
     public void dialogClosed(final boolean save) {
         if (save) {
@@ -204,14 +202,12 @@ public class ServerListDialog extends StandardDialog implements
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public void serverGroupAdded(final ServerGroupItem parent,
             final ServerGroupItem group) {
         lockLayers();
     }
 
-    /** {@inheritDoc} */
     @Override
     public void serverGroupRemoved(final ServerGroupItem parent,
             final ServerGroupItem group) {

@@ -46,7 +46,6 @@ public class DMDircHTMLEditorKit extends HTMLEditorKit {
         defaultFactory = new DMDircHTMLFactory(urlBuilder);
     }
 
-    /** {@inheritDoc} */
     @Override
     public ViewFactory getViewFactory() {
         return defaultFactory;

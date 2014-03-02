@@ -81,7 +81,7 @@ public class WindowStatusManager implements ConfigChangeListener, SelectionListe
      */
     public void onLoad() {
         panel = UIUtilities.invokeAndWait(new Callable<WindowStatusPanel>() {
-            /** {@inheritDoc} */
+
             @Override
             public WindowStatusPanel call() {
                 return new WindowStatusPanel();
@@ -102,7 +102,6 @@ public class WindowStatusManager implements ConfigChangeListener, SelectionListe
         panel = null;
     }
 
-    /** {@inheritDoc} */
     @Override
     public void selectionChanged(final TextFrame window) {
         if (window != null) {
@@ -213,7 +212,6 @@ public class WindowStatusManager implements ConfigChangeListener, SelectionListe
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public void configChanged(final String domain, final String key) {
         updateCache();

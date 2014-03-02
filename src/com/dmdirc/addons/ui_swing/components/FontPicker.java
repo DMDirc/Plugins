@@ -55,14 +55,13 @@ public class FontPicker extends JComboBox<Object> {
 
         setRenderer(new FontListCellRenderer(getRenderer()));
         new LoggingSwingWorker<String[], String[]>() {
-            /** {@inheritDoc} */
+
             @Override
             protected String[] doInBackground() {
                 return GraphicsEnvironment.getLocalGraphicsEnvironment().
                         getAvailableFontFamilyNames();
             }
 
-            /** {@inheritDoc} */
             @Override
             protected void done() {
                 try {
@@ -85,7 +84,7 @@ public class FontPicker extends JComboBox<Object> {
         final int size = getFont().getSize();
         for (final String font : fonts) {
             SwingUtilities.invokeLater(new Runnable() {
-                /** {@inheritDoc} */
+
                 @Override
                 public void run() {
                     ((DefaultComboBoxModel<Object>) getModel()).addElement(new Font(
@@ -94,7 +93,7 @@ public class FontPicker extends JComboBox<Object> {
             });
         }
         SwingUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc} */
+
             @Override
             public void run() {
                 setSelectedItem(new Font(fontFamily, Font.PLAIN, size));

@@ -34,7 +34,6 @@ public class SanitisedFilenameFilter extends DocumentFilter {
     /** Invalid filename characters. */
     private static final String INVALID_CHARS = "^[^\\w\\.\\s\\-\\#\\&\\_]";
 
-    /** {@inheritDoc} */
     @Override
     public void insertString(final DocumentFilter.FilterBypass fb,
             final int offset, final String string, final AttributeSet attr)
@@ -47,7 +46,6 @@ public class SanitisedFilenameFilter extends DocumentFilter {
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public void remove(final DocumentFilter.FilterBypass fb, final int offset,
             final int length) throws BadLocationException {
@@ -55,7 +53,6 @@ public class SanitisedFilenameFilter extends DocumentFilter {
         replace(fb, offset, length, "", null);
     }
 
-    /** {@inheritDoc} */
     @Override
     public void replace(final DocumentFilter.FilterBypass fb, final int offset,
             final int length, final String text, final AttributeSet attrs)

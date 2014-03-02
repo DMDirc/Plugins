@@ -147,7 +147,6 @@ public class CheckBoxMenuItem extends JCheckBoxMenuItem {
      */
     private class StayOpenListener implements ChangeListener {
 
-        /** {@inheritDoc} */
         @Override
         public void stateChanged(final ChangeEvent e) {
             if (getModel().isArmed() && isShowing()) {

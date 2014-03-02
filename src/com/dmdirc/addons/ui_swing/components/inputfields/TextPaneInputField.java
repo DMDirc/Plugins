@@ -82,7 +82,6 @@ public class TextPaneInputField extends JEditorPane implements InputField,
         this.iconManager = iconManager;
     }
 
-    /** {@inheritDoc} */
     @Override
     public void showColourPicker(final boolean irc, final boolean hex) {
         if (globalConfig.getOptionBool("general", "showcolourdialog")) {
@@ -108,7 +107,6 @@ public class TextPaneInputField extends JEditorPane implements InputField,
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public void hideColourPicker() {
         if (colourPicker != null) {
@@ -117,33 +115,28 @@ public class TextPaneInputField extends JEditorPane implements InputField,
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public void addActionListener(final ActionListener listener) {
         //Ignore
     }
 
-    /** {@inheritDoc} */
     @Override
     public void removeActionListener(final ActionListener listener) {
         //Ignore
     }
 
-    /** {@inheritDoc} */
     @Override
     protected void setUI(final ComponentUI newUI) {
         super.setUI(new BasicEditorPaneUI());
         super.setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));
     }
 
-    /** {@inheritDoc} */
     @Override
     public void updateUI() {
         super.setUI(new BasicEditorPaneUI());
         super.setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));
     }
 
-    /** {@inheritDoc} */
     @Override
     public void propertyChange(final PropertyChangeEvent evt) {
         if (!isFocusOwner()) {

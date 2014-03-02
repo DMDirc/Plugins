@@ -42,67 +42,56 @@ public class TextPaneBoundedRangeModel implements BoundedRangeModel {
     /** Value inside the range. */
     private int value = 0;
 
-    /** {@inheritDoc} */
     @Override
     public int getMinimum() {
         return minimum;
     }
 
-    /** {@inheritDoc} */
     @Override
     public void setMinimum(final int newMinimum) {
         setRangeProperties(value, 0, newMinimum, maximum, false);
     }
 
-    /** {@inheritDoc} */
     @Override
     public int getMaximum() {
         return maximum;
     }
 
-    /** {@inheritDoc} */
     @Override
     public void setMaximum(final int newMaximum) {
         setRangeProperties(value, 0, minimum, newMaximum, false);
     }
 
-    /** {@inheritDoc} */
     @Override
     public int getValue() {
         return value;
     }
 
-    /** {@inheritDoc} */
     @Override
     public void setValue(final int newValue) {
         setRangeProperties(newValue, 0, minimum, maximum, false);
     }
 
-    /** {@inheritDoc} */
     @Override
     public void setValueIsAdjusting(final boolean b) {
         setRangeProperties(value, 0, minimum, maximum, false);
     }
 
-    /** {@inheritDoc} */
     @Override
     public boolean getValueIsAdjusting() {
         return false;
     }
 
-    /** {@inheritDoc} */
     @Override
     public int getExtent() {
         return 0;
     }
 
-    /** {@inheritDoc} */
     @Override
     public void setExtent(final int newExtent) {
         setRangeProperties(value, 0, minimum, maximum, false);
     }
 
-    /** {@inheritDoc} */
     @Override
     public void setRangeProperties(final int value, final int extent,
             final int min, final int max, final boolean adjusting) {
@@ -116,13 +105,11 @@ public class TextPaneBoundedRangeModel implements BoundedRangeModel {
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public void addChangeListener(final ChangeListener x) {
         listeners.add(ChangeListener.class, x);
     }
 
-    /** {@inheritDoc} */
     @Override
     public void removeChangeListener(final ChangeListener x) {
         listeners.remove(ChangeListener.class, x);

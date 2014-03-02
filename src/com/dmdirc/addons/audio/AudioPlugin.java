@@ -32,7 +32,6 @@ import dagger.ObjectGraph;
  */
 public class AudioPlugin extends BaseCommandPlugin {
 
-    /** {@inheritDoc} */
     @Override
     public void load(final PluginInfo pluginInfo, final ObjectGraph graph) {
         super.load(pluginInfo, graph);

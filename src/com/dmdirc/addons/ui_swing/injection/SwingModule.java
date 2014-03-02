@@ -119,7 +119,7 @@ public class SwingModule {
             final WindowManager windowManager,
             final EventBus eventBus) {
         return UIUtilities.invokeAndWait(new Callable<MainFrame>() {
-            /** {@inheritDoc} */
+
             @Override
             public MainFrame call() {
                 return new MainFrame(

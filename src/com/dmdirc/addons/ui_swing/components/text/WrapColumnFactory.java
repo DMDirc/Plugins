@@ -21,7 +21,6 @@ import javax.swing.text.ViewFactory;
  */
 public class WrapColumnFactory implements ViewFactory {
 
-    /** {@inheritDoc} */
     @Override
     public View create(final Element elem) {
         final String kind = elem.getName();

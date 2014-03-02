@@ -205,7 +205,7 @@ public class BrowserWindow extends JDialog implements ActionListener {
     @Override
     public void actionPerformed(final ActionEvent e) {
         SwingUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc} */
+
             @Override
             public void run() {
                 if (list.getRowCount() > 0) {

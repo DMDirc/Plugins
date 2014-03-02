@@ -66,7 +66,6 @@ public class DMDircJOptionPane extends JOptionPane {
         this.maxCharactersPerLineCount = maxCharactersPerLineCount;
     }
 
-    /** {@inheritDoc} */
     @Override
     public int getMaxCharactersPerLineCount() {
         return this.maxCharactersPerLineCount;

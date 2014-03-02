@@ -111,7 +111,7 @@ public class SSLCertificateDialog extends StandardDialog implements ActionListen
         } else {
             blurb.
                     setText("Your connection to " + model.getServerName()
-                    + " is encrypted using SSL.");
+                            + " is encrypted using SSL.");
         }
     }
 

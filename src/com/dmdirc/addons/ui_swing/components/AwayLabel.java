@@ -73,14 +73,13 @@ public class AwayLabel extends JLabel implements ConfigChangeListener,
         container.addCloseListener(this);
     }
 
-    /** {@inheritDoc} */
     @Override
     public void configChanged(final String domain, final String key) {
         useAwayIndicator = container.getConfigManager()
                 .getOptionBool("ui", AWAY_INDICATOR);
         if (!useAwayIndicator) {
             UIUtilities.invokeLater(new Runnable() {
-                /** {@inheritDoc} */
+
                 @Override
                 public void run() {
                     setVisible(false);
@@ -89,11 +88,10 @@ public class AwayLabel extends JLabel implements ConfigChangeListener,
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public void onAway(final String reason) {
         UIUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc} */
+
             @Override
             public void run() {
                 if (useAwayIndicator) {
@@ -103,11 +101,10 @@ public class AwayLabel extends JLabel implements ConfigChangeListener,
         });
     }
 
-    /** {@inheritDoc} */
     @Override
     public void onBack() {
         UIUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc} */
+
             @Override
             public void run() {
                 if (useAwayIndicator) {
@@ -117,7 +114,6 @@ public class AwayLabel extends JLabel implements ConfigChangeListener,
         });
     }
 
-    /** {@inheritDoc} */
     @Override
     public void windowClosing(final FrameContainer window) {
         if (container != null && container.getConnection() != null) {

@@ -47,7 +47,6 @@ public class ValidatableReorderableJList<T> extends ReorderableJList<T> implemen
     private final Border failBorder = BorderFactory.createCompoundBorder(
             BorderFactory.createLineBorder(Color.RED, 2), getBorder());
 
-    /** {@inheritDoc} */
     @Override
     public void setValidation(final ValidationResponse validation) {
         if (validation.isFailure()) {

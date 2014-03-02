@@ -70,7 +70,6 @@ public class AddonFilter extends RowFilter<DefaultTableModel, Integer> {
         this.searchBox = searchBox;
     }
 
-    /** {@inheritDoc} */
     @Override
     public boolean include(
             final Entry<? extends DefaultTableModel, ? extends Integer> entry) {

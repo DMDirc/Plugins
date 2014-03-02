@@ -237,7 +237,6 @@ public class URLProtocolPanel extends JPanel implements ActionListener,
         updateExample();
     }
 
-    /** {@inheritDoc} */
     @Override
     public void setEnabled(final boolean enabled) {
         super.setEnabled(enabled);
@@ -279,19 +278,16 @@ public class URLProtocolPanel extends JPanel implements ActionListener,
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public void insertUpdate(final DocumentEvent e) {
         updateExample();
     }
 
-    /** {@inheritDoc} */
     @Override
     public void removeUpdate(final DocumentEvent e) {
         updateExample();
     }
 
-    /** {@inheritDoc} */
     @Override
     public void changedUpdate(final DocumentEvent e) {
         // Ignore

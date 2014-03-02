@@ -113,7 +113,6 @@ public class LicencesPanel extends JPanel implements TreeSelectionListener {
              */
             private static final long serialVersionUID = 1;
 
-            /** {@inheritDoc} */
             @Override
             public void scrollRectToVisible(final Rectangle aRect) {
                 final Rectangle rect = new Rectangle(0, aRect.y, aRect.width,
@@ -140,7 +139,6 @@ public class LicencesPanel extends JPanel implements TreeSelectionListener {
         scrollPane = new JScrollPane(licence);
     }
 
-    /** {@inheritDoc} */
     @Override
     public void valueChanged(final TreeSelectionEvent e) {
         if (list.getSelectionCount() == 0) {

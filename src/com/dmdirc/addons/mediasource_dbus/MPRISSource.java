@@ -78,7 +78,6 @@ public class MPRISSource implements MediaSource {
         return info.isEmpty() ? "" : info.get(0);
     }
 
-    /** {@inheritDoc} */
     @Override
     public MediaSourceState getState() {
         final String status = getStatus();
@@ -101,7 +100,6 @@ public class MPRISSource implements MediaSource {
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getAppName() {
         return name;
@@ -120,25 +118,21 @@ public class MPRISSource implements MediaSource {
                 ? "Unknown" : data.get(key);
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getArtist() {
         return getData("xesam:artist");
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getTitle() {
         return getData("xesam:title");
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getAlbum() {
         return getData("xesam:album");
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getLength() {
         try {
@@ -149,7 +143,6 @@ public class MPRISSource implements MediaSource {
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getTime() {
         try {
@@ -165,13 +158,11 @@ public class MPRISSource implements MediaSource {
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getFormat() {
         return "Unknown";
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getBitrate() {
         return "Unknown";

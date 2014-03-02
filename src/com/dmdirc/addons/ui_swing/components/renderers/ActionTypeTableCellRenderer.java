@@ -41,7 +41,6 @@ public final class ActionTypeTableCellRenderer extends DefaultTableCellRenderer 
      */
     private static final long serialVersionUID = 1;
 
-    /** {@inheritDoc} */
     @Override
     public void setValue(final Object value) {
         if (value == null) {

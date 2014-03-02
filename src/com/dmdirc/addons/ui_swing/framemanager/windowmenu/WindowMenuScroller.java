@@ -62,9 +62,9 @@ public class WindowMenuScroller implements ConfigChangeListener {
         this.fixedCount = fixedCount;
         this.scroller = new MenuScroller(menu,
                 config.getOptionInt(configDomain,
-                "windowMenuItems"),
+                        "windowMenuItems"),
                 config.getOptionInt(configDomain,
-                "windowMenuScrollInterval"), fixedCount, 0);
+                        "windowMenuScrollInterval"), fixedCount, 0);
         scroller.setShowSeperators(false);
 
         config.addChangeListener(configDomain,
@@ -73,11 +73,10 @@ public class WindowMenuScroller implements ConfigChangeListener {
                 "windowMenuScrollInterval", this);
     }
 
-    /** {@inheritDoc} */
     @Override
     public void configChanged(final String domain, final String key) {
         UIUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc} */
+
             @Override
             public void run() {
                 scroller.dispose();

@@ -76,7 +76,7 @@ public class DurationEditor extends StandardDialog implements ActionListener {
     /**
      * Instantiates a new duration editor.
      *
-     * @param window Parent window.
+     * @param window      Parent window.
      * @param iconManager Icon manager used to change window icon
      *
      * @since 0.6
@@ -88,9 +88,9 @@ public class DurationEditor extends StandardDialog implements ActionListener {
     /**
      * Instantiates a new duration editor.
      *
-     * @param window   Parent window.
+     * @param window      Parent window.
      * @param iconManager Icon manager used to change window icon
-     * @param duration Starting duration
+     * @param duration    Starting duration
      *
      * @since 0.6
      */
@@ -237,7 +237,7 @@ public class DurationEditor extends StandardDialog implements ActionListener {
 
         if (window != null) {
             window.addWindowListener(new WindowAdapter() {
-                /** {@inheritDoc} */
+
                 @Override
                 public void windowClosed(final WindowEvent e) {
                     dispose();

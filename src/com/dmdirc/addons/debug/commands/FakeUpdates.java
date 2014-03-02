@@ -71,19 +71,16 @@ public class FakeUpdates extends DebugCommand {
         this.updateManager = updateManager;
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getName() {
         return "fakeupdates";
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getUsage() {
         return " - Initialises a fake update handling chain";
     }
 
-    /** {@inheritDoc} */
     @Override
     public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
@@ -98,7 +95,6 @@ public class FakeUpdates extends DebugCommand {
     private static class FakeUpdateCheckStrategy
             implements UpdateCheckStrategy {
 
-        /** {@inheritDoc} */
         @Override
         public Map<UpdateComponent, UpdateCheckResult> checkForUpdates(
                 final Collection<UpdateComponent> components) {
@@ -167,7 +163,6 @@ public class FakeUpdates extends DebugCommand {
             listeners.remove(UpdateRetrievalListener.class, listener);
         }
 
-        /** {@inheritDoc} */
         @Override
         protected UpdateRetrievalResult retrieveImpl(
                 final FakeUpdateCheckResult checkResult) {
@@ -255,7 +250,6 @@ public class FakeUpdates extends DebugCommand {
             listeners.remove(UpdateInstallationListener.class, listener);
         }
 
-        /** {@inheritDoc} */
         @Override
         protected void installImpl(final UpdateComponent component,
                 final FakeRetrievalResult retrievalResult) {

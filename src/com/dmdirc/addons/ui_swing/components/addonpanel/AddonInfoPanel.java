@@ -135,7 +135,6 @@ public class AddonInfoPanel extends JPanel implements ActionListener,
         listeners.remove(AddonToggleListener.class, listener);
     }
 
-    /** {@inheritDoc} */
     @Override
     public void addonToggled() {
         listeners.getCallable(AddonToggleListener.class).addonToggled();

@@ -43,4 +43,5 @@ public class IdentModule {
     public String getSettingsDomain() {
         return pluginInfo.getDomain();
     }
+
 }

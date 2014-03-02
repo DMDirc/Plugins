@@ -67,14 +67,12 @@ public class ServerSettings extends Command implements IntelligentCommand {
         this.controller = controller;
     }
 
-    /** {@inheritDoc} */
     @Override
     public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
         controller.showServerSettingsDialog((Server) context.getSource().getConnection());
     }
 
-    /** {@inheritDoc} */
     @Override
     public AdditionalTabTargets getSuggestions(final int arg,
             final IntelligentCommandContext context) {

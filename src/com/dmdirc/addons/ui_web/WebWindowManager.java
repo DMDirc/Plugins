@@ -45,8 +45,8 @@ import java.util.Map;
 public class WebWindowManager implements FrameListener {
 
     /** A map of known implementations of window interfaces. */
-    private static final Map<Collection<String>, Class<? extends Window>> IMPLEMENTATIONS =
-            new HashMap<>();
+    private static final Map<Collection<String>, Class<? extends Window>> IMPLEMENTATIONS
+            = new HashMap<>();
 
     static {
         IMPLEMENTATIONS.put(new HashSet<>(
@@ -54,18 +54,18 @@ public class WebWindowManager implements FrameListener {
                 WebWindow.class);
         IMPLEMENTATIONS.put(new HashSet<>(
                 Arrays.asList(WindowComponent.TEXTAREA.getIdentifier(),
-                WindowComponent.INPUTFIELD.getIdentifier())),
+                        WindowComponent.INPUTFIELD.getIdentifier())),
                 WebInputWindow.class);
         IMPLEMENTATIONS.put(new HashSet<>(
                 Arrays.asList(WindowComponent.TEXTAREA.getIdentifier(),
-                WindowComponent.INPUTFIELD.getIdentifier(),
-                WindowComponent.CERTIFICATE_VIEWER.getIdentifier())),
+                        WindowComponent.INPUTFIELD.getIdentifier(),
+                        WindowComponent.CERTIFICATE_VIEWER.getIdentifier())),
                 WebInputWindow.class);
         IMPLEMENTATIONS.put(new HashSet<>(
                 Arrays.asList(WindowComponent.TEXTAREA.getIdentifier(),
-                WindowComponent.INPUTFIELD.getIdentifier(),
-                WindowComponent.TOPICBAR.getIdentifier(),
-                WindowComponent.USERLIST.getIdentifier())),
+                        WindowComponent.INPUTFIELD.getIdentifier(),
+                        WindowComponent.TOPICBAR.getIdentifier(),
+                        WindowComponent.USERLIST.getIdentifier())),
                 WebInputWindow.class);
     }
     /** The controller that owns this manager. */
@@ -111,13 +111,11 @@ public class WebWindowManager implements FrameListener {
         return windowsById.get(id);
     }
 
-    /** {@inheritDoc} */
     @Override
     public void addWindow(final FrameContainer window, final boolean focus) {
         doAddWindow(window, focus);
     }
 
-    /** {@inheritDoc} */
     @Override
     public void delWindow(final FrameContainer window) {
         if (windows.containsKey(window)) {
@@ -126,7 +124,6 @@ public class WebWindowManager implements FrameListener {
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public void addWindow(final FrameContainer parent, final FrameContainer window,
             final boolean focus) {
@@ -135,7 +132,6 @@ public class WebWindowManager implements FrameListener {
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public void delWindow(final FrameContainer parent, final FrameContainer window) {
         if (windows.containsKey(parent)) {

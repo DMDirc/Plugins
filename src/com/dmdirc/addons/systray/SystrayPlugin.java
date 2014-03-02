@@ -50,7 +50,7 @@ public class SystrayPlugin extends BaseCommandPlugin {
     /**
      * Creates a new system tray plugin.
      *
-     * @param pluginInfo         This plugin's plugin info.
+     * @param pluginInfo This plugin's plugin info.
      */
     public SystrayPlugin(final PluginInfo pluginInfo) {
         this.pluginInfo = pluginInfo;

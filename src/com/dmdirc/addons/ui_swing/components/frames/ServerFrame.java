@@ -108,31 +108,26 @@ public final class ServerFrame extends InputTextFrame implements
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public PopupType getNicknamePopupType() {
         return PopupType.CHAN_NICK;
     }
 
-    /** {@inheritDoc} */
     @Override
     public PopupType getChannelPopupType() {
         return PopupType.CHAN_NORMAL;
     }
 
-    /** {@inheritDoc} */
     @Override
     public PopupType getHyperlinkPopupType() {
         return PopupType.CHAN_HYPERLINK;
     }
 
-    /** {@inheritDoc} */
     @Override
     public PopupType getNormalPopupType() {
         return PopupType.CHAN_NORMAL;
     }
 
-    /** {@inheritDoc} */
     @Override
     public void addCustomPopupItems(final JPopupMenu popupMenu) {
         if (getContainer().getConnection().getState()
@@ -149,7 +144,6 @@ public final class ServerFrame extends InputTextFrame implements
         popupMenu.add(settingsMI);
     }
 
-    /** {@inheritDoc} */
     @Override
     public void certificateProblemEncountered(final X509Certificate[] chain,
             final Collection<CertificateException> problems,
@@ -159,7 +153,6 @@ public final class ServerFrame extends InputTextFrame implements
         sslDialog.display();
     }
 
-    /** {@inheritDoc} */
     @Override
     public void certificateProblemResolved(final CertificateManager manager) {
         if (sslDialog != null) {
@@ -167,14 +160,12 @@ public final class ServerFrame extends InputTextFrame implements
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public void windowClosing(final FrameContainer window) {
         controller.closeServerSettingsDialog((Server) window.getConnection());
         super.windowClosing(window);
     }
 
-    /** {@inheritDoc} */
     @Override
     public void dispose() {
         ((Connection) frameParent).removeCertificateProblemListener(this);

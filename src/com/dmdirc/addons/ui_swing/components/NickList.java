@@ -82,14 +82,14 @@ public class NickList extends JScrollPane implements ConfigChangeListener,
 
         nickList.setBackground(UIUtilities.convertColour(
                 colourManager.getColourFromString(
-                config.getOptionString(
-                "ui", "nicklistbackgroundcolour",
-                "ui", "backgroundcolour"), null)));
+                        config.getOptionString(
+                                "ui", "nicklistbackgroundcolour",
+                                "ui", "backgroundcolour"), null)));
         nickList.setForeground(UIUtilities.convertColour(
                 colourManager.getColourFromString(
-                config.getOptionString(
-                "ui", "nicklistforegroundcolour",
-                "ui", "foregroundcolour"), null)));
+                        config.getOptionString(
+                                "ui", "nicklistforegroundcolour",
+                                "ui", "foregroundcolour"), null)));
         nickList.setFont(new Font(config.getOption("ui", "textPaneFontName"),
                 Font.PLAIN, getFont().getSize()));
         config.addChangeListener("ui", "nicklistforegroundcolour", this);
@@ -196,7 +196,7 @@ public class NickList extends JScrollPane implements ConfigChangeListener,
 
             frame.showPopupMenu(new ClickTypeValue(ClickType.NICKNAME,
                     builder.toString()), new Point(e.getXOnScreen(),
-                    e.getYOnScreen()));
+                            e.getYOnScreen()));
         } else {
             nickList.clearSelection();
         }
@@ -249,7 +249,6 @@ public class NickList extends JScrollPane implements ConfigChangeListener,
         return suceeded;
     }
 
-    /** {@inheritDoc} */
     @Override
     public void configChanged(final String domain, final String key) {
         if ("nickListAltBackgroundColour".equals(key)
@@ -260,14 +259,14 @@ public class NickList extends JScrollPane implements ConfigChangeListener,
                 || "textPaneFontName".equals(key)) {
             nickList.setBackground(UIUtilities.convertColour(
                     colourManager.getColourFromString(
-                    config.getOptionString(
-                    "ui", "nicklistbackgroundcolour",
-                    "ui", "backgroundcolour"), null)));
+                            config.getOptionString(
+                                    "ui", "nicklistbackgroundcolour",
+                                    "ui", "backgroundcolour"), null)));
             nickList.setForeground(UIUtilities.convertColour(
                     colourManager.getColourFromString(
-                    config.getOptionString(
-                    "ui", "nicklistforegroundcolour",
-                    "ui", "foregroundcolour"), null)));
+                            config.getOptionString(
+                                    "ui", "nicklistforegroundcolour",
+                                    "ui", "foregroundcolour"), null)));
             nickList.setFont(new Font(config.getOption("ui", "textPaneFontName"),
                     Font.PLAIN, getFont().getSize()));
             nickList.repaint();
@@ -276,11 +275,10 @@ public class NickList extends JScrollPane implements ConfigChangeListener,
                 ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
     }
 
-    /** {@inheritDoc} */
     @Override
     public void clientListUpdated(final Collection<ChannelClientInfo> clients) {
         SwingUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc} */
+
             @Override
             public void run() {
                 nicklistModel.replace(clients);
@@ -288,11 +286,10 @@ public class NickList extends JScrollPane implements ConfigChangeListener,
         });
     }
 
-    /** {@inheritDoc} */
     @Override
     public void clientListUpdated() {
         SwingUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc} */
+
             @Override
             public void run() {
                 nicklistModel.sort();
@@ -301,11 +298,10 @@ public class NickList extends JScrollPane implements ConfigChangeListener,
         });
     }
 
-    /** {@inheritDoc} */
     @Override
     public void clientAdded(final ChannelClientInfo client) {
         SwingUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc} */
+
             @Override
             public void run() {
                 nicklistModel.add(client);
@@ -313,11 +309,10 @@ public class NickList extends JScrollPane implements ConfigChangeListener,
         });
     }
 
-    /** {@inheritDoc} */
     @Override
     public void clientRemoved(final ChannelClientInfo client) {
         SwingUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc} */
+
             @Override
             public void run() {
                 nicklistModel.remove(client);

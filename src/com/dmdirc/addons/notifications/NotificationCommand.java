@@ -56,7 +56,7 @@ public class NotificationCommand extends Command implements
      * Creates a new instance of this notification command.
      *
      * @param controller The controller to use for command information.
-     * @param manager     The notifications manager to get notification plugins from
+     * @param manager    The notifications manager to get notification plugins from
      */
     public NotificationCommand(final CommandController controller,
             final NotificationsManager manager) {
@@ -65,7 +65,6 @@ public class NotificationCommand extends Command implements
         this.manager = manager;
     }
 
-    /** {@inheritDoc} */
     @Override
     public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
@@ -124,7 +123,6 @@ public class NotificationCommand extends Command implements
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public AdditionalTabTargets getSuggestions(final int arg,
             final IntelligentCommandContext context) {

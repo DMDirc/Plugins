@@ -380,7 +380,6 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
         return line.replace("\r\n", "\n").replace('\r', '\n').split("\n");
     }
 
-    /** {@inheritDoc} */
     @Override
     public void configChanged(final String domain, final String key) {
         super.configChanged(domain, key);
@@ -420,14 +419,12 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public void activateFrame() {
         super.activateFrame();
         inputField.requestFocusInWindow();
     }
 
-    /** {@inheritDoc} */
     @Override
     public void dispose() {
         frameParent.getConfigManager().removeListener(this);

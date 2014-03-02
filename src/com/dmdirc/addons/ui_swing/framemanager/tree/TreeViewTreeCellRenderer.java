@@ -155,28 +155,27 @@ public class TreeViewTreeCellRenderer implements TreeCellRenderer,
     private void setColours() {
         rolloverColour = UIUtilities.convertColour(
                 colourManager.getColourFromString(
-                config.getOptionString(
-                "ui", "treeviewRolloverColour",
-                "treeview", "backgroundcolour",
-                "ui", "backgroundcolour"), null));
+                        config.getOptionString(
+                                "ui", "treeviewRolloverColour",
+                                "treeview", "backgroundcolour",
+                                "ui", "backgroundcolour"), null));
         activeBackground = UIUtilities.convertColour(
                 colourManager.getColourFromString(
-                config.getOptionString(
-                "ui", "treeviewActiveBackground",
-                "treeview", "backgroundcolour",
-                "ui", "backgroundcolour"), null));
+                        config.getOptionString(
+                                "ui", "treeviewActiveBackground",
+                                "treeview", "backgroundcolour",
+                                "ui", "backgroundcolour"), null));
         activeForeground = UIUtilities.convertColour(
                 colourManager.getColourFromString(
-                config.getOptionString(
-                "ui", "treeviewActiveForeground",
-                "treeview", "foregroundcolour",
-                "ui", "foregroundcolour"), null));
+                        config.getOptionString(
+                                "ui", "treeviewActiveForeground",
+                                "treeview", "foregroundcolour",
+                                "ui", "foregroundcolour"), null));
         activeBold = config.getOptionBool("ui", "treeviewActiveBold");
 
         manager.getTree().repaint();
     }
 
-    /** {@inheritDoc} */
     @Override
     public void configChanged(final String domain, final String key) {
         if (("ui".equals(domain) || "treeview".equals(domain))

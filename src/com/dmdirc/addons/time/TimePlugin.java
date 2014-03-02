@@ -43,14 +43,12 @@ public class TimePlugin extends BaseCommandPlugin {
         manager = getObjectGraph().get(TimerManager.class);
     }
 
-    /** {@inheritDoc} */
     @Override
     public void onLoad() {
         manager.load();
         super.onLoad();
     }
 
-    /** {@inheritDoc} */
     @Override
     public void onUnload() {
         manager.unload();

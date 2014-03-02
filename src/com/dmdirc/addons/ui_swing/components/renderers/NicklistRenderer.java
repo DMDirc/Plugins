@@ -111,7 +111,6 @@ public final class NicklistRenderer extends DefaultListCellRenderer implements
         return this;
     }
 
-    /** {@inheritDoc} */
     @Override
     public void configChanged(final String domain, final String key) {
         if ("shownickcoloursinnicklist".equals(key)) {

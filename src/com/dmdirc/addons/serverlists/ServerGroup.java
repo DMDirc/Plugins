@@ -76,13 +76,11 @@ public class ServerGroup extends ServerGroupItemBase {
         setName(name);
     }
 
-    /** {@inheritDoc} */
     @Override
     public ServerGroup getGroup() {
         return this;
     }
 
-    /** {@inheritDoc} */
     @Override
     protected ServerGroup getParent() {
         return parent;
@@ -213,7 +211,6 @@ public class ServerGroup extends ServerGroupItemBase {
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public String toString() {
         return "[" + getName() + ": links: " + getLinks() + "; desc: "

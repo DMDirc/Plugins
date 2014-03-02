@@ -89,7 +89,7 @@ public class TreeScroller implements MouseWheelListener {
      */
     public static void register(final JTree tree) {
         UIUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc} */
+
             @Override
             public void run() {
                 new TreeScroller(tree);
@@ -108,7 +108,7 @@ public class TreeScroller implements MouseWheelListener {
             final TreeSelectionModel selectionModel,
             final boolean rootVisible) {
         UIUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc} */
+
             @Override
             public void run() {
                 new TreeScroller(model, selectionModel, rootVisible);
@@ -223,8 +223,7 @@ public class TreeScroller implements MouseWheelListener {
         nextNode = node.getNextNode();
 
         if (nextNode == null && !rootVisible) {
-            nextNode =
-                    (DefaultMutableTreeNode) rootNode.getFirstChild();
+            nextNode = (DefaultMutableTreeNode) rootNode.getFirstChild();
         } else if (nextNode == null) {
             nextNode = (DefaultMutableTreeNode) model.getRoot();
         }

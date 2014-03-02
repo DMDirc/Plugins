@@ -101,7 +101,6 @@ public class SwingFirstRunWizard implements WizardListener, FirstRunWizard {
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public void wizardFinished() {
         if (ResourceManager.getResourceManager() == null) {
@@ -125,19 +124,16 @@ public class SwingFirstRunWizard implements WizardListener, FirstRunWizard {
         wizardDialog.dispose();
     }
 
-    /** {@inheritDoc} */
     @Override
     public void wizardCancelled() {
         wizardDialog.dispose();
     }
 
-    /** {@inheritDoc} */
     @Override
     public void extractPlugins() {
         corePluginExtractor.extractCorePlugins(null);
     }
 
-    /** {@inheritDoc} */
     @Override
     public void extractActions() {
         extractCoreActions();
@@ -146,25 +142,22 @@ public class SwingFirstRunWizard implements WizardListener, FirstRunWizard {
     /** Extracts the core actions. */
     public void extractCoreActions() {
         //Copy actions
-        final Map<String, byte[]> resources =
-                ResourceManager.getResourceManager().
+        final Map<String, byte[]> resources = ResourceManager.getResourceManager().
                 getResourcesStartingWithAsBytes("com/dmdirc/actions/defaults");
         for (Entry<String, byte[]> resource : resources.entrySet()) {
             try {
                 final String resourceName = actionsDirectory + resource.getKey()
                         .substring(27, resource.getKey().length());
-                final File newDir =
-                        new File(resourceName.substring(0,
+                final File newDir = new File(resourceName.substring(0,
                         resourceName.lastIndexOf('/')) + "/");
 
                 if (!newDir.exists()) {
                     newDir.mkdirs();
                 }
 
-                final File newFile =
-                        new File(newDir,
+                final File newFile = new File(newDir,
                         resourceName.substring(resourceName.lastIndexOf('/') + 1,
-                        resourceName.length()));
+                                resourceName.length()));
 
                 if (!newFile.isDirectory()) {
                     ResourceManager.getResourceManager().
@@ -176,7 +169,6 @@ public class SwingFirstRunWizard implements WizardListener, FirstRunWizard {
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public void display() {
         wizardDialog.addStep(new FirstRunExtractionStep());

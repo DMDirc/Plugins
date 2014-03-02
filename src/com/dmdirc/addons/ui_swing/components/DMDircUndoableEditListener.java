@@ -45,7 +45,6 @@ public final class DMDircUndoableEditListener implements UndoableEditListener {
         this.undoManager = undoManager;
     }
 
-    /** {@inheritDoc} */
     @Override
     public void undoableEditHappened(final UndoableEditEvent evt) {
         undoManager.addEdit(evt.getEdit());

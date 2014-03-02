@@ -110,7 +110,7 @@ public class TreeViewModel extends DefaultTreeModel {
                 } else if (!sortAfter(newChild, child) && newChild.
                         getUserObject().
                         toString().compareToIgnoreCase(child.getUserObject().
-                        toString()) < 0) {
+                                toString()) < 0) {
                     return i;
                 }
             }

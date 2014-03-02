@@ -72,7 +72,7 @@ public class Tree extends JPanel implements TreeSelectionListener,
     /**
      * Instantiates a new tree of server groups.
      *
-     * @param iconManager   Icon Manager
+     * @param iconManager  Icon Manager
      * @param model        Model backing this tree
      * @param parentWindow Dialog's parent window
      */
@@ -91,7 +91,6 @@ public class Tree extends JPanel implements TreeSelectionListener,
             /** Serial version UID. */
             private static final long serialVersionUID = 2;
 
-            /** {@inheritDoc} */
             @Override
             public void scrollRectToVisible(final Rectangle aRect) {
                 final Rectangle rect = new Rectangle(0, aRect.y,
@@ -157,19 +156,16 @@ public class Tree extends JPanel implements TreeSelectionListener,
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public void serverGroupChanged(final ServerGroupItem item) {
         //Ignore
     }
 
-    /** {@inheritDoc} */
     @Override
     public void dialogClosed(final boolean save) {
         //Ignore
     }
 
-    /** {@inheritDoc} */
     @Override
     public void serverGroupAdded(final ServerGroupItem parent,
             final ServerGroupItem group) {
@@ -178,7 +174,6 @@ public class Tree extends JPanel implements TreeSelectionListener,
                 parentNode.getChildCount());
     }
 
-    /** {@inheritDoc} */
     @Override
     public void serverGroupRemoved(final ServerGroupItem parent,
             final ServerGroupItem group) {
@@ -213,8 +208,8 @@ public class Tree extends JPanel implements TreeSelectionListener,
         final Enumeration<?> enumeration = ((DefaultMutableTreeNode) items
                 .getModel().getRoot()).breadthFirstEnumeration();
         while (enumeration.hasMoreElements()) {
-            final DefaultMutableTreeNode current =
-                    (DefaultMutableTreeNode) enumeration.nextElement();
+            final DefaultMutableTreeNode current = (DefaultMutableTreeNode) enumeration.
+                    nextElement();
             if (item == current.getUserObject()) {
                 node = current;
                 break;

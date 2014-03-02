@@ -60,13 +60,11 @@ public class IconLoader extends LoggingSwingWorker<Icon, Void> {
         this.icon = icon;
     }
 
-    /** {@inheritDoc} */
     @Override
     protected Icon doInBackground() {
         return iconManager.getIcon(icon);
     }
 
-    /** {@inheritDoc} */
     @Override
     protected void done() {
         try {

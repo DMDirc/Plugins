@@ -38,7 +38,6 @@ public final class FirstRunExtractionStep extends ExtractionStep {
      */
     private static final long serialVersionUID = 2;
 
-    /** {@inheritDoc} */
     @Override
     protected void initComponents() {
         setLayout(new MigLayout("fillx, wrap 1"));

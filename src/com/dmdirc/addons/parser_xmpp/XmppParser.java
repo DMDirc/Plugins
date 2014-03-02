@@ -127,7 +127,6 @@ public class XmppParser extends BaseSocketAwareParser {
                 new Object[]{address.getQuery(), useFakeChannel, priority});
     }
 
-    /** {@inheritDoc} */
     @Override
     public void disconnect(final String message) {
         super.disconnect(message);
@@ -135,7 +134,6 @@ public class XmppParser extends BaseSocketAwareParser {
         connection.disconnect();
     }
 
-    /** {@inheritDoc} */
     @Override
     public void joinChannels(final ChannelJoinRequest... channels) {
         for (ChannelJoinRequest request : channels) {
@@ -155,32 +153,27 @@ public class XmppParser extends BaseSocketAwareParser {
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public ChannelInfo getChannel(final String channel) {
         // TODO: Implement
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    /** {@inheritDoc} */
     @Override
     public Collection<? extends ChannelInfo> getChannels() {
         return Collections.<ChannelInfo>emptyList();
     }
 
-    /** {@inheritDoc} */
     @Override
     public int getMaxLength(final String type, final String target) {
         return Integer.MAX_VALUE;
     }
 
-    /** {@inheritDoc} */
     @Override
     public int getMaxLength() {
         return Integer.MAX_VALUE;
     }
 
-    /** {@inheritDoc} */
     @Override
     public LocalClientInfo getLocalClient() {
         final String[] parts = parseHostmask(connection.getUser());
@@ -189,7 +182,6 @@ public class XmppParser extends BaseSocketAwareParser {
         return new XmppLocalClientInfo(this, parts[0], parts[2], parts[1]);
     }
 
-    /** {@inheritDoc} */
     @Override
     public XmppClientInfo getClient(final String details) {
         final String[] parts = parseHostmask(details);
@@ -201,7 +193,6 @@ public class XmppParser extends BaseSocketAwareParser {
         return contacts.get(parts[0]);
     }
 
-    /** {@inheritDoc} */
     @Override
     public void sendRawMessage(final String message) {
         // Urgh, hacky horrible rubbish. These commands should call methods.
@@ -210,7 +201,7 @@ public class XmppParser extends BaseSocketAwareParser {
         } else if (message.length() > 0 && message.charAt(0) == '<') {
             // Looks vaguely like XML, let's send it.
             connection.sendPacket(new Packet() {
-                /** {@inheritDoc} */
+
                 @Override
                 public String toXML() {
                     return message;
@@ -253,139 +244,116 @@ public class XmppParser extends BaseSocketAwareParser {
         getCallback(NumericListener.class).onNumeric(null, null, numeric, newArgs);
     }
 
-    /** {@inheritDoc} */
     @Override
     public void sendRawMessage(final String message, final QueuePriority priority) {
         sendRawMessage(message);
     }
 
-    /** {@inheritDoc} */
     @Override
     public StringConverter getStringConverter() {
         return new DefaultStringConverter();
     }
 
-    /** {@inheritDoc} */
     @Override
     public boolean isValidChannelName(final String name) {
         return false; // TODO: Implement
     }
 
-    /** {@inheritDoc} */
     @Override
     public boolean compareURI(final URI uri) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    /** {@inheritDoc} */
     @Override
     public Collection<? extends ChannelJoinRequest> extractChannels(final URI uri) {
         return Collections.<ChannelJoinRequest>emptyList();
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getNetworkName() {
         return "XMPP"; // TODO
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getServerSoftware() {
         return "Unknown"; // TODO
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getServerSoftwareType() {
         return "XMPP"; // TODO
     }
 
-    /** {@inheritDoc} */
     @Override
     public List<String> getServerInformationLines() {
         return Collections.<String>emptyList(); // TODO
     }
 
-    /** {@inheritDoc} */
     @Override
     public int getMaxTopicLength() {
         return 0; // TODO
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getBooleanChannelModes() {
         return ""; // TODO
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getListChannelModes() {
         return ""; // TODO
     }
 
-    /** {@inheritDoc} */
     @Override
     public int getMaxListModes(final char mode) {
         return 0; // TODO
     }
 
-    /** {@inheritDoc} */
     @Override
     public boolean isUserSettable(final char mode) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getParameterChannelModes() {
         return ""; // TODO
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getDoubleParameterChannelModes() {
         return ""; // TODO
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getUserModes() {
         return ""; // TODO
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getChannelUserModes() {
         return ""; // TODO
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getChannelPrefixes() {
         return "#";
     }
 
-    /** {@inheritDoc} */
     @Override
     public long getServerLatency() {
         return 1000L; // TODO
     }
 
-    /** {@inheritDoc} */
     @Override
     public void sendCTCP(final String target, final String type, final String message) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    /** {@inheritDoc} */
     @Override
     public void sendCTCPReply(final String target, final String type, final String message) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    /** {@inheritDoc} */
     @Override
     public void sendMessage(final String target, final String message) {
         if (!chats.containsKey(target)) {
@@ -401,49 +369,42 @@ public class XmppParser extends BaseSocketAwareParser {
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public void sendNotice(final String target, final String message) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    /** {@inheritDoc} */
     @Override
     public void sendAction(final String target, final String message) {
         sendMessage(target, "/me " + message);
     }
 
-    /** {@inheritDoc} */
     @Override
     public void sendInvite(final String channel, final String user) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getLastLine() {
         return "TODO: Implement me";
     }
 
-    /** {@inheritDoc} */
     @Override
     public String[] parseHostmask(final String hostmask) {
         return new XmppProtocolDescription().parseHostmask(hostmask);
     }
 
-    /** {@inheritDoc} */
     @Override
     public long getPingTime() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    /** {@inheritDoc} */
     @Override
     public void run() {
         if (getURI().getUserInfo() == null || !getURI().getUserInfo().contains(":")) {
             getCallback(ConnectErrorListener.class).onConnectError(this,
                     new Date(), new ParserError(ParserError.ERROR_USER,
-                    "User name and password must be specified in URI", ""));
+                            "User name and password must be specified in URI", ""));
             return;
         }
         final String[] userInfoParts = getURI().getUserInfo().split(":", 2);
@@ -475,7 +436,7 @@ public class XmppParser extends BaseSocketAwareParser {
             } catch (XMPPException ex) {
                 getCallback(ConnectErrorListener.class).onConnectError(this,
                         new Date(), new ParserError(ParserError.ERROR_USER,
-                        ex.getMessage(), ""));
+                                ex.getMessage(), ""));
                 return;
             }
 
@@ -503,8 +464,8 @@ public class XmppParser extends BaseSocketAwareParser {
                     if (client.isAway()) {
                         getCallback(OtherAwayStateListener.class)
                                 .onAwayStateOther(null, null, client,
-                                AwayState.UNKNOWN,
-                                AwayState.AWAY);
+                                        AwayState.UNKNOWN,
+                                        AwayState.AWAY);
                     }
                 }
             }
@@ -540,8 +501,8 @@ public class XmppParser extends BaseSocketAwareParser {
         if (useFakeChannel) {
             getCallback(OtherAwayStateListener.class)
                     .onAwayStateOther(null, null, client,
-                    isBack ? AwayState.AWAY : AwayState.HERE,
-                    isBack ? AwayState.HERE : AwayState.AWAY);
+                            isBack ? AwayState.AWAY : AwayState.HERE,
+                            isBack ? AwayState.HERE : AwayState.AWAY);
         }
     }
 
@@ -569,7 +530,6 @@ public class XmppParser extends BaseSocketAwareParser {
                 AwayState.AWAY, AwayState.HERE, null);
     }
 
-    /** {@inheritDoc} */
     @Override
     public void setCompositionState(final String host, final CompositionState state) {
         LOG.debug("Setting composition state for {} to {}", host, state);
@@ -601,7 +561,6 @@ public class XmppParser extends BaseSocketAwareParser {
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public void requestGroupList(final String searchTerms) {
         // Do nothing
@@ -609,32 +568,27 @@ public class XmppParser extends BaseSocketAwareParser {
 
     private class ConnectionListenerImpl implements ConnectionListener {
 
-        /** {@inheritDoc} */
         @Override
         public void connectionClosed() {
             getCallback(SocketCloseListener.class).onSocketClosed(null, null);
         }
 
-        /** {@inheritDoc} */
         @Override
         public void connectionClosedOnError(final Exception excptn) {
             // TODO: Handle exception
             getCallback(SocketCloseListener.class).onSocketClosed(null, null);
         }
 
-        /** {@inheritDoc} */
         @Override
         public void reconnectingIn(final int i) {
             throw new UnsupportedOperationException("Not supported yet.");
         }
 
-        /** {@inheritDoc} */
         @Override
         public void reconnectionSuccessful() {
             throw new UnsupportedOperationException("Not supported yet.");
         }
 
-        /** {@inheritDoc} */
         @Override
         public void reconnectionFailed(final Exception excptn) {
             throw new UnsupportedOperationException("Not supported yet.");
@@ -644,25 +598,21 @@ public class XmppParser extends BaseSocketAwareParser {
 
     private class RosterListenerImpl implements RosterListener {
 
-        /** {@inheritDoc} */
         @Override
         public void entriesAdded(final Collection<String> clctn) {
             // Do nothing, yet
         }
 
-        /** {@inheritDoc} */
         @Override
         public void entriesUpdated(final Collection<String> clctn) {
             // Do nothing, yet
         }
 
-        /** {@inheritDoc} */
         @Override
         public void entriesDeleted(final Collection<String> clctn) {
             // Do nothing, yet
         }
 
-        /** {@inheritDoc} */
         @Override
         public void presenceChanged(final Presence prsnc) {
             getClient(prsnc.getFrom()).setPresence(prsnc);
@@ -672,7 +622,6 @@ public class XmppParser extends BaseSocketAwareParser {
 
     private class ChatManagerListenerImpl implements ChatManagerListener {
 
-        /** {@inheritDoc} */
         @Override
         public void chatCreated(final Chat chat, final boolean bln) {
             if (!bln) {
@@ -686,16 +635,15 @@ public class XmppParser extends BaseSocketAwareParser {
 
     private class MessageListenerImpl implements ChatStateListener {
 
-        /** {@inheritDoc} */
         @Override
         public void processMessage(final Chat chat, final Message msg) {
             if (msg.getType() == Message.Type.error) {
                 getCallback(NumericListener.class).onNumeric(null, null,
                         404, new String[]{
-                    ":xmpp", "404", getLocalClient().getNickname(),
-                    msg.getFrom(),
-                    "Cannot send message: " + msg.getError().toString()
-                });
+                            ":xmpp", "404", getLocalClient().getNickname(),
+                            msg.getFrom(),
+                            "Cannot send message: " + msg.getError().toString()
+                        });
                 return;
             }
 
@@ -710,7 +658,6 @@ public class XmppParser extends BaseSocketAwareParser {
             }
         }
 
-        /** {@inheritDoc} */
         @Override
         public void stateChanged(final Chat chat, final ChatState cs) {
             CompositionState state;
@@ -744,7 +691,6 @@ public class XmppParser extends BaseSocketAwareParser {
             this.callback = callback;
         }
 
-        /** {@inheritDoc} */
         @Override
         public void processPacket(final Packet packet) {
             if (callback.equals(DataOutListener.class)) {
@@ -758,7 +704,6 @@ public class XmppParser extends BaseSocketAwareParser {
 
     private static class AcceptAllPacketFilter implements PacketFilter {
 
-        /** {@inheritDoc} */
         @Override
         public boolean accept(final Packet packet) {
             return true;

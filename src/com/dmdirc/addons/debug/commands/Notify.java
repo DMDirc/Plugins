@@ -46,19 +46,16 @@ public class Notify extends DebugCommand {
         super(commandProvider);
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getName() {
         return "notify";
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getUsage() {
         return " - Shows the current notification colour for a window";
     }
 
-    /** {@inheritDoc} */
     @Override
     public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {

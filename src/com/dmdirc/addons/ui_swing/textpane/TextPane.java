@@ -137,7 +137,7 @@ public final class TextPane extends JComponent implements MouseWheelListener,
         setAutoscrolls(true);
 
         final MouseMotionListener doScrollRectToVisible = new MouseMotionAdapter() {
-            /** {@inheritDoc} */
+
             @Override
             public void mouseDragged(final MouseEvent e) {
                 if (e.getXOnScreen() > getLocationOnScreen().getX()
@@ -174,7 +174,6 @@ public final class TextPane extends JComponent implements MouseWheelListener,
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public void updateUI() {
         setUI(new TextPaneUI());
@@ -581,7 +580,6 @@ public final class TextPane extends JComponent implements MouseWheelListener,
         canvas.removeTextPaneListener(listener);
     }
 
-    /** {@inheritDoc} */
     @Override
     public void configChanged(final String domain, final String key) {
         showNotification = frame.getContainer().getConfigManager()

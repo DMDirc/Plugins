@@ -75,8 +75,8 @@ public class ChatContainer extends DCCFrameContainer implements DCCChatHandler {
                 tabCompleterFactory,
                 urlBuilder,
                 Arrays.asList(
-                WindowComponent.TEXTAREA.getIdentifier(),
-                WindowComponent.INPUTFIELD.getIdentifier()));
+                        WindowComponent.TEXTAREA.getIdentifier(),
+                        WindowComponent.INPUTFIELD.getIdentifier()));
         dccChat = dcc;
         dcc.setHandler(this);
         nickname = nick;
@@ -92,7 +92,6 @@ public class ChatContainer extends DCCFrameContainer implements DCCChatHandler {
         return dccChat;
     }
 
-    /** {@inheritDoc} */
     @Override
     public void sendLine(final String line) {
         if (dccChat.isWriteable()) {
@@ -107,7 +106,6 @@ public class ChatContainer extends DCCFrameContainer implements DCCChatHandler {
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public void handleChatMessage(final DCCChat dcc, final String message) {
         final StringBuffer buff = new StringBuffer("DCCChatMessage");
@@ -116,7 +114,6 @@ public class ChatContainer extends DCCFrameContainer implements DCCChatHandler {
         addLine(buff, otherNickname, message);
     }
 
-    /** {@inheritDoc} */
     @Override
     public void socketClosed(final DCCChat dcc) {
         final StringBuffer buff = new StringBuffer("DCCChatInfo");
@@ -128,7 +125,6 @@ public class ChatContainer extends DCCFrameContainer implements DCCChatHandler {
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public void socketOpened(final DCCChat dcc) {
         final StringBuffer buff = new StringBuffer("DCCChatInfo");
@@ -138,7 +134,6 @@ public class ChatContainer extends DCCFrameContainer implements DCCChatHandler {
         setIcon("dcc-chat-active");
     }
 
-    /** {@inheritDoc} */
     @Override
     public void close() {
         super.close();

@@ -57,19 +57,16 @@ public class GlobalConfigInfo extends DebugCommand {
         this.globalConfig = globalConfig;
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getName() {
         return "globalconfiginfo";
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getUsage() {
         return " - Outputs global config information";
     }
 
-    /** {@inheritDoc} */
     @Override
     public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {

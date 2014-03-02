@@ -53,7 +53,6 @@ public class TitleMediaSource implements MediaSource {
         this.name = name;
     }
 
-    /** {@inheritDoc} */
     @Override
     public MediaSourceState getState() {
         if (getInfo().isEmpty()) {
@@ -65,19 +64,16 @@ public class TitleMediaSource implements MediaSource {
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getAppName() {
         return name;
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getArtist() {
         return getInfo().split("–", 2)[0].trim();
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getTitle() {
         final String[] info = getInfo().split("–", 2);
@@ -89,31 +85,26 @@ public class TitleMediaSource implements MediaSource {
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getAlbum() {
         return "";
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getLength() {
         return "";
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getTime() {
         return "";
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getFormat() {
         return "";
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getBitrate() {
         return "";

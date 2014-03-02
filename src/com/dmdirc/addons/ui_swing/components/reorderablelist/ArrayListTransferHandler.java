@@ -78,7 +78,8 @@ public final class ArrayListTransferHandler<T> extends TransferHandler {
 
         try {
             if (hasLocalArrayListFlavor(t.getTransferDataFlavors())) {
-                return doImport((JList<T>) comp, (ArrayList<T>) t.getTransferData(localArrayListFlavor));
+                return doImport((JList<T>) comp, (ArrayList<T>) t.getTransferData(
+                        localArrayListFlavor));
             } else if (hasSerialArrayListFlavor(t.getTransferDataFlavors())) {
                 return doImport((JList<T>) comp, (ArrayList<T>) t.
                         getTransferData(serialArrayListFlavor));
@@ -132,7 +133,6 @@ public final class ArrayListTransferHandler<T> extends TransferHandler {
         return true;
     }
 
-    /** {@inheritDoc} */
     @Override
     protected void exportDone(final JComponent source, final Transferable data,
             final int action) {

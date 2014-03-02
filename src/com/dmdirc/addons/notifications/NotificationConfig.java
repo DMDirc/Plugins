@@ -59,8 +59,8 @@ public class NotificationConfig extends JPanel implements PreferencesInterface {
      * Creates a new instance of NotificationConfig panel.
      *
      * @param userSettings Config to save settings to
-     * @param domain This plugin's settings domain
-     * @param methods A list of methods to be used in the panel
+     * @param domain       This plugin's settings domain
+     * @param methods      A list of methods to be used in the panel
      */
     public NotificationConfig(
             final ConfigProvider userSettings,

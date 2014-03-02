@@ -249,10 +249,10 @@ public class DynamicRequestHandler extends AbstractHandler {
                         request.getParameter("input"),
                         request.getParameter("selstart"),
                         request.getParameter("selend")).handleKeyPressed(
-                        request.getParameter("input"),
-                        Integer.parseInt(request.getParameter("key")), 0,
-                        Boolean.parseBoolean(request.getParameter("shift")),
-                        Boolean.parseBoolean(request.getParameter("ctrl")));
+                                request.getParameter("input"),
+                                Integer.parseInt(request.getParameter("key")), 0,
+                                Boolean.parseBoolean(request.getParameter("shift")),
+                                Boolean.parseBoolean(request.getParameter("ctrl")));
             } catch (NumberFormatException ex) {
                 // Do nothing
             }
@@ -269,7 +269,7 @@ public class DynamicRequestHandler extends AbstractHandler {
 
             wiw.getInputHandler(client,
                     request.getParameter("input"), request.getParameter(
-                    "selstart"),
+                            "selstart"),
                     request.getParameter("selend")).doTabCompletion(false);
         }
     }
@@ -301,8 +301,8 @@ public class DynamicRequestHandler extends AbstractHandler {
         try {
             serverManager.connectToAddress(
                     new URI("irc://" + request.getParameter("password") + "@"
-                    + request.getParameter("server") + ":"
-                    + request.getParameter("port")),
+                            + request.getParameter("server") + ":"
+                            + request.getParameter("port")),
                     findProfile(request.getParameter("profile")));
         } catch (URISyntaxException ex) {
             // Ugh.

@@ -60,11 +60,10 @@ public class URLSubsitutionsPanel extends SubstitutionsPanel<List<String>> {
         super("Substitutions may be used as part of the launch command", subs);
     }
 
-    /** {@inheritDoc} */
     @Override
     public void setType(final List<String> type) {
         SwingUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc} */
+
             @Override
             public void run() {
                 substitutions = new ArrayList<>();

@@ -100,7 +100,6 @@ public class ErrorPanel extends StatusbarPopupPanel<JLabel> implements
         checkErrors();
     }
 
-    /** {@inheritDoc} */
     @Override
     protected StatusbarPopupWindow getWindow() {
         return new ErrorPopup(controller.getIconManager(), this, mainFrame);
@@ -112,19 +111,16 @@ public class ErrorPanel extends StatusbarPopupPanel<JLabel> implements
         errorLevel = null;
     }
 
-    /** {@inheritDoc} */
     @Override
     public void errorAdded(final ProgramError error) {
         checkErrors();
     }
 
-    /** {@inheritDoc} */
     @Override
     public void errorDeleted(final ProgramError error) {
         checkErrors();
     }
 
-    /** {@inheritDoc} */
     @Override
     public void errorStatusChanged(final ProgramError error) {
         //Ignore
@@ -133,7 +129,7 @@ public class ErrorPanel extends StatusbarPopupPanel<JLabel> implements
     /** Checks all the errors for the most significant error. */
     private void checkErrors() {
         SwingUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc} */
+
             @Override
             public void run() {
                 clearError();
@@ -155,7 +151,6 @@ public class ErrorPanel extends StatusbarPopupPanel<JLabel> implements
         });
     }
 
-    /** {@inheritDoc} */
     @Override
     public boolean isReady() {
         return statusBar.isValid();
@@ -240,8 +235,7 @@ public class ErrorPanel extends StatusbarPopupPanel<JLabel> implements
         if (e.getSource() == show) {
             controller.showErrorDialog();
         } else {
-            final Collection<ProgramError> errors =
-                    ErrorManager.getErrorManager().getErrors();
+            final Collection<ProgramError> errors = ErrorManager.getErrorManager().getErrors();
             for (final ProgramError error : errors) {
                 ErrorManager.getErrorManager().deleteError(error);
             }

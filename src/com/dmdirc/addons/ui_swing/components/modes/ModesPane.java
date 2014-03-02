@@ -220,8 +220,7 @@ public abstract class ModesPane extends JPanel {
         for (int i = 0; i < paramModes.length(); i++) {
             final String mode = paramModes.substring(i, i + 1);
             final String value = getParamModeValue(mode);
-            final boolean state =
-                    ourBooleanModes.split(" ")[0].contains(
+            final boolean state = ourBooleanModes.split(" ")[0].contains(
                     mode.subSequence(0, 1));
             final ParamModePanel paramModePanel = getParamModes().get(mode);
 

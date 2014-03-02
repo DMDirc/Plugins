@@ -46,14 +46,12 @@ public abstract class ConfirmQuitDialog extends StandardQuestionDialog {
                 "You are about to quit DMDirc, are you sure?");
     }
 
-    /** {@inheritDoc} */
     @Override
     public boolean save() {
         handleQuit();
         return true;
     }
 
-    /** {@inheritDoc} */
     @Override
     public void cancelled() {
         // Do nothing

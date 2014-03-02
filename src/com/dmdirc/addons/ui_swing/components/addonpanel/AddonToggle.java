@@ -173,7 +173,7 @@ public final class AddonToggle {
      */
     public void apply() {
         new Thread("Addon-Load-Unload") {
-            /** {@inheritDoc} */
+
             @Override
             public void run() {
                 if (pi != null) {

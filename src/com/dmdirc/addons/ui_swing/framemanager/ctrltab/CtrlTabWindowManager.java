@@ -84,7 +84,7 @@ public class CtrlTabWindowManager implements SwingWindowListener,
         model = new TreeViewModel(globalConfig, new TreeViewNode(null, null));
         selectionModel = new DefaultTreeSelectionModel();
         treeScroller = new TreeScroller(model, selectionModel, false) {
-            /** {@inheritDoc} */
+
             @Override
             protected void setPath(final TreePath path) {
                 super.setPath(path);
@@ -100,13 +100,13 @@ public class CtrlTabWindowManager implements SwingWindowListener,
                 new PreviousFrameAction(treeScroller));
         mainFrame.getRootPane().getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
                 .put(KeyStroke.getKeyStroke(KeyEvent.VK_TAB,
-                KeyEvent.CTRL_DOWN_MASK | KeyEvent.SHIFT_DOWN_MASK),
-                "prevFrameAction");
+                                KeyEvent.CTRL_DOWN_MASK | KeyEvent.SHIFT_DOWN_MASK),
+                        "prevFrameAction");
         mainFrame.getRootPane().getActionMap().put(
                 "nextFrameAction", new NextFrameAction(treeScroller));
         mainFrame.getRootPane().getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
                 .put(KeyStroke.getKeyStroke(KeyEvent.VK_TAB,
-                KeyEvent.CTRL_DOWN_MASK), "nextFrameAction");
+                                KeyEvent.CTRL_DOWN_MASK), "nextFrameAction");
     }
 
     /* {@inheritDoc} */
@@ -120,7 +120,7 @@ public class CtrlTabWindowManager implements SwingWindowListener,
         }
 
         UIUtilities.invokeAndWait(new Runnable() {
-            /** {@inheritDoc} */
+
             @Override
             public void run() {
                 final TreeViewNode node = new TreeViewNode(null, window.
@@ -138,7 +138,7 @@ public class CtrlTabWindowManager implements SwingWindowListener,
     @Override
     public void windowDeleted(final TextFrame parent, final TextFrame window) {
         UIUtilities.invokeAndWait(new Runnable() {
-            /** {@inheritDoc} */
+
             @Override
             public void run() {
                 if (nodes == null || nodes.get(window) == null) {
@@ -172,7 +172,7 @@ public class CtrlTabWindowManager implements SwingWindowListener,
     @Override
     public void selectionChanged(final TextFrame window) {
         UIUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc} */
+
             @Override
             public void run() {
                 final TreeNode[] path = model.getPathToRoot(nodes.get(

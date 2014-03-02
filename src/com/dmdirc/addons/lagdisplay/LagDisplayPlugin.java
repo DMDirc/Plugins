@@ -59,19 +59,16 @@ public final class LagDisplayPlugin extends BasePlugin {
         manager = getObjectGraph().get(LagDisplayManager.class);
     }
 
-    /** {@inheritDoc} */
     @Override
     public void onLoad() {
         manager.load();
     }
 
-    /** {@inheritDoc} */
     @Override
     public void onUnload() {
         manager.unload();
     }
 
-    /** {@inheritDoc} */
     @Override
     public void showConfig(final PreferencesDialogModel manager) {
         final PreferencesCategory cat = new PluginPreferencesCategory(

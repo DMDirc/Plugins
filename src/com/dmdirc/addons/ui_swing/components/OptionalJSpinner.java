@@ -200,7 +200,6 @@ public class OptionalJSpinner extends JPanel implements ActionListener,
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public void stateChanged(final ChangeEvent e) {
         fireChangeListener();

@@ -38,7 +38,8 @@ import net.miginfocom.swing.MigLayout;
 /**
  * Extended list mode cell renderer.
  */
-public class ExtendedListModeCellRenderer extends JPanel implements ListCellRenderer<ChannelListModeItem> {
+public class ExtendedListModeCellRenderer extends JPanel implements
+        ListCellRenderer<ChannelListModeItem> {
 
     /** A version number for this class. */
     private static final long serialVersionUID = 1;

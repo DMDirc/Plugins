@@ -239,7 +239,6 @@ public class Parser {
     protected static class TokenTypePrecedenceComparator implements
             Comparator<TokenType> {
 
-        /** {@inheritDoc} */
         @Override
         public int compare(final TokenType o1, final TokenType o2) {
             return o2.getPrecedence() - o1.getPrecedence();

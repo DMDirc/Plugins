@@ -45,7 +45,6 @@ public final class ErrorLevelIconCellRenderer extends DefaultTableCellRenderer {
         this.iconManager = iconManager;
     }
 
-    /** {@inheritDoc} */
     @Override
     public void setValue(final Object value) {
         setHorizontalAlignment(JLabel.CENTER);

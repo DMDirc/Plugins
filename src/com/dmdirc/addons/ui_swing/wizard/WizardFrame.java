@@ -70,7 +70,6 @@ public class WizardFrame extends JFrame {
         setVisible(true);
     }
 
-    /** {@inheritDoc} */
     @Override
     public void validate() {
         super.validate();

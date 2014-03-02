@@ -70,7 +70,6 @@ public class UpdateTableModel extends AbstractTableModel {
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public int getRowCount() {
         synchronized (updates) {
@@ -78,13 +77,11 @@ public class UpdateTableModel extends AbstractTableModel {
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public int getColumnCount() {
         return 3;
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getColumnName(final int columnIndex) {
         switch (columnIndex) {
@@ -100,7 +97,6 @@ public class UpdateTableModel extends AbstractTableModel {
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public Class<?> getColumnClass(final int columnIndex) {
         switch (columnIndex) {
@@ -116,13 +112,11 @@ public class UpdateTableModel extends AbstractTableModel {
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public boolean isCellEditable(final int rowIndex, final int columnIndex) {
         return columnIndex == 1;
     }
 
-    /** {@inheritDoc} */
     @Override
     public Object getValueAt(final int rowIndex, final int columnIndex) {
         synchronized (updates) {
@@ -148,7 +142,6 @@ public class UpdateTableModel extends AbstractTableModel {
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public void setValueAt(final Object aValue, final int rowIndex,
             final int columnIndex) {

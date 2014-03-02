@@ -164,7 +164,6 @@ public class TransferPanel extends JPanel implements ActionListener,
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public void onSocketClosed(final Parser parser, final Date date) {
         if ("Resend".equals(button.getText())) {
@@ -172,11 +171,10 @@ public class TransferPanel extends JPanel implements ActionListener,
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public void socketClosed(final DCCTransfer dcc) {
         UIUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc} */
+
             @Override
             public void run() {
                 if (transferContainer.isComplete()) {
@@ -200,11 +198,10 @@ public class TransferPanel extends JPanel implements ActionListener,
         });
     }
 
-    /** {@inheritDoc} */
     @Override
     public void socketOpened(final DCCTransfer dcc) {
         UIUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc} */
+
             @Override
             public void run() {
                 status.setText("Status: Socket Opened");
@@ -212,11 +209,10 @@ public class TransferPanel extends JPanel implements ActionListener,
         });
     }
 
-    /** {@inheritDoc} */
     @Override
     public void dataTransfered(final DCCTransfer dcc, final int bytes) {
         UIUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc} */
+
             @Override
             public void run() {
                 if (dcc.getType() == DCCTransfer.TransferType.SEND) {
@@ -245,7 +241,7 @@ public class TransferPanel extends JPanel implements ActionListener,
                         duration((int) transferContainer.getRemainingTime())));
                 taken.setText(String.format("Time Taken: %s", transferContainer
                         .getStartTime() == 0 ? "N/A" : duration(
-                        transferContainer.getElapsedTime())));
+                                transferContainer.getElapsedTime())));
             }
         });
     }

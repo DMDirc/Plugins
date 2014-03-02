@@ -64,7 +64,6 @@ public class Input extends Command implements IntelligentCommand {
         this.windowFactory = windowFactory;
     }
 
-    /** {@inheritDoc} */
     @Override
     public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
@@ -79,11 +78,10 @@ public class Input extends Command implements IntelligentCommand {
         } else {
             ((InputWindow) windowFactory.getSwingWindow(origin))
                     .getInputHandler().addToInputField(args
-                    .getArgumentsAsString());
+                            .getArgumentsAsString());
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public AdditionalTabTargets getSuggestions(final int arg,
             final IntelligentCommandContext context) {

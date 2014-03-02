@@ -46,19 +46,16 @@ public class ColourSpam extends DebugCommand {
         super(commandProvider);
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getName() {
         return "colourspam";
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getUsage() {
         return " - Spams coloured lines";
     }
 
-    /** {@inheritDoc} */
     @Override
     public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {

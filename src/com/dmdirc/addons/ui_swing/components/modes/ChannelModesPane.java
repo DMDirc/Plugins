@@ -51,20 +51,17 @@ public final class ChannelModesPane extends ModesPane {
         initModesPanel();
     }
 
-    /** {@inheritDoc} */
     @Override
     public boolean hasModeValue(final String mode) {
         return channel.getConfigManager().hasOptionString("server", "mode"
                 + mode);
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getModeValue(final String mode) {
         return channel.getConfigManager().getOption("server", "mode" + mode);
     }
 
-    /** {@inheritDoc} */
     @Override
     public boolean isModeEnabled(final String mode) {
         return !channel.getConfigManager().hasOptionString("server",
@@ -72,26 +69,22 @@ public final class ChannelModesPane extends ModesPane {
                 .getOptionBool("server", "enablemode" + mode);
     }
 
-    /** {@inheritDoc} */
     @Override
     public boolean isModeSettable(final String mode) {
         return channel.getConnection().getParser().isUserSettable(
                 mode.toCharArray()[0]);
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getAvailableBooleanModes() {
         return channel.getConnection().getParser().getBooleanChannelModes();
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getOurBooleanModes() {
         return channel.getChannelInfo().getModes();
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getAllParamModes() {
         final Parser parser = channel.getConnection().getParser();
@@ -99,13 +92,11 @@ public final class ChannelModesPane extends ModesPane {
                 + parser.getDoubleParameterChannelModes();
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getParamModeValue(final String mode) {
         return channel.getChannelInfo().getMode(mode.charAt(0));
     }
 
-    /** {@inheritDoc} */
     @Override
     public void alterMode(final boolean add, final String mode,
             final String parameter) {
@@ -118,13 +109,11 @@ public final class ChannelModesPane extends ModesPane {
         channel.getChannelInfo().alterMode(state, mode.charAt(0), parameter);
     }
 
-    /** {@inheritDoc} */
     @Override
     public void flushModes() {
         channel.getChannelInfo().flushModes();
     }
 
-    /** {@inheritDoc} */
     @Override
     public SwingController getSwingController() {
         return controller;

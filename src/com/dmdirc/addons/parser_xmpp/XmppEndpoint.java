@@ -153,7 +153,6 @@ public class XmppEndpoint implements Comparable<XmppEndpoint> {
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public int compareTo(final XmppEndpoint o) {
         return o.getPriority() - priority;

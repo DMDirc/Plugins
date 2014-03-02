@@ -69,7 +69,6 @@ public final class ProfileStep extends Step {
         return profile.isSelected();
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getTitle() {
         return "Profile setup";

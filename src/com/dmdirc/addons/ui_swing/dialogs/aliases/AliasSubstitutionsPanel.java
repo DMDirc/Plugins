@@ -70,7 +70,7 @@ public class AliasSubstitutionsPanel extends SubstitutionsPanel<ActionType> {
     @Override
     public void setType(final ActionType type) {
         SwingUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc} */
+
             @Override
             public void run() {
                 substitutions = new ArrayList<>();

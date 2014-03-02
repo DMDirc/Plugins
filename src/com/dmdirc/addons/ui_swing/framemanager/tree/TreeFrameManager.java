@@ -93,30 +93,26 @@ public class TreeFrameManager implements FrameManager,
         nodes = new HashMap<>();
     }
 
-    /** {@inheritDoc} */
     @Override
     public boolean canPositionVertically() {
         return true;
     }
 
-    /** {@inheritDoc} */
     @Override
     public boolean canPositionHorizontally() {
         return false;
     }
 
-    /** {@inheritDoc} */
     @Override
     public void setParent(final JComponent parent) {
         SwingUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc} */
+
             @Override
             public void run() {
                 final JScrollPane scrollPane = new JScrollPane(tree);
                 scrollPane.setAutoscrolls(true);
                 scrollPane.setHorizontalScrollBarPolicy(
                         JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-
 
                 parent.setVisible(false);
                 parent.setLayout(new MigLayout("ins 0, fill"));
@@ -131,7 +127,6 @@ public class TreeFrameManager implements FrameManager,
         });
     }
 
-    /** {@inheritDoc} */
     @Override
     public void setController(final SwingController controller) {
         this.controller = controller;
@@ -157,7 +152,6 @@ public class TreeFrameManager implements FrameManager,
         });
     }
 
-    /** {@inheritDoc} */
     @Override
     public void windowAdded(final TextFrame parent, final TextFrame window) {
         if (nodes.containsKey(window.getContainer())) {
@@ -170,18 +164,16 @@ public class TreeFrameManager implements FrameManager,
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public void windowDeleted(final TextFrame parent, final TextFrame window) {
         UIUtilities.invokeAndWait(new Runnable() {
-            /** {@inheritDoc} */
+
             @Override
             public void run() {
                 if (nodes == null || nodes.get(window.getContainer()) == null) {
                     return;
                 }
-                final DefaultMutableTreeNode node =
-                        nodes.get(window.getContainer());
+                final DefaultMutableTreeNode node = nodes.get(window.getContainer());
                 if (node.getLevel() == 0) {
                     Logger.appError(ErrorLevel.MEDIUM,
                             "delServer triggered for root node"
@@ -210,7 +202,7 @@ public class TreeFrameManager implements FrameManager,
     public void addWindow(final TreeViewNode parent,
             final FrameContainer window) {
         UIUtilities.invokeAndWait(new Runnable() {
-            /** {@inheritDoc} */
+
             @Override
             public void run() {
                 final NodeLabel label = new NodeLabel(window);
@@ -224,8 +216,7 @@ public class TreeFrameManager implements FrameManager,
                     model.insertNodeInto(node, parent);
                 }
                 tree.expandPath(new TreePath(node.getPath()).getParentPath());
-                final Rectangle view =
-                        tree.getRowBounds(tree.getRowForPath(new TreePath(node.
+                final Rectangle view = tree.getRowBounds(tree.getRowForPath(new TreePath(node.
                         getPath())));
                 if (view != null) {
                     tree.scrollRectToVisible(new Rectangle(0, (int) view.getY(),
@@ -274,19 +265,18 @@ public class TreeFrameManager implements FrameManager,
     private void setColours() {
         tree.setBackground(UIUtilities.convertColour(
                 colourManager.getColourFromString(
-                config.getOptionString(
-                "treeview", "backgroundcolour",
-                "ui", "backgroundcolour"), null)));
+                        config.getOptionString(
+                                "treeview", "backgroundcolour",
+                                "ui", "backgroundcolour"), null)));
         tree.setForeground(UIUtilities.convertColour(
                 colourManager.getColourFromString(
-                config.getOptionString(
-                "treeview", "foregroundcolour",
-                "ui", "foregroundcolour"), null)));
+                        config.getOptionString(
+                                "treeview", "foregroundcolour",
+                                "ui", "foregroundcolour"), null)));
 
         tree.repaint();
     }
 
-    /** {@inheritDoc} */
     @Override
     public void configChanged(final String domain, final String key) {
         if ("sortrootwindows".equals(key) || "sortchildwindows".equals(key)) {
@@ -301,7 +291,7 @@ public class TreeFrameManager implements FrameManager,
      */
     private void redoTreeView() {
         UIUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc} */
+
             @Override
             public void run() {
                 ((DefaultTreeModel) tree.getModel()).setRoot(null);
@@ -328,7 +318,6 @@ public class TreeFrameManager implements FrameManager,
         });
     }
 
-    /** {@inheritDoc} */
     @Override
     public void selectionChanged(final TextFrame window) {
         synchronized (nodes) {
@@ -341,11 +330,10 @@ public class TreeFrameManager implements FrameManager,
 
         if (window != null) {
             UIUtilities.invokeLater(new Runnable() {
-                /** {@inheritDoc} */
+
                 @Override
                 public void run() {
-                    final TreeNode[] treePath =
-                            ((DefaultTreeModel) tree.getModel()).getPathToRoot(
+                    final TreeNode[] treePath = ((DefaultTreeModel) tree.getModel()).getPathToRoot(
                             nodes.get(window.getContainer()));
                     if (treePath != null && treePath.length > 0) {
                         final TreePath path = new TreePath(treePath);
@@ -357,11 +345,10 @@ public class TreeFrameManager implements FrameManager,
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public void notificationSet(final FrameContainer window, final Colour colour) {
         SwingUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc} */
+
             @Override
             public void run() {
                 synchronized (nodes) {
@@ -378,11 +365,10 @@ public class TreeFrameManager implements FrameManager,
         });
     }
 
-    /** {@inheritDoc} */
     @Override
     public void notificationCleared(final FrameContainer window) {
         SwingUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc} */
+
             @Override
             public void run() {
                 synchronized (nodes) {
@@ -399,11 +385,10 @@ public class TreeFrameManager implements FrameManager,
         });
     }
 
-    /** {@inheritDoc} */
     @Override
     public void iconChanged(final FrameContainer window, final String icon) {
         SwingUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc} */
+
             @Override
             public void run() {
                 synchronized (nodes) {
@@ -420,11 +405,10 @@ public class TreeFrameManager implements FrameManager,
         });
     }
 
-    /** {@inheritDoc} */
     @Override
     public void nameChanged(final FrameContainer window, final String name) {
         SwingUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc} */
+
             @Override
             public void run() {
                 synchronized (nodes) {
@@ -441,7 +425,6 @@ public class TreeFrameManager implements FrameManager,
         });
     }
 
-    /** {@inheritDoc} */
     @Override
     public void titleChanged(final FrameContainer window, final String title) {
         // Do nothing

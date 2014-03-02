@@ -34,7 +34,6 @@ public enum AddonType {
     /** Action packs. */
     TYPE_ACTION_PACK;
 
-    /** {@inheritDoc} */
     @Override
     public String toString() {
         return super.toString().charAt(5)
