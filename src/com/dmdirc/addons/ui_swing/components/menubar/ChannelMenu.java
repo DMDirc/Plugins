@@ -26,11 +26,11 @@ import com.dmdirc.Channel;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.ServerState;
 import com.dmdirc.addons.ui_swing.MainFrame;
-import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.addons.ui_swing.dialogs.ChannelJoinDialogFactory;
 import com.dmdirc.addons.ui_swing.dialogs.channellist.ChannelListDialog;
 import com.dmdirc.addons.ui_swing.dialogs.channelsetting.ChannelSettingsDialog;
+import com.dmdirc.addons.ui_swing.injection.DialogProvider;
 import com.dmdirc.addons.ui_swing.injection.KeyedDialogProvider;
 
 import java.awt.event.ActionEvent;
@@ -54,10 +54,10 @@ public class ChannelMenu extends JMenu implements ActionListener,
     private static final long serialVersionUID = 1;
     /** Dialog provider. */
     private final KeyedDialogProvider<Channel, ChannelSettingsDialog> dialogProvider;
+    /** Channel list dialog provider. */
+    private final DialogProvider<ChannelListDialog> channelListDialogProvider;
     /** Channel join dialog factory. */
     private final ChannelJoinDialogFactory channelJoinDialogFactory;
-    /** Swing controller. */
-    private final SwingController controller;
     /** Main frame. */
     private final MainFrame mainFrame;
     /** Menu items to be disabled/enabled. */
@@ -68,22 +68,22 @@ public class ChannelMenu extends JMenu implements ActionListener,
     /**
      * Creates a new channel menu.
      *
-     * @param controller               Parent swing controller.
-     * @param mainFrame                Parent mainframe
-     * @param dialogProvider           Channel settings dialog provider
-     * @param channelJoinDialogFactory Channel join dialog factory
+     * @param mainFrame                 Parent mainframe
+     * @param dialogProvider            Channel settings dialog provider
+     * @param channelJoinDialogFactory  Channel join dialog factory
+     * @param channelListDialogProvider Channel list dialog provider
      */
     @Inject
     public ChannelMenu(
-            final SwingController controller,
             final MainFrame mainFrame,
             final KeyedDialogProvider<Channel, ChannelSettingsDialog> dialogProvider,
-            final ChannelJoinDialogFactory channelJoinDialogFactory) {
+            final ChannelJoinDialogFactory channelJoinDialogFactory,
+            final DialogProvider<ChannelListDialog> channelListDialogProvider) {
         super("Channel");
-        this.controller = controller;
         this.mainFrame = mainFrame;
         this.dialogProvider = dialogProvider;
         this.channelJoinDialogFactory = channelJoinDialogFactory;
+        this.channelListDialogProvider = channelListDialogProvider;
         setMnemonic('c');
         addMenuListener(this);
         initChannelMenu();
@@ -130,7 +130,7 @@ public class ChannelMenu extends JMenu implements ActionListener,
                 }
                 break;
             case "ListChannels":
-                new ChannelListDialog(controller).display();
+                channelListDialogProvider.displayOrRequestFocus();
                 break;
         }
     }
