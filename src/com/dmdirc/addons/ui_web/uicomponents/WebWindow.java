@@ -57,8 +57,6 @@ public class WebWindow implements Window, IRCDocumentListener,
     private final FrameContainer container;
     /** The handler to pass global events to. */
     private final DynamicRequestHandler handler;
-    /** The controller that owns this window. */
-    private final WebInterfaceUI controller;
 
     public WebWindow(final WebInterfaceUI controller,
             final FrameContainer parent, final String id) {
@@ -66,7 +64,6 @@ public class WebWindow implements Window, IRCDocumentListener,
 
         this.id = id;
         this.container = parent;
-        this.controller = controller;
         this.handler = controller.getHandler();
 
         parent.getDocument().addIRCDocumentListener(this);
@@ -88,10 +85,6 @@ public class WebWindow implements Window, IRCDocumentListener,
 
     public FrameContainer getContainer() {
         return container;
-    }
-
-    public WebInterfaceUI getController() {
-        return controller;
     }
 
     public List<String> getMessages() {
