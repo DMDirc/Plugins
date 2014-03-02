@@ -37,6 +37,7 @@ import com.dmdirc.addons.ui_swing.components.frames.ComponentFrameFactory;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.commandline.CommandLineOptionsModule.Directory;
 import com.dmdirc.commandline.CommandLineOptionsModule.DirectoryType;
+import com.dmdirc.commandparser.parsers.GlobalCommandParser;
 import com.dmdirc.interfaces.ActionListener;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.Connection;
@@ -107,6 +108,7 @@ public class DCCManager implements ActionListener {
      * @param windowFactory         The window factory to register the DCC implementations with.
      * @param componentFrameFactory Factory to use to create new component frames for DCC windows.
      * @param urlBuilder            The URL builder to use when finding icons.
+     * @param commandParser         The command parser to use for DCC windows.
      * @param baseDirectory         The directory to create a downloads directory within.
      */
     @Inject
@@ -122,6 +124,7 @@ public class DCCManager implements ActionListener {
             final SwingWindowFactory windowFactory,
             final ComponentFrameFactory componentFrameFactory,
             final URLBuilder urlBuilder,
+            final GlobalCommandParser commandParser,
             @Directory(DirectoryType.BASE) final String baseDirectory) {
         this.mainFrame = mainFrame;
         this.messageSinkManager = messageSinkManager;
@@ -136,19 +139,19 @@ public class DCCManager implements ActionListener {
         windowFactory.registerImplementation(
                 new HashSet<>(Arrays.asList("com.dmdirc.addons.dcc.ui.PlaceholderPanel")),
                 new SwingWindowFactory.WindowProvider() {
-            @Override
-            public TextFrame getWindow(final FrameContainer container) {
-                return componentFrameFactory.getComponentFrame(container);
-            }
-        });
+                    @Override
+                    public TextFrame getWindow(final FrameContainer container) {
+                        return componentFrameFactory.getComponentFrame(container, commandParser);
+                    }
+                });
         windowFactory.registerImplementation(
                 new HashSet<>(Arrays.asList("com.dmdirc.addons.dcc.ui.TransferPanel")),
                 new SwingWindowFactory.WindowProvider() {
-            @Override
-            public TextFrame getWindow(final FrameContainer container) {
-                return componentFrameFactory.getComponentFrame(container);
-            }
-        });
+                    @Override
+                    public TextFrame getWindow(final FrameContainer container) {
+                        return componentFrameFactory.getComponentFrame(container, commandParser);
+                    }
+                });
 
         final ConfigProvider defaults = identityController.getAddonSettings();
         defaults.setOption(domain, "receive.savelocation",

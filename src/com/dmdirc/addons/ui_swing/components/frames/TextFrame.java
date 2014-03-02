@@ -54,12 +54,9 @@ import com.dmdirc.commandparser.PopupMenu;
 import com.dmdirc.commandparser.PopupMenuItem;
 import com.dmdirc.commandparser.PopupType;
 import com.dmdirc.commandparser.parsers.CommandParser;
-import com.dmdirc.commandparser.parsers.GlobalCommandParser;
-import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.FrameCloseListener;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
-import com.dmdirc.interfaces.ui.InputWindow;
 import com.dmdirc.interfaces.ui.Window;
 import com.dmdirc.parser.common.ChannelJoinRequest;
 import com.dmdirc.plugins.PluginManager;
@@ -114,8 +111,6 @@ public abstract class TextFrame extends JPanel implements Window,
     private final PopupManager popupManager;
     /** Handler to use to open URLs. */
     private final URLHandler urlHandler;
-    /** Controller to use for commands. */
-    private final CommandController commandController;
     /** Boolean to determine if this frame should be popped out of main client. */
     private boolean popout;
     /**
@@ -132,27 +127,27 @@ public abstract class TextFrame extends JPanel implements Window,
     /**
      * Creates a new instance of Frame.
      *
-     * @param owner FrameContainer owning this frame.
-     * @param deps  Collection of TextPane dependencies.
+     * @param owner         FrameContainer owning this frame.
+     * @param commandParser The command parser to use for this frame.
+     * @param deps          Collection of TextPane dependencies.
      */
     public TextFrame(
             final FrameContainer owner,
+            final CommandParser commandParser,
             final TextFrameDependencies deps) {
         this.controller = deps.controller;
         this.mainFrame = deps.mainFrame;
         this.popupManager = deps.popupManager;
         this.urlHandler = deps.urlHandler;
-        this.commandController = deps.commandController;
         this.frameParent = owner;
         this.iconManager = deps.iconManager;
         this.windowFactory = deps.windowFactory;
+        this.commandParser = commandParser;
 
         final AggregateConfigProvider config = owner.getConfigManager();
 
         owner.addCloseListener(this);
         owner.setTitle(frameParent.getTitle());
-
-        commandParser = findCommandParser();
 
         initComponents(deps.textPaneFactory);
         setFocusable(true);
@@ -165,31 +160,6 @@ public abstract class TextFrame extends JPanel implements Window,
         updateColours();
 
         setLayout(new MigLayout("fill"));
-    }
-
-    /**
-     * Locate the appropriate command parser in the window hierarchy.
-     *
-     * @return Closest command parser in the tree
-     */
-    private CommandParser findCommandParser() {
-        CommandParser localParser = null;
-        Window inputWindow = this;
-        while (!(inputWindow instanceof InputWindow) && inputWindow != null
-                && inputWindow.getContainer().getParent() != null) {
-            inputWindow = windowFactory.getSwingWindow(inputWindow.getContainer().getParent());
-        }
-        if (inputWindow instanceof InputWindow) {
-            localParser = ((InputWindow) inputWindow).getContainer()
-                    .getCommandParser();
-        }
-
-        if (localParser == null) {
-            localParser = new GlobalCommandParser(frameParent.getConfigManager(),
-                    commandController);
-        }
-
-        return localParser;
     }
 
     /**
@@ -380,7 +350,7 @@ public abstract class TextFrame extends JPanel implements Window,
                                 CoreActionType.LINK_NICKNAME_CLICKED, null, this,
                                 clickType.getValue())) {
                     getController().requestWindowFocus(windowFactory.getSwingWindow(getContainer()
-                                    .getConnection().getQuery(clickType.getValue())));
+                            .getConnection().getQuery(clickType.getValue())));
                 }
                 break;
             default:
@@ -618,7 +588,6 @@ public abstract class TextFrame extends JPanel implements Window,
         final Provider<MainFrame> mainFrame;
         final PopupManager popupManager;
         final URLHandler urlHandler;
-        final CommandController commandController;
         final EventBus eventBus;
         final AggregateConfigProvider globalConfig;
         final PasteDialogFactory pasteDialog;
@@ -633,7 +602,6 @@ public abstract class TextFrame extends JPanel implements Window,
                 final Provider<MainFrame> mainFrame,
                 final PopupManager popupManager,
                 final URLHandler urlHandler,
-                final CommandController commandController,
                 final EventBus eventBus,
                 final PasteDialogFactory pasteDialog,
                 final PluginManager pluginManager,
@@ -645,7 +613,6 @@ public abstract class TextFrame extends JPanel implements Window,
             this.mainFrame = mainFrame;
             this.popupManager = popupManager;
             this.urlHandler = urlHandler;
-            this.commandController = commandController;
             this.eventBus = eventBus;
             this.globalConfig = globalConfig;
             this.pasteDialog = pasteDialog;

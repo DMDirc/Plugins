@@ -24,6 +24,7 @@ package com.dmdirc.addons.ui_swing.components.frames;
 
 import com.dmdirc.FrameContainer;
 import com.dmdirc.commandparser.PopupType;
+import com.dmdirc.commandparser.parsers.CommandParser;
 import com.dmdirc.util.annotations.factory.Factory;
 import com.dmdirc.util.annotations.factory.Unbound;
 
@@ -47,13 +48,15 @@ public class CustomFrame extends TextFrame {
     /**
      * Creates a new instance of CustomFrame.
      *
-     * @param deps  The dependencies required by text frames.
-     * @param owner The frame container that owns this frame
+     * @param deps          The dependencies required by text frames.
+     * @param commandParser The parser to use for any input.
+     * @param owner         The frame container that owns this frame
      */
     public CustomFrame(
             final TextFrameDependencies deps,
+            @Unbound final CommandParser commandParser,
             @Unbound final FrameContainer owner) {
-        super(owner, deps);
+        super(owner, commandParser, deps);
 
         initComponents();
     }
