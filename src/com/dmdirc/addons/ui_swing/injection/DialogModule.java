@@ -36,6 +36,7 @@ import com.dmdirc.addons.ui_swing.dialogs.NewServerDialog;
 import com.dmdirc.addons.ui_swing.dialogs.about.AboutDialog;
 import com.dmdirc.addons.ui_swing.dialogs.actionsmanager.ActionsManagerDialog;
 import com.dmdirc.addons.ui_swing.dialogs.aliases.AliasManagerDialog;
+import com.dmdirc.addons.ui_swing.dialogs.channellist.ChannelListDialog;
 import com.dmdirc.addons.ui_swing.dialogs.channelsetting.ChannelSettingsDialog;
 import com.dmdirc.addons.ui_swing.dialogs.prefs.SwingPreferencesDialog;
 import com.dmdirc.addons.ui_swing.dialogs.profiles.ProfileManagerDialog;
@@ -203,6 +204,13 @@ public class DialogModule {
             final MainFrame mainFrame,
             final LifecycleController lifecycleController) {
         return new SwingRestartDialog(mainFrame, lifecycleController, "apply settings");
+    }
+
+    @Provides
+    @Singleton
+    public DialogProvider<ChannelListDialog> getChannelListDialogProvider(
+            final Provider<ChannelListDialog> provider) {
+        return new DialogProvider<>(provider);
     }
 
 }

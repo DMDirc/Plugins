@@ -23,12 +23,13 @@
 package com.dmdirc.addons.ui_swing.dialogs.channellist;
 
 import com.dmdirc.Server;
-import com.dmdirc.addons.ui_swing.SwingController;
+import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.inject.Inject;
 import javax.swing.JLabel;
 
 import net.miginfocom.swing.MigLayout;
@@ -36,22 +37,22 @@ import net.miginfocom.swing.MigLayout;
 /**
  * Provides a UI to search for channels in DMDirc.
  */
-public class ChannelListDialog extends StandardDialog implements
-        ActionListener {
+public class ChannelListDialog extends StandardDialog implements ActionListener {
 
     /** Serial version UID. */
     private static final long serialVersionUID = 1L;
     /** List panel. */
-    private ChannelListPanel list;
+    private final ChannelListPanel list;
     /** Size label. */
-    private JLabel total;
+    private final JLabel total;
 
-    public ChannelListDialog(final SwingController controller) {
-        super(controller.getMainFrame(), ModalityType.MODELESS);
+    @Inject
+    public ChannelListDialog(final MainFrame mainFrame) {
+        super(mainFrame, ModalityType.MODELESS);
         setTitle("Channel List");
         total = new JLabel("No results.");
-        list = new ChannelListPanel((Server) controller.getMainFrame().getActiveFrame()
-                .getContainer().getConnection(), total);
+        list = new ChannelListPanel((Server) mainFrame.getActiveFrame().getContainer()
+                .getConnection(), total);
         layoutComponents();
         getCancelButton().setText("Close");
         getCancelButton().addActionListener(this);
@@ -65,11 +66,6 @@ public class ChannelListDialog extends StandardDialog implements
         add(getCancelButton(), "right");
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Action event
-     */
     @Override
     public void actionPerformed(final ActionEvent e) {
         dispose();
