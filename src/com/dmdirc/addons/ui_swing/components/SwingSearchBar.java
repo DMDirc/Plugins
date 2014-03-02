@@ -31,6 +31,7 @@ import com.dmdirc.addons.ui_swing.textpane.TextPane;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.interfaces.ui.SearchBar;
+import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.messages.ColourManager;
 import com.dmdirc.ui.messages.IRCDocument;
 import com.dmdirc.ui.messages.IRCDocumentSearcher;
@@ -61,11 +62,7 @@ import net.miginfocom.swing.MigLayout;
 public final class SwingSearchBar extends JPanel implements ActionListener,
         KeyListener, SearchBar, DocumentListener, ConfigChangeListener {
 
-    /**
-     * A version number for this class. It should be changed whenever the class structure is changed
-     * (or anything else that would prevent serialized objects being unserialized with the new
-     * class).
-     */
+    /** A version number for this class. */
     private static final long serialVersionUID = 6;
     /** Frame parent. */
     private final TextFrame parent;
@@ -91,11 +88,11 @@ public final class SwingSearchBar extends JPanel implements ActionListener,
     /**
      * Creates a new instance of StatusBar.
      *
-     * @param newParent parent frame for the dialog
+     * @param newParent   parent frame for the dialog
+     * @param iconManager Icon manager to retrieve icons from
      */
-    public SwingSearchBar(final TextFrame newParent) {
-        super();
-
+    public SwingSearchBar(final TextFrame newParent,
+            final IconManager iconManager) {
         listeners = new ListenerList();
 
         this.parent = newParent;
@@ -105,24 +102,21 @@ public final class SwingSearchBar extends JPanel implements ActionListener,
 
         getActionMap().put("searchAction", new SearchAction(this));
 
-        initComponents();
+        initComponents(iconManager);
         layoutComponents();
         addListeners();
     }
 
     /** Initialises components. */
-    private void initComponents() {
-        closeButton = new ImageButton<>("close",
-                parent.getIconManager().getIcon("close-inactive"),
+    private void initComponents(final IconManager iconManager) {
+        closeButton = new ImageButton<>("close", parent.getIconManager().getIcon("close-inactive"),
                 parent.getIconManager().getIcon("close-active"));
         nextButton = new JButton();
         prevButton = new JButton();
         caseCheck = new JCheckBox();
         validator = new SearchValidator();
-        searchBox = new ValidatingJTextField(parent.getController()
-                .getIconManager(), validator);
-        wrapIndicator = new JLabel("Search wrapped",
-                parent.getIconManager().getIcon("linewrap"),
+        searchBox = new ValidatingJTextField(iconManager, validator);
+        wrapIndicator = new JLabel("Search wrapped", parent.getIconManager().getIcon("linewrap"),
                 JLabel.LEFT);
 
         nextButton.setText("Later");
@@ -158,9 +152,10 @@ public final class SwingSearchBar extends JPanel implements ActionListener,
         caseCheck.addActionListener(this);
         searchBox.getDocument().addDocumentListener(this);
 
-        parent.getController().getGlobalConfig().addChangeListener(
+        parent.getContainer().getConfigManager();
+        parent.getContainer().getConfigManager().addChangeListener(
                 "ui", "backgroundcolour", this);
-        parent.getController().getGlobalConfig().addChangeListener(
+        parent.getContainer().getConfigManager().addChangeListener(
                 "ui", "foregroundcolour", this);
     }
 
@@ -232,7 +227,7 @@ public final class SwingSearchBar extends JPanel implements ActionListener,
     @Override
     public void search(final Direction direction, final String text,
             final boolean caseSensitive) {
-        boolean foundText = false;
+        boolean foundText;
         wrapIndicator.setVisible(false);
 
         final boolean up = Direction.UP == direction;
@@ -248,7 +243,7 @@ public final class SwingSearchBar extends JPanel implements ActionListener,
                 searchDown();
 
         if (result == null) {
-            foundText = false;
+            //Do nothing
         } else if ((textPane.getSelectedRange().getEndLine() != 0 || textPane.
                 getSelectedRange().getEndPos() != 0)
                 && ((up && result.getEndLine() > textPane.getSelectedRange().
@@ -409,16 +404,16 @@ public final class SwingSearchBar extends JPanel implements ActionListener,
 
         searchBox.setForeground(UIUtilities.convertColour(
                 colourManager.getColourFromString(
-                config.getOptionString(
-                "ui", "foregroundcolour"), null)));
+                        config.getOptionString(
+                                "ui", "foregroundcolour"), null)));
         searchBox.setBackground(UIUtilities.convertColour(
                 colourManager.getColourFromString(
-                config.getOptionString(
-                "ui", "backgroundcolour"), null)));
+                        config.getOptionString(
+                                "ui", "backgroundcolour"), null)));
         searchBox.setCaretColor(UIUtilities.convertColour(
                 colourManager.getColourFromString(
-                config.getOptionString(
-                "ui", "foregroundcolour"), null)));
+                        config.getOptionString(
+                                "ui", "foregroundcolour"), null)));
     }
 
 }

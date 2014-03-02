@@ -28,6 +28,7 @@ import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SwingController;
+import com.dmdirc.addons.ui_swing.SwingWindowFactory;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.actions.ChannelCopyAction;
 import com.dmdirc.addons.ui_swing.actions.CommandAction;
@@ -123,6 +124,10 @@ public abstract class TextFrame extends JPanel implements Window,
     private DesktopWindowFrame popoutFrame;
     /** Desktop place holder object used if this frame is popped out. */
     private DesktopPlaceHolderFrame popoutPlaceholder;
+    /** Icon manager to retrieve icons from. */
+    private final IconManager iconManager;
+    /** Window factory to retrieve and create windows. */
+    private final SwingWindowFactory windowFactory;
 
     /**
      * Creates a new instance of Frame.
@@ -133,14 +138,14 @@ public abstract class TextFrame extends JPanel implements Window,
     public TextFrame(
             final FrameContainer owner,
             final TextFrameDependencies deps) {
-        super();
-
         this.controller = deps.controller;
         this.mainFrame = deps.mainFrame;
         this.popupManager = deps.popupManager;
         this.urlHandler = deps.urlHandler;
         this.commandController = deps.commandController;
         this.frameParent = owner;
+        this.iconManager = deps.iconManager;
+        this.windowFactory = deps.windowFactory;
 
         final AggregateConfigProvider config = owner.getConfigManager();
 
@@ -172,8 +177,7 @@ public abstract class TextFrame extends JPanel implements Window,
         Window inputWindow = this;
         while (!(inputWindow instanceof InputWindow) && inputWindow != null
                 && inputWindow.getContainer().getParent() != null) {
-            inputWindow = controller.getWindowFactory().getSwingWindow(
-                    inputWindow.getContainer().getParent());
+            inputWindow = windowFactory.getSwingWindow(inputWindow.getContainer().getParent());
         }
         if (inputWindow instanceof InputWindow) {
             localParser = ((InputWindow) inputWindow).getContainer()
@@ -256,7 +260,7 @@ public abstract class TextFrame extends JPanel implements Window,
     private void initComponents(final TextPaneFactory textPaneFactory) {
         setTextPane(textPaneFactory.getTextPane(this));
 
-        searchBar = new SwingSearchBar(this);
+        searchBar = new SwingSearchBar(this, iconManager);
         searchBar.setVisible(false);
 
         getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).
@@ -375,8 +379,7 @@ public abstract class TextFrame extends JPanel implements Window,
                         .getActionManager().triggerEvent(
                                 CoreActionType.LINK_NICKNAME_CLICKED, null, this,
                                 clickType.getValue())) {
-                    getController().requestWindowFocus(getController()
-                            .getWindowFactory().getSwingWindow(getContainer()
+                    getController().requestWindowFocus(windowFactory.getSwingWindow(getContainer()
                                     .getConnection().getQuery(clickType.getValue())));
                 }
                 break;
@@ -620,6 +623,8 @@ public abstract class TextFrame extends JPanel implements Window,
         final AggregateConfigProvider globalConfig;
         final PasteDialogFactory pasteDialog;
         final PluginManager pluginManager;
+        final IconManager iconManager;
+        final SwingWindowFactory windowFactory;
 
         @Inject
         public TextFrameDependencies(
@@ -632,6 +637,8 @@ public abstract class TextFrame extends JPanel implements Window,
                 final EventBus eventBus,
                 final PasteDialogFactory pasteDialog,
                 final PluginManager pluginManager,
+                final IconManager iconManager,
+                final SwingWindowFactory windowFactory,
                 @GlobalConfig final AggregateConfigProvider globalConfig) {
             this.textPaneFactory = textPaneFactory;
             this.controller = controller;
@@ -643,6 +650,8 @@ public abstract class TextFrame extends JPanel implements Window,
             this.globalConfig = globalConfig;
             this.pasteDialog = pasteDialog;
             this.pluginManager = pluginManager;
+            this.iconManager = iconManager;
+            this.windowFactory = windowFactory;
         }
 
     }
