@@ -349,7 +349,7 @@ public abstract class TextFrame extends JPanel implements Window,
                         .getActionManager().triggerEvent(
                                 CoreActionType.LINK_NICKNAME_CLICKED, null, this,
                                 clickType.getValue())) {
-                    getController().requestWindowFocus(windowFactory.getSwingWindow(getContainer()
+                    controller.requestWindowFocus(windowFactory.getSwingWindow(getContainer()
                             .getConnection().getQuery(clickType.getValue())));
                 }
                 break;

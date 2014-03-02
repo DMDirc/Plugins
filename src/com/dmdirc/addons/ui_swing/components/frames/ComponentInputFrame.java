@@ -25,9 +25,11 @@ package com.dmdirc.addons.ui_swing.components.frames;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.WritableFrameContainer;
 import com.dmdirc.addons.ui_swing.SwingController;
+import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputField;
 import com.dmdirc.commandparser.PopupType;
 import com.dmdirc.util.URLBuilder;
 
+import javax.inject.Provider;
 import javax.swing.JComponent;
 import javax.swing.JPopupMenu;
 
@@ -54,16 +56,18 @@ public class ComponentInputFrame extends InputTextFrame {
     /**
      * Creates a new instance of CustomInputFrame.
      *
-     * @param deps       The dependencies required by text frames.
-     * @param urlBuilder URL builder to use when making components.
-     * @param owner      The frame container that owns this frame
+     * @param deps               The dependencies required by text frames.
+     * @param inputFieldProvider The provider to use to create a new input field.
+     * @param urlBuilder         URL builder to use when making components.
+     * @param owner              The frame container that owns this frame
      */
     public ComponentInputFrame(
             final TextFrameDependencies deps,
+            final Provider<SwingInputField> inputFieldProvider,
             final URLBuilder urlBuilder,
             final WritableFrameContainer owner) {
-        super(deps, owner);
-        this.controller = getController();
+        super(deps, inputFieldProvider, owner);
+        this.controller = deps.controller;
         this.urlBuilder = urlBuilder;
         this.owner = owner;
         initComponents();
